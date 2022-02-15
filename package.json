@@ -1,0 +1,28 @@
+{
+    "private": true,
+    "scripts": {
+        "dev": "npm run development",
+        "development": "mix",
+        "watch": "mix watch",
+        "watch-poll": "mix watch -- --watch-options-poll=1000",
+        "hot": "mix watch --hot",
+        "prod": "npm run production",
+        "production": "mix --production",
+        "prepare": "husky install",
+        "lint": "eslint --ext ./resources/.js,.vue",
+        "prettier:format": "prettier --write './**/*.{scss,js,vue}' --allow-empty"
+    },
+    "devDependencies": {
+        "axios": "^0.25",
+        "eslint": "^8.9.0",
+        "eslint-config-airbnb-base": "^15.0.0",
+        "eslint-plugin-import": "^2.25.4",
+        "eslint-plugin-vue": "^8.4.1",
+        "husky": "^7.0.4",
+        "laravel-mix": "^6.0.6",
+        "lodash": "^4.17.19",
+        "postcss": "^8.1.14",
+        "prettier-eslint": "^13.0.0",
+        "prettier-eslint-cli": "^5.0.1"
+    }
+}
