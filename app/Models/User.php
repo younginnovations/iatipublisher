@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -40,4 +42,16 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    /**
+     * Checks if email is verified.
+     *
+     * @param $email_verified_at
+     *
+     * @return bool
+     */
+    public function isEmailVerified($email_verified_at): bool
+    {
+        return $email_verified_at ? true : false;
+    }
 }
