@@ -2,6 +2,7 @@
 . "$(dirname "$0")/_/husky.sh"
 
 php artisan test && \
+npx stylelint "resources/**/*.scss" --fix && \
 npm run prettier:format && \
 npm run lint && \
 composer lint && \

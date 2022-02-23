@@ -1,4 +1,6 @@
-const mix = require("laravel-mix");
+/* eslint-disable import/no-extraneous-dependencies */
+const mix = require('laravel-mix');
+const tailwindCss = require('tailwindcss');
 
 /*
  |--------------------------------------------------------------------------
@@ -11,6 +13,12 @@ const mix = require("laravel-mix");
  |
  */
 
-mix.js("resources/assets/js/app.js", "public/js")
-    .vue()
-    .sass("resources/assets/sass/app.scss", "public/css");
+mix.js('resources/assets/js/app.js', 'public/js').vue();
+
+mix
+  .sass('resources/assets/sass/app.scss', 'public/css')
+  .options({
+    processCssUrls: false,
+    postCss: [tailwindCss('tailwind.config.js')],
+  })
+  .version();
