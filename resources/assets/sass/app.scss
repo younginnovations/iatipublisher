@@ -1,18 +1,16 @@
-// Fonts
-@import url('https://fonts.googleapis.com/css?family=Nunito');
+// layouts
+@import 'layouts/header';
+@import 'layouts/main';
 
-// Variables
-@import 'variables';
+// base
+@import 'base/fonts';
+@import 'base/typography';
 
-// Bootstrap
-@import '~bootstrap/scss/bootstrap';
+// component
+@import 'component/button';
+@import 'component/hamburger';
 
 //tailwind
 @import '~tailwindcss/base';
 @import '~tailwindcss/components';
 @import '~tailwindcss/utilities';
-
-// Only for test purpose, remove later.
-body {
-  background-color: grey;
-}

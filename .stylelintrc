@@ -3,7 +3,11 @@
   "plugins": ["stylelint-order", "stylelint-scss"],
   "customSyntax": "postcss-scss",
   "rules": {
-    "color-no-invalid-hex": true
+    "indentation": 4,
+    "declaration-colon-space-after": "always",
+    "string-no-newline": true,
+    "declaration-empty-line-before": "never",
+    "block-closing-brace-empty-line-before": "never"
   },
   "ignoreFiles": ""
 }

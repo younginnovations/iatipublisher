@@ -1,0 +1,35 @@
+.main {
+  .left__container {
+    background-image: linear-gradient(
+      160deg,
+      rgba(255, 255, 255, 0.2),
+      transparent
+    );
+  }
+  .right {
+    box-shadow: 0px 20px 40px 20px rgba(0, 0, 0, 0.05);
+
+    input {
+      padding-left: 60px;
+      border: 1.5px solid #a6b5ba;
+
+      &::placeholder {
+        letter-spacing: -0.02em;
+      }
+    }
+    &__content {
+      box-shadow: 0px 0px 25px 0px rgba(0, 0, 0, 0.1);
+    }
+  }
+}
+@media screen and (min-width: 1024px) {
+  .left__container {
+    width: 386px;
+    height: 304px;
+  }
+}
+// @media screen and (min-width:870px) {
+//   .main {
+//    display: flex;
+//   }
+// }
