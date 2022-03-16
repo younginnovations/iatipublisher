@@ -1,16 +1,19 @@
+//tailwind
+@import '~tailwindcss/base';
+@import '~tailwindcss/components';
+@import '~tailwindcss/utilities';
+
+// Abstracts
+@import 'abstracts/variables';
+
 // layouts
 @import 'layouts/header';
 @import 'layouts/main';
+@import 'layouts/footer';
 
 // base
-@import 'base/fonts';
 @import 'base/typography';
 
 // component
 @import 'component/button';
 @import 'component/hamburger';
-
-//tailwind
-@import '~tailwindcss/base';
-@import '~tailwindcss/components';
-@import '~tailwindcss/utilities';

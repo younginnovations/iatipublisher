@@ -5,16 +5,32 @@
       rgba(255, 255, 255, 0.2),
       transparent
     );
+
+    a {
+      border-bottom: 2px solid transparent;
+
+      &:hover {
+        border-bottom: 2px solid $Turquoise;
+      }
+    }
   }
   .right {
+    width: 87%;
     box-shadow: 0px 20px 40px 20px rgba(0, 0, 0, 0.05);
 
     input {
       padding-left: 60px;
-      border: 1.5px solid #a6b5ba;
+      border: 1.5px solid $N-N30;
 
       &::placeholder {
         letter-spacing: -0.02em;
+      }
+    }
+    a {
+      border-bottom: 2px solid transparent;
+
+      &:hover {
+        border-bottom: 2px solid $Turquoise;
       }
     }
     &__content {
@@ -28,8 +44,3 @@
     height: 304px;
   }
 }
-// @media screen and (min-width:870px) {
-//   .main {
-//    display: flex;
-//   }
-// }
