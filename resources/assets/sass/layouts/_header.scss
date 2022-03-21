@@ -87,5 +87,12 @@
     transform: translateX(100%);
     backdrop-filter: blur(7px);
     transition: 0.3s;
+
+    &::backdrop {
+      background: rgba(0, 0, 0, 0.2);
+    }
   }
+}
+.nav-active {
+  transform: translateX(0%);
 }

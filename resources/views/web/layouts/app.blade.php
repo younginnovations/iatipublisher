@@ -5,14 +5,14 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <title>Laravel</title>
+  <title>IATI Publisher</title>
 
   <link href="{{ asset('css/app.css') }}" rel="stylesheet">
   <script defer src="{{ asset('js/script.js') }}"></script>
 
 </head>
 
-<body class="font-sans bg-background antialiased overflow-x-hidden">
+<body class="font-sans bg-N-N10 antialiased overflow-x-hidden">
   <div id="app">
     @include('web.layouts.header')
     @yield('content')

@@ -1,3 +1,10 @@
 .btn {
   padding: 18px 0;
+
+  svg {
+    transition: 0.2s;
+  }
+  &:hover svg {
+    transform: translateX(5px);
+  }
 }

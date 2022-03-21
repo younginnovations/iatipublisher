@@ -500,6 +500,10 @@ Ensure the default browser behavior of the `hidden` attribute.
   margin-left: 1.25rem;
   margin-right: 1.25rem;
 }
+.mx-4 {
+  margin-left: 1rem;
+  margin-right: 1rem;
+}
 .my-5 {
   margin-top: 1.25rem;
   margin-bottom: 1.25rem;
@@ -525,9 +529,6 @@ Ensure the default browser behavior of the `hidden` attribute.
 .mb-6 {
   margin-bottom: 1.5rem;
 }
-.ml-4 {
-  margin-left: 1rem;
-}
 .mb-4 {
   margin-bottom: 1rem;
 }
@@ -540,14 +541,14 @@ Ensure the default browser behavior of the `hidden` attribute.
 .mr-1 {
   margin-right: 0.25rem;
 }
+.ml-4 {
+  margin-left: 1rem;
+}
 .mt-12 {
   margin-top: 3rem;
 }
 .mr-2 {
   margin-right: 0.5rem;
-}
-.mb-1 {
-  margin-bottom: 0.25rem;
 }
 .box-border {
   box-sizing: border-box;
@@ -685,7 +686,7 @@ Ensure the default browser behavior of the `hidden` attribute.
   --tw-bg-opacity: 1;
   background-color: rgb(31 223 231 / var(--tw-bg-opacity));
 }
-.bg-background {
+.bg-N-N10 {
   --tw-bg-opacity: 1;
   background-color: rgb(241 247 249 / var(--tw-bg-opacity));
 }
@@ -694,9 +695,6 @@ Ensure the default browser behavior of the `hidden` attribute.
 }
 .p-10 {
   padding: 2.5rem;
-}
-.p-11 {
-  padding: 2.75rem;
 }
 .px-7 {
   padding-left: 1.75rem;
@@ -863,7 +861,7 @@ Ensure the default browser behavior of the `hidden` attribute.
   left: 0;
   width: 100%;
   height: 4px;
-  background: #1FDFE7;
+  background: #1fdfe7;
   content: "";
 }
 
@@ -887,7 +885,7 @@ Ensure the default browser behavior of the `hidden` attribute.
   left: 0;
   width: 100%;
   height: 4px;
-  background: #1FDFE7;
+  background: #1fdfe7;
   transform: scale(0, 1);
   transition: 0.3s;
   content: "";
@@ -901,7 +899,7 @@ Ensure the default browser behavior of the `hidden` attribute.
     padding: 0px 8px 20px;
   }
   .nav__links a {
-    color: #2A2F30;
+    color: #2a2f30;
     font-size: 12px;
   }
 }
@@ -918,24 +916,34 @@ Ensure the default browser behavior of the `hidden` attribute.
 
 @media screen and (max-width: 1280px) {
   .nav__list {
-    background: rgba(21, 83, 102, 0.5);
-    -webkit-backdrop-filter: blur(7px);
-            backdrop-filter: blur(7px);
     position: fixed;
     top: 0;
     right: 0;
-    height: 100vh;
     flex-direction: column;
     justify-content: center;
-    text-align: center;
-    padding: 30px;
-    transform: translateX(100%);
-    transition: 0.3s;
-    font-size: 16px;
-    color: #ffffff;
     width: 410px;
+    height: 100vh;
+    padding: 30px;
+    color: #ffffff;
+    font-size: 16px;
+    text-align: center;
+    background: rgba(21, 83, 102, 0.5);
+    transform: translateX(100%);
+    -webkit-backdrop-filter: blur(7px);
+            backdrop-filter: blur(7px);
+    transition: 0.3s;
+  }
+  .nav__list::-webkit-backdrop {
+    background: rgba(0, 0, 0, 0.2);
+  }
+  .nav__list::backdrop {
+    background: rgba(0, 0, 0, 0.2);
   }
 }
+.nav-active {
+  transform: translateX(0%);
+}
+
 .main .left__container {
   background-image: linear-gradient(160deg, rgba(255, 255, 255, 0.2), transparent);
 }
@@ -943,15 +951,19 @@ Ensure the default browser behavior of the `hidden` attribute.
   border-bottom: 2px solid transparent;
 }
 .main .left__container a:hover {
-  border-bottom: 2px solid #1FDFE7;
+  border-bottom: 2px solid #1fdfe7;
 }
 .main .right {
-  box-shadow: 0px 20px 40px 20px rgba(0, 0, 0, 0.05);
   width: 87%;
+  box-shadow: 0px 20px 40px 20px rgba(0, 0, 0, 0.05);
 }
 .main .right input {
   padding-left: 60px;
-  border: 1.5px solid #A6B5BA;
+  border: 1.5px solid #a6b5ba;
+}
+.main .right input:focus {
+  background-color: #f1f7f9;
+  border: 1.5px solid #2a2f30;
 }
 .main .right input::-moz-placeholder {
   letter-spacing: -0.02em;
@@ -962,27 +974,48 @@ Ensure the default browser behavior of the `hidden` attribute.
 .main .right input::placeholder {
   letter-spacing: -0.02em;
 }
-.main .right a {
-  border-bottom: 2px solid transparent;
-}
-.main .right a:hover {
-  border-bottom: 2px solid #1FDFE7;
-}
 .main .right__content {
+  border: 1.5px solid transparent;
   box-shadow: 0px 0px 25px 0px rgba(0, 0, 0, 0.1);
+}
+.main .right__content svg {
+  color: #18acb2;
+}
+.main .right__content .right__arrow {
+  color: #ffffff;
+}
+.main .right__content:hover {
+  background-color: #1fdfe71a;
+  border: 1.5px solid #1fdfe7;
+  box-shadow: none;
+}
+.main .right__content:hover svg {
+  color: #ffffff;
+  fill: #18acb2;
+}
+.main .right__content:hover .right__arrow {
+  color: #1fdfe7;
+  fill: #ffffff;
 }
 
 @media screen and (min-width: 1024px) {
+  .left {
+    height: 649px;
+  }
   .left__container {
     width: 386px;
     height: 304px;
+  }
+
+  .right {
+    height: 649px;
   }
 }
 .footer a {
   border-bottom: 2px solid transparent;
 }
 .footer a:hover {
-  border-bottom: 2px solid #1FDFE7;
+  border-bottom: 2px solid #1fdfe7;
 }
 
 body {
@@ -1018,7 +1051,16 @@ h2 {
 .btn {
   padding: 18px 0;
 }
+.btn svg {
+  transition: 0.2s;
+}
+.btn:hover svg {
+  transform: translateX(5px);
+}
 
+.hamburger span {
+  pointer-events: none;
+}
 .hamburger span:nth-child(1) {
   left: 2px;
   width: 30px;
@@ -1040,26 +1082,41 @@ h2 {
   width: 20px;
   transform: translateY(15px);
 }
-
-.nav-active {
-  transform: translateX(0%);
-}
-
 .placeholder\:text-N-N40::-moz-placeholder {
   --tw-text-opacity: 1;
   color: rgb(104 121 126 / var(--tw-text-opacity));
 }
-
 .placeholder\:text-N-N40:-ms-input-placeholder {
   --tw-text-opacity: 1;
   color: rgb(104 121 126 / var(--tw-text-opacity));
 }
-
 .placeholder\:text-N-N40::placeholder {
   --tw-text-opacity: 1;
   color: rgb(104 121 126 / var(--tw-text-opacity));
 }
-
+.hover\:border-b-2:hover {
+  border-bottom-width: 2px;
+}
+.hover\:border-b-Turquoise:hover {
+  --tw-border-opacity: 1;
+  border-bottom-color: rgb(31 223 231 / var(--tw-border-opacity));
+}
+.hover\:bg-N-N50:hover {
+  --tw-bg-opacity: 1;
+  background-color: rgb(42 47 48 / var(--tw-bg-opacity));
+}
+.focus\:placeholder\:text-N-N50:focus::-moz-placeholder {
+  --tw-text-opacity: 1;
+  color: rgb(42 47 48 / var(--tw-text-opacity));
+}
+.focus\:placeholder\:text-N-N50:focus:-ms-input-placeholder {
+  --tw-text-opacity: 1;
+  color: rgb(42 47 48 / var(--tw-text-opacity));
+}
+.focus\:placeholder\:text-N-N50:focus::placeholder {
+  --tw-text-opacity: 1;
+  color: rgb(42 47 48 / var(--tw-text-opacity));
+}
 @media (min-width: 640px) {
 
   .sm\:mx-10 {
@@ -1067,7 +1124,6 @@ h2 {
     margin-right: 2.5rem;
   }
 }
-
 @media (min-width: 768px) {
 
   .md\:my-0 {
@@ -1105,7 +1161,6 @@ h2 {
     padding-bottom: 4rem;
   }
 }
-
 @media (min-width: 1024px) {
 
   .lg\:grid-cols-4 {
@@ -1118,11 +1173,6 @@ h2 {
 
   .lg\:justify-self-end {
     justify-self: end;
-  }
-
-  .lg\:rounded-r-none {
-    border-top-right-radius: 0px;
-    border-bottom-right-radius: 0px;
   }
 
   .lg\:rounded-l-none {
@@ -1147,12 +1197,7 @@ h2 {
   .lg\:pb-44 {
     padding-bottom: 11rem;
   }
-
-  .lg\:pb-52 {
-    padding-bottom: 13rem;
-  }
 }
-
 @media (min-width: 1280px) {
 
   .xl\:mx-24 {

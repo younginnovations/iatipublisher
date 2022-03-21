@@ -22,25 +22,51 @@
       padding-left: 60px;
       border: 1.5px solid $N-N30;
 
+      &:focus {
+        background-color: $N-N10;
+        border: 1.5px solid $N-N50;
+      }
       &::placeholder {
         letter-spacing: -0.02em;
       }
     }
-    a {
-      border-bottom: 2px solid transparent;
-
-      &:hover {
-        border-bottom: 2px solid $Turquoise;
-      }
-    }
     &__content {
+      border: 1.5px solid transparent;
       box-shadow: 0px 0px 25px 0px rgba(0, 0, 0, 0.1);
+
+      svg {
+        color: $success;
+      }
+      .right__arrow {
+        color: $white;
+      }
+      &:hover {
+        background-color: $Turquoise-hover;
+        border: 1.5px solid $Turquoise;
+        box-shadow: none;
+
+        svg {
+          color: $white;
+          fill: $success;
+        }
+        .right__arrow {
+          color: $Turquoise;
+          fill: $white;
+        }
+      }
     }
   }
 }
 @media screen and (min-width: 1024px) {
-  .left__container {
-    width: 386px;
-    height: 304px;
+  .left {
+    height: 649px;
+
+    &__container {
+      width: 386px;
+      height: 304px;
+    }
+  }
+  .right {
+    height: 649px;
   }
 }

@@ -1,4 +1,7 @@
 .hamburger {
+  span {
+    pointer-events: none;
+  }
   span:nth-child(1) {
     left: 2px;
     width: 30px;
@@ -22,7 +25,4 @@
     width: 20px;
     transform: translateY(15px);
   }
-}
-.nav-active {
-  transform: translateX(0%);
 }
