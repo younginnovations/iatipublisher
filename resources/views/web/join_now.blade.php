@@ -1,10 +1,10 @@
 @extends('web.layouts.app')
 
 @section('content')
-  <section class="main md:flex mx-5 sm:mx-10 xl:mx-24 xl:px-1 mt-10">
+  <section class="main md:flex xs:mx-2 sm:mx-10 xl:mx-24 xl:px-1 mt-7 sm:mt-10">
     <div
-      class="left md:basis-2/4 flex flex-col justify-center items-center bg-bluecoral rounded-r-lg md:rounded-r-none rounded-l-lg pt-14 lg:pt-44 pb-72 md:pb-16 lg:pb-44 px-7 xl:px-24 text-white">
-      <div class="left__container p-10 rounded-lg">
+      class="left md:basis-2/4 flex flex-col justify-center items-center bg-bluecoral sm:rounded-r-lg md:rounded-r-none sm:rounded-l-lg pt-5 sm:pt-10 lg:pt-44 pb-72 md:pb-16 lg:pb-44 px-3 sm:px-5 xl:px-24 text-white">
+      <div class="left__container p-5 sm:p-10 rounded-lg">
         <span class="left__title font-bold">IATI Publishing Tool</span>
         <p class="pt-6 pb-8">Welcome to IATI Publisher. Use this tool to start your IATI publishing journey.
           Enter
@@ -14,7 +14,7 @@
       </div>
     </div>
     <div
-      class="right basis-2/4 m-auto -mt-64 md:my-0 bg-white rounded-l-lg lg:rounded-l-none rounded-r-lg py-10 px-7 lg:px-14 lg:py-28 xl:px-24">
+      class="right basis-2/4 m-auto md:my-0 bg-white rounded-l-lg md:rounded-l-none rounded-r-lg py-5 sm:py-10 lg:py-28 px-5 sm:px-7 xl:px-24">
       <div class="right__container flex flex-col">
         <h2 class="text-N-N50 font-bold mb-2">Join Now.</h2>
         <span class="text-N-N40 mb-8">To being this journey, tell us your perference and we'll guide you

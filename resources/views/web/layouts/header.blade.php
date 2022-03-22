@@ -1,8 +1,9 @@
-<div class="wrapper bg-bluecoral h-72 relative">
-  <header class="grid mx-5 sm:mx-10 xl:mx-24 xl:px-1">
-    <nav class="text-xs flex justify-between items-center pt-5 px-10 bg-white rounded-md mt-12 relative z-10">
+<div class="wrapper bg-bluecoral h-56 sm:h-72 relative">
+  <header class="grid mx-3 sm:mx-10 xl:mx-24 xl:px-1">
+    <nav
+      class="text-xs flex justify-between items-center pt-5 px-5 sm:px-10 bg-white rounded-md mt-6 sm:mt-12 relative z-10">
       <a class="pb-5" href="#">
-        <svg xmlns="http://www.w3.org/2000/svg" width="240" viewBox="0 0 934 220">
+        <svg class="w-52 sm:w-60" xmlns="http://www.w3.org/2000/svg" width="240" viewBox="0 0 934 220">
           <g fill="none">
             <path fill="#185568"
               d="M2.6 208.7V102.2h30.8v106.5zM126 198.4c-7 8.5-17 13.3-30.4 13.3-21.4 0-38.7-13.3-38.7-33.9 0-20.3 17.3-30.4 41.5-31.7 18.6-1.1 24.5-3.1 24.5-9.4 0-6.1-5.7-10.3-15.7-10.3-12.2 0-17.5 6.1-18.1 12.7H59.2c1.5-23.4 19-39.5 48.3-39.5 28.6 0 47 15.5 47 44.6v65.1h-25.6l-2.9-10.9zm-38-21.9c0 6.1 5.5 9.8 14.2 9.8 11.8 0 21.2-6.6 21.2-19.9v-3.9s-5.7 2.6-17.5 3.3c-12.8.7-17.9 4.8-17.9 10.7zm135 33.2c-23.4 0-36.9-13.5-36.9-37.1v-41.7h-17.9v-28.6h17.9V86.5l31-26.2v41.9H244v28.6h-26.9v37.4c0 10.3 6.8 12.7 13.1 12.7 7.2 0 13.1-2.8 13.1-2.8v28.2s-8.3 3.4-20.3 3.4zM0 70.2c0-10 7.9-18.1 17.9-18.1 10 0 18.1 8.1 18.1 18.1 0 9.8-8.1 17.9-18.1 17.9-10 0-17.9-8-17.9-17.9zM266.9 208.7V102.2h30.8v106.5z" />
@@ -31,7 +32,7 @@
         </svg>
       </a>
       <div>
-        <ul id="nav-list" class="nav__list flex space-x-3 pt-10 leading-5">
+        <ul id="nav-list" class="nav__list flex sm:space-x-3 pt-10 leading-5">
           <li class="nav__links"><a href="#about">ABOUT</a>
           </li>
           <li class="nav__links"><a href="#step-by-step-publishing-guide">STEP-BY-STEP
@@ -49,7 +50,7 @@
             </div>
           </div>
           <li class="nav__links"><a href="#support">SUPPORT</a></li>
-          <ul class="languages absolute bottom-4 left-24 flex justify-center items-center xl:hidden">
+          <ul class="languages absolute bottom-4 left-0 right-0 flex justify-center items-center xl:hidden">
             <span class="uppercase text-white pt-5 xl:pt-0 pb-5 mr-2">Language:</span>
             <li class="nav__links"><a class="nav__active links__active" href="#">EN</a>
             </li>
@@ -73,8 +74,8 @@
         <span class="absolute bg-bluecoral w-10 h-1 rounded-lg duration-300"></span>
       </div>
     </nav>
-    <div class="header__title border-l-4 border-l-Turquoise  px-6 mt-6">
-      <h1 class="text-white font-bold">IATI Publisher</h1>
+    <div class="header__title border-l-4 border-l-Turquoise px-4 sm:px-6 mt-6">
+      <h1 class="text-white font-bold sm:text-5xl">IATI Publisher</h1>
     </div>
   </header>
 </div>

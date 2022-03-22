@@ -1,15 +1,17 @@
-.wrapper::after {
-  position: absolute;
-  top: 0;
-  right: 0;
-  width: 100%;
-  height: 292px;
-  background-image: url('/images/marque-white.png');
-  background-repeat: no-repeat;
-  background-position: 100% 16.5%;
-  background-size: 70%;
-  opacity: 0.3;
-  content: '';
+@media screen and (min-width: 640px) {
+  .wrapper::after {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 100%;
+    height: 292px;
+    background-image: url('/images/marque-white.png');
+    background-repeat: no-repeat;
+    background-position: 100% 16.5%;
+    background-size: 70%;
+    opacity: 0.3;
+    content: '';
+  }
 }
 .nav__active::after {
   position: absolute;
@@ -91,6 +93,12 @@
     &::backdrop {
       background: rgba(0, 0, 0, 0.2);
     }
+  }
+}
+@media screen and (max-width: 440px) {
+  .nav__list {
+    width: 100%;
+    padding: 20px;
   }
 }
 .nav-active {

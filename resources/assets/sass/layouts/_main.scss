@@ -15,11 +15,11 @@
     }
   }
   .right {
-    width: 87%;
+    width: 93%;
     box-shadow: 0px 20px 40px 20px rgba(0, 0, 0, 0.05);
 
     input {
-      padding-left: 60px;
+      padding-left: 55px;
       border: 1.5px solid $N-N30;
 
       &:focus {
@@ -57,6 +57,11 @@
     }
   }
 }
+@media screen and (min-width: 640px) {
+  input {
+    padding-left: 60px;
+  }
+}
 @media screen and (min-width: 1024px) {
   .left {
     height: 649px;
@@ -68,5 +73,10 @@
   }
   .right {
     height: 649px;
+  }
+}
+@media screen and (max-width: 768px) {
+  .right {
+    margin-top: -265px;
   }
 }
