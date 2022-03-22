@@ -6,7 +6,7 @@
       class="left md:basis-2/4 flex flex-col justify-center items-center bg-bluecoral sm:rounded-r-lg md:rounded-r-none sm:rounded-l-lg pt-5 sm:pt-10 lg:pt-44 pb-72 md:pb-16 lg:pb-44 px-3 sm:px-5 xl:px-24 text-white">
       <div class="left__container p-5 sm:p-10 rounded-lg">
         <span class="left__title font-bold">IATI Publishing Tool</span>
-        <p class="pt-6 pb-8">Welcome to IATI Publisher. Use this tool to start your IATI publishing journey.
+        <p class="pt-4 sm:pt-6 pb-4 sm:pb-8">Welcome to IATI Publisher. Use this tool to start your IATI publishing journey.
           Enter
           your login
           information if you're already a user or create a new account if you're new here.</p>

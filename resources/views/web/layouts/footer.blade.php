@@ -1,7 +1,7 @@
 <footer class="bg-bluecoral mt-7 sm:mt-10 md:mt-20 text-N-N20 text-sm leading-6">
   <div class="border-b border-white border-opacity-20">
     <div
-      class="mx-5 sm:mx-10 xl:mx-24 xl:px-1 grid grid-flow-row md:grid-cols-2 lg:grid-cols-4 lg:justify-items-center gap-8 sm:gap-y-10 py-10">
+      class="mx-3 sm:mx-10 xl:mx-24 xl:px-1 grid grid-flow-row md:grid-cols-2 lg:grid-cols-4 lg:justify-items-center gap-8 sm:gap-y-10 py-10">
       <div>
         <a href="#">
           <svg width="266" height="63" fill="none" xmlns="http://www.w3.org/2000/svg">
