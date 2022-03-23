@@ -12,7 +12,7 @@
 
 </head>
 
-<body class="font-sans bg-N-N10 antialiased overflow-x-hidden">
+<body class="font-sans bg-n-10 antialiased overflow-x-hidden">
   <div id="app">
     @include('web.layouts.header')
     @yield('content')

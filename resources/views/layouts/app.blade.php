@@ -24,7 +24,7 @@
   <div class="container">
     <header class="header">
       <nav class="nav">
-        <a class="nav__logo" href="#"><img src="/img/logo-colour.svg" alt="logo"></a>
+        <a class="nav__logo" href="#"><img src="/img/logo.svg" alt="logo"></a>
         <ul class="nav__list">
           <li><a class="nav__links" href="#">ABOUT</a></li>
           <li><a class="nav__links" href="#">STEP-BY-STEP PUBLISHING GUIDE</a></li>

@@ -10,7 +10,7 @@
       border-bottom: 2px solid transparent;
 
       &:hover {
-        border-bottom: 2px solid $Turquoise;
+        @apply border-b-2 border-turquoise;
       }
     }
   }
@@ -20,38 +20,34 @@
 
     input {
       padding-left: 55px;
-      border: 1.5px solid $N-N30;
+      @apply border border-n-30;
 
       &:focus {
-        background-color: $N-N10;
-        border: 1.5px solid $N-N50;
+        @apply border border-n-50 bg-n-10;
       }
       &::placeholder {
         letter-spacing: -0.02em;
       }
     }
     &__content {
-      border: 1.5px solid transparent;
+      border: 1px solid transparent;
       box-shadow: 0px 0px 25px 0px rgba(0, 0, 0, 0.1);
 
       svg {
-        color: $success;
+        @apply text-lagoon;
       }
       .right__arrow {
-        color: $white;
+        @apply text-white;
       }
       &:hover {
-        background-color: $Turquoise-hover;
-        border: 1.5px solid $Turquoise;
-        box-shadow: none;
+        @apply border border-turquoise bg-turquoise bg-opacity-10;
+        box-shadow: 0px 0px 25px 0px transparent;
 
         svg {
-          color: $white;
-          fill: $success;
+          @apply fill-lagoon text-white;
         }
         .right__arrow {
-          color: $Turquoise;
-          fill: $white;
+          @apply fill-white text-turquoise;
         }
       }
     }

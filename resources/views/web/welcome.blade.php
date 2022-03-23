@@ -11,18 +11,18 @@
           Enter
           your login
           information if you're already a user or create a new account if you're new here.</p>
-        <span>Haven't registered yet? <a class="text-Turquoise" href="join_now.blade.php">Join Now</a></span>
+        <span>Haven't registered yet? <a class="text-turquoise" href="join_now.blade.php">Join Now</a></span>
       </div>
     </div>
     <div id="right"
       class="right basis-2/4 m-auto md:my-0 bg-white rounded-l-lg md:rounded-l-none rounded-r-lg py-5 px-5 sm:py-10 sm:px-10 lg:px-14 lg:py-28 xl:px-24">
       <div class="right__container flex flex-col">
-        <h2 class="text-N-N50 font-bold mb-2">Sign In.</h2>
-        <span class="text-N-N40">Welcome back! Please enter your details.</span>
+        <h2 class="text-n-50 font-bold mb-2">Sign In.</h2>
+        <span class="text-n-40">Welcome back! Please enter your details.</span>
         <div class="username mt-6 mb-4 flex flex-col text-bluecoral font-bold text-sm relative">
           <label class="mb-2" for="Username">Username</label>
           <input
-            class="py-4 sm:py-5 box-border outline-none rounded-lg placeholder:text-N-N40 focus:placeholder:text-N-N50 duration-300 text-base"
+            class="py-4 sm:py-5 box-border outline-none rounded-lg placeholder:text-n-40 focus:placeholder:text-n-50 duration-300 text-base"
             type="text" placeholder="Enter a registered username.">
           <svg class="absolute top-11 sm:top-12 left-5 sm:left-6" width="20" height="22" fill="none"
             xmlns="http://www.w3.org/2000/svg">
@@ -34,7 +34,7 @@
         <div class="password mb-4 flex flex-col text-bluecoral font-bold text-sm relative">
           <label class="mb-2" for="Password">Password</label>
           <input
-            class="py-4 sm:py-5 box-border outline-none rounded-lg placeholder:text-N-N40 focus:placeholder:text-N-N50 duration-300 text-base"
+            class="py-4 sm:py-5 box-border outline-none rounded-lg placeholder:text-n-40 focus:placeholder:text-n-50 duration-300 text-base"
             type="password" placeholder="Enter a correct password.">
           <svg class="absolute top-11 sm:top-12 left-5 sm:left-6 mt-1" width="16" height="20" fill="none"
             xmlns="http://www.w3.org/2000/svg">
@@ -43,10 +43,10 @@
               fill="#155366" stroke="#155366" stroke-width=".667" />
           </svg>
         </div>
-        <span class="text-N-N40 mb-6 text-sm">Forgot your password? <span><a
-              class="hover:border-b-2 hover:border-b-Turquoise text-bluecoral font-bold" href="#">Reset.</a></span></span>
+        <span class="text-n-40 mb-6 text-sm">Forgot your password? <span><a
+              class="hover:border-b-2 hover:border-b-turquoise text-bluecoral font-bold" href="#">Reset.</a></span></span>
         <button
-          class="btn flex justify-center bg-Turquoise border-none text-N-N50 font-bold outline-none rounded-lg relative">SIGN
+          class="btn flex justify-center bg-turquoise border-none text-n-50 font-bold outline-none rounded-lg relative">SIGN
           IN
           <svg class="absolute right-7" width="24" height="24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M3 12h18M16 7l5 5-5 5" stroke="#2A2F30" stroke-width="2" stroke-linecap="round"

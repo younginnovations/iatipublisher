@@ -1,26 +1,29 @@
-body {
-  letter-spacing: -0.02em;
-}
 h1 {
   font-size: 37px;
-}
-.left {
-  &__title {
-    font-size: 27px;
-    text-shadow: 4px 4px 1px rgba(0, 0, 0, 0.01);
-  }
 }
 h2 {
   font-size: 35px;
 }
+
 @media screen and (min-width: 1024px) {
   h1 {
     font-size: 56px;
   }
-  .left__title {
-    font-size: 32px;
-  }
   h2 {
     font-size: 40px;
+  }
+}
+
+body {
+  letter-spacing: -0.02em;
+}
+
+.left {
+  &__title {
+    font-size: 27px;
+    text-shadow: 4px 4px 1px rgba(0, 0, 0, 0.01);
+    @media screen and (min-width: 1024px) {
+      font-size: 32px;
+    }
   }
 }

@@ -19,11 +19,11 @@
   left: 0;
   width: 100%;
   height: 4px;
-  background: $Turquoise;
+  @apply bg-turquoise;
   content: '';
 }
 .links__active {
-  color: $black;
+  @apply text-black;
   font-weight: bold;
 }
 .nav__links {
@@ -33,7 +33,7 @@
   font-style: normal;
 
   a {
-    color: $white;
+    @apply text-white;
   }
 
   &::after {
@@ -42,7 +42,7 @@
     left: 0;
     width: 100%;
     height: 4px;
-    background: $Turquoise;
+    @apply bg-turquoise;
     transform: scale(0, 1);
     transition: 0.3s;
     content: '';
@@ -56,7 +56,7 @@
     padding: 0px 8px 20px;
 
     a {
-      color: $N-N50;
+      @apply text-n-50;
       font-size: 12px;
     }
   }
@@ -82,7 +82,7 @@
     width: 410px;
     height: 100vh;
     padding: 30px;
-    color: $white;
+    @apply text-white;
     font-size: 16px;
     text-align: center;
     background: rgba(21, 83, 102, 0.5);
