@@ -21,7 +21,7 @@
           through this process.</span>
         <a href="#" class="right__content flex items-center bg-white mb-6 py-6 px-5 rounded-lg">
           <div>
-            <svg width="52" height="52" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <svg class="right__icon" width="52" height="52" fill="none" xmlns="http://www.w3.org/2000/svg">
               <circle cx="26" cy="26" r="25.25" stroke="currentColor" stroke-width="1.5" />
               <path
                 d="M37.4 37.82c-.051-.609-.05-5.383-.036-8.318a.6.6 0 0 0-.598-.604h-.003a.6.6 0 0 0-.6.598c0 .022-.01 2.12-.01 4.204.002 2.112.004 3.224.029 3.834l-9.849 2.963a.597.597 0 0 0 .054-.248v-7.897a.6.6 0 1 0-1.202 0v7.897c0 .055.009.108.022.159l-9.56-2.908-.008-7.9a.6.6 0 0 0-.6-.601h-.001a.6.6 0 0 0-.6.6l.007 8.347a.6.6 0 0 0 .425.574l10.868 3.304a.592.592 0 0 0 .348 0l10.903-3.28a.6.6 0 0 0 .41-.724Zm-.472-.44Z"
@@ -31,7 +31,7 @@
                 fill="currentColor" stroke="#18ACB2" stroke-width=".3" />
             </svg>
           </div>
-          <div class="mx-4 xl:px-1">
+          <div class="details mx-4 xl:px-1">
             <span class="text-sm text-bluecoral font-bold">I am new to IATI</span>
             <p class="text-xs text-N-N40 leading-5">Use this option if your organisation has not
               registered an account with IATI on the IATI Registry</p>
@@ -45,7 +45,7 @@
         </a>
         <a href="#" class="right__content flex items-center bg-white mb-4 py-6 px-5 rounded-lg">
           <div>
-            <svg width="52" height="52" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <svg class="right__icon" width="52" height="52" fill="none" xmlns="http://www.w3.org/2000/svg">
               <circle cx="26" cy="26" r="25.25" stroke="currentColor" stroke-width="1.5" />
               <path
                 d="M20.871 17.208A10.167 10.167 0 0 1 26 15.823a10.11 10.11 0 0 1 7.196 2.98.566.566 0 0 0 .804 0A.57.57 0 0 0 34 18a11.24 11.24 0 0 0-8-3.313c-2.008 0-3.98.532-5.703 1.54a.568.568 0 1 0 .574.982Z"
@@ -58,7 +58,7 @@
                 fill="currentColor" stroke="#18ACB2" stroke-width=".3" />
             </svg>
           </div>
-          <div class="mx-4 xl:px-1">
+          <div class="details mx-4 xl:px-1">
             <span class="text-sm text-bluecoral font-bold">My organisation has registered with IATI</span>
             <p class="text-xs text-N-N40 leading-5">Use this option if your organization is listed as an
               IATI publisher of the IATI Registry</p>

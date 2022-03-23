@@ -80,3 +80,11 @@
     margin-top: -265px;
   }
 }
+@media screen and (max-width: 420px) {
+  .right__icon {
+    display: none;
+  }
+  .details {
+    margin-left: 0;
+  }
+}
