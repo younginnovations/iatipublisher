@@ -16,7 +16,7 @@
     <div
       class="right basis-2/4 m-auto md:my-0 bg-white rounded-l-lg md:rounded-l-none rounded-r-lg py-5 sm:py-10 lg:py-28 px-5 sm:px-7 xl:px-24">
       <div class="right__container flex flex-col">
-        <h2 class="text-n-50 font-bold mb-2">Join Now.</h2>
+        <h2 class="text-n-50 font-bold mb-2 text-4xl sm:text-heading-3">Join Now.</h2>
         <span class="text-n-40 mb-8">To being this journey, tell us your perference and we'll guide you
           through this process.</span>
         <a href="#" class="right__content flex items-center bg-white mb-6 py-6 px-5 rounded-lg">

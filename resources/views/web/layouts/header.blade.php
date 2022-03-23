@@ -3,7 +3,7 @@
     <nav
       class="text-xs flex justify-between items-center pt-5 px-5 sm:px-10 bg-white rounded-md mt-6 sm:mt-12 relative z-10">
       <a class="pb-5" href="#">
-        <img src='/images/logo.svg' alt='iati logo'/>
+        <img class="w-56 sm:w-auto" src='/images/logo.svg' alt='iati logo'/>
       </a>
       <div>
         <ul id="nav-list" class="nav__list flex sm:space-x-3 pt-10 leading-5">
@@ -48,8 +48,8 @@
         <span class="absolute bg-bluecoral w-10 h-1 rounded-lg duration-300"></span>
       </div>
     </nav>
-    <div class="header__title border-l-4 border-l-turquoise px-4 sm:px-6 mt-6">
-      <h1 class="text-white font-bold text-4xl sm:text-5xl">IATI Publisher</h1>
+    <div class="header__title border-l-4 border-l-turquoise py-5 px-4 sm:px-6 mt-6">
+      <h1 class="text-white font-bold text-4xl sm:text-heading-2">IATI Publisher</h1>
     </div>
   </header>
 </div>

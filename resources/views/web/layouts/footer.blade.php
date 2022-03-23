@@ -8,8 +8,8 @@
         </a>
       </div>
       <div class="footer">
-        <h3 class="text-n-10 font-bold mb-2">IATI Publisher</h3>
-        <ul class="flex flex-col">
+        <span class="text-n-10 font-bold">IATI Publisher</span>
+        <ul class="flex flex-col mt-2">
           <li><a href="#">Home</a></li>
           <li><a href="#">About</a></li>
           <li><a href="#">Sign In</a></li>
@@ -17,8 +17,8 @@
         </ul>
       </div>
       <div class="footer">
-        <h3 class="text-n-10 font-bold mb-2">IATI Standard</h3>
-        <ul class="flex flex-col">
+        <span class="text-n-10 font-bold">IATI Standard</span>
+        <ul class="flex flex-col mt-2">
           <li><a href="#">About IATI Standard</a></li>
           <li><a href="#">Step-by-step publishing guide</a></li>
           <li><a href="#">Using Data</a></li>
