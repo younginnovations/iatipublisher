@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
+/**
+ * Class HomeController.
+ */
 class HomeController extends Controller
 {
     /**
@@ -21,8 +24,8 @@ class HomeController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function index()
+    public function index(): \Illuminate\Contracts\Support\Renderable
     {
-        return view('');
+        return view('web.welcome');
     }
 }
