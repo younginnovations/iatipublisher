@@ -1,5 +1,6 @@
 <?php
 
+use App\Constants\DBTables;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -12,15 +13,23 @@ return new class extends Migration {
      */
     public function up()
     {
-        Schema::create('users', function (Blueprint $table) {
+        Schema::create(DBTables::USERS, function (Blueprint $table) {
             $table->id();
             $table->string('name');
             $table->string('email')->unique();
-            $table->timestamp('email_verified_at')->nullable();
+            $table->integer('organization_id')->nullable();
+            $table->boolean('is_active')->default(false);
             $table->string('password');
             $table->rememberToken();
             $table->timestamps();
         });
+
+        Schema::table(
+            DBTables::USERS,
+            function ($table) {
+                $table->foreign('organization_id')->references('id')->on(DBTables::ORGANIZATIONS);
+            }
+        );
     }
 
     /**
@@ -30,6 +39,12 @@ return new class extends Migration {
      */
     public function down()
     {
-        Schema::dropIfExists('users');
+        Schema::table(
+            DBTables::USERS,
+            function ($table) {
+                $table->dropForeign('users_organization_id_foreign');
+            }
+        );
+        Schema::dropIfExists(DBTables::USERS);
     }
 };
