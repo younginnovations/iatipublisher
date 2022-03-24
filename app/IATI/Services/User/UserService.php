@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace App\IATI\Services\User;
 
+/**
+ * Class UserService.
+ */
 class UserService
 {
     /**
