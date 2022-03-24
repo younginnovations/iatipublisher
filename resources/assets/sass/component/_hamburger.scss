@@ -3,6 +3,7 @@
     pointer-events: none;
   }
   span:nth-child(1) {
+    bottom: 18px;
     left: 2px;
     width: 30px;
     transform: translateY(-15px);
@@ -17,10 +18,11 @@
     }
     span:nth-child(3) {
       width: 40px;
-      transform: translateY(0px) rotate(315deg);
+      transform: translateY(4px) rotate(315deg);
     }
   }
   span:nth-child(3) {
+    top: 18px;
     left: 2px;
     width: 20px;
     transform: translateY(15px);
