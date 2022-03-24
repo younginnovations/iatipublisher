@@ -7,7 +7,7 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'Laravel') }}</title>
+    <title>{{ config('app.name', 'IATI Publisher') }}</title>
 
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}" defer></script>
@@ -20,64 +20,112 @@
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 </head>
 <body>
-    <div id="app">
-        <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
-            <div class="container">
-                <a class="navbar-brand" href="{{ url('/') }}">
-                    {{ config('app.name', 'Laravel') }}
-                </a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-
-                <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <!-- Left Side Of Navbar -->
-                    <ul class="navbar-nav me-auto">
-
-                    </ul>
-
-                    <!-- Right Side Of Navbar -->
-                    <ul class="navbar-nav ms-auto">
-                        <!-- Authentication Links -->
-                        @guest
-                            @if (Route::has('login'))
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
-                                </li>
-                            @endif
-
-                            @if (Route::has('register'))
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a>
-                                </li>
-                            @endif
-                        @else
-                            <li class="nav-item dropdown">
-                                <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                                    {{ Auth::user()->name }}
-                                </a>
-
-                                <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                                    <a class="dropdown-item" href="{{ route('logout') }}"
-                                       onclick="event.preventDefault();
-                                                     document.getElementById('logout-form').submit();">
-                                        {{ __('Logout') }}
-                                    </a>
-
-                                    <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
-                                        @csrf
-                                    </form>
-                                </div>
-                            </li>
-                        @endguest
-                    </ul>
-                </div>
+<div class="wrapper">
+  <div class="container">
+    <header class="header">
+      <nav class="nav">
+        <a class="nav__logo" href="#"><img src="/img/logo.svg" alt="logo"></a>
+        <ul class="nav__list">
+          <li><a class="nav__links" href="#">ABOUT</a></li>
+          <li><a class="nav__links" href="#">STEP-BY-STEP PUBLISHING GUIDE</a></li>
+          <div class="dropdown">
+            <li><a class="nav__links" href="#">IATI STANDARD</a></li>
+            <div class="dropdown__content">
+              <strong>IATI Standard</strong>
+              <p>The IATI Standard is a set of rules and guidance on how to publish useful development and humanitarian data. Find out the full range of data included in the IATI Standard and more about its technical format.</p>
+              <button class="btn">Read more</button>
             </div>
-        </nav>
+          </div>
+          <li><a class="nav__links" href="#">SUPPORT</a></li>
+        </ul>
+        <div class="languages">
+          <ul>
+            LANGUAGE: <li><a class="nav__links" href="en.html">EN</a></li>
+            <li><a class="nav__links" href="fr.html">FR</a></li>
+            <li><a class="nav__links" href="#">ES</a></li>
+          </ul>
+        </div>
+      </nav>
+      <div class="header__title">
+        <h1>IATI Publisher</h1>
+      </div>
+    </header>
 
-        <main class="py-4">
-            @yield('content')
-        </main>
+    <section class="main">
+      <div class="left">
+        <div class="left__container">
+          <div class="left__content">
+            <span class="left__title">IATI Publishing Tool</span>
+            <p>Welcome to IATI Publisher. Use this tool to start your IATI publishing journey. Enter
+              your login
+              information if you're already a user or create a new account if you're new here.</p>
+            <span class="blue">Haven't registered yet? <a href="#">Join Now</a></span>
+          </div>
+        </div>
+      </div>
+      <div class="right">
+        <div class="right__container">
+          <div class="right__content">
+            <h2>Sign In.</h2>
+            <span class="gray">Welcome back! Please enter your details.</span>
+            <div class="username">
+              <label for="Username">Username</label>
+              <input type="text" placeholder="Enter a registered username.">
+              <i class="uil uil-user"></i>
+            </div>
+            <div class="password">
+              <label for="Password">Password</label>
+              <input type="text" placeholder="Enter a correct password.">
+              <i class="uil uil-lock"></i>
+            </div>
+            <span class="reset">Forgot your password? <span><a href="#">Reset.</a></span></span>
+            <button class="btn">SIGN IN <img src="/img/right-arrow.png" alt=""></button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+  <footer class="footer">
+    <div class="footer__container">
+      <div class="footer__content">
+        <div class="footer__logo">
+          <a href="#"><img src="/img/logo-white.svg" alt="logo"></a>
+        </div>
+        <div class="footer__nav">
+          <h4>IATI Publisher</h4>
+          <a href="#">Home</a>
+          <a href="#">About</a>
+          <a href="#">Sign In</a>
+          <a href="#">Join Now</a>
+        </div>
+        <div class="footer__standard">
+          <h4>IATI Standard</h4>
+          <a href="#">About IATI Standard</a>
+          <a href="#">Step-by-step publishing guide</a>
+          <a href="#">Using Data</a>
+          <a href="#">Support</a>
+        </div>
+        <div class="footer__contact">
+          <p>Part of the IATI Unified Platform <br>
+            code licensed under the GNU AGPL. <br>
+            Documnetation licensed under CC BY 3.0</p>
+          <div class="contact">
+            <i class="ri-customer-service-line"></i>
+            <span>FOR QUERIES, CONTACT SUPPORT</span>
+          </div>
+          <span>support@iatistandard.org</span>
+        </div>
+      </div>
     </div>
+  </footer>
+  <div class="copyright">
+    <span><i class="uil uil-copyright"></i> Copyright IATI 2022. All rights reserved.</span>
+    <div class="footer__social">
+      <a href="#"><i class="ri-twitter-fill"></i></a>
+      <a href="#"><i class="ri-youtube-fill"></i></a>
+    </div>
+  </div>
+</div>
 </body>
 </html>

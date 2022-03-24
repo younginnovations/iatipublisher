@@ -1,0 +1,137 @@
+@media screen and (min-width: 640px) {
+  .wrapper::after {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 100%;
+    height: 292px;
+    background-image: url('/images/marque-white.png');
+    background-repeat: no-repeat;
+    background-position: 100% 16.5%;
+    background-size: 70%;
+    opacity: 0.3;
+    content: '';
+  }
+}
+.nav__active::after {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  @apply bg-turquoise;
+  content: '';
+}
+.links__active {
+  @apply text-black;
+  font-weight: bold;
+}
+.nav__links {
+  position: relative;
+  padding: 20px 8px;
+  font-weight: normal;
+  font-style: normal;
+
+  .read__more {
+    padding-bottom: 8px;
+  }
+
+  a {
+    @apply text-white;
+    padding-bottom: 24px;
+  }
+}
+@media screen and (min-width: 1280px) {
+  .nav__links {
+    padding: 0px 8px 20px;
+
+    a {
+      @apply text-n-50;
+      font-size: 12px;
+    }
+
+    &::after {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 4px;
+      @apply bg-turquoise;
+      transform: scale(0, 1);
+      transition: 0.3s;
+      content: '';
+    }
+    &:hover::after {
+      transform: scale(1, 1);
+    }
+  }
+}
+.dropdown__content {
+  width: 424px;
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+
+  a {
+    @apply text-white;
+  }
+}
+.dropdown:hover {
+  .dropdown__content {
+    transform: translateY(12px);
+    visibility: visible;
+    opacity: 1;
+  }
+}
+@media screen and (max-width: 1280px) {
+  .nav__list {
+    position: fixed;
+    top: 0;
+    right: 0;
+    flex-direction: column;
+    justify-content: center;
+    width: 410px;
+    height: 100vh;
+    padding: 30px;
+    @apply text-white;
+    font-size: 16px;
+    text-align: center;
+    background: rgba(21, 83, 102, 0.5);
+    transform: translateX(100%);
+    backdrop-filter: blur(7px);
+    transition: 0.3s;
+
+    &::backdrop {
+      background: rgba(0, 0, 0, 0.2);
+    }
+  }
+  .active {
+    a {
+      @apply text-white;
+      position: relative;
+      padding-bottom: 24px;
+
+      &::after {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 4px;
+        transform: scale(0, 1);
+        transition: 0.3s;
+        content: '';
+        @apply bg-turquoise;
+      }
+      &:hover::after {
+        transform: scale(1, 1);
+      }
+    }
+  }
+}
+@media screen and (max-width: 440px) {
+  .nav__list {
+    width: 100%;
+    padding: 20px;
+  }
+}
+.nav-active {
+  transform: translateX(0%);
+}

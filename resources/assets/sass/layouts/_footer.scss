@@ -1,0 +1,9 @@
+.footer {
+  a {
+    @apply border-b-2 border-transparent;
+
+    &:hover {
+      @apply border-b-2 border-turquoise;
+    }
+  }
+}

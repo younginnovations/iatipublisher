@@ -1,0 +1,86 @@
+.main {
+  .left__container {
+    background-image: linear-gradient(
+      160deg,
+      rgba(255, 255, 255, 0.2),
+      transparent
+    );
+
+    a {
+      border-bottom: 2px solid transparent;
+
+      &:hover {
+        @apply border-b-2 border-turquoise;
+      }
+    }
+  }
+  .right {
+    width: 93%;
+    box-shadow: 0px 20px 40px 20px rgba(0, 0, 0, 0.05);
+
+    input {
+      padding-left: 55px;
+      @apply border border-n-30;
+
+      &:focus {
+        @apply border border-n-50 bg-n-10;
+      }
+      &::placeholder {
+        letter-spacing: -0.02em;
+      }
+    }
+    &__content {
+      border: 1px solid transparent;
+      box-shadow: 0px 0px 25px 0px rgba(0, 0, 0, 0.1);
+
+      svg {
+        @apply text-lagoon;
+      }
+      .right__arrow {
+        @apply text-white;
+      }
+      &:hover {
+        @apply border border-turquoise bg-turquoise bg-opacity-10;
+        box-shadow: 0px 0px 25px 0px transparent;
+
+        svg {
+          @apply fill-lagoon text-white;
+        }
+        .right__arrow {
+          @apply fill-white text-turquoise;
+        }
+      }
+    }
+  }
+}
+@media screen and (min-width: 640px) {
+  input {
+    padding-left: 60px;
+  }
+}
+@media screen and (min-width: 1024px) {
+  .left {
+    height: 649px;
+
+    &__container {
+      width: 386px;
+      height: 304px;
+    }
+  }
+  .right {
+    height: 649px;
+  }
+}
+@media screen and (max-width: 768px) {
+  .right {
+    margin-top: -265px;
+  }
+}
+@media screen and (max-width: 420px) {
+  .right__icon {
+    display: none;
+  }
+  .details {
+    margin-left: 0;
+  }
+}

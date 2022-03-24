@@ -14,6 +14,7 @@ const tailwindCss = require('tailwindcss');
  */
 
 mix.js('resources/assets/js/app.js', 'public/js').vue();
+mix.js('resources/assets/js/scripts/script.js', 'public/js');
 
 mix
   .sass('resources/assets/sass/app.scss', 'public/css')
