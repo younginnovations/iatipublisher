@@ -554,9 +554,6 @@ Ensure the default browser behavior of the `hidden` attribute.
 .box-border {
   box-sizing: border-box;
 }
-.block {
-  display: block;
-}
 .flex {
   display: flex;
 }
