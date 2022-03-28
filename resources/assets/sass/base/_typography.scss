@@ -1,5 +1,12 @@
 body {
   letter-spacing: -0.02em;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+a {
+  color: var(--primary);
+  transition: all 0.4s ease;
 }
 
 .left {
@@ -11,4 +18,9 @@ body {
       font-size: 32px;
     }
   }
+}
+
+h4 {
+  font-size: var(--h4);
+  line-height: 1.5;
 }

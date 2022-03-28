@@ -1,0 +1,30 @@
+.checkbox {
+  @apply relative block cursor-pointer select-none;
+
+  .checkmark {
+    @apply flex h-4 w-4 items-center justify-center rounded border-2 border-n-20;
+    transition: all 0.4s ease;
+
+    &:after {
+      border-width: 0 3px 3px 0;
+      content: '';
+      @apply mb-0.5 mt-px hidden h-2 w-[5px] rotate-45 border border-spring-50;
+    }
+  }
+
+  input {
+    @apply absolute h-0 w-0 cursor-pointer opacity-0;
+
+    &:checked ~ .checkmark {
+      @apply border-spring-50;
+
+      &:after {
+        @apply block;
+      }
+    }
+  }
+
+  &:hover input ~ .checkmark {
+    @apply border-spring-50;
+  }
+}

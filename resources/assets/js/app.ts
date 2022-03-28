@@ -4,9 +4,19 @@
  * building robust, powerful web applications using Vue and Laravel.
  */
 import { createApp } from 'vue';
+import SvgVue from 'svg-vue3';
 import ExampleComponent from './components/ExampleComponent.vue';
 
-require('./bootstrap');
+/**
+ * Vue components for Activities Listing
+ *
+ */
+import PageTitle from './components/activity/PageTitle.vue';
+import TableLayout from './components/activity/TableLayout.vue';
+import EmptyActivity from './components/activity/EmptyActivity.vue';
+import AddActivityButton from './components/activity/AddActivityButton.vue';
+
+// require('./bootstrap');
 
 const app = createApp({});
 
@@ -22,6 +32,19 @@ const app = createApp({});
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
 
 app.component('example-component', ExampleComponent);
+
+/**
+ * Registering vue component for activity listing
+ */
+app.component('page-title', PageTitle);
+app.component('table-listing', TableLayout);
+app.component('empty-activity', EmptyActivity);
+app.component('add-activity-button', AddActivityButton);
+
+/**
+ * Extension to inline SVG files with Vue.js and optimize them automatically with SVGO
+ */
+app.use(SvgVue);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
