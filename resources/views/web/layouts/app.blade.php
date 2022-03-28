@@ -9,6 +9,7 @@
 
   <link href="{{ asset('css/app.css') }}" rel="stylesheet">
   <script defer src="{{ asset('js/script.js') }}"></script>
+  <script defer src="{{ asset('js/app.js') }}"></script>
 
 </head>
 
