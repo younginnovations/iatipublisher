@@ -1,3 +1,8 @@
 .btn {
-  padding: 18px 0;
+  padding: 16px 0;
+}
+@media screen and (min-width: 640px) {
+  .btn {
+    padding: 18px 0;
+  }
 }

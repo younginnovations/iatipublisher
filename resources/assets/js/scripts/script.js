@@ -34,3 +34,25 @@ for (let i = 0; i < menuLength; i += 1) {
     e.currentTarget.classList.add('links__active');
   });
 }
+
+// Form validation
+const submitButton = document.getElementById('btn');
+const username = document.querySelector('.username');
+const password = document.querySelector('.password');
+
+function nameValidation() {
+  if (!username.value) {
+    username.style.border = '1.5px solid crimson';
+  }
+}
+function passwordValidation() {
+  if (!password.value) {
+    password.style.border = '1.5px solid crimson';
+  }
+}
+
+submitButton.addEventListener('click', (e) => {
+  e.preventDefault();
+  nameValidation();
+  passwordValidation();
+});

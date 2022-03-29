@@ -1,9 +1,14 @@
-.footer {
-  a {
-    @apply border-b-2 border-transparent;
+.footer__container {
+  max-width: 1166px;
+  margin: auto;
 
-    &:hover {
-      @apply border-b-2 border-turquoise;
+  .footer__links {
+    a {
+      @apply border-b-2 border-transparent;
+
+      &:hover {
+        @apply border-b-2 border-turquoise;
+      }
     }
   }
 }

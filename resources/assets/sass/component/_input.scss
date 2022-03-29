@@ -1,0 +1,32 @@
+.input {
+  box-sizing: border-box;
+  padding: 16px 0px 16px 55px;
+  font-size: 14px;
+  line-height: 24px;
+  border-radius: 8px;
+  outline: none;
+  transition: 0.3s;
+  @apply border border-n-30;
+
+  &:focus {
+    @apply border border-n-50 bg-n-10;
+  }
+  &::placeholder {
+    letter-spacing: -0.02em;
+    @apply text-n-40;
+  }
+  &:focus::placeholder {
+    @apply text-n-50;
+  }
+}
+@media screen and (min-width: 640px) {
+  .input {
+    padding: 20px 0px 20px 55px;
+  }
+}
+.error {
+  @apply text-crimson-50;
+  padding-top: 4px;
+  font-weight: normal;
+  font-size: 10px;
+}
