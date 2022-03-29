@@ -9,15 +9,19 @@
 
   <link href="{{ asset('css/app.css') }}" rel="stylesheet">
   <script defer src="{{ asset('js/script.js') }}"></script>
-  <script defer src="{{ asset('js/app.js') }}"></script>
+  <script defer src="{{ asset('js/app.js') }}" ></script>
+
+  <meta name="csrf-token" content="{{ csrf_token() }}">
 
 </head>
 
 <body class="font-sans bg-n-10 antialiased overflow-x-hidden">
   <div id="app">
-    @include('web.layouts.header')
+    <web-header></web-header>
+    {{-- @include('web.layouts.header') --}}
     @yield('content')
-    @include('web.layouts.footer')
+    <web-footer></web-footer>
+    {{-- @include('web.layouts.footer') --}}
   </div>
 </body>
 

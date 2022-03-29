@@ -1,6 +1,9 @@
 window._ = require('lodash');
 
 try {
+  // eslint-disable-next-line no-multi-assign
+  window.$ = window.jQuery = require('jquery');
+
   require('bootstrap');
 } catch (e) {}
 

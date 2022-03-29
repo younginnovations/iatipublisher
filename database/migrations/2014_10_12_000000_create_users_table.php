@@ -15,10 +15,13 @@ return new class extends Migration {
     {
         Schema::create(DBTables::USERS, function (Blueprint $table) {
             $table->id();
-            $table->string('name');
+            $table->string('username')->unique();
+            $table->string('full_name');
             $table->string('email')->unique();
+            $table->string('address');
             $table->integer('organization_id')->nullable();
             $table->boolean('is_active')->default(false);
+            $table->boolean('is_email_verified')->default(false);
             $table->string('password');
             $table->rememberToken();
             $table->timestamps();

@@ -13,7 +13,7 @@ class LoginTest extends TestCase
      */
     public function test_the_login_page_loads_successfully()
     {
-        $response = $this->get('/login');
+        $response = $this->get('/');
 
         $response->assertStatus(200);
     }
@@ -26,11 +26,11 @@ class LoginTest extends TestCase
     public function test_login_incorrect_credentials()
     {
         $response = $this->post('/login', [
-           'email' => 'user@user.com',
-           'password' => 'password',
-       ]);
+            'username' => 'user',
+            'password' => 'password',
+        ]);
 
         $response->assertRedirect('/');
-        $response->assertSessionHasErrors('email');
+        $response->assertSessionHasErrors('username');
     }
 }

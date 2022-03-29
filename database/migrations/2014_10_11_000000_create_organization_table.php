@@ -16,6 +16,11 @@ return new class extends Migration {
     {
         Schema::create(DBTables::ORGANIZATIONS, function (Blueprint $table) {
             $table->id();
+            $table->string('publisher_id')->unique();
+            $table->enum('publisher_type', Enums::PUBLISHER_TYPE);
+            $table->string('country');
+            $table->enum('registration_agency', Enums::ORGANIZATION_REGISTRATION_AGENCY);
+            $table->string('registration_number');
             $table->string('identifier')->unique();
             $table->enum('status', Enums::ORGANIZATION_STATUS);
             $table->timestamps();
