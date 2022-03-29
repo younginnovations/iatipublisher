@@ -1,7 +1,9 @@
 @extends('web.layouts.app')
 
 @section('content')
-  <section class="main sm:mx-10 xl:mx-24 xl:px-1 mt-7 sm:mt-10">
+
+  <welcome-signin> {{ csrf_field() }} </welcome-signin>
+  {{-- <section class="main sm:mx-10 xl:mx-24 xl:px-1 mt-7 sm:mt-10">
     <div class="main__container md:flex">
       <div
         class="left md:basis-2/4 flex flex-col justify-center items-center bg-bluecoral sm:rounded-r-lg md:rounded-r-none sm:rounded-l-lg pt-5 sm:pt-10 lg:pt-44 pb-72 md:pb-16 lg:pb-44 px-3 sm:px-5 xl:px-24 text-white">
@@ -62,5 +64,5 @@
         </form>
       </div>
     </div>
-  </section>
+  </section> --}}
 @endsection

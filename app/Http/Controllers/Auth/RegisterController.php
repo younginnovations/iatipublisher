@@ -7,7 +7,11 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\IATI\Models\User\User;
 use App\Providers\RouteServiceProvider;
+use Exception;
+use GuzzleHttp\Client;
+use GuzzleHttp\Exception\ClientException;
 use Illuminate\Foundation\Auth\RegistersUsers;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
@@ -55,10 +59,57 @@ class RegisterController extends Controller
     protected function validator(array $data)
     {
         return Validator::make($data, [
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+            'username' => ['required', 'string', 'max:255', 'unique:users,username'],
+            'full_name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email'],
+            'identifier' => ['required', 'string', 'max:255', 'unique:organizations,identifier'],
+            'publisher_id' => ['required', 'string', 'max:255', 'unique:organizations,publisher_id'],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
+
         ]);
+    }
+
+    public function verifyPublisher(Request $request)
+    {
+        try {
+            $data = $request->all();
+
+            $validator = Validator::make($data, [
+          'identifier' => ['required', 'string', 'max:255', 'unique:organizations,identifier'],
+          'publisher_id' => ['required', 'string', 'max:255', 'unique:organizations,publisher_id'],
+          'publisher_name' => ['required', 'string', 'max:255'],
+        ]);
+
+            if ($validator->fails()) {
+                return response()->json(['errors' => $validator->errors()]);
+            }
+
+            $client = new Client(
+                [
+            'base_uri'=>'https://staging.iatiregistry.org',
+            'headers'=> [
+              'X-CKAN-API-Key' => env('IATI_API_KEY '), ],
+            ]
+            );
+
+            $res = $client->request('GET', 'https://staging.iatiregistry.org/api/action/organization_show', [
+            'auth' => [env('IATI_USERNAME '), env('IATI_PASSWORD ')],
+            'query' => ['id' => $data['publisher_id']],
+        ]);
+
+            $response = json_decode($res->getBody()->getContents())->result;
+
+            if ($data['publisher_name'] != $response->title || $data['identifier'] != $response->publisher_iati_id) {
+                return response()->json(['publisher_error' => 'true', 'errors' => ['publisher_name' => ['Publisher Name doesn\'t match your IATI Registry information'], 'publisher_id' => ['Publisher ID doesn\'t match with your IATI Registry information']]]);
+            }
+
+            return response()->json(['success' => 'Publisher verified successfully']);
+        } catch (ClientException $e) {
+            return response()->json(['errors' => ['publisher_error' => 'true', 'publisher_name' => ['Publisher Name doesn\'t match your IATI Registry information'], 'publisher_id' => ['Publisher ID doesn\'t match with your IATI Registry information']]]);
+        } catch (Exception $e) {
+            dd($e);
+        }
     }
 
     /**
@@ -70,9 +121,26 @@ class RegisterController extends Controller
     protected function create(array $data)
     {
         return User::create([
-            'name' => $data['name'],
+            'username' => $data['username'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
         ]);
+    }
+
+    /**
+     * Show the application registration form.
+     *
+     * @return \Illuminate\View\View
+     */
+    public function showRegistrationForm()
+    {
+        try {
+            $countries = trans('user.country_list');
+            $registration_agencies = trans('user.registration_agency');
+
+            return view('web.register', compact('countries', 'registration_agencies'));
+        } catch (\Exception $e) {
+            dd($e);
+        }
     }
 }

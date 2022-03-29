@@ -30,7 +30,17 @@ if (mix.inProduction()) {
 
 mix.ts('resources/assets/js/app.ts', 'public/js').vue();
 
-mix.js('resources/assets/js/scripts/script.js', 'public/js');
+mix.ts('resources/assets/js/scripts/script.js', 'public/js');
+
+// mix
+//   .webpackConfig({
+//     externals: {
+//       jquery: 'jQuery',
+//     },
+//   })
+//   .scripts([
+//     'resources/assets/js/scripts/script.ts',
+//   ], 'public/js/');
 
 mix
   .sass('resources/assets/sass/app.scss', 'public/css')
