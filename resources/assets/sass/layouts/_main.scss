@@ -34,7 +34,7 @@
       box-shadow: 0px 0px 25px 0px rgba(0, 0, 0, 0.1);
 
       svg {
-        @apply text-lagoon;
+        @apply text-lagoon-50;
       }
       .right__arrow {
         @apply text-white;
@@ -44,7 +44,7 @@
         box-shadow: 0px 0px 25px 0px transparent;
 
         svg {
-          @apply fill-lagoon text-white;
+          @apply fill-lagoon-50 text-white;
         }
         .right__arrow {
           @apply fill-white text-turquoise;

@@ -487,18 +487,6 @@ Ensure the default browser behavior of the `hidden` attribute.
 .left-0 {
   left: 0px;
 }
-.bottom-1 {
-  bottom: 0.25rem;
-}
-.bottom-2 {
-  bottom: 0.5rem;
-}
-.bottom-5 {
-  bottom: 1.25rem;
-}
-.top-4 {
-  top: 1rem;
-}
 .z-10 {
   z-index: 10;
 }
@@ -587,32 +575,14 @@ Ensure the default browser behavior of the `hidden` attribute.
 .h-1 {
   height: 0.25rem;
 }
-.h-9 {
-  height: 2.25rem;
-}
-.h-5 {
-  height: 1.25rem;
-}
-.h-7 {
-  height: 1.75rem;
-}
-.w-56 {
-  width: 14rem;
+.w-52 {
+  width: 13rem;
 }
 .w-11 {
   width: 2.75rem;
 }
 .w-10 {
   width: 2.5rem;
-}
-.w-52 {
-  width: 13rem;
-}
-.w-9 {
-  width: 2.25rem;
-}
-.w-5 {
-  width: 1.25rem;
 }
 .basis-2\/4 {
   flex-basis: 50%;
@@ -687,7 +657,7 @@ Ensure the default browser behavior of the `hidden` attribute.
 }
 .border-l-turquoise {
   --tw-border-opacity: 1;
-  border-left-color: rgb(31 223 231 / var(--tw-border-opacity));
+  border-left-color: rgb(6 219 228 / var(--tw-border-opacity));
 }
 .border-opacity-20 {
   --tw-border-opacity: 0.2;
@@ -702,15 +672,11 @@ Ensure the default browser behavior of the `hidden` attribute.
 }
 .bg-turquoise {
   --tw-bg-opacity: 1;
-  background-color: rgb(31 223 231 / var(--tw-bg-opacity));
+  background-color: rgb(6 219 228 / var(--tw-bg-opacity));
 }
 .bg-n-10 {
   --tw-bg-opacity: 1;
   background-color: rgb(241 247 249 / var(--tw-bg-opacity));
-}
-.bg-n-30 {
-  --tw-bg-opacity: 1;
-  background-color: rgb(166 181 186 / var(--tw-bg-opacity));
 }
 .p-0 {
   padding: 0px;
@@ -758,14 +724,6 @@ Ensure the default browser behavior of the `hidden` attribute.
   padding-left: 1rem;
   padding-right: 1rem;
 }
-.py-0 {
-  padding-top: 0px;
-  padding-bottom: 0px;
-}
-.py-3 {
-  padding-top: 0.75rem;
-  padding-bottom: 0.75rem;
-}
 .pt-5 {
   padding-top: 1.25rem;
 }
@@ -784,14 +742,11 @@ Ensure the default browser behavior of the `hidden` attribute.
 .pt-10 {
   padding-top: 2.5rem;
 }
-.pt-11 {
-  padding-top: 2.75rem;
-}
-.pb-0 {
-  padding-bottom: 0px;
-}
 .pt-2 {
   padding-top: 0.5rem;
+}
+.pt-11 {
+  padding-top: 2.75rem;
 }
 .align-baseline {
   vertical-align: baseline;
@@ -833,7 +788,7 @@ Ensure the default browser behavior of the `hidden` attribute.
 }
 .text-turquoise {
   --tw-text-opacity: 1;
-  color: rgb(31 223 231 / var(--tw-text-opacity));
+  color: rgb(6 219 228 / var(--tw-text-opacity));
 }
 .text-n-50 {
   --tw-text-opacity: 1;
@@ -899,7 +854,7 @@ Ensure the default browser behavior of the `hidden` attribute.
   width: 100%;
   height: 4px;
   --tw-bg-opacity: 1;
-  background-color: rgb(31 223 231 / var(--tw-bg-opacity));
+  background-color: rgb(6 219 228 / var(--tw-bg-opacity));
   content: "";
 }
 
@@ -944,7 +899,7 @@ Ensure the default browser behavior of the `hidden` attribute.
   }
   .nav__links::after {
     --tw-bg-opacity: 1;
-    background-color: rgb(31 223 231 / var(--tw-bg-opacity));
+    background-color: rgb(6 219 228 / var(--tw-bg-opacity));
   }
   .nav__links::after {
     transform: scale(0, 1);
@@ -1007,8 +962,8 @@ Ensure the default browser behavior of the `hidden` attribute.
   }
 
   .active a {
-    padding-bottom: 24px;
     position: relative;
+    padding-bottom: 24px;
   }
   .active a::after {
     position: absolute;
@@ -1016,15 +971,13 @@ Ensure the default browser behavior of the `hidden` attribute.
     left: 0;
     width: 100%;
     height: 4px;
-  }
-  .active a::after {
-    --tw-bg-opacity: 1;
-    background-color: rgb(31 223 231 / var(--tw-bg-opacity));
-  }
-  .active a::after {
     transform: scale(0, 1);
     transition: 0.3s;
     content: "";
+  }
+  .active a::after {
+    --tw-bg-opacity: 1;
+    background-color: rgb(6 219 228 / var(--tw-bg-opacity));
   }
   .active a:hover::after {
     transform: scale(1, 1);
@@ -1049,7 +1002,7 @@ Ensure the default browser behavior of the `hidden` attribute.
 .main .left__container a:hover {
   border-bottom-width: 2px;
   --tw-border-opacity: 1;
-  border-color: rgb(31 223 231 / var(--tw-border-opacity));
+  border-color: rgb(6 219 228 / var(--tw-border-opacity));
 }
 .main .right {
   width: 93%;
@@ -1092,8 +1045,8 @@ Ensure the default browser behavior of the `hidden` attribute.
 .main .right__content:hover {
   border-width: 1px;
   --tw-border-opacity: 1;
-  border-color: rgb(31 223 231 / var(--tw-border-opacity));
-  background-color: rgb(31 223 231 / var(--tw-bg-opacity));
+  border-color: rgb(6 219 228 / var(--tw-border-opacity));
+  background-color: rgb(6 219 228 / var(--tw-bg-opacity));
   --tw-bg-opacity: 0.1;
   box-shadow: 0px 0px 25px 0px transparent;
 }
@@ -1105,7 +1058,7 @@ Ensure the default browser behavior of the `hidden` attribute.
 .main .right__content:hover .right__arrow {
   fill: #ffffff;
   --tw-text-opacity: 1;
-  color: rgb(31 223 231 / var(--tw-text-opacity));
+  color: rgb(6 219 228 / var(--tw-text-opacity));
 }
 
 @media screen and (min-width: 640px) {
@@ -1147,7 +1100,7 @@ Ensure the default browser behavior of the `hidden` attribute.
 .footer a:hover {
   border-bottom-width: 2px;
   --tw-border-opacity: 1;
-  border-color: rgb(31 223 231 / var(--tw-border-opacity));
+  border-color: rgb(6 219 228 / var(--tw-border-opacity));
 }
 
 body {
@@ -1172,8 +1125,8 @@ body {
   pointer-events: none;
 }
 .hamburger span:nth-child(1) {
-  left: 2px;
   bottom: 18px;
+  left: 2px;
   width: 30px;
   transform: translateY(-15px);
 }
@@ -1211,7 +1164,7 @@ body {
 }
 .hover\:border-b-turquoise:hover {
   --tw-border-opacity: 1;
-  border-bottom-color: rgb(31 223 231 / var(--tw-border-opacity));
+  border-bottom-color: rgb(6 219 228 / var(--tw-border-opacity));
 }
 .hover\:bg-bluecoral:hover {
   --tw-bg-opacity: 1;
@@ -1254,10 +1207,6 @@ body {
     left: 1.5rem;
   }
 
-  .sm\:bottom-0 {
-    bottom: 0px;
-  }
-
   .sm\:mx-10 {
     margin-left: 2.5rem;
     margin-right: 2.5rem;
@@ -1289,12 +1238,6 @@ body {
 
   .sm\:gap-y-10 {
     row-gap: 2.5rem;
-  }
-
-  .sm\:space-x-3 > :not([hidden]) ~ :not([hidden]) {
-    --tw-space-x-reverse: 0;
-    margin-right: calc(0.75rem * var(--tw-space-x-reverse));
-    margin-left: calc(0.75rem * calc(1 - var(--tw-space-x-reverse)));
   }
 
   .sm\:rounded-r-lg {
