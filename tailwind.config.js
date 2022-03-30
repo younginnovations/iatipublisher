@@ -1,3 +1,13 @@
+// Function to add opacity to colors like default Tailwind's way when using CSS variables
+function withOpacity(variableName) {
+  return ({ opacityValue }) => {
+    if (opacityValue !== undefined) {
+      return `rgba(var(${variableName}), ${opacityValue})`;
+    }
+    return `rgb(var(${variableName}))`;
+  };
+}
+
 module.exports = {
   content: [
     './resources/**/*.blade.php',
@@ -9,76 +19,76 @@ module.exports = {
       sans: ['Arial', 'sans-serif'],
     },
     colors: {
-      black: '#000000',
-      white: '#ffffff',
+      black: withOpacity('--black'),
+      white: withOpacity('--white'),
       transparent: 'transparent',
       // Neutrals
       n: {
-        0: '#FFFFFF',
-        10: '#F1F7F9',
-        20: '#D5DCDE',
-        30: '#A6B5BA',
-        40: '#68797E',
-        50: '#2A2F30',
+        0: withOpacity('--n-0'),
+        10: withOpacity('--n-10'),
+        20: withOpacity('--n-20'),
+        30: withOpacity('--n-30'),
+        40: withOpacity('--n-40'),
+        50: withOpacity('--n-50'),
       },
       // Primary colors
-      turquoise: '#06DBE4',
-      bluecoral: '#155366',
+      turquoise: withOpacity('--turquoise'),
+      bluecoral: withOpacity('--bluecoral'),
       // Secondary colors
       camel: {
-        10: '#FBE7D6',
-        20: '#F9DBC1',
-        30: '#F8CFAD',
-        40: '#F6C398',
-        50: '#F4B784',
+        10: withOpacity('--camel-10'),
+        20: withOpacity('--camel-20'),
+        30: withOpacity('--camel-30'),
+        40: withOpacity('--camel-40'),
+        50: withOpacity('--camel-50'),
       },
       teal: {
-        10: '#E7F3F1',
-        20: '#D7EBE8',
-        30: '#C3E0DC',
-        40: '#AFD6D1',
-        50: '#87C2BA',
+        10: withOpacity('--teal-10'),
+        20: withOpacity('--teal-20'),
+        30: withOpacity('--teal-30'),
+        40: withOpacity('--teal-40'),
+        50: withOpacity('--teal-50'),
       },
       spring: {
-        10: '#B2DDD3',
-        20: '#8BCCBD',
-        30: '#64BBA7',
-        40: '#3EAA91',
-        50: '#17997B',
+        10: withOpacity('--spring-10'),
+        20: withOpacity('--spring-20'),
+        30: withOpacity('--spring-30'),
+        40: withOpacity('--spring-40'),
+        50: withOpacity('--spring-50'),
       },
       lagoon: {
-        10: '#D1EEF0',
-        20: '#B2E3E5',
-        30: '#8BD5D8',
-        40: '#65C8CC',
-        50: '#18ACB2',
+        10: withOpacity('--lagoon-10'),
+        20: withOpacity('--lagoon-20'),
+        30: withOpacity('--lagoon-30'),
+        40: withOpacity('--lagoon-40'),
+        50: withOpacity('--lagoon-50'),
       },
       salmon: {
-        10: '#FFE3E0',
-        20: '#FFD0CB',
-        30: '#FFB8B1',
-        40: '#FFA198',
-        50: '#FF7264',
+        10: withOpacity('--salmon-10'),
+        20: withOpacity('--salmon-20'),
+        30: withOpacity('--salmon-30'),
+        40: withOpacity('--salmon-40'),
+        50: withOpacity('--salmon-50'),
       },
       lavender: {
-        10: '#EDE2FB',
-        20: '#E1CFF8',
-        30: '#D2B6F4',
-        40: '#C49EF0',
-        50: '#A66EE9',
+        10: withOpacity('--lavender-10'),
+        20: withOpacity('--lavender-20'),
+        30: withOpacity('--lavender-30'),
+        40: withOpacity('--lavender-40'),
+        50: withOpacity('--lavender-50'),
       },
       crimson: {
-        10: '#FFF8F7',
-        20: '#FAD5D7',
-        30: '#F19BA0',
-        40: '#E34D5B',
-        50: '#D1001E',
+        10: withOpacity('--crimson-10'),
+        20: withOpacity('--crimson-20'),
+        30: withOpacity('--crimson-30'),
+        40: withOpacity('--crimson-40'),
+        50: withOpacity('--crimson-50'),
       },
       // Pastels
-      eggshell: '#FFFDE7',
-      mint: '#EEF9F5',
-      rose: '#FFF1F0',
-      paper: '#F6F7FC',
+      eggshell: withOpacity('--eggshell'),
+      mint: withOpacity('--mint'),
+      rose: withOpacity('--rose'),
+      paper: withOpacity('--paper'),
     },
     extend: {
       fontSize: {
