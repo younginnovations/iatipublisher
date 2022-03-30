@@ -13,6 +13,10 @@
     content: '';
   }
 }
+header {
+  max-width: 1166px;
+  margin: auto;
+}
 .nav__active::after {
   position: absolute;
   bottom: 0;

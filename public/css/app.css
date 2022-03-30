@@ -551,9 +551,6 @@ Ensure the default browser behavior of the `hidden` attribute.
 .mr-2 {
   margin-right: 0.5rem;
 }
-.box-border {
-  box-sizing: border-box;
-}
 .block {
   display: block;
 }
@@ -574,6 +571,9 @@ Ensure the default browser behavior of the `hidden` attribute.
 }
 .h-1 {
   height: 0.25rem;
+}
+.w-60 {
+  width: 15rem;
 }
 .w-52 {
   width: 13rem;
@@ -641,6 +641,9 @@ Ensure the default browser behavior of the `hidden` attribute.
 .rounded-r-lg {
   border-top-right-radius: 0.5rem;
   border-bottom-right-radius: 0.5rem;
+}
+.border {
+  border-width: 1px;
 }
 .border-b {
   border-bottom-width: 1px;
@@ -730,20 +733,14 @@ Ensure the default browser behavior of the `hidden` attribute.
 .pb-72 {
   padding-bottom: 18rem;
 }
-.pt-4 {
-  padding-top: 1rem;
-}
-.pb-4 {
-  padding-bottom: 1rem;
+.pt-2 {
+  padding-top: 0.5rem;
 }
 .pb-5 {
   padding-bottom: 1.25rem;
 }
 .pt-10 {
   padding-top: 2.5rem;
-}
-.pt-2 {
-  padding-top: 0.5rem;
 }
 .pt-11 {
   padding-top: 2.75rem;
@@ -765,10 +762,6 @@ Ensure the default browser behavior of the `hidden` attribute.
 .text-xs {
   font-size: 0.75rem;
   line-height: 1rem;
-}
-.text-base {
-  font-size: 1rem;
-  line-height: 1.5rem;
 }
 .font-bold {
   font-weight: 700;
@@ -826,11 +819,11 @@ Ensure the default browser behavior of the `hidden` attribute.
   outline: 2px solid transparent;
   outline-offset: 2px;
 }
-.duration-300 {
-  transition-duration: 300ms;
-}
 .duration-200 {
   transition-duration: 200ms;
+}
+.duration-300 {
+  transition-duration: 300ms;
 }
 @media screen and (min-width: 640px) {
   .wrapper::after {
@@ -847,6 +840,11 @@ Ensure the default browser behavior of the `hidden` attribute.
     content: "";
   }
 }
+header {
+  max-width: 1166px;
+  margin: auto;
+}
+
 .nav__active::after {
   position: absolute;
   bottom: 0;
@@ -993,6 +991,10 @@ Ensure the default browser behavior of the `hidden` attribute.
   transform: translateX(0%);
 }
 
+.main__container {
+  max-width: 1166px;
+  margin: auto;
+}
 .main .left__container {
   background-image: linear-gradient(160deg, rgba(255, 255, 255, 0.2), transparent);
 }
@@ -1007,28 +1009,6 @@ Ensure the default browser behavior of the `hidden` attribute.
 .main .right {
   width: 93%;
   box-shadow: 0px 20px 40px 20px rgba(0, 0, 0, 0.05);
-}
-.main .right input {
-  padding-left: 55px;
-  border-width: 1px;
-  --tw-border-opacity: 1;
-  border-color: rgb(166 181 186 / var(--tw-border-opacity));
-}
-.main .right input:focus {
-  border-width: 1px;
-  --tw-border-opacity: 1;
-  border-color: rgb(42 47 48 / var(--tw-border-opacity));
-  --tw-bg-opacity: 1;
-  background-color: rgb(241 247 249 / var(--tw-bg-opacity));
-}
-.main .right input::-moz-placeholder {
-  letter-spacing: -0.02em;
-}
-.main .right input:-ms-input-placeholder {
-  letter-spacing: -0.02em;
-}
-.main .right input::placeholder {
-  letter-spacing: -0.02em;
 }
 .main .right__content {
   border: 1px solid transparent;
@@ -1093,11 +1073,15 @@ Ensure the default browser behavior of the `hidden` attribute.
     margin-left: 0;
   }
 }
-.footer a {
+.footer__container {
+  max-width: 1166px;
+  margin: auto;
+}
+.footer__container .footer__links a {
   border-bottom-width: 2px;
   border-color: transparent;
 }
-.footer a:hover {
+.footer__container .footer__links a:hover {
   border-bottom-width: 2px;
   --tw-border-opacity: 1;
   border-color: rgb(6 219 228 / var(--tw-border-opacity));
@@ -1118,9 +1102,14 @@ body {
 }
 
 .btn {
-  padding: 18px 0;
+  padding: 16px 0;
 }
 
+@media screen and (min-width: 640px) {
+  .btn {
+    padding: 18px 0;
+  }
+}
 .hamburger span {
   pointer-events: none;
 }
@@ -1147,17 +1136,65 @@ body {
   width: 20px;
   transform: translateY(15px);
 }
-.placeholder\:text-n-40::-moz-placeholder {
+
+.input {
+  box-sizing: border-box;
+  padding: 16px 0px 16px 55px;
+  font-size: 14px;
+  line-height: 24px;
+  border-radius: 8px;
+  outline: none;
+  transition: 0.3s;
+  border-width: 1px;
+  --tw-border-opacity: 1;
+  border-color: rgb(166 181 186 / var(--tw-border-opacity));
+}
+.input:focus {
+  border-width: 1px;
+  --tw-border-opacity: 1;
+  border-color: rgb(42 47 48 / var(--tw-border-opacity));
+  --tw-bg-opacity: 1;
+  background-color: rgb(241 247 249 / var(--tw-bg-opacity));
+}
+.input::-moz-placeholder {
+  letter-spacing: -0.02em;
   --tw-text-opacity: 1;
   color: rgb(104 121 126 / var(--tw-text-opacity));
 }
-.placeholder\:text-n-40:-ms-input-placeholder {
+.input:-ms-input-placeholder {
+  letter-spacing: -0.02em;
   --tw-text-opacity: 1;
   color: rgb(104 121 126 / var(--tw-text-opacity));
 }
-.placeholder\:text-n-40::placeholder {
+.input::placeholder {
+  letter-spacing: -0.02em;
   --tw-text-opacity: 1;
   color: rgb(104 121 126 / var(--tw-text-opacity));
+}
+.input:focus::-moz-placeholder {
+  --tw-text-opacity: 1;
+  color: rgb(42 47 48 / var(--tw-text-opacity));
+}
+.input:focus:-ms-input-placeholder {
+  --tw-text-opacity: 1;
+  color: rgb(42 47 48 / var(--tw-text-opacity));
+}
+.input:focus::placeholder {
+  --tw-text-opacity: 1;
+  color: rgb(42 47 48 / var(--tw-text-opacity));
+}
+
+@media screen and (min-width: 640px) {
+  .input {
+    padding: 20px 0px 20px 55px;
+  }
+}
+.error {
+  --tw-text-opacity: 1;
+  color: rgb(209 0 30 / var(--tw-text-opacity));
+  padding-top: 4px;
+  font-weight: normal;
+  font-size: 10px;
 }
 .hover\:border-b-2:hover {
   border-bottom-width: 2px;
@@ -1180,18 +1217,6 @@ body {
 .hover\:text-white:hover {
   --tw-text-opacity: 1;
   color: rgb(255 255 255 / var(--tw-text-opacity));
-}
-.focus\:placeholder\:text-n-50:focus::-moz-placeholder {
-  --tw-text-opacity: 1;
-  color: rgb(42 47 48 / var(--tw-text-opacity));
-}
-.focus\:placeholder\:text-n-50:focus:-ms-input-placeholder {
-  --tw-text-opacity: 1;
-  color: rgb(42 47 48 / var(--tw-text-opacity));
-}
-.focus\:placeholder\:text-n-50:focus::placeholder {
-  --tw-text-opacity: 1;
-  color: rgb(42 47 48 / var(--tw-text-opacity));
 }
 .group:hover .group-hover\:translate-x-1 {
   --tw-translate-x: 0.25rem;
@@ -1218,6 +1243,10 @@ body {
 
   .sm\:mt-12 {
     margin-top: 3rem;
+  }
+
+  .sm\:block {
+    display: block;
   }
 
   .sm\:h-72 {
@@ -1402,6 +1431,11 @@ body {
   .xl\:px-24 {
     padding-left: 6rem;
     padding-right: 6rem;
+  }
+
+  .xl\:px-20 {
+    padding-left: 5rem;
+    padding-right: 5rem;
   }
 
   .xl\:pt-0 {
