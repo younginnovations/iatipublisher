@@ -1,8 +1,44 @@
-.btn {
-  padding: 16px 0;
+.btn-primary {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 13px 24px;
+  font-size: 14px;
+
+  svg {
+    margin-left: 13px;
+    transition: 0.2s;
+  }
 }
-@media screen and (min-width: 640px) {
-  .btn {
-    padding: 18px 0;
+.btn {
+  position: relative;
+  font-weight: 700;
+  text-transform: uppercase;
+  border: none;
+  border-radius: 8px;
+  outline: none;
+  transition: 0.2s;
+  @apply bg-turquoise;
+  @apply text-n-50;
+
+  &:hover {
+    @apply bg-bluecoral;
+    @apply text-white;
+
+    svg {
+      transform: translateX(4px);
+    }
+  }
+}
+#btn {
+  display: flex;
+  justify-content: center;
+  padding: 18px 0;
+  // font-size: 14px;
+
+  svg {
+    position: absolute;
+    right: 28px;
+    transition: 0.2s;
   }
 }

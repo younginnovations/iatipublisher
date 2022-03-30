@@ -18,9 +18,9 @@
       </div>
       <div id="right"
         class="right basis-2/4 m-auto md:my-0 bg-white rounded-l-lg md:rounded-l-none rounded-r-lg py-5 px-5 sm:py-10 sm:px-10 lg:px-14 lg:py-28 xl:px-24">
-        <form method="GET" action="" class="form">
+        <form method="GET" action="">
           <div class="right__container flex flex-col">
-            <h2 class="hidden sm:block text-n-50 font-bold mb-2 text-4xl sm:text-heading-3">Sign In.</h2>
+            <h2 class="mb-2">Sign In.</h2>
             <span class="text-n-40">Welcome back! Please enter your details.</span>
             <div class="mt-6 mb-4 flex flex-col text-bluecoral font-bold text-sm relative">
               <label class="mb-2" for="Username">Username</label>
@@ -52,20 +52,17 @@
                 </span>
               @enderror
             </div>
-            <p class="text-n-40 mb-6 text-sm">Forgot your password? <span><a
-                  class="hover:border-b-2 hover:border-b-turquoise text-bluecoral font-bold" href="#">Reset.</a></span>
-            </p>
-            <button type="submit" id="btn"
-              class="btn group flex justify-center bg-turquoise border-none duration-200 text-n-50 hover:bg-bluecoral hover:text-white font-bold outline-none rounded-lg relative">SIGN
+            <span class="text-n-40 mb-6 text-sm">Forgot your password? <span><a
+                  class="hover:border-b-2 hover:border-b-turquoise text-bluecoral font-bold"
+                  href="#">Reset.</a></span></span>
+            <button id="btn" class="btn">SIGN
               IN
-              <svg class="absolute right-7 group-hover:translate-x-1 hover:fill-white duration-200" width="24" height="24"
-                fill="none" xmlns="http://www.w3.org/2000/svg">
+              <svg width="24" height="24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M3 12h18M16 7l5 5-5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                   stroke-linejoin="round" />
               </svg>
             </button>
           </div>
-
         </form>
       </div>
     </div>
