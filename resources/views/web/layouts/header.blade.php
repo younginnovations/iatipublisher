@@ -1,4 +1,4 @@
-<div class="wrapper bg-bluecoral h-56 sm:h-72 relative">
+<div class="wrapper bg-bluecoral h-56 sm:h-72 relative mb-7 sm:mb-10">
   <div class="mx-3 sm:mx-10 xl:mx-24 xl:px-1">
     <header class="grid relative z-10">
       <nav

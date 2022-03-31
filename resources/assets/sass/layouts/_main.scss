@@ -3,15 +3,6 @@
     max-width: 1166px;
     margin: auto;
 
-    &__title {
-      margin-bottom: 40px;
-      p {
-        font-weight: normal;
-        font-size: 16px;
-        font-style: normal;
-        @apply text-n-40;
-      }
-    }
     .left__container {
       background-image: linear-gradient(
         160deg,
@@ -54,11 +45,6 @@
         }
       }
     }
-  }
-}
-@media screen and (min-width: 640px) {
-  input {
-    padding-left: 60px;
   }
 }
 @media screen and (min-width: 1024px) {

@@ -1,4 +1,4 @@
-<footer class="bg-bluecoral mt-7 sm:mt-10 md:mt-20 text-n-20 text-sm leading-6">
+<footer class="bg-bluecoral text-n-20 text-sm leading-6">
   <div class="border-b border-white border-opacity-20">
     <div class="mx-3 sm:mx-10 xl:mx-24 xl:px-1 py-10">
       <div

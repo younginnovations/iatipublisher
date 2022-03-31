@@ -1,8 +1,8 @@
 @extends('web.layouts.app')
 
 @section('content')
-  <section class="main sm:mx-10 xl:mx-24 xl:px-1 mt-7 sm:mt-10">
-    <div class="main__container md:flex">
+  <section class="main mb-7 sm:mx-10 xl:mx-24 xl:px-1">
+    <div class="main__container md:flex sm:mb-10 md:mb-20">
       <div
         class="left md:basis-2/4 flex flex-col justify-center items-center bg-bluecoral sm:rounded-r-lg md:rounded-r-none sm:rounded-l-lg pt-5 sm:pt-10 lg:pt-44 pb-72 md:pb-16 lg:pb-44 px-3 sm:px-5 xl:px-24 text-white">
         <div class="left__container p-5 sm:p-10 rounded-lg">
@@ -18,9 +18,9 @@
       </div>
       <div id="right"
         class="right basis-2/4 m-auto md:my-0 bg-white rounded-l-lg md:rounded-l-none rounded-r-lg py-5 px-5 sm:py-10 sm:px-10 lg:px-14 lg:py-28 xl:px-24">
-        <form method="GET" action="">
+        <form method="POST" action="">
           <div class="right__container flex flex-col">
-            <h2 class="mb-2">Sign In.</h2>
+            <h2 class="mb-2 hidden sm:block">Sign In.</h2>
             <span class="text-n-40">Welcome back! Please enter your details.</span>
             <div class="mt-6 mb-4 flex flex-col text-bluecoral font-bold text-sm relative">
               <label class="mb-2" for="Username">Username</label>

@@ -484,9 +484,6 @@ Ensure the default browser behavior of the `hidden` attribute.
 .left-0 {
   left: 0px;
 }
-.right-7 {
-  right: 1.75rem;
-}
 .z-10 {
   z-index: 10;
 }
@@ -521,11 +518,8 @@ Ensure the default browser behavior of the `hidden` attribute.
 .mb-0 {
   margin-bottom: 0px;
 }
-.mt-7 {
-  margin-top: 1.75rem;
-}
-.mb-2 {
-  margin-bottom: 0.5rem;
+.mb-7 {
+  margin-bottom: 1.75rem;
 }
 .mb-8 {
   margin-bottom: 2rem;
@@ -535,6 +529,9 @@ Ensure the default browser behavior of the `hidden` attribute.
 }
 .mb-4 {
   margin-bottom: 1rem;
+}
+.mb-2 {
+  margin-bottom: 0.5rem;
 }
 .mt-6 {
   margin-top: 1.5rem;
@@ -554,6 +551,9 @@ Ensure the default browser behavior of the `hidden` attribute.
 .mr-2 {
   margin-right: 0.5rem;
 }
+.mt-7 {
+  margin-top: 1.75rem;
+}
 .ml-8 {
   margin-left: 2rem;
 }
@@ -562,9 +562,6 @@ Ensure the default browser behavior of the `hidden` attribute.
 }
 .ml-6 {
   margin-left: 1.5rem;
-}
-.box-border {
-  box-sizing: border-box;
 }
 .flex {
   display: flex;
@@ -663,15 +660,23 @@ Ensure the default browser behavior of the `hidden` attribute.
 .border-l-4 {
   border-left-width: 4px;
 }
+.border-l-2 {
+  border-left-width: 2px;
+}
 .border-b-2 {
   border-bottom-width: 2px;
-}
-.border-none {
-  border-style: none;
 }
 .border-white {
   --tw-border-opacity: 1;
   border-color: rgba(var(--white), var(--tw-border-opacity));
+}
+.border-crimson-50 {
+  --tw-border-opacity: 1;
+  border-color: rgba(var(--crimson-50), var(--tw-border-opacity));
+}
+.border-n-50 {
+  --tw-border-opacity: 1;
+  border-color: rgba(var(--n-50), var(--tw-border-opacity));
 }
 .border-l-turquoise {
   --tw-border-opacity: 1;
@@ -692,15 +697,18 @@ Ensure the default browser behavior of the `hidden` attribute.
   --tw-bg-opacity: 1;
   background-color: rgba(var(--n-10), var(--tw-bg-opacity));
 }
-.bg-turquoise {
+.bg-crimson-10 {
   --tw-bg-opacity: 1;
-  background-color: rgba(var(--turquoise), var(--tw-bg-opacity));
+  background-color: rgba(var(--crimson-10), var(--tw-bg-opacity));
 }
 .p-0 {
   padding: 0px;
 }
 .p-5 {
   padding: 1.25rem;
+}
+.p-4 {
+  padding: 1rem;
 }
 .px-3 {
   padding-left: 0.75rem;
@@ -760,12 +768,6 @@ Ensure the default browser behavior of the `hidden` attribute.
 .pt-11 {
   padding-top: 2.75rem;
 }
-.pt-4 {
-  padding-top: 1rem;
-}
-.pb-4 {
-  padding-bottom: 1rem;
-}
 .text-center {
   text-align: center;
 }
@@ -775,10 +777,6 @@ Ensure the default browser behavior of the `hidden` attribute.
 .font-sans {
   font-family: Arial, sans-serif;
 }
-.text-4xl {
-  font-size: 2.25rem;
-  line-height: 2.5rem;
-}
 .text-sm {
   font-size: 0.875rem;
   line-height: 1.25rem;
@@ -786,6 +784,10 @@ Ensure the default browser behavior of the `hidden` attribute.
 .text-xs {
   font-size: 0.75rem;
   line-height: 1rem;
+}
+.text-4xl {
+  font-size: 2.25rem;
+  line-height: 2.5rem;
 }
 .text-2xl {
   font-size: 1.5rem;
@@ -821,10 +823,6 @@ Ensure the default browser behavior of the `hidden` attribute.
   --tw-text-opacity: 1;
   color: rgba(var(--turquoise), var(--tw-text-opacity));
 }
-.text-n-50 {
-  --tw-text-opacity: 1;
-  color: rgba(var(--n-50), var(--tw-text-opacity));
-}
 .text-n-40 {
   --tw-text-opacity: 1;
   color: rgba(var(--n-40), var(--tw-text-opacity));
@@ -840,6 +838,10 @@ Ensure the default browser behavior of the `hidden` attribute.
 .text-n-10 {
   --tw-text-opacity: 1;
   color: rgba(var(--n-10), var(--tw-text-opacity));
+}
+.text-n-50 {
+  --tw-text-opacity: 1;
+  color: rgba(var(--n-50), var(--tw-text-opacity));
 }
 .text-crimson-40 {
   --tw-text-opacity: 1;
@@ -857,18 +859,18 @@ Ensure the default browser behavior of the `hidden` attribute.
   --tw-shadow-colored: 0 1px 2px 0 var(--tw-shadow-color);
   box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
 }
-.outline-none {
-  outline: 2px solid transparent;
-  outline-offset: 2px;
-}
 .outline {
   outline-style: solid;
 }
+.transition {
+  transition-property: color, background-color, border-color, fill, stroke, opacity, box-shadow, transform, filter, -webkit-text-decoration-color, -webkit-backdrop-filter;
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter;
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter, -webkit-text-decoration-color, -webkit-backdrop-filter;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
+}
 .duration-300 {
   transition-duration: 300ms;
-}
-.duration-200 {
-  transition-duration: 200ms;
 }
 :root {
   --black: 0, 0, 0;
@@ -1093,16 +1095,6 @@ header {
   max-width: 1166px;
   margin: auto;
 }
-.main__container__title {
-  margin-bottom: 40px;
-}
-.main__container__title p {
-  font-weight: normal;
-  font-size: 16px;
-  font-style: normal;
-  --tw-text-opacity: 1;
-  color: rgba(var(--n-40), var(--tw-text-opacity));
-}
 .main__container .left__container {
   background-image: linear-gradient(160deg, rgba(255, 255, 255, 0.2), transparent);
 }
@@ -1149,11 +1141,6 @@ header {
   color: rgba(var(--turquoise), var(--tw-text-opacity));
 }
 
-@media screen and (min-width: 640px) {
-  input {
-    padding-left: 60px;
-  }
-}
 @media screen and (min-width: 1024px) {
   .left {
     height: 649px;
@@ -1221,11 +1208,7 @@ body h2 {
 }
 
 .btn-primary {
-  display: flex;
-  align-items: center;
-  justify-content: center;
   padding: 13px 24px;
-  font-size: 14px;
 }
 .btn-primary svg {
   margin-left: 13px;
@@ -1234,7 +1217,11 @@ body h2 {
 
 .btn {
   position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   font-weight: 700;
+  font-size: 14px;
   text-transform: uppercase;
   border: none;
   border-radius: 8px;
@@ -1256,8 +1243,6 @@ body h2 {
 }
 
 #btn {
-  display: flex;
-  justify-content: center;
   padding: 18px 0;
 }
 #btn svg {
@@ -1298,17 +1283,17 @@ body h2 {
   padding: 16px 0px 16px 55px;
   font-size: 14px;
   line-height: 24px;
+  border: 1.5px solid;
   border-radius: 8px;
   outline: none;
   transition: 0.3s;
-  border: 1.5px solid;
   --tw-border-opacity: 1;
   border-color: rgba(var(--n-30), var(--tw-border-opacity));
 }
 .input:focus {
   border: 1.5px solid;
   --tw-border-opacity: 1;
-  border-color: rgba(var(--n-30), var(--tw-border-opacity));
+  border-color: rgba(var(--n-50), var(--tw-border-opacity));
   --tw-bg-opacity: 1;
   background-color: rgba(var(--n-10), var(--tw-bg-opacity));
 }
@@ -1342,7 +1327,7 @@ body h2 {
 
 @media screen and (min-width: 640px) {
   .input {
-    padding: 20px 0px 20px 55px;
+    padding: 20px 0px 20px 60px;
   }
 }
 .error {
@@ -1351,18 +1336,6 @@ body h2 {
   padding-top: 4px;
   font-weight: normal;
   font-size: 10px;
-}
-.placeholder\:text-n-40::-moz-placeholder {
-  --tw-text-opacity: 1;
-  color: rgba(var(--n-40), var(--tw-text-opacity));
-}
-.placeholder\:text-n-40:-ms-input-placeholder {
-  --tw-text-opacity: 1;
-  color: rgba(var(--n-40), var(--tw-text-opacity));
-}
-.placeholder\:text-n-40::placeholder {
-  --tw-text-opacity: 1;
-  color: rgba(var(--n-40), var(--tw-text-opacity));
 }
 .hover\:border-b-2:hover {
   border-bottom-width: 2px;
@@ -1375,32 +1348,9 @@ body h2 {
   --tw-bg-opacity: 1;
   background-color: rgba(var(--n-50), var(--tw-bg-opacity));
 }
-.hover\:bg-bluecoral:hover {
-  --tw-bg-opacity: 1;
-  background-color: rgba(var(--bluecoral), var(--tw-bg-opacity));
-}
-.hover\:fill-white:hover {
-  fill: rgb(var(--white));
-}
-.hover\:text-white:hover {
-  --tw-text-opacity: 1;
-  color: rgba(var(--white), var(--tw-text-opacity));
-}
-.focus\:placeholder\:text-n-50:focus::-moz-placeholder {
+.hover\:text-n-50:hover {
   --tw-text-opacity: 1;
   color: rgba(var(--n-50), var(--tw-text-opacity));
-}
-.focus\:placeholder\:text-n-50:focus:-ms-input-placeholder {
-  --tw-text-opacity: 1;
-  color: rgba(var(--n-50), var(--tw-text-opacity));
-}
-.focus\:placeholder\:text-n-50:focus::placeholder {
-  --tw-text-opacity: 1;
-  color: rgba(var(--n-50), var(--tw-text-opacity));
-}
-.group:hover .group-hover\:translate-x-1 {
-  --tw-translate-x: 0.25rem;
-  transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
 }
 @media (min-width: 640px) {
 
@@ -1417,8 +1367,8 @@ body h2 {
     margin-right: 2.5rem;
   }
 
-  .sm\:mt-10 {
-    margin-top: 2.5rem;
+  .sm\:mb-10 {
+    margin-bottom: 2.5rem;
   }
 
   .sm\:mt-12 {
@@ -1509,10 +1459,6 @@ body h2 {
     padding-bottom: 2rem;
   }
 
-  .sm\:text-heading-3 {
-    font-size: 40px;
-  }
-
   .sm\:text-heading-2 {
     font-size: 56px;
   }
@@ -1524,8 +1470,12 @@ body h2 {
     margin-bottom: 0px;
   }
 
-  .md\:mt-20 {
-    margin-top: 5rem;
+  .md\:mb-20 {
+    margin-bottom: 5rem;
+  }
+
+  .md\:mb-12 {
+    margin-bottom: 3rem;
   }
 
   .md\:flex {
@@ -1591,6 +1541,10 @@ body h2 {
   .xl\:mx-24 {
     margin-left: 6rem;
     margin-right: 6rem;
+  }
+
+  .xl\:mr-1 {
+    margin-right: 0.25rem;
   }
 
   .xl\:block {

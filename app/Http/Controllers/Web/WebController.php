@@ -18,6 +18,7 @@ class WebController extends Controller
      */
     public function index(): \Illuminate\Contracts\Support\Renderable
     {
-        return view('web.welcome');
+        // return view('web.welcome');
+        return view('web.sign_up');
     }
 }

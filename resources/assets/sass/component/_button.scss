@@ -1,9 +1,5 @@
 .btn-primary {
-  display: flex;
-  align-items: center;
-  justify-content: center;
   padding: 13px 24px;
-  font-size: 14px;
 
   svg {
     margin-left: 13px;
@@ -12,7 +8,11 @@
 }
 .btn {
   position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   font-weight: 700;
+  font-size: 14px;
   text-transform: uppercase;
   border: none;
   border-radius: 8px;
@@ -31,10 +31,7 @@
   }
 }
 #btn {
-  display: flex;
-  justify-content: center;
   padding: 18px 0;
-  // font-size: 14px;
 
   svg {
     position: absolute;

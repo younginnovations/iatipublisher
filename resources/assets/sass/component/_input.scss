@@ -11,7 +11,7 @@
 
   &:focus {
     border: 1.5px solid;
-    @apply border-n-30 bg-n-10;
+    @apply border-n-50 bg-n-10;
   }
   &::placeholder {
     letter-spacing: -0.02em;
@@ -23,7 +23,7 @@
 }
 @media screen and (min-width: 640px) {
   .input {
-    padding: 20px 0px 20px 55px;
+    padding: 20px 0px 20px 60px;
   }
 }
 .error {
