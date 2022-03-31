@@ -97,7 +97,11 @@ module.exports = {
         'heading-3': '40px',
         'heading-4': '32px',
         'heading-5': '24px',
+        'caption-c1': '12px',
         tiny: '10px',
+      },
+      boxShadow: {
+        dropdown: '0px 4px 40px rgba(0, 0, 0, 0.1)',
       },
     },
   },

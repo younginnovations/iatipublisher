@@ -15,4 +15,8 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', [App\Http\Controllers\Web\WebController::class, 'index'])->name('web');
 
+Route::get('/activities', function () {
+    return view('web.activities');
+});
+
 Auth::routes();

@@ -1,5 +1,6 @@
 /* eslint-disable import/no-extraneous-dependencies */
 const mix = require('laravel-mix');
+require('laravel-mix-svg-vue');
 const tailwindCss = require('tailwindcss');
 
 /*
@@ -23,4 +24,5 @@ mix
     processCssUrls: false,
     postCss: [tailwindCss('tailwind.config.js')],
   })
+  .svgVue()
   .version();

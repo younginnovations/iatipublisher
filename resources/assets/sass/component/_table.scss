@@ -1,0 +1,59 @@
+.iati-list-table {
+  display: table;
+  width: 100%;
+  table-layout: fixed;
+  background-color: var(--white);
+  border: 1px solid #d5dcde;
+  border-radius: 8px;
+
+  tbody tr:not(:last-child) {
+    td,
+    th {
+      border-bottom: 1px solid #d5dcde;
+    }
+  }
+
+  th {
+    padding: 16px 24px;
+    font-size: 12px;
+    line-height: 1.5;
+    text-transform: uppercase;
+    vertical-align: top;
+
+    svg {
+      color: var(--n-30);
+      font-size: 20px;
+    }
+
+    a {
+      display: flex;
+      svg {
+        color: var(--primary);
+        font-size: 16px;
+      }
+    }
+  }
+
+  td {
+    padding: 16px 24px;
+    font-size: 14px;
+    line-height: 1.6;
+    vertical-align: top;
+  }
+}
+
+#cb {
+  width: 68px;
+}
+
+#status {
+  width: 192px;
+}
+
+#publish {
+  width: 129px;
+}
+
+#date {
+  width: 173px;
+}

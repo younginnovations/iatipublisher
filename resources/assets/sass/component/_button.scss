@@ -1,8 +1,88 @@
 .btn {
-  padding: 16px 0;
+  @apply py-4 px-0;
 }
 @media screen and (min-width: 640px) {
   .btn {
     padding: 18px 0;
+  }
+}
+
+svg {
+  height: 1em;
+}
+
+.button,
+button {
+  @apply flex cursor-pointer items-center text-xs leading-normal tracking-tight;
+  transition: all 0.4s ease;
+}
+
+// tooltip button
+.tooltip-btn {
+  @apply relative text-n-30;
+  button {
+    @apply rounded-3xl border border-solid border-n-30 py-1.5 px-2.5;
+  }
+  svg {
+    @apply mr-1 text-xs;
+  }
+
+  &__content {
+    @apply absolute top-full left-0 hidden w-[352px];
+    .content {
+      @apply mt-6 rounded bg-eggshell text-n-50;
+      padding: 16px 33px 16px 16px;
+      box-shadow: 0px 4px 40px rgba(0, 0, 0, 0.1);
+    }
+
+    p {
+      @apply mb-1.5 text-xs leading-normal;
+    }
+  }
+
+  &:hover .tooltip-btn__content {
+    display: block;
+  }
+
+  &:hover button {
+    @apply border-spring-50 text-spring-50;
+  }
+}
+
+// primary button
+.primary-btn {
+  @apply rounded bg-bluecoral p-3 uppercase text-white;
+  box-shadow: 0px 2px 10px 10px rgba(0, 0, 0, 0.05);
+
+  &:hover {
+    @apply bg-n-50 text-white;
+  }
+
+  svg {
+    @apply mr-1 text-base;
+  }
+}
+
+// secondary button
+.secondary-btn {
+  @apply rounded bg-white p-3 uppercase text-bluecoral;
+  box-shadow: 0px 2px 10px 10px rgba(0, 0, 0, 0.05);
+
+  &:hover {
+    @apply bg-bluecoral text-white;
+  }
+
+  svg {
+    @apply mr-1 text-base;
+  }
+}
+
+// primary outline button
+.primary-outline-btn {
+  @apply justify-center rounded-3xl border border-spring-50 py-0.5 px-3.5 text-xs leading-relaxed text-spring-50;
+  filter: drop-shadow(0px 4px 40px rgba(0, 0, 0, 0.1));
+
+  &:hover {
+    @apply bg-spring-50 text-white;
   }
 }
