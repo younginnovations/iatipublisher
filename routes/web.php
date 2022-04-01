@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+//Test Line
 Route::get('/', [App\Http\Controllers\Web\WebController::class, 'index'])->name('web');
 
 Route::get('/activities', function () {
