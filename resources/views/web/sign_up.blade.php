@@ -1,5 +1,5 @@
 @extends('web.layouts.app')
 
 @section('content')
-<register-page></register-page>
+<publisher-info></publisher-info>
 @endsection

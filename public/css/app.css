@@ -551,17 +551,17 @@ Ensure the default browser behavior of the `hidden` attribute.
 .mr-2 {
   margin-right: 0.5rem;
 }
-.mt-7 {
-  margin-top: 1.75rem;
-}
-.ml-8 {
-  margin-left: 2rem;
-}
 .mr-3 {
   margin-right: 0.75rem;
 }
 .ml-6 {
   margin-left: 1.5rem;
+}
+.mt-7 {
+  margin-top: 1.75rem;
+}
+.ml-8 {
+  margin-left: 2rem;
 }
 .flex {
   display: flex;
@@ -614,11 +614,17 @@ Ensure the default browser behavior of the `hidden` attribute.
 .justify-between {
   justify-content: space-between;
 }
+.justify-items-center {
+  justify-items: center;
+}
 .gap-8 {
   gap: 2rem;
 }
 .gap-3 {
   gap: 0.75rem;
+}
+.gap-6 {
+  gap: 1.5rem;
 }
 .space-x-2 > :not([hidden]) ~ :not([hidden]) {
   --tw-space-x-reverse: 0;
@@ -793,12 +799,12 @@ Ensure the default browser behavior of the `hidden` attribute.
   font-size: 1.5rem;
   line-height: 2rem;
 }
-.text-tiny {
-  font-size: 10px;
-}
 .text-base {
   font-size: 1rem;
   line-height: 1.5rem;
+}
+.text-tiny {
+  font-size: 10px;
 }
 .font-bold {
   font-weight: 700;
@@ -814,6 +820,9 @@ Ensure the default browser behavior of the `hidden` attribute.
 }
 .leading-6 {
   line-height: 1.5rem;
+}
+.tracking-normal {
+  letter-spacing: 0em;
 }
 .text-white {
   --tw-text-opacity: 1;
@@ -1251,6 +1260,23 @@ body h2 {
   transition: 0.2s;
 }
 
+.btn-back {
+  display: flex;
+  align-items: center;
+  font-weight: bold;
+  font-size: 14px;
+  text-transform: uppercase;
+  transition: 0.2s;
+  --tw-text-opacity: 1;
+  color: rgba(var(--bluecoral), var(--tw-text-opacity));
+}
+.btn-back svg {
+  transition: 0.2s;
+}
+.btn-back:hover svg {
+  transform: translateX(-4px);
+}
+
 .hamburger span {
   pointer-events: none;
 }
@@ -1283,7 +1309,7 @@ body h2 {
   padding: 16px 0px 16px 55px;
   font-size: 14px;
   line-height: 24px;
-  border: 1.5px solid;
+  border: 1px solid;
   border-radius: 8px;
   outline: none;
   transition: 0.3s;
@@ -1291,7 +1317,7 @@ body h2 {
   border-color: rgba(var(--n-30), var(--tw-border-opacity));
 }
 .input:focus {
-  border: 1.5px solid;
+  border: 1px solid;
   --tw-border-opacity: 1;
   border-color: rgba(var(--n-50), var(--tw-border-opacity));
   --tw-bg-opacity: 1;
@@ -1474,8 +1500,8 @@ body h2 {
     margin-bottom: 5rem;
   }
 
-  .md\:mb-12 {
-    margin-bottom: 3rem;
+  .md\:mb-14 {
+    margin-bottom: 3.5rem;
   }
 
   .md\:flex {
@@ -1576,7 +1602,16 @@ body h2 {
     padding-right: 5rem;
   }
 
+  .xl\:px-2 {
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+  }
+
   .xl\:pt-0 {
     padding-top: 0px;
+  }
+
+  .xl\:pr-2 {
+    padding-right: 0.5rem;
   }
 }

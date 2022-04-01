@@ -1,5 +1,5 @@
 <template>
-  <section class="section mb-7 sm:mx-10 sm:mb-10 md:mb-12 xl:mx-24 xl:px-1">
+  <section class="section mb-7 sm:mx-10 sm:mb-10 md:mb-14 xl:mx-24 xl:px-1">
     <div class="section__container">
       <div class="section__title mt-7 text-center sm:mt-14">
         <h2>Create IATI Publisher Account</h2>
@@ -8,7 +8,8 @@
           creating an account in IATI publisher.
         </p>
       </div>
-      <div class="section__wrapper flex">
+      <EmailVerification v-if="true"></EmailVerification>
+      <div v-else class="section__wrapper flex">
         <form method="POST" action="" class="form">
           <div class="form__container">
             <span class="text-2xl font-bold text-n-50"
@@ -240,13 +241,33 @@
               </svg>
             </button>
           </div>
+          <!-- <div class="hidden">
+            <button class="btn-back">
+              <svg
+                class="mr-3"
+                width="24"
+                height="24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M21 12H3M8 7l-5 5 5 5"
+                  stroke="#155366"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+              Go back
+            </button>
+          </div> -->
         </form>
         <aside>
           <span class="text-base font-bold">Step 1 out of 3</span>
           <ul class="relative mt-6 text-sm text-n-40">
             <li class="mb-6 font-bold text-n-50">
               <span class="mr-3 ml-6">1</span> Publisher Information
-              <p class="detail mt-2 font-normal">
+              <p class="detail mt-2 font-normal xl:pr-2">
                 This information will be used to create a Publisher in IATI
                 Publisher.
               </p>
@@ -262,11 +283,26 @@
   </section>
 </template>
 
+<script lang="ts">
+import { defineComponent } from 'vue';
+import EmailVerification from './EmailVerification.vue';
+
+export default defineComponent({
+  components: {
+    EmailVerification,
+  },
+});
+</script>
+
 <style lang="scss">
 .section {
   &__container {
     max-width: 1206px;
     margin: auto;
+
+    .feedback {
+      width: 702px;
+    }
 
     .section__wrapper {
       box-shadow: 0px 20px 40px 20px rgba(0, 0, 0, 0.05);
@@ -287,6 +323,7 @@
       padding: 40px 80px;
       border-top-left-radius: 8px;
       border-bottom-left-radius: 8px;
+      width: 862px;
 
       &__container {
         @apply border-b-2 border-b-n-10;
@@ -324,9 +361,10 @@
     }
     aside {
       @apply bg-eggshell;
-      padding: 96px 90px 40px 32px;
+      padding: 96px 80px 40px 32px;
+      width: 344px;
 
-      ul::before {
+      li::before {
         content: '';
         width: 4px;
         height: 175px;
@@ -339,9 +377,19 @@
       .detail {
         margin-left: 45px;
       }
-      li::after {
+      // li::after {
+      //   position: absolute;
+      //   top: 0;
+      //   left: -1px;
+      //   width: 6px;
+      //   height: 85px;
+      //   @apply bg-turquoise;
+      //   content: '';
+      //   border-radius: 2px;
+      // }
+      .list__active::after {
         position: absolute;
-        top: 0;
+        bottom: 0;
         left: -1px;
         width: 6px;
         height: 85px;

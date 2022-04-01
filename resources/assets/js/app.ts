@@ -5,7 +5,7 @@
  */
 import { createApp } from 'vue';
 import ExampleComponent from './components/ExampleComponent.vue';
-import RegisterPage from './views/web/RegisterPage.vue';
+import PublisherInfo from './views/web/PublisherInfo.vue';
 
 require('./bootstrap');
 
@@ -23,7 +23,7 @@ const app = createApp({});
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
 
 app.component('example-component', ExampleComponent);
-app.component('register-page', RegisterPage);
+app.component('publisher-info', PublisherInfo);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to

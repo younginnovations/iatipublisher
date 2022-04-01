@@ -29669,6 +29669,46 @@ return withDirectives(h(comp), [
         /***/
       },
 
+    /***/ './node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/babel-loader/lib/index.js??clonedRuleSet-6.use[0]!./node_modules/ts-loader/index.js??clonedRuleSet-7!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/assets/js/views/web/PublisherInfo.vue?vue&type=script&lang=ts':
+      /*!*********************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/babel-loader/lib/index.js??clonedRuleSet-6.use[0]!./node_modules/ts-loader/index.js??clonedRuleSet-7!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/assets/js/views/web/PublisherInfo.vue?vue&type=script&lang=ts ***!
+  \*********************************************************************************************************************************************************************************************************************************************************************************************************************************/
+      /***/ function (__unused_webpack_module, exports, __webpack_require__) {
+        'use strict';
+
+        var __importDefault =
+          (this && this.__importDefault) ||
+          function (mod) {
+            return mod && mod.__esModule
+              ? mod
+              : {
+                  default: mod,
+                };
+          };
+
+        Object.defineProperty(exports, '__esModule', {
+          value: true,
+        });
+
+        var vue_1 = __webpack_require__(
+          /*! vue */ './node_modules/vue/dist/vue.esm-bundler.js'
+        );
+
+        var EmailVerification_vue_1 = __importDefault(
+          __webpack_require__(
+            /*! ./EmailVerification.vue */ './resources/assets/js/views/web/EmailVerification.vue'
+          )
+        );
+
+        exports['default'] = (0, vue_1.defineComponent)({
+          components: {
+            EmailVerification: EmailVerification_vue_1['default'],
+          },
+        });
+
+        /***/
+      },
+
     /***/ './node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/babel-loader/lib/index.js??clonedRuleSet-6.use[0]!./node_modules/ts-loader/index.js??clonedRuleSet-7!./node_modules/vue-loader/dist/templateLoader.js??ruleSet[1].rules[4]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/assets/js/components/ExampleComponent.vue?vue&type=template&id=7168fb6a&ts=true':
       /*!*************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/babel-loader/lib/index.js??clonedRuleSet-6.use[0]!./node_modules/ts-loader/index.js??clonedRuleSet-7!./node_modules/vue-loader/dist/templateLoader.js??ruleSet[1].rules[4]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/assets/js/components/ExampleComponent.vue?vue&type=template&id=7168fb6a&ts=true ***!
@@ -29699,6 +29739,634 @@ return withDirectives(h(comp), [
                 1
                 /* TEXT */
               ),
+            ])
+          );
+        }
+
+        exports.render = render;
+
+        /***/
+      },
+
+    /***/ './node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/babel-loader/lib/index.js??clonedRuleSet-6.use[0]!./node_modules/ts-loader/index.js??clonedRuleSet-7!./node_modules/vue-loader/dist/templateLoader.js??ruleSet[1].rules[4]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/assets/js/views/web/PublisherInfo.vue?vue&type=template&id=8f5bfee8&ts=true':
+      /*!*********************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/babel-loader/lib/index.js??clonedRuleSet-6.use[0]!./node_modules/ts-loader/index.js??clonedRuleSet-7!./node_modules/vue-loader/dist/templateLoader.js??ruleSet[1].rules[4]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/assets/js/views/web/PublisherInfo.vue?vue&type=template&id=8f5bfee8&ts=true ***!
+  \*********************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
+      /***/ (__unused_webpack_module, exports, __webpack_require__) => {
+        'use strict';
+
+        Object.defineProperty(exports, '__esModule', {
+          value: true,
+        });
+        exports.render = void 0;
+
+        var vue_1 = __webpack_require__(
+          /*! vue */ './node_modules/vue/dist/vue.esm-bundler.js'
+        );
+
+        var _hoisted_1 = {
+          class: 'section mb-7 sm:mx-10 sm:mb-10 md:mb-14 xl:mx-24 xl:px-1',
+        };
+        var _hoisted_2 = {
+          class: 'section__container',
+        };
+
+        var _hoisted_3 = /*#__PURE__*/ (0, vue_1.createElementVNode)(
+          'div',
+          {
+            class: 'section__title mt-7 text-center sm:mt-14',
+          },
+          [
+            /*#__PURE__*/ (0, vue_1.createElementVNode)(
+              'h2',
+              null,
+              'Create IATI Publisher Account'
+            ),
+            /*#__PURE__*/ (0, vue_1.createElementVNode)(
+              'p',
+              null,
+              ' Register your organisation to start your IATI publishing journey by creating an account in IATI publisher. '
+            ),
+          ],
+          -1
+          /* HOISTED */
+        );
+
+        var _hoisted_4 = {
+          key: 1,
+          class: 'section__wrapper flex',
+        };
+
+        var _hoisted_5 = /*#__PURE__*/ (0, vue_1.createElementVNode)(
+          'form',
+          {
+            method: 'POST',
+            action: '',
+            class: 'form',
+          },
+          [
+            /*#__PURE__*/ (0, vue_1.createElementVNode)(
+              'div',
+              {
+                class: 'form__container',
+              },
+              [
+                /*#__PURE__*/ (0, vue_1.createElementVNode)(
+                  'span',
+                  {
+                    class: 'text-2xl font-bold text-n-50',
+                  },
+                  'Publisher Information'
+                ),
+                /*#__PURE__*/ (0, vue_1.createElementVNode)(
+                  'div',
+                  {
+                    class:
+                      'feedback mt-6 border-l-2 border-crimson-50 bg-crimson-10 p-4 text-sm text-n-50',
+                  },
+                  [
+                    /*#__PURE__*/ (0, vue_1.createElementVNode)(
+                      'p',
+                      {
+                        class: 'mb-2 flex font-bold',
+                      },
+                      [
+                        /*#__PURE__*/ (0, vue_1.createElementVNode)(
+                          'svg',
+                          {
+                            class: 'mr-2',
+                            width: '23',
+                            height: '21',
+                            fill: 'none',
+                            xmlns: 'http://www.w3.org/2000/svg',
+                          },
+                          [
+                            /*#__PURE__*/ (0, vue_1.createElementVNode)(
+                              'path',
+                              {
+                                d: 'M11.887 15a1 1 0 1 0 0 2 1 1 0 0 0 0-2Zm10.67 1.47-8.05-14a3 3 0 0 0-5.24 0l-8 14A3 3 0 0 0 3.827 21h16.12a3 3 0 0 0 2.61-4.53Zm-1.73 2a1 1 0 0 1-.88.51H3.827a1 1 0 0 1-.88-.51 1 1 0 0 1 0-1l8-14a1 1 0 0 1 1.78 0l8.05 14a1 1 0 0 1 .05 1.02v-.02ZM11.887 7a1 1 0 0 0-1 1v4a1 1 0 0 0 2 0V8a1 1 0 0 0-1-1Z',
+                                fill: '#D1001E',
+                              }
+                            ),
+                          ]
+                        ),
+                        /*#__PURE__*/ (0, vue_1.createTextVNode)(
+                          ' Sorry, the information you provided doesn’t match your IATI Registry information. '
+                        ),
+                      ]
+                    ),
+                    /*#__PURE__*/ (0, vue_1.createElementVNode)(
+                      'p',
+                      {
+                        class: 'ml-8 leading-5 xl:mr-1',
+                      },
+                      [
+                        /*#__PURE__*/ (0, vue_1.createTextVNode)(
+                          ' Please note that if you’re an account holder in IATI Registry, make sure your '
+                        ),
+                        /*#__PURE__*/ (0, vue_1.createElementVNode)(
+                          'span',
+                          {
+                            class: 'font-bold',
+                          },
+                          'Publisher Name,Publisher ID and IATI Organisation ID'
+                        ),
+                        /*#__PURE__*/ (0, vue_1.createTextVNode)(
+                          ' match your IATI Registry Information. Contact '
+                        ),
+                        /*#__PURE__*/ (0, vue_1.createElementVNode)(
+                          'span',
+                          null,
+                          [
+                            /*#__PURE__*/ (0, vue_1.createElementVNode)(
+                              'a',
+                              {
+                                class: 'text-n-40 hover:text-n-50',
+                                href: 'mailto:support@iatistandard.org',
+                              },
+                              'support@iatistandard.org'
+                            ),
+                          ]
+                        ),
+                        /*#__PURE__*/ (0, vue_1.createTextVNode)(
+                          ' for more details. '
+                        ),
+                      ]
+                    ),
+                  ]
+                ),
+                /*#__PURE__*/ (0, vue_1.createElementVNode)(
+                  'div',
+                  {
+                    class: 'form__content',
+                  },
+                  [
+                    /*#__PURE__*/ (0, vue_1.createElementVNode)(
+                      'div',
+                      {
+                        class: 'col-span-2 mb-4',
+                      },
+                      [
+                        /*#__PURE__*/ (0, vue_1.createElementVNode)(
+                          'div',
+                          {
+                            class: 'flex items-center justify-between',
+                          },
+                          [
+                            /*#__PURE__*/ (0, vue_1.createElementVNode)(
+                              'label',
+                              {
+                                class: 'label',
+                                for: '',
+                              },
+                              [
+                                /*#__PURE__*/ (0, vue_1.createTextVNode)(
+                                  'Publisher Name '
+                                ),
+                                /*#__PURE__*/ (0, vue_1.createElementVNode)(
+                                  'span',
+                                  {
+                                    class: 'text-crimson-40',
+                                  },
+                                  ' *'
+                                ),
+                              ]
+                            ),
+                            /*#__PURE__*/ (0, vue_1.createElementVNode)(
+                              'svg',
+                              {
+                                width: '15',
+                                height: '15',
+                                fill: 'none',
+                                xmlns: 'http://www.w3.org/2000/svg',
+                              },
+                              [
+                                /*#__PURE__*/ (0, vue_1.createElementVNode)(
+                                  'path',
+                                  {
+                                    d: 'M7.385 5.167c-.18 0-.359.043-.518.128-.16.085-.295.209-.39.362l-.004.006-.003.007a.346.346 0 0 1-.093.105.438.438 0 0 1-.455.033.37.37 0 0 1-.113-.093.314.314 0 0 1-.06-.117.287.287 0 0 1-.005-.124l-.329-.058.329.058a.305.305 0 0 1 .05-.119l.003-.006.004-.006a1.75 1.75 0 0 1 .663-.615 1.92 1.92 0 0 1 2.092.176c.324.256.537.606.607.985.07.378-.005.77-.215 1.105-.211.337-.546.6-.952.737l-.227.076v.36a.31.31 0 0 1-.103.227.414.414 0 0 1-.281.106c-.11 0-.21-.04-.281-.106A.31.31 0 0 1 7 8.167V7.5a.31.31 0 0 1 .104-.227.414.414 0 0 1 .28-.106c.272 0 .536-.1.735-.285a.977.977 0 0 0 .317-.715.977.977 0 0 0-.317-.716 1.08 1.08 0 0 0-.734-.284Zm0 0V5.5v-.333Zm-.368 4.906.011-.021.009-.023a.16.16 0 0 1 .02-.037.738.738 0 0 1 .051-.06.392.392 0 0 1 .12-.074.433.433 0 0 1 .313 0l.12-.31-.12.31a.39.39 0 0 1 .126.079c.034.032.06.07.077.108.017.039.026.08.025.12v.015a.29.29 0 0 1-.02.118v.001a.264.264 0 0 1-.067.097l.227.244-.227-.244a.321.321 0 0 1-.116.068l-.01.003-.01.005a.386.386 0 0 1-.293 0l-.01-.005-.01-.003a.321.321 0 0 1-.117-.068l-.227.244.227-.244a.264.264 0 0 1-.067-.097l-.006-.015-.007-.015a.193.193 0 0 1-.022-.093v-.036a.508.508 0 0 1-.002-.057.084.084 0 0 1 .005-.01ZM3.572 2.24a7.245 7.245 0 0 1 3.813-1.073c.902 0 1.795.165 2.627.485.833.32 1.588.789 2.223 1.378a6.324 6.324 0 0 1 1.478 2.055c.342.766.518 1.587.518 2.415a6 6 0 0 1-1.147 3.51 6.759 6.759 0 0 1-3.072 2.338 7.36 7.36 0 0 1-3.967.363 7.032 7.032 0 0 1-3.51-1.741A6.2 6.2 0 0 1 .669 8.73a5.892 5.892 0 0 1 .387-3.645A6.467 6.467 0 0 1 3.572 2.24Zm.446 9.978c.998.62 2.17.949 3.367.949 1.604 0 3.147-.592 4.288-1.652 1.142-1.06 1.789-2.504 1.789-4.015a5.4 5.4 0 0 0-1.031-3.158 6.007 6.007 0 0 0-2.729-2.08 6.488 6.488 0 0 0-3.498-.32 6.226 6.226 0 0 0-3.107 1.543A5.56 5.56 0 0 0 1.426 6.39a5.314 5.314 0 0 0 .348 3.287 5.773 5.773 0 0 0 2.244 2.54Z',
+                                    fill: '#68797E',
+                                    stroke: '#68797E',
+                                    'stroke-width': '.667',
+                                  }
+                                ),
+                              ]
+                            ),
+                          ]
+                        ),
+                        /*#__PURE__*/ (0, vue_1.createElementVNode)('input', {
+                          class: 'form__input',
+                          type: 'text',
+                          placeholder: 'Enter the name of your organisation',
+                        }),
+                      ]
+                    ),
+                    /*#__PURE__*/ (0, vue_1.createElementVNode)(
+                      'div',
+                      {
+                        class: 'mb-4',
+                      },
+                      [
+                        /*#__PURE__*/ (0, vue_1.createElementVNode)(
+                          'div',
+                          {
+                            class: 'flex items-center justify-between',
+                          },
+                          [
+                            /*#__PURE__*/ (0, vue_1.createElementVNode)(
+                              'label',
+                              {
+                                class: 'label',
+                                for: '',
+                              },
+                              [
+                                /*#__PURE__*/ (0, vue_1.createTextVNode)(
+                                  'Publisher ID '
+                                ),
+                                /*#__PURE__*/ (0, vue_1.createElementVNode)(
+                                  'span',
+                                  {
+                                    class: 'text-crimson-40',
+                                  },
+                                  ' *'
+                                ),
+                              ]
+                            ),
+                            /*#__PURE__*/ (0, vue_1.createElementVNode)(
+                              'svg',
+                              {
+                                width: '15',
+                                height: '15',
+                                fill: 'none',
+                                xmlns: 'http://www.w3.org/2000/svg',
+                              },
+                              [
+                                /*#__PURE__*/ (0, vue_1.createElementVNode)(
+                                  'path',
+                                  {
+                                    d: 'M7.385 5.167c-.18 0-.359.043-.518.128-.16.085-.295.209-.39.362l-.004.006-.003.007a.346.346 0 0 1-.093.105.438.438 0 0 1-.455.033.37.37 0 0 1-.113-.093.314.314 0 0 1-.06-.117.287.287 0 0 1-.005-.124l-.329-.058.329.058a.305.305 0 0 1 .05-.119l.003-.006.004-.006a1.75 1.75 0 0 1 .663-.615 1.92 1.92 0 0 1 2.092.176c.324.256.537.606.607.985.07.378-.005.77-.215 1.105-.211.337-.546.6-.952.737l-.227.076v.36a.31.31 0 0 1-.103.227.414.414 0 0 1-.281.106c-.11 0-.21-.04-.281-.106A.31.31 0 0 1 7 8.167V7.5a.31.31 0 0 1 .104-.227.414.414 0 0 1 .28-.106c.272 0 .536-.1.735-.285a.977.977 0 0 0 .317-.715.977.977 0 0 0-.317-.716 1.08 1.08 0 0 0-.734-.284Zm0 0V5.5v-.333Zm-.368 4.906.011-.021.009-.023a.16.16 0 0 1 .02-.037.738.738 0 0 1 .051-.06.392.392 0 0 1 .12-.074.433.433 0 0 1 .313 0l.12-.31-.12.31a.39.39 0 0 1 .126.079c.034.032.06.07.077.108.017.039.026.08.025.12v.015a.29.29 0 0 1-.02.118v.001a.264.264 0 0 1-.067.097l.227.244-.227-.244a.321.321 0 0 1-.116.068l-.01.003-.01.005a.386.386 0 0 1-.293 0l-.01-.005-.01-.003a.321.321 0 0 1-.117-.068l-.227.244.227-.244a.264.264 0 0 1-.067-.097l-.006-.015-.007-.015a.193.193 0 0 1-.022-.093v-.036a.508.508 0 0 1-.002-.057.084.084 0 0 1 .005-.01ZM3.572 2.24a7.245 7.245 0 0 1 3.813-1.073c.902 0 1.795.165 2.627.485.833.32 1.588.789 2.223 1.378a6.324 6.324 0 0 1 1.478 2.055c.342.766.518 1.587.518 2.415a6 6 0 0 1-1.147 3.51 6.759 6.759 0 0 1-3.072 2.338 7.36 7.36 0 0 1-3.967.363 7.032 7.032 0 0 1-3.51-1.741A6.2 6.2 0 0 1 .669 8.73a5.892 5.892 0 0 1 .387-3.645A6.467 6.467 0 0 1 3.572 2.24Zm.446 9.978c.998.62 2.17.949 3.367.949 1.604 0 3.147-.592 4.288-1.652 1.142-1.06 1.789-2.504 1.789-4.015a5.4 5.4 0 0 0-1.031-3.158 6.007 6.007 0 0 0-2.729-2.08 6.488 6.488 0 0 0-3.498-.32 6.226 6.226 0 0 0-3.107 1.543A5.56 5.56 0 0 0 1.426 6.39a5.314 5.314 0 0 0 .348 3.287 5.773 5.773 0 0 0 2.244 2.54Z',
+                                    fill: '#68797E',
+                                    stroke: '#68797E',
+                                    'stroke-width': '.667',
+                                  }
+                                ),
+                              ]
+                            ),
+                          ]
+                        ),
+                        /*#__PURE__*/ (0, vue_1.createElementVNode)('input', {
+                          class: 'form__input',
+                          type: 'text',
+                          placeholder: 'For example, ‘dfid’ or ‘wordlbank’',
+                        }),
+                        /*#__PURE__*/ (0, vue_1.createElementVNode)(
+                          'span',
+                          {
+                            class: 'text-tiny font-normal text-n-40',
+                          },
+                          "You can use a short unique acronym of your organisation's name. "
+                        ),
+                      ]
+                    ),
+                    /*#__PURE__*/ (0, vue_1.createElementVNode)(
+                      'div',
+                      {
+                        class: 'mb-4',
+                      },
+                      [
+                        /*#__PURE__*/ (0, vue_1.createElementVNode)(
+                          'div',
+                          {
+                            class: 'flex items-center justify-between',
+                          },
+                          [
+                            /*#__PURE__*/ (0, vue_1.createElementVNode)(
+                              'label',
+                              {
+                                class: 'label',
+                                for: '',
+                              },
+                              [
+                                /*#__PURE__*/ (0, vue_1.createTextVNode)(
+                                  'Country '
+                                ),
+                                /*#__PURE__*/ (0, vue_1.createElementVNode)(
+                                  'span',
+                                  {
+                                    class: 'text-crimson-40',
+                                  },
+                                  ' *'
+                                ),
+                              ]
+                            ),
+                            /*#__PURE__*/ (0, vue_1.createElementVNode)(
+                              'svg',
+                              {
+                                width: '15',
+                                height: '15',
+                                fill: 'none',
+                                xmlns: 'http://www.w3.org/2000/svg',
+                              },
+                              [
+                                /*#__PURE__*/ (0, vue_1.createElementVNode)(
+                                  'path',
+                                  {
+                                    d: 'M7.385 5.167c-.18 0-.359.043-.518.128-.16.085-.295.209-.39.362l-.004.006-.003.007a.346.346 0 0 1-.093.105.438.438 0 0 1-.455.033.37.37 0 0 1-.113-.093.314.314 0 0 1-.06-.117.287.287 0 0 1-.005-.124l-.329-.058.329.058a.305.305 0 0 1 .05-.119l.003-.006.004-.006a1.75 1.75 0 0 1 .663-.615 1.92 1.92 0 0 1 2.092.176c.324.256.537.606.607.985.07.378-.005.77-.215 1.105-.211.337-.546.6-.952.737l-.227.076v.36a.31.31 0 0 1-.103.227.414.414 0 0 1-.281.106c-.11 0-.21-.04-.281-.106A.31.31 0 0 1 7 8.167V7.5a.31.31 0 0 1 .104-.227.414.414 0 0 1 .28-.106c.272 0 .536-.1.735-.285a.977.977 0 0 0 .317-.715.977.977 0 0 0-.317-.716 1.08 1.08 0 0 0-.734-.284Zm0 0V5.5v-.333Zm-.368 4.906.011-.021.009-.023a.16.16 0 0 1 .02-.037.738.738 0 0 1 .051-.06.392.392 0 0 1 .12-.074.433.433 0 0 1 .313 0l.12-.31-.12.31a.39.39 0 0 1 .126.079c.034.032.06.07.077.108.017.039.026.08.025.12v.015a.29.29 0 0 1-.02.118v.001a.264.264 0 0 1-.067.097l.227.244-.227-.244a.321.321 0 0 1-.116.068l-.01.003-.01.005a.386.386 0 0 1-.293 0l-.01-.005-.01-.003a.321.321 0 0 1-.117-.068l-.227.244.227-.244a.264.264 0 0 1-.067-.097l-.006-.015-.007-.015a.193.193 0 0 1-.022-.093v-.036a.508.508 0 0 1-.002-.057.084.084 0 0 1 .005-.01ZM3.572 2.24a7.245 7.245 0 0 1 3.813-1.073c.902 0 1.795.165 2.627.485.833.32 1.588.789 2.223 1.378a6.324 6.324 0 0 1 1.478 2.055c.342.766.518 1.587.518 2.415a6 6 0 0 1-1.147 3.51 6.759 6.759 0 0 1-3.072 2.338 7.36 7.36 0 0 1-3.967.363 7.032 7.032 0 0 1-3.51-1.741A6.2 6.2 0 0 1 .669 8.73a5.892 5.892 0 0 1 .387-3.645A6.467 6.467 0 0 1 3.572 2.24Zm.446 9.978c.998.62 2.17.949 3.367.949 1.604 0 3.147-.592 4.288-1.652 1.142-1.06 1.789-2.504 1.789-4.015a5.4 5.4 0 0 0-1.031-3.158 6.007 6.007 0 0 0-2.729-2.08 6.488 6.488 0 0 0-3.498-.32 6.226 6.226 0 0 0-3.107 1.543A5.56 5.56 0 0 0 1.426 6.39a5.314 5.314 0 0 0 .348 3.287 5.773 5.773 0 0 0 2.244 2.54Z',
+                                    fill: '#68797E',
+                                    stroke: '#68797E',
+                                    'stroke-width': '.667',
+                                  }
+                                ),
+                              ]
+                            ),
+                          ]
+                        ),
+                        /*#__PURE__*/ (0, vue_1.createElementVNode)('input', {
+                          class: 'form__input',
+                          type: 'text',
+                          placeholder: 'Select the country',
+                        }),
+                      ]
+                    ),
+                    /*#__PURE__*/ (0, vue_1.createElementVNode)(
+                      'div',
+                      {
+                        class: 'mb-4',
+                      },
+                      [
+                        /*#__PURE__*/ (0, vue_1.createElementVNode)(
+                          'div',
+                          {
+                            class: 'flex items-center justify-between',
+                          },
+                          [
+                            /*#__PURE__*/ (0, vue_1.createElementVNode)(
+                              'label',
+                              {
+                                class: 'label',
+                                for: '',
+                              },
+                              [
+                                /*#__PURE__*/ (0, vue_1.createTextVNode)(
+                                  'Organisation Registration Agency '
+                                ),
+                                /*#__PURE__*/ (0, vue_1.createElementVNode)(
+                                  'span',
+                                  {
+                                    class: 'text-crimson-40',
+                                  },
+                                  ' *'
+                                ),
+                              ]
+                            ),
+                            /*#__PURE__*/ (0, vue_1.createElementVNode)(
+                              'svg',
+                              {
+                                width: '15',
+                                height: '15',
+                                fill: 'none',
+                                xmlns: 'http://www.w3.org/2000/svg',
+                              },
+                              [
+                                /*#__PURE__*/ (0, vue_1.createElementVNode)(
+                                  'path',
+                                  {
+                                    d: 'M7.385 5.167c-.18 0-.359.043-.518.128-.16.085-.295.209-.39.362l-.004.006-.003.007a.346.346 0 0 1-.093.105.438.438 0 0 1-.455.033.37.37 0 0 1-.113-.093.314.314 0 0 1-.06-.117.287.287 0 0 1-.005-.124l-.329-.058.329.058a.305.305 0 0 1 .05-.119l.003-.006.004-.006a1.75 1.75 0 0 1 .663-.615 1.92 1.92 0 0 1 2.092.176c.324.256.537.606.607.985.07.378-.005.77-.215 1.105-.211.337-.546.6-.952.737l-.227.076v.36a.31.31 0 0 1-.103.227.414.414 0 0 1-.281.106c-.11 0-.21-.04-.281-.106A.31.31 0 0 1 7 8.167V7.5a.31.31 0 0 1 .104-.227.414.414 0 0 1 .28-.106c.272 0 .536-.1.735-.285a.977.977 0 0 0 .317-.715.977.977 0 0 0-.317-.716 1.08 1.08 0 0 0-.734-.284Zm0 0V5.5v-.333Zm-.368 4.906.011-.021.009-.023a.16.16 0 0 1 .02-.037.738.738 0 0 1 .051-.06.392.392 0 0 1 .12-.074.433.433 0 0 1 .313 0l.12-.31-.12.31a.39.39 0 0 1 .126.079c.034.032.06.07.077.108.017.039.026.08.025.12v.015a.29.29 0 0 1-.02.118v.001a.264.264 0 0 1-.067.097l.227.244-.227-.244a.321.321 0 0 1-.116.068l-.01.003-.01.005a.386.386 0 0 1-.293 0l-.01-.005-.01-.003a.321.321 0 0 1-.117-.068l-.227.244.227-.244a.264.264 0 0 1-.067-.097l-.006-.015-.007-.015a.193.193 0 0 1-.022-.093v-.036a.508.508 0 0 1-.002-.057.084.084 0 0 1 .005-.01ZM3.572 2.24a7.245 7.245 0 0 1 3.813-1.073c.902 0 1.795.165 2.627.485.833.32 1.588.789 2.223 1.378a6.324 6.324 0 0 1 1.478 2.055c.342.766.518 1.587.518 2.415a6 6 0 0 1-1.147 3.51 6.759 6.759 0 0 1-3.072 2.338 7.36 7.36 0 0 1-3.967.363 7.032 7.032 0 0 1-3.51-1.741A6.2 6.2 0 0 1 .669 8.73a5.892 5.892 0 0 1 .387-3.645A6.467 6.467 0 0 1 3.572 2.24Zm.446 9.978c.998.62 2.17.949 3.367.949 1.604 0 3.147-.592 4.288-1.652 1.142-1.06 1.789-2.504 1.789-4.015a5.4 5.4 0 0 0-1.031-3.158 6.007 6.007 0 0 0-2.729-2.08 6.488 6.488 0 0 0-3.498-.32 6.226 6.226 0 0 0-3.107 1.543A5.56 5.56 0 0 0 1.426 6.39a5.314 5.314 0 0 0 .348 3.287 5.773 5.773 0 0 0 2.244 2.54Z',
+                                    fill: '#68797E',
+                                    stroke: '#68797E',
+                                    'stroke-width': '.667',
+                                  }
+                                ),
+                              ]
+                            ),
+                          ]
+                        ),
+                        /*#__PURE__*/ (0, vue_1.createElementVNode)('input', {
+                          class: 'form__input',
+                          type: 'text',
+                          placeholder:
+                            'Select your Organisation Registration Agency',
+                        }),
+                      ]
+                    ),
+                    /*#__PURE__*/ (0, vue_1.createElementVNode)(
+                      'div',
+                      {
+                        class: 'mb-4',
+                      },
+                      [
+                        /*#__PURE__*/ (0, vue_1.createElementVNode)(
+                          'div',
+                          {
+                            class: 'flex items-center justify-between',
+                          },
+                          [
+                            /*#__PURE__*/ (0, vue_1.createElementVNode)(
+                              'label',
+                              {
+                                class: 'label',
+                                for: '',
+                              },
+                              [
+                                /*#__PURE__*/ (0, vue_1.createTextVNode)(
+                                  'Organisation Registration Number '
+                                ),
+                                /*#__PURE__*/ (0, vue_1.createElementVNode)(
+                                  'span',
+                                  {
+                                    class: 'text-crimson-40',
+                                  },
+                                  ' *'
+                                ),
+                              ]
+                            ),
+                            /*#__PURE__*/ (0, vue_1.createElementVNode)(
+                              'svg',
+                              {
+                                width: '15',
+                                height: '15',
+                                fill: 'none',
+                                xmlns: 'http://www.w3.org/2000/svg',
+                              },
+                              [
+                                /*#__PURE__*/ (0, vue_1.createElementVNode)(
+                                  'path',
+                                  {
+                                    d: 'M7.385 5.167c-.18 0-.359.043-.518.128-.16.085-.295.209-.39.362l-.004.006-.003.007a.346.346 0 0 1-.093.105.438.438 0 0 1-.455.033.37.37 0 0 1-.113-.093.314.314 0 0 1-.06-.117.287.287 0 0 1-.005-.124l-.329-.058.329.058a.305.305 0 0 1 .05-.119l.003-.006.004-.006a1.75 1.75 0 0 1 .663-.615 1.92 1.92 0 0 1 2.092.176c.324.256.537.606.607.985.07.378-.005.77-.215 1.105-.211.337-.546.6-.952.737l-.227.076v.36a.31.31 0 0 1-.103.227.414.414 0 0 1-.281.106c-.11 0-.21-.04-.281-.106A.31.31 0 0 1 7 8.167V7.5a.31.31 0 0 1 .104-.227.414.414 0 0 1 .28-.106c.272 0 .536-.1.735-.285a.977.977 0 0 0 .317-.715.977.977 0 0 0-.317-.716 1.08 1.08 0 0 0-.734-.284Zm0 0V5.5v-.333Zm-.368 4.906.011-.021.009-.023a.16.16 0 0 1 .02-.037.738.738 0 0 1 .051-.06.392.392 0 0 1 .12-.074.433.433 0 0 1 .313 0l.12-.31-.12.31a.39.39 0 0 1 .126.079c.034.032.06.07.077.108.017.039.026.08.025.12v.015a.29.29 0 0 1-.02.118v.001a.264.264 0 0 1-.067.097l.227.244-.227-.244a.321.321 0 0 1-.116.068l-.01.003-.01.005a.386.386 0 0 1-.293 0l-.01-.005-.01-.003a.321.321 0 0 1-.117-.068l-.227.244.227-.244a.264.264 0 0 1-.067-.097l-.006-.015-.007-.015a.193.193 0 0 1-.022-.093v-.036a.508.508 0 0 1-.002-.057.084.084 0 0 1 .005-.01ZM3.572 2.24a7.245 7.245 0 0 1 3.813-1.073c.902 0 1.795.165 2.627.485.833.32 1.588.789 2.223 1.378a6.324 6.324 0 0 1 1.478 2.055c.342.766.518 1.587.518 2.415a6 6 0 0 1-1.147 3.51 6.759 6.759 0 0 1-3.072 2.338 7.36 7.36 0 0 1-3.967.363 7.032 7.032 0 0 1-3.51-1.741A6.2 6.2 0 0 1 .669 8.73a5.892 5.892 0 0 1 .387-3.645A6.467 6.467 0 0 1 3.572 2.24Zm.446 9.978c.998.62 2.17.949 3.367.949 1.604 0 3.147-.592 4.288-1.652 1.142-1.06 1.789-2.504 1.789-4.015a5.4 5.4 0 0 0-1.031-3.158 6.007 6.007 0 0 0-2.729-2.08 6.488 6.488 0 0 0-3.498-.32 6.226 6.226 0 0 0-3.107 1.543A5.56 5.56 0 0 0 1.426 6.39a5.314 5.314 0 0 0 .348 3.287 5.773 5.773 0 0 0 2.244 2.54Z',
+                                    fill: '#68797E',
+                                    stroke: '#68797E',
+                                    'stroke-width': '.667',
+                                  }
+                                ),
+                              ]
+                            ),
+                          ]
+                        ),
+                        /*#__PURE__*/ (0, vue_1.createElementVNode)('input', {
+                          class: 'form__input',
+                          type: 'text',
+                          placeholder: '',
+                        }),
+                      ]
+                    ),
+                    /*#__PURE__*/ (0, vue_1.createElementVNode)(
+                      'div',
+                      {
+                        class: 'mb-4',
+                      },
+                      [
+                        /*#__PURE__*/ (0, vue_1.createElementVNode)(
+                          'div',
+                          {
+                            class: 'flex items-center justify-between',
+                          },
+                          [
+                            /*#__PURE__*/ (0, vue_1.createElementVNode)(
+                              'label',
+                              {
+                                class: 'label',
+                                for: '',
+                              },
+                              [
+                                /*#__PURE__*/ (0, vue_1.createTextVNode)(
+                                  'IATI Organisational Identifier '
+                                ),
+                                /*#__PURE__*/ (0, vue_1.createElementVNode)(
+                                  'span',
+                                  {
+                                    class: 'text-crimson-40',
+                                  },
+                                  ' *'
+                                ),
+                              ]
+                            ),
+                            /*#__PURE__*/ (0, vue_1.createElementVNode)(
+                              'svg',
+                              {
+                                width: '15',
+                                height: '15',
+                                fill: 'none',
+                                xmlns: 'http://www.w3.org/2000/svg',
+                              },
+                              [
+                                /*#__PURE__*/ (0, vue_1.createElementVNode)(
+                                  'path',
+                                  {
+                                    d: 'M7.385 5.167c-.18 0-.359.043-.518.128-.16.085-.295.209-.39.362l-.004.006-.003.007a.346.346 0 0 1-.093.105.438.438 0 0 1-.455.033.37.37 0 0 1-.113-.093.314.314 0 0 1-.06-.117.287.287 0 0 1-.005-.124l-.329-.058.329.058a.305.305 0 0 1 .05-.119l.003-.006.004-.006a1.75 1.75 0 0 1 .663-.615 1.92 1.92 0 0 1 2.092.176c.324.256.537.606.607.985.07.378-.005.77-.215 1.105-.211.337-.546.6-.952.737l-.227.076v.36a.31.31 0 0 1-.103.227.414.414 0 0 1-.281.106c-.11 0-.21-.04-.281-.106A.31.31 0 0 1 7 8.167V7.5a.31.31 0 0 1 .104-.227.414.414 0 0 1 .28-.106c.272 0 .536-.1.735-.285a.977.977 0 0 0 .317-.715.977.977 0 0 0-.317-.716 1.08 1.08 0 0 0-.734-.284Zm0 0V5.5v-.333Zm-.368 4.906.011-.021.009-.023a.16.16 0 0 1 .02-.037.738.738 0 0 1 .051-.06.392.392 0 0 1 .12-.074.433.433 0 0 1 .313 0l.12-.31-.12.31a.39.39 0 0 1 .126.079c.034.032.06.07.077.108.017.039.026.08.025.12v.015a.29.29 0 0 1-.02.118v.001a.264.264 0 0 1-.067.097l.227.244-.227-.244a.321.321 0 0 1-.116.068l-.01.003-.01.005a.386.386 0 0 1-.293 0l-.01-.005-.01-.003a.321.321 0 0 1-.117-.068l-.227.244.227-.244a.264.264 0 0 1-.067-.097l-.006-.015-.007-.015a.193.193 0 0 1-.022-.093v-.036a.508.508 0 0 1-.002-.057.084.084 0 0 1 .005-.01ZM3.572 2.24a7.245 7.245 0 0 1 3.813-1.073c.902 0 1.795.165 2.627.485.833.32 1.588.789 2.223 1.378a6.324 6.324 0 0 1 1.478 2.055c.342.766.518 1.587.518 2.415a6 6 0 0 1-1.147 3.51 6.759 6.759 0 0 1-3.072 2.338 7.36 7.36 0 0 1-3.967.363 7.032 7.032 0 0 1-3.51-1.741A6.2 6.2 0 0 1 .669 8.73a5.892 5.892 0 0 1 .387-3.645A6.467 6.467 0 0 1 3.572 2.24Zm.446 9.978c.998.62 2.17.949 3.367.949 1.604 0 3.147-.592 4.288-1.652 1.142-1.06 1.789-2.504 1.789-4.015a5.4 5.4 0 0 0-1.031-3.158 6.007 6.007 0 0 0-2.729-2.08 6.488 6.488 0 0 0-3.498-.32 6.226 6.226 0 0 0-3.107 1.543A5.56 5.56 0 0 0 1.426 6.39a5.314 5.314 0 0 0 .348 3.287 5.773 5.773 0 0 0 2.244 2.54Z',
+                                    fill: '#68797E',
+                                    stroke: '#68797E',
+                                    'stroke-width': '.667',
+                                  }
+                                ),
+                              ]
+                            ),
+                          ]
+                        ),
+                        /*#__PURE__*/ (0, vue_1.createElementVNode)('input', {
+                          class: 'form__input',
+                          type: 'text',
+                          placeholder: '',
+                        }),
+                        /*#__PURE__*/ (0, vue_1.createElementVNode)(
+                          'span',
+                          {
+                            class: 'text-tiny font-normal text-n-40',
+                          },
+                          'This will be autogenerated.'
+                        ),
+                      ]
+                    ),
+                  ]
+                ),
+              ]
+            ),
+            /*#__PURE__*/ (0, vue_1.createElementVNode)(
+              'div',
+              {
+                class: 'flex items-center justify-between',
+              },
+              [
+                /*#__PURE__*/ (0, vue_1.createElementVNode)(
+                  'span',
+                  {
+                    class: 'text-sm font-normal text-n-40',
+                  },
+                  [
+                    /*#__PURE__*/ (0, vue_1.createTextVNode)(
+                      'Already have an account? '
+                    ),
+                    /*#__PURE__*/ (0, vue_1.createElementVNode)(
+                      'a',
+                      {
+                        class:
+                          'font-bold text-bluecoral hover:border-b-2 hover:border-b-turquoise',
+                        href: '#',
+                      },
+                      'Sign In.'
+                    ),
+                  ]
+                ),
+                /*#__PURE__*/ (0, vue_1.createElementVNode)(
+                  'button',
+                  {
+                    class: 'btn btn-primary',
+                  },
+                  [
+                    /*#__PURE__*/ (0, vue_1.createTextVNode)(' Next Step '),
+                    /*#__PURE__*/ (0, vue_1.createElementVNode)(
+                      'svg',
+                      {
+                        width: '24',
+                        height: '24',
+                        fill: 'none',
+                        xmlns: 'http://www.w3.org/2000/svg',
+                      },
+                      [
+                        /*#__PURE__*/ (0, vue_1.createElementVNode)('path', {
+                          d: 'M3 12h18M16 7l5 5-5 5',
+                          stroke: 'currentColor',
+                          'stroke-width': '2',
+                          'stroke-linecap': 'round',
+                          'stroke-linejoin': 'round',
+                        }),
+                      ]
+                    ),
+                  ]
+                ),
+              ]
+            ),
+            /*#__PURE__*/ (0, vue_1.createCommentVNode)(
+              ' <div class="hidden">\n            <button class="btn-back">\n              <svg\n                class="mr-3"\n                width="24"\n                height="24"\n                fill="none"\n                xmlns="http://www.w3.org/2000/svg"\n              >\n                <path\n                  d="M21 12H3M8 7l-5 5 5 5"\n                  stroke="#155366"\n                  stroke-width="2"\n                  stroke-linecap="round"\n                  stroke-linejoin="round"\n                />\n              </svg>\n              Go back\n            </button>\n          </div> '
+            ),
+          ],
+          -1
+          /* HOISTED */
+        );
+
+        var _hoisted_6 = /*#__PURE__*/ (0, vue_1.createStaticVNode)(
+          '<aside><span class="text-base font-bold">Step 1 out of 3</span><ul class="relative mt-6 text-sm text-n-40"><li class="mb-6 font-bold text-n-50"><span class="mr-3 ml-6">1</span> Publisher Information <p class="detail mt-2 font-normal xl:pr-2"> This information will be used to create a Publisher in IATI Publisher. </p></li><li class="mb-6"><span class="mr-3 ml-6">2</span> Administrator Information </li><li><span class="mr-3 ml-6">3</span> Email Verification</li></ul></aside>',
+          1
+        );
+
+        var _hoisted_7 = [_hoisted_5, _hoisted_6];
+
+        function render(_ctx, _cache, $props, $setup, $data, $options) {
+          var _component_EmailVerification = (0, vue_1.resolveComponent)(
+            'EmailVerification'
+          );
+
+          return (
+            (0, vue_1.openBlock)(),
+            (0, vue_1.createElementBlock)('section', _hoisted_1, [
+              (0, vue_1.createElementVNode)('div', _hoisted_2, [
+                _hoisted_3,
+                true
+                  ? ((0, vue_1.openBlock)(),
+                    (0, vue_1.createBlock)(_component_EmailVerification, {
+                      key: 0,
+                    }))
+                  : 0,
+              ]),
             ])
           );
         }
@@ -29744,9 +30412,9 @@ return withDirectives(h(comp), [
           )
         );
 
-        var RegisterPage_vue_1 = __importDefault(
+        var PublisherInfo_vue_1 = __importDefault(
           __webpack_require__(
-            /*! ./views/web/RegisterPage.vue */ './resources/assets/js/views/web/RegisterPage.vue'
+            /*! ./views/web/PublisherInfo.vue */ './resources/assets/js/views/web/PublisherInfo.vue'
           )
         );
 
@@ -29766,7 +30434,7 @@ return withDirectives(h(comp), [
         // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
 
         app.component('example-component', ExampleComponent_vue_1['default']);
-        app.component('register-page', RegisterPage_vue_1['default']);
+        app.component('publisher-info', PublisherInfo_vue_1['default']);
         /**
          * Next, we will create a fresh Vue application instance and attach it to
          * the page. Then, you may begin adding components to this application
@@ -29778,10 +30446,10 @@ return withDirectives(h(comp), [
         /***/
       },
 
-    /***/ './node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/babel-loader/lib/index.js??clonedRuleSet-6.use[0]!./node_modules/vue-loader/dist/templateLoader.js??ruleSet[1].rules[4]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/assets/js/views/web/RegisterPage.vue?vue&type=template&id=52266200':
-      /*!*********************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/babel-loader/lib/index.js??clonedRuleSet-6.use[0]!./node_modules/vue-loader/dist/templateLoader.js??ruleSet[1].rules[4]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/assets/js/views/web/RegisterPage.vue?vue&type=template&id=52266200 ***!
-  \*********************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
+    /***/ './node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/babel-loader/lib/index.js??clonedRuleSet-6.use[0]!./node_modules/vue-loader/dist/templateLoader.js??ruleSet[1].rules[4]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/assets/js/views/web/EmailVerification.vue?vue&type=template&id=7cda5c19':
+      /*!**************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/babel-loader/lib/index.js??clonedRuleSet-6.use[0]!./node_modules/vue-loader/dist/templateLoader.js??ruleSet[1].rules[4]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/assets/js/views/web/EmailVerification.vue?vue&type=template&id=7cda5c19 ***!
+  \**************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
       /***/ (
         __unused_webpack_module,
         __webpack_exports__,
@@ -29799,771 +30467,104 @@ return withDirectives(h(comp), [
           );
 
         var _hoisted_1 = {
-          class: 'section mb-7 sm:mx-10 sm:mb-10 md:mb-12 xl:mx-24 xl:px-1',
+          class: 'section__wrapper flex',
         };
 
         var _hoisted_2 = /*#__PURE__*/ (0,
         vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)(
-          'div',
+          'form',
           {
-            class: 'section__container',
+            method: 'POST',
+            action: '',
+            class: 'form',
           },
           [
             /*#__PURE__*/ (0,
             vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)(
               'div',
               {
-                class: 'section__title mt-7 text-center sm:mt-14',
+                class:
+                  'grid justify-items-center gap-6 tracking-normal xl:px-2',
               },
               [
                 /*#__PURE__*/ (0,
                 vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)(
-                  'h2',
-                  null,
-                  'Create IATI Publisher Account'
+                  'span',
+                  {
+                    class: 'text-2xl font-bold text-n-50',
+                  },
+                  'Please verify your account'
                 ),
                 /*#__PURE__*/ (0,
                 vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)(
                   'p',
-                  null,
-                  ' Register your organisation to start your IATI publishing journey by creating an account in IATI publisher. '
-                ),
-              ]
-            ),
-            /*#__PURE__*/ (0,
-            vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)(
-              'div',
-              {
-                class: 'section__wrapper flex',
-              },
-              [
-                /*#__PURE__*/ (0,
-                vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)(
-                  'form',
                   {
-                    method: 'POST',
-                    action: '',
-                    class: 'form',
+                    class: 'text-base text-n-40',
                   },
                   [
                     /*#__PURE__*/ (0,
-                    vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)(
-                      'div',
-                      {
-                        class: 'form__container',
-                      },
-                      [
-                        /*#__PURE__*/ (0,
-                        vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)(
-                          'span',
-                          {
-                            class: 'text-2xl font-bold text-n-50',
-                          },
-                          'Publisher Information'
-                        ),
-                        /*#__PURE__*/ (0,
-                        vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)(
-                          'div',
-                          {
-                            class:
-                              'feedback mt-6 border-l-2 border-crimson-50 bg-crimson-10 p-4 text-sm text-n-50',
-                          },
-                          [
-                            /*#__PURE__*/ (0,
-                            vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)(
-                              'p',
-                              {
-                                class: 'mb-2 flex font-bold',
-                              },
-                              [
-                                /*#__PURE__*/ (0,
-                                vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)(
-                                  'svg',
-                                  {
-                                    class: 'mr-2',
-                                    width: '23',
-                                    height: '21',
-                                    fill: 'none',
-                                    xmlns: 'http://www.w3.org/2000/svg',
-                                  },
-                                  [
-                                    /*#__PURE__*/ (0,
-                                    vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)(
-                                      'path',
-                                      {
-                                        d: 'M11.887 15a1 1 0 1 0 0 2 1 1 0 0 0 0-2Zm10.67 1.47-8.05-14a3 3 0 0 0-5.24 0l-8 14A3 3 0 0 0 3.827 21h16.12a3 3 0 0 0 2.61-4.53Zm-1.73 2a1 1 0 0 1-.88.51H3.827a1 1 0 0 1-.88-.51 1 1 0 0 1 0-1l8-14a1 1 0 0 1 1.78 0l8.05 14a1 1 0 0 1 .05 1.02v-.02ZM11.887 7a1 1 0 0 0-1 1v4a1 1 0 0 0 2 0V8a1 1 0 0 0-1-1Z',
-                                        fill: '#D1001E',
-                                      }
-                                    ),
-                                  ]
-                                ),
-                                /*#__PURE__*/ (0,
-                                vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(
-                                  ' Sorry, the information you provided doesn’t match your IATI Registry information. '
-                                ),
-                              ]
-                            ),
-                            /*#__PURE__*/ (0,
-                            vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)(
-                              'p',
-                              {
-                                class: 'ml-8 leading-5 xl:mr-1',
-                              },
-                              [
-                                /*#__PURE__*/ (0,
-                                vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(
-                                  ' Please note that if you’re an account holder in IATI Registry, make sure your '
-                                ),
-                                /*#__PURE__*/ (0,
-                                vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)(
-                                  'span',
-                                  {
-                                    class: 'font-bold',
-                                  },
-                                  'Publisher Name,Publisher ID and IATI Organisation ID'
-                                ),
-                                /*#__PURE__*/ (0,
-                                vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(
-                                  ' match your IATI Registry Information. Contact '
-                                ),
-                                /*#__PURE__*/ (0,
-                                vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)(
-                                  'span',
-                                  null,
-                                  [
-                                    /*#__PURE__*/ (0,
-                                    vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)(
-                                      'a',
-                                      {
-                                        class: 'text-n-40 hover:text-n-50',
-                                        href: 'mailto:support@iatistandard.org',
-                                      },
-                                      'support@iatistandard.org'
-                                    ),
-                                  ]
-                                ),
-                                /*#__PURE__*/ (0,
-                                vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(
-                                  ' for more details. '
-                                ),
-                              ]
-                            ),
-                          ]
-                        ),
-                        /*#__PURE__*/ (0,
-                        vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)(
-                          'div',
-                          {
-                            class: 'form__content',
-                          },
-                          [
-                            /*#__PURE__*/ (0,
-                            vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)(
-                              'div',
-                              {
-                                class: 'col-span-2 mb-4',
-                              },
-                              [
-                                /*#__PURE__*/ (0,
-                                vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)(
-                                  'div',
-                                  {
-                                    class: 'flex items-center justify-between',
-                                  },
-                                  [
-                                    /*#__PURE__*/ (0,
-                                    vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)(
-                                      'label',
-                                      {
-                                        class: 'label',
-                                        for: '',
-                                      },
-                                      [
-                                        /*#__PURE__*/ (0,
-                                        vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(
-                                          'Publisher Name '
-                                        ),
-                                        /*#__PURE__*/ (0,
-                                        vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)(
-                                          'span',
-                                          {
-                                            class: 'text-crimson-40',
-                                          },
-                                          ' *'
-                                        ),
-                                      ]
-                                    ),
-                                    /*#__PURE__*/ (0,
-                                    vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)(
-                                      'svg',
-                                      {
-                                        width: '15',
-                                        height: '15',
-                                        fill: 'none',
-                                        xmlns: 'http://www.w3.org/2000/svg',
-                                      },
-                                      [
-                                        /*#__PURE__*/ (0,
-                                        vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)(
-                                          'path',
-                                          {
-                                            d: 'M7.385 5.167c-.18 0-.359.043-.518.128-.16.085-.295.209-.39.362l-.004.006-.003.007a.346.346 0 0 1-.093.105.438.438 0 0 1-.455.033.37.37 0 0 1-.113-.093.314.314 0 0 1-.06-.117.287.287 0 0 1-.005-.124l-.329-.058.329.058a.305.305 0 0 1 .05-.119l.003-.006.004-.006a1.75 1.75 0 0 1 .663-.615 1.92 1.92 0 0 1 2.092.176c.324.256.537.606.607.985.07.378-.005.77-.215 1.105-.211.337-.546.6-.952.737l-.227.076v.36a.31.31 0 0 1-.103.227.414.414 0 0 1-.281.106c-.11 0-.21-.04-.281-.106A.31.31 0 0 1 7 8.167V7.5a.31.31 0 0 1 .104-.227.414.414 0 0 1 .28-.106c.272 0 .536-.1.735-.285a.977.977 0 0 0 .317-.715.977.977 0 0 0-.317-.716 1.08 1.08 0 0 0-.734-.284Zm0 0V5.5v-.333Zm-.368 4.906.011-.021.009-.023a.16.16 0 0 1 .02-.037.738.738 0 0 1 .051-.06.392.392 0 0 1 .12-.074.433.433 0 0 1 .313 0l.12-.31-.12.31a.39.39 0 0 1 .126.079c.034.032.06.07.077.108.017.039.026.08.025.12v.015a.29.29 0 0 1-.02.118v.001a.264.264 0 0 1-.067.097l.227.244-.227-.244a.321.321 0 0 1-.116.068l-.01.003-.01.005a.386.386 0 0 1-.293 0l-.01-.005-.01-.003a.321.321 0 0 1-.117-.068l-.227.244.227-.244a.264.264 0 0 1-.067-.097l-.006-.015-.007-.015a.193.193 0 0 1-.022-.093v-.036a.508.508 0 0 1-.002-.057.084.084 0 0 1 .005-.01ZM3.572 2.24a7.245 7.245 0 0 1 3.813-1.073c.902 0 1.795.165 2.627.485.833.32 1.588.789 2.223 1.378a6.324 6.324 0 0 1 1.478 2.055c.342.766.518 1.587.518 2.415a6 6 0 0 1-1.147 3.51 6.759 6.759 0 0 1-3.072 2.338 7.36 7.36 0 0 1-3.967.363 7.032 7.032 0 0 1-3.51-1.741A6.2 6.2 0 0 1 .669 8.73a5.892 5.892 0 0 1 .387-3.645A6.467 6.467 0 0 1 3.572 2.24Zm.446 9.978c.998.62 2.17.949 3.367.949 1.604 0 3.147-.592 4.288-1.652 1.142-1.06 1.789-2.504 1.789-4.015a5.4 5.4 0 0 0-1.031-3.158 6.007 6.007 0 0 0-2.729-2.08 6.488 6.488 0 0 0-3.498-.32 6.226 6.226 0 0 0-3.107 1.543A5.56 5.56 0 0 0 1.426 6.39a5.314 5.314 0 0 0 .348 3.287 5.773 5.773 0 0 0 2.244 2.54Z',
-                                            fill: '#68797E',
-                                            stroke: '#68797E',
-                                            'stroke-width': '.667',
-                                          }
-                                        ),
-                                      ]
-                                    ),
-                                  ]
-                                ),
-                                /*#__PURE__*/ (0,
-                                vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)(
-                                  'input',
-                                  {
-                                    class: 'form__input',
-                                    type: 'text',
-                                    placeholder:
-                                      'Enter the name of your organisation',
-                                  }
-                                ),
-                              ]
-                            ),
-                            /*#__PURE__*/ (0,
-                            vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)(
-                              'div',
-                              {
-                                class: 'mb-4',
-                              },
-                              [
-                                /*#__PURE__*/ (0,
-                                vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)(
-                                  'div',
-                                  {
-                                    class: 'flex items-center justify-between',
-                                  },
-                                  [
-                                    /*#__PURE__*/ (0,
-                                    vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)(
-                                      'label',
-                                      {
-                                        class: 'label',
-                                        for: '',
-                                      },
-                                      [
-                                        /*#__PURE__*/ (0,
-                                        vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(
-                                          'Publisher ID '
-                                        ),
-                                        /*#__PURE__*/ (0,
-                                        vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)(
-                                          'span',
-                                          {
-                                            class: 'text-crimson-40',
-                                          },
-                                          ' *'
-                                        ),
-                                      ]
-                                    ),
-                                    /*#__PURE__*/ (0,
-                                    vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)(
-                                      'svg',
-                                      {
-                                        width: '15',
-                                        height: '15',
-                                        fill: 'none',
-                                        xmlns: 'http://www.w3.org/2000/svg',
-                                      },
-                                      [
-                                        /*#__PURE__*/ (0,
-                                        vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)(
-                                          'path',
-                                          {
-                                            d: 'M7.385 5.167c-.18 0-.359.043-.518.128-.16.085-.295.209-.39.362l-.004.006-.003.007a.346.346 0 0 1-.093.105.438.438 0 0 1-.455.033.37.37 0 0 1-.113-.093.314.314 0 0 1-.06-.117.287.287 0 0 1-.005-.124l-.329-.058.329.058a.305.305 0 0 1 .05-.119l.003-.006.004-.006a1.75 1.75 0 0 1 .663-.615 1.92 1.92 0 0 1 2.092.176c.324.256.537.606.607.985.07.378-.005.77-.215 1.105-.211.337-.546.6-.952.737l-.227.076v.36a.31.31 0 0 1-.103.227.414.414 0 0 1-.281.106c-.11 0-.21-.04-.281-.106A.31.31 0 0 1 7 8.167V7.5a.31.31 0 0 1 .104-.227.414.414 0 0 1 .28-.106c.272 0 .536-.1.735-.285a.977.977 0 0 0 .317-.715.977.977 0 0 0-.317-.716 1.08 1.08 0 0 0-.734-.284Zm0 0V5.5v-.333Zm-.368 4.906.011-.021.009-.023a.16.16 0 0 1 .02-.037.738.738 0 0 1 .051-.06.392.392 0 0 1 .12-.074.433.433 0 0 1 .313 0l.12-.31-.12.31a.39.39 0 0 1 .126.079c.034.032.06.07.077.108.017.039.026.08.025.12v.015a.29.29 0 0 1-.02.118v.001a.264.264 0 0 1-.067.097l.227.244-.227-.244a.321.321 0 0 1-.116.068l-.01.003-.01.005a.386.386 0 0 1-.293 0l-.01-.005-.01-.003a.321.321 0 0 1-.117-.068l-.227.244.227-.244a.264.264 0 0 1-.067-.097l-.006-.015-.007-.015a.193.193 0 0 1-.022-.093v-.036a.508.508 0 0 1-.002-.057.084.084 0 0 1 .005-.01ZM3.572 2.24a7.245 7.245 0 0 1 3.813-1.073c.902 0 1.795.165 2.627.485.833.32 1.588.789 2.223 1.378a6.324 6.324 0 0 1 1.478 2.055c.342.766.518 1.587.518 2.415a6 6 0 0 1-1.147 3.51 6.759 6.759 0 0 1-3.072 2.338 7.36 7.36 0 0 1-3.967.363 7.032 7.032 0 0 1-3.51-1.741A6.2 6.2 0 0 1 .669 8.73a5.892 5.892 0 0 1 .387-3.645A6.467 6.467 0 0 1 3.572 2.24Zm.446 9.978c.998.62 2.17.949 3.367.949 1.604 0 3.147-.592 4.288-1.652 1.142-1.06 1.789-2.504 1.789-4.015a5.4 5.4 0 0 0-1.031-3.158 6.007 6.007 0 0 0-2.729-2.08 6.488 6.488 0 0 0-3.498-.32 6.226 6.226 0 0 0-3.107 1.543A5.56 5.56 0 0 0 1.426 6.39a5.314 5.314 0 0 0 .348 3.287 5.773 5.773 0 0 0 2.244 2.54Z',
-                                            fill: '#68797E',
-                                            stroke: '#68797E',
-                                            'stroke-width': '.667',
-                                          }
-                                        ),
-                                      ]
-                                    ),
-                                  ]
-                                ),
-                                /*#__PURE__*/ (0,
-                                vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)(
-                                  'input',
-                                  {
-                                    class: 'form__input',
-                                    type: 'text',
-                                    placeholder:
-                                      'For example, ‘dfid’ or ‘wordlbank’',
-                                  }
-                                ),
-                                /*#__PURE__*/ (0,
-                                vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)(
-                                  'span',
-                                  {
-                                    class: 'text-tiny font-normal text-n-40',
-                                  },
-                                  "You can use a short unique acronym of your organisation's name. "
-                                ),
-                              ]
-                            ),
-                            /*#__PURE__*/ (0,
-                            vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)(
-                              'div',
-                              {
-                                class: 'mb-4',
-                              },
-                              [
-                                /*#__PURE__*/ (0,
-                                vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)(
-                                  'div',
-                                  {
-                                    class: 'flex items-center justify-between',
-                                  },
-                                  [
-                                    /*#__PURE__*/ (0,
-                                    vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)(
-                                      'label',
-                                      {
-                                        class: 'label',
-                                        for: '',
-                                      },
-                                      [
-                                        /*#__PURE__*/ (0,
-                                        vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(
-                                          'Country '
-                                        ),
-                                        /*#__PURE__*/ (0,
-                                        vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)(
-                                          'span',
-                                          {
-                                            class: 'text-crimson-40',
-                                          },
-                                          ' *'
-                                        ),
-                                      ]
-                                    ),
-                                    /*#__PURE__*/ (0,
-                                    vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)(
-                                      'svg',
-                                      {
-                                        width: '15',
-                                        height: '15',
-                                        fill: 'none',
-                                        xmlns: 'http://www.w3.org/2000/svg',
-                                      },
-                                      [
-                                        /*#__PURE__*/ (0,
-                                        vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)(
-                                          'path',
-                                          {
-                                            d: 'M7.385 5.167c-.18 0-.359.043-.518.128-.16.085-.295.209-.39.362l-.004.006-.003.007a.346.346 0 0 1-.093.105.438.438 0 0 1-.455.033.37.37 0 0 1-.113-.093.314.314 0 0 1-.06-.117.287.287 0 0 1-.005-.124l-.329-.058.329.058a.305.305 0 0 1 .05-.119l.003-.006.004-.006a1.75 1.75 0 0 1 .663-.615 1.92 1.92 0 0 1 2.092.176c.324.256.537.606.607.985.07.378-.005.77-.215 1.105-.211.337-.546.6-.952.737l-.227.076v.36a.31.31 0 0 1-.103.227.414.414 0 0 1-.281.106c-.11 0-.21-.04-.281-.106A.31.31 0 0 1 7 8.167V7.5a.31.31 0 0 1 .104-.227.414.414 0 0 1 .28-.106c.272 0 .536-.1.735-.285a.977.977 0 0 0 .317-.715.977.977 0 0 0-.317-.716 1.08 1.08 0 0 0-.734-.284Zm0 0V5.5v-.333Zm-.368 4.906.011-.021.009-.023a.16.16 0 0 1 .02-.037.738.738 0 0 1 .051-.06.392.392 0 0 1 .12-.074.433.433 0 0 1 .313 0l.12-.31-.12.31a.39.39 0 0 1 .126.079c.034.032.06.07.077.108.017.039.026.08.025.12v.015a.29.29 0 0 1-.02.118v.001a.264.264 0 0 1-.067.097l.227.244-.227-.244a.321.321 0 0 1-.116.068l-.01.003-.01.005a.386.386 0 0 1-.293 0l-.01-.005-.01-.003a.321.321 0 0 1-.117-.068l-.227.244.227-.244a.264.264 0 0 1-.067-.097l-.006-.015-.007-.015a.193.193 0 0 1-.022-.093v-.036a.508.508 0 0 1-.002-.057.084.084 0 0 1 .005-.01ZM3.572 2.24a7.245 7.245 0 0 1 3.813-1.073c.902 0 1.795.165 2.627.485.833.32 1.588.789 2.223 1.378a6.324 6.324 0 0 1 1.478 2.055c.342.766.518 1.587.518 2.415a6 6 0 0 1-1.147 3.51 6.759 6.759 0 0 1-3.072 2.338 7.36 7.36 0 0 1-3.967.363 7.032 7.032 0 0 1-3.51-1.741A6.2 6.2 0 0 1 .669 8.73a5.892 5.892 0 0 1 .387-3.645A6.467 6.467 0 0 1 3.572 2.24Zm.446 9.978c.998.62 2.17.949 3.367.949 1.604 0 3.147-.592 4.288-1.652 1.142-1.06 1.789-2.504 1.789-4.015a5.4 5.4 0 0 0-1.031-3.158 6.007 6.007 0 0 0-2.729-2.08 6.488 6.488 0 0 0-3.498-.32 6.226 6.226 0 0 0-3.107 1.543A5.56 5.56 0 0 0 1.426 6.39a5.314 5.314 0 0 0 .348 3.287 5.773 5.773 0 0 0 2.244 2.54Z',
-                                            fill: '#68797E',
-                                            stroke: '#68797E',
-                                            'stroke-width': '.667',
-                                          }
-                                        ),
-                                      ]
-                                    ),
-                                  ]
-                                ),
-                                /*#__PURE__*/ (0,
-                                vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)(
-                                  'input',
-                                  {
-                                    class: 'form__input',
-                                    type: 'text',
-                                    placeholder: 'Select the country',
-                                  }
-                                ),
-                              ]
-                            ),
-                            /*#__PURE__*/ (0,
-                            vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)(
-                              'div',
-                              {
-                                class: 'mb-4',
-                              },
-                              [
-                                /*#__PURE__*/ (0,
-                                vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)(
-                                  'div',
-                                  {
-                                    class: 'flex items-center justify-between',
-                                  },
-                                  [
-                                    /*#__PURE__*/ (0,
-                                    vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)(
-                                      'label',
-                                      {
-                                        class: 'label',
-                                        for: '',
-                                      },
-                                      [
-                                        /*#__PURE__*/ (0,
-                                        vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(
-                                          'Organisation Registration Agency '
-                                        ),
-                                        /*#__PURE__*/ (0,
-                                        vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)(
-                                          'span',
-                                          {
-                                            class: 'text-crimson-40',
-                                          },
-                                          ' *'
-                                        ),
-                                      ]
-                                    ),
-                                    /*#__PURE__*/ (0,
-                                    vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)(
-                                      'svg',
-                                      {
-                                        width: '15',
-                                        height: '15',
-                                        fill: 'none',
-                                        xmlns: 'http://www.w3.org/2000/svg',
-                                      },
-                                      [
-                                        /*#__PURE__*/ (0,
-                                        vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)(
-                                          'path',
-                                          {
-                                            d: 'M7.385 5.167c-.18 0-.359.043-.518.128-.16.085-.295.209-.39.362l-.004.006-.003.007a.346.346 0 0 1-.093.105.438.438 0 0 1-.455.033.37.37 0 0 1-.113-.093.314.314 0 0 1-.06-.117.287.287 0 0 1-.005-.124l-.329-.058.329.058a.305.305 0 0 1 .05-.119l.003-.006.004-.006a1.75 1.75 0 0 1 .663-.615 1.92 1.92 0 0 1 2.092.176c.324.256.537.606.607.985.07.378-.005.77-.215 1.105-.211.337-.546.6-.952.737l-.227.076v.36a.31.31 0 0 1-.103.227.414.414 0 0 1-.281.106c-.11 0-.21-.04-.281-.106A.31.31 0 0 1 7 8.167V7.5a.31.31 0 0 1 .104-.227.414.414 0 0 1 .28-.106c.272 0 .536-.1.735-.285a.977.977 0 0 0 .317-.715.977.977 0 0 0-.317-.716 1.08 1.08 0 0 0-.734-.284Zm0 0V5.5v-.333Zm-.368 4.906.011-.021.009-.023a.16.16 0 0 1 .02-.037.738.738 0 0 1 .051-.06.392.392 0 0 1 .12-.074.433.433 0 0 1 .313 0l.12-.31-.12.31a.39.39 0 0 1 .126.079c.034.032.06.07.077.108.017.039.026.08.025.12v.015a.29.29 0 0 1-.02.118v.001a.264.264 0 0 1-.067.097l.227.244-.227-.244a.321.321 0 0 1-.116.068l-.01.003-.01.005a.386.386 0 0 1-.293 0l-.01-.005-.01-.003a.321.321 0 0 1-.117-.068l-.227.244.227-.244a.264.264 0 0 1-.067-.097l-.006-.015-.007-.015a.193.193 0 0 1-.022-.093v-.036a.508.508 0 0 1-.002-.057.084.084 0 0 1 .005-.01ZM3.572 2.24a7.245 7.245 0 0 1 3.813-1.073c.902 0 1.795.165 2.627.485.833.32 1.588.789 2.223 1.378a6.324 6.324 0 0 1 1.478 2.055c.342.766.518 1.587.518 2.415a6 6 0 0 1-1.147 3.51 6.759 6.759 0 0 1-3.072 2.338 7.36 7.36 0 0 1-3.967.363 7.032 7.032 0 0 1-3.51-1.741A6.2 6.2 0 0 1 .669 8.73a5.892 5.892 0 0 1 .387-3.645A6.467 6.467 0 0 1 3.572 2.24Zm.446 9.978c.998.62 2.17.949 3.367.949 1.604 0 3.147-.592 4.288-1.652 1.142-1.06 1.789-2.504 1.789-4.015a5.4 5.4 0 0 0-1.031-3.158 6.007 6.007 0 0 0-2.729-2.08 6.488 6.488 0 0 0-3.498-.32 6.226 6.226 0 0 0-3.107 1.543A5.56 5.56 0 0 0 1.426 6.39a5.314 5.314 0 0 0 .348 3.287 5.773 5.773 0 0 0 2.244 2.54Z',
-                                            fill: '#68797E',
-                                            stroke: '#68797E',
-                                            'stroke-width': '.667',
-                                          }
-                                        ),
-                                      ]
-                                    ),
-                                  ]
-                                ),
-                                /*#__PURE__*/ (0,
-                                vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)(
-                                  'input',
-                                  {
-                                    class: 'form__input',
-                                    type: 'text',
-                                    placeholder:
-                                      'Select your Organisation Registration Agency',
-                                  }
-                                ),
-                              ]
-                            ),
-                            /*#__PURE__*/ (0,
-                            vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)(
-                              'div',
-                              {
-                                class: 'mb-4',
-                              },
-                              [
-                                /*#__PURE__*/ (0,
-                                vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)(
-                                  'div',
-                                  {
-                                    class: 'flex items-center justify-between',
-                                  },
-                                  [
-                                    /*#__PURE__*/ (0,
-                                    vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)(
-                                      'label',
-                                      {
-                                        class: 'label',
-                                        for: '',
-                                      },
-                                      [
-                                        /*#__PURE__*/ (0,
-                                        vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(
-                                          'Organisation Registration Number '
-                                        ),
-                                        /*#__PURE__*/ (0,
-                                        vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)(
-                                          'span',
-                                          {
-                                            class: 'text-crimson-40',
-                                          },
-                                          ' *'
-                                        ),
-                                      ]
-                                    ),
-                                    /*#__PURE__*/ (0,
-                                    vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)(
-                                      'svg',
-                                      {
-                                        width: '15',
-                                        height: '15',
-                                        fill: 'none',
-                                        xmlns: 'http://www.w3.org/2000/svg',
-                                      },
-                                      [
-                                        /*#__PURE__*/ (0,
-                                        vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)(
-                                          'path',
-                                          {
-                                            d: 'M7.385 5.167c-.18 0-.359.043-.518.128-.16.085-.295.209-.39.362l-.004.006-.003.007a.346.346 0 0 1-.093.105.438.438 0 0 1-.455.033.37.37 0 0 1-.113-.093.314.314 0 0 1-.06-.117.287.287 0 0 1-.005-.124l-.329-.058.329.058a.305.305 0 0 1 .05-.119l.003-.006.004-.006a1.75 1.75 0 0 1 .663-.615 1.92 1.92 0 0 1 2.092.176c.324.256.537.606.607.985.07.378-.005.77-.215 1.105-.211.337-.546.6-.952.737l-.227.076v.36a.31.31 0 0 1-.103.227.414.414 0 0 1-.281.106c-.11 0-.21-.04-.281-.106A.31.31 0 0 1 7 8.167V7.5a.31.31 0 0 1 .104-.227.414.414 0 0 1 .28-.106c.272 0 .536-.1.735-.285a.977.977 0 0 0 .317-.715.977.977 0 0 0-.317-.716 1.08 1.08 0 0 0-.734-.284Zm0 0V5.5v-.333Zm-.368 4.906.011-.021.009-.023a.16.16 0 0 1 .02-.037.738.738 0 0 1 .051-.06.392.392 0 0 1 .12-.074.433.433 0 0 1 .313 0l.12-.31-.12.31a.39.39 0 0 1 .126.079c.034.032.06.07.077.108.017.039.026.08.025.12v.015a.29.29 0 0 1-.02.118v.001a.264.264 0 0 1-.067.097l.227.244-.227-.244a.321.321 0 0 1-.116.068l-.01.003-.01.005a.386.386 0 0 1-.293 0l-.01-.005-.01-.003a.321.321 0 0 1-.117-.068l-.227.244.227-.244a.264.264 0 0 1-.067-.097l-.006-.015-.007-.015a.193.193 0 0 1-.022-.093v-.036a.508.508 0 0 1-.002-.057.084.084 0 0 1 .005-.01ZM3.572 2.24a7.245 7.245 0 0 1 3.813-1.073c.902 0 1.795.165 2.627.485.833.32 1.588.789 2.223 1.378a6.324 6.324 0 0 1 1.478 2.055c.342.766.518 1.587.518 2.415a6 6 0 0 1-1.147 3.51 6.759 6.759 0 0 1-3.072 2.338 7.36 7.36 0 0 1-3.967.363 7.032 7.032 0 0 1-3.51-1.741A6.2 6.2 0 0 1 .669 8.73a5.892 5.892 0 0 1 .387-3.645A6.467 6.467 0 0 1 3.572 2.24Zm.446 9.978c.998.62 2.17.949 3.367.949 1.604 0 3.147-.592 4.288-1.652 1.142-1.06 1.789-2.504 1.789-4.015a5.4 5.4 0 0 0-1.031-3.158 6.007 6.007 0 0 0-2.729-2.08 6.488 6.488 0 0 0-3.498-.32 6.226 6.226 0 0 0-3.107 1.543A5.56 5.56 0 0 0 1.426 6.39a5.314 5.314 0 0 0 .348 3.287 5.773 5.773 0 0 0 2.244 2.54Z',
-                                            fill: '#68797E',
-                                            stroke: '#68797E',
-                                            'stroke-width': '.667',
-                                          }
-                                        ),
-                                      ]
-                                    ),
-                                  ]
-                                ),
-                                /*#__PURE__*/ (0,
-                                vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)(
-                                  'input',
-                                  {
-                                    class: 'form__input',
-                                    type: 'text',
-                                    placeholder: '',
-                                  }
-                                ),
-                              ]
-                            ),
-                            /*#__PURE__*/ (0,
-                            vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)(
-                              'div',
-                              {
-                                class: 'mb-4',
-                              },
-                              [
-                                /*#__PURE__*/ (0,
-                                vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)(
-                                  'div',
-                                  {
-                                    class: 'flex items-center justify-between',
-                                  },
-                                  [
-                                    /*#__PURE__*/ (0,
-                                    vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)(
-                                      'label',
-                                      {
-                                        class: 'label',
-                                        for: '',
-                                      },
-                                      [
-                                        /*#__PURE__*/ (0,
-                                        vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(
-                                          'IATI Organisational Identifier '
-                                        ),
-                                        /*#__PURE__*/ (0,
-                                        vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)(
-                                          'span',
-                                          {
-                                            class: 'text-crimson-40',
-                                          },
-                                          ' *'
-                                        ),
-                                      ]
-                                    ),
-                                    /*#__PURE__*/ (0,
-                                    vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)(
-                                      'svg',
-                                      {
-                                        width: '15',
-                                        height: '15',
-                                        fill: 'none',
-                                        xmlns: 'http://www.w3.org/2000/svg',
-                                      },
-                                      [
-                                        /*#__PURE__*/ (0,
-                                        vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)(
-                                          'path',
-                                          {
-                                            d: 'M7.385 5.167c-.18 0-.359.043-.518.128-.16.085-.295.209-.39.362l-.004.006-.003.007a.346.346 0 0 1-.093.105.438.438 0 0 1-.455.033.37.37 0 0 1-.113-.093.314.314 0 0 1-.06-.117.287.287 0 0 1-.005-.124l-.329-.058.329.058a.305.305 0 0 1 .05-.119l.003-.006.004-.006a1.75 1.75 0 0 1 .663-.615 1.92 1.92 0 0 1 2.092.176c.324.256.537.606.607.985.07.378-.005.77-.215 1.105-.211.337-.546.6-.952.737l-.227.076v.36a.31.31 0 0 1-.103.227.414.414 0 0 1-.281.106c-.11 0-.21-.04-.281-.106A.31.31 0 0 1 7 8.167V7.5a.31.31 0 0 1 .104-.227.414.414 0 0 1 .28-.106c.272 0 .536-.1.735-.285a.977.977 0 0 0 .317-.715.977.977 0 0 0-.317-.716 1.08 1.08 0 0 0-.734-.284Zm0 0V5.5v-.333Zm-.368 4.906.011-.021.009-.023a.16.16 0 0 1 .02-.037.738.738 0 0 1 .051-.06.392.392 0 0 1 .12-.074.433.433 0 0 1 .313 0l.12-.31-.12.31a.39.39 0 0 1 .126.079c.034.032.06.07.077.108.017.039.026.08.025.12v.015a.29.29 0 0 1-.02.118v.001a.264.264 0 0 1-.067.097l.227.244-.227-.244a.321.321 0 0 1-.116.068l-.01.003-.01.005a.386.386 0 0 1-.293 0l-.01-.005-.01-.003a.321.321 0 0 1-.117-.068l-.227.244.227-.244a.264.264 0 0 1-.067-.097l-.006-.015-.007-.015a.193.193 0 0 1-.022-.093v-.036a.508.508 0 0 1-.002-.057.084.084 0 0 1 .005-.01ZM3.572 2.24a7.245 7.245 0 0 1 3.813-1.073c.902 0 1.795.165 2.627.485.833.32 1.588.789 2.223 1.378a6.324 6.324 0 0 1 1.478 2.055c.342.766.518 1.587.518 2.415a6 6 0 0 1-1.147 3.51 6.759 6.759 0 0 1-3.072 2.338 7.36 7.36 0 0 1-3.967.363 7.032 7.032 0 0 1-3.51-1.741A6.2 6.2 0 0 1 .669 8.73a5.892 5.892 0 0 1 .387-3.645A6.467 6.467 0 0 1 3.572 2.24Zm.446 9.978c.998.62 2.17.949 3.367.949 1.604 0 3.147-.592 4.288-1.652 1.142-1.06 1.789-2.504 1.789-4.015a5.4 5.4 0 0 0-1.031-3.158 6.007 6.007 0 0 0-2.729-2.08 6.488 6.488 0 0 0-3.498-.32 6.226 6.226 0 0 0-3.107 1.543A5.56 5.56 0 0 0 1.426 6.39a5.314 5.314 0 0 0 .348 3.287 5.773 5.773 0 0 0 2.244 2.54Z',
-                                            fill: '#68797E',
-                                            stroke: '#68797E',
-                                            'stroke-width': '.667',
-                                          }
-                                        ),
-                                      ]
-                                    ),
-                                  ]
-                                ),
-                                /*#__PURE__*/ (0,
-                                vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)(
-                                  'input',
-                                  {
-                                    class: 'form__input',
-                                    type: 'text',
-                                    placeholder: '',
-                                  }
-                                ),
-                                /*#__PURE__*/ (0,
-                                vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)(
-                                  'span',
-                                  {
-                                    class: 'text-tiny font-normal text-n-40',
-                                  },
-                                  'This will be autogenerated.'
-                                ),
-                              ]
-                            ),
-                          ]
-                        ),
-                      ]
+                    vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(
+                      ' A verification email has been sent to '
                     ),
-                    /*#__PURE__*/ (0,
-                    vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)(
-                      'div',
-                      {
-                        class: 'flex items-center justify-between',
-                      },
-                      [
-                        /*#__PURE__*/ (0,
-                        vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)(
-                          'span',
-                          {
-                            class: 'text-sm font-normal text-n-40',
-                          },
-                          [
-                            /*#__PURE__*/ (0,
-                            vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(
-                              'Already have an account? '
-                            ),
-                            /*#__PURE__*/ (0,
-                            vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)(
-                              'a',
-                              {
-                                class:
-                                  'font-bold text-bluecoral hover:border-b-2 hover:border-b-turquoise',
-                                href: '#',
-                              },
-                              'Sign In.'
-                            ),
-                          ]
-                        ),
-                        /*#__PURE__*/ (0,
-                        vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)(
-                          'button',
-                          {
-                            class: 'btn btn-primary',
-                          },
-                          [
-                            /*#__PURE__*/ (0,
-                            vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(
-                              ' Next Step '
-                            ),
-                            /*#__PURE__*/ (0,
-                            vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)(
-                              'svg',
-                              {
-                                width: '24',
-                                height: '24',
-                                fill: 'none',
-                                xmlns: 'http://www.w3.org/2000/svg',
-                              },
-                              [
-                                /*#__PURE__*/ (0,
-                                vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)(
-                                  'path',
-                                  {
-                                    d: 'M3 12h18M16 7l5 5-5 5',
-                                    stroke: 'currentColor',
-                                    'stroke-width': '2',
-                                    'stroke-linecap': 'round',
-                                    'stroke-linejoin': 'round',
-                                  }
-                                ),
-                              ]
-                            ),
-                          ]
-                        ),
-                      ]
-                    ),
-                  ]
-                ),
-                /*#__PURE__*/ (0,
-                vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)(
-                  'aside',
-                  null,
-                  [
                     /*#__PURE__*/ (0,
                     vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)(
                       'span',
                       {
-                        class: 'text-base font-bold',
-                      },
-                      'Step 1 out of 3'
-                    ),
-                    /*#__PURE__*/ (0,
-                    vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)(
-                      'ul',
-                      {
-                        class: 'relative mt-6 text-sm text-n-40',
+                        class: 'font-bold text-n-50',
                       },
                       [
                         /*#__PURE__*/ (0,
                         vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)(
-                          'li',
+                          'a',
                           {
-                            class: 'mb-6 font-bold text-n-50',
+                            href: 'mailto:admin@admin.com',
                           },
-                          [
-                            /*#__PURE__*/ (0,
-                            vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)(
-                              'span',
-                              {
-                                class: 'mr-3 ml-6',
-                              },
-                              '1'
-                            ),
-                            /*#__PURE__*/ (0,
-                            vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(
-                              ' Publisher Information '
-                            ),
-                            /*#__PURE__*/ (0,
-                            vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)(
-                              'p',
-                              {
-                                class: 'detail mt-2 font-normal',
-                              },
-                              ' This information will be used to create a Publisher in IATI Publisher. '
-                            ),
-                          ]
+                          'admin@admin.com'
                         ),
+                      ]
+                    ),
+                    /*#__PURE__*/ (0,
+                    vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(
+                      ' . Please click on the link in the email to verify and activate your new IATI publisher account. '
+                    ),
+                  ]
+                ),
+                /*#__PURE__*/ (0,
+                vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)('img', {
+                  src: '/images/mail.png',
+                  alt: '',
+                }),
+                /*#__PURE__*/ (0,
+                vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)(
+                  'button',
+                  {
+                    class: 'btn btn-primary',
+                  },
+                  [
+                    /*#__PURE__*/ (0,
+                    vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(
+                      ' Get started '
+                    ),
+                    /*#__PURE__*/ (0,
+                    vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)(
+                      'svg',
+                      {
+                        width: '24',
+                        height: '24',
+                        fill: 'none',
+                        xmlns: 'http://www.w3.org/2000/svg',
+                      },
+                      [
                         /*#__PURE__*/ (0,
                         vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)(
-                          'li',
+                          'path',
                           {
-                            class: 'mb-6',
-                          },
-                          [
-                            /*#__PURE__*/ (0,
-                            vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)(
-                              'span',
-                              {
-                                class: 'mr-3 ml-6',
-                              },
-                              '2'
-                            ),
-                            /*#__PURE__*/ (0,
-                            vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(
-                              ' Administrator Information '
-                            ),
-                          ]
-                        ),
-                        /*#__PURE__*/ (0,
-                        vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)(
-                          'li',
-                          null,
-                          [
-                            /*#__PURE__*/ (0,
-                            vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)(
-                              'span',
-                              {
-                                class: 'mr-3 ml-6',
-                              },
-                              '3'
-                            ),
-                            /*#__PURE__*/ (0,
-                            vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(
-                              ' Email Verification'
-                            ),
-                          ]
+                            d: 'M3 12h18M16 7l5 5-5 5',
+                            stroke: 'currentColor',
+                            'stroke-width': '2',
+                            'stroke-linecap': 'round',
+                            'stroke-linejoin': 'round',
+                          }
                         ),
                       ]
                     ),
@@ -30576,14 +30577,20 @@ return withDirectives(h(comp), [
           /* HOISTED */
         );
 
-        var _hoisted_3 = [_hoisted_2];
+        var _hoisted_3 = /*#__PURE__*/ (0,
+        vue__WEBPACK_IMPORTED_MODULE_0__.createStaticVNode)(
+          '<aside><span class="text-base font-bold">Step 1 out of 3</span><ul class="relative mt-6 text-sm text-n-40"><li class="mb-6 font-bold text-bluecoral"><span class="mr-3 ml-6">1</span> Publisher Information </li><li class="mb-6 font-bold text-bluecoral"><span class="mr-3 ml-6">2</span> Administrator Information </li><li class="list__active font-bold text-n-50"><span class="mr-3 ml-6">3</span> Email Verification <p class="detail mt-2 font-normal xl:pr-2"> Please verify and activate your IATI Publisher account through your provided email. </p></li></ul></aside>',
+          1
+        );
+
+        var _hoisted_4 = [_hoisted_2, _hoisted_3];
         function render(_ctx, _cache) {
           return (
             (0, vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(),
             (0, vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(
-              'section',
+              'div',
               _hoisted_1,
-              _hoisted_3
+              _hoisted_4
             )
           );
         }
@@ -36400,10 +36407,10 @@ return withDirectives(h(comp), [
         /***/
       },
 
-    /***/ './node_modules/css-loader/dist/cjs.js??clonedRuleSet-14.use[1]!./node_modules/vue-loader/dist/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-14.use[2]!./node_modules/sass-loader/dist/cjs.js??clonedRuleSet-14.use[3]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/assets/js/views/web/RegisterPage.vue?vue&type=style&index=0&id=52266200&lang=scss':
-      /*!********************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/css-loader/dist/cjs.js??clonedRuleSet-14.use[1]!./node_modules/vue-loader/dist/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-14.use[2]!./node_modules/sass-loader/dist/cjs.js??clonedRuleSet-14.use[3]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/assets/js/views/web/RegisterPage.vue?vue&type=style&index=0&id=52266200&lang=scss ***!
-  \********************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
+    /***/ './node_modules/css-loader/dist/cjs.js??clonedRuleSet-14.use[1]!./node_modules/vue-loader/dist/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-14.use[2]!./node_modules/sass-loader/dist/cjs.js??clonedRuleSet-14.use[3]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/assets/js/views/web/PublisherInfo.vue?vue&type=style&index=0&id=8f5bfee8&lang=scss':
+      /*!*********************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/css-loader/dist/cjs.js??clonedRuleSet-14.use[1]!./node_modules/vue-loader/dist/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-14.use[2]!./node_modules/sass-loader/dist/cjs.js??clonedRuleSet-14.use[3]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/assets/js/views/web/PublisherInfo.vue?vue&type=style&index=0&id=8f5bfee8&lang=scss ***!
+  \*********************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
       /***/ (module, __webpack_exports__, __webpack_require__) => {
         'use strict';
         __webpack_require__.r(__webpack_exports__);
@@ -36430,7 +36437,7 @@ return withDirectives(h(comp), [
         // Module
         ___CSS_LOADER_EXPORT___.push([
           module.id,
-          '.section__container {\n  max-width: 1206px;\n  margin: auto;\n}\n.section__container .section__wrapper {\n  box-shadow: 0px 20px 40px 20px rgba(0, 0, 0, 0.05);\n}\n.section__container .section__title {\n  margin-bottom: 40px;\n}\n.section__container .section__title p {\n  font-weight: normal;\n  font-size: 16px;\n  font-style: normal;\n  --tw-text-opacity: 1;\n  color: rgba(var(--n-40), var(--tw-text-opacity));\n}\n.section__container .form {\n  --tw-bg-opacity: 1;\n  background-color: rgba(var(--white), var(--tw-bg-opacity));\n  padding: 40px 80px;\n  border-top-left-radius: 8px;\n  border-bottom-left-radius: 8px;\n}\n.section__container .form__container {\n  border-bottom-width: 2px;\n  --tw-border-opacity: 1;\n  border-bottom-color: rgba(var(--n-10), var(--tw-border-opacity));\n  margin-bottom: 24px;\n}\n.section__container .form__container .label {\n  font-size: 14px;\n  font-weight: normal;\n  font-style: normal;\n}\n.section__container .form__input {\n  border-width: 1px;\n  --tw-border-opacity: 1;\n  border-color: rgba(var(--n-30), var(--tw-border-opacity));\n  width: 100%;\n  padding: 13px 0 13px 16px;\n  margin-top: 8px;\n  outline: none;\n  border-radius: 4px;\n  transition: 0.3s;\n}\n.section__container .form__input::-moz-placeholder {\n  --tw-text-opacity: 1;\n  color: rgba(var(--n-40), var(--tw-text-opacity));\n  font-size: 14px;\n  font-weight: normal;\n  font-style: normal;\n  letter-spacing: -0.02em;\n}\n.section__container .form__input:-ms-input-placeholder {\n  --tw-text-opacity: 1;\n  color: rgba(var(--n-40), var(--tw-text-opacity));\n  font-size: 14px;\n  font-weight: normal;\n  font-style: normal;\n  letter-spacing: -0.02em;\n}\n.section__container .form__input::placeholder {\n  --tw-text-opacity: 1;\n  color: rgba(var(--n-40), var(--tw-text-opacity));\n  font-size: 14px;\n  font-weight: normal;\n  font-style: normal;\n  letter-spacing: -0.02em;\n}\n.section__container .form__input:focus {\n  border-width: 1px;\n  --tw-border-opacity: 1;\n  border-color: rgba(var(--n-50), var(--tw-border-opacity));\n  --tw-bg-opacity: 1;\n  background-color: rgba(var(--n-10), var(--tw-bg-opacity));\n}\n.section__container .form__input:focus::-moz-placeholder {\n  --tw-text-opacity: 1;\n  color: rgba(var(--n-50), var(--tw-text-opacity));\n}\n.section__container .form__input:focus:-ms-input-placeholder {\n  --tw-text-opacity: 1;\n  color: rgba(var(--n-50), var(--tw-text-opacity));\n}\n.section__container .form__input:focus::placeholder {\n  --tw-text-opacity: 1;\n  color: rgba(var(--n-50), var(--tw-text-opacity));\n}\n.section__container aside {\n  --tw-bg-opacity: 1;\n  background-color: rgba(var(--eggshell), var(--tw-bg-opacity));\n  padding: 96px 90px 40px 32px;\n}\n.section__container aside ul::before {\n  content: "";\n  width: 4px;\n  height: 175px;\n  --tw-bg-opacity: 1;\n  background-color: rgba(var(--n-20), var(--tw-bg-opacity));\n  border-radius: 2px;\n  position: absolute;\n  left: 0px;\n  top: 0px;\n}\n.section__container aside .detail {\n  margin-left: 45px;\n}\n.section__container aside li::after {\n  position: absolute;\n  top: 0;\n  left: -1px;\n  width: 6px;\n  height: 85px;\n  --tw-bg-opacity: 1;\n  background-color: rgba(var(--turquoise), var(--tw-bg-opacity));\n  content: "";\n  border-radius: 2px;\n}\n@media screen and (min-width: 1024px) {\n.section .form__content {\n    display: grid;\n    grid-template-columns: repeat(2, 1fr);\n    gap: 16px;\n    margin-top: 24px;\n}\n}',
+          '.section__container {\n  max-width: 1206px;\n  margin: auto;\n}\n.section__container .feedback {\n  width: 702px;\n}\n.section__container .section__wrapper {\n  box-shadow: 0px 20px 40px 20px rgba(0, 0, 0, 0.05);\n}\n.section__container .section__title {\n  margin-bottom: 40px;\n}\n.section__container .section__title p {\n  font-weight: normal;\n  font-size: 16px;\n  font-style: normal;\n  --tw-text-opacity: 1;\n  color: rgba(var(--n-40), var(--tw-text-opacity));\n}\n.section__container .form {\n  --tw-bg-opacity: 1;\n  background-color: rgba(var(--white), var(--tw-bg-opacity));\n  padding: 40px 80px;\n  border-top-left-radius: 8px;\n  border-bottom-left-radius: 8px;\n  width: 862px;\n}\n.section__container .form__container {\n  border-bottom-width: 2px;\n  --tw-border-opacity: 1;\n  border-bottom-color: rgba(var(--n-10), var(--tw-border-opacity));\n  margin-bottom: 24px;\n}\n.section__container .form__container .label {\n  font-size: 14px;\n  font-weight: normal;\n  font-style: normal;\n}\n.section__container .form__input {\n  border-width: 1px;\n  --tw-border-opacity: 1;\n  border-color: rgba(var(--n-30), var(--tw-border-opacity));\n  width: 100%;\n  padding: 13px 0 13px 16px;\n  margin-top: 8px;\n  outline: none;\n  border-radius: 4px;\n  transition: 0.3s;\n}\n.section__container .form__input::-moz-placeholder {\n  --tw-text-opacity: 1;\n  color: rgba(var(--n-40), var(--tw-text-opacity));\n  font-size: 14px;\n  font-weight: normal;\n  font-style: normal;\n  letter-spacing: -0.02em;\n}\n.section__container .form__input:-ms-input-placeholder {\n  --tw-text-opacity: 1;\n  color: rgba(var(--n-40), var(--tw-text-opacity));\n  font-size: 14px;\n  font-weight: normal;\n  font-style: normal;\n  letter-spacing: -0.02em;\n}\n.section__container .form__input::placeholder {\n  --tw-text-opacity: 1;\n  color: rgba(var(--n-40), var(--tw-text-opacity));\n  font-size: 14px;\n  font-weight: normal;\n  font-style: normal;\n  letter-spacing: -0.02em;\n}\n.section__container .form__input:focus {\n  border-width: 1px;\n  --tw-border-opacity: 1;\n  border-color: rgba(var(--n-50), var(--tw-border-opacity));\n  --tw-bg-opacity: 1;\n  background-color: rgba(var(--n-10), var(--tw-bg-opacity));\n}\n.section__container .form__input:focus::-moz-placeholder {\n  --tw-text-opacity: 1;\n  color: rgba(var(--n-50), var(--tw-text-opacity));\n}\n.section__container .form__input:focus:-ms-input-placeholder {\n  --tw-text-opacity: 1;\n  color: rgba(var(--n-50), var(--tw-text-opacity));\n}\n.section__container .form__input:focus::placeholder {\n  --tw-text-opacity: 1;\n  color: rgba(var(--n-50), var(--tw-text-opacity));\n}\n.section__container aside {\n  --tw-bg-opacity: 1;\n  background-color: rgba(var(--eggshell), var(--tw-bg-opacity));\n  padding: 96px 80px 40px 32px;\n  width: 344px;\n}\n.section__container aside li::before {\n  content: "";\n  width: 4px;\n  height: 175px;\n  --tw-bg-opacity: 1;\n  background-color: rgba(var(--n-20), var(--tw-bg-opacity));\n  border-radius: 2px;\n  position: absolute;\n  left: 0px;\n  top: 0px;\n}\n.section__container aside .detail {\n  margin-left: 45px;\n}\n.section__container aside .list__active::after {\n  position: absolute;\n  bottom: 0;\n  left: -1px;\n  width: 6px;\n  height: 85px;\n  --tw-bg-opacity: 1;\n  background-color: rgba(var(--turquoise), var(--tw-bg-opacity));\n  content: "";\n  border-radius: 2px;\n}\n@media screen and (min-width: 1024px) {\n.section .form__content {\n    display: grid;\n    grid-template-columns: repeat(2, 1fr);\n    gap: 16px;\n    margin-top: 24px;\n}\n}',
           '',
         ]);
         // Exports
@@ -55332,10 +55339,10 @@ return withDirectives(h(comp), [
         /***/
       },
 
-    /***/ './node_modules/style-loader/dist/cjs.js!./node_modules/css-loader/dist/cjs.js??clonedRuleSet-14.use[1]!./node_modules/vue-loader/dist/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-14.use[2]!./node_modules/sass-loader/dist/cjs.js??clonedRuleSet-14.use[3]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/assets/js/views/web/RegisterPage.vue?vue&type=style&index=0&id=52266200&lang=scss':
-      /*!************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/style-loader/dist/cjs.js!./node_modules/css-loader/dist/cjs.js??clonedRuleSet-14.use[1]!./node_modules/vue-loader/dist/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-14.use[2]!./node_modules/sass-loader/dist/cjs.js??clonedRuleSet-14.use[3]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/assets/js/views/web/RegisterPage.vue?vue&type=style&index=0&id=52266200&lang=scss ***!
-  \************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
+    /***/ './node_modules/style-loader/dist/cjs.js!./node_modules/css-loader/dist/cjs.js??clonedRuleSet-14.use[1]!./node_modules/vue-loader/dist/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-14.use[2]!./node_modules/sass-loader/dist/cjs.js??clonedRuleSet-14.use[3]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/assets/js/views/web/PublisherInfo.vue?vue&type=style&index=0&id=8f5bfee8&lang=scss':
+      /*!*************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/style-loader/dist/cjs.js!./node_modules/css-loader/dist/cjs.js??clonedRuleSet-14.use[1]!./node_modules/vue-loader/dist/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-14.use[2]!./node_modules/sass-loader/dist/cjs.js??clonedRuleSet-14.use[3]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/assets/js/views/web/PublisherInfo.vue?vue&type=style&index=0&id=8f5bfee8&lang=scss ***!
+  \*************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
       /***/ (
         __unused_webpack_module,
         __webpack_exports__,
@@ -55355,9 +55362,9 @@ return withDirectives(h(comp), [
           /*#__PURE__*/ __webpack_require__.n(
             _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0__
           );
-        /* harmony import */ var _node_modules_css_loader_dist_cjs_js_clonedRuleSet_14_use_1_node_modules_vue_loader_dist_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_14_use_2_node_modules_sass_loader_dist_cjs_js_clonedRuleSet_14_use_3_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_RegisterPage_vue_vue_type_style_index_0_id_52266200_lang_scss__WEBPACK_IMPORTED_MODULE_1__ =
+        /* harmony import */ var _node_modules_css_loader_dist_cjs_js_clonedRuleSet_14_use_1_node_modules_vue_loader_dist_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_14_use_2_node_modules_sass_loader_dist_cjs_js_clonedRuleSet_14_use_3_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_PublisherInfo_vue_vue_type_style_index_0_id_8f5bfee8_lang_scss__WEBPACK_IMPORTED_MODULE_1__ =
           __webpack_require__(
-            /*! !!../../../../../node_modules/css-loader/dist/cjs.js??clonedRuleSet-14.use[1]!../../../../../node_modules/vue-loader/dist/stylePostLoader.js!../../../../../node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-14.use[2]!../../../../../node_modules/sass-loader/dist/cjs.js??clonedRuleSet-14.use[3]!../../../../../node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./RegisterPage.vue?vue&type=style&index=0&id=52266200&lang=scss */ './node_modules/css-loader/dist/cjs.js??clonedRuleSet-14.use[1]!./node_modules/vue-loader/dist/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-14.use[2]!./node_modules/sass-loader/dist/cjs.js??clonedRuleSet-14.use[3]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/assets/js/views/web/RegisterPage.vue?vue&type=style&index=0&id=52266200&lang=scss'
+            /*! !!../../../../../node_modules/css-loader/dist/cjs.js??clonedRuleSet-14.use[1]!../../../../../node_modules/vue-loader/dist/stylePostLoader.js!../../../../../node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-14.use[2]!../../../../../node_modules/sass-loader/dist/cjs.js??clonedRuleSet-14.use[3]!../../../../../node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./PublisherInfo.vue?vue&type=style&index=0&id=8f5bfee8&lang=scss */ './node_modules/css-loader/dist/cjs.js??clonedRuleSet-14.use[1]!./node_modules/vue-loader/dist/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-14.use[2]!./node_modules/sass-loader/dist/cjs.js??clonedRuleSet-14.use[3]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/assets/js/views/web/PublisherInfo.vue?vue&type=style&index=0&id=8f5bfee8&lang=scss'
           );
 
         var options = {};
@@ -55367,14 +55374,14 @@ return withDirectives(h(comp), [
 
         var update =
           _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0___default()(
-            _node_modules_css_loader_dist_cjs_js_clonedRuleSet_14_use_1_node_modules_vue_loader_dist_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_14_use_2_node_modules_sass_loader_dist_cjs_js_clonedRuleSet_14_use_3_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_RegisterPage_vue_vue_type_style_index_0_id_52266200_lang_scss__WEBPACK_IMPORTED_MODULE_1__[
+            _node_modules_css_loader_dist_cjs_js_clonedRuleSet_14_use_1_node_modules_vue_loader_dist_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_14_use_2_node_modules_sass_loader_dist_cjs_js_clonedRuleSet_14_use_3_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_PublisherInfo_vue_vue_type_style_index_0_id_8f5bfee8_lang_scss__WEBPACK_IMPORTED_MODULE_1__[
               'default'
             ],
             options
           );
 
         /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ =
-          _node_modules_css_loader_dist_cjs_js_clonedRuleSet_14_use_1_node_modules_vue_loader_dist_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_14_use_2_node_modules_sass_loader_dist_cjs_js_clonedRuleSet_14_use_3_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_RegisterPage_vue_vue_type_style_index_0_id_52266200_lang_scss__WEBPACK_IMPORTED_MODULE_1__[
+          _node_modules_css_loader_dist_cjs_js_clonedRuleSet_14_use_1_node_modules_vue_loader_dist_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_14_use_2_node_modules_sass_loader_dist_cjs_js_clonedRuleSet_14_use_3_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_PublisherInfo_vue_vue_type_style_index_0_id_8f5bfee8_lang_scss__WEBPACK_IMPORTED_MODULE_1__[
             'default'
           ].locals || {};
 
@@ -55752,10 +55759,10 @@ return withDirectives(h(comp), [
         /***/
       },
 
-    /***/ './resources/assets/js/views/web/RegisterPage.vue':
-      /*!********************************************************!*\
-  !*** ./resources/assets/js/views/web/RegisterPage.vue ***!
-  \********************************************************/
+    /***/ './resources/assets/js/views/web/EmailVerification.vue':
+      /*!*************************************************************!*\
+  !*** ./resources/assets/js/views/web/EmailVerification.vue ***!
+  \*************************************************************/
       /***/ (
         __unused_webpack_module,
         __webpack_exports__,
@@ -55767,15 +55774,11 @@ return withDirectives(h(comp), [
           /* harmony export */ default: () => __WEBPACK_DEFAULT_EXPORT__,
           /* harmony export */
         });
-        /* harmony import */ var _RegisterPage_vue_vue_type_template_id_52266200__WEBPACK_IMPORTED_MODULE_0__ =
+        /* harmony import */ var _EmailVerification_vue_vue_type_template_id_7cda5c19__WEBPACK_IMPORTED_MODULE_0__ =
           __webpack_require__(
-            /*! ./RegisterPage.vue?vue&type=template&id=52266200 */ './resources/assets/js/views/web/RegisterPage.vue?vue&type=template&id=52266200'
+            /*! ./EmailVerification.vue?vue&type=template&id=7cda5c19 */ './resources/assets/js/views/web/EmailVerification.vue?vue&type=template&id=7cda5c19'
           );
-        /* harmony import */ var _RegisterPage_vue_vue_type_style_index_0_id_52266200_lang_scss__WEBPACK_IMPORTED_MODULE_1__ =
-          __webpack_require__(
-            /*! ./RegisterPage.vue?vue&type=style&index=0&id=52266200&lang=scss */ './resources/assets/js/views/web/RegisterPage.vue?vue&type=style&index=0&id=52266200&lang=scss'
-          );
-        /* harmony import */ var _Users_man0zz_Desktop_iatipublisher_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_2__ =
+        /* harmony import */ var _Users_man0zz_Desktop_iatipublisher_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_1__ =
           __webpack_require__(
             /*! ./node_modules/vue-loader/dist/exportHelper.js */ './node_modules/vue-loader/dist/exportHelper.js'
           );
@@ -55783,15 +55786,83 @@ return withDirectives(h(comp), [
         const script = {};
 
         const __exports__ = /*#__PURE__*/ (0,
-        _Users_man0zz_Desktop_iatipublisher_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_2__[
+        _Users_man0zz_Desktop_iatipublisher_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_1__[
           'default'
         ])(script, [
           [
             'render',
-            _RegisterPage_vue_vue_type_template_id_52266200__WEBPACK_IMPORTED_MODULE_0__.render,
+            _EmailVerification_vue_vue_type_template_id_7cda5c19__WEBPACK_IMPORTED_MODULE_0__.render,
           ],
-          ['__file', 'resources/assets/js/views/web/RegisterPage.vue'],
+          ['__file', 'resources/assets/js/views/web/EmailVerification.vue'],
         ]);
+        /* hot reload */
+        if (false) {
+        }
+
+        /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ =
+          __exports__;
+
+        /***/
+      },
+
+    /***/ './resources/assets/js/views/web/PublisherInfo.vue':
+      /*!*********************************************************!*\
+  !*** ./resources/assets/js/views/web/PublisherInfo.vue ***!
+  \*********************************************************/
+      /***/ (
+        __unused_webpack_module,
+        __webpack_exports__,
+        __webpack_require__
+      ) => {
+        'use strict';
+        __webpack_require__.r(__webpack_exports__);
+        /* harmony export */ __webpack_require__.d(__webpack_exports__, {
+          /* harmony export */ default: () => __WEBPACK_DEFAULT_EXPORT__,
+          /* harmony export */
+        });
+        /* harmony import */ var _PublisherInfo_vue_vue_type_template_id_8f5bfee8_ts_true__WEBPACK_IMPORTED_MODULE_0__ =
+          __webpack_require__(
+            /*! ./PublisherInfo.vue?vue&type=template&id=8f5bfee8&ts=true */ './resources/assets/js/views/web/PublisherInfo.vue?vue&type=template&id=8f5bfee8&ts=true'
+          );
+        /* harmony import */ var _PublisherInfo_vue_vue_type_script_lang_ts__WEBPACK_IMPORTED_MODULE_1__ =
+          __webpack_require__(
+            /*! ./PublisherInfo.vue?vue&type=script&lang=ts */ './resources/assets/js/views/web/PublisherInfo.vue?vue&type=script&lang=ts'
+          );
+        /* harmony reexport (unknown) */ var __WEBPACK_REEXPORT_OBJECT__ = {};
+        /* harmony reexport (unknown) */ for (const __WEBPACK_IMPORT_KEY__ in _PublisherInfo_vue_vue_type_script_lang_ts__WEBPACK_IMPORTED_MODULE_1__)
+          if (__WEBPACK_IMPORT_KEY__ !== 'default')
+            __WEBPACK_REEXPORT_OBJECT__[__WEBPACK_IMPORT_KEY__] = () =>
+              _PublisherInfo_vue_vue_type_script_lang_ts__WEBPACK_IMPORTED_MODULE_1__[
+                __WEBPACK_IMPORT_KEY__
+              ];
+        /* harmony reexport (unknown) */ __webpack_require__.d(
+          __webpack_exports__,
+          __WEBPACK_REEXPORT_OBJECT__
+        );
+        /* harmony import */ var _PublisherInfo_vue_vue_type_style_index_0_id_8f5bfee8_lang_scss__WEBPACK_IMPORTED_MODULE_2__ =
+          __webpack_require__(
+            /*! ./PublisherInfo.vue?vue&type=style&index=0&id=8f5bfee8&lang=scss */ './resources/assets/js/views/web/PublisherInfo.vue?vue&type=style&index=0&id=8f5bfee8&lang=scss'
+          );
+        /* harmony import */ var _Users_man0zz_Desktop_iatipublisher_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_3__ =
+          __webpack_require__(
+            /*! ./node_modules/vue-loader/dist/exportHelper.js */ './node_modules/vue-loader/dist/exportHelper.js'
+          );
+
+        const __exports__ = /*#__PURE__*/ (0,
+        _Users_man0zz_Desktop_iatipublisher_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_3__[
+          'default'
+        ])(
+          _PublisherInfo_vue_vue_type_script_lang_ts__WEBPACK_IMPORTED_MODULE_1__[
+            'default'
+          ],
+          [
+            [
+              'render',
+              _PublisherInfo_vue_vue_type_template_id_8f5bfee8_ts_true__WEBPACK_IMPORTED_MODULE_0__.render,
+            ],
+            ['__file', 'resources/assets/js/views/web/PublisherInfo.vue'],
+          ]
+        );
         /* hot reload */
         if (false) {
         }
@@ -55830,6 +55901,45 @@ return withDirectives(h(comp), [
         /***/
       },
 
+    /***/ './resources/assets/js/views/web/PublisherInfo.vue?vue&type=script&lang=ts':
+      /*!*********************************************************************************!*\
+  !*** ./resources/assets/js/views/web/PublisherInfo.vue?vue&type=script&lang=ts ***!
+  \*********************************************************************************/
+      /***/ (
+        __unused_webpack_module,
+        __webpack_exports__,
+        __webpack_require__
+      ) => {
+        'use strict';
+        __webpack_require__.r(__webpack_exports__);
+        /* harmony export */ __webpack_require__.d(__webpack_exports__, {
+          /* harmony export */ default: () =>
+            /* reexport default from dynamic */ _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_babel_loader_lib_index_js_clonedRuleSet_6_use_0_node_modules_ts_loader_index_js_clonedRuleSet_7_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_PublisherInfo_vue_vue_type_script_lang_ts__WEBPACK_IMPORTED_MODULE_0___default.a,
+          /* harmony export */
+        });
+        /* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_babel_loader_lib_index_js_clonedRuleSet_6_use_0_node_modules_ts_loader_index_js_clonedRuleSet_7_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_PublisherInfo_vue_vue_type_script_lang_ts__WEBPACK_IMPORTED_MODULE_0__ =
+          __webpack_require__(
+            /*! -!../../../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!../../../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-6.use[0]!../../../../../node_modules/ts-loader/index.js??clonedRuleSet-7!../../../../../node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./PublisherInfo.vue?vue&type=script&lang=ts */ './node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/babel-loader/lib/index.js??clonedRuleSet-6.use[0]!./node_modules/ts-loader/index.js??clonedRuleSet-7!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/assets/js/views/web/PublisherInfo.vue?vue&type=script&lang=ts'
+          );
+        /* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_babel_loader_lib_index_js_clonedRuleSet_6_use_0_node_modules_ts_loader_index_js_clonedRuleSet_7_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_PublisherInfo_vue_vue_type_script_lang_ts__WEBPACK_IMPORTED_MODULE_0___default =
+          /*#__PURE__*/ __webpack_require__.n(
+            _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_babel_loader_lib_index_js_clonedRuleSet_6_use_0_node_modules_ts_loader_index_js_clonedRuleSet_7_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_PublisherInfo_vue_vue_type_script_lang_ts__WEBPACK_IMPORTED_MODULE_0__
+          );
+        /* harmony reexport (unknown) */ var __WEBPACK_REEXPORT_OBJECT__ = {};
+        /* harmony reexport (unknown) */ for (const __WEBPACK_IMPORT_KEY__ in _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_babel_loader_lib_index_js_clonedRuleSet_6_use_0_node_modules_ts_loader_index_js_clonedRuleSet_7_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_PublisherInfo_vue_vue_type_script_lang_ts__WEBPACK_IMPORTED_MODULE_0__)
+          if (__WEBPACK_IMPORT_KEY__ !== 'default')
+            __WEBPACK_REEXPORT_OBJECT__[__WEBPACK_IMPORT_KEY__] = () =>
+              _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_babel_loader_lib_index_js_clonedRuleSet_6_use_0_node_modules_ts_loader_index_js_clonedRuleSet_7_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_PublisherInfo_vue_vue_type_script_lang_ts__WEBPACK_IMPORTED_MODULE_0__[
+                __WEBPACK_IMPORT_KEY__
+              ];
+        /* harmony reexport (unknown) */ __webpack_require__.d(
+          __webpack_exports__,
+          __WEBPACK_REEXPORT_OBJECT__
+        );
+
+        /***/
+      },
+
     /***/ './resources/assets/js/components/ExampleComponent.vue?vue&type=template&id=7168fb6a&ts=true':
       /*!***************************************************************************************************!*\
   !*** ./resources/assets/js/components/ExampleComponent.vue?vue&type=template&id=7168fb6a&ts=true ***!
@@ -55856,10 +55966,36 @@ return withDirectives(h(comp), [
         /***/
       },
 
-    /***/ './resources/assets/js/views/web/RegisterPage.vue?vue&type=template&id=52266200':
-      /*!**************************************************************************************!*\
-  !*** ./resources/assets/js/views/web/RegisterPage.vue?vue&type=template&id=52266200 ***!
-  \**************************************************************************************/
+    /***/ './resources/assets/js/views/web/PublisherInfo.vue?vue&type=template&id=8f5bfee8&ts=true':
+      /*!***********************************************************************************************!*\
+  !*** ./resources/assets/js/views/web/PublisherInfo.vue?vue&type=template&id=8f5bfee8&ts=true ***!
+  \***********************************************************************************************/
+      /***/ (
+        __unused_webpack_module,
+        __webpack_exports__,
+        __webpack_require__
+      ) => {
+        'use strict';
+        __webpack_require__.r(__webpack_exports__);
+        /* harmony export */ __webpack_require__.d(__webpack_exports__, {
+          /* harmony export */ __esModule: () =>
+            /* reexport safe */ _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_babel_loader_lib_index_js_clonedRuleSet_6_use_0_node_modules_ts_loader_index_js_clonedRuleSet_7_node_modules_vue_loader_dist_templateLoader_js_ruleSet_1_rules_4_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_PublisherInfo_vue_vue_type_template_id_8f5bfee8_ts_true__WEBPACK_IMPORTED_MODULE_0__.__esModule,
+          /* harmony export */ render: () =>
+            /* reexport safe */ _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_babel_loader_lib_index_js_clonedRuleSet_6_use_0_node_modules_ts_loader_index_js_clonedRuleSet_7_node_modules_vue_loader_dist_templateLoader_js_ruleSet_1_rules_4_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_PublisherInfo_vue_vue_type_template_id_8f5bfee8_ts_true__WEBPACK_IMPORTED_MODULE_0__.render,
+          /* harmony export */
+        });
+        /* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_babel_loader_lib_index_js_clonedRuleSet_6_use_0_node_modules_ts_loader_index_js_clonedRuleSet_7_node_modules_vue_loader_dist_templateLoader_js_ruleSet_1_rules_4_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_PublisherInfo_vue_vue_type_template_id_8f5bfee8_ts_true__WEBPACK_IMPORTED_MODULE_0__ =
+          __webpack_require__(
+            /*! -!../../../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!../../../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-6.use[0]!../../../../../node_modules/ts-loader/index.js??clonedRuleSet-7!../../../../../node_modules/vue-loader/dist/templateLoader.js??ruleSet[1].rules[4]!../../../../../node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./PublisherInfo.vue?vue&type=template&id=8f5bfee8&ts=true */ './node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/babel-loader/lib/index.js??clonedRuleSet-6.use[0]!./node_modules/ts-loader/index.js??clonedRuleSet-7!./node_modules/vue-loader/dist/templateLoader.js??ruleSet[1].rules[4]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/assets/js/views/web/PublisherInfo.vue?vue&type=template&id=8f5bfee8&ts=true'
+          );
+
+        /***/
+      },
+
+    /***/ './resources/assets/js/views/web/EmailVerification.vue?vue&type=template&id=7cda5c19':
+      /*!*******************************************************************************************!*\
+  !*** ./resources/assets/js/views/web/EmailVerification.vue?vue&type=template&id=7cda5c19 ***!
+  \*******************************************************************************************/
       /***/ (
         __unused_webpack_module,
         __webpack_exports__,
@@ -55869,21 +56005,21 @@ return withDirectives(h(comp), [
         __webpack_require__.r(__webpack_exports__);
         /* harmony export */ __webpack_require__.d(__webpack_exports__, {
           /* harmony export */ render: () =>
-            /* reexport safe */ _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_babel_loader_lib_index_js_clonedRuleSet_6_use_0_node_modules_vue_loader_dist_templateLoader_js_ruleSet_1_rules_4_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_RegisterPage_vue_vue_type_template_id_52266200__WEBPACK_IMPORTED_MODULE_0__.render,
+            /* reexport safe */ _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_babel_loader_lib_index_js_clonedRuleSet_6_use_0_node_modules_vue_loader_dist_templateLoader_js_ruleSet_1_rules_4_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_EmailVerification_vue_vue_type_template_id_7cda5c19__WEBPACK_IMPORTED_MODULE_0__.render,
           /* harmony export */
         });
-        /* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_babel_loader_lib_index_js_clonedRuleSet_6_use_0_node_modules_vue_loader_dist_templateLoader_js_ruleSet_1_rules_4_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_RegisterPage_vue_vue_type_template_id_52266200__WEBPACK_IMPORTED_MODULE_0__ =
+        /* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_babel_loader_lib_index_js_clonedRuleSet_6_use_0_node_modules_vue_loader_dist_templateLoader_js_ruleSet_1_rules_4_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_EmailVerification_vue_vue_type_template_id_7cda5c19__WEBPACK_IMPORTED_MODULE_0__ =
           __webpack_require__(
-            /*! -!../../../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!../../../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-6.use[0]!../../../../../node_modules/vue-loader/dist/templateLoader.js??ruleSet[1].rules[4]!../../../../../node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./RegisterPage.vue?vue&type=template&id=52266200 */ './node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/babel-loader/lib/index.js??clonedRuleSet-6.use[0]!./node_modules/vue-loader/dist/templateLoader.js??ruleSet[1].rules[4]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/assets/js/views/web/RegisterPage.vue?vue&type=template&id=52266200'
+            /*! -!../../../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!../../../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-6.use[0]!../../../../../node_modules/vue-loader/dist/templateLoader.js??ruleSet[1].rules[4]!../../../../../node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./EmailVerification.vue?vue&type=template&id=7cda5c19 */ './node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/babel-loader/lib/index.js??clonedRuleSet-6.use[0]!./node_modules/vue-loader/dist/templateLoader.js??ruleSet[1].rules[4]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/assets/js/views/web/EmailVerification.vue?vue&type=template&id=7cda5c19'
           );
 
         /***/
       },
 
-    /***/ './resources/assets/js/views/web/RegisterPage.vue?vue&type=style&index=0&id=52266200&lang=scss':
-      /*!*****************************************************************************************************!*\
-  !*** ./resources/assets/js/views/web/RegisterPage.vue?vue&type=style&index=0&id=52266200&lang=scss ***!
-  \*****************************************************************************************************/
+    /***/ './resources/assets/js/views/web/PublisherInfo.vue?vue&type=style&index=0&id=8f5bfee8&lang=scss':
+      /*!******************************************************************************************************!*\
+  !*** ./resources/assets/js/views/web/PublisherInfo.vue?vue&type=style&index=0&id=8f5bfee8&lang=scss ***!
+  \******************************************************************************************************/
       /***/ (
         __unused_webpack_module,
         __webpack_exports__,
@@ -55891,9 +56027,9 @@ return withDirectives(h(comp), [
       ) => {
         'use strict';
         __webpack_require__.r(__webpack_exports__);
-        /* harmony import */ var _node_modules_style_loader_dist_cjs_js_node_modules_css_loader_dist_cjs_js_clonedRuleSet_14_use_1_node_modules_vue_loader_dist_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_14_use_2_node_modules_sass_loader_dist_cjs_js_clonedRuleSet_14_use_3_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_RegisterPage_vue_vue_type_style_index_0_id_52266200_lang_scss__WEBPACK_IMPORTED_MODULE_0__ =
+        /* harmony import */ var _node_modules_style_loader_dist_cjs_js_node_modules_css_loader_dist_cjs_js_clonedRuleSet_14_use_1_node_modules_vue_loader_dist_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_14_use_2_node_modules_sass_loader_dist_cjs_js_clonedRuleSet_14_use_3_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_PublisherInfo_vue_vue_type_style_index_0_id_8f5bfee8_lang_scss__WEBPACK_IMPORTED_MODULE_0__ =
           __webpack_require__(
-            /*! -!../../../../../node_modules/style-loader/dist/cjs.js!../../../../../node_modules/css-loader/dist/cjs.js??clonedRuleSet-14.use[1]!../../../../../node_modules/vue-loader/dist/stylePostLoader.js!../../../../../node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-14.use[2]!../../../../../node_modules/sass-loader/dist/cjs.js??clonedRuleSet-14.use[3]!../../../../../node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./RegisterPage.vue?vue&type=style&index=0&id=52266200&lang=scss */ './node_modules/style-loader/dist/cjs.js!./node_modules/css-loader/dist/cjs.js??clonedRuleSet-14.use[1]!./node_modules/vue-loader/dist/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-14.use[2]!./node_modules/sass-loader/dist/cjs.js??clonedRuleSet-14.use[3]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/assets/js/views/web/RegisterPage.vue?vue&type=style&index=0&id=52266200&lang=scss'
+            /*! -!../../../../../node_modules/style-loader/dist/cjs.js!../../../../../node_modules/css-loader/dist/cjs.js??clonedRuleSet-14.use[1]!../../../../../node_modules/vue-loader/dist/stylePostLoader.js!../../../../../node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-14.use[2]!../../../../../node_modules/sass-loader/dist/cjs.js??clonedRuleSet-14.use[3]!../../../../../node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./PublisherInfo.vue?vue&type=style&index=0&id=8f5bfee8&lang=scss */ './node_modules/style-loader/dist/cjs.js!./node_modules/css-loader/dist/cjs.js??clonedRuleSet-14.use[1]!./node_modules/vue-loader/dist/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-14.use[2]!./node_modules/sass-loader/dist/cjs.js??clonedRuleSet-14.use[3]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/assets/js/views/web/PublisherInfo.vue?vue&type=style&index=0&id=8f5bfee8&lang=scss'
           );
 
         /***/

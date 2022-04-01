@@ -39,3 +39,22 @@
     transition: 0.2s;
   }
 }
+.btn-back {
+  display: flex;
+  align-items: center;
+  font-weight: bold;
+  font-size: 14px;
+  text-transform: uppercase;
+  transition: 0.2s;
+  @apply text-bluecoral;
+
+  svg {
+    transition: 0.2s;
+  }
+
+  &:hover {
+    svg {
+      transform: translateX(-4px);
+    }
+  }
+}

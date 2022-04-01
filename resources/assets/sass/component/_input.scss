@@ -3,14 +3,14 @@
   padding: 16px 0px 16px 55px;
   font-size: 14px;
   line-height: 24px;
-  border: 1.5px solid;
+  border: 1px solid;
   border-radius: 8px;
   outline: none;
   transition: 0.3s;
   @apply border-n-30;
 
   &:focus {
-    border: 1.5px solid;
+    border: 1px solid;
     @apply border-n-50 bg-n-10;
   }
   &::placeholder {
