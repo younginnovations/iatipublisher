@@ -26,8 +26,9 @@
       border: 1px solid transparent;
       box-shadow: 0px 0px 25px 0px rgba(0, 0, 0, 0.1);
 
-      svg {
+      .right__icon {
         @apply text-lagoon-50;
+        margin-bottom: -8px;
       }
       .right__arrow {
         @apply text-white;
@@ -36,8 +37,10 @@
         @apply border border-turquoise bg-turquoise bg-opacity-10;
         box-shadow: 0px 0px 25px 0px transparent;
 
-        svg {
-          @apply fill-lagoon-50 text-white;
+        .right__icon {
+          svg {
+            @apply fill-lagoon-50 text-white;
+          }
         }
         .right__arrow {
           @apply fill-white text-turquoise;

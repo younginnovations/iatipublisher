@@ -559,11 +559,11 @@ Ensure the default browser behavior of the `hidden` attribute.
 .mt-6 {
   margin-top: 1.5rem;
 }
-.mt-1 {
-  margin-top: 0.25rem;
-}
 .mt-2 {
   margin-top: 0.5rem;
+}
+.mt-1 {
+  margin-top: 0.25rem;
 }
 .mr-1 {
   margin-right: 0.25rem;
@@ -752,6 +752,9 @@ Ensure the default browser behavior of the `hidden` attribute.
 .border-l-4 {
   border-left-width: 4px;
 }
+.border-b-2 {
+  border-bottom-width: 2px;
+}
 .border-none {
   border-style: none;
 }
@@ -762,6 +765,9 @@ Ensure the default browser behavior of the `hidden` attribute.
 .border-l-turquoise {
   --tw-border-opacity: 1;
   border-left-color: rgba(var(--turquoise), var(--tw-border-opacity));
+}
+.border-b-transparent {
+  border-bottom-color: transparent;
 }
 .border-opacity-20 {
   --tw-border-opacity: 0.2;
@@ -821,10 +827,6 @@ Ensure the default browser behavior of the `hidden` attribute.
   padding-left: 1.25rem;
   padding-right: 1.25rem;
 }
-.py-6 {
-  padding-top: 1.5rem;
-  padding-bottom: 1.5rem;
-}
 .py-4 {
   padding-top: 1rem;
   padding-bottom: 1rem;
@@ -883,6 +885,10 @@ Ensure the default browser behavior of the `hidden` attribute.
   font-size: 2.25rem;
   line-height: 2.5rem;
 }
+.text-6xl {
+  font-size: 3.75rem;
+  line-height: 1;
+}
 .text-sm {
   font-size: 0.875rem;
   line-height: 1.25rem;
@@ -890,6 +896,14 @@ Ensure the default browser behavior of the `hidden` attribute.
 .text-xs {
   font-size: 0.75rem;
   line-height: 1rem;
+}
+.text-xl {
+  font-size: 1.25rem;
+  line-height: 1.75rem;
+}
+.text-2xl {
+  font-size: 1.5rem;
+  line-height: 2rem;
 }
 .text-tiny {
   font-size: 10px;
@@ -1242,9 +1256,10 @@ header {
   border: 1px solid transparent;
   box-shadow: 0px 0px 25px 0px rgba(0, 0, 0, 0.1);
 }
-.main .right__content svg {
+.main .right__content .right__icon {
   --tw-text-opacity: 1;
   color: rgba(var(--lagoon-50), var(--tw-text-opacity));
+  margin-bottom: -8px;
 }
 .main .right__content .right__arrow {
   --tw-text-opacity: 1;
@@ -1258,7 +1273,7 @@ header {
   --tw-bg-opacity: 0.1;
   box-shadow: 0px 0px 25px 0px transparent;
 }
-.main .right__content:hover svg {
+.main .right__content:hover .right__icon svg {
   fill: rgb(var(--lagoon-50));
   --tw-text-opacity: 1;
   color: rgba(var(--white), var(--tw-text-opacity));
@@ -1746,6 +1761,10 @@ svg {
 
   .sm\:block {
     display: block;
+  }
+
+  .sm\:h-16 {
+    height: 4rem;
   }
 
   .sm\:h-72 {
