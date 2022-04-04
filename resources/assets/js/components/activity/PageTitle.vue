@@ -1,7 +1,7 @@
 <template>
   <div class="page-title mb-4">
-    <div class="grid grid-cols-2 items-end gap-4">
-      <div class="title">
+    <div class="flex items-end gap-4">
+      <div class="title grow-0">
         <div class="mb-4 text-caption-c1 font-bold text-n-40">
           Your Activities
         </div>
@@ -40,8 +40,29 @@
           </div>
         </div>
       </div>
-      <div class="actions flex justify-end">
+      <div class="actions flex grow justify-end">
         <div class="inline-flex justify-center">
+          <button
+            class="button secondary-btn mr-3.5 font-bold"
+            v-show="showButtons"
+          >
+            <svg-vue icon="download-file"></svg-vue>
+            <span>Download Selected</span>
+          </button>
+          <button
+            class="button secondary-btn mr-3.5 font-bold"
+            v-show="showButtons"
+          >
+            <svg-vue icon="approved-cloud"></svg-vue>
+            <span>Publish Selected</span>
+          </button>
+          <button
+            class="button secondary-btn mr-3.5 font-bold"
+            v-show="showButtons"
+          >
+            <svg-vue icon="delete"></svg-vue>
+            <span>Delete Selected</span>
+          </button>
           <button class="button secondary-btn mr-3.5 font-bold">
             <svg-vue icon="download-file"></svg-vue>
             <span>Download All</span>
@@ -50,15 +71,22 @@
             <svg-vue icon="publish"></svg-vue>
             <span>Publish</span>
           </button>
-          <add-activity-button></add-activity-button>
+          <AddActivityButton />
         </div>
       </div>
     </div>
   </div>
 </template>
 
-<script>
-export default {
+<script lang="ts">
+import { defineComponent } from 'vue';
+import AddActivityButton from './AddActivityButton.vue';
+
+export default defineComponent({
   name: 'page-title',
-};
+  components: { AddActivityButton },
+  props: {
+    showButtons: Boolean,
+  },
+});
 </script>

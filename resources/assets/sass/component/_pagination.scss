@@ -1,0 +1,41 @@
+.pagination {
+  @apply relative z-0 inline-flex items-center justify-center bg-white text-sm leading-relaxed text-n-40;
+
+  > a,
+  > span {
+    @apply flex border-y border-l border-n-20 py-1.5 px-3;
+
+    &:not(.prev-btn) {
+      @apply border-l border-n-20;
+    }
+
+    &.prev-btn,
+    &.next-btn {
+      @apply flex items-center justify-center bg-n-10;
+
+      svg {
+        @apply text-xs;
+      }
+    }
+    &.prev-btn {
+      @apply rounded-tl rounded-bl;
+    }
+
+    &.next-btn {
+      @apply rounded-b rounded-tr border-r;
+    }
+
+    &.prev-btn svg {
+      @apply mr-1;
+    }
+
+    &.next-btn svg {
+      @apply ml-1;
+    }
+
+    &:hover,
+    &.current {
+      @apply bg-bluecoral text-paper;
+    }
+  }
+}

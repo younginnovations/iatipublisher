@@ -65,7 +65,7 @@ button {
 
 // secondary button
 .secondary-btn {
-  @apply rounded bg-white p-3 uppercase text-bluecoral;
+  @apply gap-x-1 rounded bg-white p-3 uppercase text-bluecoral;
   box-shadow: 0px 2px 10px 10px rgba(0, 0, 0, 0.05);
 
   &:hover {
@@ -73,13 +73,13 @@ button {
   }
 
   svg {
-    @apply mr-1 text-base;
+    @apply text-base;
   }
 }
 
 // primary outline button
 .primary-outline-btn {
-  @apply justify-center rounded-3xl border border-spring-50 py-0.5 px-3.5 text-xs leading-relaxed text-spring-50;
+  @apply justify-center rounded-3xl border border-spring-50 py-0.5 px-3.5 text-sm leading-relaxed text-spring-50;
   filter: drop-shadow(0px 4px 40px rgba(0, 0, 0, 0.1));
 
   &:hover {

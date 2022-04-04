@@ -3,6 +3,20 @@ const mix = require('laravel-mix');
 require('laravel-mix-svg-vue');
 const tailwindCss = require('tailwindcss');
 
+if (mix.inProduction()) {
+  mix.options({
+    terser: {
+      terserOptions: {
+        compress: {
+          drop_console: true,
+        },
+      },
+    },
+  });
+} else {
+  mix.webpackConfig({ devtool: 'inline-source-map' }).sourceMaps();
+}
+
 /*
  |--------------------------------------------------------------------------
  | Mix Asset Management
@@ -24,5 +38,7 @@ mix
     processCssUrls: false,
     postCss: [tailwindCss('tailwind.config.js')],
   })
-  .svgVue()
+  .svgVue({
+    svgPath: 'resources/assets/images/svg',
+  })
   .version();

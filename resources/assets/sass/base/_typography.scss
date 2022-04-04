@@ -5,8 +5,11 @@ body {
 }
 
 a {
-  color: var(--primary);
+  color: rgb(var(--bluecoral));
   transition: all 0.4s ease;
+  &:hover {
+    color: rgb(var(--spring-50));
+  }
 }
 
 .left {
