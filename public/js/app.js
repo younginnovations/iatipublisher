@@ -30024,7 +30024,7 @@ return withDirectives(h(comp), [
                           {
                             class: 'text-tiny font-normal text-n-40',
                           },
-                          "You can use a short unique acronym of your organisation's name. "
+                          'You can use a unique abbreviated form of your organisation name. '
                         ),
                       ]
                     ),

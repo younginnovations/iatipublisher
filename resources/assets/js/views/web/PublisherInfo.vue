@@ -105,7 +105,7 @@
                   placeholder="For example, ‘dfid’ or ‘wordlbank’"
                 />
                 <span class="text-tiny font-normal text-n-40"
-                  >You can use a short unique acronym of your organisation's
+                  >You can use a unique abbreviated form of your organisation
                   name.
                 </span>
               </div>
