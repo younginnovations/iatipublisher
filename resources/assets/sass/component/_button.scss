@@ -51,6 +51,19 @@
     transition: 0.2s;
   }
 }
+.reset-btn {
+  @apply mt-6 flex justify-center rounded-lg border-none bg-turquoise text-sm font-bold uppercase text-n-50 outline-none duration-200 hover:bg-bluecoral hover:text-white;
+  width: 100%;
+  padding: 16px 94px;
+}
+@media screen and (min-width: 640px) {
+  .btn {
+    padding: 18px 0;
+  }
+  .reset-btn {
+    padding: 18px 0px;
+  }
+}
 
 svg {
   height: 1em;

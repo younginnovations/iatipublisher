@@ -22,6 +22,12 @@ import LoggedInHeader from './components/AdminHeader.vue';
   setting page
 */
 import SettingPage from './views/setting/SettingPage.vue';
+/*
+  vue component for password reset
+*/
+import ResetPage from './views/reset/ResetPage.vue';
+import PasswordRecovery from './views/reset/PasswordRecovery.vue';
+import ResetPassword from './views/reset/ResetPassword.vue';
 
 // require('./bootstrap');
 
@@ -54,6 +60,12 @@ app.component('loggedin-header', LoggedInHeader);
 setting page
 */
 app.component('setting-page', SettingPage);
+/*
+Registering vue component for password reset
+*/
+app.component('reset-page', ResetPage);
+app.component('password-recovery', PasswordRecovery);
+app.component('reset-password', ResetPassword);
 
 /**
  * Extension to inline SVG files with Vue.js and optimize them automatically with SVGO

@@ -4,6 +4,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" type="image" href="https://prod-iati-website.azureedge.net/prod-iati-website/favicons/favicon-32x32.png">
 
   <title>{{ config('app.name', 'IATI Publisher') }}</title>
 
