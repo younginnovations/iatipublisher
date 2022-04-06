@@ -139,3 +139,22 @@ header {
 .nav-active {
   transform: translateX(0%);
 }
+
+.nav {
+  &__pointer,
+  &__pointer-hover {
+    @apply relative;
+    &:after {
+      content: '';
+      @apply absolute bottom-0 left-0 h-1 w-full scale-x-0 scale-y-100 rounded-sm bg-turquoise transition-all duration-500;
+    }
+
+    &:hover:after {
+      @apply scale-x-100;
+    }
+  }
+
+  &__pointer:after {
+    @apply scale-x-100;
+  }
+}

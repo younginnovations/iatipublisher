@@ -4,15 +4,28 @@
     class="relative flex min-h-[647px] flex-col items-center justify-center bg-white p-10"
   >
     <div
-      v-show="dismiss"
-      class="absolute left-0 top-0 flex w-full rounded-bl rounded-br bg-rose py-4 px-5 text-[14px] leading-[1.6] text-n-50"
+      v-if="state.dismiss"
+      class="absolute left-0 top-0 flex w-full rounded-bl rounded-br bg-rose py-4 px-5 text-sm leading-relaxed text-n-50"
     >
       <div class="grow">
-        Please <a href="#" class="font-bold">complete your setup</a> in order to
-        enable complete features of IATI publisher tool.
+        <div class="flex items-center">
+          <svg-vue
+            icon="alert"
+            class="mr-1 grow-0 text-base text-crimson-50"
+          ></svg-vue>
+          <p class="grow">
+            Please <a href="#" class="font-bold">complete your setup</a> in
+            order to enable complete features of IATI publisher tool.
+          </p>
+        </div>
       </div>
       <div class="grow-0">
-        <a href="javascript:void(0);" @click="dismiss = false">Dismiss</a>
+        <button
+          class="text-sm leading-relaxed text-bluecoral"
+          @click="state.dismiss = false"
+        >
+          Dismiss
+        </button>
       </div>
     </div>
     <div
@@ -31,18 +44,21 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
+import { defineComponent, reactive } from 'vue';
 import ActivityButton from './AddActivityButton.vue';
 
-export default {
+export default defineComponent({
   name: 'empty-activity',
   components: {
     ActivityButton,
   },
-  data() {
-    return {
+  setup() {
+    const state = reactive({
       dismiss: true,
-    };
+    });
+
+    return { state };
   },
-};
+});
 </script>

@@ -1,0 +1,53 @@
+<template>
+  <div id="activity-listing-page" class="bg-paper px-10 pt-4 pb-[71px]">
+    <div id="activity">
+      <PageTitle :showButtons="state.showButtons" />
+
+      <!--  If no data then show empty state   -->
+      <!--      <EmptyActivity/>-->
+      <!--   Else listing view   -->
+      <TableLayout :showOrHide="showOrHide" />
+      <div class="mt-6">
+        <Pagination />
+      </div>
+      <ToastMessage />
+    </div>
+  </div>
+</template>
+
+<script lang="ts">
+import { defineComponent, reactive } from 'vue';
+
+import EmptyActivity from './EmptyActivity.vue';
+import TableLayout from './TableLayout.vue';
+import Pagination from '../Pagination.vue';
+import PageTitle from './PageTitle.vue';
+import ToastMessage from './ToastMessage.vue';
+
+export default defineComponent({
+  name: 'activity-component',
+  components: {
+    EmptyActivity,
+    PageTitle,
+    Pagination,
+    ToastMessage,
+    TableLayout,
+  },
+  setup() {
+    const state = reactive({
+      showButtons: false,
+    });
+
+    const showOrHide = (data = Array) => {
+      console.log(data);
+      if (data.length > 0) {
+        state.showButtons = true;
+      } else {
+        state.showButtons = false;
+      }
+    };
+
+    return { state, showOrHide };
+  },
+});
+</script>

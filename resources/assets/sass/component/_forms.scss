@@ -8,7 +8,7 @@
     &:after {
       border-width: 0 3px 3px 0;
       content: '';
-      @apply mb-0.5 mt-px hidden h-2 w-[5px] rotate-45 border border-spring-50;
+      @apply mb-0.5 hidden h-2 w-[5px] rotate-45 border-spring-50;
     }
   }
 
