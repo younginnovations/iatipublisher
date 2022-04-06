@@ -10,8 +10,8 @@ import SvgVue from 'svg-vue3';
  * Vue components for Activities Listing
  *
  */
-import Activity from './components/activity/Activity.vue';
-import LoggedInHeader from './components/Header.vue';
+import Activity from './views/activity/ActivityList.vue';
+import LoggedInHeader from './components/AdminHeader.vue';
 
 const app = createApp({});
 
