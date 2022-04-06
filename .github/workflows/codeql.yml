@@ -68,3 +68,6 @@ jobs:
 
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v2
+  
+  clover-test:
+    uses: ./.github/workflows/clover-test.yml
