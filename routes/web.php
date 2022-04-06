@@ -16,6 +16,10 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', [App\Http\Controllers\Web\WebController::class, 'index'])->name('web');
 Route::get('/register', [App\Http\Controllers\Web\WebController::class, 'register'])->name('register');
 
+Route::get('/setting_page', function () {
+    return view('admin.settings.setting_page');
+});
+
 // Auth::routes(['verify' => true]);
 
 Route::get('/login', [App\Http\Controllers\Web\WebController::class, 'index'])->name('index.login');

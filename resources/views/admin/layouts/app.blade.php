@@ -24,7 +24,7 @@
     <div id="app">
         <loggedin-header></loggedin-header>
 
-        <main class="py-4 min-h-screen bg-paper">
+        <main>
             @yield('content')
         </main>
     </div>

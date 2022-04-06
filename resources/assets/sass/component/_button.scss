@@ -96,7 +96,7 @@ button {
 
 // primary button
 .primary-btn {
-  @apply rounded bg-bluecoral p-3 uppercase text-white;
+  @apply rounded bg-bluecoral p-3 font-bold uppercase text-white;
   box-shadow: 0px 2px 10px 10px rgba(0, 0, 0, 0.05);
 
   &:hover {
@@ -129,5 +129,13 @@ button {
 
   &:hover {
     @apply bg-spring-50 text-white;
+  }
+}
+.cancel-btn {
+  @apply text-xs font-bold uppercase text-n-40;
+  transition: 0.4s;
+
+  &:hover {
+    @apply text-bluecoral;
   }
 }
