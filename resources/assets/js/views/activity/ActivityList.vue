@@ -18,11 +18,11 @@
 <script lang="ts">
 import { defineComponent, reactive } from 'vue';
 
-import EmptyActivity from './EmptyActivity.vue';
-import TableLayout from './TableLayout.vue';
-import Pagination from '../Pagination.vue';
-import PageTitle from './PageTitle.vue';
-import ToastMessage from './ToastMessage.vue';
+import EmptyActivity from './partials/EmptyActivity.vue';
+import TableLayout from './partials/TableLayout.vue';
+import Pagination from '../../components/Pagination.vue';
+import PageTitle from './partials/PageTitle.vue';
+import ToastMessage from '../../components/ToastMessage.vue';
 
 export default defineComponent({
   name: 'activity-component',
