@@ -82,7 +82,7 @@
                 type="checkbox"
                 :value="1"
                 v-model="state.selected"
-                @change="showOrHide(state.selected)"
+                @change="emitShowOrHide"
               />
               <span class="checkmark"></span>
             </label>
@@ -136,7 +136,7 @@
                 type="checkbox"
                 :value="2"
                 v-model="state.selected"
-                @change="showOrHide(state.selected)"
+                @change="emitShowOrHide"
               />
               <span class="checkmark"></span>
             </label>
@@ -196,7 +196,7 @@
                 type="checkbox"
                 :value="3"
                 v-model="state.selected"
-                @change="showOrHide(state.selected)"
+                @change="emitShowOrHide"
               />
               <span class="checkmark"></span>
             </label>
@@ -246,7 +246,7 @@
                 type="checkbox"
                 :value="4"
                 v-model="state.selected"
-                @change="showOrHide(state.selected)"
+                @change="emitShowOrHide"
               />
               <span class="checkmark"></span>
             </label>
@@ -265,15 +265,17 @@ import { defineComponent, reactive } from 'vue';
 export default defineComponent({
   name: 'table-layout',
   components: {},
-  props: {
-    showOrHide: Function,
-  },
-  setup() {
+  emits: ['showOrHide'],
+  setup(props, { emit }) {
     const state = reactive({
       selected: [],
     });
 
-    return { state };
+    const emitShowOrHide = () => {
+      emit('showOrHide', state.selected);
+    };
+
+    return { state, emitShowOrHide };
   },
 });
 </script>

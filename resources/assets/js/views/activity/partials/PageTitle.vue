@@ -49,9 +49,36 @@
             <svg-vue icon="download-file"></svg-vue>
             <span>Download Selected</span>
           </button>
+
+          <!--    Toggle modal      -->
+          <Modal @close="toggleModal" :modalActive="state.modalActive">
+            <alert :type="'success'" class="mb-1"
+              >The following activities are eligible for publishing</alert
+            >
+            <div class="checked-list">
+              <div class="list px-6">
+                <a href="#" class="block border-b border-n-20 py-4"
+                  >EU-Angola Dialogue Facility</a
+                >
+              </div>
+            </div>
+            <alert :type="'failure'" class="mt-1 mb-1"
+              >The following activities are not eligible for publishing</alert
+            >
+            <div class="checked-list">
+              <div class="list px-6">
+                <a href="#" class="block border-b border-n-20 py-4"
+                  >Programme in support of Higher Education Agro-PRODESI:
+                  Acceleration of inclusive & sustainable agribusiness
+                  investment in economic corridors</a
+                >
+              </div>
+            </div>
+          </Modal>
           <button
             class="button secondary-btn mr-3.5 font-bold"
             v-show="showButtons"
+            @click="state.modalActive = true"
           >
             <svg-vue icon="approved-cloud"></svg-vue>
             <span>Publish Selected</span>
@@ -79,14 +106,76 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, reactive } from 'vue';
 import AddActivityButton from './AddActivityButton.vue';
+import Modal from '../../../components/PopupModal.vue';
+import Alert from '../../../components/AlertMessage.vue';
 
 export default defineComponent({
   name: 'page-title',
-  components: { AddActivityButton },
+  components: { AddActivityButton, Modal, Alert },
   props: {
     showButtons: Boolean,
+  },
+  setup() {
+    const state = reactive({
+      modalActive: false,
+    });
+
+    const data = {
+      activityList: [
+        {
+          title: 'EU-Angola Dialogue Facility',
+          permalink: '#',
+          canBePublished: true,
+        },
+        {
+          title:
+            'Programme in support of Higher Education Agro-PRODESI: Acceleration of inclusive & sustainable agribusiness investment in economic corridors',
+          permalink: '#',
+          canBePublished: false,
+        },
+        {
+          title:
+            'UNFPA Angola Improved national population data systems to map and address inequalities; to advance achievement of the Sustainable Development Goals and the commitments of the Programme of Action of the International Cference on Population and Development; and to strengthen interventions in humanitarian crises activities',
+          permalink: '#',
+          canBePublished: false,
+        },
+        {
+          title: 'Programme in support of Higher Education',
+          permalink: '#',
+          canBePublished: true,
+        },
+        {
+          title:
+            'AGO.S1 Leadership, advocacy and communication to fast track the AIDS response',
+          permalink: '#',
+          canBePublished: true,
+        },
+      ],
+    };
+
+    const list = reactive({
+      publishable: [],
+      nonPublishable: [],
+    });
+
+    // computed function
+    // const selectedItems = computed({
+    //
+    // });
+
+    // toggle function
+    const toggleModal = () => {
+      state.modalActive = false;
+    };
+
+    return {
+      state,
+      data,
+      list,
+      toggleModal,
+    };
   },
 });
 </script>
