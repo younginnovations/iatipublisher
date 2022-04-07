@@ -43,16 +43,11 @@ before_script:
   - composer install --prefer-source --no-interaction --dev
   - php artisan key:generate
   - php artisan jwt:secret
-  - php artisan migrate
-
-before_install:
-  - mysql -e 'CREATE DATABASE iatipublisher_db;'
+  - pear install pear/PHP_CodeSniffer
+  - phpenv rehash
 
 script:
   - phpunit
-
-services:
-  - mysql
 
 notifications:
   email: false
