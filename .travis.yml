@@ -11,9 +11,9 @@ os: linux
 
 # jobs:
 #   include:
-#     - stage: "Tests"                
-#       name: "Unit Test PHP"  
-#       script: 
+#     - stage: "Tests"
+#       name: "Unit Test PHP"
+#       script:
 #       - travis_retry composer self-update
 #       - travis_retry composer install --prefer-source --no-interaction
 #       - cp .env.example .env
