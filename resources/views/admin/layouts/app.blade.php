@@ -9,12 +9,15 @@
 
     <title>{{ config('app.name', 'IATI Publisher') }}</title>
 
-    <!-- Styles -->
-    <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    <!-- Scripts -->
+    <script src="{{ asset('js/app.js') }}" defer></script>
     <script defer src="{{ asset('js/script.js') }}"></script>
 
-    <!-- Scripts -->
-    <script defer src="{{ asset('js/app.js') }}"></script>
+    <!-- Fonts -->
+    <link href="http://fonts.cdnfonts.com/css/arial" rel="stylesheet">
+
+    <!-- Styles -->
+    <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 
 </head>
 <body>

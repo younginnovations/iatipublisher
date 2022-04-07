@@ -21,7 +21,7 @@ return new class extends Migration {
             $table->string('country');
             $table->enum('registration_agency', Enums::ORGANIZATION_REGISTRATION_AGENCY);
             $table->string('registration_number');
-            $table->string('identifier')->unique();
+            $table->string('identifier');
             $table->enum('status', Enums::ORGANIZATION_STATUS);
             $table->timestamps();
         });

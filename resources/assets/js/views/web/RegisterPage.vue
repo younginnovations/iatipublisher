@@ -13,7 +13,7 @@
         <div class="form">
           <div class="form__container">
             <span class="text-2xl font-bold text-n-50">{{
-              registerForm[`step_${step}`].title
+              registerForm[step].title
             }}</span>
             <div
               class="feedback mt-6 border-l-2 border-crimson-50 bg-crimson-10 p-4 text-sm text-n-50"
@@ -38,13 +38,13 @@
                     >support@iatistandard.org</a
                   ></span
                 >
-                for more details.
+                for more details. {{ formData }}
               </p>
             </div>
             <div class="form__content">
               <div
                 :class="field.class"
-                v-for="field in registerForm[`step_${step}`].fields"
+                v-for="field in registerForm[step].fields"
                 :key="field.name"
               >
                 <div class="flex items-center justify-between">
@@ -61,7 +61,24 @@
                   :type="field.type"
                   v-model="formData[field.name]"
                   :placeholder="formData[field.placeholder]"
+                  v-if="field.type === 'text' || field.type === 'password'"
                 />
+                <!-- {{ field.options }} -->
+                <select
+                  class="form__input"
+                  v-model="field.name"
+                  :placeholder="field.placeholder"
+                  v-if="field.type === 'select'"
+                >
+                  <!-- <option v-for="option in formData[field.options]" v-bind="option">{{option}}</option> -->
+                  <option
+                    v-for="(ele, i) in field.options"
+                    :key="i"
+                    :value="ele"
+                  >
+                    {{ ele }}
+                  </option>
+                </select>
                 <span
                   class="error"
                   role="alert"
@@ -111,43 +128,35 @@
         </div>
 
         <!-- step 1 -->
-        <aside v-if="step == 1">
+        <aside>
           <span class="text-base font-bold">Step 1 out of 3</span>
           <ul class="relative mt-6 text-sm text-n-40">
-            <li class="relative mb-6 font-bold text-n-50">
-              <span class="list__active"></span>
-              <span class="mr-3 ml-6">1</span> Publisher Information
-              <p class="detail mt-2 font-normal xl:pr-2">
-                This information will be used to create a Publisher in IATI
-                Publisher.
-              </p>
-            </li>
-            <li class="mb-6">
-              <span class="mr-3 ml-6">2</span> Administrator Information
-            </li>
-            <li><span class="mr-3 ml-6">3</span> Email Verification</li>
-          </ul>
-        </aside>
-
-        <!-- step 2 -->
-        <aside v-if="step == 2">
-          <span class="text-base font-bold">Step 1 out of 3</span>
-          <ul class="relative mt-6 text-sm text-n-40">
-            <li class="mb-6 flex items-center font-bold text-bluecoral">
-              <span class="mr-3 ml-6">
-                <svg-vue class="text-xs" icon="checked"></svg-vue>
+            <li
+              :class="[
+                step == parseInt(i)
+                  ? 'relative mb-6 font-bold text-n-50'
+                  : 'mb-6',
+              ]"
+              v-for="(ele, i) in registerForm"
+              :key="ele.title"
+            >
+              <span class="list__active" v-if="step == parseInt(i)"></span>
+              <!-- <span class="mr-3 ml-6" v-if="!ele.is_complete"> -->
+              <span class="mr-3 ml-6" v-if="!ele.is_complete">
+                {{ i }}
               </span>
-              Publisher Information
-            </li>
-            <li class="relative mb-6 font-bold text-n-50">
-              <span class="list__active"></span>
-              <span class="mr-3 ml-6">2</span> Administrator Information
-              <p class="detail mt-2 font-normal xl:pr-2">
-                This information will be used to create an admin account in IATI
-                Publisher.
+              <span class="mr-3 ml-6" v-if="ele.is_complete">
+                <!-- <span class="mr-3 ml-6"> -->
+                <svg-vue class="text-xs" icon="checked"> </svg-vue>
+              </span>
+              {{ ele.title }}
+              <p
+                class="detail mt-2 font-normal xl:pr-2"
+                v-if="step == parseInt(i)"
+              >
+                {{ ele.description }}
               </p>
             </li>
-            <li><span class="mr-3 ml-6">3</span> Email Verification</li>
           </ul>
         </aside>
       </div>
@@ -156,7 +165,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, ref, defineProps } from 'vue';
+import { defineComponent, reactive, ref } from 'vue';
 import axios from 'axios';
 import EmailVerification from './EmailVerification.vue';
 
@@ -165,8 +174,12 @@ export default defineComponent({
     EmailVerification,
   },
 
-  // setup(props) {
-  setup() {
+  props: {
+    country: String,
+    registration_agency: String,
+  },
+
+  setup(props) {
     const step = ref(1);
     const publisherExists = ref(true);
     const errorData = reactive({
@@ -180,18 +193,31 @@ export default defineComponent({
       full_name: '',
       email: '',
       password: '',
-      confirm_password: '',
+      confirmation_password: '',
     });
+
+    // interface form {
+    //   title : string,
+    //   is_complete : boolean,
+    //   description : string,
+    //   fields?: Array<T>,
+    // };
+    // interface formArr{
+    //   [key: number] : form,
+    // };
     const registerForm = reactive({
-      step_1: {
+      1: {
         title: 'Publisher Information',
+        is_complete: false,
+        description:
+          'This information will be used to create a Publisher in IATI Publisher',
         fields: {
           publisher_name: {
             label: 'Publisher Name',
             name: 'publisher_name',
             placeholder: 'Enter the name of your organization',
             required: true,
-            type: 'select',
+            type: 'text',
             class: 'col-span-2 mb-4',
           },
           publisher_id: {
@@ -208,6 +234,7 @@ export default defineComponent({
             placeholder: 'Select the country',
             required: false,
             type: 'select',
+            options: props.country,
             class: 'mb-4',
           },
           organization_registration_agency: {
@@ -215,7 +242,8 @@ export default defineComponent({
             name: 'registration_agency',
             placeholder: 'Select your Organization Registration Agency',
             required: true,
-            type: 'text',
+            type: 'select',
+            options: props.registration_agency,
             class: 'mb-4',
           },
           organization_registration_no: {
@@ -236,8 +264,11 @@ export default defineComponent({
           },
         },
       },
-      step_2: {
+      2: {
         title: 'Administrator Information',
+        is_complete: false,
+        description:
+          'This information will be used to create an admin account in IATI Publisher',
         fields: {
           username: {
             label: 'Username',
@@ -268,18 +299,24 @@ export default defineComponent({
             name: 'password',
             placeholder: '',
             required: true,
-            type: 'text',
+            type: 'password',
             class: 'mb-4',
           },
           confirm_password: {
             label: 'Confirm Password',
-            name: 'confirm_password',
+            name: 'confirmation_password',
             placeholder: '',
             required: true,
-            type: 'text',
+            type: 'password',
             class: 'mb-4',
           },
         },
+      },
+      3: {
+        title: 'Email Verification',
+        is_complete: false,
+        description:
+          'Please verify and activate your IATI Publisher account through your provided email',
       },
     });
     const formData = reactive({
@@ -293,7 +330,7 @@ export default defineComponent({
       full_name: '',
       email: '',
       password: '',
-      confirm_password: '',
+      confirmation_password: '',
     });
 
     function verifyPublisher() {
@@ -317,7 +354,10 @@ export default defineComponent({
           if (errors.hasOwnProperty('publisher_error'))
             publisherExists.value = false;
 
-          if (response.data.hasOwnProperty('success')) step.value += 1;
+          if (response.data.hasOwnProperty('success')) {
+            // registerForm[step.value].is_complete = true;
+            step.value += 1;
+          }
         })
         .catch((error) => {
           // const { errors } = error;
@@ -330,8 +370,6 @@ export default defineComponent({
       axios
         .post('/register', formData)
         .then((response) => {
-          // console.log(response, publisherExists);
-          // publisherExists.value = true;
           const errors = response.data.hasOwnProperty('errors')
             ? response.data.errors
             : [];
@@ -340,10 +378,10 @@ export default defineComponent({
           errorData.email = errors.email ? errors.email[0] : '';
           errorData.password = errors.password ? errors.password[0] : '';
 
-          // if (errors.hasOwnProperty('publisher_error'))
-          //   publisherExists.value = false;
-
-          if (response.data.hasOwnProperty('success')) step.value += 1;
+          if (response.data.hasOwnProperty('success')) {
+            // registerForm[step.value].is_complete = true;
+            step.value += 1;
+          }
         })
         .catch((error) => {
           console.log('errors', error);
@@ -369,6 +407,7 @@ export default defineComponent({
       publisherExists,
       goToNextForm,
       goToPreviousForm,
+      props,
     };
   },
 });

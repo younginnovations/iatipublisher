@@ -27,4 +27,5 @@ Route::get('/register', [App\Http\Controllers\Auth\RegisterController::class, 's
 Route::post('/verifyPublisher', [App\Http\Controllers\Auth\RegisterController::class, 'verifyPublisher'])->name('verify-publisher');
 // Route::post('/verifyPublisher', [App\Http\Controllers\Auth\RegisterController::class, 'verifyPublisher'])->name('verify-publisher');
 Route::post('/register', [App\Http\Controllers\Auth\RegisterController::class, 'register']);
+Route::get('/verifyEmail', [App\Http\Controllers\Web\WebController::class, 'index'])->name('verification.verify');
 Route::post('/logout', [App\Http\Controllers\Auth\LoginController::class, 'logout'])->name('logout');

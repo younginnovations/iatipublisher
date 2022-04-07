@@ -37,7 +37,6 @@ app.component('web-header', WebHeader);
 app.component('web-footer', WebFooter);
 app.component('welcome-signin', WelcomeSignIn);
 app.component('register-form', RegisterPage);
-app.component('register-form', RegisterPage);
 
 /**
  * Registering vue component for activity listing
