@@ -1,0 +1,58 @@
+language: php
+
+php:
+  - 8.0
+  - 8.1
+
+os: linux
+
+# services:
+#   - docker
+
+# jobs:
+#   include:
+#     - stage: "Tests"                
+#       name: "Unit Test PHP"  
+#       script: 
+#       - travis_retry composer self-update
+#       - travis_retry composer install --prefer-source --no-interaction
+#       - cp .env.example .env
+#       - php artisan key:generate
+#       - vendor/bin/phpunit tests/Feature/ExampleTest.php
+#     - stage: "Build Docker Image"
+#       name: "Build Images Docker"
+#       script:
+#       - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+#       - docker build -t iatipublisher-docker .
+#       - docker images
+#       - docker tag iatipublisher-docker $DOCKER_USERNAME/iatipublisher
+#       - docker push $DOCKER_USERNAME/iatipublisher
+
+# before_script:
+#   - composer install
+#   - cp .env.example .env
+#   - php artisan key:generate
+#   - php artisan jwt:secret
+
+# script:
+#   - vendor/bin/phpunit
+
+before_script:
+  - cp .env.example .env
+  - composer self-update
+  - composer install --prefer-source --no-interaction --dev
+  - php artisan key:generate
+  - php artisan jwt:secret
+  - php artisan migrate
+
+before_install:
+  - mysql -e 'CREATE DATABASE iatipublisher_db;'
+
+script:
+  - phpunit
+
+services:
+  - mysql
+
+notifications:
+  email: false
