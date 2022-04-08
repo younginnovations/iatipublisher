@@ -30,3 +30,6 @@
   font-weight: normal;
   font-size: 10px;
 }
+.error__input {
+  @apply border border-crimson-50;
+}

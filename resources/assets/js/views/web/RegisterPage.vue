@@ -1,7 +1,7 @@
 <template>
   <section class="section mb-7 sm:mx-10 sm:mb-10 md:mb-14 xl:mx-24 xl:px-1">
     <div class="section__container">
-      <div class="section__title mt-7 text-center sm:mt-14">
+      <div class="section__title mt-7 text-center leading-10 sm:mt-14">
         <h2>Create IATI Publisher Account</h2>
         <p>
           Register your organisation to start your IATI publishing journey by
@@ -263,7 +263,7 @@
               ></span
             >
             <button
-              class="btn btn-primary"
+              class="btn btn-next"
               v-if="step != 3"
               @click="goToNextForm()"
             >
@@ -642,16 +642,16 @@ export default defineComponent({
       .detail {
         margin-left: 45px;
       }
-      // li::after {
-      //   position: absolute;
-      //   top: 0;
-      //   left: -1px;
-      //   width: 6px;
-      //   height: 85px;
-      //   @apply bg-turquoise;
-      //   content: '';
-      //   border-radius: 2px;
-      // }
+      li::after {
+        position: absolute;
+        top: 0;
+        left: -1px;
+        width: 6px;
+        height: 85px;
+        @apply bg-turquoise;
+        content: '';
+        border-radius: 2px;
+      }
       .list__active::after {
         position: absolute;
         bottom: 0;

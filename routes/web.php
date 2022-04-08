@@ -20,7 +20,6 @@ Route::get('/activities', function () {
     return view('web.activities');
 });
 
-Auth::routes();
 // Auth::routes();
 
 Route::post('/login', [App\Http\Controllers\Auth\LoginController::class, 'login'])->name('login');

@@ -3,9 +3,7 @@
     class="right m-auto basis-2/4 rounded-l-lg rounded-r-lg bg-white py-5 px-5 sm:py-10 sm:px-7 md:my-0 md:rounded-l-none lg:py-28 xl:px-24"
   >
     <div class="right__container flex flex-col">
-      <h2 class="mb-2 text-4xl font-bold text-n-50 sm:text-heading-3">
-        Join Now.
-      </h2>
+      <h2 class="hidden sm:block">Join Now.</h2>
       <span class="mb-8 text-n-40">
         To being this journey, tell us your preference and we'll guide you
         through this process.
