@@ -9,15 +9,11 @@
 
     <title>{{ config('app.name', 'IATI Publisher') }}</title>
 
-    <!-- Scripts -->
-    <script src="{{ asset('js/app.js') }}" defer></script>
-
-    <!-- Fonts -->
-    <link href="http://fonts.cdnfonts.com/css/arial" rel="stylesheet">
-
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     <script defer src="{{ asset('js/script.js') }}"></script>
+
+    <!-- Scripts -->
     <script defer src="{{ asset('js/app.js') }}"></script>
 
 </head>
@@ -25,7 +21,7 @@
     <div id="app">
         <loggedin-header></loggedin-header>
 
-        <main class="py-4">
+        <main class="py-4 min-h-screen bg-paper">
             @yield('content')
         </main>
     </div>

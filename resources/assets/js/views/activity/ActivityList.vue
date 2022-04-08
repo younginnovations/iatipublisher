@@ -6,7 +6,7 @@
       <!--  If no data then show empty state   -->
       <!--      <EmptyActivity/>-->
       <!--   Else listing view   -->
-      <TableLayout :showOrHide="showOrHide" />
+      <TableLayout @showOrHide="showOrHide" />
       <div class="mt-6">
         <Pagination />
       </div>
@@ -39,7 +39,6 @@ export default defineComponent({
     });
 
     const showOrHide = (data = Array) => {
-      console.log(data);
       if (data.length > 0) {
         state.showButtons = true;
       } else {
