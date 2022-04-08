@@ -6,12 +6,7 @@
           class="relative z-10 mt-6 flex items-center justify-between rounded-md bg-white px-5 pt-5 text-xs sm:mt-12 sm:px-10"
         >
           <a class="pb-5" href="#">
-            <!-- <img
-              class="w-52 sm:w-auto"
-              src='../../../../../assets/images/svg/header-logo.svg'
-              alt="iati logo"
-            /> -->
-            <svg-vue class="w-52 sm:w-full" icon="header-logo"></svg-vue>
+            <svg-vue class="w-52 text-6xl sm:w-60" icon="header-logo"></svg-vue>
           </a>
           <div>
             <ul

@@ -13,36 +13,31 @@
           . Please click on the link in the email to verify and activate your
           new IATI publisher account.
         </p>
-        <img src="/images/mail.png" alt="" />
+        <svg-vue class="verification" icon="ic-verification"></svg-vue>
         <button class="btn btn-next">
           Get started
-          <svg
-            width="24"
-            height="24"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M3 12h18M16 7l5 5-5 5"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            />
-          </svg>
+          <svg-vue class="text-2xl" icon="right-arrow"></svg-vue>
         </button>
       </div>
     </form>
+    <!-- step 3 -->
     <aside>
       <span class="text-base font-bold">Step 1 out of 3</span>
       <ul class="relative mt-6 text-sm text-n-40">
-        <li class="mb-6 font-bold text-bluecoral">
-          <span class="mr-3 ml-6">1</span> Publisher Information
+        <li class="mb-6 flex items-center font-bold text-bluecoral">
+          <span class="mr-3 ml-6"
+            ><svg-vue class="text-xs" icon="checked"></svg-vue
+          ></span>
+          Publisher Information
         </li>
-        <li class="mb-6 font-bold text-bluecoral">
-          <span class="mr-3 ml-6">2</span> Administrator Information
+        <li class="mb-6 flex items-center font-bold text-bluecoral">
+          <span class="mr-3 ml-6"
+            ><svg-vue class="text-xs" icon="checked"></svg-vue
+          ></span>
+          Administrator Information
         </li>
-        <li class="list__active font-bold text-n-50">
+        <li class="relative font-bold text-n-50">
+          <span class="list__active"></span>
           <span class="mr-3 ml-6">3</span> Email Verification
           <p class="detail mt-2 font-normal xl:pr-2">
             Please verify and activate your IATI Publisher account through your
