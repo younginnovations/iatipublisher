@@ -52,21 +52,6 @@
       </p>
       <button type="submit" id="btn" class="btn" @click="login">
         SIGN IN
-        <!-- <svg
-          class="absolute right-7 duration-200 hover:fill-white group-hover:translate-x-1"
-          width="24"
-          height="24"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            d="M3 12h18M16 7l5 5-5 5"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          />
-        </svg> -->
         <svg-vue class="" icon="right-arrow"></svg-vue>
       </button>
     </div>

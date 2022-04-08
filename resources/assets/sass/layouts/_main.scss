@@ -25,6 +25,7 @@
     &__content {
       border: 1px solid transparent;
       box-shadow: 0px 0px 25px 0px rgba(0, 0, 0, 0.1);
+      @apply flex items-center rounded-lg bg-white py-6 px-5;
 
       .right__icon {
         @apply text-lagoon-50;
