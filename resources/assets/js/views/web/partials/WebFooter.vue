@@ -5,7 +5,7 @@
     <div class="border-b border-white border-opacity-20">
       <div class="mx-3 py-10 sm:mx-10 xl:mx-24 xl:px-1">
         <div
-          class="footer_container grid grid-flow-row gap-8 sm:gap-y-10 md:grid-cols-2 lg:grid-cols-4 lg:justify-items-center"
+          class="footer__container grid grid-flow-row gap-8 sm:gap-y-10 md:grid-cols-2 lg:grid-cols-4 lg:justify-items-center"
         >
           <div>
             <a href="#">

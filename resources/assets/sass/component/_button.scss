@@ -1,9 +1,70 @@
-.btn {
-  @apply py-4 px-0;
+// .btn {
+//   @apply py-4 px-0;
+// }
+// @media screen and (min-width: 640px) {
+//   .btn {
+//     padding: 18px 0;
+//   }
+// }
+
+.btn-next {
+  padding: 13px 24px;
+
+  svg {
+    margin-left: 13px;
+    transition: 0.2s;
+  }
 }
-@media screen and (min-width: 640px) {
-  .btn {
-    padding: 18px 0;
+.btn {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 14px;
+  text-transform: uppercase;
+  border: none;
+  border-radius: 8px;
+  outline: none;
+  transition: 0.4s;
+  @apply bg-turquoise;
+  @apply text-n-50;
+
+  &:hover {
+    @apply bg-bluecoral;
+    @apply text-white;
+
+    svg {
+      transform: translateX(4px);
+    }
+  }
+}
+#btn {
+  padding: 18px 0;
+
+  svg {
+    position: absolute;
+    right: 28px;
+    transition: 0.4s;
+  }
+}
+.btn-back {
+  display: flex;
+  align-items: center;
+  font-weight: bold;
+  font-size: 14px;
+  text-transform: uppercase;
+  transition: 0.2s;
+  @apply text-bluecoral;
+
+  svg {
+    transition: 0.2s;
+  }
+
+  &:hover {
+    svg {
+      transform: translateX(-4px);
+    }
   }
 }
 

@@ -14,7 +14,7 @@
           new IATI publisher account.
         </p>
         <img src="/images/mail.png" alt="" />
-        <button class="btn btn-primary">
+        <button class="btn btn-next">
           Get started
           <svg
             width="24"
