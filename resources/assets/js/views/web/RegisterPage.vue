@@ -85,7 +85,7 @@
                 />
 
                 <select
-                  class="form__input"
+                  class="form__input bg-white"
                   v-model="formData[field.name]"
                   :placeholder="field.placeholder"
                   v-if="field.type === 'select'"
@@ -96,7 +96,7 @@
                 </select>
 
                 <span
-                  class="text-tiny font-normal text-n-40"
+                  class="text-xs font-normal text-n-40"
                   v-if="field.help_text != '' && errorData[field.name] == ''"
                   >{{ field.help_text }}
                 </span>
@@ -232,26 +232,7 @@ export default defineComponent({
 
     const registrationAgency = computed(() => {
       if (formData.country !== '') {
-        console.log(formData.country);
-        // return map.call(props.registration_agency, ({key, value}) => {
-        //   console.log(key, value);
-        //   // if (formData.country === key.split('-')[0]) {
-        //   //   console.log('has',key,value);
-        //   //   return { key: value };
-        //   // }
-        // });
-
-        // return new Map<string,string>map.has(props.registration_agency, ({key, value}) => {
-        //   console.log(key, value);
-        //   // if (formData.country === key.split('-')[0]) {
-        //   //   console.log('has',key,value);
-        //   //   return { key: value };
-        //   // }
-        // });
-
-        // return props.registration_agency.filter(function (data) {
-        //   return data;
-        // });
+   
       }
 
       return props.registration_agency;
@@ -268,6 +249,7 @@ export default defineComponent({
             label: 'Publisher Name',
             name: 'publisher_name',
             placeholder: 'Enter the name of your organization',
+            id: 'publisher_name',
             required: true,
             type: 'text',
             class: 'col-span-2 mb-4',
@@ -277,6 +259,7 @@ export default defineComponent({
             label: 'Publisher ID',
             name: 'publisher_id',
             placeholder: "For example, 'dfid' and 'worldbank'",
+            id: 'publisher_id',
             required: false,
             type: 'text',
             class: 'mb-4',
@@ -287,6 +270,7 @@ export default defineComponent({
             label: 'Country',
             name: 'country',
             placeholder: 'Select the country',
+            id: 'country',
             required: false,
             type: 'select',
             options: props.country,
@@ -297,6 +281,7 @@ export default defineComponent({
             label: 'Organization Registration Agency',
             name: 'registration_agency',
             placeholder: 'Select your Organization Registration Agency',
+            id: 'registration_agency',
             required: true,
             type: 'select',
             options: registrationAgency,
@@ -307,6 +292,7 @@ export default defineComponent({
             label: 'Organization Registration Number',
             name: 'registration_number',
             placeholder: '',
+            id: 'registration_number',
             required: true,
             type: 'text',
             class: 'mb-4',
@@ -316,6 +302,7 @@ export default defineComponent({
             label: 'IATI Organizational Identifier',
             name: 'identifier',
             placeholder: '',
+            id: 'identifier',
             required: true,
             type: 'text',
             class: 'mb-4',
@@ -334,6 +321,7 @@ export default defineComponent({
             label: 'Username',
             name: 'username',
             placeholder: '',
+            id: 'username',
             required: true,
             type: 'text',
             class: 'mb-4',
@@ -343,6 +331,7 @@ export default defineComponent({
             label: 'Full Name',
             name: 'full_name',
             placeholder: '',
+            id: 'full_name',
             required: true,
             type: 'text',
             class: 'col-start-1 mb-4',
@@ -351,6 +340,7 @@ export default defineComponent({
             label: 'Email Address',
             name: 'email',
             placeholder: '',
+            id: 'email',
             required: true,
             type: 'text',
             class: 'mb-4',
@@ -359,6 +349,7 @@ export default defineComponent({
             label: 'Password',
             name: 'password',
             placeholder: '',
+            id: 'password',
             required: true,
             type: 'password',
             class: 'mb-4',
@@ -367,6 +358,7 @@ export default defineComponent({
             label: 'Confirm Password',
             name: 'password_confirmation',
             placeholder: '',
+            id: 'password_confirmation',
             required: true,
             type: 'password',
             class: 'mb-4',

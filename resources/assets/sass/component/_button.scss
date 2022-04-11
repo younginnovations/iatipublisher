@@ -1,3 +1,4 @@
+// Turquoise button
 .btn {
   position: relative;
   display: flex;
@@ -9,7 +10,6 @@
   border: none;
   border-radius: 8px;
   outline: none;
-  transition: 0.3s;
   @apply bg-turquoise;
   @apply text-n-50;
 
@@ -21,14 +21,6 @@
       transform: translateX(4px);
       transition: 0.3s;
     }
-  }
-}
-#btn {
-  padding: 18px 0;
-
-  svg {
-    @apply absolute right-7 text-2xl;
-    transition: 0.4s;
   }
 }
 .btn-back {
