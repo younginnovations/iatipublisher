@@ -14,6 +14,7 @@
           class="username input sm:h-16"
           type="text"
           placeholder="Enter a registered username"
+          id="username"
           v-model="formData.username"
         />
         <svg-vue
@@ -30,6 +31,7 @@
           class="password input sm:h-16"
           type="password"
           placeholder="Enter a correct password"
+          id="password"
           v-model="formData.password"
         />
         <svg-vue
@@ -96,3 +98,14 @@ export default defineComponent({
   },
 });
 </script>
+
+<style lang="scss">
+#btn {
+  padding: 18px 0;
+
+  svg {
+    @apply absolute right-7 text-2xl;
+    transition: 0.4s;
+  }
+}
+</style>
