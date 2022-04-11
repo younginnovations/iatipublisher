@@ -21,8 +21,7 @@ return new class extends Migration {
             $table->string('address')->nullable();
             $table->integer('organization_id')->nullable();
             $table->boolean('is_active')->default(false);
-            $table->boolean('is_email_verified')->default(false);
-            $table->boolean('email_verified_at')->default(false);
+            $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->rememberToken();
             $table->timestamps();

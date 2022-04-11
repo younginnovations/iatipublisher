@@ -85,4 +85,32 @@ class UserService
           'password' => Hash::make($data['password']),
       ]);
     }
+
+    /**
+     * return codeList array from json codeList.
+     * @param      $listName
+     * @param      $listType
+     * @param bool $code
+     * @return array
+     */
+    public function getCodeList($listName, $listType, $code = true)
+    {
+        $defaultVersion = config('app.default_version_name');
+        $defaultLocale = config('app.fallback_locale');
+        $locale = config('app.locale');
+        $filePath = app_path("Http/Data/$listType/$listName.json");
+        $codeListFromFile = file_get_contents($filePath);
+        $codeLists = json_decode($codeListFromFile, true);
+        $codeList = $codeLists[$listName];
+        $data = [];
+
+        foreach ($codeList as $list) {
+            $data[$list['code']] = ($code) ? $list['code'] . (array_key_exists(
+                'name',
+                $list
+            ) ? ' - ' . $list['name'] : '') : $list['name'];
+        }
+
+        return $data;
+    }
 }
