@@ -7,17 +7,18 @@
         >
         <p class="text-base text-n-40">
           A verification email has been sent to
-          <span class="font-bold text-n-50"
-            ><a href="mailto:admin@admin.com">admin@admin.com</a></span
+          <span class="font-bold text-n-50">
+            <!-- <a :href="['mailto:', props.email]">{{ props.email }}</a></span -->
+            {{ props.email }}</span
           >
           . Please click on the link in the email to verify and activate your
           new IATI publisher account.
         </p>
         <svg-vue class="verification" icon="ic-verification"></svg-vue>
-        <button class="btn btn-next">
+        <a href="/admin/dashboard" class="btn btn-next">
           Get started
           <svg-vue class="text-2xl" icon="right-arrow"></svg-vue>
-        </button>
+        </a>
       </div>
     </form>
     <!-- step 3 -->
@@ -48,3 +49,19 @@
     </aside>
   </div>
 </template>
+
+<script lang="ts">
+import { defineComponent } from 'vue';
+
+export default defineComponent({
+  props: {
+    email: String,
+  },
+
+  setup(props) {
+    return {
+      props,
+    };
+  },
+});
+</script>

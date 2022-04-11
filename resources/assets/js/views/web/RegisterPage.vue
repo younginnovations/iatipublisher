@@ -8,7 +8,10 @@
           creating an account in IATI publisher.
         </p>
       </div>
-      <EmailVerification v-if="step === 3"></EmailVerification>
+      <EmailVerification
+        v-if="step === 3"
+        :email="formData.email"
+      ></EmailVerification>
       <div v-else class="section__wrapper flex">
         <div class="form">
           <div class="form__container">
@@ -38,7 +41,7 @@
                     >support@iatistandard.org</a
                   ></span
                 >
-                for more details. {{ formData }}
+                for more details.
               </p>
             </div>
             <div class="form__content">
@@ -57,28 +60,47 @@
                   <svg-vue class="cursor-pointer" icon="help"></svg-vue>
                 </div>
                 <input
-                  class="form__input"
+                  class="form__input error__input"
                   :type="field.type"
                   v-model="formData[field.name]"
                   :placeholder="formData[field.placeholder]"
-                  v-if="field.type === 'text' || field.type === 'password'"
+                  v-if="
+                    (field.type === 'text' || field.type === 'password') &&
+                    field.name != 'identifier'
+                  "
                 />
-                <!-- {{ field.options }} -->
+
+                <input
+                  class="form__input"
+                  :type="field.type"
+                  v-model="formData[field.name]"
+                  :value="
+                    formData.registration_agency +
+                    '-' +
+                    formData.registration_number
+                  "
+                  :placeholder="formData[field.placeholder]"
+                  v-if="field.name == 'identifier'"
+                  disabled="disabled"
+                />
+
                 <select
                   class="form__input"
-                  v-model="field.name"
+                  v-model="formData[field.name]"
                   :placeholder="field.placeholder"
                   v-if="field.type === 'select'"
                 >
-                  <!-- <option v-for="option in formData[field.options]" v-bind="option">{{option}}</option> -->
-                  <option
-                    v-for="(ele, i) in field.options"
-                    :key="i"
-                    :value="ele"
-                  >
+                  <option v-for="(ele, i) in field.options" :key="i" :value="i">
                     {{ ele }}
                   </option>
                 </select>
+
+                <span
+                  class="text-tiny font-normal text-n-40"
+                  v-if="field.help_text != '' && errorData[field.name] == ''"
+                  >{{ field.help_text }}
+                </span>
+
                 <span
                   class="error"
                   role="alert"
@@ -141,12 +163,10 @@
               :key="ele.title"
             >
               <span class="list__active" v-if="step == parseInt(i)"></span>
-              <!-- <span class="mr-3 ml-6" v-if="!ele.is_complete"> -->
               <span class="mr-3 ml-6" v-if="!ele.is_complete">
                 {{ i }}
               </span>
               <span class="mr-3 ml-6" v-if="ele.is_complete">
-                <!-- <span class="mr-3 ml-6"> -->
                 <svg-vue class="text-xs" icon="checked"> </svg-vue>
               </span>
               {{ ele.title }}
@@ -165,7 +185,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, ref } from 'vue';
+import { defineComponent, reactive, ref, computed } from 'vue';
 import axios from 'axios';
 import EmailVerification from './EmailVerification.vue';
 
@@ -193,18 +213,50 @@ export default defineComponent({
       full_name: '',
       email: '',
       password: '',
-      confirmation_password: '',
+      password_confirmation: '',
     });
 
-    // interface form {
-    //   title : string,
-    //   is_complete : boolean,
-    //   description : string,
-    //   fields?: Array<T>,
-    // };
-    // interface formArr{
-    //   [key: number] : form,
-    // };
+    const formData = reactive({
+      publisher_name: '',
+      publisher_id: '',
+      country: '',
+      registration_agency: '',
+      registration_number: '',
+      identifier: '',
+      username: '',
+      full_name: '',
+      email: '',
+      password: '',
+      password_confirmation: '',
+    });
+
+    const registrationAgency = computed(() => {
+      if (formData.country !== '') {
+        console.log(formData.country);
+        // return map.call(props.registration_agency, ({key, value}) => {
+        //   console.log(key, value);
+        //   // if (formData.country === key.split('-')[0]) {
+        //   //   console.log('has',key,value);
+        //   //   return { key: value };
+        //   // }
+        // });
+
+        // return new Map<string,string>map.has(props.registration_agency, ({key, value}) => {
+        //   console.log(key, value);
+        //   // if (formData.country === key.split('-')[0]) {
+        //   //   console.log('has',key,value);
+        //   //   return { key: value };
+        //   // }
+        // });
+
+        // return props.registration_agency.filter(function (data) {
+        //   return data;
+        // });
+      }
+
+      return props.registration_agency;
+    });
+
     const registerForm = reactive({
       1: {
         title: 'Publisher Information',
@@ -219,6 +271,7 @@ export default defineComponent({
             required: true,
             type: 'text',
             class: 'col-span-2 mb-4',
+            help_text: '',
           },
           publisher_id: {
             label: 'Publisher ID',
@@ -227,6 +280,8 @@ export default defineComponent({
             required: false,
             type: 'text',
             class: 'mb-4',
+            help_text:
+              'You can use a unique abbreviated form of your organization name',
           },
           country: {
             label: 'Country',
@@ -236,6 +291,7 @@ export default defineComponent({
             type: 'select',
             options: props.country,
             class: 'mb-4',
+            help_text: '',
           },
           organization_registration_agency: {
             label: 'Organization Registration Agency',
@@ -243,8 +299,9 @@ export default defineComponent({
             placeholder: 'Select your Organization Registration Agency',
             required: true,
             type: 'select',
-            options: props.registration_agency,
+            options: registrationAgency,
             class: 'mb-4',
+            help_text: '',
           },
           organization_registration_no: {
             label: 'Organization Registration Number',
@@ -253,6 +310,7 @@ export default defineComponent({
             required: true,
             type: 'text',
             class: 'mb-4',
+            help_text: '',
           },
           iati_organizational_identifier: {
             label: 'IATI Organizational Identifier',
@@ -261,6 +319,8 @@ export default defineComponent({
             required: true,
             type: 'text',
             class: 'mb-4',
+            help_text:
+              'This is autogenerated, please make sure to fill the above fields correctly.',
           },
         },
       },
@@ -277,6 +337,7 @@ export default defineComponent({
             required: true,
             type: 'text',
             class: 'mb-4',
+            help_text: '',
           },
           full_name: {
             label: 'Full Name',
@@ -304,7 +365,7 @@ export default defineComponent({
           },
           confirm_password: {
             label: 'Confirm Password',
-            name: 'confirmation_password',
+            name: 'password_confirmation',
             placeholder: '',
             required: true,
             type: 'password',
@@ -319,80 +380,75 @@ export default defineComponent({
           'Please verify and activate your IATI Publisher account through your provided email',
       },
     });
-    const formData = reactive({
-      publisher_name: '',
-      publisher_id: '',
-      country: '',
-      registration_agency: '',
-      registration_number: '',
-      identifier: '',
-      username: '',
-      full_name: '',
-      email: '',
-      password: '',
-      confirmation_password: '',
-    });
 
     function verifyPublisher() {
+      formData.identifier = `${formData.registration_agency}-${formData.registration_number}`;
       axios
         .post('/verifyPublisher', formData)
-        .then((response) => {
-          console.log(response, publisherExists);
+        .then((res) => {
+          const response = res.data;
           publisherExists.value = true;
-          const errors = response.data.hasOwnProperty('errors')
-            ? response.data.errors
-            : [];
+          const errors = 'errors' in response ? response.errors : [];
+
           errorData.publisher_name = errors.publisher_name
             ? errors.publisher_name[0]
             : '';
           errorData.publisher_id = errors.publisher_id
             ? errors.publisher_id[0]
             : '';
+          errorData.registration_agency = errors.registration_agency
+            ? errors.registration_agency[0]
+            : '';
+          errorData.registration_number = errors.registration_number
+            ? errors.registration_number[0]
+            : '';
           errorData.identifier = errors.identifier ? errors.identifier[0] : '';
 
-          console.log(errors);
-          if (errors.hasOwnProperty('publisher_error'))
+          if ('publisher_error' in errors) {
             publisherExists.value = false;
+          }
 
-          if (response.data.hasOwnProperty('success')) {
-            // registerForm[step.value].is_complete = true;
+          if ('success' in response) {
+            console.log('here');
+            registerForm['1'].is_complete = true;
             step.value += 1;
           }
         })
         .catch((error) => {
           // const { errors } = error;
           // errors = error.response.data.errors;
-          console.log('errors', error);
+          // console.log('errors', error);
         });
     }
 
     function submitForm() {
       axios
         .post('/register', formData)
-        .then((response) => {
-          const errors = response.data.hasOwnProperty('errors')
-            ? response.data.errors
-            : [];
+        .then((res) => {
+          const response = res.data;
+          const errors = 'errors' in response ? response.data.errors : [];
           errorData.username = errors.username ? errors.username[0] : '';
           errorData.full_name = errors.full_name ? errors.full_name[0] : '';
           errorData.email = errors.email ? errors.email[0] : '';
           errorData.password = errors.password ? errors.password[0] : '';
 
-          if (response.data.hasOwnProperty('success')) {
-            // registerForm[step.value].is_complete = true;
+          if ('success' in response) {
+            registerForm['2'].is_complete = true;
             step.value += 1;
           }
         })
         .catch((error) => {
-          console.log('errors', error);
+          const { errors } = error.response.data;
+          errorData.username = errors.username ? errors.username[0] : '';
+          errorData.full_name = errors.full_name ? errors.full_name[0] : '';
+          errorData.email = errors.email ? errors.email[0] : '';
+          errorData.password = errors.password ? errors.password[0] : '';
         });
     }
 
     function goToNextForm() {
       if (step.value === 1) verifyPublisher();
       if (step.value === 2) submitForm();
-
-      console.log('Next Form');
     }
 
     function goToPreviousForm() {
