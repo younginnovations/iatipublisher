@@ -58,7 +58,7 @@ class UserService
             'registration_agency' => $data['registration_agency'],
             'registration_number' => $data['registration_number'],
             'identifier'          => $data['registration_agency'] . '-' . $data['registration_number'],
-            'status'              => 'pending',
+            'iati_status'         => 'pending',
         ]);
 
         return $this->userRepo->store([

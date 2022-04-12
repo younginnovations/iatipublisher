@@ -18,12 +18,19 @@ return new class extends Migration {
             $table->id();
             $table->string('publisher_id')->unique();
             $table->string('publisher_name')->unique();
-            $table->enum('publisher_type', Enums::PUBLISHER_TYPE)->nullable();
-            $table->string('country')->nullable();
-            $table->enum('registration_agency', Enums::ORGANIZATION_REGISTRATION_AGENCY);
-            $table->string('registration_number');
+            $table->string('publisher_type')->nullable();
             $table->string('identifier');
-            $table->enum('status', Enums::ORGANIZATION_STATUS);
+            $table->string('address')->nullable();
+            $table->string('telephone')->nullable();
+            $table->json('reporting_org')->nullable();
+            $table->string('country')->nullable();
+            $table->string('logo_url')->nullable();
+            $table->string('organization_url')->nullable();
+            $table->enum('status', Enums::ORGANIZATION_STATUS)->default('draft');
+            $table->enum('iati_status', Enums::IATI_ORGANIZATION_STATUS)->default('pending');
+            $table->boolean('is_published')->default(false);
+            $table->string('registration_agency')->nullable();
+            $table->string('registration_number')->nullable();
             $table->timestamps();
         });
     }

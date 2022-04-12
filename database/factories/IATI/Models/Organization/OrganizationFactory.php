@@ -28,7 +28,8 @@ class OrganizationFactory extends Factory
             'registration_agency' => 'AF-COA',
             'registration_number' => '5',
             'identifier'          => env('IATI_YIPL_IDENTIFIER'),
-            'status'              => 'verified',
+            'iati_status'         => 'pending',
+            'status'              => 'draft',
         ];
     }
 }

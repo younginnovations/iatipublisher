@@ -13,4 +13,4 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::resource('/activities', \App\Http\Controllers\Activity\ActivityController::class);
+Route::resource('/organization', \App\Http\Controllers\Organization\OrganizationController::class);

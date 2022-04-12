@@ -193,12 +193,12 @@ class RegisterController extends Controller
     public function register(Request $request): \Illuminate\Http\JsonResponse|\Illuminate\Http\RedirectResponse
     {
         $validator = Validator::make($request->all(), [
-            'username'     => ['required', 'string', 'max:255', 'unique:users,username'],
-            'full_name'    => ['required', 'string', 'max:255'],
-            'email'        => ['required', 'string', 'email', 'max:255', 'unique:users,email'],
-            'publisher_id' => ['required', 'string', 'max:255', 'unique:organizations,publisher_id'],
-            'password'     => ['required', 'string', 'min:8', 'confirmed'],
-        ]);
+                'username'     => ['required', 'string', 'max:255', 'unique:users,username'],
+                'full_name'    => ['required', 'string', 'max:255'],
+                'email'        => ['required', 'string', 'email', 'max:255', 'unique:users,email'],
+                'publisher_id' => ['required', 'string', 'max:255', 'unique:organizations,publisher_id'],
+                'password'     => ['required', 'string', 'min:8', 'confirmed'],
+            ]);
 
         if ($validator->fails()) {
             return response()->json(['success' => false, 'errors' => $validator->errors()]);
