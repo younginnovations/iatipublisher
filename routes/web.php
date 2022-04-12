@@ -20,13 +20,16 @@ Route::get('/activities', function () {
     return view('web.activities');
 });
 
-Auth::routes(['verify' => true]);
+// Auth::routes(['verify' => true]);
 
 Route::get('/login', [App\Http\Controllers\Web\WebController::class, 'index'])->name('index.login');
 Route::post('/login', [App\Http\Controllers\Auth\LoginController::class, 'login'])->name('login');
 Route::get('/register', [App\Http\Controllers\Auth\RegisterController::class, 'showRegistrationForm'])->name('register');
 Route::post('/verifyPublisher', [App\Http\Controllers\Auth\RegisterController::class, 'verifyPublisher'])->name('verify-publisher');
 Route::post('/register', [App\Http\Controllers\Auth\RegisterController::class, 'register']);
-// Route::post('/verifyEmail/{id}/{hash}', [App\Http\Controllers\Auth\VerificationController::class, 'verify'])->name('verification.verify');
+Route::get('/email/verify/{id}/{hash}', [App\Http\Controllers\Auth\VerificationController::class, 'verify'])->name('verification.verify');
 // Route::get('/verifyEmail', [App\Http\Controllers\Auth\VerificationController::class, 'show'])->name('verification.notice');
 Route::post('/logout', [App\Http\Controllers\Auth\LoginController::class, 'logout'])->name('logout');
+Route::get('/email/verify', function () {
+    return view('auth.verify-email');
+})->middleware('auth')->name('verification.notice');

@@ -82,7 +82,6 @@ class RegisterController extends Controller
             $data = $request->all();
 
             $validator = Validator::make($data, [
-              // 'identifier' => ['required', 'string', 'max:255', 'unique:organizations,identifier'],
               'publisher_id' => ['required', 'string', 'max:255', 'unique:organizations,publisher_id'],
               'publisher_name' => ['required', 'string', 'max:255'],
               'registration_agency' => ['required'],
@@ -93,24 +92,24 @@ class RegisterController extends Controller
                 return response()->json(['errors' => $validator->errors()]);
             }
 
-            //   $client = new Client(
-            //     [
-            //     'base_uri'=>'https://staging.iatiregistry.org',
-            //     'headers'=> [
-            //       'X-CKAN-API-Key' => env('IATI_API_KEY'), ],
-            //     ]
-            //   );
+            $client = new Client(
+                [
+                'base_uri'=>'https://staging.iatiregistry.org',
+                'headers'=> [
+                  'X-CKAN-API-Key' => env('IATI_API_KEY'), ],
+                ]
+            );
 
-            // $res = $client->request('GET', 'https://staging.iatiregistry.org/api/action/organization_show', [
-            // 'auth' => [env('IATI_USERNAME'), env('IATI_PASSWORD')],
-            // 'query' => ['id' => $data['publisher_id']],
-            // ]);
+            $res = $client->request('GET', 'https://staging.iatiregistry.org/api/action/organization_show', [
+            'auth' => [env('IATI_USERNAME'), env('IATI_PASSWORD')],
+            'query' => ['id' => $data['publisher_id']],
+            ]);
 
-            // $response = json_decode($res->getBody()->getContents())->result;
+            $response = json_decode($res->getBody()->getContents())->result;
 
-            // if ($data['publisher_name'] != $response->title || $data['registration_agency'].'-'.$data['registration_number'] != $response->publisher_iati_id) {
-            //     return response()->json(['publisher_error' => 'true', 'errors' => ['publisher_name' => ['Publisher Name doesn\'t match your IATI Registry information'], 'publisher_id' => ['Publisher ID doesn\'t match with your IATI Registry information']]]);
-            // }
+            if ($data['publisher_name'] != $response->title || $data['registration_agency'] . '-' . $data['registration_number'] != $response->publisher_iati_id) {
+                return response()->json(['publisher_error' => 'true', 'errors' => ['publisher_name' => ['Publisher Name doesn\'t match your IATI Registry information'], 'publisher_id' => ['Publisher ID doesn\'t match with your IATI Registry information']]]);
+            }
 
             return response()->json(['success' => 'Publisher verified successfully']);
         } catch (ClientException $e) {
@@ -128,21 +127,11 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-
-      // $client = new Client(
-        //   [
-        //     'base_uri'=>'https://staging.iatiregistry.org',
-        //     'headers'=> [
-        //       'X-CKAN-API-Key' => env('IATI_API_KEY'), ],
-        //     ]
-        //     );
-
-        // $res = $client->request('GET', 'https://staging.iatiregistry.org/api/action/organization_show', [
-        // 'auth' => [env('IATI_USERNAME'), env('IATI_PASSWORD')],
-        // 'query' => ['id' => $data['publisher_id']],
-        // ]);
-
-        return $this->userService->registerExistingUser($data);
+        try {
+            return $this->userService->registerExistingUser($data);
+        } catch (\Exception $e) {
+            Log::error($e);
+        }
     }
 
     /**
@@ -153,10 +142,8 @@ class RegisterController extends Controller
     public function showRegistrationForm()
     {
         try {
-            // $countries = trans('user.country_list');
             $countries = $this->userService->getCodeList('Country', 'Organization');
             $registration_agencies = $this->userService->getCodeList('OrganizationRegistrationAgency', 'Organization');
-            $registration_agencies = trans('user.registration_agency');
 
             return view('web.register', compact('countries', 'registration_agencies'));
         } catch (\Exception $e) {

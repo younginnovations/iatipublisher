@@ -232,7 +232,15 @@ export default defineComponent({
 
     const registrationAgency = computed(() => {
       if (formData.country !== '') {
-   
+        const uncategorized = ['XI', 'PK', 'IQ', 'NE', 'XR'];
+        const agencies = props.registration_agency!;
+        return Object.fromEntries(
+          Object.entries(agencies).filter(
+            ([key, value]) =>
+              key.startsWith(formData.country) ||
+              uncategorized.some((k) => key.startsWith(k))
+          )
+        );
       }
 
       return props.registration_agency;
@@ -409,7 +417,7 @@ export default defineComponent({
         .catch((error) => {
           // const { errors } = error;
           // errors = error.response.data.errors;
-          // console.log('errors', error);
+          console.log('errors', error);
         });
     }
 

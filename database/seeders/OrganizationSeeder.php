@@ -17,6 +17,7 @@ class OrganizationSeeder extends Seeder
     {
         DB::table('organizations')->insert([
             'publisher_id' => Str::random(5),
+            'publisher_name' => 'yipl',
             'publisher_type' => 'government',
             'country' => 'IN',
             'registration_agency' => 'AF-COA',

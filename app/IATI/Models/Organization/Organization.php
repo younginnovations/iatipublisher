@@ -18,6 +18,7 @@ class Organization extends Model
      */
     protected $fillable = [
       'publisher_id',
+      'publisher_name',
       'publisher_type',
       'country',
       'registration_agency',
