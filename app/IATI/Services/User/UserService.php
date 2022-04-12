@@ -51,31 +51,15 @@ class UserService
      */
     public function registerExistingUser(array $data)
     {
-        // $organization = $this->organizationRepo->store([
-        //   'publisher_id' => $data['publisher_id'],
-        //   'publisher_type' => 'government',
-        //   'country' => $data['country'],
-        //   // 'country' => 'ZW',
-        //   'registration_agency' => $data['registration_agency'],
-        //   // 'registration_agency' => 'PK-NTN',
-        //   'registration_number' => $data['registration_number'],
-        //   'identifier' => $data['registration_agency'].'-'.$data['registration_number'],
-        //   'status' => 'pending',
-        // ]);
-
         $organization = $this->organizationRepo->createOrganization([
         'publisher_id' => $data['publisher_id'],
-        'publisher_type' => 'government',
-        // 'country' => $data['country'],
-        'country' => 'ZW',
-        // 'registration_agency' => $data['registration_agency'],
-        'registration_agency' => 'PK-NTN',
+        'publisher_name' => $data['publisher_name'],
+        'country' => isset($data['country']) ? $data['country'] : null,
+        'registration_agency' => $data['registration_agency'],
         'registration_number' => $data['registration_number'],
         'identifier' => $data['registration_agency'] . '-' . $data['registration_number'],
         'status' => 'pending',
       ]);
-
-        // dd($organization);
 
         return $this->userRepo->store([
           'username' => $data['username'],
@@ -93,11 +77,8 @@ class UserService
      * @param bool $code
      * @return array
      */
-    public function getCodeList($listName, $listType, $code = true)
+    public function getCodeList($listName, $listType, $code = true) : array
     {
-        $defaultVersion = config('app.default_version_name');
-        $defaultLocale = config('app.fallback_locale');
-        $locale = config('app.locale');
         $filePath = app_path("Http/Data/$listType/$listName.json");
         $codeListFromFile = file_get_contents($filePath);
         $codeLists = json_decode($codeListFromFile, true);
@@ -105,10 +86,7 @@ class UserService
         $data = [];
 
         foreach ($codeList as $list) {
-            $data[$list['code']] = ($code) ? $list['code'] . (array_key_exists(
-                'name',
-                $list
-            ) ? ' - ' . $list['name'] : '') : $list['name'];
+            $data[$list['code']] = ($code) ? $list['code'] . (array_key_exists('name', $list) ? ' - ' . $list['name'] : '') : $list['name'];
         }
 
         return $data;
