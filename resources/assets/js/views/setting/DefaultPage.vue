@@ -1,11 +1,19 @@
 <template>
-  <div class="setting__container">
+  <div class="setting__container mb-14">
     <div class="flex">
       <button class="tab-btn mr-2">Publishing Settings</button>
       <button class="tab-btn active__tab">Default Values</button>
     </div>
     <div class="registry__info">
       <div class="mb-4 text-sm font-bold text-n-50">Default Values</div>
+      <div class="flex items-center text-xs text-n-50">
+        <span class="mr-1"
+          ><span class="text-salmon-50">* </span>Mandatory fields</span
+        >
+        <button>
+          <svg-vue class="text-base" icon="help"></svg-vue>
+        </button>
+      </div>
     </div>
     <p class="text">
       These values will be used in the xml files which is published to the IATI
@@ -33,7 +41,7 @@
         <div>
           <div class="flex justify-between">
             <label for="default_language"
-              >Default Language <span class="text-crimson-50">*</span></label
+              >Default Language <span class="text-salmon-50">*</span></label
             >
             <button><svg-vue class="text-base" icon="help"></svg-vue></button>
           </div>
@@ -73,7 +81,7 @@
         <div>
           <div class="flex justify-between">
             <label for="linked_data_url"
-              >Linked Data URL <span class="text-crimson-50">*</span></label
+              >Linked Data URL <span class="text-salmon-50">*</span></label
             >
             <button><svg-vue class="text-base" icon="help"></svg-vue></button>
           </div>
@@ -90,7 +98,7 @@
         <div>
           <div class="flex justify-between">
             <label for="humanitarian"
-              >Humanitarian <span class="text-crimson-50">*</span></label
+              >Humanitarian <span class="text-salmon-50">*</span></label
             >
             <button><svg-vue class="text-base" icon="help"></svg-vue></button>
           </div>
