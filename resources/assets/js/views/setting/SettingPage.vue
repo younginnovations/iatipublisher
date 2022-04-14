@@ -2,12 +2,12 @@
   <section class="section">
     <div class="setting">
       <span class="text-xs font-bold text-n-40">Settings</span>
-      <div class="flex items-center">
+      <div class="mt-4 flex items-center">
         <a href="#"><svg-vue icon="left-arrow"></svg-vue></a>
         <h2 class="ml-3 text-heading-4 font-bold text-n-50">Settings</h2>
       </div>
       <DefaultPage v-if="true"></DefaultPage>
-      <div v-else class="setting__container mb-1">
+      <div v-else class="setting__container mb-14">
         <div class="flex">
           <button class="tab-btn active__tab mr-2">Publishing Settings</button>
           <button class="tab-btn">Default Values</button>
@@ -15,6 +15,14 @@
         <div class="registry__info">
           <div class="mb-4 text-sm font-bold text-n-50">
             Registry Information
+          </div>
+          <div class="flex items-center text-xs text-n-50">
+            <span class="mr-1"
+              ><span class="text-salmon-50">* </span>Mandatory fields</span
+            >
+            <button>
+              <svg-vue class="text-base" icon="help"></svg-vue>
+            </button>
           </div>
         </div>
         <div class="register">
@@ -48,7 +56,7 @@
               <div class="relative">
                 <div class="flex justify-between">
                   <label for="api_token"
-                    >API Token <span class="text-crimson-50">*</span></label
+                    >API Token <span class="text-salmon-50">*</span></label
                   >
                   <button>
                     <svg-vue class="text-base" icon="help"></svg-vue>
@@ -75,7 +83,7 @@
     </div>
     <div class="fixed bottom-0 w-full bg-eggshell py-5 pr-40 shadow-dropdown">
       <div class="flex justify-end">
-        <button class="cancel-btn mr-8">Cancel</button>
+        <button class="ghost-btn mr-8">Cancel</button>
         <button class="primary-btn save-btn">Save publishing setting</button>
       </div>
     </div>
@@ -96,23 +104,22 @@ export default defineComponent({
 <style lang="scss">
 .section {
   @apply bg-paper;
-  height: 90vh;
 
   .setting {
     padding: 16px 0px 24px;
     max-width: 1000px;
     margin: auto;
+    height: 90vh;
+    @apply flex flex-col justify-center;
 
     &__container {
       @apply relative mt-6 rounded-lg bg-white px-20;
-      height: 504px;
-      overflow-y: scroll;
+      overflow-y: auto;
       padding-top: 52px;
       padding-bottom: 52px;
 
       .registry__info {
-        max-width: 768px;
-        @apply mt-7 mb-4 border-b border-b-n-20;
+        @apply mt-7 mb-4 flex justify-between border-b border-b-n-20;
       }
       p {
         @apply text-xs leading-5 text-n-40;
