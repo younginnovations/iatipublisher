@@ -1,5 +1,6 @@
 <?php
 
+// use App\Http\Controllers\Admin\Setting\SettingController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -16,9 +17,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', [App\Http\Controllers\Web\WebController::class, 'index'])->name('web');
 Route::get('/register', [App\Http\Controllers\Web\WebController::class, 'register'])->name('register');
 
-Route::get('/setting_page', function () {
-    return view('admin.settings.setting_page');
-});
+Route::get('/setting', [App\Http\Controllers\Admin\Setting\SettingController::class, 'index'])->name('setting.index');
 
 // Auth::routes(['verify' => true]);
 

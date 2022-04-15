@@ -245,7 +245,7 @@ export default defineComponent({
       menus: [
         {
           name: 'Activity DATA',
-          permalink: '#',
+          permalink: 'activities',
           active: true,
         },
         {
@@ -255,7 +255,7 @@ export default defineComponent({
         },
         {
           name: 'Settings',
-          permalink: '#',
+          permalink: 'setting',
           active: false,
         },
       ],

@@ -6,97 +6,109 @@
         <a href="#"><svg-vue icon="left-arrow"></svg-vue></a>
         <h2 class="ml-3 text-heading-4 font-bold text-n-50">Settings</h2>
       </div>
-      <DefaultPage v-if="true"></DefaultPage>
-      <div v-else class="setting__container mb-14">
+      <div class="setting__container mb-14">
         <div class="flex">
-          <button class="tab-btn active__tab mr-2">Publishing Settings</button>
-          <button class="tab-btn">Default Values</button>
+          <button
+            :class="
+              tab === 'publish' ? 'tab-btn active__tab mr-2' : 'tab-btn mr-2'
+            "
+            @click="toggleTab"
+          >
+            Publishing Settings
+          </button>
+          <button
+            :class="tab === 'default' ? 'tab-btn active__tab' : 'tab-btn'"
+            @click="toggleTab"
+          >
+            Default Values
+          </button>
         </div>
-        <div class="registry__info">
-          <div class="mb-4 text-sm font-bold text-n-50">
-            Registry Information
-          </div>
-          <div class="flex items-center text-xs text-n-50">
-            <span class="mr-1"
-              ><span class="text-salmon-50">* </span>Mandatory fields</span
-            >
-            <button>
-              <svg-vue class="text-base" icon="help"></svg-vue>
-            </button>
-          </div>
-        </div>
-        <div class="register">
-          <div class="register__container">
-            <div>
-              <div class="relative">
-                <div class="flex justify-between">
-                  <label for="name">Publisher ID</label>
-                  <button>
-                    <svg-vue class="text-base" icon="help"></svg-vue>
-                  </button>
-                </div>
-                <input
-                  id="publisher_id"
-                  class="register__input mb-2"
-                  type="text"
-                  placeholder="yipl"
-                />
-                <span class="tag">Correct</span>
-              </div>
-              <p class="xl:pr-2">
-                You need to create user and publisher accounts on the IATI
-                Registry. When creating your publisher account you will be asked
-                to specify a publisher identifier (typically a unique
-                abbreviation of your organisation's name). We recommend that you
-                use the same identifier as you specified as your IATI account
-                identifier.
-              </p>
-            </div>
-            <div>
-              <div class="relative">
-                <div class="flex justify-between">
-                  <label for="api_token"
-                    >API Token <span class="text-salmon-50">*</span></label
-                  >
-                  <button>
-                    <svg-vue class="text-base" icon="help"></svg-vue>
-                  </button>
-                </div>
-                <input
-                  id="api_token"
-                  class="register__input mb-2"
-                  type="text"
-                  placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ"
-                />
-                <span class="tag">Correct</span>
-              </div>
-              <p>
-                You can get your API token from the IATI Registry. Follow the
-                link to learn how to retrieve your API key
-                <a class="font-bold text-bluecoral" href="#">Click Here</a>
-              </p>
-            </div>
-          </div>
-          <button class="primary-btn verify-btn">Verify</button>
-        </div>
+        <SettingPublishingForm v-if="tab === 'publish'"></SettingPublishingForm>
+        <SettingDefaultForm
+          v-else
+          :currencies="currencies"
+          :languages="languages"
+          :humanitarian="humanitarian"
+        ></SettingDefaultForm>
       </div>
     </div>
     <div class="fixed bottom-0 w-full bg-eggshell py-5 pr-40 shadow-dropdown">
       <div class="flex justify-end">
         <button class="ghost-btn mr-8">Cancel</button>
-        <button class="primary-btn save-btn">Save publishing setting</button>
+        <button class="primary-btn save-btn">
+          {{
+            tab === 'publish'
+              ? 'Save publishing setting'
+              : 'Save default values'
+          }}
+        </button>
       </div>
     </div>
   </section>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
-import DefaultPage from './DefaultPage.vue';
+import { defineComponent, ref, reactive } from 'vue';
+import { useStore } from 'vuex';
+import SettingDefaultForm from './SettingDefaultForm.vue';
+import SettingPublishingForm from './SettingPublishingForm.vue';
 
 export default defineComponent({
   components: {
-    DefaultPage,
+    SettingDefaultForm,
+    SettingPublishingForm,
+  },
+
+  props: {
+    currencies: String,
+    languages: String,
+    humanitarian: String,
+  },
+
+  setup(props) {
+    const tab = ref('publish');
+    const store = useStore();
+
+    const publishingForm = reactive({
+      publisher_id: '',
+      api_token: '',
+    });
+
+    const defaultForm = reactive({
+      default_currency: '',
+      default_language: '',
+      hierarchy: '',
+      linked_data_url: '',
+      humanitarian: 'false',
+    });
+
+    const publishingError = reactive({
+      publisher_id: '',
+      api_token: '',
+    });
+
+    const defaultError = reactive({
+      default_currency: '',
+      default_language: '',
+      hierarchy: '',
+      linked_data_url: '',
+      humanitarian: 'false',
+    });
+
+    function toggleTab() {
+      tab.value = tab.value === 'publish' ? 'default' : 'publish';
+    }
+
+    return {
+      tab,
+      toggleTab,
+      publishingForm,
+      publishingError,
+      defaultForm,
+      defaultError,
+      store,
+      props,
+    };
   },
 });
 </script>
