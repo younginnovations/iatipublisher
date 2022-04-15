@@ -174,8 +174,8 @@ class RegisterController extends Controller
     public function showRegistrationForm(): \Illuminate\View\View
     {
         try {
-            $countries = $this->userService->getCodeList('Country', 'Organization');
-            $registration_agencies = $this->userService->getCodeList('OrganizationRegistrationAgency', 'Organization');
+            $countries = getCodeList('Country', 'Organization');
+            $registration_agencies = getCodeList('OrganizationRegistrationAgency', 'Organization');
 
             return view('web.register', compact('countries', 'registration_agencies'));
         } catch (\Exception $e) {

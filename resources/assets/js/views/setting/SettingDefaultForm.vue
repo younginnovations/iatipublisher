@@ -1,9 +1,5 @@
 <template>
-  <div class="setting__container mb-14">
-    <div class="flex">
-      <button class="tab-btn mr-2">Publishing Settings</button>
-      <button class="tab-btn active__tab">Default Values</button>
-    </div>
+  <div>
     <div class="registry__info">
       <div class="mb-4 text-sm font-bold text-n-50">Default Values</div>
       <div class="flex items-center text-xs text-n-50">
@@ -27,12 +23,14 @@
             <label for="default_currency">Default Currency</label>
             <button><svg-vue class="text-base" icon="help"></svg-vue></button>
           </div>
-          <input
+          <!-- <input
             id="default_currency"
             class="register__input mb-2"
             type="text"
             placeholder="EUR - Euro"
-          />
+          /> -->
+          <Multiselect v-model="currency" :options="props.currencies" />
+
           <p>
             The currency in which you normally report your financial
             transactions. Select from dropdown.
@@ -45,12 +43,14 @@
             >
             <button><svg-vue class="text-base" icon="help"></svg-vue></button>
           </div>
-          <input
+          <!-- <input
             id="default_language"
             class="register__input mb-2"
             type="text"
             placeholder="en - English"
-          />
+          /> -->
+          <Multiselect v-model="language" :options="props.languages" />
+
           <p>
             The language in which you normally report. Select from dropdown.
           </p>
@@ -102,14 +102,40 @@
             >
             <button><svg-vue class="text-base" icon="help"></svg-vue></button>
           </div>
-          <input
-            id="humanitarian"
-            class="register__input"
-            type="text"
-            placeholder="No"
-          />
+          <!-- <input
+          id="humanitarian"
+          class="register__input"
+          type="text"
+          placeholder="No"
+        /> -->
+          <Multiselect v-model="humanitarian" :options="props.humanitarian" />
         </div>
       </div>
     </div>
   </div>
 </template>
+
+<script lang="ts">
+import { defineComponent } from 'vue';
+import Multiselect from '@vueform/multiselect';
+
+export default defineComponent({
+  components: {
+    Multiselect,
+  },
+
+  props: {
+    currencies: String,
+    languages: String,
+    humanitarian: String,
+  },
+
+  setup(props) {
+    return {
+      props,
+    };
+  },
+});
+</script>
+
+<style src="@vueform/multiselect/themes/default.css"></style>
