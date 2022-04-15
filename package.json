@@ -47,6 +47,7 @@
     "vue-template-compiler": "^2.6.14"
   },
   "dependencies": {
+    "@vueform/multiselect": "^2.3.3",
     "ts-loader": "^9.2.8",
     "typescript": "^4.6.3"
   }
