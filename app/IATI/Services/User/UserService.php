@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\IATI\Services\User;
 
 use App\IATI\Repositories\Organization\OrganizationRepository;
+use App\IATI\Repositories\Setting\SettingRepository;
 use App\IATI\Repositories\User\UserRepository;
 use Illuminate\Support\Facades\Hash;
 
@@ -24,14 +25,20 @@ class UserService
     private OrganizationRepository $organizationRepo;
 
     /**
+     * @var SettingRepository
+     */
+    private $settingRepo;
+
+    /**
      * UserService constructor.
      *
      * @param UserRepository $userRepo
      */
-    public function __construct(UserRepository $userRepo, OrganizationRepository $organizationRepo)
+    public function __construct(UserRepository $userRepo, OrganizationRepository $organizationRepo, SettingRepository $settingRepo)
     {
         $this->userRepo = $userRepo;
         $this->organizationRepo = $organizationRepo;
+        $this->settingRepo = $settingRepo;
     }
 
     /**
@@ -68,29 +75,5 @@ class UserService
             'organization_id' => $organization['id'],
             'password'        => Hash::make($data['password']),
         ]);
-    }
-
-    /**
-     * return codeList array from json codeList.
-     *
-     * @param      $listName
-     * @param      $listType
-     * @param bool $code
-     *
-     * @return array
-     */
-    public function getCodeList($listName, $listType, bool $code = true): array
-    {
-        $filePath = app_path("Data/$listType/$listName.json");
-        $codeListFromFile = file_get_contents($filePath);
-        $codeLists = json_decode($codeListFromFile, true);
-        $codeList = $codeLists[$listName];
-        $data = [];
-
-        foreach ($codeList as $list) {
-            $data[$list['code']] = ($code) ? $list['code'] . (array_key_exists('name', $list) ? ' - ' . $list['name'] : '') : $list['name'];
-        }
-
-        return $data;
     }
 }
