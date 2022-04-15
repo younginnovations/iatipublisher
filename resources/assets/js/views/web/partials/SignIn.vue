@@ -11,7 +11,11 @@
       >
         <label class="mb-2" for="Username">Username</label>
         <input
-          class="username input sm:h-16"
+          :class="
+            errorData.username != ''
+              ? 'error__input username input sm:h-16'
+              : 'username input sm:h-16'
+          "
           type="text"
           placeholder="Enter a registered username"
           id="username"
@@ -28,7 +32,11 @@
       <div class="relative mb-4 flex flex-col text-sm font-bold text-bluecoral">
         <label class="mb-2" for="Password">Password</label>
         <input
-          class="password input sm:h-16"
+          :class="
+            errorData.password != ''
+              ? 'error__input password input sm:h-16'
+              : 'password input sm:h-16'
+          "
           type="password"
           placeholder="Enter a correct password"
           id="password"

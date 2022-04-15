@@ -53,11 +53,13 @@
                 <div class="flex items-center justify-between">
                   <label class="label" for=""
                     >{{ field.label }}
-                    <span class="text-crimson-40" v-if="field.required">
-                      *</span
-                    >
+                    <span class="text-salmon-40" v-if="field.required"> *</span>
                   </label>
-                  <svg-vue class="cursor-pointer" icon="help"></svg-vue>
+                  <HoverText
+                    v-if="field.hover_text !== ''"
+                    :name="field.label"
+                    :hover_text="field.hover_text"
+                  ></HoverText>
                 </div>
                 <input
                   class="form__input error__input"
@@ -84,16 +86,12 @@
                   disabled="disabled"
                 />
 
-                <select
-                  class="form__input bg-white"
-                  v-model="formData[field.name]"
-                  :placeholder="field.placeholder"
+                <Multiselect
+                  class="select"
                   v-if="field.type === 'select'"
-                >
-                  <option v-for="(ele, i) in field.options" :key="i" :value="i">
-                    {{ ele }}
-                  </option>
-                </select>
+                  v-model="formData[field.name]"
+                  :options="field.options"
+                />
 
                 <span
                   class="text-xs font-normal text-n-40"
@@ -188,10 +186,14 @@
 import { defineComponent, reactive, ref, computed } from 'vue';
 import axios from 'axios';
 import EmailVerification from './EmailVerification.vue';
+import HoverText from './../../components/HoverText.vue';
+import Multiselect from '@vueform/multiselect';
 
 export default defineComponent({
   components: {
     EmailVerification,
+    HoverText,
+    Multiselect,
   },
 
   props: {
@@ -202,6 +204,7 @@ export default defineComponent({
   setup(props) {
     const step = ref(1);
     const publisherExists = ref(true);
+    const option = ref(['a', 'b']);
     const errorData = reactive({
       publisher_name: '',
       publisher_id: '',
@@ -234,6 +237,8 @@ export default defineComponent({
       if (formData.country !== '') {
         const uncategorized = ['XI', 'PK', 'IQ', 'NE', 'XR'];
         const agencies = props.registration_agency!;
+
+        formData.registration_agency = '';
         return Object.fromEntries(
           Object.entries(agencies).filter(
             ([key, value]) =>
@@ -259,8 +264,9 @@ export default defineComponent({
             placeholder: 'Enter the name of your organization',
             id: 'publisher_name',
             required: true,
+            hover_text: 'The Name of the organisation publishing the data',
             type: 'text',
-            class: 'col-span-2 mb-4',
+            class: 'col-span-2 mb-4 lg:mb-2',
             help_text: '',
           },
           publisher_id: {
@@ -269,8 +275,10 @@ export default defineComponent({
             placeholder: "For example, 'dfid' and 'worldbank'",
             id: 'publisher_id',
             required: false,
+            hover_text:
+              "This will be the unique identifier for the publisher. Where possible use a short abbreviation of your organisation's name. For example: 'dfid' or 'worldbank' Must be at least two characters long and lower case. Can include letters, numbers and also - (dash) and _ (underscore).",
             type: 'text',
-            class: 'mb-4',
+            class: 'mb-4 lg:mb-2',
             help_text:
               'You can use a unique abbreviated form of your organization name',
           },
@@ -281,8 +289,10 @@ export default defineComponent({
             id: 'country',
             required: false,
             type: 'select',
+            hover_text:
+              'Choose from the dropdown the country in which the publisher is legally incorporated. ',
             options: props.country,
-            class: 'mb-4',
+            class: 'mb-4 lg:mb-2 relative',
             help_text: '',
           },
           organization_registration_agency: {
@@ -291,9 +301,10 @@ export default defineComponent({
             placeholder: 'Select your Organization Registration Agency',
             id: 'registration_agency',
             required: true,
+            hover_text: '',
             type: 'select',
             options: registrationAgency,
-            class: 'mb-4',
+            class: 'mb-4 lg:mb-2 relative',
             help_text: '',
           },
           organization_registration_no: {
@@ -302,8 +313,9 @@ export default defineComponent({
             placeholder: '',
             id: 'registration_number',
             required: true,
+            hover_text: '',
             type: 'text',
-            class: 'mb-4',
+            class: 'mb-4 lg:mb-2',
             help_text: '',
           },
           iati_organizational_identifier: {
@@ -312,8 +324,10 @@ export default defineComponent({
             placeholder: '',
             id: 'identifier',
             required: true,
+            hover_text:
+              'The organisation identifier used in the IATI XML files to identify the reporting organisation. ',
             type: 'text',
-            class: 'mb-4',
+            class: 'mb-4 lg:mb-2',
             help_text:
               'This is autogenerated, please make sure to fill the above fields correctly.',
           },
@@ -331,8 +345,10 @@ export default defineComponent({
             placeholder: '',
             id: 'username',
             required: true,
+            hover_text:
+              'This was auto-generated using organisation abbreviaton you provided earlier.',
             type: 'text',
-            class: 'mb-4',
+            class: 'mb-4 lg:mb-2',
             help_text: '',
           },
           full_name: {
@@ -340,9 +356,10 @@ export default defineComponent({
             name: 'full_name',
             placeholder: '',
             id: 'full_name',
+            hover_text: '',
             required: true,
             type: 'text',
-            class: 'col-start-1 mb-4',
+            class: 'col-start-1 mb-4 lg:mb-2',
           },
           email: {
             label: 'Email Address',
@@ -350,8 +367,9 @@ export default defineComponent({
             placeholder: '',
             id: 'email',
             required: true,
+            hover_text: '',
             type: 'text',
-            class: 'mb-4',
+            class: 'mb-4 lg:mb-2',
           },
           password: {
             label: 'Password',
@@ -359,8 +377,9 @@ export default defineComponent({
             placeholder: '',
             id: 'password',
             required: true,
+            hover_text: '',
             type: 'password',
-            class: 'mb-4',
+            class: 'mb-4 lg:mb-2',
           },
           confirm_password: {
             label: 'Confirm Password',
@@ -368,8 +387,9 @@ export default defineComponent({
             placeholder: '',
             id: 'password_confirmation',
             required: true,
+            hover_text: '',
             type: 'password',
-            class: 'mb-4',
+            class: 'mb-4 lg:mb-2',
           },
         },
       },
@@ -464,12 +484,18 @@ export default defineComponent({
       goToNextForm,
       goToPreviousForm,
       props,
+      option,
     };
   },
 });
 </script>
 
+<style src="@vueform/multiselect/themes/default.css"></style>
+
 <style lang="scss">
+.label {
+  @apply pb-2 text-sm font-normal;
+}
 .section {
   &__container {
     max-width: 1206px;
@@ -506,17 +532,48 @@ export default defineComponent({
         @apply border-b-2 border-b-n-10;
         margin-bottom: 24px;
 
-        .label {
-          font-size: 14px;
-          font-weight: normal;
-          font-style: normal;
+        .multiselect-option.is-selected {
+          @apply bg-n-20 text-n-50;
+        }
+        .multiselect-option.is-selected.is-pointed {
+          @apply bg-n-20 text-n-50;
+        }
+        .multiselect.is-active {
+          box-shadow: 0 0 0 0;
+        }
+        .multiselect-dropdown {
+          @apply border border-n-50;
+        }
+        .multiselect-caret {
+          -webkit-mask-image: url('/images/dropdown-arrow.svg');
+          mask-image: url('/images/dropdown-arrow.svg');
+        }
+        .select {
+          padding: 16px 0px 16px 55px;
+          height: 52px;
+          font-size: 16px;
+          line-height: 24px;
+          outline: none;
+          transition: 0.3s;
+          @apply border border-n-30;
+
+          &:focus {
+            @apply border border-n-50 bg-n-10;
+            box-shadow: 0 0 0 0;
+          }
+          &::placeholder {
+            letter-spacing: -0.02em;
+            @apply text-n-40;
+          }
+          &:focus::placeholder {
+            @apply text-n-50;
+          }
         }
       }
       &__input {
         @apply border border-n-30;
         width: 100%;
         padding: 13px 0 13px 16px;
-        margin-top: 8px;
         outline: none;
         border-radius: 4px;
         transition: 0.3s;

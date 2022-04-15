@@ -1,7 +1,7 @@
 .input {
   box-sizing: border-box;
   padding: 16px 0px 16px 55px;
-  font-size: 14px;
+  font-size: 16px;
   line-height: 24px;
   border-radius: 8px;
   outline: none;
@@ -28,7 +28,7 @@
   @apply text-crimson-50;
   padding-top: 4px;
   font-weight: normal;
-  font-size: 10px;
+  font-size: 12px;
 }
 .error__input {
   @apply border border-crimson-50;

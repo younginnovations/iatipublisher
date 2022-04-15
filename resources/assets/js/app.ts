@@ -10,7 +10,6 @@ import WebHeader from './views/web/partials/WebHeader.vue';
 import WebFooter from './views/web/partials/WebFooter.vue';
 import WelcomeSignIn from './views/web/WelcomePage.vue';
 import RegisterPage from './views/web/RegisterPage.vue';
-import EmailVerification from './views/web/EmailVerification.vue';
 
 /**
  * Vue components for Activities Listing
