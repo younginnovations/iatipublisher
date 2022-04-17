@@ -2,7 +2,7 @@
   <div>
     <div class="registry__info">
       <div class="mb-4 text-sm font-bold text-n-50">Registry Information</div>
-      <div class="flex items-center text-xs text-n-50">
+      <div class="mb-4 flex items-center text-xs text-n-50">
         <span class="mr-1"
           ><span class="text-salmon-50">* </span>Mandatory fields</span
         >

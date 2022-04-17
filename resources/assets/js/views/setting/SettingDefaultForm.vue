@@ -29,7 +29,11 @@
             type="text"
             placeholder="EUR - Euro"
           /> -->
-          <Multiselect v-model="currency" :options="props.currencies" />
+          <Multiselect
+            class="select"
+            v-model="currency"
+            :options="props.currencies"
+          />
 
           <p>
             The currency in which you normally report your financial
@@ -49,7 +53,11 @@
             type="text"
             placeholder="en - English"
           /> -->
-          <Multiselect v-model="language" :options="props.languages" />
+          <Multiselect
+            class="select"
+            v-model="language"
+            :options="props.languages"
+          />
 
           <p>
             The language in which you normally report. Select from dropdown.
@@ -108,7 +116,11 @@
           type="text"
           placeholder="No"
         /> -->
-          <Multiselect v-model="humanitarian" :options="props.humanitarian" />
+          <Multiselect
+            class="select"
+            v-model="humanitarian"
+            :options="props.humanitarian"
+          />
         </div>
       </div>
     </div>
