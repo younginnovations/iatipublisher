@@ -121,14 +121,53 @@ export default defineComponent({
     padding: 16px 0px 24px;
     max-width: 1000px;
     margin: auto;
-    height: 90vh;
-    @apply flex flex-col justify-center;
+    height: calc(100vh - 10vh);
 
     &__container {
       @apply relative mt-6 rounded-lg bg-white px-20;
       overflow-y: auto;
       padding-top: 52px;
       padding-bottom: 52px;
+      max-height: 65vh;
+
+      .multiselect-option.is-selected {
+        @apply bg-n-20 text-n-50;
+      }
+      .multiselect-option.is-selected.is-pointed {
+        @apply bg-n-20 text-n-50;
+      }
+      .multiselect.is-active {
+        box-shadow: 0 0 0 0;
+      }
+      .multiselect-dropdown {
+        @apply border border-n-50;
+      }
+      .multiselect-caret {
+        -webkit-mask-image: url('/images/dropdown-arrow.svg');
+        mask-image: url('/images/dropdown-arrow.svg');
+      }
+      .select {
+        padding: 16px 0px 16px 55px;
+        height: 52px;
+        font-size: 16px;
+        line-height: 24px;
+        outline: none;
+        transition: 0.3s;
+        margin: 8px 0px;
+        @apply border border-n-30;
+
+        &:focus {
+          @apply border border-n-50 bg-n-10;
+          box-shadow: 0 0 0 0;
+        }
+        &::placeholder {
+          letter-spacing: -0.02em;
+          @apply text-n-40;
+        }
+        &:focus::placeholder {
+          @apply text-n-50;
+        }
+      }
 
       .registry__info {
         @apply mt-7 mb-4 flex justify-between border-b border-b-n-20;
