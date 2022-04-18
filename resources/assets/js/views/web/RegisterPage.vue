@@ -62,7 +62,11 @@
                   ></HoverText>
                 </div>
                 <input
-                  class="form__input error__input"
+                  :class="
+                    errorData[field.name] != ''
+                      ? 'error__input form__input'
+                      : 'form__input'
+                  "
                   :type="field.type"
                   v-model="formData[field.name]"
                   :placeholder="formData[field.placeholder]"
@@ -87,7 +91,11 @@
                 />
 
                 <Multiselect
-                  class="select"
+                  :class="
+                    errorData[field.name] != ''
+                      ? 'error__input vue__select'
+                      : 'vue__select'
+                  "
                   v-if="field.type === 'select'"
                   v-model="formData[field.name]"
                   :options="field.options"
@@ -548,14 +556,10 @@ export default defineComponent({
           -webkit-mask-image: url('/images/dropdown-arrow.svg');
           mask-image: url('/images/dropdown-arrow.svg');
         }
-        .select {
+        .vue__select {
+          @apply border border-n-30 text-base leading-6 outline-none duration-300;
           padding: 16px 0px 16px 55px;
           height: 52px;
-          font-size: 16px;
-          line-height: 24px;
-          outline: none;
-          transition: 0.3s;
-          @apply border border-n-30;
 
           &:focus {
             @apply border border-n-50 bg-n-10;
@@ -569,27 +573,8 @@ export default defineComponent({
             @apply text-n-50;
           }
         }
-      }
-      &__input {
-        @apply border border-n-30;
-        width: 100%;
-        padding: 13px 0 13px 16px;
-        outline: none;
-        border-radius: 4px;
-        transition: 0.3s;
-
-        &::placeholder {
-          @apply text-n-40;
-          font-size: 14px;
-          font-weight: normal;
-          font-style: normal;
-          letter-spacing: -0.02em;
-        }
-        &:focus {
-          @apply border border-n-50 bg-n-10;
-        }
-        &:focus::placeholder {
-          @apply text-n-50;
+        .error__input {
+          @apply border border-crimson-50;
         }
       }
     }

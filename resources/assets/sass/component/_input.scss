@@ -33,3 +33,18 @@
 .error__input {
   @apply border border-crimson-50;
 }
+.form__input {
+  @apply box-border w-full rounded border border-n-30 outline-none duration-300;
+  padding: 13px 0 13px 16px;
+
+  &::placeholder {
+    @apply text-sm font-normal text-n-40;
+    letter-spacing: -0.02em;
+  }
+  &:focus {
+    @apply border border-n-50 bg-n-10;
+  }
+  &:focus::placeholder {
+    @apply text-n-50;
+  }
+}
