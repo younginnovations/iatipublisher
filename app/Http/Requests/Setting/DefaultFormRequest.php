@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Setting;
 
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -21,7 +21,7 @@ class DefaultFormRequest extends FormRequest
         return [
           'default_currency' => 'required',
           'default_language' => 'required',
-          'default_hierarchy' => 'required',
+          'hierarchy' => 'required',
           'linked_data_url' => 'required',
           'humanitarian' => 'required',
         ];

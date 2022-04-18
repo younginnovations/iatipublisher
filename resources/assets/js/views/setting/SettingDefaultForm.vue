@@ -23,16 +23,11 @@
             <label for="default_currency">Default Currency</label>
             <button><svg-vue class="text-base" icon="help"></svg-vue></button>
           </div>
-          <!-- <input
-            id="default_currency"
-            class="register__input mb-2"
-            type="text"
-            placeholder="EUR - Euro"
-          /> -->
           <Multiselect
             class="select"
-            v-model="currency"
+            v-model="defaultForm.default_currency"
             :options="props.currencies"
+            @click="updateStore('default_currency')"
           />
 
           <p>
@@ -47,16 +42,11 @@
             >
             <button><svg-vue class="text-base" icon="help"></svg-vue></button>
           </div>
-          <!-- <input
-            id="default_language"
-            class="register__input mb-2"
-            type="text"
-            placeholder="en - English"
-          /> -->
           <Multiselect
             class="select"
-            v-model="language"
+            v-model="defaultForm.default_language"
             :options="props.languages"
+            @click="updateStore('linked_data_url')"
           />
 
           <p>
@@ -78,6 +68,8 @@
             class="register__input mb-2"
             type="text"
             placeholder="1"
+            v-model="defaultForm.hierarchy"
+            @input="updateStore('hierarchy')"
           />
           <p>
             IATI allows for activities to be reported hierarchically (eg. parent
@@ -98,6 +90,8 @@
             class="register__input mb-2"
             type="text"
             placeholder="en - English"
+            v-model="defaultForm.linked_data_url"
+            @input="updateStore('linked_data_url')"
           />
           <p>
             The language in which you normally report. Select from dropdown.
@@ -110,16 +104,11 @@
             >
             <button><svg-vue class="text-base" icon="help"></svg-vue></button>
           </div>
-          <!-- <input
-          id="humanitarian"
-          class="register__input"
-          type="text"
-          placeholder="No"
-        /> -->
           <Multiselect
             class="select"
-            v-model="humanitarian"
+            v-model="defaultForm.humanitarian"
             :options="props.humanitarian"
+            @click="updateStore('default_currency')"
           />
         </div>
       </div>
@@ -128,8 +117,9 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, reactive, computed } from 'vue';
 import Multiselect from '@vueform/multiselect';
+import { useStore } from 'vuex';
 
 export default defineComponent({
   components: {
@@ -143,8 +133,33 @@ export default defineComponent({
   },
 
   setup(props) {
+    const store = useStore();
+
+    const defaultError = reactive({
+      default_currency: '',
+      default_language: '',
+      hierarchy: '',
+      linked_data_url: '',
+      humanitarian: 'false',
+    });
+
+    const defaultForm = computed(() => {
+      return store.state.setting.defaultForm;
+    });
+
+    function updateStore(key: string) {
+      store.dispatch('setting/updateDefaultForm', {
+        state: store.state,
+        key: key,
+        value: defaultForm.value[key],
+      });
+    }
+
     return {
       props,
+      defaultForm,
+      defaultError,
+      updateStore,
     };
   },
 });
