@@ -5,9 +5,10 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Admin\Setting;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Setting\DefaultFormRequest;
+use App\Http\Requests\Setting\PublisherFormRequest;
 use App\IATI\Services\Organization\OrganizationService;
 use App\IATI\Services\Setting\SettingService;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
 /**
@@ -28,7 +29,6 @@ class SettingController extends Controller
         $this->organizationService = $organizationService;
         $this->settingService = $settingService;
         $this->logger = $logger;
-        $this->middleware('auth');
     }
 
     /**
@@ -50,15 +50,29 @@ class SettingController extends Controller
     }
 
     /**
+     * Get setting of the corresponding organization.
+     *
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function getSetting()
+    {
+        try {
+            return response()->json(['success' => 'Settings stored successfully']);
+        } catch (\Exception $e) {
+            Log::error($e);
+        }
+    }
+
+    /**
      * Create a new user instance after a valid registration.
      *
      * @param  array  $data
      * @return \App\Models\User
      */
-    public function store(Request $request)
+    public function storePublishingInfo(PublisherFormRequest $request)
     {
         try {
-            $this->settingService->store($request->all());
+            $this->settingService->storePublishingInfo($request->all());
 
             return response()->json(['success' => 'Settings stored successfully']);
         } catch (\Exception $e) {
@@ -69,15 +83,15 @@ class SettingController extends Controller
     /**
      * Create a new user instance after a valid registration.
      *
-     * @param  array  $request
+     * @param  array  $data
+     * @return \App\Models\User
      */
-    public function update(Request $request, int $id)
+    public function storeDefaultForm(DefaultFormRequest $request)
     {
         try {
-            $data = $request->all();
-            $this->settingService->update($id, $data);
+            $this->settingService->storeDefaultValues($request->all());
 
-            return response()->json(['success' => 'Settings updated successfully']);
+            return response()->json(['success' => 'Settings stored successfully']);
         } catch (\Exception $e) {
             Log::error($e);
         }
