@@ -26,6 +26,8 @@
               class="register__input mb-2"
               type="text"
               placeholder="yipl"
+              v-model="publishingForm.publisher_id"
+              @input="updateStore('publisher_id')"
             />
             <span class="tag">Correct</span>
           </div>
@@ -52,6 +54,8 @@
               class="register__input mb-2"
               type="text"
               placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ"
+              v-model="publishingForm.api_token"
+              @input="updateStore('api_token')"
             />
             <span class="tag">Correct</span>
           </div>
@@ -66,3 +70,41 @@
     </div>
   </div>
 </template>
+<script lang="ts">
+import { defineComponent, ref, reactive, computed } from 'vue';
+import { useStore } from 'vuex';
+
+export default defineComponent({
+  setup(props) {
+    const tab = ref('publish');
+    const store = useStore();
+
+    const publishingForm = computed(() => store.state.setting.publishingForm);
+
+    const publishingError = computed(() => store.state.setting.publishingError);
+
+    function updateStore(key: string) {
+      console.log(key, publishingForm, publishingForm.value['publisher_id']);
+      store.dispatch('setting/updatePublisherInfo', {
+        state: store.state,
+        key: key,
+        value: publishingForm.value[key],
+      });
+    }
+
+    function toggleTab() {
+      tab.value = tab.value === 'publish' ? 'default' : 'publish';
+    }
+
+    return {
+      tab,
+      toggleTab,
+      publishingForm,
+      publishingError,
+      store,
+      props,
+      updateStore,
+    };
+  },
+});
+</script>

@@ -16,9 +16,6 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', [App\Http\Controllers\Web\WebController::class, 'index'])->name('web');
 Route::get('/register', [App\Http\Controllers\Web\WebController::class, 'register'])->name('register');
-
-Route::get('/setting', [App\Http\Controllers\Admin\Setting\SettingController::class, 'index'])->name('setting.index');
-
 // Auth::routes(['verify' => true]);
 
 Route::get('/login', [App\Http\Controllers\Web\WebController::class, 'index'])->name('index.login');

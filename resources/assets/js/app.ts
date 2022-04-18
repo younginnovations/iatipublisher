@@ -23,6 +23,9 @@ import LoggedInHeader from './components/AdminHeader.vue';
 */
 import SettingPage from './views/setting/SettingPage.vue';
 
+// stores
+import store from './store';
+
 // require('./bootstrap');
 
 const app = createApp({});
@@ -65,5 +68,5 @@ app.use(SvgVue);
  * the page. Then, you may begin adding components to this application
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
-
+app.use(store);
 app.mount('#app');

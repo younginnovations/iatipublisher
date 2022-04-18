@@ -35,7 +35,7 @@
     <div class="fixed bottom-0 w-full bg-eggshell py-5 pr-40 shadow-dropdown">
       <div class="flex justify-end">
         <button class="ghost-btn mr-8">Cancel</button>
-        <button class="primary-btn save-btn">
+        <button class="primary-btn save-btn" @click="submitForm">
           {{
             tab === 'publish'
               ? 'Save publishing setting'
@@ -48,8 +48,9 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, reactive } from 'vue';
+import { defineComponent, ref, computed } from 'vue';
 import { useStore } from 'vuex';
+import axios from 'axios';
 import SettingDefaultForm from './SettingDefaultForm.vue';
 import SettingPublishingForm from './SettingPublishingForm.vue';
 
@@ -60,52 +61,92 @@ export default defineComponent({
   },
 
   props: {
-    currencies: String,
-    languages: String,
-    humanitarian: String,
+    currencies: Object,
+    languages: Object,
+    humanitarian: Object,
   },
 
   setup(props) {
     const tab = ref('publish');
     const store = useStore();
 
-    const publishingForm = reactive({
-      publisher_id: '',
-      api_token: '',
-    });
+    const publishingForm = computed(() => store.state.setting.publishingForm);
 
-    const defaultForm = reactive({
-      default_currency: '',
-      default_language: '',
-      hierarchy: '',
-      linked_data_url: '',
-      humanitarian: 'false',
-    });
+    const publishingError = computed(() => store.state.setting.publishingError);
 
-    const publishingError = reactive({
-      publisher_id: '',
-      api_token: '',
-    });
+    const defaultForm = computed(() => store.state.setting.defaultForm);
 
-    const defaultError = reactive({
-      default_currency: '',
-      default_language: '',
-      hierarchy: '',
-      linked_data_url: '',
-      humanitarian: 'false',
-    });
+    const defaultError = computed(() => store.state.setting.defaultError);
 
     function toggleTab() {
       tab.value = tab.value === 'publish' ? 'default' : 'publish';
     }
 
+    function submitDefault() {
+      console.log(defaultForm.value);
+
+      axios
+        .post('/store/default', defaultForm.value)
+        .then((res) => {
+          const response = res.data;
+
+          if ('success' in response) {
+            console.log('here', response);
+          }
+        })
+        .catch((error) => {
+          const { errors } = error.response.data;
+
+          // console.log('here', errors);
+          // errors.forEach(e => {
+          //   console.log(e);
+          // });
+
+          for (const e in errors) {
+            console.log(e);
+            // if (Object.prototype.hasOwnProperty.call(object, e)) {
+            //   const element = object[e];
+
+            // }
+          }
+          // store.dispatch('setting/updatePublisherInfo', {
+          //   state: store.state,
+          //   key: key,
+          //   value: publishingForm.value[key],
+          // });
+        });
+    }
+
+    function submitPublishing() {
+      console.log(publishingForm.value);
+      axios
+        .post('/store/publisher', publishingForm.value)
+        .then((res) => {
+          const response = res.data;
+          console.log('response', response);
+        })
+        .catch((error) => {
+          console.log('here', error);
+          const { errors } = error.response.data;
+          // console.log(error);
+          // store.dispatch('setting/updatePublisherInfo', {
+          //   state: store.state,
+          //   key: key,
+          //   value: publishingForm.value[key],
+          // });
+        });
+    }
+
+    function submitForm() {
+      console.log('clicked');
+      if (tab.value === 'publish') submitPublishing();
+      if (tab.value === 'default') submitDefault();
+    }
+
     return {
       tab,
       toggleTab,
-      publishingForm,
-      publishingError,
-      defaultForm,
-      defaultError,
+      submitForm,
       store,
       props,
     };
