@@ -37,8 +37,8 @@ header {
   font-style: normal;
 
   .read__more {
-    @apply rounded-sm bg-bluecoral  text-center text-xs text-white;
-    width: 95px;
+    @apply rounded-sm bg-bluecoral text-center text-xs text-white;
+    width: fit-content;
     padding: 8px 18px;
 
     &:hover {

@@ -15,68 +15,44 @@
             >
               <li class="nav__links active dropdown">
                 <a href="#about">ABOUT</a>
-                <div class="dropdown__content">
-                  <div class="flex flex-col">
-                    <strong class="text-sm font-bold text-n-50"
-                      >IATI Standard</strong
-                    >
-                    <p class="py-4 text-sm text-n-50">
-                      IATI Publisher helps small and medium-sized organisations
+                <NavDropdown
+                  name="About"
+                  text="IATI Publisher helps small and medium-sized organisations
                       publish IATI data on development and humanitarian
-                      financing and activities.
-                    </p>
-                    <a class="read__more" href="#">Learn more</a>
-                  </div>
-                </div>
+                      financing and activities."
+                  btnText="Learn more"
+                ></NavDropdown>
               </li>
               <li class="nav__links active dropdown">
                 <a href="#step-by-step-publishing-guide"
-                  >STEP-BY-STEP PUBLISHING GUIDE</a
+                  >PUBLISHING CHECKLIST</a
                 >
-                <div class="dropdown__content">
-                  <div class="flex flex-col">
-                    <strong class="text-sm font-bold text-n-50"
-                      >IATI Standard</strong
-                    >
-                    <p class="py-4 text-sm text-n-50">
-                      New to IATI? Use our checklist to track each step required
-                      for your organisation to successfully publish IATI data.
-                    </p>
-                    <a class="read__more" href="#">Read more</a>
-                  </div>
-                </div>
+                <NavDropdown
+                  name="Publishing checklist"
+                  text=" New to IATI? Use our checklist to track each step required
+                      for your organisation to successfully publish IATI data."
+                  btnText="Read more"
+                ></NavDropdown>
               </li>
               <li class="nav__links active dropdown relative">
                 <a href="#iati-standard">IATI STANDARD</a>
-                <div class="dropdown__content">
-                  <div class="flex flex-col">
-                    <strong class="text-sm font-bold text-n-50"
-                      >IATI Standard</strong
-                    >
-                    <p class="py-4 text-sm text-n-50">
-                      The IATI Standard is a set of rules and guidance on how to
+                <NavDropdown
+                  name="IATI Standard"
+                  text="The IATI Standard is a set of rules and guidance on how to
                       publish useful development and humanitarian data. Find out
                       the full range of data included in the IATI Standard and
-                      more about its technical format.
-                    </p>
-                    <a class="read__more" href="#">Read more</a>
-                  </div>
-                </div>
+                      more about its technical format."
+                  btnText="See all data fields"
+                ></NavDropdown>
               </li>
               <li class="nav__links active dropdown">
                 <a href="#support">SUPPORT</a>
-                <div class="dropdown__content">
-                  <div class="flex flex-col">
-                    <strong class="text-sm font-bold text-n-50"
-                      >IATI Standard</strong
-                    >
-                    <p class="py-4 text-sm text-n-50">
-                      Any questions? Get help to publish your organisation’s
-                      data.
-                    </p>
-                    <a class="read__more" href="#">Read more</a>
-                  </div>
-                </div>
+                <NavDropdown
+                  name="Support"
+                  text="Any questions? Get help to publish your organisation’s
+                      data."
+                  btnText="Read more"
+                ></NavDropdown>
               </li>
               <li class="absolute bottom-4 left-0 right-0 xl:hidden">
                 <div class="flex items-center justify-center">
@@ -132,3 +108,14 @@
     </div>
   </div>
 </template>
+
+<script lang="ts">
+import { defineComponent } from 'vue';
+import NavDropdown from '../../../components/NavDropdown.vue';
+
+export default defineComponent({
+  components: {
+    NavDropdown,
+  },
+});
+</script>
