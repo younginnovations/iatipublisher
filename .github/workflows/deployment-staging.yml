@@ -22,16 +22,8 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - name: 'Install Caprover CLI'
+        run: npm install -g caprover
+
       - name: Staging Deploy
-        # You may pin to the exact commit or the version.
-        # uses: AlexxNB/caprover-action@45fdf55f3213582285394908e8a3a0d2df41e21d
-        uses: AlexxNB/caprover-action@v1
-        with:
-          # CapRover admin panel URL. Ex. https://captain.root.domain.com
-          server: 'https://captain.caprover.staging.yipl.com.np'
-          # CapRover admin password. Use $\{{ secrets.CAPROVER_PASSWORD }} for better security.
-          password: ${{ secrets.CAPROVER_PASSWORD }}
-          # Application name on the CapRover server. Must exists.
-          appname: 'iatipublisher-staging'
-          # Branch which will be deployed
-          branch: staging
+        run: caprover deploy -h https://captain.caprover.staging.yipl.com.np/ -p ${{ secrets.CAPROVER_PASSWORD }} -b staging -a iatipublisher-staging
