@@ -57,7 +57,9 @@ class SettingController extends Controller
     public function getSetting()
     {
         try {
-            return response()->json(['success' => 'Settings stored successfully']);
+            $setting = $this->settingService->getSetting();
+
+            return response()->json(['success' => 'Settings stored successfully', 'data' => $setting]);
         } catch (\Exception $e) {
             Log::error($e);
         }

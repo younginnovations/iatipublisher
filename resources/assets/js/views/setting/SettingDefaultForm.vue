@@ -29,8 +29,11 @@
             :options="props.currencies"
             @click="updateStore('default_currency')"
           />
+          <span class="error" role="alert" v-if="defaultError.default_currency">
+            {{ defaultError.default_currency }}
+          </span>
 
-          <p>
+          <p v-if="!defaultError.default_currency">
             The currency in which you normally report your financial
             transactions. Select from dropdown.
           </p>
@@ -43,13 +46,18 @@
             <button><svg-vue class="text-base" icon="help"></svg-vue></button>
           </div>
           <Multiselect
-            class="select"
+            :class="
+              defaultError.default_language ? 'error__input select' : 'select'
+            "
             v-model="defaultForm.default_language"
             :options="props.languages"
-            @click="updateStore('linked_data_url')"
+            @click="updateStore('default_language')"
           />
+          <span class="error" role="alert" v-if="defaultError.default_language">
+            {{ defaultError.default_language }}
+          </span>
 
-          <p>
+          <p v-if="!defaultError.default_language">
             The language in which you normally report. Select from dropdown.
           </p>
         </div>
@@ -65,13 +73,20 @@
           </div>
           <input
             id="default_hierarchy"
-            class="register__input mb-2"
+            :class="
+              defaultError.hierarchy
+                ? 'error__input register__input mb-2'
+                : 'register__input mb-2'
+            "
             type="text"
             placeholder="1"
             v-model="defaultForm.hierarchy"
             @input="updateStore('hierarchy')"
           />
-          <p>
+          <span class="error" role="alert" v-if="defaultError.hierarchy">
+            {{ defaultError.hierarchy }}
+          </span>
+          <p v-if="!defaultError.hierarchy">
             IATI allows for activities to be reported hierarchically (eg. parent
             - child ; programme - project - sub-project, etc). For activities at
             lower levels, their hierarchy can be edited as you are entering
@@ -87,13 +102,20 @@
           </div>
           <input
             id="data_url"
-            class="register__input mb-2"
+            :class="
+              defaultError.linked_data_url
+                ? 'error__input register__input mb-2'
+                : 'register__input mb-2'
+            "
             type="text"
             placeholder="en - English"
             v-model="defaultForm.linked_data_url"
             @input="updateStore('linked_data_url')"
           />
-          <p>
+          <span class="error" role="alert" v-if="defaultError.linked_data_url">
+            {{ defaultError.linked_data_url }}
+          </span>
+          <p v-if="!defaultError.linked_data_url">
             The language in which you normally report. Select from dropdown.
           </p>
         </div>
@@ -102,14 +124,21 @@
             <label for="humanitarian"
               >Humanitarian <span class="text-salmon-50">*</span></label
             >
+
             <button><svg-vue class="text-base" icon="help"></svg-vue></button>
           </div>
           <Multiselect
+            :class="
+              defaultError.humanitarian ? 'error__input select' : 'select'
+            "
             class="select"
             v-model="defaultForm.humanitarian"
             :options="props.humanitarian"
             @click="updateStore('default_currency')"
           />
+          <span class="error" role="alert" v-if="defaultError.humanitarian">
+            {{ defaultError.humanitarian }}
+          </span>
         </div>
       </div>
     </div>
@@ -117,7 +146,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, computed } from 'vue';
+import { defineComponent, computed } from 'vue';
 import Multiselect from '@vueform/multiselect';
 import { useStore } from 'vuex';
 
@@ -135,21 +164,16 @@ export default defineComponent({
   setup(props) {
     const store = useStore();
 
-    const defaultError = reactive({
-      default_currency: '',
-      default_language: '',
-      hierarchy: '',
-      linked_data_url: '',
-      humanitarian: 'false',
-    });
-
     const defaultForm = computed(() => {
       return store.state.setting.defaultForm;
     });
 
+    const defaultError = computed(() => {
+      return store.state.setting.defaultError;
+    });
+
     function updateStore(key: string) {
       store.dispatch('setting/updateDefaultForm', {
-        state: store.state,
         key: key,
         value: defaultForm.value[key],
       });
