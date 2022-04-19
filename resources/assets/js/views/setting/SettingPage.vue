@@ -48,7 +48,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, computed } from 'vue';
+import { defineComponent, ref, computed, onMounted } from 'vue';
 import { useStore } from 'vuex';
 import axios from 'axios';
 import SettingDefaultForm from './SettingDefaultForm.vue';
@@ -78,12 +78,68 @@ export default defineComponent({
 
     const defaultError = computed(() => store.state.setting.defaultError);
 
+    function updateStore(fun_name: string, key: String, value: String) {
+      store.dispatch(`setting/${fun_name}`, {
+        key: key,
+        value: value,
+      });
+    }
+
+    onMounted(async () => {
+      const { data } = await axios.get('/setting/data');
+      const defaultValues = JSON.parse(data.data.default_values);
+      const publisherInfo = JSON.parse(data.data.publishing_info);
+      const activityValues = JSON.parse(data.data.activity_default_values);
+
+      if (publisherInfo) {
+        updateStore(
+          'updatePublisherInfo',
+          'publisher_id',
+          publisherInfo.publisher_id
+        );
+        updateStore(
+          'updatePublisherInfo',
+          'api_token',
+          publisherInfo.api_token
+        );
+      }
+
+      if (defaultValues) {
+        updateStore(
+          'updateDefaultForm',
+          'default_currency',
+          defaultValues.default_currency
+        );
+        updateStore(
+          'updateDefaultForm',
+          'default_language',
+          defaultValues.default_language
+        );
+      }
+
+      if (activityValues) {
+        updateStore(
+          'updateDefaultForm',
+          'linked_data_url',
+          activityValues.linked_data_url
+        );
+        updateStore(
+          'updateDefaultForm',
+          'humanitarian',
+          activityValues.humanitarian
+        );
+        updateStore('updateDefaultForm', 'hierarchy', activityValues.hierarchy);
+      }
+    });
+
     function toggleTab() {
       tab.value = tab.value === 'publish' ? 'default' : 'publish';
     }
 
     function submitDefault() {
-      console.log(defaultForm.value);
+      for (const data in defaultError.value) {
+        updateStore('updateDefaultError', data, '');
+      }
 
       axios
         .post('/store/default', defaultForm.value)
@@ -91,54 +147,37 @@ export default defineComponent({
           const response = res.data;
 
           if ('success' in response) {
-            console.log('here', response);
           }
         })
         .catch((error) => {
           const { errors } = error.response.data;
 
-          // console.log('here', errors);
-          // errors.forEach(e => {
-          //   console.log(e);
-          // });
-
           for (const e in errors) {
-            console.log(e);
-            // if (Object.prototype.hasOwnProperty.call(object, e)) {
-            //   const element = object[e];
-
-            // }
+            updateStore('updateDefaultError', e, errors[e][0]);
           }
-          // store.dispatch('setting/updatePublisherInfo', {
-          //   state: store.state,
-          //   key: key,
-          //   value: publishingForm.value[key],
-          // });
         });
     }
 
     function submitPublishing() {
-      console.log(publishingForm.value);
+      for (const data in defaultError.value) {
+        updateStore('updatePublishingError', data, '');
+      }
+
       axios
         .post('/store/publisher', publishingForm.value)
         .then((res) => {
           const response = res.data;
-          console.log('response', response);
         })
         .catch((error) => {
-          console.log('here', error);
           const { errors } = error.response.data;
-          // console.log(error);
-          // store.dispatch('setting/updatePublisherInfo', {
-          //   state: store.state,
-          //   key: key,
-          //   value: publishingForm.value[key],
-          // });
+
+          for (const e in errors) {
+            updateStore('updatePublishingError', e, errors[e][0]);
+          }
         });
     }
 
     function submitForm() {
-      console.log('clicked');
       if (tab.value === 'publish') submitPublishing();
       if (tab.value === 'default') submitDefault();
     }
@@ -147,6 +186,8 @@ export default defineComponent({
       tab,
       toggleTab,
       submitForm,
+      defaultError,
+      publishingError,
       store,
       props,
     };
