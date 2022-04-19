@@ -8,7 +8,7 @@ use App\IATI\Repositories\Setting\SettingRepository;
 use Illuminate\Support\Facades\Auth;
 
 /**
- * Class Sett.
+ * Class Setting.
  */
 class SettingService
 {
@@ -25,6 +25,16 @@ class SettingService
     public function __construct(SettingRepository $settingRepo)
     {
         $this->settingRepo = $settingRepo;
+    }
+
+    /**
+     * Store user.
+     *
+     * @param array $data
+     */
+    public function getSetting()
+    {
+        return $this->settingRepo->findBy('organization_id', Auth::user()->organization_id);
     }
 
     /**
@@ -57,6 +67,7 @@ class SettingService
                                 'default_language'=> $data['default_language'],
                               ]),
           'activity_default_values' => json_encode([
+                                    'hierarchy' => $data['hierarchy'],
                                     'linked_data_url' => $data['linked_data_url'],
                                     'humanitarian' => $data['humanitarian'],
                                   ]),
