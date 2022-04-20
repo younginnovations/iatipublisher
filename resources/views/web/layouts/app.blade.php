@@ -18,10 +18,8 @@
 <body class="font-sans bg-n-10 antialiased overflow-x-hidden">
   <div id="app">
     <web-header></web-header>
-    {{-- @include('web.layouts.header') --}}
     @yield('content')
     <web-footer></web-footer>
-    {{-- @include('web.layouts.footer') --}}
   </div>
 </body>
 

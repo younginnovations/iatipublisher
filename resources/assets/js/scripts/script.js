@@ -14,7 +14,6 @@ $(document).ready(() => {
     const burger = $('#hamburger');
     const nav = $('#nav-list');
 
-    console.log('hi', burger, nav);
     $('body').on('click', '#hamburger', () => {
       // console.log('clicked');
       $('#nav-list').toggleClass('nav-active');

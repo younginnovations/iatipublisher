@@ -89,7 +89,7 @@ export default defineComponent({
         .then((response) => {
           errorData.username = '';
           errorData.password = '';
-          if (response.status) window.location.href = 'admin/dashboard';
+          if (response.status) window.location.href = 'activities';
         })
         .catch((error) => {
           const { errors } = error.response.data;
