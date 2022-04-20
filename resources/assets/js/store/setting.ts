@@ -41,9 +41,7 @@ const actions = {
   updateDefaultForm({ commit }, payload: Object) {
     commit('updateDefaultForm', payload);
   },
-
 };
-
 
 const mutations = {
   updatePublisherInfo(state: any, payload: Object) {
@@ -58,7 +56,6 @@ const mutations = {
   updateDefaultError(state: any, payload: Object) {
     state.defaultError[payload.key] = payload.value;
   }
-
 };
 
 export default {
@@ -66,6 +63,6 @@ export default {
   state,
   actions,
   mutations,
-}
+};
 
 

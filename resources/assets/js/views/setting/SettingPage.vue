@@ -265,15 +265,11 @@ export default defineComponent({
       }
     }
     .tab-btn {
-      @apply border border-n-20 bg-white p-2 text-xs text-n-40;
+      @apply border border-n-20 bg-white p-2 text-xs text-bluecoral;
       border-radius: 4px;
-
-      &:focus {
-        @apply border-turquoise text-bluecoral;
-      }
     }
     .active__tab {
-      @apply border-turquoise text-bluecoral;
+      @apply border-turquoise bg-n-10 text-n-40;
     }
     .register {
       @apply rounded-lg border border-n-30 p-6;
