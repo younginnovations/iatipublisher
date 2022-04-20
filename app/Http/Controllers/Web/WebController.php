@@ -20,4 +20,14 @@ class WebController extends Controller
     {
         return view('web.welcome');
     }
+
+    /**
+     * Shows the web page.
+     *
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function register(): \Illuminate\Contracts\Support\Renderable
+    {
+        return view('web.register');
+    }
 }

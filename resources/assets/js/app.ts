@@ -5,6 +5,11 @@
  */
 import { createApp } from 'vue';
 import SvgVue from 'svg-vue3';
+import ExampleComponent from './components/ExampleComponent.vue';
+import WebHeader from './views/web/partials/WebHeader.vue';
+import WebFooter from './views/web/partials/WebFooter.vue';
+import WelcomeSignIn from './views/web/WelcomePage.vue';
+import RegisterPage from './views/web/RegisterPage.vue';
 
 /**
  * Vue components for Activities Listing
@@ -14,6 +19,23 @@ import Activity from './views/activity/ActivityList.vue';
 import LoggedInHeader from './components/AdminHeader.vue';
 
 const app = createApp({});
+
+/**
+ * The following block of code may be used to automatically register your
+ * Vue components. It will recursively scan this directory for the Vue
+ * components and automatically register them with their "basename".
+ *
+ * Eg. ./components/ExampleComponent.vue -> <example-component></example-component>
+ */
+
+// const files = require.context('./', true, /\.vue$/i)
+// files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
+
+app.component('example-component', ExampleComponent);
+app.component('web-header', WebHeader);
+app.component('web-footer', WebFooter);
+app.component('welcome-signin', WelcomeSignIn);
+app.component('register-form', RegisterPage);
 
 /**
  * Registering vue component for activity listing

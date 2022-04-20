@@ -37,7 +37,13 @@ header {
   font-style: normal;
 
   .read__more {
-    padding-bottom: 8px;
+    @apply rounded-sm bg-bluecoral text-center text-xs text-white;
+    width: fit-content;
+    padding: 8px 18px;
+
+    &:hover {
+      @apply bg-n-50 text-white;
+    }
   }
 
   a {
@@ -71,12 +77,11 @@ header {
   }
 }
 .dropdown__content {
+  @apply invisible absolute right-0 top-7 hidden h-56 bg-white py-7 px-8 opacity-0 duration-300 xl:block;
   width: 424px;
+  height: auto;
+  line-height: 22px;
   box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
-
-  a {
-    @apply text-white;
-  }
 }
 .dropdown:hover {
   .dropdown__content {
