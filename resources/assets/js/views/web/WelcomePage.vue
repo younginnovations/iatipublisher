@@ -5,15 +5,15 @@
         class="left flex flex-col items-center justify-center bg-bluecoral px-3 pt-5 pb-72 text-white sm:rounded-r-lg sm:rounded-l-lg sm:px-5 sm:pt-10 md:basis-2/4 md:rounded-r-none md:pb-16 lg:pt-44 lg:pb-44 xl:px-24"
       >
         <div class="left__container rounded-lg p-5 sm:p-10">
-          <span class="left__title font-bold">IATI Publishing Tool</span>
+          <span class="left__title font-bold">{{
+            props.translation.iati_publishing_tool
+          }}</span>
           <p class="pt-2 sm:pt-6 sm:pb-8">
-            Welcome to IATI Publisher. Use this tool to start your IATI
-            publishing journey. Enter your login information if you're already a
-            user or create a new account if you're new here.
+            {{ props.translation.iati_publishing_tool_description }}
           </p>
           <div class="hidden sm:block">
             <span class="flex">
-              Haven't registered yet?
+              {{ props.translation.registered_yet }}
               <button
                 class="ml-1 border-b-2 border-b-transparent text-base text-turquoise hover:border-b-2 hover:border-b-turquoise"
                 @click="togglePage"
@@ -25,8 +25,11 @@
         </div>
       </div>
 
-      <SignIn v-if="page === 'Join Now'"></SignIn>
-      <JoinNow v-else></JoinNow>
+      <SignIn
+        v-if="page === props.translation.join_now"
+        :translation="props.translation"
+      ></SignIn>
+      <JoinNow v-else :translation="props.translation"></JoinNow>
     </div>
   </section>
 </template>
@@ -41,16 +44,23 @@ export default defineComponent({
     JoinNow,
     SignIn,
   },
-  setup() {
-    const page = ref('Join Now');
+  props: {
+    translation: String,
+  },
+  setup(props) {
+    const page = ref(props.translation.join_now);
 
     function togglePage() {
-      page.value = page.value === 'Join Now' ? 'Sign In' : 'Join Now';
+      page.value =
+        page.value === props.translation.join_now
+          ? props.translation.sign_in
+          : props.translation.join_now;
     }
 
     return {
       page,
       togglePage,
+      props,
     };
   },
 });

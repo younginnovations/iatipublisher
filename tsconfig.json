@@ -62,6 +62,8 @@
 
     /* Advanced Options */
     "forceConsistentCasingInFileNames": true,  /* Disallow inconsistently-cased references to the same file. */
+    "suppressImplicitAnyIndexErrors": true,
+    "strictNullChecks":false,
 
   },
   "include" : [

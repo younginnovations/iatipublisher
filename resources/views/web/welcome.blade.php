@@ -1,8 +1,7 @@
 @extends('web.layouts.app')
 
 @section('content')
-
-  <welcome-signin> {{ csrf_field() }} </welcome-signin>
+  <welcome-signin :translation="{{ json_encode(trans('auth')) }}"></welcome-signin>
   {{-- <section class="main sm:mx-10 xl:mx-24 xl:px-1 mt-7 sm:mt-10">
     <div class="main__container md:flex">
       <div

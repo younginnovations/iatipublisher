@@ -16,41 +16,61 @@
             </a>
           </div>
           <div class="footer__links">
-            <span class="font-bold text-n-10">IATI Publisher</span>
+            <span class="font-bold text-n-10">{{
+              props.translation.iati_publisher
+            }}</span>
             <ul class="mt-2 flex flex-col">
-              <li><a href="#">Home</a></li>
-              <li><a href="#">About</a></li>
-              <li><a href="#">Sign In</a></li>
-              <li><a href="#">Join Now</a></li>
+              <li>
+                <a href="#">{{ props.translation.home }}</a>
+              </li>
+              <li>
+                <a href="#">{{ props.translation.about }}</a>
+              </li>
+              <li>
+                <a href="#">{{ props.translation.sign_in }}</a>
+              </li>
+              <li>
+                <a href="#">{{ props.translation.join_now }}</a>
+              </li>
             </ul>
           </div>
           <div class="footer__links">
-            <span class="font-bold text-n-10">IATI Standard</span>
+            <span class="font-bold text-n-10">{{
+              props.translation.iati_standard
+            }}</span>
             <ul class="mt-2 flex flex-col">
-              <li><a href="#">About IATI Standard</a></li>
-              <li><a href="#">Step-by-step publishing guide</a></li>
-              <li><a href="#">Using Data</a></li>
-              <li><a href="#">Support</a></li>
+              <li>
+                <a href="#">{{ props.translation.about_iati_standard }}</a>
+              </li>
+              <li>
+                <a href="#">{{ props.translation.publishing_guid }}</a>
+              </li>
+              <li>
+                <a href="#">{{ props.translation.using_data }}</a>
+              </li>
+              <li>
+                <a href="#">{{ props.translation.support }}</a>
+              </li>
             </ul>
           </div>
           <div class="footer__links lg:justify-self-end">
             <div class="text-xs leading-5">
-              <p>Part of the IATI Unified Platform</p>
-              <p>Code licensed under the GNU AGPL.</p>
-              <p>Documnetation licensed under CC BY 3.0</p>
+              <p>{{ props.translation.part_of_the_iati }}</p>
+              <p>{{ props.translation.code_licensed }}</p>
+              <p>{{ props.translation.documentation_licensed }}</p>
             </div>
             <div class="my-5 flex items-center space-x-2 text-n-10">
               <svg-vue class="text-2xl" icon="headphone"></svg-vue>
-              <span class="text-sm font-bold uppercase"
-                >For queries, contact support</span
-              >
+              <span class="text-sm font-bold uppercase">{{
+                props.translation.contact_support
+              }}</span>
             </div>
             <ul>
               <li>
                 <a
                   class="text-sm text-n-10"
                   href="mailto:support@iatistandard.org"
-                  >support@iatistandard.org</a
+                  >{{ props.translation.support_email }}</a
                 >
               </li>
             </ul>
@@ -62,7 +82,7 @@
       <div class="footer__container grid gap-3 sm:grid-cols-2">
         <span class="flex items-center">
           <svg-vue class="mr-1 text-base" icon="copyright"></svg-vue>
-          Copyright IATI 2022. All rights reserved.</span
+          {{ props.translation.copyright }}</span
         >
         <div class="flex sm:justify-end">
           <a href="#">
@@ -76,3 +96,18 @@
     </div>
   </footer>
 </template>
+
+<script lang="ts">
+import { defineComponent } from 'vue';
+
+export default defineComponent({
+  props: {
+    translation: String,
+  },
+  setup(props) {
+    return {
+      props,
+    };
+  },
+});
+</script>

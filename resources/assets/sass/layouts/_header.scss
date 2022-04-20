@@ -40,6 +40,7 @@ header {
     @apply rounded-sm bg-bluecoral text-center text-xs text-white;
     width: fit-content;
     padding: 8px 18px;
+    text-transform: inherit;
 
     &:hover {
       @apply bg-n-50 text-white;
@@ -49,6 +50,7 @@ header {
   a {
     @apply text-white;
     padding-bottom: 24px;
+    text-transform: uppercase;
   }
 }
 @media screen and (min-width: 1280px) {

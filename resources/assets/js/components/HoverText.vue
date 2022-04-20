@@ -31,7 +31,7 @@ export default defineComponent({
   @apply relative pb-2;
 
   &__text {
-    @apply invisible absolute right-0 top-4 z-20 w-60 rounded bg-eggshell p-2 text-xs text-n-40 opacity-0 duration-200;
+    @apply invisible absolute right-0 top-4 z-20 w-60 rounded bg-eggshell p-2 text-xs leading-5 text-n-40 opacity-0 duration-200;
     transition: all 0.3s ease-out;
   }
 }

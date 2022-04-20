@@ -3,20 +3,20 @@
     class="right m-auto basis-2/4 rounded-l-lg rounded-r-lg bg-white py-5 px-5 sm:py-10 sm:px-7 md:my-0 md:rounded-l-none lg:py-28 xl:px-20"
   >
     <div class="right__container flex flex-col">
-      <h2 class="mb-2 hidden sm:block">Join Now.</h2>
+      <h2 class="mb-2 hidden sm:block">{{ props.translation.join_now }}.</h2>
       <span class="mb-8 text-n-40 xl:pr-6">
-        To being this journey, tell us your preference and we'll guide you
-        through this process.
+        {{ props.translation.join_now_description }}
       </span>
       <a href="#" class="right__content mb-6">
         <div class="right__icon">
           <svg-vue class="text-6xl" icon="default-1"></svg-vue>
         </div>
         <div class="details mx-4 xl:px-1">
-          <span class="text-sm font-bold text-bluecoral">I am new to IATI</span>
+          <span class="text-sm font-bold text-bluecoral">{{
+            props.translation.unregistered_account
+          }}</span>
           <p class="text-xs leading-5 text-n-40">
-            Use this option if your organization has not registered an account
-            with IATI on the IATI Registry
+            {{ props.translation.unregistered_account_description }}
           </p>
         </div>
         <div>
@@ -28,12 +28,11 @@
           <svg-vue class="text-6xl" icon="default-2"></svg-vue>
         </div>
         <div class="details mx-4 xl:px-1" @click="goToRegisterPage">
-          <span class="text-sm font-bold text-bluecoral"
-            >My organisation has registered with IATI</span
-          >
+          <span class="text-sm font-bold text-bluecoral">{{
+            props.translation.registered_account
+          }}</span>
           <p class="text-xs leading-5 text-n-40">
-            Use this option if your organization is listed as an IATI publisher
-            of the IATI Registry
+            {{ props.translation.registered_account_description }}
           </p>
         </div>
         <div>
@@ -41,11 +40,11 @@
         </div>
       </a>
       <span class="text-sm text-n-40"
-        >Not sure which one to select?
+        >{{ props.translation.not_sure }}
         <a
           class="border-b-2 border-b-transparent font-bold text-bluecoral hover:border-b-2 hover:border-b-turquoise"
           href="#"
-          >Contact Support.</a
+          >{{ props.translation.contact_support }}.</a
         ></span
       >
     </div>
@@ -56,13 +55,17 @@
 import { defineComponent } from 'vue';
 
 export default defineComponent({
-  setup() {
+  props: {
+    translation: String,
+  },
+  setup(props) {
     function goToRegisterPage() {
       window.location.href = '/register';
     }
 
     return {
       goToRegisterPage,
+      props,
     };
   },
 });

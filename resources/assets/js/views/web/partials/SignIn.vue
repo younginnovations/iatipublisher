@@ -4,12 +4,14 @@
     class="right m-auto basis-2/4 rounded-l-lg rounded-r-lg bg-white py-5 px-5 sm:py-10 sm:px-10 md:my-0 md:rounded-l-none lg:px-14 lg:py-28 xl:px-24"
   >
     <div class="right__container flex flex-col">
-      <h2 class="mb-2 hidden sm:block">Sign In.</h2>
-      <span class="text-n-40">Welcome back! Please enter your details.</span>
+      <h2 class="mb-2 hidden sm:block">{{ props.translation.sign_in }}.</h2>
+      <span class="text-n-40">{{ props.translation.Welcome_back }}</span>
       <div
         class="relative mt-6 mb-4 flex flex-col text-sm font-bold text-bluecoral"
       >
-        <label class="mb-2" for="Username">Username</label>
+        <label class="mb-2" for="Username">{{
+          props.translation.username
+        }}</label>
         <input
           :class="
             errorData.username != ''
@@ -30,7 +32,9 @@
         </span>
       </div>
       <div class="relative mb-4 flex flex-col text-sm font-bold text-bluecoral">
-        <label class="mb-2" for="Password">Password</label>
+        <label class="mb-2" for="Password">{{
+          props.translation.password
+        }}</label>
         <input
           :class="
             errorData.password != ''
@@ -51,17 +55,17 @@
         }}</span>
       </div>
       <p class="mb-6 text-sm text-n-40">
-        Forgot your password?
+        {{ props.translation.forget_password }}
         <span
           ><a
             class="border-b-2 border-b-transparent font-bold text-bluecoral hover:border-b-2 hover:border-b-turquoise"
             href="#"
-            >Reset.</a
+            >{{ props.translation.reset }}.</a
           ></span
         >
       </p>
       <button type="submit" id="btn" class="btn" @click="login">
-        SIGN IN
+        {{ props.translation.sign_in }}
         <svg-vue class="" icon="right-arrow"></svg-vue>
       </button>
     </div>
@@ -73,7 +77,10 @@ import { defineComponent, reactive } from 'vue';
 import axios from 'axios';
 
 export default defineComponent({
-  setup() {
+  props: {
+    translation: String,
+  },
+  setup(props) {
     const formData = reactive({
       username: '',
       password: '',
@@ -102,6 +109,7 @@ export default defineComponent({
       formData,
       errorData,
       login,
+      props,
     };
   },
 });
