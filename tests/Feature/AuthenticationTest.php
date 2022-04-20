@@ -7,7 +7,7 @@ use Tests\TestCase;
 class AuthenticationTest extends TestCase
 {
     /**
-     * A basic feature test example.
+     * Login page load tests.
      *
      * @return void
      */
