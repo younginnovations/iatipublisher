@@ -1,5 +1,17 @@
 {
+<<<<<<< HEAD
     "/js/app.js": "/js/app.js?id=8145d3ac3be84e40aff128dacc7b6b8e",
     "/js/script.js": "/js/script.js?id=6b28f4ca880f55e1c800a193fd853144",
     "/css/app.css": "/css/app.css?id=4fc6c8ee668b9cdfab46944831fcff1e"
+=======
+<<<<<<< HEAD
+    "/js/app.js": "/js/app.js?id=d83306c08bdc0904e92dc321a4c35ecc",
+    "/js/script.js": "/js/script.js?id=6b28f4ca880f55e1c800a193fd853144",
+    "/css/app.css": "/css/app.css?id=1ba2bbda092edf05b7b411570c0c9a36"
+=======
+    "/js/app.js": "/js/app.js?id=088343f15c846edaa469bfe4bcee33c6",
+    "/js/script.js": "/js/script.js?id=6b28f4ca880f55e1c800a193fd853144",
+    "/css/app.css": "/css/app.css?id=5dfa79e03a3cc30026d4d579d9de3325"
+>>>>>>> 79e49ea (Activity Detail)
+>>>>>>> 2179092 (Activity Detail)
 }
