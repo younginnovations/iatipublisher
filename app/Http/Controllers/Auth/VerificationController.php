@@ -37,7 +37,7 @@ class VerificationController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = RouteServiceProvider::HOME;
+    protected string $redirectTo = RouteServiceProvider::HOME;
 
     /**
      * Create a new controller instance.
@@ -54,12 +54,13 @@ class VerificationController extends Controller
     /**
      * Mark the authenticated user's email address as verified.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
+     *
      * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\RedirectResponse
      *
      * @throws \Illuminate\Auth\Access\AuthorizationException
      */
-    public function verification(EmailVerificationRequest $request)
+    public function verification(EmailVerificationRequest $request): JsonResponse|\Illuminate\Http\RedirectResponse
     {
         Log::info($request);
         $request->fulfill();
@@ -70,12 +71,13 @@ class VerificationController extends Controller
     /**
      * Mark the authenticated user's email address as verified.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
+     *
      * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\RedirectResponse
      *
      * @throws \Illuminate\Auth\Access\AuthorizationException
      */
-    public function verify(Request $request)
+    public function verify(Request $request): JsonResponse|\Illuminate\Http\RedirectResponse
     {
         Log::info($request);
 
@@ -91,20 +93,22 @@ class VerificationController extends Controller
 
         if ($request->user()->hasVerifiedEmail()) {
             return $request->wantsJson()
-                        ? new JsonResponse([], 204)
-                        : redirect($this->redirectPath());
+                ? new JsonResponse([], 204)
+                : redirect($this->redirectPath());
         }
 
         if ($request->user()->markEmailAsVerified()) {
             event(new Verified($request->user()));
         }
 
-        if ($response = $this->verified($request)) {
+        $response = $this->verified($request);
+
+        if ($response) {
             return $response;
         }
 
         return $request->wantsJson()
-                    ? new JsonResponse([], 204)
-                    : redirect($this->redirectPath())->with('verified', true);
+            ? new JsonResponse([], 204)
+            : redirect($this->redirectPath())->with('verified', true);
     }
 }

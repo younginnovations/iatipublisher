@@ -24,8 +24,8 @@ class RegisterTest extends TestCase
     public function test_must_enter_all_required_fields(): void
     {
         $this->post('/register')
-         ->assertRedirect('/')
-         ->assertSessionHasErrors(['username', 'full_name', 'email', 'publisher_id', 'password']);
+             ->assertRedirect('/')
+             ->assertSessionHasErrors(['username', 'full_name', 'email', 'publisher_id', 'password']);
     }
 
     /*public function test_successful_registration()

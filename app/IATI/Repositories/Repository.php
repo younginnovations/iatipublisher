@@ -17,7 +17,7 @@ abstract class Repository implements RepositoryInterface
     /**
      * @var Builder
      */
-    protected $model;
+    protected mixed $model;
 
     /**
      * Repository constructor.
@@ -34,7 +34,7 @@ abstract class Repository implements RepositoryInterface
      *
      * @return string
      */
-    abstract public function getModel();
+    abstract public function getModel(): string;
 
     /**
      * Get model.
@@ -43,7 +43,7 @@ abstract class Repository implements RepositoryInterface
      *
      * @return mixed
      */
-    protected function makeModel($app)
+    protected function makeModel($app): mixed
     {
         return $app->make($this->getModel());
     }
@@ -55,7 +55,7 @@ abstract class Repository implements RepositoryInterface
      *
      * @return Collection
      */
-    public function all($columns = ['*']): Collection
+    public function all(array $columns = ['*']): Collection
     {
         return $this->model->all($columns);
     }
@@ -90,9 +90,9 @@ abstract class Repository implements RepositoryInterface
      *
      * @param $id
      *
-     * @return int
+     * @return bool
      */
-    public function delete($id): int
+    public function delete($id): bool
     {
         return $this->model->destroy($id);
     }
@@ -117,7 +117,7 @@ abstract class Repository implements RepositoryInterface
      *
      * @return Builder|Builder[]|Collection|Model|object|null
      */
-    public function find($id, $columns = ['*']): object
+    public function find($id, array $columns = ['*']): object
     {
         return $this->model->find($id, $columns);
     }
@@ -131,7 +131,7 @@ abstract class Repository implements RepositoryInterface
      *
      * @return object
      */
-    public function findBy($attribute, $value, $columns = ['*']): object
+    public function findBy($attribute, $value, array $columns = ['*']): object
     {
         return $this->model->where($attribute, '=', $value)->first($columns);
     }
@@ -145,7 +145,7 @@ abstract class Repository implements RepositoryInterface
      *
      * @return object
      */
-    public function findAllBy($attribute, $value, $columns = ['*']): object
+    public function findAllBy($attribute, $value, array $columns = ['*']): object
     {
         return $this->model->where($attribute, '=', $value)->get($columns);
     }

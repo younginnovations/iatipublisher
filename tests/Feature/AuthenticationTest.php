@@ -24,9 +24,9 @@ class AuthenticationTest extends TestCase
     public function test_must_enter_username_and_password(): void
     {
         $this->post('/login')
-         ->assertRedirect('/')
-         ->assertSessionHasErrors('username')
-         ->assertSessionHasErrors('password');
+             ->assertRedirect('/')
+             ->assertSessionHasErrors('username')
+             ->assertSessionHasErrors('password');
     }
 
     /**
@@ -37,8 +37,8 @@ class AuthenticationTest extends TestCase
     public function test_must_enter_password(): void
     {
         $this->post('/login', ['username' => 'manish@gmail.com'])
-         ->assertRedirect('/')
-         ->assertSessionHasErrors('password');
+             ->assertRedirect('/')
+             ->assertSessionHasErrors('password');
     }
 
     /**
@@ -49,8 +49,8 @@ class AuthenticationTest extends TestCase
     public function test_must_enter_email(): void
     {
         $this->post('/login', ['password' => 'password'])
-         ->assertRedirect('/')
-         ->assertSessionHasErrors('username');
+             ->assertRedirect('/')
+             ->assertSessionHasErrors('username');
     }
 
     /**
@@ -61,8 +61,8 @@ class AuthenticationTest extends TestCase
     public function test_invalid_credentials(): void
     {
         $this->post('/login', ['username' => 'admin123', 'password' => 'password123'])
-         ->assertRedirect('/')
-         ->assertSessionHasErrors('username');
+             ->assertRedirect('/')
+             ->assertSessionHasErrors('username');
     }
 
     /**
@@ -73,9 +73,9 @@ class AuthenticationTest extends TestCase
     public function test_successful_login(): void
     {
         $response = $this->post('/login', [
-      'username' => 'admin',
-      'password' => 'password',
-    ]);
+            'username' => 'admin',
+            'password' => 'password',
+        ]);
 
         $response->assertRedirect('/activities');
     }

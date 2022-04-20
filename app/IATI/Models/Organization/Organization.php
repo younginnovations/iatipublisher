@@ -17,13 +17,13 @@ class Organization extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-      'publisher_id',
-      'publisher_name',
-      'publisher_type',
-      'country',
-      'registration_agency',
-      'registration_number',
-      'identifier',
-      'status',
+        'publisher_id',
+        'publisher_name',
+        'publisher_type',
+        'country',
+        'registration_agency',
+        'registration_number',
+        'identifier',
+        'status',
     ];
 }

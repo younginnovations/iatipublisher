@@ -18,7 +18,7 @@ interface RepositoryInterface
      *
      * @return Collection
      */
-    public function all($columns = ['*']);
+    public function all(array $columns = ['*']): Collection;
 
     /**
      * Stores newly created resource.
@@ -27,7 +27,7 @@ interface RepositoryInterface
      *
      * @return object
      */
-    public function store(array $data);
+    public function store(array $data): object;
 
     /**
      * Update specific resource.
@@ -37,7 +37,7 @@ interface RepositoryInterface
      *
      * @return bool
      */
-    public function update($id, array $data);
+    public function update($id, array $data): bool;
 
     /**
      * Delete specific resource.
@@ -46,7 +46,7 @@ interface RepositoryInterface
      *
      * @return bool
      */
-    public function delete($id);
+    public function delete($id): bool;
 
     /**
      * Find specific resource.
@@ -56,7 +56,7 @@ interface RepositoryInterface
      *
      * @return object
      */
-    public function find($id, $columns = ['*']);
+    public function find($id, array $columns = ['*']): object;
 
     /**
      * Find specific resource by given attribute.
@@ -67,5 +67,5 @@ interface RepositoryInterface
      *
      * @return object
      */
-    public function findBy($attribute, $value, $columns = ['*']);
+    public function findBy($attribute, $value, array $columns = ['*']): object;
 }

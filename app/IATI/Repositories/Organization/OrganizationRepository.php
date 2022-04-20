@@ -12,12 +12,24 @@ use App\IATI\Repositories\Repository;
  */
 class OrganizationRepository extends Repository
 {
+    /**
+     * Return Organization model.
+     *
+     * @return string
+     */
     public function getModel():string
     {
         return Organization::class;
     }
 
-    public function createOrganization(array $data)
+    /**
+     * Creates new organization.
+     *
+     * @param array $data
+     *
+     * @return \Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Eloquent\Model|mixed
+     */
+    public function createOrganization(array $data): mixed
     {
         return $this->model->firstOrCreate($data);
     }

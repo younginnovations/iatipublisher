@@ -6,7 +6,10 @@ use Illuminate\Support\ServiceProvider;
 
 class RepositoryServiceProvider extends ServiceProvider
 {
-    public function register()
+    /**
+     * @return void
+     */
+    public function register(): void
     {
         // $this->app->bind(
         //   'App\IATI\Repositories\RepositoryInterface',

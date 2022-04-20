@@ -12,6 +12,11 @@ use App\IATI\Repositories\Repository;
  */
 class UserRepository extends Repository
 {
+    /**
+     * Returns user model.
+     *
+     * @return string
+     */
     public function getModel():string
     {
         return User::class;

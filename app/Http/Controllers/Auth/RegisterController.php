@@ -40,11 +40,11 @@ class RegisterController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = RouteServiceProvider::HOME;
+    protected string $redirectTo = RouteServiceProvider::HOME;
 
-    protected $organizationService;
-    protected $userService;
-    protected $logger;
+    protected OrganizationService $organizationService;
+    protected UserService $userService;
+    protected Log $logger;
 
     /**
      * Create a new controller instance.
@@ -62,30 +62,37 @@ class RegisterController extends Controller
     /**
      * Get a validator for an incoming registration request.
      *
-     * @param  array  $data
+     * @param array $data
+     *
      * @return \Illuminate\Contracts\Validation\Validator
      */
-    protected function validator(array $data)
+    protected function validator(array $data): \Illuminate\Contracts\Validation\Validator
     {
         return Validator::make($data, [
-            'username' => ['required', 'string', 'max:255', 'unique:users,username'],
-            'full_name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email'],
+            'username'     => ['required', 'string', 'max:255', 'unique:users,username'],
+            'full_name'    => ['required', 'string', 'max:255'],
+            'email'        => ['required', 'string', 'email', 'max:255', 'unique:users,email'],
             'publisher_id' => ['required', 'string', 'max:255', 'unique:organizations,publisher_id'],
-            'password' => ['required', 'string', 'min:8', 'confirmed'],
+            'password'     => ['required', 'string', 'min:8', 'confirmed'],
         ]);
     }
 
+    /**
+     * @param Request $request
+     *
+     * @return \Illuminate\Http\JsonResponse|void
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
     public function verifyPublisher(Request $request)
     {
         try {
             $data = $request->all();
 
             $validator = Validator::make($data, [
-              'publisher_id' => ['sometimes', 'max:255', 'unique:organizations,publisher_id'],
-              'publisher_name' => ['required', 'string', 'max:255'],
-              'registration_agency' => ['required'],
-              'registration_number' => ['required'],
+                'publisher_id'        => ['sometimes', 'max:255', 'unique:organizations,publisher_id'],
+                'publisher_name'      => ['required', 'string', 'max:255'],
+                'registration_agency' => ['required'],
+                'registration_number' => ['required'],
             ]);
 
             if ($validator->fails()) {
@@ -94,26 +101,43 @@ class RegisterController extends Controller
 
             $client = new Client(
                 [
-                'base_uri'=>'https://staging.iatiregistry.org',
-                'headers'=> [
-                  'X-CKAN-API-Key' => env('IATI_API_KEY'), ],
+                    'base_uri' => 'https://staging.iatiregistry.org',
+                    'headers'  => [
+                        'X-CKAN-API-Key' => env('IATI_API_KEY'),
+                    ],
                 ]
             );
 
             $res = $client->request('GET', 'https://staging.iatiregistry.org/api/action/organization_show', [
-            'auth' => [env('IATI_USERNAME'), env('IATI_PASSWORD')],
-            'query' => ['id' => $data['publisher_id']],
+                'auth'  => [env('IATI_USERNAME'), env('IATI_PASSWORD')],
+                'query' => ['id' => $data['publisher_id']],
             ]);
 
             $response = json_decode($res->getBody()->getContents())->result;
 
             if ($data['publisher_name'] != $response->title || $data['registration_agency'] . '-' . $data['registration_number'] != $response->publisher_iati_id) {
-                return response()->json(['publisher_error' => 'true', 'errors' => ['publisher_name' => ['Publisher Name doesn\'t match your IATI Registry information'], 'publisher_id' => ['Publisher ID doesn\'t match with your IATI Registry information']]]);
+                return response()->json(
+                    [
+                        'publisher_error' => 'true',
+                        'errors'          => [
+                            'publisher_name' => ['Publisher Name doesn\'t match your IATI Registry information'],
+                            'publisher_id'   => ['Publisher ID doesn\'t match with your IATI Registry information'],
+                        ],
+                    ]
+                );
             }
 
             return response()->json(['success' => 'Publisher verified successfully']);
         } catch (ClientException $e) {
-            return response()->json(['errors' => ['publisher_error' => 'true', 'publisher_name' => ['Publisher Name doesn\'t match your IATI Registry information'], 'publisher_id' => ['Publisher ID doesn\'t match with your IATI Registry information']]]);
+            return response()->json(
+                [
+                    'errors' => [
+                        'publisher_error' => 'true',
+                        'publisher_name'  => ['Publisher Name doesn\'t match your IATI Registry information'],
+                        'publisher_id'    => ['Publisher ID doesn\'t match with your IATI Registry information'],
+                    ],
+                ]
+            );
         } catch (Exception $e) {
             Log::error($e);
         }
@@ -122,10 +146,11 @@ class RegisterController extends Controller
     /**
      * Create a new user instance after a valid registration.
      *
-     * @param  array  $data
+     * @param array $data
+     *
      * @return \App\Models\User
      */
-    protected function create(array $data)
+    protected function create(array $data): \App\Models\User
     {
         try {
             return $this->userService->registerExistingUser($data);
@@ -139,7 +164,7 @@ class RegisterController extends Controller
      *
      * @return \Illuminate\View\View
      */
-    public function showRegistrationForm()
+    public function showRegistrationForm(): \Illuminate\View\View
     {
         try {
             $countries = $this->userService->getCodeList('Country', 'Organization');
@@ -154,18 +179,20 @@ class RegisterController extends Controller
     /**
      * Handle a registration request for the application.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
+     *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Http\JsonResponse
      */
-    public function register(Request $request)
+    public function register(Request $request): \Illuminate\Http\JsonResponse|\Illuminate\Http\RedirectResponse
     {
         $this->validator($request->all())->validate();
 
         event(new Registered($user = $this->create($request->all())));
 
         $this->guard()->login($user);
+        $response = $this->registered($request, $user);
 
-        if ($response = $this->registered($request, $user)) {
+        if ($response) {
             return $response;
         }
 

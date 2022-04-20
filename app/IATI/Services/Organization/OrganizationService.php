@@ -14,7 +14,7 @@ class OrganizationService
     /**
      * @var OrganizationRepository
      */
-    private $organizationRepo;
+    private OrganizationRepository $organizationRepo;
 
     /**
      * UserService constructor.
@@ -31,7 +31,7 @@ class OrganizationService
      *
      * @param array $data
      */
-    public function create(array $data)
+    public function create(array $data): \Illuminate\Database\Eloquent\Model
     {
         return $this->organizationRepo->store($data);
     }

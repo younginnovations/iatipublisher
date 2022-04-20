@@ -16,12 +16,12 @@ class UserService
     /**
      * @var UserRepository
      */
-    private $userRepo;
+    private UserRepository $userRepo;
 
     /**
      * @var OrganizationRepository
      */
-    private $organizationRepo;
+    private OrganizationRepository $organizationRepo;
 
     /**
      * UserService constructor.
@@ -39,7 +39,7 @@ class UserService
      *
      * @param array $data
      */
-    public function create(array $data)
+    public function create(array $data): \Illuminate\Database\Eloquent\Model
     {
         return $this->userRepo->store($data);
     }
@@ -49,35 +49,37 @@ class UserService
      *
      * @param array $data
      */
-    public function registerExistingUser(array $data)
+    public function registerExistingUser(array $data): \Illuminate\Database\Eloquent\Model
     {
         $organization = $this->organizationRepo->createOrganization([
-        'publisher_id' => $data['publisher_id'],
-        'publisher_name' => $data['publisher_name'],
-        'country' => isset($data['country']) ? $data['country'] : null,
-        'registration_agency' => $data['registration_agency'],
-        'registration_number' => $data['registration_number'],
-        'identifier' => $data['registration_agency'] . '-' . $data['registration_number'],
-        'status' => 'pending',
-      ]);
+            'publisher_id'        => $data['publisher_id'],
+            'publisher_name'      => $data['publisher_name'],
+            'country'             => isset($data['country']) ? $data['country'] : null,
+            'registration_agency' => $data['registration_agency'],
+            'registration_number' => $data['registration_number'],
+            'identifier'          => $data['registration_agency'] . '-' . $data['registration_number'],
+            'status'              => 'pending',
+        ]);
 
         return $this->userRepo->store([
-          'username' => $data['username'],
-          'full_name' => $data['full_name'],
-          'email' => $data['email'],
-          'organization_id' => $organization['id'],
-          'password' => Hash::make($data['password']),
-      ]);
+            'username'        => $data['username'],
+            'full_name'       => $data['full_name'],
+            'email'           => $data['email'],
+            'organization_id' => $organization['id'],
+            'password'        => Hash::make($data['password']),
+        ]);
     }
 
     /**
      * return codeList array from json codeList.
+     *
      * @param      $listName
      * @param      $listType
      * @param bool $code
+     *
      * @return array
      */
-    public function getCodeList($listName, $listType, $code = true) : array
+    public function getCodeList($listName, $listType, bool $code = true): array
     {
         $filePath = app_path("Http/Data/$listType/$listName.json");
         $codeListFromFile = file_get_contents($filePath);
