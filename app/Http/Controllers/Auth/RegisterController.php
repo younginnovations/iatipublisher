@@ -115,20 +115,18 @@ class RegisterController extends Controller
 
             $response = json_decode($res->getBody()->getContents())->result;
 
-            if ($data['publisher_name'] != $response->title || $data['registration_agency'] . '-' . $data['registration_number'] != $response->publisher_iati_id) {
-                return response()->json(
-                    [
-                        'publisher_error' => 'true',
-                        'errors'          => [
-                            'publisher_name' => ['Publisher Name doesn\'t match your IATI Registry information'],
-                            'publisher_id'   => ['Publisher ID doesn\'t match with your IATI Registry information'],
-                        ],
-                    ]
-                );
+            if ($data['publisher_name'] != $response->title) {
+                return response()->json(['publisher_error' => 'true', 'errors' => ['publisher_name' => ['Publisher Name doesn\'t match your IATI Registry information'], 'publisher_id' => ['Publisher ID doesn\'t match with your IATI Registry information']]]);
+            }
+
+            if ($data['registration_agency'] . '-' . $data['registration_number'] != $response->publisher_iati_id) {
+                return response()->json(['publisher_error' => 'true', 'errors' => ['publisher_name' => ['Publisher Name doesn\'t match your IATI Registry information']]]);
             }
 
             return response()->json(['success' => 'Publisher verified successfully']);
         } catch (ClientException $e) {
+            Log::error($e);
+
             return response()->json(
                 [
                     'errors' => [
@@ -140,6 +138,8 @@ class RegisterController extends Controller
             );
         } catch (Exception $e) {
             Log::error($e);
+
+            return response()->json(['error' => 'Error has occurred while verifying the publisher.']);
         }
     }
 

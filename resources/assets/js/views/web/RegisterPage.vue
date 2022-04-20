@@ -1,5 +1,6 @@
 <template>
   <section class="section mb-7 sm:mx-10 sm:mb-10 md:mb-14 xl:mx-24 xl:px-1">
+    <Loader v-if="isLoaderVisible"></Loader>
     <div class="section__container">
       <div class="section__title mt-7 text-center leading-10 sm:mt-14">
         <h2>Create IATI Publisher Account</h2>
@@ -98,6 +99,7 @@
                   "
                   v-if="field.type === 'select'"
                   v-model="formData[field.name]"
+                  :searchable="true"
                   :options="field.options"
                 />
 
@@ -155,9 +157,8 @@
           </div>
         </div>
 
-        <!-- step 1 -->
         <aside>
-          <span class="text-base font-bold">Step 1 out of 3</span>
+          <span class="text-base font-bold">Step {{ step }} out of 3</span>
           <ul class="relative mt-6 text-sm text-n-40">
             <li
               :class="[
@@ -196,22 +197,25 @@ import axios from 'axios';
 import EmailVerification from './EmailVerification.vue';
 import HoverText from './../../components/HoverText.vue';
 import Multiselect from '@vueform/multiselect';
+import Loader from '../../components/Loader.vue';
 
 export default defineComponent({
   components: {
     EmailVerification,
     HoverText,
     Multiselect,
+    Loader,
   },
 
   props: {
-    country: String,
-    registration_agency: String,
+    country: [Object, String],
+    registration_agency: [Object, String],
   },
 
   setup(props) {
     const step = ref(1);
     const publisherExists = ref(true);
+    const isLoaderVisible = ref(false);
     const option = ref(['a', 'b']);
     const errorData = reactive({
       publisher_name: '',
@@ -411,6 +415,7 @@ export default defineComponent({
 
     function verifyPublisher() {
       formData.identifier = `${formData.registration_agency}-${formData.registration_number}`;
+      isLoaderVisible.value = true;
       axios
         .post('/verifyPublisher', formData)
         .then((res) => {
@@ -441,15 +446,20 @@ export default defineComponent({
             registerForm['1'].is_complete = true;
             step.value += 1;
           }
+          isLoaderVisible.value = false;
         })
         .catch((error) => {
           // const { errors } = error;
           // errors = error.response.data.errors;
           console.log('errors', error);
+          isLoaderVisible.value = false;
         });
     }
 
     function submitForm() {
+      isLoaderVisible.value = true;
+      console.log(isLoaderVisible.value);
+
       axios
         .post('/register', formData)
         .then((res) => {
@@ -459,6 +469,7 @@ export default defineComponent({
           errorData.full_name = errors.full_name ? errors.full_name[0] : '';
           errorData.email = errors.email ? errors.email[0] : '';
           errorData.password = errors.password ? errors.password[0] : '';
+          isLoaderVisible.value = false;
 
           if ('success' in response) {
             registerForm['2'].is_complete = true;
@@ -467,6 +478,7 @@ export default defineComponent({
         })
         .catch((error) => {
           const { errors } = error.response.data;
+          isLoaderVisible.value = false;
           errorData.username = errors.username ? errors.username[0] : '';
           errorData.full_name = errors.full_name ? errors.full_name[0] : '';
           errorData.email = errors.email ? errors.email[0] : '';
@@ -489,6 +501,7 @@ export default defineComponent({
       formData,
       errorData,
       publisherExists,
+      isLoaderVisible,
       goToNextForm,
       goToPreviousForm,
       props,

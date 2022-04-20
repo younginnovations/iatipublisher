@@ -81,7 +81,7 @@ class UserService
      */
     public function getCodeList($listName, $listType, bool $code = true): array
     {
-        $filePath = app_path("Http/Data/$listType/$listName.json");
+        $filePath = app_path("Data/$listType/$listName.json");
         $codeListFromFile = file_get_contents($filePath);
         $codeLists = json_decode($codeListFromFile, true);
         $codeList = $codeLists[$listName];
