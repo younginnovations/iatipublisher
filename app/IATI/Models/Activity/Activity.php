@@ -106,4 +106,24 @@ class Activity extends Model
     {
         return new ActivityFactory();
     }
+
+    public function getTitleElementCompletedAttribute()
+    {
+        $titles = $this->title;
+
+        if (!empty($titles)) {
+            foreach ($titles as $title) {
+                if (!isset($title['narrative'])
+                    || empty($title['narrative'])
+                    || !isset($title['language'])
+                    || empty($title['language'])) {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        return false;
+    }
 }
