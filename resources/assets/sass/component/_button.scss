@@ -120,6 +120,11 @@ button {
   svg {
     @apply text-base;
   }
+
+  .dropdown__arrow {
+    font-size: 6px;
+    transition: 0.2s;
+  }
 }
 
 // primary outline button
