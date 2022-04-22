@@ -1,5 +1,11 @@
 <template>
   <section class="section">
+    <Loader v-if="loaderVisibility"></Loader>
+    <Toast
+      v-if="toastVisibility"
+      :message="toastMessage"
+      :type="toastType"
+    ></Toast>
     <div class="setting">
       <span class="text-xs font-bold text-n-40">Settings</span>
       <div class="mt-4 flex items-center">
@@ -23,7 +29,10 @@
             Default Values
           </button>
         </div>
-        <SettingPublishingForm v-if="tab === 'publish'"></SettingPublishingForm>
+        <SettingPublishingForm
+          v-if="tab === 'publish'"
+          @submitPublishing="submitForm"
+        ></SettingPublishingForm>
         <SettingDefaultForm
           v-else
           :currencies="currencies"
@@ -33,8 +42,8 @@
       </div>
     </div>
     <div class="fixed bottom-0 w-full bg-eggshell py-5 pr-40 shadow-dropdown">
-      <div class="flex justify-end">
-        <button class="ghost-btn mr-8">Cancel</button>
+      <div class="flex items-center justify-end">
+        <a class="ghost-btn mr-8" href="/activities">Cancel</a>
         <button class="primary-btn save-btn" @click="submitForm">
           {{
             tab === 'publish'
@@ -49,131 +58,190 @@
 
 <script lang="ts">
 import { defineComponent, ref, computed, onMounted } from 'vue';
-import { useStore } from 'vuex';
+import { useStore } from '../../store';
+import { ActionTypes } from '../../store/setting/actions';
 import axios from 'axios';
 import SettingDefaultForm from './SettingDefaultForm.vue';
 import SettingPublishingForm from './SettingPublishingForm.vue';
+import Loader from '../../components/Loader.vue';
+import Toast from '../../components/Toast.vue';
 
 export default defineComponent({
   components: {
     SettingDefaultForm,
     SettingPublishingForm,
+    Loader,
+    Toast,
   },
 
   props: {
-    currencies: Object,
-    languages: Object,
-    humanitarian: Object,
+    currencies: [String, Object],
+    languages: [String, Object],
+    humanitarian: [String, Object],
   },
 
   setup(props) {
     const tab = ref('publish');
     const store = useStore();
+    const loaderVisibility = ref(false);
+    const toastVisibility = ref(false);
+    const toastMessage = ref('');
+    const toastType = ref('');
 
-    const publishingForm = computed(() => store.state.setting.publishingForm);
+    const publishingForm = computed(() => store.state.publishingForm);
 
-    const publishingError = computed(() => store.state.setting.publishingError);
+    const publishingInfo = computed(() => store.state.publishingInfo);
 
-    const defaultForm = computed(() => store.state.setting.defaultForm);
+    const publishingError = computed(() => store.state.publishingError);
 
-    const defaultError = computed(() => store.state.setting.defaultError);
+    const defaultForm = computed(() => store.state.defaultForm);
 
-    function updateStore(fun_name: string, key: String, value: String) {
-      store.dispatch(`setting/${fun_name}`, {
+    const defaultError = computed(() => store.state.defaultError);
+
+    function updateStore(
+      name: keyof typeof ActionTypes,
+      key: string,
+      value: string | boolean
+    ) {
+      store.dispatch(ActionTypes[name], {
         key: key,
         value: value,
       });
     }
 
     onMounted(async () => {
-      const { data } = await axios.get('/setting/data');
-      const defaultValues = JSON.parse(data.data.default_values);
-      const publisherInfo = JSON.parse(data.data.publishing_info);
-      const activityValues = JSON.parse(data.data.activity_default_values);
+      const { data } = await axios.get('api/setting/data');
+      const settingData = data.data;
 
-      if (publisherInfo) {
-        updateStore(
-          'updatePublisherInfo',
-          'publisher_id',
-          publisherInfo.publisher_id
-        );
-        updateStore(
-          'updatePublisherInfo',
-          'api_token',
-          publisherInfo.api_token
-        );
-      }
+      if (settingData) {
+        const defaultValues = settingData.default_values
+          ? JSON.parse(settingData.default_values)
+          : {};
+        const publisherInfo = settingData.publishing_info
+          ? JSON.parse(settingData.publishing_info)
+          : {};
+        const activityValues = settingData.activity_default_values
+          ? JSON.parse(settingData.activity_default_values)
+          : {};
 
-      if (defaultValues) {
-        updateStore(
-          'updateDefaultForm',
-          'default_currency',
-          defaultValues.default_currency
-        );
-        updateStore(
-          'updateDefaultForm',
-          'default_language',
-          defaultValues.default_language
-        );
-      }
+        if (publisherInfo) {
+          for (const key in publisherInfo) {
+            updateStore(
+              typeof publisherInfo[key] === 'string'
+                ? 'UPDATE_PUBLISHING_FORM'
+                : 'UPDATE_PUBLISHER_INFO',
+              key,
+              publisherInfo[key]
+            );
+          }
 
-      if (activityValues) {
-        updateStore(
-          'updateDefaultForm',
-          'linked_data_url',
-          activityValues.linked_data_url
-        );
-        updateStore(
-          'updateDefaultForm',
-          'humanitarian',
-          activityValues.humanitarian
-        );
-        updateStore('updateDefaultForm', 'hierarchy', activityValues.hierarchy);
+          if (publisherInfo.api_token) {
+            updateStore(
+              'UPDATE_PUBLISHER_INFO',
+              'isVerificationRequested',
+              true
+            );
+          }
+        }
+
+        if (defaultValues) {
+          for (const key in defaultValues) {
+            updateStore('UPDATE_DEFAULT_VALUES', key, defaultValues[key]);
+          }
+        }
+
+        if (activityValues) {
+          for (const key in activityValues) {
+            updateStore('UPDATE_DEFAULT_VALUES', key, activityValues[key]);
+          }
+        }
       }
     });
 
     function toggleTab() {
+      toastVisibility.value = false;
       tab.value = tab.value === 'publish' ? 'default' : 'publish';
     }
 
     function submitDefault() {
       for (const data in defaultError.value) {
-        updateStore('updateDefaultError', data, '');
+        updateStore('UPDATE_DEFAULT_ERROR', data, '');
       }
+      loaderVisibility.value = true;
 
       axios
-        .post('/store/default', defaultForm.value)
+        .post('api/store/default', defaultForm.value)
         .then((res) => {
           const response = res.data;
+          loaderVisibility.value = false;
+          toastVisibility.value = true;
+          toastMessage.value = response.message;
+          toastType.value = response.status;
 
-          if ('success' in response) {
-          }
+          loaderVisibility.value = false;
         })
         .catch((error) => {
           const { errors } = error.response.data;
 
           for (const e in errors) {
-            updateStore('updateDefaultError', e, errors[e][0]);
+            updateStore('UPDATE_DEFAULT_ERROR', e, errors[e][0]);
           }
+
+          loaderVisibility.value = false;
         });
     }
 
     function submitPublishing() {
-      for (const data in defaultError.value) {
-        updateStore('updatePublishingError', data, '');
+      loaderVisibility.value = true;
+
+      for (const data in publishingError.value) {
+        updateStore('UPDATE_PUBLISHING_ERROR', data, '');
       }
 
       axios
-        .post('/store/publisher', publishingForm.value)
+        .post('api/store/publisher', {
+          ...publishingForm.value,
+          ...publishingInfo.value,
+        })
         .then((res) => {
           const response = res.data;
+          console.log(response.message);
+
+          if (response.status) {
+            updateStore(
+              'UPDATE_PUBLISHER_INFO',
+              'publisher_verification',
+              response.data.publisher_verification
+            );
+
+            updateStore(
+              'UPDATE_PUBLISHER_INFO',
+              'token_verification',
+              response.data.token_verification
+            );
+
+            updateStore(
+              'UPDATE_PUBLISHER_INFO',
+              'isVerificationRequested',
+              true
+            );
+          }
+
+          loaderVisibility.value = false;
+          toastVisibility.value = true;
+          toastMessage.value = response.message;
+          toastType.value = response.status;
         })
         .catch((error) => {
           const { errors } = error.response.data;
 
+          console.log(errors);
+
           for (const e in errors) {
-            updateStore('updatePublishingError', e, errors[e][0]);
+            updateStore('UPDATE_PUBLISHING_ERROR', e, errors[e][0]);
           }
+
+          loaderVisibility.value = false;
         });
     }
 
@@ -183,13 +251,17 @@ export default defineComponent({
     }
 
     return {
+      props,
       tab,
-      toggleTab,
-      submitForm,
       defaultError,
       publishingError,
       store,
-      props,
+      loaderVisibility,
+      toastVisibility,
+      toastMessage,
+      toastType,
+      toggleTab,
+      submitForm,
     };
   },
 });
@@ -277,9 +349,14 @@ export default defineComponent({
       &__container {
         @apply grid grid-cols-2 gap-6;
 
-        .tag {
+        .tag__correct {
           @apply absolute right-2 top-10 flex h-5 cursor-pointer items-center justify-center rounded bg-spring-40 text-center text-xs text-white;
-          width: 54px;
+          width: 50px;
+        }
+
+        .tag__incorrect {
+          @apply absolute right-2 top-10 flex h-5 cursor-pointer items-center justify-center rounded bg-salmon-50 text-center text-xs text-white;
+          width: 61px;
         }
       }
       .verify-btn {
@@ -290,7 +367,7 @@ export default defineComponent({
     }
     .register__input {
       @apply mt-2 w-full border border-n-30 outline-none duration-300;
-      padding: 13px 0 13px 16px;
+      padding: 13px 10px 13px 16px;
       border-radius: 4px;
 
       &::placeholder {
@@ -302,6 +379,9 @@ export default defineComponent({
       }
       &:focus::placeholder {
         @apply text-n-50;
+      }
+      .error__input {
+        @apply border border-crimson-50;
       }
     }
   }

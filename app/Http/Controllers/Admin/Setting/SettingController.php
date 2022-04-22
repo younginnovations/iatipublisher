@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Admin\Setting;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Setting\DefaultFormRequest;
-use App\Http\Requests\Setting\PublisherFormRequest;
 use App\IATI\Services\Organization\OrganizationService;
 use App\IATI\Services\Setting\SettingService;
 use Illuminate\Support\Facades\Log;
@@ -32,7 +30,7 @@ class SettingController extends Controller
     }
 
     /**
-     * Show the application setting page.
+     * Show the organization setting page.
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
@@ -46,56 +44,8 @@ class SettingController extends Controller
             return view('admin.settings.index', compact('currencies', 'languages', 'humanitarian'));
         } catch (\Exception $e) {
             Log::error($e);
-        }
-    }
 
-    /**
-     * Get setting of the corresponding organization.
-     *
-     * @return \Illuminate\Contracts\Support\Renderable
-     */
-    public function getSetting()
-    {
-        try {
-            $setting = $this->settingService->getSetting();
-
-            return response()->json(['success' => 'Settings stored successfully', 'data' => $setting]);
-        } catch (\Exception $e) {
-            Log::error($e);
-        }
-    }
-
-    /**
-     * Create a new user instance after a valid registration.
-     *
-     * @param  array  $data
-     * @return \App\Models\User
-     */
-    public function storePublishingInfo(PublisherFormRequest $request)
-    {
-        try {
-            $this->settingService->storePublishingInfo($request->all());
-
-            return response()->json(['success' => 'Settings stored successfully']);
-        } catch (\Exception $e) {
-            Log::error($e);
-        }
-    }
-
-    /**
-     * Create a new user instance after a valid registration.
-     *
-     * @param  array  $data
-     * @return \App\Models\User
-     */
-    public function storeDefaultForm(DefaultFormRequest $request)
-    {
-        try {
-            $this->settingService->storeDefaultValues($request->all());
-
-            return response()->json(['success' => 'Settings stored successfully']);
-        } catch (\Exception $e) {
-            Log::error($e);
+            return redirect()->route('/activities');
         }
     }
 }

@@ -17,9 +17,17 @@ class Setting extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-      'organization_id',
-      'publishing_info',
-      'default_values',
-      'activity_default_values',
+        'organization_id',
+        'publishing_info',
+        'default_values',
+        'activity_default_values',
     ];
+
+    /**
+     * Setting belongs to organization.
+     */
+    protected function organization()
+    {
+        return $this->belongsTo('App\IATI\Models\Organization\Organization', 'organization_id');
+    }
 }

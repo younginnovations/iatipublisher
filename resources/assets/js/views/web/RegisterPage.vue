@@ -78,7 +78,11 @@
                 />
 
                 <input
-                  class="form__input"
+                  :class="
+                    errorData[field.name] != ''
+                      ? 'error__input form__input'
+                      : 'form__input'
+                  "
                   :type="field.type"
                   v-model="formData[field.name]"
                   :value="
@@ -208,8 +212,8 @@ export default defineComponent({
   },
 
   props: {
-    country: [Object, String],
-    registration_agency: [Object, String],
+    country: [String, Object],
+    registration_agency: [String, Object],
   },
 
   setup(props) {
@@ -308,7 +312,7 @@ export default defineComponent({
             help_text: '',
           },
           organization_registration_agency: {
-            label: 'Organization Registration Agency',
+            label: 'Organisation Registration Agency',
             name: 'registration_agency',
             placeholder: 'Select your Organization Registration Agency',
             id: 'registration_agency',
@@ -320,7 +324,7 @@ export default defineComponent({
             help_text: '',
           },
           organization_registration_no: {
-            label: 'Organization Registration Number',
+            label: 'Organisation Registration Number',
             name: 'registration_number',
             placeholder: '',
             id: 'registration_number',
@@ -331,7 +335,7 @@ export default defineComponent({
             help_text: '',
           },
           iati_organizational_identifier: {
-            label: 'IATI Organizational Identifier',
+            label: 'IATI Organisational Identifier',
             name: 'identifier',
             placeholder: '',
             id: 'identifier',
@@ -417,11 +421,12 @@ export default defineComponent({
       formData.identifier = `${formData.registration_agency}-${formData.registration_number}`;
       isLoaderVisible.value = true;
       axios
-        .post('/verifyPublisher', formData)
+        .post('api/verifyPublisher', formData)
         .then((res) => {
           const response = res.data;
           publisherExists.value = true;
-          const errors = 'errors' in response ? response.errors : [];
+          const errors =
+            !response.status || 'errors' in response ? response.errors : [];
 
           errorData.publisher_name = errors.publisher_name
             ? errors.publisher_name[0]
@@ -441,17 +446,14 @@ export default defineComponent({
             publisherExists.value = false;
           }
 
-          if ('success' in response) {
-            console.log('here');
+          if (response.status) {
             registerForm['1'].is_complete = true;
             step.value += 1;
           }
+
           isLoaderVisible.value = false;
         })
         .catch((error) => {
-          // const { errors } = error;
-          // errors = error.response.data.errors;
-          console.log('errors', error);
           isLoaderVisible.value = false;
         });
     }
@@ -461,7 +463,7 @@ export default defineComponent({
       console.log(isLoaderVisible.value);
 
       axios
-        .post('/register', formData)
+        .post('api/register', formData)
         .then((res) => {
           const response = res.data;
           const errors = 'errors' in response ? response.data.errors : [];
@@ -471,7 +473,7 @@ export default defineComponent({
           errorData.password = errors.password ? errors.password[0] : '';
           isLoaderVisible.value = false;
 
-          if ('success' in response) {
+          if (response.status) {
             registerForm['2'].is_complete = true;
             step.value += 1;
           }

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\IATI\Services\Setting;
 
+use App\IATI\Models\Setting\Setting;
 use App\IATI\Repositories\Setting\SettingRepository;
 use Illuminate\Support\Facades\Auth;
 
@@ -31,46 +32,54 @@ class SettingService
      * Store user.
      *
      * @param array $data
+     *
+     * @return Setting
      */
-    public function getSetting()
+    public function getSetting(): ?Setting
     {
-        return $this->settingRepo->findBy('organization_id', Auth::user()->organization_id);
+        return $this->settingRepo->findByOrganization(Auth::user()->organization_id);
     }
 
     /**
-     * Store user.
+     * Store publishing info.
      *
      * @param array $data
+     *
+     * @return Setting
      */
-    public function storePublishingInfo(array $data)
+    public function storePublishingInfo(array $data): Setting
     {
         return $this->settingRepo->updateSetting(Auth::user()->organization_id, [
-          'organization_id' => Auth::user()->organization_id,
-          'publishing_info' => json_encode([
-                                'publisher_id'=> $data['publisher_id'],
-                                'api_token'=> $data['api_token'],
-                              ]),
+            'organization_id' => Auth::user()->organization_id,
+            'publishing_info' => json_encode([
+                'publisher_id' => $data['publisher_id'],
+                'api_token' => $data['api_token'],
+                'publisher_verification' => $data['publisher_verification'],
+                'token_verification' => $data['token_verification'],
+            ]),
         ]);
     }
 
     /**
-     * Store user.
+     * Store default values.
      *
      * @param array $data
+     *
+     * @return Setting
      */
-    public function storeDefaultValues(array $data)
+    public function storeDefaultValues(array $data): Setting
     {
         return $this->settingRepo->updateSetting(Auth::user()->organization_id, [
-          'organization_id' => Auth::user()->organization_id,
-          'default_values' => json_encode([
-                                'default_currency'=> $data['default_currency'],
-                                'default_language'=> $data['default_language'],
-                              ]),
-          'activity_default_values' => json_encode([
-                                    'hierarchy' => $data['hierarchy'],
-                                    'linked_data_url' => $data['linked_data_url'],
-                                    'humanitarian' => $data['humanitarian'],
-                                  ]),
+            'organization_id'         => Auth::user()->organization_id,
+            'default_values'          => json_encode([
+                'default_currency' => isset($data['default_currency']) ? $data['default_currency'] : '',
+                'default_language' => $data['default_language'],
+            ]),
+            'activity_default_values' => json_encode([
+                'hierarchy' => $data['hierarchy'],
+                'linked_data_url' => $data['linked_data_url'],
+                'humanitarian' => $data['humanitarian'],
+            ]),
         ]);
     }
 }
