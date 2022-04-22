@@ -2,11 +2,7 @@
   <div id="activity-listing-page" class="bg-paper px-10 pt-4 pb-[71px]">
     <div id="activity">
       <PageTitle :showButtons="state.showButtons" />
-      <!--================================
-        If no data then show empty state
-        <EmptyActivity/>
-        Else listing view
-        ==================================-->
+      <EmptyActivity v-if="isEmpty"> </EmptyActivity>
       <TableLayout @showOrHide="showOrHide" />
       <div class="mt-6">
         <Pagination />
@@ -16,7 +12,8 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive } from 'vue';
+import { defineComponent, reactive, ref } from 'vue';
+
 import EmptyActivity from './partials/EmptyActivity.vue';
 import TableLayout from './partials/TableLayout.vue';
 import Pagination from '../../components/Pagination.vue';
@@ -35,6 +32,8 @@ export default defineComponent({
       showButtons: false,
     });
 
+    const isEmpty = ref(false);
+
     const showOrHide = (data = Array) => {
       if (data.length > 0) {
         state.showButtons = true;
@@ -43,7 +42,7 @@ export default defineComponent({
       }
     };
 
-    return { state, showOrHide };
+    return { state, isEmpty, showOrHide };
   },
 });
 </script>

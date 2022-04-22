@@ -67,24 +67,30 @@
         <button class="button secondary-btn mr-3.5 font-bold">
           <svg-vue icon="add"></svg-vue>
         </button>
-        <button class="button secondary-btn" @click="toggle">
+        <button
+          class="button secondary-btn dropdown-btn"
+          @click="toggle"
+          ref="dropdownBtn"
+        >
           <svg-vue icon="user-profile"></svg-vue>
           <svg-vue class="dropdown__arrow" icon="dropdown-arrow"></svg-vue>
         </button>
-        <div v-if="state.isVisible" class="profile__dropdown">
+        <div v-show="state.isVisible" class="profile__dropdown" ref="dropdown">
           <ul>
             <li class="border-b border-b-n-20">
               <svg-vue class="user-profile" icon="user-profile"></svg-vue>
               <div class="flex flex-col leading-4">
-                <span class="text-n-50">Ram Shanker</span
-                ><span class="text-tiny text-n-40">YoungInnovations</span>
+                <span class="text-n-50">{{ props.user.full_name }}</span
+                ><span class="text-tiny text-n-40">{{
+                  props.organization.publisher_name
+                }}</span>
               </div>
             </li>
             <li class="dropdown__list border-b border-b-n-20">
               <svg-vue icon="user"></svg-vue>
               <a href="#">Your Profile</a>
             </li>
-            <li class="dropdown__list">
+            <li class="dropdown__list" @click="logout">
               <svg-vue icon="logout"></svg-vue>
               <a href="#">Logout</a>
             </li>
@@ -238,7 +244,8 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive } from 'vue';
+import { reactive, defineComponent, onMounted, ref } from 'vue';
+import axios from 'axios';
 import { useToggle } from '@vueuse/core';
 import Multiselect from '@vueform/multiselect';
 
@@ -254,7 +261,14 @@ export default defineComponent({
     HoverText,
     Multiselect,
   },
-  setup() {
+  props: {
+    user: Object,
+    organization: Object,
+  },
+
+  setup(props) {
+    const dropdown = ref();
+    const dropdownBtn = ref();
     const data = {
       languageNavLiClasses: 'flex',
       languageNavAnchorClasses:
@@ -303,16 +317,39 @@ export default defineComponent({
       isVisible: false,
     });
 
+    onMounted(() => {
+      window.addEventListener('click', (e) => {
+        if (
+          !dropdownBtn.value.contains(e.target) &&
+          !dropdown.value.contains(e.target)
+        ) {
+          state.isVisible = false;
+        }
+      });
+    });
+
     const toggle = () => {
       state.isVisible = !state.isVisible;
     };
 
+    async function logout() {
+      await axios.post('/logout').then((res) => {
+        if (res.status) {
+          window.location.href = '/';
+        }
+      });
+    }
+
     return {
+      props,
       data,
       state,
+      dropdown,
+      dropdownBtn,
       toggle,
       modalValue,
       modalToggle,
+      logout,
     };
   },
 });

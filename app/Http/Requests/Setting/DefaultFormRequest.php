@@ -19,11 +19,11 @@ class DefaultFormRequest extends FormRequest
     public function rules()
     {
         return [
-          'default_currency' => 'required',
-          'default_language' => 'required',
-          'hierarchy' => 'required',
-          'linked_data_url' => 'required',
-          'humanitarian' => 'required',
+          'default_currency' => 'sometimes',
+          'default_language' => 'sometimes',
+          'hierarchy' => 'sometimes',
+          'linked_data_url' => 'sometimes',
+          'humanitarian' => 'sometimes',
         ];
     }
 }
