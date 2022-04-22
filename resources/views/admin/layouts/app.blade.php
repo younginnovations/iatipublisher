@@ -22,7 +22,7 @@
 </head>
 <body>
     <div id="app">
-        <loggedin-header></loggedin-header>
+        <loggedin-header :user="{{ Auth::user() }}" :organization= "{{ Auth::user()->organization }}"></loggedin-header>
 
         <main>
             @yield('content')

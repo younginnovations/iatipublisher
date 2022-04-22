@@ -17,3 +17,12 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+Route::post('/verifyPublisher', [App\Http\Controllers\Api\Auth\RegisterController::class, 'verifyPublisher'])->name('verify-publisher');
+Route::post('/register', [App\Http\Controllers\Api\Auth\RegisterController::class, 'register']);
+
+Route::get('/setting/data', [App\Http\Controllers\Api\Setting\SettingController::class, 'getSetting'])->name('setting.data');
+Route::post('/store/publisher', [App\Http\Controllers\Api\Setting\SettingController::class, 'storePublishingInfo'])->name('setting.publisher.save');
+Route::post('/store/default', [App\Http\Controllers\Api\Setting\SettingController::class, 'storeDefaultForm'])->name('setting.default.save');
+
+Route::post('/login', [App\Http\Controllers\Api\Auth\LoginController::class, 'login'])->name('login');

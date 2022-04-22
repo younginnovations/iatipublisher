@@ -27,6 +27,7 @@
             class="select"
             v-model="defaultForm.default_currency"
             :options="props.currencies"
+            :searchable="true"
             @click="updateStore('default_currency')"
           />
           <span class="error" role="alert" v-if="defaultError.default_currency">
@@ -50,6 +51,7 @@
               defaultError.default_language ? 'error__input select' : 'select'
             "
             v-model="defaultForm.default_language"
+            :searchable="true"
             :options="props.languages"
             @click="updateStore('default_language')"
           />
@@ -134,6 +136,7 @@
             class="select"
             v-model="defaultForm.humanitarian"
             :options="props.humanitarian"
+            :searchable="true"
             @click="updateStore('default_currency')"
           />
           <span class="error" role="alert" v-if="defaultError.humanitarian">
@@ -146,9 +149,10 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed } from 'vue';
+import { defineComponent, computed, ref } from 'vue';
 import Multiselect from '@vueform/multiselect';
-import { useStore } from 'vuex';
+import { useStore } from '../../store';
+import { ActionTypes } from '../../store/setting/actions';
 
 export default defineComponent({
   components: {
@@ -156,24 +160,24 @@ export default defineComponent({
   },
 
   props: {
-    currencies: String,
-    languages: String,
-    humanitarian: String,
+    currencies: [String, Object],
+    languages: [String, Object],
+    humanitarian: [String, Object],
   },
 
   setup(props) {
     const store = useStore();
 
     const defaultForm = computed(() => {
-      return store.state.setting.defaultForm;
+      return store.state.defaultForm;
     });
 
     const defaultError = computed(() => {
-      return store.state.setting.defaultError;
+      return store.state.defaultError;
     });
 
-    function updateStore(key: string) {
-      store.dispatch('setting/updateDefaultForm', {
+    function updateStore(key: keyof typeof defaultForm.value) {
+      store.dispatch(ActionTypes.UPDATE_DEFAULT_VALUES, {
         key: key,
         value: defaultForm.value[key],
       });

@@ -23,15 +23,34 @@
             </div>
             <input
               id="publisher_id"
-              class="register__input mb-2"
+              :class="
+                publishingInfo.publisher_verification
+                  ? 'register__input error__input mb-2'
+                  : 'register__input mb-2'
+              "
               type="text"
               placeholder="yipl"
               v-model="publishingForm.publisher_id"
               @input="updateStore('publisher_id')"
+              @focusout="autoVerify"
             />
-            <span class="tag">Correct</span>
+            <span
+              v-if="publishingInfo.isVerificationRequested"
+              :class="
+                publishingInfo.publisher_verification
+                  ? 'tag__correct'
+                  : 'tag__incorrect'
+              "
+            >
+              {{
+                publishingInfo.publisher_verification ? 'Correct' : 'Incorrect'
+              }}
+            </span>
           </div>
-          <p class="xl:pr-2">
+          <span class="error" role="alert" v-if="publishingError.publisher_id">
+            {{ publishingError.publisher_id }}
+          </span>
+          <p class="xl:pr-2" v-if="!publishingError.publisher_id">
             You need to create user and publisher accounts on the IATI Registry.
             When creating your publisher account you will be asked to specify a
             publisher identifier (typically a unique abbreviation of your
@@ -51,42 +70,74 @@
             </div>
             <input
               id="api_token"
-              class="register__input mb-2"
+              :class="
+                publishingInfo.token_verification
+                  ? 'register__input error__input mb-2'
+                  : 'register__input mb-2'
+              "
               type="text"
               placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ"
               v-model="publishingForm.api_token"
               @input="updateStore('api_token')"
+              @focusout="autoVerify"
             />
-            <span class="tag">Correct</span>
+            <span
+              v-if="publishingInfo.isVerificationRequested"
+              :class="
+                publishingInfo.token_verification
+                  ? 'tag__correct'
+                  : 'tag__incorrect'
+              "
+            >
+              {{ publishingInfo.token_verification ? 'Correct' : 'Incorrect' }}
+            </span>
           </div>
-          <p>
+          <span class="error" role="alert" v-if="publishingError.api_token">
+            {{ publishingError.api_token }}
+          </span>
+          <p v-if="!publishingError.api_token">
             You can get your API token from the IATI Registry. Follow the link
             to learn how to retrieve your API key
-            <a class="font-bold text-bluecoral" href="#">Click Here</a>
+            <a class="font-bold text-bluecoral" href="">Click Here</a>
           </p>
         </div>
       </div>
-      <button class="primary-btn verify-btn">Verify</button>
+      <button class="primary-btn verify-btn" @click="submitPublishing">
+        Verify
+      </button>
     </div>
   </div>
 </template>
 <script lang="ts">
-import { defineComponent, ref, reactive, computed } from 'vue';
-import { useStore } from 'vuex';
+import { defineComponent, ref, computed } from 'vue';
+import { useStore } from '../../store';
+import { ActionTypes } from '../../store/setting/actions';
 
 export default defineComponent({
-  setup(props) {
+  emits: ['submitPublishing'],
+
+  setup(props, { emit }) {
     const tab = ref('publish');
     const store = useStore();
 
-    const publishingForm = computed(() => store.state.setting.publishingForm);
+    const publishingForm = computed(() => store.state.publishingForm);
 
-    const publishingError = computed(() => store.state.setting.publishingError);
+    const publishingInfo = computed(() => store.state.publishingInfo);
 
-    function updateStore(key: string) {
-      console.log(key, publishingForm, publishingForm.value['publisher_id']);
-      store.dispatch('setting/updatePublisherInfo', {
-        state: store.state,
+    const publishingError = computed(() => store.state.publishingError);
+
+    function submitPublishing() {
+      emit('submitPublishing');
+    }
+
+    function autoVerify() {
+      if (publishingForm.value.publisher_id && publishingForm.value.api_token) {
+        emit('submitPublishing');
+      }
+    }
+
+    function updateStore(key: keyof typeof publishingForm.value) {
+      store.dispatch(ActionTypes.UPDATE_PUBLISHING_FORM, {
         key: key,
         value: publishingForm.value[key],
       });
@@ -98,12 +149,15 @@ export default defineComponent({
 
     return {
       tab,
-      toggleTab,
       publishingForm,
+      publishingInfo,
       publishingError,
       store,
       props,
+      submitPublishing,
+      toggleTab,
       updateStore,
+      autoVerify,
     };
   },
 });

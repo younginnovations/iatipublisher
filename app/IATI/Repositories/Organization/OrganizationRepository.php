@@ -17,7 +17,7 @@ class OrganizationRepository extends Repository
      *
      * @return string
      */
-    public function getModel():string
+    public function getModel(): string
     {
         return Organization::class;
     }
