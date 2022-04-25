@@ -9,5 +9,6 @@ COPY --chown=webuser:webgroup . /var/www/html/
 
 RUN composer install
 RUN composer du
+RUN php artisan config:clear
 RUN php artisan migrate --force
 RUN php artisan db:seed --force
