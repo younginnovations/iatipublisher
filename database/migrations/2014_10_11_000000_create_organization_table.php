@@ -19,7 +19,7 @@ return new class extends Migration {
             $table->string('publisher_id')->unique();
             $table->string('publisher_name')->unique();
             $table->enum('publisher_type', Enums::PUBLISHER_TYPE)->nullable();
-            $table->string('country');
+            $table->string('country')->nullable();
             $table->enum('registration_agency', Enums::ORGANIZATION_REGISTRATION_AGENCY);
             $table->string('registration_number');
             $table->string('identifier');
