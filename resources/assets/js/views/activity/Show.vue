@@ -237,7 +237,7 @@
             </div>
           </div>
         </div>
-        <Elements :data="elements" />
+        <Elements :data="elements" :activity-id="activityId" />
       </aside>
       <div class="activities__content">
         <div class="inline-flex flex-wrap gap-2">
@@ -263,8 +263,8 @@
         </div>
 
         <div class="activities__content--elements -mx-3 flex flex-wrap">
-          <template v-for="(post, key, index) in activities">
-            <template v-for="(element, name, i) in post.elements">
+          <template v-for="(post, key, index) in activities" :key="index">
+            <template v-for="(element, name, i) in post.elements" :key="i">
               <ActivityElement
                 v-if="Object.keys(element.content).length > 0"
                 :id="key"
@@ -285,7 +285,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, ref } from 'vue';
 import { useToggle } from '@vueuse/core';
 import HoverText from '../../components/HoverText.vue';
 import ProgressBar from '../../components/ProgressBar.vue';

@@ -69,7 +69,7 @@
         v-for="(post, index) in filteredElements"
         :key="index"
         class="elements__item relative flex cursor-pointer flex-col items-center justify-center rounded border border-dashed border-n-40 p-2.5 text-n-30"
-        href="/1/title-form"
+        :href="`/activities/${activityId}/title`"
       >
         <div class="status_icons absolute right-0 top-0 mt-1 mr-1 inline-flex">
           <svg-vue
@@ -118,6 +118,10 @@ export default defineComponent({
   props: {
     data: {
       type: Object,
+      required: true,
+    },
+    activityId: {
+      type: Number,
       required: true,
     },
   },
