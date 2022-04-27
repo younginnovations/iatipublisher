@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\IATI\Models\User;
 
+use Database\Factories\IATI\Models\User\UserFactory;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -65,5 +66,10 @@ class User extends Authenticatable implements MustVerifyEmail
     public function isEmailVerified($email_verified_at): bool
     {
         return $email_verified_at ? true : false;
+    }
+
+    public static function newFactory()
+    {
+        return new UserFactory();
     }
 }

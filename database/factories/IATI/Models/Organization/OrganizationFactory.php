@@ -1,20 +1,25 @@
 <?php
 
-namespace Database\Seeders;
+namespace Database\Factories\IATI\Models\Organization;
 
-use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
+use App\IATI\Models\Organization\Organization;
+use Illuminate\Database\Eloquent\Factories\Factory;
 
-class OrganizationSeeder extends Seeder
+/**
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Model>
+ */
+class OrganizationFactory extends Factory
 {
+    protected $model = Organization::class;
+
     /**
-     * Run the database seeders.
+     * Define the model's default state.
      *
-     * @return void
+     * @return array
      */
-    public function run()
+    public function definition(): array
     {
-        DB::table('organizations')->insert([
+        return [
             'id'                  => 1,
             'publisher_id'        => env('IATI_YIPL_PUBLISHER_ID'),
             'publisher_name'      => env('IATI_YIPL_PUBLISHER_NAME'),
@@ -24,6 +29,6 @@ class OrganizationSeeder extends Seeder
             'registration_number' => '5',
             'identifier'          => env('IATI_YIPL_IDENTIFIER'),
             'status'              => 'verified',
-        ]);
+        ];
     }
 }

@@ -2,10 +2,18 @@
 
 namespace Tests\Feature;
 
+use App\IATI\Models\Organization\Organization;
+use App\IATI\Models\User\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
+/**
+ * Class AuthenticationTest.
+ */
 class AuthenticationTest extends TestCase
 {
+    use RefreshDatabase;
+
     /**
      * Login page load tests.
      *
@@ -54,7 +62,7 @@ class AuthenticationTest extends TestCase
     }
 
     /**
-     * Login success test.
+     * Invalid credentials login test.
      *
      * @return void
      */
@@ -72,10 +80,12 @@ class AuthenticationTest extends TestCase
      */
     public function test_successful_login(): void
     {
+        Organization::factory()->create();
+        $user = User::factory()->create();
         $response = $this->post('/login', [
-             'username' => 'admin',
-             'password' => 'password',
-         ]);
+            'username' => $user->username,
+            'password' => 'password',
+        ]);
 
         $response->assertRedirect('/activities');
     }
