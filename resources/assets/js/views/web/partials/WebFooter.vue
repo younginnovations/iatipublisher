@@ -8,7 +8,7 @@
           class="footer__container grid grid-flow-row gap-8 sm:gap-y-10 md:grid-cols-2 lg:grid-cols-4 lg:justify-items-center"
         >
           <div>
-            <a href="#">
+            <a href="/">
               <svg-vue
                 class="h-auto w-60 text-6xl sm:w-64"
                 icon="footer-logo"
@@ -18,19 +18,19 @@
           <div class="footer__links">
             <span class="font-bold text-n-10">IATI Publisher</span>
             <ul class="mt-2 flex flex-col">
-              <li><a href="#">Home</a></li>
-              <li><a href="#">About</a></li>
-              <li><a href="#">Sign In</a></li>
-              <li><a href="#">Join Now</a></li>
+              <li><a href="/">Home</a></li>
+              <li><a href="/">About</a></li>
+              <li><a href="/">Sign In</a></li>
+              <li><a href="/">Join Now</a></li>
             </ul>
           </div>
           <div class="footer__links">
             <span class="font-bold text-n-10">IATI Standard</span>
             <ul class="mt-2 flex flex-col">
-              <li><a href="#">About IATI Standard</a></li>
-              <li><a href="#">Step-by-step publishing guide</a></li>
-              <li><a href="#">Using Data</a></li>
-              <li><a href="#">Support</a></li>
+              <li><a href="/">About IATI Standard</a></li>
+              <li><a href="/">Step-by-step publishing guide</a></li>
+              <li><a href="/">Using Data</a></li>
+              <li><a href="/">Support</a></li>
             </ul>
           </div>
           <div class="footer__links lg:justify-self-end">
@@ -65,10 +65,10 @@
           Copyright IATI 2022. All rights reserved.</span
         >
         <div class="flex sm:justify-end">
-          <a href="#">
+          <a href="/">
             <svg-vue class="mt-1 mr-1 text-4xl" icon="youtube"></svg-vue>
           </a>
-          <a class="ml-4" href="#">
+          <a class="ml-4" href="/">
             <svg-vue class="mt-1 mr-1 text-4xl" icon="twitter"></svg-vue>
           </a>
         </div>

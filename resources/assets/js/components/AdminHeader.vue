@@ -65,13 +65,18 @@
           ref="dropdownBtn"
         >
           <svg-vue icon="user-profile"></svg-vue>
-          <svg-vue class="dropdown__arrow" icon="dropdown-arrow"></svg-vue>
+          <svg-vue
+            :class="
+              state.isVisible ? 'dropdown__arrow rotate-180' : 'dropdown__arrow'
+            "
+            icon="dropdown-arrow"
+          ></svg-vue>
         </button>
         <div v-show="state.isVisible" class="profile__dropdown" ref="dropdown">
           <ul>
             <li class="border-b border-b-n-20">
               <svg-vue class="user-profile" icon="user-profile"></svg-vue>
-              <div class="flex flex-col leading-4">
+              <div class="flex flex-col capitalize leading-4">
                 <span class="text-n-50">{{ props.user.full_name }}</span
                 ><span class="text-tiny text-n-40">{{
                   props.organization.publisher_name
@@ -222,11 +227,6 @@ export default defineComponent({
   }
   .dropdown__list {
     @apply bg-n-10 hover:bg-n-20 hover:text-bluecoral;
-  }
-}
-.secondary__btn--active {
-  .dropdown__arrow {
-    transform: rotate(180deg);
   }
 }
 </style>
