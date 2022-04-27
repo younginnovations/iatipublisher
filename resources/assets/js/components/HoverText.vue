@@ -5,7 +5,7 @@
     </button>
     <div class="help__text">
       <span class="font-bold">{{ props.name }}</span>
-      <p>{{ props.hover_text }}</p>
+      <p v-html="props.hover_text"></p>
     </div>
   </div>
 </template>
@@ -28,10 +28,10 @@ export default defineComponent({
 
 <style lang="scss">
 .help {
-  @apply relative pb-2;
+  @apply relative;
 
   &__text {
-    @apply invisible absolute right-0 top-4 z-20 w-60 rounded bg-eggshell p-2 text-xs text-n-40 opacity-0 duration-200;
+    @apply invisible absolute right-0 top-4 z-20 w-60 rounded bg-eggshell p-2 text-left text-xs text-n-40 opacity-0 duration-200;
     transition: all 0.3s ease-out;
   }
 }

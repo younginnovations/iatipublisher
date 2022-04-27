@@ -6,10 +6,10 @@
       :message="toastMessage"
       :type="toastType"
     ></Toast>
-    <div class="setting">
+    <div class="setting input__field">
       <span class="text-xs font-bold text-n-40">Settings</span>
       <div class="mt-4 flex items-center">
-        <a href="#"><svg-vue icon="left-arrow"></svg-vue></a>
+        <a href="/activities"><svg-vue icon="left-arrow"></svg-vue></a>
         <h2 class="ml-3 text-heading-4 font-bold text-n-50">Settings</h2>
       </div>
       <div class="setting__container mb-14">
@@ -175,6 +175,7 @@ export default defineComponent({
           const response = res.data;
           loaderVisibility.value = false;
           toastVisibility.value = true;
+          setTimeout(() => (toastVisibility.value = false), 5000);
           toastMessage.value = response.message;
           toastType.value = response.status;
 
@@ -229,6 +230,7 @@ export default defineComponent({
 
           loaderVisibility.value = false;
           toastVisibility.value = true;
+          setTimeout(() => (toastVisibility.value = false), 2000);
           toastMessage.value = response.message;
           toastType.value = response.status;
         })
@@ -284,53 +286,17 @@ export default defineComponent({
       padding-bottom: 52px;
       max-height: 65vh;
 
-      .multiselect-option.is-selected {
-        @apply bg-n-20 text-n-50;
-      }
-      .multiselect-option.is-selected.is-pointed {
-        @apply bg-n-20 text-n-50;
-      }
-      .multiselect.is-active {
-        box-shadow: 0 0 0 0;
-      }
-      .multiselect-dropdown {
-        @apply border border-n-50;
-      }
-      .multiselect-caret {
-        -webkit-mask-image: url('/images/dropdown-arrow.svg');
-        mask-image: url('/images/dropdown-arrow.svg');
-      }
-      .select {
-        padding: 16px 0px 16px 55px;
-        height: 52px;
-        font-size: 16px;
-        line-height: 24px;
-        outline: none;
-        transition: 0.3s;
+      .vue__select {
         margin: 8px 0px;
-        @apply border border-n-30;
-
-        &:focus {
-          @apply border border-n-50 bg-n-10;
-          box-shadow: 0 0 0 0;
-        }
-        &::placeholder {
-          letter-spacing: -0.02em;
-          @apply text-n-40;
-        }
-        &:focus::placeholder {
-          @apply text-n-50;
-        }
       }
-
       .registry__info {
-        @apply mt-7 mb-4 flex justify-between border-b border-b-n-20;
+        @apply my-4 flex justify-between border-b border-b-n-20;
       }
       p {
         @apply text-xs leading-5 text-n-40;
       }
       .text {
-        @apply mb-6 text-sm;
+        @apply mb-8 text-sm;
       }
       label {
         @apply text-xs text-n-50;
@@ -367,7 +333,7 @@ export default defineComponent({
     }
     .register__input {
       @apply mt-2 w-full border border-n-30 outline-none duration-300;
-      padding: 13px 10px 13px 16px;
+      padding: 13px 16px;
       border-radius: 4px;
 
       &::placeholder {
@@ -380,9 +346,9 @@ export default defineComponent({
       &:focus::placeholder {
         @apply text-n-50;
       }
-      .error__input {
-        @apply border border-crimson-50;
-      }
+    }
+    .error__input {
+      @apply border border-crimson-50;
     }
   }
 }

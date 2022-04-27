@@ -9,9 +9,12 @@
 
   <link href="{{ asset('css/app.css') }}" rel="stylesheet">
   <script defer src="{{ asset('js/script.js') }}"></script>
-  <script defer src="{{ asset('js/app.js') }}" ></script>
+  <script defer src="{{ asset('js/app.js') }}"></script>
 
   <meta name="csrf-token" content="{{ csrf_token() }}">
+  <link rel="icon"
+    href="{{ URL::asset('https://prod-iati-website.azureedge.net/prod-iati-website/favicons/favicon-32x32.png') }}"
+    type="image/x-icon" />
 
 </head>
 

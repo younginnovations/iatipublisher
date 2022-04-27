@@ -7,24 +7,32 @@
           ><span class="text-salmon-50">* </span>Mandatory fields</span
         >
         <button>
-          <svg-vue class="text-base" icon="help"></svg-vue>
+          <HoverText
+            name="IATI Registry Information"
+            hover_text="IATI Publisher needs to add your organisation's data to the IATI Registry (iatiregistry.org). To do this, we need to access your organisation's IATI Registry Publisher Account. Please provide your organisation's credentials from the IATI Registry."
+          ></HoverText>
         </button>
       </div>
     </div>
-    <div class="register">
+    <div class="register mt-6">
       <div class="register__container">
         <div>
           <div class="relative">
             <div class="flex justify-between">
-              <label for="name">Publisher ID</label>
+              <label for="publisher-id"
+                >Publisher ID <span class="text-salmon-50">*</span></label
+              >
               <button>
-                <svg-vue class="text-base" icon="help"></svg-vue>
+                <HoverText
+                  name="Publisher ID"
+                  hover_text="This is the unique identifier for on your organisation on its Publisher Account in the IATI Registry. The Publisher ID is a short abbreviation of your organisation's name. For example: 'nef_mali' or 'oxfamgb'."
+                ></HoverText>
               </button>
             </div>
             <input
-              id="publisher_id"
+              id="publisher-id"
               :class="
-                publishingInfo.publisher_verification
+                publishingError.publisher_id
                   ? 'register__input error__input mb-2'
                   : 'register__input mb-2'
               "
@@ -61,17 +69,20 @@
         <div>
           <div class="relative">
             <div class="flex justify-between">
-              <label for="api_token"
+              <label for="api-token"
                 >API Token <span class="text-salmon-50">*</span></label
               >
               <button>
-                <svg-vue class="text-base" icon="help"></svg-vue>
+                <HoverText
+                  name="API Token"
+                  hover_text="The API token is a unique key that is generated from your organisation's IATI Registry Publisher Account. It is required to give IATI Publisher permission to add data to the IATI Registry on your behalf. Generate a Token in the 'My Account' tab by <a class='font-bold' href='https://www.iatiregistry.org/'>logging into</a> to the IATI Registry."
+                ></HoverText>
               </button>
             </div>
             <input
-              id="api_token"
+              id="api-token"
               :class="
-                publishingInfo.token_verification
+                publishingError.api_token
                   ? 'register__input error__input mb-2'
                   : 'register__input mb-2'
               "
@@ -112,8 +123,12 @@
 import { defineComponent, ref, computed } from 'vue';
 import { useStore } from '../../store';
 import { ActionTypes } from '../../store/setting/actions';
+import HoverText from './../../components/HoverText.vue';
 
 export default defineComponent({
+  components: {
+    HoverText,
+  },
   emits: ['submitPublishing'],
 
   setup(props, { emit }) {
