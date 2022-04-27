@@ -8,7 +8,7 @@
         To being this journey, tell us your preference and we'll guide you
         through this process.
       </span>
-      <a href="#" class="right__content mb-6">
+      <a href="/" class="right__content mb-6">
         <div class="right__icon">
           <svg-vue class="text-6xl" icon="default-1"></svg-vue>
         </div>
@@ -23,11 +23,11 @@
           <svg-vue class="right__arrow text-2xl" icon="right-arrow"></svg-vue>
         </div>
       </a>
-      <a href="#" class="right__content mb-4">
+      <a href="/register" class="right__content mb-4">
         <div class="right__icon">
           <svg-vue class="text-6xl" icon="default-2"></svg-vue>
         </div>
-        <div class="details mx-4 xl:px-1" @click="goToRegisterPage">
+        <div class="details mx-4 xl:px-1">
           <span class="text-sm font-bold text-bluecoral"
             >My organisation has registered with IATI</span
           >
@@ -44,7 +44,7 @@
         >Not sure which one to select?
         <a
           class="border-b-2 border-b-transparent font-bold text-bluecoral hover:border-b-2 hover:border-b-turquoise"
-          href="#"
+          href="/"
           >Contact Support.</a
         ></span
       >

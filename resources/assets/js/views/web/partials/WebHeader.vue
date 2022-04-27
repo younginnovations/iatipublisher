@@ -5,7 +5,7 @@
         <nav
           class="relative z-10 mt-6 flex items-center justify-between rounded-md bg-white px-5 pt-5 text-xs sm:mt-12 sm:px-10"
         >
-          <a class="pb-5" href="#">
+          <a class="pb-5" href="/">
             <svg-vue class="w-52 text-6xl sm:w-60" icon="header-logo"></svg-vue>
           </a>
           <div>
@@ -14,7 +14,7 @@
               class="nav__list flex pt-10 leading-5 xl:space-x-3"
             >
               <li class="nav__links active dropdown">
-                <a href="#about">ABOUT</a>
+                <a href="/">ABOUT</a>
                 <NavDropdown
                   name="About"
                   text="IATI Publisher helps small and medium-sized organisations
@@ -24,9 +24,7 @@
                 ></NavDropdown>
               </li>
               <li class="nav__links active dropdown">
-                <a href="#step-by-step-publishing-guide"
-                  >PUBLISHING CHECKLIST</a
-                >
+                <a href="/">PUBLISHING CHECKLIST</a>
                 <NavDropdown
                   name="Publishing checklist"
                   text=" New to IATI? Use our checklist to track each step required
@@ -35,7 +33,7 @@
                 ></NavDropdown>
               </li>
               <li class="nav__links active dropdown relative">
-                <a href="#iati-standard">IATI STANDARD</a>
+                <a href="/">IATI STANDARD</a>
                 <NavDropdown
                   name="IATI Standard"
                   text="The IATI Standard is a set of rules and guidance on how to
@@ -46,7 +44,7 @@
                 ></NavDropdown>
               </li>
               <li class="nav__links active dropdown">
-                <a href="#support">SUPPORT</a>
+                <a href="/">SUPPORT</a>
                 <NavDropdown
                   name="Support"
                   text="Any questions? Get help to publish your organisation’s
@@ -61,10 +59,10 @@
                   >
                   <ul class="languages flex items-center justify-center">
                     <li class="nav__links">
-                      <a class="nav__active links__active" href="#">EN</a>
+                      <a class="nav__active links__active" href="/">EN</a>
                     </li>
-                    <li class="nav__links"><a href="#">FR</a></li>
-                    <li class="nav__links"><a href="#">ES</a></li>
+                    <li class="nav__links"><a href="/">FR</a></li>
+                    <li class="nav__links"><a href="/">ES</a></li>
                   </ul>
                 </div>
               </li>
@@ -75,10 +73,10 @@
               <span class="mr-2 pt-5 pb-5 uppercase xl:pt-0">Language:</span>
               <ul class="flex items-center justify-center">
                 <li class="nav__links">
-                  <a class="nav__active links__active" href="#">EN</a>
+                  <a class="nav__active links__active" href="/">EN</a>
                 </li>
-                <li class="nav__links"><a href="#">FR</a></li>
-                <li class="nav__links"><a href="#">ES</a></li>
+                <li class="nav__links"><a href="/">FR</a></li>
+                <li class="nav__links"><a href="/">ES</a></li>
               </ul>
             </div>
           </div>

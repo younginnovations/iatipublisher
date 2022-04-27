@@ -8,7 +8,7 @@
       :class="props.position === 'left' ? 'left-0' : 'right-0'"
     >
       <p class="font-bold text-bluecoral">{{ props.name }}</p>
-      <p>{{ props.hover_text }}</p>
+      <p v-html="props.hover_text"></p>
       <a
         :href="props.link"
         v-if="props.link"
@@ -39,10 +39,10 @@ export default defineComponent({
 
 <style lang="scss">
 .help {
-  @apply relative pb-2;
+  @apply relative;
 
   &__text {
-    @apply invisible absolute top-4 z-20 w-60 space-y-1.5 rounded bg-eggshell p-2 text-xs text-n-50 opacity-0 duration-200;
+    @apply invisible absolute top-4 z-20 w-60 space-y-1.5 rounded text-left bg-eggshell p-2 text-xs text-n-50 opacity-0 duration-200;
     transition: all 0.3s ease-out;
     box-shadow: 0px 4px 40px rgb(0 0 0 / 10%);
   }
