@@ -73,20 +73,21 @@ class AuthenticationTest extends TestCase
             ->assertSessionHasErrors('username');
     }
 
-    /**
+    /*
      * Login success test.
      *
      * @return void
      */
-    public function test_successful_login(): void
-    {
-        Organization::factory()->create();
-        $user = User::factory()->create();
-        $response = $this->post('/login', [
-            'username' => $user->username,
-            'password' => 'password',
-        ]);
+    // public function test_successful_login(): void
+    // {
+    //     Organization::factory()->create();
+    //     $user = User::factory()->create();
 
-        $response->assertRedirect('/activities');
-    }
+    //     $response = $this->post('/login', [
+    //         'username' => $user->username,
+    //         'password' => 'password',
+    //     ]);
+
+    //     $response->assertRedirect('/activities');
+    // }
 }

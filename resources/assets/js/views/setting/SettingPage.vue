@@ -18,13 +18,13 @@
             :class="
               tab === 'publish' ? 'tab-btn active__tab mr-2' : 'tab-btn mr-2'
             "
-            @click="toggleTab"
+            @click="toggleTab('publish')"
           >
             Publishing Settings
           </button>
           <button
             :class="tab === 'default' ? 'tab-btn active__tab' : 'tab-btn'"
-            @click="toggleTab"
+            @click="toggleTab('default')"
           >
             Default Values
           </button>
@@ -158,9 +158,9 @@ export default defineComponent({
       }
     });
 
-    function toggleTab() {
+    function toggleTab(page: string) {
       toastVisibility.value = false;
-      tab.value = tab.value === 'publish' ? 'default' : 'publish';
+      tab.value = page;
     }
 
     function submitDefault() {
@@ -170,14 +170,14 @@ export default defineComponent({
       loaderVisibility.value = true;
 
       axios
-        .post('api/store/default', defaultForm.value)
+        .post('api/setting/store/default', defaultForm.value)
         .then((res) => {
           const response = res.data;
           loaderVisibility.value = false;
           toastVisibility.value = true;
           setTimeout(() => (toastVisibility.value = false), 5000);
           toastMessage.value = response.message;
-          toastType.value = response.status;
+          toastType.value = response.success;
 
           loaderVisibility.value = false;
         })
@@ -200,7 +200,7 @@ export default defineComponent({
       }
 
       axios
-        .post('api/store/publisher', {
+        .post('api/setting/store/publisher', {
           ...publishingForm.value,
           ...publishingInfo.value,
         })
@@ -208,7 +208,7 @@ export default defineComponent({
           const response = res.data;
           console.log(response.message);
 
-          if (response.status) {
+          if (response.success) {
             updateStore(
               'UPDATE_PUBLISHER_INFO',
               'publisher_verification',
@@ -232,7 +232,7 @@ export default defineComponent({
           toastVisibility.value = true;
           setTimeout(() => (toastVisibility.value = false), 2000);
           toastMessage.value = response.message;
-          toastType.value = response.status;
+          toastType.value = response.success;
         })
         .catch((error) => {
           const { errors } = error.response.data;
