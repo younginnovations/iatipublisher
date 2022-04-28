@@ -6,48 +6,17 @@ php:
 
 os: linux
 
-# services:
-#   - docker
+services:
+  - postgresql
+  - redis
 
-# jobs:
-#   include:
-#     - stage: "Tests"
-#       name: "Unit Test PHP"
-#       script:
-#       - travis_retry composer self-update
-#       - travis_retry composer install --prefer-source --no-interaction
-#       - cp .env.example .env
-#       - php artisan key:generate
-#       - vendor/bin/phpunit tests/Feature/ExampleTest.php
-#     - stage: "Build Docker Image"
-#       name: "Build Images Docker"
-#       script:
-#       - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-#       - docker build -t iatipublisher-docker .
-#       - docker images
-#       - docker tag iatipublisher-docker $DOCKER_USERNAME/iatipublisher
-#       - docker push $DOCKER_USERNAME/iatipublisher
-
-# before_script:
-#   - composer install
-#   - cp .env.example .env
-#   - php artisan key:generate
-#   - php artisan jwt:secret
-
-# script:
-#   - vendor/bin/phpunit
+before_install:
+  - phpenv config-rm xdebug.ini
+  - echo "extension = redis.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
 
 before_script:
-  - cp .env.example .env
-  - composer self-update
-  - composer install --prefer-source --no-interaction --dev
-  - php artisan key:generate
-  - php artisan jwt:secret
-  - pear install pear/PHP_CodeSniffer
-  - phpenv rehash
-
-script:
-  - phpunit
-
-notifications:
-  email: false
+  - travis_retry composer self-update
+  - travis_retry composer install --prefer-source --no-interaction
+  - psql -c 'create database iati_db_test;' -U postgres
+  - php artisan migrate --seed
+  - php artisan config:clear
