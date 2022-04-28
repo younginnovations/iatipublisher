@@ -32,7 +32,7 @@ class RegisterTest extends TestCase
      */
     public function test_api_publisher_must_enter_all_required_fields(): void
     {
-        $this->post('verifyPublisher')
+        $this->post('api/verifyPublisher')
              ->assertStatus(200)
              ->assertJsonValidationErrors(['publisher_name', 'publisher_id', 'registration_agency', 'registration_number']);
     }
@@ -44,7 +44,7 @@ class RegisterTest extends TestCase
      */
     public function test_api_publisher_name_does_not_exist(): void
     {
-        $this->post('verifyPublisher', [
+        $this->post('api/verifyPublisher', [
             'publisher_name'      => env('IATI_YIPL_PUBLISHER_NAME'),
             'publisher_id'        => 'test111111',
             'registration_agency' => env('IATI_YIPL_REGISTRATION_AGENCY'),
@@ -67,7 +67,7 @@ class RegisterTest extends TestCase
      */
     public function test_api_publisher_name_mismatch(): void
     {
-        $this->post('verifyPublisher', [
+        $this->post('api/verifyPublisher', [
             'publisher_name'      => 'test101',
             'publisher_id'        => env('IATI_YIPL_PUBLISHER_ID'),
             'registration_agency' => env('IATI_YIPL_REGISTRATION_AGENCY'),
@@ -91,7 +91,7 @@ class RegisterTest extends TestCase
      */
     public function test_api_publisher_iati_id_mismatch(): void
     {
-        $this->post('verifyPublisher', [
+        $this->post('api/verifyPublisher', [
             'publisher_name'      => env('IATI_YIPL_PUBLISHER_NAME'),
             'publisher_id'        => env('IATI_YIPL_PUBLISHER_ID'),
             'registration_agency' => 'test',
@@ -115,7 +115,7 @@ class RegisterTest extends TestCase
      */
     public function test_api_publisher_verified(): void
     {
-        $this->post('verifyPublisher', [
+        $this->post('api/verifyPublisher', [
             'publisher_name'      => env('IATI_YIPL_PUBLISHER_NAME'),
             'publisher_id'        => env('IATI_YIPL_PUBLISHER_ID'),
             'registration_agency' => env('IATI_YIPL_REGISTRATION_AGENCY'),
@@ -135,7 +135,7 @@ class RegisterTest extends TestCase
      */
     public function test_api_admin_must_enter_all_required_fields(): void
     {
-        $this->post('register')
+        $this->post('api/register')
              ->assertStatus(200)
              ->assertJsonValidationErrors(['username', 'full_name', 'email', 'password', 'publisher_id']);
     }
@@ -150,7 +150,7 @@ class RegisterTest extends TestCase
         Organization::factory()->create();
         $user = User::factory()->create();
 
-        $this->post('register', [
+        $this->post('api/register', [
             'username'              => $user->username,
             'full_name'             => Str::random(5),
             'email'                 => 'test+1@gmail.com',
@@ -194,7 +194,7 @@ class RegisterTest extends TestCase
         Organization::factory()->create();
         User::factory()->create();
 
-        $this->post('register', [
+        $this->post('api/register', [
             'username'              => Str::random(5),
             'full_name'             => Str::random(5),
             'email'                 => 'test+1@gmail.com',
@@ -213,7 +213,7 @@ class RegisterTest extends TestCase
      */
     public function test_successful_registration(): void
     {
-        $this->post('register', [
+        $this->post('api/register', [
             'publisher_id'          => Str::random(5),
             'publisher_name'        => Str::random(5),
             'country'               => null,

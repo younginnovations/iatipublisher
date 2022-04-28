@@ -31,6 +31,6 @@ class OrganizationRepository extends Repository
      */
     public function createOrganization(array $data): mixed
     {
-        return $this->model->firstOrCreate($data);
+        return $this->model->updateOrCreate(['publisher_id' => $data['publisher_id']], $data);
     }
 }

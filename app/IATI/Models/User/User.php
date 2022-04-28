@@ -72,7 +72,7 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return new UserFactory();
     }
-    
+
     /**
      * User belongs to organization.
      */

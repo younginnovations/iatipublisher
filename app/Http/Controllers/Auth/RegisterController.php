@@ -12,6 +12,7 @@ use Exception;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
 use Illuminate\Auth\Events\Registered;
+use Illuminate\Database\DatabaseManager;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -45,17 +46,19 @@ class RegisterController extends Controller
     protected OrganizationService $organizationService;
     protected UserService $userService;
     protected Log $logger;
+    protected DatabaseManager $db;
 
     /**
      * Create a new controller instance.
      *
      * @return void
      */
-    public function __construct(OrganizationService $organizationService, UserService $userService, Log $logger)
+    public function __construct(OrganizationService $organizationService, UserService $userService, Log $logger, DatabaseManager $db)
     {
         $this->organizationService = $organizationService;
         $this->userService = $userService;
         $this->logger = $logger;
+        $this->db = $db;
         $this->middleware('guest');
     }
 
@@ -107,7 +110,7 @@ class RegisterController extends Controller
             if ($res->getStatusCode() == 404) {
                 return response()->json([
                     'success' => false,
-                    'errors'  => ['publisher_name' => 'Publisher Name doesn\'t exists in IATI Registry'],
+                    'errors'  => ['publisher_name' => ['Publisher Name doesn\'t exists in IATI Registry']],
                 ]);
             }
 
@@ -115,11 +118,11 @@ class RegisterController extends Controller
             $response = json_decode($res->getBody()->getContents())->result;
 
             if ($postData['publisher_name'] != $response->title) {
-                $errors['publisher_name'] = 'Publisher Name doesn\'t match your IATI Registry information';
+                $errors['publisher_name'] = ['Publisher Name doesn\'t match your IATI Registry information'];
             }
 
             if ($postData['registration_agency'] . '-' . $postData['registration_number'] != $response->publisher_iati_id) {
-                $errors['identifier'] = 'Publisher IATI ID doesn\'t match your IATI Registry information';
+                $errors['publisher_iati_id'] = ['Publisher IATI ID doesn\'t match your IATI Registry information'];
             }
 
             if (!empty($errors)) {
@@ -160,7 +163,12 @@ class RegisterController extends Controller
     protected function create(array $data)
     {
         try {
-            return $this->userService->registerExistingUser($data);
+            $this->db->beginTransaction();
+            $user = $this->userService->registerExistingUser($data);
+
+            $this->db->commit();
+
+            return $user;
         } catch (\Exception $e) {
             Log::error($e->getMessage());
         }
