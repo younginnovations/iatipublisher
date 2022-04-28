@@ -8,6 +8,7 @@ use App\IATI\Repositories\Organization\OrganizationRepository;
 use App\IATI\Repositories\Setting\SettingRepository;
 use App\IATI\Repositories\User\UserRepository;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class UserService.
@@ -56,8 +57,9 @@ class UserService
      *
      * @param array $data
      */
-    public function registerExistingUser(array $data): \Illuminate\Database\Eloquent\Model
+    public function registerExistingUser(array $data)
     {
+        // dump('here');
         $organization = $this->organizationRepo->createOrganization([
             'publisher_id'        => $data['publisher_id'],
             'publisher_name'      => $data['publisher_name'],
@@ -67,6 +69,9 @@ class UserService
             'identifier'          => $data['registration_agency'] . '-' . $data['registration_number'],
             'iati_status'         => 'pending',
         ]);
+        // dd($organization);
+
+        // Log::info($organization['id']);
 
         return $this->userRepo->store([
             'username'        => $data['username'],

@@ -10,9 +10,10 @@ use App\Http\Requests\Setting\PublisherFormRequest;
 use App\IATI\Services\Organization\OrganizationService;
 use App\IATI\Services\Setting\SettingService;
 use GuzzleHttp\Client;
-use GuzzleHttp\Exception\RequestException;
+use Illuminate\Database\DatabaseManager;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 /**
@@ -22,16 +23,18 @@ class SettingController extends Controller
 {
     protected $organizationService;
     protected $settingService;
+    protected $db;
 
     /**
      * Create a new controller instance.
      *
      * @return void
      */
-    public function __construct(OrganizationService $organizationService, SettingService $settingService, Log $logger)
+    public function __construct(OrganizationService $organizationService, SettingService $settingService, Log $logger, DatabaseManager $db)
     {
         $this->organizationService = $organizationService;
         $this->settingService = $settingService;
+        $this->db = $db;
         $this->logger = $logger;
     }
 
@@ -45,11 +48,11 @@ class SettingController extends Controller
         try {
             $setting = $this->settingService->getSetting();
 
-            return response()->json(['status' => true, 'message' => 'Settings fetched successfully', 'data' => $setting]);
+            return response()->json(['success' => true, 'message' => 'Settings fetched successfully', 'data' => $setting]);
         } catch (\Exception $e) {
-            Log::error($e);
+            Log::error($e->getMessage());
 
-            return response()->json(['status' => false, 'message' => 'Error occurred while fetching the data']);
+            return response()->json(['success' => false, 'message' => 'Error occurred while fetching the data']);
         }
     }
 
@@ -63,35 +66,33 @@ class SettingController extends Controller
     public function storePublishingInfo(PublisherFormRequest $request): JsonResponse
     {
         try {
-            $data = $request->all();
-            if ($data['publisher_id'] != Auth::user()->organization->publisher_id) {
-                return response()->json(['error' => 'Publisher ID cannot be changed', 'data' => $data]);
+            $publisherData = $request->all();
+
+            if ($publisherData['publisher_id'] != Auth::user()->organization->publisher_id) {
+                return response()->json(['success'=> false, 'message' => 'Publisher ID cannot be changed', 'data' => $publisherData]);
             }
 
-            $publisher_verification = $this->verifyPublisher($data);
-            $token_verification = $this->verifyApi($data);
+            $publisher_verification = $this->verifyPublisher($publisherData);
+            $token_verification = $this->verifyApi($publisherData);
 
-            if ($publisher_verification['status'] && $token_verification['status']) {
-                $data['publisher_verification'] = $publisher_verification['validation'];
-                $data['token_verification'] = $token_verification['validation'];
-                $this->settingService->storePublishingInfo($data);
+            if ($publisher_verification['success'] && $token_verification['success']) {
+                $publisherData['publisher_verification'] = $publisher_verification['validation'];
+                $publisherData['token_verification'] = $token_verification['validation'];
 
-                return response()->json(['status' => true, 'message' => 'Publisher setting stored successfully', 'data' => $data]);
+                DB::beginTransaction();
+
+                $this->settingService->storePublishingInfo($publisherData);
+
+                DB::commit();
+
+                return response()->json(['success' => true, 'message' => 'Publisher setting stored successfully', 'data' => $publisherData]);
             }
 
-            return response()->json(['status' => false, 'message' => 'Error occurred while verifying data', 'data' => $data, 'error'=> ['token' => $token_verification, 'publisher_verification' => $publisher_verification]]);
-        } catch (\GuzzleHttp\Exception\ClientException $e) {
-            Log::error($e);
-
-            return response()->json(['error' => $e]);
-        } catch (RequestException $e) {
-            Log::error($e->getResponse());
-
-            return response()->json(['error' => $e]);
+            return response()->json(['success' => false, 'message' => 'Error occurred while verifying data', 'data' => $publisherData, 'error'=> ['token' => $token_verification, 'publisher_verification' => $publisher_verification]]);
         } catch (\Exception $e) {
-            Log::error($e);
+            Log::error($e->getMessage());
 
-            return response()->json(['status' => false, 'message' => 'Error occurred while storing setting']);
+            return response()->json(['success' => false, 'message' => 'Error occurred while storing setting']);
         }
     }
 
@@ -105,13 +106,17 @@ class SettingController extends Controller
     public function storeDefaultForm(DefaultFormRequest $request): JsonResponse
     {
         try {
+            DB::beginTransaction();
+
             $this->settingService->storeDefaultValues($request->all());
 
-            return response()->json(['status' => true, 'message' => 'Default setting stored successfully']);
-        } catch (\Exception $e) {
-            Log::error($e);
+            DB::commit();
 
-            return response()->json(['status' => false, 'message' => 'Error occurred while storing setting']);
+            return response()->json(['success' => true, 'message' => 'Default setting stored successfully']);
+        } catch (\Exception $e) {
+            Log::error($e->getMessage());
+
+            return response()->json(['success' => false, 'message' => 'Error occurred while storing setting']);
         }
     }
 
@@ -142,11 +147,11 @@ class SettingController extends Controller
 
             $response = json_decode($res->getBody()->getContents())->result;
 
-            return ['status' => true, 'validation' => $response ? true : false];
+            return ['success' => true, 'validation' => $response ? true : false];
         } catch (\Exception $e) {
             Log::error($e->getMessage());
 
-            return ['status' => 'error', 'message' => $e->getMessage()];
+            return ['success' => 'error', 'message' => $e->getMessage()];
         }
     }
 
@@ -176,11 +181,11 @@ class SettingController extends Controller
 
             $response = json_decode($res->getBody()->getContents())->result;
 
-            return ['status' => true, 'validation' => in_array($data['publisher_id'], array_column($response, 'name')) ? true : false];
+            return ['success' => true, 'validation' => in_array($data['publisher_id'], array_column($response, 'name')) ? true : false];
         } catch (\Exception $e) {
             Log::error($e->getMessage());
 
-            return ['status' => false, 'message' => $e->getMessage()];
+            return ['success' => false, 'message' => $e->getMessage()];
         }
     }
 }

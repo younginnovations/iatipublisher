@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Api\Auth;
 
 use App\Http\Controllers\Controller;
-use App\IATI\Models\User\User;
 use App\IATI\Services\Organization\OrganizationService;
 use App\IATI\Services\User\UserService;
 use App\Providers\RouteServiceProvider;
@@ -13,8 +12,10 @@ use Exception;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
 use Illuminate\Auth\Events\Registered;
+use Illuminate\Database\DatabaseManager;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 
@@ -46,17 +47,20 @@ class RegisterController extends Controller
     protected OrganizationService $organizationService;
     protected UserService $userService;
     protected Log $logger;
+    protected DatabaseManager $db;
 
     /**
      * Create a new controller instance.
      *
      * @return void
      */
-    public function __construct(OrganizationService $organizationService, UserService $userService, Log $logger)
+    public function __construct(OrganizationService $organizationService, UserService $userService, Log $logger, DatabaseManager $db)
     {
         $this->organizationService = $organizationService;
         $this->userService = $userService;
         $this->logger = $logger;
+        $this->db = $db;
+
         $this->middleware('guest');
     }
 
@@ -87,9 +91,8 @@ class RegisterController extends Controller
     public function verifyPublisher(Request $request)
     {
         try {
-            $data = $request->all();
-
-            $validator = Validator::make($data, [
+            $postData = $request->all();
+            $validator = Validator::make($postData, [
                 'publisher_id'        => ['required', 'max:255'],
                 'publisher_name'      => ['required', 'string', 'max:255'],
                 'registration_agency' => ['required'],
@@ -97,67 +100,59 @@ class RegisterController extends Controller
             ]);
 
             if ($validator->fails()) {
-                return response()->json(['errors' => $validator->errors()]);
+                return response()->json(['success' => false, 'errors' => $validator->errors()]);
             }
 
-            $client = new Client(
-                [
-                    'base_uri' => 'https://staging.iatiregistry.org',
-                    'headers'  => [
-                        'X-CKAN-API-Key' => env('IATI_API_KEY'),
-                    ],
-                ]
-            );
-
-            $res = $client->request('GET', 'https://staging.iatiregistry.org/api/action/organization_show', [
-                'auth'  => [env('IATI_USERNAME'), env('IATI_PASSWORD')],
-                'query' => ['id' => $data['publisher_id']],
+            $client = new Client(['base_uri' => env('IATI_URL')]);
+            $res = $client->request('GET', env('IATI_API_ENDPOINT') . '/action/organization_show', [
+                'http_errors' => false,
+                'query'       => ['id' => $postData['publisher_id']],
             ]);
 
+            if ($res->getStatusCode() == 404) {
+                return response()->json([
+                    'success' => false,
+                    'publisher_error' => 'true',
+                    'errors'  => ['publisher_name' => ['Publisher Name doesn\'t exists in IATI Registry']],
+                ]);
+            }
+
+            $errors = [];
             $response = json_decode($res->getBody()->getContents())->result;
 
-            if ($data['publisher_name'] != $response->title) {
+            if ($postData['publisher_name'] != $response->title) {
+                $errors['publisher_name'] = ['Publisher Name doesn\'t match your IATI Registry information'];
+            }
+
+            if ($postData['registration_agency'] . '-' . $postData['registration_number'] != $response->publisher_iati_id) {
+                $errors['identifier'] = ['Publisher IATI ID doesn\'t match your IATI Registry information'];
+            }
+
+            if (!empty($errors)) {
                 return response()->json([
-                    'status' => false,
-                    'message' => 'Publisher name or id doesn\'t match',
-                    'publisher_error' => true,
-                    'errors' => [
-                        'publisher_name' => ['Publisher Name doesn\'t match your IATI Registry information'],
-                        'publisher_id' => ['Publisher ID doesn\'t match with your IATI Registry information'],
-                    ],
+                    'success'         => false,
+                    'publisher_error' => 'true',
+                    'errors'          => $errors,
                 ]);
             }
 
-            if ($data['registration_agency'] . '-' . $data['registration_number'] != $response->publisher_iati_id) {
-                return response()->json([
-                    'status' => false,
-                    'message' => 'Identifier doesn\'t match',
-                    'publisher_error' => false,
-                    'errors' => [
-                        'identifier' => ['Identifier doesn\'t match your IATI Registry information'],
-                    ],
-                ]);
-            }
-
-            return response()->json(['status' => true, 'message' => 'Publisher verified successfully']);
+            return response()->json(['success' => true, 'message' => 'Publisher verified successfully']);
         } catch (ClientException $e) {
-            Log::error($e);
+            Log::error($e->getMessage());
 
             return response()->json(
                 [
-                    'status' => false,
-                    'message' => 'Client Exception. Publisher name or ID doesn\'t match',
-                    'errors' => [
-                        'publisher_error' => true,
-                        'publisher_name'  => ['Publisher Name doesn\'t match your IATI Registry information'],
-                        'publisher_id'    => ['Publisher ID doesn\'t match with your IATI Registry information'],
+                    'success' => false,
+                    'errors'  => [
+                        'publisher_name' => ['Publisher Name doesn\'t match your IATI Registry information'],
+                        'publisher_id'   => ['Publisher ID doesn\'t match with your IATI Registry information'],
                     ],
                 ]
             );
         } catch (Exception $e) {
-            Log::error($e);
+            Log::error($e->getMessage());
 
-            return response()->json(['error' => 'Error has occurred while verifying the publisher.']);
+            return response()->json(['success' => false, 'error' => 'Error has occurred while verifying the publisher.']);
         }
     }
 
@@ -166,12 +161,17 @@ class RegisterController extends Controller
      *
      * @param array $data
      *
-     * @return \App\Models\User
+     * @return \Illuminate\Database\Eloquent\Model|void
      */
-    protected function create(array $data): User
+    protected function create(array $data)
     {
         try {
-            return $this->userService->registerExistingUser($data);
+            DB::beginTransaction();
+            $user = $this->userService->registerExistingUser($data);
+
+            DB::commit();
+
+            return $user;
         } catch (\Exception $e) {
             Log::error($e->getMessage());
         }
@@ -203,17 +203,22 @@ class RegisterController extends Controller
      */
     public function register(Request $request): \Illuminate\Http\JsonResponse|\Illuminate\Http\RedirectResponse
     {
-        $this->validator($request->all())->validate();
+        $validator = Validator::make($request->all(), [
+            'username'     => ['required', 'string', 'max:255', 'unique:users,username'],
+            'full_name'    => ['required', 'string', 'max:255'],
+            'email'        => ['required', 'string', 'email', 'max:255', 'unique:users,email'],
+            'publisher_id' => ['required', 'string', 'max:255'],
+            'password'     => ['required', 'string', 'min:8', 'confirmed'],
+        ]);
 
-        event(new Registered($user = $this->create($request->all())));
-
-        $this->guard()->login($user);
-        $response = $this->registered($request, $user);
-
-        if ($response) {
-            return $response;
+        if ($validator->fails()) {
+            return response()->json(['success' => false, 'errors' => $validator->errors()]);
         }
+        $user = $this->create($request->all());
+        event(new Registered($user));
 
-        return response()->json(['status' => true, 'message' => 'User registered successfully']);
+        // $this->guard()->login($user);
+
+        return response()->json(['success' => true, 'message' => 'User registered successfully']);
     }
 }

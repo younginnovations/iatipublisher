@@ -9,12 +9,12 @@
           creating an account in IATI publisher.
         </p>
       </div>
-      <EmailVerification
-        v-if="step === 3"
-        :email="formData.email"
-      ></EmailVerification>
-      <div v-else class="section__wrapper flex">
-        <div class="form input__field">
+      <div class="section__wrapper flex">
+        <EmailVerification
+          v-if="step === 3"
+          :email="formData.email"
+        ></EmailVerification>
+        <div v-else class="form input__field">
           <div class="form__container">
             <span class="text-2xl font-bold text-n-50">{{
               registerForm[step].title
@@ -136,8 +136,8 @@
             <span class="text-sm font-normal text-n-40" v-if="step == 1"
               >Already have an account?
               <a
-                class="border-b-2 border-b-transparent font-bold text-bluecoral hover:border-b-2 hover:border-b-turquoise"
                 href="/"
+                class="border-b-2 border-b-transparent font-bold text-bluecoral hover:border-b-2 hover:border-b-turquoise"
                 >Sign In.</a
               ></span
             >
@@ -154,8 +154,8 @@
             <span class="text-sm font-normal text-n-40"
               >Already have an account?
               <a
-                class="border-b-2 border-b-transparent font-bold text-bluecoral hover:border-b-2 hover:border-b-turquoise"
                 href="/"
+                class="border-b-2 border-b-transparent font-bold text-bluecoral hover:border-b-2 hover:border-b-turquoise"
                 >Sign In.</a
               ></span
             >
@@ -168,8 +168,8 @@
             <li
               :class="[
                 step == parseInt(i)
-                  ? 'relative mb-6 font-bold text-n-50'
-                  : 'mb-6',
+                  ? 'relative font-bold text-n-50'
+                  : 'mb-6 flex items-center font-bold text-bluecoral',
               ]"
               v-for="(ele, i) in registerForm"
               :key="ele.title"
@@ -197,7 +197,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, ref, computed } from 'vue';
+import { defineComponent, reactive, ref, computed, watch } from 'vue';
 import axios from 'axios';
 import EmailVerification from './EmailVerification.vue';
 import HoverText from './../../components/HoverText.vue';
@@ -221,7 +221,7 @@ export default defineComponent({
     const step = ref(1);
     const publisherExists = ref(true);
     const isLoaderVisible = ref(false);
-    const option = ref(['a', 'b']);
+
     const errorData = reactive({
       publisher_name: '',
       publisher_id: '',
@@ -250,12 +250,19 @@ export default defineComponent({
       password_confirmation: '',
     });
 
-    const registrationAgency = computed(() => {
-      if (formData.country !== '') {
-        const uncategorized = ['XI', 'PK', 'IQ', 'NE', 'XR'];
-        const agencies = props.registration_agency!;
-
+    watch(
+      () => formData.country,
+      () => {
         formData.registration_agency = '';
+      }
+    );
+
+    const registrationAgency = computed(() => {
+      const agencies = props.registration_agency!;
+
+      if (formData.country !== '') {
+        const uncategorized = ['XI', 'XR'];
+
         return Object.fromEntries(
           Object.entries(agencies).filter(
             ([key, value]) =>
@@ -265,7 +272,7 @@ export default defineComponent({
         );
       }
 
-      return props.registration_agency;
+      return agencies;
     });
 
     const registerForm = reactive({
@@ -427,8 +434,9 @@ export default defineComponent({
           const response = res.data;
           publisherExists.value = true;
           const errors =
-            !response.status || 'errors' in response ? response.errors : [];
+            !response.success || 'errors' in response ? response.errors : [];
 
+          console.log(response, errors);
           errorData.publisher_name = errors.publisher_name
             ? errors.publisher_name[0]
             : '';
@@ -447,7 +455,7 @@ export default defineComponent({
             publisherExists.value = false;
           }
 
-          if (response.status) {
+          if (response.success) {
             registerForm['1'].is_complete = true;
             step.value += 1;
           }
@@ -461,20 +469,20 @@ export default defineComponent({
 
     function submitForm() {
       isLoaderVisible.value = true;
-      console.log(isLoaderVisible.value);
 
       axios
         .post('api/register', formData)
         .then((res) => {
           const response = res.data;
-          const errors = 'errors' in response ? response.data.errors : [];
+          const errors =
+            !response.success || 'errors' in response ? response.errors : [];
           errorData.username = errors.username ? errors.username[0] : '';
           errorData.full_name = errors.full_name ? errors.full_name[0] : '';
           errorData.email = errors.email ? errors.email[0] : '';
           errorData.password = errors.password ? errors.password[0] : '';
           isLoaderVisible.value = false;
 
-          if (response.status) {
+          if (response.success) {
             registerForm['2'].is_complete = true;
             step.value += 1;
           }
@@ -508,7 +516,6 @@ export default defineComponent({
       goToNextForm,
       goToPreviousForm,
       props,
-      option,
     };
   },
 });
