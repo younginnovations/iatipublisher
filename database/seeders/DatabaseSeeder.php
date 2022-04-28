@@ -13,9 +13,12 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        $this->call([
-          OrganizationSeeder::class,
-          UserSeeder::class,
-        ]);
+        if ((env('APP_ENV') == 'local') || (env('APP_ENV') == 'staging')) {
+            $this->call([
+                OrganizationSeeder::class,
+                UserSeeder::class,
+                ActivityTableSeeder::class,
+            ]);
+        }
     }
 }

@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class OrganizationSeeder extends Seeder
 {
@@ -15,15 +16,12 @@ class OrganizationSeeder extends Seeder
     public function run()
     {
         DB::table('organizations')->insert([
-            'id'                  => 1,
-            'publisher_id'        => env('IATI_YIPL_PUBLISHER_ID'),
-            'publisher_name'      => env('IATI_YIPL_PUBLISHER_NAME'),
-            'publisher_type'      => 'government',
-            'country'             => 'NP-SWO',
-            'registration_agency' => 'AF-COA',
-            'registration_number' => '5',
-            'identifier'          => env('IATI_YIPL_IDENTIFIER'),
-            'status'              => 'verified',
+            'publisher_id' => Str::random(5),
+            'publisher_name' => 'test',
+            'publisher_type' => 'government',
+            'identifier' => Str::random(5),
+            'address' => 'Kathmandu',
+            'iati_status' => 'pending',
         ]);
     }
 }
