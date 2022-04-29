@@ -44,10 +44,34 @@
     </nav>
     <div class="flex grow-0 items-center">
       <div class="flex">
-        <!--        <input type="text" v-model="keyword">-->
         <button class="button secondary-btn mr-3.5 font-bold">
           <svg-vue icon="plus"></svg-vue>
         </button>
+
+        <!--====================
+        Add Activity Modal
+    ========================-->
+        <Modal @close="modalToggle" :modalActive="modalValue">
+          <h5 class="title mb-6 flex">
+            Add a title and identifier for the activity
+          </h5>
+          <div class="flex justify-end">
+            <div class="inline-flex">
+              <BtnComponent
+                class="bg-white px-6 uppercase"
+                @click="modalValue = false"
+                text="Cancel"
+              />
+              <BtnComponent
+                class="space"
+                type="primary"
+                @click="modalValue = false"
+                text="Publish"
+              />
+            </div>
+          </div>
+        </Modal>
+
         <button class="button secondary-btn font-bold">
           <svg-vue icon="user-profile"></svg-vue>
         </button>
@@ -58,6 +82,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
+import { useToggle } from '@vueuse/core';
 
 export default defineComponent({
   name: 'header-component',
@@ -105,7 +130,12 @@ export default defineComponent({
         },
       ],
     };
-    return { data };
+    const [modalValue, modalToggle] = useToggle();
+    return {
+      data,
+      modalValue,
+      modalToggle,
+    };
   },
 });
 </script>

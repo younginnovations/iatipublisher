@@ -96,8 +96,12 @@ button {
 
 // primary button
 .primary-btn {
-  @apply rounded bg-bluecoral p-3 uppercase text-white;
+  @apply rounded bg-bluecoral py-3 px-4 uppercase text-white;
   box-shadow: 0px 2px 10px 10px rgba(0, 0, 0, 0.05);
+
+  &.space {
+    @apply px-6;
+  }
 
   &:hover {
     @apply bg-n-50 text-white;

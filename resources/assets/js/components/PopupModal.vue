@@ -1,26 +1,26 @@
 <template>
   <Teleport to="body">
-    <transition name="modal-animation">
+    <Transition name="modal-animation">
       <div
-        v-show="modalActive"
+        v-if="modalActive"
         class="modal fixed top-0 left-0 flex h-screen w-screen items-center justify-center p-8"
       >
-        <transition name="modal-animation-inner">
+        <Transition name="modal-animation-inner">
           <div class="flex h-full w-full items-center justify-center">
             <div
               class="modal-backdrop absolute left-0 top-0 h-full w-full bg-n-50 opacity-50"
               @click="close"
             ></div>
             <div
-              v-show="modalActive"
+              v-if="modalActive"
               class="modal-inner relative max-h-full w-full max-w-[809px] overflow-x-hidden rounded-lg bg-white p-8"
             >
               <slot />
             </div>
           </div>
-        </transition>
+        </Transition>
       </div>
-    </transition>
+    </Transition>
   </Teleport>
 </template>
 

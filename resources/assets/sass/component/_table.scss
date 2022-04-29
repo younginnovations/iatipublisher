@@ -45,10 +45,16 @@
   }
 
   td {
-    padding: 16px 24px;
-    font-size: 14px;
-    line-height: 1.6;
-    vertical-align: top;
+    @apply relative py-4 px-6 align-top text-base leading-relaxed;
+  }
+
+  .has-status {
+    td {
+      @apply px-6 pt-11 pb-7;
+    }
+    th {
+      @apply px-6 pt-11 pb-7;
+    }
   }
 }
 
