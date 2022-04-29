@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Activity;
 
 use App\Http\Controllers\Controller;
 use App\IATI\Models\Activity\Activity;
+use App\IATI\Requests\ActivityCreateRequest;
 use App\IATI\Services\Activity\ActivityService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 /**
@@ -47,14 +49,26 @@ class ActivityController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return void
+     * Stores activity in activity table.
+     * @param Request $request
+     * @return JsonResponse
      */
-    public function store(Request $request): void
+    public function store(ActivityCreateRequest $request) : JsonResponse
     {
-        //
+        try {
+            $input = $request->all();
+            $organizationId = 1;
+
+            if (!$this->activityService->store($input, $organizationId)) {
+                return response()->json(['success' => false, 'error' => 'Error has occurred while saving activity.']);
+            }
+
+            return response()->json(['success' => true, 'message' => 'Activity created successfully.']);
+        } catch (\Exception $e) {
+            logger()->error($e->getMessage());
+
+            return response()->json(['success' => false, 'error' => 'Error has occurred while saving activity.']);
+        }
     }
 
     /**
