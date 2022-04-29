@@ -16,7 +16,6 @@ class ActivityTableSeeder extends Seeder
     {
         Activity::create(
             [
-                'id'    => '1',
                 'identifier' => [
                     'activity_identifier' => 'SYRZ000041',
                     'iati_identifier_text' => 'CZ-ICO-25755277-SYRZ000041',
