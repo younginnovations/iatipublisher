@@ -20,6 +20,7 @@ import TableLayout from './partials/TableLayout.vue';
 import Pagination from '../../components/Pagination.vue';
 import PageTitle from './partials/PageTitle.vue';
 import ToastMessage from '../../components/ToastMessage.vue';
+import PopupModal from '../../components/PopupModal.vue';
 
 export default defineComponent({
   name: 'activity-component',
@@ -29,6 +30,7 @@ export default defineComponent({
     Pagination,
     ToastMessage,
     TableLayout,
+    PopupModal,
   },
   setup() {
     const state = reactive({

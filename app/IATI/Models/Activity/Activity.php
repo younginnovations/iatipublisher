@@ -2,7 +2,8 @@
 
 namespace App\IATI\Models\Activity;
 
-use App\IATI\Models\Organisation\Organisation;
+use App\IATI\Models\Organization\Organization;
+use Database\Factories\IATI\Models\Activity\ActivityFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -22,6 +23,7 @@ class Activity extends Model
         'other_identifier',
         'title',
         'description',
+        'activity_status',
         'status',
         'activity_date',
         'contact_info',
@@ -91,8 +93,13 @@ class Activity extends Model
      * Activity belongs to an organisation.
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function organisation(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    public function organization(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
-        return $this->belongsTo(Organisation::class, 'org_id');
+        return $this->belongsTo(Organization::class, 'org_id');
+    }
+
+    public static function newFactory()
+    {
+        return new ActivityFactory();
     }
 }
