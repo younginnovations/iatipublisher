@@ -55,7 +55,7 @@
         <span
           ><a
             class="border-b-2 border-b-transparent font-bold text-bluecoral hover:border-b-2 hover:border-b-turquoise"
-            href="#"
+            href="/"
             >Reset.</a
           ></span
         >

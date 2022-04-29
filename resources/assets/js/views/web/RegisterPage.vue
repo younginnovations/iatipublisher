@@ -9,12 +9,12 @@
           creating an account in IATI publisher.
         </p>
       </div>
-      <EmailVerification
-        v-if="step === 3"
-        :email="formData.email"
-      ></EmailVerification>
-      <div v-else class="section__wrapper flex">
-        <div class="form">
+      <div class="section__wrapper flex">
+        <EmailVerification
+          v-if="step === 3"
+          :email="formData.email"
+        ></EmailVerification>
+        <div v-else class="form input__field">
           <div class="form__container">
             <span class="text-2xl font-bold text-n-50">{{
               registerForm[step].title
@@ -52,7 +52,7 @@
                 :key="field.name"
               >
                 <div class="flex items-center justify-between">
-                  <label class="label" for=""
+                  <label class="label" :for="field.id"
                     >{{ field.label }}
                     <span class="text-salmon-40" v-if="field.required"> *</span>
                   </label>
@@ -63,6 +63,7 @@
                   ></HoverText>
                 </div>
                 <input
+                  :id="id"
                   :class="
                     errorData[field.name] != ''
                       ? 'error__input form__input'
@@ -78,7 +79,11 @@
                 />
 
                 <input
-                  class="form__input"
+                  :class="
+                    errorData[field.name] != ''
+                      ? 'error__input form__input'
+                      : 'form__input'
+                  "
                   :type="field.type"
                   v-model="formData[field.name]"
                   :value="
@@ -131,8 +136,8 @@
             <span class="text-sm font-normal text-n-40" v-if="step == 1"
               >Already have an account?
               <a
+                href="/"
                 class="border-b-2 border-b-transparent font-bold text-bluecoral hover:border-b-2 hover:border-b-turquoise"
-                href="#"
                 >Sign In.</a
               ></span
             >
@@ -149,8 +154,8 @@
             <span class="text-sm font-normal text-n-40"
               >Already have an account?
               <a
+                href="/"
                 class="border-b-2 border-b-transparent font-bold text-bluecoral hover:border-b-2 hover:border-b-turquoise"
-                href="#"
                 >Sign In.</a
               ></span
             >
@@ -163,8 +168,8 @@
             <li
               :class="[
                 step == parseInt(i)
-                  ? 'relative mb-6 font-bold text-n-50'
-                  : 'mb-6',
+                  ? 'relative font-bold text-n-50'
+                  : 'mb-6 flex items-center font-bold text-bluecoral',
               ]"
               v-for="(ele, i) in registerForm"
               :key="ele.title"
@@ -192,7 +197,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, ref, computed } from 'vue';
+import { defineComponent, reactive, ref, computed, watch } from 'vue';
 import axios from 'axios';
 import EmailVerification from './EmailVerification.vue';
 import HoverText from './../../components/HoverText.vue';
@@ -208,15 +213,15 @@ export default defineComponent({
   },
 
   props: {
-    country: [Object, String],
-    registration_agency: [Object, String],
+    country: [String, Object],
+    registration_agency: [String, Object],
   },
 
   setup(props) {
     const step = ref(1);
     const publisherExists = ref(true);
     const isLoaderVisible = ref(false);
-    const option = ref(['a', 'b']);
+
     const errorData = reactive({
       publisher_name: '',
       publisher_id: '',
@@ -245,12 +250,19 @@ export default defineComponent({
       password_confirmation: '',
     });
 
-    const registrationAgency = computed(() => {
-      if (formData.country !== '') {
-        const uncategorized = ['XI', 'PK', 'IQ', 'NE', 'XR'];
-        const agencies = props.registration_agency!;
-
+    watch(
+      () => formData.country,
+      () => {
         formData.registration_agency = '';
+      }
+    );
+
+    const registrationAgency = computed(() => {
+      const agencies = props.registration_agency!;
+
+      if (formData.country !== '') {
+        const uncategorized = ['XI', 'XR'];
+
         return Object.fromEntries(
           Object.entries(agencies).filter(
             ([key, value]) =>
@@ -260,7 +272,7 @@ export default defineComponent({
         );
       }
 
-      return props.registration_agency;
+      return agencies;
     });
 
     const registerForm = reactive({
@@ -274,7 +286,7 @@ export default defineComponent({
             label: 'Publisher Name',
             name: 'publisher_name',
             placeholder: 'Enter the name of your organization',
-            id: 'publisher_name',
+            id: 'publisher-name',
             required: true,
             hover_text: 'The Name of the organisation publishing the data',
             type: 'text',
@@ -285,7 +297,7 @@ export default defineComponent({
             label: 'Publisher ID',
             name: 'publisher_id',
             placeholder: "For example, 'dfid' and 'worldbank'",
-            id: 'publisher_id',
+            id: 'publisher-id',
             required: false,
             hover_text:
               "This will be the unique identifier for the publisher. Where possible use a short abbreviation of your organisation's name. For example: 'dfid' or 'worldbank' Must be at least two characters long and lower case. Can include letters, numbers and also - (dash) and _ (underscore).",
@@ -308,10 +320,10 @@ export default defineComponent({
             help_text: '',
           },
           organization_registration_agency: {
-            label: 'Organization Registration Agency',
+            label: 'Organisation Registration Agency',
             name: 'registration_agency',
             placeholder: 'Select your Organization Registration Agency',
-            id: 'registration_agency',
+            id: 'registration-agency',
             required: true,
             hover_text: '',
             type: 'select',
@@ -320,10 +332,10 @@ export default defineComponent({
             help_text: '',
           },
           organization_registration_no: {
-            label: 'Organization Registration Number',
+            label: 'Organisation Registration Number',
             name: 'registration_number',
             placeholder: '',
-            id: 'registration_number',
+            id: 'registration-number',
             required: true,
             hover_text: '',
             type: 'text',
@@ -331,7 +343,7 @@ export default defineComponent({
             help_text: '',
           },
           iati_organizational_identifier: {
-            label: 'IATI Organizational Identifier',
+            label: 'IATI Organisational Identifier',
             name: 'identifier',
             placeholder: '',
             id: 'identifier',
@@ -339,7 +351,7 @@ export default defineComponent({
             hover_text:
               'The organisation identifier used in the IATI XML files to identify the reporting organisation. ',
             type: 'text',
-            class: 'mb-4 lg:mb-2',
+            class: 'mb-4 lg:mb-6',
             help_text:
               'This is autogenerated, please make sure to fill the above fields correctly.',
           },
@@ -367,7 +379,7 @@ export default defineComponent({
             label: 'Full Name',
             name: 'full_name',
             placeholder: '',
-            id: 'full_name',
+            id: 'full-name',
             hover_text: '',
             required: true,
             type: 'text',
@@ -397,11 +409,11 @@ export default defineComponent({
             label: 'Confirm Password',
             name: 'password_confirmation',
             placeholder: '',
-            id: 'password_confirmation',
+            id: 'password-confirmation',
             required: true,
             hover_text: '',
             type: 'password',
-            class: 'mb-4 lg:mb-2',
+            class: 'mb-4 lg:mb-6',
           },
         },
       },
@@ -417,12 +429,14 @@ export default defineComponent({
       formData.identifier = `${formData.registration_agency}-${formData.registration_number}`;
       isLoaderVisible.value = true;
       axios
-        .post('/verifyPublisher', formData)
+        .post('api/verifyPublisher', formData)
         .then((res) => {
           const response = res.data;
           publisherExists.value = true;
-          const errors = 'errors' in response ? response.errors : [];
+          const errors =
+            !response.success || 'errors' in response ? response.errors : [];
 
+          console.log(response, errors);
           errorData.publisher_name = errors.publisher_name
             ? errors.publisher_name[0]
             : '';
@@ -441,37 +455,34 @@ export default defineComponent({
             publisherExists.value = false;
           }
 
-          if ('success' in response) {
-            console.log('here');
+          if (response.success) {
             registerForm['1'].is_complete = true;
             step.value += 1;
           }
+
           isLoaderVisible.value = false;
         })
         .catch((error) => {
-          // const { errors } = error;
-          // errors = error.response.data.errors;
-          console.log('errors', error);
           isLoaderVisible.value = false;
         });
     }
 
     function submitForm() {
       isLoaderVisible.value = true;
-      console.log(isLoaderVisible.value);
 
       axios
-        .post('/register', formData)
+        .post('api/register', formData)
         .then((res) => {
           const response = res.data;
-          const errors = 'errors' in response ? response.data.errors : [];
+          const errors =
+            !response.success || 'errors' in response ? response.errors : [];
           errorData.username = errors.username ? errors.username[0] : '';
           errorData.full_name = errors.full_name ? errors.full_name[0] : '';
           errorData.email = errors.email ? errors.email[0] : '';
           errorData.password = errors.password ? errors.password[0] : '';
           isLoaderVisible.value = false;
 
-          if ('success' in response) {
+          if (response.success) {
             registerForm['2'].is_complete = true;
             step.value += 1;
           }
@@ -505,7 +516,6 @@ export default defineComponent({
       goToNextForm,
       goToPreviousForm,
       props,
-      option,
     };
   },
 });
@@ -515,7 +525,7 @@ export default defineComponent({
 
 <style lang="scss">
 .label {
-  @apply pb-2 text-sm font-normal;
+  @apply text-sm font-normal;
 }
 .section {
   &__container {
@@ -552,43 +562,6 @@ export default defineComponent({
       &__container {
         @apply border-b-2 border-b-n-10;
         margin-bottom: 24px;
-
-        .multiselect-option.is-selected {
-          @apply bg-n-20 text-n-50;
-        }
-        .multiselect-option.is-selected.is-pointed {
-          @apply bg-n-20 text-n-50;
-        }
-        .multiselect.is-active {
-          box-shadow: 0 0 0 0;
-        }
-        .multiselect-dropdown {
-          @apply border border-n-50;
-        }
-        .multiselect-caret {
-          -webkit-mask-image: url('/images/dropdown-arrow.svg');
-          mask-image: url('/images/dropdown-arrow.svg');
-        }
-        .vue__select {
-          @apply border border-n-30 text-base leading-6 outline-none duration-300;
-          padding: 16px 0px 16px 55px;
-          height: 52px;
-
-          &:focus {
-            @apply border border-n-50 bg-n-10;
-            box-shadow: 0 0 0 0;
-          }
-          &::placeholder {
-            letter-spacing: -0.02em;
-            @apply text-n-40;
-          }
-          &:focus::placeholder {
-            @apply text-n-50;
-          }
-        }
-        .error__input {
-          @apply border border-crimson-50;
-        }
       }
     }
     aside {

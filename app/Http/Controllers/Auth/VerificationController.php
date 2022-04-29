@@ -8,7 +8,6 @@ use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Auth\Events\Verified;
-use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Foundation\Auth\VerifiesEmails;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -49,23 +48,6 @@ class VerificationController extends Controller
         $this->middleware('auth');
         $this->middleware('signed')->only('verify');
         $this->middleware('throttle:6,1')->only('verify', 'resend');
-    }
-
-    /**
-     * Mark the authenticated user's email address as verified.
-     *
-     * @param \Illuminate\Http\Request $request
-     *
-     * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\RedirectResponse
-     *
-     * @throws \Illuminate\Auth\Access\AuthorizationException
-     */
-    public function verification(EmailVerificationRequest $request): JsonResponse|\Illuminate\Http\RedirectResponse
-    {
-        Log::info($request);
-        $request->fulfill();
-
-        return redirect('/activities');
     }
 
     /**
