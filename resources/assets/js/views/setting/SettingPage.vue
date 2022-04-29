@@ -277,7 +277,7 @@ export default defineComponent({
     height: calc(100vh - 80px);
 
     &__container {
-      @apply relative mt-6 rounded-lg bg-white p-20;
+      @apply relative mt-6 rounded-lg bg-white py-14 px-20;
       overflow-y: auto;
       max-height: 65vh;
 
