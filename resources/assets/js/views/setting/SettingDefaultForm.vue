@@ -149,6 +149,7 @@
 
             <button>
               <HoverText
+                width="w-80"
                 name="Humanitarian"
                 hover_text="Do you want to add a 'Humanitarian Flag' to every activity that your organisation publishes data on? This means that your organisation identifies all their activities as wholly or partially addressing a humanitarian crisis or multiple crises. You can later manually add or remove a Humantarian Flag on individual activities if required."
               ></HoverText>

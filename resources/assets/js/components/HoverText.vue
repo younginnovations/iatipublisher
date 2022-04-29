@@ -5,7 +5,11 @@
     </button>
     <div
       class="help__text"
-      :class="props.position === 'left' ? 'left-0' : 'right-0'"
+      :class="
+        props.position === 'left'
+          ? 'left-0 ' + hoverTextClass
+          : 'right-0 ' + hoverTextClass
+      "
     >
       <p class="font-bold text-bluecoral">{{ props.name }}</p>
       <p v-html="props.hover_text"></p>
@@ -20,7 +24,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, ref } from 'vue';
 
 export default defineComponent({
   props: {
@@ -28,10 +32,15 @@ export default defineComponent({
     hover_text: String,
     position: String,
     link: String,
+    width: String,
   },
   setup(props) {
+    const hoverTextClass = ref('');
+    hoverTextClass.value = props.width ? props.width : 'w-60';
+
     return {
       props,
+      hoverTextClass,
     };
   },
 });
@@ -42,7 +51,7 @@ export default defineComponent({
   @apply relative;
 
   &__text {
-    @apply invisible absolute top-4 z-20 w-60 space-y-1.5 rounded text-left bg-eggshell p-2 text-xs text-n-50 opacity-0 duration-200;
+    @apply invisible absolute top-4 z-20 w-60 space-y-1.5 rounded bg-eggshell p-2 text-left text-xs text-n-50 opacity-0 duration-200;
     transition: all 0.3s ease-out;
     box-shadow: 0px 4px 40px rgb(0 0 0 / 10%);
   }

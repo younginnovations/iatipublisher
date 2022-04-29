@@ -12,7 +12,7 @@
         <a href="/activities"><svg-vue icon="left-arrow"></svg-vue></a>
         <h2 class="ml-3 text-heading-4 font-bold text-n-50">Settings</h2>
       </div>
-      <div class="setting__container mb-14">
+      <div class="setting__container">
         <div class="flex">
           <button
             :class="
@@ -206,7 +206,6 @@ export default defineComponent({
         })
         .then((res) => {
           const response = res.data;
-          console.log(response.message);
 
           if (response.success) {
             updateStore(
@@ -236,8 +235,6 @@ export default defineComponent({
         })
         .catch((error) => {
           const { errors } = error.response.data;
-
-          console.log(errors);
 
           for (const e in errors) {
             updateStore('UPDATE_PUBLISHING_ERROR', e, errors[e][0]);
@@ -277,13 +274,11 @@ export default defineComponent({
     padding: 16px 0px 24px;
     max-width: 1000px;
     margin: auto;
-    height: calc(100vh - 10vh);
+    height: calc(100vh - 80px);
 
     &__container {
-      @apply relative mt-6 rounded-lg bg-white px-20;
+      @apply relative mt-6 rounded-lg bg-white p-20;
       overflow-y: auto;
-      padding-top: 52px;
-      padding-bottom: 52px;
       max-height: 65vh;
 
       .vue__select {
