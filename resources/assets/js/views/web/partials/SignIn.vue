@@ -3,7 +3,7 @@
     id="right"
     class="right m-auto basis-2/4 rounded-l-lg rounded-r-lg bg-white py-5 px-5 sm:py-10 sm:px-10 md:my-0 md:rounded-l-none lg:px-14 lg:py-28 xl:px-24"
   >
-    <div class="right__container flex flex-col">
+    <div class="right__container flex flex-col" @keyup.enter="login">
       <h2 class="mb-2 hidden sm:block">Sign In.</h2>
       <span class="text-n-40">Welcome back! Please enter your details.</span>
       <div

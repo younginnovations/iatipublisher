@@ -1,5 +1,6 @@
 <template>
   <div :class="className">
+    <svg-vue :icon="props.type ? 'check-circle' : 'times-circle'"></svg-vue>
     <span>{{ props.message }}</span>
   </div>
 </template>
@@ -23,8 +24,8 @@ export default defineComponent({
   setup(props) {
     const className = ref('');
     className.value = props.type
-      ? 'fixed right-10 top-20 inline-flex rounded-lg bg-eggshell py-4 px-8 text-sm leading-normal text-n-50'
-      : 'fixed right-10 top-20 inline-flex rounded-lg bg-salmon-50 py-4 px-8 text-sm leading-normal text-n-50';
+      ? 'rounded-lg bg-mint border border-spring-10 py-4 px-5 inline-flex items-center space-x-1 text-xs leading-normal text-n-50'
+      : 'rounded-lg bg-crimson-10 border border-crimson-20 py-4 px-5 inline-flex items-center space-x-1 text-xs leading-normal text-n-50';
     return {
       props,
       className,
