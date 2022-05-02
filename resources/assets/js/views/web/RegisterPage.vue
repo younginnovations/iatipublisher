@@ -63,7 +63,7 @@
                   ></HoverText>
                 </div>
                 <input
-                  :id="id"
+                  :id="field.id"
                   :class="
                     errorData[field.name] != ''
                       ? 'error__input form__input'
@@ -73,7 +73,9 @@
                   v-model="formData[field.name]"
                   :placeholder="formData[field.placeholder]"
                   v-if="
-                    (field.type === 'text' || field.type === 'password') &&
+                    (field.type === 'text' ||
+                      field.type === 'password' ||
+                      field.type === 'email') &&
                     field.name != 'identifier'
                   "
                 />
@@ -213,8 +215,14 @@ export default defineComponent({
   },
 
   props: {
-    country: [String, Object],
-    registration_agency: [String, Object],
+    country: {
+      type: [String, Object],
+      required: true,
+    },
+    registration_agency: {
+      type: [String, Object],
+      required: true,
+    },
   },
 
   setup(props) {
@@ -260,7 +268,7 @@ export default defineComponent({
     const registrationAgency = computed(() => {
       const agencies = props.registration_agency!;
 
-      if (formData.country !== '') {
+      if (formData.country) {
         const uncategorized = ['XI', 'XR'];
 
         return Object.fromEntries(
@@ -270,9 +278,9 @@ export default defineComponent({
               uncategorized.some((k) => key.startsWith(k))
           )
         );
+      } else {
+        return agencies;
       }
-
-      return agencies;
     });
 
     const registerForm = reactive({
@@ -310,7 +318,7 @@ export default defineComponent({
             label: 'Country',
             name: 'country',
             placeholder: 'Select the country',
-            id: 'country',
+            id: 'country_select',
             required: false,
             type: 'select',
             hover_text:
@@ -392,7 +400,7 @@ export default defineComponent({
             id: 'email',
             required: true,
             hover_text: '',
-            type: 'text',
+            type: 'email',
             class: 'mb-4 lg:mb-2',
           },
           password: {
@@ -436,7 +444,6 @@ export default defineComponent({
           const errors =
             !response.success || 'errors' in response ? response.errors : [];
 
-          console.log(response, errors);
           errorData.publisher_name = errors.publisher_name
             ? errors.publisher_name[0]
             : '';
@@ -451,7 +458,7 @@ export default defineComponent({
             : '';
           errorData.identifier = errors.identifier ? errors.identifier[0] : '';
 
-          if ('publisher_error' in errors) {
+          if ('publisher_error' in response) {
             publisherExists.value = false;
           }
 

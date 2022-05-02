@@ -69,7 +69,7 @@ class SettingController extends Controller
             $publisherData = $request->all();
 
             if ($publisherData['publisher_id'] != Auth::user()->organization->publisher_id) {
-                return response()->json(['success'=> false, 'message' => 'Publisher ID cannot be changed', 'data' => $publisherData]);
+                return response()->json(['success' => false, 'message' => 'Publisher ID cannot be changed', 'data' => $publisherData]);
             }
 
             $publisher_verification = $this->verifyPublisher($publisherData);
@@ -88,7 +88,7 @@ class SettingController extends Controller
                 return response()->json(['success' => true, 'message' => 'Publisher setting stored successfully', 'data' => $publisherData]);
             }
 
-            return response()->json(['success' => false, 'message' => 'Error occurred while verifying data', 'data' => $publisherData, 'error'=> ['token' => $token_verification, 'publisher_verification' => $publisher_verification]]);
+            return response()->json(['success' => false, 'message' => 'Error occurred while verifying data', 'data' => $publisherData, 'error' => ['token' => $token_verification, 'publisher_verification' => $publisher_verification]]);
         } catch (\Exception $e) {
             Log::error($e->getMessage());
 

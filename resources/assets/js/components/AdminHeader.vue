@@ -267,8 +267,14 @@ export default defineComponent({
     Multiselect,
   },
   props: {
-    user: Object,
-    organization: Object,
+    user: {
+      type: Object,
+      required: true,
+    },
+    organization: {
+      type: Object,
+      required: true,
+    },
   },
 
   setup(props) {

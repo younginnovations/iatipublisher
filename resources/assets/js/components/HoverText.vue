@@ -28,11 +28,26 @@ import { defineComponent, ref } from 'vue';
 
 export default defineComponent({
   props: {
-    name: String,
-    hover_text: String,
-    position: String,
-    link: String,
-    width: String,
+    name: {
+      type: String,
+      required: true,
+    },
+    hover_text: {
+      type: String,
+      required: true,
+    },
+    width: {
+      type: String,
+      required: false,
+    },
+    position: {
+      type: String,
+      required: false,
+    },
+    link: {
+      type: String,
+      required: false,
+    },
   },
   setup(props) {
     const hoverTextClass = ref('');

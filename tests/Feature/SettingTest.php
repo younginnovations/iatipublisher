@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\IATI\Models\Organization\Organization;
+use App\IATI\Models\Setting\Setting;
 use App\IATI\Models\User\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -190,52 +191,24 @@ class SettingTest extends TestCase
     {
         Organization::factory()->create();
         $user = User::factory()->create();
-
-        $this->actingAs($user)
-            ->post('api/setting/store/publisher', [
-                'publisher_id' => env('IATI_YIPL_PUBLISHER_ID'),
-                'api_token' => 'asdfkjasldfjlasjddflas',
-            ])
-            ->assertStatus(200)
-            ->assertJsonStructure([
-                'success',
-                'message',
-                'data' => [
-                    'publisher_id',
-                    'api_token',
-                    'publisher_verification',
-                    'token_verification',
-                ],
-            ])->assertJson(
-                ['data' => [
-                    'publisher_verification' => true,
-                    'token_verification' => false,
-                ]]
-            );
-    }
-
-    /**
-     * Test validation of setting publishing form.
-     *
-     * @return void
-     */
-    public function test_edit_setting_default_form_filled_data(): void
-    {
-        Organization::factory()->create();
-        $user = User::factory()->create();
+        $setting = Setting::factory()->create();
 
         $this->actingAs($user)
             ->post('api/setting/store/default', [
-                'default_currency'      => '',
-                'default_language'        => '',
-                'humanitarian'        => '',
-                'hierarchy'        => '',
-                'linked_data_url'        => '',
+                'default_currency' => 'BND',
+                'default_language' => 'ab',
+                'hierarchy' => '2',
+                'linked_data_url' => 'test',
+                'humanitarian' => 'no',
             ])
             ->assertStatus(200)
             ->assertJsonStructure([
                 'success',
                 'message',
-            ]);
+            ])->assertJson(
+                [
+                    'success' => true,
+                ]
+            );
     }
 }

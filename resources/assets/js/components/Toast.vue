@@ -11,8 +11,14 @@ export default defineComponent({
   name: 'toast-cmp',
   components: {},
   props: {
-    message: String,
-    type: Boolean,
+    message: {
+      type: String,
+      required: true,
+    },
+    type: {
+      type: Boolean,
+      required: true,
+    },
   },
   setup(props) {
     const className = ref('');
