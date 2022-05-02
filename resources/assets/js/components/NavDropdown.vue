@@ -17,9 +17,18 @@ import { defineComponent } from 'vue';
 
 export default defineComponent({
   props: {
-    name: String,
-    text: String,
-    btnText: String,
+    name: {
+      type: String,
+      required: true,
+    },
+    text: {
+      type: String,
+      required: true,
+    },
+    btnText: {
+      type: String,
+      required: true,
+    },
   },
   setup(props) {
     return {

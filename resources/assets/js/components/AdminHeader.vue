@@ -108,8 +108,14 @@ export default defineComponent({
   components: {},
 
   props: {
-    user: Object,
-    organization: Object,
+    user: {
+      type: Object,
+      required: true,
+    },
+    organization: {
+      type: Object,
+      required: true,
+    },
   },
 
   setup(props) {

@@ -112,9 +112,8 @@ class RegisterController extends Controller
             if ($res->getStatusCode() == 404) {
                 return response()->json([
                     'success' => false,
-                    'publisher_error' => 'true',
-                    'errors'  => ['publisher_name' => ['Publisher Name doesn\'t exists in IATI Registry']],
-                ]);
+                    'publisher_error' => true,
+                    'errors'  => ['publisher_name' => ['Publisher Name doesn\'t exists in IATI Registry'], 'publisher_id' => ['Publisher ID doesn\'t match with your IATI Registry Information.']],                ]);
             }
 
             $errors = [];
@@ -131,7 +130,7 @@ class RegisterController extends Controller
             if (!empty($errors)) {
                 return response()->json([
                     'success'         => false,
-                    'publisher_error' => 'true',
+                    'publisher_error' => true,
                     'errors'          => $errors,
                 ]);
             }

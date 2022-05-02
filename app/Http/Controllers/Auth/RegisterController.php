@@ -110,7 +110,11 @@ class RegisterController extends Controller
             if ($res->getStatusCode() == 404) {
                 return response()->json([
                     'success' => false,
-                    'errors'  => ['publisher_name' => ['Publisher Name doesn\'t exists in IATI Registry']],
+                    'errors'  => [
+                        'publisher_error' => true,
+                        'publisher_name' => ['Publisher Name doesn\'t exists in IATI Registry'],
+                        'publisher_id' => ['Publisher ID doesn\'t match with your IATI Registry Information.'],
+                    ],
                 ]);
             }
 
@@ -119,16 +123,16 @@ class RegisterController extends Controller
 
             if ($postData['publisher_name'] != $response->title) {
                 $errors['publisher_name'] = ['Publisher Name doesn\'t match your IATI Registry information'];
+                $errors['publisher_error'] = true;
             }
 
             if ($postData['registration_agency'] . '-' . $postData['registration_number'] != $response->publisher_iati_id) {
-                $errors['publisher_iati_id'] = ['Publisher IATI ID doesn\'t match your IATI Registry information'];
+                $errors['identifier'] = ['Publisher IATI ID doesn\'t match your IATI Registry information'];
             }
 
             if (!empty($errors)) {
                 return response()->json([
                     'success'         => false,
-                    'publisher_error' => 'true',
                     'errors'          => $errors,
                 ]);
             }
@@ -141,6 +145,7 @@ class RegisterController extends Controller
                 [
                     'success' => false,
                     'errors'  => [
+                        'publisher_error' => true,
                         'publisher_name' => ['Publisher Name doesn\'t match your IATI Registry information'],
                         'publisher_id'   => ['Publisher ID doesn\'t match with your IATI Registry information'],
                     ],
@@ -164,6 +169,7 @@ class RegisterController extends Controller
     {
         try {
             $this->db->beginTransaction();
+
             $user = $this->userService->registerExistingUser($data);
 
             $this->db->commit();
