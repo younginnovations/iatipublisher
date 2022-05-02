@@ -42,139 +42,150 @@
       </div>
       <div class="actions flex grow justify-end">
         <div class="inline-flex justify-center">
-          <button
-            class="button secondary-btn mr-3.5 font-bold"
-            v-show="showButtons"
-          >
-            <svg-vue icon="download-file"></svg-vue>
-            <span>Download Selected</span>
-          </button>
-
-          <!--    Toggle modal      -->
-          <Modal @close="toggleModal" :modalActive="state.modalActive">
-            <alert :type="'success'" class="mb-1"
-              >The following activities are eligible for publishing</alert
-            >
-            <div class="checked-list">
-              <div class="list px-6">
-                <a href="#" class="block border-b border-n-20 py-4"
-                  >EU-Angola Dialogue Facility</a
-                >
-              </div>
-            </div>
-            <alert :type="'failure'" class="mt-1 mb-1"
-              >The following activities are not eligible for publishing</alert
-            >
-            <div class="checked-list">
-              <div class="list px-6">
-                <a href="#" class="block border-b border-n-20 py-4"
-                  >Programme in support of Higher Education Agro-PRODESI:
-                  Acceleration of inclusive & sustainable agribusiness
-                  investment in economic corridors</a
-                >
-              </div>
-            </div>
-          </Modal>
-          <button
-            class="button secondary-btn mr-3.5 font-bold"
-            v-show="showButtons"
-            @click="state.modalActive = true"
-          >
-            <svg-vue icon="approved-cloud"></svg-vue>
-            <span>Publish Selected</span>
-          </button>
-          <button
-            class="button secondary-btn mr-3.5 font-bold"
-            v-show="showButtons"
-          >
-            <svg-vue icon="delete"></svg-vue>
-            <span>Delete Selected</span>
-          </button>
-          <button class="button secondary-btn mr-3.5 font-bold">
-            <svg-vue icon="download-file"></svg-vue>
-            <span>Download All</span>
-          </button>
-          <button class="button secondary-btn mr-3.5 font-bold">
-            <svg-vue icon="publish"></svg-vue>
-            <span>Publish</span>
-          </button>
+          <BtnComponent
+            class="mr-3.5"
+            type="secondary"
+            text="Download Selected"
+            icon="download-file"
+            v-if="showButtons"
+          />
+          <BtnComponent
+            class="mr-3.5"
+            type="secondary"
+            text="Publish Selected"
+            icon="approved-cloud"
+            v-if="showButtons"
+            @click="modalValue = true"
+          />
+          <BtnComponent
+            class="mr-3.5"
+            type="secondary"
+            text="Delete Selected"
+            icon="delete"
+            v-if="showButtons"
+          />
+          <BtnComponent
+            class="mr-3.5"
+            type="secondary"
+            text="Download All"
+            icon="download-file"
+          />
+          <BtnComponent
+            class="mr-3.5"
+            type="secondary"
+            text="Publish"
+            icon="publish"
+            @click="modalValue = true"
+          />
           <AddActivityButton />
         </div>
       </div>
     </div>
+
+    <!-- ==============================
+          Toast Message that shows
+          publishable status
+        ===============================-->
+    <ToastMessage />
+
+    <!-- =====================
+          Toggle modal
+    ==========================-->
+    <Modal @close="modalToggle" :modalActive="modalValue">
+      <div class="eligible-activities mb-6 text-sm leading-relaxed">
+        <div class="title mb-6 flex">
+          <svg-vue
+            icon="tick"
+            class="mr-1 mt-0.5 text-lg text-spring-50"
+          ></svg-vue>
+          <b>The following activities are eligible for publishing</b>
+        </div>
+        <div class="eligible-list rounded-lg bg-mint px-6">
+          <div class="list border-b border-n-20 py-6">
+            <a href="#" class=""> EU-Angola Dialogue Facility </a>
+          </div>
+          <div class="list border-b border-n-20 py-6">
+            <a href="#" class=""> Programme in support of Higher Education </a>
+          </div>
+          <div class="list py-6">
+            <a href="#" class="">
+              AGO.S1 Leadership, advocacy and communication to fast track the
+              AIDS response
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="non-eligible-activities mb-6 text-sm leading-relaxed">
+        <div class="title mb-6 flex">
+          <svg-vue
+            icon="warning-fill"
+            class="mr-1 mt-0.5 text-lg text-crimson-40"
+          ></svg-vue>
+          <b>The following activities are eligible for publishing</b>
+        </div>
+        <div class="eligible-list rounded-lg bg-rose px-6">
+          <div class="list border-b border-n-20 py-6">
+            <a href="#" class=""> EU-Angola Dialogue Facility </a>
+          </div>
+          <div class="list border-b border-n-20 py-6">
+            <a href="#" class=""> Programme in support of Higher Education </a>
+          </div>
+          <div class="list py-6">
+            <a href="#" class="">
+              UNFPA Angola Improved national population data systems to map and
+              address inequalities; to advance achievement of the Sustainable
+              Development Goals and the commitments of the Programme of Action
+              of the International Cference on Population and Development; and
+              to strengthen interventions in humanitarian crises activities
+            </a>
+          </div>
+        </div>
+      </div>
+      <div class="flex justify-end">
+        <div class="inline-flex">
+          <BtnComponent
+            class="bg-white px-6 uppercase"
+            @click="modalValue = false"
+            text="Cancel"
+          />
+          <BtnComponent
+            class="space"
+            type="primary"
+            @click="modalValue = false"
+            text="Publish"
+          />
+        </div>
+      </div>
+    </Modal>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive } from 'vue';
+import { defineComponent } from 'vue';
+import { useToggle } from '@vueuse/core';
+import ToastMessage from '../../../components/ToastMessage.vue';
 import AddActivityButton from './AddActivityButton.vue';
 import Modal from '../../../components/PopupModal.vue';
-import Alert from '../../../components/AlertMessage.vue';
+import BtnComponent from '../../../components/ButtonComponent.vue';
 
 export default defineComponent({
   name: 'page-title',
-  components: { AddActivityButton, Modal, Alert },
+  components: {
+    AddActivityButton,
+    Modal,
+    BtnComponent,
+    ToastMessage,
+  },
   props: {
     showButtons: Boolean,
   },
   setup() {
-    const state = reactive({
-      modalActive: false,
-    });
-
-    const data = {
-      activityList: [
-        {
-          title: 'EU-Angola Dialogue Facility',
-          permalink: '#',
-          canBePublished: true,
-        },
-        {
-          title:
-            'Programme in support of Higher Education Agro-PRODESI: Acceleration of inclusive & sustainable agribusiness investment in economic corridors',
-          permalink: '#',
-          canBePublished: false,
-        },
-        {
-          title:
-            'UNFPA Angola Improved national population data systems to map and address inequalities; to advance achievement of the Sustainable Development Goals and the commitments of the Programme of Action of the International Cference on Population and Development; and to strengthen interventions in humanitarian crises activities',
-          permalink: '#',
-          canBePublished: false,
-        },
-        {
-          title: 'Programme in support of Higher Education',
-          permalink: '#',
-          canBePublished: true,
-        },
-        {
-          title:
-            'AGO.S1 Leadership, advocacy and communication to fast track the AIDS response',
-          permalink: '#',
-          canBePublished: true,
-        },
-      ],
-    };
-
-    const list = reactive({
-      publishable: [],
-      nonPublishable: [],
-    });
-
-    // computed function
-    // const selectedItems = computed({
-    //
-    // });
-
-    // toggle function
-    const toggleModal = () => {
-      state.modalActive = false;
-    };
+    const [modalValue, modalToggle] = useToggle();
 
     return {
-      state,
-      data,
-      list,
-      toggleModal,
+      modalValue,
+      modalToggle,
     };
   },
 });

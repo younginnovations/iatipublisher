@@ -50,10 +50,6 @@
               href="#"
               class="hover:text-sp50 inline-flex items-start text-n-50 transition duration-500"
             >
-              <svg-vue
-                icon="approved-cloud"
-                class="mr-3 mt-1 shrink-0 text-base text-spring-50"
-              ></svg-vue>
               <span>EU-Angola Dialogue Facility</span>
             </a>
           </td>
@@ -71,7 +67,9 @@
             </button>
           </td>
 
-          <td></td>
+          <td>
+            <button class="button primary-outline-btn w-20">Publish</button>
+          </td>
 
           <th class="check-column">
             <label class="sr-only" for="">
@@ -89,19 +87,15 @@
           </th>
         </tr>
 
-        <!--      ========================================    -->
-        <!--      Second item with "Ready to Publish" button  -->
-        <!--      ============================================-->
+        <!--============================================
+              Second item with "Draft" button
+        ================================================-->
         <tr>
           <td class="text-n-50">
             <a
               href="#"
               class="hover:text-sp50 inline-flex items-start text-n-50 transition duration-500"
             >
-              <svg-vue
-                icon="approved-cloud"
-                class="mr-3 mt-1 shrink-0 text-base text-spring-50"
-              ></svg-vue>
               <span
                 >Support Program on Public Finance Management and Financial
                 Sector reform</span
@@ -116,9 +110,9 @@
               class="inline-flex items-center text-n-40 transition duration-500 hover:text-spring-50"
             >
               <span class="mr-1 text-base">
-                <svg-vue icon="tick"></svg-vue>
+                <svg-vue icon="document-write"></svg-vue>
               </span>
-              <span class="text-sm leading-relaxed">Ready to publish</span>
+              <span class="text-sm leading-relaxed">Draft</span>
             </button>
           </td>
 
@@ -143,19 +137,74 @@
           </th>
         </tr>
 
-        <!--      ========================================-->
-        <!--        Third item with "Published" Status-->
-        <!--      ============================================-->
+        <!-- ===========================================
+              Third item with "Ready to Publish"
+              and Previously Published Status
+        ================================================-->
+        <tr class="has-status">
+          <td class="text-n-50">
+            <div
+              class="status absolute top-0.5 left-0 flex items-center bg-mint py-1.5 px-2"
+            >
+              <svg-vue
+                icon="approved-cloud"
+                class="pr-1 text-base text-spring-50"
+              ></svg-vue>
+              <span class="text-xs text-n-50"
+                >Previously Published on IATI</span
+              >
+            </div>
+            <a
+              href="#"
+              class="hover:text-sp50 inline-flex items-start text-n-50 transition duration-500"
+            >
+              <span>EU-Angola Dialogue Facility 2</span>
+            </a>
+          </td>
+
+          <td class="text-n-40">2 days ago</td>
+
+          <td>
+            <button
+              class="inline-flex items-center text-n-40 transition duration-500 hover:text-spring-50"
+            >
+              <span class="mr-1 text-base">
+                <svg-vue icon="tick"></svg-vue>
+              </span>
+              <span class="text-sm leading-relaxed">Ready to publish</span>
+            </button>
+          </td>
+
+          <td>
+            <button class="button primary-outline-btn w-20">RePublish</button>
+          </td>
+
+          <th class="check-column">
+            <label class="sr-only" for="">
+              Select "EU-Angola Dialogue Facility 2"
+            </label>
+            <label class="checkbox">
+              <input
+                type="checkbox"
+                :value="3"
+                v-model="state.selected"
+                @change="emitShowOrHide"
+              />
+              <span class="checkmark"></span>
+            </label>
+          </th>
+        </tr>
+
+        <!-- ===========================================
+              Fourth item with "Ready to Publish"
+              Status
+        ================================================-->
         <tr>
           <td class="text-n-50">
             <a
               href="#"
               class="hover:text-sp50 inline-flex items-start text-n-50 transition duration-500"
             >
-              <svg-vue
-                icon="tick"
-                class="mr-3 mt-1 shrink-0 text-base text-spring-50"
-              ></svg-vue>
               <span
                 >UNFPA Angola Improved national population data systems to map
                 and address inequalities; to advance the achievement of the
@@ -194,7 +243,7 @@
             <label class="checkbox">
               <input
                 type="checkbox"
-                :value="3"
+                :value="4"
                 v-model="state.selected"
                 @change="emitShowOrHide"
               />
@@ -203,19 +252,26 @@
           </th>
         </tr>
 
-        <!--      ========================================-->
-        <!--        Fourth item with "Changes made" Status-->
-        <!--      ============================================-->
-        <tr>
+        <!-- ===========================================
+              Fifth item with "Changes made" Status
+        ================================================-->
+        <tr class="has-status">
           <td class="text-n-50">
+            <div
+              class="status absolute top-0.5 left-0 flex items-center bg-mint py-1.5 px-2"
+            >
+              <svg-vue
+                icon="approved-cloud"
+                class="pr-1 text-base text-spring-50"
+              ></svg-vue>
+              <span class="text-xs text-n-50"
+                >Previously Published on IATI</span
+              >
+            </div>
             <a
               href="#"
               class="hover:text-sp50 inline-flex items-start text-n-50 transition duration-500"
             >
-              <svg-vue
-                icon="approved-cloud"
-                class="mr-3 mt-1 text-base text-spring-50"
-              ></svg-vue>
               <span>Programme in support of Higher Education</span>
             </a>
           </td>
@@ -244,7 +300,7 @@
             <label class="checkbox">
               <input
                 type="checkbox"
-                :value="4"
+                :value="5"
                 v-model="state.selected"
                 @change="emitShowOrHide"
               />

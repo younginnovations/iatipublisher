@@ -17,7 +17,7 @@
         @apply relative;
         &:after {
           content: '';
-          @apply absolute left-0 bottom-0 h-px w-full w-full max-w-full bg-n-20;
+          @apply absolute left-0 bottom-0 h-px w-full max-w-full bg-n-20;
         }
       }
       td:first-child:after {
@@ -45,10 +45,20 @@
   }
 
   td {
-    padding: 16px 24px;
-    font-size: 14px;
-    line-height: 1.6;
-    vertical-align: top;
+    @apply relative py-4 px-6 align-top text-base leading-relaxed;
+  }
+
+  .has-status {
+    td {
+      @apply px-6 pt-11 pb-7;
+    }
+    th {
+      @apply px-6 pt-11 pb-7;
+    }
+  }
+
+  .check-column .checkbox {
+    margin-top: 4px;
   }
 }
 

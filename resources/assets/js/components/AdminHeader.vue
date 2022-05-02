@@ -44,7 +44,6 @@
     </nav>
     <div class="flex grow-0 items-center">
       <div class="flex">
-        <!--        <input type="text" v-model="keyword">-->
         <button class="button secondary-btn mr-3.5 font-bold">
           <svg-vue icon="plus"></svg-vue>
         </button>
@@ -105,7 +104,9 @@ export default defineComponent({
         },
       ],
     };
-    return { data };
+    return {
+      data,
+    };
   },
 });
 </script>

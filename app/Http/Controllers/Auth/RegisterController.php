@@ -72,7 +72,7 @@ class RegisterController extends Controller
             'username'     => ['required', 'string', 'max:255', 'unique:users,username'],
             'full_name'    => ['required', 'string', 'max:255'],
             'email'        => ['required', 'string', 'email', 'max:255', 'unique:users,email'],
-            'publisher_id' => ['required', 'string', 'max:255', 'unique:organizations,publisher_id'],
+            'publisher_id' => ['required', 'string', 'max:255'],
             'password'     => ['required', 'string', 'min:8', 'confirmed'],
         ]);
     }
@@ -88,7 +88,7 @@ class RegisterController extends Controller
         try {
             $postData = $request->all();
             $validator = Validator::make($postData, [
-                'publisher_id'        => ['required', 'max:255', 'unique:organizations,publisher_id'],
+                'publisher_id'        => ['required', 'max:255'],
                 'publisher_name'      => ['required', 'string', 'max:255'],
                 'registration_agency' => ['required'],
                 'registration_number' => ['required'],
@@ -119,7 +119,7 @@ class RegisterController extends Controller
             }
 
             if ($postData['registration_agency'] . '-' . $postData['registration_number'] != $response->publisher_iati_id) {
-                $errors['publisher_iati_id'] = 'Publisher IATI ID doesn\'t match your IATI Registry information';
+                $errors['identifier'] = 'Publisher IATI ID doesn\'t match your IATI Registry information';
             }
 
             if (!empty($errors)) {
@@ -196,7 +196,7 @@ class RegisterController extends Controller
                 'username'     => ['required', 'string', 'max:255', 'unique:users,username'],
                 'full_name'    => ['required', 'string', 'max:255'],
                 'email'        => ['required', 'string', 'email', 'max:255', 'unique:users,email'],
-                'publisher_id' => ['required', 'string', 'max:255', 'unique:organizations,publisher_id'],
+                'publisher_id' => ['required', 'string', 'max:255'],
                 'password'     => ['required', 'string', 'min:8', 'confirmed'],
             ]);
 
