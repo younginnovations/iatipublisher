@@ -128,7 +128,7 @@ button {
 
 // primary outline button
 .primary-outline-btn {
-  @apply justify-center rounded-3xl border border-spring-50 py-0.5 px-3.5 text-sm leading-relaxed text-spring-50;
+  @apply justify-center rounded-3xl border border-spring-50 px-3.5 text-sm leading-relaxed text-spring-50;
   filter: drop-shadow(0px 4px 40px rgba(0, 0, 0, 0.1));
 
   &:hover {

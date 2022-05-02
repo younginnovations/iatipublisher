@@ -17,7 +17,7 @@
         @apply relative;
         &:after {
           content: '';
-          @apply absolute left-0 bottom-0 h-px w-full w-full max-w-full bg-n-20;
+          @apply absolute left-0 bottom-0 h-px w-full max-w-full bg-n-20;
         }
       }
       td:first-child:after {
@@ -55,6 +55,10 @@
     th {
       @apply px-6 pt-11 pb-7;
     }
+  }
+
+  .check-column .checkbox {
+    margin-top: 4px;
   }
 }
 

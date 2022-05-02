@@ -39,6 +39,7 @@ export default defineComponent({
   },
 });
 </script>
+
 <style lang="scss" scoped>
 .modal-animation-enter-active,
 .modal-animation-leave-active {
