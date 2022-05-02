@@ -75,9 +75,18 @@ export default defineComponent({
   },
 
   props: {
-    currencies: [String, Object],
-    languages: [String, Object],
-    humanitarian: [String, Object],
+    currencies: {
+      type: [String, Object],
+      required: true,
+    },
+    languages: {
+      type: [String, Object],
+      required: true,
+    },
+    humanitarian: {
+      type: [String, Object],
+      required: true,
+    },
   },
 
   setup(props) {
