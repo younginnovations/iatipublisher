@@ -1,16 +1,20 @@
 <template>
   <section class="section">
     <Loader v-if="loaderVisibility"></Loader>
-    <Toast
-      v-if="toastVisibility"
-      :message="toastMessage"
-      :type="toastType"
-    ></Toast>
     <div class="setting input__field">
       <span class="text-xs font-bold text-n-40">Settings</span>
-      <div class="mt-4 flex items-center">
-        <a href="/activities"><svg-vue icon="left-arrow"></svg-vue></a>
-        <h2 class="ml-3 text-heading-4 font-bold text-n-50">Settings</h2>
+      <div class="flex items-center justify-between">
+        <div class="mt-4 mb-6 flex items-center">
+          <a href="/activities"><svg-vue icon="left-arrow"></svg-vue></a>
+          <h2 class="ml-3 text-heading-4 font-bold text-n-50">Settings</h2>
+        </div>
+        <div>
+          <Toast
+            v-if="toastVisibility"
+            :message="toastMessage"
+            :type="toastType"
+          ></Toast>
+        </div>
       </div>
       <div class="setting__container">
         <div class="flex">
@@ -30,10 +34,12 @@
           </button>
         </div>
         <SettingPublishingForm
+          @keyup.enter="submitForm"
           v-if="tab === 'publish'"
           @submitPublishing="submitForm"
         ></SettingPublishingForm>
         <SettingDefaultForm
+          @keyup.enter="submitForm"
           v-else
           :currencies="currencies"
           :languages="languages"
@@ -95,7 +101,7 @@ export default defineComponent({
     const loaderVisibility = ref(false);
     const toastVisibility = ref(false);
     const toastMessage = ref('');
-    const toastType = ref('');
+    const toastType = ref(false);
 
     const publishingForm = computed(() => store.state.publishingForm);
 
@@ -238,7 +244,7 @@ export default defineComponent({
 
           loaderVisibility.value = false;
           toastVisibility.value = true;
-          setTimeout(() => (toastVisibility.value = false), 2000);
+          setTimeout(() => (toastVisibility.value = false), 5000);
           toastMessage.value = response.message;
           toastType.value = response.success;
         })
@@ -286,7 +292,7 @@ export default defineComponent({
     height: calc(100vh - 80px);
 
     &__container {
-      @apply relative mt-6 rounded-lg bg-white py-14 px-20;
+      @apply relative rounded-lg bg-white py-14 px-20;
       overflow-y: auto;
       max-height: 65vh;
 

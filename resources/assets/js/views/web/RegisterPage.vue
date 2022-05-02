@@ -14,7 +14,7 @@
           v-if="step === 3"
           :email="formData.email"
         ></EmailVerification>
-        <div v-else class="form input__field">
+        <div v-else class="form input__field" @keyup.enter="goToNextForm">
           <div class="form__container">
             <span class="text-2xl font-bold text-n-50">{{
               registerForm[step].title
@@ -185,7 +185,7 @@
               </span>
               {{ ele.title }}
               <p
-                class="detail mt-2 font-normal xl:pr-2"
+                class="detail mt-2 mb-6 font-normal xl:pr-2"
                 v-if="step == parseInt(i)"
               >
                 {{ ele.description }}
