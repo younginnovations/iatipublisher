@@ -542,55 +542,6 @@ export default defineComponent({
         @apply text-n-40;
       }
     }
-    .form {
-      @apply bg-white;
-      padding: 40px 80px;
-      border-top-left-radius: 8px;
-      border-bottom-left-radius: 8px;
-      width: 862px;
-
-      &__container {
-        @apply border-b-2 border-b-n-10;
-        margin-bottom: 24px;
-
-        .multiselect-option.is-selected {
-          @apply bg-n-20 text-n-50;
-        }
-        .multiselect-option.is-selected.is-pointed {
-          @apply bg-n-20 text-n-50;
-        }
-        .multiselect.is-active {
-          box-shadow: 0 0 0 0;
-        }
-        .multiselect-dropdown {
-          @apply border border-n-50;
-        }
-        .multiselect-caret {
-          -webkit-mask-image: url('/images/dropdown-arrow.svg');
-          mask-image: url('/images/dropdown-arrow.svg');
-        }
-        .vue__select {
-          @apply border border-n-30 text-base leading-6 outline-none duration-300;
-          padding: 16px 0px 16px 55px;
-          height: 52px;
-
-          &:focus {
-            @apply border border-n-50 bg-n-10;
-            box-shadow: 0 0 0 0;
-          }
-          &::placeholder {
-            letter-spacing: -0.02em;
-            @apply text-n-40;
-          }
-          &:focus::placeholder {
-            @apply text-n-50;
-          }
-        }
-        .error__input {
-          @apply border border-crimson-50;
-        }
-      }
-    }
     aside {
       @apply bg-eggshell;
       padding: 96px 80px 40px 32px;
@@ -622,13 +573,62 @@ export default defineComponent({
       }
     }
   }
-  @media screen and (min-width: 1024px) {
-    .form__content {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 16px;
-      margin-top: 24px;
+}
+.form {
+  @apply bg-white;
+  padding: 40px 80px;
+  border-top-left-radius: 8px;
+  border-bottom-left-radius: 8px;
+  width: 862px;
+
+  &__container {
+    @apply border-b-2 border-b-n-10;
+    margin-bottom: 24px;
+
+    .multiselect-option.is-selected {
+      @apply bg-n-20 text-n-50;
     }
+    .multiselect-option.is-selected.is-pointed {
+      @apply bg-n-20 text-n-50;
+    }
+    .multiselect.is-active {
+      box-shadow: 0 0 0 0;
+    }
+    .multiselect-dropdown {
+      @apply border border-n-50;
+    }
+    .multiselect-caret {
+      -webkit-mask-image: url('/images/dropdown-arrow.svg');
+      mask-image: url('/images/dropdown-arrow.svg');
+    }
+    .error__input {
+      @apply border border-crimson-50;
+    }
+  }
+}
+.vue__select {
+  @apply border border-n-30 text-base leading-6 outline-none duration-300;
+  padding: 16px 0px 16px 55px;
+  height: 52px;
+
+  &:focus {
+    @apply border border-n-50 bg-n-10;
+    box-shadow: 0 0 0 0;
+  }
+  &::placeholder {
+    letter-spacing: -0.02em;
+    @apply text-n-40;
+  }
+  &:focus::placeholder {
+    @apply text-n-50;
+  }
+}
+@media screen and (min-width: 1024px) {
+  .form__content {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+    margin-top: 24px;
   }
 }
 </style>
