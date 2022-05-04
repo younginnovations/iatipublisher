@@ -4,11 +4,10 @@
       <svg-vue class="cursor-pointer text-base" icon="help"></svg-vue>
     </button>
     <div
-      class="help__text"
       :class="
         props.position === 'left'
-          ? 'left-0 ' + hoverTextClass
-          : 'right-0 ' + hoverTextClass
+          ? 'help__text left-0 ' + hoverTextClass
+          : 'help__text right-0 ' + hoverTextClass
       "
     >
       <p class="font-bold text-bluecoral">{{ props.name }}</p>
@@ -66,7 +65,7 @@ export default defineComponent({
   @apply relative;
 
   &__text {
-    @apply invisible absolute top-4 z-20 w-60 space-y-1.5 rounded bg-eggshell p-2 text-left text-xs text-n-50 opacity-0 duration-200;
+    @apply invisible absolute top-4 z-20 space-y-1.5 rounded bg-eggshell p-2 text-left text-xs text-n-50 opacity-0 duration-200;
     transition: all 0.3s ease-out;
     box-shadow: 0px 4px 40px rgb(0 0 0 / 10%);
   }

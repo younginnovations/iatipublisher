@@ -17,6 +17,10 @@
   "plugins": ["vue", "@typescript-eslint"],
   "rules": {
     "import/no-extraneous-dependencies": ["error", { "devDependencies": true }],
-    "max-len": "off"
+    "@typescript-eslint/no-shadow": ["error"],
+    "no-param-reassign": [2, {"state": false}],
+    "@typescript-eslint/no-var-requires": 0,
+    "max-len": "off",
+    "no-shadow": "off"
   }
 }

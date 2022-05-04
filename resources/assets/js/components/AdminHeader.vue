@@ -43,14 +43,6 @@
       </ul>
     </nav>
     <div class="flex grow-0 items-center">
-      <div class="flex">
-        <button
-          @click="modalValue = true"
-          class="button secondary-btn mr-3.5 font-bold"
-        >
-          <svg-vue icon="plus"></svg-vue>
-        </button>
-      </div>
       <div class="flex items-center">
         <div class="search">
           <input
@@ -64,7 +56,10 @@
           ></svg-vue>
         </div>
         <!--        <input type="text" v-model="keyword">-->
-        <button class="button secondary-btn mr-3.5 font-bold">
+        <button
+          class="button secondary-btn mr-3.5 font-bold"
+          @click="modalValue = true"
+        >
           <svg-vue icon="add"></svg-vue>
         </button>
         <button

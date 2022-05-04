@@ -559,18 +559,6 @@ export default defineComponent({
         @apply text-n-40;
       }
     }
-    .form {
-      @apply bg-white;
-      padding: 40px 80px;
-      border-top-left-radius: 8px;
-      border-bottom-left-radius: 8px;
-      width: 862px;
-
-      &__container {
-        @apply border-b-2 border-b-n-10;
-        margin-bottom: 24px;
-      }
-    }
     aside {
       @apply bg-eggshell;
       padding: 96px 80px 40px 32px;

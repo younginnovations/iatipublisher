@@ -78,16 +78,16 @@ class AuthenticationTest extends TestCase
      *
      * @return void
      */
-    // public function test_successful_login(): void
-    // {
-    //     Organization::factory()->create();
-    //     $user = User::factory()->create();
+    public function test_successful_login(): void
+    {
+        Organization::factory()->create();
+        $user = User::factory()->create();
 
-    //     $response = $this->post('/login', [
-    //         'username' => $user->username,
-    //         'password' => 'password',
-    //     ]);
+        $response = $this->post('/login', [
+            'username' => $user->username,
+            'password' => 'password',
+        ]);
 
-    //     $response->assertRedirect('/activities');
-    // }
+        $response->assertRedirect('/activities');
+    }
 }
