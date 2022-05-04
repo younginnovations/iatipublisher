@@ -4,6 +4,9 @@ namespace App\Http\Requests\Setting;
 
 use Illuminate\Foundation\Http\FormRequest;
 
+/**
+ * Class DefaultFormRequest.
+ */
 class DefaultFormRequest extends FormRequest
 {
     public function authorize()

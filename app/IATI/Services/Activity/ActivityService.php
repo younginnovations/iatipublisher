@@ -18,6 +18,7 @@ class ActivityService
 
     /**
      * ActivityService constructor.
+     *
      * @param ActivityRepository $activityRepository
      */
     public function __construct(ActivityRepository $activityRepository)
@@ -27,6 +28,7 @@ class ActivityService
 
     /**
      * Returns all activities present in database.
+     *
      * @return \Illuminate\Database\Eloquent\Collection
      */
     public function getAllActivities(): \Illuminate\Database\Eloquent\Collection

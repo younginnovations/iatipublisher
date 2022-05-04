@@ -15,7 +15,6 @@ use Illuminate\Auth\Events\Registered;
 use Illuminate\Database\DatabaseManager;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 
@@ -113,7 +112,11 @@ class RegisterController extends Controller
                 return response()->json([
                     'success' => false,
                     'publisher_error' => true,
-                    'errors'  => ['publisher_name' => ['Publisher Name doesn\'t exists in IATI Registry'], 'publisher_id' => ['Publisher ID doesn\'t match with your IATI Registry Information.']],                ]);
+                    'errors'  => [
+                        'publisher_name' => ['Publisher Name doesn\'t exists in IATI Registry'],
+                        'publisher_id' => ['Publisher ID doesn\'t match with your IATI Registry Information.'],
+                    ],
+                ]);
             }
 
             $errors = [];
@@ -137,7 +140,7 @@ class RegisterController extends Controller
 
             return response()->json(['success' => true, 'message' => 'Publisher verified successfully']);
         } catch (ClientException $e) {
-            Log::error($e->getMessage());
+            logger()->error($e->getMessage());
 
             return response()->json(
                 [
@@ -149,7 +152,7 @@ class RegisterController extends Controller
                 ]
             );
         } catch (Exception $e) {
-            Log::error($e->getMessage());
+            logger()->error($e->getMessage());
 
             return response()->json(['success' => false, 'error' => 'Error has occurred while verifying the publisher.']);
         }
@@ -165,31 +168,13 @@ class RegisterController extends Controller
     protected function create(array $data)
     {
         try {
-            DB::beginTransaction();
+            $this->db->beginTransaction();
             $user = $this->userService->registerExistingUser($data);
-
-            DB::commit();
+            $this->db->commit();
 
             return $user;
         } catch (\Exception $e) {
-            Log::error($e->getMessage());
-        }
-    }
-
-    /**
-     * Show the application registration form.
-     *
-     * @return \Illuminate\View\View
-     */
-    public function showRegistrationForm(): \Illuminate\View\View
-    {
-        try {
-            $countries = getCodeList('Country', 'Organization');
-            $registration_agencies = getCodeList('OrganizationRegistrationAgency', 'Organization');
-
-            return view('web.register', compact('countries', 'registration_agencies'));
-        } catch (\Exception $e) {
-            Log::error($e->getMessage());
+            logger()->error($e->getMessage());
         }
     }
 

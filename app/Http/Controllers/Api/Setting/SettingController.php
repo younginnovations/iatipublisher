@@ -13,7 +13,6 @@ use GuzzleHttp\Client;
 use Illuminate\Database\DatabaseManager;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 /**
@@ -50,7 +49,7 @@ class SettingController extends Controller
 
             return response()->json(['success' => true, 'message' => 'Settings fetched successfully', 'data' => $setting]);
         } catch (\Exception $e) {
-            Log::error($e->getMessage());
+            logger()->error($e->getMessage());
 
             return response()->json(['success' => false, 'message' => 'Error occurred while fetching the data']);
         }
@@ -79,18 +78,18 @@ class SettingController extends Controller
                 $publisherData['publisher_verification'] = $publisher_verification['validation'];
                 $publisherData['token_verification'] = $token_verification['validation'];
 
-                DB::beginTransaction();
+                $this->db->beginTransaction();
 
                 $this->settingService->storePublishingInfo($publisherData);
 
-                DB::commit();
+                $this->db->commit();
 
                 return response()->json(['success' => true, 'message' => 'Publisher setting stored successfully', 'data' => $publisherData]);
             }
 
             return response()->json(['success' => false, 'message' => 'Error occurred while verifying data', 'data' => $publisherData, 'error' => ['token' => $token_verification, 'publisher_verification' => $publisher_verification]]);
         } catch (\Exception $e) {
-            Log::error($e->getMessage());
+            logger()->error($e->getMessage());
 
             return response()->json(['success' => false, 'message' => 'Error occurred while storing setting']);
         }
@@ -106,15 +105,15 @@ class SettingController extends Controller
     public function storeDefaultForm(DefaultFormRequest $request): JsonResponse
     {
         try {
-            DB::beginTransaction();
+            $this->db->beginTransaction();
 
             $this->settingService->storeDefaultValues($request->all());
 
-            DB::commit();
+            $this->db->commit();
 
             return response()->json(['success' => true, 'message' => 'Default setting stored successfully']);
         } catch (\Exception $e) {
-            Log::error($e->getMessage());
+            logger()->error($e->getMessage());
 
             return response()->json(['success' => false, 'message' => 'Error occurred while storing setting']);
         }
@@ -149,7 +148,7 @@ class SettingController extends Controller
 
             return ['success' => true, 'validation' => $response ? true : false];
         } catch (\Exception $e) {
-            Log::error($e->getMessage());
+            logger()->error($e->getMessage());
 
             return ['success' => 'error', 'message' => $e->getMessage()];
         }
@@ -183,7 +182,7 @@ class SettingController extends Controller
 
             return ['success' => true, 'validation' => in_array($data['publisher_id'], array_column($response, 'name')) ? true : false];
         } catch (\Exception $e) {
-            Log::error($e->getMessage());
+            logger()->error($e->getMessage());
 
             return ['success' => false, 'message' => $e->getMessage()];
         }

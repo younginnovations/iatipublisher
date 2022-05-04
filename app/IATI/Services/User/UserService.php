@@ -5,10 +5,8 @@ declare(strict_types=1);
 namespace App\IATI\Services\User;
 
 use App\IATI\Repositories\Organization\OrganizationRepository;
-use App\IATI\Repositories\Setting\SettingRepository;
 use App\IATI\Repositories\User\UserRepository;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Log;
 
 /**
  * Class UserService.
@@ -26,20 +24,14 @@ class UserService
     private OrganizationRepository $organizationRepo;
 
     /**
-     * @var SettingRepository
-     */
-    private $settingRepo;
-
-    /**
      * UserService constructor.
      *
      * @param UserRepository $userRepo
      */
-    public function __construct(UserRepository $userRepo, OrganizationRepository $organizationRepo, SettingRepository $settingRepo)
+    public function __construct(UserRepository $userRepo, OrganizationRepository $organizationRepo)
     {
         $this->userRepo = $userRepo;
         $this->organizationRepo = $organizationRepo;
-        $this->settingRepo = $settingRepo;
     }
 
     /**
@@ -59,7 +51,6 @@ class UserService
      */
     public function registerExistingUser(array $data)
     {
-        // dump('here');
         $organization = $this->organizationRepo->createOrganization([
             'publisher_id'        => $data['publisher_id'],
             'publisher_name'      => $data['publisher_name'],
@@ -69,9 +60,6 @@ class UserService
             'identifier'          => $data['registration_agency'] . '-' . $data['registration_number'],
             'iati_status'         => 'pending',
         ]);
-        // dd($organization);
-
-        // Log::info($organization['id']);
 
         return $this->userRepo->store([
             'username'        => $data['username'],

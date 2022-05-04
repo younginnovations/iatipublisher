@@ -43,7 +43,7 @@ class SettingController extends Controller
 
             return view('admin.settings.index', compact('currencies', 'languages', 'humanitarian'));
         } catch (\Exception $e) {
-            Log::error($e);
+            logger()->error($e->getMessage());
 
             return redirect()->route('/activities');
         }

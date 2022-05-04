@@ -9,7 +9,7 @@ use App\IATI\Repositories\Setting\SettingRepository;
 use Illuminate\Support\Facades\Auth;
 
 /**
- * Class Setting.
+ * Class SettingService.
  */
 class SettingService
 {
