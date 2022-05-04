@@ -3,9 +3,18 @@
     <button class="">
       <svg-vue class="cursor-pointer text-base" icon="help"></svg-vue>
     </button>
-    <div class="help__text">
-      <span class="font-bold">{{ props.name }}</span>
+    <div
+      class="help__text"
+      :class="props.position === 'left' ? 'left-0' : 'right-0'"
+    >
+      <p class="font-bold text-bluecoral">{{ props.name }}</p>
       <p>{{ props.hover_text }}</p>
+      <a
+        :href="props.link"
+        v-if="props.link"
+        class="inline-block font-bold text-bluecoral"
+        >Learn more</a
+      >
     </div>
   </div>
 </template>
@@ -17,6 +26,8 @@ export default defineComponent({
   props: {
     name: String,
     hover_text: String,
+    position: String,
+    link: String,
   },
   setup(props) {
     return {
@@ -31,8 +42,9 @@ export default defineComponent({
   @apply relative pb-2;
 
   &__text {
-    @apply invisible absolute right-0 top-4 z-20 w-60 rounded bg-eggshell p-2 text-xs text-n-40 opacity-0 duration-200;
+    @apply invisible absolute top-4 z-20 w-60 space-y-1.5 rounded bg-eggshell p-2 text-xs text-n-50 opacity-0 duration-200;
     transition: all 0.3s ease-out;
+    box-shadow: 0px 4px 40px rgb(0 0 0 / 10%);
   }
 }
 

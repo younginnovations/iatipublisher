@@ -1,5 +1,5 @@
 <template>
-  <button class="button relative font-bold" :class="btnType">
+  <button class="button relative font-bold text-n-40" :class="btnType">
     <svg-vue :icon="icon" v-if="icon"></svg-vue>
     <span>{{ text }}</span>
   </button>
