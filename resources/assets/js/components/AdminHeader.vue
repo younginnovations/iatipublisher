@@ -43,16 +43,59 @@
       </ul>
     </nav>
     <div class="flex grow-0 items-center">
-      <div class="flex">
+      <div class="flex items-center">
+        <div class="search">
+          <input
+            class="search__input"
+            type="text"
+            placeholder="Search activity..."
+          />
+          <svg-vue
+            class="absolute left-3 top-3 text-base"
+            icon="search"
+          ></svg-vue>
+        </div>
+        <!--        <input type="text" v-model="keyword">-->
         <button
-          @click="modalValue = true"
           class="button secondary-btn mr-3.5 font-bold"
+          @click="modalValue = true"
         >
-          <svg-vue icon="plus"></svg-vue>
+          <svg-vue icon="add"></svg-vue>
         </button>
-        <button class="button secondary-btn font-bold">
+        <button
+          class="button secondary-btn dropdown-btn"
+          @click="toggle"
+          ref="dropdownBtn"
+        >
           <svg-vue icon="user-profile"></svg-vue>
+          <svg-vue
+            :class="
+              state.isVisible ? 'dropdown__arrow rotate-180' : 'dropdown__arrow'
+            "
+            icon="dropdown-arrow"
+          ></svg-vue>
         </button>
+        <div v-show="state.isVisible" class="profile__dropdown" ref="dropdown">
+          <ul>
+            <li class="border-b border-b-n-20">
+              <svg-vue class="user-profile" icon="user-profile"></svg-vue>
+              <div class="flex flex-col capitalize leading-4">
+                <span class="text-n-50">{{ props.user.full_name }}</span
+                ><span class="text-tiny text-n-40">{{
+                  props.organization.publisher_name
+                }}</span>
+              </div>
+            </li>
+            <li class="dropdown__list border-b border-b-n-20">
+              <svg-vue icon="user"></svg-vue>
+              <a href="#">Your Profile</a>
+            </li>
+            <li class="dropdown__list" @click="logout">
+              <svg-vue icon="logout"></svg-vue>
+              <a href="#">Logout</a>
+            </li>
+          </ul>
+        </div>
       </div>
     </div>
 
@@ -201,7 +244,8 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { reactive, defineComponent, onMounted, ref } from 'vue';
+import axios from 'axios';
 import { useToggle } from '@vueuse/core';
 import Multiselect from '@vueform/multiselect';
 
@@ -217,7 +261,20 @@ export default defineComponent({
     HoverText,
     Multiselect,
   },
-  setup() {
+  props: {
+    user: {
+      type: Object,
+      required: true,
+    },
+    organization: {
+      type: Object,
+      required: true,
+    },
+  },
+
+  setup(props) {
+    const dropdown = ref();
+    const dropdownBtn = ref();
     const data = {
       languageNavLiClasses: 'flex',
       languageNavAnchorClasses:
@@ -245,7 +302,7 @@ export default defineComponent({
       menus: [
         {
           name: 'Activity DATA',
-          permalink: '#',
+          permalink: 'activities',
           active: true,
         },
         {
@@ -255,16 +312,50 @@ export default defineComponent({
         },
         {
           name: 'Settings',
-          permalink: '#',
+          permalink: 'setting',
           active: false,
         },
       ],
     };
     const [modalValue, modalToggle] = useToggle();
+
+    const state = reactive({
+      isVisible: false,
+    });
+
+    onMounted(() => {
+      window.addEventListener('click', (e) => {
+        if (
+          !dropdownBtn.value.contains(e.target) &&
+          !dropdown.value.contains(e.target)
+        ) {
+          state.isVisible = false;
+        }
+      });
+    });
+
+    const toggle = () => {
+      state.isVisible = !state.isVisible;
+    };
+
+    async function logout() {
+      await axios.post('/logout').then((res) => {
+        if (res.status) {
+          window.location.href = '/';
+        }
+      });
+    }
+
     return {
+      props,
       data,
+      state,
+      dropdown,
+      dropdownBtn,
+      toggle,
       modalValue,
       modalToggle,
+      logout,
     };
   },
 });
@@ -289,5 +380,36 @@ export default defineComponent({
 }
 .form-group-title {
   @apply text-xs font-bold text-bluecoral;
+}
+.search {
+  position: relative;
+
+  &__input {
+    @apply mr-3.5 border border-n-30 bg-transparent outline-none;
+    border-radius: 20px;
+    padding: 10px 42px 10px 34px;
+  }
+}
+
+.profile__dropdown {
+  @apply absolute right-10 z-20 bg-white text-left text-sm text-bluecoral shadow-dropdown;
+  top: 60px;
+  width: 265px;
+  box-shadow: 4px 4px 40px rgba(0, 50, 76, 0.2);
+
+  li {
+    @apply flex items-center space-x-3 p-4;
+
+    a:hover {
+      @apply text-bluecoral;
+    }
+
+    .user-profile {
+      font-size: 26px;
+    }
+  }
+  .dropdown__list {
+    @apply bg-n-10 hover:bg-n-20 hover:text-bluecoral;
+  }
 }
 </style>

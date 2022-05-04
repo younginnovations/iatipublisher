@@ -30,11 +30,8 @@
   font-weight: normal;
   font-size: 12px;
 }
-.error__input {
-  @apply border border-crimson-50;
-}
 .form__input {
-  @apply box-border w-full rounded border border-n-30 outline-none duration-300;
+  @apply my-2 box-border w-full rounded border border-n-30 outline-none duration-300;
   padding: 13px 0 13px 16px;
 
   &::placeholder {
@@ -47,4 +44,46 @@
   &:focus::placeholder {
     @apply text-n-50;
   }
+}
+.input__field {
+  .multiselect-option.is-selected {
+    @apply bg-n-20 text-n-50;
+  }
+  .multiselect-option.is-selected.is-pointed {
+    @apply bg-n-20 text-n-50;
+  }
+  .multiselect.is-active {
+    @apply border border-n-50 bg-n-10;
+    box-shadow: 0 0 0 0;
+  }
+  .multiselect-placeholder {
+    letter-spacing: -0.02em;
+    @apply pr-3 text-sm text-n-40;
+  }
+  .multiselect.is-open {
+    .multiselect-placeholder {
+      @apply text-n-50;
+    }
+  }
+  .multiselect-dropdown {
+    @apply border border-n-50;
+  }
+  .multiselect-caret {
+    -webkit-mask-image: url('/images/dropdown-arrow.svg');
+    mask-image: url('/images/dropdown-arrow.svg');
+  }
+  .multiselect-search {
+    @apply border border-n-30;
+  }
+  .multiselect-search:focus {
+    @apply bg-n-10;
+  }
+  .vue__select {
+    @apply my-2 text-sm leading-6 outline-none duration-300;
+    height: 52px;
+    padding: 16px 0px 16px 55px;
+  }
+}
+.error__input {
+  @apply border border-crimson-50;
 }

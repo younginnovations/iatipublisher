@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * Class User.
+ * Class Organization.
  */
 class Organization extends Model
 {
@@ -44,6 +44,7 @@ class Organization extends Model
 
     /**
      * Organisation has many activities.
+     *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function activities(): \Illuminate\Database\Eloquent\Relations\HasMany

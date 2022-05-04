@@ -72,4 +72,12 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return new UserFactory();
     }
+
+    /**
+     * User belongs to organization.
+     */
+    protected function organization()
+    {
+        return $this->belongsTo('App\IATI\Models\Organization\Organization', 'organization_id');
+    }
 }

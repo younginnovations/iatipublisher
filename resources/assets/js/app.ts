@@ -18,6 +18,13 @@ import RegisterPage from './views/web/RegisterPage.vue';
 import Activity from './views/activity/ActivityList.vue';
 import LoggedInHeader from './components/AdminHeader.vue';
 
+/*
+  setting page
+*/
+import SettingPage from './views/setting/SettingPage.vue';
+
+// require('./bootstrap');
+
 const app = createApp({});
 
 /**
@@ -43,6 +50,11 @@ app.component('register-form', RegisterPage);
 app.component('activity-template', Activity);
 app.component('loggedin-header', LoggedInHeader);
 
+/*
+setting page
+*/
+app.component('setting-page', SettingPage);
+
 /**
  * Extension to inline SVG files with Vue.js and optimize them automatically with SVGO
  */
@@ -53,5 +65,4 @@ app.use(SvgVue);
  * the page. Then, you may begin adding components to this application
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
-
 app.mount('#app');

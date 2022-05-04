@@ -49,7 +49,7 @@ class UserService
      *
      * @param array $data
      */
-    public function registerExistingUser(array $data): \Illuminate\Database\Eloquent\Model
+    public function registerExistingUser(array $data)
     {
         $organization = $this->organizationRepo->createOrganization([
             'publisher_id'        => $data['publisher_id'],
@@ -68,29 +68,5 @@ class UserService
             'organization_id' => $organization['id'],
             'password'        => Hash::make($data['password']),
         ]);
-    }
-
-    /**
-     * return codeList array from json codeList.
-     *
-     * @param      $listName
-     * @param      $listType
-     * @param bool $code
-     *
-     * @return array
-     */
-    public function getCodeList($listName, $listType, bool $code = true): array
-    {
-        $filePath = app_path("Data/$listType/$listName.json");
-        $codeListFromFile = file_get_contents($filePath);
-        $codeLists = json_decode($codeListFromFile, true);
-        $codeList = $codeLists[$listName];
-        $data = [];
-
-        foreach ($codeList as $list) {
-            $data[$list['code']] = ($code) ? $list['code'] . (array_key_exists('name', $list) ? ' - ' . $list['name'] : '') : $list['name'];
-        }
-
-        return $data;
     }
 }
