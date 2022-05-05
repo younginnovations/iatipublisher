@@ -41,8 +41,14 @@ export default defineComponent({
     JoinNow,
     SignIn,
   },
-  setup() {
-    const page = ref('Join Now');
+  props: {
+    page: {
+      type: String,
+      required: true,
+    },
+  },
+  setup(props) {
+    const page = ref(props.page == 'signin' ? 'Join Now' : 'Sign In');
 
     function togglePage() {
       page.value = page.value === 'Join Now' ? 'Sign In' : 'Join Now';

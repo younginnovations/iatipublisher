@@ -16,9 +16,9 @@ class WebController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function index(): \Illuminate\Contracts\Support\Renderable
+    public function index($page = 'signin'): \Illuminate\Contracts\Support\Renderable
     {
-        return view('web.welcome');
+        return view('web.welcome', compact('page'));
     }
 
     /**

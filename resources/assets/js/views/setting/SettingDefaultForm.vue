@@ -3,21 +3,14 @@
     <div class="registry__info">
       <div class="mb-4 text-sm font-bold text-n-50">Default Values</div>
       <div class="mb-4 flex items-center text-xs text-n-50">
-        <span class="mr-1"
-          ><span class="text-salmon-50">* </span>Mandatory fields</span
-        >
         <button>
           <HoverText
             name="Default Values"
-            hover_text="These values will be automatically added in the XML file of an activity to your data files."
+            hover_text="These values will be automatically added to your data files."
           ></HoverText>
         </button>
       </div>
     </div>
-    <p class="text">
-      These values will be used in the xml files which is published to the IATI
-      Registry. You have the option to override the activities.
-    </p>
     <span class="text-sm font-bold text-n-50">Default for all data</span>
     <div class="register mt-4 mb-6">
       <div class="register__container mb-0">
@@ -45,8 +38,8 @@
           </span>
 
           <p v-if="!defaultError.default_currency">
-            The currency in which you normally report your financial
-            transactions. Select from dropdown.
+            If you do not set your default currency, you have to choose and
+            select currency manually for all the financial transactions.
           </p>
         </div>
         <div>
@@ -55,7 +48,7 @@
             <button>
               <HoverText
                 name="Default Language"
-                hover_text="The language in which you provide data on your activities. You can later manually change the language on individual text if required. "
+                hover_text="The language in which you provide data on your activities. You can later manually change the language on individual text if required."
               ></HoverText>
             </button>
           </div>
@@ -77,7 +70,9 @@
           </span>
 
           <p v-if="!defaultError.default_language">
-            The language in which you normally report. Select from dropdown.
+            If you do not set your default language, you have to choose and
+            select language for all the narrative text in activity and
+            organisation.
           </p>
         </div>
       </div>
@@ -91,7 +86,9 @@
             <button>
               <HoverText
                 name="Default Hierarchy"
-                hover_text="The hierarchical level within the reporting organisation’s subdivision of its units of aid. (eg activity = 1; sub-activity = 2; sub-sub-activity = 3). "
+                hover_text="If you are reporting both programmes (parent activities) and projects (child activities),
+                choose the hierarchical level that most of your activities are at. e.g. parent activity = 1; child activity = 2.
+                <br>If all your activities are at the same level i.e. you have no child activities, then choose 1."
               ></HoverText>
             </button>
           </div>
@@ -111,37 +108,10 @@
             {{ defaultError.hierarchy }}
           </span>
           <p v-if="!defaultError.hierarchy">
-            IATI allows for activities to be reported hierarchically (eg. parent
-            - child ; programme - project - sub-project, etc). For activities at
-            lower levels, their hierarchy can be edited as you are entering
-            them.
+            If hierarchy is not reported then 1 is assumed. If multiple levels
+            are reported then, to avoid double counting, financial transactions
+            should only be reported at the lowest hierarchical level.
           </p>
-        </div>
-        <div>
-          <div class="flex justify-between">
-            <label for="data-url">Linked Data URL</label>
-            <button>
-              <HoverText
-                name="Linked Data URL"
-                hover_text="If a publisher chooses to publish linked data about their IATI activities then allowing them to declare where this data is published would support discovery of it, and any additional information they may choose to publish as Linked Data alongside it."
-              ></HoverText>
-            </button>
-          </div>
-          <input
-            id="data-url"
-            :class="
-              defaultError.linked_data_url
-                ? 'error__input register__input mb-2'
-                : 'register__input mb-2'
-            "
-            type="text"
-            placeholder="Type Linked Data URI here"
-            v-model="defaultForm.linked_data_url"
-            @input="updateStore('linked_data_url')"
-          />
-          <span class="error" role="alert" v-if="defaultError.linked_data_url">
-            {{ defaultError.linked_data_url }}
-          </span>
         </div>
         <div>
           <div class="flex justify-between">
@@ -151,7 +121,7 @@
               <HoverText
                 width="w-[370px]"
                 name="Humanitarian"
-                hover_text="Do you want to add a 'Humanitarian Flag' to every activity that your organisation publishes data on? This means that your organisation identifies all their activities as wholly or partially addressing a humanitarian crisis or multiple crises. You can later manually add or remove a Humantarian Flag on individual activities if required."
+                hover_text="Add a 'Humanitarian Flag' to every activity that your organisation publishes data on. This means that your organisation identifies all their activities as wholly or partially addressing a humanitarian crisis or multiple crises. You can later manually add or remove a Humanitarian Flag on individual activities if required."
               ></HoverText>
             </button>
           </div>
@@ -171,6 +141,9 @@
           <span class="error" role="alert" v-if="defaultError.humanitarian">
             {{ defaultError.humanitarian }}
           </span>
+          <p v-if="!defaultError.hierarchy">
+            If not selected, it will be set to 'Yes' in all the activities.
+          </p>
         </div>
       </div>
     </div>

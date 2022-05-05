@@ -16,9 +16,17 @@
         ></EmailVerification>
         <div v-else class="form input__field" @keyup.enter="goToNextForm">
           <div class="form__container">
-            <span class="text-2xl font-bold text-n-50">{{
-              registerForm[step].title
-            }}</span>
+            <div class="flex items-center space-x-1">
+              <HoverText
+                v-if="registerForm[step].hover_text"
+                :name="registerForm[step].title"
+                :hover_text="registerForm[step].hover_text"
+                :position="right"
+              ></HoverText>
+              <span class="text-2xl font-bold text-n-50">{{
+                registerForm[step].title
+              }}</span>
+            </div>
             <div
               class="feedback mt-6 h-32 border-l-2 border-crimson-50 bg-crimson-10 p-4 text-sm text-n-50"
               v-if="!publisherExists"
@@ -73,7 +81,7 @@
                   "
                   :type="field.type"
                   v-model="formData[field.name]"
-                  :placeholder="formData[field.placeholder]"
+                  :placeholder="field.placeholder"
                   v-if="
                     (field.type === 'text' ||
                       field.type === 'password' ||
@@ -95,7 +103,7 @@
                     '-' +
                     formData.registration_number
                   "
-                  :placeholder="formData[field.placeholder]"
+                  :placeholder="field.placeholder"
                   v-if="field.name == 'identifier'"
                   disabled="disabled"
                 />
@@ -108,6 +116,7 @@
                   "
                   v-if="field.type === 'select'"
                   v-model="formData[field.name]"
+                  :placeholder="field.placeholder"
                   :searchable="true"
                   :options="field.options"
                 />
@@ -301,14 +310,16 @@ export default defineComponent({
         is_complete: false,
         description:
           'This information will be used to create a Publisher in IATI Publisher',
+        hover_text:
+          'Provide information about your organisation. You will need to provide the same information that you used to create your Publisher Account on the IATI Registry (iatiregistry.org).',
         fields: {
           publisher_name: {
             label: 'Publisher Name',
             name: 'publisher_name',
-            placeholder: 'Enter the name of your organization',
+            placeholder: 'Type your Publisher Name here',
             id: 'publisher-name',
             required: true,
-            hover_text: 'The Name of the organisation publishing the data',
+            hover_text: 'Provide the name of your organisation.',
             type: 'text',
             class: 'col-span-2 mb-4 lg:mb-2',
             help_text: '',
@@ -316,25 +327,23 @@ export default defineComponent({
           publisher_id: {
             label: 'Publisher ID',
             name: 'publisher_id',
-            placeholder: "For example, 'dfid' and 'worldbank'",
+            placeholder: 'Type your organisation ID here',
             id: 'publisher-id',
             required: true,
             hover_text:
-              "This will be the unique identifier for the publisher. Where possible use a short abbreviation of your organisation's name. For example: 'dfid' or 'worldbank' Must be at least two characters long and lower case. Can include letters, numbers and also - (dash) and _ (underscore).",
+              "This is the unique ID for your organisation that you created when you set up your IATI Registry Publisher Account. It should be a shorter version of your organisation's name, which will include lowercase letters and may include numbers, - (dash) or _ (underscore). For example nef_mali' for Near East Foundation Mali.",
             type: 'text',
             class: 'mb-4 lg:mb-2',
-            help_text:
-              'You can use a unique abbreviated form of your organization name',
+            help_text: '',
           },
           country: {
             label: 'Country',
             name: 'country',
-            placeholder: 'Select the country',
+            placeholder: 'Select a Country',
             id: 'country_select',
             required: false,
             type: 'select',
-            hover_text:
-              'Choose from the dropdown the country in which the publisher is legally incorporated. ',
+            hover_text: 'Add the location of your organisation.',
             options: props.country,
             class: 'mb-4 lg:mb-2 relative',
             help_text: '',
@@ -342,10 +351,11 @@ export default defineComponent({
           organization_registration_agency: {
             label: 'Organisation Registration Agency',
             name: 'registration_agency',
-            placeholder: 'Select your Organization Registration Agency',
+            placeholder: 'Select an Organisation Registration Agency',
             id: 'registration-agency',
             required: true,
-            hover_text: '',
+            hover_text:
+              'Provide the name of the agency in your country where you organisation is registered. If you do not know this information please email support@iatistandard.org.',
             type: 'select',
             options: registrationAgency,
             class: 'mb-4 lg:mb-2 relative',
@@ -354,13 +364,14 @@ export default defineComponent({
           organization_registration_no: {
             label: 'Organisation Registration Number',
             name: 'registration_number',
-            placeholder: '',
+            placeholder: 'Type your Registration Number here',
             id: 'registration-number',
             required: true,
-            hover_text: '',
+            hover_text:
+              'Add the registration number for your organisation that has been provided by the registration agency named above.',
             type: 'text',
             class: 'mb-4 lg:mb-2',
-            help_text: '',
+            help_text: 'for e.g. 123456',
           },
           iati_organizational_identifier: {
             label: 'IATI Organisational Identifier',
@@ -369,7 +380,7 @@ export default defineComponent({
             id: 'identifier',
             required: true,
             hover_text:
-              'The organisation identifier used in the IATI XML files to identify the reporting organisation. ',
+              'The Organisation Identifier is a unique code for your organisation. This is genereated from the Organisation Registration Agency and Registration Number. For more information read: <a href="http://iatistandard.org/en/guidance/preparing-organisation/organisation-account/how-to-create-your-iati-organisation-identifier/" target="_blank">How to create your IATI organisation identifier.</a>',
             type: 'text',
             class: 'mb-4 lg:mb-6',
             help_text:
@@ -382,15 +393,17 @@ export default defineComponent({
         is_complete: false,
         description:
           'This information will be used to create an admin account in IATI Publisher',
+        hover_text:
+          'Provide your information to create an admin account here on IATI Publisher.',
         fields: {
           username: {
             label: 'Username',
             name: 'username',
-            placeholder: '',
+            placeholder: 'Type username here',
             id: 'username',
             required: true,
             hover_text:
-              'This was auto-generated using organisation abbreviaton you provided earlier.',
+              'You will need this later to login into IATI Publisher.',
             type: 'text',
             class: 'mb-4 lg:mb-2',
             help_text: '',
@@ -398,7 +411,7 @@ export default defineComponent({
           full_name: {
             label: 'Full Name',
             name: 'full_name',
-            placeholder: '',
+            placeholder: 'Type your full name here',
             id: 'full-name',
             hover_text: '',
             required: true,
@@ -408,7 +421,7 @@ export default defineComponent({
           email: {
             label: 'Email Address',
             name: 'email',
-            placeholder: '',
+            placeholder: 'Type valid email here',
             id: 'email',
             required: true,
             hover_text: '',
@@ -418,7 +431,7 @@ export default defineComponent({
           password: {
             label: 'Password',
             name: 'password',
-            placeholder: '',
+            placeholder: 'Type password here',
             id: 'password',
             required: true,
             hover_text: '',
@@ -428,7 +441,7 @@ export default defineComponent({
           confirm_password: {
             label: 'Confirm Password',
             name: 'password_confirmation',
-            placeholder: '',
+            placeholder: 'Type password here',
             id: 'password-confirmation',
             required: true,
             hover_text: '',
@@ -499,6 +512,11 @@ export default defineComponent({
           errorData.full_name = errors.full_name ? errors.full_name[0] : '';
           errorData.email = errors.email ? errors.email[0] : '';
           errorData.password = errors.password ? errors.password[0] : '';
+          errorData.password_confirmation = errors.password_confirmation
+            ? errors.password_confirmation[0]
+            : errors.password
+            ? errors.password[0]
+            : '';
           isLoaderVisible.value = false;
 
           if (response.success) {
@@ -513,6 +531,11 @@ export default defineComponent({
           errorData.full_name = errors.full_name ? errors.full_name[0] : '';
           errorData.email = errors.email ? errors.email[0] : '';
           errorData.password = errors.password ? errors.password[0] : '';
+          errorData.password_confirmation = errors.password_confirmation
+            ? errors.password_confirmation[0]
+            : errors.password
+            ? errors.password[0]
+            : '';
         });
     }
 

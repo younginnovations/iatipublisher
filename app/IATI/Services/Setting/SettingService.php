@@ -52,7 +52,7 @@ class SettingService
         return $this->settingRepo->updateSetting(Auth::user()->organization_id, [
             'organization_id' => Auth::user()->organization_id,
             'publishing_info' => json_encode([
-                'publisher_id' => $data['publisher_id'],
+                'publisher_id' => Auth::user()->organization->publisher_id,
                 'api_token' => $data['api_token'],
                 'publisher_verification' => $data['publisher_verification'],
                 'token_verification' => $data['token_verification'],
@@ -76,9 +76,8 @@ class SettingService
                 'default_language' => $data['default_language'],
             ]),
             'activity_default_values' => json_encode([
-                'hierarchy' => $data['hierarchy'],
-                'linked_data_url' => $data['linked_data_url'],
-                'humanitarian' => $data['humanitarian'],
+                'hierarchy' => isset($data['hierarchy']) ? $data['hierarchy'] : 1,
+                'humanitarian' => isset($data['humanitarian']) ? $data['humanitarian'] : 'yes',
             ]),
         ]);
     }

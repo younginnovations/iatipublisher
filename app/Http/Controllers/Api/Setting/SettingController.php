@@ -62,19 +62,39 @@ class SettingController extends Controller
      *
      * @return JsonResponse
      */
-    public function storePublishingInfo(PublisherFormRequest $request): JsonResponse
+    public function verify(PublisherFormRequest $request): JsonResponse
     {
         try {
             $publisherData = $request->all();
 
-            if ($publisherData['publisher_id'] != Auth::user()->organization->publisher_id) {
-                return response()->json(['success' => false, 'message' => 'Publisher ID cannot be changed', 'data' => $publisherData]);
-            }
+            $publisherData['publisher_id'] = Auth::user()->organization->publisher_id;
+            $publisherData['publisher_verification'] = ($this->verifyPublisher($publisherData))['validation'];
+            $publisherData['token_verification'] = ($this->verifyApi($publisherData))['validation'];
 
+            return response()->json(['success' => true, 'message' => 'API token verified successfully.', 'data' => $publisherData]);
+        } catch (\Exception $e) {
+            logger()->error($e->getMessage());
+
+            return response()->json(['success' => false, 'message' => 'Error occurred while verify publisher']);
+        }
+    }
+
+    /**
+     * Store publishing info a valid registration.
+     *
+     * @param  array  $data
+     *
+     * @return JsonResponse
+     */
+    public function storePublishingInfo(PublisherFormRequest $request): JsonResponse
+    {
+        try {
+            $publisherData = $request->all();
+            $publisherData['publisher_id'] = Auth::user()->organization->publisher_id;
             $publisher_verification = $this->verifyPublisher($publisherData);
             $token_verification = $this->verifyApi($publisherData);
 
-            if ($publisher_verification['success'] && $token_verification['success']) {
+            if (isset($token_verification['success'])) {
                 $publisherData['publisher_verification'] = $publisher_verification['validation'];
                 $publisherData['token_verification'] = $token_verification['validation'];
 
@@ -107,11 +127,11 @@ class SettingController extends Controller
         try {
             $this->db->beginTransaction();
 
-            $this->settingService->storeDefaultValues($request->all());
+            $setting = $this->settingService->storeDefaultValues($request->all());
 
             $this->db->commit();
 
-            return response()->json(['success' => true, 'message' => 'Default setting stored successfully']);
+            return response()->json(['success' => true, 'message' => 'Default setting stored successfully', 'data'=> $setting]);
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
@@ -164,23 +184,27 @@ class SettingController extends Controller
     public function verifyApi(array $data): array
     {
         try {
-            $client = new Client(
-                [
-                    'base_uri' => env('IATI_API_ENDPOINT'),
-                    'headers' => [
-                        'X-CKAN-API-Key' => $data['api_token'],
-                    ],
-                ]
-            );
+            if ($data['api_token']) {
+                $client = new Client(
+                    [
+                        'base_uri' => env('IATI_API_ENDPOINT'),
+                        'headers' => [
+                            'X-CKAN-API-Key' => $data['api_token'],
+                        ],
+                    ]
+                );
 
-            $res = $client->request('GET', env('IATI_API_ENDPOINT') . '/action/organization_list_for_user', [
-                'auth' => [env('IATI_USERNAME'), env('IATI_PASSWORD')],
-                'connect_timeout' => 500,
-            ]);
+                $res = $client->request('GET', env('IATI_API_ENDPOINT') . '/action/organization_list_for_user', [
+                    'auth' => [env('IATI_USERNAME'), env('IATI_PASSWORD')],
+                    'connect_timeout' => 500,
+                ]);
 
-            $response = json_decode($res->getBody()->getContents())->result;
+                $response = json_decode($res->getBody()->getContents())->result;
 
-            return ['success' => true, 'validation' => in_array($data['publisher_id'], array_column($response, 'name')) ? true : false];
+                return ['success' => true, 'validation' => in_array($data['publisher_id'], array_column($response, 'name')) ? true : false];
+            }
+
+            return ['success' => true, 'validation' => false];
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 

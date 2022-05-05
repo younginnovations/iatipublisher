@@ -21,7 +21,7 @@
               <li><a href="/">Home</a></li>
               <li><a href="/">About</a></li>
               <li><a href="/">Sign In</a></li>
-              <li><a href="/">Join Now</a></li>
+              <li><a href="/register/join">Join Now</a></li>
             </ul>
           </div>
           <div class="footer__links">
@@ -42,7 +42,7 @@
             <div class="my-5 flex items-center space-x-2 text-n-10">
               <svg-vue class="text-2xl" icon="headphone"></svg-vue>
               <span class="text-sm font-bold uppercase"
-                >For queries, contact support</span
+                >Any questions? Contact Support</span
               >
             </div>
             <ul>

@@ -55,8 +55,8 @@ class RegisterController extends Controller
     public function showRegistrationForm(): \Illuminate\View\View
     {
         try {
-            $countries = getCodeList('Country', 'Organization');
-            $registration_agencies = getCodeList('OrganizationRegistrationAgency', 'Organization');
+            $countries = getCodeListArray('Country', 'OrganizationArray');
+            $registration_agencies = getCodeListArray('OrganizationRegistrationAgency', 'OrganizationArray');
 
             return view('web.register', compact('countries', 'registration_agencies'));
         } catch (\Exception $e) {

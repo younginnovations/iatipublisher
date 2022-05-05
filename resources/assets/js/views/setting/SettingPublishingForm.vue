@@ -3,9 +3,6 @@
     <div class="registry__info">
       <div class="mb-4 text-sm font-bold text-n-50">Registry Information</div>
       <div class="mb-4 flex items-center text-xs text-n-50">
-        <span class="mr-1"
-          ><span class="text-salmon-50">* </span>Mandatory fields</span
-        >
         <button>
           <HoverText
             name="IATI Registry Information"
@@ -19,13 +16,11 @@
         <div>
           <div class="relative">
             <div class="flex justify-between">
-              <label for="publisher-id"
-                >Publisher ID <span class="text-salmon-50">*</span></label
-              >
+              <label for="publisher-id">Publisher ID </label>
               <button>
                 <HoverText
                   name="Publisher ID"
-                  hover_text="This is the unique identifier for on your organisation on its Publisher Account in the IATI Registry. The Publisher ID is a short abbreviation of your organisation's name. For example: 'nef_mali' or 'oxfamgb'."
+                  hover_text="This is the unique ID for your organisation that you created when you set up your IATI Registry Publisher Account. It is a shortened version of your organisation's name, which will include lowercase letters and may include numbers and also - (dash) and _ (underscore). For example nef_mali' for Near East Foundation Mali."
                 ></HoverText>
               </button>
             </div>
@@ -37,45 +32,24 @@
                   : 'register__input mb-2'
               "
               type="text"
-              placeholder="yipl"
-              v-model="publishingForm.publisher_id"
+              placeholder="Type Publisher ID here"
+              :value="props.organization.publisher_id"
               @input="updateStore('publisher_id')"
-              @focusout="autoVerify"
+              disabled="disabled"
             />
-            <span
-              v-if="publishingInfo.isVerificationRequested"
-              :class="
-                publishingInfo.publisher_verification
-                  ? 'tag__correct'
-                  : 'tag__incorrect'
-              "
-            >
-              {{
-                publishingInfo.publisher_verification ? 'Correct' : 'Incorrect'
-              }}
-            </span>
           </div>
           <span class="error" role="alert" v-if="publishingError.publisher_id">
             {{ publishingError.publisher_id }}
           </span>
-          <p class="xl:pr-2" v-if="!publishingError.publisher_id">
-            You need to create user and publisher accounts on the IATI Registry.
-            When creating your publisher account you will be asked to specify a
-            publisher identifier (typically a unique abbreviation of your
-            organisation's name). We recommend that you use the same identifier
-            as you specified as your IATI account identifier.
-          </p>
         </div>
         <div>
           <div class="relative">
             <div class="flex justify-between">
-              <label for="api-token"
-                >API Token <span class="text-salmon-50">*</span></label
-              >
+              <label for="api-token">API Token </label>
               <button>
                 <HoverText
                   name="API Token"
-                  hover_text="The API token is a unique key that is generated from your organisation's IATI Registry Publisher Account. It is required to give IATI Publisher permission to add data to the IATI Registry on your behalf. Generate a Token in the 'My Account' tab by <a class='font-bold' href='https://www.iatiregistry.org/'>logging into</a> to the IATI Registry."
+                  hover_text="TThe API token is a unique key that is generated from your organisation's IATI Registry Publisher Account. It is required to give IATI Publisher permission to add data to the IATI Registry on your behalf. Generate a Token in the 'My Account' tab by <a href='https://www.iatiregistry.org/user/login' target='_blank'>logging</a> into to the IATI Registry."
                 ></HoverText>
               </button>
             </div>
@@ -87,10 +61,9 @@
                   : 'register__input mb-2'
               "
               type="text"
-              placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ"
+              placeholder="Type API Token here"
               v-model="publishingForm.api_token"
               @input="updateStore('api_token')"
-              @focusout="autoVerify"
             />
             <span
               v-if="publishingInfo.isVerificationRequested"
@@ -106,11 +79,6 @@
           <span class="error" role="alert" v-if="publishingError.api_token">
             {{ publishingError.api_token }}
           </span>
-          <p v-if="!publishingError.api_token">
-            You can get your API token from the IATI Registry. Follow the link
-            to learn how to retrieve your API key
-            <a class="font-bold text-bluecoral" href="">Click Here</a>
-          </p>
         </div>
       </div>
       <button class="primary-btn verify-btn" @click="submitPublishing">
@@ -130,6 +98,12 @@ export default defineComponent({
     HoverText,
   },
   emits: ['submitPublishing'],
+  props: {
+    organization: {
+      type: Object,
+      required: true,
+    },
+  },
 
   setup(props, { emit }) {
     const tab = ref('publish');
@@ -146,9 +120,7 @@ export default defineComponent({
     }
 
     function autoVerify() {
-      if (publishingForm.value.publisher_id && publishingForm.value.api_token) {
-        emit('submitPublishing');
-      }
+      emit('submitPublishing');
     }
 
     function updateStore(key: keyof typeof publishingForm.value) {

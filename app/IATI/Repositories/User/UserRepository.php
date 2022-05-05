@@ -21,4 +21,14 @@ class UserRepository extends Repository
     {
         return User::class;
     }
+
+    /**
+     * Returns user model.
+     *
+     * @return string
+     */
+    public function sendEmail($user):void
+    {
+        User::sendEmail($user);
+    }
 }

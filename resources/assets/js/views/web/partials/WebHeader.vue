@@ -17,9 +17,7 @@
                 <a href="/">ABOUT</a>
                 <NavDropdown
                   name="About"
-                  text="IATI Publisher helps small and medium-sized organisations
-                      publish IATI data on development and humanitarian
-                      financing and activities."
+                  text="IATI Publisher helps small and medium-sized organisations publish IATI data on development and humanitarian financing and activities"
                   btnText="Learn more"
                 ></NavDropdown>
               </li>
@@ -27,8 +25,7 @@
                 <a href="/">PUBLISHING CHECKLIST</a>
                 <NavDropdown
                   name="Publishing checklist"
-                  text=" New to IATI? Use our checklist to track each step required
-                      for your organisation to successfully publish IATI data."
+                  text="New to IATI? Use our checklist to track each step required for your organisation to successfully publish IATI data"
                   btnText="Read more"
                 ></NavDropdown>
               </li>
@@ -36,10 +33,8 @@
                 <a href="/">IATI STANDARD</a>
                 <NavDropdown
                   name="IATI Standard"
-                  text="The IATI Standard is a set of rules and guidance on how to
-                      publish useful development and humanitarian data. Find out
-                      the full range of data included in the IATI Standard and
-                      more about its technical format."
+                  text="The IATI Standard provides information and guidance on all the data fields that
+                        your organisation can publish IATI data on"
                   btnText="See all data fields"
                 ></NavDropdown>
               </li>
@@ -47,8 +42,7 @@
                 <a href="/">SUPPORT</a>
                 <NavDropdown
                   name="Support"
-                  text="Any questions? Get help to publish your organisation’s
-                      data."
+                  text=" Any questions? Get help to publish your organisation’s data"
                   btnText="Read more"
                 ></NavDropdown>
               </li>
