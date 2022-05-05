@@ -22,10 +22,9 @@ class ActivityCreateTest extends TestCase
     {
         Organization::factory()->create();
         $user = User::factory()->create();
-
-        $this->actingAs($user)->post('/activities')
-             ->assertStatus(302)
-             ->assertSessionHasErrors(['narrative', 'language', 'activity_identifier', 'iati_identifier_text']);
+        Activity::factory()->create();
+        $this->actingAs($user)->post('/activities', [])
+             ->assertSessionHasErrors(['narrative', 'language', 'activity_identifier']);
     }
 
     /**

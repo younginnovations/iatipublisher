@@ -1,5 +1,5 @@
 @extends('admin.layouts.app')
 
-@section("content")
-  <activity-template></activity-template>
+@section('content')
+    <activity-template ></activity-template>
 @endsection
