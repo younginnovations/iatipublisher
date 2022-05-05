@@ -62,15 +62,36 @@ class SettingController extends Controller
      *
      * @return JsonResponse
      */
+    public function verify(PublisherFormRequest $request): JsonResponse
+    {
+        try {
+            $publisherData = $request->all();
+
+            $publisherData['publisher_id'] = Auth::user()->organization->publisher_id;
+            $publisherData['publisher_verification'] = ($this->verifyPublisher($publisherData))['validation'];
+            $publisherData['token_verification'] = ($this->verifyApi($publisherData))['validation'];
+
+            return response()->json(['success' => true, 'message' => 'API token verified successfully.', 'data' => $publisherData]);
+        } catch (\Exception $e) {
+            logger()->error($e->getMessage());
+
+            return response()->json(['success' => false, 'message' => 'Error occurred while verify publisher']);
+        }
+    }
+
+    /**
+     * Store publishing info a valid registration.
+     *
+     * @param  array  $data
+     *
+     * @return JsonResponse
+     */
     public function storePublishingInfo(PublisherFormRequest $request): JsonResponse
     {
         try {
             $publisherData = $request->all();
 
-            if ($publisherData['publisher_id'] != Auth::user()->organization->publisher_id) {
-                return response()->json(['success' => false, 'message' => 'Publisher ID cannot be changed', 'data' => $publisherData]);
-            }
-
+            $publisherData['publisher_id'] = Auth::user()->organization->publisher_id;
             $publisher_verification = $this->verifyPublisher($publisherData);
             $token_verification = $this->verifyApi($publisherData);
 
@@ -107,11 +128,11 @@ class SettingController extends Controller
         try {
             $this->db->beginTransaction();
 
-            $this->settingService->storeDefaultValues($request->all());
+            $setting = $this->settingService->storeDefaultValues($request->all());
 
             $this->db->commit();
 
-            return response()->json(['success' => true, 'message' => 'Default setting stored successfully']);
+            return response()->json(['success' => true, 'message' => 'Default setting stored successfully', 'data'=> $setting]);
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 

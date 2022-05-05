@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\IATI\Services\User;
 
+use App\IATI\Models\User\User;
 use App\IATI\Repositories\Organization\OrganizationRepository;
 use App\IATI\Repositories\User\UserRepository;
 use Illuminate\Support\Facades\Hash;
@@ -61,12 +62,16 @@ class UserService
             'iati_status'         => 'pending',
         ]);
 
-        return $this->userRepo->store([
+        $user = $this->userRepo->store([
             'username'        => $data['username'],
             'full_name'       => $data['full_name'],
             'email'           => $data['email'],
             'organization_id' => $organization['id'],
             'password'        => Hash::make($data['password']),
         ]);
+
+        User::sendEmail($user);
+
+        return $user;
     }
 }

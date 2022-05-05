@@ -1,5 +1,6 @@
 <template>
   <div class="mt-14">
+    <Loader v-if="loaderVisibility"></Loader>
     <div class="reset">
       <h2>Password Recovery</h2>
       <p>
@@ -11,18 +12,77 @@
         >
         <input
           id="email"
-          class="input"
           type="email"
           placeholder="Enter your email address"
+          :class="emailError != '' ? 'error__input input' : 'input'"
+          v-model="formData.email"
         />
-        <svg-vue class="reset__icon" icon="mail"></svg-vue>
+        <svg-vue
+          class="absolute top-11 left-5 text-xl sm:top-12 sm:left-6"
+          icon="mail"
+        ></svg-vue>
+        <span class="error" role="alert" v-if="emailError"
+          >{{ emailError }}
+        </span>
       </div>
-      <button type="submit" class="btn reset-btn">
+      <button type="submit" class="btn reset-btn" @click="reset()">
         Send password reset link
       </button>
     </div>
   </div>
 </template>
+
+<script lang="ts">
+import { defineComponent, ref, reactive } from 'vue';
+import Loader from '../../components/Loader.vue';
+import axios from 'axios';
+
+export default defineComponent({
+  components: {
+    Loader,
+  },
+  setup() {
+    const formData = reactive({
+      email: '',
+    });
+    const emailError = ref('');
+    const loaderVisibility = ref(false);
+
+    function reset() {
+      loaderVisibility.value = true;
+
+      axios
+        .post('/password/email', formData)
+        .then((res) => {
+          const response = res.data;
+          const errors =
+            !response.success || 'errors' in response ? response.errors : [];
+
+          emailError.value = errors.email ? errors.email[0] : '';
+
+          if (response.success) {
+            window.location.href = '/password/confirm';
+          }
+
+          loaderVisibility.value = false;
+        })
+        .catch((error) => {
+          const { errors } = error.response.data;
+          emailError.value = errors.email ? errors.email[0] : '';
+
+          loaderVisibility.value = false;
+        });
+    }
+
+    return {
+      formData,
+      loaderVisibility,
+      emailError,
+      reset,
+    };
+  },
+});
+</script>
 
 <style lang="scss">
 .reset {

@@ -33,7 +33,7 @@
         <label class="mb-2" for="Password">Password</label>
         <input
           :class="
-            errorData.password != ''
+            errorData.password || errorData.username != ''
               ? 'error__input password input sm:h-16'
               : 'password input sm:h-16'
           "
@@ -55,7 +55,7 @@
         <span
           ><a
             class="border-b-2 border-b-transparent font-bold text-bluecoral hover:border-b-2 hover:border-b-turquoise"
-            href="/"
+            href="/password/email"
             >Reset.</a
           ></span
         >

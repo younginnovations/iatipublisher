@@ -36,6 +36,7 @@
         <SettingPublishingForm
           @keyup.enter="submitForm"
           v-if="tab === 'publish'"
+          :organization="props.organization"
           @submitPublishing="submitForm"
         ></SettingPublishingForm>
         <SettingDefaultForm
@@ -50,7 +51,10 @@
     <div class="fixed bottom-0 w-full bg-eggshell py-5 pr-40 shadow-dropdown">
       <div class="flex items-center justify-end">
         <a class="ghost-btn mr-8" href="/activities">Cancel</a>
-        <button class="primary-btn save-btn" @click="submitForm">
+        <button
+          class="primary-btn save-btn"
+          @click="submitForm('api/setting/store/publisher')"
+        >
           {{
             tab === 'publish'
               ? 'Save publishing setting'
@@ -90,6 +94,10 @@ export default defineComponent({
       required: true,
     },
     humanitarian: {
+      type: [String, Object],
+      required: true,
+    },
+    organization: {
       type: [String, Object],
       required: true,
     },
@@ -194,6 +202,14 @@ export default defineComponent({
           toastMessage.value = response.message;
           toastType.value = response.success;
 
+          if (response.success) {
+            updateStore(
+              'UPDATE_PUBLISHING_INFO',
+              response.data.hierarchial,
+              ''
+            );
+          }
+
           loaderVisibility.value = false;
         })
         .catch((error) => {
@@ -207,7 +223,7 @@ export default defineComponent({
         });
     }
 
-    function submitPublishing() {
+    function submitPublishing(url: string) {
       loaderVisibility.value = true;
 
       for (const data in publishingError.value) {
@@ -215,7 +231,7 @@ export default defineComponent({
       }
 
       axios
-        .post('api/setting/store/publisher', {
+        .post(url, {
           ...publishingForm.value,
           ...publishingInfo.value,
         })
@@ -259,8 +275,8 @@ export default defineComponent({
         });
     }
 
-    function submitForm() {
-      if (tab.value === 'publish') submitPublishing();
+    function submitForm(url = 'api/setting/verify') {
+      if (tab.value === 'publish') submitPublishing(url);
       if (tab.value === 'default') submitDefault();
     }
 
