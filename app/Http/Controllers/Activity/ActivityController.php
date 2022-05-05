@@ -4,10 +4,10 @@ namespace App\Http\Controllers\Activity;
 
 use App\Http\Controllers\Controller;
 use App\IATI\Models\Activity\Activity;
-use App\IATI\Requests\ActivityCreateRequest;
 use App\IATI\Services\Activity\ActivityService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 /**
  * Class ActivityController.
@@ -33,9 +33,18 @@ class ActivityController extends Controller
      *
      * @return \Illuminate\Contracts\View\View
      */
-    public function index(): \Illuminate\Contracts\View\View
+    public function index()
     {
-        return view('admin.activity.activities');
+        try {
+            $activities = $this->activityService->getPaginatedActivities()->toArray();
+            $page_count = ceil($activities['total'] / 1);
+
+            return view('admin.activity.activities', compact('activities', 'page_count'));
+        } catch (\Exception $e) {
+            logger()->error($e->getMessage());
+
+            return response()->json(['success' => false, 'error' => 'Error has occurred while fetching activities.']);
+        }
     }
 
     /**
@@ -48,17 +57,19 @@ class ActivityController extends Controller
         //
     }
 
-    /**
-     * Stores activity in activity table.
-     * @param ActivityCreateRequest $request
+    /*
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     *
      * @return JsonResponse
      */
-    public function store(ActivityCreateRequest $request) : JsonResponse
+    public function store(Request $request): JsonResponse
     {
         try {
             $input = $request->all();
 
-            if (!$this->activityService->store($input, auth()->user()->organization->id)) {
+            if (!$this->activityService->store($input, Auth::user()->org_id)) {
                 return response()->json(['success' => false, 'error' => 'Error has occurred while saving activity.']);
             }
 
@@ -74,6 +85,7 @@ class ActivityController extends Controller
      * Display the specified resource.
      *
      * @param  \App\IATI\Models\Activity\Activity  $activity
+     *
      * @return void
      */
     public function show(Activity $activity): void
@@ -85,6 +97,7 @@ class ActivityController extends Controller
      * Show the form for editing the specified resource.
      *
      * @param  \App\IATI\Models\Activity\Activity  $activity
+     *
      * @return void
      */
     public function edit(Activity $activity): void
@@ -97,6 +110,7 @@ class ActivityController extends Controller
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  \App\IATI\Models\Activity\Activity  $activity
+     *
      * @return void
      */
     public function update(Request $request, Activity $activity): void
@@ -108,6 +122,7 @@ class ActivityController extends Controller
      * Remove the specified resource from storage.
      *
      * @param  \App\IATI\Models\Activity\Activity  $activity
+     *
      * @return void
      */
     public function destroy(Activity $activity): void

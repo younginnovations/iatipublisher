@@ -17,43 +17,117 @@
       </ul>
     </div>
   </button>
+  <!-- <CreateActivityModal :modalActive="modelVisible" @close="toggleModel(false)"></CreateActivityModal> -->
   <Model :modalActive="modelVisible" @close="toggleModel(false)">
+    <h5 class="title mb-5 flex text-2xl font-bold text-bluecoral">
+      Add a title and identifier for the activity
+    </h5>
     <form action="/activities" method="POST" class="flex space-x-3">
       <input type="hidden" name="_token" :value="csrf()" />
-      <div class="grid">
-        <div class="flex">
-          <div class="flex flex-1 flex-col">
-            <label for="narrative">Title narrative</label>
-            <input type="text" name="narrative" id="narrative" class="border" />
-          </div>
-          <div class="flex flex-1 flex-col">
-            <label for="language">Title language</label>
-            <input type="text" name="language" id="language" class="border" />
+      <div>
+        <div class="form-group-title-container">
+          <HoverText
+            :name="'title'"
+            :hover_text="'Help text'"
+            position="left"
+          ></HoverText>
+          <p class="form-group-title">title</p>
+        </div>
+        <div class="form-group">
+          <div class="form__content">
+            <div>
+              <div class="flex items-center justify-between">
+                <div class="flex flex-1 flex-col">
+                  <label class="form-group-title" for="narrative"
+                    >Title narrative
+                    <span class="text-salmon-40"> *</span></label
+                  >
+                  <HoverText
+                    :name="'test'"
+                    :hover_text="'UNFPA Angola Improved national population data systems to map and address inequalities; to advance the achievement of the Sustainable Development Goals and the commitments of the Programme of Action of the International Conference on Population and Development'"
+                    :link="'https://google.com'"
+                  ></HoverText>
+
+                  <input
+                    type="text"
+                    name="narrative"
+                    id="narrative"
+                    class="error__input form__input"
+                  />
+                </div>
+              </div>
+              <div class="flex items-center justify-between">
+                <div class="flex flex-1 flex-col">
+                  <label class="form-group-title" for="language"
+                    >Title language
+                    <span class="text-salmon-40"> *</span></label
+                  >
+                  <HoverText
+                    :name="'test'"
+                    :hover_text="'UNFPA Angola Improved national population data systems to map and address inequalities; to advance the achievement of the Sustainable Development Goals and the commitments of the Programme of Action of the International Conference on Population and Development'"
+                    :link="'https://google.com'"
+                  ></HoverText>
+
+                  <input
+                    type="text"
+                    name="language"
+                    id="language"
+                    class="error__input form__input"
+                  />
+                </div>
+              </div>
+            </div>
           </div>
         </div>
+        <div class="form-group">
+          <div class="form__content">
+            <div class="flex items-center justify-between">
+              <div class="flex flex-1 flex-col">
+                <label class="form-group-title" for="activity_identifier"
+                  >activity identifier <span class="text-salmon-40"> *</span>
+                </label>
+                <HoverText
+                  :name="'test'"
+                  :hover_text="'UNFPA Angola Improved national population data systems to map and address inequalities; to advance the achievement of the Sustainable Development Goals and the commitments of the Programme of Action of the International Conference on Population and Development'"
+                  :link="'https://google.com'"
+                ></HoverText>
 
-        <div class="flex">
-          <div class="flex flex-1 flex-col">
-            <label for="activity_identifier">activity identifier</label>
-            <input
-              type="text"
-              name="activity_identifier"
-              id="activity_identifier"
-              class="border"
-            />
-          </div>
-          <div class="flex flex-1 flex-col">
-            <label for="iati_identifier_text">iati-identifier</label>
-            <input
-              type="text"
-              name="iati_identifier_text"
-              id="iati_identifier_text"
-              class="border"
-            />
+                <input
+                  type="text"
+                  name="activity_identifier"
+                  id="activity_identifier"
+                  class="error__input form__input"
+                />
+              </div>
+            </div>
+            <div class="flex items-center justify-between">
+              <div class="flex flex-1 flex-col">
+                <label class="form-group-title" for="iati_identifier_text"
+                  >iati-identifier <span class="text-salmon-40"> *</span></label
+                >
+                <HoverText
+                  :name="'test'"
+                  :hover_text="'UNFPA Angola Improved national population data systems to map and address inequalities; to advance the achievement of the Sustainable Development Goals and the commitments of the Programme of Action of the International Conference on Population and Development'"
+                  :link="'https://google.com'"
+                ></HoverText>
+
+                <input
+                  type="text"
+                  name="iati_identifier_text"
+                  id="iati_identifier_text"
+                  class="error__input form__input"
+                />
+              </div>
+            </div>
           </div>
         </div>
       </div>
-      <button type="submit">submit</button>
+      <div class="mt-8 flex justify-end">
+        <div class="inline-flex">
+          <BtnComponent class="bg-white px-6 uppercase" text="Cancel" />
+          <BtnComponent class="space" type="primary" text="Save" />
+        </div>
+      </div>
     </form>
   </Model>
 </template>
@@ -61,10 +135,12 @@
 <script lang="ts">
 import { reactive, defineComponent, ref } from 'vue';
 import Model from '../../../components/PopupModal.vue';
+import HoverText from '../../../components/HoverText.vue';
+import CreateActivityModal from './CreateActivityModal.vue';
 
 export default defineComponent({
   name: 'add-activity-button',
-  components: { Model },
+  components: { Model, HoverText },
   setup() {
     const state = reactive({
       isVisible: false,

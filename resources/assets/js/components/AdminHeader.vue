@@ -102,6 +102,7 @@
     <!--====================
         Add Activity Modal
     ========================-->
+    <!-- <CreateActivityModal @close="modalToggle" :modalActive="modalValue"></CreateActivityModal> -->
     <Modal @close="modalToggle" :modalActive="modalValue">
       <h5 class="title mb-5 flex text-2xl font-bold text-bluecoral">
         Add a title and identifier for the activity
@@ -251,6 +252,7 @@ import Multiselect from '@vueform/multiselect';
 
 import Modal from './PopupModal.vue';
 import BtnComponent from './ButtonComponent.vue';
+import CreateActivityModal from '../views/activity/partials/CreateActivityModal.vue';
 import HoverText from './HoverText.vue';
 
 export default defineComponent({
@@ -260,6 +262,7 @@ export default defineComponent({
     BtnComponent,
     HoverText,
     Multiselect,
+    CreateActivityModal,
   },
   props: {
     user: {
@@ -352,8 +355,8 @@ export default defineComponent({
       state,
       dropdown,
       dropdownBtn,
-      toggle,
       modalValue,
+      toggle,
       modalToggle,
       logout,
     };
