@@ -24,7 +24,7 @@ class DefaultFormRequest extends FormRequest
         return [
           'default_currency' => 'sometimes',
           'default_language' => 'sometimes',
-          'hierarchy' => 'sometimes',
+          'hierarchy' => 'sometimes|integer|min:0|lte:4',
           'linked_data_url' => 'sometimes',
           'humanitarian' => 'sometimes',
         ];

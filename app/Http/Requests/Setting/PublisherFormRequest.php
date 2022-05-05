@@ -22,7 +22,7 @@ class PublisherFormRequest extends FormRequest
     public function rules()
     {
         return [
-          'publisher_id' => 'required',
+        //   'publisher_id' => 'required',
           'api_token' => 'required',
         ];
     }

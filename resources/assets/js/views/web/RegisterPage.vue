@@ -306,7 +306,7 @@ export default defineComponent({
             name: 'publisher_id',
             placeholder: "For example, 'dfid' and 'worldbank'",
             id: 'publisher-id',
-            required: false,
+            required: true,
             hover_text:
               "This will be the unique identifier for the publisher. Where possible use a short abbreviation of your organisation's name. For example: 'dfid' or 'worldbank' Must be at least two characters long and lower case. Can include letters, numbers and also - (dash) and _ (underscore).",
             type: 'text',
@@ -487,6 +487,11 @@ export default defineComponent({
           errorData.full_name = errors.full_name ? errors.full_name[0] : '';
           errorData.email = errors.email ? errors.email[0] : '';
           errorData.password = errors.password ? errors.password[0] : '';
+          errorData.password_confirmation = errors.password_confirmation
+            ? errors.password_confirmation[0]
+            : errors.password
+            ? errors.password[0]
+            : '';
           isLoaderVisible.value = false;
 
           if (response.success) {
@@ -501,6 +506,11 @@ export default defineComponent({
           errorData.full_name = errors.full_name ? errors.full_name[0] : '';
           errorData.email = errors.email ? errors.email[0] : '';
           errorData.password = errors.password ? errors.password[0] : '';
+          errorData.password_confirmation = errors.password_confirmation
+            ? errors.password_confirmation[0]
+            : errors.password
+            ? errors.password[0]
+            : '';
         });
     }
 

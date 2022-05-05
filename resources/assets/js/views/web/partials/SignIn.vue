@@ -33,7 +33,7 @@
         <label class="mb-2" for="Password">Password</label>
         <input
           :class="
-            errorData.password != ''
+            errorData.password || errorData.username != ''
               ? 'error__input password input sm:h-16'
               : 'password input sm:h-16'
           "

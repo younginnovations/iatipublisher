@@ -3,9 +3,9 @@
     <div class="registry__info">
       <div class="mb-4 text-sm font-bold text-n-50">Default Values</div>
       <div class="mb-4 flex items-center text-xs text-n-50">
-        <span class="mr-1"
+        <!-- <span class="mr-1"
           ><span class="text-salmon-50">* </span>Mandatory fields</span
-        >
+        > -->
         <button>
           <HoverText
             name="Default Values"

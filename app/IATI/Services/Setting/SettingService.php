@@ -52,7 +52,7 @@ class SettingService
         return $this->settingRepo->updateSetting(Auth::user()->organization_id, [
             'organization_id' => Auth::user()->organization_id,
             'publishing_info' => json_encode([
-                'publisher_id' => $data['publisher_id'],
+                'publisher_id' => Auth::user()->organization->publisher_id,
                 'api_token' => $data['api_token'],
                 'publisher_verification' => $data['publisher_verification'],
                 'token_verification' => $data['token_verification'],

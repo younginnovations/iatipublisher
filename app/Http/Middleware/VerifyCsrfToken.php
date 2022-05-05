@@ -18,10 +18,10 @@ class VerifyCsrfToken extends Middleware
     protected function tokensMatch($request)
     {
         // Don't validate CSRF when testing.
-        if(env('APP_ENV') === 'test') {
+        if (env('APP_ENV') === 'test') {
             return true;
         }
-     
+
         return parent::tokensMatch($request);
     }
 }
