@@ -27,3 +27,14 @@ Route::post('/logout', [App\Http\Controllers\Auth\LoginController::class, 'logou
 Route::get('/email/verify', function () {
     return view('auth.verify-email');
 })->middleware('auth')->name('verification.notice');
+Route::get('/reset', function () {
+    return view('web.reset');
+});
+
+Route::get('/reset_password', function () {
+    return view('web.reset_password');
+});
+
+Route::get('/password_recovery', function () {
+    return view('web.password_recovery');
+});
