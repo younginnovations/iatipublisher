@@ -175,7 +175,7 @@
           </div>
         </div>
 
-        <aside>
+        <aside class="register__sidebar">
           <span class="text-base font-bold">Step {{ step }} out of 3</span>
           <ul class="relative mt-6 text-sm text-n-40">
             <li
@@ -498,6 +498,7 @@ export default defineComponent({
           isLoaderVisible.value = false;
         });
     }
+
     
     function submitForm() {
       isLoaderVisible.value = true;
@@ -598,7 +599,7 @@ export default defineComponent({
         @apply text-n-40;
       }
     }
-    aside {
+    .register__sidebar {
       @apply bg-eggshell;
       padding: 96px 80px 40px 32px;
       width: 344px;

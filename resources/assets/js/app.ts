@@ -17,6 +17,7 @@ import RegisterPage from './views/web/RegisterPage.vue';
  */
 import Activity from './views/activity/ActivityList.vue';
 import LoggedInHeader from './components/AdminHeader.vue';
+import ActivitiesDetail from './views/activity/ActivitiesDetail.vue';
 
 /*
   setting page
@@ -55,6 +56,7 @@ app.component('register-form', RegisterPage);
  */
 app.component('activity-template', Activity);
 app.component('loggedin-header', LoggedInHeader);
+app.component('activities-detail', ActivitiesDetail);
 
 /*
 setting page

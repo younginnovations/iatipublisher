@@ -1,7 +1,10 @@
 <template>
   <div class="help">
     <button>
-      <svg-vue class="cursor-pointer text-base" icon="help"></svg-vue>
+      <svg-vue
+        :class="props.icon_size ? 'text-tiny' : iconSize"
+        icon="help"
+      ></svg-vue>
     </button>
     <div
       :class="
@@ -47,13 +50,20 @@ export default defineComponent({
       type: String,
       required: false,
     },
+    icon_size: {
+      type: String,
+      required: false,
+    },
   },
   setup(props) {
     const hoverTextClass = ref('');
+    const iconSize = ref('');
     hoverTextClass.value = props.width ? props.width : 'w-60';
+    iconSize.value = props.icon_size ? props.icon_size : 'text-sm';
 
     return {
       props,
+      iconSize,
       hoverTextClass,
     };
   },
