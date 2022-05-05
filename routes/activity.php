@@ -15,4 +15,5 @@ use Illuminate\Support\Facades\Route;
 
 Route::name('admin.')->group(function () {
     Route::resource('/activities', \App\Http\Controllers\Admin\Activity\ActivityController::class);
+    Route::post('/activity/{page}', [App\Http\Controllers\Api\Activity\ActivityController::class, 'getActivities'])->name('paginate');
 });

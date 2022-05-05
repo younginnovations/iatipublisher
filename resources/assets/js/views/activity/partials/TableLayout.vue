@@ -44,17 +44,21 @@
         <!--      ===================================-->
         <!--      First item with "Draft" status-->
         <!--      =======================================-->
-        <tr>
+        <tr v-for="datum in props.data.data" :key="datum">
           <td class="title">
             <a
               href="#"
               class="hover:text-sp50 inline-flex items-start text-n-50 transition duration-500"
             >
-              <span>EU-Angola Dialogue Facility</span>
+              <svg-vue
+                icon="approved-cloud"
+                class="mr-3 mt-1 shrink-0 text-base text-spring-50"
+              ></svg-vue>
+              <span>{{ datum['title'][0]['narrative'] }}</span>
             </a>
           </td>
 
-          <td class="text-n-40">2 days ago</td>
+          <td class="text-n-40">{{ formatDate(datum.created_at) }}</td>
 
           <td>
             <button
@@ -63,22 +67,31 @@
               <span class="mr-1 text-base">
                 <svg-vue icon="document-write"></svg-vue>
               </span>
-              <span class="text-sm leading-relaxed">Draft</span>
+              <span class="text-sm leading-relaxed">{{ datum['status'] }}</span>
             </button>
           </td>
 
           <td>
-            <button class="button primary-outline-btn w-20">Publish</button>
+            <button
+              class="button primary-outline-btn w-20"
+              v-if="
+                datum['status'] != 'draft' && datum['status'] != 'published'
+              "
+            >
+              {{
+                datum['status'] == 'ready_to_publish' ? 'Publish' : 'RePublish'
+              }}
+            </button>
           </td>
 
           <th class="check-column">
             <label class="sr-only" for="">
-              Select "EU-Angola Dialogue Facility"
+              Select "{{ datum['title'][0]['narrative'] }}"
             </label>
             <label class="checkbox">
               <input
                 type="checkbox"
-                :value="1"
+                :value="datum.id"
                 v-model="state.selected"
                 @change="emitShowOrHide"
               />
@@ -87,14 +100,21 @@
           </th>
         </tr>
 
-        <!--============================================
-              Second item with "Draft" button
-        ================================================-->
-        <tr>
+        <!--      ========================================    -->
+        <!--      Second item with "Ready to Publish" button  -->
+        <!--      ============================================-->
+        <!-- <tr>
           <td class="text-n-50">
             <a
               href="#"
-              class="hover:text-sp50 inline-flex items-start text-n-50 transition duration-500"
+              class="
+                hover:text-sp50
+                inline-flex
+                items-start
+                text-n-50
+                transition
+                duration-500
+              "
             >
               <span
                 >Support Program on Public Finance Management and Financial
@@ -107,7 +127,14 @@
 
           <td>
             <button
-              class="inline-flex items-center text-n-40 transition duration-500 hover:text-spring-50"
+              class="
+                inline-flex
+                items-center
+                text-n-40
+                transition
+                duration-500
+                hover:text-spring-50
+              "
             >
               <span class="mr-1 text-base">
                 <svg-vue icon="document-write"></svg-vue>
@@ -135,75 +162,23 @@
               <span class="checkmark"></span>
             </label>
           </th>
-        </tr>
+        </tr> -->
 
-        <!-- ===========================================
-              Third item with "Ready to Publish"
-              and Previously Published Status
-        ================================================-->
-        <tr class="has-status">
-          <td class="text-n-50">
-            <div
-              class="status absolute top-0.5 left-0 flex items-center bg-mint py-1.5 px-2"
-            >
-              <svg-vue
-                icon="approved-cloud"
-                class="pr-1 text-base text-spring-50"
-              ></svg-vue>
-              <span class="text-xs text-n-50"
-                >Previously Published on IATI</span
-              >
-            </div>
-            <a
-              href="#"
-              class="hover:text-sp50 inline-flex items-start text-n-50 transition duration-500"
-            >
-              <span>EU-Angola Dialogue Facility 2</span>
-            </a>
-          </td>
-
-          <td class="text-n-40">2 days ago</td>
-
-          <td>
-            <button
-              class="inline-flex items-center text-n-40 transition duration-500 hover:text-spring-50"
-            >
-              <span class="mr-1 text-base">
-                <svg-vue icon="tick"></svg-vue>
-              </span>
-              <span class="text-sm leading-relaxed">Ready to publish</span>
-            </button>
-          </td>
-
-          <td>
-            <button class="button primary-outline-btn w-20">RePublish</button>
-          </td>
-
-          <th class="check-column">
-            <label class="sr-only" for="">
-              Select "EU-Angola Dialogue Facility 2"
-            </label>
-            <label class="checkbox">
-              <input
-                type="checkbox"
-                :value="3"
-                v-model="state.selected"
-                @change="emitShowOrHide"
-              />
-              <span class="checkmark"></span>
-            </label>
-          </th>
-        </tr>
-
-        <!-- ===========================================
-              Fourth item with "Ready to Publish"
-              Status
-        ================================================-->
-        <tr>
+        <!--      ========================================-->
+        <!--        Third item with "Published" Status-->
+        <!--      ============================================-->
+        <!-- <tr>
           <td class="text-n-50">
             <a
               href="#"
-              class="hover:text-sp50 inline-flex items-start text-n-50 transition duration-500"
+              class="
+                hover:text-sp50
+                inline-flex
+                items-start
+                text-n-50
+                transition
+                duration-500
+              "
             >
               <span
                 >UNFPA Angola Improved national population data systems to map
@@ -220,7 +195,14 @@
 
           <td>
             <button
-              class="inline-flex items-center text-n-40 transition duration-500 hover:text-spring-50"
+              class="
+                inline-flex
+                items-center
+                text-n-40
+                transition
+                duration-500
+                hover:text-spring-50
+              "
             >
               <span class="mr-1 text-base text-spring-50">
                 <svg-vue icon="tick"></svg-vue>
@@ -250,15 +232,23 @@
               <span class="checkmark"></span>
             </label>
           </th>
-        </tr>
+        </tr> -->
 
-        <!-- ===========================================
-              Fifth item with "Changes made" Status
-        ================================================-->
-        <tr class="has-status">
+        <!--      ========================================-->
+        <!--        Fourth item with "Changes made" Status-->
+        <!--      ============================================-->
+        <!-- <tr>
           <td class="text-n-50">
-            <div
-              class="status absolute top-0.5 left-0 flex items-center bg-mint py-1.5 px-2"
+            <a
+              href="#"
+              class="
+                hover:text-sp50
+                inline-flex
+                items-start
+                text-n-50
+                transition
+                duration-500
+              "
             >
               <svg-vue
                 icon="approved-cloud"
@@ -280,7 +270,14 @@
 
           <td>
             <button
-              class="inline-flex items-center text-n-40 transition duration-500 hover:text-spring-50"
+              class="
+                inline-flex
+                items-center
+                text-n-40
+                transition
+                duration-500
+                hover:text-spring-50
+              "
             >
               <span class="mr-1 text-base">
                 <svg-vue icon="history"></svg-vue>
@@ -307,7 +304,7 @@
               <span class="checkmark"></span>
             </label>
           </th>
-        </tr>
+        </tr> -->
 
         <!--  Loop ends here  -->
       </tbody>
@@ -317,11 +314,18 @@
 
 <script lang="ts">
 import { defineComponent, reactive } from 'vue';
+import moment from 'moment';
 
 export default defineComponent({
   name: 'table-layout',
   components: {},
   emits: ['showOrHide'],
+  props: {
+    data: {
+      type: [Object],
+      required: true,
+    },
+  },
   setup(props, { emit }) {
     const state = reactive({
       selected: [],
@@ -331,7 +335,11 @@ export default defineComponent({
       emit('showOrHide', state.selected);
     };
 
-    return { state, emitShowOrHide };
+    function formatDate(date: Date) {
+      return moment(date).fromNow();
+    }
+
+    return { state, emitShowOrHide, props, formatDate };
   },
 });
 </script>
