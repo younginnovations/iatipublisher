@@ -19,4 +19,6 @@ before_script:
   - travis_retry composer install --prefer-source --no-interaction
   - psql -c 'create database iati_db_test;' -U postgres
   - php artisan migrate --seed
-  - php artisan config:clear
+
+script: 
+  - bin/atoum --test-all
