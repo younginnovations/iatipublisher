@@ -20,5 +20,6 @@ before_script:
   - psql -c 'create database iati_db_test;' -U postgres
   - php artisan migrate --seed
 
-# script: 
-  # - php atoum.phar --test-all
+script: 
+  - wget https://github.com/atoum/atoum/releases/download/3.2.0/atoum.phar
+  - php atoum.phar --test-all
