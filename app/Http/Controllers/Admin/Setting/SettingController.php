@@ -37,7 +37,7 @@ class SettingController extends Controller
     public function index()
     {
         try {
-            $currencies = getCodeList('Currency', 'Organization', false);
+            $currencies = getCodeListArray('Currency', 'OrganizationArray');
             $languages = getCodeList('Language', 'Organization', false);
             $humanitarian = trans('setting.humanitarian_types');
 

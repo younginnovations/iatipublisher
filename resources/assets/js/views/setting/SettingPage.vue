@@ -36,6 +36,7 @@
         <SettingPublishingForm
           @keyup.enter="submitForm"
           v-if="tab === 'publish'"
+          :organization="props.organization"
           @submitPublishing="submitForm"
         ></SettingPublishingForm>
         <SettingDefaultForm
@@ -90,6 +91,10 @@ export default defineComponent({
       required: true,
     },
     humanitarian: {
+      type: [String, Object],
+      required: true,
+    },
+    organization: {
       type: [String, Object],
       required: true,
     },
