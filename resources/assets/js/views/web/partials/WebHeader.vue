@@ -1,7 +1,7 @@
 <template>
   <div class="wrapper relative h-56 bg-bluecoral sm:h-72">
     <div class="mx-3 sm:mx-10 xl:mx-24 xl:px-1">
-      <header class="relative z-10 grid">
+      <header class="header relative z-10 grid">
         <nav
           class="relative z-10 mt-6 flex items-center justify-between rounded-md bg-white px-5 pt-5 text-xs sm:mt-12 sm:px-10"
         >

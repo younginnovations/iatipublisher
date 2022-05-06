@@ -43,7 +43,7 @@
       <span class="text-sm text-n-40"
         >Not sure which one to select?
         <a
-          class="border-b-2 border-b-transparent font-bold text-bluecoral hover:border-b-2 hover:border-b-turquoise"
+          class="border-b-2 border-b-transparent font-bold text-bluecoral hover:border-b-2 hover:border-b-turquoise hover:text-bluecoral"
           href="/"
           >Contact Support.</a
         ></span

@@ -27,7 +27,6 @@
 }
 .error {
   @apply text-crimson-50;
-  padding-top: 4px;
   font-weight: normal;
   font-size: 12px;
 }
@@ -59,7 +58,7 @@
   }
   .multiselect-placeholder {
     letter-spacing: -0.02em;
-    @apply pr-3 text-sm text-n-40;
+    @apply pr-3 text-sm text-n-40 duration-300;
   }
   .multiselect.is-open {
     .multiselect-placeholder {
@@ -80,7 +79,7 @@
     @apply bg-n-10;
   }
   .vue__select {
-    @apply my-2 text-sm leading-6 outline-none duration-300;
+    @apply my-2 border border-n-30 text-sm leading-6 outline-none duration-300;
     height: 52px;
     padding: 16px 0px 16px 55px;
   }

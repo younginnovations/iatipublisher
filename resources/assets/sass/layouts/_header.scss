@@ -36,6 +36,10 @@
   font-weight: normal;
   font-style: normal;
 
+  a:hover {
+    @apply text-n-50;
+  }
+
   .read__more {
     @apply rounded-sm bg-bluecoral text-center text-xs text-white;
     width: fit-content;
