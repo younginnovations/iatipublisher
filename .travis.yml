@@ -21,4 +21,4 @@ before_script:
   - php artisan migrate --seed
 
 script: 
-  - bin/atoum --test-all
+  - php atoum.phar --test-all
