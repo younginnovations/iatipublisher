@@ -44,6 +44,7 @@
   }
 }
 .btn-next {
+  height: 48px;
   padding: 13px 24px;
 
   svg {
@@ -57,9 +58,6 @@
   padding: 16px 94px;
 }
 @media screen and (min-width: 640px) {
-  .btn {
-    padding: 18px 0;
-  }
   .reset-btn {
     padding: 18px 0px;
   }

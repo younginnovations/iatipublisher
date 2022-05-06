@@ -20,7 +20,7 @@
               registerForm[step].title
             }}</span>
             <div
-              class="feedback mt-6 border-l-2 border-crimson-50 bg-crimson-10 p-4 text-sm text-n-50"
+              class="feedback mt-6 h-32 border-l-2 border-crimson-50 bg-crimson-10 p-4 text-sm text-n-50"
               v-if="!publisherExists"
             >
               <p class="mb-2 flex font-bold">
@@ -28,16 +28,18 @@
                 Sorry, the information you provided doesn’t match your IATI
                 Registry information.
               </p>
-              <p class="ml-8 leading-5 xl:mr-1">
-                Please note that if you’re an account holder in IATI Registry,
-                make sure your
+              <p class="ml-8 xl:mr-1">
+                Please note that if you’re an account holder in
+                <span
+                  ><a href="https://iatiregistry.org/">IATI Registry</a></span
+                >, make sure your
                 <span class="font-bold"
                   >Publisher Name,Publisher ID and IATI Organisation ID</span
                 >
                 match your IATI Registry Information. Contact
                 <span
                   ><a
-                    class="text-n-40 hover:text-n-50"
+                    class="text-bluecoral"
                     href="mailto:support@iatistandard.org"
                     >support@iatistandard.org</a
                   ></span
@@ -139,7 +141,7 @@
               >Already have an account?
               <a
                 href="/"
-                class="border-b-2 border-b-transparent font-bold text-bluecoral hover:border-b-2 hover:border-b-turquoise"
+                class="border-b-2 border-b-transparent font-bold text-bluecoral hover:border-b-2 hover:border-b-turquoise hover:text-bluecoral"
                 >Sign In.</a
               ></span
             >
@@ -157,7 +159,7 @@
               >Already have an account?
               <a
                 href="/"
-                class="border-b-2 border-b-transparent font-bold text-bluecoral hover:border-b-2 hover:border-b-turquoise"
+                class="border-b-2 border-b-transparent font-bold text-bluecoral hover:border-b-2 hover:border-b-turquoise hover:text-bluecoral"
                 >Sign In.</a
               ></span
             >
@@ -171,7 +173,7 @@
               :class="[
                 step == parseInt(i)
                   ? 'relative font-bold text-n-50'
-                  : 'mb-6 flex items-center font-bold text-bluecoral',
+                  : 'mb-6 flex items-center',
               ]"
               v-for="(ele, i) in registerForm"
               :key="ele.title"
@@ -183,7 +185,17 @@
               <span class="mr-3 ml-6" v-if="ele.is_complete">
                 <svg-vue class="text-xs" icon="checked"> </svg-vue>
               </span>
-              {{ ele.title }}
+              <span
+                :class="[
+                  step == parseInt(i)
+                    ? 'font-bold text-n-50'
+                    : ele.is_complete
+                    ? 'font-bold text-bluecoral'
+                    : 'font-normal text-n-40',
+                ]"
+              >
+                {{ ele.title }}
+              </span>
               <p
                 class="detail mt-2 mb-6 font-normal xl:pr-2"
                 v-if="step == parseInt(i)"
@@ -306,7 +318,7 @@ export default defineComponent({
             name: 'publisher_id',
             placeholder: "For example, 'dfid' and 'worldbank'",
             id: 'publisher-id',
-            required: false,
+            required: true,
             hover_text:
               "This will be the unique identifier for the publisher. Where possible use a short abbreviation of your organisation's name. For example: 'dfid' or 'worldbank' Must be at least two characters long and lower case. Can include letters, numbers and also - (dash) and _ (underscore).",
             type: 'text',
@@ -541,6 +553,10 @@ export default defineComponent({
 
     .feedback {
       width: 702px;
+
+      p {
+        line-height: 22px;
+      }
     }
     .section__wrapper {
       box-shadow: 0px 20px 40px 20px rgba(0, 0, 0, 0.05);
@@ -602,44 +618,12 @@ export default defineComponent({
     @apply border-b-2 border-b-n-10;
     margin-bottom: 24px;
 
-    .multiselect-option.is-selected {
-      @apply bg-n-20 text-n-50;
-    }
-    .multiselect-option.is-selected.is-pointed {
-      @apply bg-n-20 text-n-50;
-    }
-    .multiselect.is-active {
-      box-shadow: 0 0 0 0;
-    }
-    .multiselect-dropdown {
-      @apply border border-n-50;
-    }
-    .multiselect-caret {
-      -webkit-mask-image: url('/images/dropdown-arrow.svg');
-      mask-image: url('/images/dropdown-arrow.svg');
-    }
     .error__input {
       @apply border border-crimson-50;
     }
   }
 }
-.vue__select {
-  @apply border border-n-30 text-base leading-6 outline-none duration-300;
-  padding: 16px 0px 16px 55px;
-  height: 52px;
 
-  &:focus {
-    @apply border border-n-50 bg-n-10;
-    box-shadow: 0 0 0 0;
-  }
-  &::placeholder {
-    letter-spacing: -0.02em;
-    @apply text-n-40;
-  }
-  &:focus::placeholder {
-    @apply text-n-50;
-  }
-}
 @media screen and (min-width: 1024px) {
   .form__content {
     display: grid;
