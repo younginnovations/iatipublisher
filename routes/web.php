@@ -23,18 +23,18 @@ Route::get('/register', [App\Http\Controllers\Auth\RegisterController::class, 's
 Route::get('/email/verify/{id}/{hash}', [App\Http\Controllers\Auth\VerificationController::class, 'verify'])->name('verification.verify');
 // Route::get('/verifyEmail', [App\Http\Controllers\Auth\VerificationController::class, 'show'])->name('verification.notice');
 Route::post('/logout', [App\Http\Controllers\Auth\LoginController::class, 'logout'])->name('logout');
+Route::get('/password/email', [App\Http\Controllers\Auth\ForgotPasswordController::class, 'showLinkRequestForm'])->name('password.email');
+Route::get('/password/confirm', [App\Http\Controllers\Auth\ForgotPasswordController::class, 'showEmailSentMessage'])->name('password.confirm');
+Route::get('password/reset/{token}', [App\Http\Controllers\Auth\ResetPasswordController::class, 'showResetForm'])->name('password.reset');
 
-Route::get('/email/verify', function () {
-    return view('auth.verify-email');
-})->middleware('auth')->name('verification.notice');
-Route::get('/reset', function () {
-    return view('web.reset');
-});
+// Route::get('/email/verify', function () {
+//     return view('auth.verify-email');
+// })->middleware('auth')->name('verification.notice');
 
-Route::get('/reset_password', function () {
-    return view('web.reset_password');
-});
+// Route::get('/reset_password', function () {
+//     return view('web.reset_password')
+// });
 
-Route::get('/password_recovery', function () {
-    return view('web.password_recovery');
-});
+// Route::get('/password_recovery', function () {
+//     return view('web.password_recovery');
+// });

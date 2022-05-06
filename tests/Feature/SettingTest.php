@@ -102,7 +102,7 @@ class SettingTest extends TestCase
                 'publisher_id'      => '',
                 'api_token'        => '',
             ])
-            ->assertSessionHasErrors(['publisher_id', 'api_token']);
+            ->assertSessionHasErrors(['api_token']);
     }
 
     /**

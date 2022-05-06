@@ -499,6 +499,11 @@ export default defineComponent({
           errorData.full_name = errors.full_name ? errors.full_name[0] : '';
           errorData.email = errors.email ? errors.email[0] : '';
           errorData.password = errors.password ? errors.password[0] : '';
+          errorData.password_confirmation = errors.password_confirmation
+            ? errors.password_confirmation[0]
+            : errors.password
+            ? errors.password[0]
+            : '';
           isLoaderVisible.value = false;
 
           if (response.success) {
@@ -513,6 +518,11 @@ export default defineComponent({
           errorData.full_name = errors.full_name ? errors.full_name[0] : '';
           errorData.email = errors.email ? errors.email[0] : '';
           errorData.password = errors.password ? errors.password[0] : '';
+          errorData.password_confirmation = errors.password_confirmation
+            ? errors.password_confirmation[0]
+            : errors.password
+            ? errors.password[0]
+            : '';
         });
     }
 
