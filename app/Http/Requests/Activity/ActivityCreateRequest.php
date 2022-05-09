@@ -1,6 +1,6 @@
 <?php
 
-namespace App\IATI\Requests;
+namespace App\Http\Requests\Activity;
 
 use App\IATI\Services\Activity\ActivityService;
 use Illuminate\Foundation\Http\FormRequest;

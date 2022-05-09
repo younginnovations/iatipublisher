@@ -3,8 +3,12 @@
     <div id="activity">
       <PageTitle :showButtons="state.showButtons" />
       <EmptyActivity v-if="isEmpty"> </EmptyActivity>
-      <TableLayout @showOrHide="showOrHide" :data="activities" />
-      <div class="mt-6">
+      <TableLayout
+        v-if="!isEmpty"
+        @showOrHide="showOrHide"
+        :data="activities"
+      />
+      <div class="mt-6" v-if="!isEmpty">
         <Pagination
           :page_count="activities.last_page"
           :current_page="activities.current_page"
@@ -34,36 +38,21 @@ export default defineComponent({
     TableLayout,
     PopupModal,
   },
-  props: {
-    activities: {
-      type: [Object],
-      required: true,
-    },
-    page_count: {
-      type: [Number, String],
-      required: true,
-    },
-  },
-  setup(props) {
+  setup() {
     const activities = reactive({});
 
     onMounted(async () => {
       axios
-        .post('api/activity/1')
+        .get('api/activity/1')
         .then((res) => {
           const response = res.data;
           Object.assign(activities, response.data);
-
-          if (response.data.total < 2) {
-            isEmpty.value = true;
-          }
+          isEmpty.value = response.data ? false : true;
         })
         .catch((error) => {
           const { errors } = error.response.data;
         });
     });
-
-    console.log('here', activities);
 
     const state = reactive({
       showButtons: false,
@@ -80,19 +69,19 @@ export default defineComponent({
     };
 
     function fetchActivities(active_page: number) {
-      console.log(active_page);
       axios
-        .post('api/activity/' + active_page)
+        .get('api/activity/' + active_page)
         .then((res) => {
           const response = res.data;
           Object.assign(activities, response.data);
+          isEmpty.value = response.data ? false : true;
         })
         .catch((error) => {
           const { errors } = error.response.data;
         });
     }
 
-    return { activities, state, isEmpty, showOrHide, props, fetchActivities };
+    return { activities, state, isEmpty, showOrHide, fetchActivities };
   },
 });
 </script>

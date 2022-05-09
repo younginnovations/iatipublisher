@@ -26,4 +26,26 @@ if (!function_exists('getCodeList')) {
 
         return $data;
     }
+
+    /**
+     * return codeList array from codeList.
+     *
+     * @param      $listName
+     * @param      $listType
+     * @param bool $code
+     *
+     * @return array
+     */
+    function getCodeListArray($listName, $listType, $code = true): array
+    {
+        $filePath = app_path("Data/$listType/$listName.php");
+        $codeListFromFile = include $filePath;
+        $data = [];
+
+        foreach ($codeListFromFile as $key => $value) {
+            $data[$key] = ($code) ? $key . ' - ' . $value : $value;
+        }
+
+        return $data;
+    }
 }

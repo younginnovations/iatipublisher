@@ -25,6 +25,6 @@ Route::get('/setting/data', [App\Http\Controllers\Api\Setting\SettingController:
 Route::post('/setting/store/publisher', [App\Http\Controllers\Api\Setting\SettingController::class, 'storePublishingInfo'])->name('setting.publisher.save');
 Route::post('/setting/store/default', [App\Http\Controllers\Api\Setting\SettingController::class, 'storeDefaultForm'])->name('setting.default.save');
 
-Route::post('/activity/{page}', [App\Http\Controllers\Api\Activity\ActivityController::class, 'getActivities'])->name('activity.paginate');
-
-Route::post('/login', [App\Http\Controllers\Api\Auth\LoginController::class, 'login'])->name('login');
+Route::get('/activity/{page}', [App\Http\Controllers\Api\Activity\ActivityController::class, 'getActivities'])->name('activity.paginate');
+Route::post('/activity', [App\Http\Controllers\Api\Activity\ActivityController::class, 'store'])->name('activity.store');
+Route::get('/languages', [App\Http\Controllers\Api\Activity\ActivityController::class, 'getLanguages'])->name('activity.language');
