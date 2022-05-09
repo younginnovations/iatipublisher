@@ -88,24 +88,6 @@ class SettingTest extends TestCase
     }
 
     /**
-     * Test validation of setting publishing form with empty data.
-     *
-     * @return void
-     */
-    public function test_validation_setting_publishing_form_empty_data(): void
-    {
-        Organization::factory()->create();
-        $user = User::factory()->create();
-
-        $this->actingAs($user)
-            ->post('api/setting/store/publisher', [
-                'publisher_id'      => '',
-                'api_token'        => '',
-            ])
-            ->assertSessionHasErrors(['publisher_id', 'api_token']);
-    }
-
-    /**
      * Test validation of setting publishing form with incorrect data.
      *
      * @return void

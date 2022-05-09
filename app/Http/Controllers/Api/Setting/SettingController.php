@@ -185,23 +185,27 @@ class SettingController extends Controller
     public function verifyApi(array $data): array
     {
         try {
-            $client = new Client(
-                [
-                    'base_uri' => env('IATI_API_ENDPOINT'),
-                    'headers' => [
-                        'X-CKAN-API-Key' => $data['api_token'],
-                    ],
-                ]
-            );
+            if ($data['api_token']) {
+                $client = new Client(
+                    [
+                        'base_uri' => env('IATI_API_ENDPOINT'),
+                        'headers' => [
+                            'X-CKAN-API-Key' => $data['api_token'],
+                        ],
+                    ]
+                );
 
-            $res = $client->request('GET', env('IATI_API_ENDPOINT') . '/action/organization_list_for_user', [
-                'auth' => [env('IATI_USERNAME'), env('IATI_PASSWORD')],
-                'connect_timeout' => 500,
-            ]);
+                $res = $client->request('GET', env('IATI_API_ENDPOINT') . '/action/organization_list_for_user', [
+                    'auth' => [env('IATI_USERNAME'), env('IATI_PASSWORD')],
+                    'connect_timeout' => 500,
+                ]);
 
-            $response = json_decode($res->getBody()->getContents())->result;
+                $response = json_decode($res->getBody()->getContents())->result;
 
-            return ['success' => true, 'validation' => in_array($data['publisher_id'], array_column($response, 'name')) ? true : false];
+                return ['success' => true, 'validation' => in_array($data['publisher_id'], array_column($response, 'name')) ? true : false];
+            }
+
+            return ['success' => true, 'validation' => false];
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 

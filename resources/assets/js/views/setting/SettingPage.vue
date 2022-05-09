@@ -224,6 +224,7 @@ export default defineComponent({
     }
 
     function submitPublishing(url: string) {
+      console.log(url);
       loaderVisibility.value = true;
 
       for (const data in publishingError.value) {

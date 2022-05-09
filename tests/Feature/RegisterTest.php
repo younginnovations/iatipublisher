@@ -45,8 +45,8 @@ class RegisterTest extends TestCase
     public function test_api_publisher_name_does_not_exist(): void
     {
         $this->post('/api/verifyPublisher', [
-            'publisher_name'      => env('IATI_YIPL_PUBLISHER_NAME'),
-            'publisher_id'        => 'test111111',
+            'publisher_name'      => 'test',
+            'publisher_id'        => env('IATI_YIPL_PUBLISHER_ID'),
             'registration_agency' => env('IATI_YIPL_REGISTRATION_AGENCY'),
             'registration_number' => env('IATI_YIPL_REGISTRATION_NUMBER'),
         ])

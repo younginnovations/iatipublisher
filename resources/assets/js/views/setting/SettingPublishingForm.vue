@@ -83,10 +83,9 @@
                   : 'register__input mb-2'
               "
               type="text"
-              placeholder="'Type API Token here"
+              placeholder="Type API Token here"
               v-model="publishingForm.api_token"
               @input="updateStore('api_token')"
-              @focusout="autoVerify"
             />
             <span
               v-if="publishingInfo.isVerificationRequested"

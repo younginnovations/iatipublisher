@@ -114,8 +114,7 @@ class RegisterController extends Controller
                     'success' => false,
                     'publisher_error' => true,
                     'errors'  => [
-                        'publisher_name' => ['Publisher Name doesn\'t exists in IATI Registry'],
-                        'publisher_id' => ['Publisher ID doesn\'t match with your IATI Registry Information.'],
+                        'publisher_id' => ['Publisher ID doesn\'t exist in IATI Registry.'],
                     ],
                 ]);
             }
