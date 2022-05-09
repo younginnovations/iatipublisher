@@ -3,7 +3,7 @@
     <Transition name="modal-animation">
       <div
         v-if="modalActive"
-        class="modal fixed top-0 left-0 flex h-screen w-screen items-center justify-center p-8"
+        class="modal fixed top-0 left-0 z-50 flex h-screen w-screen items-center justify-center p-8"
       >
         <Transition name="modal-animation-inner">
           <div class="flex h-full w-full items-center justify-center">

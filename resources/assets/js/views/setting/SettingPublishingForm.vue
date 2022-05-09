@@ -19,6 +19,7 @@
               <label for="publisher-id">Publisher ID </label>
               <button>
                 <HoverText
+                  width="w-72"
                   name="Publisher ID"
                   hover_text="This is the unique ID for your organisation that you created when you set up your IATI Registry Publisher Account. It is a shortened version of your organisation's name, which will include lowercase letters and may include numbers and also - (dash) and _ (underscore). For example nef_mali' for Near East Foundation Mali."
                 ></HoverText>

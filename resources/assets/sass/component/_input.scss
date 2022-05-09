@@ -1,7 +1,7 @@
 .input {
   box-sizing: border-box;
   height: 64px;
-  padding: 16px 0px 16px 55px;
+  padding: 14px 0px 14px 55px;
   font-size: 16px;
   line-height: 24px;
   border-radius: 8px;
@@ -73,7 +73,7 @@
     mask-image: url('/images/dropdown-arrow.svg');
   }
   .multiselect-search {
-    @apply border border-n-30;
+    @apply border border-n-30 py-2.5;
   }
   .multiselect-search:focus {
     @apply bg-n-10;

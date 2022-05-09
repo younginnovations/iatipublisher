@@ -31,7 +31,7 @@
   text-transform: uppercase;
   cursor: pointer;
   transition: 0.3s;
-  @apply text-bluecoral;
+  @apply w-24 text-bluecoral;
 
   svg {
     transition: 0.3s;
@@ -51,6 +51,9 @@
     margin-left: 13px;
     transition: 0.2s;
   }
+}
+.get-started-btn {
+  width: 185px;
 }
 .reset-btn {
   @apply mt-6 flex justify-center rounded-lg border-none bg-turquoise text-sm font-bold uppercase text-n-50 outline-none duration-200 hover:bg-bluecoral hover:text-white;

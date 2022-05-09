@@ -95,7 +95,11 @@
       </aside>
       <div class="activities__content">
         <div class="inline-flex">
-          <button v-for="(post, index) in element_group" class="tab-btn mr-2">
+          <button
+            v-for="(post, index) in element_group"
+            :key="index"
+            class="tab-btn mr-2"
+          >
             <span>{{ post.label }}</span>
             <span class="hover__text">
               <HoverText
@@ -109,12 +113,14 @@
 
         <div
           v-for="(post, index) in activityGrouped.data"
+          :key="index"
           :class="index"
           class="basis-6/12"
         >
           <div class="activities__content--elements -mx-3 flex flex-wrap">
             <ActivityElement
               v-for="(element, index) in post"
+              :key="index"
               :title="index"
               :width="index === 'title' ? 'full' : ''"
               content="AF-COA-1234"
