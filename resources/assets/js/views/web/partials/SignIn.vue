@@ -107,7 +107,7 @@ export default defineComponent({
 });
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 #btn {
   padding: 18px 0;
 
@@ -115,5 +115,11 @@ export default defineComponent({
     @apply absolute right-7 text-2xl;
     transition: 0.4s;
   }
+}
+.username {
+  @apply mb-2;
+}
+.password {
+  @apply mb-2;
 }
 </style>

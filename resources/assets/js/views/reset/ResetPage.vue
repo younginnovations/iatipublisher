@@ -35,11 +35,11 @@
     @apply relative flex flex-col;
 
     .input {
-      @apply mt-2 py-5;
+      @apply my-2 py-5;
     }
   }
   &__icon {
-    @apply absolute left-5 bottom-6;
+    @apply absolute left-5 bottom-8;
   }
 
   h2 {
@@ -49,7 +49,7 @@
     @apply text-base text-n-40;
   }
   .reset-btn {
-    @apply mt-6 w-full;
+    @apply mt-3 w-full;
     padding: 16px 94px;
 
     @media screen and (min-width: 640px) {
