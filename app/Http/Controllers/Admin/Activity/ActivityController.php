@@ -36,10 +36,9 @@ class ActivityController extends Controller
     public function index()
     {
         try {
-            $activities = $this->activityService->getPaginatedActivities()->toArray();
-            $page_count = ceil($activities['total'] / 1);
+            $languages = getCodeListArray('Languages', 'ActivityArray');
 
-            return view('admin.activity.activities', compact('activities', 'page_count'));
+            return view('admin.activity.activities', compact('languages'));
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 

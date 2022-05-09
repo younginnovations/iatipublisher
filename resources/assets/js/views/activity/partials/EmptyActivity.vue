@@ -40,25 +40,32 @@
     <div class="mb-[17px] text-caption-c1 leading-5 text-n-50">
       Click on the button below to add a new activity
     </div>
-    <ActivityButton />
+    <ActivityButton :language="language" />
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent, reactive } from 'vue';
 import ActivityButton from './AddActivityButton.vue';
+import { useToggle } from '@vueuse/core';
 
 export default defineComponent({
   name: 'empty-activity',
   components: {
     ActivityButton,
   },
-  setup() {
+  props: {
+    language: {
+      type: [String, Object],
+      required: true,
+    },
+  },
+  setup(props) {
     const state = reactive({
       dismiss: true,
     });
 
-    return { state };
+    return { state, props };
   },
 });
 </script>

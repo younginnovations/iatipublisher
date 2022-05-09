@@ -2,6 +2,11 @@
   <header
     class="activity__header flex min-h-[60px] max-w-full gap-10 bg-bluecoral px-10 text-xs leading-normal text-white"
   >
+    <Toast
+      v-if="toastVisibility"
+      :message="toastMessage"
+      :type="toastType"
+    ></Toast>
     <figure class="flex grow-0 items-center">
       <a href="/">
         <svg-vue icon="logo" class="text-4xl"></svg-vue>
@@ -93,150 +98,17 @@
     <!--====================
         Add Activity Modal
     ========================-->
-    <!-- <CreateActivityModal @close="modalToggle" :modalActive="modalValue"></CreateActivityModal> -->
-    <Modal @close="modalToggle" :modalActive="modalValue">
-      <h5 class="title mb-5 flex text-2xl font-bold text-bluecoral">
-        Add a title and identifier for the activity
-      </h5>
-      <div>
-        <form>
-          <div class="mb-5">
-            <div class="form-group-title-container">
-              <HoverText
-                :name="'title'"
-                :hover_text="'Help text'"
-                position="left"
-              ></HoverText>
-              <p class="form-group-title">title</p>
-            </div>
-            <div class="form-group">
-              <div class="form__content">
-                <div>
-                  <div class="flex items-center justify-between">
-                    <label class="label" for=""
-                      >narrative
-                      <span class="text-salmon-40"> *</span>
-                    </label>
-                    <HoverText
-                      :name="'test'"
-                      :hover_text="'UNFPA Angola Improved national population data systems to map and address inequalities; to advance the achievement of the Sustainable Development Goals and the commitments of the Programme of Action of the International Conference on Population and Development'"
-                      :link="'https://google.com'"
-                    ></HoverText>
-                  </div>
-                  <input
-                    class="error__input form__input"
-                    type="text"
-                    placeholder="Enter an activity title"
-                  />
-
-                  <span class="text-xs font-normal text-n-40"
-                    >This is a help text
-                  </span>
-                </div>
-                <div>
-                  <div class="flex items-center justify-between">
-                    <label class="label" for=""
-                      >@xml: lang
-                      <span class="text-salmon-40"> *</span>
-                    </label>
-                    <HoverText
-                      :name="'test'"
-                      :hover_text="'lorem ipsum'"
-                    ></HoverText>
-                  </div>
-
-                  <Multiselect
-                    class="vue__select"
-                    :searchable="true"
-                    :options="{ one: 'one', two: 'two' }"
-                  />
-
-                  <span class="text-xs font-normal text-n-40"
-                    >This is a help text
-                  </span>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div>
-            <div class="form-group-title-container">
-              <HoverText
-                :name="'title'"
-                :hover_text="'Help text'"
-                position="left"
-              ></HoverText>
-              <p class="form-group-title">iati-identifier</p>
-            </div>
-            <div class="form-group">
-              <div class="form__content">
-                <div>
-                  <div class="flex items-center justify-between">
-                    <label class="label" for=""
-                      >activity identifier
-                      <span class="text-salmon-40"> *</span>
-                    </label>
-                    <HoverText
-                      :name="'test'"
-                      :hover_text="'lorem ipsum'"
-                    ></HoverText>
-                  </div>
-                  <Multiselect
-                    class="vue__select"
-                    :searchable="true"
-                    :options="{ one: 'one', two: 'two' }"
-                  />
-
-                  <span class="text-xs font-normal text-n-40"
-                    >This is a help text
-                  </span>
-                </div>
-                <div>
-                  <div class="flex items-center justify-between">
-                    <label class="label" for=""
-                      >iati-identifier
-                      <span class="text-salmon-40"> *</span>
-                    </label>
-                    <HoverText
-                      :name="'test'"
-                      :hover_text="'lorem ipsum'"
-                    ></HoverText>
-                  </div>
-                  <input
-                    class="error__input form__input"
-                    type="text"
-                    placeholder="Unique activity identifier"
-                  />
-
-                  <span class="text-xs font-normal text-n-40"
-                    >This is a help text
-                  </span>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="mt-8 flex justify-end">
-            <div class="inline-flex">
-              <BtnComponent
-                class="bg-white px-6 uppercase"
-                @click="modalValue = false"
-                text="Cancel"
-              />
-              <BtnComponent
-                class="space"
-                type="primary"
-                @click="modalValue = false"
-                text="Save"
-              />
-            </div>
-          </div>
-        </form>
-      </div>
-    </Modal>
+    <CreateActivityModal
+      @close="modalToggle"
+      :modalActive="modalValue"
+      @closeModal="modalToggle"
+      @toast="toast"
+    ></CreateActivityModal>
   </header>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, ref, reactive, onMounted } from 'vue';
 import axios from 'axios';
 import { useToggle } from '@vueuse/core';
 import Multiselect from '@vueform/multiselect';
@@ -245,6 +117,7 @@ import Modal from './PopupModal.vue';
 import BtnComponent from './ButtonComponent.vue';
 import CreateActivityModal from '../views/activity/partials/CreateActivityModal.vue';
 import HoverText from './HoverText.vue';
+import Toast from './Toast.vue';
 
 export default defineComponent({
   name: 'header-component',
@@ -254,6 +127,7 @@ export default defineComponent({
     HoverText,
     Multiselect,
     CreateActivityModal,
+    Toast,
   },
   props: {
     user: {
@@ -267,6 +141,12 @@ export default defineComponent({
   },
 
   setup(props) {
+    const dropdown = ref();
+    const dropdownBtn = ref();
+    const toastVisibility = ref(false);
+    const toastMessage = ref('');
+    const toastType = ref(false);
+
     const data = {
       languageNavLiClasses: 'flex',
       languageNavAnchorClasses:
@@ -309,7 +189,34 @@ export default defineComponent({
         },
       ],
     };
+
     const [modalValue, modalToggle] = useToggle();
+
+    const state = reactive({
+      isVisible: false,
+    });
+
+    onMounted(() => {
+      window.addEventListener('click', (e) => {
+        if (
+          !dropdownBtn.value.contains(e.target) &&
+          !dropdown.value.contains(e.target)
+        ) {
+          state.isVisible = false;
+        }
+      });
+    });
+
+    const toggle = () => {
+      state.isVisible = !state.isVisible;
+    };
+
+    function toast(message: string, type: boolean) {
+      toastVisibility.value = true;
+      setTimeout(() => (toastVisibility.value = false), 5000);
+      toastMessage.value = message;
+      toastType.value = type;
+    }
 
     async function logout() {
       await axios.post('/logout').then((res) => {
@@ -323,6 +230,11 @@ export default defineComponent({
       props,
       data,
       modalValue,
+      toastVisibility,
+      toastMessage,
+      toastType,
+      toast,
+      toggle,
       modalToggle,
       logout,
     };

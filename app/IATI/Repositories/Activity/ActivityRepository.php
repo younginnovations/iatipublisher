@@ -55,6 +55,6 @@ class ActivityRepository extends Repository
      */
     public function getActivityForOrganization($organizationId, $page)
     {
-        return $this->model->where('org_id', $organizationId)->paginate(3, ['*'], 'activity', $page);
+        return $this->model->where('org_id', $organizationId)->paginate(10, ['*'], 'activity', $page);
     }
 }

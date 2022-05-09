@@ -30,7 +30,7 @@
 
 <body>
   <div id="app">
-    <loggedin-header :user="{{ Auth::user() }}" :organization="{{ Auth::user()->organization }}"></loggedin-header>
+    <loggedin-header :user="{{ Auth::user() }}" :organization="{{ Auth::user()->organization }}" :languages="{{ json_encode(getCodeListArray('Languages', 'ActivityArray'))}}"></loggedin-header>
 
     <main>
       @yield('content')

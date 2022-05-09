@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Api\Activity;
 
 use App\Http\Controllers\Controller;
-use App\IATI\Requests\ActivityCreateRequest;
+use App\Http\Requests\Activity\ActivityCreateRequest;
 use App\IATI\Services\Activity\ActivityService;
 use Illuminate\Http\JsonResponse;
 
@@ -39,6 +39,24 @@ class ActivityController extends Controller
             $activities = $this->activityService->getPaginatedActivities($page);
 
             return response()->json(['success' => true, 'message' => 'Activities fetched successfully', 'data' => $activities]);
+        } catch (\Exception $e) {
+            logger()->error($e->getMessage());
+
+            return response()->json(['success' => false, 'message' => 'Error occurred while fetching the data']);
+        }
+    }
+
+    /*
+    * Get languages
+    *
+    * @return JsonResponse
+    */
+    public function getLanguages(): JsonResponse
+    {
+        try {
+            $languages = getCodeListArray('Languages', 'ActivityArray', false);
+
+            return response()->json(['success' => true, 'message' => 'Languages fetched successfully', 'data' => $languages]);
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
