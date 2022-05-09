@@ -144,7 +144,11 @@
                   type="text"
                   placeholder=""
                   :value="
-                    organization.identifier + '-' + formData.activity_identifier
+                    formData.activity_identifier
+                      ? organization.identifier +
+                        '-' +
+                        formData.activity_identifier
+                      : ''
                   "
                   disabled="disabled"
                 />

@@ -1,5 +1,8 @@
 <template>
-  <div id="activity-listing-page" class="bg-paper px-10 pt-4 pb-[71px]">
+  <div
+    id="activity-listing-page"
+    class="listing__page bg-paper px-10 pt-4 pb-[71px]"
+  >
     <div id="activity">
       <PageTitle :showButtons="state.showButtons" />
       <EmptyActivity v-if="isEmpty"> </EmptyActivity>
@@ -47,7 +50,7 @@ export default defineComponent({
         .then((res) => {
           const response = res.data;
           Object.assign(activities, response.data);
-          isEmpty.value = response.data ? false : true;
+          isEmpty.value = response.data.data.length ? false : true;
         })
         .catch((error) => {
           const { errors } = error.response.data;
@@ -85,3 +88,9 @@ export default defineComponent({
   },
 });
 </script>
+
+<style lang="scss">
+.listing__page {
+  height: calc(100vh - 60px);
+}
+</style>
