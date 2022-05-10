@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\IATI\Services\Activity;
 
+use App\IATI\Models\Activity\Activity;
 use App\IATI\Repositories\Activity\ActivityRepository;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Auth;
@@ -60,7 +61,7 @@ class ActivityService
     {
         $activity_identifier = [
             'activity_identifier' => $input['activity_identifier'],
-            'iati_identifier_text' => $input['iati_identifier_text'],
+            'iati_identifier_text' => Auth::user()->organization->identifier . '-' . $input['activity_identifier'],
         ];
 
         $activity_title = [
@@ -87,5 +88,17 @@ class ActivityService
     public function getActivityIdentifiersForOrganization($organizationId): Collection
     {
         return $this->activityRepository->getActivityIdentifiersForOrganization($organizationId);
+    }
+
+    /**
+     * Returns activity identifiers used by an organization.
+     *
+     * @param $organizationId
+     *
+     * @return Activity
+     */
+    public function getActivity($id): Activity
+    {
+        return $this->activityRepository->find($id);
     }
 }

@@ -7,7 +7,9 @@ namespace App\Http\Controllers\Api\Activity;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Activity\ActivityCreateRequest;
 use App\IATI\Services\Activity\ActivityService;
+use Illuminate\Database\DatabaseManager;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Auth;
 
 /**
  * Class SettingController.
@@ -20,12 +22,18 @@ class ActivityController extends Controller
     protected $activityService;
 
     /**
+     * @var DatabaseManager
+     */
+    protected $db;
+
+    /**
      * ActivityController Constructor.
      * @param ActivityService $activityService
      */
-    public function __construct(ActivityService $activityService)
+    public function __construct(ActivityService $activityService, DatabaseManager $db)
     {
         $this->activityService = $activityService;
+        $this->db = $db;
     }
 
     /*
@@ -55,8 +63,15 @@ class ActivityController extends Controller
     {
         try {
             $languages = getCodeListArray('Languages', 'ActivityArray', false);
+            $organization = Auth::user()->organization;
 
-            return response()->json(['success' => true, 'message' => 'Languages fetched successfully', 'data' => $languages]);
+            return response()->json([
+                'success' => true, 'message' => 'Languages fetched successfully',
+                'data' => [
+                    'languages' => $languages,
+                    'organization' => $organization,
+                ],
+            ]);
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
@@ -76,11 +91,11 @@ class ActivityController extends Controller
         try {
             $input = $request->all();
 
-            if (!$this->activityService->store($input)) {
-                return response()->json(['success' => false, 'error' => 'Error has occurred while saving activity.']);
-            }
+            $this->db->beginTransaction();
+            $activity = $this->activityService->store($input);
+            $this->db->commit();
 
-            return response()->json(['success' => true, 'message' => 'Activity created successfully.']);
+            return response()->json(['success' => true, 'message' => 'Activity created successfully.', 'data' => $activity]);
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 

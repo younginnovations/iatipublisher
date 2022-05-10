@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Activity;
 
 use App\Http\Controllers\Controller;
-use App\IATI\Models\Activity\Activity;
 use App\IATI\Services\Activity\ActivityService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -83,13 +82,21 @@ class ActivityController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\IATI\Models\Activity\Activity  $activity
+     * @param  $activity_id
      *
-     * @return void
+     * @return \Illuminate\Contracts\View\View
      */
-    public function show(Activity $activity): void
+    public function show($activity_id)
     {
-        //
+        try {
+            $activity = $this->activityService->getActivity($activity_id);
+
+            return view('admin.activity.detail', compact('activity'));
+        } catch (\Exception $e) {
+            logger()->error($e->getMessage());
+
+            return response()->json(['success' => false, 'error' => 'Error has occurred while saving activity.']);
+        }
     }
 
     /**
