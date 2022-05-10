@@ -3,11 +3,11 @@
 namespace App\Http\Controllers\Admin\Activity;
 
 use App\Http\Controllers\Controller;
-use App\IATI\Models\Activity\Activity;
 use App\IATI\Services\Activity\ActivityService;
-use App\IATI\Requests\ActivityCreateRequest;
+use App\Http\Requests\Activity\ActivityCreateRequest;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 /**
  * Class ActivityController.
@@ -83,13 +83,21 @@ class ActivityController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\IATI\Models\Activity\Activity  $activity
+     * @param  $activity_id
      *
-     * @return void
+     * @return \Illuminate\Contracts\View\View
      */
-    public function show(Activity $activity): void
+    public function show($activity_id)
     {
-        //
+        try {
+            $activity = $this->activityService->getActivity($activity_id);
+
+            return view('admin.activity.detail', compact('activity'));
+        } catch (\Exception $e) {
+            logger()->error($e->getMessage());
+
+            return response()->json(['success' => false, 'error' => 'Error has occurred while saving activity.']);
+        }
     }
 
     /**
@@ -140,6 +148,31 @@ class ActivityController extends Controller
             $activities = $this->activityService->getPaginatedActivities($page);
 
             return response()->json(['success' => true, 'message' => 'Activities fetched successfully', 'data' => $activities]);
+        } catch (\Exception $e) {
+            logger()->error($e->getMessage());
+
+            return response()->json(['success' => false, 'message' => 'Error occurred while fetching the data']);
+        }
+    }
+
+        /*
+    * Get languages
+    *
+    * @return JsonResponse
+    */
+    public function getLanguages(): JsonResponse
+    {
+        try {
+            $languages = getCodeListArray('Languages', 'ActivityArray', false);
+            $organization = Auth::user()->organization;
+
+            return response()->json([
+                'success' => true, 'message' => 'Languages fetched successfully',
+                'data' => [
+                    'languages' => $languages,
+                    'organization' => $organization,
+                ],
+            ]);
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 

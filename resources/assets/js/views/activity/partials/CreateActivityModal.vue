@@ -12,12 +12,12 @@
       <form class="input__field">
         <div class="mb-5">
           <div class="form-group-title-container">
+            <p class="form-group-title">title</p>
             <HoverText
               :name="'title'"
-              :hover_text="'Help text'"
+              hover_text="A short, human-readable title that contains a meaningful summary of the activity. May be repeated for different languages. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/title/' target='_blank'>For more information</a>"
               position="left"
             ></HoverText>
-            <p class="form-group-title">title</p>
           </div>
           <div class="form-group">
             <div class="form__content">
@@ -28,9 +28,8 @@
                     <span class="text-salmon-40"> *</span>
                   </label>
                   <HoverText
-                    :name="'test'"
-                    :hover_text="'UNFPA Angola Improved national population data systems to map and address inequalities; to advance the achievement of the Sustainable Development Goals and the commitments of the Programme of Action of the International Conference on Population and Development'"
-                    :link="'https://google.com'"
+                    :name="'narrative'"
+                    hover_text="The name of the organisation. May be repeated for different languages. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/reporting-org/narrative/''>For more information</a>"
                   ></HoverText>
                 </div>
                 <input
@@ -40,7 +39,7 @@
                       : 'form__input'
                   "
                   type="text"
-                  placeholder="Enter an activity title"
+                  placeholder="Type narrative here"
                   v-model="formData.narrative"
                 />
                 <span
@@ -50,9 +49,6 @@
                 >
                   {{ errorData.narrative }}
                 </span>
-                <span v-else class="text-xs font-normal text-n-40"
-                  >This is a help text
-                </span>
               </div>
               <div>
                 <div class="flex items-center justify-between">
@@ -61,8 +57,8 @@
                     <span class="text-salmon-40"> *</span>
                   </label>
                   <HoverText
-                    :name="'test'"
-                    :hover_text="'lorem ipsum'"
+                    name="@xml:lang"
+                    hover_text="A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/iati-identifier/' target='_blank'>For more information</a>"
                   ></HoverText>
                 </div>
 
@@ -74,6 +70,7 @@
                   "
                   :searchable="true"
                   :options="languages"
+                  placeholder="Select @xml:lang"
                   v-model="formData.language"
                 />
 
@@ -86,7 +83,7 @@
                 </span>
 
                 <span v-else class="text-xs font-normal text-n-40"
-                  >This is a help text
+                  >If no value is selected, default value is assumed.
                 </span>
               </div>
             </div>
@@ -94,12 +91,12 @@
         </div>
         <div>
           <div class="form-group-title-container">
-            <HoverText
-              :name="'title'"
-              :hover_text="'Help text'"
-              position="left"
-            ></HoverText>
             <p class="form-group-title">iati-identifier</p>
+            <HoverText
+              :name="'iati-identifier'"
+              position="left"
+              hover_text="A globally unique identifier for the activity.This MUST be prefixed with EITHER the current IATI organisation identifier for the reporting organisation (reporting-org/@ref) OR a previous identifier reported in other-identifier, and suffixed with the organisation\’s own activity identifier. The prefix and the suffix should be separated by a hyphen “-“.Once an activity has been reported to IATI its identifier MUST NOT be changed in subsequent updates. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/iati-identifier/' target='_blank'>For more information</a>"
+            ></HoverText>
           </div>
           <div class="form-group">
             <div class="form__content">
@@ -109,10 +106,6 @@
                     >activity identifier
                     <span class="text-salmon-40"> *</span>
                   </label>
-                  <HoverText
-                    :name="'test'"
-                    :hover_text="'lorem ipsum'"
-                  ></HoverText>
                 </div>
                 <input
                   :class="
@@ -121,7 +114,7 @@
                       : 'form__input'
                   "
                   type="text"
-                  placeholder="Unique activity identifier"
+                  placeholder="Type activity-identifier here"
                   v-model="formData.activity_identifier"
                 />
                 <span
@@ -132,7 +125,11 @@
                   {{ errorData.activity_identifier }}
                 </span>
                 <span v-else class="text-xs font-normal text-n-40"
-                  >This is a help text
+                  >Enter your own unique activity identifier such as
+                  abbreviation or simply a number. Make sure it is unique across
+                  all the activities. IATI Publisher will concatenate
+                  Organization Identifier and Activity Identifer to autogenerate
+                  'iati-identifier'.
                 </span>
               </div>
               <div>
@@ -141,20 +138,15 @@
                     >iati-identifier
                     <span class="text-salmon-40"> *</span>
                   </label>
-                  <HoverText
-                    :name="'test'"
-                    :hover_text="'lorem ipsum'"
-                  ></HoverText>
                 </div>
                 <input
-                  :class="
-                    errorData.iati_identifier_text != ''
-                      ? 'error__input form__input'
-                      : 'form__input'
-                  "
+                  class="form__input"
                   type="text"
-                  placeholder="Unique activity identifier"
-                  v-model="formData.iati_identifier_text"
+                  placeholder=""
+                  :value="
+                    organization.identifier + '-' + formData.activity_identifier
+                  "
+                  disabled="disabled"
                 />
 
                 <span
@@ -166,7 +158,7 @@
                 </span>
 
                 <span v-else class="text-xs font-normal text-n-40"
-                  >This is a help text
+                  >This is autogenerated
                 </span>
               </div>
             </div>
@@ -221,27 +213,26 @@ export default defineComponent({
       narrative: '',
       language: '',
       activity_identifier: '',
-      iati_identifier_text: '',
     });
 
     const errorData = reactive({
       narrative: '',
       language: '',
       activity_identifier: '',
-      iati_identifier_text: '',
     });
 
     const loaderVisibility = ref(false);
 
     const languages = reactive({});
+    const organization = reactive({});
 
     onMounted(async () => {
       axios
-        .get('api/languages')
+        .get('/languages')
         .then((res) => {
-          console.log(res);
           const response = res.data;
-          Object.assign(languages, response.data);
+          Object.assign(languages, response.data.languages);
+          Object.assign(organization, response.data.organization);
         })
         .catch((error) => {
           const { errors } = error.response.data;
@@ -254,14 +245,18 @@ export default defineComponent({
 
     function storeActivity() {
       axios
-        .post('api/activity', formData)
+        .post('/activities', formData)
         .then((res) => {
           const response = res.data;
           loaderVisibility.value = false;
+
           emit('closeModal');
-          emit('toast', response.message, response.type);
-          loaderVisibility.value = false;
+          if (response.success) {
+            emit('toast', response.message, response.success);
+            window.location.href = `/activities/${response.data.id}`;
+          }
         })
+
         .catch((error) => {
           const { errors } = error.response.data;
 
@@ -269,9 +264,6 @@ export default defineComponent({
           errorData.language = errors.language ? errors.language[0] : '';
           errorData.activity_identifier = errors.activity_identifier
             ? errors.activity_identifier[0]
-            : '';
-          errorData.iati_identifier_text = errors.iati_identifier_text
-            ? errors.iati_identifier_text[0]
             : '';
 
           loaderVisibility.value = false;
@@ -284,6 +276,7 @@ export default defineComponent({
       errorData,
       loaderVisibility,
       languages,
+      organization,
       closeModal,
       storeActivity,
     };

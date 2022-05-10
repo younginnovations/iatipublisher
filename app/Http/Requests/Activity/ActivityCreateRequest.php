@@ -57,7 +57,7 @@ class ActivityCreateRequest extends FormRequest
             'narrative'             => ['required'],
             'language'              => ['required'],
             'activity_identifier'   => ['required', Rule::notIn($activityIdentifiers)],
-            'iati_identifier_text'  => ['required'],
+            'iati_identifier_text'  => ['sometimes'],
         ];
     }
 }
