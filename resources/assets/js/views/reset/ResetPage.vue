@@ -17,10 +17,7 @@
           :class="emailError != '' ? 'error__input input' : 'input'"
           v-model="formData.email"
         />
-        <svg-vue
-          class="absolute top-11 left-5 text-xl sm:top-12 sm:left-6"
-          icon="mail"
-        ></svg-vue>
+        <svg-vue class="reset__icon mail__icon" icon="mail"></svg-vue>
         <span class="error" role="alert" v-if="emailError"
           >{{ emailError }}
         </span>
@@ -99,7 +96,11 @@ export default defineComponent({
     }
   }
   &__icon {
-    @apply absolute left-5 bottom-6;
+    @apply absolute left-6;
+    top: 51px;
+  }
+  .mail__icon {
+    top: 52px;
   }
 
   h2 {

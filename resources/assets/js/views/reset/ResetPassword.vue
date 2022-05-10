@@ -18,10 +18,7 @@
           placeholder="Enter a new password"
           v-model="formData.password"
         />
-        <svg-vue
-          class="absolute top-11 left-5 text-xl sm:top-12 sm:left-6"
-          icon="pw-lock"
-        ></svg-vue>
+        <svg-vue class="reset__icon text-lg" icon="pw-lock"></svg-vue>
         <span class="error" role="alert" v-if="errorData.password != ''">
           {{ errorData.password }}
         </span>
@@ -43,10 +40,7 @@
           placeholder="Re-enter your password"
           v-model="formData.password_confirmation"
         />
-        <svg-vue
-          class="absolute top-11 left-5 text-xl sm:top-12 sm:left-6"
-          icon="pw-lock"
-        ></svg-vue>
+        <svg-vue class="reset__icon text-lg" icon="pw-lock"></svg-vue>
         <span
           class="error"
           role="alert"
