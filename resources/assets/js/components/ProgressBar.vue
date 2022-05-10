@@ -1,7 +1,7 @@
 <template>
   <CircleProgress
-    :size="80"
-    :percent="60"
+    :size="70"
+    :percent="percent"
     :viewport="true"
     :show-percent="true"
     fill-color="#17997B"
@@ -20,37 +20,24 @@ export default {
   components: {
     CircleProgress: CircleProgress,
   },
-  setup() {
-    const percent = ref(75);
-
-    onMounted(() => {
-      setInterval(() => {
-        if (percent.value === 25) {
-          percent.value = 75;
-        } else {
-          percent.value = 25;
-        }
-      }, 1000);
-    });
-
-    return {
-      percent,
-    };
+  props: {
+    percent: Number,
   },
+  setup(props) {},
 };
 </script>
 
 <style lang="scss">
 .vue3-circular-progressbar {
   svg {
-    height: 70px;
-    width: 70px;
+    @apply h-auto;
   }
   .current-counter[data-v-49af6a0a] {
-    position: absolute;
-    top: 45%;
-    left: 40%;
-    transform: translate(-50%, -50%);
+    @apply absolute top-2/4 left-2/4 -translate-y-2/4 -translate-x-2/4 font-bold text-spring-50;
+
+    &:after {
+      content: '%';
+    }
   }
 }
 </style>

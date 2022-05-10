@@ -56,7 +56,7 @@
                 hover_text="You cannot publish an activity until all the mandatory fields have been filled."
               ></HoverText>
             </div>
-            <ProgressBar class="mb-3"></ProgressBar>
+            <ProgressBar class="mb-3" percent="60"></ProgressBar>
             <span>Fill core elements to get 100% score</span>
           </div>
           <div class="activities__card elements">
@@ -89,195 +89,148 @@
             </div>
           </div>
         </div>
-        <div class="activities__card elements__panel">
-          <div class="grid grid-flow-col">
-            <div class="relative">
-              <svg-vue
-                class="panel__search absolute left-2.5 top-3 text-sm text-n-30"
-                icon="panel-search"
-              ></svg-vue>
-              <input
-                class="panel__input"
-                type="text"
-                placeholder="Search elements to add/edit"
-              />
-            </div>
-            <div class="grid justify-items-end">
-              <button
-                class="button panel-btn dropdown-btn"
-                @click="toggle"
-                ref="dropdownBtn"
-              >
-                <svg-vue icon="core"></svg-vue>
-                <svg-vue
-                  :class="
-                    state.isVisible
-                      ? 'dropdown__arrow rotate-180'
-                      : 'dropdown__arrow'
-                  "
-                  icon="dropdown-arrow"
-                ></svg-vue>
-              </button>
-              <!-- <div v-show="state.isVisible" class="profile__dropdown" ref="dropdown">
-          <ul>
-            <li class="border-b border-b-n-20">
-              <svg-vue class="user-profile" icon="user-profile"></svg-vue>
-              <div class="flex flex-col capitalize leading-4">
-                <span class="text-n-50">{{ props.user.full_name }}</span
-                ><span class="text-tiny text-n-40">{{
-                  props.organization.publisher_name
-                }}</span>
-              </div>
-            </li>
-            <li class="dropdown__list border-b border-b-n-20">
-              <svg-vue icon="user"></svg-vue>
-              <a href="#">Your Profile</a>
-            </li>
-            <li class="dropdown__list" @click="logout">
-              <svg-vue icon="logout"></svg-vue>
-              <a href="#">Logout</a>
-            </li>
-          </ul>
-        </div> -->
-            </div>
-          </div>
-        </div>
+        <Elements />
       </aside>
-      <div class="inline-flex">
-        <button
-          :class="
-            tab === ''
-              ? 'tab-btn active__tab mr-2 flex items-center'
-              : 'tab-btn mr-2'
-          "
-          @click="toggleTab('')"
-        >
-          <span>Identification</span>
-          <span class="hover__text">
-            <HoverText
-              icon_size="text-tiny"
-              name="Identification"
-              hover_text="You cannot publish an activity until all the mandatory fields have been filled."
-            ></HoverText>
-          </span>
-        </button>
-        <button
-          :class="tab === '' ? 'tab-btn active__tab mr-2' : 'tab-btn mr-2'"
-          @click="toggleTab('')"
-        >
-          <span>Basic Information</span>
-          <span class="hover__text">
-            <HoverText
-              icon_size="text-tiny"
-              name="Basic Information"
-              hover_text="You cannot publish an activity until all the mandatory fields have been filled."
-            ></HoverText>
-          </span>
-        </button>
-        <button
-          :class="tab === '' ? 'tab-btn active__tab mr-2' : 'tab-btn mr-2'"
-          @click="toggleTab('')"
-        >
-          <span>Participating Org</span>
-          <span class="hover__text">
-            <HoverText
-              icon_size="text-tiny"
-              name="Participating Org"
-              hover_text="You cannot publish an activity until all the mandatory fields have been filled."
-            ></HoverText>
-          </span>
-        </button>
-        <button
-          :class="tab === '' ? 'tab-btn active__tab mr-2' : 'tab-btn mr-2'"
-          @click="toggleTab('')"
-        >
-          <span>Humanitarian Info</span>
-          <span class="hover__text">
-            <HoverText
-              icon_size="text-tiny"
-              name="Humanitarian Info"
-              hover_text="You cannot publish an activity until all the mandatory fields have been filled."
-            ></HoverText>
-          </span>
-        </button>
-        <button
-          :class="tab === '' ? 'tab-btn active__tab mr-2' : 'tab-btn mr-2'"
-          @click="toggleTab('')"
-        >
-          <span>Geography</span>
-          <span class="hover__text">
-            <HoverText
-              icon_size="text-tiny"
-              name="Geography"
-              hover_text="You cannot publish an activity until all the mandatory fields have been filled."
-            ></HoverText>
-          </span>
-        </button>
-        <button
-          :class="tab === '' ? 'tab-btn active__tab mr-2' : 'tab-btn mr-2'"
-          @click="toggleTab('')"
-        >
-          <span>Classification</span>
-          <span class="hover__text">
-            <HoverText
-              icon_size="text-tiny"
-              name="Classification"
-              hover_text="You cannot publish an activity until all the mandatory fields have been filled."
-            ></HoverText>
-          </span>
-        </button>
-        <button
-          :class="tab === '' ? 'tab-btn active__tab mr-2' : 'tab-btn mr-2'"
-          @click="toggleTab('')"
-        >
-          <span>Financial</span>
-          <span class="hover__text">
-            <HoverText
-              icon_size="text-tiny"
-              name="Financial"
-              hover_text="You cannot publish an activity until all the mandatory fields have been filled."
-            ></HoverText>
-          </span>
-        </button>
-        <button
-          :class="tab === '' ? 'tab-btn active__tab mr-2' : 'tab-btn mr-2'"
-          @click="toggleTab('')"
-        >
-          <span>Related docs</span>
-          <span class="hover__text">
-            <HoverText
-              icon_size="text-tiny"
-              name="Related docs"
-              hover_text="You cannot publish an activity until all the mandatory fields have been filled."
-            ></HoverText>
-          </span>
-        </button>
-        <button
-          :class="tab === '' ? 'tab-btn active__tab mr-2' : 'tab-btn mr-2'"
-          @click="toggleTab('')"
-        >
-          <span>Relations</span>
-          <span class="hover__text">
-            <HoverText
-              icon_size="text-tiny"
-              name="Relations"
-              hover_text="You cannot publish an activity until all the mandatory fields have been filled."
-            ></HoverText>
-          </span>
-        </button>
-        <button
-          :class="tab === '' ? 'tab-btn active__tab' : 'tab-btn'"
-          @click="toggleTab('')"
-        >
-          <span>Results</span>
-          <span class="hover__text">
-            <HoverText
-              icon_size="text-tiny"
-              name="Results"
-              hover_text="You cannot publish an activity until all the mandatory fields have been filled."
-            ></HoverText>
-          </span>
-        </button>
+      <div class="activities__content">
+        <div class="inline-flex">
+          <button
+            :class="
+              tab === ''
+                ? 'tab-btn active__tab mr-2 flex items-center'
+                : 'tab-btn mr-2'
+            "
+            @click="toggleTab('')"
+          >
+            <span>Identification</span>
+            <span class="hover__text">
+              <HoverText
+                icon_size="text-tiny"
+                name="Identification"
+                hover_text="You cannot publish an activity until all the mandatory fields have been filled."
+              ></HoverText>
+            </span>
+          </button>
+          <button
+            :class="tab === '' ? 'tab-btn active__tab mr-2' : 'tab-btn mr-2'"
+            @click="toggleTab('')"
+          >
+            <span>Basic Information</span>
+            <span class="hover__text">
+              <HoverText
+                icon_size="text-tiny"
+                name="Basic Information"
+                hover_text="You cannot publish an activity until all the mandatory fields have been filled."
+              ></HoverText>
+            </span>
+          </button>
+          <button
+            :class="tab === '' ? 'tab-btn active__tab mr-2' : 'tab-btn mr-2'"
+            @click="toggleTab('')"
+          >
+            <span>Participating Org</span>
+            <span class="hover__text">
+              <HoverText
+                icon_size="text-tiny"
+                name="Participating Org"
+                hover_text="You cannot publish an activity until all the mandatory fields have been filled."
+              ></HoverText>
+            </span>
+          </button>
+          <button
+            :class="tab === '' ? 'tab-btn active__tab mr-2' : 'tab-btn mr-2'"
+            @click="toggleTab('')"
+          >
+            <span>Humanitarian Info</span>
+            <span class="hover__text">
+              <HoverText
+                icon_size="text-tiny"
+                name="Humanitarian Info"
+                hover_text="You cannot publish an activity until all the mandatory fields have been filled."
+              ></HoverText>
+            </span>
+          </button>
+          <button
+            :class="tab === '' ? 'tab-btn active__tab mr-2' : 'tab-btn mr-2'"
+            @click="toggleTab('')"
+          >
+            <span>Geography</span>
+            <span class="hover__text">
+              <HoverText
+                icon_size="text-tiny"
+                name="Geography"
+                hover_text="You cannot publish an activity until all the mandatory fields have been filled."
+              ></HoverText>
+            </span>
+          </button>
+          <button
+            :class="tab === '' ? 'tab-btn active__tab mr-2' : 'tab-btn mr-2'"
+            @click="toggleTab('')"
+          >
+            <span>Classification</span>
+            <span class="hover__text">
+              <HoverText
+                icon_size="text-tiny"
+                name="Classification"
+                hover_text="You cannot publish an activity until all the mandatory fields have been filled."
+              ></HoverText>
+            </span>
+          </button>
+          <button
+            :class="tab === '' ? 'tab-btn active__tab mr-2' : 'tab-btn mr-2'"
+            @click="toggleTab('')"
+          >
+            <span>Financial</span>
+            <span class="hover__text">
+              <HoverText
+                icon_size="text-tiny"
+                name="Financial"
+                hover_text="You cannot publish an activity until all the mandatory fields have been filled."
+              ></HoverText>
+            </span>
+          </button>
+          <button
+            :class="tab === '' ? 'tab-btn active__tab mr-2' : 'tab-btn mr-2'"
+            @click="toggleTab('')"
+          >
+            <span>Related docs</span>
+            <span class="hover__text">
+              <HoverText
+                icon_size="text-tiny"
+                name="Related docs"
+                hover_text="You cannot publish an activity until all the mandatory fields have been filled."
+              ></HoverText>
+            </span>
+          </button>
+          <button
+            :class="tab === '' ? 'tab-btn active__tab mr-2' : 'tab-btn mr-2'"
+            @click="toggleTab('')"
+          >
+            <span>Relations</span>
+            <span class="hover__text">
+              <HoverText
+                icon_size="text-tiny"
+                name="Relations"
+                hover_text="You cannot publish an activity until all the mandatory fields have been filled."
+              ></HoverText>
+            </span>
+          </button>
+          <button
+            :class="tab === '' ? 'tab-btn active__tab' : 'tab-btn'"
+            @click="toggleTab('')"
+          >
+            <span>Results</span>
+            <span class="hover__text">
+              <HoverText
+                icon_size="text-tiny"
+                name="Results"
+                hover_text="You cannot publish an activity until all the mandatory fields have been filled."
+              ></HoverText>
+            </span>
+          </button>
+        </div>
+        <div class="activities__content--elements">
+          <!--    iati-identifier      -->
+        </div>
       </div>
     </div>
   </div>
@@ -287,11 +240,13 @@
 import { defineComponent, onMounted, ref, reactive } from 'vue';
 import HoverText from '../../components/HoverText.vue';
 import ProgressBar from '../../components/ProgressBar.vue';
+import Elements from './partials/ActivitiesElements.vue';
 
 export default defineComponent({
   components: {
     HoverText,
     ProgressBar,
+    Elements,
   },
   setup(props) {
     const dropdown = ref();
@@ -299,17 +254,6 @@ export default defineComponent({
 
     const state = reactive({
       isVisible: false,
-    });
-
-    onMounted(() => {
-      window.addEventListener('click', (e) => {
-        if (
-          !dropdownBtn.value.contains(e.target) &&
-          !dropdown.value.contains(e.target)
-        ) {
-          state.isVisible = false;
-        }
-      });
     });
 
     const toggle = () => {
