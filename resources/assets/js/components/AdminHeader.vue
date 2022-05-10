@@ -1,8 +1,9 @@
 <template>
   <header
-    class="flex min-h-[60px] max-w-full gap-10 bg-bluecoral px-10 text-xs leading-normal text-white"
+    class="relative flex min-h-[60px] max-w-full gap-10 bg-bluecoral px-10 text-xs leading-normal text-white"
   >
     <Toast
+      class="toast -bottom-24"
       v-if="toastVisibility"
       :message="toastMessage"
       :type="toastType"
@@ -257,6 +258,10 @@ export default defineComponent({
 <style src="@vueform/multiselect/themes/default.css"></style>
 
 <style lang="scss">
+.toast {
+  @apply absolute  left-2/4 z-50;
+  transform: translate(-50%, -50%);
+}
 .form-group {
   @apply rounded-lg border border-n-20 p-5;
 
