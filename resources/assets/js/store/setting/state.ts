@@ -12,18 +12,15 @@ export const state = {
     default_currency: '',
     default_language: '',
     hierarchy: '',
-    linked_data_url: '',
-    humanitarian: 'no',
+    humanitarian: 'yes',
   },
   publishingError: {
-    publisher_id: '',
     api_token: '',
   },
   defaultError: {
     default_currency: '',
     default_language: '',
     hierarchy: '',
-    linked_data_url: '',
     humanitarian: '',
   },
 };

@@ -34,10 +34,10 @@ class SettingController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function index()
+    public function index(): \Illuminate\Contracts\Support\Renderable
     {
         try {
-            $currencies = getCodeList('Currency', 'Organization', false);
+            $currencies = getCodeListArray('Currency', 'OrganizationArray');
             $languages = getCodeList('Language', 'Organization', false);
             $humanitarian = trans('setting.humanitarian_types');
 

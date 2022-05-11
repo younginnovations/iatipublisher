@@ -5,7 +5,7 @@
     </button>
     <div
       :class="
-        props.position === 'left'
+        props.position === 'right'
           ? 'help__text left-0 ' + hoverTextClass
           : 'help__text right-0 ' + hoverTextClass
       "

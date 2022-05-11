@@ -76,8 +76,9 @@ class RegisterController extends Controller
             'username'     => ['required', 'string', 'max:255', 'unique:users,username'],
             'full_name'    => ['required', 'string', 'max:255'],
             'email'        => ['required', 'string', 'email', 'max:255', 'unique:users,email'],
-            'publisher_id' => ['required', 'string', 'max:255'],
+            'publisher_id' => ['required', 'string', 'max:255', 'unique:organizations,publisher_id'],
             'password'     => ['required', 'string', 'min:8', 'confirmed'],
+            'password_confirmation' => ['required', 'string', 'min:8'],
         ]);
     }
 
@@ -87,12 +88,12 @@ class RegisterController extends Controller
      * @return \Illuminate\Http\JsonResponse|void
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function verifyPublisher(Request $request)
+    public function verifyPublisher(Request $request): \Illuminate\Http\JsonResponse| \GuzzleHttp\Exception\GuzzleException
     {
         try {
             $postData = $request->all();
             $validator = Validator::make($postData, [
-                'publisher_id'        => ['required', 'max:255'],
+                'publisher_id' => ['required', 'string', 'max:255', 'unique:organizations,publisher_id'],
                 'publisher_name'      => ['required', 'string', 'max:255'],
                 'registration_agency' => ['required'],
                 'registration_number' => ['required'],
@@ -113,8 +114,7 @@ class RegisterController extends Controller
                     'success' => false,
                     'publisher_error' => true,
                     'errors'  => [
-                        'publisher_name' => ['Publisher Name doesn\'t exists in IATI Registry'],
-                        'publisher_id' => ['Publisher ID doesn\'t match with your IATI Registry Information.'],
+                        'publisher_id' => ['Publisher ID doesn\'t exist in IATI Registry.'],
                     ],
                 ]);
             }
@@ -138,7 +138,7 @@ class RegisterController extends Controller
                 ]);
             }
 
-            return response()->json(['success' => true, 'message' => 'Publisher verified successfully']);
+            return response()->json(['success' => true, 'message' => 'Publisher verified successfully', 'data' => $response]);
         } catch (ClientException $e) {
             logger()->error($e->getMessage());
 
@@ -165,7 +165,7 @@ class RegisterController extends Controller
      *
      * @return \Illuminate\Database\Eloquent\Model|void
      */
-    protected function create(array $data)
+    protected function create(array $data): \Illuminate\Database\Eloquent\Model
     {
         try {
             $this->db->beginTransaction();
@@ -191,8 +191,9 @@ class RegisterController extends Controller
             'username'     => ['required', 'string', 'max:255', 'unique:users,username'],
             'full_name'    => ['required', 'string', 'max:255'],
             'email'        => ['required', 'string', 'email', 'max:255', 'unique:users,email'],
-            'publisher_id' => ['required', 'string', 'max:255'],
+            'publisher_id' => ['required', 'string', 'max:255', 'unique:organizations,publisher_id'],
             'password'     => ['required', 'string', 'min:8', 'confirmed'],
+            'password_confirmation' => ['required', 'string', 'min:8'],
         ]);
 
         if ($validator->fails()) {

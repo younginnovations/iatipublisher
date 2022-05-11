@@ -5,9 +5,11 @@ declare(strict_types=1);
 namespace App\IATI\Models\User;
 
 use Database\Factories\IATI\Models\User\UserFactory;
+use Illuminate\Auth\Notifications\VerifyEmail;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
@@ -79,5 +81,22 @@ class User extends Authenticatable implements MustVerifyEmail
     protected function organization()
     {
         return $this->belongsTo('App\IATI\Models\Organization\Organization', 'organization_id');
+    }
+
+    /**
+     * Sends verification email to new user.
+     *
+     * @param $user
+     */
+    public static function sendEmail($user): void
+    {
+        VerifyEmail::toMailUsing(function ($notifiable, $url) {
+            return (new MailMessage)
+                ->subject('Verify Email Address')
+                ->greeting('Hello ' . $notifiable->full_name)
+                ->line('Welcome to IATI Publisher. Your email has been used to create a new account here.
+                Please click the button below to verify that you have created the account in it.')
+                ->action('Verify Email Address', $url);
+        });
     }
 }
