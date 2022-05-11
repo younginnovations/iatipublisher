@@ -1,6 +1,6 @@
 <template>
   <header
-    class="flex min-h-[60px] max-w-full gap-10 bg-bluecoral px-10 text-xs leading-normal text-white"
+    class="activity__header flex min-h-[60px] max-w-full gap-10 bg-bluecoral px-10 text-xs leading-normal text-white"
   >
     <figure class="flex grow-0 items-center">
       <a href="/">
@@ -62,40 +62,31 @@
         >
           <svg-vue icon="add"></svg-vue>
         </button>
-        <button
-          class="button secondary-btn dropdown-btn"
-          @click="toggle"
-          ref="dropdownBtn"
-        >
+        <button class="button secondary-btn dropdown-btn">
           <svg-vue icon="user-profile"></svg-vue>
-          <svg-vue
-            :class="
-              state.isVisible ? 'dropdown__arrow rotate-180' : 'dropdown__arrow'
-            "
-            icon="dropdown-arrow"
-          ></svg-vue>
+          <svg-vue class="dropdown__arrow" icon="dropdown-arrow"></svg-vue>
+          <div class="profile__dropdown">
+            <ul>
+              <li class="border-b border-b-n-20">
+                <svg-vue class="user-profile" icon="user-profile"></svg-vue>
+                <div class="flex flex-col capitalize leading-4">
+                  <span class="text-n-50">{{ props.user.full_name }}</span
+                  ><span class="text-tiny text-n-40">{{
+                    props.organization.publisher_name
+                  }}</span>
+                </div>
+              </li>
+              <li class="dropdown__list border-b border-b-n-20">
+                <svg-vue icon="user"></svg-vue>
+                <a href="#">Your Profile</a>
+              </li>
+              <li class="dropdown__list" @click="logout">
+                <svg-vue icon="logout"></svg-vue>
+                <a href="#">Logout</a>
+              </li>
+            </ul>
+          </div>
         </button>
-        <div v-show="state.isVisible" class="profile__dropdown" ref="dropdown">
-          <ul>
-            <li class="border-b border-b-n-20">
-              <svg-vue class="user-profile" icon="user-profile"></svg-vue>
-              <div class="flex flex-col capitalize leading-4">
-                <span class="text-n-50">{{ props.user.full_name }}</span
-                ><span class="text-tiny text-n-40">{{
-                  props.organization.publisher_name
-                }}</span>
-              </div>
-            </li>
-            <li class="dropdown__list border-b border-b-n-20">
-              <svg-vue icon="user"></svg-vue>
-              <a href="#">Your Profile</a>
-            </li>
-            <li class="dropdown__list" @click="logout">
-              <svg-vue icon="logout"></svg-vue>
-              <a href="#">Logout</a>
-            </li>
-          </ul>
-        </div>
       </div>
     </div>
 
@@ -244,7 +235,7 @@
 </template>
 
 <script lang="ts">
-import { reactive, defineComponent, onMounted, ref } from 'vue';
+import { defineComponent } from 'vue';
 import axios from 'axios';
 import { useToggle } from '@vueuse/core';
 import Multiselect from '@vueform/multiselect';
@@ -273,8 +264,6 @@ export default defineComponent({
   },
 
   setup(props) {
-    const dropdown = ref();
-    const dropdownBtn = ref();
     const data = {
       languageNavLiClasses: 'flex',
       languageNavAnchorClasses:
@@ -319,25 +308,6 @@ export default defineComponent({
     };
     const [modalValue, modalToggle] = useToggle();
 
-    const state = reactive({
-      isVisible: false,
-    });
-
-    onMounted(() => {
-      window.addEventListener('click', (e) => {
-        if (
-          !dropdownBtn.value.contains(e.target) &&
-          !dropdown.value.contains(e.target)
-        ) {
-          state.isVisible = false;
-        }
-      });
-    });
-
-    const toggle = () => {
-      state.isVisible = !state.isVisible;
-    };
-
     async function logout() {
       await axios.post('/logout').then((res) => {
         if (res.status) {
@@ -349,10 +319,6 @@ export default defineComponent({
     return {
       props,
       data,
-      state,
-      dropdown,
-      dropdownBtn,
-      toggle,
       modalValue,
       modalToggle,
       logout,
@@ -364,6 +330,13 @@ export default defineComponent({
 <style src="@vueform/multiselect/themes/default.css"></style>
 
 <style lang="scss">
+.activity__header {
+  nav {
+    a:hover {
+      @apply text-white;
+    }
+  }
+}
 .form-group {
   @apply rounded-lg border border-n-20 p-5;
 
@@ -392,8 +365,8 @@ export default defineComponent({
 }
 
 .profile__dropdown {
-  @apply absolute right-10 z-20 bg-white text-left text-sm text-bluecoral shadow-dropdown;
-  top: 60px;
+  @apply invisible absolute right-10 z-20 bg-white text-left text-sm text-bluecoral opacity-0 shadow-dropdown  duration-300;
+  top: 50px;
   width: 265px;
   box-shadow: 4px 4px 40px rgba(0, 50, 76, 0.2);
 
@@ -410,6 +383,19 @@ export default defineComponent({
   }
   .dropdown__list {
     @apply bg-n-10 hover:bg-n-20 hover:text-bluecoral;
+
+    a {
+      @apply capitalize;
+    }
+  }
+}
+.dropdown-btn:hover {
+  .profile__dropdown {
+    @apply visible opacity-100;
+    transform: translateY(10px);
+  }
+  .dropdown__arrow {
+    transform: rotate(180deg);
   }
 }
 </style>

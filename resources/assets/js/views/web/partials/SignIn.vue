@@ -54,7 +54,7 @@
         Forgot your password?
         <span
           ><a
-            class="border-b-2 border-b-transparent font-bold text-bluecoral hover:border-b-2 hover:border-b-turquoise"
+            class="border-b-2 border-b-transparent font-bold text-bluecoral hover:border-b-2 hover:border-b-turquoise hover:text-bluecoral"
             href="/"
             >Reset.</a
           ></span
@@ -108,9 +108,12 @@ export default defineComponent({
 </script>
 
 <style lang="scss">
+@media screen and (min-width: 640px) {
+  #btn {
+    padding: 18px 0;
+  }
+}
 #btn {
-  padding: 18px 0;
-
   svg {
     @apply absolute right-7 text-2xl;
     transition: 0.4s;
