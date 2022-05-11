@@ -3,12 +3,13 @@
 namespace App\Http\Controllers\Admin\Activity;
 
 use App\Http\Controllers\Controller;
+use App\IATI\Models\Activity\Activity;
+use App\IATI\Requests\ActivityCreateRequest;
 use App\IATI\Services\Activity\ActivityService;
-use App\Http\Requests\Activity\ActivityCreateRequest;
-use Illuminate\Database\DatabaseManager;
+use Exception;
+use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
 /**
  * Class ActivityController.
@@ -21,36 +22,23 @@ class ActivityController extends Controller
     protected ActivityService $activityService;
 
     /**
-     * @var DatabaseManager
-     */
-    protected DatabaseManager $db;
-
-    /**
      * ActivityController Constructor.
+     *
      * @param ActivityService $activityService
      */
-    public function __construct(ActivityService $activityService, DatabaseManager $db)
+    public function __construct(ActivityService $activityService)
     {
         $this->activityService = $activityService;
-        $this->db = $db;
     }
 
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Contracts\View\View
+     * @return View
      */
-    public function index()
+    public function index(): View
     {
-        try {
-            $languages = getCodeListArray('Languages', 'ActivityArray');
-
-            return view('admin.activity.activities', compact('languages'));
-        } catch (\Exception $e) {
-            logger()->error($e->getMessage());
-
-            return response()->json(['success' => false, 'error' => 'Error has occurred while fetching activities.']);
-        }
+        return view('admin.activity.index');
     }
 
     /**
@@ -63,10 +51,10 @@ class ActivityController extends Controller
         //
     }
 
-    /*
-     * Store a newly created resource in storage.
+    /**
+     * Stores activity in activity table.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param ActivityCreateRequest $request
      *
      * @return JsonResponse
      */
@@ -75,12 +63,12 @@ class ActivityController extends Controller
         try {
             $input = $request->all();
 
-            $this->db->beginTransaction();
-            $activity = $this->activityService->store($input);
-            $this->db->commit();
+            if (!$this->activityService->store($input, auth()->user()->organization->id)) {
+                return response()->json(['success' => false, 'error' => 'Error has occurred while saving activity.']);
+            }
 
-            return response()->json(['success' => true, 'message' => 'Activity created successfully.', 'data' => $activity]);
-        } catch (\Exception $e) {
+            return response()->json(['success' => true, 'message' => 'Activity created successfully.']);
+        } catch (Exception $e) {
             logger()->error($e->getMessage());
 
             return response()->json(['success' => false, 'error' => 'Error has occurred while saving activity.']);
@@ -90,27 +78,23 @@ class ActivityController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  $activity_id
+     * @param Activity $activity
      *
-     * @return \Illuminate\Contracts\View\View
+     * @return View
      */
-    public function show($activity_id)
+    public function show(Activity $activity): View
     {
-        try {
-            $activity = $this->activityService->getActivity($activity_id);
+        $elements = json_decode(file_get_contents(app_path('Data/Activity/Element.json')), true);
+        $elementGroups = json_decode(file_get_contents(app_path('Data/Activity/ElementGroup.json')), true);
+        $progress = 75;
 
-            return view('admin.activity.detail', compact('activity'));
-        } catch (\Exception $e) {
-            logger()->error($e->getMessage());
-
-            return response()->json(['success' => false, 'error' => 'Error has occurred while saving activity.']);
-        }
+        return view('admin.activity.show', compact('elements', 'elementGroups', 'progress', 'activity'));
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\IATI\Models\Activity\Activity  $activity
+     * @param Activity $activity
      *
      * @return void
      */
@@ -122,8 +106,8 @@ class ActivityController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\IATI\Models\Activity\Activity  $activity
+     * @param Request $request
+     * @param Activity $activity
      *
      * @return void
      */
@@ -135,55 +119,12 @@ class ActivityController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\IATI\Models\Activity\Activity  $activity
+     * @param Activity $activity
      *
      * @return void
      */
     public function destroy(Activity $activity): void
     {
         //
-    }
-
-    /*
-     * Get activities of the corresponding organization
-     *
-     * @return JsonResponse
-     */
-    public function getActivities($page): JsonResponse
-    {
-        try {
-            $activities = $this->activityService->getPaginatedActivities($page);
-
-            return response()->json(['success' => true, 'message' => 'Activities fetched successfully', 'data' => $activities]);
-        } catch (\Exception $e) {
-            logger()->error($e->getMessage());
-
-            return response()->json(['success' => false, 'message' => 'Error occurred while fetching the data']);
-        }
-    }
-
-    /*
-    * Get languages
-    *
-    * @return JsonResponse
-    */
-    public function getLanguages(): JsonResponse
-    {
-        try {
-            $languages = getCodeListArray('Languages', 'ActivityArray');
-            $organization = Auth::user()->organization;
-
-            return response()->json([
-                'success' => true, 'message' => 'Languages fetched successfully',
-                'data' => [
-                    'languages' => $languages,
-                    'organization' => $organization,
-                ],
-            ]);
-        } catch (\Exception $e) {
-            logger()->error($e->getMessage());
-
-            return response()->json(['success' => false, 'message' => 'Error occurred while fetching the data']);
-        }
     }
 }
