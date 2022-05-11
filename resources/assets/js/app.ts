@@ -3,7 +3,7 @@
  * includes Vue and other libraries. It is a great starting point when
  * building robust, powerful web applications using Vue and Laravel.
  */
-import { createApp } from 'vue';
+import {createApp} from 'vue';
 import SvgVue from 'svg-vue3';
 import ExampleComponent from './components/ExampleComponent.vue';
 import WebHeader from './views/web/partials/WebHeader.vue';
@@ -15,22 +15,26 @@ import RegisterPage from './views/web/RegisterPage.vue';
  * Vue components for Activities Listing
  *
  */
-import Activity from './views/activity/ActivityList.vue';
+import Activity from './views/activity/Index.vue';
 import LoggedInHeader from './components/AdminHeader.vue';
-import ActivitiesDetail from './views/activity/ActivitiesDetail.vue';
+import ActivitiesDetail from './views/activity/Show.vue';
 
-/*
-  setting page
-*/
+/**
+ * Setting page
+ */
 import SettingPage from './views/setting/SettingPage.vue';
-/*
-  vue component for password reset
-*/
+
+/**
+ * vue component for password reset
+ */
 import ResetPage from './views/reset/ResetPage.vue';
 import PasswordRecovery from './views/reset/PasswordRecovery.vue';
 import ResetPassword from './views/reset/ResetPassword.vue';
 
-// require('./bootstrap');
+/**
+ * Additional Components
+ */
+import HoverText from './components/HoverText.vue';
 
 const app = createApp({});
 
@@ -68,6 +72,11 @@ Registering vue component for password reset
 app.component('reset-page', ResetPage);
 app.component('password-recovery', PasswordRecovery);
 app.component('reset-password', ResetPassword);
+
+/**
+ * Registering Additional Components
+ */
+app.component('hover-text', HoverText);
 
 /**
  * Extension to inline SVG files with Vue.js and optimize them automatically with SVGO

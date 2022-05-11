@@ -88,6 +88,14 @@ class AuthenticationTest extends TestCase
             'password' => 'password',
         ]);
 
+<<<<<<< HEAD
         $response->assertRedirect('/activities');
+=======
+<<<<<<< Updated upstream
+        // $response->assertRedirect('/activities');
+=======
+//        $response->assertRedirect('/activities');
+>>>>>>> Stashed changes
+>>>>>>> b81b58c (Activity Title Forms)
     }
 }

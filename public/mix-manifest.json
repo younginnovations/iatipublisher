@@ -2,6 +2,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     "/js/app.js": "/js/app.js?id=8145d3ac3be84e40aff128dacc7b6b8e",
     "/js/script.js": "/js/script.js?id=6b28f4ca880f55e1c800a193fd853144",
     "/css/app.css": "/css/app.css?id=4fc6c8ee668b9cdfab46944831fcff1e"
@@ -10,6 +11,8 @@
 >>>>>>> 91f00de (72-activity-detail-page)
 =======
 >>>>>>> 55590c7 (Activity detail page)
+=======
+>>>>>>> d32957a (Activity Title Forms)
 <<<<<<< HEAD
     "/js/app.js": "/js/app.js?id=d83306c08bdc0904e92dc321a4c35ecc",
     "/js/script.js": "/js/script.js?id=6b28f4ca880f55e1c800a193fd853144",
@@ -50,5 +53,13 @@
     "/css/app.css": "/css/app.css?id=8dfa80df320b7de4a99b850849e81a41"
 >>>>>>> 1bca705 (dynamic activity detail page)
 >>>>>>> b6eb335 (dynamic activity detail page)
+<<<<<<< HEAD
 >>>>>>> 0fa66a0 (dynamic activity detail page)
+=======
+=======
+    "/js/app.js": "/js/app.js?id=c260d1ef3a42fd78e06735432ff1a98c",
+    "/js/script.js": "/js/script.js?id=6b28f4ca880f55e1c800a193fd853144",
+    "/css/app.css": "/css/app.css?id=2cb929d105866993a4936ddecf6a8157"
+>>>>>>> b81b58c (Activity Title Forms)
+>>>>>>> d32957a (Activity Title Forms)
 }

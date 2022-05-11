@@ -7,10 +7,10 @@
           icon="panel-search"
         ></svg-vue>
         <input
-          class="panel__input"
-          type="text"
           v-model="elements.search"
+          class="panel__input"
           placeholder="Search elements to add/edit"
+          type="text"
         />
       </div>
       <div class="relative grid justify-items-end">
@@ -40,7 +40,8 @@
     </div>
     <div class="elements__listing mt-3 grid grid-cols-2 gap-2">
       <div
-        v-for="post in filteredElements"
+        v-for="(post, index) in filteredElements"
+        :key="index"
         class="elements__item flex cursor-pointer flex-col items-center justify-center rounded border border-dashed border-n-40 p-2.5 text-n-30"
       >
         <svg-vue :icon="post.icon" class="text-base"></svg-vue>
@@ -116,7 +117,6 @@ export default defineComponent({
 
   .elements__panel {
     @apply rounded-lg p-4 shadow-dropdown;
-    height: 1232px;
 
     .panel__input:focus,
     .panel__search:focus {

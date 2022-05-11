@@ -15,7 +15,6 @@ use Illuminate\Support\Facades\Route;
 */
 Route::name('admin.')->group(function () {
     Route::resource('/activities', ActivityController::class);
-    Route::resource('/activities', ActivityController::class);
     Route::get('/activities/{id}', function () {
         return view('admin.activity.activity-detail');
     });
