@@ -190,7 +190,7 @@ export default defineComponent({
           active: false,
         },
       ],
-    };
+    });
 
     const [modalValue, modalToggle] = useToggle();
 
@@ -207,7 +207,7 @@ export default defineComponent({
       setTimeout(() => (toastVisibility.value = false), 5000);
       toastMessage.value = message;
       toastType.value = type;
-    };
+    }
 
     function changeActiveMenu() {
       const path = window.location.pathname;
