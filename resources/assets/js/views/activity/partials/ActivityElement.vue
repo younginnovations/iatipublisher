@@ -15,9 +15,8 @@
         </div>
         <div class="icons flex">
           <a
-            v-if="hovered"
             class="mr-2.5 flex items-center text-xs font-bold uppercase"
-            href="/title-form"
+            href="/1/title-form"
           >
             <svg-vue class="mr-0.5 text-base" icon="edit"></svg-vue>
             <span>Edit</span>
@@ -38,8 +37,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue';
-import { useElementHover } from '@vueuse/core';
+import { defineComponent } from 'vue';
 import HoverText from '../../../components/HoverText.vue';
 
 export default defineComponent({
@@ -86,10 +84,7 @@ export default defineComponent({
       layout = 'basis-full';
     }
 
-    const myHoverableElement = ref();
-    const isHovered = useElementHover(myHoverableElement);
-
-    return { layout, isHovered };
+    return { layout };
   },
 });
 </script>

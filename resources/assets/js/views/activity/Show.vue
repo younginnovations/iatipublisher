@@ -95,168 +95,34 @@
       </aside>
       <div class="activities__content">
         <div class="inline-flex">
-          <button
-            :class="
-              tab === ''
-                ? 'tab-btn active__tab mr-2 flex items-center'
-                : 'tab-btn mr-2'
-            "
-            @click="toggleTab('')"
-          >
-            <span>Identification</span>
+          <button v-for="(post, index) in element_group" class="tab-btn mr-2">
+            <span>{{ post.label }}</span>
             <span class="hover__text">
               <HoverText
+                :name="post.label"
                 hover_text="You cannot publish an activity until all the mandatory fields have been filled."
                 icon_size="text-tiny"
-                name="Identification"
-              ></HoverText>
-            </span>
-          </button>
-          <button
-            :class="tab === '' ? 'tab-btn active__tab mr-2' : 'tab-btn mr-2'"
-            @click="toggleTab('')"
-          >
-            <span>Basic Information</span>
-            <span class="hover__text">
-              <HoverText
-                hover_text="You cannot publish an activity until all the mandatory fields have been filled."
-                icon_size="text-tiny"
-                name="Basic Information"
-              ></HoverText>
-            </span>
-          </button>
-          <button
-            :class="tab === '' ? 'tab-btn active__tab mr-2' : 'tab-btn mr-2'"
-            @click="toggleTab('')"
-          >
-            <span>Participating Org</span>
-            <span class="hover__text">
-              <HoverText
-                hover_text="You cannot publish an activity until all the mandatory fields have been filled."
-                icon_size="text-tiny"
-                name="Participating Org"
-              ></HoverText>
-            </span>
-          </button>
-          <button
-            :class="tab === '' ? 'tab-btn active__tab mr-2' : 'tab-btn mr-2'"
-            @click="toggleTab('')"
-          >
-            <span>Humanitarian Info</span>
-            <span class="hover__text">
-              <HoverText
-                hover_text="You cannot publish an activity until all the mandatory fields have been filled."
-                icon_size="text-tiny"
-                name="Humanitarian Info"
-              ></HoverText>
-            </span>
-          </button>
-          <button
-            :class="tab === '' ? 'tab-btn active__tab mr-2' : 'tab-btn mr-2'"
-            @click="toggleTab('')"
-          >
-            <span>Geography</span>
-            <span class="hover__text">
-              <HoverText
-                hover_text="You cannot publish an activity until all the mandatory fields have been filled."
-                icon_size="text-tiny"
-                name="Geography"
-              ></HoverText>
-            </span>
-          </button>
-          <button
-            :class="tab === '' ? 'tab-btn active__tab mr-2' : 'tab-btn mr-2'"
-            @click="toggleTab('')"
-          >
-            <span>Classification</span>
-            <span class="hover__text">
-              <HoverText
-                hover_text="You cannot publish an activity until all the mandatory fields have been filled."
-                icon_size="text-tiny"
-                name="Classification"
-              ></HoverText>
-            </span>
-          </button>
-          <button
-            :class="tab === '' ? 'tab-btn active__tab mr-2' : 'tab-btn mr-2'"
-            @click="toggleTab('')"
-          >
-            <span>Financial</span>
-            <span class="hover__text">
-              <HoverText
-                hover_text="You cannot publish an activity until all the mandatory fields have been filled."
-                icon_size="text-tiny"
-                name="Financial"
-              ></HoverText>
-            </span>
-          </button>
-          <button
-            :class="tab === '' ? 'tab-btn active__tab mr-2' : 'tab-btn mr-2'"
-            @click="toggleTab('')"
-          >
-            <span>Related docs</span>
-            <span class="hover__text">
-              <HoverText
-                hover_text="You cannot publish an activity until all the mandatory fields have been filled."
-                icon_size="text-tiny"
-                name="Related docs"
-              ></HoverText>
-            </span>
-          </button>
-          <button
-            :class="tab === '' ? 'tab-btn active__tab mr-2' : 'tab-btn mr-2'"
-            @click="toggleTab('')"
-          >
-            <span>Relations</span>
-            <span class="hover__text">
-              <HoverText
-                hover_text="You cannot publish an activity until all the mandatory fields have been filled."
-                icon_size="text-tiny"
-                name="Relations"
-              ></HoverText>
-            </span>
-          </button>
-          <button
-            :class="tab === '' ? 'tab-btn active__tab' : 'tab-btn'"
-            @click="toggleTab('')"
-          >
-            <span>Results</span>
-            <span class="hover__text">
-              <HoverText
-                hover_text="You cannot publish an activity until all the mandatory fields have been filled."
-                icon_size="text-tiny"
-                name="Results"
               ></HoverText>
             </span>
           </button>
         </div>
-        <div class="activities__content--elements -mx-3 flex flex-wrap">
-          <!-- iati-identifier -->
-          <ActivityElement
-            content="AF-COA-1234"
-            icon="align-center"
-            status="completed"
-            title="iati-publisher"
-            tooltip="Example text"
-          />
-          <!-- reporting-org -->
-          <ActivityElement
-            content="Younginnovations"
-            icon="building"
-            status="completed"
-            title="reporting-org"
-            tooltip="Example text"
-          />
-          <!-- title -->
-          <ActivityElement
-            content="Partnership Against Child Exploitation"
-            icon="note"
-            language="english"
-            status="completed"
-            title="title"
-            tooltip="Example text"
-            width="full"
-          />
+
+        <div
+          v-for="(post, index) in activityGrouped.data"
+          :class="index"
+          class="basis-6/12"
+        >
+          <div class="activities__content--elements -mx-3 flex flex-wrap">
+            <ActivityElement
+              v-for="(element, index) in post"
+              :title="index"
+              :width="index === 'title' ? 'full' : ''"
+              content="AF-COA-1234"
+              icon="align-center"
+              status="completed"
+              tooltip="Example text"
+            />
+          </div>
         </div>
       </div>
     </div>
@@ -280,9 +146,9 @@ export default defineComponent({
   props: {
     elements: {
       type: Object,
-      required: true,
+      required: false,
     },
-    elementGroups: {
+    element_group: {
       type: Object,
       required: true,
     },
@@ -296,20 +162,40 @@ export default defineComponent({
     },
   },
   setup(props) {
-    const dropdown = ref();
-    const dropdownBtn = ref();
-    const state = reactive({
-      isVisible: false,
+    /**
+     * Grouping all the datas for scroll function
+     *
+     * static data for now
+     * this data will be created using props.element_group and props.activity
+     */
+    const activityGrouped = reactive({
+      data: {
+        identification: {
+          iati_identifier: {
+            activity_identifier: 'SYRZ000041',
+            iati_identifier_text: 'CZ-ICO-25755277-SYRZ000041',
+          },
+          title: [
+            {
+              language: 'en',
+              narrative: 'DGGF Track 3',
+            },
+          ],
+        },
+      },
     });
 
-    const toggle = () => {
-      state.isVisible = !state.isVisible;
-    };
+    /**
+     * Scroll to section function
+     *
+     * to be continue
+     */
+
+    const scrollRef = ref([]);
+
     return {
-      state,
-      dropdown,
-      dropdownBtn,
-      toggle,
+      scrollRef,
+      activityGrouped,
     };
   },
 });
@@ -317,10 +203,14 @@ export default defineComponent({
 
 <style lang="scss">
 .activities {
-  @apply grid grid-flow-col gap-7;
+  @apply flex gap-7;
 
   &__sidebar {
     width: 280px;
+  }
+
+  &__content {
+    @apply grow;
   }
 
   &__card {

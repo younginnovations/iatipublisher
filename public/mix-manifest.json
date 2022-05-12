@@ -3,6 +3,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     "/js/app.js": "/js/app.js?id=8145d3ac3be84e40aff128dacc7b6b8e",
     "/js/script.js": "/js/script.js?id=6b28f4ca880f55e1c800a193fd853144",
     "/css/app.css": "/css/app.css?id=4fc6c8ee668b9cdfab46944831fcff1e"
@@ -62,4 +63,9 @@
     "/css/app.css": "/css/app.css?id=2cb929d105866993a4936ddecf6a8157"
 >>>>>>> b81b58c (Activity Title Forms)
 >>>>>>> d32957a (Activity Title Forms)
+=======
+    "/js/app.js": "/js/app.js?id=fdca9543fa8f0c3c24ee8653f2098b31",
+    "/js/script.js": "/js/script.js?id=6b28f4ca880f55e1c800a193fd853144",
+    "/css/app.css": "/css/app.css?id=f0d64e4c0efa7dfb7f053ed0718b2a4e"
+>>>>>>> d71059d (Dynamic Activity Detail)
 }

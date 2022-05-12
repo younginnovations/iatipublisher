@@ -39,14 +39,15 @@
       </div>
     </div>
     <div class="elements__listing mt-3 grid grid-cols-2 gap-2">
-      <div
+      <a
         v-for="(post, index) in filteredElements"
         :key="index"
         class="elements__item flex cursor-pointer flex-col items-center justify-center rounded border border-dashed border-n-40 p-2.5 text-n-30"
+        href="/1/title-form"
       >
-        <svg-vue :icon="post.icon" class="text-base"></svg-vue>
-        <div class="title mt-1 text-xs">{{ post.name }}</div>
-      </div>
+        <svg-vue class="text-base" icon="align-center"></svg-vue>
+        <div class="title mt-1 text-xs">{{ index }}</div>
+      </a>
     </div>
   </div>
 </template>
@@ -58,45 +59,27 @@ import { useToggle } from '@vueuse/core';
 export default defineComponent({
   name: 'activities-elements',
   components: {},
-  setup() {
+  props: {
+    data: {
+      type: Object,
+      required: true,
+    },
+  },
+  setup(props) {
     const [searchBtnValue, searchBtnToggle] = useToggle();
 
     const elements = reactive({
       search: '',
-      items: [
-        {
-          name: 'iati-identifier',
-          icon: 'align-center',
-          completed: true,
-          core: true,
-        },
-        {
-          name: 'reporting-org',
-          icon: 'building',
-          completed: true,
-          core: true,
-        },
-        {
-          name: 'other-identifier',
-          icon: 'align-right',
-          completed: true,
-          core: false,
-        },
-        {
-          name: 'title',
-          icon: 'note',
-          completed: true,
-          core: true,
-        },
-      ],
     });
 
+    const asArrayData = Object.entries(props.data);
     const filteredElements = computed(() => {
-      return elements.items.filter((post) => {
-        return post.name.toLowerCase().includes(elements.search.toLowerCase());
+      const filtered = asArrayData.filter(([key, value]) => {
+        return key.toLowerCase().includes(elements.search.toLowerCase());
       });
+      const justStrings = Object.fromEntries(filtered);
+      return justStrings;
     });
-
     return {
       searchBtnValue,
       searchBtnToggle,
