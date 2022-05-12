@@ -53,7 +53,7 @@
         <a class="ghost-btn mr-8" href="/activities">Cancel</a>
         <button
           class="primary-btn save-btn"
-          @click="submitForm('api/setting/store/publisher')"
+          @click="submitForm('setting/store/publisher')"
         >
           {{
             tab === 'publish'
@@ -133,7 +133,7 @@ export default defineComponent({
     }
 
     onMounted(async () => {
-      const { data } = await axios.get('api/setting/data');
+      const { data } = await axios.get('/setting/data');
       const settingData = data.data;
 
       if (settingData) {
@@ -193,7 +193,7 @@ export default defineComponent({
       loaderVisibility.value = true;
 
       axios
-        .post('api/setting/store/default', defaultForm.value)
+        .post('/setting/store/default', defaultForm.value)
         .then((res) => {
           const response = res.data;
           loaderVisibility.value = false;
@@ -271,7 +271,7 @@ export default defineComponent({
         });
     }
 
-    function submitForm(url = 'api/setting/verify') {
+    function submitForm(url = 'setting/verify') {
       if (tab.value === 'publish') submitPublishing(url);
       if (tab.value === 'default') submitDefault();
     }

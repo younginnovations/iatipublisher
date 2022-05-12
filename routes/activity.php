@@ -13,4 +13,6 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::resource('/activities', \App\Http\Controllers\Activity\ActivityController::class);
+Route::name('admin.')->group(function () {
+    Route::resource('/activities', \App\Http\Controllers\Admin\Activity\ActivityController::class);
+});

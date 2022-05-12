@@ -11,7 +11,6 @@ use Illuminate\Auth\Events\Verified;
 use Illuminate\Foundation\Auth\VerifiesEmails;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 
 /**
  * Class VerificationController.
@@ -61,8 +60,6 @@ class VerificationController extends Controller
      */
     public function verify(Request $request): JsonResponse|\Illuminate\Http\RedirectResponse
     {
-        Log::info($request);
-
         if (!hash_equals((string) $request->route('id'), (string) $request->user()->getKey())) {
             throw new AuthorizationException;
         }
@@ -70,8 +67,6 @@ class VerificationController extends Controller
         if (!hash_equals((string) $request->route('hash'), sha1($request->user()->getEmailForVerification()))) {
             throw new AuthorizationException;
         }
-
-        Log::info($request->user()->hasVerifiedEmail());
 
         if ($request->user()->hasVerifiedEmail()) {
             return $request->wantsJson()

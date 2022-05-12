@@ -92,7 +92,7 @@ export default defineComponent({
       loaderVisibility.value = true;
 
       axios
-        .post('/api/reset', formData)
+        .post('/reset', formData)
         .then((res) => {
           const response = res.data;
           const errors = 'errors' in response ? response.errors : [];

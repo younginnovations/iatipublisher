@@ -7,7 +7,9 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\ResetsPasswords;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rules\Password;
 
 /**
  * Class ResetPasswordController.
@@ -39,7 +41,8 @@ class ResetPasswordController extends Controller
      *
      * If no token is present, display the link request form.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
+     *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function showResetForm(Request $request)
@@ -49,5 +52,38 @@ class ResetPasswordController extends Controller
         return view('web.reset_password')->with(
             ['token' => $token, 'email' => $request->email]
         );
+    }
+
+    /**
+     * Get the response for a successful password reset.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @param string                   $response
+     *
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Http\JsonResponse
+     */
+    protected function sendResetResponse(Request $request, $response): JsonResponse|\Illuminate\Http\RedirectResponse
+    {
+        if ($request->wantsJson()) {
+            return new JsonResponse(['success' => true, 'message' => trans($response)], 200);
+        }
+
+        return redirect($this->redirectPath())
+            ->with('status', trans($response));
+    }
+
+    /**
+     * Get the password reset validation rules.
+     *
+     * @return array
+     */
+    protected function rules(): array
+    {
+        return [
+            'token'                 => 'required',
+            'email'                 => 'required|email',
+            'password'              => ['required', 'confirmed', Password::defaults()],
+            'password_confirmation' => ['required'],
+        ];
     }
 }
