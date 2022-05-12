@@ -21,7 +21,7 @@
                 v-if="registerForm[step].hover_text"
                 :name="registerForm[step].title"
                 :hover_text="registerForm[step].hover_text"
-                :position="right"
+                position="right"
               ></HoverText>
               <span class="text-2xl font-bold text-n-50">{{
                 registerForm[step].title
