@@ -12,5 +12,6 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
-
-Route::resource('/organization', \App\Http\Controllers\Organization\OrganizationController::class);
+Route::name('admin.')->group(function () {
+    Route::resource('/organization', \App\Http\Controllers\Admin\Organization\OrganizationController::class);
+});
