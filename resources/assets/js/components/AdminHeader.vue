@@ -9,7 +9,7 @@
       :type="toastType"
     ></Toast>
     <figure class="flex grow-0 items-center">
-      <a href="/">
+      <a href="">
         <svg-vue icon="logo" class="text-4xl"></svg-vue>
       </a>
     </figure>
@@ -175,7 +175,7 @@ export default defineComponent({
       menus: [
         {
           name: 'Activity DATA',
-          permalink: 'activities',
+          permalink: '/activities',
           active: true,
         },
         {
@@ -185,7 +185,7 @@ export default defineComponent({
         },
         {
           name: 'Settings',
-          permalink: 'setting',
+          permalink: '/setting',
           active: false,
         },
       ],
@@ -198,14 +198,14 @@ export default defineComponent({
     });
 
     onMounted(() => {
-      window.addEventListener('click', (e) => {
-        if (
-          !dropdownBtn.value.contains(e.target) &&
-          !dropdown.value.contains(e.target)
-        ) {
-          state.isVisible = false;
-        }
-      });
+      // window.addEventListener('click', (e) => {
+      //   if (
+      //     !dropdownBtn.value.contains(e.target) &&
+      //     !dropdown.value.contains(e.target)
+      //   ) {
+      //     state.isVisible = false;
+      //   }
+      // });
     });
 
     const toggle = () => {

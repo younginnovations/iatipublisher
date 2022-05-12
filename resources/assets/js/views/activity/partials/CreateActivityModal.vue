@@ -12,12 +12,12 @@
       <form class="input__field">
         <div class="mb-5">
           <div class="form-group-title-container">
-            <p class="form-group-title">title</p>
             <HoverText
               :name="'title'"
-              hover_text="A short, human-readable title that contains a meaningful summary of the activity. May be repeated for different languages. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/title/' target='_blank'>For more information</a>"
-              position="left"
+              hover_text="A short, human-readable title. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/title/' target='_blank'>For more information</a>"
+              position="right"
             ></HoverText>
+            <p class="form-group-title">title</p>
           </div>
           <div class="form-group">
             <div class="form__content">
@@ -29,7 +29,7 @@
                   </label>
                   <HoverText
                     :name="'narrative'"
-                    hover_text="The name of the organisation. May be repeated for different languages. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/reporting-org/narrative/''>For more information</a>"
+                    hover_text="The free text name or description of the item being described. This can be repeated in multiple languages. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/title/narrative/' target='_blank'>For more information</a>"
                   ></HoverText>
                 </div>
                 <input
@@ -91,12 +91,12 @@
         </div>
         <div>
           <div class="form-group-title-container">
-            <p class="form-group-title">iati-identifier</p>
             <HoverText
               :name="'iati-identifier'"
-              position="left"
-              hover_text="A globally unique identifier for the activity.This MUST be prefixed with EITHER the current IATI organisation identifier for the reporting organisation (reporting-org/@ref) OR a previous identifier reported in other-identifier, and suffixed with the organisation\’s own activity identifier. The prefix and the suffix should be separated by a hyphen “-“.Once an activity has been reported to IATI its identifier MUST NOT be changed in subsequent updates. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/iati-identifier/' target='_blank'>For more information</a>"
+              position="right"
+              hover_text="A globally unique identifier for the activity.<br><br>This MUST be prefixed with EITHER the current IATI organisation identifier for the reporting organisation (reporting-org/@ref) OR a previous identifier reported in other-identifier, and suffixed with the organisation’s own activity identifier. The prefix and the suffix should be separated by a hyphen “-“.<br><br>Once an activity has been reported to IATI its identifier MUST NOT be changed in subsequent updates. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/iati-identifier/' target='_blank'>For more information</a>"
             ></HoverText>
+            <p class="form-group-title">iati-identifier</p>
           </div>
           <div class="form-group">
             <div class="form__content">
@@ -167,7 +167,7 @@
         <div class="mt-8 flex justify-end">
           <div class="inline-flex">
             <BtnComponent
-              class="bg-white px-6 uppercase"
+              class="mx-3 bg-white px-3 uppercase"
               @click="closeModal"
               text="Cancel"
             />
@@ -250,9 +250,9 @@ export default defineComponent({
           const response = res.data;
           loaderVisibility.value = false;
 
-          emit('closeModal');
           if (response.success) {
             emit('toast', response.message, response.success);
+            emit('closeModal');
             window.location.href = `/activities/${response.data.id}`;
           }
         })

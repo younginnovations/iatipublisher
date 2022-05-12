@@ -60,4 +60,16 @@ class ActivityCreateRequest extends FormRequest
             'iati_identifier_text'  => ['sometimes'],
         ];
     }
+
+    /**
+     * Custom validation messages.
+     *
+     * @return array
+     */
+    public function messages()
+    {
+        return [
+            'activity_identifier.not_in' => 'The activity identifier already exists.',
+        ];
+    }
 }

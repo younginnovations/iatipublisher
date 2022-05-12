@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin\Activity;
 use App\Http\Controllers\Controller;
 use App\IATI\Services\Activity\ActivityService;
 use App\Http\Requests\Activity\ActivityCreateRequest;
+use Illuminate\Database\DatabaseManager;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -20,12 +21,18 @@ class ActivityController extends Controller
     protected ActivityService $activityService;
 
     /**
+     * @var DatabaseManager
+     */
+    protected DatabaseManager $db;
+
+    /**
      * ActivityController Constructor.
      * @param ActivityService $activityService
      */
-    public function __construct(ActivityService $activityService)
+    public function __construct(ActivityService $activityService, DatabaseManager $db)
     {
         $this->activityService = $activityService;
+        $this->db = $db;
     }
 
     /**
@@ -68,11 +75,11 @@ class ActivityController extends Controller
         try {
             $input = $request->all();
 
-            if (!$this->activityService->store($input)) {
-                return response()->json(['success' => false, 'error' => 'Error has occurred while saving activity.']);
-            }
+            $this->db->beginTransaction();
+            $activity = $this->activityService->store($input);
+            $this->db->commit();
 
-            return response()->json(['success' => true, 'message' => 'Activity created successfully.']);
+            return response()->json(['success' => true, 'message' => 'Activity created successfully.', 'data' => $activity]);
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
@@ -155,7 +162,7 @@ class ActivityController extends Controller
         }
     }
 
-        /*
+    /*
     * Get languages
     *
     * @return JsonResponse
@@ -163,7 +170,7 @@ class ActivityController extends Controller
     public function getLanguages(): JsonResponse
     {
         try {
-            $languages = getCodeListArray('Languages', 'ActivityArray', false);
+            $languages = getCodeListArray('Languages', 'ActivityArray');
             $organization = Auth::user()->organization;
 
             return response()->json([

@@ -44,10 +44,14 @@
         <!--      ===================================-->
         <!--      First item with "Draft" status-->
         <!--      =======================================-->
-        <tr v-for="datum in props.data.data" :key="datum">
+        <tr
+          v-for="datum in props.data.data"
+          @click="'/activities/' + datum['id']"
+          :key="datum['id']"
+        >
           <td class="title">
             <a
-              href="#"
+              :href="'/activities/' + datum['id']"
               class="hover:text-sp50 inline-flex items-start text-n-50 transition duration-500"
             >
               <svg-vue
