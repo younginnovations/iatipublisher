@@ -42,7 +42,7 @@
                   ><a href="https://iatiregistry.org/">IATI Registry</a></span
                 >, make sure your
                 <span class="font-bold"
-                  >Publisher Name,Publisher ID and IATI Organisation ID</span
+                  >Publisher Name, Publisher ID and IATI Organisation ID</span
                 >
                 match your IATI Registry Information. Contact
                 <span

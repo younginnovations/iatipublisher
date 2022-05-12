@@ -47,7 +47,8 @@
         >Not sure which one to select?
         <a
           class="border-b-2 border-b-transparent font-bold text-bluecoral hover:border-b-2 hover:border-b-turquoise hover:text-bluecoral"
-          href="/"
+          href="mailto:support@iatistandard.org"
+          target="_blank"
           >Contact Support.</a
         ></span
       >
