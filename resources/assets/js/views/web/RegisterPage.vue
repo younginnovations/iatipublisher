@@ -462,7 +462,7 @@ export default defineComponent({
       formData.identifier = `${formData.registration_agency}-${formData.registration_number}`;
       isLoaderVisible.value = true;
       axios
-        .post('api/verifyPublisher', formData)
+        .post('/verifyPublisher', formData)
         .then((res) => {
           const response = res.data;
           publisherExists.value = true;
@@ -503,7 +503,7 @@ export default defineComponent({
       isLoaderVisible.value = true;
 
       axios
-        .post('api/register', formData)
+        .post('/register', formData)
         .then((res) => {
           const response = res.data;
           const errors =
