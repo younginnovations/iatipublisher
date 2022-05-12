@@ -3,16 +3,25 @@
     <div id="activity">
       <PageTitle :showButtons="state.showButtons" />
       <EmptyActivity v-if="isEmpty"> </EmptyActivity>
-      <TableLayout @showOrHide="showOrHide" />
-      <div class="mt-6">
-        <Pagination />
+      <TableLayout
+        v-if="!isEmpty"
+        @showOrHide="showOrHide"
+        :data="activities"
+      />
+      <div class="mt-6" v-if="!isEmpty">
+        <Pagination
+          :page_count="activities.last_page"
+          :current_page="activities.current_page"
+          @fetchActivities="fetchActivities"
+        />
       </div>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, ref } from 'vue';
+import { defineComponent, reactive, ref, onMounted } from 'vue';
+import axios from 'axios';
 
 import EmptyActivity from './partials/EmptyActivity.vue';
 import TableLayout from './partials/TableLayout.vue';
@@ -30,6 +39,21 @@ export default defineComponent({
     PopupModal,
   },
   setup() {
+    const activities = reactive({});
+
+    onMounted(async () => {
+      axios
+        .post('/activity/1')
+        .then((res) => {
+          const response = res.data;
+          Object.assign(activities, response.data);
+          isEmpty.value = response.data ? false : true;
+        })
+        .catch((error) => {
+          const { errors } = error.response.data;
+        });
+    });
+
     const state = reactive({
       showButtons: false,
     });
@@ -44,7 +68,20 @@ export default defineComponent({
       }
     };
 
-    return { state, isEmpty, showOrHide };
+    function fetchActivities(active_page: number) {
+      axios
+        .post('/activity/' + active_page)
+        .then((res) => {
+          const response = res.data;
+          Object.assign(activities, response.data);
+          isEmpty.value = response.data ? false : true;
+        })
+        .catch((error) => {
+          const { errors } = error.response.data;
+        });
+    }
+
+    return { activities, state, isEmpty, showOrHide, fetchActivities };
   },
 });
 </script>

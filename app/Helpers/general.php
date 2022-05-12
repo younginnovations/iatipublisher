@@ -28,7 +28,7 @@ if (!function_exists('getCodeList')) {
     }
 
     /**
-     * return codeList array from json codeList.
+     * return codeList array from codeList.
      *
      * @param      $listName
      * @param      $listType

@@ -127,6 +127,7 @@
         <div class="eligible-list rounded-lg bg-rose px-6">
           <div class="list border-b border-n-20 py-6">
             <a href="#" class=""> EU-Angola Dialogue Facility </a>
+            console.log(response.data);
           </div>
           <div class="list border-b border-n-20 py-6">
             <a href="#" class=""> Programme in support of Higher Education </a>

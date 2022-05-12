@@ -5,70 +5,56 @@ declare(strict_types=1);
 namespace App\IATI\Repositories\Activity;
 
 use App\IATI\Models\Activity\Activity;
+use App\IATI\Repositories\Repository;
 use Illuminate\Database\Eloquent\Collection;
 
 /**
  * Class ActivityRepository.
  */
-class ActivityRepository
+class ActivityRepository extends Repository
 {
     /**
-     * @var Activity
+     * Returns activity model.
+     *
+     * @return string
      */
-    protected $activity;
-
-    /**
-     * ActivityRepository Constructor.
-     * @param Activity $activity
-     */
-    public function __construct(Activity $activity)
+    public function getModel():string
     {
-        $this->activity = $activity;
+        return Activity::class;
     }
 
     /**
      * Returns all activities present in database.
+     *
      * @return \Illuminate\Database\Eloquent\Collection
      */
     public function getAllActivities(): Collection
     {
-        return $this->activity->all();
-    }
-
-    /**
-     * Creates activity.
-     * @param $input
-     * @param $organizationId
-     * @return \Illuminate\Database\Eloquent\Model
-     */
-    public function store($input, $organizationId) : \Illuminate\Database\Eloquent\Model
-    {
-        $activity_identifier = [
-            'activity_identifier' => $input['activity_identifier'],
-            'iati_identifier_text' => $input['iati_identifier_text'],
-        ];
-
-        $activity_title = [
-            [
-                'narrative' => $input['narrative'],
-                'language'  => $input['language'],
-            ],
-        ];
-
-        return $this->activity->create([
-            'identifier'    => $activity_identifier,
-            'title'         => $activity_title,
-            'org_id'        => $organizationId,
-        ]);
+        return $this->model->all();
     }
 
     /**
      * Returns activity identifiers used by an organization.
+     *
      * @param $organizationId
+     *
      * @return Collection
      */
-    public function getActivityIdentifiersForOrganization($organizationId): Collection
+    public function getActivityIdentifiersForOrganization($organizationId, $page = null): Collection
     {
-        return $this->activity->where('org_id', $organizationId)->get(['identifier']);
+        return $this->model->where('org_id', $organizationId)->get(['identifier']);
+    }
+
+    /**
+     * Returns activity identifiers used by an organization.
+     *
+     * @param $organizationId
+     * @param $page
+     *
+     * @return Collection
+     */
+    public function getActivityForOrganization($organizationId, $page)
+    {
+        return $this->model->where('org_id', $organizationId)->paginate(10, ['*'], 'activity', $page);
     }
 }
