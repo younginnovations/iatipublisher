@@ -88,7 +88,7 @@
               </li>
               <li class="dropdown__list" @click="logout">
                 <svg-vue icon="logout"></svg-vue>
-                <a href="#">Logout</a>
+                <button>Logout</button>
               </li>
             </ul>
           </div>
@@ -148,7 +148,8 @@ export default defineComponent({
     const toastMessage = ref('');
     const toastType = ref(false);
 
-    const data = {
+    const active_tab = ref('activities');
+    const data = reactive({
       languageNavLiClasses: 'flex',
       languageNavAnchorClasses:
         'flex text-white items-center uppercase nav__pointer-hover px-1.5',
@@ -197,17 +198,6 @@ export default defineComponent({
       isVisible: false,
     });
 
-    onMounted(() => {
-      // window.addEventListener('click', (e) => {
-      //   if (
-      //     !dropdownBtn.value.contains(e.target) &&
-      //     !dropdown.value.contains(e.target)
-      //   ) {
-      //     state.isVisible = false;
-      //   }
-      // });
-    });
-
     const toggle = () => {
       state.isVisible = !state.isVisible;
     };
@@ -217,6 +207,14 @@ export default defineComponent({
       setTimeout(() => (toastVisibility.value = false), 5000);
       toastMessage.value = message;
       toastType.value = type;
+    };
+
+    function changeActiveMenu() {
+      const path = window.location.pathname;
+
+      data.menus.forEach((menu, key) => {
+        data.menus[key]['active'] = menu.permalink === path ? true : false;
+      });
     }
 
     async function logout() {
@@ -227,6 +225,10 @@ export default defineComponent({
       });
     }
 
+    onMounted(async () => {
+      changeActiveMenu();
+    });
+
     return {
       props,
       data,
@@ -236,6 +238,7 @@ export default defineComponent({
       toastType,
       toast,
       toggle,
+      active_tab,
       modalToggle,
       logout,
     };
