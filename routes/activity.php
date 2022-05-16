@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\Activity\ActivityController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -12,9 +13,14 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
-
 Route::name('admin.')->group(function () {
-    Route::resource('/activities', \App\Http\Controllers\Admin\Activity\ActivityController::class);
+    Route::resource('/activities', ActivityController::class);
+    Route::get('/activities/{id}', function () {
+        return view('admin.activity.activity-detail');
+    });
+    Route::get('/activities/{id}/title-form', function () {
+        return view('admin.activity.activity-title-form');
+    });
     Route::post('/activity/{page}', [App\Http\Controllers\Admin\Activity\ActivityController::class, 'getActivities'])->name('paginate');
     Route::post('/activity', [App\Http\Controllers\Admin\Activity\ActivityController::class, 'store'])->name('store');
     Route::get('/languages', [App\Http\Controllers\Admin\Activity\ActivityController::class, 'getLanguages'])->name('codelist');

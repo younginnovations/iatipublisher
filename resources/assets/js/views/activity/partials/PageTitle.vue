@@ -2,8 +2,12 @@
   <div class="page-title mb-4">
     <div class="flex items-end gap-4">
       <div class="title grow-0">
-        <div class="mb-4 text-caption-c1 font-bold text-n-40">
-          Your Activities
+        <div class="mb-4 text-caption-c1 text-n-40">
+          <nav aria-label="breadcrumbs" class="rank-math-breadcrumb">
+            <p>
+              <span class="last font-bold">Your Activities</span>
+            </p>
+          </nav>
         </div>
         <div class="inline-flex items-center">
           <h4 class="mr-4 font-bold">Your Activities</h4>
