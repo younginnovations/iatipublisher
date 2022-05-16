@@ -1,7 +1,7 @@
 <template>
   <div class="mt-14">
     <Loader v-if="loaderVisibility"></Loader>
-    <div class="reset">
+    <div class="reset" @keyup.enter="reset">
       <h2>Password Recovery</h2>
       <p>
         Please enter your email, we will send you a link to reset your password

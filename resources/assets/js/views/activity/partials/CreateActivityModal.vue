@@ -9,7 +9,7 @@
       Add a title and identifier for the activity
     </h5>
     <div>
-      <form class="input__field">
+      <div class="input__field">
         <div class="mb-5">
           <div class="form-group-title-container">
             <HoverText
@@ -183,7 +183,7 @@
             />
           </div>
         </div>
-      </form>
+      </div>
     </div>
   </Modal>
 </template>

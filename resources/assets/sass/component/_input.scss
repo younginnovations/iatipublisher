@@ -73,7 +73,7 @@
     mask-image: url('/images/dropdown-arrow.svg');
   }
   .multiselect-search {
-    @apply border border-n-30;
+    @apply border border-n-30 py-2.5;
   }
   .multiselect-search:focus {
     @apply bg-n-10;
