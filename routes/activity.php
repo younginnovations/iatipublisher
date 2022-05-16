@@ -21,4 +21,7 @@ Route::name('admin.')->group(function () {
     Route::get('/activities/{id}/title-form', function () {
         return view('admin.activity.activity-title-form');
     });
+    Route::post('/activity/{page}', [App\Http\Controllers\Admin\Activity\ActivityController::class, 'getActivities'])->name('paginate');
+    Route::post('/activity', [App\Http\Controllers\Admin\Activity\ActivityController::class, 'store'])->name('store');
+    Route::get('/languages', [App\Http\Controllers\Admin\Activity\ActivityController::class, 'getLanguages'])->name('codelist');
 });

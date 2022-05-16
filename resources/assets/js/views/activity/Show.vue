@@ -162,6 +162,7 @@ export default defineComponent({
     },
   },
   setup(props) {
+    console.log(props.activity);
     /**
      * Grouping all the datas for scroll function
      *
