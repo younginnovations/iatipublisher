@@ -49,7 +49,7 @@
               <button>
                 <HoverText
                   name="API Token"
-                  hover_text="TThe API token is a unique key that is generated from your organisation's IATI Registry Publisher Account. It is required to give IATI Publisher permission to add data to the IATI Registry on your behalf. Generate a Token in the 'My Account' tab by <a href='https://www.iatiregistry.org/user/login' target='_blank'>logging</a> into to the IATI Registry."
+                  hover_text="The API token is a unique key that is generated from your organisation's IATI Registry Publisher Account. It is required to give IATI Publisher permission to add data to the IATI Registry on your behalf. Generate a Token in the 'My Account' tab by <a href='https://www.iatiregistry.org/user/login' target='_blank' target='_blank'>logging</a> into to the IATI Registry."
                 ></HoverText>
               </button>
             </div>
