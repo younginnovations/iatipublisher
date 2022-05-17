@@ -32,7 +32,8 @@
         <input
           id="repeat_password"
           :class="
-            errorData.password_confirmation != ''
+            errorData.password_confirmation ||
+            (errorData.password && formData.password != '') != ''
               ? 'error__input input'
               : 'input'
           "

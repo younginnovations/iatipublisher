@@ -8,7 +8,7 @@
         To begin, your organisation needs to be registered as an IATI publisher.
         Select an option and we’ll guide you through this process.
       </span>
-      <a href="/" class="right__content mb-6">
+      <a href="#" class="right__content pointer-events-none mb-6">
         <div class="right__icon">
           <svg-vue class="text-6xl" icon="default-1"></svg-vue>
         </div>
@@ -47,7 +47,8 @@
         >Not sure which one to select?
         <a
           class="border-b-2 border-b-transparent font-bold text-bluecoral hover:border-b-2 hover:border-b-turquoise hover:text-bluecoral"
-          href="/"
+          href="mailto:support@iatistandard.org"
+          target="_blank"
           >Contact Support.</a
         ></span
       >

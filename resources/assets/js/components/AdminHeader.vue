@@ -88,7 +88,7 @@
               </li>
               <li class="dropdown__list" @click="logout">
                 <svg-vue icon="logout"></svg-vue>
-                <a href="#">Logout</a>
+                <button>Logout</button>
               </li>
             </ul>
           </div>
@@ -148,7 +148,8 @@ export default defineComponent({
     const toastMessage = ref('');
     const toastType = ref(false);
 
-    const data = {
+    const active_tab = ref('activities');
+    const data = reactive({
       languageNavLiClasses: 'flex',
       languageNavAnchorClasses:
         'flex text-white items-center uppercase nav__pointer-hover px-1.5',
@@ -189,7 +190,7 @@ export default defineComponent({
           active: false,
         },
       ],
-    };
+    });
 
     const [modalValue, modalToggle] = useToggle();
 
@@ -208,6 +209,14 @@ export default defineComponent({
       toastType.value = type;
     }
 
+    function changeActiveMenu() {
+      const path = window.location.pathname;
+
+      data.menus.forEach((menu, key) => {
+        data.menus[key]['active'] = menu.permalink === path ? true : false;
+      });
+    }
+
     async function logout() {
       await axios.post('/logout').then((res) => {
         if (res.status) {
@@ -215,6 +224,10 @@ export default defineComponent({
         }
       });
     }
+
+    onMounted(async () => {
+      changeActiveMenu();
+    });
 
     return {
       props,
@@ -225,6 +238,7 @@ export default defineComponent({
       toastType,
       toast,
       toggle,
+      active_tab,
       modalToggle,
       logout,
     };

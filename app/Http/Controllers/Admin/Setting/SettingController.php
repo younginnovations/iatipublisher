@@ -49,7 +49,7 @@ class SettingController extends Controller
     {
         try {
             $currencies = getCodeListArray('Currency', 'OrganizationArray');
-            $languages = getCodeList('Language', 'Organization', false);
+            $languages = getCodeList('Language', 'Organization');
             $humanitarian = trans('setting.humanitarian_types');
 
             return view('admin.settings.index', compact('currencies', 'languages', 'humanitarian'));

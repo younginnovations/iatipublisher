@@ -13,7 +13,11 @@
           </p>
           <div class="hidden sm:block">
             <span class="flex">
-              Haven't registered yet?
+              {{
+                page == 'Join Now'
+                  ? "Haven't registered yet?"
+                  : 'Already have an account?'
+              }}
               <button
                 class="ml-1 border-b-2 border-b-transparent text-base text-turquoise hover:border-b-2 hover:border-b-turquoise"
                 @click="togglePage"

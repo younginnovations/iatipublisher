@@ -42,7 +42,7 @@
                   ><a href="https://iatiregistry.org/">IATI Registry</a></span
                 >, make sure your
                 <span class="font-bold"
-                  >Publisher Name,Publisher ID and IATI Organisation ID</span
+                  >Publisher Name, Publisher ID and IATI Organisation ID</span
                 >
                 match your IATI Registry Information. Contact
                 <span
@@ -604,8 +604,12 @@ export default defineComponent({
 
     .register__sidebar {
       @apply bg-eggshell;
-      padding: 96px 80px 40px 32px;
+      padding: 96px 32px 40px;
       width: 344px;
+
+      ul {
+        width: 253px;
+      }
 
       ul::before {
         content: '';
