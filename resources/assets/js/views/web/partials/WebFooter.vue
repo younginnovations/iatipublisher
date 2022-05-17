@@ -41,7 +41,7 @@
             </div>
             <div class="my-5 flex items-center space-x-2 text-n-10">
               <svg-vue class="text-2xl" icon="headphone"></svg-vue>
-              <span class="text-sm font-bold uppercase"
+              <span class="text-xs font-bold uppercase"
                 >Any questions? Contact Support</span
               >
             </div>

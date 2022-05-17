@@ -6,7 +6,11 @@
       :message="toastMessage"
       :type="toastType"
     ></Toast>
-    <button class="button primary-btn relative font-bold" @click="toggle">
+    <button
+      class="button primary-btn relative font-bold"
+      @click="toggle"
+      ref="dropdownBtn"
+    >
       <svg-vue icon="plus"></svg-vue>
       <span>Add Activity</span>
       <div
@@ -34,7 +38,7 @@
 </template>
 
 <script lang="ts">
-import { reactive, defineComponent, ref } from 'vue';
+import { reactive, defineComponent, ref, onMounted } from 'vue';
 import Model from '../../../components/PopupModal.vue';
 import HoverText from '../../../components/HoverText.vue';
 import CreateModal from '../CreateModal.vue';
@@ -76,6 +80,15 @@ export default defineComponent({
     const liClass =
       'block p-2.5 text-n-40 text-tiny leading-[1.5] font-bold hover:text-n-50 hover:bg-n-10';
 
+    const dropdownBtn = ref();
+    onMounted(() => {
+      window.addEventListener('click', (e) => {
+        if (!dropdownBtn.value.contains(e.target)) {
+          state.isVisible = false;
+        }
+      });
+    });
+
     const toggle = () => {
       state.isVisible = !state.isVisible;
     };
@@ -92,6 +105,7 @@ export default defineComponent({
       toggle,
       modalToggle,
       toggleModel,
+      dropdownBtn,
     };
   },
 });

@@ -85,6 +85,7 @@
             <label for="default-hierarchy">Default Hierarchy</label>
             <button>
               <HoverText
+                width="w-64"
                 name="Default Hierarchy"
                 hover_text="If you are reporting both programmes (parent activities) and projects (child activities),
                 choose the hierarchical level that most of your activities are at. e.g. parent activity = 1; child activity = 2.
@@ -119,7 +120,7 @@
 
             <button>
               <HoverText
-                width="w-[370px]"
+                width="w-72"
                 name="Humanitarian"
                 hover_text="Add a 'Humanitarian Flag' to every activity that your organisation publishes data on. This means that your organisation identifies all their activities as wholly or partially addressing a humanitarian crisis or multiple crises. You can later manually add or remove a Humanitarian Flag on individual activities if required."
               ></HoverText>

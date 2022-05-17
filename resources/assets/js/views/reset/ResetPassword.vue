@@ -1,7 +1,7 @@
 <template>
   <div class="mt-14">
     <Loader v-if="loaderVisibility"></Loader>
-    <div class="reset reset__password">
+    <div class="reset reset__password" @keyup.enter="reset">
       <h2>Reset Password</h2>
       <p>Please enter your new password</p>
       <span class="error" role="alert" v-if="errorData.email != ''">

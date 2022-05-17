@@ -155,8 +155,8 @@
               ></span
             >
             <button
+              class="btn btn-next w-40"
               v-if="step != 3"
-              class="btn btn-next"
               @click="goToNextForm()"
             >
               Next Step

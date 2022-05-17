@@ -11,7 +11,7 @@
         IATI publisher account.
       </p>
       <svg-vue class="verification" icon="ic-verification"></svg-vue>
-      <a href="/activities" class="btn btn-next">
+      <a href="/activities" class="btn btn-next get-started-btn">
         Get started
         <svg-vue class="text-2xl" icon="right-arrow"></svg-vue>
       </a>
