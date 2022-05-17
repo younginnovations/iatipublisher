@@ -16,6 +16,7 @@ class Activity extends Model
 
     /**
      * Fillable property for mass assignment.
+     *
      * @var array
      */
     protected $fillable = [
@@ -91,6 +92,7 @@ class Activity extends Model
 
     /**
      * Activity belongs to an organisation.
+     *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function organization(): \Illuminate\Database\Eloquent\Relations\BelongsTo
@@ -100,14 +102,20 @@ class Activity extends Model
 
     /**
      * Factory for creating activity.
+     *
      * @return ActivityFactory
      */
-    public static function newFactory()
+    public static function newFactory(): ActivityFactory
     {
         return new ActivityFactory();
     }
 
-    public function getTitleElementCompletedAttribute()
+    /**
+     * Returns title element complete status.
+     *
+     * @return bool
+     */
+    public function getTitleElementCompletedAttribute(): bool
     {
         $titles = $this->title;
 

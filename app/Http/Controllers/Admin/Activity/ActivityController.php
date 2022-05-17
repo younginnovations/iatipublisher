@@ -158,7 +158,7 @@ class ActivityController extends Controller
             $activities = $this->activityService->getPaginatedActivities($page);
 
             return response()->json(['success' => true, 'message' => 'Activities fetched successfully', 'data' => $activities]);
-        } catch (Exgitception $e) {
+        } catch (Exception $e) {
             logger()->error($e->getMessage());
 
             return response()->json(['success' => false, 'message' => 'Error occurred while fetching the data']);
