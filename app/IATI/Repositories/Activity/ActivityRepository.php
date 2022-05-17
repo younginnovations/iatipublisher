@@ -49,11 +49,11 @@ class ActivityRepository extends Repository
      * Returns activity identifiers used by an organization.
      *
      * @param $organizationId
-     * @param $page
+     * @param int $page
      *
      * @return Collection
      */
-    public function getActivityForOrganization($organizationId, $page = 1)
+    public function getActivityForOrganization($organizationId, int $page = 1): Collection
     {
         return $this->model->where('org_id', $organizationId)->paginate(10, ['*'], 'activity', $page);
     }

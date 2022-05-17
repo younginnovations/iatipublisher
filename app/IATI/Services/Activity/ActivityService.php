@@ -17,7 +17,7 @@ class ActivityService
     /**
      * @var ActivityRepository
      */
-    protected $activityRepository;
+    protected ActivityRepository $activityRepository;
 
     /**
      * ActivityService constructor.
@@ -42,11 +42,11 @@ class ActivityService
     /**
      * Returns all activities present in database.
      *
-     * @param $page
+     * @param int $page
      *
      * @return \Illuminate\Database\Eloquent\Collection
      */
-    public function getPaginatedActivities($page = 1): Collection | \Illuminate\Pagination\LengthAwarePaginator
+    public function getPaginatedActivities(int $page = 1): Collection | \Illuminate\Pagination\LengthAwarePaginator
     {
         return $this->activityRepository->getActivityForOrganization(Auth::user()->organization_id, $page);
     }
@@ -94,7 +94,7 @@ class ActivityService
     /**
      * Returns activity identifiers used by an organization.
      *
-     * @param $organizationId
+     * @param $id
      *
      * @return Activity
      */
