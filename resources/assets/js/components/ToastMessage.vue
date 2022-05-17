@@ -1,6 +1,6 @@
 <template>
   <div
-    class="fixed right-10 bottom-0 inline-flex rounded-t-lg bg-eggshell py-4 px-8 text-sm leading-normal text-n-50"
+    class="fixed right-10 bottom-0 z-10 inline-flex rounded-t-lg bg-eggshell py-4 px-8 text-sm leading-normal text-n-50"
   >
     <span>5 activities ready to publish</span>
     <span class="ml-2.5 cursor-pointer font-bold text-spring-50"

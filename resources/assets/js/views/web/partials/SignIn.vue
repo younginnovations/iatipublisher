@@ -22,7 +22,7 @@
           v-model="formData.username"
         />
         <svg-vue
-          class="absolute top-11 left-5 text-xl sm:top-12 sm:left-6"
+          class="absolute top-12 left-5 text-xl sm:left-6"
           icon="user"
         ></svg-vue>
         <span class="error" role="alert" v-if="errorData.username != ''">
@@ -43,7 +43,7 @@
           v-model="formData.password"
         />
         <svg-vue
-          class="absolute top-11 left-5 text-xl sm:top-12 sm:left-6"
+          class="absolute top-12 left-5 text-xl sm:left-6"
           icon="pw-lock"
         ></svg-vue>
         <span class="error" role="alert" v-if="errorData.password">{{
@@ -108,15 +108,17 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
-@media screen and (min-width: 640px) {
-  #btn {
-    padding: 18px 0;
-  }
-}
 #btn {
+  padding: 13px 0;
+
   svg {
     @apply absolute right-7 text-2xl;
     transition: 0.4s;
+  }
+}
+@media screen and (min-width: 640px) {
+  #btn {
+    padding: 18px 0;
   }
 }
 .username {

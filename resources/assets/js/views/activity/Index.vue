@@ -91,6 +91,6 @@ export default defineComponent({
 
 <style lang="scss">
 .listing__page {
-  height: calc(100vh - 60px);
+  min-height: calc(100vh - 60px);
 }
 </style>
