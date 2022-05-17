@@ -28,3 +28,59 @@
     @apply border-spring-50;
   }
 }
+
+form {
+  .form-field-group {
+    @apply relative rounded-lg border border-n-30 p-6;
+    &:not(:last-child) {
+      @apply mb-6;
+    }
+
+    .delete-item {
+      @apply absolute top-2/4 right-0 -translate-y-2/4 translate-x-2/4 cursor-pointer rounded-full bg-n-40 p-1.5 text-lg text-n-40 text-white;
+    }
+  }
+
+  .form-field {
+    @apply px-3;
+
+    .help-text {
+      @apply mt-2 text-xs leading-relaxed;
+    }
+  }
+
+  .form-field-label {
+    @apply mb-2 flex justify-between;
+    label {
+      @apply text-xs leading-relaxed;
+    }
+
+    .required {
+      @apply font-bold text-salmon-50;
+    }
+  }
+
+  input[type='text'] {
+    @apply w-full rounded border border-n-30 px-4 py-3 outline-none duration-300;
+
+    &::placeholder {
+      @apply text-sm text-n-40;
+    }
+
+    &:focus {
+      @apply border border-n-50 bg-n-10;
+    }
+
+    &:focus::placeholder {
+      @apply text-n-50;
+    }
+  }
+
+  select {
+    @apply w-full rounded border border-n-30 px-4 py-3 text-sm text-n-40 outline-none duration-300;
+
+    &:focus {
+      @apply border border-n-50 bg-n-10;
+    }
+  }
+}

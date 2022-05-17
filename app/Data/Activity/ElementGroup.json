@@ -1,0 +1,157 @@
+{
+  "identification": {
+    "label": "Identification",
+    "elements": {
+      "iati_identifier": {
+        "label": "IATI Identifier"
+      },
+      "reporting_org": {
+        "label": "Reporting Organization"
+      },
+      "other_identifier": {
+        "label": "Oter Identifier"
+      }
+    }
+  },
+  "basic_activity_information": {
+    "label": "Basic Activity Information",
+    "elements": {
+      "title": {
+        "label": "Title"
+      },
+      "description": {
+        "label": "Description"
+      },
+      "activity_status": {
+        "label": "Activity Status"
+      },
+      "activity_date": {
+        "label": "Activity Date"
+      },
+      "contact_info": {
+        "label": "Contact info"
+      },
+      "activity_scope": {
+        "label": "Activity Scope"
+      }
+    }
+  },
+  "participating_organisations": {
+    "label": "Participating Organizations",
+    "elements": {
+      "participating_org": {
+        "label": "Participating Organizations"
+      }
+    }
+  },
+  "geopolitical_information": {
+    "label": "Geopolitical Information",
+    "elements": {
+      "recipient_country": {
+        "label": "Recipient Country"
+      },
+      "recipient_region": {
+        "label": "Recipient Region"
+      },
+      "location": {
+        "label": "Location"
+      }
+    }
+  },
+  "classifications": {
+    "label": "Classifications",
+    "elements": {
+      "sector": {
+        "label": "Sector"
+      },
+      "policy_marker": {
+        "label": "Policy Maker"
+      },
+      "tag": {
+        "label": "Tag"
+      },
+      "collaboration_type": {
+        "label": "Collaboration Type"
+      },
+      "default_flow_type": {
+        "label": "Default Flow Type"
+      },
+      "default_finance_type": {
+        "label": "Default Finance Type"
+      },
+      "default_tied_status": {
+        "label": "Default Tied Status"
+      },
+      "country_budget_items": {
+        "label": "Country Budget Items"
+      }
+    }
+  },
+  "humanitarian": {
+    "label": "Humanitarian",
+    "elements": {
+      "humanitarian_scope": {
+        "label": "Humanitarian Scope"
+      }
+    }
+  },
+  "financial": {
+    "label": "Financial",
+    "elements": {
+      "budget": {
+        "label": "Budget"
+      },
+      "transactions": {
+        "label": "Transactions"
+      },
+      "planned_disbursement": {
+        "label": "Planned Disbursement"
+      },
+      "capital_spend": {
+        "label": "Capital Spend"
+      }
+    }
+  },
+  "related_documents": {
+    "label": "Related Documents",
+    "elements": {
+      "document_links": {
+        "label": "Document Links"
+      }
+    }
+  },
+  "relations": {
+    "label": "Relations",
+    "elements": {
+      "related_activity": {
+        "label": "Related Activity"
+      },
+      "legacy_data": {
+        "label": "Legacy Data"
+      }
+    }
+  },
+  "performance": {
+    "label": "Performance",
+    "elements": {
+      "conditions": {
+        "label": "Conditions"
+      },
+      "results": {
+        "label": "Results"
+      }
+    }
+  },
+  "oecd_reporting": {
+    "label": "OECD Reporting",
+    "elements": {
+      "crs-add": {
+        "label": "CRS-ADD"
+      },
+      "fss": {
+        "label": "FSS"
+      }
+    }
+  }
+}
+

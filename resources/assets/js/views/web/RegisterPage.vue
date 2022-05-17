@@ -19,8 +19,8 @@
             <div class="flex items-center space-x-1">
               <HoverText
                 v-if="registerForm[step].hover_text"
-                :name="registerForm[step].title"
                 :hover_text="registerForm[step].hover_text"
+                :name="registerForm[step].title"
                 :position="right"
               ></HoverText>
               <span class="text-2xl font-bold text-n-50">{{
@@ -28,8 +28,8 @@
               }}</span>
             </div>
             <div
-              class="feedback mt-6 h-32 border-l-2 border-crimson-50 bg-crimson-10 p-4 text-sm text-n-50"
               v-if="!publisherExists"
+              class="feedback mt-6 h-32 border-l-2 border-crimson-50 bg-crimson-10 p-4 text-sm text-n-50"
             >
               <p class="mb-2 flex font-bold">
                 <svg-vue class="mr-2 text-xl" icon="warning"></svg-vue>
@@ -57,80 +57,80 @@
             </div>
             <div class="form__content">
               <div
-                :class="field.class"
                 v-for="field in registerForm[step].fields"
                 :key="field.name"
+                :class="field.class"
               >
                 <div class="flex items-center justify-between">
-                  <label class="label" :for="field.id"
+                  <label :for="field.id" class="label"
                     >{{ field.label }}
-                    <span class="text-salmon-40" v-if="field.required"> *</span>
+                    <span v-if="field.required" class="text-salmon-40"> *</span>
                   </label>
                   <HoverText
                     v-if="field.hover_text !== ''"
-                    :name="field.label"
                     :hover_text="field.hover_text"
+                    :name="field.label"
                   ></HoverText>
                 </div>
                 <input
-                  :id="field.id"
-                  :class="
-                    errorData[field.name] != ''
-                      ? 'error__input form__input'
-                      : 'form__input'
-                  "
-                  :type="field.type"
-                  v-model="formData[field.name]"
-                  :placeholder="field.placeholder"
                   v-if="
                     (field.type === 'text' ||
                       field.type === 'password' ||
                       field.type === 'email') &&
                     field.name != 'identifier'
                   "
-                />
-
-                <input
+                  :id="field.id"
+                  v-model="formData[field.name]"
                   :class="
                     errorData[field.name] != ''
                       ? 'error__input form__input'
                       : 'form__input'
                   "
+                  :placeholder="field.placeholder"
                   :type="field.type"
+                />
+
+                <input
+                  v-if="field.name == 'identifier'"
                   v-model="formData[field.name]"
+                  :class="
+                    errorData[field.name] != ''
+                      ? 'error__input form__input'
+                      : 'form__input'
+                  "
+                  :placeholder="field.placeholder"
+                  :type="field.type"
                   :value="
                     formData.registration_agency +
                     '-' +
                     formData.registration_number
                   "
-                  :placeholder="field.placeholder"
-                  v-if="field.name == 'identifier'"
                   disabled="disabled"
                 />
 
                 <Multiselect
+                  v-if="field.type === 'select'"
+                  v-model="formData[field.name]"
                   :class="
                     errorData[field.name] != ''
                       ? 'error__input vue__select'
                       : 'vue__select'
                   "
-                  v-if="field.type === 'select'"
-                  v-model="formData[field.name]"
+                  :options="field.options"
                   :placeholder="field.placeholder"
                   :searchable="true"
-                  :options="field.options"
                 />
 
                 <span
-                  class="text-xs font-normal text-n-40"
                   v-if="field.help_text != '' && errorData[field.name] == ''"
+                  class="text-xs font-normal text-n-40"
                   >{{ field.help_text }}
                 </span>
 
                 <span
+                  v-if="errorData[field.name] != ''"
                   class="error"
                   role="alert"
-                  v-if="errorData[field.name] != ''"
                 >
                   {{ errorData[field.name] }}
                 </span>
@@ -139,59 +139,59 @@
           </div>
           <div class="flex items-center justify-between">
             <button
-              class="btn-back"
               v-if="step != 1"
+              class="btn-back"
               @click="goToPreviousForm()"
             >
               <svg-vue class="mr-3 cursor-pointer" icon="left-arrow"></svg-vue>
               Go back
             </button>
-            <span class="text-sm font-normal text-n-40" v-if="step == 1"
+            <span v-if="step == 1" class="text-sm font-normal text-n-40"
               >Already have an account?
               <a
-                href="/"
                 class="border-b-2 border-b-transparent font-bold text-bluecoral hover:border-b-2 hover:border-b-turquoise hover:text-bluecoral"
+                href="/"
                 >Sign In.</a
               ></span
             >
             <button
-              class="btn btn-next"
               v-if="step != 3"
+              class="btn btn-next"
               @click="goToNextForm()"
             >
               Next Step
               <svg-vue class="text-2xl" icon="right-arrow"></svg-vue>
             </button>
           </div>
-          <div class="mt-6 text-center" v-if="step == 2">
+          <div v-if="step == 2" class="mt-6 text-center">
             <span class="text-sm font-normal text-n-40"
               >Already have an account?
               <a
-                href="/"
                 class="border-b-2 border-b-transparent font-bold text-bluecoral hover:border-b-2 hover:border-b-turquoise hover:text-bluecoral"
+                href="/"
                 >Sign In.</a
               ></span
             >
           </div>
         </div>
 
-        <aside>
+        <aside class="register__sidebar">
           <span class="text-base font-bold">Step {{ step }} out of 3</span>
           <ul class="relative mt-6 text-sm text-n-40">
             <li
+              v-for="(ele, i) in registerForm"
+              :key="ele.title"
               :class="[
                 step == parseInt(i)
                   ? 'relative font-bold text-n-50'
                   : 'mb-6 flex items-center',
               ]"
-              v-for="(ele, i) in registerForm"
-              :key="ele.title"
             >
-              <span class="list__active" v-if="step == parseInt(i)"></span>
-              <span class="mr-3 ml-6" v-if="!ele.is_complete">
+              <span v-if="step == parseInt(i)" class="list__active"></span>
+              <span v-if="!ele.is_complete" class="mr-3 ml-6">
                 {{ i }}
               </span>
-              <span class="mr-3 ml-6" v-if="ele.is_complete">
+              <span v-if="ele.is_complete" class="mr-3 ml-6">
                 <svg-vue class="text-xs" icon="checked"> </svg-vue>
               </span>
               <span
@@ -206,8 +206,8 @@
                 {{ ele.title }}
               </span>
               <p
-                class="detail mt-2 mb-6 font-normal xl:pr-2"
                 v-if="step == parseInt(i)"
+                class="detail mt-2 mb-6 font-normal xl:pr-2"
               >
                 {{ ele.description }}
               </p>
@@ -220,7 +220,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, ref, computed, watch } from 'vue';
+import { computed, defineComponent, reactive, ref, watch } from 'vue';
 import axios from 'axios';
 import EmailVerification from './EmailVerification.vue';
 import HoverText from './../../components/HoverText.vue';
@@ -569,6 +569,7 @@ export default defineComponent({
 .label {
   @apply text-sm font-normal;
 }
+
 .section {
   &__container {
     max-width: 1206px;
@@ -581,6 +582,7 @@ export default defineComponent({
         line-height: 22px;
       }
     }
+
     .section__wrapper {
       box-shadow: 0px 20px 40px 20px rgba(0, 0, 0, 0.05);
 
@@ -588,6 +590,7 @@ export default defineComponent({
         font-size: 190px;
       }
     }
+
     .section__title {
       margin-bottom: 40px;
 
@@ -598,7 +601,8 @@ export default defineComponent({
         @apply text-n-40;
       }
     }
-    aside {
+
+    .register__sidebar {
       @apply bg-eggshell;
       padding: 96px 80px 40px 32px;
       width: 344px;
@@ -613,9 +617,11 @@ export default defineComponent({
         left: 0px;
         top: 0px;
       }
+
       .detail {
         margin-left: 45px;
       }
+
       .list__active::after {
         position: absolute;
         top: 0;
@@ -630,6 +636,7 @@ export default defineComponent({
     }
   }
 }
+
 .form {
   @apply bg-white;
   padding: 40px 80px;

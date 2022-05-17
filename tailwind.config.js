@@ -16,7 +16,7 @@ module.exports = {
   ],
   theme: {
     fontFamily: {
-      sans: ['Arial', 'sans-serif'],
+      sans: ['Arial CE', 'sans-serif'],
     },
     colors: {
       black: withOpacity('--black'),
