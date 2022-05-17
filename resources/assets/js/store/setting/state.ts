@@ -12,7 +12,7 @@ export const state = {
     default_currency: '',
     default_language: '',
     hierarchy: '',
-    humanitarian: 'yes',
+    humanitarian: '',
   },
   publishingError: {
     api_token: '',

@@ -27,9 +27,9 @@
           <div class="footer__links">
             <span class="font-bold text-n-10">IATI Standard</span>
             <ul class="mt-2 flex flex-col">
-              <li><a href="/">About IATI Standard</a></li>
-              <li><a href="/">Step-by-step publishing guide</a></li>
-              <li><a href="/">Using Data</a></li>
+              <li><a href="/">IATI Standard</a></li>
+              <li><a href="/">Publishing Checklist</a></li>
+              <li><a href="/">Access IATI Data</a></li>
               <li><a href="/">Support</a></li>
             </ul>
           </div>
