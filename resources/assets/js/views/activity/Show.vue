@@ -91,7 +91,7 @@
             </div>
           </div>
         </div>
-        <Elements :data="elements" />
+        <Elements :data="elements" :activity-id="activityId" />
       </aside>
       <div class="activities__content">
         <div class="inline-flex">
@@ -198,10 +198,12 @@ export default defineComponent({
      */
 
     const scrollRef = ref([]);
+    const activityId = props.activity['id'];
 
     return {
       scrollRef,
       activityGrouped,
+      activityId,
     };
   },
 });

@@ -17,4 +17,12 @@ class Title extends BaseElement
     {
         return 'App\IATI\Forms\Activity\Title';
     }
+
+    /**
+     * @return \Illuminate\Foundation\Application|mixed
+     */
+    public function getRepository()
+    {
+        return App('App\IATI\Repositories\Activity\TitleRepository');
+    }
 }
