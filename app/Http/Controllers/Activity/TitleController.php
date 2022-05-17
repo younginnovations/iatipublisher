@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Activity;
 
 use App\Http\Controllers\Controller;
 use App\IATI\Services\Activity\FormCreator\Title;
+use App\IATI\Services\Activity\TitleService;
+use Illuminate\Http\Request;
 
 /**
  * Class TitleController.
@@ -13,25 +15,32 @@ class TitleController extends Controller
     /**
      * @var Title
      */
-    protected $title;
+    protected Title $title;
+
+    /**
+     * @var TitleService
+     */
+    protected TitleService $titleService;
 
     /**
      * TitleController Constructor.
      * @param Title $title
      */
-    public function __construct(Title $title)
+    public function __construct(Title $title, TitleService $titleService)
     {
         $this->title = $title;
+        $this->titleService = $titleService;
     }
 
     /**
      * Display a listing of the resource.
-     *
+     * @param $id
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index($id)
     {
-        $form = $this->title->editForm();
+        $activityTitle = $this->titleService->getTitleData($id);
+        $form = $this->title->editForm($activityTitle, $id);
 
         return view('activity.title.title', compact('form'));
     }
@@ -86,9 +95,22 @@ class TitleController extends Controller
      * @param  \App\IATI\Models\Activity\Activity  $activity
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Activity $activity)
+    public function update(Request $request, $id)
     {
-        //
+        try {
+            $activityData = $this->titleService->getActivityData($id);
+            $activityTitle = $request->all();
+
+            if (!$this->titleService->update($activityTitle, $activityData)) {
+                return response()->json(['success' => false, 'error' => 'Error has occurred while updating activity title.']);
+            }
+
+            return response()->json(['success' => true, 'message' => 'Activity title updated successfully.']);
+        } catch (\Exception $e) {
+            logger()->error($e->getMessage());
+
+            return response()->json(['success' => false, 'error' => 'Error has occurred while updating activity title.']);
+        }
     }
 
     /**

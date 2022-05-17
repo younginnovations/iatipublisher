@@ -37,19 +37,30 @@ class Title
     }
 
     /**
+     * Returns activity title edit form.
      * @param array $data
      * @param $activityId
      * @return $this
-     * return activity title edit form.
      */
-    public function editForm()
+    public function editForm($data, $activityId)
     {
+        $model['narrative'] = $data;
+
         return $this->formBuilder->create(
             $this->formPath,
             [
-            'method' => 'POST',
-            'url' => '',
-        ]
-        );
+            'method'    => 'PUT',
+            'model'     => $model,
+            'url'       => route('admin.activities.title.update', [$activityId, 0]),
+            ]
+        )->add('Save', 'submit', ['attr' => ['class' => ''], 'label' => 'Save'])
+         ->add('Cancel', 'static', [
+             'label' => false,
+             'value' => 'Cancel',
+             'attr'    => [
+                 'class' => '',
+                 'href'  => '',
+             ],
+         ]);
     }
 }

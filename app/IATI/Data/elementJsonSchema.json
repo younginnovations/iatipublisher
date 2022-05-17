@@ -5,7 +5,7 @@
         "type": "text",
         "required": true,
         "criteria": "mandatory",
-        "label": "Narrative",
+        "label": "Text",
         "attributes": {
           "lang": {
             "type": "select",
