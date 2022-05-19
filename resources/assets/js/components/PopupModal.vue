@@ -13,7 +13,7 @@
             ></div>
             <div
               v-if="modalActive"
-              class="modal-inner relative max-h-full w-full max-w-[809px] overflow-x-hidden rounded-lg bg-white p-8"
+              class="modal-inner relative max-h-full overflow-x-hidden rounded-lg bg-white p-8"
             >
               <slot />
             </div>
