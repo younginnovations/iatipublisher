@@ -105,11 +105,19 @@ class RegisterController extends Controller
                 return response()->json(['success' => false, 'errors' => $validator->errors()]);
             }
 
-            $client = new Client(['base_uri' => env('IATI_URL')]);
-            $res = $client->request('GET', env('IATI_API_ENDPOINT') . '/action/organization_show', [
+            $clientConfig = ['base_uri' => env('IATI_URL')];
+            $requestConfig = [
                 'http_errors' => false,
-                'query'       => ['id' => $postData['publisher_id']],
-            ]);
+                'query'       => ['id' => $postData['publisher_id'] ?? ''],
+            ];
+
+            if (env('APP_ENV') != 'production') {
+                $clientConfig['headers']['X-CKAN-API-Key'] = env('IATI_API_KEY');
+                $requestConfig['auth'] = [env('IATI_USERNAME'), env('IATI_PASSWORD')];
+            }
+
+            $client = new Client($clientConfig);
+            $res = $client->request('GET', env('IATI_API_ENDPOINT') . '/action/organization_show', $requestConfig);
 
             if ($res->getStatusCode() == 404) {
                 return response()->json([
@@ -153,7 +161,7 @@ class RegisterController extends Controller
                     ],
                 ]
             );
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
             return response()->json(['success' => false, 'error' => 'Error has occurred while verifying the publisher.']);
