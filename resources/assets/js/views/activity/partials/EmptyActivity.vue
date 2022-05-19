@@ -1,30 +1,6 @@
 <template>
-  <div
-    id="empty-state"
-    class="relative flex min-h-[647px] flex-col items-center justify-center bg-white p-10"
-  >
-    <div
-      v-if="state.dismiss"
-      class="absolute top-0 left-0 flex w-full px-5 py-4 text-sm leading-relaxed rounded-bl rounded-br bg-rose text-n-50"
-    >
-      <div class="grow">
-        <div class="flex items-center">
-          <svg-vue icon="alert" class="mr-1 text-base grow-0 text-crimson-50" />
-          <p class="grow">
-            Please <a href="#" class="font-bold">complete your setup</a> in
-            order to enable complete features of IATI publisher tool.
-          </p>
-        </div>
-      </div>
-      <div class="grow-0">
-        <button
-          class="text-sm leading-relaxed text-bluecoral"
-          @click="state.dismiss = false"
-        >
-          Dismiss
-        </button>
-      </div>
-    </div>
+  <div class="min-h-[647px] overflow-hidden bg-white">
+    <ErrorMessage></ErrorMessage>
     <div
       class="mb-6 flex h-[150px] w-[150px] items-center justify-center rounded-full"
       style="background: linear-gradient(180deg, #e3ecfa 0%, #dae7ff 100%)"
@@ -44,11 +20,13 @@
 <script lang="ts">
 import { defineComponent, reactive } from 'vue';
 import ActivityButton from './AddActivityButton.vue';
+import ErrorMessage from '../../../components/ErrorMessage.vue';
 
 export default defineComponent({
   name: 'EmptyActivity',
   components: {
     ActivityButton,
+    ErrorMessage,
   },
   setup() {
     const state = reactive({
