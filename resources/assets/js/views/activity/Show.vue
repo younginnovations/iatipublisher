@@ -7,22 +7,20 @@
           <div class="mb-4 text-caption-c1 text-n-40">
             <nav aria-label="breadcrumbs" class="rank-math-breadcrumb">
               <p>
-                <a class="font-bold" href="/">Your Activities</a>
+                <a class="font-bold" href="/activities">Your Activities</a>
                 <span class="separator mx-4"> / </span>
-                <span class="last text-n-30"
-                  >Partnership against child exploitation</span
-                >
+                <span class="last text-n-30">{{ pageTitle }}</span>
               </p>
             </nav>
           </div>
           <div class="inline-flex items-center">
             <div class="mr-3">
-              <a href="/">
+              <a href="/activities">
                 <svg-vue icon="arrow-short-left"></svg-vue>
               </a>
             </div>
             <h4 class="mr-4 font-bold">
-              Partnership Against Child Exploitation
+              {{ pageTitle }}
             </h4>
           </div>
         </div>
@@ -94,40 +92,40 @@
         <Elements :data="elements" />
       </aside>
       <div class="activities__content">
-        <div class="inline-flex">
-          <button
-            v-for="(post, index) in element_group"
-            :key="index"
-            class="tab-btn mr-2"
+        <div class="inline-flex flex-wrap">
+          <a
+            v-for="(post, index) in groupedData"
+            v-smooth-scroll
+            :href="`#${index}`"
+            class="tab-btn-anchor"
           >
-            <span>{{ post.label }}</span>
-            <span class="hover__text">
-              <HoverText
-                :name="post.label"
-                hover_text="You cannot publish an activity until all the mandatory fields have been filled."
-                icon_size="text-tiny"
-              ></HoverText>
-            </span>
-          </button>
+            <button :disabled="post.status == 'disabled'" class="tab-btn mr-2">
+              <span>{{ post.label }}</span>
+              <span class="hover__text">
+                <HoverText
+                  :name="post.label"
+                  hover_text="You cannot publish an activity until all the mandatory fields have been filled."
+                  icon_size="text-tiny"
+                  name=""
+                ></HoverText>
+              </span>
+            </button>
+          </a>
         </div>
 
-        <div
-          v-for="(post, index) in activityGrouped.data"
-          :key="index"
-          :class="index"
-          class="basis-6/12"
-        >
+        <div v-for="(post, index) in activities" :id="index">
           <div class="activities__content--elements -mx-3 flex flex-wrap">
-            <ActivityElement
-              v-for="(element, index) in post"
-              :key="index"
-              :title="index"
-              :width="index === 'title' ? 'full' : ''"
-              content="AF-COA-1234"
-              icon="align-center"
-              status="completed"
-              tooltip="Example text"
-            />
+            <template v-for="(element, a) in post.elements">
+              <ActivityElement
+                v-if="element.content.length > 0"
+                :content="element.content"
+                :element_name="a"
+                :title="a"
+                :width="a === 'title' ? 'full' : ''"
+                status="completed"
+                tooltip="Example text"
+              />
+            </template>
           </div>
         </div>
       </div>
@@ -136,7 +134,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, ref } from 'vue';
+import { defineComponent } from 'vue';
 import HoverText from '../../components/HoverText.vue';
 import ProgressBar from '../../components/ProgressBar.vue';
 import Elements from './partials/ActivitiesElements.vue';
@@ -152,7 +150,7 @@ export default defineComponent({
   props: {
     elements: {
       type: Object,
-      required: false,
+      required: true,
     },
     element_group: {
       type: Object,
@@ -169,39 +167,62 @@ export default defineComponent({
   },
   setup(props) {
     /**
-     * Grouping all the datas for scroll function
-     *
-     * static data for now
-     * this data will be created using props.element_group and props.activity
+     * Finding current language - activity title
      */
-    const activityGrouped = reactive({
-      data: {
-        identification: {
-          iati_identifier: {
-            activity_identifier: 'SYRZ000041',
-            iati_identifier_text: 'CZ-ICO-25755277-SYRZ000041',
-          },
-          title: [
-            {
-              language: 'en',
-              narrative: 'DGGF Track 3',
-            },
-          ],
-        },
-      },
-    });
+    let pageTitle = '';
+    const found = props.activity.title.find(
+      (e: { language: string }, index: number) => {
+        const currentLanguage = 'en';
+        return e.language === currentLanguage;
+      }
+    );
+
+    // callback if language not available in data
+    if (found) {
+      pageTitle = found.narrative;
+    } else {
+      pageTitle = props.activity.title[0].narrative;
+    }
 
     /**
-     * Scroll to section function
+     * Grouping all the data's for scroll function
      *
-     * to be continue
+     * this data is created using props.element_group and props.activity
      */
+    const groupedData = { ...props.element_group },
+      detailData = props.activity,
+      activities = { ...props.element_group };
 
-    const scrollRef = ref([]);
+    // generating available elements
+    Object.keys(activities).map((key, index) => {
+      let flag = false;
+      Object.keys(activities[key]['elements']).map((k, i) => {
+        if (detailData[k]) {
+          activities[key]['elements'][k]['content'] = detailData[k];
+          flag = true;
+        } else {
+          activities[key]['elements'][k]['content'] = [];
+        }
+      });
+
+      if (flag === false) {
+        delete activities[key];
+      }
+    });
+
+    // generating available categories of elements
+    Object.keys(groupedData).map((key, index) => {
+      if (activities.hasOwnProperty(key)) {
+        groupedData[key]['status'] = 'enabled';
+      } else {
+        groupedData[key]['status'] = 'disabled';
+      }
+    });
 
     return {
-      scrollRef,
-      activityGrouped,
+      groupedData,
+      activities,
+      pageTitle,
     };
   },
 });
@@ -229,6 +250,14 @@ export default defineComponent({
     border-radius: 8px 0px 0px 8px;
     width: 151px;
     height: 174px;
+  }
+
+  .tab-btn:disabled {
+    @apply pointer-events-none text-n-20;
+
+    svg {
+      @apply text-n-20;
+    }
   }
 }
 </style>

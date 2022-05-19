@@ -23,6 +23,7 @@
     }
   }
 }
+
 .btn-back {
   display: flex;
   align-items: center;
@@ -43,6 +44,7 @@
     }
   }
 }
+
 .btn-next {
   height: 48px;
   padding: 13px 24px;
@@ -52,14 +54,17 @@
     transition: 0.2s;
   }
 }
+
 .get-started-btn {
   width: 185px;
 }
+
 .reset-btn {
   @apply mt-6 flex justify-center rounded-lg border-none bg-turquoise text-sm font-bold uppercase text-n-50 outline-none duration-200 hover:bg-bluecoral hover:text-white;
   width: 100%;
   padding: 16px 94px;
 }
+
 @media screen and (min-width: 640px) {
   .reset-btn {
     padding: 18px 0px;
@@ -82,6 +87,7 @@ button {
   button {
     @apply rounded-3xl border border-solid border-n-30 py-1.5 px-2.5;
   }
+
   svg {
     @apply mr-1 text-xs;
   }
@@ -154,6 +160,7 @@ button {
     @apply bg-spring-50 text-white;
   }
 }
+
 .ghost-btn {
   @apply text-xs font-bold uppercase text-n-40;
   transition: 0.4s;
@@ -163,13 +170,19 @@ button {
   }
 }
 
+.tab-btn-anchor {
+  @apply cursor-default;
+}
+
 .tab-btn {
-  @apply h-9 border border-n-20 bg-white p-2 text-xs text-bluecoral;
+  @apply h-9 rounded border border-n-20 bg-white p-2 text-xs text-n-40;
   border-radius: 4px;
 }
+
 .active__tab {
   @apply border-turquoise bg-n-10 text-n-40;
 }
+
 .panel-btn {
   @apply h-10 space-x-1 rounded border border-n-30 bg-eggshell py-3 px-2;
   width: 43px;
@@ -177,6 +190,7 @@ button {
   &:hover {
     @apply bg-bluecoral text-white;
   }
+
   .dropdown__arrow {
     font-size: 6px;
     transition: 0.2s;

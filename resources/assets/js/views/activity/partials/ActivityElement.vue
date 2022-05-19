@@ -3,7 +3,10 @@
     <div class="rounded-lg bg-white p-4">
       <div class="mb-4 flex">
         <div class="title flex grow">
-          <svg-vue :icon="icon" class="mr-1.5 text-xl text-bluecoral"></svg-vue>
+          <svg-vue
+            class="mr-1.5 text-xl text-bluecoral"
+            icon="align-center"
+          ></svg-vue>
           <div class="title text-sm font-bold">{{ title }}</div>
           <div
             v-if="status"
@@ -15,23 +18,36 @@
         </div>
         <div class="icons flex">
           <a
-            class="mr-2.5 flex items-center text-xs font-bold uppercase"
+            class="edit-button mr-2.5 flex items-center text-xs font-bold uppercase"
             href="/1/title-form"
           >
             <svg-vue class="mr-0.5 text-base" icon="edit"></svg-vue>
             <span>Edit</span>
           </a>
           <svg-vue class="mr-1.5" icon="core"></svg-vue>
-          <HoverText v-if="tooltip" :hover_text="tooltip" name=""></HoverText>
+          <HoverText
+            v-if="tooltip"
+            :hover_text="tooltip"
+            class="text-n-40"
+          ></HoverText>
         </div>
       </div>
       <div class="divider mb-4 h-px w-full bg-n-20"></div>
-      <div class="content">
-        <div v-if="language" class="language mb-1.5 text-sm italic text-n-30">
-          (Language: {{ language }})
+      <template>
+        <div v-for="(post, index) in content" class="content">
+          <!--          <template v-switch="element_name">-->
+          <!--            <template v-case="title">-->
+          <!--              <div v-if="post.language" class="language mb-1.5 text-sm italic text-n-30">-->
+          <!--                (Language: {{ post.language }})-->
+          <!--              </div>-->
+          <!--            </template>-->
+          <!--          </template>-->
+          <div v-if="post.activity_identifier" class="text-sm">
+            {{ post.activity_identifier }}
+          </div>
+          <div v-if="post.narrative" class="text-sm">{{ post.narrative }}</div>
         </div>
-        <div class="text-sm">{{ content }}</div>
-      </div>
+      </template>
     </div>
   </div>
 </template>
@@ -48,7 +64,7 @@ export default defineComponent({
       type: String,
       required: true,
     },
-    icon: {
+    element_name: {
       type: String,
       required: true,
     },
@@ -61,21 +77,12 @@ export default defineComponent({
       required: false,
     },
     content: {
-      type: String,
+      type: Array,
       required: true,
     },
     width: {
       type: String,
       required: false,
-    },
-    language: {
-      type: String,
-      required: false,
-    },
-    hovered: {
-      type: Boolean,
-      required: false,
-      default: false,
     },
   },
   setup(props) {
@@ -88,3 +95,18 @@ export default defineComponent({
   },
 });
 </script>
+
+<style lang="scss" scoped>
+.activities__content--element {
+  .edit-button {
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.4s ease;
+  }
+
+  &:hover .edit-button {
+    opacity: 1;
+    visibility: visible;
+  }
+}
+</style>
