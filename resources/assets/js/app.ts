@@ -4,6 +4,7 @@
  * building robust, powerful web applications using Vue and Laravel.
  */
 import {createApp} from 'vue';
+import VueSmoothScroll from 'vue3-smooth-scroll';
 import SvgVue from 'svg-vue3';
 import ExampleComponent from './components/ExampleComponent.vue';
 import WebHeader from './views/web/partials/WebHeader.vue';
@@ -82,6 +83,8 @@ app.component('hover-text', HoverText);
  * Extension to inline SVG files with Vue.js and optimize them automatically with SVGO
  */
 app.use(SvgVue);
+
+app.use(VueSmoothScroll)
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to

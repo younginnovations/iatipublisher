@@ -2,14 +2,20 @@
   "identification": {
     "label": "Identification",
     "elements": {
-      "iati_identifier": {
+      "identifier": {
+        "core": true,
+        "completed": true,
         "label": "IATI Identifier"
       },
       "reporting_org": {
+        "core": true,
+        "completed": true,
         "label": "Reporting Organization"
       },
       "other_identifier": {
-        "label": "Oter Identifier"
+        "core": false,
+        "completed": true,
+        "label": "Other Identifier"
       }
     }
   },
@@ -17,21 +23,33 @@
     "label": "Basic Activity Information",
     "elements": {
       "title": {
+        "core": true,
+        "completed": true,
         "label": "Title"
       },
       "description": {
+        "core": true,
+        "completed": false,
         "label": "Description"
       },
       "activity_status": {
+        "core": true,
+        "completed": true,
         "label": "Activity Status"
       },
       "activity_date": {
+        "core": true,
+        "completed": true,
         "label": "Activity Date"
       },
       "contact_info": {
+        "core": true,
+        "completed": true,
         "label": "Contact info"
       },
       "activity_scope": {
+        "core": true,
+        "completed": true,
         "label": "Activity Scope"
       }
     }

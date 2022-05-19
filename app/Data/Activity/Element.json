@@ -1,38 +1,138 @@
 {
   "iati_identifier": {
-
+    "core": true,
+    "completed": true
   },
-  "reporting_org": {},
-  "other_identifier": {},
-  "title": {},
-  "description": {},
-  "activity_status": {},
-  "activity_date": {},
-  "contact_info": {},
-  "activity_scope": {},
-  "participating_org": {},
-  "recipient_country": {},
-  "recipient_region": {},
-  "location": {},
-  "sector": {},
-  "policy_marker": {},
-  "tag": {},
-  "collaboration_type": {},
-  "default_flow_type": {},
-  "default_finance_type": {},
-  "default_aid_type": {},
-  "default_tied_status": {},
-  "country_budget_items": {},
-  "humanitarian_scope": {},
-  "budget": {},
-  "transactions": {},
-  "planned_disbursement": {},
-  "capital_spend": {},
-  "document_links": {},
-  "related_activity": {},
-  "legacy_data": {},
-  "conditions": {},
-  "results": {},
-  "crs-add": {},
-  "fss": {}
+  "reporting_org": {
+    "core": true,
+    "completed": true
+  },
+  "other_identifier": {
+    "core": false,
+    "completed": true
+  },
+  "title": {
+    "core": true,
+    "completed": true
+  },
+  "description": {
+    "core": true,
+    "completed": true
+  },
+  "activity_status": {
+    "core": true,
+    "completed": true
+  },
+  "activity_date": {
+    "core": true,
+    "completed": true
+  },
+  "contact_info": {
+    "core": false,
+    "completed": true
+  },
+  "activity_scope": {
+    "core": false,
+    "completed": true
+  },
+  "participating_org": {
+    "core": true,
+    "completed": true
+  },
+  "recipient_country": {
+    "core": true,
+    "completed": true
+  },
+  "recipient_region": {
+    "core": true,
+    "completed": true
+  },
+  "location": {
+    "core": false,
+    "completed": false
+  },
+  "sector": {
+    "core": true,
+    "completed": true
+  },
+  "policy_marker": {
+    "core": false,
+    "completed": false
+  },
+  "tag": {
+    "core": false,
+    "completed": false
+  },
+  "collaboration_type": {
+    "core": false,
+    "completed": false
+  },
+  "default_flow_type": {
+    "core": false,
+    "completed": false
+  },
+  "default_finance_type": {
+    "core": false,
+    "completed": false
+  },
+  "default_aid_type": {
+    "core": false,
+    "completed": false
+  },
+  "default_tied_status": {
+    "core": false,
+    "completed": false
+  },
+  "country_budget_items": {
+    "core": false,
+    "completed": false
+  },
+  "humanitarian_scope": {
+    "core": false,
+    "completed": false
+  },
+  "budget": {
+    "core": true,
+    "completed": true
+  },
+  "transactions": {
+    "core": true,
+    "completed": true
+  },
+  "planned_disbursement": {
+    "core": false,
+    "completed": false
+  },
+  "capital_spend": {
+    "core": false,
+    "completed": false
+  },
+  "document_links": {
+    "core": false,
+    "completed": false
+  },
+  "related_activity": {
+    "core": false,
+    "completed": false
+  },
+  "legacy_data": {
+    "core": false,
+    "completed": false
+  },
+  "conditions": {
+    "core": false,
+    "completed": false
+  },
+  "results": {
+    "core": false,
+    "completed": false
+  },
+  "crs-add": {
+    "core": false,
+    "completed": false
+  },
+  "fss": {
+    "core": false,
+    "completed": false
+  }
 }

@@ -3,10 +3,10 @@
     <table class="">
       <thead>
         <tr class="bg-n-10">
-          <th scope="col" id="title">
+          <th id="title" scope="col">
             <a
-              href="#"
               class="text-n-50 transition duration-500 hover:text-spring-50"
+              href="#"
             >
               <span class="sorting-indicator descending">
                 <svg-vue icon="descending-arrow"></svg-vue>
@@ -14,10 +14,10 @@
               <span>Activity Title</span>
             </a>
           </th>
-          <th scope="col" id="date">
+          <th id="date" scope="col">
             <a
-              href="#"
               class="text-n-50 transition duration-500 hover:text-spring-50"
+              href="#"
             >
               <span class="sorting-indicator ascending">
                 <svg-vue icon="ascending-arrow"></svg-vue>
@@ -25,13 +25,13 @@
               <span>Updated On</span>
             </a>
           </th>
-          <th scope="col" id="status">
+          <th id="status" scope="col">
             <span class="hidden">Status</span>
           </th>
-          <th scope="col" id="publish">
+          <th id="publish" scope="col">
             <span class="hidden">Status</span>
           </th>
-          <th scope="col" id="cb">
+          <th id="cb" scope="col">
             <span class="">
               <svg-vue icon="checkbox"></svg-vue>
             </span>
@@ -39,8 +39,6 @@
         </tr>
       </thead>
       <tbody>
-        <!--      Loop starts here-->
-
         <tr
           v-for="datum in props.data.data"
           :key="datum['id']"
@@ -52,8 +50,8 @@
               class="hover:text-sp50 inline-flex items-start text-n-50 transition duration-500"
             >
               <svg-vue
-                icon="approved-cloud"
                 class="mr-3 mt-1 shrink-0 text-base text-spring-50"
+                icon="approved-cloud"
               ></svg-vue>
               <span>{{ datum['title'][0]['narrative'] }}</span>
             </a>
@@ -74,10 +72,10 @@
 
           <td>
             <button
-              class="button primary-outline-btn w-20"
               v-if="
                 datum['status'] != 'draft' && datum['status'] != 'published'
               "
+              class="button primary-outline-btn w-20"
             >
               {{
                 datum['status'] == 'ready_to_publish' ? 'Publish' : 'RePublish'
@@ -85,23 +83,21 @@
             </button>
           </td>
 
-          <th class="check-column">
+          <th class="check-column" @click="(e) => e.stopPropagation()">
             <label class="sr-only" for="">
               Select "{{ datum['title'][0]['narrative'] }}"
             </label>
             <label class="checkbox">
               <input
-                type="checkbox"
-                :value="datum.id"
                 v-model="state.selected"
+                :value="datum.id"
+                type="checkbox"
                 @change="emitShowOrHide"
               />
               <span class="checkmark"></span>
             </label>
           </th>
         </tr>
-
-        <!--  Loop ends here  -->
       </tbody>
     </table>
   </div>
