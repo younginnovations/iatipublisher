@@ -52,5 +52,11 @@ mix
   })
   .svgVue({
     svgPath: 'resources/assets/images/svg',
+    svgoSettings: [
+      { removeTitle: true },
+      { removeViewBox: false },
+      { removeDimensions: true },
+      { prefixIds: true },
+    ],
   })
   .version();
