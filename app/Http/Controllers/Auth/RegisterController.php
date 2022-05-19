@@ -105,9 +105,13 @@ class RegisterController extends Controller
                 return response()->json(['success' => false, 'errors' => $validator->errors()]);
             }
 
-            $client = new Client(['base_uri' => env('IATI_URL')]);
+            $client = new Client(['base_uri' => env('IATI_URL'), 'headers'  => [
+                'X-CKAN-API-Key' => env('IATI_API_KEY'),
+            ]]);
+
             $res = $client->request('GET', env('IATI_API_ENDPOINT') . '/action/organization_show', [
                 'http_errors' => false,
+                'auth' => [env('IATI_USERNAME'), env('IATI_PASSWORD')],
                 'query'       => ['id' => $postData['publisher_id']],
             ]);
 
