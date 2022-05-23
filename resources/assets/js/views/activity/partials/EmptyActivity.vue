@@ -1,7 +1,10 @@
 <template>
-  <div class="min-h-[647px] bg-white">
+  <div class="min-h-[647px] overflow-hidden bg-white">
     <ErrorMessage></ErrorMessage>
-    <div id="empty-state" class="relative mb-14 flex flex-col items-center">
+    <div
+      id="empty-state"
+      class="relative mb-14 flex flex-col items-center duration-300"
+    >
       <div class="mb-6">
         <svg-vue icon="folder" class="text-[150px]"></svg-vue>
       </div>
