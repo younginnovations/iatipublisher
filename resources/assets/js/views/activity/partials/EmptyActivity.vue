@@ -18,7 +18,6 @@
     </div>
   </div>
 </template>
-
 <script lang="ts">
 import { defineComponent, reactive } from 'vue';
 import ActivityButton from './AddActivityButton.vue';
@@ -30,12 +29,7 @@ export default defineComponent({
     ActivityButton,
     ErrorMessage,
   },
-  props: {
-    language: {
-      type: [String, Object],
-      required: true,
-    },
-  },
+  props: {},
   setup(props) {
     const state = reactive({
       dismiss: true,

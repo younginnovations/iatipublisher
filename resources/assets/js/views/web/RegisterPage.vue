@@ -18,13 +18,13 @@
           <div class="form__container">
             <div class="flex items-center space-x-1">
               <HoverText
-                v-if="registerForm[step].hover_text"
-                :hover_text="registerForm[step].hover_text"
-                :name="registerForm[step].title"
-                :position="right"
+                v-if="registerForm[getCurrentStep()].hover_text"
+                :hover_text="registerForm[getCurrentStep()].hover_text"
+                :name="registerForm[getCurrentStep()].title"
+                position="right"
               ></HoverText>
               <span class="text-2xl font-bold text-n-50">{{
-                registerForm[step].title
+                registerForm[getCurrentStep()].title
               }}</span>
             </div>
             <div
@@ -57,7 +57,7 @@
             </div>
             <div class="form__content">
               <div
-                v-for="field in registerForm[step].fields"
+                v-for="field in registerForm[getCurrentStep()].fields"
                 :key="field.name"
                 :class="field.class"
               >
@@ -139,7 +139,7 @@
           </div>
           <div class="flex items-center justify-between">
             <button
-              v-if="step != 1"
+              v-if="getCurrentStep() != 1"
               class="btn-back"
               @click="goToPreviousForm()"
             >
@@ -156,14 +156,14 @@
             >
             <button
               class="btn btn-next w-40"
-              v-if="step != 3"
+              v-if="get != 3"
               @click="goToNextForm()"
             >
               Next Step
               <svg-vue class="text-2xl" icon="right-arrow"></svg-vue>
             </button>
           </div>
-          <div v-if="step == 2" class="mt-6 text-center">
+          <div v-if="getCurrentStep() == 2" class="mt-6 text-center">
             <span class="text-sm font-normal text-n-40"
               >Already have an account?
               <a
@@ -176,18 +176,23 @@
         </div>
 
         <aside class="register__sidebar">
-          <span class="text-base font-bold">Step {{ step }} out of 3</span>
+          <span class="text-base font-bold"
+            >Step {{ getCurrentStep() }} out of 3</span
+          >
           <ul class="relative mt-6 text-sm text-n-40">
             <li
               v-for="(ele, i) in registerForm"
               :key="ele.title"
               :class="[
-                step == parseInt(i)
+                getCurrentStep() == parseInt(i)
                   ? 'relative font-bold text-n-50'
                   : 'mb-6 flex items-center',
               ]"
             >
-              <span v-if="step == parseInt(i)" class="list__active"></span>
+              <span
+                v-if="getCurrentStep() == parseInt(i)"
+                class="list__active"
+              ></span>
               <span v-if="!ele.is_complete" class="mr-3 ml-6">
                 {{ i }}
               </span>
@@ -196,7 +201,7 @@
               </span>
               <span
                 :class="[
-                  step == parseInt(i)
+                  getCurrentStep() == parseInt(i)
                     ? 'font-bold text-n-50'
                     : ele.is_complete
                     ? 'font-bold text-bluecoral'
@@ -206,7 +211,7 @@
                 {{ ele.title }}
               </span>
               <p
-                v-if="step == parseInt(i)"
+                v-if="getCurrentStep() == parseInt(i)"
                 class="detail mt-2 mb-6 font-normal xl:pr-2"
               >
                 {{ ele.description }}
@@ -539,6 +544,10 @@ export default defineComponent({
         });
     }
 
+    function getCurrentStep() {
+      return step.value;
+    }
+
     function goToNextForm() {
       if (step.value === 1) verifyPublisher();
       if (step.value === 2) submitForm();
@@ -549,15 +558,15 @@ export default defineComponent({
     }
 
     return {
-      step,
       registerForm,
       formData,
       errorData,
       publisherExists,
+      props,
       isLoaderVisible,
+      getCurrentStep,
       goToNextForm,
       goToPreviousForm,
-      props,
     };
   },
 });
