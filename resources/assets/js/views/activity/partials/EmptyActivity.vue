@@ -16,7 +16,6 @@
     <ActivityButton />
   </div>
 </template>
-
 <script lang="ts">
 import { defineComponent, reactive } from 'vue';
 import ActivityButton from './AddActivityButton.vue';

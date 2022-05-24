@@ -101,4 +101,14 @@ class User extends Authenticatable implements MustVerifyEmail
                 ->action('Verify Email Address', $url);
         });
     }
+
+    /**
+     * Sends verification email to new user.
+     *
+     * @param $user
+     */
+    public static function resendEmail($user): void
+    {
+        $user->sendEmailVerificationNotification();
+    }
 }
