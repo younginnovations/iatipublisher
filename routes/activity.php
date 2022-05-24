@@ -16,5 +16,6 @@ Route::name('admin.')->group(function () {
     Route::resource('/activities', \App\Http\Controllers\Admin\Activity\ActivityController::class);
     Route::get('/activity/page/{page?}', [App\Http\Controllers\Admin\Activity\ActivityController::class, 'getActivities'])->name('paginate');
     Route::get('/activity/codelists', [App\Http\Controllers\Admin\Activity\ActivityController::class, 'getLanguagesOrganization'])->name('codelist');
-    Route::resource('activities.title', \App\Http\Controllers\Activity\TitleController::class);
+    Route::get('activities/{id}/title', [\App\Http\Controllers\Admin\Activity\TitleController::class, 'edit'])->name('activities.title.edit');
+    Route::put('activities/{id}/title', [\App\Http\Controllers\Admin\Activity\TitleController::class, 'update'])->name('activities.title.update');
 });

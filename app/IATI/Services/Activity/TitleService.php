@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\IATI\Services\Activity;
 
-use App\IATI\IatiActivity;
 use App\IATI\Repositories\Activity\TitleRepository;
 use Illuminate\Database\Eloquent\Model;
 
@@ -16,21 +15,23 @@ class TitleService
     /**
      * @var TitleRepository
      */
-    protected $titleRepository;
+    protected TitleRepository $titleRepository;
 
     /**
      * TitleService constructor.
      *
-     * @param IatiActivity $iatiActivity
+     * @param TitleRepository $titleRepository
      */
-    public function __construct(IatiActivity $iatiActivity)
+    public function __construct(TitleRepository $titleRepository)
     {
-        $this->titleRepository = $iatiActivity->getTitle()->getRepository();
+        $this->titleRepository = $titleRepository;
     }
 
     /**
      * Returns title data of an activity.
+     *
      * @param int $activity_id
+     *
      * @return array
      */
     public function getTitleData(int $activity_id): array
@@ -40,7 +41,9 @@ class TitleService
 
     /**
      * Returns activity object.
+     *
      * @param $id
+     *
      * @return Model
      */
     public function getActivityData($id): Model
@@ -50,8 +53,10 @@ class TitleService
 
     /**
      * Updates activity title.
+     *
      * @param $activityTitle
-     * @param $activityData
+     * @param $activity
+     *
      * @return bool
      */
     public function update($activityTitle, $activity): bool
