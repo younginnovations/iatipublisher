@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\IATI\Services\Activity\FormCreator\Title;
 use App\IATI\Services\Activity\TitleService;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 
 /**
  * Class TitleController.
@@ -24,6 +25,7 @@ class TitleController extends Controller
 
     /**
      * TitleController Constructor.
+     *
      * @param Title $title
      */
     public function __construct(Title $title, TitleService $titleService)
@@ -34,13 +36,16 @@ class TitleController extends Controller
 
     /**
      * Display a listing of the resource.
+     *
      * @param $id
-     * @return \Illuminate\Http\Response
+     *
+     * @return View
      */
-    public function index($id)
+    public function index($id): View
     {
+        $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
         $activityTitle = $this->titleService->getTitleData($id);
-        $form = $this->title->editForm($activityTitle, $id);
+        $form = $this->title->editForm($activityTitle, $id, $element['title']);
 
         return view('activity.title.title', compact('form'));
     }
@@ -58,7 +63,8 @@ class TitleController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
+     *
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -69,7 +75,8 @@ class TitleController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\IATI\Models\Activity\Activity  $activity
+     * @param \App\IATI\Models\Activity\Activity $activity
+     *
      * @return \Illuminate\Http\Response
      */
     public function show(Activity $activity)
@@ -80,7 +87,8 @@ class TitleController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\IATI\Models\Activity\Activity  $activity
+     * @param \App\IATI\Models\Activity\Activity $activity
+     *
      * @return \Illuminate\Http\Response
      */
     public function edit(Activity $activity)
@@ -91,8 +99,9 @@ class TitleController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\IATI\Models\Activity\Activity  $activity
+     * @param \Illuminate\Http\Request           $request
+     * @param \App\IATI\Models\Activity\Activity $activity
+     *
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
@@ -116,7 +125,8 @@ class TitleController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\IATI\Models\Activity\Activity  $activity
+     * @param \App\IATI\Models\Activity\Activity $activity
+     *
      * @return \Illuminate\Http\Response
      */
     public function destroy(Activity $activity)
