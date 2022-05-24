@@ -18,4 +18,5 @@ Route::name('admin.')->group(function () {
     Route::post('setting/store/publisher', [App\Http\Controllers\Admin\Setting\SettingController::class, 'storePublishingInfo'])->name('setting.publisher.save');
     Route::post('setting/store/default', [App\Http\Controllers\Admin\Setting\SettingController::class, 'storeDefaultForm'])->name('setting.default.save');
     Route::post('setting/verify', [App\Http\Controllers\Admin\Setting\SettingController::class, 'verify'])->name('setting.verify');
+    Route::get('/setting/status', [App\Http\Controllers\Admin\Setting\SettingController::class, 'getSettingStatus'])->name('setting.status');
 });
