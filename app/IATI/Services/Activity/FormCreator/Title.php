@@ -14,17 +14,17 @@ class Title
     /**
      * @var FormBuilder
      */
-    protected $formBuilder;
+    protected FormBuilder $formBuilder;
 
     /**
      * @var IatiActivity
      */
-    protected $iatiActivity;
+    protected IatiActivity $iatiActivity;
 
     /**
      * @var string
      */
-    protected $formPath;
+    protected string $formPath;
 
     /**
      * @param FormBuilder $formBuilder
@@ -38,29 +38,33 @@ class Title
 
     /**
      * Returns activity title edit form.
+     *
      * @param array $data
-     * @param $activityId
-     * @return $this
+     * @param       $activityId
+     * @param       $formData
+     *
+     * @return \Kris\LaravelFormBuilder\Form
      */
-    public function editForm($data, $activityId)
+    public function editForm(array $data, $activityId, $formData): \Kris\LaravelFormBuilder\Form
     {
         $model['narrative'] = $data;
 
         return $this->formBuilder->create(
-            $this->formPath,
+            'App\IATI\Forms\BaseForm',
             [
-            'method'    => 'PUT',
-            'model'     => $model,
-            'url'       => route('admin.activities.title.update', [$activityId, 0]),
+                'method' => 'PUT',
+                'model'  => $model,
+                'url'    => route('admin.activities.title.update', [$activityId, 0]),
+                'data'   => $formData,
             ]
         )->add('Save', 'submit', ['attr' => ['class' => ''], 'label' => 'Save'])
-         ->add('Cancel', 'static', [
-             'label' => false,
-             'value' => 'Cancel',
-             'attr'    => [
-                 'class' => '',
-                 'href'  => '',
-             ],
-         ]);
+                                 ->add('Cancel', 'static', [
+                                     'label' => false,
+                                     'value' => 'Cancel',
+                                     'attr'  => [
+                                         'class' => '',
+                                         'href'  => '',
+                                     ],
+                                 ]);
     }
 }

@@ -1,20 +1,70 @@
 {
   "title": {
+    "sub_elements": {
+      "narrative": {
+        "name": "narrative",
+        "type": "textarea",
+        "required": true,
+        "criteria": "mandatory",
+        "label": "Text",
+        "attr": {
+          "row": 4
+        },
+        "attributes": {
+          "lang": {
+            "name": "language",
+            "type": "select",
+            "multiSelect": false,
+            "required": true,
+            "criteria": "mandatory",
+            "label": "@xml:lang",
+            "choices": {
+              "aa": "Afar",
+              "ab": "Abkhazian",
+              "en": "English",
+              "fr": "French",
+              "sp": "Spanish"
+            }
+          }
+        }
+      }
+    },
+    "criteria": "mandatory",
+    "label": "Title",
+    "multiple": false
+  },
+  "reporting-org": {
     "sub-elements": {
       "narrative": {
         "type": "text",
         "required": true,
         "criteria": "mandatory",
-        "label": "Text",
+        "label": "Narrative",
         "attributes": {
           "lang": {
             "type": "select",
             "required": true,
             "criteria": "mandatory",
-            "label": "Language"
+            "label": "Language",
+            "value": [
+              "en",
+              "fr",
+              "sp"
+            ]
           }
         }
       }
+    },
+    "attributes": {
+      "ref": {
+        "type": "text",
+        "label": "ORGANISATION NAME ABBREVIATION",
+        "value": null,
+        "require": true,
+        "criteria": null
+      },
+      "type": {},
+      "secondary-reporter": {}
     },
     "criteria": "mandatory",
     "label": "Title"

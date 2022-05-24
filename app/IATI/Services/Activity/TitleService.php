@@ -16,7 +16,7 @@ class TitleService
     /**
      * @var TitleRepository
      */
-    protected $titleRepository;
+    protected TitleRepository $titleRepository;
 
     /**
      * TitleService constructor.
@@ -30,7 +30,9 @@ class TitleService
 
     /**
      * Returns title data of an activity.
+     *
      * @param int $activity_id
+     *
      * @return array
      */
     public function getTitleData(int $activity_id): array
@@ -40,7 +42,9 @@ class TitleService
 
     /**
      * Returns activity object.
+     *
      * @param $id
+     *
      * @return Model
      */
     public function getActivityData($id): Model
@@ -50,8 +54,10 @@ class TitleService
 
     /**
      * Updates activity title.
+     *
      * @param $activityTitle
-     * @param $activityData
+     * @param $activity
+     *
      * @return bool
      */
     public function update($activityTitle, $activity): bool
