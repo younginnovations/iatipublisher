@@ -54,10 +54,8 @@
             </div>
             <div class="form__content">
               <div
-                v-for="(field, index, key) in registerForm[getCurrentStep()][
-                  'fields'
-                ]"
-                :key="key"
+                v-for="field in registerForm[getCurrentStep()].fields"
+                :key="field.name"
                 :class="field.class"
               >
                 <div class="flex items-center justify-between mb-2">
@@ -635,6 +633,7 @@ export default defineComponent({
       formData,
       errorData,
       publisherExists,
+      props,
       isLoaderVisible,
       goToNextForm,
       goToPreviousForm,

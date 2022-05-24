@@ -21,15 +21,32 @@
               icon="warning-activity"
               class="mr-2 grow-0 text-base text-salmon-50"
             ></svg-vue>
-            <span class="text-sm font-bold text-n-50">2 Alerts</span>
+            <span class="text-sm font-bold text-n-50">
+              {{
+                errorData.account_verified ||
+                (errorData.default_setting && errorData.publisher_setting)
+                  ? '1 Alerts'
+                  : '2 Alerts'
+              }}
+            </span>
           </div>
-          <div :class="show ? 'text-show' : 'text-hide'">
+          <div
+            :class="show ? 'text-show' : 'text-hide'"
+            v-if="!errorData.account_verified"
+          >
             <svg-vue icon="red-dot" class="text-[6px]"></svg-vue>
             <span class="text-sm font-bold text-n-50"
               >Account not verified</span
             >
           </div>
-          <div :class="show ? 'text-show' : 'text-hide'">
+          <div
+            :class="
+              show &&
+              (!errorData.publisher_setting || !errorData.default_setting)
+                ? 'text-show'
+                : 'text-hide'
+            "
+          >
             <svg-vue icon="red-dot" class="text-[6px]"></svg-vue>
             <span class="text-sm font-bold text-bluecoral"
               >Complete your setup</span
@@ -51,7 +68,7 @@
       :class="show ? 'border-show duration-300' : 'border-hide duration-300'"
     ></div>
 
-    <div class="ml-4 mr-6">
+    <div class="ml-4 mr-6" v-if="!errorData.account_verified">
       <TransitionRoot
         :show="show"
         as="template"
@@ -72,8 +89,9 @@
             <div class="ml-5 text-left">
               <p>
                 Please check for verification email sent to you and verify your
-                account, click <span><a href="#">here</a></span> if you haven’t
-                received your verification email. Contact
+                account, click
+                <span><a @click="resendVerificationEmail()">here</a></span> if
+                you haven’t received your verification email. Contact
                 <span
                   ><a href="mailto:support@iatistandard.org"
                     >support@iatistandard.org</a
@@ -87,7 +105,10 @@
       </TransitionRoot>
     </div>
 
-    <div class="ml-4 mr-6">
+    <div
+      class="ml-4 mr-6"
+      v-if="!errorData.publisher_setting || !errorData.default_setting"
+    >
       <TransitionRoot
         :show="show"
         as="template"
@@ -107,14 +128,18 @@
             <div class="ml-5">
               <p>
                 Please
-                <span><a href="/setting">complete your setup</a></span>
+                <span
+                  ><a href="/setting" target="_blank"
+                    >complete your setup</a
+                  ></span
+                >
                 in order to enable complete features of IATI publisher tool.
               </p>
-              <div class="alert__message">
+              <div class="alert__message" v-if="!errorData.publisher_setting">
                 <svg-vue icon="red-cross" class="text-[7px]"></svg-vue>
                 <p>Update registry information - API Key & Publisher ID</p>
               </div>
-              <div class="alert__message">
+              <div class="alert__message" v-if="!errorData.default_setting">
                 <svg-vue icon="red-cross" class="text-[7px]"></svg-vue>
                 <p>Update default values</p>
               </div>
@@ -127,8 +152,9 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue';
+import { defineComponent, ref, reactive, onMounted } from 'vue';
 import { TransitionRoot } from '@headlessui/vue';
+import axios from 'axios';
 
 export default defineComponent({
   components: {
@@ -138,7 +164,47 @@ export default defineComponent({
   setup(props) {
     const show = ref(false);
 
-    return { show };
+    const errorData = reactive({
+      account_verified: false,
+      default_setting: false,
+      publisher_setting: false,
+    });
+
+    function resendVerificationEmail() {
+      axios
+        .post('/user/verification/email')
+        .then((res) => {
+          console.log(res);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
+
+    onMounted(async () => {
+      axios
+        .get('/setting/status')
+        .then((res) => {
+          const response = res.data;
+          errorData.default_setting = response.data.default_status;
+          errorData.publisher_setting = response.data.publisher_status;
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+
+      axios
+        .get('/user/verification/status')
+        .then((res) => {
+          const response = res.data;
+          errorData.account_verified = response.data.account_verified;
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    });
+
+    return { show, errorData, resendVerificationEmail };
   },
 });
 </script>
