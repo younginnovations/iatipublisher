@@ -3,10 +3,25 @@
     <div class="rounded-lg bg-white p-4">
       <div class="mb-4 flex">
         <div class="title flex grow">
-          <svg-vue
-            class="mr-1.5 text-xl text-bluecoral"
-            icon="align-center"
-          ></svg-vue>
+          <template
+            v-if="
+              title === 'reporting_org' ||
+              title === 'default_tied_status' ||
+              title === 'crs_add' ||
+              title === 'fss'
+            "
+          >
+            <svg-vue
+              class="mr-1.5 text-xl text-bluecoral"
+              icon="activity-elements/building"
+            ></svg-vue>
+          </template>
+          <template v-else>
+            <svg-vue
+              :icon="'activity-elements/' + title"
+              class="mr-1.5 text-xl text-bluecoral"
+            ></svg-vue>
+          </template>
           <div class="title text-sm font-bold">{{ title }}</div>
           <div
             v-if="status"
@@ -33,19 +48,17 @@
         </div>
       </div>
       <div class="divider mb-4 h-px w-full bg-n-20"></div>
-      <template>
-        <div v-for="(post, index) in content" class="content">
-          <!--          <template v-switch="element_name">-->
-          <!--            <template v-case="title">-->
-          <!--              <div v-if="post.language" class="language mb-1.5 text-sm italic text-n-30">-->
-          <!--                (Language: {{ post.language }})-->
-          <!--              </div>-->
-          <!--            </template>-->
-          <!--          </template>-->
-          <div v-if="post.activity_identifier" class="text-sm">
-            {{ post.activity_identifier }}
+      <template v-if="element_name === 'title'">
+        <div v-for="(post, index) in content" class="title-content">
+          <div
+            v-if="post.language"
+            class="language mb-1.5 text-sm italic text-n-30"
+          >
+            (Language: {{ post.language }})
           </div>
-          <div v-if="post.narrative" class="text-sm">{{ post.narrative }}</div>
+          <div v-if="post.narrative" class="text-sm">
+            {{ post.narrative }}
+          </div>
         </div>
       </template>
     </div>
@@ -97,7 +110,7 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
-.activities__content--element {
+.activities__content--element > div {
   .edit-button {
     opacity: 0;
     visibility: hidden;

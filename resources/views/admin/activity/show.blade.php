@@ -4,6 +4,7 @@
         :elements="{{ json_encode($elements) }}"
         :element_group="{{ json_encode($elementGroups) }}"
         :activity="{{ json_encode($activity) }}"
-        :progress="{{ $progress }}">
+        :progress="{{ $progress }}"
+        :lang="{{json_encode('lang file')}}">
     </activities-detail>
 @endsection

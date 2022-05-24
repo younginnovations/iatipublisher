@@ -177,10 +177,14 @@ button {
 .tab-btn {
   @apply h-9 rounded border border-n-20 bg-white p-2 text-xs text-n-40;
   border-radius: 4px;
+
+  &:hover {
+    @apply border-turquoise bg-n-10 text-bluecoral;
+  }
 }
 
 .active__tab {
-  @apply border-turquoise bg-n-10 text-n-40;
+  @apply border-turquoise bg-n-10 text-bluecoral;
 }
 
 .panel-btn {

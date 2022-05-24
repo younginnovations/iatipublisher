@@ -26,20 +26,167 @@
         </div>
         <div class="actions flex grow justify-end">
           <div class="inline-flex justify-center">
-            <button class="button secondary-btn mr-3.5 font-bold">
+            <!-- Download File -->
+            <button
+              class="button secondary-btn mr-3.5 font-bold"
+              @click="downloadValue = true"
+            >
               <svg-vue icon="download-file"></svg-vue>
             </button>
-            <button class="button secondary-btn mr-3.5 font-bold">
+            <Modal
+              :modalActive="downloadValue"
+              width="583"
+              @close="downloadToggle"
+            >
+              <div class="mb-4">
+                <div class="title mb-6 flex">
+                  <svg-vue
+                    class="mr-1 mt-0.5 text-lg text-spring-50"
+                    icon="download-file"
+                  ></svg-vue>
+                  <b>Download file.</b>
+                </div>
+                <div class="rounded-lg bg-mint p-4">
+                  Click the download button to save the file.
+                </div>
+              </div>
+              <div class="flex justify-end">
+                <div class="inline-flex">
+                  <BtnComponent
+                    class="bg-white px-6 uppercase"
+                    text="Go Back"
+                    @click="downloadValue = false"
+                  />
+                  <BtnComponent
+                    class="space"
+                    text="Download"
+                    type="primary"
+                    @click="downloadValue = false"
+                  />
+                </div>
+              </div>
+            </Modal>
+
+            <!-- Delete Activity -->
+            <button
+              class="button secondary-btn mr-3.5 font-bold"
+              @click="deleteValue = true"
+            >
               <svg-vue icon="delete"></svg-vue>
             </button>
-            <button class="button secondary-btn mr-3.5 font-bold">
+            <Modal :modalActive="deleteValue" width="583" @close="deleteToggle">
+              <div class="mb-4">
+                <div class="title mb-6 flex">
+                  <svg-vue
+                    class="mr-1 mt-0.5 text-lg text-crimson-40"
+                    icon="delete"
+                  ></svg-vue>
+                  <b>Delete activity</b>
+                </div>
+                <div class="rounded-lg bg-rose p-4">
+                  Are you sure you want to delete this activity?
+                </div>
+              </div>
+              <div class="flex justify-end">
+                <div class="inline-flex">
+                  <BtnComponent
+                    class="bg-white px-6 uppercase"
+                    text="Go Back"
+                    @click="deleteValue = false"
+                  />
+                  <BtnComponent
+                    class="space"
+                    text="Delete"
+                    type="primary"
+                    @click="deleteValue = false"
+                  />
+                </div>
+              </div>
+            </Modal>
+
+            <!-- Unpublish Activity -->
+            <button
+              class="button secondary-btn mr-3.5 font-bold"
+              @click="unpublishValue = true"
+            >
               <svg-vue icon="cancel-cloud"></svg-vue>
               <span>Unpublish</span>
             </button>
-            <button class="button primary-btn relative font-bold">
+            <Modal
+              :modalActive="unpublishValue"
+              width="583"
+              @close="unpublishToggle"
+            >
+              <div class="mb-4">
+                <div class="title mb-6 flex">
+                  <svg-vue
+                    class="mr-1 mt-0.5 text-lg text-crimson-40"
+                    icon="cancel-cloud"
+                  ></svg-vue>
+                  <b>Unpublish activity</b>
+                </div>
+                <div class="rounded-lg bg-rose p-4">
+                  Are you sure you want to unpublish this activity?
+                </div>
+              </div>
+              <div class="flex justify-end">
+                <div class="inline-flex">
+                  <BtnComponent
+                    class="bg-white px-6 uppercase"
+                    text="Go Back"
+                    @click="unpublishValue = false"
+                  />
+                  <BtnComponent
+                    class="space"
+                    text="Unpublish"
+                    type="primary"
+                    @click="unpublishValue = false"
+                  />
+                </div>
+              </div>
+            </Modal>
+
+            <!-- Publish Activity -->
+            <button
+              class="button primary-btn relative font-bold"
+              @click="publishValue = true"
+            >
               <svg-vue icon="approved-cloud"></svg-vue>
               <span>Publish</span>
             </button>
+            <Modal
+              :modalActive="publishValue"
+              width="583"
+              @close="publishToggle"
+            >
+              <div class="mb-4">
+                <div class="title mb-6 flex">
+                  <svg-vue
+                    class="mr-1 mt-0.5 text-lg text-spring-50"
+                    icon="approved-cloud"
+                  ></svg-vue>
+                  <b>Publish activity?</b>
+                </div>
+                <div class="rounded-lg bg-mint p-4">
+                  Are you ready to publish this activity?
+                </div>
+              </div>
+              <div class="flex justify-end">
+                <div class="inline-flex">
+                  <BtnComponent
+                    class="bg-white px-6 uppercase"
+                    text="Go Back"
+                    @click="publishValue = false"
+                  />
+                  <BtnComponent
+                    class="space"
+                    text="Publish"
+                    type="primary"
+                    @click="publishValue = false"
+                  />
+                </div>
+              </div>
+            </Modal>
           </div>
         </div>
       </div>
@@ -54,6 +201,7 @@
               <HoverText
                 hover_text="You cannot publish an activity until all the mandatory fields have been filled."
                 name=""
+                position="right"
               ></HoverText>
             </div>
             <ProgressBar :percent="progress" class="mb-3"></ProgressBar>
@@ -92,14 +240,14 @@
         <Elements :data="elements" />
       </aside>
       <div class="activities__content">
-        <div class="inline-flex flex-wrap">
+        <div class="inline-flex flex-wrap gap-2">
           <a
             v-for="(post, index) in groupedData"
             v-smooth-scroll
             :href="`#${index}`"
             class="tab-btn-anchor"
           >
-            <button :disabled="post.status == 'disabled'" class="tab-btn mr-2">
+            <button :disabled="post.status == 'disabled'" class="tab-btn">
               <span>{{ post.label }}</span>
               <span class="hover__text">
                 <HoverText
@@ -115,13 +263,13 @@
 
         <div v-for="(post, index) in activities" :id="index">
           <div class="activities__content--elements -mx-3 flex flex-wrap">
-            <template v-for="(element, a) in post.elements">
+            <template v-for="(element, name) in post.elements">
               <ActivityElement
                 v-if="element.content.length > 0"
                 :content="element.content"
-                :element_name="a"
-                :title="a"
-                :width="a === 'title' ? 'full' : ''"
+                :element_name="name"
+                :title="name"
+                :width="name === 'title' ? 'full' : ''"
                 status="completed"
                 tooltip="Example text"
               />
@@ -135,10 +283,13 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
+import { useToggle } from '@vueuse/core';
 import HoverText from '../../components/HoverText.vue';
 import ProgressBar from '../../components/ProgressBar.vue';
 import Elements from './partials/ActivitiesElements.vue';
 import ActivityElement from './partials/ActivityElement.vue';
+import Modal from '../../components/PopupModal.vue';
+import BtnComponent from '../../components/ButtonComponent.vue';
 
 export default defineComponent({
   components: {
@@ -146,6 +297,8 @@ export default defineComponent({
     ProgressBar,
     Elements,
     ActivityElement,
+    Modal,
+    BtnComponent,
   },
   props: {
     elements: {
@@ -166,6 +319,14 @@ export default defineComponent({
     },
   },
   setup(props) {
+    /**
+     * For modal popup
+     */
+    const [publishValue, publishToggle] = useToggle();
+    const [unpublishValue, unpublishToggle] = useToggle();
+    const [deleteValue, deleteToggle] = useToggle();
+    const [downloadValue, downloadToggle] = useToggle();
+
     /**
      * Finding current language - activity title
      */
@@ -223,6 +384,14 @@ export default defineComponent({
       groupedData,
       activities,
       pageTitle,
+      publishValue,
+      publishToggle,
+      unpublishValue,
+      unpublishToggle,
+      deleteValue,
+      deleteToggle,
+      downloadValue,
+      downloadToggle,
     };
   },
 });

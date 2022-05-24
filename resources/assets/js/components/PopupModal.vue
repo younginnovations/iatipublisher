@@ -13,7 +13,8 @@
             ></div>
             <div
               v-if="modalActive"
-              class="modal-inner relative max-h-full w-full max-w-[809px] overflow-x-hidden rounded-lg bg-white p-8"
+              :style="`max-width:${width}px;`"
+              class="modal-inner relative max-h-full w-full overflow-x-hidden rounded-lg bg-white p-8"
             >
               <slot />
             </div>
@@ -29,7 +30,17 @@ import { defineComponent } from 'vue';
 
 export default defineComponent({
   name: 'popup-modal',
-  props: ['modalActive'],
+  props: {
+    modalActive: {
+      type: Boolean,
+      required: true,
+    },
+    width: {
+      type: Number,
+      required: false,
+      default: 809,
+    },
+  },
   emits: ['close'],
   setup(props, { emit }) {
     const close = () => {
@@ -45,20 +56,25 @@ export default defineComponent({
 .modal-animation-leave-active {
   transition: opacity 0.5s cubic-bezier(0.52, 0.02, 0.19, 1.02);
 }
+
 .modal-animation-enter-from,
 .modal-animation-leave-to {
   opacity: 0;
 }
+
 .modal-animation-inner-enter-active {
   transition: all 0.5s cubic-bezier(0.52, 0.02, 0.19, 1.02) 0.15s;
 }
+
 .modal-animation-inner-leave-active {
-  transition: all 0.5s cubic-bezier(0.52, 0.02, 0.19, 1.02);
+  transition: all 0.1s cubic-bezier(0.52, 0.02, 0.19, 1.02);
 }
+
 .modal-animation-inner-enter-from {
   opacity: 0;
   transform: scale(0.8);
 }
+
 .modal-animation-inner-leave-to {
   transform: scale(0.8);
 }

@@ -45,7 +45,25 @@
         class="elements__item flex cursor-pointer flex-col items-center justify-center rounded border border-dashed border-n-40 p-2.5 text-n-30"
         href="/1/title-form"
       >
-        <svg-vue class="text-base" icon="align-center"></svg-vue>
+        <template
+          v-if="
+            index === 'reporting_org' ||
+            index === 'default_tied_status' ||
+            index === 'crs_add' ||
+            index === 'fss'
+          "
+        >
+          <svg-vue
+            class="text-base"
+            icon="activity-elements/building"
+          ></svg-vue>
+        </template>
+        <template v-else>
+          <svg-vue
+            :icon="'activity-elements/' + index"
+            class="text-base"
+          ></svg-vue>
+        </template>
         <div class="title mt-1 text-xs">{{ index }}</div>
       </a>
     </div>
@@ -68,6 +86,9 @@ export default defineComponent({
   setup(props) {
     const [searchBtnValue, searchBtnToggle] = useToggle();
 
+    /**
+     * Search functionality
+     */
     const elements = reactive({
       search: '',
     });
@@ -80,6 +101,7 @@ export default defineComponent({
       const justStrings = Object.fromEntries(filtered);
       return justStrings;
     });
+
     return {
       searchBtnValue,
       searchBtnToggle,
