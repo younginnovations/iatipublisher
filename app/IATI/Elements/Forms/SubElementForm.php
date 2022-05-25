@@ -1,6 +1,6 @@
 <?php
 
-namespace App\IATI\Forms;
+namespace App\IATI\Elements\Forms;
 
 use Kris\LaravelFormBuilder\Form;
 
