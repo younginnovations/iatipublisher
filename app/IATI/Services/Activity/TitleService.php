@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\IATI\Services\Activity;
 
-use App\IATI\IatiActivity;
 use App\IATI\Repositories\Activity\TitleRepository;
 use Illuminate\Database\Eloquent\Model;
 
@@ -21,11 +20,11 @@ class TitleService
     /**
      * TitleService constructor.
      *
-     * @param IatiActivity $iatiActivity
+     * @param TitleRepository $titleRepository
      */
-    public function __construct(IatiActivity $iatiActivity)
+    public function __construct(TitleRepository $titleRepository)
     {
-        $this->titleRepository = $iatiActivity->getTitle()->getRepository();
+        $this->titleRepository = $titleRepository;
     }
 
     /**

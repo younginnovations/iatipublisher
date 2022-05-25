@@ -1,6 +1,6 @@
 <?php
 
-namespace App\IATI\Forms;
+namespace App\IATI\Elements\Forms;
 
 use Kris\LaravelFormBuilder\Form;
 
@@ -22,7 +22,7 @@ class BaseForm extends Form
             [
                 'type'    => 'form',
                 'options' => [
-                    'class' => 'App\IATI\Forms\SubElementForm',
+                    'class' => 'App\IATI\Elements\Forms\SubElementForm',
                     'data'  => $field,
                     'label' => false,
                 ],
