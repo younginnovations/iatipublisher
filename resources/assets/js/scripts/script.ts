@@ -17,4 +17,13 @@ $(document).ready(() => {
       }
     });
   });
+
+    $('.add_to_collection').on('click', function(e) {
+      e.preventDefault();
+      var container = $('.collection-container');
+      var count = $('.form-child-body').length;
+      var proto = container.data('prototype').replace(/__NAME__/g, count);
+      $('.form-child-body').last().after($(proto).unwrap());
+  });
+
 });
