@@ -21,13 +21,24 @@ class BaseForm extends Form
             'collection',
             [
                 'type'    => 'form',
+                'property' => 'name',
+                'prototype' => true,
+                'prototype_name' => '__NAME__',
                 'options' => [
                     'class' => 'App\IATI\Elements\Forms\SubElementForm',
                     'data'  => $field,
                     'label' => false,
+                    'wrapper' => [
+                        'class' => 'form-child-body',
+                    ],
                 ],
             ]
-        );
+        )->add('add_to_collection', 'button', [
+            'label' => 'add to collection',
+            'attr' => [
+                'class' => 'add_to_collection',
+            ],
+        ]);
     }
 
     /**
