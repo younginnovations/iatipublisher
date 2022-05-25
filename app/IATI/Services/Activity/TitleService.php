@@ -61,7 +61,7 @@ class TitleService
      */
     public function update($activityTitle, $activity): bool
     {
-        $activity->title = $activityTitle['narrative'];
+        $activity->title = array_values($activityTitle['narrative']);
 
         return $activity->save();
     }

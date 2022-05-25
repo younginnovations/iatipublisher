@@ -42,14 +42,37 @@ class BaseFormCreator
                 'url'    => $this->url,
                 'data'   => $formData,
             ]
-        )->add('Save', 'submit', ['attr' => ['class' => ''], 'label' => 'Save'])
-                                 ->add('Cancel', 'static', [
-                                     'label' => false,
-                                     'value' => 'Cancel',
-                                     'attr'  => [
-                                         'class' => '',
-                                         'href'  => '',
-                                     ],
-                                 ]);
+        )
+        ->add('buttons', 'buttongroup', [
+            'wrapper' => [
+                'class' => 'fixed left-0 bottom-0 w-full bg-eggshell py-5 pr-40 shadow-dropdown z-50',
+            ],
+            'buttons' => [
+                'clear'    => [
+                    'label'     => 'Cancel',
+                    'attr'      => [
+                        'type'      => 'clear',
+                        'class'     => 'ghost-btn mr-8',
+                    ],
+                ],
+
+                'submit'    => [
+                    'label'     => 'Save Publishing Setting',
+                    'attr'      => [
+                        'type'      => 'submit',
+                        'class'     => 'primary-btn save-btn',
+                    ],
+                ],
+            ],
+            ]);
+        // ->add('Save', 'submit', ['attr' => ['class' => ''], 'label' => 'Save'])
+        // ->add('Cancel', 'button', [
+        //     'label' => false,
+        //     'value' => 'Cancel',
+        //     'attr'  => [
+        //         'class' => '',
+        //         'href'  => '',
+        //     ],
+        // ]);
     }
 }
