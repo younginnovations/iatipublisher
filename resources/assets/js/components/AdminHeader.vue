@@ -112,22 +112,17 @@
 <script setup lang="ts">
 import { defineProps, ref, reactive, onMounted } from 'vue';
 import type { Ref } from 'vue';
-
 import axios from 'axios';
 import { useToggle } from '@vueuse/core';
-
 import CreateModal from '../views/activity/CreateModal.vue';
 import Toast from './Toast.vue';
-
 defineProps({
   user: { type: Object, required: true },
   organization: { type: Object, required: true },
 });
-
 const toastVisibility = ref(false);
 const toastMessage = ref('');
 const toastType = ref(false);
-
 const data = reactive({
   languageNavLiClasses: 'flex',
   languageNavAnchorClasses:
@@ -170,24 +165,19 @@ const data = reactive({
     },
   ],
 });
-
 const [modalValue, modalToggle] = useToggle();
-
 function toast(message: string, type: boolean) {
   toastVisibility.value = true;
   setTimeout(() => (toastVisibility.value = false), 5000);
   toastMessage.value = message;
   toastType.value = type;
 }
-
 function changeActiveMenu() {
   const path = window.location.pathname;
-
   data.menus.forEach((menu, key) => {
     data.menus[key]['active'] = menu.permalink === path ? true : false;
   });
 }
-
 async function logout() {
   await axios.post('/logout').then((res) => {
     if (res.status) {
@@ -195,39 +185,31 @@ async function logout() {
     }
   });
 }
-
 /**
  * Search functionality
  *
  */
 const searchValue: Ref<string | null> = ref('');
 const currentURL = window.location.href;
-
 if (currentURL.includes('?')) {
   const queryString = window.location.search,
     urlParams = new URLSearchParams(queryString),
     search = urlParams.get('q');
-
   searchValue.value = search;
 }
-
 const spinner = ref(false);
-
 const searchFunction = () => {
   spinner.value = true;
   const param = searchValue.value?.replace('#', '');
   let sortingParam = '';
-
   if (currentURL.includes('?') && currentURL.includes('&')) {
     const queryString = window.location.search;
     let queryStringArr = queryString.split('&') as [];
     sortingParam = '&' + queryStringArr.slice(1).join('&');
   }
-
   let href = param ? `/activities?q=${param}${sortingParam}` : '/activities/';
   window.location.href = href;
 };
-
 onMounted(async () => {
   changeActiveMenu();
 });
@@ -252,21 +234,17 @@ onMounted(async () => {
   top: 50px;
   width: 265px;
   box-shadow: 4px 4px 40px rgba(0, 50, 76, 0.2);
-
   li {
     @apply flex items-center space-x-3 p-4;
-
     a:hover {
       @apply text-bluecoral;
     }
-
     .user-profile {
       font-size: 26px;
     }
   }
   .dropdown__list {
     @apply bg-n-10 hover:bg-n-20 hover:text-bluecoral;
-
     a {
       @apply capitalize;
     }
@@ -281,7 +259,6 @@ onMounted(async () => {
     transform: rotate(180deg);
   }
 }
-
 .spinner {
   @apply absolute top-3 right-3 inline-block animate-spin rounded-full border-2 border-n-10 border-opacity-5;
   width: 15px;

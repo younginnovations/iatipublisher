@@ -146,25 +146,46 @@
   </div>
 </template>
 
-<script setup lang="ts">
-import { defineProps, inject } from 'vue';
+<script lang="ts">
+import { defineComponent, ref } from 'vue';
 import { useToggle } from '@vueuse/core';
 import AddActivityButton from './AddActivityButton.vue';
-import Modal from 'Components/PopupModal.vue';
-import BtnComponent from 'Components/ButtonComponent.vue';
-import Toast from 'Components/Toast.vue';
+import Modal from '../../../components/PopupModal.vue';
+import BtnComponent from '../../../components/ButtonComponent.vue';
+import Toast from '../../../components/Toast.vue';
 
-defineProps({
-  showButtons: { type: Boolean, required: true },
+export default defineComponent({
+  name: 'PageTitle',
+  components: {
+    AddActivityButton,
+    Modal,
+    BtnComponent,
+  },
+  props: {
+    showButtons: Boolean,
+  },
+  setup() {
+    const [modalValue, modalToggle] = useToggle();
+
+    const toastVisibility = ref(false);
+    const toastMessage = ref('');
+    const toastType = ref(false);
+
+    function toast(message: string, type: boolean) {
+      toastVisibility.value = true;
+      setTimeout(() => (toastVisibility.value = false), 5000);
+      toastMessage.value = message;
+      toastType.value = type;
+    }
+
+    return {
+      modalValue,
+      modalToggle,
+      toastVisibility,
+      toastMessage,
+      toastType,
+      toast,
+    };
+  },
 });
-
-interface ToastInterface {
-  visibility: boolean;
-  message: string;
-  type: boolean;
-}
-
-const toastMessage = inject('toastData') as ToastInterface;
-
-const [modalValue, modalToggle] = useToggle();
 </script>
