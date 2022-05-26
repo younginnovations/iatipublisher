@@ -44,7 +44,13 @@
           </div>
         </div>
       </div>
-      <div class="actions flex grow justify-end">
+      <div class="actions relative flex grow justify-end">
+        <Toast
+          class="absolute right-0 bottom-12 z-50"
+          v-if="toastVisibility"
+          :message="toastMessage"
+          :type="toastType"
+        ></Toast>
         <div class="inline-flex justify-center">
           <BtnComponent
             class="mr-3.5"
@@ -173,12 +179,13 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, ref } from 'vue';
 import { useToggle } from '@vueuse/core';
 import ToastMessage from '../../../components/ToastMessage.vue';
 import AddActivityButton from './AddActivityButton.vue';
 import Modal from '../../../components/PopupModal.vue';
 import BtnComponent from '../../../components/ButtonComponent.vue';
+import Toast from '../../../components/Toast.vue';
 
 export default defineComponent({
   name: 'page-title',
@@ -187,6 +194,7 @@ export default defineComponent({
     Modal,
     BtnComponent,
     ToastMessage,
+    Toast,
   },
   props: {
     showButtons: Boolean,
@@ -194,9 +202,24 @@ export default defineComponent({
   setup() {
     const [modalValue, modalToggle] = useToggle();
 
+    const toastVisibility = ref(false);
+    const toastMessage = ref('');
+    const toastType = ref(false);
+
+    function toast(message: string, type: boolean) {
+      toastVisibility.value = true;
+      setTimeout(() => (toastVisibility.value = false), 5000);
+      toastMessage.value = message;
+      toastType.value = type;
+    }
+
     return {
       modalValue,
       modalToggle,
+      toastVisibility,
+      toastMessage,
+      toastType,
+      toast,
     };
   },
 });

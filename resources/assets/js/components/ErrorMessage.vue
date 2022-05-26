@@ -89,9 +89,15 @@
             <div class="ml-5 text-left">
               <p>
                 Please check for verification email sent to you and verify your
-                account, click
-                <span><a @click="resendVerificationEmail()">here</a></span> if
-                you haven’t received your verification email. Contact
+                account,
+                <span
+                  ><a
+                    class="border-b-2 border-b-bluecoral font-bold text-bluecoral hover:border-b-spring-50"
+                    @click="resendVerificationEmail()"
+                    >resend verification email</a
+                  ></span
+                >
+                if you haven’t received your verification email. Contact
                 <span
                   ><a href="mailto:support@iatistandard.org"
                     >support@iatistandard.org</a

@@ -260,7 +260,6 @@
                   :name="post.label"
                   hover_text="You cannot publish an activity until all the mandatory fields have been filled."
                   icon_size="text-tiny"
-                  name=""
                 ></HoverText>
               </span>
             </button>
