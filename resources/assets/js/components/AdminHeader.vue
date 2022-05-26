@@ -2,12 +2,6 @@
   <header
     class="activity__header flex min-h-[60px] max-w-full gap-10 bg-bluecoral px-10 text-xs leading-normal text-white"
   >
-    <Toast
-      class="toast -bottom-24"
-      v-if="toastVisibility"
-      :message="toastMessage"
-      :type="toastType"
-    ></Toast>
     <figure class="flex grow-0 items-center">
       <a href="/activities">
         <svg-vue icon="logo" class="text-4xl"></svg-vue>
@@ -118,7 +112,6 @@ import Modal from './PopupModal.vue';
 import BtnComponent from './ButtonComponent.vue';
 import CreateModal from '../views/activity/CreateModal.vue';
 import HoverText from './HoverText.vue';
-import Toast from './Toast.vue';
 
 export default defineComponent({
   name: 'header-component',
@@ -128,7 +121,6 @@ export default defineComponent({
     HoverText,
     Multiselect,
     CreateModal,
-    Toast,
   },
   props: {
     user: {
@@ -142,12 +134,6 @@ export default defineComponent({
   },
 
   setup(props) {
-    const dropdown = ref();
-    const dropdownBtn = ref();
-    const toastVisibility = ref(false);
-    const toastMessage = ref('');
-    const toastType = ref(false);
-
     const active_tab = ref('activities');
     const data = reactive({
       languageNavLiClasses: 'flex',
@@ -202,13 +188,6 @@ export default defineComponent({
       state.isVisible = !state.isVisible;
     };
 
-    function toast(message: string, type: boolean) {
-      toastVisibility.value = true;
-      setTimeout(() => (toastVisibility.value = false), 5000);
-      toastMessage.value = message;
-      toastType.value = type;
-    }
-
     function changeActiveMenu() {
       const path = window.location.pathname;
 
@@ -233,10 +212,6 @@ export default defineComponent({
       props,
       data,
       modalValue,
-      toastVisibility,
-      toastMessage,
-      toastType,
-      toast,
       toggle,
       active_tab,
       modalToggle,
@@ -255,10 +230,6 @@ export default defineComponent({
       @apply text-white;
     }
   }
-}
-.toast {
-  @apply absolute  left-2/4 z-50;
-  transform: translate(-50%, -50%);
 }
 .form-group {
   @apply rounded-lg border border-n-20 p-5;

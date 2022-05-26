@@ -26,7 +26,13 @@
             </h4>
           </div>
         </div>
-        <div class="actions flex grow justify-end">
+        <div class="actions relative flex grow justify-end">
+          <Toast
+            class="absolute right-0 bottom-12 z-50"
+            v-if="toastVisibility"
+            :message="toastMessage"
+            :type="toastType"
+          ></Toast>
           <div class="inline-flex justify-center">
             <button class="button secondary-btn mr-3.5 font-bold">
               <svg-vue icon="download-file"></svg-vue>
@@ -141,6 +147,7 @@ import HoverText from '../../components/HoverText.vue';
 import ProgressBar from '../../components/ProgressBar.vue';
 import Elements from './partials/ActivitiesElements.vue';
 import ActivityElement from './partials/ActivityElement.vue';
+import Toast from '../../components/Toast.vue';
 
 export default defineComponent({
   components: {
@@ -148,6 +155,7 @@ export default defineComponent({
     ProgressBar,
     Elements,
     ActivityElement,
+    Toast,
   },
   props: {
     elements: {
@@ -199,9 +207,23 @@ export default defineComponent({
 
     const scrollRef = ref([]);
 
+    const toastVisibility = ref(false);
+    const toastMessage = ref('');
+    const toastType = ref(false);
+
+    function toast(message: string, type: boolean) {
+      toastVisibility.value = true;
+      setTimeout(() => (toastVisibility.value = false), 5000);
+      toastMessage.value = message;
+      toastType.value = type;
+    }
+
     return {
       scrollRef,
       activityGrouped,
+      toastVisibility,
+      toastMessage,
+      Toast,
     };
   },
 });
