@@ -161,11 +161,12 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, ref } from 'vue';
 import { useToggle } from '@vueuse/core';
 import AddActivityButton from './AddActivityButton.vue';
 import Modal from '../../../components/PopupModal.vue';
 import BtnComponent from '../../../components/ButtonComponent.vue';
+import Toast from '../../../components/Toast.vue';
 
 export default defineComponent({
   name: 'PageTitle',
@@ -180,9 +181,24 @@ export default defineComponent({
   setup() {
     const [modalValue, modalToggle] = useToggle();
 
+    const toastVisibility = ref(false);
+    const toastMessage = ref('');
+    const toastType = ref(false);
+
+    function toast(message: string, type: boolean) {
+      toastVisibility.value = true;
+      setTimeout(() => (toastVisibility.value = false), 5000);
+      toastMessage.value = message;
+      toastType.value = type;
+    }
+
     return {
       modalValue,
       modalToggle,
+      toastVisibility,
+      toastMessage,
+      toastType,
+      toast,
     };
   },
 });
