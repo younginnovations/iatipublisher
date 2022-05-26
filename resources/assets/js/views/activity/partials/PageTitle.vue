@@ -44,7 +44,13 @@
           </div>
         </div>
       </div>
-      <div class="actions flex grow justify-end">
+      <div class="actions relative flex grow justify-end">
+        <Toast
+          class="absolute right-0 bottom-12 z-50"
+          v-if="toastVisibility"
+          :message="toastMessage"
+          :type="toastType"
+        ></Toast>
         <div class="inline-flex justify-center">
           <BtnComponent
             class="mr-3.5"
@@ -96,69 +102,76 @@
           Toggle modal
     ==========================-->
     <Modal @close="modalToggle" :modalActive="modalValue">
-      <div class="eligible-activities mb-6 text-sm leading-relaxed">
-        <div class="title mb-6 flex">
-          <svg-vue
-            icon="tick"
-            class="mr-1 mt-0.5 text-lg text-spring-50"
-          ></svg-vue>
-          <b>The following activities are eligible for publishing</b>
+      <div class="max-w-[809px]">
+        <div class="eligible-activities mb-6 text-sm leading-relaxed">
+          <div class="title mb-6 flex">
+            <svg-vue
+              icon="tick"
+              class="mr-1 mt-0.5 text-lg text-spring-50"
+            ></svg-vue>
+            <b>The following activities are eligible for publishing</b>
+          </div>
+          <div class="eligible-list rounded-lg bg-mint px-6">
+            <div class="list border-b border-n-20 py-6">
+              <a href="#" class=""> EU-Angola Dialogue Facility </a>
+            </div>
+            <div class="list border-b border-n-20 py-6">
+              <a href="#" class="">
+                Programme in support of Higher Education
+              </a>
+            </div>
+            <div class="list py-6">
+              <a href="#" class="">
+                AGO.S1 Leadership, advocacy and communication to fast track the
+                AIDS response
+              </a>
+            </div>
+          </div>
         </div>
-        <div class="eligible-list rounded-lg bg-mint px-6">
-          <div class="list border-b border-n-20 py-6">
-            <a href="#" class=""> EU-Angola Dialogue Facility </a>
-          </div>
-          <div class="list border-b border-n-20 py-6">
-            <a href="#" class=""> Programme in support of Higher Education </a>
-          </div>
-          <div class="list py-6">
-            <a href="#" class="">
-              AGO.S1 Leadership, advocacy and communication to fast track the
-              AIDS response
-            </a>
-          </div>
-        </div>
-      </div>
 
-      <div class="non-eligible-activities mb-6 text-sm leading-relaxed">
-        <div class="title mb-6 flex">
-          <svg-vue
-            icon="warning-fill"
-            class="mr-1 mt-0.5 text-lg text-crimson-40"
-          ></svg-vue>
-          <b>The following activities are eligible for publishing</b>
+        <div class="non-eligible-activities mb-6 text-sm leading-relaxed">
+          <div class="title mb-6 flex">
+            <svg-vue
+              icon="warning-fill"
+              class="mr-1 mt-0.5 text-lg text-crimson-40"
+            ></svg-vue>
+            <b>The following activities are eligible for publishing</b>
+          </div>
+          <div class="eligible-list rounded-lg bg-rose px-6">
+            <div class="list border-b border-n-20 py-6">
+              <a href="#" class=""> EU-Angola Dialogue Facility </a>
+            </div>
+            <div class="list border-b border-n-20 py-6">
+              <a href="#" class="">
+                Programme in support of Higher Education
+              </a>
+            </div>
+            <div class="list py-6">
+              <a href="#" class="">
+                UNFPA Angola Improved national population data systems to map
+                and address inequalities; to advance achievement of the
+                Sustainable Development Goals and the commitments of the
+                Programme of Action of the International Cference on Population
+                and Development; and to strengthen interventions in humanitarian
+                crises activities
+              </a>
+            </div>
+          </div>
         </div>
-        <div class="eligible-list rounded-lg bg-rose px-6">
-          <div class="list border-b border-n-20 py-6">
-            <a href="#" class=""> EU-Angola Dialogue Facility </a>
+        <div class="flex justify-end">
+          <div class="inline-flex">
+            <BtnComponent
+              class="bg-white px-6 uppercase"
+              @click="modalValue = false"
+              text="Cancel"
+            />
+            <BtnComponent
+              class="space"
+              type="primary"
+              @click="modalValue = false"
+              text="Publish"
+            />
           </div>
-          <div class="list border-b border-n-20 py-6">
-            <a href="#" class=""> Programme in support of Higher Education </a>
-          </div>
-          <div class="list py-6">
-            <a href="#" class="">
-              UNFPA Angola Improved national population data systems to map and
-              address inequalities; to advance achievement of the Sustainable
-              Development Goals and the commitments of the Programme of Action
-              of the International Cference on Population and Development; and
-              to strengthen interventions in humanitarian crises activities
-            </a>
-          </div>
-        </div>
-      </div>
-      <div class="flex justify-end">
-        <div class="inline-flex">
-          <BtnComponent
-            class="bg-white px-6 uppercase"
-            @click="modalValue = false"
-            text="Cancel"
-          />
-          <BtnComponent
-            class="space"
-            type="primary"
-            @click="modalValue = false"
-            text="Publish"
-          />
         </div>
       </div>
     </Modal>
@@ -166,12 +179,13 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, ref } from 'vue';
 import { useToggle } from '@vueuse/core';
 import ToastMessage from '../../../components/ToastMessage.vue';
 import AddActivityButton from './AddActivityButton.vue';
 import Modal from '../../../components/PopupModal.vue';
 import BtnComponent from '../../../components/ButtonComponent.vue';
+import Toast from '../../../components/Toast.vue';
 
 export default defineComponent({
   name: 'page-title',
@@ -180,6 +194,7 @@ export default defineComponent({
     Modal,
     BtnComponent,
     ToastMessage,
+    Toast,
   },
   props: {
     showButtons: Boolean,
@@ -187,9 +202,24 @@ export default defineComponent({
   setup() {
     const [modalValue, modalToggle] = useToggle();
 
+    const toastVisibility = ref(false);
+    const toastMessage = ref('');
+    const toastType = ref(false);
+
+    function toast(message: string, type: boolean) {
+      toastVisibility.value = true;
+      setTimeout(() => (toastVisibility.value = false), 5000);
+      toastMessage.value = message;
+      toastType.value = type;
+    }
+
     return {
       modalValue,
       modalToggle,
+      toastVisibility,
+      toastMessage,
+      toastType,
+      toast,
     };
   },
 });

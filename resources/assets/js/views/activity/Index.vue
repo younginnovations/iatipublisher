@@ -5,7 +5,8 @@
   >
     <div id="activity">
       <PageTitle :showButtons="state.showButtons" />
-      <EmptyActivity v-if="isEmpty"> </EmptyActivity>
+      <!-- <ErrorMessage></ErrorMessage> -->
+      <EmptyActivity v-if="!isEmpty"> </EmptyActivity>
       <TableLayout
         v-if="!isEmpty"
         @showOrHide="showOrHide"
@@ -13,8 +14,8 @@
       />
       <div class="mt-6" v-if="!isEmpty">
         <Pagination
-          :page_count="activities.last_page"
-          :current_page="activities.current_page"
+          v-if="!isEmpty"
+          :page_count="activities ? activities.last_page : 1"
           @fetchActivities="fetchActivities"
         />
       </div>
@@ -31,6 +32,7 @@ import TableLayout from './partials/TableLayout.vue';
 import Pagination from '../../components/Pagination.vue';
 import PageTitle from './partials/PageTitle.vue';
 import PopupModal from '../../components/PopupModal.vue';
+import ErrorMessage from '../../components/ErrorMessage.vue';
 
 export default defineComponent({
   name: 'activity-component',
@@ -40,6 +42,7 @@ export default defineComponent({
     Pagination,
     TableLayout,
     PopupModal,
+    ErrorMessage,
   },
   setup() {
     const activities = reactive({});

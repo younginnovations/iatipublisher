@@ -30,7 +30,7 @@ export default defineComponent({
   components: {},
   props: {
     page_count: {
-      type: [String],
+      type: Number,
       required: true,
     },
   },
@@ -48,16 +48,12 @@ export default defineComponent({
 
     function nextPage() {
       active_page.value =
-        active_page.value === parseInt(props.page_count)
-          ? 1
-          : active_page.value + 1;
+        active_page.value === props.page_count ? 1 : active_page.value + 1;
     }
 
     function previousPage() {
       active_page.value =
-        active_page.value === 1
-          ? parseInt(props.page_count)
-          : active_page.value - 1;
+        active_page.value === 1 ? props.page_count : active_page.value - 1;
     }
 
     return { props, active_page, updateActivePage, nextPage, previousPage };
