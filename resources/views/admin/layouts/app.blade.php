@@ -16,6 +16,7 @@
   <!-- Scripts -->
   <script src="{{ asset('js/app.js') }}" defer></script>
   <script defer src="{{ asset('js/script.js') }}"></script>
+  <script defer src="{{ asset('js/formbuilder.js') }}"></script>
 
   <!-- Fonts -->
   {{-- <link href="http://fonts.cdnfonts.com/css/arial" rel="stylesheet"> --}}

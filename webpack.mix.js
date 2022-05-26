@@ -31,6 +31,7 @@ if (mix.inProduction()) {
 mix.ts('resources/assets/js/app.ts', 'public/js').vue();
 
 mix.ts('resources/assets/js/scripts/script.ts', 'public/js');
+mix.ts('resources/assets/js/scripts/formbuilder.ts', 'public/js');
 
 // mix
 //   .webpackConfig({

@@ -47,5 +47,11 @@ class SubElementForm extends Form
                 $this->buildFields($attribute);
             }
         }
+
+        $this->add('delete', 'button', [
+            'attr' => [
+                'class' => 'delete',
+            ],
+        ]);
     }
 }
