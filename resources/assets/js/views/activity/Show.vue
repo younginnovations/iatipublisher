@@ -261,20 +261,22 @@
           </a>
         </div>
 
-        <div v-for="(post, index) in activities" :id="index">
-          <div class="activities__content--elements -mx-3 flex flex-wrap">
-            <template v-for="(element, name) in post.elements">
+        <div class="activities__content--elements -mx-3 flex flex-wrap">
+          <template v-for="(post, key, index) in activities">
+            <template v-for="(element, name, i) in post.elements">
               <ActivityElement
-                v-if="element.content.length > 0"
+                v-if="Object.keys(element.content).length > 0"
+                :id="key"
                 :content="element.content"
-                :element_name="name"
+                :data="element"
                 :title="name"
-                :width="name === 'title' ? 'full' : ''"
-                status="completed"
+                :width="
+                  name === 'title' || name === 'description' ? 'full' : ''
+                "
                 tooltip="Example text"
               />
             </template>
-          </div>
+          </template>
         </div>
       </div>
     </div>

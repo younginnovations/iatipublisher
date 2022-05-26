@@ -18,21 +18,38 @@
           class="button panel-btn dropdown-btn"
           @click="searchBtnToggle()"
         >
-          <svg-vue icon="core"></svg-vue>
           <svg-vue
-            :class="
-              searchBtnValue ? 'dropdown__arrow rotate-180' : 'dropdown__arrow'
+            :icon="
+              elements.status
+                ? elements.status === 'completed'
+                  ? 'double-tick'
+                  : elements.status
+                : 'box'
             "
+            class="text-lg"
+          ></svg-vue>
+          <svg-vue
+            :class="searchBtnValue ? 'rotate-180' : ''"
+            class="w-2.5 text-xs transition duration-200 ease-linear"
             icon="dropdown-arrow"
           ></svg-vue>
         </button>
         <div
           v-show="searchBtnValue"
-          class="button__dropdown button panel-btn dropdown-btn absolute right-0 top-full z-10 bg-white p-2 text-left shadow-dropdown"
+          class="button__dropdown button dropdown-btn absolute right-0 top-full z-10 w-[118px] bg-white text-left shadow-dropdown"
         >
-          <ul>
-            <li class="">
-              <svg-vue icon="double-tick"></svg-vue>
+          <ul class="py-2 px-1">
+            <li class="" @click="dropdownFilter('')">
+              <svg-vue class="text-lg" icon="box"></svg-vue>
+              <span>All Elements</span>
+            </li>
+            <li class="" @click="dropdownFilter('core')">
+              <svg-vue class="text-lg" icon="core"></svg-vue>
+              <span>Core</span>
+            </li>
+            <li class="" @click="dropdownFilter('completed')">
+              <svg-vue class="text-lg" icon="double-tick"></svg-vue>
+              <span>Completed</span>
             </li>
           </ul>
         </div>
@@ -42,9 +59,21 @@
       <a
         v-for="(post, index) in filteredElements"
         :key="index"
-        class="elements__item flex cursor-pointer flex-col items-center justify-center rounded border border-dashed border-n-40 p-2.5 text-n-30"
+        class="elements__item relative flex cursor-pointer flex-col items-center justify-center rounded border border-dashed border-n-40 p-2.5 text-n-30"
         href="/1/title-form"
       >
+        <div class="status_icons absolute right-0 top-0 mt-1 mr-1 inline-flex">
+          <svg-vue
+            v-if="post.completed"
+            class="text-base text-spring-50"
+            icon="double-tick"
+          ></svg-vue>
+          <svg-vue
+            v-if="post.core"
+            class="text-base text-camel-50"
+            icon="core"
+          ></svg-vue>
+        </div>
         <template
           v-if="
             index === 'reporting_org' ||
@@ -85,28 +114,42 @@ export default defineComponent({
   },
   setup(props) {
     const [searchBtnValue, searchBtnToggle] = useToggle();
-
     /**
      * Search functionality
      */
     const elements = reactive({
       search: '',
+      status: '',
     });
 
     const asArrayData = Object.entries(props.data);
     const filteredElements = computed(() => {
       const filtered = asArrayData.filter(([key, value]) => {
-        return key.toLowerCase().includes(elements.search.toLowerCase());
+        if (!elements.status) {
+          return key.toLowerCase().includes(elements.search.toLowerCase());
+        } else {
+          if (value[elements.status]) {
+            console.log(elements.status);
+            return key.toLowerCase().includes(elements.search.toLowerCase());
+          }
+        }
       });
+
       const justStrings = Object.fromEntries(filtered);
       return justStrings;
     });
+
+    const dropdownFilter = (s: string) => {
+      elements.status = s;
+      searchBtnToggle();
+    };
 
     return {
       searchBtnValue,
       searchBtnToggle,
       elements,
       filteredElements,
+      dropdownFilter,
     };
   },
 });

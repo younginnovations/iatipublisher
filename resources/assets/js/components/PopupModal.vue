@@ -36,9 +36,9 @@ export default defineComponent({
       required: true,
     },
     width: {
-      type: Number,
+      type: String,
       required: false,
-      default: 809,
+      default: '809',
     },
   },
   emits: ['close'],

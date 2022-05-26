@@ -16,6 +16,12 @@
               icon="activity-elements/building"
             ></svg-vue>
           </template>
+          <template v-else-if="title === 'identifier'">
+            <svg-vue
+              class="mr-1.5 text-xl text-bluecoral"
+              icon="activity-elements/iati_identifier"
+            ></svg-vue>
+          </template>
           <template v-else>
             <svg-vue
               :icon="'activity-elements/' + title"
@@ -24,11 +30,16 @@
           </template>
           <div class="title text-sm font-bold">{{ title }}</div>
           <div
-            v-if="status"
-            class="status ml-2.5 flex text-xs leading-5 text-spring-50"
+            v-if="'completed' in data"
+            :class="{
+              'text-spring-50': data.completed === true,
+              'text-crimson-50': data.completed === false,
+            }"
+            class="status ml-2.5 flex text-xs leading-5"
           >
             <b class="mr-2 text-base leading-3">.</b>
-            <span>{{ status }}</span>
+            <span v-if="data.completed">completed</span>
+            <span v-else>not completed</span>
           </div>
         </div>
         <div class="icons flex">
@@ -39,7 +50,9 @@
             <svg-vue class="mr-0.5 text-base" icon="edit"></svg-vue>
             <span>Edit</span>
           </a>
-          <svg-vue class="mr-1.5" icon="core"></svg-vue>
+          <template v-if="'core' in data">
+            <svg-vue v-if="data.core" class="mr-1.5" icon="core"></svg-vue>
+          </template>
           <HoverText
             v-if="tooltip"
             :hover_text="tooltip"
@@ -48,7 +61,8 @@
         </div>
       </div>
       <div class="divider mb-4 h-px w-full bg-n-20"></div>
-      <template v-if="element_name === 'title'">
+      <template v-if="title === 'title'">
+        <!-- Title content -->
         <div v-for="(post, index) in content" class="title-content">
           <div
             v-if="post.language"
@@ -58,6 +72,18 @@
           </div>
           <div v-if="post.narrative" class="text-sm">
             {{ post.narrative }}
+          </div>
+        </div>
+      </template>
+
+      <template v-if="title === 'identifier'">
+        <!-- iati identifier -->
+        <div class="identifier-content">
+          <div v-if="content.activity_identifier" class="mb-4 text-sm">
+            {{ content.activity_identifier }}
+          </div>
+          <div v-if="content.iati_identifier_text" class="text-sm">
+            {{ content.iati_identifier_text }}
           </div>
         </div>
       </template>
@@ -73,24 +99,20 @@ export default defineComponent({
   name: 'activity-element',
   components: { HoverText },
   props: {
+    data: {
+      type: Object,
+      required: true,
+    },
     title: {
       type: String,
       required: true,
-    },
-    element_name: {
-      type: String,
-      required: true,
-    },
-    status: {
-      type: String,
-      required: false,
     },
     tooltip: {
       type: String,
       required: false,
     },
     content: {
-      type: Array,
+      type: Object || Array,
       required: true,
     },
     width: {
@@ -99,12 +121,13 @@ export default defineComponent({
     },
   },
   setup(props) {
+    const status = '';
     let layout = 'basis-6/12';
     if (props.width === 'full') {
       layout = 'basis-full';
     }
 
-    return { layout };
+    return { layout, status };
   },
 });
 </script>
