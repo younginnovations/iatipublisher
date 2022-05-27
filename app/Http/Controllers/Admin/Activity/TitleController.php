@@ -40,11 +40,12 @@ class TitleController extends Controller
     {
         try {
             $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
+            $activity = $this->titleService->getActivityData($id);
             $model['narrative'] = $this->titleService->getTitleData($id);
             $this->baseFormCreator->url = route('admin.activities.title.update', [$id]);
             $form = $this->baseFormCreator->editForm($model, $element['title']);
 
-            return view('activity.title.title', compact('form'));
+            return view('activity.title.title', compact('form', 'activity'));
         } catch (\Exception $e) {
             dd($e->getMessage());
             logger()->error($e->getMessage());

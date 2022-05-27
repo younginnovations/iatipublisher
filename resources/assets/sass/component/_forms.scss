@@ -37,7 +37,14 @@ form {
     }
 
     .delete-item {
-      @apply absolute top-2/4 right-0 -translate-y-2/4 translate-x-2/4 cursor-pointer rounded-full bg-n-40 p-1.5 text-lg text-n-40 text-white;
+      @apply absolute top-2/4 right-0 h-8 w-8 -translate-y-2/4 translate-x-2/4 cursor-pointer overflow-hidden rounded-full rounded-full bg-n-40 p-1.5 indent-7 text-lg text-n-40 text-white;
+      &:after {
+        background: url('/images/delete.svg') no-repeat center;
+        background-size: 18px;
+        filter: invert(100%);
+        content: '';
+        @apply absolute left-1/2 top-1/2 h-8 w-8 -translate-x-1/2 -translate-y-1/2;
+      }
     }
   }
 
@@ -81,6 +88,24 @@ form {
 
     &:focus {
       @apply border border-n-50 bg-n-10;
+    }
+  }
+
+  .help {
+    @apply relative;
+
+    &__text {
+      @apply invisible absolute top-4 z-20 space-y-1.5 rounded bg-eggshell p-4 text-left text-xs text-n-40 opacity-0 duration-200;
+      box-shadow: 0px 4px 40px rgb(0 0 0 / 10%);
+      transition: all 0.3s ease-out;
+    }
+  }
+
+  .help:hover {
+    .help__text {
+      transform: translateY(5px);
+      visibility: visible;
+      opacity: 1;
     }
   }
 }

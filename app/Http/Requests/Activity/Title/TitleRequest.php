@@ -28,8 +28,8 @@ class TitleRequest extends ActivityBaseRequest
      */
     public function messages(): array
     {
-        $messages['narrative.*.narrative.required'] = 'Narrative Required';
-        $messages['narrative.unique_lang'] = 'Narrative Unique';
+        $messages['narrative.*.narrative.required'] = 'The text field is required.';
+        $messages['narrative.unique_lang'] = 'The @xml:lang field must be unique.';
 
         return $messages;
     }

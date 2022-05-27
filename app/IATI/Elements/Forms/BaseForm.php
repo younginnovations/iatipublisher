@@ -29,14 +29,14 @@ class BaseForm extends Form
                     'data'  => $field,
                     'label' => false,
                     'wrapper' => [
-                        'class' => 'form-child-body',
+                        'class' => 'form-child-body form-field-group flex flex-wrap',
                     ],
                 ],
             ]
         )->add('add_to_collection', 'button', [
-            'label' => 'add to collection',
+            'label' => 'Add More',
             'attr' => [
-                'class' => 'add_to_collection',
+                'class' => 'add_to_collection button relative font-bold text-n-40 text-bluecoral text-xs uppercase leading-normal mt-2 space-x-2',
             ],
         ]);
     }

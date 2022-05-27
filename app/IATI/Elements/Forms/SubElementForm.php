@@ -15,11 +15,26 @@ class SubElementForm extends Form
     {
         $options = [
             'label'         => $field['label'] ?? 'Label',
-            'required'      => $field['required'] ?? false,
+            'help_block'    => [
+                'text' => $field['help_text']['text'] ?? '',
+            ],
+            'hover_block' => [
+                'title' => $field['label'],
+                'text'  => $field['hover_text'] ?? '',
+            ],
+            'label'         => $field['label'] ?? '',
+            'required'      => false,
             'multiple'      => $field['multiple'] ?? false,
+            'attr' => [
+                'class' => 'form__input border-0',
+            ],
+            'wrapper' => [
+                'class' => 'form-field basis-6/12',
+            ],
         ];
 
         if ($field['type'] == 'select') {
+            $options['attr']['class'] = 'select2';
             $options['empty_value'] = $field['empty_value'] ?? 'Select a value';
             $options['choices'] = $field['choices'] ?? false;
             $options['default_value'] = $field['default'] ?? false;
@@ -50,7 +65,7 @@ class SubElementForm extends Form
 
         $this->add('delete', 'button', [
             'attr' => [
-                'class' => 'delete',
+                'class' => 'delete delete-item',
             ],
         ]);
     }
