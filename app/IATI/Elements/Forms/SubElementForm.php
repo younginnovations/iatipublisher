@@ -58,7 +58,7 @@ class SubElementForm extends Form
         if ($field['type'] == 'select') {
             $options['attr']['class'] = 'select2';
             $options['empty_value'] = $field['empty_value'] ?? 'Select a value';
-            $options['choices'] = $field['choices'] ?? false;
+            $options['choices'] = $field['choices'] ? (is_string($field['choices']) ? ($this->getCodeList($field['choices'])) : $field['choices']) : false;
             $options['default_value'] = $field['default'] ?? false;
         }
 
@@ -68,5 +68,29 @@ class SubElementForm extends Form
                 $field['type'],
                 $options
             );
+    }
+
+    /**
+     * Return codeList array from json codeList.
+     * @param string $filePath
+     * @param bool $code
+     * @return array
+     */
+    public function getCodeList(string $filePath, bool $code = true): array
+    {
+        $filePath = app_path("Data/$filePath");
+        $codeListFromFile = file_get_contents($filePath);
+        $codeLists = json_decode($codeListFromFile, true);
+        $codeList = last($codeLists);
+        $data = [];
+
+        foreach ($codeList as $list) {
+            $data[$list['code']] = ($code) ? $list['code'] . (array_key_exists(
+                'name',
+                $list
+            ) ? ' - ' . $list['name'] : '') : $list['name'];
+        }
+
+        return $data;
     }
 }
