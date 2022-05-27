@@ -156,10 +156,13 @@
     "criteria": "mandatory",
     "attributes": {
       "code": {
+        "name": "activity_status",
         "type": "select",
+        "multiselect": false,
         "required": true,
         "criteria": "mandatory",
-        "label": "Code"
+        "label": "Code",
+        "choices": "Activity/ActivityStatus.json"
       }
     }
   },
@@ -197,15 +200,18 @@
       }
     }
   },
-  "activity-scope": {
+  "activity_scope": {
     "label": "Activity Scope",
     "criteria": "",
     "attributes": {
       "code": {
+        "name": "activity_scope",
+        "multiselect": false,
         "required": true,
         "criteria": "mandatory",
         "label": "Activity Scope Code",
-        "type": "select"
+        "type": "select",
+        "choices": "Activity/ActivityScope.json"
       }
     }
   },
@@ -426,10 +432,13 @@
     "criteria": "recommended",
     "attributes": {
       "code": {
+        "name": "collaboration_type",
+        "multiselect": false,
         "label": "Code",
         "criteria": "recommended",
         "required": true,
-        "type": "select"
+        "type": "select",
+        "choices": "Activity/CollaborationType.json"
       }
     }
   },
@@ -438,10 +447,13 @@
     "criteria": "recommended",
     "attributes": {
       "code": {
+        "name": "default_flow_type",
+        "multiselect": false,
         "label": "Code",
         "criteria": "recommended",
         "required": true,
-        "type": "select"
+        "type": "select",
+        "choices": "Activity/FlowType.json"
       }
     }
   },
@@ -450,10 +462,13 @@
     "criteria": "recommended",
     "attributes": {
       "code": {
+        "name": "default_finance_type",
+        "multiselect": false,
         "label": "Code",
         "criteria": "recommended",
         "required": true,
-        "type": "select"
+        "type": "select",
+        "choices": "Activity/FinanceType.json"
       }
     }
   },
@@ -480,10 +495,13 @@
     "criteria": "recommended",
     "attributes": {
       "code": {
+        "name": "default_tied_status",
+        "multiselect": false,
         "label": "Code",
         "criteria": "mandatory",
         "required": true,
-        "type": "select"
+        "type": "select",
+        "choices": "Activity/TiedStatus.json"
       }
     }
   },
@@ -592,6 +610,8 @@
     "criteria": "",
     "attributes": {
       "percentage": {
+        "name": "capital_spend",
+        "multiselect": false,
         "label": "Percentage",
         "criteria": "",
         "required": true,
@@ -602,18 +622,24 @@
   "related-activity": {
     "label": "Related Activity",
     "criteria": "",
+    "add_more": true,
     "attributes": {
+      "name": "related_activity",
       "reference": {
+        "name": "activity_identifier",
         "label": "Reference",
         "criteria": "",
         "required": true,
         "type": "text"
       },
-      "type": {
+      "activity_type": {
+        "name": "relationship_type",
+        "multiselect": false,
         "label": "Type",
         "criteria": "",
         "required": true,
-        "type": "select"
+        "type": "select",
+        "choices": "Activity/RelatedActivityType.json"
       }
     }
   },

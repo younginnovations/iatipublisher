@@ -43,7 +43,7 @@
         v-for="(post, index) in filteredElements"
         :key="index"
         class="elements__item flex cursor-pointer flex-col items-center justify-center rounded border border-dashed border-n-40 p-2.5 text-n-30"
-        :href="`/activities/${activityId}/title`"
+        :href="`/activities/${activityId}/${index}`"
       >
         <svg-vue class="text-base" icon="align-center"></svg-vue>
         <div class="title mt-1 text-xs">{{ index }}</div>
