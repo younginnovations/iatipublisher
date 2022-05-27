@@ -2,6 +2,7 @@
 
 namespace App\IATI\Elements\Forms;
 
+use Illuminate\Support\Arr;
 use Kris\LaravelFormBuilder\Form;
 
 /**
@@ -17,13 +18,17 @@ class SubElementForm extends Form
     public function buildForm():void
     {
         $data = $this->getData();
-        $this->buildFields($this->getData());
+        if (Arr::get($data, 'type', null)) {
+            $this->buildFields($this->getData());
+        }
 
         if (isset($data['attributes'])) {
             $attributes = $data['attributes'];
 
             foreach ($attributes as $attribute) {
-                $this->buildFields($attribute);
+                if (is_array($attribute)) {
+                    $this->buildFields($attribute);
+                }
             }
         }
 
@@ -44,7 +49,6 @@ class SubElementForm extends Form
     public function buildFields($field): void
     {
         $options = [
-            'label' => $field['label'] ?? 'Label',
             'help_block' => [
                 'text' => $field['help_text']['text'] ?? '',
             ],
@@ -63,10 +67,10 @@ class SubElementForm extends Form
             ],
         ];
 
-        if ($field['type'] == 'select') {
+        if (array_key_exists('type', $field) && $field['type'] == 'select') {
             $options['attr']['class'] = 'select2';
             $options['empty_value'] = $field['empty_value'] ?? 'Select a value';
-            $options['choices'] = $field['choices'] ?? false;
+            $options['choices'] = $field['choices'] ? (is_string($field['choices']) ? ($this->getCodeList($field['choices'])) : $field['choices']) : false;
             $options['default_value'] = $field['default'] ?? false;
         }
 
@@ -76,5 +80,29 @@ class SubElementForm extends Form
                 $field['type'],
                 $options
             );
+    }
+
+    /**
+     * Return codeList array from json codeList.
+     * @param string $filePath
+     * @param bool $code
+     * @return array
+     */
+    public function getCodeList(string $filePath, bool $code = true): array
+    {
+        $filePath = app_path("Data/$filePath");
+        $codeListFromFile = file_get_contents($filePath);
+        $codeLists = json_decode($codeListFromFile, true);
+        $codeList = last($codeLists);
+        $data = [];
+
+        foreach ($codeList as $list) {
+            $data[$list['code']] = ($code) ? $list['code'] . (array_key_exists(
+                'name',
+                $list
+            ) ? ' - ' . $list['name'] : '') : $list['name'];
+        }
+
+        return $data;
     }
 }
