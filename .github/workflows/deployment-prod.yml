@@ -74,8 +74,6 @@ jobs:
               packages/main.yaml
               packages/cert-issuer-stage.yaml
               packages/cert-issuer-prod.yaml
-              packages/postgres-db.yaml
               packages/sealed-registry-credentials.yaml
-              packages/sealed-postgres-credentials.yaml
               packages/sealed-iati-env.yaml
           kubectl-version: 'latest'
