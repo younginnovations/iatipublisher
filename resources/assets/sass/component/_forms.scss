@@ -68,7 +68,7 @@ form {
   }
 
   input[type='text'] {
-    @apply w-full rounded border border-n-30 px-4 py-3 outline-none duration-300;
+    @apply mt-0 w-full rounded border border-n-30 px-4 py-3 text-sm leading-normal outline-none duration-300;
 
     &::placeholder {
       @apply text-sm text-n-40;
@@ -108,4 +108,42 @@ form {
       opacity: 1;
     }
   }
+}
+
+/**
+  Select 2 field
+*/
+span.select2-container--default {
+  .select2-selection--single {
+    @apply h-12 w-full rounded border border-n-30 px-4 py-3 text-sm text-n-40 outline-none duration-300;
+
+    .select2-selection__rendered {
+      @apply p-0 text-sm leading-normal;
+    }
+
+    .select2-selection__arrow {
+      @apply h-11;
+    }
+
+    .select2-selection__clear span {
+      @apply mr-2.5 text-sm;
+    }
+
+    .select2-selection__placeholder {
+      @apply text-sm text-n-40;
+    }
+  }
+
+  .select2-results__option--highlighted[aria-selected] {
+    color: #1f2937;
+    background-color: #f3f4f6;
+  }
+
+  .select2-results__option[aria-selected] {
+    @apply text-sm text-n-50;
+  }
+}
+
+.max-w-half {
+  max-width: 50%;
 }
