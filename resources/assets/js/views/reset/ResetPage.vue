@@ -55,6 +55,10 @@ export default defineComponent({
       axios
         .post('/password/email', formData)
         .then((res) => {
+          if (res.request.responseURL.includes('activities')) {
+            window.location.href = '/activities';
+          }
+
           const response = res.data;
           const errors =
             !response.success || 'errors' in response ? response.errors : [];
