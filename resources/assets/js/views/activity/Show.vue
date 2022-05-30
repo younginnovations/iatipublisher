@@ -242,9 +242,10 @@
       <div class="activities__content">
         <div class="inline-flex flex-wrap gap-2">
           <a
-            v-for="(post, index) in groupedData"
+            v-for="(post, key, index) in groupedData"
+            :key="key"
             v-smooth-scroll
-            :href="`#${index}`"
+            :href="`#${key}`"
             class="tab-btn-anchor"
           >
             <button :disabled="post.status == 'disabled'" class="tab-btn">

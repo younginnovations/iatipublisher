@@ -38,17 +38,26 @@
           v-show="searchBtnValue"
           class="button__dropdown button dropdown-btn absolute right-0 top-full z-10 w-[118px] bg-white text-left shadow-dropdown"
         >
-          <ul class="py-2 px-1">
-            <li class="" @click="dropdownFilter('')">
-              <svg-vue class="text-lg" icon="box"></svg-vue>
+          <ul class="w-full bg-eggshell py-2">
+            <li
+              class="flex py-1.5 px-3.5 hover:bg-white"
+              @click="dropdownFilter('')"
+            >
+              <svg-vue class="mr-1 text-lg" icon="box"></svg-vue>
               <span>All Elements</span>
             </li>
-            <li class="" @click="dropdownFilter('core')">
-              <svg-vue class="text-lg" icon="core"></svg-vue>
+            <li
+              class="flex py-1.5 px-3.5 hover:bg-white"
+              @click="dropdownFilter('core')"
+            >
+              <svg-vue class="mr-1 text-lg" icon="core"></svg-vue>
               <span>Core</span>
             </li>
-            <li class="" @click="dropdownFilter('completed')">
-              <svg-vue class="text-lg" icon="double-tick"></svg-vue>
+            <li
+              class="flex py-1.5 px-3.5 hover:bg-white"
+              @click="dropdownFilter('completed')"
+            >
+              <svg-vue class="mr-1 text-lg" icon="double-tick"></svg-vue>
               <span>Completed</span>
             </li>
           </ul>
