@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Http\Requests\Activity;
 
-use App\Helpers\GetCodeName;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Validator;
 
@@ -37,7 +36,7 @@ class ActivityBaseRequest extends FormRequest
                 $validator->addReplacer(
                     'unique_default_lang',
                     function ($message) use ($validator, $defaultLanguage) {
-                        return str_replace(':language', app(GetCodeName::class)->getActivityCodeName('Language', $defaultLanguage), $message);
+                        return str_replace(':language', getCodeListArray('Languages', 'ActivityArray')[$defaultLanguage], $message);
                     }
                 );
 

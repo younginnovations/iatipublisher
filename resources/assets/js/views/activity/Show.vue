@@ -1,6 +1,11 @@
 <template>
   <div class="bg-paper px-10 pt-4 pb-[71px]">
     <!-- title section -->
+    <Toast
+      v-if="toast.visibility"
+      :message="toast.message"
+      :type="toast.type"
+    ></Toast>
     <div class="page-title mb-6">
       <div class="flex items-end gap-4">
         <div class="title grow-0">
@@ -285,7 +290,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue';
+import { defineComponent, onMounted, reactive, ref } from 'vue';
 import { useToggle } from '@vueuse/core';
 import HoverText from '../../components/HoverText.vue';
 import ProgressBar from '../../components/ProgressBar.vue';
@@ -293,6 +298,7 @@ import Elements from './partials/ActivitiesElements.vue';
 import ActivityElement from './partials/ActivityElement.vue';
 import Modal from '../../components/PopupModal.vue';
 import BtnComponent from '../../components/ButtonComponent.vue';
+import Toast from '../../components/Toast.vue';
 
 export default defineComponent({
   components: {
@@ -302,6 +308,7 @@ export default defineComponent({
     ActivityElement,
     Modal,
     BtnComponent,
+    Toast,
   },
   props: {
     elements: {
@@ -322,6 +329,12 @@ export default defineComponent({
     },
   },
   setup(props) {
+    const toast = reactive({
+      visibility: false,
+      message: '',
+      type: true,
+    });
+
     /**
      * For modal popup
      */
