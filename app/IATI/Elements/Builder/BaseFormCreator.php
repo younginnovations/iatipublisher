@@ -65,14 +65,5 @@ class BaseFormCreator
                 ],
             ],
             ]);
-        // ->add('Save', 'submit', ['attr' => ['class' => ''], 'label' => 'Save'])
-        // ->add('Cancel', 'button', [
-        //     'label' => false,
-        //     'value' => 'Cancel',
-        //     'attr'  => [
-        //         'class' => '',
-        //         'href'  => '',
-        //     ],
-        // ]);
     }
 }
