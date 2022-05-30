@@ -79,6 +79,8 @@ class RegisterController extends Controller
             'full_name'             => ['required', 'string', 'max:255'],
             'email'                 => ['required', 'string', 'email', 'max:255', 'unique:users,email'],
             'publisher_id'          => ['required', 'string', 'max:255', 'unique:organizations,publisher_id'],
+            'publisher_name'        => ['required', 'string', 'max:255', 'unique:organizations,publisher_name'],
+            'identifier'            => ['required', 'string', 'max:255', 'unique:organizations,identifier'],
             'password'              => ['required', 'string', 'min:8', 'confirmed'],
             'password_confirmation' => ['required', 'string', 'min:8'],
         ]);
@@ -96,7 +98,8 @@ class RegisterController extends Controller
             $postData = $request->all();
             $validator = Validator::make($postData, [
                 'publisher_id'        => ['required', 'string', 'max:255', 'unique:organizations,publisher_id'],
-                'publisher_name'      => ['required', 'string', 'max:255'],
+                'publisher_name'      => ['required', 'string', 'max:255', 'unique:organizations,publisher_name'],
+                'identifier'          => ['required', 'string', 'max:255', 'unique:organizations,identifier'],
                 'registration_agency' => ['required'],
                 'registration_number' => ['required'],
             ]);
@@ -191,7 +194,7 @@ class RegisterController extends Controller
     public function register(Request $request): \Illuminate\Http\JsonResponse|\Illuminate\Http\RedirectResponse
     {
         $validator = Validator::make($request->all(), [
-            'username'              => ['required', 'string', 'max:255', 'unique:users,username'],
+            'username'              => ['required', 'max:255', 'string', 'unique:users,username'],
             'full_name'             => ['required', 'string', 'max:255'],
             'email'                 => ['required', 'string', 'email', 'max:255', 'unique:users,email'],
             'publisher_id'          => ['required', 'string', 'max:255', 'unique:organizations,publisher_id'],
