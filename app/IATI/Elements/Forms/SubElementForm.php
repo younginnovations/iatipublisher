@@ -7,48 +7,6 @@ use Kris\LaravelFormBuilder\Form;
 class SubElementForm extends Form
 {
     /**
-     * @param $field
-     *
-     * @return void
-     */
-    public function buildFields($field): void
-    {
-        $options = [
-            'label'         => $field['label'] ?? 'Label',
-            'help_block'    => [
-                'text' => $field['help_text']['text'] ?? '',
-            ],
-            'hover_block' => [
-                'title' => $field['label'],
-                'text'  => $field['hover_text'] ?? '',
-            ],
-            'label'         => $field['label'] ?? '',
-            'required'      => false,
-            'multiple'      => $field['multiple'] ?? false,
-            'attr' => [
-                'class' => 'form__input border-0',
-            ],
-            'wrapper' => [
-                'class' => 'form-field basis-6/12',
-            ],
-        ];
-
-        if ($field['type'] == 'select') {
-            $options['attr']['class'] = 'select2';
-            $options['empty_value'] = $field['empty_value'] ?? 'Select a value';
-            $options['choices'] = $field['choices'] ?? false;
-            $options['default_value'] = $field['default'] ?? false;
-        }
-
-        $this
-            ->add(
-                $field['name'],
-                $field['type'],
-                $options
-            );
-    }
-
-    /**
      * @return mixed|void
      */
     public function buildForm()
@@ -68,5 +26,47 @@ class SubElementForm extends Form
                 'class' => 'delete delete-item',
             ],
         ]);
+    }
+
+    /**
+     * @param $field
+     *
+     * @return void
+     */
+    public function buildFields($field): void
+    {
+        $options = [
+            'label' => $field['label'] ?? 'Label',
+            'help_block' => [
+                'text' => $field['help_text']['text'] ?? '',
+            ],
+            'hover_block' => [
+                'title' => $field['label'],
+                'text' => $field['hover_text'] ?? '',
+            ],
+            'label' => $field['label'] ?? '',
+            'required' => false,
+            'multiple' => $field['multiple'] ?? false,
+            'attr' => [
+                'class' => 'form__input border-0',
+            ],
+            'wrapper' => [
+                'class' => 'form-field basis-6/12 max-w-half',
+            ],
+        ];
+
+        if ($field['type'] == 'select') {
+            $options['attr']['class'] = 'select2';
+            $options['empty_value'] = $field['empty_value'] ?? 'Select a value';
+            $options['choices'] = $field['choices'] ?? false;
+            $options['default_value'] = $field['default'] ?? false;
+        }
+
+        $this
+            ->add(
+                $field['name'],
+                $field['type'],
+                $options
+            );
     }
 }
