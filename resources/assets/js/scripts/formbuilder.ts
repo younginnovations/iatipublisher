@@ -1,4 +1,5 @@
 import $ from 'jquery';
+import 'select2';
 
 class FormBuilder {
 
@@ -10,6 +11,9 @@ class FormBuilder {
     var count = $(target).attr('child_count') ? parseInt($(target).attr('child_count') as string) + 1 : $('.form-child-body').length+1;
     var proto = container.data('prototype').replace(/__NAME__/g, count);
     $('.form-child-body').last().after($(proto));
+    $('.select2').last().select2({
+      placeholder: 'Select language',
+    });
     $('.add_to_collection').attr('child_count', count);
   }
 
@@ -18,7 +22,7 @@ class FormBuilder {
     ev.preventDefault();
     var target = ev.target as EventTarget;
     var collectionLength = $('.form-child-body').length;
-    var count = $(target).attr('child_count') ? parseInt($(target).attr('child_count') as string)+1 : collectionLength;
+    var count = $('.add_to_collection').attr('child_count') ? parseInt($('.add_to_collection').attr('child_count') as string)+1 : collectionLength;
     $('.add_to_collection').attr('child_count', count);
 
     if(collectionLength > 1) {

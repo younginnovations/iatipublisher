@@ -30,6 +30,7 @@ class TitleRequest extends ActivityBaseRequest
     {
         $messages['narrative.*.narrative.required'] = 'The text field is required.';
         $messages['narrative.unique_lang'] = 'The @xml:lang field must be unique.';
+        $messages['narrative.unique_default_lang'] = 'The @xml:lang field must be unique.';
 
         return $messages;
     }

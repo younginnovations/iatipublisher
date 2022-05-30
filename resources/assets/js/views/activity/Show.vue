@@ -1,6 +1,11 @@
 <template>
   <div class="bg-paper px-10 pt-4 pb-[71px]">
     <!-- title section -->
+    <Toast
+      v-if="toast.visibility"
+      :message="toast.message"
+      :type="toast.type"
+    ></Toast>
     <div class="page-title mb-6">
       <div class="flex items-end gap-4">
         <div class="title grow-0">
@@ -17,7 +22,7 @@
           </div>
           <div class="inline-flex items-center">
             <div class="mr-3">
-              <a href="/">
+              <a href="/activities">
                 <svg-vue icon="arrow-short-left"></svg-vue>
               </a>
             </div>
@@ -136,11 +141,12 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, ref } from 'vue';
+import { defineComponent, onMounted, reactive, ref } from 'vue';
 import HoverText from '../../components/HoverText.vue';
 import ProgressBar from '../../components/ProgressBar.vue';
 import Elements from './partials/ActivitiesElements.vue';
 import ActivityElement from './partials/ActivityElement.vue';
+import Toast from '../../components/Toast.vue';
 
 export default defineComponent({
   components: {
@@ -148,6 +154,7 @@ export default defineComponent({
     ProgressBar,
     Elements,
     ActivityElement,
+    Toast,
   },
   props: {
     elements: {
@@ -168,6 +175,12 @@ export default defineComponent({
     },
   },
   setup(props) {
+    const toast = reactive({
+      visibility: false,
+      message: '',
+      type: true,
+    });
+
     /**
      * Grouping all the datas for scroll function
      *
@@ -204,6 +217,7 @@ export default defineComponent({
       scrollRef,
       activityGrouped,
       activityId,
+      toast,
     };
   },
 });
