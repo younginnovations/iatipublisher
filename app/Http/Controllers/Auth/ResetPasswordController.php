@@ -9,7 +9,8 @@ use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\ResetsPasswords;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Validation\Rules\Password;
+use Illuminate\Support\Facades\Password;
+use Illuminate\Validation\Rules;
 
 /**
  * Class ResetPasswordController.
@@ -82,8 +83,39 @@ class ResetPasswordController extends Controller
         return [
             'token'                 => 'required',
             'email'                 => 'required|email',
-            'password'              => ['required', 'confirmed', Password::defaults()],
-            'password_confirmation' => ['required'],
+            'password'              => ['required', 'confirmed', 'string', 'min:8', 'max:255', Rules\Password::defaults()],
+            'password_confirmation' => ['required', 'string', 'min:8', 'max:255'],
         ];
+    }
+
+    /**
+     * Reset the given user's password.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Http\JsonResponse
+     */
+    public function reset(Request $request)
+    {
+        $request['password'] = isset($request['password']) && $request['password'] ? decryptString($request['password'], 'test') : '';
+        $request['password_confirmation'] = isset($request['password_confirmation']) && $request['password_confirmation'] ? decryptString($request['password_confirmation'], 'test') : '';
+
+        $request->validate($this->rules(), $this->validationErrorMessages());
+
+        // Here we will attempt to reset the user's password. If it is successful we
+        // will update the password on an actual user model and persist it to the
+        // database. Otherwise we will parse the error and return the response.
+        $response = $this->broker()->reset(
+            $this->credentials($request),
+            function ($user, $password) {
+                $this->resetPassword($user, $password);
+            }
+        );
+
+        // If the password was successfully reset, we will redirect the user back to
+        // the application's home authenticated view. If there is an error we can
+        // redirect them back to where they came from with their error message.
+        return $response == Password::PASSWORD_RESET
+            ? $this->sendResetResponse($request, $response)
+            : $this->sendResetFailedResponse($request, $response);
     }
 }

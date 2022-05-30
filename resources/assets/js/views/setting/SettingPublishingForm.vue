@@ -11,7 +11,7 @@
         </button>
       </div>
     </div>
-    <div class="register mt-6">
+    <div class="register mt-6" @keyup.enter="autoVerify">
       <div class="register__container">
         <div>
           <div class="relative">
@@ -121,6 +121,7 @@ export default defineComponent({
     }
 
     function autoVerify() {
+      console.log('a');
       emit('submitPublishing');
     }
 
