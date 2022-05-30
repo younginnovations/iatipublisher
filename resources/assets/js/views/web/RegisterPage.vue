@@ -226,6 +226,7 @@ import EmailVerification from './EmailVerification.vue';
 import HoverText from './../../components/HoverText.vue';
 import Multiselect from '@vueform/multiselect';
 import Loader from '../../components/Loader.vue';
+import CryptoJS from 'crypto-js';
 
 export default defineComponent({
   components: {
@@ -459,10 +460,18 @@ export default defineComponent({
     });
 
     function verifyPublisher() {
-      formData.identifier = `${formData.registration_agency}-${formData.registration_number}`;
       isLoaderVisible.value = true;
+
+      formData.identifier = `${formData.registration_agency}-${formData.registration_number}`;
+
+      let form = {
+        password: encrypt(formData.password, 'test'),
+        password_confirmation: encrypt(formData.password_confirmation, 'test'),
+      };
+
+      console.log({ ...formData, ...form });
       axios
-        .post('/verifyPublisher', formData)
+        .post('/verifyPublisher', { ...formData, ...form })
         .then((res) => {
           const response = res.data;
           publisherExists.value = true;
@@ -499,12 +508,51 @@ export default defineComponent({
         });
     }
 
+    function encrypt(string: string, key: string) {
+      var iv = CryptoJS.lib.WordArray.random(16); 
+
+      var salt = CryptoJS.lib.WordArray.random(256);
+      var iterations = 999;
+      var encryptMethodLength = 256 / 4;
+      var hashKey = CryptoJS.PBKDF2(key, salt, {
+        hasher: CryptoJS.algo.SHA512,
+        keySize: encryptMethodLength / 8,
+        iterations: iterations,
+      });
+
+      var encrypted = CryptoJS.AES.encrypt(string, hashKey, {
+        mode: CryptoJS.mode.CBC,
+        iv: iv,
+      });
+      var encryptedString = CryptoJS.enc.Base64.stringify(encrypted.ciphertext);
+
+      var output = {
+        ciphertext: encryptedString,
+        iv: CryptoJS.enc.Hex.stringify(iv),
+        salt: CryptoJS.enc.Hex.stringify(salt),
+        iterations: iterations,
+      };
+
+      return CryptoJS.enc.Base64.stringify(
+        CryptoJS.enc.Utf8.parse(JSON.stringify(output))
+      );
+    }
+
     function submitForm() {
-      isLoaderVisible.value = true;
+      // isLoaderVisible.value = true;
+
+      let form = {
+        password: encrypt(formData.password, 'test'),
+        password_confirmation: encrypt(formData.password_confirmation, 'test'),
+      };
 
       axios
-        .post('/register', formData)
+        .post('/register', { ...formData, ...form })
         .then((res) => {
+          if (res.request.responseURL.includes('activities')) {
+            window.location.href = '/activities';
+          }
+
           const response = res.data;
           const errors =
             !response.success || 'errors' in response ? response.errors : [];
@@ -525,6 +573,7 @@ export default defineComponent({
           }
         })
         .catch((error) => {
+          console.log(error);
           const { errors } = error.response.data;
           isLoaderVisible.value = false;
           errorData.username = errors.username ? errors.username[0] : '';

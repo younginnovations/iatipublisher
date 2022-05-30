@@ -60,6 +60,7 @@
 import { defineComponent, reactive, ref } from 'vue';
 import Loader from '../../components/Loader.vue';
 import axios from 'axios';
+import CryptoJS from 'crypto-js';
 
 export default defineComponent({
   components: {
@@ -89,12 +90,53 @@ export default defineComponent({
       password_confirmation: '',
     });
 
+    function encrypt(string: string, key: string) {
+      var iv = CryptoJS.lib.WordArray.random(16); // the reason to be 16, please read on `encryptMethod` property.
+
+      var salt = CryptoJS.lib.WordArray.random(256);
+      var iterations = 999;
+      var encryptMethodLength = 256 / 4; // example: AES number is 256 / 4 = 64
+      var hashKey = CryptoJS.PBKDF2(key, salt, {
+        hasher: CryptoJS.algo.SHA512,
+        keySize: encryptMethodLength / 8,
+        iterations: iterations,
+      });
+
+      var encrypted = CryptoJS.AES.encrypt(string, hashKey, {
+        mode: CryptoJS.mode.CBC,
+        iv: iv,
+      });
+      var encryptedString = CryptoJS.enc.Base64.stringify(encrypted.ciphertext);
+
+      var output = {
+        ciphertext: encryptedString,
+        iv: CryptoJS.enc.Hex.stringify(iv),
+        salt: CryptoJS.enc.Hex.stringify(salt),
+        iterations: iterations,
+      };
+
+      return CryptoJS.enc.Base64.stringify(
+        CryptoJS.enc.Utf8.parse(JSON.stringify(output))
+      );
+    }
+
     function reset() {
       loaderVisibility.value = true;
 
+      let form = {
+        email: formData.email,
+        token: props.reset_token,
+        password_confirmation: encrypt(formData.password_confirmation, 'test'),
+        password: encrypt(formData.password, 'test'),
+      };
+
       axios
-        .post('/reset', formData)
+        .post('/reset', form)
         .then((res) => {
+          if (res.request.responseURL.includes('activities')) {
+            window.location.href = '/activities';
+          }
+
           const response = res.data;
           const errors = 'errors' in response ? response.errors : [];
           errorData.password = errors.password ? errors.password[0] : '';
