@@ -1,0 +1,35 @@
+{
+  "organisation_identifier": {
+    "core": true,
+    "completed": true
+  },
+  "organisation_name": {
+    "core": true,
+    "completed": true
+  },
+  "reporting_organisation": {
+    "completed": true
+  },
+  "total_budget": {
+    "core": true,
+    "completed": true
+  },
+  "recipient_org_budget": {
+    "core": true,
+    "completed": true
+  },
+  "recipient_country_budget": {
+    "core": true,
+    "completed": true
+  },
+  "recipient_region_budget": {
+    "core": true,
+    "completed": true
+  },
+  "total_expenditure": {
+    "completed": true
+  },
+  "document_link": {
+    "completed": true
+  }
+}

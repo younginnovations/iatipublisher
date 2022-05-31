@@ -63,7 +63,11 @@
       <div class="divider mb-4 h-px w-full bg-n-20"></div>
       <template v-if="title === 'title'">
         <!-- Title content -->
-        <div v-for="(post, index) in content" class="title-content">
+        <div
+          v-for="(post, index) in content"
+          class="title-content"
+          :key="index"
+        >
           <div
             v-if="post.language"
             class="language mb-1.5 text-sm italic text-n-30"

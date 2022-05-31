@@ -142,8 +142,6 @@ export default defineComponent({
   },
 
   setup(props) {
-    const dropdown = ref();
-    const dropdownBtn = ref();
     const toastVisibility = ref(false);
     const toastMessage = ref('');
     const toastType = ref(false);
@@ -181,7 +179,7 @@ export default defineComponent({
         },
         {
           name: 'Organisation DATA',
-          permalink: '#',
+          permalink: '/organisation',
           active: false,
         },
         {

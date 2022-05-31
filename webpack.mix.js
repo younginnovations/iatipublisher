@@ -4,6 +4,7 @@ require('laravel-mix-svg-vue');
 const tailwindCss = require('tailwindcss');
 
 if (mix.inProduction()) {
+  mix.version();
   mix.options({
     terser: {
       terserOptions: {
@@ -28,10 +29,10 @@ if (mix.inProduction()) {
  |
  */
 
-mix.ts('resources/assets/js/app.ts', 'public/js').vue();
+mix.ts('resources/assets/js/app.ts', 'public/js').vue().version();
 
-mix.ts('resources/assets/js/scripts/script.ts', 'public/js');
-mix.ts('resources/assets/js/scripts/formbuilder.ts', 'public/js');
+mix.ts('resources/assets/js/scripts/script.ts', 'public/js').version();
+mix.ts('resources/assets/js/scripts/formbuilder.ts', 'public/js').version();
 
 // mix
 //   .webpackConfig({
