@@ -239,7 +239,10 @@
                 position="right"
               />
             </div>
-            <ProgressBar :percent="progress" class="mb-3" />
+            <RadialProgressBar
+              class="mb-3 h-20 text-8xl"
+              :isPercent="true"
+            ></RadialProgressBar>
             <span>Fill core elements to get 100% score</span>
           </div>
           <div class="activities__card elements">
@@ -264,7 +267,7 @@
             </div>
             <div class="flex justify-between">
               <div class="flex items-center space-x-1">
-                <svg-vue icon="double-tick" />
+                <svg-vue icon="double-tick" class="text-spring-50"></svg-vue>
                 <span>Completed</span>
               </div>
               <HoverText
@@ -364,7 +367,7 @@ import { useToggle } from '@vueuse/core';
 // components
 import { Result } from './elements/Index';
 import HoverText from 'Components/HoverText.vue';
-import ProgressBar from 'Components/ProgressBar.vue';
+import RadialProgressBar from 'Components/RadialProgressBar.vue';
 import Modal from 'Components/PopupModal.vue';
 import BtnComponent from 'Components/ButtonComponent.vue';
 import Toast from 'Components/Toast.vue';
@@ -375,13 +378,13 @@ import ActivityElement from 'Activity/partials/ActivityElement.vue';
 export default defineComponent({
   components: {
     HoverText,
-    ProgressBar,
     Elements,
     ActivityElement,
     Result,
     Modal,
     BtnComponent,
     Toast,
+    RadialProgressBar,
   },
   props: {
     elements: {
