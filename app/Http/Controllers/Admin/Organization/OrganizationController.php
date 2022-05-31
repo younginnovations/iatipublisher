@@ -7,6 +7,7 @@ namespace App\Http\Controllers\Admin\Organization;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Organization\Organization;
 use App\IATI\Services\Organization\OrganizationService;
+use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 
 /**
@@ -30,12 +31,16 @@ class OrganizationController extends Controller
 
     /**
      * Display a listing of the resource.
-     *
-     * @return void
      */
-    public function index(): void
+    public function index()
     {
-        //
+        $elements = json_decode(file_get_contents(app_path('Data/Organization/OrganisationElements.json')), true);
+        $elementGroups = json_decode(file_get_contents(app_path('Data/Organization/OrganisationElementsGroup.json')), true);
+        $progress = 75;
+        $activity = ['organisation_identifier' => [['narrative'=>'Organisation Name', 'language'=>'en']]];
+
+        // return view('admin.activity.show', compact('elements', 'elementGroups', 'progress', 'activity'));
+        return view('admin.organisation.index', compact('elements', 'elementGroups', 'progress', 'activity'));
     }
 
     /**
