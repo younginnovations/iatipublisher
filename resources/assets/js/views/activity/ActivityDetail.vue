@@ -237,7 +237,10 @@
                 position="right"
               />
             </div>
-            <ProgressBar :percent="progress" class="mb-3" />
+            <RadialProgressBar
+              class="mb-3 h-20 text-8xl"
+              :isPercent="true"
+            ></RadialProgressBar>
             <span>Fill core elements to get 100% score</span>
           </div>
           <div class="activities__card elements">
@@ -262,7 +265,7 @@
             </div>
             <div class="flex justify-between">
               <div class="flex items-center space-x-1">
-                <svg-vue icon="double-tick" />
+                <svg-vue icon="double-tick" class="text-spring-50"></svg-vue>
                 <span>Completed</span>
               </div>
               <HoverText
@@ -337,22 +340,22 @@
 import { defineComponent, onMounted, reactive } from 'vue';
 import { useToggle } from '@vueuse/core';
 import HoverText from '../../components/HoverText.vue';
-import ProgressBar from '../../components/ProgressBar.vue';
 import Elements from './partials/ActivitiesElements.vue';
 import ActivityElement from './partials/ActivityElement.vue';
 import Modal from '../../components/PopupModal.vue';
 import BtnComponent from '../../components/ButtonComponent.vue';
 import Toast from '../../components/Toast.vue';
+import RadialProgressBar from '../../components/RadialProgressBar.vue';
 
 export default defineComponent({
   components: {
     HoverText,
-    ProgressBar,
     Elements,
     ActivityElement,
     Modal,
     BtnComponent,
     Toast,
+    RadialProgressBar,
   },
   props: {
     elements: {
@@ -496,7 +499,7 @@ export default defineComponent({
 
 <style lang="scss">
 .activities {
-  @apply flex gap-7;
+  @apply flex space-x-7;
 
   &__sidebar {
     width: 280px;

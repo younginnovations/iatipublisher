@@ -34,6 +34,11 @@ import PasswordRecovery from './views/reset/PasswordRecovery.vue';
 import ResetPassword from './views/reset/ResetPassword.vue';
 
 /**
+ * Organisation data
+ */
+ import OrganisationData from './views/organisation/OrganisationData.vue';
+
+/**
  * Additional Components
  */
 import HoverText from './components/HoverText.vue';
@@ -80,6 +85,11 @@ app.component('ResetPassword', ResetPassword);
  * Registering Additional Components
  */
 app.component('HoverText', HoverText);
+
+/**
+ * Organisation data
+ */
+app.component('organisation-data', OrganisationData);
 
 /**
  * Extension to inline SVG files with Vue.js and optimize them automatically with SVGO

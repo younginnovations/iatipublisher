@@ -13,5 +13,5 @@ use Illuminate\Support\Facades\Route;
 |
 */
 Route::name('admin.')->group(function () {
-    Route::resource('/organization', \App\Http\Controllers\Admin\Organization\OrganizationController::class);
+    Route::resource('/organisation', \App\Http\Controllers\Admin\Organization\OrganizationController::class);
 });
