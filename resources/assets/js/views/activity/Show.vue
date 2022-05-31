@@ -242,7 +242,7 @@
       <div class="activities__content">
         <div class="inline-flex flex-wrap gap-2">
           <a
-            v-for="(post, key, index) in groupedData"
+            v-for="(post, key) in groupedData"
             :key="key"
             v-smooth-scroll
             :href="`#${key}`"
@@ -255,7 +255,6 @@
                   :name="post.label"
                   hover_text="You cannot publish an activity until all the mandatory fields have been filled."
                   icon_size="text-tiny"
-                  name=""
                 ></HoverText>
               </span>
             </button>
@@ -263,8 +262,8 @@
         </div>
 
         <div class="activities__content--elements -mx-3 flex flex-wrap">
-          <template v-for="(post, key, index) in activities">
-            <template v-for="(element, name, i) in post.elements">
+          <template v-for="(post, key, index) in activities" :key="index">
+            <template v-for="(element, name, i) in post.elements" :key="i">
               <ActivityElement
                 v-if="Object.keys(element.content).length > 0"
                 :id="key"
@@ -402,7 +401,7 @@ export default defineComponent({
 
 <style lang="scss">
 .activities {
-  @apply flex gap-7;
+  @apply flex space-x-7;
 
   &__sidebar {
     width: 280px;

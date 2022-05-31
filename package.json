@@ -54,6 +54,7 @@
     "ts-loader": "^9.2.8",
     "typescript": "^4.6.3",
     "vue3-circle-progress": "^1.0.7",
+    "vue3-radial-progress": "^1.1.1",
     "vue3-smooth-scroll": "^0.8.1",
     "vuex": "^4.0.2",
     "vuex-map-fields": "^1.4.1"

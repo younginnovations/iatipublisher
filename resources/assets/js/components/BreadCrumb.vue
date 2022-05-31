@@ -4,6 +4,8 @@
       <p>
         <a href="/" class="font-bold text-n-40">Your Activities</a>
         <span class="separator"> / </span>
+        <span class="last">{{ title }}</span>
+        <span class="separator"> / </span>
         <span class="last">Partnership against child exploitation</span>
       </p>
     </nav>
@@ -14,8 +16,16 @@
 import { defineComponent } from 'vue';
 
 export default defineComponent({
-  setup: () => ({
-    title: 'Breadcrumb Component',
+  props: {
+    title: {
+      type: String,
+      required: true,
+    },
+  },
+  setup: (props) => ({
+    return: {
+      props,
+    },
   }),
 });
 </script>
