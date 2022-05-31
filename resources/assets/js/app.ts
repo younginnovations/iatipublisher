@@ -13,7 +13,6 @@ import RegisterPage from './views/web/RegisterPage.vue';
 
 /**
  * Vue components for Activities Listing
- *
  */
 import ResultDetail from './views/activity/results/ResultDetail.vue';
 import ResultList from './views/activity/results/ResultList.vue';
@@ -40,6 +39,11 @@ import SettingPage from './views/setting/SettingPage.vue';
 import ResetPage from './views/reset/ResetPage.vue';
 import PasswordRecovery from './views/reset/PasswordRecovery.vue';
 import ResetPassword from './views/reset/ResetPassword.vue';
+
+/**
+ * Organisation data
+ */
+ import OrganisationData from './views/organisation/OrganisationData.vue';
 
 /**
  * Additional Components
@@ -94,6 +98,11 @@ app
  */
 app.component('HoverText', HoverText);
 app.component('PageTitle', PageTitle);
+
+/**
+ * Organisation data
+ */
+app.component('organisation-data', OrganisationData);
 
 /**
  * Extension to inline SVG files with Vue.js and optimize them automatically with SVGO
