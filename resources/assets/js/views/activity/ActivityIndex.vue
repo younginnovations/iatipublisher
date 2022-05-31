@@ -1,7 +1,7 @@
 <template>
   <div
     id="activity-listing-page"
-    class="listing__page bg-paper px-10 pt-4 pb-[71px]"
+    class="page-height bg-paper px-10 pt-4 pb-[71px]"
   >
     <div id="activity">
       <PageTitle :show-buttons="state.showButtons" />
@@ -77,7 +77,7 @@ export default defineComponent({
 </script>
 
 <style lang="scss">
-.listing__page {
+.page-height {
   min-height: calc(100vh - 60px);
 }
 </style>
