@@ -12,7 +12,7 @@
             user or create a new account if you're new here.
           </p>
           <div class="hidden sm:block">
-            <span class="flex">
+            <span class="flex flex-wrap">
               {{
                 page == 'Join Now'
                   ? "Haven't registered yet?"
