@@ -434,7 +434,7 @@ export default defineComponent({
       downloadValue,
       downloadToggle,
       toast,
-      props
+      props,
     };
   },
 });

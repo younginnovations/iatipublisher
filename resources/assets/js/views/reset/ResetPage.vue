@@ -2,11 +2,15 @@
   <div class="mt-14">
     <Loader v-if="loaderVisibility"></Loader>
     <div class="reset" @keyup.enter="reset">
-      <h2>Password Recovery</h2>
-      <p>
-        Please enter your email, we will send you a link to reset your password
-      </p>
-      <div class="reset__content mt-8">
+      <div class="mb-8 flex flex-col">
+        <h2>Password Recovery</h2>
+        <p>
+          Please enter your email, we will send you a link to reset your
+          password
+        </p>
+      </div>
+
+      <div class="reset__content">
         <label class="text-sm font-bold text-bluecoral" for="email"
           >Email</label
         >
@@ -102,9 +106,9 @@ export default defineComponent({
   .mail__icon {
     top: 52px;
   }
-
   h2 {
-    @apply text-heading-3 font-bold text-n-50;
+    @apply mb-2 text-heading-3 font-bold text-n-50;
+    line-height: 60px;
   }
   p {
     @apply text-base text-n-40;

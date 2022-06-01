@@ -21,7 +21,7 @@
                 v-if="registerForm[step].hover_text"
                 :hover_text="registerForm[step].hover_text"
                 :name="registerForm[step].title"
-                :position="right"
+                position="right"
               ></HoverText>
               <span class="text-2xl font-bold text-n-50">{{
                 registerForm[step].title
@@ -176,8 +176,10 @@
         </div>
 
         <aside class="register__sidebar">
-          <span class="text-base font-bold">Step {{ step }} out of 3</span>
-          <ul class="relative mt-6 text-sm text-n-40">
+          <span class="text-base font-bold text-n-50"
+            >Step {{ step }} out of 3</span
+          >
+          <ul class="relative mt-6 text-sm text-bluecoral">
             <li
               v-for="(ele, i) in registerForm"
               :key="ele.title"
@@ -188,23 +190,25 @@
               ]"
             >
               <span v-if="step == parseInt(i)" class="list__active"></span>
-              <span v-if="!ele.is_complete" class="mr-3 ml-6">
-                {{ i }}
-              </span>
-              <span v-if="ele.is_complete" class="mr-3 ml-6">
-                <svg-vue class="text-xs" icon="checked"> </svg-vue>
-              </span>
-              <span
-                :class="[
-                  step == parseInt(i)
-                    ? 'font-bold text-n-50'
-                    : ele.is_complete
-                    ? 'font-bold text-bluecoral'
-                    : 'font-normal text-n-40',
-                ]"
-              >
-                {{ ele.title }}
-              </span>
+              <div class="flex items-center">
+                <span v-if="!ele.is_complete" class="mr-3 ml-6">
+                  {{ i }}
+                </span>
+                <span v-if="ele.is_complete" class="mr-3 ml-6">
+                  <svg-vue class="text-xs" icon="checked"> </svg-vue>
+                </span>
+                <span
+                  :class="[
+                    step == parseInt(i)
+                      ? 'font-bold text-n-50'
+                      : ele.is_complete
+                      ? 'font-bold text-bluecoral'
+                      : 'font-normal text-n-40',
+                  ]"
+                >
+                  {{ ele.title }}
+                </span>
+              </div>
               <p
                 v-if="step == parseInt(i)"
                 class="detail mt-2 mb-6 font-normal xl:pr-2"
@@ -567,7 +571,7 @@ export default defineComponent({
 
 <style lang="scss">
 .label {
-  @apply text-sm font-normal;
+  @apply text-sm font-normal text-n-50;
 }
 
 .section {

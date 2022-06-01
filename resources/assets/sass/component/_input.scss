@@ -37,7 +37,7 @@
 }
 .form__input {
   @apply my-2 box-border w-full rounded border border-n-30 outline-none duration-300;
-  padding: 13px 0 13px 16px;
+  padding: 13px 16px;
 
   &::placeholder {
     @apply text-sm font-normal text-n-40;
@@ -63,7 +63,11 @@
   }
   .multiselect-placeholder {
     letter-spacing: -0.02em;
-    @apply pr-3 text-sm text-n-40 duration-300;
+    @apply w-[310px] overflow-hidden whitespace-nowrap pr-3 text-sm text-n-40 duration-300;
+  }
+  .multiselect-placeholder::after {
+    content: '';
+    @apply absolute right-0 top-3 h-6 w-7 bg-white;
   }
   .multiselect.is-open {
     .multiselect-placeholder {
@@ -81,6 +85,9 @@
     @apply border border-n-30 py-2.5;
   }
   .multiselect-search:focus {
+    @apply bg-n-10;
+  }
+  .multiselect-search:focus + .multiselect-placeholder::after {
     @apply bg-n-10;
   }
   .vue__select {

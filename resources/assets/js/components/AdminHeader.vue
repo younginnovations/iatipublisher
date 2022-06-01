@@ -74,8 +74,10 @@
           <div class="profile__dropdown">
             <ul>
               <li class="border-b border-b-n-20">
-                <svg-vue class="user-profile" icon="user-profile"></svg-vue>
-                <div class="flex flex-col capitalize leading-4">
+                <div>
+                  <svg-vue class="user-profile" icon="user-profile"></svg-vue>
+                </div>
+                <div class="flex flex-col break-all capitalize leading-4">
                   <span class="text-n-50">{{ props.user.full_name }}</span
                   ><span class="text-tiny text-n-40">{{
                     props.organization.publisher_name
