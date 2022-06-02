@@ -139,7 +139,9 @@
         "label": "Type",
         "criteria": "mandatory",
         "multiselect": false,
-        "choices": "Activity/DescriptionType.json"
+        "choices": "Activity/DescriptionType.json",
+        "hover_text": "Activity description types. (General, objectives, etc)<br>Following are the description types:<br>1. General - Unstructured, long description of the activity<br>2. Objectives - Specific objectives for the activity, e.g. taken from logical framework<br>3. Target Groups - Details of groups that are intended to benefit from the activity<br>4. Other - For miscellaneous use. A further classification or breakdown may be included in the narrative. <br><a href='https://iatistandard.org/en/iati-standard/203/codelists/descriptiontype/'>For more information</a>",
+        "help_text": ""
       }
     },
     "sub_elements": {
@@ -152,6 +154,8 @@
         "attr": {
           "row": 4
         },
+        "hover_text": "The free text name or description of the item being described. This can be repeated in multiple languages. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/description/narrative/'>For more information</a>",
+        "help_text": "",
         "attributes": {
           "lang": {
             "name": "language",
@@ -160,6 +164,8 @@
             "required": true,
             "criteria": "mandatory",
             "label": "@xml:lang",
+            "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/description/narrative/'>For more information</a>",
+            "help_text": "",
             "choices": {
               "aa": "Afar",
               "ab": "Abkhazian",
@@ -183,39 +189,101 @@
         "required": true,
         "criteria": "mandatory",
         "label": "Code",
-        "choices": "Activity/ActivityStatus.json"
+        "choices": "Activity/ActivityStatus.json",
+        "hover_text": "An IATI code defining the current status of the activity. This attribute is required. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/activity-status/'>For more information</a>",
+        "help_text": ""
       }
     }
   },
   "activity_date": {
     "label": "Activity Date",
     "criteria": "mandatory",
+    "add_more": true,
     "attributes": {
       "date_type": {
+        "name": "type",
         "type": "select",
         "required": true,
         "criteria": "mandatory",
-        "label": "Activity Date Type"
+        "label": "Type",
+        "choices": "Activity/ActivityDateType.json",
+        "multiselect": false,
+        "hover_text": "An IATI code defining the type of activity date being reported. This attribute is required. <a href='https://iatistandard.org/en/iati-standard/203/codelists/activitydatetype/'>For more information</a>",
+        "help_text": ""
       },
       "iso-date": {
+        "name": "date",
         "type": "date",
         "required": true,
         "criteria": "mandatory",
-        "label": "Activity Date"
+        "label": "Date",
+        "hover_text": "This attribute is required. This value must be of type xsd:date. <br>11.1.2: The planned start date of the activity must be before the planned end date.<br>11.1.3: The actual start date of the activity must be before the actual end date.<br>11.1.4: The actual start date of the activity must not be in the future.<br>11.1.5: The actual end date of the activity must not be in the future. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/activity-date/'>For more information</a>",
+        "help_text": ""
       }
     },
     "sub-elements": {
       "narrative": {
-        "type": "text",
+        "name": "narrative",
+        "type": "textarea",
         "required": false,
-        "label": "Narrative",
         "criteria": "",
+        "label": "Text",
+        "attr": {
+          "row": 4
+        },
+        "hover_text": "The free text name or description of the item being described. This can be repeated in multiple languages. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/activity-date/narrative/'>For more information</a>",
+        "help_text": "",
         "attributes": {
           "lang": {
+            "name": "language",
             "type": "select",
+            "multiSelect": false,
             "required": false,
-            "label": "Language",
-            "criteria": ""
+            "criteria": "",
+            "label": "@xml:lang",
+            "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/description/narrative/'>For more information</a>",
+            "help_text": "",
+            "choices": {
+              "aa": "Afar",
+              "ab": "Abkhazian",
+              "en": "English",
+              "fr": "French",
+              "sp": "Spanish"
+            }
+          }
+        }
+      }
+    },
+
+    "sub_elements": {
+      "narrative": {
+        "name": "narrative",
+        "type": "textarea",
+        "required": true,
+        "criteria": "mandatory",
+        "label": "Text",
+        "attr": {
+          "row": 4
+        },
+        "hover_text": "The free text name or description of the item being described. This can be repeated in multiple languages. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/description/narrative/'>For more information</a>",
+        "help_text": "",
+        "attributes": {
+          "lang": {
+            "name": "language",
+            "type": "select",
+            "multiSelect": false,
+            "required": true,
+            "criteria": "mandatory",
+            "label": "@xml:lang",
+            "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/description/narrative/'>For more information</a>",
+            "help_text": "",
+            "choices": {
+              "aa": "Afar",
+              "ab": "Abkhazian",
+              "en": "English",
+              "fr": "French",
+              "sp": "Spanish"
+            }
           }
         }
       }
@@ -230,9 +298,11 @@
         "multiselect": false,
         "required": true,
         "criteria": "mandatory",
-        "label": "Activity Scope Code",
+        "label": "Code",
         "type": "select",
-        "choices": "Activity/ActivityScope.json"
+        "choices": "Activity/ActivityScope.json",
+        "hover_text": "The geographical scope. See IATI codelist for values.This attribute is required.This value must be of type xsd:string. <a href='https://iatistandard.org/en/iati-standard/203/codelists/activityscope/'>For more information</a>",
+        "help_text": ""
       }
     }
   },
@@ -459,7 +529,9 @@
         "criteria": "recommended",
         "required": true,
         "type": "select",
-        "choices": "Activity/CollaborationType.json"
+        "choices": "Activity/CollaborationType.json",
+        "hover_text": "A code from the OECD DAC CRS “Bi_Multi” codelist. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/collaboration-type/'>For more information</a>",
+        "help_text": ""
       }
     }
   },
@@ -474,7 +546,9 @@
         "criteria": "recommended",
         "required": true,
         "type": "select",
-        "choices": "Activity/FlowType.json"
+        "choices": "Activity/FlowType.json",
+        "hover_text": "A code from the OECD DAC CRS “Type of flow” codelist. This attribute is required. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/default-flow-type/'>For more information</a>",
+        "help_text": ""
       }
     }
   },
@@ -489,7 +563,8 @@
         "criteria": "recommended",
         "required": true,
         "type": "select",
-        "choices": "Activity/FinanceType.json"
+        "choices": "Activity/FinanceType.json",
+        "hover_text": "A code from the OECD DAC CRS “Type of finance” codelist. This attribute is required. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/default-finance-type/'>For more information</a>"
       }
     }
   },
@@ -522,7 +597,9 @@
         "criteria": "mandatory",
         "required": true,
         "type": "select",
-        "choices": "Activity/TiedStatus.json"
+        "choices": "Activity/TiedStatus.json",
+        "hover_text": "An IATI code interpreting the usage of Columns 36-38 of the CRS++ reporting format. (Amount tied, Amount partially untied, Amount tied). <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/default-tied-status/'>For more information</a>",
+        "help_text": ""
       }
     }
   },
@@ -636,7 +713,9 @@
         "label": "Percentage",
         "criteria": "",
         "required": true,
-        "type": "text"
+        "type": "text",
+        "hover_text": "The percentage of the total commitment allocated to or planned for capital expenditure. Content must be a decimal number between 0 and 100 inclusive, with no percentage sign. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/capital-spend/'>For more information</a>",
+        "help_text": ""
       }
     }
   },
@@ -651,7 +730,9 @@
         "label": "Reference",
         "criteria": "",
         "required": true,
-        "type": "text"
+        "type": "text",
+        "hover_text": "A valid activity identifier (as defined in iati-activity/iati-identifier).",
+        "help_text": ""
       },
       "activity_type": {
         "name": "relationship_type",
@@ -660,7 +741,9 @@
         "criteria": "",
         "required": true,
         "type": "select",
-        "choices": "Activity/RelatedActivityType.json"
+        "choices": "Activity/RelatedActivityType.json",
+        "hover_text": "An IATI code for the type of relationship",
+        "help_text": ""
       }
     }
   },
@@ -718,21 +801,27 @@
         "label": "Name",
         "criteria": "",
         "required": true,
-        "type": "text"
+        "type": "text",
+        "hover_text": "The original field name in the reporting organisation’s system",
+        "help_text": ""
       },
       "value": {
         "name": "value",
         "label": "Value",
         "criteria": "",
         "required": true,
-        "type": "text"
+        "type": "text",
+        "hover_text": "The original field value in the reporting organisation’s system",
+        "help_text": ""
       },
       "iati-equivalent": {
         "name": "iati-equivalent",
         "label": "IATI Equivalent",
         "criteria": "",
         "required": false,
-        "type": "text"
+        "type": "text",
+        "hover_text": "The name of the equivalent IATI element.",
+        "help_text": ""
       }
     }
   }

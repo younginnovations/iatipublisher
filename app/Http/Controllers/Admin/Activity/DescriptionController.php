@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Admin\Activity;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Activity\Description\DescriptionRequest;
 use App\IATI\Elements\Builder\DescriptionFormCreator;
 use App\IATI\Services\Activity\DescriptionService;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 
 /**
  * Class DescriptionController.
@@ -46,11 +46,12 @@ class DescriptionController extends Controller
     {
         try {
             $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
+            $activity = $this->descriptionService->getActivityData($id);
             $model['description'] = $this->descriptionService->getDescriptionData($id);
             $this->descriptionFormCreator->url = route('admin.activities.description.update', [$id]);
             $form = $this->descriptionFormCreator->editForm($model, $element['description']);
 
-            return view('activity.description.description', compact('form'));
+            return view('activity.description.description', compact('form', 'activity'));
         } catch (\Exception $e) {
             dd(logger()->error($e->getMessage()));
             logger()->error($e->getMessage());
@@ -62,7 +63,7 @@ class DescriptionController extends Controller
      * @param $id
      * @return JsonResponse
      */
-    public function update(Request $request, $id): JsonResponse
+    public function update(DescriptionRequest $request, $id): JsonResponse
     {
         try {
             $activityData = $this->descriptionService->getActivityData($id);

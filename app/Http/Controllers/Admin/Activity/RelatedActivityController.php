@@ -46,11 +46,12 @@ class RelatedActivityController extends Controller
     {
         try {
             $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
+            $activity = $this->relatedActivityService->getActivityData($id);
             $model['related_activity'] = $this->relatedActivityService->getRelatedActivityData($id);
             $this->baseFormCreator->url = route('admin.activities.related-activity.update', [$id]);
             $form = $this->baseFormCreator->editForm($model, $element['related-activity']);
 
-            return view('activity.relatedActivity.relatedActivity', compact('form'));
+            return view('activity.relatedActivity.relatedActivity', compact('form', 'activity'));
         } catch (\Exception $e) {
             dd(logger()->error($e->getMessage()));
             logger()->error($e->getMessage());

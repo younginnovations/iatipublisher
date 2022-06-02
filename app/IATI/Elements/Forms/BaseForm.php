@@ -102,12 +102,26 @@ class BaseForm extends Form
     public function buildField($field): void
     {
         $options = [
-            'label'         => $field['label'] ?? 'Label',
+            'help_block' => [
+                'text' => $field['help_text']['text'] ?? '',
+            ],
+            'hover_block' => [
+                'title' => $field['label'],
+                'text' => $field['hover_text'] ?? '',
+            ],
+            'label'         => $field['label'] ?? '',
             'required'      => $field['required'] ?? false,
             'multiple'      => $field['multiple'] ?? false,
+            'attr' => [
+                'class' => 'form__input border-0',
+            ],
+            'wrapper' => [
+                'class' => 'form-field basis-6/12 max-w-half',
+            ],
         ];
 
         if ($field['type'] == 'select') {
+            $options['attr']['class'] = 'select2';
             $options['empty_value'] = $field['empty_value'] ?? 'Select a value';
             $options['choices'] = $field['choices'] ? (is_string($field['choices']) ? ($this->getCodeList($field['choices'])) : $field['choices']) : false;
             $options['default_value'] = $field['default'] ?? false;

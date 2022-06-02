@@ -46,11 +46,12 @@ class CapitalSpendController extends Controller
     {
         try {
             $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
+            $activity = $this->capitalSpendService->getActivityData($id);
             $model['capital_spend'] = $this->capitalSpendService->getCapitalSpendData($id);
             $this->baseFormCreator->url = route('admin.activities.capital-spend.update', [$id]);
             $form = $this->baseFormCreator->editForm($model, $element['capital-spend']);
 
-            return view('activity.capitalSpend.capitalSpend', compact('form'));
+            return view('activity.capitalSpend.capitalSpend', compact('form', 'activity'));
         } catch (\Exception $e) {
             dd(logger()->error($e->getMessage()));
             logger()->error($e->getMessage());

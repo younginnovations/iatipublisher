@@ -46,11 +46,12 @@ class DefaultTiedStatusController extends Controller
     {
         try {
             $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
+            $activity = $this->defaultTiedStatusService->getActivityData($id);
             $model['default_tied_status'] = $this->defaultTiedStatusService->getDefaultTiedStatusData($id);
             $this->baseFormCreator->url = route('admin.activities.default-tied-status.update', [$id]);
             $form = $this->baseFormCreator->editForm($model, $element['default-tied-status']);
 
-            return view('activity.defaultTiedStatus.defaultTiedStatus', compact('form'));
+            return view('activity.defaultTiedStatus.defaultTiedStatus', compact('form', 'activity'));
         } catch (\Exception $e) {
             dd(logger()->error($e->getMessage()));
             logger()->error($e->getMessage());

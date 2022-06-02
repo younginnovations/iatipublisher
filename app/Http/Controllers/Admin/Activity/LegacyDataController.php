@@ -47,10 +47,11 @@ class LegacyDataController extends Controller
         try {
             $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
             $model['legacy_data'] = $this->activityLegacyDataService->getActivityLegacyData($id);
+            $activity = $this->activityLegacyDataService->getActivityData($id);
             $this->baseFormCreator->url = route('admin.activities.legacy-data.update', [$id]);
             $form = $this->baseFormCreator->editForm($model, $element['legacy-data']);
 
-            return view('activity.legacyData.legacyData', compact('form'));
+            return view('activity.legacyData.legacyData', compact('form', 'activity'));
         } catch (\Exception $e) {
             dd(logger()->error($e->getMessage()));
             logger()->error($e->getMessage());

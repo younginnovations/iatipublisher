@@ -46,11 +46,12 @@ class CollaborationTypeController extends Controller
     {
         try {
             $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
+            $activity = $this->collaborationTypeService->getActivityData($id);
             $model['collaboration_type'] = $this->collaborationTypeService->getCollaborationTypeData($id);
             $this->baseFormCreator->url = route('admin.activities.collaboration-type.update', [$id]);
             $form = $this->baseFormCreator->editForm($model, $element['collaboration-type']);
 
-            return view('activity.collaborationType.collaborationType', compact('form'));
+            return view('activity.collaborationType.collaborationType', compact('form', 'activity'));
         } catch (\Exception $e) {
             dd(logger()->error($e->getMessage()));
             logger()->error($e->getMessage());

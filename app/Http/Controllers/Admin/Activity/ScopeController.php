@@ -46,11 +46,12 @@ class ScopeController extends Controller
     {
         try {
             $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
+            $activity = $this->scopeService->getActivityData($id);
             $model['activity_scope'] = $this->scopeService->getScopeData($id);
             $this->baseFormCreator->url = route('admin.activities.scope.update', [$id]);
             $form = $this->baseFormCreator->editForm($model, $element['activity_scope']);
 
-            return view('activity.scope.scope', compact('form'));
+            return view('activity.scope.scope', compact('form', 'activity'));
         } catch (\Exception $e) {
             dd(logger()->error($e->getMessage()));
             logger()->error($e->getMessage());

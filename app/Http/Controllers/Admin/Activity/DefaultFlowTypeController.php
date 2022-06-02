@@ -46,11 +46,12 @@ class DefaultFlowTypeController extends Controller
     {
         try {
             $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
+            $activity = $this->defaultFlowTypeService->getActivityData($id);
             $model['default_flow_type'] = $this->defaultFlowTypeService->getDefaultFlowTypeData($id);
             $this->baseFormCreator->url = route('admin.activities.default-flow-type.update', [$id]);
             $form = $this->baseFormCreator->editForm($model, $element['default-flow-type']);
 
-            return view('activity.defaultFlowType.defaultFlowType', compact('form'));
+            return view('activity.defaultFlowType.defaultFlowType', compact('form', 'activity'));
         } catch (\Exception $e) {
             dd(logger()->error($e->getMessage()));
             logger()->error($e->getMessage());

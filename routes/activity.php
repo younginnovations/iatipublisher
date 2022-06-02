@@ -40,4 +40,6 @@ Route::name('admin.')->group(function () {
     Route::put('activities/{id}/legacy_data', [\App\Http\Controllers\Admin\Activity\LegacyDataController::class, 'update'])->name('activities.legacy-data.update');
     Route::get('activities/{id}/description', [\App\Http\Controllers\Admin\Activity\DescriptionController::class, 'edit'])->name('activities.description.edit');
     Route::put('activities/{id}/description', [\App\Http\Controllers\Admin\Activity\DescriptionController::class, 'update'])->name('activities.description.update');
+    Route::get('activities/{id}/activity_date', [\App\Http\Controllers\Admin\Activity\DateController::class, 'edit'])->name('activities.date.edit');
+    Route::put('activities/{id}/activity_date', [\App\Http\Controllers\Admin\Activity\DateController::class, 'update'])->name('activities.date.update');
 });

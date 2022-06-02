@@ -46,11 +46,12 @@ class StatusController extends Controller
     {
         try {
             $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
+            $activity = $this->statusService->getActivityData($id);
             $model['activity_status'] = $this->statusService->getStatusData($id);
             $this->baseFormCreator->url = route('admin.activities.status.update', [$id]);
             $form = $this->baseFormCreator->editForm($model, $element['activity_status']);
 
-            return view('activity.status.status', compact('form'));
+            return view('activity.status.status', compact('form', 'activity'));
         } catch (\Exception $e) {
             dd(logger()->error($e->getMessage()));
             logger()->error($e->getMessage());

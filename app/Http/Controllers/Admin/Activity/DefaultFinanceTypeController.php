@@ -46,11 +46,12 @@ class DefaultFinanceTypeController extends Controller
     {
         try {
             $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
+            $activity = $this->defaultFinanceTypeService->getActivityData($id);
             $model['default_finance_type'] = $this->defaultFinanceTypeService->getDefaultFinanceTypeData($id);
             $this->baseFormCreator->url = route('admin.activities.default-finance-type.update', [$id]);
             $form = $this->baseFormCreator->editForm($model, $element['default-finance-type']);
 
-            return view('activity.defaultFinanceType.defaultFinanceType', compact('form'));
+            return view('activity.defaultFinanceType.defaultFinanceType', compact('form', 'activity'));
         } catch (\Exception $e) {
             dd(logger()->error($e->getMessage()));
             logger()->error($e->getMessage());
