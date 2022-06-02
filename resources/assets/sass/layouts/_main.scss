@@ -49,6 +49,11 @@
       }
     }
   }
+  @media screen and (min-width: 1366px) {
+    .join-now {
+      @apply px-10;
+    }
+  }
 }
 @media screen and (min-width: 640px) {
   input {
