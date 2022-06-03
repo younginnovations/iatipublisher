@@ -49,6 +49,7 @@ class SubElementForm extends Form
     public function buildFields($field): void
     {
         $options = [
+            'label' => $field['label'] ?? '',
             'help_block' => [
                 'text' => $field['help_text']['text'] ?? '',
             ],
@@ -56,8 +57,7 @@ class SubElementForm extends Form
                 'title' => $field['label'],
                 'text' => $field['hover_text'] ?? '',
             ],
-            'label' => $field['label'] ?? '',
-            'required' => false,
+            'required' => $field['required'],
             'multiple' => $field['multiple'] ?? false,
             'attr' => [
                 'class' => 'form__input border-0',
