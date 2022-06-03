@@ -19,20 +19,20 @@ class DescriptionCollectionForm extends BaseForm
                 'type'    => 'form',
                 'property' => 'name',
                 'prototype' => true,
-                'prototype_name' => '__NAME__',
+                'prototype_name' => '__PARENT_NAME__',
                 'options' => [
                     'class' => 'App\IATI\Elements\Forms\BaseForm',
                     'data'  => $this->data,
                     'label' => false,
                     'wrapper' => [
-                        'class' => 'form-child-body',
+                        'class' => 'multi-form form-field-group flex flex-wrap',
                     ],
                 ],
             ]
         )->add('add_to_collection', 'button', [
-            'label' => 'add to collection',
+            'label' => 'add more',
             'attr' => [
-                'class' => 'add_to_collection',
+                'class' => 'add_to_parent button relative font-bold text-n-40 text-bluecoral text-xs uppercase leading-normal mt-2 space-x-2',
             ],
         ]);
     }

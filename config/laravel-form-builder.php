@@ -3,7 +3,7 @@
 return [
     'defaults'      => [
         // 'wrapper_class'       => 'form-group form-field-group',
-        'wrapper_class'       => '',
+        'wrapper_class'       => 'subelement',
         'wrapper_error_class' => 'has-error',
         'label_class'         => 'control-label',
         'field_class'         => 'form-control',

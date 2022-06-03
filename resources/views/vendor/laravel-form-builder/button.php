@@ -2,7 +2,7 @@
     <div <?= $options['wrapperAttrs'] ?>>
 <?php endif; ?>
 
-    <?php if ( $name == 'add_to_collection' ): ?>
+    <?php if ( $name == 'add_to_collection' || $name== 'add_more' ): ?>
         <?= Form::button("<span class='mr-1'>".file_get_contents(resource_path('assets/images/svg/add-more.svg'))."</span>".$options['label'], $options['attr']) ?>
     <?php endif; ?>
 
