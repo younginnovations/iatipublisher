@@ -60,6 +60,13 @@ class ActivityBaseRequest extends FormRequest
                 return $check;
             }
         );
+
+        Validator::extendImplicit(
+            'sum',
+            function ($attribute, $value, $parameters, $validator) {
+                return false;
+            }
+        );
     }
 
     /**
@@ -114,6 +121,49 @@ class ActivityBaseRequest extends FormRequest
                     $narrativeIndex
                 )] = 'The text field is required.';
             }
+        }
+
+        return $messages;
+    }
+
+    /**
+     * returns rules for narrative.
+     * @param      $formFields
+     * @param      $formBase
+     * @return array
+     */
+    public function getRulesForNarrative($formFields, $formBase)
+    {
+        $rules = [];
+        $rules[sprintf('%s.narrative', $formBase)][] = 'unique_lang';
+        $rules[sprintf('%s.narrative', $formBase)][] = 'unique_default_lang';
+        foreach ($formFields as $narrativeIndex => $narrative) {
+            $rules[sprintf('%s.narrative.%s.narrative', $formBase, $narrativeIndex)][] = 'required_with:' . sprintf(
+                '%s.narrative.%s.language',
+                $formBase,
+                $narrativeIndex
+            );
+        }
+
+        return $rules;
+    }
+
+    /**
+     * returns messages for narrative.
+     * @param $formFields
+     * @param $formBase
+     * @return array
+     */
+    public function getMessagesForNarrative($formFields, $formBase)
+    {
+        $messages = [];
+        $messages[sprintf('%s.narrative.unique_lang', $formBase)] = 'The @xml:lang field must be unique.';
+        foreach ($formFields as $narrativeIndex => $narrative) {
+            $messages[sprintf(
+                '%s.narrative.%s.narrative.required_with',
+                $formBase,
+                $narrativeIndex
+            )] = 'The text field is required with @xml:lang field.';
         }
 
         return $messages;

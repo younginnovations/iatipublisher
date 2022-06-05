@@ -42,4 +42,8 @@ Route::name('admin.')->group(function () {
     Route::put('activities/{id}/description', [\App\Http\Controllers\Admin\Activity\DescriptionController::class, 'update'])->name('activities.description.update');
     Route::get('activities/{id}/activity_date', [\App\Http\Controllers\Admin\Activity\DateController::class, 'edit'])->name('activities.date.edit');
     Route::put('activities/{id}/activity_date', [\App\Http\Controllers\Admin\Activity\DateController::class, 'update'])->name('activities.date.update');
+    Route::get('activities/{id}/recipient_country', [\App\Http\Controllers\Admin\Activity\RecipientCountryController::class, 'edit'])->name('activities.recipient-country.edit');
+    Route::put('activities/{id}/recipient_country', [\App\Http\Controllers\Admin\Activity\RecipientCountryController::class, 'update'])->name('activities.recipient-country.update');
+    Route::get('activities/{id}/humanitarian_scope', [\App\Http\Controllers\Admin\Activity\HumanitarianScopeController::class, 'edit'])->name('activities.humanitarian-scope.edit');
+    Route::put('activities/{id}/humanitarian_scope', [\App\Http\Controllers\Admin\Activity\HumanitarianScopeController::class, 'update'])->name('activities.humanitarian-scope.update');
 });

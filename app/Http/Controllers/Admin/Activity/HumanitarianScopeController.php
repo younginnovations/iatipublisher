@@ -1,0 +1,83 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Http\Controllers\Admin\Activity;
+
+use App\Http\Controllers\Controller;
+use App\Http\Requests\Activity\HumanitarianScope\HumanitarianScopeRequest;
+use App\IATI\Elements\Builder\ParentCollectionFormCreator;
+use App\IATI\Services\Activity\HumanitarianScopeService;
+use Illuminate\Http\JsonResponse;
+
+/**
+ * Class HumanitarianScopeController.
+ */
+class HumanitarianScopeController extends Controller
+{
+    /**
+     * @var ParentCollectionFormCreator
+     */
+    protected ParentCollectionFormCreator $parentCollectionFormCreator;
+
+    /**
+     * @var HumanitarianScopeService
+     */
+    protected HumanitarianScopeService $humanitarianScopeService;
+
+    /**
+     * HumanitarianScopeController Constructor.
+     *
+     * @param ParentCollectionFormCreator $parentCollectionFormCreator
+     * @param HumanitarianScopeService $humanitarianScopeService
+     */
+    public function __construct(ParentCollectionFormCreator $parentCollectionFormCreator, HumanitarianScopeService $humanitarianScopeService)
+    {
+        $this->parentCollectionFormCreator = $parentCollectionFormCreator;
+        $this->humanitarianScopeService = $humanitarianScopeService;
+    }
+
+    /**
+     * @param int $id
+     *
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|void
+     */
+    public function edit(int $id)
+    {
+        try {
+            $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
+            $activity = $this->humanitarianScopeService->getActivityData($id);
+            $model['humanitarian_scope'] = $this->humanitarianScopeService->getHumanitarianScopeData($id);
+            $this->parentCollectionFormCreator->url = route('admin.activities.humanitarian-scope.update', [$id]);
+            $form = $this->parentCollectionFormCreator->editForm($model, $element['humanitarian-scope']);
+
+            return view('activity.humanitarianScope.humanitarianScope', compact('form', 'activity'));
+        } catch (\Exception $e) {
+            dd(logger()->error($e->getMessage()));
+            logger()->error($e->getMessage());
+        }
+    }
+
+    /**
+     * @param HumanitarianScopeRequest $request
+     * @param $id
+     * @return JsonResponse
+     */
+    public function update(HumanitarianScopeRequest $request, $id): JsonResponse
+    {
+        try {
+            $activityData = $this->humanitarianScopeService->getActivityData($id);
+            $activityHumanitarianScope = $request->all();
+
+            if (!$this->humanitarianScopeService->update($activityHumanitarianScope, $activityData)) {
+                return response()->json(['success' => false, 'error' => 'Error has occurred while updating activity humanitarian scope.']);
+            }
+
+            return response()->json(['success' => true, 'message' => 'Activity humanitarian scope updated successfully.']);
+        } catch (\Exception $e) {
+            logger()->error($e->getMessage());
+
+            return response()->json(['success' => false, 'error' => 'Error has occurred while updating activity humanitarian scope.']);
+        }
+    }
+}

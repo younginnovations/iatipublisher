@@ -7,7 +7,7 @@ namespace App\IATI\Elements\Builder;
 use Kris\LaravelFormBuilder\Form;
 use Kris\LaravelFormBuilder\FormBuilder;
 
-class DateFormCreator
+class ParentCollectionFormCreator
 {
     /**
      * @var string
@@ -35,7 +35,7 @@ class DateFormCreator
     public function editForm(array $model, $formData): Form
     {
         return $this->formBuilder->create(
-            'App\IATI\Elements\Forms\DateCollectionForm',
+            'App\IATI\Elements\Forms\ParentCollectionForm',
             [
                 'method' => 'PUT',
                 'model'  => $model,

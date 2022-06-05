@@ -54,7 +54,11 @@ class DescriptionRepository
      */
     public function update($activityDescription, $activity): bool
     {
-        $activity->description = $activityDescription['description'];
+        foreach ($activityDescription['description'] as $key => $description) {
+            $activityDescription['description'][$key]['narrative'] = array_values($description['narrative']);
+        }
+
+        $activity->description = array_values($activityDescription['description']);
 
         return $activity->save();
     }

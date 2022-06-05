@@ -52,7 +52,7 @@
                                     echo file_get_contents(resource_path('assets/images/svg/note.svg'));
                                 @endphp
                             </span>
-                            <div class="title text-sm font-bold">Activity Date</div>
+                            <div class="title text-sm font-bold">Activity Humanitarian Scope</div>
                             <div class="flex status text-xs leading-5 text-crimson-50 ml-2.5 mr-2.5">
                                 <b class="mr-2 text-base leading-3">.</b>
                                 <span>not completed</span>
@@ -70,10 +70,10 @@
                     {!! form($form) !!}
                     <div class="hidden parent-collection"
                          data_name = "description"
-                         data-prototype="{{ form_row($form->activity_date->prototype()) }}" >
+                         data-prototype="{{ form_row($form->humanitarian_scope->prototype()) }}" >
                     </div>
                     <div class="hidden collection-container"
-                         data-prototype="{{ str_replace('activity_date[0]','activity_date[__PARENT_NAME__]',form_row($form->activity_date->getChildren()[0]->getChild('narrative')->prototype())) }}"
+                         data-prototype="{{ str_replace('humanitarian_scope[0]','humanitarian_scope[__PARENT_NAME__]',form_row($form->humanitarian_scope->getChildren()[0]->getChild('narrative')->prototype())) }}"
                     >
                     </div>
                 </div>

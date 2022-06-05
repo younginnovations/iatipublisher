@@ -54,7 +54,11 @@ class DateRepository
      */
     public function update($activityDate, $activity): bool
     {
-        $activity->activity_date = $activityDate['activity_date'];
+        foreach ($activityDate['activity_date'] as $key => $activity_date) {
+            $activityDate['activity_date'][$key]['narrative'] = array_values($activity_date['narrative']);
+        }
+
+        $activity->activity_date = array_values($activityDate['activity_date']);
 
         return $activity->save();
     }

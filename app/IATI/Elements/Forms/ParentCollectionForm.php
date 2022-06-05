@@ -3,9 +3,9 @@
 namespace App\IATI\Elements\Forms;
 
 /**
- * Class DescriptionCollectionForm.
+ * Class ParentCollectionForm.
  */
-class DescriptionCollectionForm extends BaseForm
+class ParentCollectionForm extends BaseForm
 {
     /**
      * @return mixed|void
@@ -13,7 +13,7 @@ class DescriptionCollectionForm extends BaseForm
     public function buildForm()
     {
         $this->add(
-            'description',
+            $this->getData('name'),
             'collection',
             [
                 'type'    => 'form',
