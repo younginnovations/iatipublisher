@@ -8,9 +8,9 @@ use App\IATI\Models\Activity\Activity;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * Class LegacyDataRepository.
+ * Class ConditionRepository.
  */
-class LegacyDataRepository
+class ConditionRepository
 {
     /**
      * @var Activity
@@ -18,7 +18,7 @@ class LegacyDataRepository
     protected Activity $activity;
 
     /**
-     * LegacyDataRepository Constructor.
+     * ConditionRepository Constructor.
      * @param Activity $activity
      */
     public function __construct(Activity $activity)
@@ -27,13 +27,13 @@ class LegacyDataRepository
     }
 
     /**
-     * Returns legacy data of an activity.
+     * Returns conditions data of an activity.
      * @param $activityId
      * @return array|null
      */
-    public function getActivityLegacyData($activityId): ?array
+    public function getConditionData($activityId): ?array
     {
-        return $this->activity->findorFail($activityId)->legacy_data;
+        return $this->activity->findorFail($activityId)->conditions;
     }
 
     /**
@@ -47,14 +47,19 @@ class LegacyDataRepository
     }
 
     /**
-     * Updates activity legacy.
-     * @param $activityLegacy
+     * Updates activity conditions.
+     * @param $activityCondition
      * @param $activity
      * @return bool
      */
-    public function update($activityLegacy, $activity): bool
+    public function update($activityCondition, $activity): bool
     {
-        $activity->legacy_data = array_values($activityLegacy['legacy_data']);
+        foreach ($activityCondition['condition'] as $key => $conditions) {
+            $activityCondition['condition'][$key]['narrative'] = array_values($conditions['narrative']);
+        }
+
+        $activityCondition['condition'] = array_values($activityCondition['condition']);
+        $activity->conditions = $activityCondition;
 
         return $activity->save();
     }

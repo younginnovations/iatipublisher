@@ -34,6 +34,27 @@
                     <div class="status flex justify-end rounded-lg mb-1.5">
                         <div class="flex status text-xs leading-relaxed text-salmon-50">
                             <b class="mr-2 text-base leading-3">.</b><span>not completed</span>
+                {{-- <div class="title-form-layout__container p-8 bg-white rounded-lg overflow-y-auto max-h-[62vh]">
+                    title
+                    <div class="flex mb-4">
+                        <div class="flex title grow">
+                            <span class="text-bluecoral text-xl mr-1.5">
+                                @php
+                                    echo file_get_contents(resource_path('assets/images/svg/note.svg'));
+                                @endphp
+                            </span>
+                            <div class="title text-sm font-bold">Activity Description</div>
+                            <div class="flex status text-xs leading-5 text-crimson-50 ml-2.5 mr-2.5">
+                                <b class="mr-2 text-base leading-3">.</b>
+                                <span>not completed</span>
+                            </div>
+                            @php
+                                echo file_get_contents(resource_path('assets/images/svg/core.svg'))
+                            @endphp
+                        </div>
+                        <div class="icons flex">
+                            <span class="text-xs"><sup class="text-salmon-50">*</sup> Mandatory fields</span>
+                            <hover-text hover_text="tooltip" class="ml-1" /> --}}
                         </div>
                     </div>
                     <div class="title flex items-center mb-4">

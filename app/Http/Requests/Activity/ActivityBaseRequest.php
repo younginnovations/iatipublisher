@@ -67,6 +67,15 @@ class ActivityBaseRequest extends FormRequest
                 return false;
             }
         );
+
+        Validator::extend(
+            'total',
+            function ($attribute, $value, $parameters, $validator) {
+                ($value != 100) ? $check = false : $check = true;
+
+                return $check;
+            }
+        );
     }
 
     /**

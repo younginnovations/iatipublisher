@@ -17,30 +17,51 @@ class BaseForm extends Form
      */
     public function buildCollection($field): void
     {
-        $this->add(
-            $field['name'],
-            'collection',
-            [
-                'type'    => 'form',
-                'property' => 'name',
-                'prototype' => true,
-                'prototype_name' => '__NAME__',
-                'options' => [
-                    'class' => 'App\IATI\Elements\Forms\SubElementForm',
-                    'data'  => $field,
-                    'label' => false,
-                    'wrapper' => [
-                        'class' => 'form-field-group form-child-body flex flex-wrap rounded-br-lg border-y border-r border-spring-50 p-6',
+        if (!Arr::get($field, 'type', null) && array_key_exists('sub_elements', $field)) {
+            $this->add(
+                $field['name'],
+                'collection',
+                [
+                    'type'    => 'form',
+                    'property' => 'name',
+                    'prototype' => true,
+                    'prototype_name' => '__NAME__',
+                    'options' => [
+                        'class' => 'App\IATI\Elements\Forms\WrapperCollectionForm',
+                        'data'  => $field,
+                        'label' => false,
+                        'wrapper' => [
+                            'class' => 'form-field-group form-child-body flex flex-wrap rounded-br-lg border-y border-r border-spring-50 p-6',
+                        ],
                     ],
+                ]
+            );
+        } else {
+            $this->add(
+                $field['name'],
+                'collection',
+                [
+                    'type'    => 'form',
+                    'property' => 'name',
+                    'prototype' => true,
+                    'prototype_name' => '__NAME__',
+                    'options' => [
+                        'class' => 'App\IATI\Elements\Forms\SubElementForm',
+                        'data'  => $field,
+                        'label' => false,
+                        'wrapper' => [
+                            'class' => 'form-field-group form-child-body flex flex-wrap rounded-br-lg border-y border-r border-spring-50 p-6',
+                        ],
+                    ],
+                ]
+            )->add('add_to_collection', 'button', [
+                'label' => 'Add More',
+                'attr' => [
+                    'class' => 'add_to_collection add_more button relative -translate-y-1/2 pl-3.5 text-xs font-bold uppercase leading-normal text-spring-50 text-bluecoral',
+                    'icon' => true,
                 ],
-            ]
-        )->add('add_to_collection', 'button', [
-            'label' => 'Add More',
-            'attr' => [
-                'class' => 'add_to_collection add_more button relative -translate-y-1/2 pl-3.5 text-xs font-bold uppercase leading-normal text-spring-50 text-bluecoral',
-                'icon' => true,
-            ],
-        ]);
+            ]);
+        }
     }
 
     /**

@@ -54,7 +54,7 @@ class RelatedActivityRepository
      */
     public function update($activityRelatedActivity, $activity): bool
     {
-        $activity->related_activity = $activityRelatedActivity['related_activity'];
+        $activity->related_activity = array_values($activityRelatedActivity['related_activity']);
 
         return $activity->save();
     }

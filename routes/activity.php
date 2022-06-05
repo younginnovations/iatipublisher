@@ -48,4 +48,8 @@ Route::name('admin.')->group(function () {
     Route::put('activities/{id}/humanitarian_scope', [\App\Http\Controllers\Admin\Activity\HumanitarianScopeController::class, 'update'])->name('activities.humanitarian-scope.update');
     Route::get('activities/{id}/sector', [\App\Http\Controllers\Admin\Activity\SectorController::class, 'edit'])->name('activities.sector.edit');
     Route::put('activities/{id}/sector', [\App\Http\Controllers\Admin\Activity\SectorController::class, 'update'])->name('activities.sector.update');
+    Route::get('activities/{id}/conditions', [\App\Http\Controllers\Admin\Activity\ConditionController::class, 'edit'])->name('activities.conditions.edit');
+    Route::put('activities/{id}/conditions', [\App\Http\Controllers\Admin\Activity\ConditionController::class, 'update'])->name('activities.conditions.update');
+    Route::get('activities/{id}/country_budget_items', [\App\Http\Controllers\Admin\Activity\CountryBudgetItemController::class, 'edit'])->name('activities.country-budget-items.edit');
+    Route::put('activities/{id}/country_budget_items', [\App\Http\Controllers\Admin\Activity\CountryBudgetItemController::class, 'update'])->name('activities.country-budget-items.update');
 });

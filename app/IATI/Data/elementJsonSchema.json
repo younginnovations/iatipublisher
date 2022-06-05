@@ -605,49 +605,90 @@
   },
   "country-budget-items": {
     "label": "Activity Country Budget Items",
+    "name": "activity_country_budget_items",
     "criteria": "",
+    "add_more": true,
     "attributes": {
       "vocabulary": {
-        "label": "Country Budget Items Vocabulary",
+        "name": "vocabulary",
+        "label": "@vocabulary",
         "criteria": "",
         "required": true,
-        "type": "select"
-      },
-      "sub-elements": {
-        "budget-item": {
-          "label": "Budget Item",
-          "criteria": "",
-          "attributes": {
-            "code": {
-              "type": "select",
-              "required": true,
-              "criteria": "",
-              "label": "Code"
-            },
-            "percentage": {
-              "type": "text",
-              "criteria": "",
-              "required": false,
-              "label": "Percentage"
-            }
+        "type": "select",
+        "multiselect": false,
+        "choices": "Activity/BudgetIdentifierVocabulary.json",
+        "hover_text": "An IATI code for the common functional classification or country system (This allows for common codes, country-specific, or any other classification agreed between countries and donors). <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/country-budget-items/'>For more information</a>",
+        "help_text": ""
+      }
+    },
+    "sub_elements": {
+      "budget-item": {
+        "name": "budget_item",
+        "label": "Budget Item",
+        "criteria": "",
+        "required": false,
+        "add_more": true,
+        "attributes": {
+          "code_text": {
+            "name": "code_text",
+            "type": "text",
+            "required": false,
+            "criteria": "",
+            "label": "@code",
+            "hover_text": "A code for the budget-item from the vocabulary specified. This attribute is required. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/country-budget-items/budget-item/'>For more information</a>",
+            "help_text": ""
           },
-          "sub-elements": {
-            "description": {
-              "label": "Description",
-              "criteria": "",
-              "sub-elements": {
-                "narrative": {
-                  "type": "text",
-                  "required": false,
-                  "criteria": "",
-                  "label": "Narrative",
-                  "attributes": {
-                    "lang": {
-                      "type": "select",
-                      "required": false,
-                      "criteria": "",
-                      "label": "Language"
-                    }
+          "code": {
+            "name": "code",
+            "type": "select",
+            "multiselect": false,
+            "required": true,
+            "criteria": "",
+            "label": "@code",
+            "choices": "Activity/BudgetIdentifier.json",
+            "hover_text": "A code for the budget-item from the vocabulary specified. This attribute is required. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/country-budget-items/budget-item/'>For more information</a>",
+            "help_text": ""
+          },
+          "percentage": {
+            "name": "percentage",
+            "type": "text",
+            "criteria": "",
+            "required": false,
+            "label": "@percentage",
+            "hover_text": "When multiple budget-item elements are declared within a single country-budget-items element, then, for each vocabulary used, the percentage values should sum 100%. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/country-budget-items/budget-item/'>For more information</a>",
+            "help_text": ""
+          }
+        },
+        "sub_elements": {
+          "description": {
+            "name": "description",
+            "label": "Description",
+            "criteria": "",
+            "required": false,
+            "add_more": false,
+            "sub_elements": {
+              "narrative": {
+                "name": "narrative",
+                "type": "textarea",
+                "required": false,
+                "criteria": "",
+                "label": "narrative",
+                "attr": {
+                  "row": 4
+                },
+                "hover_text": "The free text name or description of the item being described. This can be repeated in multiple languages. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/description/narrative/'>For more information</a>",
+                "help_text": "",
+                "attributes": {
+                  "lang": {
+                    "name": "language",
+                    "type": "select",
+                    "multiSelect": false,
+                    "required": false,
+                    "criteria": "",
+                    "label": "@xml:lang",
+                    "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/description/narrative/'>For more information</a>",
+                    "help_text": "",
+                    "choices": "Activity/Language.json"
                   }
                 }
               }
@@ -778,41 +819,69 @@
     }
   },
   "conditions": {
+    "name": "activity_condition",
     "label": "Activity Conditions",
     "criteria": "",
+    "add_more": true,
     "attributes": {
       "attached": {
-        "label": "Attached",
+        "name": "condition_attached",
+        "label": "@attached",
         "criteria": "",
         "required": true,
-        "type": "select"
+        "multiselect": false,
+        "type": "select",
+        "choices": {
+          "0" : "False",
+          "1" : "True"
+        },
+        "hover_text" : "A yes/no (1/0) value stating whether there are conditions attached to the activity. It is strongly recommended that this attribute is reported, even if there are no conditions attached (i.e. attached=”0”)",
+        "help_text": ""
       }
     },
-    "sub-elements": {
+    "sub_elements": {
       "condition": {
+        "name": "condition",
         "label": "Condition",
         "criteria": "",
         "required": false,
+        "add_more": true,
         "attributes": {
           "condition_type": {
-            "label": "Type",
+            "name": "condition_type",
+            "label": "@type",
             "criteria": "",
             "required": false,
-            "type": "select"
+            "multiselect": false,
+            "type": "select",
+            "choices": "Activity/ConditionType.json",
+            "hover_text": "An IATI code defining the type of condition. ",
+            "help_text": ""
           }
         },
-        "sub-elements": {
+        "sub_elements": {
           "narrative": {
-            "type": "text",
+            "name": "narrative",
+            "type": "textarea",
             "required": false,
             "criteria": "",
-            "label": "Narrative",
+            "label": "narrative",
+            "attr": {
+              "row": 4
+            },
+            "hover_text": "The free text name or description of the item being described. This can be repeated in multiple languages. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/description/narrative/'>For more information</a>",
+            "help_text": "",
             "attributes": {
               "lang": {
+                "name": "language",
                 "type": "select",
+                "multiSelect": false,
                 "required": false,
                 "criteria": "",
-                "label": "Language"
+                "label": "@xml:lang",
+                "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/description/narrative/'>For more information</a>",
+                "help_text": "",
+                "choices": "Activity/Language.json"
               }
             }
           }

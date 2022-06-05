@@ -42,12 +42,18 @@ form {
       @apply absolute left-1/2 top-1/2 h-8 w-8 -translate-x-1/2 -translate-y-1/2;
     }
   }
+
   .form-field {
     @apply px-3;
     .help-text {
       @apply mt-2 text-xs leading-relaxed;
     }
   }
+
+  > .form-field {
+    @apply mb-6 p-0;
+  }
+
   .form-field-label {
     @apply mb-2 flex justify-between;
     label {
