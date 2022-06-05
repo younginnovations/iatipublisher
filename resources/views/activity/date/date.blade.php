@@ -1,6 +1,6 @@
 {{-- @extends('admin.layouts.app')
 
-@section('content')
+{{-- @section('content')
 
 {!! form($form) !!}
 <div class="hidden collection-container"
@@ -48,9 +48,9 @@
                     <div class="flex mb-4">
                         <div class="flex title grow">
                             <span class="text-bluecoral text-xl mr-1.5">
-                            @php
-                                echo file_get_contents(resource_path('assets/images/svg/note.svg'))
-                            @endphp
+                                @php
+                                    echo file_get_contents(resource_path('assets/images/svg/note.svg'));
+                                @endphp
                             </span>
                             <div class="title text-sm font-bold">Activity Date</div>
                             <div class="flex status text-xs leading-5 text-crimson-50 ml-2.5 mr-2.5">
@@ -63,21 +63,20 @@
                         </div>
                         <div class="icons flex">
                             <span class="text-xs"><sup class="text-salmon-50">*</sup> Mandatory fields</span>
-                            <hover-text hover_text="tooltip" class="ml-1"/>
+                            <hover-text hover_text="tooltip" class="ml-1" />
                         </div>
                     </div>
                     <div class="divider h-px bg-n-20 w-full mb-4"></div>
-
-                    {{-- form section --}}
                     {!! form($form) !!}
+                    <div class="hidden parent-collection"
+                         data_name = "description"
+                         data-prototype="{{ form_row($form->activity_date->prototype()) }}" >
+                    </div>
+                    <div class="hidden collection-container"
+                         data-prototype="{{ str_replace('activity_date[0]','activity_date[__PARENT_NAME__]',form_row($form->activity_date->getChildren()[0]->getChild('narrative')->prototype())) }}"
+                    >
+                    </div>
                 </div>
-                <div class="hidden collection-container"
-                     data-prototype="{{ form_row($form->activity_date->prototype()) }}">
-                </div>
-
-            </div>
-        </div>
     </section>
-
 @endsection
 

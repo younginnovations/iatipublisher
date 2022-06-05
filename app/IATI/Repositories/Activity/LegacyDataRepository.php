@@ -54,7 +54,7 @@ class LegacyDataRepository
      */
     public function update($activityLegacy, $activity): bool
     {
-        $activity->legacy_data = $activityLegacy['legacy_data'];
+        $activity->legacy_data = array_values($activityLegacy['legacy_data']);
 
         return $activity->save();
     }

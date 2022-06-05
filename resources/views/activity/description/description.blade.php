@@ -52,7 +52,7 @@
                                     echo file_get_contents(resource_path('assets/images/svg/note.svg'));
                                 @endphp
                             </span>
-                            <div class="title text-sm font-bold">Activity Title</div>
+                            <div class="title text-sm font-bold">Activity Description</div>
                             <div class="flex status text-xs leading-5 text-crimson-50 ml-2.5 mr-2.5">
                                 <b class="mr-2 text-base leading-3">.</b>
                                 <span>not completed</span>

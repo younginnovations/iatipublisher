@@ -13,6 +13,7 @@ class SubElementForm extends Form
     public function buildForm()
     {
         $data = $this->getData();
+
         if (Arr::get($data, 'type', null)) {
             $this->buildFields($this->getData());
         }
@@ -49,7 +50,7 @@ class SubElementForm extends Form
                 'title' => $field['label'],
                 'text' => $field['hover_text'] ?? '',
             ],
-            'required' => $field['required'],
+            'required' => $field['required'] ?? false,
             'multiple' => $field['multiple'] ?? false,
             'attr' => [
                 'class' => 'form__input border-0',

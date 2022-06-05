@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Admin\Activity;
 
 use App\Http\Controllers\Controller;
-use App\IATI\Elements\Builder\DateFormCreator;
+use App\Http\Requests\Activity\Date\DateRequest;
+use App\IATI\Elements\Builder\ParentCollectionFormCreator;
 use App\IATI\Services\Activity\DateService;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 
 /**
  * Class DateController.
@@ -16,9 +16,9 @@ use Illuminate\Http\Request;
 class DateController extends Controller
 {
     /**
-     * @var DateFormCreator
+     * @var ParentCollectionFormCreator
      */
-    protected DateFormCreator $dateFormCreator;
+    protected ParentCollectionFormCreator $parentCollectionFormCreator;
 
     /**
      * @var DateService
@@ -28,12 +28,12 @@ class DateController extends Controller
     /**
      * DateController Constructor.
      *
-     * @param DateFormCreator $dateFormCreator
+     * @param ParentCollectionFormCreator $parentCollectionFormCreator
      * @param DateService $dateService
      */
-    public function __construct(DateFormCreator $dateFormCreator, DateService $dateService)
+    public function __construct(ParentCollectionFormCreator $parentCollectionFormCreator, DateService $dateService)
     {
-        $this->dateFormCreator = $dateFormCreator;
+        $this->parentCollectionFormCreator = $parentCollectionFormCreator;
         $this->dateService = $dateService;
     }
 
@@ -48,8 +48,8 @@ class DateController extends Controller
             $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
             $activity = $this->dateService->getActivityData($id);
             $model['activity_date'] = $this->dateService->getDateData($id);
-            $this->dateFormCreator->url = route('admin.activities.date.update', [$id]);
-            $form = $this->dateFormCreator->editForm($model, $element['activity_date']);
+            $this->parentCollectionFormCreator->url = route('admin.activities.date.update', [$id]);
+            $form = $this->parentCollectionFormCreator->editForm($model, $element['activity_date']);
 
             return view('activity.date.date', compact('form', 'activity'));
         } catch (\Exception $e) {
@@ -63,11 +63,16 @@ class DateController extends Controller
      * @param $id
      * @return JsonResponse
      */
-    public function update(Request $request, $id): JsonResponse
+    public function update(DateRequest $request, $id): JsonResponse
     {
         try {
             $activityData = $this->dateService->getActivityData($id);
             $activityDate = $request->all();
+            $messages = $this->validateData($request->get('activity_date'));
+
+            if ($messages) {
+                return response()->json(['success' => false, 'error' => array_unique($messages)]);
+            }
 
             if (!$this->dateService->update($activityDate, $activityData)) {
                 return response()->json(['success' => false, 'error' => 'Error has occurred while updating activity date.']);
@@ -79,5 +84,60 @@ class DateController extends Controller
 
             return response()->json(['success' => false, 'error' => 'Error has occurred while updating activity date.']);
         }
+    }
+
+    /**
+     * Validate activity date data based on Activity Date and Activity Date Type.
+     * @param array $activityDates
+     * @return array
+     */
+    private function validateData(array $activityDates): array
+    {
+        $messages = [];
+        $hasStart = false;
+
+        foreach ($activityDates as $activityDateIndex => $activityDate) {
+            $blockIndex = $activityDateIndex + 1;
+            $date = $activityDate['date'];
+            $type = $activityDate['type'];
+
+            if ($type == 2 || $type == 4) {
+                (strtotime($date) <= strtotime(date('Y-m-d'))) ?: $messages[] = sprintf('Actual Start Date and Actual End Date must be Today or past days. (block %s)', $blockIndex);
+            }
+
+            if ($type == 4) {
+                $actualStartDate = array_column(array_filter($activityDates, function ($date) {
+                    return $date['type'] == 2;
+                }), 'date');
+
+                if (count($actualStartDate)) {
+                    foreach ($actualStartDate as $startDate) {
+                        strtotime($date) > strtotime($startDate) ?: $messages[] = sprintf('End date must be later than the start date. (Block %s)', $blockIndex);
+                    }
+                }
+            }
+
+            if ($type == 3) {
+                $plannedStartDate = array_column(array_filter($activityDates, function ($date) {
+                    return $date['type'] == 1;
+                }), 'date');
+
+                if (count($plannedStartDate)) {
+                    foreach ($plannedStartDate as $startDate) {
+                        strtotime($date) > strtotime($startDate) ?: $messages[] = sprintf('End date must be later than the start date. (Block %s)', $blockIndex);
+                    }
+                }
+            }
+
+            if ($type == 1 || $type == 2) {
+                $hasStart = true;
+            }
+        }
+
+        if (!$hasStart) {
+            array_unshift($messages, 'Planned Start or Actual Start in Activity Date Type is required.');
+        }
+
+        return $messages;
     }
 }
