@@ -11,40 +11,6 @@ use Kris\LaravelFormBuilder\Form;
 class BaseForm extends Form
 {
     /**
-     * @param $field
-     *
-     * @return void
-     */
-    public function buildCollection($field): void
-    {
-        $this->add(
-            $field['name'],
-            'collection',
-            [
-                'type'    => 'form',
-                'property' => 'name',
-                'prototype' => true,
-                'prototype_name' => '__NAME__',
-                'options' => [
-                    'class' => 'App\IATI\Elements\Forms\SubElementForm',
-                    'data'  => $field,
-                    'label' => false,
-                    'wrapper' => [
-                        'class' => 'form-child-body form-field-group flex flex-wrap',
-                    ],
-                ],
-            ]
-        )->add('add_to_collection', 'button', [
-            'label' => 'Add More',
-            'attr' => [
-                'class' => 'add_to_collection button relative font-bold text-n-40 text-bluecoral text-xs uppercase leading-normal mt-2 space-x-2',
-            ],
-        ]);
-    }
-
-    /**
-     * Builds base form.
-     *
      * @return mixed|void
      */
     public function buildForm():void
@@ -81,27 +47,36 @@ class BaseForm extends Form
     }
 
     /**
-     * Return codeList array from json codeList.
-     * @param string $filePath
-     * @param bool $code
-     * @return array
+     * @param $field
+     *
+     * @return void
      */
-    public function getCodeList(string $filePath, bool $code = true): array
+    public function buildCollection($field): void
     {
-        $filePath = app_path("Data/$filePath");
-        $codeListFromFile = file_get_contents($filePath);
-        $codeLists = json_decode($codeListFromFile, true);
-        $codeList = last($codeLists);
-        $data = [];
-
-        foreach ($codeList as $list) {
-            $data[$list['code']] = ($code) ? $list['code'] . (array_key_exists(
-                'name',
-                $list
-            ) ? ' - ' . $list['name'] : '') : $list['name'];
-        }
-
-        return $data;
+        $this->add(
+            $field['name'],
+            'collection',
+            [
+                'type' => 'form',
+                'property' => 'name',
+                'prototype' => true,
+                'prototype_name' => '__NAME__',
+                'options' => [
+                    'class' => 'App\IATI\Elements\Forms\SubElementForm',
+                    'data' => $field,
+                    'label' => false,
+                    'wrapper' => [
+                        'class' => 'relative form-child-body form-field-group flex flex-wrap',
+                    ],
+                ],
+            ]
+        )->add('add_to_collection', 'button', [
+            'label' => 'Add More',
+            'attr' => [
+                'icon' => true,
+                'class' => 'add_to_collection add_more button relative text-xs font-bold text-spring-50 text-bluecoral uppercase leading-normal -translate-y-1/2 pl-3.5 ml-6',
+            ],
+        ]);
     }
 
     /**
@@ -119,9 +94,9 @@ class BaseForm extends Form
                 'title' => $field['label'],
                 'text' => $field['hover_text'] ?? '',
             ],
-            'label'         => $field['label'] ?? '',
-            'required'      => $field['required'] ?? false,
-            'multiple'      => $field['multiple'] ?? false,
+            'label' => $field['label'] ?? '',
+            'required' => $field['required'] ?? false,
+            'multiple' => $field['multiple'] ?? false,
             'attr' => [
                 'class' => 'form__input border-0',
             ],
@@ -143,5 +118,29 @@ class BaseForm extends Form
                 $field['type'],
                 $options
             );
+    }
+
+    /**
+     * Return codeList array from json codeList.
+     * @param string $filePath
+     * @param bool $code
+     * @return array
+     */
+    public function getCodeList(string $filePath, bool $code = true): array
+    {
+        $filePath = app_path("Data/$filePath");
+        $codeListFromFile = file_get_contents($filePath);
+        $codeLists = json_decode($codeListFromFile, true);
+        $codeList = last($codeLists);
+        $data = [];
+
+        foreach ($codeList as $list) {
+            $data[$list['code']] = ($code) ? $list['code'] . (array_key_exists(
+                'name',
+                $list
+            ) ? ' - ' . $list['name'] : '') : $list['name'];
+        }
+
+        return $data;
     }
 }
