@@ -46,4 +46,6 @@ Route::name('admin.')->group(function () {
     Route::put('activities/{id}/recipient_country', [\App\Http\Controllers\Admin\Activity\RecipientCountryController::class, 'update'])->name('activities.recipient-country.update');
     Route::get('activities/{id}/humanitarian_scope', [\App\Http\Controllers\Admin\Activity\HumanitarianScopeController::class, 'edit'])->name('activities.humanitarian-scope.edit');
     Route::put('activities/{id}/humanitarian_scope', [\App\Http\Controllers\Admin\Activity\HumanitarianScopeController::class, 'update'])->name('activities.humanitarian-scope.update');
+    Route::get('activities/{id}/sector', [\App\Http\Controllers\Admin\Activity\SectorController::class, 'edit'])->name('activities.sector.edit');
+    Route::put('activities/{id}/sector', [\App\Http\Controllers\Admin\Activity\SectorController::class, 'update'])->name('activities.sector.update');
 });

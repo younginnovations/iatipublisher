@@ -42,10 +42,10 @@
                     </div>
                     {!! form($form) !!}
                     <div class="hidden parent-collection" data_name="description"
-                        data-prototype="{{ form_row($form->description->prototype()) }}">
+                        data-prototype="{{ form_row($form->sector->prototype()) }}">
                     </div>
                     <div class="hidden collection-container"
-                        data-prototype="{{ str_replace('description[0]','description[__PARENT_NAME__]',form_row($form->description->getChildren()[0]->getChild('narrative')->prototype())) }}">
+                        data-prototype="{{ str_replace('description[0]','description[__PARENT_NAME__]',form_row($form->sector->getChildren()[0]->getChild('narrative')->prototype())) }}">
                     </div>
                 </div>
             </div>

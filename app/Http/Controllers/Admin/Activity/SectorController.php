@@ -5,15 +5,15 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Admin\Activity;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Activity\Description\DescriptionRequest;
+use App\Http\Requests\Activity\Sector\SectorRequest;
 use App\IATI\Elements\Builder\ParentCollectionFormCreator;
-use App\IATI\Services\Activity\DescriptionService;
+use App\IATI\Services\Activity\SectorService;
 use Illuminate\Http\JsonResponse;
 
 /**
- * Class DescriptionController.
+ * Class SectorController.
  */
-class DescriptionController extends Controller
+class SectorController extends Controller
 {
     /**
      * @var ParentCollectionFormCreator
@@ -21,20 +21,20 @@ class DescriptionController extends Controller
     protected ParentCollectionFormCreator $parentCollectionFormCreator;
 
     /**
-     * @var DescriptionService
+     * @var SectorService
      */
-    protected DescriptionService $descriptionService;
+    protected SectorService $sectorService;
 
     /**
-     * DescriptionController Constructor.
+     * SectorController Constructor.
      *
      * @param ParentCollectionFormCreator $parentCollectionFormCreator
-     * @param DescriptionService $descriptionService
+     * @param SectorService $sectorService
      */
-    public function __construct(ParentCollectionFormCreator $parentCollectionFormCreator, DescriptionService $descriptionService)
+    public function __construct(ParentCollectionFormCreator $parentCollectionFormCreator, SectorService $sectorService)
     {
         $this->parentCollectionFormCreator = $parentCollectionFormCreator;
-        $this->descriptionService = $descriptionService;
+        $this->sectorService = $sectorService;
     }
 
     /**
@@ -46,30 +46,29 @@ class DescriptionController extends Controller
     {
         try {
             $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
-            $activity = $this->descriptionService->getActivityData($id);
-            $model['description'] = $this->descriptionService->getDescriptionData($id);
-            $this->parentCollectionFormCreator->url = route('admin.activities.description.update', [$id]);
-            $form = $this->parentCollectionFormCreator->editForm($model, $element['description']);
+            $activity = $this->sectorService->getActivityData($id);
+            $model['sector'] = $this->sectorService->getSectorData($id);
+            $this->parentCollectionFormCreator->url = route('admin.activities.sector.update', [$id]);
+            $form = $this->parentCollectionFormCreator->editForm($model, $element['sector']);
 
-            return view('activity.description.description', compact('form', 'activity'));
+            return view('activity.sector.sector', compact('form', 'activity'));
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
             dd($e);
         }
     }
 
-    /**
-     * @param DescriptionRequest $request
+    /**Sector SectorRequest $request
      * @param $id
      * @return JsonResponse
      */
-    public function update(DescriptionRequest $request, $id): JsonResponse
+    public function update(SectorRequest $request, $id): JsonResponse
     {
         try {
-            $activityData = $this->descriptionService->getActivityData($id);
+            $activityData = $this->sectorService->getActivityData($id);
             $activityDescription = $request->all();
 
-            if (!$this->descriptionService->update($activityDescription, $activityData)) {
+            if (!$this->sectorService->update($activityDescription, $activityData)) {
                 return response()->json(['success' => false, 'error' => 'Error has occurred while updating activity description.']);
             }
 

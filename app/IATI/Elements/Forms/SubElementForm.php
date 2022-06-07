@@ -34,7 +34,7 @@ class SubElementForm extends Form
 
         $this->add('delete', 'button', [
             'attr' => [
-                'class' => 'delete delete-item',
+                'class' => 'delete delete-item absolute right-0 top-2/4 -translate-y-1/2 translate-x-1/2',
             ],
         ]);
     }
@@ -57,7 +57,7 @@ class SubElementForm extends Form
                 'title' => $field['label'],
                 'text' => $field['hover_text'] ?? '',
             ],
-            'required' => $field['required'] ?? false,
+            'required' => $field['required'],
             'multiple' => $field['multiple'] ?? false,
             'attr' => [
                 'class' => 'form__input border-0',

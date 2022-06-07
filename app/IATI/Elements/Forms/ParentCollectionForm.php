@@ -12,6 +12,7 @@ class ParentCollectionForm extends BaseForm
      */
     public function buildForm()
     {
+        // dd($this->getData(),$this->getData('name'));
         $this->add(
             $this->getData('name'),
             'collection',
@@ -25,7 +26,7 @@ class ParentCollectionForm extends BaseForm
                     'data' => $this->data,
                     'label' => false,
                     'wrapper' => [
-                        'class' => 'multi-form form-field-group flex flex-wrap relative',
+                        'class' => 'multi-form relative',
                     ],
                 ],
             ]

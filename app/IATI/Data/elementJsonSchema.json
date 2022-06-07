@@ -357,45 +357,63 @@
   },
   "sector": {
     "label": "Activity Sector",
+    "name": "sector",
     "criteria": "mandatory",
     "attributes": {
       "code": {
+        "name" : "code",
         "type": "select",
         "required": true,
         "criteria": "mandatory",
-        "label": "Sector Code"
+        "label": "Sector Code",
+        "choices": "Activity/Language.json"
       },
       "percentage": {
+        "name": "percentage",
         "type": "text",
         "criteria": "recommended",
         "required": false,
         "label": "Percentage"
       },
       "vocabulary": {
+        "name": "vocabulary",
         "label": "Sector Vocabulary",
         "criteria": "recommended",
         "required": true,
-        "type": "select"
+        "type": "select",
+        "choices": "Activity/Language.json"
       },
       "vocabulary-uri": {
+        "name":"vocabulary_uri",
         "label": "Sector Vocabulary Uri",
         "criteria": "recommended",
         "required": false,
         "type": "text"
       }
     },
-    "sub-elements": {
+    "sub_elements": {
       "narrative": {
-        "type": "text",
+        "name": "narrative",
+        "type": "textarea",
         "required": false,
-        "criteria": "recommended",
-        "label": "Narrative",
+        "criteria": "",
+        "label": "narrative",
+        "attr": {
+          "row": 4
+        },
+        "hover_text": "The free text name or description of the item being described. This can be repeated in multiple languages. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/description/narrative/'>For more information</a>",
+        "help_text": "",
         "attributes": {
           "lang": {
+            "name": "language",
             "type": "select",
+            "multiSelect": false,
             "required": false,
             "criteria": "",
-            "label": "Language"
+            "label": "@xml:lang",
+            "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/description/narrative/'>For more information</a>",
+            "help_text": "",
+            "choices": "Activity/Language.json"
           }
         }
       }
@@ -541,17 +559,30 @@
     "label": "Activity Default Aid Type",
     "criteria": "recommended",
     "attributes": {
-      "code": {
-        "label": "Code",
-        "criteria": "recommended",
-        "required": true,
-        "type": "select"
-      },
       "vocabulary": {
         "label": "Default Aid Type Vocabulary",
+        "name": "vocabulary",
         "criteria": "",
         "required": true,
-        "type": "select"
+        "type": "select",
+        "choices": "Activity/AidTypeVocabulary.json",
+        "hover_text": "The free text name or description of the item being described. This can be repeated in multiple languages. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/title/narrative/'> For more information </a>",
+        "help_text": ""
+      },
+      "code": {
+        "label": "Code",
+        "name": "name",
+        "criteria": "recommended",
+        "required": true,
+        "type": "select",
+        "choices": {
+          "1 - OECD DAC":"Activity/AidType.json",
+          "2 - Earmarking Category":"Activity/EarmarkingCategory.json",
+          "3 - Earmarking Modality":"Activity/EarmarkingModality.json",
+          "4 - Cash and Voucher Modalities":"Activity/CashandVoucherModalities.json"
+        },
+        "hover_text": "The free text name or description of the item being described. This can be repeated in multiple languages. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/title/narrative/'> For more information </a>",
+        "help_text": ""
       }
     }
   },

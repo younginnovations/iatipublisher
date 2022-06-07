@@ -11,6 +11,39 @@ use Kris\LaravelFormBuilder\Form;
 class BaseForm extends Form
 {
     /**
+     * @param $field
+     *
+     * @return void
+     */
+    public function buildCollection($field): void
+    {
+        $this->add(
+            $field['name'],
+            'collection',
+            [
+                'type'    => 'form',
+                'property' => 'name',
+                'prototype' => true,
+                'prototype_name' => '__NAME__',
+                'options' => [
+                    'class' => 'App\IATI\Elements\Forms\SubElementForm',
+                    'data'  => $field,
+                    'label' => false,
+                    'wrapper' => [
+                        'class' => 'form-field-group form-child-body flex flex-wrap rounded-br-lg border-y border-r border-spring-50 p-6',
+                    ],
+                ],
+            ]
+        )->add('add_to_collection', 'button', [
+            'label' => 'Add More',
+            'attr' => [
+                'class' => 'add_to_collection add_more button relative -translate-y-1/2 pl-3.5 text-xs font-bold uppercase leading-normal text-spring-50 text-bluecoral',
+                'icon' => true,
+            ],
+        ]);
+    }
+
+    /**
      * @return mixed|void
      */
     public function buildForm():void
@@ -38,86 +71,12 @@ class BaseForm extends Form
                 if (Arr::get($element, 'add_more', false)) {
                     $this->add('delete', 'button', [
                         'attr' => [
-                            'class' => 'delete-parent delete-item',
+                            'class' => 'delete-parent delete-item absolute right-0 top-16 -translate-y-1/2 translate-x-1/2',
                         ],
                     ]);
                 }
             }
         }
-    }
-
-    /**
-     * @param $field
-     *
-     * @return void
-     */
-    public function buildCollection($field): void
-    {
-        $this->add(
-            $field['name'],
-            'collection',
-            [
-                'type' => 'form',
-                'property' => 'name',
-                'prototype' => true,
-                'prototype_name' => '__NAME__',
-                'options' => [
-                    'class' => 'App\IATI\Elements\Forms\SubElementForm',
-                    'data' => $field,
-                    'label' => false,
-                    'wrapper' => [
-                        'class' => 'relative form-child-body form-field-group flex flex-wrap',
-                    ],
-                ],
-            ]
-        )->add('add_to_collection', 'button', [
-            'label' => 'Add More',
-            'attr' => [
-                'icon' => true,
-                'class' => 'add_to_collection add_more button relative text-xs font-bold text-spring-50 text-bluecoral uppercase leading-normal -translate-y-1/2 pl-3.5 ml-6',
-            ],
-        ]);
-    }
-
-    /**
-     * @param $field
-     *
-     * @return void
-     */
-    public function buildField($field): void
-    {
-        $options = [
-            'help_block' => [
-                'text' => $field['help_text']['text'] ?? '',
-            ],
-            'hover_block' => [
-                'title' => $field['label'],
-                'text' => $field['hover_text'] ?? '',
-            ],
-            'label' => $field['label'] ?? '',
-            'required' => $field['required'] ?? false,
-            'multiple' => $field['multiple'] ?? false,
-            'attr' => [
-                'class' => 'form__input border-0',
-            ],
-            'wrapper' => [
-                'class' => 'form-field basis-6/12 max-w-half',
-            ],
-        ];
-
-        if ($field['type'] == 'select') {
-            $options['attr']['class'] = 'select2';
-            $options['empty_value'] = $field['empty_value'] ?? 'Select a value';
-            $options['choices'] = $field['choices'] ? (is_string($field['choices']) ? ($this->getCodeList($field['choices'])) : $field['choices']) : false;
-            $options['default_value'] = $field['default'] ?? false;
-        }
-
-        $this
-            ->add(
-                $field['name'],
-                $field['type'],
-                $options
-            );
     }
 
     /**
@@ -142,5 +101,46 @@ class BaseForm extends Form
         }
 
         return $data;
+    }
+
+    /**
+     * @param $field
+     *
+     * @return void
+     */
+    public function buildField($field): void
+    {
+        $options = [
+            'help_block' => [
+                'text' => $field['help_text']['text'] ?? '',
+            ],
+            'hover_block' => [
+                'title' => $field['label'],
+                'text' => $field['hover_text'] ?? '',
+            ],
+            'label'         => $field['label'] ?? '',
+            'required'      => $field['required'] ?? false,
+            'multiple'      => $field['multiple'] ?? false,
+            'attr' => [
+                'class' => 'form__input border-0',
+            ],
+            'wrapper' => [
+                'class' => 'form-field basis-6/12 max-w-half attribute',
+            ],
+        ];
+
+        if ($field['type'] == 'select') {
+            $options['attr']['class'] = 'select2';
+            $options['empty_value'] = $field['empty_value'] ?? 'Select a value';
+            $options['choices'] = $field['choices'] ? (is_string($field['choices']) ? ($this->getCodeList($field['choices'])) : $field['choices']) : false;
+            $options['default_value'] = $field['default'] ?? false;
+        }
+
+        $this
+            ->add(
+                $field['name'],
+                $field['type'],
+                $options
+            );
     }
 }

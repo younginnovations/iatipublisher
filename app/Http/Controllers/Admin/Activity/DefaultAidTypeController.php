@@ -48,12 +48,19 @@ class DefaultAidTypeController extends Controller
             $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
             $model['default_aid_type'] = $this->defaultAidTypeService->getDefaultAidTypeData($id);
             $this->baseFormCreator->url = route('admin.activities.default-aid-type.update', [$id]);
+            $temp = [];
+
+            foreach ($element['default-aid-type']['attributes']['code']['choices'] as $key => $choice) {
+                $temp[$key] = getList($choice, true);
+            }
+
+            $element['default-aid-type']['attributes']['code']['choices'] = $temp;
             $form = $this->baseFormCreator->editForm($model, $element['default-aid-type']);
 
             return view('activity.defaultAidType.defaultAidType', compact('form'));
         } catch (\Exception $e) {
-            dd(logger()->error($e->getMessage()));
             logger()->error($e->getMessage());
+            dd($e);
         }
     }
 

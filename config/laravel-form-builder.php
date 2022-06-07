@@ -7,7 +7,7 @@ use Kris\LaravelFormBuilder\FormHelper;
 return [
     'defaults' => [
         // 'wrapper_class'       => 'form-group form-field-group',
-        'wrapper_class' => 'subelement border-l border-spring-50 rounded-tl-lg pb-11',
+        'wrapper_class' => 'subelement rounded-tl-lg border-l border-spring-50 pb-11',
         'wrapper_error_class' => 'has-error',
         'label_class' => 'flex control-label py-4 px-6 font-bold text-sm leading-relaxed rounded-tl-lg rounded-tr-lg border-spring-50 border-t border-r',
         'field_class' => 'form-control',

@@ -5,7 +5,7 @@
     <?php endif; ?>
     <?php if ($showLabel && $options['label'] !== false && $options['label_show']) : ?>
         <div class="form-field-label">
-        <?php if ($showLabel && $options['label'] !== false && $options['label_show'] && $options['required']) : ?>
+            <?php if ($showLabel && $options['label'] !== false && $options['label_show'] && $options['required']) : ?>
                 <?= Html::decode(Form::label($name, $options['label'] . '<span class="text-salmon-40"> *</span>')) ?>
             <?php endif; ?>
 
