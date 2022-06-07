@@ -28,8 +28,8 @@ Route::middleware(RedirectIfAuthenticated::class)->name('web.')->group(function 
     Route::get('/password/confirm', [App\Http\Controllers\Auth\ForgotPasswordController::class, 'showEmailSentMessage'])->name('password.confirm');
     Route::post('/reset', [App\Http\Controllers\Auth\ResetPasswordController::class, 'reset'])->name('reset');
 });
-Route::get('/email/verify/{id}/{hash}', [App\Http\Controllers\Auth\VerificationController::class, 'verify'])->name('verification.verify');
 Route::get('password/reset/{token}', [App\Http\Controllers\Auth\ResetPasswordController::class, 'showResetForm'])->name('password.reset');
+Route::get('/email/verify/{id}/{hash}', [App\Http\Controllers\Auth\VerificationController::class, 'verify'])->name('verification.verify');
 Route::post('/logout', [App\Http\Controllers\Auth\LoginController::class, 'logout'])->name('logout');
 
 // Auth::routes(['verify' => true]);

@@ -179,8 +179,6 @@ class RegisterController extends Controller
     {
         try {
             $this->db->beginTransaction();
-            $data['password'] = decryptString($data['password'], 'test');
-            $data['password_confirmation'] = decryptString($data['password_confirmation'], 'test');
             $user = $this->userService->registerExistingUser($data);
             $this->db->commit();
 
@@ -199,13 +197,11 @@ class RegisterController extends Controller
      */
     public function register(Request $request): \Illuminate\Http\JsonResponse|\Illuminate\Http\RedirectResponse
     {
-        if (isset($request['password'])) {
-            $request['password'] = decryptString($request['password'], 'test');
-            $request['password_confirmation'] = decryptString($request['password_confirmation'], 'test');
-        }
+        $request['password'] = isset($request['password']) && $request['password'] ? decryptString($request['password'], 'test') : '';
+        $request['password_confirmation'] = isset($request['password_confirmation']) && $request['password_confirmation'] ? decryptString($request['password_confirmation'], 'test') : '';
 
         $validator = Validator::make($request->all(), [
-            'username'              => ['required', 'max:255', 'string', 'regex:/^[a-zA-Z]*[a-zA-Z0-9 _]*$/', 'unique:users,username'],
+            'username'              => ['required', 'max:255', 'string', 'regex:/^[A-Za-z]([0-9A-Za-z _])*$/', 'unique:users,username'],
             'full_name'             => ['required', 'string', 'max:255'],
             'email'                 => ['required', 'string', 'email', 'regex:/^([a-z0-9\+_\-]+)(\.[a-z0-9\+_\-]+)*@([a-z0-9\-]+\.)+[a-z]{2,6}$/ix', 'max:255', 'unique:users,email'],
             'publisher_id'          => ['required', 'string', 'max:255', 'unique:organizations,publisher_id'],

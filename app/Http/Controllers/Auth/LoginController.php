@@ -112,7 +112,6 @@ class LoginController extends Controller
     {
         if (isset($request['password'])) {
             $request['password'] = decryptString($request['password'], 'test');
-            $this->validateLogin($request);
         }
 
         $this->validateLogin($request);

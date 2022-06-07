@@ -469,6 +469,7 @@ export default defineComponent({
         password_confirmation: encrypt(formData.password_confirmation, 'test'),
       };
 
+      console.log({ ...formData, ...form });
       axios
         .post('/verifyPublisher', { ...formData, ...form })
         .then((res) => {
@@ -538,7 +539,7 @@ export default defineComponent({
     }
 
     function submitForm() {
-      isLoaderVisible.value = true;
+      // isLoaderVisible.value = true;
 
       let form = {
         password: encrypt(formData.password, 'test'),
@@ -548,6 +549,10 @@ export default defineComponent({
       axios
         .post('/register', { ...formData, ...form })
         .then((res) => {
+          if (res.request.responseURL.includes('activities')) {
+            window.location.href = '/activities';
+          }
+
           const response = res.data;
           const errors =
             !response.success || 'errors' in response ? response.errors : [];
@@ -568,6 +573,7 @@ export default defineComponent({
           }
         })
         .catch((error) => {
+          console.log(error);
           const { errors } = error.response.data;
           isLoaderVisible.value = false;
           errorData.username = errors.username ? errors.username[0] : '';

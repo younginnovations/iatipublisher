@@ -133,6 +133,10 @@ export default defineComponent({
       axios
         .post('/reset', form)
         .then((res) => {
+          if (res.request.responseURL.includes('activities')) {
+            window.location.href = '/activities';
+          }
+
           const response = res.data;
           const errors = 'errors' in response ? response.errors : [];
           errorData.password = errors.password ? errors.password[0] : '';

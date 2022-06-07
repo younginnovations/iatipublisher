@@ -99,7 +99,6 @@ class ResetPasswordController extends Controller
         $request['password'] = isset($request['password']) && $request['password'] ? decryptString($request['password'], 'test') : '';
         $request['password_confirmation'] = isset($request['password_confirmation']) && $request['password_confirmation'] ? decryptString($request['password_confirmation'], 'test') : '';
 
-        // dd($request);
         $request->validate($this->rules(), $this->validationErrorMessages());
 
         // Here we will attempt to reset the user's password. If it is successful we
