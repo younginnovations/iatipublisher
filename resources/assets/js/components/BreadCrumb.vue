@@ -2,7 +2,7 @@
   <div>
     <nav aria-label="breadcrumbs" class="rank-math-breadcrumb">
       <p>
-        <a href="/" class="font-bold text-n-40">Your Activities</a>
+        <a href="#" class="font-bold text-n-40">{{ link }}</a>
         <span class="separator"> / </span>
         <span class="last">{{ title }}</span>
         <span class="separator"> / </span>
@@ -18,6 +18,10 @@ import { defineComponent } from 'vue';
 export default defineComponent({
   props: {
     title: {
+      type: String,
+      required: true,
+    },
+    link: {
       type: String,
       required: true,
     },

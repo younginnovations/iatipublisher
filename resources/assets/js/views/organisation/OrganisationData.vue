@@ -3,7 +3,10 @@
     <!-- title section -->
     <div class="page-title mb-6">
       <div class="mb-6 text-caption-c1 text-n-40">
-        <BreadCrumb title="Organisation Name"></BreadCrumb>
+        <BreadCrumb
+          title="Organisation Name"
+          link="Your Organisation Data"
+        ></BreadCrumb>
       </div>
       <div class="flex items-end gap-4">
         <div class="title grow-0">
@@ -18,20 +21,166 @@
         </div>
         <div class="actions flex grow justify-end">
           <div class="inline-flex justify-center">
-            <button class="button secondary-btn mr-3.5 font-bold">
+            <button
+              class="button secondary-btn mr-3.5 font-bold"
+              @click="downloadValue = true"
+            >
               <svg-vue icon="download-file"></svg-vue>
             </button>
-            <button class="button secondary-btn mr-3.5 font-bold">
+            <Modal
+              :modalActive="downloadValue"
+              width="583"
+              @close="downloadToggle"
+            >
+              <div class="mb-4">
+                <div class="title mb-6 flex">
+                  <svg-vue
+                    class="mr-1 mt-0.5 text-lg text-spring-50"
+                    icon="download-file"
+                  ></svg-vue>
+                  <b>Download file.</b>
+                </div>
+                <div class="rounded-lg bg-mint p-4">
+                  Click the download button to save the file.
+                </div>
+              </div>
+              <div class="flex justify-end">
+                <div class="inline-flex">
+                  <BtnComponent
+                    class="bg-white px-6 uppercase"
+                    text="Go Back"
+                    @click="downloadValue = false"
+                  />
+                  <BtnComponent
+                    class="space"
+                    text="Download"
+                    type="primary"
+                    @click="downloadValue = false"
+                  />
+                </div>
+              </div>
+            </Modal>
+
+            <!-- Delete Activity -->
+            <button
+              class="button secondary-btn mr-3.5 font-bold"
+              @click="deleteValue = true"
+            >
               <svg-vue icon="delete"></svg-vue>
             </button>
-            <button class="button secondary-btn mr-3.5 font-bold">
+            <Modal :modalActive="deleteValue" width="583" @close="deleteToggle">
+              <div class="mb-4">
+                <div class="title mb-6 flex">
+                  <svg-vue
+                    class="mr-1 mt-0.5 text-lg text-crimson-40"
+                    icon="delete"
+                  ></svg-vue>
+                  <b>Delete activity</b>
+                </div>
+                <div class="rounded-lg bg-rose p-4">
+                  Are you sure you want to delete this activity?
+                </div>
+              </div>
+              <div class="flex justify-end">
+                <div class="inline-flex">
+                  <BtnComponent
+                    class="bg-white px-6 uppercase"
+                    text="Go Back"
+                    @click="deleteValue = false"
+                  />
+                  <BtnComponent
+                    class="space"
+                    text="Delete"
+                    type="primary"
+                    @click="deleteValue = false"
+                  />
+                </div>
+              </div>
+            </Modal>
+
+            <!-- Unpublish Activity -->
+            <button
+              class="button secondary-btn mr-3.5 font-bold"
+              @click="unpublishValue = true"
+            >
               <svg-vue icon="cancel-cloud"></svg-vue>
               <span>Unpublish</span>
             </button>
-            <button class="button primary-btn relative font-bold">
+            <Modal
+              :modalActive="unpublishValue"
+              width="583"
+              @close="unpublishToggle"
+            >
+              <div class="mb-4">
+                <div class="title mb-6 flex">
+                  <svg-vue
+                    class="mr-1 mt-0.5 text-lg text-crimson-40"
+                    icon="cancel-cloud"
+                  ></svg-vue>
+                  <b>Unpublish activity</b>
+                </div>
+                <div class="rounded-lg bg-rose p-4">
+                  Are you sure you want to unpublish this activity?
+                </div>
+              </div>
+              <div class="flex justify-end">
+                <div class="inline-flex">
+                  <BtnComponent
+                    class="bg-white px-6 uppercase"
+                    text="Go Back"
+                    @click="unpublishValue = false"
+                  />
+                  <BtnComponent
+                    class="space"
+                    text="Unpublish"
+                    type="primary"
+                    @click="unpublishValue = false"
+                  />
+                </div>
+              </div>
+            </Modal>
+
+            <!-- Publish Activity -->
+            <button
+              class="button primary-btn relative font-bold"
+              @click="publishValue = true"
+            >
               <svg-vue icon="approved-cloud"></svg-vue>
               <span>Publish</span>
             </button>
+            <Modal
+              :modalActive="publishValue"
+              width="583"
+              @close="publishToggle"
+            >
+              <div class="mb-4">
+                <div class="title mb-6 flex">
+                  <svg-vue
+                    class="mr-1 mt-0.5 text-lg text-spring-50"
+                    icon="approved-cloud"
+                  ></svg-vue>
+                  <b>Publish activity?</b>
+                </div>
+                <div class="rounded-lg bg-mint p-4">
+                  Are you ready to publish this activity?
+                </div>
+              </div>
+              <div class="flex justify-end">
+                <div class="inline-flex">
+                  <BtnComponent
+                    class="bg-white px-6 uppercase"
+                    text="Go Back"
+                    @click="publishValue = false"
+                  />
+                  <BtnComponent
+                    class="space"
+                    text="Publish"
+                    type="primary"
+                    @click="publishValue = false"
+                  />
+                </div>
+              </div>
+            </Modal>
           </div>
         </div>
       </div>
@@ -41,17 +190,20 @@
     <div class="activities">
       <aside class="activities__sidebar">
         <div
-          class="grid grid-cols-2 items-center justify-items-center rounded-lg bg-white py-3.5 text-center text-tiny text-n-30 shadow-dropdown"
+          class="grid grid-cols-2 justify-items-center rounded-lg bg-white py-3.5 text-center text-tiny text-n-30 shadow-dropdown"
         >
           <div class="mandatory relative flex flex-col items-center">
             <span class="mr-2">Your overall progress</span>
-            <RadialProgressBar class="my-2.5 h-20 text-8xl"></RadialProgressBar>
+            <RadialProgressBar
+              :isPercent="false"
+              class="my-2.5 h-20 text-8xl"
+            ></RadialProgressBar>
             <p>
               <span class="text-spring-50">1</span> mandatory <br />
               elements completed
             </p>
           </div>
-          <div class="">
+          <div>
             <div class="mb-7 flex items-center space-x-6">
               <span>Element Notes</span>
               <HoverText
@@ -71,20 +223,6 @@
               <div class="element__inner">
                 <span class="element__notes border border-spring-50"></span>
                 <span>Completed</span>
-              </div>
-            </div>
-            <div class="element">
-              <div class="element__inner">
-                <span
-                  class="element__notes border-dashed border-lavender-50"
-                ></span>
-                <span>DQI</span>
-              </div>
-            </div>
-            <div class="ml-2">
-              <div class="element__inner">
-                <span class="element__notes border-dashed border-n-40"></span>
-                <span>Optional</span>
               </div>
             </div>
           </div>
@@ -163,23 +301,26 @@
 <script lang="ts">
 import { defineComponent, reactive, ref } from 'vue';
 import HoverText from '../../components/HoverText.vue';
-import ProgressBar from '../../components/ProgressBar.vue';
 import ActivityElement from '../activity/partials/ActivityElement.vue';
 import RadialProgressBar from '../../components/RadialProgressBar.vue';
 import OrganisationElements from './OrganisationElements.vue';
 import ElementsDetail from './ElementsDetail.vue';
 import BreadCrumb from '../../components/BreadCrumb.vue';
+import Modal from '../../components/PopupModal.vue';
+import BtnComponent from '../../components/ButtonComponent.vue';
+import { useToggle } from '@vueuse/core';
 
 export default defineComponent({
   name: 'activities-elements',
   components: {
     HoverText,
-    ProgressBar,
     ActivityElement,
     RadialProgressBar,
     OrganisationElements,
     ElementsDetail,
     BreadCrumb,
+    Modal,
+    BtnComponent,
   },
   props: {
     elements: {
@@ -248,6 +389,12 @@ export default defineComponent({
         }
       });
     });
+
+    const [publishValue, publishToggle] = useToggle();
+    const [unpublishValue, unpublishToggle] = useToggle();
+    const [deleteValue, deleteToggle] = useToggle();
+    const [downloadValue, downloadToggle] = useToggle();
+
     return {
       elements,
       organisation,
@@ -255,6 +402,14 @@ export default defineComponent({
       pageTitle,
       tab,
       toggleTab,
+      publishValue,
+      publishToggle,
+      unpublishValue,
+      unpublishToggle,
+      deleteValue,
+      deleteToggle,
+      downloadValue,
+      downloadToggle,
     };
   },
 });

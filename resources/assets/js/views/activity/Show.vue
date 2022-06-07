@@ -204,7 +204,10 @@
                 position="right"
               ></HoverText>
             </div>
-            <ProgressBar :percent="progress" class="mb-3"></ProgressBar>
+            <RadialProgressBar
+              class="mb-3 h-20 text-8xl"
+              :isPercent="true"
+            ></RadialProgressBar>
             <span>Fill core elements to get 100% score</span>
           </div>
           <div class="activities__card elements">
@@ -287,20 +290,20 @@
 import { defineComponent } from 'vue';
 import { useToggle } from '@vueuse/core';
 import HoverText from '../../components/HoverText.vue';
-import ProgressBar from '../../components/ProgressBar.vue';
 import Elements from './partials/ActivitiesElements.vue';
 import ActivityElement from './partials/ActivityElement.vue';
 import Modal from '../../components/PopupModal.vue';
 import BtnComponent from '../../components/ButtonComponent.vue';
+import RadialProgressBar from '../../components/RadialProgressBar.vue';
 
 export default defineComponent({
   components: {
     HoverText,
-    ProgressBar,
     Elements,
     ActivityElement,
     Modal,
     BtnComponent,
+    RadialProgressBar,
   },
   props: {
     elements: {
@@ -313,10 +316,6 @@ export default defineComponent({
     },
     activity: {
       type: Object,
-      required: true,
-    },
-    progress: {
-      type: Number,
       required: true,
     },
   },
