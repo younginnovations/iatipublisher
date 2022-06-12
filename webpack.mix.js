@@ -36,16 +36,6 @@ mix
   .ts('resources/assets/js/scripts/activity/aidtype.ts', 'public/js')
   .version();
 
-// mix
-//   .webpackConfig({
-//     externals: {
-//       jquery: 'jQuery',
-//     },
-//   })
-//   .scripts([
-//     'resources/assets/js/scripts/script.ts',
-//   ], 'public/js/');
-
 mix
   .sass('resources/assets/sass/app.scss', 'public/css')
   .options({

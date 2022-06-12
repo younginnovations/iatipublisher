@@ -2,8 +2,10 @@
   <div class="help">
     <button>
       <svg-vue
-        class="text-n-40"
-        :class="props.icon_size ? 'text-tiny' : iconSize"
+        :class="{
+          'text-tiny': props.iconSize,
+          iconSize: !props.iconSize,
+        }"
         icon="help"
       ></svg-vue>
     </button>
@@ -15,7 +17,7 @@
       "
     >
       <span class="font-bold text-bluecoral">{{ props.name }}</span>
-      <p v-html="props.hover_text"></p>
+      <p v-html="props.hoverText"></p>
       <a
         v-if="props.link"
         :href="props.link"
@@ -35,7 +37,7 @@ export default defineComponent({
       type: String,
       required: false,
     },
-    hover_text: {
+    hoverText: {
       type: String,
       required: true,
     },
@@ -51,7 +53,7 @@ export default defineComponent({
       type: String,
       required: false,
     },
-    icon_size: {
+    iconSize: {
       type: String,
       required: false,
     },
@@ -60,7 +62,7 @@ export default defineComponent({
     const hoverTextClass = ref('');
     const iconSize = ref('');
     hoverTextClass.value = props.width ? props.width : 'w-60';
-    iconSize.value = props.icon_size ? props.icon_size : 'text-sm';
+    iconSize.value = props.iconSize ? props.iconSize : 'text-sm';
 
     return {
       props,
