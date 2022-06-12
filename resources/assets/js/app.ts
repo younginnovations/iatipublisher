@@ -6,7 +6,6 @@
 import {createApp} from 'vue';
 import VueSmoothScroll from 'vue3-smooth-scroll';
 import SvgVue from 'svg-vue3';
-import ExampleComponent from './components/ExampleComponent.vue';
 import WebHeader from './views/web/partials/WebHeader.vue';
 import WebFooter from './views/web/partials/WebFooter.vue';
 import WelcomeSignIn from './views/web/WelcomePage.vue';
@@ -16,11 +15,11 @@ import RegisterPage from './views/web/RegisterPage.vue';
  * Vue components for Activities Listing
  *
  */
-import Activity from './views/activity/Index.vue';
-import LoggedInHeader from './components/AdminHeader.vue';
-import ActivitiesDetail from './views/activity/Show.vue';
 import StaticDescriptionForm from './components/DescriptionForm.vue';
 import ElementsNote from './views/activity/partials/ElementsNote.vue';
+import Activity from './views/activity/ActivityIndex.vue';
+import LoggedInHeader from './components/TheAdminHeader.vue';
+import ActivitiesDetail from './views/activity/ActivityDetail.vue';
 
 /**
  * Setting page
@@ -31,7 +30,7 @@ import SettingPage from './views/setting/SettingPage.vue';
  * vue component for password reset
  */
 import ResetPage from './views/reset/ResetPage.vue';
-import PasswordRecovery from './views/reset/PasswordRecovery.vue';
+import ResetPasswordRecovery from './views/reset/ResetPasswordRecovery.vue';
 import ResetPassword from './views/reset/ResetPassword.vue';
 
 /**
@@ -52,7 +51,6 @@ const app = createApp({});
 // const files = require.context('./', true, /\.vue$/i)
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
 
-app.component('example-component', ExampleComponent);
 app.component('web-header', WebHeader);
 app.component('web-footer', WebFooter);
 app.component('welcome-signin', WelcomeSignIn);
@@ -75,7 +73,7 @@ app.component('setting-page', SettingPage);
 Registering vue component for password reset
 */
 app.component('reset-page', ResetPage);
-app.component('password-recovery', PasswordRecovery);
+app.component('password-recovery', ResetPasswordRecovery);
 app.component('reset-password', ResetPassword);
 
 /**

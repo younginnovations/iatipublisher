@@ -2,7 +2,7 @@
 @section('content')
     <activities-detail
         :elements="{{ json_encode($elements) }}"
-        :element_group="{{ json_encode($elementGroups) }}"
+        :elementGroup="{{ json_encode($elementGroups) }}"
         :activity="{{ json_encode($activity) }}"
         :progress="{{ $progress }}"
         :lang="{{json_encode('lang file')}}"

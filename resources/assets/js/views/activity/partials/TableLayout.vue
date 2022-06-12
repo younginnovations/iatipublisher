@@ -83,12 +83,12 @@
           <td>
             <button
               v-if="
-                datum['status'] != 'draft' && datum['status'] != 'published'
+                datum['status'] !== 'draft' && datum['status'] !== 'published'
               "
               class="button primary-outline-btn w-20"
             >
               {{
-                datum['status'] == 'ready_to_publish' ? 'Publish' : 'RePublish'
+                datum['status'] === 'ready_to_publish' ? 'Publish' : 'RePublish'
               }}
             </button>
           </td>
