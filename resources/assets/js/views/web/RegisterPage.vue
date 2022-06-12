@@ -11,14 +11,14 @@
       </div>
       <div class="section__wrapper flex">
         <EmailVerification
-          v-if="step === 3"
-          :email="formData.email"
+          v-if="checkStep('3')"
+          :email="formData['email']"
         ></EmailVerification>
         <div v-else class="form input__field" @keyup.enter="goToNextForm">
           <div class="form__container">
             <div class="flex items-center space-x-1">
               <HoverText
-                v-if="registerForm[step].hover_text"
+                v-if="registerForm[step]['hover_text']"
                 :hover_text="registerForm[step].hover_text"
                 :name="registerForm[step].title"
                 position="right"
@@ -57,13 +57,12 @@
             </div>
             <div class="form__content">
               <div
-                v-for="field in registerForm[step].fields"
-                :key="field.name"
-                :class="field.class"
+                v-for="(field, index, key) in registerForm[step]['fields']"
+                :key="key"
               >
                 <div class="flex items-center justify-between">
                   <label :for="field.id" class="label"
-                    >{{ field.label }}
+                    >{{ field['label'] }}
                     <span v-if="field.required" class="text-salmon-40"> *</span>
                   </label>
                   <HoverText
@@ -73,12 +72,7 @@
                   ></HoverText>
                 </div>
                 <input
-                  v-if="
-                    (field.type === 'text' ||
-                      field.type === 'password' ||
-                      field.type === 'email') &&
-                    field.name != 'identifier'
-                  "
+                  v-if="isTextField(field.type, field.name)"
                   :id="field.id"
                   v-model="formData[field.name]"
                   :class="
@@ -91,7 +85,7 @@
                 />
 
                 <input
-                  v-if="field.name == 'identifier'"
+                  v-if="field.name === 'identifier'"
                   v-model="formData[field.name]"
                   :class="
                     errorData[field.name] != ''
@@ -105,7 +99,7 @@
                     '-' +
                     formData.registration_number
                   "
-                  disabled="disabled"
+                  disabled="true"
                 />
 
                 <Multiselect
@@ -122,7 +116,7 @@
                 />
 
                 <span
-                  v-if="field.help_text != '' && errorData[field.name] == ''"
+                  v-if="field.help_text && errorData[field.name]"
                   class="text-xs font-normal text-n-40"
                   >{{ field.help_text }}
                 </span>
@@ -139,14 +133,14 @@
           </div>
           <div class="flex items-center justify-between">
             <button
-              v-if="step != 1"
+              v-if="step !== 1"
               class="btn-back"
               @click="goToPreviousForm()"
             >
               <svg-vue class="mr-3 cursor-pointer" icon="left-arrow"></svg-vue>
               Go back
             </button>
-            <span v-if="step == 1" class="text-sm font-normal text-n-40"
+            <span v-if="step === 1" class="text-sm font-normal text-n-40"
               >Already have an account?
               <a
                 class="border-b-2 border-b-transparent font-bold text-bluecoral hover:border-b-2 hover:border-b-turquoise hover:text-bluecoral"
@@ -156,14 +150,14 @@
             >
             <button
               class="btn btn-next w-40"
-              v-if="step != 3"
+              v-if="step !== 3"
               @click="goToNextForm()"
             >
               Next Step
               <svg-vue class="text-2xl" icon="right-arrow"></svg-vue>
             </button>
           </div>
-          <div v-if="step == 2" class="mt-6 text-center">
+          <div v-if="step === 2" class="mt-6 text-center">
             <span class="text-sm font-normal text-n-40"
               >Already have an account?
               <a
@@ -176,44 +170,38 @@
         </div>
 
         <aside class="register__sidebar">
-          <span class="text-base font-bold text-n-50"
-            >Step {{ step }} out of 3</span
+          <span class="text-base font-bold"
+            >Step {{ getCurrentStep() }} out of 3</span
           >
-          <ul class="relative mt-6 text-sm text-bluecoral">
+          <ul class="relative mt-6 text-sm text-n-40">
             <li
-              v-for="(ele, i) in registerForm"
-              :key="ele.title"
+              v-for="(form, key, i) in registerForm"
+              :key="i"
               :class="[
-                step == parseInt(i)
+                step === i
                   ? 'relative font-bold text-n-50'
                   : 'mb-6 flex items-center',
               ]"
             >
-              <span v-if="step == parseInt(i)" class="list__active"></span>
-              <div class="flex items-center">
-                <span v-if="!ele.is_complete" class="mr-3 ml-6">
-                  {{ i }}
-                </span>
-                <span v-if="ele.is_complete" class="mr-3 ml-6">
-                  <svg-vue class="text-xs" icon="checked"> </svg-vue>
-                </span>
-                <span
-                  :class="[
-                    step == parseInt(i)
-                      ? 'font-bold text-n-50'
-                      : ele.is_complete
-                      ? 'font-bold text-bluecoral'
-                      : 'font-normal text-n-40',
-                  ]"
-                >
-                  {{ ele.title }}
-                </span>
-              </div>
-              <p
-                v-if="step == parseInt(i)"
-                class="detail mt-2 mb-6 font-normal xl:pr-2"
+              <span v-if="step === i" class="list__active"></span>
+              <span v-if="!form['is_complete']" class="mr-3 ml-6">
+                {{ i }}
+              </span>
+              <span v-if="form['is_complete']" class="mr-3 ml-6">
+                <svg-vue class="text-xs" icon="checked"> </svg-vue>
+              </span>
+              <span
+                class="font-bold"
+                :class="{
+                  'text-n-50': step === i,
+                  'text-bluecoral': step !== i && form.is_complete,
+                  'text-n-40': step !== i && !form.is_complete,
+                }"
               >
-                {{ ele.description }}
+                {{ form['title'] }}
+              </span>
+              <p v-if="step === i" class="detail mt-2 mb-6 font-normal xl:pr-2">
+                {{ form['description'] }}
               </p>
             </li>
           </ul>
@@ -298,7 +286,7 @@ export default defineComponent({
 
         return Object.fromEntries(
           Object.entries(agencies).filter(
-            ([key, value]) =>
+            ([key]) =>
               key.startsWith(formData.country) ||
               uncategorized.some((k) => key.startsWith(k))
           )
@@ -306,6 +294,23 @@ export default defineComponent({
       } else {
         return agencies;
       }
+    });
+
+    const isTextField = computed(() => {
+      return (fieldType: string, fieldName: string) => {
+        return (fieldType === 'text' ||
+          fieldType === 'password' ||
+          fieldType === 'email') &&
+          fieldName != 'identifier'
+          ? true
+          : false;
+      };
+    });
+
+    const checkStep = computed(() => {
+      return (formStep: string) => {
+        return parseInt(formStep) === step.value ? true : false;
+      };
     });
 
     const registerForm = reactive({
@@ -543,6 +548,10 @@ export default defineComponent({
         });
     }
 
+    function getCurrentStep() {
+      return step.value.toString();
+    }
+
     function goToNextForm() {
       if (step.value === 1) verifyPublisher();
       if (step.value === 2) submitForm();
@@ -561,6 +570,9 @@ export default defineComponent({
       isLoaderVisible,
       goToNextForm,
       goToPreviousForm,
+      getCurrentStep,
+      checkStep,
+      isTextField,
       props,
     };
   },
