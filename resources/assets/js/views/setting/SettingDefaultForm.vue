@@ -1,13 +1,15 @@
 <template>
   <div>
     <div class="registry__info">
-      <div class="mb-4 text-sm font-bold text-n-50">Default Values</div>
+      <div class="mb-4 text-sm font-bold text-n-50">
+        Default Values
+      </div>
       <div class="mb-4 flex items-center text-xs text-n-50">
         <button>
           <HoverText
             name="Default Values"
-            hover_text="These values will be automatically added to your data files."
-          ></HoverText>
+            hover-text="These values will be automatically added to your data files."
+          />
         </button>
       </div>
     </div>
@@ -20,20 +22,24 @@
             <button>
               <HoverText
                 name="Default Currency"
-                hover_text="The currency in which you report your financial transactions. You can later manually change the currency on individual transactions and budgets if required."
-              ></HoverText>
+                hover-text="The currency in which you report your financial transactions. You can later manually change the currency on individual transactions and budgets if required."
+              />
             </button>
           </div>
           <Multiselect
             id="default-currency"
+            v-model="defaultForm.default_currency"
             class="vue__select"
             placeholder="Select from dropdown"
-            v-model="defaultForm.default_currency"
             :options="props.currencies"
             :searchable="true"
             @click="updateStore('default_currency')"
           />
-          <span class="error" role="alert" v-if="defaultError.default_currency">
+          <span
+            v-if="defaultError.default_currency"
+            class="error"
+            role="alert"
+          >
             {{ defaultError.default_currency }}
           </span>
 
@@ -48,24 +54,27 @@
             <button>
               <HoverText
                 name="Default Language"
-                hover_text="The language in which you provide data on your activities. You can later manually change the language on individual text if required."
-              ></HoverText>
+                hover-text="The language in which you provide data on your activities. You can later manually change the language on individual text if required."
+              />
             </button>
           </div>
           <Multiselect
             id="default-language"
-            :class="
-              defaultError.default_language
-                ? 'error__input vue__select'
-                : 'vue__select'
-            "
-            placeholder="Select language from dropdown"
             v-model="defaultForm.default_language"
+            class="vue__select"
+            :class="{
+              error__input: defaultError.default_language,
+            }"
+            placeholder="Select language from dropdown"
             :searchable="true"
             :options="props.languages"
             @click="updateStore('default_language')"
           />
-          <span class="error" role="alert" v-if="defaultError.default_language">
+          <span
+            v-if="defaultError.default_language"
+            class="error"
+            role="alert"
+          >
             {{ defaultError.default_language }}
           </span>
 
@@ -87,25 +96,25 @@
               <HoverText
                 width="w-64"
                 name="Default Hierarchy"
-                hover_text="If you are reporting both programmes (parent activities) and projects (child activities),
+                hover-text="If you are reporting both programmes (parent activities) and projects (child activities),
                 choose the hierarchical level that most of your activities are at. e.g. parent activity = 1; child activity = 2.
                 <br>If all your activities are at the same level i.e. you have no child activities, then choose 1."
-              ></HoverText>
+              />
             </button>
           </div>
           <input
             id="default-hierarchy"
-            :class="
-              defaultError.hierarchy
-                ? 'register__input mb-2'
-                : 'register__input mb-2'
-            "
+            v-model="defaultForm.hierarchy"
+            class="register__input mb-2"
             type="text"
             placeholder="Type default hierarchy here"
-            v-model="defaultForm.hierarchy"
             @input="updateStore('hierarchy')"
-          />
-          <span class="error" role="alert" v-if="defaultError.hierarchy">
+          >
+          <span
+            v-if="defaultError.hierarchy"
+            class="error"
+            role="alert"
+          >
             {{ defaultError.hierarchy }}
           </span>
           <p v-if="!defaultError.hierarchy">
@@ -122,24 +131,27 @@
               <HoverText
                 width="w-72"
                 name="Humanitarian"
-                hover_text="Add a 'Humanitarian Flag' to every activity that your organisation publishes data on. This means that your organisation identifies all their activities as wholly or partially addressing a humanitarian crisis or multiple crises. You can later manually add or remove a Humanitarian Flag on individual activities if required."
-              ></HoverText>
+                hover-text="Add a 'Humanitarian Flag' to every activity that your organisation publishes data on. This means that your organisation identifies all their activities as wholly or partially addressing a humanitarian crisis or multiple crises. You can later manually add or remove a Humanitarian Flag on individual activities if required."
+              />
             </button>
           </div>
           <Multiselect
             id="humanitarian"
-            :class="
-              defaultError.humanitarian
-                ? 'error__input vue__select'
-                : 'vue__select'
-            "
-            placeholder="Select Humanitarian here"
             v-model="defaultForm.humanitarian"
+            class="vue__select"
+            :class="{
+              error__input: defaultError.humanitarian,
+            }"
+            placeholder="Select Humanitarian here"
             :options="props.humanitarian"
             :searchable="true"
             @click="updateStore('humanitarian')"
           />
-          <span class="error" role="alert" v-if="defaultError.humanitarian">
+          <span
+            v-if="defaultError.humanitarian"
+            class="error"
+            role="alert"
+          >
             {{ defaultError.humanitarian }}
           </span>
           <p v-if="!defaultError.hierarchy">

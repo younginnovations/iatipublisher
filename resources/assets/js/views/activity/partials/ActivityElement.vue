@@ -1,8 +1,8 @@
 <template>
-  <div :class="layout" class="activities__content--element px-3 py-3 text-n-50">
-    <div class="rounded-lg bg-white p-4">
-      <div class="mb-4 flex">
-        <div class="title flex grow">
+  <div :class="layout" class="px-3 py-3 activities__content--element text-n-50">
+    <div class="p-4 bg-white rounded-lg">
+      <div class="flex mb-4">
+        <div class="flex title grow">
           <template
             v-if="
               title === 'reporting_org' ||
@@ -31,7 +31,7 @@
             ></svg-vue>
           </template>
 
-          <div class="title text-sm font-bold">
+          <div class="text-sm font-bold title">
             {{ title.toString().replace(/_/g, '-') }}
           </div>
 
@@ -48,7 +48,7 @@
           </div>
         </div>
 
-        <div class="icons flex items-center">
+        <div class="flex items-center icons">
           <a
             :href="`/activities/${activityId}/${title}`"
             class="edit-button mr-2.5 flex items-center text-tiny font-bold uppercase"
@@ -63,13 +63,13 @@
 
           <HoverText
             v-if="tooltip"
-            :hover_text="tooltip"
+            :hover-text="tooltip"
             class="text-n-40"
           ></HoverText>
         </div>
       </div>
 
-      <div class="divider mb-4 h-px w-full bg-n-20"></div>
+      <div class="w-full h-px mb-4 divider bg-n-20"></div>
 
       <!-- Title -->
       <template v-if="title === 'title'">
@@ -77,7 +77,7 @@
           <div class="language mb-1.5">
             (Language: {{ types.languages[post.language] }})
           </div>
-          <div v-if="post.narrative" class="description text-sm">
+          <div v-if="post.narrative" class="text-sm description">
             {{ post.narrative }}
           </div>
           <div v-if="i !== data.content.length - 1" class="mb-4"></div>
@@ -100,7 +100,7 @@
           :key="key"
           :class="{ 'mb-4': key !== data.content.length - 1 }"
         >
-          <div class="description-type mb-4 text-sm font-bold">
+          <div class="mb-4 text-sm font-bold description-type">
             {{ props.types.descriptionType[post.type] }}
           </div>
           <div
@@ -126,7 +126,7 @@
           :key="key"
           :class="{ 'mb-4': key !== data.content.length - 1 }"
         >
-          <div class="date-type mb-1 flex flex-col space-y-2 text-sm font-bold">
+          <div class="flex flex-col mb-1 space-y-2 text-sm font-bold date-type">
             <span>{{ props.types.activityDate[post.type] }}</span>
             <span class="text-sm font-normal">{{ post.date }}</span>
           </div>
@@ -134,7 +134,7 @@
             v-for="(item, i) in post.narrative"
             :key="i"
             :class="{ 'mb-4': i !== post.narrative.length - 1 }"
-            class="date-content flex"
+            class="flex date-content"
           >
             <span v-if="item.narrative" class="w-[100px] text-xs text-n-40"
               >Description</span
@@ -143,7 +143,7 @@
               <div v-if="item.language" class="language mb-1.5">
                 (Language: {{ types.languages[item.language] }})
               </div>
-              <div v-if="item.narrative" class="description text-xs leading-5">
+              <div v-if="item.narrative" class="text-xs leading-5 description">
                 {{ item.narrative }}
               </div>
             </div>
@@ -158,7 +158,7 @@
           :key="key"
           :class="{ 'mb-4': key !== data.content.length - 1 }"
         >
-          <div class="recipient_country-code mb-4 flex gap-1 text-sm">
+          <div class="flex gap-1 mb-4 text-sm recipient_country-code">
             <span>{{ types.country[post.country_code] }}</span>
             <span v-if="post.percentage" class="text-sm font-normal"
               >({{ post.percentage }}%)</span
@@ -229,20 +229,20 @@
       <!-- Conditions -->
       <template v-else-if="title === 'conditions'">
         <div
-          class="country_budget_items overflow-hidden rounded-lg border border-n-20"
+          class="overflow-hidden border rounded-lg country_budget_items border-n-20"
         >
           <div
-            class="date-type tb-title flex gap-1 bg-n-10 px-6 py-2 text-xs font-bold"
+            class="flex gap-1 px-6 py-2 text-xs font-bold date-type tb-title bg-n-10"
           >
             <span> Attached: </span>
-            <span class="font-normal italic text-n-30">
+            <span class="italic font-normal text-n-30">
               <span v-if="data.content.condition_attached === '0'">No</span>
               <span v-else-if="data.content.condition_attached === '1'"
                 >Yes</span
               >
             </span>
           </div>
-          <div class="tb-content condition-contents px-6 py-2">
+          <div class="px-6 py-2 tb-content condition-contents">
             <div
               v-for="(post, key) in data.content.condition"
               :key="key"
@@ -277,35 +277,35 @@
           class="humanitarian_scope"
           :class="{ 'mb-4': key !== data.content.length - 1 }"
         >
-          <ul class="mb-4 inline-flex flex-wrap gap-3">
+          <ul class="inline-flex flex-wrap gap-3 mb-4">
             <li class="inline-block">
-              <div class="date-type flex gap-1 text-sm font-bold">
+              <div class="flex gap-1 text-sm font-bold date-type">
                 <span>Code: </span>
-                <span class="text-sm font-normal italic text-n-30">
+                <span class="text-sm italic font-normal text-n-30">
                   {{ post.code }}
                 </span>
               </div>
             </li>
             <li class="inline-block">
-              <div class="date-type flex gap-1 text-sm font-bold">
+              <div class="flex gap-1 text-sm font-bold date-type">
                 <span>Type: </span>
-                <span class="text-sm font-normal italic text-n-30">
+                <span class="text-sm italic font-normal text-n-30">
                   {{ types.humanitarianScopeType[post.type] }}
                 </span>
               </div>
             </li>
             <li class="inline-block">
-              <div class="date-type flex gap-1 text-sm font-bold">
+              <div class="flex gap-1 text-sm font-bold date-type">
                 <span>Vocabulary: </span>
-                <span class="text-sm font-normal italic text-n-30">
+                <span class="text-sm italic font-normal text-n-30">
                   {{ types.humanitarianScopeVocabulary[post.vocabulary] }}
                 </span>
               </div>
             </li>
             <li class="inline-block" v-if="post.vocabulary === '99'">
-              <div class="date-type flex gap-1 text-sm font-bold">
+              <div class="flex gap-1 text-sm font-bold date-type">
                 <span>Vocabulary Uri: </span>
-                <span class="text-sm font-normal italic text-n-30">
+                <span class="text-sm italic font-normal text-n-30">
                   {{ post.vocabulary_uri }}
                 </span>
               </div>
@@ -320,7 +320,7 @@
               <div class="language mb-1.5">
                 (Language: {{ types.languages[item.language] }})
               </div>
-              <div v-if="item.narrative" class="description text-sm">
+              <div v-if="item.narrative" class="text-sm description">
                 {{ item.narrative }}
               </div>
             </div>
@@ -337,7 +337,7 @@
           :class="{ 'mb-4': key !== data.content.length - 1 }"
         >
           <div class="default_aid_type-content">
-            <div class="date-type mb-4 text-sm font-bold">
+            <div class="mb-4 text-sm font-bold date-type">
               {{ types.aidTypeVocabulary[post.default_aidtype_vocabulary] }}
             </div>
 
@@ -370,9 +370,9 @@
 
       <!-- Country Budget Items -->
       <template v-else-if="title === 'country_budget_items'">
-        <div class="overflow-hidden rounded-lg border border-n-20">
+        <div class="overflow-hidden border rounded-lg border-n-20">
           <div
-            class="tb-title country_budget_vocabulary bg-n-10 px-6 py-2 text-xs font-bold"
+            class="px-6 py-2 text-xs font-bold tb-title country_budget_vocabulary bg-n-10"
           >
             {{
               props.types.budgetIdentifierVocabulary[
@@ -380,37 +380,37 @@
               ]
             }}
           </div>
-          <div class="country_budget_items tb-content px-6 py-2">
+          <div class="px-6 py-2 country_budget_items tb-content">
             <div
               v-for="(post, key) in data.content.budget_item"
               :key="key"
               class="country_budget_item"
               :class="{ 'mb-4': key !== data.content.budget_item.length - 1 }"
             >
-              <ul class="mb-4 inline-flex flex-wrap gap-3">
+              <ul class="inline-flex flex-wrap gap-3 mb-4">
                 <li
                   class="inline-block"
                   v-if="data.content.country_budget_vocabulary === '1'"
                 >
-                  <div class="date-type flex gap-1 text-sm font-bold">
+                  <div class="flex gap-1 text-sm font-bold date-type">
                     <span>Code: </span>
-                    <span class="text-sm font-normal italic text-n-30">
+                    <span class="text-sm italic font-normal text-n-30">
                       {{ types.budgetIdentifier[post.code] }}
                     </span>
                   </div>
                 </li>
                 <li class="inline-block" v-else>
-                  <div class="date-type flex gap-1 text-sm font-bold">
+                  <div class="flex gap-1 text-sm font-bold date-type">
                     <span>Code: {{ post.code_text }}</span>
-                    <span class="text-sm font-normal italic text-n-30">
+                    <span class="text-sm italic font-normal text-n-30">
                       {{ post.code_text }}
                     </span>
                   </div>
                 </li>
                 <li class="inline-block">
-                  <div class="date-type flex gap-1 text-sm font-bold">
+                  <div class="flex gap-1 text-sm font-bold date-type">
                     <span>Percentage:</span>
-                    <span class="text-sm font-normal italic text-n-30">
+                    <span class="text-sm italic font-normal text-n-30">
                       {{ post.percentage }}%
                     </span>
                   </div>
@@ -427,7 +427,7 @@
                     <div class="language mb-1.5">
                       (Language: {{ types.languages[i.language] }})
                     </div>
-                    <div v-if="i.narrative" class="description text-sm">
+                    <div v-if="i.narrative" class="text-sm description">
                       {{ i.narrative }}
                     </div>
                   </div>
@@ -443,14 +443,14 @@
         <div
           v-for="(post, key) in data.content"
           :key="key"
-          class="country_budget_items overflow-hidden rounded-lg border border-n-20"
+          class="overflow-hidden border rounded-lg country_budget_items border-n-20"
           :class="{ 'mb-4': key !== data.content.length - 1 }"
         >
-          <div class="tb-title bg-n-10 px-6 py-2 text-xs font-bold">
+          <div class="px-6 py-2 text-xs font-bold tb-title bg-n-10">
             {{ types.sectorVocabulary[post.sector_vocabulary] }}
           </div>
-          <div class="tb-content px-6 py-2">
-            <ul class="mb-4 inline-flex flex-wrap gap-2">
+          <div class="px-6 py-2 tb-content">
+            <ul class="inline-flex flex-wrap gap-2 mb-4">
               <li
                 v-if="
                   post.sector_vocabulary === '98' ||
@@ -459,7 +459,7 @@
               >
                 <div class="flex gap-1 text-sm font-bold">
                   <span>Vocabulary-uri: </span>
-                  <span class="text-sm font-normal italic text-n-30">
+                  <span class="text-sm italic font-normal text-n-30">
                     {{ post.vocabulary_uri }}
                   </span>
                 </div>
@@ -467,7 +467,7 @@
               <li>
                 <div class="flex gap-1 text-sm font-bold">
                   <span>Code: </span>
-                  <span class="text-sm font-normal italic text-n-30">
+                  <span class="text-sm italic font-normal text-n-30">
                     <span v-if="post.sector_vocabulary === '1'">
                       {{ types.sectorCode[post.code] }}
                     </span>
@@ -489,7 +489,7 @@
               <li>
                 <div class="flex gap-1 text-sm font-bold">
                   <span>Percentage: </span>
-                  <span class="text-sm font-normal italic text-n-30">
+                  <span class="text-sm italic font-normal text-n-30">
                     {{ post.percentage }}%
                   </span>
                 </div>
@@ -505,7 +505,7 @@
                 <div class="language mb-1.5">
                   (Language: {{ types.languages[i.language] }})
                 </div>
-                <div v-if="i.narrative" class="description text-sm">
+                <div v-if="i.narrative" class="text-sm description">
                   {{ i.narrative }}
                 </div>
               </div>
@@ -525,7 +525,7 @@
             {{ types.regionVocabulary[post.region_vocabulary] }}
           </div>
           <div class="tb-content">
-            <ul class="mb-2 inline-flex flex-wrap items-center gap-1">
+            <ul class="inline-flex flex-wrap items-center gap-1 mb-2">
               <li>
                 <div class="flex gap-1 text-sm font-bold">
                   <span class="text-sm font-normal">
@@ -592,7 +592,7 @@
           </div>
           <div class="mb-4">
             <div class="category">Owner org</div>
-            <div class="tb-content px-6">
+            <div class="px-6 tb-content">
               <div
                 v-for="(post, key) in data.content.owner_org"
                 :key="key"
@@ -635,18 +635,18 @@
         <div
           v-for="(post, key) in data.content"
           :key="key"
-          class="overflow-hidden rounded-lg border border-n-20"
+          class="overflow-hidden border rounded-lg border-n-20"
           :class="{ 'mb-4': key !== data.content.length - 1 }"
         >
-          <div class="tb-title bg-n-10 px-6 py-2 text-xs font-bold">
+          <div class="px-6 py-2 text-xs font-bold tb-title bg-n-10">
             {{ types.policyMarkerVocabulary[post.policymarker_vocabulary] }}
           </div>
-          <div class="tb-content px-6 py-2">
-            <ul class="mb-4 inline-flex flex-wrap gap-2">
+          <div class="px-6 py-2 tb-content">
+            <ul class="inline-flex flex-wrap gap-2 mb-4">
               <li>
                 <div class="flex gap-1 text-sm font-bold">
                   <span>Significance: </span>
-                  <span class="text-sm font-normal italic text-n-30">
+                  <span class="text-sm italic font-normal text-n-30">
                     {{ types.policySignificance[post.significance] }}
                   </span>
                 </div>
@@ -654,7 +654,7 @@
               <li v-if="post.policymarker_vocabulary === '99'">
                 <div class="flex gap-1 text-sm font-bold">
                   <span>Vocabulary-uri: </span>
-                  <span class="text-sm font-normal italic text-n-30">
+                  <span class="text-sm italic font-normal text-n-30">
                     {{ post.vocabulary_uri }}
                   </span>
                 </div>
@@ -662,7 +662,7 @@
               <li>
                 <div class="flex gap-1 text-sm font-bold">
                   <span>Code: </span>
-                  <span class="text-sm font-normal italic text-n-30">
+                  <span class="text-sm italic font-normal text-n-30">
                     <span v-if="post.policymarker_vocabulary === '1'">
                       {{ types.policyMarker[post.policy_marker] }}
                     </span>
@@ -683,7 +683,7 @@
                 <div class="language mb-1.5">
                   (Language: {{ types.languages[i.language] }})
                 </div>
-                <div v-if="i.narrative" class="description text-sm">
+                <div v-if="i.narrative" class="text-sm description">
                   {{ i.narrative }}
                 </div>
               </div>
@@ -697,18 +697,18 @@
         <div
           v-for="(post, key) in data.content"
           :key="key"
-          class="overflow-hidden rounded-lg border border-n-20"
+          class="overflow-hidden border rounded-lg border-n-20"
           :class="{ 'mb-4': key !== data.content.length - 1 }"
         >
-          <div class="tb-title bg-n-10 px-6 py-2 text-xs font-bold">
+          <div class="px-6 py-2 text-xs font-bold tb-title bg-n-10">
             {{ types.tagVocabulary[post.tag_vocabulary] }}
           </div>
-          <div class="tb-content px-6 py-2">
-            <ul class="mb-4 inline-flex flex-wrap gap-2">
+          <div class="px-6 py-2 tb-content">
+            <ul class="inline-flex flex-wrap gap-2 mb-4">
               <li>
                 <div class="flex gap-1 text-sm font-bold">
                   <span>Code: </span>
-                  <span class="text-sm font-normal italic text-n-30">
+                  <span class="text-sm italic font-normal text-n-30">
                     <span
                       v-if="
                         post.tag_vocabulary === '1' ||
@@ -729,7 +729,7 @@
               <li v-if="post.tag_vocabulary === '99'">
                 <div class="flex gap-1 text-sm font-bold">
                   <span>Vocabulary-uri: </span>
-                  <span class="text-sm font-normal italic text-n-30">
+                  <span class="text-sm italic font-normal text-n-30">
                     {{ post.vocabulary_uri }}
                   </span>
                 </div>
@@ -745,7 +745,7 @@
                 <div class="language mb-1.5">
                   (Language: {{ types.languages[i.language] }})
                 </div>
-                <div v-if="i.narrative" class="description text-sm">
+                <div v-if="i.narrative" class="text-sm description">
                   {{ i.narrative }}
                 </div>
               </div>
@@ -762,7 +762,7 @@
           class="elements-detail"
           :class="{ 'mb-4': key !== data.content.length - 1 }"
         >
-          <div class="space text-sm font-bold">
+          <div class="text-sm font-bold space">
             {{ types.budgetType[post.budget_type] }}
           </div>
           <div class="mb-2 text-sm">
@@ -772,10 +772,10 @@
           <div
             v-for="(item, i) in post.budget_value"
             :key="i"
-            class="elements-detail mb-1"
+            class="mb-1 elements-detail"
             :class="{ 'mb-4': i !== post.budget_value.length - 1 }"
           >
-            <div class="value text-sm">
+            <div class="text-sm value">
               <span>{{ item.amount }}</span>
               <span>{{ item.currency }}</span>
               <span>({{ item.value_date }})</span>
@@ -818,7 +818,7 @@
           class="elements-detail"
           :class="{ 'mb-4': key !== data.content.length - 1 }"
         >
-          <div class="category text-sm font-bold">
+          <div class="text-sm font-bold category">
             {{ types.contactType[post.type] }}
           </div>
 
@@ -832,7 +832,7 @@
               :key="j"
               :class="{ 'mb-4': j !== item.narrative.length - 1 }"
             >
-              <div class="value items-center text-sm">
+              <div class="items-center text-sm value">
                 <span v-if="narrative.narrative">{{
                   narrative.narrative
                 }}</span>
@@ -1230,7 +1230,7 @@
             :key="i"
             :class="{ 'mb-4': i !== post.value.length - 1 }"
           >
-            <div class="value text-sm">
+            <div class="text-sm value">
               <span>{{ item.amount }}</span>
               <span>{{ types.currency[item.currency] }}</span>
               <span>({{ item.value_date }})</span>
@@ -1374,7 +1374,7 @@
       </template>
 
       <template v-else>
-        <div class="content text-sm">
+        <div class="text-sm content">
           <template v-if="title === 'activity_status'">
             {{ props.types.activityStatus[data.content] }}
           </template>

@@ -2,24 +2,23 @@
   <div class="help">
     <button>
       <svg-vue
-        class="text-n-40"
-        :class="props.icon_size ? 'text-tiny' : iconSize"
+        :class="{
+          'text-tiny': iconSize,
+          svgIconSize: !iconSize,
+        }"
         icon="help"
-      ></svg-vue>
+      />
     </button>
     <div
-      :class="
-        props.position === 'right'
-          ? 'help__text left-0 ' + hoverTextClass
-          : 'help__text right-0 ' + hoverTextClass
-      "
+      :class="[
+        position === 'right'
+          ? 'help__text left-0 ' + width
+          : 'help__text right-0 ' + width,
+      ]"
     >
-      <span class="font-bold text-bluecoral">{{ props.name }}</span>
-      <p v-html="props.hover_text"></p>
-      <a
-        v-if="props.link"
-        :href="props.link"
-        class="inline-block font-bold text-bluecoral"
+      <span class="font-bold text-bluecoral">{{ name }}</span>
+      <p>{{ hoverText }}</p>
+      <a v-if="link" :href="link" class="inline-block font-bold text-bluecoral"
         >Learn more</a
       >
     </div>
@@ -27,46 +26,39 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue';
+import { defineComponent } from 'vue';
 
 export default defineComponent({
   props: {
     name: {
       type: String,
       required: false,
+      default: '',
     },
-    hover_text: {
+    hoverText: {
       type: String,
       required: true,
     },
     width: {
       type: String,
       required: false,
+      default: 'w-60',
     },
     position: {
       type: String,
       required: false,
+      default: '',
     },
     link: {
       type: String,
       required: false,
+      default: '',
     },
-    icon_size: {
+    iconSize: {
       type: String,
       required: false,
+      default: 'text-sm',
     },
-  },
-  setup(props) {
-    const hoverTextClass = ref('');
-    const iconSize = ref('');
-    hoverTextClass.value = props.width ? props.width : 'w-60';
-    iconSize.value = props.icon_size ? props.icon_size : 'text-sm';
-
-    return {
-      props,
-      iconSize,
-      hoverTextClass,
-    };
   },
 });
 </script>
