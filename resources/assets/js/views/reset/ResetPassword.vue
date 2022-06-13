@@ -70,7 +70,7 @@ export default defineComponent({
       type: String,
       required: true,
     },
-    reset_token: {
+    resetToken: {
       type: String,
       required: true,
     },
@@ -79,7 +79,7 @@ export default defineComponent({
     const loaderVisibility = ref(false);
     const formData = reactive({
       email: props.email,
-      token: props.reset_token,
+      token: props.resetToken,
       password: '',
       password_confirmation: '',
     });

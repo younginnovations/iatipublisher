@@ -150,7 +150,7 @@ export default defineComponent({
     const toastMessage = ref('');
     const toastType = ref(false);
 
-    const active_tab = ref('activities');
+    const activeTab = ref('activities');
     const data = reactive({
       languageNavLiClasses: 'flex',
       languageNavAnchorClasses:
@@ -240,7 +240,7 @@ export default defineComponent({
       toastType,
       toast,
       toggle,
-      active_tab,
+      activeTab,
       modalToggle,
       logout,
     };
