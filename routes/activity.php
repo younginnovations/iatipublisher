@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\Activity\ActivityController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -13,7 +14,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 Route::name('admin.')->group(function () {
-    Route::resource('/activities', \App\Http\Controllers\Admin\Activity\ActivityController::class);
+    Route::resource('/activities', ActivityController::class);
     Route::get('/activity/page/{page?}', [App\Http\Controllers\Admin\Activity\ActivityController::class, 'getActivities'])->name('paginate');
     Route::get('/activity/codelists', [App\Http\Controllers\Admin\Activity\ActivityController::class, 'getLanguagesOrganization'])->name('codelist');
     Route::get('activities/{id}/title', [\App\Http\Controllers\Admin\Activity\TitleController::class, 'edit'])->name('activities.title.edit');
@@ -81,4 +82,13 @@ Route::name('admin.')->group(function () {
     Route::resource('activities.results', \App\Http\Controllers\Admin\Activity\ResultController::class);
     Route::resource('activities.results.indicators', \App\Http\Controllers\Admin\Activity\IndicatorController::class);
     Route::resource('activities.results.indicators.periods', \App\Http\Controllers\Admin\Activity\PeriodController::class);
+
+    // static route for static pages
+    Route::get('/activities/{id}/result', function () {
+        return view('admin.activity.result.result');
+    });
+
+    Route::get('/activities/{id}/result-detail', function () {
+        return view('admin.activity.result.detail');
+    });
 });
