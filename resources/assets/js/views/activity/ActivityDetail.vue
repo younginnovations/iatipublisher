@@ -199,7 +199,7 @@
             <div class="mb-2 flex items-center justify-between">
               <span class="mr-2">Publishing Progress</span>
               <HoverText
-                hover_text="You cannot publish an activity until all the mandatory fields have been filled."
+                hoverText="You cannot publish an activity until all the mandatory fields have been filled."
                 name=""
                 position="right"
               ></HoverText>
@@ -211,7 +211,7 @@
             <div class="mb-7 flex items-center justify-between">
               <span>Elements</span>
               <HoverText
-                hover_text="You cannot publish an activity until all the mandatory fields have been filled."
+                hoverText="You cannot publish an activity until all the mandatory fields have been filled."
                 name=""
               ></HoverText>
             </div>
@@ -221,7 +221,7 @@
                 <span>Core</span>
               </div>
               <HoverText
-                hover_text="You cannot publish an activity until all the mandatory fields have been filled."
+                hoverText="You cannot publish an activity until all the mandatory fields have been filled."
                 name=""
               ></HoverText>
             </div>
@@ -231,7 +231,7 @@
                 <span>Completed</span>
               </div>
               <HoverText
-                hover_text="You cannot publish an activity until all the mandatory fields have been filled."
+                hoverText="You cannot publish an activity until all the mandatory fields have been filled."
                 name=""
               ></HoverText>
             </div>
@@ -308,7 +308,7 @@ export default defineComponent({
       type: Object,
       required: true,
     },
-    element_group: {
+    elementGroup: {
       type: Object,
       required: true,
     },

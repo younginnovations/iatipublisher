@@ -14,14 +14,14 @@
     <link rel="icon" type="image" href="https://prod-iati-website.azureedge.net/prod-iati-website/favicons/favicon-32x32.png">
 
   <!-- Scripts -->
-  <script src="{{ asset('js/app.js') }}" defer></script>
-  <script defer src="{{ asset('js/script.js') }}"></script>
+  <script src="{{ mix('js/app.js') }}" defer></script>
+  <script defer src="{{ mix('js/script.js') }}"></script>
 
   <!-- Fonts -->
   {{-- <link href="http://fonts.cdnfonts.com/css/arial" rel="stylesheet"> --}}
 
   <!-- Styles -->
-  <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+  <link href="{{ mix('css/app.css') }}" rel="stylesheet">
   <link rel="icon"
     href="{{ URL::asset('https://prod-iati-website.azureedge.net/prod-iati-website/favicons/favicon-32x32.png') }}"
     type="image/x-icon" />

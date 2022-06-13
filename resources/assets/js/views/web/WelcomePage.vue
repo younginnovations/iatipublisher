@@ -14,7 +14,7 @@
           <div class="hidden sm:block">
             <span class="flex">
               {{
-                page == 'Join Now'
+                page === 'Join Now'
                   ? "Haven't registered yet?"
                   : 'Already have an account?'
               }}
@@ -52,7 +52,7 @@ export default defineComponent({
     },
   },
   setup(props) {
-    const page = ref(props.page == 'signin' ? 'Join Now' : 'Sign In');
+    const page = ref(props.page === 'signin' ? 'Join Now' : 'Sign In');
 
     function togglePage() {
       page.value = page.value === 'Join Now' ? 'Sign In' : 'Join Now';

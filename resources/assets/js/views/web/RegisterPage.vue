@@ -18,13 +18,13 @@
           <div class="form__container">
             <div class="flex items-center space-x-1">
               <HoverText
-                v-if="registerForm[step]['hover_text']"
-                :hover_text="registerForm[step].hover_text"
-                :name="registerForm[step].title"
+                v-if="registerForm['3']['hover_text']"
+                :hoverText="registerForm['3'].hover_text"
+                :name="registerForm['3'].title"
                 :position="right"
               ></HoverText>
               <span class="text-2xl font-bold text-n-50">{{
-                registerForm[step].title
+                registerForm['3'].title
               }}</span>
             </div>
             <div
@@ -57,7 +57,9 @@
             </div>
             <div class="form__content">
               <div
-                v-for="(field, index, key) in registerForm[step]['fields']"
+                v-for="(field, index, key) in registerForm[getCurrentStep()][
+                  'fields'
+                ]"
                 :key="key"
               >
                 <div class="flex items-center justify-between">
@@ -67,7 +69,7 @@
                   </label>
                   <HoverText
                     v-if="field.hover_text !== ''"
-                    :hover_text="field.hover_text"
+                    :hoverText="field.hover_text"
                     :name="field.label"
                   ></HoverText>
                 </div>
@@ -75,11 +77,10 @@
                   v-if="isTextField(field.type, field.name)"
                   :id="field.id"
                   v-model="formData[field.name]"
-                  :class="
-                    errorData[field.name] != ''
-                      ? 'error__input form__input'
-                      : 'form__input'
-                  "
+                  :class="{
+                    'error_input form__input': errorData[field.name],
+                    form__input: !errorData[field.name],
+                  }"
                   :placeholder="field.placeholder"
                   :type="field.type"
                 />
@@ -87,15 +88,14 @@
                 <input
                   v-if="field.name === 'identifier'"
                   v-model="formData[field.name]"
-                  :class="
-                    errorData[field.name] != ''
-                      ? 'error__input form__input'
-                      : 'form__input'
-                  "
+                  :class="{
+                    'error_input form__input': errorData[field.name],
+                    form__input: !errorData[field.name],
+                  }"
                   :placeholder="field.placeholder"
                   :type="field.type"
                   :value="
-                    formData.registration_agency +
+                    formData.registrationAgency +
                     '-' +
                     formData.registration_number
                   "
@@ -105,24 +105,22 @@
                 <Multiselect
                   v-if="field.type === 'select'"
                   v-model="formData[field.name]"
-                  :class="
-                    errorData[field.name] != ''
-                      ? 'error__input vue__select'
-                      : 'vue__select'
-                  "
+                  :class="{
+                    'error_input vue__select': errorData[field.name],
+                    vue__select: !errorData[field.name],
+                  }"
                   :options="field.options"
                   :placeholder="field.placeholder"
                   :searchable="true"
                 />
-
                 <span
-                  v-if="field.help_text && errorData[field.name]"
+                  v-if="field.help_text && errorData[field.name] === ''"
                   class="text-xs font-normal text-n-40"
                   >{{ field.help_text }}
                 </span>
 
                 <span
-                  v-if="errorData[field.name] != ''"
+                  v-if="errorData[field.name] !== ''"
                   class="error"
                   role="alert"
                 >
@@ -133,14 +131,14 @@
           </div>
           <div class="flex items-center justify-between">
             <button
-              v-if="step !== 1"
+              v-if="!checkStep(1)"
               class="btn-back"
               @click="goToPreviousForm()"
             >
               <svg-vue class="mr-3 cursor-pointer" icon="left-arrow"></svg-vue>
               Go back
             </button>
-            <span v-if="step === 1" class="text-sm font-normal text-n-40"
+            <span v-if="checkStep(1)" class="text-sm font-normal text-n-40"
               >Already have an account?
               <a
                 class="border-b-2 border-b-transparent font-bold text-bluecoral hover:border-b-2 hover:border-b-turquoise hover:text-bluecoral"
@@ -150,14 +148,14 @@
             >
             <button
               class="btn btn-next w-40"
-              v-if="step !== 3"
+              v-if="!checkStep(3)"
               @click="goToNextForm()"
             >
               Next Step
               <svg-vue class="text-2xl" icon="right-arrow"></svg-vue>
             </button>
           </div>
-          <div v-if="step === 2" class="mt-6 text-center">
+          <div v-if="checkStep(2)" class="mt-6 text-center">
             <span class="text-sm font-normal text-n-40"
               >Already have an account?
               <a
@@ -177,15 +175,14 @@
             <li
               v-for="(form, key, i) in registerForm"
               :key="i"
-              :class="[
-                step === i
-                  ? 'relative font-bold text-n-50'
-                  : 'mb-6 flex items-center',
-              ]"
+              :class="{
+                'relative font-bold text-n-50': checkStep(key),
+                'mb-6 flex items-center': !checkStep(key),
+              }"
             >
-              <span v-if="step === i" class="list__active"></span>
+              <span v-if="checkStep(key)" class="list__active"></span>
               <span v-if="!form['is_complete']" class="mr-3 ml-6">
-                {{ i }}
+                {{ key }}
               </span>
               <span v-if="form['is_complete']" class="mr-3 ml-6">
                 <svg-vue class="text-xs" icon="checked"> </svg-vue>
@@ -193,14 +190,17 @@
               <span
                 class="font-bold"
                 :class="{
-                  'text-n-50': step === i,
-                  'text-bluecoral': step !== i && form.is_complete,
-                  'text-n-40': step !== i && !form.is_complete,
+                  'text-n-50': checkStep(key),
+                  'text-bluecoral': !checkStep(key) && form.is_complete,
+                  'text-n-40': !checkStep(key) && !form.is_complete,
                 }"
               >
                 {{ form['title'] }}
               </span>
-              <p v-if="step === i" class="detail mt-2 mb-6 font-normal xl:pr-2">
+              <p
+                v-if="checkStep(key)"
+                class="detail mt-2 mb-6 font-normal xl:pr-2"
+              >
                 {{ form['description'] }}
               </p>
             </li>
@@ -232,7 +232,7 @@ export default defineComponent({
       type: [String, Object],
       required: true,
     },
-    registration_agency: {
+    registrationAgency: {
       type: [String, Object],
       required: true,
     },
@@ -247,7 +247,7 @@ export default defineComponent({
       publisher_name: '',
       publisher_id: '',
       country: '',
-      registration_agency: '',
+      registrationAgency: '',
       registration_number: '',
       identifier: '',
       username: '',
@@ -261,7 +261,7 @@ export default defineComponent({
       publisher_name: '',
       publisher_id: '',
       country: '',
-      registration_agency: '',
+      registrationAgency: '',
       registration_number: '',
       identifier: '',
       username: '',
@@ -274,12 +274,12 @@ export default defineComponent({
     watch(
       () => formData.country,
       () => {
-        formData.registration_agency = '';
+        formData.registrationAgency = '';
       }
     );
 
     const registrationAgency = computed(() => {
-      const agencies = props.registration_agency!;
+      const agencies = props.registrationAgency!;
 
       if (formData.country) {
         const uncategorized = ['XI', 'XR'];
@@ -308,8 +308,8 @@ export default defineComponent({
     });
 
     const checkStep = computed(() => {
-      return (formStep: string) => {
-        return parseInt(formStep) === step.value ? true : false;
+      return (formStep: string | number) => {
+        return parseInt(formStep.toString()) === step.value ? true : false;
       };
     });
 
@@ -357,9 +357,9 @@ export default defineComponent({
             class: 'mb-4 lg:mb-2 relative',
             help_text: '',
           },
-          organization_registration_agency: {
+          organization_registrationAgency: {
             label: 'Organisation Registration Agency',
-            name: 'registration_agency',
+            name: 'registrationAgency',
             placeholder: 'Select an Organisation Registration Agency',
             id: 'registration-agency',
             required: true,
@@ -468,7 +468,7 @@ export default defineComponent({
     });
 
     function verifyPublisher() {
-      formData.identifier = `${formData.registration_agency}-${formData.registration_number}`;
+      formData.identifier = `${formData.registrationAgency}-${formData.registration_number}`;
       isLoaderVisible.value = true;
       axios
         .post('/verifyPublisher', formData)
@@ -484,8 +484,8 @@ export default defineComponent({
           errorData.publisher_id = errors.publisher_id
             ? errors.publisher_id[0]
             : '';
-          errorData.registration_agency = errors.registration_agency
-            ? errors.registration_agency[0]
+          errorData.registrationAgency = errors.registrationAgency
+            ? errors.registrationAgency[0]
             : '';
           errorData.registration_number = errors.registration_number
             ? errors.registration_number[0]
@@ -562,7 +562,6 @@ export default defineComponent({
     }
 
     return {
-      step,
       registerForm,
       formData,
       errorData,

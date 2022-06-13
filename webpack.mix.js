@@ -28,9 +28,9 @@ if (mix.inProduction()) {
  |
  */
 
-mix.ts('resources/assets/js/app.ts', 'public/js').vue();
+mix.ts('resources/assets/js/app.ts', 'public/js').vue().version();
 
-mix.ts('resources/assets/js/scripts/script.js', 'public/js');
+mix.ts('resources/assets/js/scripts/script.js', 'public/js').version();
 
 mix
   .sass('resources/assets/sass/app.scss', 'public/css')

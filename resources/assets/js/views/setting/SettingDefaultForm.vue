@@ -6,7 +6,7 @@
         <button>
           <HoverText
             name="Default Values"
-            hover_text="These values will be automatically added to your data files."
+            hoverText="These values will be automatically added to your data files."
           ></HoverText>
         </button>
       </div>
@@ -20,7 +20,7 @@
             <button>
               <HoverText
                 name="Default Currency"
-                hover_text="The currency in which you report your financial transactions. You can later manually change the currency on individual transactions and budgets if required."
+                hoverText="The currency in which you report your financial transactions. You can later manually change the currency on individual transactions and budgets if required."
               ></HoverText>
             </button>
           </div>
@@ -48,7 +48,7 @@
             <button>
               <HoverText
                 name="Default Language"
-                hover_text="The language in which you provide data on your activities. You can later manually change the language on individual text if required."
+                hoverText="The language in which you provide data on your activities. You can later manually change the language on individual text if required."
               ></HoverText>
             </button>
           </div>
@@ -87,7 +87,7 @@
               <HoverText
                 width="w-64"
                 name="Default Hierarchy"
-                hover_text="If you are reporting both programmes (parent activities) and projects (child activities),
+                hoverText="If you are reporting both programmes (parent activities) and projects (child activities),
                 choose the hierarchical level that most of your activities are at. e.g. parent activity = 1; child activity = 2.
                 <br>If all your activities are at the same level i.e. you have no child activities, then choose 1."
               ></HoverText>
@@ -122,7 +122,7 @@
               <HoverText
                 width="w-72"
                 name="Humanitarian"
-                hover_text="Add a 'Humanitarian Flag' to every activity that your organisation publishes data on. This means that your organisation identifies all their activities as wholly or partially addressing a humanitarian crisis or multiple crises. You can later manually add or remove a Humanitarian Flag on individual activities if required."
+                hoverText="Add a 'Humanitarian Flag' to every activity that your organisation publishes data on. This means that your organisation identifies all their activities as wholly or partially addressing a humanitarian crisis or multiple crises. You can later manually add or remove a Humanitarian Flag on individual activities if required."
               ></HoverText>
             </button>
           </div>

@@ -57,7 +57,7 @@
                             </div>
                             <div class="icons flex">
                                 <span class="text-xs"><sup class="text-salmon-50">*</sup> Mandatory fields</span>
-                                <hover-text hover_text="tooltip" class="ml-1"/>
+                                <hover-text hoverText="tooltip" class="ml-1"/>
                             </div>
                         </div>
                         {{-- divider --}}
@@ -73,7 +73,7 @@
                                                     Narrative
                                                     <sup class="required">*</sup>
                                                 </label>
-                                                <hover-text hover_text="tooltip"/>
+                                                <hover-text hoverText="tooltip"/>
                                             </div>
                                             <input type="text" placeholder="Enter an activity title text" value="">
                                             <div class="help-text">
@@ -88,7 +88,7 @@
                                                     @xml: lang
                                                     <sup class="required">*</sup>
                                                 </label>
-                                                <hover-text hover_text="tooltip"/>
+                                                <hover-text hoverText="tooltip"/>
                                             </div>
                                             <select>
                                                 <option>Select a language</option>
@@ -117,7 +117,7 @@
                                                     Narrative
                                                     <sup class="required">*</sup>
                                                 </label>
-                                                <hover-text hover_text="tooltip"/>
+                                                <hover-text hoverText="tooltip"/>
                                             </div>
                                             <input type="text" placeholder="Enter an activity title text" value="">
                                             <div class="help-text">
@@ -132,7 +132,7 @@
                                                     @xml: lang
                                                     <sup class="required">*</sup>
                                                 </label>
-                                                <hover-text hover_text="tooltip"/>
+                                                <hover-text hoverText="tooltip"/>
                                             </div>
                                             <select>
                                                 <option>Select a language</option>
