@@ -5,16 +5,16 @@
   >
     <div id="activity">
       <PageTitle :showButtons="state.showButtons" />
-      <EmptyActivity v-if="isEmpty"> </EmptyActivity>
+      <EmptyActivity v-if="isEmpty"></EmptyActivity>
       <TableLayout
         v-if="!isEmpty"
-        @showOrHide="showOrHide"
         :data="activities"
+        @showOrHide="showOrHide"
       />
-      <div class="mt-6" v-if="!isEmpty">
+      <div v-if="!isEmpty" class="mt-6">
         <Pagination
-          :page_count="activities.last_page"
           :current_page="activities.current_page"
+          :page_count="activities.last_page"
           @fetchActivities="fetchActivities"
         />
       </div>
@@ -23,14 +23,13 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, ref, onMounted } from 'vue';
+import { defineComponent, onMounted, reactive, ref } from 'vue';
 import axios from 'axios';
 
 import EmptyActivity from './partials/EmptyActivity.vue';
 import TableLayout from './partials/TableLayout.vue';
 import Pagination from '../../components/Pagination.vue';
 import PageTitle from './partials/PageTitle.vue';
-import PopupModal from '../../components/PopupModal.vue';
 
 export default defineComponent({
   name: 'activity-component',
@@ -39,7 +38,6 @@ export default defineComponent({
     PageTitle,
     Pagination,
     TableLayout,
-    PopupModal,
   },
   setup() {
     const activities = reactive({});

@@ -16,8 +16,8 @@
       <span class="font-bold text-bluecoral">{{ props.name }}</span>
       <p v-html="props.hover_text"></p>
       <a
-        :href="props.link"
         v-if="props.link"
+        :href="props.link"
         class="inline-block font-bold text-bluecoral"
         >Learn more</a
       >
@@ -32,7 +32,7 @@ export default defineComponent({
   props: {
     name: {
       type: String,
-      required: true,
+      required: false,
     },
     hover_text: {
       type: String,
