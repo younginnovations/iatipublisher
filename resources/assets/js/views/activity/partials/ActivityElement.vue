@@ -1,5 +1,5 @@
 <template>
-  <div :class="layout" class="activities__content--element px-3 py-3 text-n-50">
+  <div :class="layout" class="activities__content--element p-3 text-n-50">
     <div class="rounded-lg bg-white p-4">
       <div class="mb-4 flex">
         <div class="title flex grow">
@@ -57,9 +57,7 @@
             <span>Edit</span>
           </a>
 
-          <template v-if="'core' in data">
-            <svg-vue v-if="data.core" class="mr-1.5" icon="core" />
-          </template>
+          <svg-vue v-if="data.core" class="mr-1.5" icon="core"></svg-vue>
 
           <HoverText v-if="tooltip" :hover-text="tooltip" class="text-n-40" />
         </div>
