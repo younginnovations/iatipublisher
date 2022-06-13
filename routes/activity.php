@@ -1,5 +1,21 @@
 <?php
 
+use App\Http\Controllers\Admin\Activity\ActivityController;
+use App\Http\Controllers\Admin\Activity\CapitalSpendController;
+use App\Http\Controllers\Admin\Activity\CollaborationTypeController;
+use App\Http\Controllers\Admin\Activity\DateController;
+use App\Http\Controllers\Admin\Activity\DefaultAidTypeController;
+use App\Http\Controllers\Admin\Activity\DefaultFinanceTypeController;
+use App\Http\Controllers\Admin\Activity\DefaultFlowTypeController;
+use App\Http\Controllers\Admin\Activity\DefaultTiedStatusController;
+use App\Http\Controllers\Admin\Activity\DescriptionController;
+use App\Http\Controllers\Admin\Activity\HumanitarianScopeController;
+use App\Http\Controllers\Admin\Activity\LegacyDataController;
+use App\Http\Controllers\Admin\Activity\RecipientCountryController;
+use App\Http\Controllers\Admin\Activity\RelatedActivityController;
+use App\Http\Controllers\Admin\Activity\ScopeController;
+use App\Http\Controllers\Admin\Activity\StatusController;
+use App\Http\Controllers\Admin\Activity\TitleController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -13,7 +29,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 Route::name('admin.')->group(function () {
-    Route::resource('/activities', \App\Http\Controllers\Admin\Activity\ActivityController::class);
+    Route::resource('/activities', ActivityController::class);
     Route::get('/activity/page/{page?}', [App\Http\Controllers\Admin\Activity\ActivityController::class, 'getActivities'])->name('paginate');
     Route::get('/activity/codelists', [App\Http\Controllers\Admin\Activity\ActivityController::class, 'getLanguagesOrganization'])->name('codelist');
     Route::get('activities/{id}/title', [\App\Http\Controllers\Admin\Activity\TitleController::class, 'edit'])->name('activities.title.edit');
@@ -81,4 +97,11 @@ Route::name('admin.')->group(function () {
     Route::resource('activities.results', \App\Http\Controllers\Admin\Activity\ResultController::class);
     Route::resource('activities.results.indicators', \App\Http\Controllers\Admin\Activity\IndicatorController::class);
     Route::resource('activities.results.indicators.periods', \App\Http\Controllers\Admin\Activity\PeriodController::class);
+
+
+    // Route::get('/activities/{id}/results', [App\Http\Controllers\Admin\Activity\ResultController::class, 'index'])->name('result.index');
+    // Route::get('/activities/{id}/result-detail', [App\Http\Controllers\Admin\Activity\ResultController::class, 'index'])->name('result.detail');
+    // Route::get('/activities/{id}/result-detail', function () {
+    //     return view('admin.activity.result.detail');
+    // });
 });
