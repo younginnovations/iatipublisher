@@ -8,7 +8,9 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Activity\CountryBudgetItem\CountryBudgetItemRequest;
 use App\IATI\Elements\Builder\MultilevelSubElementFormCreator;
 use App\IATI\Services\Activity\CountryBudgetItemService;
+use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 
 /**
  * Class CountryBudgetItemController.
@@ -38,11 +40,13 @@ class CountryBudgetItemController extends Controller
     }
 
     /**
+     * Renders country budget item edit form.
+     *
      * @param int $id
      *
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|void
      */
-    public function edit(int $id)
+    public function edit(int $id):View|RedirectResponse
     {
         try {
             $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
@@ -54,30 +58,34 @@ class CountryBudgetItemController extends Controller
             return view('activity.countryBudgetItem.countryBudgetItem', compact('form', 'activity'));
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
-            dd($e);
+
+            return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while updating country budget item.');
         }
     }
 
     /**
+     * Updates country budget item data.
+     *
      * @param CountryBudgetItemRequest $request
      * @param $id
-     * @return JsonResponse
+     *
+     * @return JsonResponse|RedirectResponse
      */
-    public function update(CountryBudgetItemRequest $request, $id): JsonResponse
+    public function update(CountryBudgetItemRequest $request, $id): JsonResponse|RedirectResponse
     {
         try {
             $activityData = $this->countryBudgetItemService->getActivityData($id);
             $activityCountryBudgetItem = $request->except(['_token', '_method']);
 
             if (!$this->countryBudgetItemService->update($activityCountryBudgetItem, $activityData)) {
-                return response()->json(['success' => false, 'error' => 'Error has occurred while updating activity country budget items.']);
+                return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while updating country budget item.');
             }
 
-            return response()->json(['success' => true, 'message' => 'Activity country budget items updated successfully.']);
+            return redirect()->route('admin.activities.show', $id)->with('success', 'Country budget item updated successfully.');
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return response()->json(['success' => false, 'error' => 'Error has occurred while updating activity country budget items.']);
+            return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while updating country budget item.');
         }
     }
 }

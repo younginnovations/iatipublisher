@@ -8,7 +8,9 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Activity\RecipientCountry\RecipientCountryRequest;
 use App\IATI\Elements\Builder\ParentCollectionFormCreator;
 use App\IATI\Services\Activity\RecipientCountryService;
+use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 
 /**
  * Class RecipientCountryController.
@@ -38,11 +40,13 @@ class RecipientCountryController extends Controller
     }
 
     /**
+     * Renders recipient country edit form.
+     *
      * @param int $id
      *
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|void
      */
-    public function edit(int $id)
+    public function edit(int $id): View|RedirectResponse
     {
         try {
             $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
@@ -53,31 +57,35 @@ class RecipientCountryController extends Controller
 
             return view('activity.recipientCountry.recipientCountry', compact('form', 'activity'));
         } catch (\Exception $e) {
-            dd(logger()->error($e->getMessage()));
             logger()->error($e->getMessage());
+
+            return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while updating recipient country.');
         }
     }
 
     /**
+     * Update the recipient country data.
+     *
      * @param RecipientCountryRequest $request
      * @param $id
-     * @return JsonResponse
+     *
+     * @return JsonResponse|RedirectResponse
      */
-    public function update(RecipientCountryRequest $request, $id): JsonResponse
+    public function update(RecipientCountryRequest $request, $id): JsonResponse|RedirectResponse
     {
         try {
             $activityData = $this->recipientCountryService->getActivityData($id);
             $activityRecipientCountry = $request->all();
 
             if (!$this->recipientCountryService->update($activityRecipientCountry, $activityData)) {
-                return response()->json(['success' => false, 'error' => 'Error has occurred while updating activity recipient country.']);
+                return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while updating recipient country.');
             }
 
-            return response()->json(['success' => true, 'message' => 'Activity recipient country updated successfully.']);
+            return redirect()->route('admin.activities.show', $id)->with('success', 'Recipient country updated successfully.');
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return response()->json(['success' => false, 'error' => 'Error has occurred while updating activity recipient country.']);
+            return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while updating recipient country.');
         }
     }
 }

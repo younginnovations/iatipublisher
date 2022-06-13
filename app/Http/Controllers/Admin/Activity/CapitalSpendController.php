@@ -8,7 +8,9 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Activity\CapitalSpend\CapitalSpendRequest;
 use App\IATI\Elements\Builder\BaseFormCreator;
 use App\IATI\Services\Activity\CapitalSpendService;
+use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 
 /**
  * Class CapitalSpendController.
@@ -38,11 +40,13 @@ class CapitalSpendController extends Controller
     }
 
     /**
+     * Renders capital spend edit form.
+     *
      * @param int $id
      *
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|void
      */
-    public function edit(int $id)
+    public function edit(int $id): View|RedirectResponse
     {
         try {
             $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
@@ -53,31 +57,35 @@ class CapitalSpendController extends Controller
 
             return view('activity.capitalSpend.capitalSpend', compact('form', 'activity'));
         } catch (\Exception $e) {
-            dd(logger()->error($e->getMessage()));
             logger()->error($e->getMessage());
+
+            return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while updating activity capital spend.');
         }
     }
 
     /**
+     * Updates capitals spend data.
+     *
      * @param CapitalSpendRequest $request
      * @param $id
-     * @return JsonResponse
+     *
+     * @return JsonResponse|RedirectResponse
      */
-    public function update(CapitalSpendRequest $request, $id): JsonResponse
+    public function update(CapitalSpendRequest $request, $id): JsonResponse|RedirectResponse
     {
         try {
             $activityData = $this->capitalSpendService->getActivityData($id);
             $activityCapitalSpend = (float) $request->get('capital_spend');
 
             if (!$this->capitalSpendService->update($activityCapitalSpend, $activityData)) {
-                return response()->json(['success' => false, 'error' => 'Error has occurred while updating activity capital spend.']);
+                return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while updating activity capital spend.');
             }
 
-            return response()->json(['success' => true, 'message' => 'Activity capital spend updated successfully.']);
+            return redirect()->route('admin.activities.show', $id)->with('success', 'Activity capital spend updated successfully.');
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return response()->json(['success' => false, 'error' => 'Error has occurred while updating activity capital spend.']);
+            return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while updating activity capital spend.');
         }
     }
 }

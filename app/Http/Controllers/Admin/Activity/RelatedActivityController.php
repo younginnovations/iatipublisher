@@ -8,7 +8,9 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Activity\RelatedActivity\RelatedActivityRequest;
 use App\IATI\Elements\Builder\BaseFormCreator;
 use App\IATI\Services\Activity\RelatedActivityService;
+use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 
 /**
  * Class RelatedActivityController.
@@ -42,7 +44,7 @@ class RelatedActivityController extends Controller
      *
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|void
      */
-    public function edit(int $id)
+    public function edit(int $id): View|RedirectResponse
     {
         try {
             $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
@@ -53,31 +55,34 @@ class RelatedActivityController extends Controller
 
             return view('activity.relatedActivity.relatedActivity', compact('form', 'activity'));
         } catch (\Exception $e) {
-            dd(logger()->error($e->getMessage()));
             logger()->error($e->getMessage());
+
+            return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while updating related activity.');
         }
     }
 
     /**
+     * Updates related activity data.
      * @param RelatedActivityRequest $request
      * @param $id
-     * @return JsonResponse
+     *
+     * @return JsonResponse|RedirectResponse
      */
-    public function update(RelatedActivityRequest $request, $id): JsonResponse
+    public function update(RelatedActivityRequest $request, $id): JsonResponse|RedirectResponse
     {
         try {
             $activityData = $this->relatedActivityService->getActivityData($id);
             $activityRelatedActivity = $request->all();
 
             if (!$this->relatedActivityService->update($activityRelatedActivity, $activityData)) {
-                return response()->json(['success' => false, 'error' => 'Error has occurred while updating activity related activity.']);
+                return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while updating related activity.');
             }
 
-            return response()->json(['success' => true, 'message' => 'Activity related activity updated successfully.']);
+            return redirect()->route('admin.activities.show', $id)->with('success', 'Related activity updated successfully.');
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return response()->json(['success' => false, 'error' => 'Error has occurred while updating activity related activity.']);
+            return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while updating related activity.');
         }
     }
 }

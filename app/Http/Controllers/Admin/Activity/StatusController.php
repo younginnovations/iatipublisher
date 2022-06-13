@@ -8,7 +8,9 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Activity\Status\StatusRequest;
 use App\IATI\Elements\Builder\BaseFormCreator;
 use App\IATI\Services\Activity\StatusService;
+use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 
 /**
  * Class StatusController.
@@ -38,11 +40,13 @@ class StatusController extends Controller
     }
 
     /**
+     * Renders status edit form.
+     *
      * @param int $id
      *
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|void
      */
-    public function edit(int $id)
+    public function edit(int $id): View|RedirectResponse
     {
         try {
             $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
@@ -53,14 +57,18 @@ class StatusController extends Controller
 
             return view('activity.status.status', compact('form', 'activity'));
         } catch (\Exception $e) {
-            dd(logger()->error($e->getMessage()));
             logger()->error($e->getMessage());
+
+            return response()->json(['success' => false, 'error' => 'Error has occurred while updating activity status.']);
         }
     }
 
     /**
+     * Updates status data.
+     *
      * @param StatusRequest $request
      * @param $id
+     *
      * @return JsonResponse
      */
     public function update(StatusRequest $request, $id): JsonResponse
@@ -70,10 +78,10 @@ class StatusController extends Controller
             $activityStatus = (int) $request->get('activity_status');
 
             if (!$this->statusService->update($activityStatus, $activityData)) {
-                return response()->json(['success' => false, 'error' => 'Error has occurred while updating activity title.']);
+                return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while updating activity status.');
             }
 
-            return response()->json(['success' => true, 'message' => 'Activity status updated successfully.']);
+            return redirect()->route('admin.activities.show', $id)->with('success', 'Activity status updated successfully.');
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 

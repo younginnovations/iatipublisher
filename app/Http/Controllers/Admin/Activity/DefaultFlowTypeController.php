@@ -8,7 +8,9 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Activity\DefaultFlowType\DefaultFlowTypeRequest;
 use App\IATI\Elements\Builder\BaseFormCreator;
 use App\IATI\Services\Activity\DefaultFlowTypeService;
+use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 
 /**
  * Class DefaultFlowTypeController.
@@ -38,11 +40,13 @@ class DefaultFlowTypeController extends Controller
     }
 
     /**
+     * Renders default flow type edit form.
+     *
      * @param int $id
      *
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|void
      */
-    public function edit(int $id)
+    public function edit(int $id): View|RedirectResponse
     {
         try {
             $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
@@ -53,31 +57,35 @@ class DefaultFlowTypeController extends Controller
 
             return view('activity.defaultFlowType.defaultFlowType', compact('form', 'activity'));
         } catch (\Exception $e) {
-            dd(logger()->error($e->getMessage()));
             logger()->error($e->getMessage());
+
+            return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while updating default flow type.');
         }
     }
 
     /**
+     * Updates default flow type data.
+     *
      * @param DefaultFlowTypeRequest $request
      * @param $id
-     * @return JsonResponse
+     *
+     * @return JsonResponse|RedirectResponse
      */
-    public function update(DefaultFlowTypeRequest $request, $id): JsonResponse
+    public function update(DefaultFlowTypeRequest $request, $id): JsonResponse|RedirectResponse
     {
         try {
             $activityData = $this->defaultFlowTypeService->getActivityData($id);
             $activityDefaultFlowType = (int) $request->get('default_flow_type');
 
             if (!$this->defaultFlowTypeService->update($activityDefaultFlowType, $activityData)) {
-                return response()->json(['success' => false, 'error' => 'Error has occurred while updating activity default flow type.']);
+                return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while updating default flow type.');
             }
 
-            return response()->json(['success' => true, 'message' => 'Activity default flow type updated successfully.']);
+            return redirect()->route('admin.activities.show', $id)->with('success', 'Default flow type updated successfully.');
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return response()->json(['success' => false, 'error' => 'Error has occurred while updating activity default flow type.']);
+            return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while updating default flow type.');
         }
     }
 }

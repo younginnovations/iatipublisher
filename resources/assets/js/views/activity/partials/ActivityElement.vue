@@ -44,8 +44,8 @@
         </div>
         <div class="icons flex">
           <a
-            class="edit-button mr-2.5 flex items-center text-xs font-bold uppercase"
-            href="/1/title-form"
+            class="mr-2.5 flex items-center text-xs font-bold uppercase"
+            :href="`/activities/1/${title}`"
           >
             <svg-vue class="mr-0.5 text-base" icon="edit"></svg-vue>
             <span>Edit</span>
@@ -63,7 +63,11 @@
       <div class="divider mb-4 h-px w-full bg-n-20"></div>
       <template v-if="title === 'title'">
         <!-- Title content -->
-        <div v-for="(post, index) in content" class="title-content">
+        <div
+          v-for="(post, index) in content"
+          :key="index"
+          class="title-content"
+        >
           <div
             v-if="post.language"
             class="language mb-1.5 text-sm italic text-n-30"
@@ -86,6 +90,9 @@
             {{ content.iati_identifier_text }}
           </div>
         </div>
+      </template>
+      <template v-else>
+        {{ content }}
       </template>
     </div>
   </div>

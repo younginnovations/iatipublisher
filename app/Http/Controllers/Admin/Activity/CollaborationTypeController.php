@@ -8,7 +8,9 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Activity\CollaborationType\CollaborationTypeRequest;
 use App\IATI\Elements\Builder\BaseFormCreator;
 use App\IATI\Services\Activity\CollaborationTypeService;
+use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 
 /**
  * Class CollaborationTypeController.
@@ -38,11 +40,13 @@ class CollaborationTypeController extends Controller
     }
 
     /**
+     * Updates collaboration type edit form.
+     *
      * @param int $id
      *
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|void
      */
-    public function edit(int $id)
+    public function edit(int $id):View|RedirectResponse
     {
         try {
             $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
@@ -53,31 +57,35 @@ class CollaborationTypeController extends Controller
 
             return view('activity.collaborationType.collaborationType', compact('form', 'activity'));
         } catch (\Exception $e) {
-            dd(logger()->error($e->getMessage()));
             logger()->error($e->getMessage());
+
+            return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while updating activity collaboration type.');
         }
     }
 
     /**
+     * Updates collaboration type data.
+     *
      * @param CollaborationTypeRequest $request
      * @param $id
-     * @return JsonResponse
+     *
+     * @return JsonResponse|RedirectResponse
      */
-    public function update(CollaborationTypeRequest $request, $id): JsonResponse
+    public function update(CollaborationTypeRequest $request, $id): JsonResponse|RedirectResponse
     {
         try {
             $activityData = $this->collaborationTypeService->getActivityData($id);
             $activityCollaborationType = (int) $request->get('collaboration_type');
 
             if (!$this->collaborationTypeService->update($activityCollaborationType, $activityData)) {
-                return response()->json(['success' => false, 'error' => 'Error has occurred while updating activity collaboration type.']);
+                return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while updating activity collaboration type.');
             }
 
-            return response()->json(['success' => true, 'message' => 'Activity collaboration type updated successfully.']);
+            return redirect()->route('admin.activities.show', $id)->with('success', 'Activity collaboration type updated successfully.');
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return response()->json(['success' => false, 'error' => 'Error has occurred while updating activity collaboration type.']);
+            return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while updating activity collaboration type.');
         }
     }
 }

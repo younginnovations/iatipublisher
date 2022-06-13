@@ -8,7 +8,9 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Activity\DefaultTiedStatus\DefaultTiedStatusRequest;
 use App\IATI\Elements\Builder\BaseFormCreator;
 use App\IATI\Services\Activity\DefaultTiedStatusService;
+use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 
 /**
  * Class DefaultTiedStatusController.
@@ -38,11 +40,13 @@ class DefaultTiedStatusController extends Controller
     }
 
     /**
+     * Renders default tied status edit form.
+     *
      * @param int $id
      *
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|void
      */
-    public function edit(int $id)
+    public function edit(int $id): View|RedirectResponse
     {
         try {
             $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
@@ -53,31 +57,35 @@ class DefaultTiedStatusController extends Controller
 
             return view('activity.defaultTiedStatus.defaultTiedStatus', compact('form', 'activity'));
         } catch (\Exception $e) {
-            dd(logger()->error($e->getMessage()));
             logger()->error($e->getMessage());
+
+            return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while updating default tied status.');
         }
     }
 
     /**
+     * Updates default tied status data.
+     *
      * @param DefaultTiedStatusRequest $request
      * @param $id
-     * @return JsonResponse
+     *
+     * @return JsonResponse|RedirectResponse
      */
-    public function update(DefaultTiedStatusRequest $request, $id): JsonResponse
+    public function update(DefaultTiedStatusRequest $request, $id): JsonResponse|RedirectResponse
     {
         try {
             $activityData = $this->defaultTiedStatusService->getActivityData($id);
             $activityDefaultTiedStatus = (int) $request->get('default_tied_status');
 
             if (!$this->defaultTiedStatusService->update($activityDefaultTiedStatus, $activityData)) {
-                return response()->json(['success' => false, 'error' => 'Error has occurred while updating activity default tied status.']);
+                return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while updating default tied status.');
             }
 
-            return response()->json(['success' => true, 'message' => 'Activity default tied status updated successfully.']);
+            return redirect()->route('admin.activities.show', $id)->with('success', 'Default tied status updated successfully.');
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return response()->json(['success' => false, 'error' => 'Error has occurred while updating activity default tied status.']);
+            return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while updating default tied status.');
         }
     }
 }

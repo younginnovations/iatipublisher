@@ -8,7 +8,9 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Activity\Scope\ScopeRequest;
 use App\IATI\Elements\Builder\BaseFormCreator;
 use App\IATI\Services\Activity\ScopeService;
+use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 
 /**
  * Class ScopeController.
@@ -38,11 +40,13 @@ class ScopeController extends Controller
     }
 
     /**
+     * Renders scope edit form.
+     *
      * @param int $id
      *
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|void
      */
-    public function edit(int $id)
+    public function edit(int $id): View|RedirectResponse
     {
         try {
             $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
@@ -53,31 +57,35 @@ class ScopeController extends Controller
 
             return view('activity.scope.scope', compact('form', 'activity'));
         } catch (\Exception $e) {
-            dd(logger()->error($e->getMessage()));
             logger()->error($e->getMessage());
+
+            return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while updating activity scope.');
         }
     }
 
     /**
+     * Updates scope data.
+     *
      * @param ScopeRequest $request
      * @param $id
-     * @return JsonResponse
+     *
+     * @return JsonResponse|RedirectResponse
      */
-    public function update(ScopeRequest $request, $id): JsonResponse
+    public function update(ScopeRequest $request, $id): JsonResponse|RedirectResponse
     {
         try {
             $activityData = $this->scopeService->getActivityData($id);
             $activityScope = (int) $request->get('activity_scope');
 
             if (!$this->scopeService->update($activityScope, $activityData)) {
-                return response()->json(['success' => false, 'error' => 'Error has occurred while updating activity scope.']);
+                return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while updating activity scope.');
             }
 
-            return response()->json(['success' => true, 'message' => 'Activity scope updated successfully.']);
+            return redirect()->route('admin.activities.show', $id)->with('success', 'Activity scope updated successfully.');
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return response()->json(['success' => false, 'error' => 'Error has occurred while updating activity scope.']);
+            return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while updating activity scope.');
         }
     }
 }

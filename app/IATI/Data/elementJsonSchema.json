@@ -366,7 +366,7 @@
         "required": true,
         "criteria": "mandatory",
         "label": "Sector Code",
-        "choices": "Activity/Language.json"
+        "choices": "Activity/SectorCode.json"
       },
       "percentage": {
         "name": "percentage",
@@ -381,7 +381,7 @@
         "criteria": "recommended",
         "required": true,
         "type": "select",
-        "choices": "Activity/Language.json"
+        "choices": "Activity/SectorVocabulary.json"
       },
       "vocabulary-uri": {
         "name":"vocabulary_uri",

@@ -8,7 +8,9 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Activity\DefaultFinanceType\DefaultFinanceTypeRequest;
 use App\IATI\Elements\Builder\BaseFormCreator;
 use App\IATI\Services\Activity\DefaultFinanceTypeService;
+use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 
 /**
  * Class DefaultFinanceTypeController.
@@ -38,11 +40,13 @@ class DefaultFinanceTypeController extends Controller
     }
 
     /**
+     * Renders default finance type edit form.
+     *
      * @param int $id
      *
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|void
      */
-    public function edit(int $id)
+    public function edit(int $id):View|RedirectResponse
     {
         try {
             $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
@@ -53,31 +57,35 @@ class DefaultFinanceTypeController extends Controller
 
             return view('activity.defaultFinanceType.defaultFinanceType', compact('form', 'activity'));
         } catch (\Exception $e) {
-            dd(logger()->error($e->getMessage()));
             logger()->error($e->getMessage());
+
+            return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while updating default finance type.');
         }
     }
 
     /**
+     * Updates default finance type data.
+     *
      * @param DefaultFinanceTypeRequest $request
      * @param $id
-     * @return JsonResponse
+     *
+     * @return JsonResponse|RedirectResponse
      */
-    public function update(DefaultFinanceTypeRequest $request, $id): JsonResponse
+    public function update(DefaultFinanceTypeRequest $request, $id): JsonResponse|RedirectResponse
     {
         try {
             $activityData = $this->defaultFinanceTypeService->getActivityData($id);
             $activityDefaultFinanceType = (int) $request->get('default_finance_type');
 
             if (!$this->defaultFinanceTypeService->update($activityDefaultFinanceType, $activityData)) {
-                return response()->json(['success' => false, 'error' => 'Error has occurred while updating activity default finance type.']);
+                return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while updating default finance type.');
             }
 
-            return response()->json(['success' => true, 'message' => 'Activity default finance type updated successfully.']);
+            return redirect()->route('admin.activities.show', $id)->with('success', 'Default finance type updated successfully.');
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return response()->json(['success' => false, 'error' => 'Error has occurred while updating activity default finance type.']);
+            return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while updating default finance type.');
         }
     }
 }

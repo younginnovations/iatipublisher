@@ -10,9 +10,11 @@ use Illuminate\Support\Arr;
 class MultilevelSubElementForm extends BaseForm
 {
     /**
+     * Builds multilevel subelement form.
+     *
      * @return mixed|void
      */
-    public function buildForm()
+    public function buildForm():void
     {
         $attributes = Arr::get($this->getData(), 'attributes', null);
         $sub_elements = Arr::get($this->getData(), 'sub_elements', null);

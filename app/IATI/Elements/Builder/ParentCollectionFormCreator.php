@@ -7,6 +7,9 @@ namespace App\IATI\Elements\Builder;
 use Kris\LaravelFormBuilder\Form;
 use Kris\LaravelFormBuilder\FormBuilder;
 
+/**
+ * Class ParentCollectionFormCreator.
+ */
 class ParentCollectionFormCreator
 {
     /**
@@ -19,6 +22,11 @@ class ParentCollectionFormCreator
      */
     protected FormBuilder $formBuilder;
 
+    /**
+     * ParentCollectionFormCreator constructor.
+     *
+     * @param FormBuilder $formBuilder
+     */
     public function __construct(FormBuilder $formBuilder)
     {
         $this->formBuilder = $formBuilder;

@@ -27,14 +27,15 @@ class WrapperCollectionForm extends Form
                         'data'  => $field,
                         'label' => false,
                         'wrapper' => [
-                            'class' => 'form-child-body form-field-group flex flex-wrap',
+                            'class' => 'form-field-group form-child-body flex flex-wrap rounded-br-lg border-y border-r border-spring-50 p-6',
                         ],
                     ],
                 ]
             )->add('add_to_collection', 'button', [
                 'label' => 'Add More',
                 'attr' => [
-                    'class' => 'add_to_collection button relative font-bold text-n-40 text-bluecoral text-xs uppercase leading-normal mt-2 space-x-2',
+                    'class' => 'add_to_collection add_more button relative -translate-y-1/2 pl-3.5 text-xs font-bold uppercase leading-normal text-spring-50 text-bluecoral',
+                    'icon' => true,
                 ],
             ]);
         }

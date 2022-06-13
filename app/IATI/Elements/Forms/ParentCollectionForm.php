@@ -8,11 +8,12 @@ namespace App\IATI\Elements\Forms;
 class ParentCollectionForm extends BaseForm
 {
     /**
+     * Builds parent collection form.
+     *
      * @return mixed|void
      */
-    public function buildForm()
+    public function buildForm():void
     {
-        // dd($this->getData(),$this->getData('name'));
         $this->add(
             $this->getData('name'),
             'collection',

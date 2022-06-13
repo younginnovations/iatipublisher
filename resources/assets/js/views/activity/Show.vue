@@ -327,6 +327,10 @@ export default defineComponent({
       type: Number,
       required: true,
     },
+    toast: {
+      type: Object,
+      required: true,
+    },
   },
   setup(props) {
     const toast = reactive({
@@ -342,6 +346,18 @@ export default defineComponent({
     const [unpublishValue, unpublishToggle] = useToggle();
     const [deleteValue, deleteToggle] = useToggle();
     const [downloadValue, downloadToggle] = useToggle();
+
+    onMounted(() => {
+      if (props.toast.message !== '') {
+        toast.type = props.toast.type;
+        toast.visibility = true;
+        toast.message = props.toast.message;
+      }
+
+      setTimeout(() => {
+        toast.visibility = false;
+      }, 5000);
+    });
 
     /**
      * Finding current language - activity title
