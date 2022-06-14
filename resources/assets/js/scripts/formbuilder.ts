@@ -6,10 +6,10 @@ class FormBuilder {
   // add new collection
   public addForm(ev: Event): void {
     ev.preventDefault();
-    var target = ev.target as EventTarget;
-    var container = $('.collection-container');
-    var count = $(target).attr('child_count') ? parseInt($(target).attr('child_count') as string) + 1 : $('.form-child-body').length+1;
-    var proto = container.data('prototype').replace(/__NAME__/g, count);
+    let target = ev.target as EventTarget;
+    let container = $('.collection-container');
+    let count = $(target).attr('child_count') ? parseInt($(target).attr('child_count') as string) + 1 : $('.form-child-body').length+1;
+    let proto = container.data('prototype').replace(/__NAME__/g, count);
     $('.form-child-body').last().after($(proto));
     $('.select2').last().select2({
       placeholder: 'Select language',
@@ -20,9 +20,9 @@ class FormBuilder {
   // delete collection
   public deleteForm(ev: Event): void {
     ev.preventDefault();
-    var target = ev.target as EventTarget;
-    var collectionLength = $('.form-child-body').length;
-    var count = $('.add_to_collection').attr('child_count') ? parseInt($('.add_to_collection').attr('child_count') as string)+1 : collectionLength;
+    let target = ev.target as EventTarget;
+    let collectionLength = $('.form-child-body').length;
+    let count = $('.add_to_collection').attr('child_count') ? parseInt($('.add_to_collection').attr('child_count') as string)+1 : collectionLength;
     $('.add_to_collection').attr('child_count', count);
 
     if(collectionLength > 1) {

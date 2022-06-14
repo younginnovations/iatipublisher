@@ -42,9 +42,11 @@ class BaseForm extends Form
     }
 
     /**
+     * Builds base form.
+     *
      * @return mixed|void
      */
-    public function buildForm()
+    public function buildForm():void
     {
         $element = $this->getData();
         $sub_elements = $element['sub_elements'];

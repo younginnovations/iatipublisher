@@ -8,7 +8,9 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Activity\Title\TitleRequest;
 use App\IATI\Elements\Builder\BaseFormCreator;
 use App\IATI\Services\Activity\TitleService;
+use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 
 /**
  * Class TitleController.
@@ -32,11 +34,13 @@ class TitleController extends Controller
     }
 
     /**
+     * Renders title edit form.
+     *
      * @param int $id
      *
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|void
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|void|RedirectResponse
      */
-    public function edit(int $id)
+    public function edit(int $id): View|RedirectResponse
     {
         try {
             $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
@@ -47,12 +51,15 @@ class TitleController extends Controller
 
             return view('activity.title.title', compact('form', 'activity'));
         } catch (\Exception $e) {
-            dd($e->getMessage());
             logger()->error($e->getMessage());
+
+            return redirect()->route('admin.activities.show');
         }
     }
 
     /**
+     * Updates activity title data.
+     *
      * @param TitleRequest $request
      * @param              $id
      *

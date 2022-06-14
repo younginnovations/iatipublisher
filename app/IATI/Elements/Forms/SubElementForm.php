@@ -4,18 +4,24 @@ namespace App\IATI\Elements\Forms;
 
 use Kris\LaravelFormBuilder\Form;
 
+/**
+ * Class SubElementForm.
+ */
 class SubElementForm extends Form
 {
     /**
+     * Builds subelement form.
+     *
      * @return mixed|void
      */
-    public function buildForm()
+    public function buildForm():void
     {
         $data = $this->getData();
         $this->buildFields($this->getData());
 
         if (isset($data['attributes'])) {
             $attributes = $data['attributes'];
+
             foreach ($attributes as $attribute) {
                 $this->buildFields($attribute);
             }
@@ -29,6 +35,8 @@ class SubElementForm extends Form
     }
 
     /**
+     * Builds form field.
+     *
      * @param $field
      *
      * @return void

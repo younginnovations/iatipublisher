@@ -7,8 +7,14 @@ namespace App\Http\Requests\Activity;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Validator;
 
+/**
+ * Class ActivityBaseRequest.
+ */
 class ActivityBaseRequest extends FormRequest
 {
+    /**
+     * ActivityBaseRequest constructor.
+     */
     public function __construct()
     {
         Validator::extendImplicit(

@@ -6,6 +6,9 @@ namespace App\Http\Requests\Activity\Title;
 
 use App\Http\Requests\Activity\ActivityBaseRequest;
 
+/**
+ * Class TitleRequest.
+ */
 class TitleRequest extends ActivityBaseRequest
 {
     /**
