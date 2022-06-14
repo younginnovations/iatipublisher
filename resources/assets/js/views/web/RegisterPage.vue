@@ -1,6 +1,6 @@
 <template>
   <section class="section mb-7 sm:mx-10 sm:mb-10 md:mb-14 xl:mx-24 xl:px-1">
-    <Loader v-if="isLoaderVisible"></Loader>
+    <Loader v-if="isLoaderVisible" />
     <div class="section__container">
       <div class="section__title mt-7 text-center leading-10 sm:mt-14">
         <h2>Create IATI Publisher Account</h2>
@@ -13,16 +13,20 @@
         <EmailVerification
           v-if="checkStep('3')"
           :email="formData['email']"
-        ></EmailVerification>
-        <div v-else class="form input__field" @keyup.enter="goToNextForm">
+        />
+        <div
+          v-else
+          class="form input__field"
+          @keyup.enter="goToNextForm"
+        >
           <div class="form__container">
             <div class="flex items-center space-x-1">
               <HoverText
                 v-if="registerForm['3']['hover_text']"
-                :hoverText="registerForm['3'].hover_text"
+                :hover-text="registerForm['3'].hover_text"
                 :name="registerForm['3'].title"
                 :position="right"
-              ></HoverText>
+              />
               <span class="text-2xl font-bold text-n-50">{{
                 registerForm['3'].title
               }}</span>
@@ -32,26 +36,22 @@
               class="feedback mt-6 h-32 border-l-2 border-crimson-50 bg-crimson-10 p-4 text-sm text-n-50"
             >
               <p class="mb-2 flex font-bold">
-                <svg-vue class="mr-2 text-xl" icon="warning"></svg-vue>
+                <svg-vue
+                  class="mr-2 text-xl"
+                  icon="warning"
+                />
                 Sorry, the information you provided doesn’t match your IATI
                 Registry information.
               </p>
               <p class="ml-8 xl:mr-1">
                 Please note that if you’re an account holder in
-                <span
-                  ><a href="https://iatiregistry.org/">IATI Registry</a></span
-                >, make sure your
-                <span class="font-bold"
-                  >Publisher Name, Publisher ID and IATI Organisation ID</span
-                >
+                <span><a href="https://iatiregistry.org/">IATI Registry</a></span>, make sure your
+                <span class="font-bold">Publisher Name, Publisher ID and IATI Organisation ID</span>
                 match your IATI Registry Information. Contact
-                <span
-                  ><a
-                    class="text-bluecoral"
-                    href="mailto:support@iatistandard.org"
-                    >support@iatistandard.org</a
-                  ></span
-                >
+                <span><a
+                  class="text-bluecoral"
+                  href="mailto:support@iatistandard.org"
+                >support@iatistandard.org</a></span>
                 for more details.
               </p>
             </div>
@@ -69,9 +69,9 @@
                   </label>
                   <HoverText
                     v-if="field.hover_text !== ''"
-                    :hoverText="field.hover_text"
+                    :hover-text="field.hover_text"
                     :name="field.label"
-                  ></HoverText>
+                  />
                 </div>
                 <input
                   v-if="isTextField(field.type, field.name)"
@@ -83,7 +83,7 @@
                   }"
                   :placeholder="field.placeholder"
                   :type="field.type"
-                />
+                >
 
                 <input
                   v-if="field.name === 'identifier'"
@@ -96,11 +96,11 @@
                   :type="field.type"
                   :value="
                     formData.registrationAgency +
-                    '-' +
-                    formData.registration_number
+                      '-' +
+                      formData.registration_number
                   "
                   disabled="true"
-                />
+                >
 
                 <Multiselect
                   v-if="field.type === 'select'"
@@ -116,7 +116,7 @@
                 <span
                   v-if="field.help_text && errorData[field.name] === ''"
                   class="text-xs font-normal text-n-40"
-                  >{{ field.help_text }}
+                >{{ field.help_text }}
                 </span>
 
                 <span
@@ -135,42 +135,46 @@
               class="btn-back"
               @click="goToPreviousForm()"
             >
-              <svg-vue class="mr-3 cursor-pointer" icon="left-arrow"></svg-vue>
+              <svg-vue
+                class="mr-3 cursor-pointer"
+                icon="left-arrow"
+              />
               Go back
             </button>
-            <span v-if="checkStep(1)" class="text-sm font-normal text-n-40"
-              >Already have an account?
+            <span
+              v-if="checkStep(1)"
+              class="text-sm font-normal text-n-40"
+            >Already have an account?
               <a
                 class="border-b-2 border-b-transparent font-bold text-bluecoral hover:border-b-2 hover:border-b-turquoise hover:text-bluecoral"
                 href="/"
-                >Sign In.</a
-              ></span
-            >
+              >Sign In.</a></span>
             <button
-              class="btn btn-next w-40"
               v-if="!checkStep(3)"
+              class="btn btn-next w-40"
               @click="goToNextForm()"
             >
               Next Step
-              <svg-vue class="text-2xl" icon="right-arrow"></svg-vue>
+              <svg-vue
+                class="text-2xl"
+                icon="right-arrow"
+              />
             </button>
           </div>
-          <div v-if="checkStep(2)" class="mt-6 text-center">
-            <span class="text-sm font-normal text-n-40"
-              >Already have an account?
+          <div
+            v-if="checkStep(2)"
+            class="mt-6 text-center"
+          >
+            <span class="text-sm font-normal text-n-40">Already have an account?
               <a
                 class="border-b-2 border-b-transparent font-bold text-bluecoral hover:border-b-2 hover:border-b-turquoise hover:text-bluecoral"
                 href="/"
-                >Sign In.</a
-              ></span
-            >
+              >Sign In.</a></span>
           </div>
         </div>
 
         <aside class="register__sidebar">
-          <span class="text-base font-bold"
-            >Step {{ getCurrentStep() }} out of 3</span
-          >
+          <span class="text-base font-bold">Step {{ getCurrentStep() }} out of 3</span>
           <ul class="relative mt-6 text-sm text-n-40">
             <li
               v-for="(form, key, i) in registerForm"
@@ -180,12 +184,24 @@
                 'mb-6 flex items-center': !checkStep(key),
               }"
             >
-              <span v-if="checkStep(key)" class="list__active"></span>
-              <span v-if="!form['is_complete']" class="mr-3 ml-6">
+              <span
+                v-if="checkStep(key)"
+                class="list__active"
+              />
+              <span
+                v-if="!form['is_complete']"
+                class="mr-3 ml-6"
+              >
                 {{ key }}
               </span>
-              <span v-if="form['is_complete']" class="mr-3 ml-6">
-                <svg-vue class="text-xs" icon="checked"> </svg-vue>
+              <span
+                v-if="form['is_complete']"
+                class="mr-3 ml-6"
+              >
+                <svg-vue
+                  class="text-xs"
+                  icon="checked"
+                />
               </span>
               <span
                 class="font-bold"
@@ -358,7 +374,7 @@ export default defineComponent({
             class: 'mb-4 lg:mb-2 relative',
             help_text: '',
           },
-          organization_registrationAgency: {
+          organization_registration_agency: {
             label: 'Organisation Registration Agency',
             name: 'registrationAgency',
             placeholder: 'Select an Organisation Registration Agency',
@@ -390,7 +406,7 @@ export default defineComponent({
             id: 'identifier',
             required: true,
             hover_text:
-              'The Organisation Identifier is a unique code for your organisation. This is genereated from the Organisation Registration Agency and Registration Number. For more information read: <a href="http://iatistandard.org/en/guidance/preparing-organisation/organisation-account/how-to-create-your-iati-organisation-identifier/" target="_blank">How to create your IATI organisation identifier.</a>',
+              'The Organisation Identifier is a unique code for your organisation. This is generated from the Organisation Registration Agency and Registration Number. For more information read: <a href="http://iatistandard.org/en/guidance/preparing-organisation/organisation-account/how-to-create-your-iati-organisation-identifier/" target="_blank">How to create your IATI organisation identifier.</a>',
             type: 'text',
             class: 'mb-4 lg:mb-6',
             help_text:
@@ -522,7 +538,7 @@ export default defineComponent({
 
           isLoaderVisible.value = false;
         })
-        .catch((error) => {
+        .catch(() => {
           isLoaderVisible.value = false;
         });
     }

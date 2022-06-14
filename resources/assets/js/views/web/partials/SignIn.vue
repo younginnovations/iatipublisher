@@ -11,8 +11,13 @@
       <div
         class="relative mt-6 mb-4 flex flex-col text-sm font-bold text-bluecoral"
       >
-        <label class="mb-2" for="Username">Username</label>
+        <label
+          class="mb-2"
+          for="Username"
+        >Username</label>
         <input
+          id="username"
+          v-model="formData.username"
           :class="
             errorData.username != ''
               ? 'error__input username input sm:h-16'
@@ -20,20 +25,27 @@
           "
           type="text"
           placeholder="Enter a registered username"
-          id="username"
-          v-model="formData.username"
-        />
+        >
         <svg-vue
           class="absolute top-12 left-5 text-xl sm:left-6"
           icon="user"
-        ></svg-vue>
-        <span class="error" role="alert" v-if="errorData.username != ''">
+        />
+        <span
+          v-if="errorData.username != ''"
+          class="error"
+          role="alert"
+        >
           {{ errorData.username }}
         </span>
       </div>
       <div class="relative mb-4 flex flex-col text-sm font-bold text-bluecoral">
-        <label class="mb-2" for="Password">Password</label>
+        <label
+          class="mb-2"
+          for="Password"
+        >Password</label>
         <input
+          id="password"
+          v-model="formData.password"
           :class="
             errorData.password || errorData.username != ''
               ? 'error__input password input sm:h-16'
@@ -41,30 +53,37 @@
           "
           type="password"
           placeholder="Enter a correct password"
-          id="password"
-          v-model="formData.password"
-        />
+        >
         <svg-vue
           class="absolute top-12 left-5 text-xl sm:left-6"
           icon="pw-lock"
-        ></svg-vue>
-        <span class="error" role="alert" v-if="errorData.password">{{
+        />
+        <span
+          v-if="errorData.password"
+          class="error"
+          role="alert"
+        >{{
           errorData.password
         }}</span>
       </div>
       <p class="mb-6 text-sm text-n-40">
         Forgot your password?
-        <span
-          ><a
-            class="border-b-2 border-b-transparent font-bold text-bluecoral hover:border-b-2 hover:border-b-turquoise hover:text-bluecoral"
-            href="/password/email"
-            >Reset.</a
-          ></span
-        >
+        <span><a
+          class="border-b-2 border-b-transparent font-bold text-bluecoral hover:border-b-2 hover:border-b-turquoise hover:text-bluecoral"
+          href="/password/email"
+        >Reset.</a></span>
       </p>
-      <button type="submit" id="btn" class="btn" @click="login">
+      <button
+        id="btn"
+        type="submit"
+        class="btn"
+        @click="login"
+      >
         SIGN IN
-        <svg-vue class="" icon="right-arrow"></svg-vue>
+        <svg-vue
+          class=""
+          icon="right-arrow"
+        />
       </button>
     </div>
   </div>

@@ -5,13 +5,13 @@ class FormBuilder {
   // adds new collection of sub-element
   public addForm(ev: Event): void {
     ev.preventDefault();
-    let target = ev.target as EventTarget;
-    let container = $(target).attr('form_type') ? $(`.collection-container[form_type ='${$(target).attr('form_type')}']`) : $('.collection-container');
+    const target = ev.target as EventTarget;
+    const container = $(target).attr('form_type') ? $(`.collection-container[form_type ='${$(target).attr('form_type')}']`) : $('.collection-container');
     console.log('target', target, 'container', container);
-    let count = $(target).attr('child_count')
+    const count = $(target).attr('child_count')
       ? parseInt($(target).attr('child_count') as string) + 1
       : $(target).parent().find('.form-child-body').length;
-    let parent_count = $(target).attr('parent_count')
+    const parent_count = $(target).attr('parent_count')
       ? parseInt($(target).attr('parent_count') as string)
       : $(target).parent().prevAll('.multi-form').length;
     let proto = container
@@ -44,9 +44,9 @@ class FormBuilder {
   // adds parent collection
   public addParentForm(ev: Event): void {
     ev.preventDefault();
-    let target = ev.target as EventTarget;
-    let container = $('.parent-collection');
-    let count = $(target).attr('child_count')
+    const target = ev.target as EventTarget;
+    const container = $('.parent-collection');
+    const count = $(target).attr('child_count')
       ? parseInt($(target).attr('child_count') as string) + 1
       : $('.multi-form').length;
     let proto = container.data('prototype').replace(/__PARENT_NAME__/g, count);
@@ -71,11 +71,11 @@ class FormBuilder {
   // deletes collection
   public deleteForm(ev: Event): void {
     ev.preventDefault();
-    let target = ev.target as EventTarget;
-    let collectionLength = $('.multi-form').length
+    const target = ev.target as EventTarget;
+    const collectionLength = $('.multi-form').length
       ? $(target).closest('.subelement').find('.form-child-body').length
       : $('.form-child-body').length;
-    let count = $('.add_to_collection').attr('child_count')
+    const count = $('.add_to_collection').attr('child_count')
       ? parseInt($('.add_to_collection').attr('child_count') as string) + 1
       : collectionLength;
     $('.add_to_collection').attr('child_count', count);
@@ -88,9 +88,9 @@ class FormBuilder {
   // deletes parent collection
   public deleteParentForm(ev: Event): void {
     ev.preventDefault();
-    let target = ev.target as EventTarget;
-    let collectionLength = $('.subelement').length;
-    let count = $('.add_to_parent').attr('child_count')
+    const target = ev.target as EventTarget;
+    const collectionLength = $('.subelement').length;
+    const count = $('.add_to_parent').attr('child_count')
       ? parseInt($('.add_to_parent').attr('child_count') as string) + 1
       : collectionLength;
     $('.add_to_parent').attr('child_count', count);
@@ -162,28 +162,28 @@ class FormBuilder {
    * @Logic hide vocabulary-uri field based on '@vocabulary' field value
    */
   public humanitarianScopeHideVocabularyUri() {
-    let humanitarianScopeVocabulary = $(
+    const humanitarianScopeVocabulary = $(
       'select[id^="humanitarian_scope"][id*="[vocabulary]"]'
     );
 
     if (humanitarianScopeVocabulary.length > 0) {
       // hide fields on page load
       $.each(humanitarianScopeVocabulary, (index, scope) => {
-        let val = $(scope).val() ?? '';
+        const val = $(scope).val() ?? '';
         this.hideHumanitarianScopeField($(scope), val.toString());
       });
 
       // hide/show fields on value change
       humanitarianScopeVocabulary.on('select2:select', (e) => {
-        let val = e.params.data.id;
-        let index = e.target as HTMLElement;
+        const val = e.params.data.id;
+        const index = e.target as HTMLElement;
 
         this.hideHumanitarianScopeField($(index), val);
       });
 
       // hide/show fields on value clear
       humanitarianScopeVocabulary.on('select2:clear', (e) => {
-        let index = e.target as HTMLElement;
+        const index = e.target as HTMLElement;
 
         this.hideHumanitarianScopeField($(index), '');
       });
@@ -192,7 +192,7 @@ class FormBuilder {
 
   // hide country budget based on vocabulary
   public hideHumanitarianScopeField(index: JQuery, value: string) {
-    let humanitarianScopeHideVocabularyUri =
+    const humanitarianScopeHideVocabularyUri =
       'input[id^="humanitarian_scope"][id*="[vocabulary_uri]"]';
 
     if (value === '99') {
@@ -220,22 +220,22 @@ class FormBuilder {
    * @Logic show/hide 'code' field based on '@vocabulary' field value
    */
   public countryBudgetHideCodeField() {
-    let countryBudgetVocabulary = $('select#country_budget_vocabulary');
+    const countryBudgetVocabulary = $('select#country_budget_vocabulary');
 
     if (countryBudgetVocabulary.length > 0) {
       // hide/show on page load
-      let val = countryBudgetVocabulary.val() ?? '1';
+      const val = countryBudgetVocabulary.val() ?? '1';
       this.hideCountryBudgetField(val.toString());
 
       // hide/show on value change
       countryBudgetVocabulary.on('select2:select', (e) => {
-        let val = e.params.data.id;
+        const val = e.params.data.id;
         this.hideCountryBudgetField(val);
       });
 
       //hide/show based on value cleared
       countryBudgetVocabulary.on('select2:clear', (e) => {
-        let index = e.target as HTMLElement;
+        const index = e.target as HTMLElement;
 
         this.hideCountryBudgetField('');
       });
@@ -246,7 +246,7 @@ class FormBuilder {
    * Hide Country Budget Fields
    */
   public hideCountryBudgetField(value: string) {
-    let countryBudgetVocabulary = $('select#country_budget_vocabulary'),
+    const countryBudgetVocabulary = $('select#country_budget_vocabulary'),
       countryBudgetCodeInput = 'input[id^="budget_item"][id*="[code_text]"]',
       countryBudgetCodeSelect = 'select[id^="budget_item"][id*="[code]"]';
 
@@ -273,24 +273,24 @@ class FormBuilder {
    * @Logic hide vocabulary-uri and codes field based on '@vocabulary' field value
    */
   public aidTypeVocabularyHideField() {
-    let aidtype_vocabulary = $('select[id*="default_aidtype_vocabulary"]');
-    let index = $(this);
+    const aidtype_vocabulary = $('select[id*="default_aidtype_vocabulary"]');
+    const index = $(this);
 
     if (aidtype_vocabulary.length > 0) {
       $.each(aidtype_vocabulary, (index, item) => {
-        let data = $(item).val() ?? '1';
+        const data = $(item).val() ?? '1';
         this.hideAidTypeSelectField($(item), data.toString());
       });
 
       aidtype_vocabulary.on('select2:select', (e) => {
-        let data = e.params.data.id;
-        let target = e.target as HTMLElement;
+        const data = e.params.data.id;
+        const target = e.target as HTMLElement;
 
         this.hideAidTypeSelectField($(target), data);
       });
 
       aidtype_vocabulary.on('select2:clear', (e) => {
-        let target = e.target as HTMLElement;
+        const target = e.target as HTMLElement;
 
         this.hideAidTypeSelectField($(target), '');
       });
@@ -301,7 +301,7 @@ class FormBuilder {
    * Hide Aid Type Select Fields
    */
   public hideAidTypeSelectField(index: JQuery, value: string) {
-    let default_aid_type = 'select[id*="[default_aid_type]"]',
+    const default_aid_type = 'select[id*="[default_aid_type]"]',
       earmarking_category = 'select[id*="[earmarking_category]"]',
       earmarking_modality = 'select[id*="[earmarking_modality]"]',
       cash_and_voucher_modalities =
@@ -389,23 +389,23 @@ class FormBuilder {
    * @Logic hide vocabulary-uri and codes field based on '@vocabulary' field value
    */
   public policyVocabularyHideField() {
-    let policymaker_vocabulary = $('select[id*="policymarker_vocabulary"]');
+    const policymaker_vocabulary = $('select[id*="policymarker_vocabulary"]');
 
     if (policymaker_vocabulary.length > 0) {
       $.each(policymaker_vocabulary, (index, policy_marker) => {
-        let data = $(policy_marker).val() ?? '1';
+        const data = $(policy_marker).val() ?? '1';
         this.hidePolicyMakerField($(policy_marker), data.toString());
       });
 
       policymaker_vocabulary.on('select2:select', (e) => {
-        let data = e.params.data.id;
-        let target = e.target as HTMLElement;
+        const data = e.params.data.id;
+        const target = e.target as HTMLElement;
 
         this.hidePolicyMakerField($(target), data);
       });
 
       policymaker_vocabulary.on('select2:clear', (e) => {
-        let target = e.target as HTMLElement;
+        const target = e.target as HTMLElement;
 
         this.hidePolicyMakerField($(target), '');
       });
@@ -416,7 +416,7 @@ class FormBuilder {
    * Hides Policy Marker Form Fields
    */
   public hidePolicyMakerField(index: JQuery, value: string) {
-    let case1_show = 'select[id*="[policy_marker]"]',
+    const case1_show = 'select[id*="[policy_marker]"]',
       case2_show =
         'input[id*="[policy_marker_text]"],input[id*="[vocabulary_uri]"]',
       case1 = 'input[id*="[policy_marker_text]"],input[id*="[vocabulary_uri]"]',
@@ -475,23 +475,23 @@ class FormBuilder {
    * @Logic hide vocabulary-uri and codes field based on '@vocabulary' field value
    */
   public sectorVocabularyHideField() {
-    let sector_vocabulary = $('select[id*="sector_vocabulary"]');
+    const sector_vocabulary = $('select[id*="sector_vocabulary"]');
 
     if (sector_vocabulary.length > 0) {
       $.each(sector_vocabulary, (index, sector) => {
-        let data = $(sector).val() ?? '1';
+        const data = $(sector).val() ?? '1';
         this.hideSectorField($(sector), data.toString());
       });
 
       sector_vocabulary.on('select2:select', (e) => {
-        let data = e.params.data.id;
-        let target = e.target as HTMLElement;
+        const data = e.params.data.id;
+        const target = e.target as HTMLElement;
 
         this.hideSectorField($(target), data);
       });
 
       sector_vocabulary.on('select2:clear', (e) => {
-        let target = e.target as HTMLElement;
+        const target = e.target as HTMLElement;
 
         this.hideSectorField($(target), '');
       });
@@ -502,7 +502,7 @@ class FormBuilder {
    * Hide Sector Form fields
    */
   public hideSectorField(index: JQuery, value: string) {
-    let case1_show = 'select[id*="[code]"]',
+    const case1_show = 'select[id*="[code]"]',
       case2_show = 'select[id*="[category_code]"]',
       case7_show = 'select[id*="[sdg_goal]"]',
       case8_show = 'select[id*="[sdg_target]"]',
@@ -643,23 +643,23 @@ class FormBuilder {
    * @Logic hide vocabulary-uri and codes field based on '@vocabulary' field value
    */
   public recipientVocabularyHideField() {
-    let region_vocabulary = $('select[id*="region_vocabulary"]');
+    const region_vocabulary = $('select[id*="region_vocabulary"]');
 
     if (region_vocabulary.length > 0) {
       $.each(region_vocabulary, (index, region_vocab) => {
-        let data = $(region_vocab).val() ?? '1';
+        const data = $(region_vocab).val() ?? '1';
         this.hideRecipientRegionField($(region_vocab), data.toString());
       });
 
       region_vocabulary.on('select2:select', (e) => {
-        let data = e.params.data.id;
-        let target = e.target as HTMLElement;
+        const data = e.params.data.id;
+        const target = e.target as HTMLElement;
 
         this.hideRecipientRegionField($(target), data);
       });
 
       region_vocabulary.on('select2:clear', (e) => {
-        let target = e.target as HTMLElement;
+        const target = e.target as HTMLElement;
 
         this.hideRecipientRegionField($(target), '');
       });
@@ -670,7 +670,7 @@ class FormBuilder {
    * Hides Recipient Region Form Fields
    */
   public hideRecipientRegionField(index: JQuery, value: string) {
-    let case1_show = 'select[id*="[region_code]"],input[id*="[custom_code]"]',
+    const case1_show = 'select[id*="[region_code]"],input[id*="[custom_code]"]',
       case2_show = 'input[id*="[custom_code]"]',
       case99_show = 'input[id*="[custom_code]"],input[id*="[vocabulary_uri]"]',
       case1 = 'input[id*="[custom_code]"],input[id*="[vocabulary_uri]"]',
@@ -748,7 +748,7 @@ class FormBuilder {
    * Updates Activity identifier
    */
   public updateActivityIdentifier() {
-    let activity_identifier = $('#activity_identifier');
+    const activity_identifier = $('#activity_identifier');
 
     if (activity_identifier.length > 0) {
       activity_identifier.on('keyup', function () {
@@ -765,23 +765,23 @@ class FormBuilder {
    * @Logic hide vocabulary-uri and codes field based on '@vocabulary' field value
    */
   public tagVocabularyHideField() {
-    let tag_vocabulary = $('select[id*="tag_vocabulary"]');
+    const tag_vocabulary = $('select[id*="tag_vocabulary"]');
 
     if (tag_vocabulary.length > 0) {
       $.each(tag_vocabulary, (index, tag) => {
-        let data = $(tag).val() ?? '1';
+        const data = $(tag).val() ?? '1';
         this.hideTagField($(tag), data.toString());
       });
 
       tag_vocabulary.on('select2:select', (e) => {
-        let data = e.params.data.id;
-        let target = e.target as HTMLElement;
+        const data = e.params.data.id;
+        const target = e.target as HTMLElement;
 
         this.hideTagField($(target), data);
       });
 
       tag_vocabulary.on('select2:clear', (e) => {
-        let target = e.target as HTMLElement;
+        const target = e.target as HTMLElement;
 
         this.hideTagField($(target), '');
       });
@@ -792,7 +792,7 @@ class FormBuilder {
    * Hide Tag Form fields
    */
   public hideTagField(index: JQuery, value: string) {
-    let case1_show = 'input[id*="[tag_text]"]',
+    const case1_show = 'input[id*="[tag_text]"]',
       case2_show = 'select[id*="[goals_tag_code]"]',
       case3_show = 'select[id*="[targets_tag_code]"]',
       case99_show = 'input[id*="[tag_text]"], input[id*="[vocabulary_uri]"]',
@@ -890,7 +890,7 @@ class FormBuilder {
 }
 
 $(function () {
-  let formBuilder = new FormBuilder();
+  const formBuilder = new FormBuilder();
   formBuilder.addWrapper();
   formBuilder.hideShowFormFields();
   formBuilder.updateActivityIdentifier();
@@ -907,10 +907,10 @@ $(function () {
    * Delete function
    *
    */
-  var deleteConfirmation = $('.delete-confirmation'),
+  const deleteConfirmation = $('.delete-confirmation'),
     cancelPopup = '.cancel-popup',
-    deleteConfirm = '.delete-confirm',
-    deleteIndex = {},
+    deleteConfirm = '.delete-confirm'
+  let  deleteIndex = {},
     childOrParent = '';
 
   $('body').on('click', '.delete', (event: Event) => {

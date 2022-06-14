@@ -1,34 +1,37 @@
 <template>
-  <div :class="layout" class="activities__content--element px-3 py-3">
+  <div
+    :class="layout"
+    class="activities__content--element px-3 py-3"
+  >
     <div class="rounded-lg bg-white p-4">
       <div class="mb-4 flex">
         <div class="title flex grow">
           <template
             v-if="
               title === 'reporting_org' ||
-              title === 'default_tied_status' ||
-              title === 'crs_add' ||
-              title === 'fss'
+                title === 'default_tied_status' ||
+                title === 'crs_add' ||
+                title === 'fss'
             "
           >
             <svg-vue
               class="mr-1.5 text-xl text-bluecoral"
               icon="activity-elements/building"
-            ></svg-vue>
+            />
           </template>
 
           <template v-else-if="title === 'identifier'">
             <svg-vue
               class="mr-1.5 text-xl text-bluecoral"
               icon="activity-elements/iati_identifier"
-            ></svg-vue>
+            />
           </template>
 
           <template v-else>
             <svg-vue
               :icon="'activity-elements/' + title"
               class="mr-1.5 text-xl text-bluecoral"
-            ></svg-vue>
+            />
           </template>
 
           <div class="title text-sm font-bold">
@@ -53,39 +56,51 @@
             :href="`/activities/${activityId}/${title}`"
             class="edit-button mr-2.5 flex items-center text-xs font-bold uppercase"
           >
-            <svg-vue class="mr-0.5 text-base" icon="edit"></svg-vue>
+            <svg-vue
+              class="mr-0.5 text-base"
+              icon="edit"
+            />
             <span>Edit</span>
           </a>
 
           <template v-if="'core' in data">
-            <svg-vue v-if="data.core" class="mr-1.5" icon="core"></svg-vue>
+            <svg-vue
+              v-if="data.core"
+              class="mr-1.5"
+              icon="core"
+            />
           </template>
 
           <HoverText
             v-if="tooltip"
             :hover_text="tooltip"
             class="text-n-40"
-          ></HoverText>
+          />
         </div>
       </div>
-
-      <div class="divider mb-4 h-px w-full bg-n-20"></div>
-
+      <div class="divider mb-4 h-px w-full bg-n-20" />
       <template v-if="title === 'title'">
-        <div v-for="(post, i) in data.content" :key="i" class="title-content">
-          <div class="language mb-1.5 text-sm italic text-n-30">
+        <!-- Title content -->
+        <div
+          v-for="(post, index) in content"
+          :key="index"
+          class="title-content"
+        >
+          <div
+            v-if="post.language"
+            class="language mb-1.5 text-sm italic text-n-30"
+          >
             (Language: {{ post.language }})
           </div>
-          <div v-if="post.narrative" class="description text-sm">
             {{ post.narrative }}
-          </div>
-          <div v-if="i !== data.content.length - 1" class="mb-4"></div>
-        </div>
       </template>
 
       <template v-else-if="title === 'identifier'">
         <div class="identifier-content">
-          <div v-if="data.content.iati_identifier_text" class="text-sm">
+          <div
+            v-if="data.content.iati_identifier_text"
+            class="text-sm"
+          >
             {{ data.content.iati_identifier_text }}
           </div>
         </div>
@@ -167,7 +182,10 @@
             <div class="language mb-1.5 text-xs text-n-30">
               (Language: {{ item.language }})
             </div>
-            <div v-if="item.narrative" class="text-sm">
+            <div
+              v-if="item.narrative"
+              class="text-sm"
+            >
               {{ item.narrative }}
             </div>
           </div>
@@ -184,7 +202,9 @@
             <div class="type mb-1.5 text-sm italic text-n-30">
               {{ props.types.relatedActivityType[post.relationship_type] }}
             </div>
-            <div class="text-sm">ref: {{ post.activity_identifier }}</div>
+            <div class="text-sm">
+              ref: {{ post.activity_identifier }}
+            </div>
           </div>
         </div>
       </template>
@@ -196,8 +216,12 @@
           :class="{ 'mb-4': key !== data.content.length - 1 }"
         >
           <div class="related-content">
-            <div class="text-sm">name: {{ post.name }}</div>
-            <div class="text-sm">value: {{ post.value }}</div>
+            <div class="text-sm">
+              name: {{ post.name }}
+            </div>
+            <div class="text-sm">
+              value: {{ post.value }}
+            </div>
             <div class="text-sm">
               iati-equivalent: {{ post.iati_equivalent }}
             </div>
@@ -215,9 +239,7 @@
             <span> Attached: </span>
             <span class="font-normal italic text-n-30">
               <span v-if="data.content.condition_attached === '0'">No</span>
-              <span v-else-if="data.content.condition_attached === '1'"
-                >Yes</span
-              >
+              <span v-else-if="data.content.condition_attached === '1'">Yes</span>
             </span>
           </div>
           <div class="tb-content condition-contents px-6 py-2">
@@ -238,7 +260,10 @@
                 <div class="language mb-1.5 text-xs italic text-n-30">
                   (Language: {{ item.language }})
                 </div>
-                <div v-if="item.narrative" class="text-sm">
+                <div
+                  v-if="item.narrative"
+                  class="text-sm"
+                >
                   {{ item.narrative }}
                 </div>
               </div>
@@ -279,7 +304,10 @@
                 </span>
               </div>
             </li>
-            <li class="inline-block" v-if="post.vocabulary === '99'">
+            <li
+              v-if="post.vocabulary === '99'"
+              class="inline-block"
+            >
               <div class="date-type flex gap-1 text-sm font-bold">
                 <span>Vocabulary Uri: </span>
                 <span class="text-sm font-normal italic text-n-30">
@@ -298,7 +326,10 @@
               <div class="language mb-1.5 text-xs italic text-n-30">
                 (Language: {{ item.language }})
               </div>
-              <div v-if="item.narrative" class="text-sm">
+              <div
+                v-if="item.narrative"
+                class="text-sm"
+              >
                 {{ item.narrative }}
               </div>
             </div>
@@ -318,7 +349,10 @@
               {{ types.aidTypeVocabulary[post.default_aidtype_vocabulary] }}
             </div>
 
-            <div v-if="post.default_aidtype_vocabulary === '2'" class="text-sm">
+            <div
+              v-if="post.default_aidtype_vocabulary === '2'"
+              class="text-sm"
+            >
               {{ types.earmarkingCategory[post.earmarking_category] }}
             </div>
 
@@ -338,7 +372,10 @@
               }}
             </div>
 
-            <div v-else class="text-sm">
+            <div
+              v-else
+              class="text-sm"
+            >
               {{ post.default_aid_type }}
             </div>
           </div>
@@ -365,8 +402,8 @@
             >
               <ul class="mb-4 inline-flex flex-wrap gap-3">
                 <li
-                  class="inline-block"
                   v-if="data.content.country_budget_vocabulary === '1'"
+                  class="inline-block"
                 >
                   <div class="date-type flex gap-1 text-sm font-bold">
                     <span>Code: </span>
@@ -375,7 +412,10 @@
                     </span>
                   </div>
                 </li>
-                <li class="inline-block" v-else>
+                <li
+                  v-else
+                  class="inline-block"
+                >
                   <div class="date-type flex gap-1 text-sm font-bold">
                     <span>Code: {{ post.code_text }}</span>
                     <span class="text-sm font-normal italic text-n-30">
@@ -396,7 +436,6 @@
                 <template
                   v-for="(item, i) in post.description"
                   :key="i"
-                  class="description"
                 >
                   <div
                     v-for="(i, k) in item.narrative"
@@ -407,7 +446,10 @@
                     <div class="language mb-1.5 text-sm italic text-n-30">
                       (Language: {{ i.language }})
                     </div>
-                    <div v-if="i.narrative" class="text-sm">
+                    <div
+                      v-if="i.narrative"
+                      class="text-sm"
+                    >
                       {{ i.narrative }}
                     </div>
                   </div>
@@ -433,7 +475,7 @@
               <li
                 v-if="
                   post.sector_vocabulary === '98' ||
-                  post.sector_vocabulary === '99'
+                    post.sector_vocabulary === '99'
                 "
               >
                 <div class="flex gap-1 text-sm font-bold">
@@ -484,7 +526,10 @@
                 <div class="language mb-1.5 text-xs italic text-n-30">
                   (Language: {{ i.language }})
                 </div>
-                <div v-if="i.narrative" class="text-sm">
+                <div
+                  v-if="i.narrative"
+                  class="text-sm"
+                >
                   {{ i.narrative }}
                 </div>
               </div>
@@ -542,7 +587,10 @@
                 <div class="language mb-1.5 text-xs italic text-n-30">
                   (Language: {{ i.language }})
                 </div>
-                <div v-if="i.narrative" class="text-sm">
+                <div
+                  v-if="i.narrative"
+                  class="text-sm"
+                >
                   {{ i.narrative }}
                 </div>
               </div>
@@ -597,7 +645,10 @@
                 <div class="language mb-1.5 text-sm italic text-n-30">
                   (Language: {{ i.language }})
                 </div>
-                <div v-if="i.narrative" class="text-sm">
+                <div
+                  v-if="i.narrative"
+                  class="text-sm"
+                >
                   {{ i.narrative }}
                 </div>
               </div>
@@ -658,7 +709,10 @@
                 <div class="language mb-1.5 text-sm italic text-n-30">
                   (Language: {{ i.language }})
                 </div>
-                <div v-if="i.narrative" class="text-sm">
+                <div
+                  v-if="i.narrative"
+                  class="text-sm"
+                >
                   {{ i.narrative }}
                 </div>
               </div>
@@ -686,7 +740,7 @@
                     <span
                       v-if="
                         post.tag_vocabulary === '1' ||
-                        post.tag_vocabulary === '99'
+                          post.tag_vocabulary === '99'
                       "
                     >
                       {{ post.tag_text }}
@@ -719,7 +773,10 @@
                 <div class="language mb-1.5 text-sm italic text-n-30">
                   (Language: {{ i.language }})
                 </div>
-                <div v-if="i.narrative" class="text-sm">
+                <div
+                  v-if="i.narrative"
+                  class="text-sm"
+                >
                   {{ i.narrative }}
                 </div>
               </div>
@@ -772,7 +829,7 @@ import { defineComponent } from 'vue';
 import HoverText from '../../../components/HoverText.vue';
 
 export default defineComponent({
-  name: 'activity-element',
+  name: 'ActivityElement',
   components: { HoverText },
   props: {
     data: {

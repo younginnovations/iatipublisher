@@ -1,7 +1,9 @@
 <template>
   <div class="overlay">
     <div class="overlay__inner">
-      <div class="overlay__content"><span class="spinner"></span></div>
+      <div class="overlay__content">
+        <span class="spinner" />
+      </div>
     </div>
   </div>
 </template>
@@ -10,7 +12,7 @@
 import { defineComponent } from 'vue';
 
 export default defineComponent({
-  name: 'loader-cmp',
+  name: 'LoaderCmp',
 });
 </script>
 

@@ -8,6 +8,6 @@
         :lang="{{json_encode('lang file')}}"
         :types="{{json_encode($types)}}"
         :status="{{json_encode($status)}}"
-        :toast="{{ json_encode($toast) }}">
+        :toastData="{{ json_encode($toast) }}">
     </activities-detail>
 @endsection

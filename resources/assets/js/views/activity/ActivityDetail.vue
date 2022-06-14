@@ -5,17 +5,20 @@
       <div class="flex items-end gap-4">
         <div class="title grow-0">
           <div class="max-w-sm pb-4 text-caption-c1 text-n-40">
-            <nav aria-label="breadcrumbs" class="rank-math-breadcrumb">
+            <nav
+              aria-label="breadcrumbs"
+              class="rank-math-breadcrumb"
+            >
               <div class="flex">
-                <a class="whitespace-nowrap font-bold" href="/activities"
-                  >Your Activities</a
-                >
+                <a
+                  class="whitespace-nowrap font-bold"
+                  href="/activities"
+                >Your Activities</a>
                 <span class="separator mx-4"> / </span>
                 <div class="breadcrumb__title">
                   <span
                     class="breadcrumb__title last overflow-hidden text-n-30"
-                    >{{ pageTitle ?? 'Untitled' }}</span
-                  >
+                  >{{ pageTitle ?? 'Untitled' }}</span>
                   <span class="ellipsis__title--hover w-[calc(100%_+_35px)]">{{
                     pageTitle ? pageTitle : 'Untitled'
                   }}</span>
@@ -26,7 +29,7 @@
           <div class="inline-flex max-w-3xl items-center">
             <div class="mr-3">
               <a href="/activities">
-                <svg-vue icon="arrow-short-left"></svg-vue>
+                <svg-vue icon="arrow-short-left" />
               </a>
             </div>
             <div class="">
@@ -47,7 +50,7 @@
               v-if="toast.visibility"
               :message="toast.message"
               :type="toast.type"
-            ></Toast>
+            />
           </div>
           <div class="inline-flex justify-end">
             <!-- Download File -->
@@ -55,10 +58,10 @@
               class="button secondary-btn mr-3.5 font-bold"
               @click="downloadValue = true"
             >
-              <svg-vue icon="download-file"></svg-vue>
+              <svg-vue icon="download-file" />
             </button>
             <Modal
-              :modalActive="downloadValue"
+              :modal-active="downloadValue"
               width="583"
               @close="downloadToggle"
             >
@@ -67,7 +70,7 @@
                   <svg-vue
                     class="mr-1 mt-0.5 text-lg text-spring-50"
                     icon="download-file"
-                  ></svg-vue>
+                  />
                   <b>Download file.</b>
                 </div>
                 <div class="rounded-lg bg-mint p-4">
@@ -96,15 +99,19 @@
               class="button secondary-btn mr-3.5 font-bold"
               @click="deleteValue = true"
             >
-              <svg-vue icon="delete"></svg-vue>
+              <svg-vue icon="delete" />
             </button>
-            <Modal :modalActive="deleteValue" width="583" @close="deleteToggle">
+            <Modal
+              :modal-active="deleteValue"
+              width="583"
+              @close="deleteToggle"
+            >
               <div class="mb-4">
                 <div class="title mb-6 flex">
                   <svg-vue
                     class="mr-1 mt-0.5 text-lg text-crimson-40"
                     icon="delete"
-                  ></svg-vue>
+                  />
                   <b>Delete activity</b>
                 </div>
                 <div class="rounded-lg bg-rose p-4">
@@ -133,11 +140,11 @@
               class="button secondary-btn mr-3.5 font-bold"
               @click="unpublishValue = true"
             >
-              <svg-vue icon="cancel-cloud"></svg-vue>
+              <svg-vue icon="cancel-cloud" />
               <span>Unpublish</span>
             </button>
             <Modal
-              :modalActive="unpublishValue"
+              :modal-active="unpublishValue"
               width="583"
               @close="unpublishToggle"
             >
@@ -146,7 +153,7 @@
                   <svg-vue
                     class="mr-1 mt-0.5 text-lg text-crimson-40"
                     icon="cancel-cloud"
-                  ></svg-vue>
+                  />
                   <b>Unpublish activity</b>
                 </div>
                 <div class="rounded-lg bg-rose p-4">
@@ -175,11 +182,11 @@
               class="button primary-btn relative font-bold"
               @click="publishValue = true"
             >
-              <svg-vue icon="approved-cloud"></svg-vue>
+              <svg-vue icon="approved-cloud" />
               <span>Publish</span>
             </button>
             <Modal
-              :modalActive="publishValue"
+              :modal-active="publishValue"
               width="583"
               @close="publishToggle"
             >
@@ -188,7 +195,7 @@
                   <svg-vue
                     class="mr-1 mt-0.5 text-lg text-spring-50"
                     icon="approved-cloud"
-                  ></svg-vue>
+                  />
                   <b>Publish activity?</b>
                 </div>
                 <div class="rounded-lg bg-mint p-4">
@@ -223,49 +230,55 @@
             <div class="mb-2 flex items-center justify-between">
               <span class="mr-2">Publishing Progress</span>
               <HoverText
-                hoverText="You cannot publish an activity until all the mandatory fields have been filled."
+                hover-text="You cannot publish an activity until all the mandatory fields have been filled."
                 name=""
                 class="hover-text"
                 position="right"
-              ></HoverText>
+              />
             </div>
-            <ProgressBar :percent="progress" class="mb-3"></ProgressBar>
+            <ProgressBar
+              :percent="progress"
+              class="mb-3"
+            />
             <span>Fill core elements to get 100% score</span>
           </div>
           <div class="activities__card elements">
             <div class="mb-7 flex items-center justify-between">
               <span>Elements</span>
               <HoverText
-                hoverText="You cannot publish an activity until all the mandatory fields have been filled."
+                hover-text="You cannot publish an activity until all the mandatory fields have been filled."
                 name=""
                 class="hover-text"
-              ></HoverText>
+              />
             </div>
             <div class="mb-3 flex justify-between">
               <div class="flex items-center space-x-1">
-                <svg-vue icon="core"></svg-vue>
+                <svg-vue icon="core" />
                 <span>Core</span>
               </div>
               <HoverText
-                hoverText="You cannot publish an activity until all the mandatory fields have been filled."
+                hover-text="You cannot publish an activity until all the mandatory fields have been filled."
                 name=""
                 class="hover-text"
-              ></HoverText>
+              />
             </div>
             <div class="flex justify-between">
               <div class="flex items-center space-x-1">
-                <svg-vue icon="double-tick"></svg-vue>
+                <svg-vue icon="double-tick" />
                 <span>Completed</span>
               </div>
               <HoverText
-                hoverText="You cannot publish an activity until all the mandatory fields have been filled."
+                hover-text="You cannot publish an activity until all the mandatory fields have been filled."
                 name=""
                 class="hover-text"
-              ></HoverText>
+              />
             </div>
           </div>
         </div>
-        <Elements :activity-id="activity.id" :data="elements" />
+        <Elements
+          :activity-id="activity.id"
+          :data="elements"
+        />
       </aside>
       <div class="activities__content">
         <div class="mb-3 inline-flex flex-wrap gap-2">
@@ -276,7 +289,10 @@
             :href="`#${key}`"
             class="tab-btn-anchor"
           >
-            <button :disabled="post.status == 'disabled'" class="tab-btn">
+            <button
+              :disabled="post.status == 'disabled'"
+              class="tab-btn"
+            >
               <span>{{ post.label }}</span>
               <span class="hover__text">
                 <HoverText
@@ -290,8 +306,14 @@
         </div>
 
         <div class="activities__content--elements -mx-3 flex flex-wrap">
-          <template v-for="(post, key, index) in activities" :key="index">
-            <template v-for="(element, name, i) in post.elements" :key="i">
+          <template
+            v-for="(post, key, index) in activities"
+            :key="index"
+          >
+            <template
+              v-for="(element, name, i) in post.elements"
+              :key="i"
+            >
               <ActivityElement
                 v-if="
                   typeof element.content === 'object'
@@ -302,7 +324,7 @@
                 :data="element"
                 :types="props.types"
                 :title="name.toString()"
-                :activityId="activity.id"
+                :activity-id="activity.id"
                 :width="
                   name === 'identifier' ||
                   name === 'activity_status' ||
@@ -363,7 +385,7 @@ export default defineComponent({
       type: Number,
       required: true,
     },
-    toast: {
+    toastData: {
       type: Object,
       required: true,
     },
@@ -392,10 +414,10 @@ export default defineComponent({
     const [downloadValue, downloadToggle] = useToggle();
 
     onMounted(() => {
-      if (props.toast.message !== '') {
-        toast.type = props.toast.type;
+      if (props.toastData.message !== '') {
+        toast.type = props.toastData.type;
         toast.visibility = true;
-        toast.message = props.toast.message;
+        toast.message = props.toastData.message;
       }
 
       setTimeout(() => {
@@ -408,7 +430,7 @@ export default defineComponent({
      */
     let pageTitle = '';
     const found = props.activity.title.find(
-      (e: { language: string }, index: number) => {
+      (e: { language: string }) => {
         const currentLanguage = 'en';
         return e.language === currentLanguage;
       }
@@ -418,6 +440,7 @@ export default defineComponent({
     if (found) {
       pageTitle = found.narrative;
     } else {
+      // eslint-disable-next-line vue/no-setup-props-destructure
       pageTitle = props.activity.title[0].narrative;
     }
 
@@ -431,9 +454,9 @@ export default defineComponent({
       activities = { ...props.elementGroup };
 
     // generating available elements
-    Object.keys(activities).map((key, index) => {
+    Object.keys(activities).map((key) => {
       let flag = false;
-      Object.keys(activities[key]['elements']).map((k, i) => {
+      Object.keys(activities[key]['elements']).map((k) => {
         if (detailData[k]) {
           activities[key]['elements'][k]['content'] = detailData[k];
           flag = true;
@@ -448,8 +471,8 @@ export default defineComponent({
     });
 
     // generating available categories of elements
-    Object.keys(groupedData).map((key, index) => {
-      if (activities.hasOwnProperty(key)) {
+    Object.keys(groupedData).map((key) => {
+      if (Object.prototype.hasOwnProperty.call(activities, key)) {
         groupedData[key]['status'] = 'enabled';
       } else {
         groupedData[key]['status'] = 'disabled';
@@ -464,6 +487,7 @@ export default defineComponent({
      * @returns object
      */
     Object.keys(props.elements).map((key, index) => {
+      // eslint-disable-next-line vue/no-mutating-props
       props.elements[key]['completed'] = props.status[key] ?? false;
     });
 
