@@ -2,29 +2,34 @@
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="icon" type="image" href="https://prod-iati-website.azureedge.net/prod-iati-website/favicons/favicon-32x32.png">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image"
+        href="https://prod-iati-website.azureedge.net/prod-iati-website/favicons/favicon-32x32.png">
 
-  <title>{{ config('app.name', 'IATI Publisher') }}</title>
+    <title>{{ config('app.name', 'IATI Publisher') }}</title>
 
-  <link href="{{ asset('css/app.css') }}" rel="stylesheet">
-  <script defer src="{{ asset('js/script.js') }}"></script>
-  <script defer src="{{ asset('js/app.js') }}"></script>
+    <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    <script defer src="{{ asset('js/script.js') }}"></script>
+    <script defer src="{{ asset('js/app.js') }}"></script>
 
-  <meta name="csrf-token" content="{{ csrf_token() }}">
-  <link rel="icon"
-    href="{{ URL::asset('https://prod-iati-website.azureedge.net/prod-iati-website/favicons/favicon-32x32.png') }}"
-    type="image/x-icon" />
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <link rel="icon"
+        href="{{ URL::asset('https://prod-iati-website.azureedge.net/prod-iati-website/favicons/favicon-32x32.png') }}"
+        type="image/x-icon" />
+
+    {{-- select2 --}}
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
 </head>
 
 <body class="font-sans bg-n-10 antialiased overflow-x-hidden">
-  <div id="app">
-    <web-header></web-header>
-    @yield('content')
-    <web-footer></web-footer>
-  </div>
+    <div id="app">
+        <web-header></web-header>
+        @yield('content')
+        <web-footer></web-footer>
+    </div>
 </body>
 
 </html>

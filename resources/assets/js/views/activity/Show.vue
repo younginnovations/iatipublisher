@@ -1,6 +1,11 @@
 <template>
   <div class="bg-paper px-10 pt-4 pb-[71px]">
     <!-- title section -->
+    <Toast
+      v-if="toast.visibility"
+      :message="toast.message"
+      :type="toast.type"
+    ></Toast>
     <div class="page-title mb-6">
       <div class="flex items-end gap-4">
         <div class="title grow-0">
@@ -237,13 +242,13 @@
             </div>
           </div>
         </div>
-        <Elements :data="elements" />
+        <Elements :data="elements" :activity-id="activity.id" />
       </aside>
       <div class="activities__content">
         <div class="inline-flex flex-wrap gap-2">
           <a
             v-for="(post, key, index) in groupedData"
-            :key="key"
+            :key="index"
             v-smooth-scroll
             :href="`#${key}`"
             class="tab-btn-anchor"
@@ -263,8 +268,8 @@
         </div>
 
         <div class="activities__content--elements -mx-3 flex flex-wrap">
-          <template v-for="(post, key, index) in activities">
-            <template v-for="(element, name, i) in post.elements">
+          <template v-for="(post, key, index) in activities" :key="index">
+            <template v-for="(element, name, i) in post.elements" :key="i">
               <ActivityElement
                 v-if="Object.keys(element.content).length > 0"
                 :id="key"
@@ -285,7 +290,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, onMounted, reactive, ref } from 'vue';
 import { useToggle } from '@vueuse/core';
 import HoverText from '../../components/HoverText.vue';
 import ProgressBar from '../../components/ProgressBar.vue';
@@ -293,6 +298,7 @@ import Elements from './partials/ActivitiesElements.vue';
 import ActivityElement from './partials/ActivityElement.vue';
 import Modal from '../../components/PopupModal.vue';
 import BtnComponent from '../../components/ButtonComponent.vue';
+import Toast from '../../components/Toast.vue';
 
 export default defineComponent({
   components: {
@@ -302,6 +308,7 @@ export default defineComponent({
     ActivityElement,
     Modal,
     BtnComponent,
+    Toast,
   },
   props: {
     elements: {
@@ -322,6 +329,12 @@ export default defineComponent({
     },
   },
   setup(props) {
+    const toast = reactive({
+      visibility: false,
+      message: '',
+      type: true,
+    });
+
     /**
      * For modal popup
      */
@@ -395,6 +408,7 @@ export default defineComponent({
       deleteToggle,
       downloadValue,
       downloadToggle,
+      toast,
     };
   },
 });

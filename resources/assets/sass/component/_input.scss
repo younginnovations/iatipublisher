@@ -30,6 +30,11 @@
   font-weight: normal;
   font-size: 12px;
 }
+.has_error {
+  .form__input {
+    @apply border border-crimson-50;
+  }
+}
 .form__input {
   @apply my-2 box-border w-full rounded border border-n-30 outline-none duration-300;
   padding: 13px 0 13px 16px;

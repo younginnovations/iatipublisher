@@ -1,0 +1,691 @@
+{
+  "title": {
+    "sub_elements": {
+      "narrative": {
+        "name": "narrative",
+        "type": "text",
+        "required": true,
+        "criteria": "mandatory",
+        "label": "Text",
+        "hover_text" : "The free text name or description of the item being described. This can be repeated in multiple languages. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/title/narrative/'> For more information </a>",
+        "help_text" : "",
+        "attr": {
+          "row": 4
+        },
+        "attributes": {
+          "lang": {
+            "name": "language",
+            "type": "select",
+            "multiSelect": false,
+            "required": true,
+            "criteria": "mandatory",
+            "label": "@xml:lang",
+            "hover_text" : "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/title/narrative/' target='_blank'>For more information</a>",
+            "help_text" : "",
+            "choices": {
+              "aa": "Afar",
+              "ab": "Abkhazian",
+              "en": "English",
+              "fr": "French",
+              "sp": "Spanish"
+            }
+          }
+        }
+      }
+    },
+    "criteria": "mandatory",
+    "label": "Title",
+    "multiple": false
+  },
+  "reporting-org": {
+    "sub-elements": {
+      "narrative": {
+        "type": "text",
+        "required": true,
+        "criteria": "mandatory",
+        "label": "Narrative",
+        "attributes": {
+          "lang": {
+            "type": "select",
+            "required": true,
+            "criteria": "mandatory",
+            "label": "Language",
+            "value": [
+              "en",
+              "fr",
+              "sp"
+            ]
+          }
+        }
+      }
+    },
+    "attributes": {
+      "ref": {
+        "type": "text",
+        "label": "ORGANISATION NAME ABBREVIATION",
+        "value": null,
+        "require": true,
+        "criteria": null
+      },
+      "type": {},
+      "secondary-reporter": {}
+    },
+    "criteria": "mandatory",
+    "label": "Title"
+  },
+  "activity-identifier": {
+    "type": "text",
+    "required": true,
+    "criteria": "mandatory",
+    "label": "Activity Identifier"
+  },
+  "other-identifier": {
+    "criteria": "",
+    "label": "Other Identifier",
+    "attributes": {
+      "reference": {
+        "type": "text",
+        "required": true,
+        "criteria": "mandatory",
+        "label": "Reference"
+      },
+      "reference_type": {
+        "type": "select",
+        "required": true,
+        "criteria": "mandatory",
+        "label": "Reference Type"
+      }
+    },
+    "sub-elements": {
+      "owner-org": {
+        "criteria": "",
+        "label": "Owner Organisation",
+        "attributes": {
+          "reference": {
+            "type": "text",
+            "required": false,
+            "label": "Reference",
+            "criteria": ""
+          }
+        },
+        "sub-elements": {
+          "narrative": {
+            "type": "text",
+            "required": false,
+            "label": "Narrative",
+            "criteria": "",
+            "attributes": {
+              "lang": {
+                "type": "select",
+                "required": false,
+                "label": "Language",
+                "criteria": ""
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "description": {
+    "label": "Description",
+    "criteria": "mandatory",
+    "attributes": {
+      "description_type": {
+        "type": "select",
+        "required": true,
+        "label": "Type",
+        "criteria": "mandatory"
+      }
+    },
+    "sub-elements": {
+      "narrative": {
+        "type": "text",
+        "required": true,
+        "criteria": "mandatory",
+        "label": "Narrative",
+        "attributes": {
+          "lang": {
+            "type": "select",
+            "required": true,
+            "criteria": "mandatory",
+            "label": "Language"
+          }
+        }
+      }
+    }
+  },
+  "activity_status": {
+    "label": "Activity Status",
+    "criteria": "mandatory",
+    "attributes": {
+      "code": {
+        "type": "select",
+        "required": true,
+        "criteria": "mandatory",
+        "label": "Code"
+      }
+    }
+  },
+  "activity_date": {
+    "label": "Activity Date",
+    "criteria": "mandatory",
+    "attributes": {
+      "date_type": {
+        "type": "select",
+        "required": true,
+        "criteria": "mandatory",
+        "label": "Activity Date Type"
+      },
+      "iso-date": {
+        "type": "date",
+        "required": true,
+        "criteria": "mandatory",
+        "label": "Activity Date"
+      }
+    },
+    "sub-elements": {
+      "narrative": {
+        "type": "text",
+        "required": false,
+        "label": "Narrative",
+        "criteria": "",
+        "attributes": {
+          "lang": {
+            "type": "select",
+            "required": false,
+            "label": "Language",
+            "criteria": ""
+          }
+        }
+      }
+    }
+  },
+  "activity-scope": {
+    "label": "Activity Scope",
+    "criteria": "",
+    "attributes": {
+      "code": {
+        "required": true,
+        "criteria": "mandatory",
+        "label": "Activity Scope Code",
+        "type": "select"
+      }
+    }
+  },
+  "recipient-country": {
+    "label": "Recipient Country",
+    "criteria": "recommended",
+    "attributes": {
+      "code": {
+        "type": "select",
+        "required": true,
+        "criteria": "mandatory",
+        "label": "Recipient Country Code"
+      },
+      "percentage": {
+        "type": "text",
+        "criteria": "recommended",
+        "required": false,
+        "label": "Percentage"
+      }
+    },
+    "sub-elements": {
+      "narrative": {
+        "type": "text",
+        "required": false,
+        "criteria": "",
+        "label": "Narrative",
+        "attributes": {
+          "lang": {
+            "type": "select",
+            "required": false,
+            "criteria": "",
+            "label": "Language"
+          }
+        }
+      }
+    }
+  },
+  "recipient-region": {
+    "label": "Recipient Region",
+    "criteria": "recommended",
+    "attributes": {
+      "code": {
+        "type": "select",
+        "required": true,
+        "criteria": "mandatory",
+        "label": "Recipient Region Code"
+      },
+      "percentage": {
+        "type": "text",
+        "criteria": "recommended",
+        "required": false,
+        "label": "Percentage"
+      },
+      "vocabulary": {
+        "label": "Recipient Region Vocabulary",
+        "criteria": "recommended",
+        "required": true,
+        "type": "select"
+      },
+      "vocabulary-uri": {
+        "label": "Recipient Region Vocabulary Uri",
+        "criteria": "recommended",
+        "required": false,
+        "type": "text"
+      }
+    },
+    "sub-elements": {
+      "narrative": {
+        "type": "text",
+        "required": false,
+        "criteria": "",
+        "label": "Narrative",
+        "attributes": {
+          "lang": {
+            "type": "select",
+            "required": false,
+            "criteria": "",
+            "label": "Language"
+          }
+        }
+      }
+    }
+  },
+  "sector": {
+    "label": "Activity Sector",
+    "criteria": "mandatory",
+    "attributes": {
+      "code": {
+        "type": "select",
+        "required": true,
+        "criteria": "mandatory",
+        "label": "Sector Code"
+      },
+      "percentage": {
+        "type": "text",
+        "criteria": "recommended",
+        "required": false,
+        "label": "Percentage"
+      },
+      "vocabulary": {
+        "label": "Sector Vocabulary",
+        "criteria": "recommended",
+        "required": true,
+        "type": "select"
+      },
+      "vocabulary-uri": {
+        "label": "Sector Vocabulary Uri",
+        "criteria": "recommended",
+        "required": false,
+        "type": "text"
+      }
+    },
+    "sub-elements": {
+      "narrative": {
+        "type": "text",
+        "required": false,
+        "criteria": "recommended",
+        "label": "Narrative",
+        "attributes": {
+          "lang": {
+            "type": "select",
+            "required": false,
+            "criteria": "",
+            "label": "Language"
+          }
+        }
+      }
+    }
+  },
+  "tag": {
+    "label": "Activity Tag",
+    "criteria": "",
+    "attributes": {
+      "code": {
+        "type": "select",
+        "required": true,
+        "criteria": "",
+        "label": "Tag Code"
+      },
+      "vocabulary": {
+        "label": "Tag Vocabulary",
+        "criteria": "",
+        "required": true,
+        "type": "select"
+      },
+      "vocabulary-uri": {
+        "label": "Tag Vocabulary Uri",
+        "criteria": "",
+        "required": false,
+        "type": "text"
+      }
+    },
+    "sub-elements": {
+      "narrative": {
+        "type": "text",
+        "required": false,
+        "criteria": "",
+        "label": "Narrative",
+        "attributes": {
+          "lang": {
+            "type": "select",
+            "required": false,
+            "criteria": "",
+            "label": "Language"
+          }
+        }
+      }
+    }
+  },
+  "policy-marker": {
+    "label": "Activity Policy Marker",
+    "criteria": "",
+    "attributes": {
+      "code": {
+        "type": "select",
+        "required": true,
+        "criteria": "",
+        "label": "Policy Marker Code"
+      },
+      "vocabulary": {
+        "label": "Policy Marker Vocabulary",
+        "criteria": "",
+        "required": false,
+        "type": "select"
+      },
+      "vocabulary-uri": {
+        "label": "Policy Marker Uri",
+        "criteria": "",
+        "required": false,
+        "type": "text"
+      },
+      "significance": {
+        "type": "select",
+        "required": false,
+        "criteria": "",
+        "label": "Policy Marker Significance"
+      }
+    },
+    "sub-elements": {
+      "narrative": {
+        "type": "text",
+        "required": false,
+        "criteria": "",
+        "label": "Narrative",
+        "attributes": {
+          "lang": {
+            "type": "select",
+            "required": false,
+            "criteria": "",
+            "label": "Language"
+          }
+        }
+      }
+    }
+  },
+  "collaboration-type": {
+    "label": "Activity Collaboration Type",
+    "criteria": "recommended",
+    "attributes": {
+      "code": {
+        "label": "Code",
+        "criteria": "recommended",
+        "required": true,
+        "type": "select"
+      }
+    }
+  },
+  "default-flow-type": {
+    "label": "Activity Default Flow Type",
+    "criteria": "recommended",
+    "attributes": {
+      "code": {
+        "label": "Code",
+        "criteria": "recommended",
+        "required": true,
+        "type": "select"
+      }
+    }
+  },
+  "default-finance-type": {
+    "label": "Activity Default Finance Type",
+    "criteria": "recommended",
+    "attributes": {
+      "code": {
+        "label": "Code",
+        "criteria": "recommended",
+        "required": true,
+        "type": "select"
+      }
+    }
+  },
+  "default-aid-type": {
+    "label": "Activity Default Aid Type",
+    "criteria": "recommended",
+    "attributes": {
+      "code": {
+        "label": "Code",
+        "criteria": "recommended",
+        "required": true,
+        "type": "select"
+      },
+      "vocabulary": {
+        "label": "Default Aid Type Vocabulary",
+        "criteria": "",
+        "required": true,
+        "type": "select"
+      }
+    }
+  },
+  "default-tied-status": {
+    "label": "Activity Default Tied Status",
+    "criteria": "recommended",
+    "attributes": {
+      "code": {
+        "label": "Code",
+        "criteria": "mandatory",
+        "required": true,
+        "type": "select"
+      }
+    }
+  },
+  "country-budget-items": {
+    "label": "Activity Country Budget Items",
+    "criteria": "",
+    "attributes": {
+      "vocabulary": {
+        "label": "Country Budget Items Vocabulary",
+        "criteria": "",
+        "required": true,
+        "type": "select"
+      },
+      "sub-elements": {
+        "budget-item": {
+          "label": "Budget Item",
+          "criteria": "",
+          "attributes": {
+            "code": {
+              "type": "select",
+              "required": true,
+              "criteria": "",
+              "label": "Code"
+            },
+            "percentage": {
+              "type": "text",
+              "criteria": "",
+              "required": false,
+              "label": "Percentage"
+            }
+          },
+          "sub-elements": {
+            "description": {
+              "label": "Description",
+              "criteria": "",
+              "sub-elements": {
+                "narrative": {
+                  "type": "text",
+                  "required": false,
+                  "criteria": "",
+                  "label": "Narrative",
+                  "attributes": {
+                    "lang": {
+                      "type": "select",
+                      "required": false,
+                      "criteria": "",
+                      "label": "Language"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "humanitarian-scope": {
+    "label": "Activity Humanitarian Scope",
+    "criteria": "",
+    "attributes": {
+      "type": {
+        "type": "select",
+        "criteria": "mandatory",
+        "required": true,
+        "label": "Type"
+      },
+      "code": {
+        "type": "text",
+        "required": true,
+        "criteria": "",
+        "label": "Code"
+      },
+      "vocabulary": {
+        "label": "Vocabulary",
+        "criteria": "mandatory",
+        "required": true,
+        "type": "select"
+      },
+      "vocabulary-uri": {
+        "label": "Vocabulary Uri",
+        "criteria": "",
+        "required": false,
+        "type": "text"
+      }
+    },
+    "sub-elements": {
+      "narrative": {
+        "type": "text",
+        "required": false,
+        "criteria": "",
+        "label": "Narrative",
+        "attributes": {
+          "lang": {
+            "type": "select",
+            "required": false,
+            "criteria": "mandatory",
+            "label": "Language"
+          }
+        }
+      }
+    }
+  },
+  "capital-spend": {
+    "label": "Activity Capital Spend",
+    "criteria": "",
+    "attributes": {
+      "percentage": {
+        "label": "Percentage",
+        "criteria": "",
+        "required": true,
+        "type": "text"
+      }
+    }
+  },
+  "related-activity": {
+    "label": "Related Activity",
+    "criteria": "",
+    "attributes": {
+      "reference": {
+        "label": "Reference",
+        "criteria": "",
+        "required": true,
+        "type": "text"
+      },
+      "type": {
+        "label": "Type",
+        "criteria": "",
+        "required": true,
+        "type": "select"
+      }
+    }
+  },
+  "conditions": {
+    "label": "Activity Conditions",
+    "criteria": "",
+    "attributes": {
+      "attached": {
+        "label": "Attached",
+        "criteria": "",
+        "required": true,
+        "type": "select"
+      }
+    },
+    "sub-elements": {
+      "condition": {
+        "label": "Condition",
+        "criteria": "",
+        "required": false,
+        "attributes": {
+          "condition_type": {
+            "label": "Type",
+            "criteria": "",
+            "required": false,
+            "type": "select"
+          }
+        },
+        "sub-elements": {
+          "narrative": {
+            "type": "text",
+            "required": false,
+            "criteria": "",
+            "label": "Narrative",
+            "attributes": {
+              "lang": {
+                "type": "select",
+                "required": false,
+                "criteria": "",
+                "label": "Language"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "legacy-data": {
+    "label": "Activity Legacy Data",
+    "criteria": "",
+    "attributes": {
+      "name": {
+        "label": "Name",
+        "criteria": "",
+        "required": true,
+        "type": "text"
+      },
+      "value": {
+        "label": "Value",
+        "criteria": "",
+        "required": true,
+        "type": "text"
+      },
+      "iati-equivalent": {
+        "label": "IATI Equivalent",
+        "criteria": "",
+        "required": false,
+        "type": "text"
+      }
+    }
+  }
+}
