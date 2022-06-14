@@ -6,6 +6,9 @@ namespace App\Http\Requests\Activity\LegacyData;
 
 use App\Http\Requests\Activity\ActivityBaseRequest;
 
+/**
+ * Class LegacyDataRequest.
+ */
 class LegacyDataRequest extends ActivityBaseRequest
 {
     /**

@@ -1,15 +1,22 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\IATI\Elements\Forms;
 
 use Kris\LaravelFormBuilder\Form;
 
+/**
+ * Class WrapperCollectionForm.
+ */
 class WrapperCollectionForm extends Form
 {
     /**
+     * Builds wrapper collection form.
+     *
      * @return mixed|void
      */
-    public function buildForm()
+    public function buildForm(): void
     {
         $data = $this->getData();
 

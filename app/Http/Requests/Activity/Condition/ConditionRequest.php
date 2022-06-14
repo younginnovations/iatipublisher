@@ -6,6 +6,9 @@ namespace App\Http\Requests\Activity\Condition;
 
 use App\Http\Requests\Activity\ActivityBaseRequest;
 
+/**
+ * Class ConditionRequest.
+ */
 class ConditionRequest extends ActivityBaseRequest
 {
     /**
@@ -30,7 +33,9 @@ class ConditionRequest extends ActivityBaseRequest
 
     /**
      * Returns rules for related activity.
+     *
      * @param array $formFields
+     *
      * @return array
      */
     protected function getRulesForCondition(array $formFields): array
@@ -56,7 +61,9 @@ class ConditionRequest extends ActivityBaseRequest
 
     /**
      * Returns messages for related activity validations.
+     *
      * @param array $formFields
+     *
      * @return array
      */
     protected function getMessagesForCondition(array $formFields): array

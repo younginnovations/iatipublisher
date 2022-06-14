@@ -7,6 +7,9 @@ namespace App\Http\Requests\Activity\CountryBudgetItem;
 use App\Http\Requests\Activity\ActivityBaseRequest;
 use Illuminate\Support\Arr;
 
+/**
+ * Class CountryBudgetItemRequest.
+ */
 class CountryBudgetItemRequest extends ActivityBaseRequest
 {
     /**
@@ -31,7 +34,9 @@ class CountryBudgetItemRequest extends ActivityBaseRequest
 
     /**
      * Returns rules for related activity.
+     *
      * @param array $formFields
+     *
      * @return array
      */
     protected function getRulesForCountryBudgetItem(array $formFields): array
@@ -50,7 +55,9 @@ class CountryBudgetItemRequest extends ActivityBaseRequest
 
     /**
      * Returns messages for related activity validations.
+     *
      * @param array $formFields
+     *
      * @return array
      */
     protected function getMessagesForCountryBudgetItem(array $formFields): array
@@ -69,8 +76,10 @@ class CountryBudgetItemRequest extends ActivityBaseRequest
 
     /**
      * returns budget item validation rules.
+     *
      * @param $formFields
      * @param $code
+     *
      * @return array
      */
     public function getBudgetItemRules(array $formFields, $code)
@@ -96,8 +105,10 @@ class CountryBudgetItemRequest extends ActivityBaseRequest
 
     /**
      * return budget item error message.
+     *
      * @param $formFields
      * @param $code
+     *
      * @return array
      */
     public function getBudgetItemMessages(array $formFields, $code)
@@ -122,8 +133,10 @@ class CountryBudgetItemRequest extends ActivityBaseRequest
 
     /**
      * return budget item description rule.
+     *
      * @param $formFields
      * @param $formBase
+     *
      * @return array
      */
     public function getBudgetItemDescriptionRules(array $formFields, $formBase)
@@ -140,8 +153,10 @@ class CountryBudgetItemRequest extends ActivityBaseRequest
 
     /**
      * return budget item description error message.
+     *
      * @param $formFields
      * @param $formBase
+     *
      * @return array
      */
     public function getBudgetItemDescriptionMessages(array $formFields, $formBase)
@@ -157,7 +172,9 @@ class CountryBudgetItemRequest extends ActivityBaseRequest
     }
 
     /** Returns rules for percentage.
+     *
      * @param $countryBudget
+     *
      * @return array
      */
     protected function getRulesForPercentage($countryBudget)

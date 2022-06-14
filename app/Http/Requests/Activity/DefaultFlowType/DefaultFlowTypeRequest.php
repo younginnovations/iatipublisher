@@ -4,6 +4,9 @@ namespace App\Http\Requests\Activity\DefaultFlowType;
 
 use App\Http\Requests\Activity\ActivityBaseRequest;
 
+/**
+ * Class DefaultFlowTypeRequest.
+ */
 class DefaultFlowTypeRequest extends ActivityBaseRequest
 {
     /**

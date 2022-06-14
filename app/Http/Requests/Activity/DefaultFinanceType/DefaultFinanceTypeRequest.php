@@ -4,6 +4,9 @@ namespace App\Http\Requests\Activity\DefaultFinanceType;
 
 use App\Http\Requests\Activity\ActivityBaseRequest;
 
+/**
+ * Class DefaultFinanceTypeRequest.
+ */
 class DefaultFinanceTypeRequest extends ActivityBaseRequest
 {
     /**

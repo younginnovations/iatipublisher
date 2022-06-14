@@ -6,6 +6,9 @@ namespace App\Http\Requests\Activity\RecipientCountry;
 
 use App\Http\Requests\Activity\ActivityBaseRequest;
 
+/**
+ * Class RecipientCountryRequest.
+ */
 class RecipientCountryRequest extends ActivityBaseRequest
 {
     /**
@@ -45,6 +48,7 @@ class RecipientCountryRequest extends ActivityBaseRequest
             if (count($formFields) > 1) {
                 $rules[$recipientCountryForm . '.percentage'] = 'required|numeric|max:100';
             }
+
             $rules = array_merge(
                 $rules,
                 $this->getRulesForNarrative(

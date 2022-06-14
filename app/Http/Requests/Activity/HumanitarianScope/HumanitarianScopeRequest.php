@@ -7,6 +7,9 @@ namespace App\Http\Requests\Activity\HumanitarianScope;
 use App\Http\Requests\Activity\ActivityBaseRequest;
 use Illuminate\Support\Arr;
 
+/**
+ * Class HumanitarianScopeRequest.
+ */
 class HumanitarianScopeRequest extends ActivityBaseRequest
 {
     /**

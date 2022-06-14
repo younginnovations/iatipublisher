@@ -4,6 +4,9 @@ namespace App\Http\Requests\Activity\Scope;
 
 use App\Http\Requests\Activity\ActivityBaseRequest;
 
+/**
+ * Class ScopeRequest.
+ */
 class ScopeRequest extends ActivityBaseRequest
 {
     /**

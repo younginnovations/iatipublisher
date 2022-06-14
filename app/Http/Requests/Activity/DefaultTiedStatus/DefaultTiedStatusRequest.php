@@ -4,6 +4,9 @@ namespace App\Http\Requests\Activity\DefaultTiedStatus;
 
 use App\Http\Requests\Activity\ActivityBaseRequest;
 
+/**
+ * Class DefaultTiedStatusRequest.
+ */
 class DefaultTiedStatusRequest extends ActivityBaseRequest
 {
     /**

@@ -6,6 +6,9 @@ namespace App\Http\Requests\Activity\RelatedActivity;
 
 use App\Http\Requests\Activity\ActivityBaseRequest;
 
+/**
+ * Class RelatedActivityRequest.
+ */
 class RelatedActivityRequest extends ActivityBaseRequest
 {
     /**

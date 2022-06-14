@@ -4,6 +4,9 @@ namespace App\Http\Requests\Activity\CollaborationType;
 
 use App\Http\Requests\Activity\ActivityBaseRequest;
 
+/**
+ * Class CollaborationTypeRequest.
+ */
 class CollaborationTypeRequest extends ActivityBaseRequest
 {
     /**

@@ -6,6 +6,9 @@ namespace App\Http\Requests\Activity\Description;
 
 use App\Http\Requests\Activity\ActivityBaseRequest;
 
+/**
+ * Class DescriptionRequest.
+ */
 class DescriptionRequest extends ActivityBaseRequest
 {
     /**

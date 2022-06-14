@@ -4,6 +4,9 @@ namespace App\Http\Requests\Activity\CapitalSpend;
 
 use App\Http\Requests\Activity\ActivityBaseRequest;
 
+/**
+ * Class CapitalSpendRequest.
+ */
 class CapitalSpendRequest extends ActivityBaseRequest
 {
     /**

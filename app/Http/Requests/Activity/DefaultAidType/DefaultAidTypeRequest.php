@@ -4,6 +4,9 @@ namespace App\Http\Requests\Activity\DefaultAidType;
 
 use App\Http\Requests\Activity\ActivityBaseRequest;
 
+/**
+ * Class DefaultAidTypeRequest.
+ */
 class DefaultAidTypeRequest extends ActivityBaseRequest
 {
     /**

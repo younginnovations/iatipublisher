@@ -6,6 +6,9 @@ namespace App\Http\Requests\Activity\Date;
 
 use App\Http\Requests\Activity\ActivityBaseRequest;
 
+/**
+ * Class DateRequest.
+ */
 class DateRequest extends ActivityBaseRequest
 {
     /**
@@ -30,7 +33,9 @@ class DateRequest extends ActivityBaseRequest
 
     /**
      * Returns rules for related activity.
+     *
      * @param array $formFields
+     *
      * @return array
      */
     protected function getRulesForDate(array $formFields): array
@@ -52,7 +57,9 @@ class DateRequest extends ActivityBaseRequest
 
     /**
      * Returns messages for related activity validations.
+     *
      * @param array $formFields
+     *
      * @return array
      */
     protected function getMessagesForDate(array $formFields): array

@@ -21,11 +21,14 @@ class ActivityBaseRequest extends FormRequest
             'unique_lang',
             function ($attribute, $value) {
                 $languages = [];
+
                 foreach ($value as $narrative) {
                     $language = $narrative['language'];
+
                     if (in_array($language, $languages)) {
                         return false;
                     }
+
                     $languages[] = $language;
                 }
 
@@ -47,6 +50,7 @@ class ActivityBaseRequest extends FormRequest
                 );
 
                 $check = true;
+
                 foreach ($value as $narrative) {
                     $languages[] = $narrative['language'];
                 }
@@ -80,11 +84,13 @@ class ActivityBaseRequest extends FormRequest
 
     /**
      * returns rules for narrative if narrative is required.
+     *
      * @param      $formFields
      * @param      $formBase
+     *
      * @return array
      */
-    public function getRulesForRequiredNarrative($formFields, $formBase)
+    public function getRulesForRequiredNarrative($formFields, $formBase): array
     {
         $rules = [];
         $rules[sprintf('%s.narrative', $formBase)][] = 'unique_lang';
@@ -107,11 +113,13 @@ class ActivityBaseRequest extends FormRequest
 
     /**
      * get message for narrative.
+     *
      * @param $formFields
      * @param $formBase
+     *
      * @return array
      */
-    public function getMessagesForRequiredNarrative($formFields, $formBase)
+    public function getMessagesForRequiredNarrative($formFields, $formBase): array
     {
         $messages = [];
         $messages[sprintf('%s.narrative.unique_lang', $formBase)] = 'The @xml:lang field must be unique.';
@@ -137,15 +145,18 @@ class ActivityBaseRequest extends FormRequest
 
     /**
      * returns rules for narrative.
+     *
      * @param      $formFields
      * @param      $formBase
+     *
      * @return array
      */
-    public function getRulesForNarrative($formFields, $formBase)
+    public function getRulesForNarrative($formFields, $formBase): array
     {
         $rules = [];
         $rules[sprintf('%s.narrative', $formBase)][] = 'unique_lang';
         $rules[sprintf('%s.narrative', $formBase)][] = 'unique_default_lang';
+
         foreach ($formFields as $narrativeIndex => $narrative) {
             $rules[sprintf('%s.narrative.%s.narrative', $formBase, $narrativeIndex)][] = 'required_with:' . sprintf(
                 '%s.narrative.%s.language',
@@ -159,14 +170,17 @@ class ActivityBaseRequest extends FormRequest
 
     /**
      * returns messages for narrative.
+     *
      * @param $formFields
      * @param $formBase
+     *
      * @return array
      */
-    public function getMessagesForNarrative($formFields, $formBase)
+    public function getMessagesForNarrative($formFields, $formBase): array
     {
         $messages = [];
         $messages[sprintf('%s.narrative.unique_lang', $formBase)] = 'The @xml:lang field must be unique.';
+
         foreach ($formFields as $narrativeIndex => $narrative) {
             $messages[sprintf(
                 '%s.narrative.%s.narrative.required_with',

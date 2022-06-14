@@ -4,6 +4,9 @@ namespace App\Http\Requests\Activity\Status;
 
 use App\Http\Requests\Activity\ActivityBaseRequest;
 
+/**
+ * Class StatusRequest.
+ */
 class StatusRequest extends ActivityBaseRequest
 {
     /**

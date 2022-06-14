@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Requests\Setting;
 
 use Illuminate\Foundation\Http\FormRequest;
@@ -9,7 +11,7 @@ use Illuminate\Foundation\Http\FormRequest;
  */
 class DefaultFormRequest extends FormRequest
 {
-    public function authorize()
+    public function authorize(): bool
     {
         return true;
     }
@@ -19,7 +21,7 @@ class DefaultFormRequest extends FormRequest
      *
      * @return array
      */
-    public function rules()
+    public function rules(): array
     {
         return [
             'default_currency' => 'sometimes',

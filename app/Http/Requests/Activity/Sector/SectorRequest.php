@@ -6,6 +6,9 @@ namespace App\Http\Requests\Activity\Sector;
 
 use App\Http\Requests\Activity\ActivityBaseRequest;
 
+/**
+ * Class SectorRequest.
+ */
 class SectorRequest extends ActivityBaseRequest
 {
     /**
