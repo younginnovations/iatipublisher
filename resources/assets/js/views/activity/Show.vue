@@ -242,13 +242,13 @@
             </div>
           </div>
         </div>
-        <Elements :data="elements" :activity-id="activityId" />
+        <Elements :data="elements" :activity-id="activity.id" />
       </aside>
       <div class="activities__content">
         <div class="inline-flex flex-wrap gap-2">
           <a
             v-for="(post, key, index) in groupedData"
-            :key="key"
+            :key="index"
             v-smooth-scroll
             :href="`#${key}`"
             class="tab-btn-anchor"
@@ -408,6 +408,7 @@ export default defineComponent({
       deleteToggle,
       downloadValue,
       downloadToggle,
+      toast,
     };
   },
 });
