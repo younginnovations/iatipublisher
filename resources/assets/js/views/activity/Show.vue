@@ -278,6 +278,7 @@
                 "
                 :id="key"
                 :data="element"
+                :types="props.types"
                 :title="name"
                 :width="
                   name === 'title' || name === 'description' ? 'full' : ''
@@ -331,6 +332,10 @@ export default defineComponent({
       required: true,
     },
     toast: {
+      type: Object,
+      required: true,
+    },
+    types: {
       type: Object,
       required: true,
     },
@@ -429,6 +434,7 @@ export default defineComponent({
       downloadValue,
       downloadToggle,
       toast,
+      props
     };
   },
 });

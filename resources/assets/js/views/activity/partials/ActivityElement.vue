@@ -50,7 +50,15 @@
         <div class="icons flex">
           <a
             :href="`/activities/1/${title}`"
-            class="edit-button mr-2.5 flex items-center text-xs font-bold uppercase"
+            class="
+              edit-button
+              mr-2.5
+              flex
+              items-center
+              text-xs
+              font-bold
+              uppercase
+            "
           >
             <svg-vue class="mr-0.5 text-base" icon="edit"></svg-vue>
             <span>Edit</span>
@@ -100,10 +108,7 @@
           :class="{ 'mb-4': key !== data.content.length - 1 }"
         >
           <div class="description-type mb-4 text-sm font-bold">
-            <span v-if="post.type === '1'">General Description</span>
-            <span v-else-if="post.type === '2'">Objective Description</span>
-            <span v-else-if="post.type === '3'">Target Groups Description</span>
-            <span v-else>Other Description</span>
+            {{ props.types.descriptionType[post.type] }}
           </div>
           <div
             v-for="(item, i) in post.narrative"
@@ -128,10 +133,7 @@
           :class="{ 'mb-4': key !== data.content.length - 1 }"
         >
           <div class="date-type mb-4 flex gap-1 text-sm font-bold">
-            <span v-if="post.type === '1'">Planned start date:</span>
-            <span v-else-if="post.type === '2'">Actual start date:</span>
-            <span v-else-if="post.type === '3'">Planned start date:</span>
-            <span v-else>Actual end date:</span>
+            {{ props.types.activityDate[post.type] }}
             <span class="text-sm font-normal italic text-n-30">{{
               post.date
             }}</span>
@@ -191,11 +193,7 @@
         >
           <div class="related-content">
             <div class="type mb-1.5 text-sm italic text-n-30">
-              <span v-if="post.relationship_type === '1'">Parent</span>
-              <span v-else-if="post.relationship_type === '2'">Child</span>
-              <span v-else-if="post.relationship_type === '3'">Sibling</span>
-              <span v-else-if="post.relationship_type === '4'">Co-funded</span>
-              <span v-else>Third Party</span>
+              {{ props.types.relatedActivityType[post.relationship_type] }}
             </div>
             <div class="text-sm">@ref: {{ post.activity_identifier }}</div>
           </div>
@@ -233,11 +231,7 @@
             :class="{ 'mb-4': key !== data.content.condition.length - 1 }"
           >
             <div class="mb-4 text-sm font-bold">
-              <span v-if="post.condition_type === '1'">Policy Condition:</span>
-              <span v-else-if="post.condition_type === '2'"
-                >Performance Condition:</span
-              >
-              <span v-else>Fiduciary Condition</span>
+              {{ props.types.conditionType[post.condition_type] }}
             </div>
             <div
               v-for="(item, i) in post.narrative"
@@ -259,70 +253,23 @@
       <template v-else>
         <div class="content text-sm">
           <template v-if="title === 'activity_status'">
-            <span v-if="data.content === 1">Pipeline/identification</span>
-            <span v-else-if="data.content === 2">Implementation</span>
-            <span v-else-if="data.content === 3">Finalisation</span>
-            <span v-else-if="data.content === 4">Closed</span>
-            <span v-else-if="data.content === 5">Cancelled</span>
-            <span v-else>Suspended</span>
+            {{ props.types.activityStatus[data.content] }}
           </template>
 
           <template v-else-if="title === 'activity_scope'">
-            <span v-if="data.content === 1">Global</span>
-            <span v-else-if="data.content === 2">Regional</span>
-            <span v-else-if="data.content === 3">Multi-national</span>
-            <span v-else-if="data.content === 4">National</span>
-            <span v-else-if="data.content === 5"
-              >Sub-national: Multi-first-level administrative areas</span
-            >
-            <span v-else-if="data.content === 6"
-              >Sub-national: Single first-level administrative area</span
-            >
-            <span v-else-if="data.content === 7"
-              >Sub-national: Single second-level administrative area</span
-            >
-            <span v-else>Single location</span>
+            {{ props.types.activityScope[data.content] }}
           </template>
 
           <template v-else-if="title === 'collaboration_type'">
-            <span v-if="data.content === 1">Bilateral</span>
-            <span v-else-if="data.content === 2">Multilateral (inflows)</span>
-            <span v-else-if="data.content === 3"
-              >Bilateral, core contributions to NGOs and other private bodies /
-              PPPs</span
-            >
-            <span v-else-if="data.content === 4">Multilateral outflows</span>
-            <span v-else-if="data.content === 6">Private sector outflows</span>
-            <span v-else-if="data.content === 7"
-              >Bilateral, ex-post reporting on NGOs' activities funded through
-              core contributions</span
-            >
-            <span v-else>Bilateral, triangular co-operation</span>
+            {{ props.types.collaborationType[data.content] }}
           </template>
 
           <template v-else-if="title === 'default_flow_type'">
-            <span v-if="data.content === 10">ODA</span>
-            <span v-else-if="data.content === 20">OOF</span>
-            <span v-else-if="data.content === 21">Non-export credit OOF</span>
-            <span v-else-if="data.content === 22"
-              >Officially supported export credits</span
-            >
-            <span v-else-if="data.content === 30">Private grants</span>
-            <span v-else-if="data.content === 35">Private market</span>
-            <span v-else-if="data.content === 36"
-              >Private Foreign Direct Investment</span
-            >
-            <span v-else-if="data.content === 37"
-              >Other Private flows at market terms</span
-            >
-            <span v-else-if="data.content === 40">Non flow</span>
-            <span v-else>Other flows</span>
+            {{ props.types.flowType[data.content] }}
           </template>
 
           <template v-else-if="title === 'default_tied_status'">
-            <span v-if="data.content === 3">Partially tied</span>
-            <span v-else-if="data.content === 4">Tied</span>
-            <span v-else>Untied</span>
+            {{ props.types.tiedStatus[data.content] }}
           </template>
 
           <template v-else-if="title === 'capital_spend'">
@@ -330,7 +277,7 @@
           </template>
 
           <template v-else-if="title === 'default_finance_type'">
-            <span>{{ data.content }}</span>
+            <span> {{ props.types.financeType[data.content] }}</span>
           </template>
 
           <template v-else>
@@ -366,6 +313,10 @@ export default defineComponent({
       type: String,
       required: false,
     },
+    types: {
+      type: Object,
+      required: true,
+    },
   },
   setup(props) {
     const status = '';
@@ -374,7 +325,7 @@ export default defineComponent({
       layout = 'basis-full';
     }
 
-    return { layout, status };
+    return { layout, status, props };
   },
 });
 </script>
