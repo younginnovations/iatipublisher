@@ -14,7 +14,7 @@
           <div class="hidden sm:block">
             <span class="flex">
               {{
-                page === 'Join Now'
+                pageContent === 'Join Now'
                   ? "Haven't registered yet?"
                   : 'Already have an account?'
               }}
@@ -22,15 +22,15 @@
                 class="ml-1 border-b-2 border-b-transparent text-base text-turquoise hover:border-b-2 hover:border-b-turquoise"
                 @click="togglePage"
               >
-                {{ page }}
+                {{ pageContent }}
               </button>
             </span>
           </div>
         </div>
       </div>
 
-      <SignIn v-if="page === 'Join Now'"></SignIn>
-      <JoinNow v-else></JoinNow>
+      <SignIn v-if="pageContent === 'Join Now'" />
+      <JoinNow v-else />
     </div>
   </section>
 </template>
@@ -52,14 +52,14 @@ export default defineComponent({
     },
   },
   setup(props) {
-    const page = ref(props.page === 'signin' ? 'Join Now' : 'Sign In');
+    const pageContent = ref(props.page === 'signin' ? 'Join Now' : 'Sign In');
 
     function togglePage() {
-      page.value = page.value === 'Join Now' ? 'Sign In' : 'Join Now';
+      pageContent.value = pageContent.value === 'Join Now' ? 'Sign In' : 'Join Now';
     }
 
     return {
-      page,
+      pageContent,
       togglePage,
     };
   },

@@ -49,33 +49,33 @@ const app = createApp({});
 // const files = require.context('./', true, /\.vue$/i)
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
 
-app.component('web-header', WebHeader);
-app.component('web-footer', WebFooter);
-app.component('welcome-signin', WelcomeSignIn);
-app.component('register-form', RegisterPage);
+app.component('WebHeader', WebHeader);
+app.component('WebFooter', WebFooter);
+app.component('WelcomeSignin', WelcomeSignIn);
+app.component('RegisterForm', RegisterPage);
 
 /**
  * Registering vue component for activity listing
  */
-app.component('activity-template', Activity);
-app.component('loggedin-header', LoggedInHeader);
-app.component('activities-detail', ActivitiesDetail);
+app.component('ActivityTemplate', Activity);
+app.component('LoggedinHeader', LoggedInHeader);
+app.component('ActivitiesDetail', ActivitiesDetail);
 
 /*
 setting page
 */
-app.component('setting-page', SettingPage);
+app.component('SettingPage', SettingPage);
 /*
 Registering vue component for password reset
 */
-app.component('reset-page', ResetPage);
-app.component('password-recovery', ResetPasswordRecovery);
-app.component('reset-password', ResetPassword);
+app.component('ResetPage', ResetPage);
+app.component('PasswordRecovery', ResetPasswordRecovery);
+app.component('ResetPassword', ResetPassword);
 
 /**
  * Registering Additional Components
  */
-app.component('hover-text', HoverText);
+app.component('HoverText', HoverText);
 
 /**
  * Extension to inline SVG files with Vue.js and optimize them automatically with SVGO

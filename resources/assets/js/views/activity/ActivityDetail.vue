@@ -5,9 +5,15 @@
       <div class="flex items-end gap-4">
         <div class="title grow-0">
           <div class="mb-4 text-caption-c1 text-n-40">
-            <nav aria-label="breadcrumbs" class="rank-math-breadcrumb">
+            <nav
+              aria-label="breadcrumbs"
+              class="rank-math-breadcrumb"
+            >
               <p>
-                <a class="font-bold" href="/activities">Your Activities</a>
+                <a
+                  class="font-bold"
+                  href="/activities"
+                >Your Activities</a>
                 <span class="separator mx-4"> / </span>
                 <span class="last text-n-30">{{ pageTitle }}</span>
               </p>
@@ -16,7 +22,7 @@
           <div class="inline-flex items-center">
             <div class="mr-3">
               <a href="/activities">
-                <svg-vue icon="arrow-short-left"></svg-vue>
+                <svg-vue icon="arrow-short-left" />
               </a>
             </div>
             <h4 class="mr-4 font-bold">
@@ -31,10 +37,10 @@
               class="button secondary-btn mr-3.5 font-bold"
               @click="downloadValue = true"
             >
-              <svg-vue icon="download-file"></svg-vue>
+              <svg-vue icon="download-file" />
             </button>
             <Modal
-              :modalActive="downloadValue"
+              :modal-active="downloadValue"
               width="583"
               @close="downloadToggle"
             >
@@ -43,7 +49,7 @@
                   <svg-vue
                     class="mr-1 mt-0.5 text-lg text-spring-50"
                     icon="download-file"
-                  ></svg-vue>
+                  />
                   <b>Download file.</b>
                 </div>
                 <div class="rounded-lg bg-mint p-4">
@@ -72,15 +78,19 @@
               class="button secondary-btn mr-3.5 font-bold"
               @click="deleteValue = true"
             >
-              <svg-vue icon="delete"></svg-vue>
+              <svg-vue icon="delete" />
             </button>
-            <Modal :modalActive="deleteValue" width="583" @close="deleteToggle">
+            <Modal
+              :modal-active="deleteValue"
+              width="583"
+              @close="deleteToggle"
+            >
               <div class="mb-4">
                 <div class="title mb-6 flex">
                   <svg-vue
                     class="mr-1 mt-0.5 text-lg text-crimson-40"
                     icon="delete"
-                  ></svg-vue>
+                  />
                   <b>Delete activity</b>
                 </div>
                 <div class="rounded-lg bg-rose p-4">
@@ -109,11 +119,11 @@
               class="button secondary-btn mr-3.5 font-bold"
               @click="unpublishValue = true"
             >
-              <svg-vue icon="cancel-cloud"></svg-vue>
+              <svg-vue icon="cancel-cloud" />
               <span>Unpublish</span>
             </button>
             <Modal
-              :modalActive="unpublishValue"
+              :modal-active="unpublishValue"
               width="583"
               @close="unpublishToggle"
             >
@@ -122,7 +132,7 @@
                   <svg-vue
                     class="mr-1 mt-0.5 text-lg text-crimson-40"
                     icon="cancel-cloud"
-                  ></svg-vue>
+                  />
                   <b>Unpublish activity</b>
                 </div>
                 <div class="rounded-lg bg-rose p-4">
@@ -151,11 +161,11 @@
               class="button primary-btn relative font-bold"
               @click="publishValue = true"
             >
-              <svg-vue icon="approved-cloud"></svg-vue>
+              <svg-vue icon="approved-cloud" />
               <span>Publish</span>
             </button>
             <Modal
-              :modalActive="publishValue"
+              :modal-active="publishValue"
               width="583"
               @close="publishToggle"
             >
@@ -164,7 +174,7 @@
                   <svg-vue
                     class="mr-1 mt-0.5 text-lg text-spring-50"
                     icon="approved-cloud"
-                  ></svg-vue>
+                  />
                   <b>Publish activity?</b>
                 </div>
                 <div class="rounded-lg bg-mint p-4">
@@ -199,41 +209,44 @@
             <div class="mb-2 flex items-center justify-between">
               <span class="mr-2">Publishing Progress</span>
               <HoverText
-                hoverText="You cannot publish an activity until all the mandatory fields have been filled."
+                hover-text="You cannot publish an activity until all the mandatory fields have been filled."
                 name=""
                 position="right"
-              ></HoverText>
+              />
             </div>
-            <ProgressBar :percent="progress" class="mb-3"></ProgressBar>
+            <ProgressBar
+              :percent="progress"
+              class="mb-3"
+            />
             <span>Fill core elements to get 100% score</span>
           </div>
           <div class="activities__card elements">
             <div class="mb-7 flex items-center justify-between">
               <span>Elements</span>
               <HoverText
-                hoverText="You cannot publish an activity until all the mandatory fields have been filled."
+                hover-text="You cannot publish an activity until all the mandatory fields have been filled."
                 name=""
-              ></HoverText>
+              />
             </div>
             <div class="mb-3 flex justify-between">
               <div class="flex items-center space-x-1">
-                <svg-vue icon="core"></svg-vue>
+                <svg-vue icon="core" />
                 <span>Core</span>
               </div>
               <HoverText
-                hoverText="You cannot publish an activity until all the mandatory fields have been filled."
+                hover-text="You cannot publish an activity until all the mandatory fields have been filled."
                 name=""
-              ></HoverText>
+              />
             </div>
             <div class="flex justify-between">
               <div class="flex items-center space-x-1">
-                <svg-vue icon="double-tick"></svg-vue>
+                <svg-vue icon="double-tick" />
                 <span>Completed</span>
               </div>
               <HoverText
-                hoverText="You cannot publish an activity until all the mandatory fields have been filled."
+                hover-text="You cannot publish an activity until all the mandatory fields have been filled."
                 name=""
-              ></HoverText>
+              />
             </div>
           </div>
         </div>
@@ -242,32 +255,35 @@
       <div class="activities__content">
         <div class="inline-flex flex-wrap gap-2">
           <a
-            v-for="(post, key, index) in groupedData"
+            v-for="(post, key) in groupedData"
             :key="key"
             v-smooth-scroll
             :href="`#${key}`"
             class="tab-btn-anchor"
           >
-            <button :disabled="post.status == 'disabled'" class="tab-btn">
+            <button
+              :disabled="post.status == 'disabled'"
+              class="tab-btn"
+            >
               <span>{{ post.label }}</span>
               <span class="hover__text">
                 <HoverText
                   :name="post.label"
                   hover_text="You cannot publish an activity until all the mandatory fields have been filled."
                   icon_size="text-tiny"
-                  name=""
-                ></HoverText>
+                />
               </span>
             </button>
           </a>
         </div>
 
         <div class="activities__content--elements -mx-3 flex flex-wrap">
-          <template v-for="(post, key, index) in activities">
-            <template v-for="(element, name, i) in post.elements">
+          <template v-for="(post, key) in activities">
+            <template v-for="(element, name, index) in post.elements">
               <ActivityElement
                 v-if="Object.keys(element.content).length > 0"
                 :id="key"
+                :key="index"
                 :content="element.content"
                 :data="element"
                 :title="name"
@@ -285,6 +301,7 @@
 </template>
 
 <script lang="ts">
+/* eslint-disable vue/no-setup-props-destructure */
 import { defineComponent } from 'vue';
 import { useToggle } from '@vueuse/core';
 import HoverText from '../../components/HoverText.vue';
@@ -335,7 +352,7 @@ export default defineComponent({
      */
     let pageTitle = '';
     const found = props.activity.title.find(
-      (e: { language: string }, index: number) => {
+      (e: { language: string }) => {
         const currentLanguage = 'en';
         return e.language === currentLanguage;
       }
@@ -358,9 +375,9 @@ export default defineComponent({
       activities = { ...props.element_group };
 
     // generating available elements
-    Object.keys(activities).map((key, index) => {
+    Object.keys(activities).map((key) => {
       let flag = false;
-      Object.keys(activities[key]['elements']).map((k, i) => {
+      Object.keys(activities[key]['elements']).map((k) => {
         if (detailData[k]) {
           activities[key]['elements'][k]['content'] = detailData[k];
           flag = true;
@@ -375,8 +392,8 @@ export default defineComponent({
     });
 
     // generating available categories of elements
-    Object.keys(groupedData).map((key, index) => {
-      if (activities.hasOwnProperty(key)) {
+    Object.keys(groupedData).map((key) => {
+      if (Object.prototype.hasOwnProperty.call(activities, key)) {
         groupedData[key]['status'] = 'enabled';
       } else {
         groupedData[key]['status'] = 'disabled';

@@ -1,34 +1,39 @@
 <template>
-  <div :class="layout" class="activities__content--element px-3 py-3">
+  <div
+    :class="layout"
+    class="activities__content--element px-3 py-3"
+  >
     <div class="rounded-lg bg-white p-4">
       <div class="mb-4 flex">
         <div class="title flex grow">
           <template
             v-if="
               title === 'reporting_org' ||
-              title === 'default_tied_status' ||
-              title === 'crs_add' ||
-              title === 'fss'
+                title === 'default_tied_status' ||
+                title === 'crs_add' ||
+                title === 'fss'
             "
           >
             <svg-vue
               class="mr-1.5 text-xl text-bluecoral"
               icon="activity-elements/building"
-            ></svg-vue>
+            />
           </template>
           <template v-else-if="title === 'identifier'">
             <svg-vue
               class="mr-1.5 text-xl text-bluecoral"
               icon="activity-elements/iati_identifier"
-            ></svg-vue>
+            />
           </template>
           <template v-else>
             <svg-vue
               :icon="'activity-elements/' + title"
               class="mr-1.5 text-xl text-bluecoral"
-            ></svg-vue>
+            />
           </template>
-          <div class="title text-sm font-bold">{{ title }}</div>
+          <div class="title text-sm font-bold">
+            {{ title }}
+          </div>
           <div
             v-if="'completed' in data"
             :class="{
@@ -47,30 +52,44 @@
             class="edit-button mr-2.5 flex items-center text-xs font-bold uppercase"
             href="/1/title-form"
           >
-            <svg-vue class="mr-0.5 text-base" icon="edit"></svg-vue>
+            <svg-vue
+              class="mr-0.5 text-base"
+              icon="edit"
+            />
             <span>Edit</span>
           </a>
           <template v-if="'core' in data">
-            <svg-vue v-if="data.core" class="mr-1.5" icon="core"></svg-vue>
+            <svg-vue
+              v-if="data.core"
+              class="mr-1.5"
+              icon="core"
+            />
           </template>
           <HoverText
             v-if="tooltip"
             :hover_text="tooltip"
             class="text-n-40"
-          ></HoverText>
+          />
         </div>
       </div>
-      <div class="divider mb-4 h-px w-full bg-n-20"></div>
+      <div class="divider mb-4 h-px w-full bg-n-20" />
       <template v-if="title === 'title'">
         <!-- Title content -->
-        <div v-for="(post, index) in content" class="title-content">
+        <div
+          v-for="(post, index) in content"
+          :key="index"
+          class="title-content"
+        >
           <div
             v-if="post.language"
             class="language mb-1.5 text-sm italic text-n-30"
           >
             (Language: {{ post.language }})
           </div>
-          <div v-if="post.narrative" class="text-sm">
+          <div
+            v-if="post.narrative"
+            class="text-sm"
+          >
             {{ post.narrative }}
           </div>
         </div>
@@ -79,10 +98,16 @@
       <template v-if="title === 'identifier'">
         <!-- iati identifier -->
         <div class="identifier-content">
-          <div v-if="content.activity_identifier" class="mb-4 text-sm">
+          <div
+            v-if="content.activity_identifier"
+            class="mb-4 text-sm"
+          >
             {{ content.activity_identifier }}
           </div>
-          <div v-if="content.iati_identifier_text" class="text-sm">
+          <div
+            v-if="content.iati_identifier_text"
+            class="text-sm"
+          >
             {{ content.iati_identifier_text }}
           </div>
         </div>
@@ -96,7 +121,7 @@ import { defineComponent } from 'vue';
 import HoverText from '../../../components/HoverText.vue';
 
 export default defineComponent({
-  name: 'activity-element',
+  name: 'ActivityElement',
   components: { HoverText },
   props: {
     data: {

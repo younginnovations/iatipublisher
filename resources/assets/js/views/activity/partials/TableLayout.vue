@@ -3,37 +3,52 @@
     <table class="">
       <thead>
         <tr class="bg-n-10">
-          <th id="title" scope="col">
+          <th
+            id="title"
+            scope="col"
+          >
             <a
               class="text-n-50 transition duration-500 hover:text-spring-50"
               href="#"
             >
               <span class="sorting-indicator descending">
-                <svg-vue icon="descending-arrow"></svg-vue>
+                <svg-vue icon="descending-arrow" />
               </span>
               <span>Activity Title</span>
             </a>
           </th>
-          <th id="date" scope="col">
+          <th
+            id="date"
+            scope="col"
+          >
             <a
               class="text-n-50 transition duration-500 hover:text-spring-50"
               href="#"
             >
               <span class="sorting-indicator ascending">
-                <svg-vue icon="ascending-arrow"></svg-vue>
+                <svg-vue icon="ascending-arrow" />
               </span>
               <span>Updated On</span>
             </a>
           </th>
-          <th id="status" scope="col">
+          <th
+            id="status"
+            scope="col"
+          >
             <span class="hidden">Status</span>
           </th>
-          <th id="publish" scope="col">
+          <th
+            id="publish"
+            scope="col"
+          >
             <span class="hidden">Status</span>
           </th>
-          <th id="cb" scope="col">
+          <th
+            id="cb"
+            scope="col"
+          >
             <span class="">
-              <svg-vue icon="checkbox"></svg-vue>
+              <svg-vue icon="checkbox" />
             </span>
           </th>
         </tr>
@@ -52,19 +67,21 @@
               <svg-vue
                 class="mr-3 mt-1 shrink-0 text-base text-spring-50"
                 icon="approved-cloud"
-              ></svg-vue>
+              />
               <span>{{ datum['title'][0]['narrative'] }}</span>
             </a>
           </td>
 
-          <td class="text-n-40">{{ formatDate(datum.created_at) }}</td>
+          <td class="text-n-40">
+            {{ formatDate(datum.created_at) }}
+          </td>
 
           <td>
             <button
               class="inline-flex items-center text-n-40 transition duration-500 hover:text-spring-50"
             >
               <span class="mr-1 text-base">
-                <svg-vue icon="document-write"></svg-vue>
+                <svg-vue icon="document-write" />
               </span>
               <span class="text-sm leading-relaxed">{{ datum['status'] }}</span>
             </button>
@@ -83,8 +100,14 @@
             </button>
           </td>
 
-          <th class="check-column" @click="(e) => e.stopPropagation()">
-            <label class="sr-only" for="">
+          <th
+            class="check-column"
+            @click="(e) => e.stopPropagation()"
+          >
+            <label
+              class="sr-only"
+              for=""
+            >
               Select "{{ datum['title'][0]['narrative'] }}"
             </label>
             <label class="checkbox">
@@ -93,8 +116,8 @@
                 :value="datum.id"
                 type="checkbox"
                 @change="emitShowOrHide"
-              />
-              <span class="checkmark"></span>
+              >
+              <span class="checkmark" />
             </label>
           </th>
         </tr>
@@ -108,15 +131,15 @@ import { defineComponent, reactive } from 'vue';
 import moment from 'moment';
 
 export default defineComponent({
-  name: 'table-layout',
+  name: 'TableLayout',
   components: {},
-  emits: ['showOrHide'],
   props: {
     data: {
       type: [Object],
       required: true,
     },
   },
+  emits: ['showOrHide'],
   setup(props, { emit }) {
     const state = reactive({
       selected: [],
@@ -130,7 +153,7 @@ export default defineComponent({
       return moment(date).fromNow();
     }
 
-    function goToDetail(id: Number) {
+    function goToDetail(id: number) {
       window.location.href = '/activities/' + id;
     }
 
