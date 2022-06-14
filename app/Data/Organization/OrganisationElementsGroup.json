@@ -20,6 +20,13 @@
     }
   },
 
+  "basic_information": {
+    "label": "Basic Information",
+    "elements": {
+
+    }
+  },
+
   "budget": {
     "label": "Budget",
     "elements": {

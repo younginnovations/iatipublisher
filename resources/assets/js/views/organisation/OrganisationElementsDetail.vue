@@ -881,7 +881,22 @@
           <span class="text-sm font-bold text-n-50">{{
             props.content.document_title
           }}</span>
-          <table>
+          <div class="ml-5 flex">
+            <div class="w-[100px] text-xs text-n-40">Title</div>
+            <table>
+              <tr
+                v-for="(title, i) in props.content.title"
+                :key="i"
+                class="flex flex-col pl-2"
+              >
+                <td class="language">
+                  {{ title.language }}
+                </td>
+                <td>{{ title.document_link_title }}</td>
+              </tr>
+            </table>
+          </div>
+          <table class="table">
             <tr>
               <td>Document Link</td>
               <td>
@@ -889,39 +904,64 @@
               </td>
             </tr>
           </table>
-          <table>
+          <div class="ml-5 flex">
+            <div class="w-[100px] pr-20 text-xs text-n-40">Description</div>
+            <table>
+              <tr
+                v-for="(description, i) in props.content.description"
+                :key="i"
+                class="flex flex-col pl-2"
+              >
+                <td class="language">{{ description.language }}</td>
+                <td class="lg:w-[500px]">
+                  <p>{{ description.text }}</p>
+                </td>
+              </tr>
+            </table>
+          </div>
+          <div class="ml-5 flex">
+            <div class="w-[100px] text-xs text-n-40">Category</div>
+            <div>
+              <div
+                v-for="(category, i) in props.content.category"
+                :key="i"
+                class="mb-1 pl-2"
+              >
+                <span>{{ category.A }}</span>
+                <span>{{ category.B }}</span>
+              </div>
+            </div>
+          </div>
+          <table class="table">
             <tr>
               <td>Language</td>
               <td>{{ props.content.language }}</td>
             </tr>
           </table>
-          <table>
+          <table class="table">
             <tr>
               <td>Document Date</td>
               <td>{{ props.content.document_date }}</td>
             </tr>
           </table>
-          <div v-for="(document_link, index) in props.content" :key="index">
-            {{ document_link.title }}
-            <!-- Hello -->
-            <div
-              class="mb-4 flex flex-col"
-              v-for="(title, i) in document_link.title"
-              :key="i"
-            >
-              <table class="mb-2 whitespace-nowrap">
-                <tr class="mb-1">
-                  <td>Title</td>
-                  <td class="language pl-2">
-                    {{ title.language }}
-                  </td>
-                </tr>
-                <tr>
-                  <td></td>
-                  <td>{{ title.document_link_title }}</td>
-                </tr>
-              </table>
+          <div class="ml-5 flex">
+            <div class="w-[100px] whitespace-nowrap pr-2 text-xs text-n-40">
+              Recipient Country
             </div>
+            <table>
+              <tr
+                v-for="(recipient_country, i) in props.content
+                  .recipient_country"
+                :key="i"
+                class="flex flex-col pl-2"
+              >
+                <td>{{ recipient_country.country }}</td>
+                <td class="language">{{ recipient_country.language }}</td>
+                <td class="lg:w-[500px]">
+                  <p>{{ recipient_country.text }}</p>
+                </td>
+              </tr>
+            </table>
           </div>
         </div>
         <!-- document link ends -->
@@ -988,7 +1028,7 @@ export default defineComponent({
     visibility: visible;
   }
   .language {
-    @apply mb-1.5 text-xs italic text-n-30;
+    @apply mb-1 text-xs italic text-n-30;
   }
   .element-title {
     @apply mb-2 text-sm font-bold text-n-50;
@@ -1001,15 +1041,29 @@ export default defineComponent({
       width: 118px;
     }
   }
-  .document-link * {
+  :is(tr, td) * {
     @apply mb-1;
   }
+
   .document-link {
-    td:nth-child(1) {
-      @apply text-n-40;
-    }
+    @apply leading-5;
+
     table {
-      @apply ml-5;
+      @apply whitespace-nowrap;
+
+      p {
+        @apply mb-0 whitespace-normal;
+      }
+    }
+    .table {
+      @apply ml-5 mb-1;
+
+      td:nth-child(1) {
+        @apply text-n-40;
+      }
+      td:nth-child(2) {
+        @apply pl-2;
+      }
     }
   }
   .table-head {

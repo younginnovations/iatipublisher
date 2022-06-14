@@ -228,7 +228,7 @@
         <OrganisationElements :data="elements" />
       </aside>
       <div class="activities__content">
-        <div class="inline-flex flex-wrap gap-2">
+        <div class="mb-3 inline-flex flex-wrap gap-2">
           <a
             v-for="(post, key) in groupedData"
             :key="key"
@@ -1018,7 +1018,7 @@ export default defineComponent({
                 document_link_title: 'Document link title',
               },
               {
-                language: '(Language: English)',
+                language: '(Language: Nepali)',
                 document_link_title: 'Document link title',
               },
             ],
@@ -1035,22 +1035,21 @@ export default defineComponent({
             ],
             category: [
               {
-                1: 'A01 - Pre- and post-project impact appraisal',
+                A: 'A01 - Pre- and post-project impact appraisal',
               },
               {
-                2: 'A01 - Pre- and post-project impact appraisal',
+                B: 'A01 - Pre- and post-project impact appraisal',
               },
             ],
             language: 'English, Nepali',
             document_date: 'November 20,2022',
             recipient_country: [
               {
-                country: 'AF- Afganisthan',
+                country: 'AF- Afghanistan',
                 language: '(Language: English)',
                 text: 'This programme will bring change for boys and girls to enjoy their rights to be protected from the worst forms of child labour in Central African Republic, the Democratic Republic of the Congo (DRC) and Ethiopia.',
               },
               {
-                country: 'AF- Afganisthan',
                 language: '(Language: English)',
                 text: 'This programme will bring change for boys and girls to enjoy their rights to be protected from the worst forms of child labour in Central African Republic, the Democratic Republic of the Congo (DRC) and Ethiopia.',
               },
