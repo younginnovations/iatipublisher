@@ -3,22 +3,25 @@
     class="activity__header flex min-h-[60px] max-w-full gap-10 bg-bluecoral px-10 text-xs leading-normal text-white"
   >
     <Toast
-      class="toast -bottom-24"
       v-if="toastVisibility"
+      class="toast -bottom-24"
       :message="toastMessage"
       :type="toastType"
-    ></Toast>
+    />
     <figure class="flex grow-0 items-center">
       <a href="/activities">
-        <svg-vue icon="logo" class="text-4xl"></svg-vue>
+        <svg-vue
+          icon="logo"
+          class="text-4xl"
+        />
       </a>
     </figure>
     <nav class="flex grow-0">
       <ul class="flex flex-wrap">
         <li
           v-for="(language, index) in data.languages"
+          :key="index"
           :class="data.languageNavLiClasses"
-          v-bind:key="index"
         >
           <a
             :class="[
@@ -36,7 +39,7 @@
       <ul class="-mx-4 flex flex-wrap">
         <li
           v-for="(menu, index) in data.menus"
-          v-bind:key="index"
+          :key="index"
           :class="data.menuNavLiClasses"
         >
           <a
@@ -55,37 +58,42 @@
             class="search__input"
             type="text"
             placeholder="Search activity..."
-          />
+          >
           <svg-vue
             class="absolute left-3 top-3 text-base"
             icon="search"
-          ></svg-vue>
+          />
         </div>
         <!--        <input type="text" v-model="keyword">-->
         <button
           class="button secondary-btn mr-3.5 font-bold"
           @click="modalValue = true"
         >
-          <svg-vue icon="add"></svg-vue>
+          <svg-vue icon="add" />
         </button>
         <button class="button secondary-btn dropdown-btn">
-          <svg-vue icon="user-profile"></svg-vue>
-          <svg-vue class="dropdown__arrow" icon="dropdown-arrow"></svg-vue>
+          <svg-vue icon="user-profile" />
+          <svg-vue
+            class="dropdown__arrow"
+            icon="dropdown-arrow"
+          />
           <div class="profile__dropdown">
             <ul>
               <li class="border-b border-b-n-20">
                 <div>
-                  <svg-vue class="user-profile" icon="user-profile"></svg-vue>
+                  <svg-vue
+                    class="user-profile"
+                    icon="user-profile"
+                  />
                 </div>
                 <div class="flex flex-col break-all capitalize leading-4">
-                  <span class="text-n-50">{{ props.user.full_name }}</span
-                  ><span class="text-tiny text-n-40">{{
+                  <span class="text-n-50">{{ props.user.full_name }}</span><span class="text-tiny text-n-40">{{
                     props.organization.publisher_name
                   }}</span>
                 </div>
               </li>
               <li class="dropdown__list border-b border-b-n-20">
-                <svg-vue icon="user"></svg-vue>
+                <svg-vue icon="user" />
                 <a href="#">Your Profile</a>
               </li>
               <li class="dropdown__list" @click="logout">
@@ -102,11 +110,11 @@
         Add Activity Modal
     ========================-->
     <CreateModal
+      :modal-active="modalValue"
       @close="modalToggle"
-      :modalActive="modalValue"
       @closeModal="modalToggle"
       @toast="toast"
-    ></CreateModal>
+    />
   </header>
 </template>
 
@@ -114,21 +122,12 @@
 import { defineComponent, ref, reactive, onMounted } from 'vue';
 import axios from 'axios';
 import { useToggle } from '@vueuse/core';
-import Multiselect from '@vueform/multiselect';
-
-import Modal from './PopupModal.vue';
-import BtnComponent from './ButtonComponent.vue';
 import CreateModal from '../views/activity/CreateModal.vue';
-import HoverText from './HoverText.vue';
 import Toast from './Toast.vue';
 
 export default defineComponent({
-  name: 'header-component',
+  name: 'HeaderComponent',
   components: {
-    Modal,
-    BtnComponent,
-    HoverText,
-    Multiselect,
     CreateModal,
     Toast,
   },
@@ -144,8 +143,6 @@ export default defineComponent({
   },
 
   setup(props) {
-    const dropdown = ref();
-    const dropdownBtn = ref();
     const toastVisibility = ref(false);
     const toastMessage = ref('');
     const toastType = ref(false);

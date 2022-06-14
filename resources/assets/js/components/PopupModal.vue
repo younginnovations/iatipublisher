@@ -10,7 +10,7 @@
             <div
               class="modal-backdrop absolute left-0 top-0 h-full w-full bg-n-50 opacity-50"
               @click="close"
-            ></div>
+            />
             <div
               v-if="modalActive"
               :style="`max-width:${width}px;`"
@@ -29,7 +29,7 @@
 import { defineComponent } from 'vue';
 
 export default defineComponent({
-  name: 'popup-modal',
+  name: 'PopupModal',
   props: {
     modalActive: {
       type: Boolean,
