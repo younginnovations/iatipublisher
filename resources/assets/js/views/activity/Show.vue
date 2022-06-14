@@ -242,7 +242,7 @@
             </div>
           </div>
         </div>
-        <Elements :data="elements" :activity-id="activity.id" />
+        <Elements :activity-id="activity.id" :data="elements" />
       </aside>
       <div class="activities__content">
         <div class="inline-flex flex-wrap gap-2">
@@ -271,9 +271,12 @@
           <template v-for="(post, key, index) in activities" :key="index">
             <template v-for="(element, name, i) in post.elements" :key="i">
               <ActivityElement
-                v-if="Object.keys(element.content).length > 0"
+                v-if="
+                  typeof element.content === 'object'
+                    ? Object.keys(element.content).length > 0
+                    : element.content
+                "
                 :id="key"
-                :content="element.content"
                 :data="element"
                 :title="name"
                 :width="
@@ -290,7 +293,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, reactive, ref } from 'vue';
+import { defineComponent, onMounted, reactive } from 'vue';
 import { useToggle } from '@vueuse/core';
 import HoverText from '../../components/HoverText.vue';
 import ProgressBar from '../../components/ProgressBar.vue';
@@ -411,6 +414,7 @@ export default defineComponent({
         groupedData[key]['status'] = 'disabled';
       }
     });
+    console.log(activities);
 
     return {
       groupedData,

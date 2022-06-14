@@ -105,9 +105,10 @@ class ActivityController extends Controller
             $toast['type'] = Session::has('error') ? 'error' : 'success';
             $elements = json_decode(file_get_contents(app_path('Data/Activity/Element.json')), true);
             $elementGroups = json_decode(file_get_contents(app_path('Data/Activity/ElementGroup.json')), true);
+            $financeTypes = getCodeList('FinanceType', 'Activity');
             $progress = 75;
 
-            return view('admin.activity.show', compact('elements', 'elementGroups', 'progress', 'activity', 'toast'));
+            return view('admin.activity.show', compact('elements', 'elementGroups', 'progress', 'activity', 'toast', 'financeTypes'));
         } catch (Exception $e) {
             logger()->error($e->getMessage());
         }

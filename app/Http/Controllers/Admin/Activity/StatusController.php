@@ -69,9 +69,9 @@ class StatusController extends Controller
      * @param StatusRequest $request
      * @param $id
      *
-     * @return JsonResponse
+     * @return JsonResponse|RedirectResponse
      */
-    public function update(StatusRequest $request, $id): JsonResponse
+    public function update(StatusRequest $request, $id): JsonResponse|RedirectResponse
     {
         try {
             $activityData = $this->statusService->getActivityData($id);
