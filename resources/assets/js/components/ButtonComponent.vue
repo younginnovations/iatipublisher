@@ -1,6 +1,12 @@
 <template>
-  <button class="button relative font-bold text-n-40" :class="btnType">
-    <svg-vue :icon="icon" v-if="icon"></svg-vue>
+  <button
+    class="button relative font-bold text-n-40"
+    :class="btnType"
+  >
+    <svg-vue
+      v-if="icon"
+      :icon="icon"
+    />
     <span>{{ text }}</span>
   </button>
 </template>
@@ -9,7 +15,7 @@
 import { defineComponent } from 'vue';
 
 export default defineComponent({
-  name: 'button-component',
+  name: 'ButtonComponent',
   components: {},
   props: {
     text: String,

@@ -27,5 +27,5 @@ $(document).ready(() => {
   $(document).on('selecting', '.select2', function (e) {
     console.log('change');
   });
-  let formBuilder = new DynamicSelect();
+  const formBuilder = new DynamicSelect();
 });

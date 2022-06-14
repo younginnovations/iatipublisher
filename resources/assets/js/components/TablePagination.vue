@@ -1,7 +1,14 @@
 <template>
-  <nav class="pagination" aria-label="Pagination">
-    <a href="#" class="prev-btn" @click="previousPage">
-      <svg-vue icon="arrow-left"></svg-vue>
+  <nav
+    class="pagination"
+    aria-label="Pagination"
+  >
+    <a
+      href="#"
+      class="prev-btn"
+      @click="previousPage"
+    >
+      <svg-vue icon="arrow-left" />
       <span class="">Prev</span>
     </a>
 
@@ -10,14 +17,18 @@
       :key="index"
       href="#"
       aria-current="page"
-      @click="updateActivePage(index)"
       :class="active_page === index ? 'current' : ''"
+      @click="updateActivePage(index)"
     >
       {{ index }}
     </a>
-    <a href="#" class="next-btn" @click="nextPage">
+    <a
+      href="#"
+      class="next-btn"
+      @click="nextPage"
+    >
       <span class="">Next</span>
-      <svg-vue icon="arrow-right"></svg-vue>
+      <svg-vue icon="arrow-right" />
     </a>
   </nav>
 </template>
@@ -26,7 +37,7 @@
 import { defineComponent, ref, watch } from 'vue';
 
 export default defineComponent({
-  name: 'pagination-component',
+  name: 'PaginationComponent',
   components: {},
   props: {
     page_count: {

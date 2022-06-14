@@ -5,19 +5,19 @@
         <svg-vue
           class="panel__search absolute left-2.5 top-3 text-sm text-n-30"
           icon="panel-search"
-        ></svg-vue>
+        />
         <input
           v-model="elements.search"
           class="panel__input"
           placeholder="Search elements to add/edit"
           type="text"
-        />
+        >
       </div>
       <div class="relative grid justify-items-end">
         <button
+          ref="dropdownBtn"
           class="button panel-btn dropdown-btn"
           @click="searchBtnToggle()"
-          ref="dropdownBtn"
         >
           <svg-vue
             :icon="
@@ -28,12 +28,12 @@
                 : 'box'
             "
             class="text-lg"
-          ></svg-vue>
+          />
           <svg-vue
             :class="searchBtnValue ? 'rotate-180' : ''"
             class="w-2.5 text-xs transition duration-200 ease-linear"
             icon="dropdown-arrow"
-          ></svg-vue>
+          />
         </button>
         <div
           v-show="searchBtnValue"
@@ -45,21 +45,30 @@
               class="flex py-1.5 px-3.5 hover:bg-white"
               @click="dropdownFilter('')"
             >
-              <svg-vue class="mr-1 text-lg" icon="box"></svg-vue>
+              <svg-vue
+                class="mr-1 text-lg"
+                icon="box"
+              />
               <span>All Elements</span>
             </li>
             <li
               class="flex py-1.5 px-3.5 hover:bg-white"
               @click="dropdownFilter('criteria')"
             >
-              <svg-vue class="mr-1 text-lg" icon="core"></svg-vue>
+              <svg-vue
+                class="mr-1 text-lg"
+                icon="core"
+              />
               <span>Core</span>
             </li>
             <li
               class="flex py-1.5 px-3.5 hover:bg-white"
               @click="dropdownFilter('completed')"
             >
-              <svg-vue class="mr-1 text-lg" icon="double-tick"></svg-vue>
+              <svg-vue
+                class="mr-1 text-lg"
+                icon="double-tick"
+              />
               <span>Completed</span>
             </li>
           </ul>
@@ -78,31 +87,31 @@
             v-if="post.completed"
             class="text-base text-spring-50"
             icon="double-tick"
-          ></svg-vue>
+          />
           <svg-vue
             v-if="post.criteria"
             class="text-base text-camel-50"
             icon="core"
-          ></svg-vue>
+          />
         </div>
         <template
           v-if="
             index === 'reporting_org' ||
-            index === 'default_tied_status' ||
-            index === 'crs_add' ||
-            index === 'fss'
+              index === 'default_tied_status' ||
+              index === 'crs_add' ||
+              index === 'fss'
           "
         >
           <svg-vue
             class="text-base"
             icon="activity-elements/building"
-          ></svg-vue>
+          />
         </template>
         <template v-else>
           <svg-vue
             :icon="'activity-elements/' + index"
             class="text-base"
-          ></svg-vue>
+          />
         </template>
         <div class="title mt-1 text-xs">
           {{ index.toString().replace(/_/g, '-') }}
@@ -117,7 +126,7 @@ import { computed, defineComponent, reactive, onMounted, ref } from 'vue';
 import { useToggle } from '@vueuse/core';
 
 export default defineComponent({
-  name: 'activities-elements',
+  name: 'ActivitiesElements',
   components: {},
   props: {
     data: {

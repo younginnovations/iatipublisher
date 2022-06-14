@@ -1,7 +1,10 @@
 <template>
   <div class="mt-14">
-    <Loader v-if="loaderVisibility"></Loader>
-    <div class="reset" @keyup.enter="reset">
+    <Loader v-if="loaderVisibility" />
+    <div
+      class="reset"
+      @keyup.enter="reset"
+    >
       <div class="mb-8 flex flex-col">
         <h2>Password Recovery</h2>
         <p>
@@ -11,22 +14,33 @@
       </div>
 
       <div class="reset__content">
-        <label class="text-sm font-bold text-bluecoral" for="email"
-          >Email</label
-        >
+        <label
+          class="text-sm font-bold text-bluecoral"
+          for="email"
+        >Email</label>
         <input
           id="email"
+          v-model="formData.email"
           type="email"
           placeholder="Enter your email address"
           :class="emailError != '' ? 'error__input input' : 'input'"
-          v-model="formData.email"
+        >
+        <svg-vue
+          class="reset__icon mail__icon"
+          icon="mail"
         />
-        <svg-vue class="reset__icon mail__icon" icon="mail"></svg-vue>
-        <span class="error" role="alert" v-if="emailError"
-          >{{ emailError }}
+        <span
+          v-if="emailError"
+          class="error"
+          role="alert"
+        >{{ emailError }}
         </span>
       </div>
-      <button type="submit" class="btn reset-btn" @click="reset()">
+      <button
+        type="submit"
+        class="btn reset-btn"
+        @click="reset()"
+      >
         Send password reset link
       </button>
     </div>

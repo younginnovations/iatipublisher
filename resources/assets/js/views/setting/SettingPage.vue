@@ -1,19 +1,21 @@
 <template>
   <section class="section">
-    <Loader v-if="loaderVisibility"></Loader>
+    <Loader v-if="loaderVisibility" />
     <div class="setting input__field">
       <span class="text-xs font-bold text-n-40">Settings</span>
       <div class="flex items-center justify-between">
         <div class="mt-4 mb-6 flex items-center">
-          <a href="/activities"><svg-vue icon="left-arrow"></svg-vue></a>
-          <h2 class="ml-3 text-heading-4 font-bold text-n-50">Settings</h2>
+          <a href="/activities"><svg-vue icon="left-arrow" /></a>
+          <h2 class="ml-3 text-heading-4 font-bold text-n-50">
+            Settings
+          </h2>
         </div>
         <div>
           <Toast
             v-if="toastVisibility"
             :message="toastMessage"
             :type="toastType"
-          ></Toast>
+          />
         </div>
       </div>
       <div class="setting__container overflow-x-hidden">
@@ -34,23 +36,26 @@
           </button>
         </div>
         <SettingPublishingForm
-          @keyup.enter="submitForm"
           v-if="tab === 'publish'"
           :organization="props.organization"
-          @submitPublishing="submitForm"
-        ></SettingPublishingForm>
-        <SettingDefaultForm
           @keyup.enter="submitForm"
+          @submitPublishing="submitForm"
+        />
+        <SettingDefaultForm
           v-else
           :currencies="currencies"
           :languages="languages"
           :humanitarian="humanitarian"
-        ></SettingDefaultForm>
+          @keyup.enter="submitForm"
+        />
       </div>
     </div>
     <div class="fixed bottom-0 w-full bg-eggshell py-5 pr-40 shadow-dropdown">
       <div class="flex items-center justify-end">
-        <a class="ghost-btn mr-8" href="/activities">Cancel</a>
+        <a
+          class="ghost-btn mr-8"
+          href="/activities"
+        >Cancel</a>
         <button
           class="primary-btn save-btn"
           @click="submitForm('setting/store/publisher')"
