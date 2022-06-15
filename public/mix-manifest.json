@@ -1,7 +1,7 @@
 {
-    "/js/app.js": "/js/app.js",
-    "/js/script.js": "/js/script.js",
-    "/js/formbuilder.js": "/js/formbuilder.js",
-    "/js/aidtype.js": "/js/aidtype.js",
-    "/css/app.css": "/css/app.css"
+    "/js/app.js": "/js/app.js?id=db0508a139558e74a6da5529346d43cf",
+    "/js/script.js": "/js/script.js?id=508b65f3c468e92ba5ef5e8b6a641ebc",
+    "/js/formbuilder.js": "/js/formbuilder.js?id=0e3576932c55b528618131c42d9c9b15",
+    "/js/aidtype.js": "/js/aidtype.js?id=1234413c7ffca7faf806cddcb7aedd6e",
+    "/css/app.css": "/css/app.css?id=1079630baa475807d0751d50eb04d475"
 }

@@ -29,15 +29,14 @@
             </div>
             <input
               id="publisher-id"
-              :class="
-                publishingError.publisher_id
-                  ? 'register__input error__input mb-2'
-                  : 'register__input mb-2'
-              "
+              class="register__input mb-2"
+              :class="{
+                'error__input' : publishingError.publisher_id
+              }"
               type="text"
               placeholder="Type Publisher ID here"
               :value="props.organization.publisher_id"
-              disabled="disabled"
+              disabled="true"
               @input="updateStore('publisher_id')"
             >
           </div>
@@ -63,22 +62,20 @@
             <input
               id="api-token"
               v-model="publishingForm.api_token"
-              :class="
-                publishingError.api_token
-                  ? 'register__input error__input mb-2'
-                  : 'register__input mb-2'
-              "
+              class="register__input mb-2"
+              :class="{
+                'error__input' : publishingError.api_token
+              }"
               type="text"
               placeholder="Type API Token here"
               @input="updateStore('api_token')"
             >
             <span
               v-if="publishingInfo.isVerificationRequested"
-              :class="
-                publishingInfo.token_verification
-                  ? 'tag__correct'
-                  : 'tag__incorrect'
-              "
+              :class="{
+                'tag__correct' : publishingInfo.token_verification,
+                'tag__incorrect' : !publishingInfo.token_verification
+              }"
             >
               {{ publishingInfo.token_verification ? 'Correct' : 'Incorrect' }}
             </span>
@@ -113,7 +110,7 @@ export default defineComponent({
   },
   props: {
     organization: {
-      type: Object,
+      type: [Object,String],
       required: true,
     },
   },

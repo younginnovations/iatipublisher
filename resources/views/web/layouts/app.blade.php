@@ -9,9 +9,9 @@
 
     <title>{{ config('app.name', 'IATI Publisher') }}</title>
 
-  <link href="{{ mix('css/app.css') }}" rel="stylesheet">
-  <script defer src="{{ mix('js/script.js') }}"></script>
-  <script defer src="{{ mix('js/app.js') }}"></script>
+    <link href="{{ mix('css/app.css') }}" rel="stylesheet">
+    <script defer src="{{ mix('js/script.js') }}"></script>
+    <script defer src="{{ mix('js/app.js') }}"></script>
 
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <link rel="icon"

@@ -21,15 +21,20 @@
       <div class="setting__container overflow-x-hidden">
         <div class="flex">
           <button
-            :class="
-              tab === 'publish' ? 'tab-btn active__tab mr-2' : 'tab-btn mr-2'
+            class="tab-btn mr-2"
+            :class="{
+              'active__tab' : tab==='publish'
+            }
             "
             @click="toggleTab('publish')"
           >
             Publishing Settings
           </button>
           <button
-            :class="tab === 'default' ? 'tab-btn active__tab' : 'tab-btn'"
+            class="tab-btn"
+            :class="{
+              active__tab: tab === 'default',
+            }"
             @click="toggleTab('default')"
           >
             Default Values

@@ -23,7 +23,10 @@
           v-model="formData.email"
           type="email"
           placeholder="Enter your email address"
-          :class="emailError != '' ? 'error__input input' : 'input'"
+          class="input"
+          :class="{
+            'error__input' : emailError!=''
+          }"
         >
         <svg-vue
           class="reset__icon mail__icon"
