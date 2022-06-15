@@ -18,9 +18,18 @@ export default defineComponent({
   name: 'ButtonComponent',
   components: {},
   props: {
-    text: String,
-    icon: String,
-    type: String,
+    text: {
+      type: String,
+      required: true,
+    },
+    icon: {
+      type: String,
+      required: true,
+    },
+    type: {
+      type: String,
+      required: true,
+    },
   },
   setup(props) {
     let btnType = '';

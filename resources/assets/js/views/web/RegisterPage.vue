@@ -23,9 +23,9 @@
             <div class="flex items-center space-x-1">
               <HoverText
                 v-if="registerForm['3']['hover_text']"
-                :hover-text="registerForm['3'].hover_text"
+                :hover-text="registerForm['3']['hover_text']"
                 :name="registerForm['3'].title"
-                :position="right"
+                position="right"
               />
               <span class="text-2xl font-bold text-n-50">{{
                 registerForm['3'].title

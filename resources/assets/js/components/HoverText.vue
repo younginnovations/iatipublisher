@@ -3,24 +3,24 @@
     <button>
       <svg-vue
         :class="{
-          'text-tiny': props.iconSize,
-          svgIconSize: !props.iconSize,
+          'text-tiny': iconSize,
+          svgIconSize: !iconSize,
         }"
         icon="help"
       />
     </button>
     <div
-      :class="
-        props.position === 'right'
-          ? 'help__text left-0 ' + hoverTextClass
-          : 'help__text right-0 ' + hoverTextClass
-      "
+      :class="[
+        position === 'right'
+          ? 'help__text left-0 ' + width
+          : 'help__text right-0 ' + width
+      ]"
     >
-      <span class="font-bold text-bluecoral">{{ props.name }}</span>
-      <p v-html="props.hoverText" />
+      <span class="font-bold text-bluecoral">{{ name }}</span>
+      <p v-html="hoverText" />
       <a
-        v-if="props.link"
-        :href="props.link"
+        v-if="link"
+        :href="link"
         class="inline-block font-bold text-bluecoral"
       >Learn more</a>
     </div>
@@ -43,6 +43,7 @@ export default defineComponent({
     width: {
       type: String,
       required: false,
+      default: 'w-60'
     },
     position: {
       type: String,
@@ -55,19 +56,8 @@ export default defineComponent({
     iconSize: {
       type: String,
       required: false,
+      default: 'text-sm'
     },
-  },
-  setup(props) {
-    const hoverTextClass = ref('');
-    const svgIconSize = ref('');
-    hoverTextClass.value = props.width ? props.width : 'w-60';
-    svgIconSize.value = props.iconSize ? props.iconSize : 'text-sm';
-
-    return {
-      props,
-      svgIconSize,
-      hoverTextClass,
-    };
   },
 });
 </script>
