@@ -12,6 +12,7 @@ use Illuminate\Database\DatabaseManager;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
 
 /**
  * Class ActivityController.
@@ -100,11 +101,14 @@ class ActivityController extends Controller
     public function show(Activity $activity): View|JsonResponse
     {
         try {
+            $toast['message'] = Session::has('error') ? Session::get('error') : (Session::get('success') ? Session::get('success') : '');
+            $toast['type'] = Session::has('error') ? 'error' : 'success';
             $elements = json_decode(file_get_contents(app_path('Data/Activity/Element.json')), true);
             $elementGroups = json_decode(file_get_contents(app_path('Data/Activity/ElementGroup.json')), true);
+            $types = $this->getActivityDetailDataType();
             $progress = 75;
 
-            return view('admin.activity.show', compact('elements', 'elementGroups', 'progress', 'activity'));
+            return view('admin.activity.show', compact('elements', 'elementGroups', 'progress', 'activity', 'toast', 'types'));
         } catch (Exception $e) {
             logger()->error($e->getMessage());
         }
@@ -188,5 +192,29 @@ class ActivityController extends Controller
 
             return response()->json(['success' => false, 'message' => 'Error occurred while fetching the data']);
         }
+    }
+
+    /*
+    * Get activity detail data type
+    *
+    * @return array
+    */
+    public function getActivityDetailDataType(): array
+    {
+        return [
+            'languages' => getCodeListArray('Languages', 'ActivityArray'),
+            'activityDate' => getCodeList('ActivityDateType', 'Activity'),
+            'activityScope' => getCodeList('ActivityScope', 'Activity'),
+            'activityStatus' => getCodeList('ActivityStatus', 'Activity'),
+            'aidType' => getCodeList('AidType', 'Activity'),
+            'aidTypeVocabulary' => getCodeList('AidTypeVocabulary', 'Activity'),
+            'collaborationType' => getCodeList('CollaborationType', 'Activity'),
+            'conditionType' => getCodeList('ConditionType', 'Activity'),
+            'financeType' => getCodeList('FinanceType', 'Activity'),
+            'flowType' => getCodeList('FlowType', 'Activity'),
+            'relatedActivityType' => getCodeList('RelatedActivityType', 'Activity'),
+            'tiedStatus' => getCodeList('TiedStatus', 'Activity'),
+            'descriptionType' => getCodeList('DescriptionType', 'Activity'),
+        ];
     }
 }

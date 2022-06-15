@@ -29,7 +29,8 @@
         type="image/x-icon" />
 
     {{-- select2 css--}}
-    <link href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.5/css/select2.min.css" rel="stylesheet" />
+    {{-- <link href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css" rel="stylesheet" /> --}}
 
 </head>
 
@@ -40,6 +41,7 @@
 
         <main>
             @yield('content')
+            @stack('scripts')
         </main>
     </div>
 </body>

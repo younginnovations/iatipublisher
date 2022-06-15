@@ -49,7 +49,7 @@ class TitleRepository
     /**
      * Updates activity title.
      * @param $activityTitle
-     * @param $activityData
+     * @param $activity
      * @return bool
      */
     public function update($activityTitle, $activity): bool

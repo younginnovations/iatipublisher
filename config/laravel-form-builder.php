@@ -1,18 +1,22 @@
 <?php
 
-return [
-    'defaults'      => [
-        // 'wrapper_class'       => 'form-group form-field-group',
-        'wrapper_class'       => '',
-        'wrapper_error_class' => 'has-error',
-        'label_class'         => 'control-label',
-        'field_class'         => 'form-control',
-        'field_error_class'   => '',
-        'help_block_class'    => 'help-block help-text',
-        'error_class'         => 'text-danger error',
-        'required_class'      => 'required',
+use Kris\LaravelFormBuilder\Form;
+use Kris\LaravelFormBuilder\FormBuilder;
+use Kris\LaravelFormBuilder\FormHelper;
 
-        'help_block_tag'      => 'p',
+return [
+    'defaults' => [
+        // 'wrapper_class'       => 'form-group form-field-group',
+        'wrapper_class' => 'subelement rounded-tl-lg border-l border-spring-50 pb-11',
+        'wrapper_error_class' => 'has-error',
+        'label_class' => 'flex control-label py-4 px-6 font-bold text-sm leading-relaxed rounded-tl-lg rounded-tr-lg border-spring-50 border-t border-r',
+        'field_class' => 'form-control',
+        'field_error_class' => '',
+        'help_block_class' => 'help-block help-text',
+        'error_class' => 'text-danger error',
+        'required_class' => 'required',
+
+        'help_block_tag' => 'p',
 
         // Override a class from a field.
         //'text'                => [
@@ -28,22 +32,22 @@ return [
         //],
     ],
     // Templates
-    'form'          => 'laravel-form-builder::form',
-    'text'          => 'laravel-form-builder::text',
-    'textarea'      => 'laravel-form-builder::textarea',
-    'button'        => 'laravel-form-builder::button',
-    'buttongroup'   => 'laravel-form-builder::buttongroup',
-    'radio'         => 'laravel-form-builder::radio',
-    'checkbox'      => 'laravel-form-builder::checkbox',
-    'select'        => 'laravel-form-builder::select',
-    'choice'        => 'laravel-form-builder::choice',
-    'repeated'      => 'laravel-form-builder::repeated',
-    'child_form'    => 'laravel-form-builder::child_form',
-    'collection'    => 'laravel-form-builder::collection',
-    'static'        => 'laravel-form-builder::static',
+    'form' => 'laravel-form-builder::form',
+    'text' => 'laravel-form-builder::text',
+    'textarea' => 'laravel-form-builder::textarea',
+    'button' => 'laravel-form-builder::button',
+    'buttongroup' => 'laravel-form-builder::buttongroup',
+    'radio' => 'laravel-form-builder::radio',
+    'checkbox' => 'laravel-form-builder::checkbox',
+    'select' => 'laravel-form-builder::select',
+    'choice' => 'laravel-form-builder::choice',
+    'repeated' => 'laravel-form-builder::repeated',
+    'child_form' => 'laravel-form-builder::child_form',
+    'collection' => 'laravel-form-builder::collection',
+    'static' => 'laravel-form-builder::static',
 
     // Remove the laravel-form-builder:: prefix above when using template_prefix
-    'template_prefix'   => '',
+    'template_prefix' => '',
 
     'default_namespace' => '',
 
@@ -51,7 +55,7 @@ return [
 //        'datetime' => App\Forms\Fields\Datetime::class
     ],
 
-    'plain_form_class' => \Kris\LaravelFormBuilder\Form::class,
-    'form_builder_class' => \Kris\LaravelFormBuilder\FormBuilder::class,
-    'form_helper_class' => \Kris\LaravelFormBuilder\FormHelper::class,
+    'plain_form_class' => Form::class,
+    'form_builder_class' => FormBuilder::class,
+    'form_helper_class' => FormHelper::class,
 ];

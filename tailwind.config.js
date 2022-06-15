@@ -13,6 +13,8 @@ module.exports = {
     './resources/**/*.blade.php',
     './resources/**/*.js',
     './resources/**/*.vue',
+    './config/*.php',
+    './app/**/*.php',
   ],
   theme: {
     fontFamily: {

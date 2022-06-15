@@ -242,7 +242,7 @@
             </div>
           </div>
         </div>
-        <Elements :data="elements" :activity-id="activity.id" />
+        <Elements :activity-id="activity.id" :data="elements" />
       </aside>
       <div class="activities__content">
         <div class="inline-flex flex-wrap gap-2">
@@ -271,10 +271,14 @@
           <template v-for="(post, key, index) in activities" :key="index">
             <template v-for="(element, name, i) in post.elements" :key="i">
               <ActivityElement
-                v-if="Object.keys(element.content).length > 0"
+                v-if="
+                  typeof element.content === 'object'
+                    ? Object.keys(element.content).length > 0
+                    : element.content
+                "
                 :id="key"
-                :content="element.content"
                 :data="element"
+                :types="props.types"
                 :title="name"
                 :width="
                   name === 'title' || name === 'description' ? 'full' : ''
@@ -290,7 +294,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, reactive, ref } from 'vue';
+import { defineComponent, onMounted, reactive } from 'vue';
 import { useToggle } from '@vueuse/core';
 import HoverText from '../../components/HoverText.vue';
 import ProgressBar from '../../components/ProgressBar.vue';
@@ -327,6 +331,14 @@ export default defineComponent({
       type: Number,
       required: true,
     },
+    toast: {
+      type: Object,
+      required: true,
+    },
+    types: {
+      type: Object,
+      required: true,
+    },
   },
   setup(props) {
     const toast = reactive({
@@ -342,6 +354,18 @@ export default defineComponent({
     const [unpublishValue, unpublishToggle] = useToggle();
     const [deleteValue, deleteToggle] = useToggle();
     const [downloadValue, downloadToggle] = useToggle();
+
+    onMounted(() => {
+      if (props.toast.message !== '') {
+        toast.type = props.toast.type;
+        toast.visibility = true;
+        toast.message = props.toast.message;
+      }
+
+      setTimeout(() => {
+        toast.visibility = false;
+      }, 5000);
+    });
 
     /**
      * Finding current language - activity title
@@ -395,6 +419,7 @@ export default defineComponent({
         groupedData[key]['status'] = 'disabled';
       }
     });
+    console.log(activities);
 
     return {
       groupedData,
@@ -409,6 +434,7 @@ export default defineComponent({
       downloadValue,
       downloadToggle,
       toast,
+      props
     };
   },
 });

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Requests\Setting;
 
 use Illuminate\Foundation\Http\FormRequest;
@@ -9,7 +11,7 @@ use Illuminate\Foundation\Http\FormRequest;
  */
 class PublisherFormRequest extends FormRequest
 {
-    public function authorize()
+    public function authorize(): bool
     {
         return true;
     }
@@ -19,11 +21,11 @@ class PublisherFormRequest extends FormRequest
      *
      * @return array
      */
-    public function rules()
+    public function rules(): array
     {
         return [
-          'publisher_id' => 'sometimes',
-          'api_token' => 'sometimes',
+            'publisher_id' => 'sometimes',
+            'api_token' => 'sometimes',
         ];
     }
 }
