@@ -50,15 +50,7 @@
         <div class="icons flex">
           <a
             :href="`/activities/1/${title}`"
-            class="
-              edit-button
-              mr-2.5
-              flex
-              items-center
-              text-xs
-              font-bold
-              uppercase
-            "
+            class="edit-button mr-2.5 flex items-center text-xs font-bold uppercase"
           >
             <svg-vue class="mr-0.5 text-base" icon="edit"></svg-vue>
             <span>Edit</span>
@@ -103,7 +95,7 @@
 
       <template v-else-if="title === 'description'">
         <div
-          v-for="(post, key, i) in data.content"
+          v-for="(post, key) in data.content"
           :key="key"
           :class="{ 'mb-4': key !== data.content.length - 1 }"
         >
@@ -128,7 +120,7 @@
 
       <template v-else-if="title === 'activity_date'">
         <div
-          v-for="(post, key, i) in data.content"
+          v-for="(post, key) in data.content"
           :key="key"
           :class="{ 'mb-4': key !== data.content.length - 1 }"
         >
@@ -156,7 +148,7 @@
 
       <template v-else-if="title === 'recipient_country'">
         <div
-          v-for="(post, key, i) in data.content"
+          v-for="(post, key) in data.content"
           :key="key"
           :class="{ 'mb-4': key !== data.content.length - 1 }"
         >
@@ -187,7 +179,7 @@
 
       <template v-else-if="title === 'related_activity'">
         <div
-          v-for="(post, key, i) in data.content"
+          v-for="(post, key) in data.content"
           :key="key"
           :class="{ 'mb-4': key !== data.content.length - 1 }"
         >
@@ -202,7 +194,7 @@
 
       <template v-else-if="title === 'legacy_data'">
         <div
-          v-for="(post, key, i) in data.content"
+          v-for="(post, key) in data.content"
           :key="key"
           :class="{ 'mb-4': key !== data.content.length - 1 }"
         >
@@ -226,7 +218,7 @@
         </div>
         <div class="condition-contents">
           <div
-            v-for="(post, key, i) in data.content.condition"
+            v-for="(post, key) in data.content.condition"
             :key="key"
             :class="{ 'mb-4': key !== data.content.condition.length - 1 }"
           >
