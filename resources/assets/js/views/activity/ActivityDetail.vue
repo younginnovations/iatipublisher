@@ -323,16 +323,16 @@
                 :id="key"
                 :data="element"
                 :types="props.types"
-                :title="name.toString()"
+                :title="String(name)"
                 :activity-id="activity.id"
                 :width="
-                  name === 'identifier' ||
-                  name === 'activity_status' ||
-                  name === 'activity_scope' ||
-                  name === 'collaboration_type' ||
-                  name === 'default_flow_type' ||
-                  name === 'default_tied_status' ||
-                  name === 'default_finance_type'
+                  String(name) === 'identifier' ||
+                  String(name) === 'activity_status' ||
+                  String(name) === 'activity_scope' ||
+                  String(name) === 'collaboration_type' ||
+                  String(name) === 'default_flow_type' ||
+                  String(name) === 'default_tied_status' ||
+                  String(name) === 'default_finance_type'
                     ? 'basis-6/12'
                     : 'full'
                 "

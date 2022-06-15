@@ -93,6 +93,7 @@
             (Language: {{ post.language }})
           </div>
             {{ post.narrative }}
+            </div>
       </template>
 
       <template v-else-if="title === 'identifier'">

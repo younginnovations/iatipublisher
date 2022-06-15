@@ -36,11 +36,10 @@
                 </div>
                 <input
                   v-model="formData.narrative"
-                  :class="
-                    errorData.narrative != ''
-                      ? 'error__input form__input'
-                      : 'form__input'
-                  "
+                  class="form__input"
+                  :class="{
+                    error__input: errorData.narrative != '',
+                  }"
                   type="text"
                   placeholder="Type narrative here"
                 >
@@ -66,11 +65,10 @@
 
                 <Multiselect
                   v-model="formData.language"
-                  :class="
-                    errorData.language != ''
-                      ? 'error__input vue__select'
-                      : 'vue__select'
-                  "
+                  class="vue__select"
+                  :class="{
+                    error__input: errorData.language != '',
+                  }"
                   :searchable="true"
                   :options="languages"
                   placeholder="Select @xml:lang"
@@ -115,11 +113,10 @@
                 </div>
                 <input
                   v-model="formData.activity_identifier"
-                  :class="
-                    errorData.activity_identifier != ''
-                      ? 'error__input form__input'
-                      : 'form__input'
-                  "
+                  class="form__input"
+                  :class="{
+                    error__input: errorData.activity_identifier != '',
+                  }"
                   type="text"
                   placeholder="Type activity-identifier here"
                 >
@@ -136,8 +133,8 @@
                 >Enter your own unique activity identifier such as
                   abbreviation or simply a number. Make sure it is unique across
                   all the activities. IATI Publisher will concatenate
-                  Organization Identifier and Activity Identifier to autogenerate
-                  'iati-identifier'.
+                  Organization Identifier and Activity Identifier to
+                  autogenerate 'iati-identifier'.
                 </span>
               </div>
               <div>
@@ -242,13 +239,11 @@ export default defineComponent({
     const organization = reactive({});
 
     onMounted(async () => {
-      axios
-        .get('/activity/codelists')
-        .then((res) => {
-          const response = res.data;
-          Object.assign(languages, response.data.languages);
-          Object.assign(organization, response.data.organization);
-        })
+      axios.get('/activity/codelists').then((res) => {
+        const response = res.data;
+        Object.assign(languages, response.data.languages);
+        Object.assign(organization, response.data.organization);
+      });
     });
 
     function closeModal() {

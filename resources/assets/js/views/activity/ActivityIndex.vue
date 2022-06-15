@@ -17,7 +17,7 @@
       >
         <Pagination
           :current_page="activities.current_page"
-          :page_count="activities.last_page"
+          :page-count="activities.last_page"
           @fetchActivities="fetchActivities"
         />
       </div>

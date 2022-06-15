@@ -18,7 +18,11 @@ export default defineComponent({
   name: 'AlertMessage',
   components: {},
   props: {
-    type: String,
+    type: {
+      type : String,
+      required : false,
+      default : 'success'
+    },
   },
   setup(props) {
     let icon = 'tick';

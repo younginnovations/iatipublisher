@@ -18,11 +18,10 @@
         <input
           id="username"
           v-model="formData.username"
-          :class="
-            errorData.username != ''
-              ? 'error__input username input sm:h-16'
-              : 'username input sm:h-16'
-          "
+          class="username input sm:h-16"
+          :class="{
+            'error_input' : errorData.username
+          }"
           type="text"
           placeholder="Enter a registered username"
         >
@@ -46,11 +45,10 @@
         <input
           id="password"
           v-model="formData.password"
-          :class="
-            errorData.password || errorData.username != ''
-              ? 'error__input password input sm:h-16'
-              : 'password input sm:h-16'
-          "
+          class="password input sm:h-16"
+          :class="{
+            'error__input' : errorData.password || errorData.username
+          }"
           type="password"
           placeholder="Enter a correct password"
         >

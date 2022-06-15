@@ -13,7 +13,7 @@
     </a>
 
     <a
-      v-for="index in parseInt(props.page_count)"
+      v-for="index in parseInt(props.pageCount)"
       :key="index"
       href="#"
       aria-current="page"
@@ -40,7 +40,7 @@ export default defineComponent({
   name: 'PaginationComponent',
   components: {},
   props: {
-    page_count: {
+    pageCount: {
       type: [String],
       required: true,
     },
@@ -59,7 +59,7 @@ export default defineComponent({
 
     function nextPage() {
       active_page.value =
-        active_page.value === parseInt(props.page_count)
+        active_page.value === parseInt(props.pageCount)
           ? 1
           : active_page.value + 1;
     }
@@ -67,7 +67,7 @@ export default defineComponent({
     function previousPage() {
       active_page.value =
         active_page.value === 1
-          ? parseInt(props.page_count)
+          ? parseInt(props.pageCount)
           : active_page.value - 1;
     }
 
