@@ -40,30 +40,22 @@ class DefaultAidTypeController extends Controller
     }
 
     /**
-     * Renders default aid type edit form.
-     *
      * @param int $id
      *
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|void
      */
-    public function edit(int $id):View|RedirectResponse
+    public function edit(int $id): View|RedirectResponse
     {
         try {
             $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
             $activity = $this->defaultAidTypeService->getActivityData($id);
             $model['default_aid_type'] = $this->defaultAidTypeService->getDefaultAidTypeData($id);
             $this->baseFormCreator->url = route('admin.activities.default-aid-type.update', [$id]);
-            $temp = [];
-
-            foreach ($element['default-aid-type']['attributes']['code']['choices'] as $key => $choice) {
-                $temp[$key] = getList($choice, true);
-            }
-
-            $element['default-aid-type']['attributes']['code']['choices'] = $temp;
             $form = $this->baseFormCreator->editForm($model, $element['default-aid-type']);
 
             return view('activity.defaultAidType.defaultAidType', compact('form', 'activity'));
         } catch (\Exception $e) {
+            dd($e->getMessage());
             logger()->error($e->getMessage());
 
             return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while updating default aid type.');
@@ -72,7 +64,6 @@ class DefaultAidTypeController extends Controller
 
     /**
      * Updates default aid type data.
-     *
      * @param DefaultAidTypeRequest $request
      * @param $id
      *
@@ -82,13 +73,13 @@ class DefaultAidTypeController extends Controller
     {
         try {
             $activityData = $this->defaultAidTypeService->getActivityData($id);
-            $activityDefaultAidType = (int) $request->get('default_aid_type');
+            $activityDefaultAidType = $request->all();
 
             if (!$this->defaultAidTypeService->update($activityDefaultAidType, $activityData)) {
                 return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while updating default aid type.');
             }
 
-            return redirect()->route('admin.activities.show', $id)->with('success', 'Default aid type updated successfully.');
+            return redirect()->route('admin.activities.show', $id)->with('success', 'Activity default aid type updated successfully.');
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 

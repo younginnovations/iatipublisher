@@ -29,9 +29,9 @@ class DefaultAidTypeRepository
     /**
      * Returns default aid type data of an activity.
      * @param $activityId
-     * @return int|null
+     * @return array|null
      */
-    public function getDefaultAidTypeData($activityId): ?int
+    public function getDefaultAidTypeData($activityId): ?array
     {
         return $this->activity->findorFail($activityId)->default_aid_type;
     }
@@ -54,7 +54,7 @@ class DefaultAidTypeRepository
      */
     public function update($activityDefaultAidType, $activity): bool
     {
-        $activity->default_aid_type = $activityDefaultAidType;
+        $activity->default_aid_type = array_values($activityDefaultAidType['default_aid_type']);
 
         return $activity->save();
     }

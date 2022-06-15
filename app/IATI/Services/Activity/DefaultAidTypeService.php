@@ -32,9 +32,9 @@ class DefaultAidTypeService
      *
      * @param int $activity_id
      *
-     * @return int|null
+     * @return array|null
      */
-    public function getDefaultAidTypeData(int $activity_id): ?int
+    public function getDefaultAidTypeData(int $activity_id): ?array
     {
         return $this->defaultAidTypeRepository->getDefaultAidTypeData($activity_id);
     }
@@ -52,7 +52,7 @@ class DefaultAidTypeService
     }
 
     /**
-     * Updates activity default aid type data.
+     * Updates activity default aid type.
      *
      * @param $activityDefaultAidType
      * @param $activity
