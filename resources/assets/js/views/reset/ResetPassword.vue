@@ -22,7 +22,10 @@
         <input
           id="new_password"
           v-model="formData.password"
-          :class="errorData.password != '' ? 'error__input input' : 'input'"
+          class="input"
+          :class="{
+            error__input: errorData.password != '',
+          }"
           type="password"
           placeholder="Enter a new password"
         >
@@ -46,12 +49,10 @@
         <input
           id="repeat_password"
           v-model="formData.password_confirmation"
-          :class="
-            errorData.password_confirmation ||
-              (errorData.password && formData.password != '') != ''
-              ? 'error__input input'
-              : 'input'
-          "
+          class="input"
+          :class="{
+            error__input: errorData.password_confirmation ||(errorData.password && formData.password != '') != '',
+          }"
           type="password"
           placeholder="Re-enter your password"
         >

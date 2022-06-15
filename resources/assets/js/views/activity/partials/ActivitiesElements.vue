@@ -30,7 +30,9 @@
             class="text-lg"
           />
           <svg-vue
-            :class="searchBtnValue ? 'rotate-180' : ''"
+            :class="{
+              'rotate-180' : searchBtnValue
+            }"
             class="w-2.5 text-xs transition duration-200 ease-linear"
             icon="dropdown-arrow"
           />

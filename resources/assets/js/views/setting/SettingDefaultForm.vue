@@ -61,11 +61,10 @@
           <Multiselect
             id="default-language"
             v-model="defaultForm.default_language"
-            :class="
-              defaultError.default_language
-                ? 'error__input vue__select'
-                : 'vue__select'
-            "
+            class="vue__select"
+            :class="{
+              error__input: defaultError.default_language,
+            }"
             placeholder="Select language from dropdown"
             :searchable="true"
             :options="props.languages"
@@ -106,11 +105,7 @@
           <input
             id="default-hierarchy"
             v-model="defaultForm.hierarchy"
-            :class="
-              defaultError.hierarchy
-                ? 'register__input mb-2'
-                : 'register__input mb-2'
-            "
+            class="register__input mb-2"
             type="text"
             placeholder="Type default hierarchy here"
             @input="updateStore('hierarchy')"
@@ -143,11 +138,10 @@
           <Multiselect
             id="humanitarian"
             v-model="defaultForm.humanitarian"
-            :class="
-              defaultError.humanitarian
-                ? 'error__input vue__select'
-                : 'vue__select'
-            "
+            class="vue__select"
+            :class="{
+              error__input: defaultError.humanitarian,
+            }"
             placeholder="Select Humanitarian here"
             :options="props.humanitarian"
             :searchable="true"
