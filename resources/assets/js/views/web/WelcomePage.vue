@@ -7,9 +7,10 @@
         <div class="left__container rounded-lg p-5 sm:p-10">
           <span class="left__title font-bold">IATI Publishing Tool</span>
           <p class="pt-2 sm:pt-6 sm:pb-8">
-            Welcome to IATI Publisher. Use this tool to start your IATI
-            publishing journey. Enter your login information if you're already a
-            user or create a new account if you're new here.
+            Welcome to IATI Publisher. Publish IATI data on your organisation’s
+            development and humanitarian financing and activities. Enter your
+            login information if you’re already a user or create a new account
+            if you’re new here.
           </p>
           <div class="hidden sm:block">
             <span class="flex flex-wrap">

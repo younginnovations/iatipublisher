@@ -58,6 +58,10 @@
   @media screen and (min-width: 1366px) {
     .join-now {
       @apply px-20;
+
+      .right__content {
+        width: 423px;
+      }
     }
   }
 }
