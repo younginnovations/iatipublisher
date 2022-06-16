@@ -42,7 +42,7 @@ class SectorRequest extends ActivityBaseRequest
         foreach ($formFields as $sectorIndex => $sector) {
             $sectorForm = sprintf('sector.%s', $sectorIndex);
 //            $rules[sprintf('%s.vocabulary', $sectorForm)] = 'required';
-//            $vocabulary = $sector['vocabulary'];
+//            $vocabulary = $sector['sector_vocabulary'];
             $rules[sprintf('%s.vocabulary_uri', $sectorForm)] = 'nullable|url';
 
 //            switch ($vocabulary) {
@@ -125,7 +125,7 @@ class SectorRequest extends ActivityBaseRequest
             $messages[sprintf('%s.vocabulary_uri.url', $sectorForm)] = 'The @vocabulary-uri field must be a valid url.';
 //            $messages[sprintf('%s.vocabulary.required', $sectorForm)] = trans('validation.required', ['attribute' => trans('elementForm.sector_vocabulary')]);
 
-//            $vocabulary = $sector['vocabulary'];
+//            $vocabulary = $sector['sector_vocabulary'];
 
 //            switch ($vocabulary) {
 //                case '1':
@@ -190,7 +190,7 @@ class SectorRequest extends ActivityBaseRequest
             foreach ($sectors as $sectorIndex => $sector) {
                 $sectorForm = sprintf('sector.%s', $sectorIndex);
                 $percentage = $sector['percentage'] ?: 0;
-                $sectorVocabulary = $sector['vocabulary'] ?: 'Not Specified';
+                $sectorVocabulary = $sector['sector_vocabulary'] ?: 'Not Specified';
 
                 if (array_key_exists($sectorVocabulary, $array)) {
                     $totalPercentage = $array[$sectorVocabulary] + (float) $percentage;

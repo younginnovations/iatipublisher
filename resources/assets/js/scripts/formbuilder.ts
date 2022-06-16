@@ -95,7 +95,7 @@ class FormBuilder {
   }
 
   //add wrapper div around the attributes
-  public addWrapper() {
+  public addWrapper(): void {
     $('.multi-form').each(function () {
       $(this)
         .find('.attribute')
@@ -114,8 +114,8 @@ class FormBuilder {
    */
   public humanitarianScopeVocabularyUri() {
     var humanitarianScopeVocabulary = $(
-        'select[id^="humanitarian_scope"][id*="[vocabulary]"]'
-      ),
+      'select[id^="humanitarian_scope"][id*="[vocabulary]"]'
+    ),
       humanitarianScopeVocabularyUri =
         'input[id^="humanitarian_scope"][id*="[vocabulary_uri]"]';
 
@@ -201,6 +201,168 @@ class FormBuilder {
       });
     }
   }
+  //hide and show aid type fields
+  public hideAidTypeSelectField(index: JQuery, value: string) {
+    var default_aid_type = 'select[id*="[default_aid_type]"]',
+      earmarking_category = 'select[id*="[earmarking_category]"]',
+      earmarking_modality = 'select[id*="[earmarking_modality]"]',
+      cash_and_voucher_modalities =
+        'select[id*="[cash_and_voucher_modalities]"]',
+      case1 =
+        'select[id*="[earmarking_category]"],select[id*="[earmarking_modality]"],select[id*="[cash_and_voucher_modalities]"]',
+      case2 =
+        'select[id*="[default_aid_type]"],select[id*="[earmarking_modality]"],select[id*="[cash_and_voucher_modalities]"]',
+      case3 =
+        'select[id*="[default_aid_type]"],select[id*="[earmarking_category]"],select[id*="[cash_and_voucher_modalities]"]',
+      case4 =
+        'select[id*="[default_aid_type]"],select[id*="[earmarking_category]"],select[id*="[earmarking_modality]"]';
+
+    switch (value) {
+      case '2':
+        //show fields
+        index.closest('.form-field-group').find(earmarking_category).show().closest('.form-field').show();
+
+        // //hide fields
+        index.closest('.form-field-group').find(case2).hide().closest('.form-field').hide();
+        break;
+      case '3':
+        //show fields
+        index.closest('.form-field-group').find(earmarking_modality).show().closest('.form-field').show();
+
+        //hide fields
+        index.closest('.form-field-group').find(case3).hide().closest('.form-field').hide();
+        break;
+
+      case '4':
+        //show fields
+        index.closest('.form-field-group').find(cash_and_voucher_modalities).show().closest('.form-field').show();
+
+        //hide fields
+        index.closest('.form-field-group').find(case4).hide().closest('.form-field').hide();
+        break;
+      default:
+        //show fields
+        index.closest('.form-field-group').find(default_aid_type).show().closest('.form-field').show();
+
+        //hide fields
+        index.closest('.form-field-group').find(case1).hide().closest('.form-field').hide();
+    }
+
+
+
+  }
+
+  public hidePolicyMakerField(index: JQuery, value: string) {
+    let case1_show = 'select[id*="[policy_marker]"]',
+      case2_show = 'input[id*="[policy_marker_text]"],input[id*="[vocabulary_uri]"]',
+      case1 =
+        'input[id*="[policy_marker_text]"],input[id*="[vocabulary_uri]"]',
+      case2 =
+        'select[id*="[policy_marker]"]';
+
+    console.log('here');
+
+    switch (value) {
+      case '1':
+        index.closest('.form-field-group').find(case1_show).show().closest('.form-field').show();
+        index.closest('.form-field-group').find(case1).hide().closest('.form-field').hide();
+        break;
+      case '99':
+        index.closest('.form-field-group').find(case2_show).show().closest('.form-field').show();
+        index.closest('.form-field-group').find(case2).hide().closest('.form-field').hide();
+        break;
+      default:
+        index.closest('.form-field-group').find(case1).hide().closest('.form-field').hide();
+    }
+  }
+
+  public hideSectorField(index: JQuery, value: string) {
+    let case1_show = 'select[id*="[code]"]',
+      case2_show = 'select[id*="[category_code]"]',
+      case7_show = 'select[id*="[sdg_goal]"]',
+      case8_show = 'select[id*="[sdg_target]"]',
+      case98_99_show = 'input[id*="[text]"],input[id*="[vocabulary_uri]"]',
+      default_show = 'input[id*="[text]"]',
+      case1 =
+        'select[id*="[category_code]"],select[id*="[sdg_goal]"],select[id*="[sdg_target]"],input[id*="[vocabulary_uri]"],input[id*="[text]"]',
+      case2 =
+        'input[id*="[vocabulary_uri]"],select[id*="[sdg_goal]"],select[id*="[sdg_target]"],select[id*="[code]"],input[id*="[text]"]',
+      case7 =
+        'input[id*="[vocabulary_uri]"],select[id*="[category_code]"],select[id*="[sdg_target]"],select[id*="[code]"],input[id*="[text]"]',
+      case8 =
+        'input[id*="[vocabulary_uri]"],select[id*="[category_code]"],select[id*="[sdg_goal]"],select[id*="[code]"],input[id*="[text]"]',
+      case98_99 =
+        'select[id*="[category_code]"],select[id*="[sdg_goal]"],select[id*="[sdg_target]"],select[id*="[code]"]',
+      default_hide = 'select[id*="[category_code]"],select[id*="[sdg_goal]"],select[id*="[sdg_target]"],select[id*="[code]"],input[id*="[vocabulary_uri]"]';
+
+
+    switch (value) {
+      case '1':
+        index.closest('.form-field-group').find(case1_show).show().closest('.form-field').show();
+        index.closest('.form-field-group').find(case1).hide().closest('.form-field').hide();
+        break;
+      case '2':
+        index.closest('.form-field-group').find(case2_show).show().closest('.form-field').show();
+        index.closest('.form-field-group').find(case2).hide().closest('.form-field').hide();
+        break;
+      case '7':
+        index.closest('.form-field-group').find(case7_show).show().closest('.form-field').show();
+        index.closest('.form-field-group').find(case7).hide().closest('.form-field').hide();
+        break;
+      case '8':
+        index.closest('.form-field-group').find(case8_show).show().closest('.form-field').show();
+        index.closest('.form-field-group').find(case8).hide().closest('.form-field').hide();
+        break;
+      case '98':
+        index.closest('.form-field-group').find(case98_99_show).show().closest('.form-field').show();
+        index.closest('.form-field-group').find(case98_99).hide().closest('.form-field').hide();
+        break;
+      case '99':
+        index.closest('.form-field-group').find(case98_99_show).show().closest('.form-field').show();
+        index.closest('.form-field-group').find(case98_99).hide().closest('.form-field').hide();
+        break;
+      default:
+        index.closest('.form-field-group').find(default_show).show().closest('.form-field').show();
+
+        index.closest('.form-field-group').find(default_hide).hide().closest('.form-field').hide();
+    }
+  }
+
+  public hideRecipientRegionField(index: JQuery, value: string) {
+    let case1_show = 'select[id*="[region_code]"],input[id*="[custom_code]"]',
+      case2_show = 'input[id*="[custom_code]"]',
+      case99_show = 'input[id*="[custom_code]"],input[id*="[vocabulary_uri]"]',
+      case1 =
+        'input[id*="[custom_code]"],input[id*="[vocabulary_uri]"]',
+      case2 =
+        'select[id*="[region_code]"],input[id*="[vocabulary_uri]"]',
+      case99 =
+        'select[id*="[region_code]"]';
+
+    console.log(index.closest('.form-field-group').find(case1_show));
+
+    console.log(value);
+
+
+    switch (value) {
+      case '1':
+        index.closest('.form-field-group').find(case1_show).show().closest('.form-field').show();
+        index.closest('.form-field-group').find(case1).hide().closest('.form-field').hide();
+        break;
+      case '2':
+        index.closest('.form-field-group').find(case2_show).show().closest('.form-field').show();
+        index.closest('.form-field-group').find(case2).hide().closest('.form-field').hide();
+        break;
+      case '99':
+        index.closest('.form-field-group').find(case99_show).show().closest('.form-field').show();
+        index.closest('.form-field-group').find(case99).hide().closest('.form-field').hide();
+        break;
+      default:
+        index.closest('.form-field-group').find(case2_show).show().closest('.form-field').show();
+        index.closest('.form-field-group').find(case2).hide().closest('.form-field').hide();
+    }
+  }
+
 }
 
 $(function () {
@@ -228,11 +390,7 @@ $(function () {
     allowClear: true,
   });
 
-  /**
-   * Default Aid Type Form Page
-   *
-   * @Logic hide select fields based on '@vocabulary' field value
-   */
+  //aidtype_vocabulary
   var aidtype_vocabulary = $('select[id*="default_aidtype_vocabulary"]');
 
   //run code only if vocabulary select field exist in page
@@ -240,101 +398,80 @@ $(function () {
     // hide fields on page load
     $.each(aidtype_vocabulary, function () {
       var data = $(this).val() ?? '1';
-      defaultAidtypeHideSelectField($(this), data.toString());
+      formBuilder.hideAidTypeSelectField($(this), data.toString());
     });
 
     // hide fields based on vocabulary value change
     aidtype_vocabulary.on('select2:select', function (e) {
       var data = e.params.data.id;
-      defaultAidtypeHideSelectField($(this), data);
+      formBuilder.hideAidTypeSelectField($(this), data);
     });
   }
 
-  function defaultAidtypeHideSelectField(index: JQuery, value: string) {
-    var default_aid_type = 'select[id*="[default_aid_type]"]',
-      earmarking_category = 'select[id*="[earmarking_category]"]',
-      earmarking_modality = 'select[id*="[earmarking_modality]"]',
-      cash_and_voucher_modalities =
-        'select[id*="[cash_and_voucher_modalities]"]',
-      case1 =
-        'select[id*="[earmarking_category]"],select[id*="[earmarking_modality]"],select[id*="[cash_and_voucher_modalities]"]',
-      case2 =
-        'select[id*="[default_aid_type]"],select[id*="[earmarking_modality]"],select[id*="[cash_and_voucher_modalities]"]',
-      case3 =
-        'select[id*="[default_aid_type]"],select[id*="[earmarking_category]"],select[id*="[cash_and_voucher_modalities]"]',
-      case4 =
-        'select[id*="[default_aid_type]"],select[id*="[earmarking_category]"],select[id*="[earmarking_modality]"]';
 
-    switch (value) {
-      case '2':
-        //show fields
-        index
-          .closest('.form-field-group')
-          .find(earmarking_category)
-          .show()
-          .closest('.form-field')
-          .show();
 
-        // //hide fields
-        index
-          .closest('.form-field-group')
-          .find(case2)
-          .hide()
-          .closest('.form-field')
-          .hide();
-        break;
-      case '3':
-        //show fields
-        index
-          .closest('.form-field-group')
-          .find(earmarking_modality)
-          .show()
-          .closest('.form-field')
-          .show();
+  //policy maker
+  var policymaker_vocabulary = $('select[id*="policymarker_vocabulary"]');
 
-        //hide fields
-        index
-          .closest('.form-field-group')
-          .find(case3)
-          .hide()
-          .closest('.form-field')
-          .hide();
-        break;
+  //run code only if vocabulary select field exist in page
+  if (policymaker_vocabulary.length > 0) {
+    console.log('here');
+    //loop through all vocabulary
+    $.each(policymaker_vocabulary, function () {
+      var data = $(this).val() ?? '1';
+      formBuilder.hidePolicyMakerField($(this), data.toString());
+    });
 
-      case '4':
-        //show fields
-        index
-          .closest('.form-field-group')
-          .find(cash_and_voucher_modalities)
-          .show()
-          .closest('.form-field')
-          .show();
+    /**
+     * Hide and show select field based on vocabulary value
+     */
 
-        //hide fields
-        index
-          .closest('.form-field-group')
-          .find(case4)
-          .hide()
-          .closest('.form-field')
-          .hide();
-        break;
-      default:
-        //show fields
-        index
-          .closest('.form-field-group')
-          .find(default_aid_type)
-          .show()
-          .closest('.form-field')
-          .show();
+    policymaker_vocabulary.on('select2:select', function (e) {
+      var data = e.params.data.id;
+      formBuilder.hidePolicyMakerField($(this), data);
+    });
+  }
 
-        //hide fields
-        index
-          .closest('.form-field-group')
-          .find(case1)
-          .hide()
-          .closest('.form-field')
-          .hide();
-    }
+  //sector
+  var sector_vocabulary = $('select[id*="sector_vocabulary"]');
+
+  //run code only if vocabulary select field exist in page
+  if (sector_vocabulary.length > 0) {
+    //loop through all vocabulary
+    $.each(sector_vocabulary, function () {
+      var data = $(this).val() ?? '1';
+      formBuilder.hideSectorField($(this), data.toString());
+    });
+
+    /**
+     * Hide and show select field based on vocabulary value
+     */
+
+    sector_vocabulary.on('select2:select', function (e) {
+      var data = e.params.data.id;
+      formBuilder.hideSectorField($(this), data);
+    });
+  }
+
+  //recipient_region
+  var region_vocabulary = $('select[id*="region_vocabulary"]');
+
+  //run code only if vocabulary select field exist in page
+  if (region_vocabulary.length > 0) {
+    //loop through all vocabulary
+    $.each(region_vocabulary, function () {
+      var data = $(this).val() ?? '1';
+      formBuilder.hideRecipientRegionField($(this), data.toString());
+    });
+
+    /**
+     * Hide and show select field based on vocabulary value
+     */
+
+    region_vocabulary.on('select2:select', function (e) {
+      var data = e.params.data.id;
+      formBuilder.hideRecipientRegionField($(this), data);
+    });
   }
 
   formBuilder.humanitarianScopeVocabularyUri();

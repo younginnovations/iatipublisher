@@ -42,10 +42,14 @@ class OtherIdentifierRequest extends ActivityBaseRequest
 
         foreach ($formFields as $ownerOrgIndex => $ownerOrg) {
             $ownerOrgForm = sprintf('owner_org.%s', $ownerOrgIndex);
+            // dd($ownerOrg['narrative']);
             $rules = array_merge(
                 $rules,
                 $this->getRulesForNarrative($ownerOrg['narrative'], $ownerOrgForm)
             );
+
+            // foreach ($otherIdentifier['narrative'] as $narrativeIndex => $narrative) {
+                // $this->getRulesForRequiredNarrative($otherIdentifier['narrative'], $otherIdentifierForm);
         }
 
         return $rules;

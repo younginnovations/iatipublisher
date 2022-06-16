@@ -119,9 +119,9 @@ class RecipientRegionRequest extends ActivityBaseRequest
 
         foreach ($formFields as $recipientRegionIndex => $recipientRegion) {
             $recipientRegionForm = 'recipient_region.' . $recipientRegionIndex;
-//            $messages[$recipientRegionForm . '.region_code.required'] = 'The @cde field is required.';
-//            $messages[$recipientRegionForm . '.custom_code.required'] = 'The @cde field is required.';
-//            $messages[$recipientRegionForm . '.region_code_input.required'] = 'The @cde field is required.';
+//            $messages[$recipientRegionForm . '.region_code.required'] = 'The @code field is required.';
+//            $messages[$recipientRegionForm . '.custom_code.required'] = 'The @code field is required.';
+//            $messages[$recipientRegionForm . '.region_code_input.required'] = 'The @code field is required.';
             $messages[$recipientRegionForm . '.percentage.numeric'] = 'The @percentage field must be a number.';
             $messages[$recipientRegionForm . '.percentage.max'] = 'The @percentage cannot be greater than 100.';
 //            $messages[$recipientRegionForm . '.percentage.required'] = 'The @percentage field is required.';

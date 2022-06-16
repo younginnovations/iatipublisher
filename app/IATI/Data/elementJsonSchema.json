@@ -372,7 +372,7 @@
         "hover_text": "Either an OECD DAC or UN region code. Codelist is determined by vocabulary attribute. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/transaction/recipient-region/'>For more information</a>",
         "help_text": ""
       },
-      "un_region_code": {
+      "region_code": {
         "name": "custom_code",
         "type": "text",
         "required": true,
@@ -435,7 +435,7 @@
     "criteria": "mandatory",
     "attributes": {
       "vocabulary": {
-        "name": "vocabulary",
+        "name": "sector_vocabulary",
         "label": "@vocabulary",
         "criteria": "recommended",
         "required": true,
@@ -630,7 +630,7 @@
     "add_more": true,
     "attributes": {
       "vocabulary": {
-        "name": "vocabulary",
+        "name": "policymarker_vocabulary",
         "label": "@vocabulary",
         "criteria": "",
         "required": false,
@@ -649,6 +649,17 @@
         "hover_text": "If the vocabulary is 99 (reporting organisation), the URI where this internal vocabulary is defined. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/policy-marker/'>For more information</a>",
         "help_text": "",
         "hidden": true
+      },
+      "significance": {
+        "name": "significance",
+        "type": "select",
+        "required": false,
+        "multiselect": false,
+        "criteria": "",
+        "label": "@significance",
+        "choices": "Activity/PolicySignificance.json",
+        "hover_text": "An OECD DAC CRS code indicating the significance of the policy marker for this activity. This attribute MUST be used for all OECD DAC CRS vocabularies. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/policy-marker/'>For more information</a>",
+        "help_text": ""
       },
       "policy_marker_code": {
         "name": "policy_marker",
@@ -670,18 +681,8 @@
         "hover_text": "A policy marker code from the codelist specified in the vocabulary. This attribute is required. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/policy-marker/'>For more information</a></a>",
         "help_text": "",
         "hidden": true
-      },
-      "significance": {
-        "name": "significance",
-        "type": "select",
-        "required": false,
-        "multiselect": false,
-        "criteria": "",
-        "label": "@significance",
-        "choices": "Activity/PolicySignificance.json",
-        "hover_text": "An OECD DAC CRS code indicating the significance of the policy marker for this activity. This attribute MUST be used for all OECD DAC CRS vocabularies. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/policy-marker/'>For more information</a>",
-        "help_text": ""
       }
+
     },
     "sub_elements": {
       "narrative": {

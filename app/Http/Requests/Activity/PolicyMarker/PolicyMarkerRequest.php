@@ -45,7 +45,7 @@ class PolicyMarkerRequest extends ActivityBaseRequest
             $policyMarkerForm = sprintf('policy_marker.%s', $policyMarkerIndex);
             $rules[sprintf('%s.vocabulary_uri', $policyMarkerForm)] = 'nullable|url';
 
-//            if (Arr::get($policyMarker, 'vocabulary') == '99') {
+//            if (Arr::get($policyMarker, 'policymarker_vocabulary') == '99') {
 //                $rules[sprintf('%s.policy_marker_text', $policyMarkerForm)] = 'required';
 //                $rules[sprintf('%s.vocabulary_uri', $policyMarkerForm)] = 'url|required';
 //            } else {
@@ -75,7 +75,7 @@ class PolicyMarkerRequest extends ActivityBaseRequest
             $messages[sprintf('%s.vocabulary_uri.url', $policyMarkerForm)]
                 = 'The @vocabulary-uri field must be a valid url.';
 
-//            if (Arr::get($policyMarker, 'vocabulary') == '99') {
+//            if (Arr::get($policyMarker, 'policymarker_vocabulary') == '99') {
 //                $messages[sprintf('%s.policy_marker_text.required', $policyMarkerForm)]
 //                    = 'The @code field is required.';
 //                $messages[sprintf('%s.vocabulary_uri.required', $policyMarkerForm)]
