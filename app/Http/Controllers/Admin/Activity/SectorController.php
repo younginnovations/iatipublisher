@@ -74,7 +74,6 @@ class SectorController extends Controller
     public function update(SectorRequest $request, $id): JsonResponse|RedirectResponse
     {
         try {
-            // dd('here');
             $activityData = $this->sectorService->getActivityData($id);
             $activityDescription = $request->all();
 

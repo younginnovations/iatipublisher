@@ -52,15 +52,15 @@ class OtherIdentifierService
     }
 
     /**
-     * Updates activity condition.
+     * Updates activity identifier.
      *
-     * @param $activityCondition
+     * @param $activityIdentifier
      * @param $activity
      *
      * @return bool
      */
-    public function update($activityCondition, $activity): bool
+    public function update($activityIdentifier, $activity): bool
     {
-        return $this->otherIdentifierRepository->update($activityCondition, $activity);
+        return $this->otherIdentifierRepository->update($activityIdentifier, $activity);
     }
 }

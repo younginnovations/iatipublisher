@@ -54,19 +54,22 @@ class OtherIdentifierRepository
     /**
      * Updates activity conditions.
      *
-     * @param $activityOtherIdentifier
+     * @param $activityIdentifier
      * @param $activity
      *
      * @return bool
      */
-    public function update($activityOtherIdentifier, $activity): bool
+    public function update($activityIdentifier, $activity): bool
     {
-        // foreach ($activityOtherIdentifier['other-identifier'] as $key => $conditions) {
-        //     $activityOtherIdentifier['condition'][$key]['narrative'] = array_values($conditions['narrative']);
-        // }
-        dd($activityOtherIdentifier);
-        $activityOtherIdentifier['other_identifier'] = array_values($activityOtherIdentifier['other_identifier']);
-        $activity->other_identifier = $activityOtherIdentifier;
+        $activityIdentifier['owner_org'] = array_values($activityIdentifier['owner_org']);
+
+        foreach ($activityIdentifier['owner_org'] as $owner_index => $owner_value) {
+            foreach ($owner_value['narrative'] as $narrative_key => $narrative_value) {
+                $activityIdentifier['owner_org'][$owner_index]['narrative'] = array_values($narrative_value);
+            }
+        }
+
+        $activity->other_identifier = $activityIdentifier;
 
         return $activity->save();
     }

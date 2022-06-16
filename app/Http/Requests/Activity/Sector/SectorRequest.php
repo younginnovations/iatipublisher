@@ -32,10 +32,7 @@ class SectorRequest extends ActivityBaseRequest
         foreach ($formFields as $sectorIndex => $sector) {
             $sectorForm = sprintf('sector.%s', $sectorIndex);
             $rules[sprintf('%s.vocabulary', $sectorForm)] = 'required';
-            // dd($sector);
             $vocabulary = $sector['vocabulary'];
-            // $vocabulary                                          = getCodeL$sector, ['sector_vocabulary']);
-            // $customVocab                                         = getVal($sector, ['use_my_custom_vocab']);
 
             switch ($vocabulary) {
                 case '1':
