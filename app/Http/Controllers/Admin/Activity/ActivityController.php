@@ -215,6 +215,12 @@ class ActivityController extends Controller
             'relatedActivityType' => getCodeList('RelatedActivityType', 'Activity'),
             'tiedStatus' => getCodeList('TiedStatus', 'Activity'),
             'descriptionType' => getCodeList('DescriptionType', 'Activity'),
+            'humanitarianScopeType' => getCodeList('HumanitarianScopeType', 'Activity'),
+            'humanitarianScopeVocabulary' => getCodeList('HumanitarianScopeVocabulary', 'Activity'),
+            'aidTypeVocabulary' => getCodeList('AidTypeVocabulary', 'Activity'),
+            'earmarkingCategory' => getCodeList('EarmarkingCategory', 'Activity'),
+            'earmarkingModality' => getCodeList('EarmarkingModality', 'Activity'),
+            'cashandVoucherModalities' => getCodeList('CashandVoucherModalities', 'Activity'),
         ];
     }
 }
