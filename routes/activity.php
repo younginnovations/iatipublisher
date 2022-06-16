@@ -60,4 +60,6 @@ Route::name('admin.')->group(function () {
     Route::put('activities/{id}/recipient_region', [\App\Http\Controllers\Admin\Activity\RecipientRegionController::class, 'update'])->name('activities.recipient-region.update');
     Route::get('activities/{id}/tag', [\App\Http\Controllers\Admin\Activity\TagController::class, 'edit'])->name('activities.tag.edit');
     Route::put('activities/{id}/tag', [\App\Http\Controllers\Admin\Activity\TagController::class, 'update'])->name('activities.tag.update');
+    Route::get('activities/{id}/other_identifier', [\App\Http\Controllers\Admin\Activity\OtherIdentifierController::class, 'edit'])->name('activities.other-identifier.edit');
+    Route::put('activities/{id}/other_identifier', [\App\Http\Controllers\Admin\Activity\OtherIdentifierController::class, 'update'])->name('activities.other-identifier.update');
 });

@@ -69,6 +69,7 @@ class BaseForm extends Form
      */
     public function buildForm():void
     {
+        $this->setClientValidationEnabled(false);
         $element = $this->getData();
         $attributes = Arr::get($element, 'attributes', null);
         $sub_elements = Arr::get($element, 'sub_elements', null);

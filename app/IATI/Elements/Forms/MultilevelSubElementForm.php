@@ -18,6 +18,7 @@ class MultilevelSubElementForm extends BaseForm
     {
         $attributes = Arr::get($this->getData(), 'attributes', null);
         $sub_elements = Arr::get($this->getData(), 'sub_elements', null);
+        // dd($this->getData(),$attributes, $sub_elements);
 
         if ($attributes) {
             if (Arr::get($this->getData(), 'add_more', false) && !$sub_elements) {

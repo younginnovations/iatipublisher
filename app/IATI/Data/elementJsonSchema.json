@@ -69,47 +69,55 @@
     "criteria": "mandatory",
     "label": "Activity Identifier"
   },
-  "other-identifier": {
+  "other_identifier": {
     "criteria": "",
     "label": "Other Identifier",
     "attributes": {
       "reference": {
+        "name": "reference",
         "type": "text",
         "required": true,
         "criteria": "mandatory",
         "label": "Reference"
       },
       "reference_type": {
+        "name": "reference_type",
         "type": "select",
         "required": true,
         "criteria": "mandatory",
-        "label": "Reference Type"
+        "label": "Reference Type",
+        "choices": "Activity/OtherIdentifierType.json"
       }
     },
-    "sub-elements": {
+    "sub_elements": {
       "owner-org": {
+        "name": "owner_org",
         "criteria": "",
         "label": "Owner Organisation",
         "attributes": {
           "reference": {
+            "name": "reference",
             "type": "text",
             "required": false,
             "label": "Reference",
             "criteria": ""
           }
         },
-        "sub-elements": {
+        "sub_elements": {
           "narrative": {
+            "name": "narrative",
             "type": "text",
             "required": false,
             "label": "Narrative",
             "criteria": "",
             "attributes": {
               "lang": {
+                "name": "@xml:lang",
                 "type": "select",
                 "required": false,
                 "label": "Language",
-                "criteria": ""
+                "criteria": "",
+                "choices" : "Activity/Language.json"
               }
             }
           }
@@ -409,21 +417,6 @@
     "name": "sector",
     "criteria": "mandatory",
     "attributes": {
-      "code": {
-        "name" : "code",
-        "type": "select",
-        "required": true,
-        "criteria": "mandatory",
-        "label": "Sector Code",
-        "choices": "Activity/SectorCode.json"
-      },
-      "percentage": {
-        "name": "percentage",
-        "type": "text",
-        "criteria": "recommended",
-        "required": false,
-        "label": "Percentage"
-      },
       "vocabulary": {
         "name": "vocabulary",
         "label": "Sector Vocabulary",
@@ -438,6 +431,52 @@
         "criteria": "recommended",
         "required": false,
         "type": "text"
+      },
+      "code": {
+        "name" : "code",
+        "type": "select",
+        "required": true,
+        "criteria": "mandatory",
+        "label": "Sector Code",
+        "choices": "Activity/SectorCode.json"
+      },
+      "text": {
+        "name" : "text",
+        "type": "text",
+        "required": true,
+        "criteria": "mandatory",
+        "label": "Sector Code"
+      },
+      "category_code": {
+        "name" : "category_code",
+        "type": "select",
+        "required": true,
+        "criteria": "mandatory",
+        "label": "Sector Code",
+        "choices": "Activity/SectorCategory.json"
+      },
+      "sdg_goal": {
+        "name" : "sdg_goal",
+        "type": "select",
+        "required": true,
+        "criteria": "mandatory",
+        "label": "Sector Code",
+        "choices": "Activity/UNSDG-Goals.json"
+      },
+      "sdg_target": {
+        "name" : "sdg_target",
+        "type": "select",
+        "required": true,
+        "criteria": "mandatory",
+        "label": "Sector Code",
+        "choices": "Activity/UNSDG-Targets.json"
+      },
+      "percentage": {
+        "name": "percentage",
+        "type": "text",
+        "criteria": "recommended",
+        "required": false,
+        "label": "Percentage"
       }
     },
     "sub_elements": {

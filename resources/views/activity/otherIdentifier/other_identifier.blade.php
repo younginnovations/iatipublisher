@@ -2,6 +2,7 @@
 
 @section('content')
     <section class="section min-h-[calc(100vh_-_60px)]">
+
         <div class="px-10 pt-4 pb-[71px]">
             <div class="page-title mb-6">
                 <div class="flex items-end gap-4">
@@ -41,16 +42,15 @@
                             </div>
                         </div>
                         <div class="title flex items-center mb-4">
-                            <div class="text-sm shrink-0 uppercase text-n-40 font-bold">Sector</div>
+                            <div class="text-sm shrink-0 uppercase text-n-40 font-bold">Other Identifier</div>
                             <div class="line grow h-px border-b border-n-40 ml-4"></div>
                         </div>
-                        {{$errors}}
                         {!! form($form) !!}
-                        <div class="hidden parent-collection" data_name="description"
-                            data-prototype="{{ form_row($form->sector->prototype()) }}">
+                        <div class="hidden parent-collection" data_name="other_identifier"
+                            data-prototype="{{ form_row($form->owner_org->prototype()) }}">
                         </div>
                         <div class="hidden collection-container"
-                            data-prototype="{{ str_replace('description[0]','description[__PARENT_NAME__]',form_row($form->sector->getChildren()[0]->getChild('narrative')->prototype())) }}">
+                            data-prototype="{{ str_replace('owner_org[0]','owner_org[__PARENT_NAME__]',form_row($form->owner_org->getChildren()[0]->getChild('narrative')->prototype())) }}">
                         </div>
                     </div>
                 </div>

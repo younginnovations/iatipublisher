@@ -19,6 +19,7 @@ class WrapperCollectionForm extends Form
     public function buildForm(): void
     {
         $data = $this->getData();
+        $this->setClientValidationEnabled(false);
 
         foreach ($data['sub_elements'] as $field) {
             $this->add(

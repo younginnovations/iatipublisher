@@ -18,6 +18,8 @@ class ConditionRequest extends ActivityBaseRequest
      */
     public function rules(): array
     {
+        // dd($this->get('other_identifier'), $_REQUEST );
+
         return $this->getRulesForCondition($this->get('condition'));
     }
 
