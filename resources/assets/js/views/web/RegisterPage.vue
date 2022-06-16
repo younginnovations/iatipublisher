@@ -509,7 +509,7 @@ export default defineComponent({
     }
 
     function encrypt(string: string, key: string) {
-      var iv = CryptoJS.lib.WordArray.random(16); 
+      var iv = CryptoJS.lib.WordArray.random(16);
 
       var salt = CryptoJS.lib.WordArray.random(256);
       var iterations = 999;

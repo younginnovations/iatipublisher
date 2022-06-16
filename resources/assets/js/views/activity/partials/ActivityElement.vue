@@ -50,15 +50,7 @@
         <div class="icons flex">
           <a
             :href="`/activities/1/${title}`"
-            class="
-              edit-button
-              mr-2.5
-              flex
-              items-center
-              text-xs
-              font-bold
-              uppercase
-            "
+            class="edit-button mr-2.5 flex items-center text-xs font-bold uppercase"
           >
             <svg-vue class="mr-0.5 text-base" icon="edit"></svg-vue>
             <span>Edit</span>

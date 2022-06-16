@@ -329,14 +329,8 @@ export default defineComponent({
       &__container {
         @apply grid grid-cols-2 gap-6;
 
-        .tag__correct {
-          @apply absolute right-2 top-10 flex h-5 cursor-pointer items-center justify-center rounded bg-spring-40 text-center text-xs text-white;
-          width: 50px;
-        }
-
-        .tag__incorrect {
-          @apply absolute right-2 top-10 flex h-5 cursor-pointer items-center justify-center rounded bg-salmon-50 text-center text-xs text-white;
-          width: 61px;
+        .tag {
+          @apply absolute right-2 top-10 flex h-5 cursor-pointer items-center justify-center rounded px-2 text-center text-xs text-white;
         }
       }
       .verify-btn {
