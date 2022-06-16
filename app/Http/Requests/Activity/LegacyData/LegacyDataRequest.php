@@ -40,11 +40,11 @@ class LegacyDataRequest extends ActivityBaseRequest
     {
         $rules = [];
 
-        foreach ($formFields as $legacyDataIndex => $legacyData) {
-            $legacyDataForm = sprintf('legacy_data.%s', $legacyDataIndex);
-            $rules[sprintf('%s.name', $legacyDataForm)] = 'required';
-            $rules[sprintf('%s.value', $legacyDataForm)] = 'required';
-        }
+//        foreach ($formFields as $legacyDataIndex => $legacyData) {
+//            $legacyDataForm = sprintf('legacy_data.%s', $legacyDataIndex);
+//            $rules[sprintf('%s.name', $legacyDataForm)] = 'required';
+//            $rules[sprintf('%s.value', $legacyDataForm)] = 'required';
+//        }
 
         return $rules;
     }
@@ -58,11 +58,11 @@ class LegacyDataRequest extends ActivityBaseRequest
     {
         $messages = [];
 
-        foreach ($formFields as $legacyDataIndex => $legacyData) {
-            $legacyDataForm = sprintf('legacy_data.%s', $legacyDataIndex);
-            $messages[sprintf('%s.name.required', $legacyDataForm)] = 'The Name field is required';
-            $messages[sprintf('%s.value.required', $legacyDataForm)] = 'The Value field is required';
-        }
+//        foreach ($formFields as $legacyDataIndex => $legacyData) {
+//            $legacyDataForm = sprintf('legacy_data.%s', $legacyDataIndex);
+//            $messages[sprintf('%s.name.required', $legacyDataForm)] = 'The @name field is required';
+//            $messages[sprintf('%s.value.required', $legacyDataForm)] = 'The @value field is required';
+//        }
 
         return $messages;
     }

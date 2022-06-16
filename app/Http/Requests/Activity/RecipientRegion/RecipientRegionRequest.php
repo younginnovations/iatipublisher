@@ -51,27 +51,27 @@ class RecipientRegionRequest extends ActivityBaseRequest
      */
     protected function getRulesForRecipientRegion(array $formFields): array
     {
-        $activityId = (int) $this->segment(2);
-        $recipientCountry = $this->recipientCountryService->getRecipientCountryData($activityId);
+//        $activityId = (int) $this->segment(2);
+//        $recipientCountry = $this->recipientCountryService->getRecipientCountryData($activityId);
         $rules = [];
 
         foreach ($formFields as $recipientRegionIndex => $recipientRegion) {
             $recipientRegionForm = 'recipient_region.' . $recipientRegionIndex;
 
-            if (Arr::get($recipientRegion, 'region_vocabulary', 1) == 1) {
-                $rules[$recipientRegionForm . '.region_code'] = 'required';
-            } elseif (Arr::get($recipientRegion, 'region_vocabulary', 1) == 2) {
-                $rules[$recipientRegionForm . '.custom_code'] = 'required';
-            } elseif (Arr::get($recipientRegion, 'region_vocabulary', 1) == 99) {
-                $rules[$recipientRegionForm . '.region_code_input'] = 'required';
-            }
+//            if (Arr::get($recipientRegion, 'region_vocabulary', 1) == 1) {
+//                $rules[$recipientRegionForm . '.region_code'] = 'required';
+//            } elseif (Arr::get($recipientRegion, 'region_vocabulary', 1) == 2) {
+//                $rules[$recipientRegionForm . '.custom_code'] = 'required';
+//            } elseif (Arr::get($recipientRegion, 'region_vocabulary', 1) == 99) {
+//                $rules[$recipientRegionForm . '.region_code_input'] = 'required';
+//            }
 
             $rules[$recipientRegionForm . '.vocabulary_uri'] = 'nullable|url';
             $rules[$recipientRegionForm . '.percentage'] = 'nullable|numeric|max:100';
 
-            if (count($formFields) > 1 || $recipientCountry != null) {
-                $rules[$recipientRegionForm . '.percentage'] = 'required|numeric|max:100';
-            }
+//            if (count($formFields) > 1 || $recipientCountry != null) {
+//                $rules[$recipientRegionForm . '.percentage'] = 'required|numeric|max:100';
+//            }
 
             $rules = array_merge(
                 $rules,
@@ -119,12 +119,12 @@ class RecipientRegionRequest extends ActivityBaseRequest
 
         foreach ($formFields as $recipientRegionIndex => $recipientRegion) {
             $recipientRegionForm = 'recipient_region.' . $recipientRegionIndex;
-            $messages[$recipientRegionForm . '.region_code.required'] = 'The @cde field is required.';
-            $messages[$recipientRegionForm . '.custom_code.required'] = 'The @cde field is required.';
-            $messages[$recipientRegionForm . '.region_code_input.required'] = 'The @cde field is required.';
+//            $messages[$recipientRegionForm . '.region_code.required'] = 'The @cde field is required.';
+//            $messages[$recipientRegionForm . '.custom_code.required'] = 'The @cde field is required.';
+//            $messages[$recipientRegionForm . '.region_code_input.required'] = 'The @cde field is required.';
             $messages[$recipientRegionForm . '.percentage.numeric'] = 'The @percentage field must be a number.';
             $messages[$recipientRegionForm . '.percentage.max'] = 'The @percentage cannot be greater than 100.';
-            $messages[$recipientRegionForm . '.percentage.required'] = 'The @percentage field is required.';
+//            $messages[$recipientRegionForm . '.percentage.required'] = 'The @percentage field is required.';
             $messages = array_merge(
                 $messages,
                 $this->getMessagesForNarrative(
@@ -151,14 +151,16 @@ class RecipientRegionRequest extends ActivityBaseRequest
 
         if (count($regions) > 1) {
             foreach ($regions as $regionIndex => $region) {
-                $regionVocabs[$region['region_vocabulary']] = 0;
+                $regionVocab = $region['region_vocabulary'] ?: 'Not Specified';
+                $regionVocabs[$regionVocab] = 0;
             }
 
             foreach ($regions as $regionIndex => $region) {
-                $regionVocabs[$region['region_vocabulary']] += Arr::get($region, 'percentage', 0);
+                $regionVocab = $region['region_vocabulary'] ?: 'Not Specified';
+                $regionVocabs[$regionVocab] += Arr::get($region, 'percentage', 0);
                 $regionForm = sprintf('recipient_region.%s', $regionIndex);
-                $percentage = $region['percentage'];
-                $recipient_region = $region['region_vocabulary'];
+                $percentage = $region['percentage'] ?: 0;
+                $recipient_region = $regionVocab;
 
                 if (array_key_exists($recipient_region, $array)) {
                     $totalPercentage = (int) $array[$recipient_region] + (float) $percentage;
@@ -171,7 +173,9 @@ class RecipientRegionRequest extends ActivityBaseRequest
             }
 
             foreach ($regions as $regionIndex => $region) {
-                if ($regionVocabs[$region['region_vocabulary']] > 100) {
+                $regionVocab = $region['region_vocabulary'] ?: 'Not Specified';
+
+                if ($regionVocabs[$regionVocab] > 100) {
                     return $array;
                 }
             }

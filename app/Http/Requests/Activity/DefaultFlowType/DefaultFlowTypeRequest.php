@@ -17,7 +17,7 @@ class DefaultFlowTypeRequest extends ActivityBaseRequest
     public function rules(): array
     {
         return [
-            'default_flow_type' => ['required', 'in:10,20,21,22,30,35,36,37,40,50'],
+            'default_flow_type' => ['nullable', 'in:10,20,21,22,30,35,36,37,40,50'],
         ];
     }
 
@@ -29,7 +29,7 @@ class DefaultFlowTypeRequest extends ActivityBaseRequest
     public function messages(): array
     {
         return [
-            'required'  => 'The Code is required.',
+//            'required'  => 'The @code field is required.',
             'in'        => 'The selected code does not exist.',
         ];
     }

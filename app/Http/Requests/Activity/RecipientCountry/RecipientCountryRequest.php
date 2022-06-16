@@ -42,12 +42,12 @@ class RecipientCountryRequest extends ActivityBaseRequest
 
         foreach ($formFields as $recipientCountryIndex => $recipientCountry) {
             $recipientCountryForm = 'recipient_country.' . $recipientCountryIndex;
-            $rules[$recipientCountryForm . '.country_code'] = 'required';
+//            $rules[$recipientCountryForm . '.country_code'] = 'required';
             $rules[$recipientCountryForm . '.percentage'] = 'nullable|numeric|max:100';
 
-            if (count($formFields) > 1) {
-                $rules[$recipientCountryForm . '.percentage'] = 'required|numeric|max:100';
-            }
+//            if (count($formFields) > 1) {
+//                $rules[$recipientCountryForm . '.percentage'] = 'required|numeric|max:100';
+//            }
 
             $rules = array_merge(
                 $rules,
@@ -99,10 +99,10 @@ class RecipientCountryRequest extends ActivityBaseRequest
 
         foreach ($formFields as $recipientCountryIndex => $recipientCountry) {
             $recipientCountryForm = 'recipient_country.' . $recipientCountryIndex;
-            $messages[$recipientCountryForm . '.country_code.required'] = 'The @code is required.';
+//            $messages[$recipientCountryForm . '.country_code.required'] = 'The @code is required.';
             $messages[$recipientCountryForm . '.percentage.numeric'] = 'The @percentage must be a number.';
             $messages[$recipientCountryForm . '.percentage.max'] = 'The @percentage cannot be greater than 100';
-            $messages[$recipientCountryForm . '.percentage.required'] = 'The @percentage is required.';
+//            $messages[$recipientCountryForm . '.percentage.required'] = 'The @percentage is required.';
             $messages = array_merge(
                 $messages,
                 $this->getMessagesForNarrative(
@@ -128,8 +128,8 @@ class RecipientCountryRequest extends ActivityBaseRequest
         if (count($recipient_countries) > 1) {
             foreach ($recipient_countries as $countryIndex => $country) {
                 $countryForm = sprintf('recipient_country.%s', $countryIndex);
-                $percentage = $country['percentage'];
-                $recipient_country = $country['country_code'];
+                $percentage = $country['percentage'] ?: 0;
+                $recipient_country = $country['country_code'] ?: 'Not Specified';
                 $newIndex = $countryIndex + 1;
 
                 if (isset($array['country_code']) && array_key_exists($recipient_country, $array)) {

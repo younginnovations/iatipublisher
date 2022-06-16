@@ -44,7 +44,7 @@ class ConditionRequest extends ActivityBaseRequest
 
         foreach ($formFields as $conditionIndex => $condition) {
             $conditionForm = sprintf('condition.%s', $conditionIndex);
-            $rules['condition_attached'] = 'required';
+//            $rules['condition_attached'] = 'required';
             $rules[sprintf('%s.condition_type', $conditionForm)] = 'required_if:condition_attached,1';
             $rules = array_merge(
                 $rules,
@@ -72,7 +72,7 @@ class ConditionRequest extends ActivityBaseRequest
 
         foreach ($formFields as $conditionIndex => $condition) {
             $conditionForm = sprintf('condition.%s', $conditionIndex);
-            $messages['condition_attached.required'] = 'The @attached field is required.';
+//            $messages['condition_attached.required'] = 'The @attached field is required.';
             $messages[sprintf('%s.condition_type.required_if', $conditionForm)] = 'The @type field is required when @attached field is true.';
             $messages = array_merge(
                 $messages,
