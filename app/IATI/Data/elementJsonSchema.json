@@ -177,8 +177,8 @@
         "required": true,
         "criteria": "mandatory",
         "label": "narrative",
-        "hover_text" : "The free text name or description of the item being described. This can be repeated in multiple languages. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/title/narrative/'> For more information </a>",
-        "help_text" : "",
+        "hover_text": "The free text name or description of the item being described. This can be repeated in multiple languages. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/title/narrative/'> For more information </a>",
+        "help_text": "",
         "attr": {
           "row": 4
         },
@@ -350,6 +350,17 @@
     "criteria": "recommended",
     "add_more": true,
     "attributes": {
+      "vocabulary": {
+        "name": "region_vocabulary",
+        "label": "@vocabulary",
+        "criteria": "recommended",
+        "required": true,
+        "type": "select",
+        "multiselect": false,
+        "choices": "Activity/RegionVocabulary.json",
+        "hover_text": "An IATI code for the vocabulary from which the region code is drawn. If it is not present 1 - ‘OECD DAC’ is assumed. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/transaction/recipient-region/'>For more information</a>",
+        "help_text": ""
+      },
       "oecd_region_code": {
         "name": "region_code",
         "type": "select",
@@ -371,15 +382,14 @@
         "help_text": "",
         "hidden": true
       },
-      "99_region_code": {
-        "name": "region_code_input",
+      "vocabulary-uri": {
+        "name": "vocabulary_uri",
+        "label": "@vocabulary-uri",
+        "criteria": "recommended",
+        "required": false,
         "type": "text",
-        "required": true,
-        "criteria": "mandatory",
-        "label": "@code",
-        "hover_text": "Either an OECD DAC or UN region code. Codelist is determined by vocabulary attribute. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/transaction/recipient-region/'>For more information</a>",
-        "help_text": "",
-        "hidden": true
+        "hover_text": "The URI where this vocabulary is defined. If the vocabulary is 99 (reporting organisation), the URI where this internal vocabulary is defined. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/transaction/recipient-region/'>For more information</a>",
+        "help_text": ""
       },
       "percentage": {
         "name": "percentage",
@@ -388,26 +398,6 @@
         "required": false,
         "label": "@percentage",
         "hover_text": "",
-        "help_text": ""
-      },
-      "vocabulary": {
-        "name": "region_vocabulary",
-        "label": "@vocabulary",
-        "criteria": "recommended",
-        "required": true,
-        "type": "select",
-        "multiselect": false,
-        "choices": "Activity/RegionVocabulary.json",
-        "hover_text": "An IATI code for the vocabulary from which the region code is drawn. If it is not present 1 - ‘OECD DAC’ is assumed. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/transaction/recipient-region/'>For more information</a>",
-        "help_text": ""
-      },
-      "vocabulary-uri": {
-        "name": "vocabulary_uri",
-        "label": "@vocabulary-uri",
-        "criteria": "recommended",
-        "required": false,
-        "type": "text",
-        "hover_text": "The URI where this vocabulary is defined. If the vocabulary is 99 (reporting organisation), the URI where this internal vocabulary is defined. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/transaction/recipient-region/'>For more information</a>",
         "help_text": ""
       }
     },
@@ -453,14 +443,14 @@
         "choices": "Activity/SectorVocabulary.json"
       },
       "vocabulary-uri": {
-        "name":"vocabulary_uri",
+        "name": "vocabulary_uri",
         "label": "@vocabulary-uri",
         "criteria": "recommended",
         "required": false,
         "type": "text"
       },
       "code": {
-        "name" : "code",
+        "name": "code",
         "type": "select",
         "required": true,
         "criteria": "mandatory",
@@ -468,14 +458,14 @@
         "choices": "Activity/SectorCode.json"
       },
       "text": {
-        "name" : "text",
+        "name": "text",
         "type": "text",
         "required": true,
         "criteria": "mandatory",
         "label": "@code"
       },
       "category_code": {
-        "name" : "category_code",
+        "name": "category_code",
         "type": "select",
         "required": true,
         "criteria": "mandatory",
@@ -483,7 +473,7 @@
         "choices": "Activity/SectorCategory.json"
       },
       "sdg_goal": {
-        "name" : "sdg_goal",
+        "name": "sdg_goal",
         "type": "select",
         "required": true,
         "criteria": "mandatory",
@@ -491,7 +481,7 @@
         "choices": "Activity/UNSDG-Goals.json"
       },
       "sdg_target": {
-        "name" : "sdg_target",
+        "name": "sdg_target",
         "type": "select",
         "required": true,
         "criteria": "mandatory",
@@ -861,7 +851,7 @@
     "add_more": true,
     "attributes": {
       "vocabulary": {
-        "name": "vocabulary",
+        "name": "country_budget_vocabulary",
         "label": "@vocabulary",
         "criteria": "",
         "required": true,
@@ -1083,10 +1073,10 @@
         "multiselect": false,
         "type": "select",
         "choices": {
-          "0" : "False",
-          "1" : "True"
+          "0": "False",
+          "1": "True"
         },
-        "hover_text" : "A yes/no (1/0) value stating whether there are conditions attached to the activity. It is strongly recommended that this attribute is reported, even if there are no conditions attached (i.e. attached=”0”)",
+        "hover_text": "A yes/no (1/0) value stating whether there are conditions attached to the activity. It is strongly recommended that this attribute is reported, even if there are no conditions attached (i.e. attached=”0”)",
         "help_text": ""
       }
     },

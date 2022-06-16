@@ -56,6 +56,9 @@ class FormBuilder {
         )
       );
     $(target).attr('child_count', count);
+
+    this.humanitarianScopeVocabularyUri();
+    this.countryBudgetCodeField();
   }
 
   // deletes collection
@@ -103,6 +106,101 @@ class FormBuilder {
         );
     });
   }
+
+  /**
+   * Humanitarian Scope Form Page
+   *
+   * @Logic hide vocabulary-uri field based on '@vocabulary' field value
+   */
+  public humanitarianScopeVocabularyUri() {
+    var humanitarianScopeVocabulary = $(
+        'select[id^="humanitarian_scope"][id*="[vocabulary]"]'
+      ),
+      humanitarianScopeVocabularyUri =
+        'input[id^="humanitarian_scope"][id*="[vocabulary_uri]"]';
+
+    if (humanitarianScopeVocabulary.length > 0) {
+      // hide fields on page load
+      $.each(humanitarianScopeVocabulary, function () {
+        var val = humanitarianScopeVocabulary.val() ?? '';
+        var index = $(this);
+
+        if (val === '99') {
+          index
+            .closest('.form-field-group')
+            .find(humanitarianScopeVocabularyUri)
+            .show()
+            .closest('.form-field')
+            .show();
+        } else {
+          index
+            .closest('.form-field-group')
+            .find(humanitarianScopeVocabularyUri)
+            .hide()
+            .closest('.form-field')
+            .hide();
+        }
+      });
+
+      // hide/show fields on value change
+      humanitarianScopeVocabulary.on('select2:select', function (e) {
+        var val = e.params.data.id;
+        var index = $(this);
+
+        if (val === '99') {
+          index
+            .closest('.form-field-group')
+            .find(humanitarianScopeVocabularyUri)
+            .show()
+            .closest('.form-field')
+            .show();
+        } else {
+          index
+            .closest('.form-field-group')
+            .find(humanitarianScopeVocabularyUri)
+            .hide()
+            .closest('.form-field')
+            .hide();
+        }
+      });
+    }
+  }
+
+  /**
+   * Country Budget Form Page
+   *
+   * @Logic show/hide 'code' field based on '@vocabulary' field value
+   */
+  public countryBudgetCodeField() {
+    var countryBudgetVocabulary = $('select#country_budget_vocabulary'),
+      countryBudgetCodeInput = 'input[id^="budget_item"][id*="[code_text]"]',
+      countryBudgetCodeSelect = 'select[id^="budget_item"][id*="[code]"]';
+
+    if (countryBudgetVocabulary.length > 0) {
+      // hide/show on page load
+      var val = countryBudgetVocabulary.val() ?? '1';
+
+      if (val === '1') {
+        $(countryBudgetCodeInput).closest('.form-field').hide();
+        $(countryBudgetCodeSelect).closest('.form-field').show();
+      } else {
+        $(countryBudgetCodeInput).closest('.form-field').show();
+        $(countryBudgetCodeSelect).closest('.form-field').hide();
+      }
+
+      // hide/show on value change
+      countryBudgetVocabulary.on('select2:select', function (e) {
+        var val = e.params.data.id;
+        if (val === '1') {
+          $(countryBudgetCodeInput).closest('.form-field').hide();
+          $(countryBudgetCodeSelect).closest('.form-field').show();
+        } else {
+          $(countryBudgetCodeInput).closest('.form-field').show();
+          $(countryBudgetCodeSelect).closest('.form-field').hide();
+        }
+      });
+    }
+  }
 }
 
 $(function () {
@@ -130,27 +228,29 @@ $(function () {
     allowClear: true,
   });
 
+  /**
+   * Default Aid Type Form Page
+   *
+   * @Logic hide select fields based on '@vocabulary' field value
+   */
   var aidtype_vocabulary = $('select[id*="default_aidtype_vocabulary"]');
 
   //run code only if vocabulary select field exist in page
   if (aidtype_vocabulary.length > 0) {
-    //loop through all vocabulary
+    // hide fields on page load
     $.each(aidtype_vocabulary, function () {
-      var data = $(this).val() ? $(this).val() : '1';
-      hideSelectField($(this), data.toString());
+      var data = $(this).val() ?? '1';
+      defaultAidtypeHideSelectField($(this), data.toString());
     });
 
-    /**
-     * Hide and show select field based on vocabulary value
-     */
-
+    // hide fields based on vocabulary value change
     aidtype_vocabulary.on('select2:select', function (e) {
       var data = e.params.data.id;
-      hideSelectField($(this), data);
+      defaultAidtypeHideSelectField($(this), data);
     });
   }
 
-  function hideSelectField(index: JQuery, value: string) {
+  function defaultAidtypeHideSelectField(index: JQuery, value: string) {
     var default_aid_type = 'select[id*="[default_aid_type]"]',
       earmarking_category = 'select[id*="[earmarking_category]"]',
       earmarking_modality = 'select[id*="[earmarking_modality]"]',
@@ -167,7 +267,6 @@ $(function () {
 
     switch (value) {
       case '2':
-        console.log('case' + value);
         //show fields
         index
           .closest('.form-field-group')
@@ -237,4 +336,7 @@ $(function () {
           .hide();
     }
   }
+
+  formBuilder.humanitarianScopeVocabularyUri();
+  formBuilder.countryBudgetCodeField();
 });

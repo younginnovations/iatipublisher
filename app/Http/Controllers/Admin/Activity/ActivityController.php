@@ -221,6 +221,7 @@ class ActivityController extends Controller
             'earmarkingCategory' => getCodeList('EarmarkingCategory', 'Activity'),
             'earmarkingModality' => getCodeList('EarmarkingModality', 'Activity'),
             'cashandVoucherModalities' => getCodeList('CashandVoucherModalities', 'Activity'),
+            'budgetIdentifierVocabulary' => getCodeList('BudgetIdentifierVocabulary', 'Activity'),
         ];
     }
 }

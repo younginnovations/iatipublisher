@@ -44,7 +44,7 @@ class CountryBudgetItemRequest extends ActivityBaseRequest
         $rules = [];
 
 //        $rules['vocabulary'] = 'required';
-        $code = $formFields['vocabulary'] == 1 ? 'code' : 'code_text';
+        $code = $formFields['country_budget_vocabulary'] == 1 ? 'code' : 'code_text';
         $rules = array_merge(
             $rules,
             $this->getBudgetItemRules($formFields['budget_item'], $code)
@@ -64,8 +64,8 @@ class CountryBudgetItemRequest extends ActivityBaseRequest
     {
         $messages = [];
 
-        $code = $formFields['vocabulary'] == 1 ? 'code' : 'code_text';
-        $messages[sprintf('vocabulary.required')] = 'The @vocabulary field is required.';
+        $code = $formFields['country_budget_vocabulary'] == 1 ? 'code' : 'code_text';
+        // $messages[sprintf('vocabulary.required')] = 'The @vocabulary field is required.';
         $messages = array_merge(
             $messages,
             $this->getBudgetItemMessages($formFields['budget_item'], $code)
@@ -195,9 +195,10 @@ class CountryBudgetItemRequest extends ActivityBaseRequest
             foreach ($countryBudgetItems as $key => $countryBudgetItem) {
 //                if ($isEmpty) {
 //                    $rules["budget_item.$key.percentage"] = 'required';
-//                } elseif ($totalPercentage != 100) {
-                $rules["budget_item.$key.percentage"] = 'sum';
-//                }
+//                } else
+                if ($totalPercentage != 100) {
+                    $rules["budget_item.$key.percentage"] = 'sum';
+                }
             }
         } else {
             $rules['budget_item.0.percentage'] = 'nullable|total';
