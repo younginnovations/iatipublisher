@@ -64,10 +64,29 @@
     "label": "Title"
   },
   "activity-identifier": {
-    "type": "text",
-    "required": true,
+    "label": "Activity Identifier",
     "criteria": "mandatory",
-    "label": "Activity Identifier"
+    "attributes": {
+      "iati-activity-identifier": {
+        "name": "activity_identifier",
+        "criteria": "mandatory",
+        "type": "text",
+        "required": true,
+        "label": "activity-identifier",
+        "hover_text": "",
+        "help_text": ""
+      },
+      "iati-activity-identifier-text": {
+        "name": "iati_identifier_text",
+        "criteria": "",
+        "type": "text",
+        "required": false,
+        "label": "iati-identifier",
+        "hover_text": "",
+        "help_text": "",
+        "read_only": true
+      }
+    }
   },
   "other_identifier": {
     "criteria": "",

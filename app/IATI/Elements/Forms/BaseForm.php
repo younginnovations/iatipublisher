@@ -145,6 +145,7 @@ class BaseForm extends Form
             'multiple'      => $field['multiple'] ?? false,
             'attr' => [
                 'class' => 'form__input border-0',
+                'readonly' => (array_key_exists('read_only', $field) && $field['read_only'] == true) ? 'readonly' : false,
             ],
             'wrapper' => [
                 'class' => 'form-field basis-6/12 max-w-half attribute',

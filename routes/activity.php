@@ -62,4 +62,6 @@ Route::name('admin.')->group(function () {
     Route::put('activities/{id}/tag', [\App\Http\Controllers\Admin\Activity\TagController::class, 'update'])->name('activities.tag.update');
     Route::get('activities/{id}/other_identifier', [\App\Http\Controllers\Admin\Activity\OtherIdentifierController::class, 'edit'])->name('activities.other-identifier.edit');
     Route::put('activities/{id}/other_identifier', [\App\Http\Controllers\Admin\Activity\OtherIdentifierController::class, 'update'])->name('activities.other-identifier.update');
+    Route::get('activities/{id}/iati_identifier', [\App\Http\Controllers\Admin\Activity\IdentifierController::class, 'edit'])->name('activities.identifier.edit');
+    Route::put('activities/{id}/iati_identifier', [\App\Http\Controllers\Admin\Activity\IdentifierController::class, 'update'])->name('activities.identifier.update');
 });
