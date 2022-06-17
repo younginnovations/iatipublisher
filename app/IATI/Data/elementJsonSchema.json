@@ -115,7 +115,7 @@
         "label": "Owner Organisation",
         "attributes": {
           "reference": {
-            "name": "@red",
+            "name": "ref",
             "type": "text",
             "required": false,
             "label": "Reference",
@@ -530,13 +530,15 @@
     "criteria": "",
     "add_more": true,
     "attributes": {
-      "tag_code": {
-        "name": "tag_code",
-        "type": "text",
+      "tag_vocabulary": {
+        "name": "tag_vocabulary",
+        "type": "select",
         "required": true,
+        "multiselect": false,
         "criteria": "",
-        "label": "@code",
-        "hover_text": "The code for the tag as defined in the specified vocabulary. This attribute is required. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/tag/'>For more information</a>",
+        "label": "@vocabulary",
+        "choices": "Activity/TagVocabulary.json",
+        "hover_text": "An IATI code for the vocabulary or taxonomy (see non-embedded codelist) used for tag classifications. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/tag/'>For more information</a>",
         "help_text": ""
       },
       "goals_tag_code": {
@@ -572,17 +574,6 @@
         "hover_text": "The code for the tag as defined in the specified vocabulary. This attribute is required. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/tag/'>For more information</a>",
         "help_text": "",
         "hidden": true
-      },
-      "tag_vocabulary": {
-        "name": "tag_vocabulary",
-        "type": "select",
-        "required": true,
-        "multiselect": false,
-        "criteria": "",
-        "label": "@vocabulary",
-        "choices": "Activity/TagVocabulary.json",
-        "hover_text": "An IATI code for the vocabulary or taxonomy (see non-embedded codelist) used for tag classifications. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/tag/'>For more information</a>",
-        "help_text": ""
       },
       "vocabulary-uri": {
         "name": "vocabulary_uri",
@@ -682,7 +673,6 @@
         "help_text": "",
         "hidden": true
       }
-
     },
     "sub_elements": {
       "narrative": {

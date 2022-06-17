@@ -227,6 +227,12 @@ class ActivityController extends Controller
             'sectorCategory' => getCodeList('SectorCategory', 'Activity'),
             'sdgGoals' => getCodeList('UNSDG-Goals', 'Activity'),
             'sdgTarget' => getCodeList('UNSDG-Targets', 'Activity'),
+            'regionVocabulary' => getCodeList('RegionVocabulary', 'Activity'),
+            'region' => getCodeList('Region', 'Activity'),
+            'policyMarkerVocabulary' => getCodeList('PolicyMarkerVocabulary', 'Activity'),
+            'policySignificance' => getCodeList('PolicySignificance', 'Activity'),
+            'policyMarker' => getCodeList('PolicyMarker', 'Activity'),
+            'tagVocabulary' => getCodeList('TagVocabulary', 'Activity'),
         ];
     }
 }

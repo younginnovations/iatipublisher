@@ -64,9 +64,7 @@ class OtherIdentifierRepository
         $activityIdentifier['owner_org'] = array_values($activityIdentifier['owner_org']);
 
         foreach ($activityIdentifier['owner_org'] as $owner_index => $owner_value) {
-            foreach ($owner_value['narrative'] as $narrative_key => $narrative_value) {
-                $activityIdentifier['owner_org'][$owner_index]['narrative'] = array_values($narrative_value);
-            }
+            $activityIdentifier['owner_org'][$owner_index]['narrative'] = array_values($owner_value['narrative']);
         }
 
         $activity->other_identifier = $activityIdentifier;

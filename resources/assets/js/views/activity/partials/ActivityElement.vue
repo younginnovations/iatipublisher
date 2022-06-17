@@ -187,7 +187,7 @@
             <div class="type mb-1.5 text-sm italic text-n-30">
               {{ props.types.relatedActivityType[post.relationship_type] }}
             </div>
-            <div class="text-sm">@ref: {{ post.activity_identifier }}</div>
+            <div class="text-sm">ref: {{ post.activity_identifier }}</div>
           </div>
         </div>
       </template>
@@ -199,10 +199,10 @@
           :class="{ 'mb-4': key !== data.content.length - 1 }"
         >
           <div class="related-content">
-            <div class="text-sm">@name: {{ post.name }}</div>
-            <div class="text-sm">@value: {{ post.value }}</div>
+            <div class="text-sm">name: {{ post.name }}</div>
+            <div class="text-sm">value: {{ post.value }}</div>
             <div class="text-sm">
-              @iati-equivalent: {{ post.iati_equivalent }}
+              iati-equivalent: {{ post.iati_equivalent }}
             </div>
           </div>
         </div>
@@ -439,7 +439,7 @@
                   post.sector_vocabulary === '99'
                 "
               >
-                <div class="date-type flex gap-1 text-sm font-bold">
+                <div class="flex gap-1 text-sm font-bold">
                   <span>Vocabulary-uri: </span>
                   <span class="text-sm font-normal italic text-n-30">
                     {{ post.vocabulary_uri }}
@@ -447,7 +447,7 @@
                 </div>
               </li>
               <li>
-                <div class="date-type flex gap-1 text-sm font-bold">
+                <div class="flex gap-1 text-sm font-bold">
                   <span>Code: </span>
                   <span class="text-sm font-normal italic text-n-30">
                     <span v-if="post.sector_vocabulary === '1'">
@@ -469,7 +469,7 @@
                 </div>
               </li>
               <li>
-                <div class="date-type flex gap-1 text-sm font-bold">
+                <div class="flex gap-1 text-sm font-bold">
                   <span>Percentage: </span>
                   <span class="text-sm font-normal italic text-n-30">
                     {{ post.percentage }}%
@@ -483,6 +483,246 @@
                 :key="k"
                 class="country_budget_items"
                 :class="{ 'mb-4': k !== post.narrative - 1 }"
+              >
+                <div class="language mb-1.5 text-sm italic text-n-30">
+                  (Language: {{ i.language }})
+                </div>
+                <div v-if="i.narrative" class="text-sm">
+                  {{ i.narrative }}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </template>
+
+      <template v-else-if="title === 'recipient_region'">
+        <div
+          v-for="(post, key) in data.content"
+          :key="key"
+          class="overflow-hidden rounded-lg border border-n-20"
+          :class="{ 'mb-4': key !== data.content.length - 1 }"
+        >
+          <div class="tb-title bg-n-10 px-6 py-2 text-xs font-bold">
+            {{ types.regionVocabulary[post.region_vocabulary] }}
+          </div>
+          <div class="tb-content px-6 py-2">
+            <ul class="mb-4 inline-flex flex-wrap gap-2">
+              <li>
+                <div class="flex gap-1 text-sm font-bold">
+                  <span>Code: </span>
+                  <span class="text-sm font-normal italic text-n-30">
+                    <span v-if="post.region_vocabulary === '1'">
+                      {{ types.region[post.region_code] }}
+                    </span>
+                    <span v-else>
+                      {{ post.custom_code }}
+                    </span>
+                  </span>
+                </div>
+              </li>
+              <li v-if="post.region_vocabulary === '99'">
+                <div class="flex gap-1 text-sm font-bold">
+                  <span>Vocabulary-uri: </span>
+                  <span class="text-sm font-normal italic text-n-30">
+                    {{ post.vocabulary_uri }}
+                  </span>
+                </div>
+              </li>
+              <li>
+                <div class="flex gap-1 text-sm font-bold">
+                  <span>Percentage: </span>
+                  <span class="text-sm font-normal italic text-n-30">
+                    {{ post.percentage }}%
+                  </span>
+                </div>
+              </li>
+            </ul>
+            <div class="content">
+              <div
+                v-for="(i, k) in post.narrative"
+                :key="k"
+                class="item"
+                :class="{ 'mb-4': k !== post.narrative - 1 }"
+              >
+                <div class="language mb-1.5 text-sm italic text-n-30">
+                  (Language: {{ i.language }})
+                </div>
+                <div v-if="i.narrative" class="text-sm">
+                  {{ i.narrative }}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </template>
+
+      <template v-else-if="title === 'other_identifier'">
+        <ul class="mb-4 inline-flex flex-wrap gap-3">
+          <li class="inline-block">
+            <div class="date-type flex gap-1 text-sm font-bold">
+              <span>Reference: </span>
+              <span class="text-sm font-normal italic text-n-30">
+                {{ data.content.reference }}
+              </span>
+            </div>
+          </li>
+          <li class="inline-block">
+            <div class="date-type flex gap-1 text-sm font-bold">
+              <span>Type: </span>
+              <span class="text-sm font-normal italic text-n-30">
+                {{ data.content.reference }}
+              </span>
+            </div>
+          </li>
+        </ul>
+        <div class="mb-4 overflow-hidden rounded-lg border border-n-20">
+          <div class="tb-title bg-n-10 px-6 py-2 text-xs font-bold">
+            Owner org
+          </div>
+          <div class="tb-content px-6 py-2">
+            <div
+              v-for="(post, key) in data.content.owner_org"
+              :key="key"
+              :class="{ 'mb-4': key !== data.content.owner_org.length - 1 }"
+            >
+              <ul class="mb-4 inline-flex flex-wrap gap-3">
+                <li class="inline-block">
+                  <div class="date-type flex gap-1 text-sm font-bold">
+                    <span>Reference: </span>
+                    <span class="text-sm font-normal italic text-n-30">
+                      {{ post.ref }}
+                    </span>
+                  </div>
+                </li>
+              </ul>
+              <div
+                v-for="(i, k) in post.narrative"
+                :key="k"
+                class="item"
+                :class="{ 'mb-4': k !== post.narrative.length - 1 }"
+              >
+                <div class="language mb-1.5 text-sm italic text-n-30">
+                  (Language: {{ i.language }})
+                </div>
+                <div v-if="i.narrative" class="text-sm">
+                  {{ i.narrative }}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </template>
+
+      <template v-else-if="title === 'policy_marker'">
+        <div
+          v-for="(post, key) in data.content"
+          :key="key"
+          class="overflow-hidden rounded-lg border border-n-20"
+          :class="{ 'mb-4': key !== data.content.length - 1 }"
+        >
+          <div class="tb-title bg-n-10 px-6 py-2 text-xs font-bold">
+            {{ types.policyMarkerVocabulary[post.policymarker_vocabulary] }}
+          </div>
+          <div class="tb-content px-6 py-2">
+            <ul class="mb-4 inline-flex flex-wrap gap-2">
+              <li>
+                <div class="flex gap-1 text-sm font-bold">
+                  <span>Significance: </span>
+                  <span class="text-sm font-normal italic text-n-30">
+                    {{ types.policySignificance[post.significance] }}
+                  </span>
+                </div>
+              </li>
+              <li v-if="post.policymarker_vocabulary === '99'">
+                <div class="flex gap-1 text-sm font-bold">
+                  <span>Vocabulary-uri: </span>
+                  <span class="text-sm font-normal italic text-n-30">
+                    {{ post.vocabulary_uri }}
+                  </span>
+                </div>
+              </li>
+              <li>
+                <div class="flex gap-1 text-sm font-bold">
+                  <span>Code: </span>
+                  <span class="text-sm font-normal italic text-n-30">
+                    <span v-if="post.policymarker_vocabulary === '1'">
+                      {{ types.policyMarker[post.policy_marker] }}
+                    </span>
+                    <span v-else>
+                      {{ post.policy_marker_text }}
+                    </span>
+                  </span>
+                </div>
+              </li>
+            </ul>
+            <div class="content">
+              <div
+                v-for="(i, k) in post.narrative"
+                :key="k"
+                class="item"
+                :class="{ 'mb-4': k !== post.narrative.length - 1 }"
+              >
+                <div class="language mb-1.5 text-sm italic text-n-30">
+                  (Language: {{ i.language }})
+                </div>
+                <div v-if="i.narrative" class="text-sm">
+                  {{ i.narrative }}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </template>
+
+      <template v-else-if="title === 'tag'">
+        <div
+          v-for="(post, key) in data.content"
+          :key="key"
+          class="overflow-hidden rounded-lg border border-n-20"
+          :class="{ 'mb-4': key !== data.content.length - 1 }"
+        >
+          <div class="tb-title bg-n-10 px-6 py-2 text-xs font-bold">
+            {{ types.tagVocabulary[post.tag_vocabulary] }}
+          </div>
+          <div class="tb-content px-6 py-2">
+            <ul class="mb-4 inline-flex flex-wrap gap-2">
+              <li>
+                <div class="flex gap-1 text-sm font-bold">
+                  <span>Code: </span>
+                  <span class="text-sm font-normal italic text-n-30">
+                    <span
+                      v-if="
+                        post.tag_vocabulary === '1' ||
+                        post.tag_vocabulary === '99'
+                      "
+                    >
+                      {{ post.tag_text }}
+                    </span>
+                    <span v-if="post.tag_vocabulary === '2'">
+                      {{ types.sdgGoals[post.goals_tag_code] }}
+                    </span>
+                    <span v-if="post.tag_vocabulary === '3'">
+                      {{ types.sdgTarget[post.targets_tag_code] }}
+                    </span>
+                  </span>
+                </div>
+              </li>
+              <li v-if="post.tag_vocabulary === '99'">
+                <div class="flex gap-1 text-sm font-bold">
+                  <span>Vocabulary-uri: </span>
+                  <span class="text-sm font-normal italic text-n-30">
+                    {{ post.vocabulary_uri }}
+                  </span>
+                </div>
+              </li>
+            </ul>
+            <div class="content">
+              <div
+                v-for="(i, k) in post.narrative"
+                :key="k"
+                class="item"
+                :class="{ 'mb-4': k !== post.narrative.length - 1 }"
               >
                 <div class="language mb-1.5 text-sm italic text-n-30">
                   (Language: {{ i.language }})
