@@ -31,8 +31,8 @@
     "label": "Title",
     "multiple": false
   },
-  "reporting-org": {
-    "sub-elements": {
+  "reporting_org": {
+    "sub_elements": {
       "narrative": {
         "type": "text",
         "required": true,
@@ -63,11 +63,11 @@
     "criteria": "mandatory",
     "label": "Title"
   },
-  "activity-identifier": {
+  "activity_identifier": {
     "label": "Activity Identifier",
     "criteria": "mandatory",
     "attributes": {
-      "iati-activity-identifier": {
+      "iati_activity_identifier": {
         "name": "activity_identifier",
         "criteria": "mandatory",
         "type": "text",
@@ -76,7 +76,7 @@
         "hover_text": "",
         "help_text": ""
       },
-      "iati-activity-identifier-text": {
+      "iati_activity_identifier_text": {
         "name": "iati_identifier_text",
         "criteria": "",
         "type": "text",
@@ -109,7 +109,7 @@
       }
     },
     "sub_elements": {
-      "owner-org": {
+      "owner_org": {
         "name": "owner_org",
         "criteria": "",
         "label": "Owner Organisation",
@@ -234,7 +234,7 @@
         "hover_text": "An IATI code defining the type of activity date being reported. This attribute is required. <a href='https://iatistandard.org/en/iati-standard/203/codelists/activitydatetype/'>For more information</a>",
         "help_text": ""
       },
-      "iso-date": {
+      "iso_date": {
         "name": "date",
         "type": "date",
         "required": true,
@@ -289,7 +289,7 @@
       }
     }
   },
-  "recipient-country": {
+  "recipient_country": {
     "name": "recipient_country",
     "label": "Recipient Country",
     "criteria": "recommended",
@@ -344,7 +344,7 @@
       }
     }
   },
-  "recipient-region": {
+  "recipient_region": {
     "name": "recipient_region",
     "label": "Recipient Region",
     "criteria": "recommended",
@@ -382,7 +382,7 @@
         "help_text": "",
         "hidden": true
       },
-      "vocabulary-uri": {
+      "vocabulary_uri": {
         "name": "vocabulary_uri",
         "label": "@vocabulary-uri",
         "criteria": "recommended",
@@ -442,7 +442,7 @@
         "type": "select",
         "choices": "Activity/SectorVocabulary.json"
       },
-      "vocabulary-uri": {
+      "vocabulary_uri": {
         "name": "vocabulary_uri",
         "label": "@vocabulary-uri",
         "criteria": "recommended",
@@ -575,7 +575,7 @@
         "help_text": "",
         "hidden": true
       },
-      "vocabulary-uri": {
+      "vocabulary_uri": {
         "name": "vocabulary_uri",
         "label": "@vocabulary-uri",
         "criteria": "",
@@ -614,7 +614,7 @@
       }
     }
   },
-  "policy-marker": {
+  "policy_marker": {
     "name": "policy_marker",
     "label": "Activity Policy Marker",
     "criteria": "",
@@ -631,7 +631,7 @@
         "hover_text": "An IATI code for the vocabulary to be used to define policy markers. If omitted then the OECD DAC vocabulary is assumed. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/policy-marker/'>For more information</a>",
         "help_text": ""
       },
-      "vocabulary-uri": {
+      "vocabulary_uri": {
         "name": "vocabulary_uri",
         "label": "@vocabulary-uri",
         "criteria": "",
@@ -702,7 +702,7 @@
       }
     }
   },
-  "collaboration-type": {
+  "collaboration_type": {
     "label": "Activity Collaboration Type",
     "criteria": "recommended",
     "attributes": {
@@ -719,7 +719,7 @@
       }
     }
   },
-  "default-flow-type": {
+  "default_flow_type": {
     "label": "Activity Default Flow Type",
     "criteria": "recommended",
     "attributes": {
@@ -736,7 +736,7 @@
       }
     }
   },
-  "default-finance-type": {
+  "default_finance_type": {
     "label": "Activity Default Finance Type",
     "criteria": "recommended",
     "attributes": {
@@ -752,7 +752,7 @@
       }
     }
   },
-  "default-aid-type": {
+  "default_aid_type": {
     "label": "Activity Default Aid Type",
     "criteria": "recommended",
     "add_more": true,
@@ -818,7 +818,7 @@
       }
     }
   },
-  "default-tied-status": {
+  "default_tied_status": {
     "label": "Activity Default Tied Status",
     "criteria": "recommended",
     "attributes": {
@@ -835,7 +835,7 @@
       }
     }
   },
-  "country-budget-items": {
+  "country_budget_items": {
     "label": "Activity Country Budget Items",
     "name": "activity_country_budget_items",
     "criteria": "",
@@ -854,7 +854,7 @@
       }
     },
     "sub_elements": {
-      "budget-item": {
+      "budget_item": {
         "name": "budget_item",
         "label": "Budget Item",
         "criteria": "",
@@ -930,7 +930,7 @@
       }
     }
   },
-  "humanitarian-scope": {
+  "humanitarian_scope": {
     "name": "humanitarian_scope",
     "label": "Humanitarian Scope",
     "criteria": "",
@@ -958,7 +958,7 @@
         "hover_text": "A code for a recognised vocabulary of terms classifying the event or action. This attribute is required. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/humanitarian-scope/'>For more information</a>",
         "help_text": ""
       },
-      "vocabulary-uri": {
+      "vocabulary_uri": {
         "name": "vocabulary_uri",
         "label": "@vocabulary-uri",
         "criteria": "",
@@ -1006,7 +1006,7 @@
       }
     }
   },
-  "capital-spend": {
+  "capital_spend": {
     "label": "Activity Capital Spend",
     "criteria": "",
     "attributes": {
@@ -1022,7 +1022,7 @@
       }
     }
   },
-  "related-activity": {
+  "related_activity": {
     "label": "Related Activity",
     "criteria": "",
     "add_more": true,
@@ -1121,7 +1121,7 @@
       }
     }
   },
-  "legacy-data": {
+  "legacy_data": {
     "label": "Activity Legacy Data",
     "criteria": "",
     "add_more": true,
@@ -1145,8 +1145,8 @@
         "hover_text": "The original field value in the reporting organisation’s system",
         "help_text": ""
       },
-      "iati-equivalent": {
-        "name": "iati-equivalent",
+      "iati_equivalent": {
+        "name": "iati_equivalent",
         "label": "@iati-equivalent",
         "criteria": "",
         "required": false,
