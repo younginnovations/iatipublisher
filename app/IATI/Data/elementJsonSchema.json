@@ -33,7 +33,7 @@
     "multiple": false
   },
   "reporting_org": {
-    "sub-elements": {
+    "sub_elements": {
       "narrative": {
         "type": "text",
         "required": true,
@@ -68,7 +68,7 @@
     "label": "Activity Identifier",
     "criteria": "mandatory",
     "attributes": {
-      "iati-activity-identifier": {
+      "iati_activity_identifier": {
         "name": "activity_identifier",
         "criteria": "mandatory",
         "type": "text",
@@ -77,7 +77,7 @@
         "hover_text": "",
         "help_text": ""
       },
-      "iati-activity-identifier-text": {
+      "iati_activity_identifier_text": {
         "name": "iati_identifier_text",
         "criteria": "",
         "type": "text",
@@ -110,7 +110,7 @@
       }
     },
     "sub_elements": {
-      "owner-org": {
+      "owner_org": {
         "name": "owner_org",
         "criteria": "",
         "add_more": true,
@@ -237,7 +237,7 @@
         "hover_text": "An IATI code defining the type of activity date being reported. This attribute is required. <a href='https://iatistandard.org/en/iati-standard/203/codelists/activitydatetype/'>For more information</a>",
         "help_text": ""
       },
-      "iso-date": {
+      "iso_date": {
         "name": "date",
         "type": "date",
         "required": true,
@@ -387,7 +387,7 @@
         "help_text": "",
         "hidden": true
       },
-      "vocabulary-uri": {
+      "vocabulary_uri": {
         "name": "vocabulary_uri",
         "label": "@vocabulary-uri",
         "criteria": "recommended",
@@ -449,7 +449,7 @@
         "type": "select",
         "choices": "Activity/SectorVocabulary.json"
       },
-      "vocabulary-uri": {
+      "vocabulary_uri": {
         "name": "vocabulary_uri",
         "label": "@vocabulary-uri",
         "criteria": "recommended",
@@ -583,7 +583,7 @@
         "help_text": "",
         "hidden": true
       },
-      "vocabulary-uri": {
+      "vocabulary_uri": {
         "name": "vocabulary_uri",
         "label": "@vocabulary-uri",
         "criteria": "",
@@ -640,7 +640,7 @@
         "hover_text": "An IATI code for the vocabulary to be used to define policy markers. If omitted then the OECD DAC vocabulary is assumed. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/policy-marker/'>For more information</a>",
         "help_text": ""
       },
-      "vocabulary-uri": {
+      "vocabulary_uri": {
         "name": "vocabulary_uri",
         "label": "@vocabulary-uri",
         "criteria": "",
@@ -763,7 +763,7 @@
     }
   },
   "default_aid_type": {
-    "label": "default_aid_type",
+    "label": "Activity Default Aid Type",
     "criteria": "recommended",
     "add_more": true,
     "name": "default_aid_type",
@@ -865,7 +865,7 @@
       }
     },
     "sub_elements": {
-      "budget-item": {
+      "budget_item": {
         "name": "budget_item",
         "label": "Budget Item",
         "criteria": "",
@@ -970,7 +970,7 @@
         "hover_text": "A code for a recognised vocabulary of terms classifying the event or action. This attribute is required. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/humanitarian-scope/'>For more information</a>",
         "help_text": ""
       },
-      "vocabulary-uri": {
+      "vocabulary_uri": {
         "name": "vocabulary_uri",
         "label": "@vocabulary-uri",
         "criteria": "",
@@ -1161,8 +1161,8 @@
         "hover_text": "The original field value in the reporting organisation’s system",
         "help_text": ""
       },
-      "iati-equivalent": {
-        "name": "iati-equivalent",
+      "iati_equivalent": {
+        "name": "iati_equivalent",
         "label": "@iati-equivalent",
         "criteria": "",
         "required": false,
