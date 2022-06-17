@@ -59,7 +59,7 @@ class StatusController extends Controller
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return response()->json(['success' => false, 'error' => 'Error has occurred while updating activity status.']);
+            return response()->json(['success' => false, 'error' => 'Error has occurred while opening activity status form.']);
         }
     }
 

@@ -44,7 +44,6 @@
                             <div class="text-sm shrink-0 uppercase text-n-40 font-bold">Sector</div>
                             <div class="line grow h-px border-b border-n-40 ml-4"></div>
                         </div>
-                        {{$errors}}
                         {!! form($form) !!}
                         <div class="hidden parent-collection" data_name="description"
                             data-prototype="{{ form_row($form->sector->prototype()) }}">

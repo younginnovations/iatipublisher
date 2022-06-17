@@ -43,7 +43,10 @@ class SectorRequest extends ActivityBaseRequest
             $sectorForm = sprintf('sector.%s', $sectorIndex);
 //            $rules[sprintf('%s.vocabulary', $sectorForm)] = 'required';
 //            $vocabulary = $sector['sector_vocabulary'];
-            $rules[sprintf('%s.vocabulary_uri', $sectorForm)] = 'nullable|url';
+
+            if (isset($sector['vocabulary']) && $sector['vocabulary'] === '99') {
+                $rules[sprintf('%s.vocabulary_uri', $sectorForm)] = 'nullable|url';
+            }
 
 //            switch ($vocabulary) {
 //                case '1':

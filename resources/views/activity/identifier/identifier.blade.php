@@ -45,6 +45,9 @@
                             <div class="line grow h-px border-b border-n-40 ml-4"></div>
                         </div>
                         {!! form($form) !!}
+                        <div class="hidden identifier"
+                            activity_identifier={{ $activity->organization->identifier}}>
+                        </div>
                     </div>
                 </div>
             </div>

@@ -59,7 +59,7 @@ class DefaultTiedStatusController extends Controller
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while updating default tied status.');
+            return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while rendering default tied status form.');
         }
     }
 

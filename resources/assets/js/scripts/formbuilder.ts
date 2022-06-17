@@ -27,6 +27,7 @@ class FormBuilder {
         placeholder: 'Select an option',
       });
     $(target).attr('child_count', count);
+    this.aidTypeVocabularyHideField();
   }
 
   // adds parent collection
@@ -57,8 +58,11 @@ class FormBuilder {
       );
     $(target).attr('child_count', count);
 
-    this.humanitarianScopeVocabularyUri();
-    this.countryBudgetCodeField();
+    this.humanitarianScopeHideVocabularyUri();
+    this.countryBudgetHideCodeField();
+    this.sectorVocabularyHideField();
+    this.recipientVocabularyHideField();
+    this.policyVocabularyHideField();
   }
 
   // deletes collection
@@ -108,62 +112,63 @@ class FormBuilder {
   }
 
   /**
+   * Hide and Show different form fields based on vocabulary and other types
+   */
+  public hideShowFormFields() {
+    this.humanitarianScopeHideVocabularyUri();
+    this.countryBudgetHideCodeField();
+    this.aidTypeVocabularyHideField();
+    this.sectorVocabularyHideField();
+    this.policyVocabularyHideField();
+    this.recipientVocabularyHideField();
+  }
+
+  /**
    * Humanitarian Scope Form Page
    *
    * @Logic hide vocabulary-uri field based on '@vocabulary' field value
    */
-  public humanitarianScopeVocabularyUri() {
-    var humanitarianScopeVocabulary = $(
+  public humanitarianScopeHideVocabularyUri() {
+    let humanitarianScopeVocabulary = $(
       'select[id^="humanitarian_scope"][id*="[vocabulary]"]'
-    ),
-      humanitarianScopeVocabularyUri =
-        'input[id^="humanitarian_scope"][id*="[vocabulary_uri]"]';
+    );
 
     if (humanitarianScopeVocabulary.length > 0) {
       // hide fields on page load
-      $.each(humanitarianScopeVocabulary, function () {
-        var val = humanitarianScopeVocabulary.val() ?? '';
-        var index = $(this);
-
-        if (val === '99') {
-          index
-            .closest('.form-field-group')
-            .find(humanitarianScopeVocabularyUri)
-            .show()
-            .closest('.form-field')
-            .show();
-        } else {
-          index
-            .closest('.form-field-group')
-            .find(humanitarianScopeVocabularyUri)
-            .hide()
-            .closest('.form-field')
-            .hide();
-        }
+      $.each(humanitarianScopeVocabulary, (index, scope) => {
+        let val = $(scope).val() ?? '';
+        this.hideHumanitarianScopeField($(scope), val.toString());
       });
 
       // hide/show fields on value change
-      humanitarianScopeVocabulary.on('select2:select', function (e) {
-        var val = e.params.data.id;
-        var index = $(this);
+      humanitarianScopeVocabulary.on('select2:select', (e) => {
+        let val = e.params.data.id;
+        let index = e.target as HTMLElement;
 
-        if (val === '99') {
-          index
-            .closest('.form-field-group')
-            .find(humanitarianScopeVocabularyUri)
-            .show()
-            .closest('.form-field')
-            .show();
-        } else {
-          index
-            .closest('.form-field-group')
-            .find(humanitarianScopeVocabularyUri)
-            .hide()
-            .closest('.form-field')
-            .hide();
-        }
+        this.hideHumanitarianScopeField($(index), val);
+      });
+
+      // hide/show fields on value clear
+      humanitarianScopeVocabulary.on('select2:clear', (e) => {
+        let index = e.target as HTMLElement;
+
+        this.hideHumanitarianScopeField($(index), '');
       });
     }
+
+  }
+
+  // hide country budget based on vocabulary
+  public hideHumanitarianScopeField(index: JQuery, value: string) {
+    let humanitarianScopeHideVocabularyUri =
+      'input[id^="humanitarian_scope"][id*="[vocabulary_uri]"]';
+
+    if (value === '99') {
+      index.closest('.form-field-group').find(humanitarianScopeHideVocabularyUri).show().closest('.form-field').show();
+    } else {
+      index.closest('.form-field-group').find(humanitarianScopeHideVocabularyUri).val('').trigger('change').hide().closest('.form-field').hide();
+    }
+
   }
 
   /**
@@ -171,39 +176,82 @@ class FormBuilder {
    *
    * @Logic show/hide 'code' field based on '@vocabulary' field value
    */
-  public countryBudgetCodeField() {
-    var countryBudgetVocabulary = $('select#country_budget_vocabulary'),
-      countryBudgetCodeInput = 'input[id^="budget_item"][id*="[code_text]"]',
-      countryBudgetCodeSelect = 'select[id^="budget_item"][id*="[code]"]';
+  public countryBudgetHideCodeField() {
+    let countryBudgetVocabulary = $('select#country_budget_vocabulary');
 
     if (countryBudgetVocabulary.length > 0) {
       // hide/show on page load
-      var val = countryBudgetVocabulary.val() ?? '1';
-
-      if (val === '1') {
-        $(countryBudgetCodeInput).closest('.form-field').hide();
-        $(countryBudgetCodeSelect).closest('.form-field').show();
-      } else {
-        $(countryBudgetCodeInput).closest('.form-field').show();
-        $(countryBudgetCodeSelect).closest('.form-field').hide();
-      }
+      let val = countryBudgetVocabulary.val() ?? '1';
+      this.hideCountryBudgetField(val.toString());
 
       // hide/show on value change
-      countryBudgetVocabulary.on('select2:select', function (e) {
-        var val = e.params.data.id;
-        if (val === '1') {
-          $(countryBudgetCodeInput).closest('.form-field').hide();
-          $(countryBudgetCodeSelect).closest('.form-field').show();
-        } else {
-          $(countryBudgetCodeInput).closest('.form-field').show();
-          $(countryBudgetCodeSelect).closest('.form-field').hide();
-        }
+      countryBudgetVocabulary.on('select2:select', (e) => {
+        let val = e.params.data.id;
+        this.hideCountryBudgetField(val);
+      });
+
+      //hide/show based on value cleared
+      countryBudgetVocabulary.on('select2:clear', (e) => {
+        let index = e.target as HTMLElement;
+
+        this.hideCountryBudgetField('');
       });
     }
   }
-  //hide and show aid type fields
+
+  /**
+  * Hide Country Budget Fields
+  */
+  public hideCountryBudgetField(value: string) {
+    let countryBudgetVocabulary = $('select#country_budget_vocabulary'),
+      countryBudgetCodeInput = 'input[id^="budget_item"][id*="[code_text]"]',
+      countryBudgetCodeSelect = 'select[id^="budget_item"][id*="[code]"]';
+
+    if (value === '1') {
+      $(countryBudgetCodeInput).val('').trigger('change').closest('.form-field').hide();
+      $(countryBudgetCodeSelect).closest('.form-field').show();
+    } else {
+      $(countryBudgetCodeInput).closest('.form-field').show();
+      $(countryBudgetCodeSelect).val('').trigger('change').closest('.form-field').hide();
+    }
+
+  }
+
+  /**
+  * AidType Form Page
+  *
+  * @Logic hide vocabulary-uri and codes field based on '@vocabulary' field value
+  */
+  public aidTypeVocabularyHideField() {
+    let aidtype_vocabulary = $('select[id*="default_aidtype_vocabulary"]');
+    let index = $(this);
+
+    if (aidtype_vocabulary.length > 0) {
+      $.each(aidtype_vocabulary, (index, item) => {
+        let data = $(item).val() ?? '1';
+        this.hideAidTypeSelectField($(item), data.toString());
+      });
+
+      aidtype_vocabulary.on('select2:select', (e) => {
+        let data = e.params.data.id;
+        let target = e.target as HTMLElement;
+
+        this.hideAidTypeSelectField($(target), data);
+      });
+
+      aidtype_vocabulary.on('select2:clear', (e) => {
+        let target = e.target as HTMLElement;
+
+        this.hideAidTypeSelectField($(target), '');
+      });
+    }
+  }
+
+  /**
+  * Hide Aid Type Select Fields
+  */
   public hideAidTypeSelectField(index: JQuery, value: string) {
-    var default_aid_type = 'select[id*="[default_aid_type]"]',
+    let default_aid_type = 'select[id*="[default_aid_type]"]',
       earmarking_category = 'select[id*="[earmarking_category]"]',
       earmarking_modality = 'select[id*="[earmarking_modality]"]',
       cash_and_voucher_modalities =
@@ -219,39 +267,58 @@ class FormBuilder {
 
     switch (value) {
       case '2':
-        //show fields
         index.closest('.form-field-group').find(earmarking_category).show().closest('.form-field').show();
-
-        // //hide fields
-        index.closest('.form-field-group').find(case2).hide().closest('.form-field').hide();
+        index.closest('.form-field-group').find(case2).val('').trigger('change').hide().closest('.form-field').hide();
         break;
       case '3':
-        //show fields
         index.closest('.form-field-group').find(earmarking_modality).show().closest('.form-field').show();
-
-        //hide fields
-        index.closest('.form-field-group').find(case3).hide().closest('.form-field').hide();
+        index.closest('.form-field-group').find(case3).val('').trigger('change').hide().closest('.form-field').hide();
         break;
 
       case '4':
-        //show fields
         index.closest('.form-field-group').find(cash_and_voucher_modalities).show().closest('.form-field').show();
-
-        //hide fields
-        index.closest('.form-field-group').find(case4).hide().closest('.form-field').hide();
+        index.closest('.form-field-group').find(case4).val('').trigger('change').hide().closest('.form-field').hide();
         break;
       default:
-        //show fields
         index.closest('.form-field-group').find(default_aid_type).show().closest('.form-field').show();
-
-        //hide fields
-        index.closest('.form-field-group').find(case1).hide().closest('.form-field').hide();
+        index.closest('.form-field-group').find(case1).val('').trigger('change').hide().closest('.form-field').hide();
     }
-
-
 
   }
 
+  /**
+  * Policy Marker Form Page
+  *
+  * @Logic hide vocabulary-uri and codes field based on '@vocabulary' field value
+  */
+  public policyVocabularyHideField() {
+    let policymaker_vocabulary = $('select[id*="policymarker_vocabulary"]');
+
+    if (policymaker_vocabulary.length > 0) {
+      $.each(policymaker_vocabulary, (index, policy_marker) => {
+        let data = $(policy_marker).val() ?? '1';
+        this.hidePolicyMakerField($(policy_marker), data.toString());
+      });
+
+
+      policymaker_vocabulary.on('select2:select', (e) => {
+        let data = e.params.data.id;
+        let target = e.target as HTMLElement;
+
+        this.hidePolicyMakerField($(target), data);
+      });
+
+      policymaker_vocabulary.on('select2:clear', (e) => {
+        let target = e.target as HTMLElement;
+
+        this.hidePolicyMakerField($(target), '');
+      });
+    }
+  }
+
+  /**
+  * Hides Policy Marker Form Fields
+  */
   public hidePolicyMakerField(index: JQuery, value: string) {
     let case1_show = 'select[id*="[policy_marker]"]',
       case2_show = 'input[id*="[policy_marker_text]"],input[id*="[vocabulary_uri]"]',
@@ -265,17 +332,50 @@ class FormBuilder {
     switch (value) {
       case '1':
         index.closest('.form-field-group').find(case1_show).show().closest('.form-field').show();
-        index.closest('.form-field-group').find(case1).hide().closest('.form-field').hide();
+        index.closest('.form-field-group').find(case1).val('').trigger('change').hide().closest('.form-field').hide();
         break;
       case '99':
         index.closest('.form-field-group').find(case2_show).show().closest('.form-field').show();
-        index.closest('.form-field-group').find(case2).hide().closest('.form-field').hide();
+        index.closest('.form-field-group').find(case2).val('').trigger('change').hide().closest('.form-field').hide();
         break;
       default:
-        index.closest('.form-field-group').find(case1).hide().closest('.form-field').hide();
+        index.closest('.form-field-group').find(case1).val('').trigger('change').hide().closest('.form-field').hide();
     }
   }
 
+  /**
+  * Sector Form Page
+  *
+  * @Logic hide vocabulary-uri and codes field based on '@vocabulary' field value
+  */
+  public sectorVocabularyHideField() {
+    let sector_vocabulary = $('select[id*="sector_vocabulary"]');
+
+    if (sector_vocabulary.length > 0) {
+      $.each(sector_vocabulary, (index, sector) => {
+        let data = $(sector).val() ?? '1';
+        this.hideSectorField($(sector), data.toString());
+      });
+
+
+      sector_vocabulary.on('select2:select', (e) => {
+        let data = e.params.data.id;
+        let target = e.target as HTMLElement;
+
+        this.hideSectorField($(target), data);
+      });
+
+      sector_vocabulary.on('select2:clear', (e) => {
+        let target = e.target as HTMLElement;
+
+        this.hideSectorField($(target), '');
+      });
+    }
+  }
+
+  /**
+   * Hide Sector Form fields
+  */
   public hideSectorField(index: JQuery, value: string) {
     let case1_show = 'select[id*="[code]"]',
       case2_show = 'select[id*="[category_code]"]',
@@ -299,35 +399,69 @@ class FormBuilder {
     switch (value) {
       case '1':
         index.closest('.form-field-group').find(case1_show).show().closest('.form-field').show();
-        index.closest('.form-field-group').find(case1).hide().closest('.form-field').hide();
+        index.closest('.form-field-group').find(case1).val('').trigger('change').hide().closest('.form-field').hide();
         break;
       case '2':
         index.closest('.form-field-group').find(case2_show).show().closest('.form-field').show();
-        index.closest('.form-field-group').find(case2).hide().closest('.form-field').hide();
+        index.closest('.form-field-group').find(case2).val('').trigger('change').hide().closest('.form-field').hide();
         break;
       case '7':
         index.closest('.form-field-group').find(case7_show).show().closest('.form-field').show();
-        index.closest('.form-field-group').find(case7).hide().closest('.form-field').hide();
+        index.closest('.form-field-group').find(case7).val('').trigger('change').hide().closest('.form-field').hide();
         break;
       case '8':
         index.closest('.form-field-group').find(case8_show).show().closest('.form-field').show();
-        index.closest('.form-field-group').find(case8).hide().closest('.form-field').hide();
+        index.closest('.form-field-group').find(case8).val('').trigger('change').hide().closest('.form-field').hide();
         break;
       case '98':
         index.closest('.form-field-group').find(case98_99_show).show().closest('.form-field').show();
-        index.closest('.form-field-group').find(case98_99).hide().closest('.form-field').hide();
+        index.closest('.form-field-group').find(case98_99).val('').trigger('change').hide().closest('.form-field').hide();
         break;
       case '99':
         index.closest('.form-field-group').find(case98_99_show).show().closest('.form-field').show();
-        index.closest('.form-field-group').find(case98_99).hide().closest('.form-field').hide();
+        index.closest('.form-field-group').find(case98_99).val('').trigger('change').hide().closest('.form-field').hide();
         break;
       default:
         index.closest('.form-field-group').find(default_show).show().closest('.form-field').show();
 
-        index.closest('.form-field-group').find(default_hide).hide().closest('.form-field').hide();
+        index.closest('.form-field-group').find(default_hide).val('').trigger('change').hide().closest('.form-field').hide();
     }
   }
 
+  /**
+ *  Recipient Vocabulary Form Page
+ *
+ * @Logic hide vocabulary-uri and codes field based on '@vocabulary' field value
+ */
+  public recipientVocabularyHideField() {
+
+    let region_vocabulary = $('select[id*="region_vocabulary"]');
+
+    if (region_vocabulary.length > 0) {
+
+      $.each(region_vocabulary, (index, region_vocab) => {
+        let data = $(region_vocab).val() ?? '1';
+        this.hideRecipientRegionField($(region_vocab), data.toString());
+      });
+
+      region_vocabulary.on('select2:select', (e) => {
+        let data = e.params.data.id;
+        let target = e.target as HTMLElement;
+
+        this.hideRecipientRegionField($(target), data);
+      });
+
+      region_vocabulary.on('select2:clear', (e) => {
+        let target = e.target as HTMLElement;
+
+        this.hideRecipientRegionField($(target), '');
+      });
+    }
+  }
+
+  /**
+  * Hides Recipient Region Form Fields
+  */
   public hideRecipientRegionField(index: JQuery, value: string) {
     let case1_show = 'select[id*="[region_code]"],input[id*="[custom_code]"]',
       case2_show = 'input[id*="[custom_code]"]',
@@ -339,28 +473,37 @@ class FormBuilder {
       case99 =
         'select[id*="[region_code]"]';
 
-    console.log(index.closest('.form-field-group').find(case1_show));
-
-    console.log(value);
-
-
     switch (value) {
       case '1':
         index.closest('.form-field-group').find(case1_show).show().closest('.form-field').show();
-        index.closest('.form-field-group').find(case1).hide().closest('.form-field').hide();
+        index.closest('.form-field-group').find(case1).val('').trigger('change').hide().closest('.form-field').hide();
         break;
       case '2':
         index.closest('.form-field-group').find(case2_show).show().closest('.form-field').show();
-        index.closest('.form-field-group').find(case2).hide().closest('.form-field').hide();
+        index.closest('.form-field-group').find(case2).val('').trigger('change').hide().closest('.form-field').hide();
         break;
       case '99':
         index.closest('.form-field-group').find(case99_show).show().closest('.form-field').show();
-        index.closest('.form-field-group').find(case99).hide().closest('.form-field').hide();
+        index.closest('.form-field-group').find(case99).val('').trigger('change').hide().closest('.form-field').hide();
         break;
       default:
         index.closest('.form-field-group').find(case2_show).show().closest('.form-field').show();
-        index.closest('.form-field-group').find(case2).hide().closest('.form-field').hide();
+        index.closest('.form-field-group').find(case2).val('').trigger('change').hide().closest('.form-field').hide();
     }
+  }
+
+  /**
+  * Updates Activity identifier
+  */
+  public updateActivityIdentifier() {
+    let activity_identifier = $('#activity_identifier');
+
+    if (activity_identifier.length > 0) {
+      activity_identifier.on('keyup', function () {
+        $('#iati_identifier_text').val($('.identifier').attr('activity_identifier') + `-${$(this).val()}`);
+      })
+    }
+
   }
 
 }
@@ -368,6 +511,8 @@ class FormBuilder {
 $(function () {
   let formBuilder = new FormBuilder();
   formBuilder.addWrapper();
+  formBuilder.hideShowFormFields();
+  formBuilder.updateActivityIdentifier();
 
   $('body').on('click', '.add_to_collection', (event: Event) => {
     formBuilder.addForm(event);
@@ -390,90 +535,8 @@ $(function () {
     allowClear: true,
   });
 
-  //aidtype_vocabulary
-  var aidtype_vocabulary = $('select[id*="default_aidtype_vocabulary"]');
-
-  //run code only if vocabulary select field exist in page
-  if (aidtype_vocabulary.length > 0) {
-    // hide fields on page load
-    $.each(aidtype_vocabulary, function () {
-      var data = $(this).val() ?? '1';
-      formBuilder.hideAidTypeSelectField($(this), data.toString());
-    });
-
-    // hide fields based on vocabulary value change
-    aidtype_vocabulary.on('select2:select', function (e) {
-      var data = e.params.data.id;
-      formBuilder.hideAidTypeSelectField($(this), data);
-    });
-  }
 
 
 
-  //policy maker
-  var policymaker_vocabulary = $('select[id*="policymarker_vocabulary"]');
 
-  //run code only if vocabulary select field exist in page
-  if (policymaker_vocabulary.length > 0) {
-    console.log('here');
-    //loop through all vocabulary
-    $.each(policymaker_vocabulary, function () {
-      var data = $(this).val() ?? '1';
-      formBuilder.hidePolicyMakerField($(this), data.toString());
-    });
-
-    /**
-     * Hide and show select field based on vocabulary value
-     */
-
-    policymaker_vocabulary.on('select2:select', function (e) {
-      var data = e.params.data.id;
-      formBuilder.hidePolicyMakerField($(this), data);
-    });
-  }
-
-  //sector
-  var sector_vocabulary = $('select[id*="sector_vocabulary"]');
-
-  //run code only if vocabulary select field exist in page
-  if (sector_vocabulary.length > 0) {
-    //loop through all vocabulary
-    $.each(sector_vocabulary, function () {
-      var data = $(this).val() ?? '1';
-      formBuilder.hideSectorField($(this), data.toString());
-    });
-
-    /**
-     * Hide and show select field based on vocabulary value
-     */
-
-    sector_vocabulary.on('select2:select', function (e) {
-      var data = e.params.data.id;
-      formBuilder.hideSectorField($(this), data);
-    });
-  }
-
-  //recipient_region
-  var region_vocabulary = $('select[id*="region_vocabulary"]');
-
-  //run code only if vocabulary select field exist in page
-  if (region_vocabulary.length > 0) {
-    //loop through all vocabulary
-    $.each(region_vocabulary, function () {
-      var data = $(this).val() ?? '1';
-      formBuilder.hideRecipientRegionField($(this), data.toString());
-    });
-
-    /**
-     * Hide and show select field based on vocabulary value
-     */
-
-    region_vocabulary.on('select2:select', function (e) {
-      var data = e.params.data.id;
-      formBuilder.hideRecipientRegionField($(this), data);
-    });
-  }
-
-  formBuilder.humanitarianScopeVocabularyUri();
-  formBuilder.countryBudgetCodeField();
 });

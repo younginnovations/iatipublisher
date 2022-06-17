@@ -59,7 +59,7 @@ class IdentifierController extends Controller
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return response()->json(['success' => false, 'error' => 'Error has occurred while updating activity identifier.']);
+            return response()->json(['success' => false, 'error' => 'Error has occurred while rendering activity identifier form.']);
         }
     }
 

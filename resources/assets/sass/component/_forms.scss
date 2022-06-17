@@ -111,10 +111,12 @@ form {
     }
   }
 }
+
 /**
   Select 2 field
 */
 span.select2-container--default {
+  width: 100% !important;
   max-width: 100%;
   .select2-selection--single {
     @apply h-12 w-full rounded border border-n-30 px-4 py-3 text-sm text-n-40 outline-none duration-300;
