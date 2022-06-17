@@ -17,7 +17,7 @@ class StatusRequest extends ActivityBaseRequest
     public function rules(): array
     {
         return [
-          'activity_status' => ['required', 'in:1,2,3,4,5,6'],
+          'activity_status' => ['nullable', 'in:1,2,3,4,5,6'],
         ];
     }
 
@@ -29,7 +29,7 @@ class StatusRequest extends ActivityBaseRequest
     public function messages(): array
     {
         return [
-            'required'  => 'The Code is required.',
+//            'required'  => 'The Code is required.',
             'in'        => 'The selected code does not exist.',
         ];
     }

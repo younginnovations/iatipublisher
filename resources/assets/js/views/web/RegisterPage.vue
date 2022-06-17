@@ -191,10 +191,10 @@
             >
               <span v-if="step == parseInt(i)" class="list__active"></span>
               <div class="flex items-center">
-                <span v-if="!ele.is_complete" class="mr-3 ml-6">
+                <span v-if="!ele.is_complete" class="ml-6 mr-3">
                   {{ i }}
                 </span>
-                <span v-if="ele.is_complete" class="mr-3 ml-6">
+                <span v-if="ele.is_complete" class="ml-6 mr-3">
                   <svg-vue class="text-xs" icon="checked"> </svg-vue>
                 </span>
                 <span

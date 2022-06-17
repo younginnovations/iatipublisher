@@ -42,10 +42,10 @@ class DescriptionRequest extends ActivityBaseRequest
 
         foreach ($formFields as $descriptionIndex => $description) {
             $descriptionForm = sprintf('description.%s', $descriptionIndex);
-            $rules[sprintf('%s.type', $descriptionForm)] = 'required';
+//            $rules[sprintf('%s.type', $descriptionForm)] = 'required';
             $rules = array_merge(
                 $rules,
-                $this->getRulesForRequiredNarrative($description['narrative'], $descriptionForm)
+                $this->getRulesForNarrative($description['narrative'], $descriptionForm)
             );
         }
 
@@ -63,7 +63,7 @@ class DescriptionRequest extends ActivityBaseRequest
 
         foreach ($formFields as $descriptionIndex => $description) {
             $descriptionForm = sprintf('description.%s', $descriptionIndex);
-            $messages[sprintf('%s.type.required', $descriptionForm)] = 'Type is required.';
+//            $messages[sprintf('%s.type.required', $descriptionForm)] = 'The @type field is required.';
             $messages = array_merge(
                 $messages,
                 $this->getMessagesForRequiredNarrative($description['narrative'], $descriptionForm)

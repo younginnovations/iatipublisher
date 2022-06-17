@@ -1,7 +1,7 @@
 import $ from 'jquery';
 import 'select2';
 
-$(document).ready(() => {
+$(function () {
   $('body').on('click', '#hamburger', () => {
     $('#nav-list').toggleClass('nav-active');
     $('#hamburger').toggleClass('active');
@@ -15,10 +15,5 @@ $(document).ready(() => {
       $('#hamburger').removeClass('active');
       $('body').removeClass('overflow-hidden');
     }
-  });
-
-  $('.select2').select2({
-    placeholder: "Select an option",
-    allowClear: true,
   });
 });

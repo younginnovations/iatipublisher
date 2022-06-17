@@ -40,11 +40,11 @@ class RelatedActivityRequest extends ActivityBaseRequest
     {
         $rules = [];
 
-        foreach ($formFields as $relatedActivityIndex => $relatedActivity) {
-            $relatedActivityForm = sprintf('related_activity.%s', $relatedActivityIndex);
-            $rules[sprintf('%s.relationship_type', $relatedActivityForm)] = 'required';
-            $rules[sprintf('%s.activity_identifier', $relatedActivityForm)] = 'required';
-        }
+//        foreach ($formFields as $relatedActivityIndex => $relatedActivity) {
+//            $relatedActivityForm = sprintf('related_activity.%s', $relatedActivityIndex);
+//            $rules[sprintf('%s.relationship_type', $relatedActivityForm)] = 'required';
+//            $rules[sprintf('%s.activity_identifier', $relatedActivityForm)] = 'required';
+//        }
 
         return $rules;
     }
@@ -58,11 +58,11 @@ class RelatedActivityRequest extends ActivityBaseRequest
     {
         $messages = [];
 
-        foreach ($formFields as $relatedActivityIndex => $relatedActivity) {
-            $relatedActivityForm = sprintf('related_activity.%s', $relatedActivityIndex);
-            $messages[sprintf('%s.relationship_type.required', $relatedActivityForm)] = 'Relationship type is required.';
-            $messages[sprintf('%s.activity_identifier.required', $relatedActivityForm)] = 'Activity Identifier is required.';
-        }
+//        foreach ($formFields as $relatedActivityIndex => $relatedActivity) {
+//            $relatedActivityForm = sprintf('related_activity.%s', $relatedActivityIndex);
+//            $messages[sprintf('%s.relationship_type.required', $relatedActivityForm)] = 'Relationship type is required.';
+//            $messages[sprintf('%s.activity_identifier.required', $relatedActivityForm)] = 'Activity Identifier is required.';
+//        }
 
         return $messages;
     }

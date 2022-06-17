@@ -59,7 +59,7 @@ class CollaborationTypeController extends Controller
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while updating activity collaboration type.');
+            return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while rendering activity collaboration type form.');
         }
     }
 

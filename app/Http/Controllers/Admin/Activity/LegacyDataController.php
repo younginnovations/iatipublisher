@@ -59,7 +59,7 @@ class LegacyDataController extends Controller
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while updating legacy data.');
+            return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while rendering legacy data form.');
         }
     }
 

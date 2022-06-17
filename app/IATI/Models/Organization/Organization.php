@@ -49,6 +49,6 @@ class Organization extends Model
      */
     public function activities(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
-        return $this->hasMany(Activity::class, 'org_id');
+        return $this->hasMany(Activity::class, 'org_id', 'id');
     }
 }

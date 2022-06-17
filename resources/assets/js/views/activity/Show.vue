@@ -260,7 +260,6 @@
                   :name="post.label"
                   hover_text="You cannot publish an activity until all the mandatory fields have been filled."
                   icon_size="text-tiny"
-                  name=""
                 ></HoverText>
               </span>
             </button>
@@ -446,6 +445,7 @@ export default defineComponent({
 
   &__sidebar {
     width: 280px;
+    flex-shrink: 0;
   }
 
   &__content {
