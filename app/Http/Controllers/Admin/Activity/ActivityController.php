@@ -222,6 +222,11 @@ class ActivityController extends Controller
             'earmarkingModality' => getCodeList('EarmarkingModality', 'Activity'),
             'cashandVoucherModalities' => getCodeList('CashandVoucherModalities', 'Activity'),
             'budgetIdentifierVocabulary' => getCodeList('BudgetIdentifierVocabulary', 'Activity'),
+            'sectorVocabulary' => getCodeList('SectorVocabulary', 'Activity'),
+            'sectorCode' => getCodeList('SectorCode', 'Activity'),
+            'sectorCategory' => getCodeList('SectorCategory', 'Activity'),
+            'sdgGoals' => getCodeList('UNSDG-Goals', 'Activity'),
+            'sdgTarget' => getCodeList('UNSDG-Targets', 'Activity'),
         ];
     }
 }
