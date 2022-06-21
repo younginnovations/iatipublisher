@@ -54,20 +54,24 @@ class BaseForm extends Form
                         ],
                     ],
                 ]
-            )->add('add_to_collection', 'button', [
-                'label' => 'Add More',
-                'attr' => [
-                    'class' => 'add_to_collection add_more button relative -translate-y-1/2 pl-3.5 text-xs font-bold uppercase leading-normal text-spring-50 text-bluecoral',
-                    'icon' => true,
-                ],
-            ]);
+            );
+            if (isset($field['add_more']) && $field['add_more']) {
+                $this->add('add_to_collection_' . $field['name'], 'button', [
+                    'label' => 'Add More',
+                    'attr' => [
+                        'class' => 'add_to_collection add_more button relative -translate-y-1/2 pl-3.5 text-xs font-bold uppercase leading-normal text-spring-50 text-bluecoral ',
+                        'form_type' => $field['name'],
+                        'icon' => true,
+                    ],
+                ]);
+            }
         }
     }
 
     /**
      * @return mixed|void
      */
-    public function buildForm():void
+    public function buildForm(): void
     {
         $this->setClientValidationEnabled(false);
         $element = $this->getData();

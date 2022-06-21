@@ -22,6 +22,7 @@ class WrapperCollectionForm extends Form
         $this->setClientValidationEnabled(false);
 
         foreach ($data['sub_elements'] as $field) {
+            // dd(str_replace('[__NAME__]','',$this->getName()));
             $this->add(
                 $field['name'],
                 'collection',
@@ -43,6 +44,7 @@ class WrapperCollectionForm extends Form
                 'label' => 'Add More',
                 'attr' => [
                     'class' => 'add_to_collection add_more button relative -translate-y-1/2 pl-3.5 text-xs font-bold uppercase leading-normal text-spring-50 text-bluecoral',
+                    'form_type' => $field['name'],
                     'icon' => true,
                 ],
             ]);

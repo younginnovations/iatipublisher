@@ -6,7 +6,9 @@ class FormBuilder {
   public addForm(ev: Event): void {
     ev.preventDefault();
     let target = ev.target as EventTarget;
-    let container = $('.collection-container');
+    console.log($('.collection-container'));
+    let container = $(target).attr('form_type') ? $(`.collection-container[form_type ='${$(target).attr('form_type')}']`) : $('.collection-container');
+    console.log('target', target, 'container', container);
     let count = $(target).attr('child_count')
       ? parseInt($(target).attr('child_count') as string) + 1
       : $(target).parent().find('.form-child-body').length;
@@ -17,15 +19,24 @@ class FormBuilder {
       .data('prototype')
       .replace(/__PARENT_NAME__/g, parent_count);
     proto = proto.replace(/__NAME__/g, count);
+
     $(target).prev().append($(proto));
-    $(target)
-      .parent()
-      .find('.form-child-body')
-      .last()
-      .find('.select2')
-      .select2({
-        placeholder: 'Select an option',
+    if ($(target).attr('form_type')) {
+      $(target).prev().last().find('.select2').select2({
+        placeholder: 'Select an option'
       });
+    } else {
+      $(target)
+        .parent()
+        .find('.form-child-body')
+        .last()
+        .find('.select2')
+        .select2({
+          placeholder: 'Select an option',
+        });
+    }
+
+
     $(target).attr('child_count', count);
     this.aidTypeVocabularyHideField();
   }

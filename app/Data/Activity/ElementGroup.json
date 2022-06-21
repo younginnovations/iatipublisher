@@ -136,7 +136,7 @@
   "related_documents": {
     "label": "Related Documents",
     "elements": {
-      "document_links": {
+      "document_link": {
         "label": "Document Links"
       }
     }

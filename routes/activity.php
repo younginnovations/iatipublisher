@@ -64,4 +64,10 @@ Route::name('admin.')->group(function () {
     Route::put('activities/{id}/other_identifier', [\App\Http\Controllers\Admin\Activity\OtherIdentifierController::class, 'update'])->name('activities.other-identifier.update');
     Route::get('activities/{id}/iati_identifier', [\App\Http\Controllers\Admin\Activity\IdentifierController::class, 'edit'])->name('activities.identifier.edit');
     Route::put('activities/{id}/iati_identifier', [\App\Http\Controllers\Admin\Activity\IdentifierController::class, 'update'])->name('activities.identifier.update');
+    Route::get('activities/{id}/document_link', [\App\Http\Controllers\Admin\Activity\DocumentLinkController::class, 'edit'])->name('activities.document-link.edit');
+    Route::put('activities/{id}/document_link', [\App\Http\Controllers\Admin\Activity\DocumentLinkController::class, 'update'])->name('activities.document-link.update');
+    Route::get('activities/{id}/contact_info', [\App\Http\Controllers\Admin\Activity\ContactInfoController::class, 'edit'])->name('activities.contact-info.edit');
+    Route::put('activities/{id}/contact_info', [\App\Http\Controllers\Admin\Activity\ContactInfoController::class, 'update'])->name('activities.contact-info.update');
+    Route::get('activities/{id}/participating_org', [\App\Http\Controllers\Admin\Activity\ParticipatingOrganizationController::class, 'edit'])->name('activities.participating-org.edit');
+    Route::put('activities/{id}/participating_org', [\App\Http\Controllers\Admin\Activity\ParticipatingOrganizationController::class, 'update'])->name('activities.participating-org.update');
 });
