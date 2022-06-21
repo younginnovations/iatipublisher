@@ -11,7 +11,8 @@
                                 <p>
                                     <a class="font-bold" href="/">Your Activities</a>
                                     <span class="separator mx-4"> / </span>
-                                    <span class="last text-n-30">Partnership against child exploitation</span>
+                                    <span class="last text-n-30"><a
+                                                href="/activities/{{ $activity['id'] }}">{{ $activity['title'][0]['narrative'] }}</a></span>
                                 </p>
                             </nav>
                         </div>
@@ -21,7 +22,9 @@
                                     <svg-vue icon="arrow-short-left"></svg-vue>
                                 </a>
                             </div>
-                            <h4 class="mr-4 font-bold">Partnership Against Child Exploitation</h4>
+                            <h4 class="mr-4 font-bold">
+                                {{ $activity['title'][0]['narrative'] }}
+                            </h4>
                         </div>
                     </div>
                 </div>
@@ -38,14 +41,14 @@
                             </div>
                         </div>
                         <div class="title flex items-center mb-4">
-                            <div class="text-sm shrink-0 uppercase text-n-40 font-bold">Description</div>
+                            <div class="text-sm shrink-0 uppercase text-n-40 font-bold">Activity Description</div>
                             <div class="line grow h-px border-b border-n-40 ml-4"></div>
                         </div>
                         {!! form($form) !!}
                         <div class="hidden parent-collection" data_name="description"
                             data-prototype="{{ form_row($form->description->prototype()) }}">
                         </div>
-                        <div class="hidden collection-container"
+                        <div class="hidden collection-container" form_type="narrative"
                             data-prototype="{{ str_replace('description[0]','description[__PARENT_NAME__]',form_row($form->description->getChildren()[0]->getChild('narrative')->prototype())) }}">
                         </div>
                     </div>

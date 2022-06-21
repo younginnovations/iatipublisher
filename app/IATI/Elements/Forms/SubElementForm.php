@@ -34,11 +34,13 @@ class SubElementForm extends Form
             }
         }
 
-        $this->add('delete', 'button', [
-            'attr' => [
-                'class' => 'delete delete-item absolute right-0 top-2/4 -translate-y-1/2 translate-x-1/2',
-            ],
-        ]);
+        if (Arr::get($data, 'add_more', false)) {
+            $this->add('delete', 'button', [
+                'attr' => [
+                    'class' => 'delete delete-item absolute right-0 top-2/4 -translate-y-1/2 translate-x-1/2',
+                ],
+            ]);
+        }
     }
 
     /**

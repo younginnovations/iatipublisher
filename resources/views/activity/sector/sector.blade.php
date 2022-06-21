@@ -41,14 +41,14 @@
                             </div>
                         </div>
                         <div class="title flex items-center mb-4">
-                            <div class="text-sm shrink-0 uppercase text-n-40 font-bold">Sector</div>
+                            <div class="text-sm shrink-0 uppercase text-n-40 font-bold">Activity Sector</div>
                             <div class="line grow h-px border-b border-n-40 ml-4"></div>
                         </div>
                         {!! form($form) !!}
                         <div class="hidden parent-collection" data_name="description"
                             data-prototype="{{ form_row($form->sector->prototype()) }}">
                         </div>
-                        <div class="hidden collection-container"
+                        <div class="hidden collection-container" form_type="narrative"
                             data-prototype="{{ str_replace('description[0]','description[__PARENT_NAME__]',form_row($form->sector->getChildren()[0]->getChild('narrative')->prototype())) }}">
                         </div>
                     </div>

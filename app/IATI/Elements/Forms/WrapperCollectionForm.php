@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\IATI\Elements\Forms;
 
+use Illuminate\Support\Arr;
 use Kris\LaravelFormBuilder\Form;
 
 /**
@@ -41,7 +42,7 @@ class WrapperCollectionForm extends Form
                     ],
                 ]
             )->add('add_to_collection', 'button', [
-                'label' => 'Add More',
+                'label' => sprintf('add more %s', Arr::get($field, 'name', '')),
                 'attr' => [
                     'class' => 'add_to_collection add_more button relative -translate-y-1/2 pl-3.5 text-xs font-bold uppercase leading-normal text-spring-50 text-bluecoral',
                     'form_type' => $field['name'],

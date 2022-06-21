@@ -5,6 +5,7 @@
         "name": "narrative",
         "type": "text",
         "required": true,
+        "add_more": true,
         "criteria": "mandatory",
         "label": "narrative",
         "hover_text": "The free text name or description of the item being described. This can be repeated in multiple languages. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/title/narrative/'> For more information </a>",
@@ -127,6 +128,7 @@
             "name": "narrative",
             "type": "textarea",
             "required": false,
+            "add_more": true,
             "criteria": "",
             "label": "narrative",
             "attr": {
@@ -175,6 +177,7 @@
         "name": "narrative",
         "type": "textarea",
         "required": true,
+        "add_more": true,
         "criteria": "mandatory",
         "label": "narrative",
         "hover_text": "The free text name or description of the item being described. This can be repeated in multiple languages. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/title/narrative/'> For more information </a>",
@@ -249,6 +252,7 @@
         "name": "narrative",
         "type": "textarea",
         "required": false,
+        "add_more": true,
         "criteria": "",
         "label": "narrative",
         "attr": {
@@ -321,6 +325,7 @@
         "name": "narrative",
         "type": "textarea",
         "required": false,
+        "add_more": true,
         "criteria": "",
         "label": "narrative",
         "attr": {
@@ -406,6 +411,7 @@
         "name": "narrative",
         "type": "textarea",
         "required": false,
+        "add_more": true,
         "criteria": "",
         "label": "narrative",
         "attr": {
@@ -501,6 +507,7 @@
         "name": "narrative",
         "type": "textarea",
         "required": false,
+        "add_more": true,
         "criteria": "",
         "label": "narrative",
         "attr": {
@@ -591,6 +598,7 @@
         "name": "narrative",
         "type": "textarea",
         "required": false,
+        "add_more": true,
         "criteria": "",
         "label": "narrative",
         "attr": {
@@ -679,6 +687,7 @@
         "name": "narrative",
         "type": "textarea",
         "required": false,
+        "add_more": true,
         "criteria": "",
         "label": "narrative",
         "attr": {
@@ -758,6 +767,7 @@
     "add_more": true,
     "attributes": {
       "name": "default_aid_type",
+      "add_more": true,
       "vocabulary": {
         "label": "@vocabulary",
         "name": "default_aidtype_vocabulary",
@@ -903,6 +913,7 @@
                 "name": "narrative",
                 "type": "textarea",
                 "required": false,
+                "add_more": true,
                 "criteria": "",
                 "label": "narrative",
                 "attr": {
@@ -983,6 +994,7 @@
         "name": "narrative",
         "type": "textarea",
         "required": false,
+        "add_more": true,
         "criteria": "",
         "label": "narrative",
         "attr": {
@@ -1028,6 +1040,7 @@
     "add_more": true,
     "attributes": {
       "name": "related_activity",
+      "add_more": true,
       "reference": {
         "name": "activity_identifier",
         "label": "@ref",
@@ -1096,6 +1109,7 @@
             "name": "narrative",
             "type": "textarea",
             "required": false,
+            "add_more": true,
             "criteria": "",
             "label": "narrative",
             "attr": {
@@ -1127,6 +1141,7 @@
     "add_more": true,
     "attributes": {
       "name": "legacy_data",
+      "add_more": true,
       "name_attribute": {
         "name": "name",
         "label": "@name",
@@ -1642,6 +1657,112 @@
             "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/description/narrative/'>For more information</a>",
             "help_text": "",
             "choices": "Activity/Language.json"
+          }
+        }
+      }
+    }
+  },
+  "budget": {
+    "name": "budget",
+    "label": "Activity Budget",
+    "criteria": "recommended",
+    "add_more": true,
+    "attributes": {
+      "type": {
+        "name": "budget_type",
+        "label": "@type",
+        "criteria": "recommended",
+        "required": false,
+        "type": "select",
+        "multiselect": false,
+        "choices": "Activity/BudgetType.json",
+        "hover_text": "Whether this is the original budget (prepared when the original commitment was made) or has subsequently been revised. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/budget/'>For more information</a>",
+        "help_text": ""
+      },
+      "status": {
+        "name": "budget_status",
+        "label": "@status",
+        "criteria": "recommended",
+        "required": true,
+        "type": "select",
+        "multiselect": false,
+        "choices": "Activity/BudgetStatus.json",
+        "hover_text": "The status explains whether the budget being reported is indicative or has been formally committed. The value should appear within the BudgetStatus codelist. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/budget/'>For more information</a>",
+        "help_text": ""
+      }
+    },
+    "sub_elements": {
+      "period_start": {
+        "name": "period_start",
+        "label": "Period Start",
+        "criteria": "mandatory",
+        "required": true,
+        "add_more": false,
+        "attributes": {
+          "period_start_date": {
+            "name": "date",
+            "label": "@iso-date",
+            "criteria": "mandatory",
+            "required": true,
+            "type": "date",
+            "hover_text": "This attribute is required. This value must be of type xsd:date. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/budget/period-start/'>For more information</a>",
+            "help_text": ""
+          }
+        }
+      },
+      "period_end": {
+        "name": "period_end",
+        "label": "Period End",
+        "criteria": "mandatory",
+        "required": true,
+        "add_more": false,
+        "attributes": {
+          "period_end_date": {
+            "name": "date",
+            "label": "@iso-date",
+            "criteria": "mandatory",
+            "required": true,
+            "type": "date",
+            "hover_text": "This attribute is required. This value must be of type xsd:date. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/budget/period-end/'>For more information</a>",
+            "help_text": ""
+          }
+        }
+      },
+      "value": {
+        "name": "budget_value",
+        "label": "Value",
+        "criteria": "mandatory",
+        "required": true,
+        "add_more": false,
+        "attributes": {
+          "amount": {
+            "name": "amount",
+            "label": "@amount",
+            "criteria": "",
+            "required": true,
+            "type": "text",
+            "hover_text": "",
+            "help_text": ""
+          },
+          "currency": {
+            "name": "currency",
+            "label": "@currency",
+            "criteria": "recommended",
+            "required": false,
+            "type": "select",
+            "multiselect": false,
+            "choices": "Activity/Currency.json",
+            "hover_text": "A three letter ISO 4217 code for the original currency of the amount. This is required for all currency amounts unless the iati-organisation/@default-currency attribute is specified. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/budget/value/'>For more information</a>",
+            "help_text": ""
+          },
+          "value_date": {
+            "name": "value_date",
+            "label": "@value-date",
+            "criteria": "mandatory",
+            "required": true,
+            "type": "date",
+            "hover_text": "The date to be used for determining the exchange rate for currency conversions.This attribute is required. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/budget/value/'>For more information</a>",
+            "help_text": ""
           }
         }
       }

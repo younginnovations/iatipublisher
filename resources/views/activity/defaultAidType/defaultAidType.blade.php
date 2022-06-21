@@ -41,11 +41,11 @@
                             </div>
                         </div>
                         <div class="title flex items-center mb-4">
-                            <div class="text-sm shrink-0 uppercase text-n-40 font-bold">Default Aid Type</div>
+                            <div class="text-sm shrink-0 uppercase text-n-40 font-bold">Activity Default Aid Type</div>
                             <div class="line grow h-px border-b border-n-40 ml-4"></div>
                         </div>
                         {!! form($form) !!}
-                        <div class="hidden collection-container"
+                        <div class="hidden collection-container" form_type="default_aid_type"
                              data-prototype="{{ form_row($form->default_aid_type->prototype()) }}">
                         </div>
                     </div>

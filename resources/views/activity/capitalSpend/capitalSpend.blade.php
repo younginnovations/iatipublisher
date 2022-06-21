@@ -41,7 +41,7 @@
                             </div>
                         </div>
                         <div class="title flex items-center mb-4">
-                            <div class="text-sm shrink-0 uppercase text-n-40 font-bold">Capital Spend</div>
+                            <div class="text-sm shrink-0 uppercase text-n-40 font-bold">Activity Capital Spend</div>
                             <div class="line grow h-px border-b border-n-40 ml-4"></div>
                         </div>
                         {!! form($form) !!}

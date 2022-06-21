@@ -55,9 +55,10 @@ class BaseForm extends Form
                     ],
                 ]
             );
+
             if (isset($field['add_more']) && $field['add_more']) {
                 $this->add('add_to_collection_' . $field['name'], 'button', [
-                    'label' => 'Add More',
+                    'label' => sprintf('add more %s', str_replace('_', ' ', Arr::get($field, 'name', ''))),
                     'attr' => [
                         'class' => 'add_to_collection add_more button relative -translate-y-1/2 pl-3.5 text-xs font-bold uppercase leading-normal text-spring-50 text-bluecoral ',
                         'form_type' => $field['name'],
@@ -94,7 +95,7 @@ class BaseForm extends Form
             foreach ($sub_elements as $sub_element) {
                 $this->buildCollection($sub_element);
 
-                if (Arr::get($element, 'add_more', false)) {
+                if (Arr::get($element, 'add_more', false) && Arr::get($sub_element, 'add_more', false)) {
                     $this->add('delete', 'button', [
                         'attr' => [
                             'class' => 'delete-parent delete-item absolute right-0 top-16 -translate-y-1/2 translate-x-1/2',
