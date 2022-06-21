@@ -235,4 +235,37 @@ class ActivityController extends Controller
             'tagVocabulary' => getCodeList('TagVocabulary', 'Activity'),
         ];
     }
+
+    /**
+     * Returns array containing activity detail status.
+     *
+     * @param Activity $activity
+     *
+     * @return array
+     */
+    public function getActivityDetailStatus($activity): array
+    {
+        return [
+            'iati_identifier' => $activity->identifier_element_completed,
+            'title'           => $activity->title_element_completed,
+            'description'     => $activity->description_element_completed,
+            'activity_status' => $activity->activity_status_element_completed,
+            'activity_date'   => $activity->activity_date_element_completed,
+            'activity_scope'  => $activity->activity_scope_element_completed,
+            'recipient_country' => $activity->recipient_country_element_completed,
+            'recipient_region' => $activity->recipient_region_element_completed,
+            'collaboration_type' => $activity->collaboration_type_element_completed,
+            'default_finance_type' => $activity->default_finance_type_element_completed,
+            'default_aid_type' => $activity->default_aid_type_element_completed,
+            'default_tied_status' => $activity->default_tied_status_element_completed,
+            'capital_spend'=> $activity->capital_spend_element_completed,
+            'related_activity' => $activity->related_activity_element_completed,
+            'sector' => $activity->sector_element_completed,
+            'humanitarian_scope' => $activity->humanitarian_scope_element_completed,
+            'legacy_data' => $activity->legacy_data_element_completed,
+            'tag' => $activity->tag_element_completed,
+            'policy_marker' => $activity->policy_marker_element_completed,
+            'conditions' => $activity->conditions_element_completed,
+        ];
+    }
 }
