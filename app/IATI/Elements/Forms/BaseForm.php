@@ -31,7 +31,7 @@ class BaseForm extends Form
                         'data'  => $field,
                         'label' => false,
                         'wrapper' => [
-                            'class' => 'form-field-group form-child-body flex flex-wrap rounded-br-lg border-y border-r border-spring-50 p-6',
+                            'class' => 'form-field-group form-child-body rounded-br-lg border-y border-r border-spring-50 p-6',
                         ],
                     ],
                 ]

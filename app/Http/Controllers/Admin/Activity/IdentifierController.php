@@ -53,7 +53,7 @@ class IdentifierController extends Controller
             $activity = $this->identifierService->getActivityData($id);
             $model['activity_identifier'] = $this->identifierService->getActivityIdentifierData($id);
             $this->baseFormCreator->url = route('admin.activities.identifier.update', [$id]);
-            $form = $this->baseFormCreator->editForm($model['activity_identifier'], $element['activity-identifier']);
+            $form = $this->baseFormCreator->editForm($model['activity_identifier'], $element['activity_identifier']);
 
             return view('activity.identifier.identifier', compact('form', 'activity'));
         } catch (\Exception $e) {

@@ -53,7 +53,7 @@ class LegacyDataController extends Controller
             $model['legacy_data'] = $this->activityLegacyDataService->getActivityLegacyData($id);
             $activity = $this->activityLegacyDataService->getActivityData($id);
             $this->baseFormCreator->url = route('admin.activities.legacy-data.update', [$id]);
-            $form = $this->baseFormCreator->editForm($model, $element['legacy-data']);
+            $form = $this->baseFormCreator->editForm($model, $element['legacy_data']);
 
             return view('activity.legacyData.legacyData', compact('form', 'activity'));
         } catch (\Exception $e) {

@@ -53,7 +53,7 @@ class RecipientCountryController extends Controller
             $activity = $this->recipientCountryService->getActivityData($id);
             $model['recipient_country'] = $this->recipientCountryService->getRecipientCountryData($id);
             $this->parentCollectionFormCreator->url = route('admin.activities.recipient-country.update', [$id]);
-            $form = $this->parentCollectionFormCreator->editForm($model, $element['recipient-country']);
+            $form = $this->parentCollectionFormCreator->editForm($model, $element['recipient_country']);
 
             return view('activity.recipientCountry.recipientCountry', compact('form', 'activity'));
         } catch (\Exception $e) {

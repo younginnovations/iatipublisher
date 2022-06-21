@@ -51,7 +51,7 @@ class DefaultAidTypeController extends Controller
             $activity = $this->defaultAidTypeService->getActivityData($id);
             $model['default_aid_type'] = $this->defaultAidTypeService->getDefaultAidTypeData($id);
             $this->baseFormCreator->url = route('admin.activities.default-aid-type.update', [$id]);
-            $form = $this->baseFormCreator->editForm($model, $element['default-aid-type']);
+            $form = $this->baseFormCreator->editForm($model, $element['default_aid_type']);
 
             return view('activity.defaultAidType.defaultAidType', compact('form', 'activity'));
         } catch (\Exception $e) {
