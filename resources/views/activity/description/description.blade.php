@@ -11,7 +11,7 @@
                                 <p>
                                     <a class="font-bold" href="/">Your Activities</a>
                                     <span class="separator mx-4"> / </span>
-                                    <span class="last text-n-30">Partnership against child exploitation</span>
+                                    <span class="last text-n-30">{{ $activity['title'][0]['narrative'] }}</span>
                                 </p>
                             </nav>
                         </div>
@@ -21,7 +21,7 @@
                                     <svg-vue icon="arrow-short-left"></svg-vue>
                                 </a>
                             </div>
-                            <h4 class="mr-4 font-bold">Partnership Against Child Exploitation</h4>
+                            <h4 class="mr-4 font-bold">{{ $activity['title'][0]['narrative'] }}</h4>
                         </div>
                     </div>
                 </div>
