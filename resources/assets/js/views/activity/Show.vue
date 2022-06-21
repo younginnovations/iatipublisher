@@ -286,7 +286,7 @@
                 :width="
                   name === 'title' || name === 'description' ? 'full' : ''
                 "
-                :completed="activity[`${name}_element_completed`] ?? false"
+                :completed="status[name]"
                 tooltip="Example text"
               />
             </template>
@@ -340,6 +340,10 @@ export default defineComponent({
       required: true,
     },
     types: {
+      type: Object,
+      required: true,
+    },
+    status: {
       type: Object,
       required: true,
     },
