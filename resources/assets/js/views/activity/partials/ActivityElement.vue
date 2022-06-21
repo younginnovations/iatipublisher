@@ -48,7 +48,7 @@
 
         <div class="icons flex">
           <a
-            :href="`/activities/1/${title}`"
+            :href="`/activities/${activityId}/${title}`"
             class="edit-button mr-2.5 flex items-center text-xs font-bold uppercase"
           >
             <svg-vue class="mr-0.5 text-base" icon="edit"></svg-vue>
@@ -83,9 +83,6 @@
 
       <template v-else-if="title === 'identifier'">
         <div class="identifier-content">
-          <div v-if="data.content.activity_identifier" class="mb-4 text-sm">
-            {{ data.content.activity_identifier }}
-          </div>
           <div v-if="data.content.iati_identifier_text" class="text-sm">
             {{ data.content.iati_identifier_text }}
           </div>
@@ -806,6 +803,10 @@ export default defineComponent({
     },
     completed: {
       type: Boolean,
+      required: true,
+    },
+    activityId: {
+      type: Number,
       required: true,
     },
   },

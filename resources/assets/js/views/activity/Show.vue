@@ -283,6 +283,7 @@
                 :data="element"
                 :types="props.types"
                 :title="name"
+                :activityId="activity.id"
                 :width="
                   name === 'title' || name === 'description' ? 'full' : ''
                 "
