@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\Model;
 class Activity extends Model
 {
     use HasFactory;
+    protected $appends = ['title_element_completed'];
 
     /**
      * Fillable property for mass assignment.
@@ -355,6 +356,7 @@ class Activity extends Model
     {
         $elementSchema = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
         $mandatorySubElements = $this->mandatorySubElements($elementSchema['title']['sub_elements']);
+        $this->attributes['title_element_completed'] = $this->isDataCompleted($mandatorySubElements['narrative'], $this->title);
 
         return $this->isDataCompleted($mandatorySubElements['narrative'], $this->title);
     }

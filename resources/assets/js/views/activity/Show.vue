@@ -242,7 +242,11 @@
             </div>
           </div>
         </div>
-        <Elements :activity-id="activity.id" :data="elements" />
+        <Elements
+          :activity-id="activity.id"
+          :data="elements"
+          :activity="activity"
+        />
       </aside>
       <div class="activities__content">
         <div class="inline-flex flex-wrap gap-2">
@@ -282,6 +286,7 @@
                 :width="
                   name === 'title' || name === 'description' ? 'full' : ''
                 "
+                :completed="activity[`${name}_element_completed`] ?? false"
                 tooltip="Example text"
               />
             </template>
@@ -401,7 +406,8 @@ export default defineComponent({
           activities[key]['elements'][k]['content'] = detailData[k];
           flag = true;
         } else {
-          activities[key]['elements'][k]['content'] = [];
+          // activities[key]['elements'][k]['content'] = [];
+          delete activities[key][k];
         }
       });
 
@@ -418,7 +424,6 @@ export default defineComponent({
         groupedData[key]['status'] = 'disabled';
       }
     });
-    console.log(activities);
 
     return {
       groupedData,
