@@ -73,7 +73,7 @@
       >
         <div class="status_icons absolute top-0 right-0 mt-1 mr-1 inline-flex">
           <svg-vue
-            v-if="activity[`${index}_element_completed`] ?? false"
+            v-if="status[index] ?? false"
             class="text-base text-spring-50"
             icon="double-tick"
           ></svg-vue>
@@ -124,7 +124,7 @@ export default defineComponent({
       type: Number,
       required: true,
     },
-    activity: {
+    status: {
       type: Object,
       required: true,
     },

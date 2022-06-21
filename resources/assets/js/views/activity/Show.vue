@@ -245,7 +245,7 @@
         <Elements
           :activity-id="activity.id"
           :data="elements"
-          :activity="activity"
+          :status="status"
         />
       </aside>
       <div class="activities__content">
@@ -286,7 +286,7 @@
                 :width="
                   name === 'title' || name === 'description' ? 'full' : ''
                 "
-                :completed="status[name]"
+                :completed="status[name] ?? false"
                 tooltip="Example text"
               />
             </template>
