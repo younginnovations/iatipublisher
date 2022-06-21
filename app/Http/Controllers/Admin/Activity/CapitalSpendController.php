@@ -53,7 +53,7 @@ class CapitalSpendController extends Controller
             $activity = $this->capitalSpendService->getActivityData($id);
             $model['capital_spend'] = $this->capitalSpendService->getCapitalSpendData($id);
             $this->baseFormCreator->url = route('admin.activities.capital-spend.update', [$id]);
-            $form = $this->baseFormCreator->editForm($model, $element['capital-spend']);
+            $form = $this->baseFormCreator->editForm($model, $element['capital_spend']);
 
             return view('activity.capitalSpend.capitalSpend', compact('form', 'activity'));
         } catch (\Exception $e) {
