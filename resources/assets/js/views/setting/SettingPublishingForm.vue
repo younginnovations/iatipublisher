@@ -11,7 +11,7 @@
         </button>
       </div>
     </div>
-    <div class="register mt-6">
+    <div class="register mt-6" @keyup.enter="autoVerify">
       <div class="register__container">
         <div>
           <div class="relative">
@@ -38,6 +38,18 @@
               @input="updateStore('publisher_id')"
               disabled="disabled"
             />
+            <span
+              v-if="publishingInfo.isVerificationRequested"
+              class="tag"
+              :class="{
+                'bg-spring-50': publishingInfo.token_verification,
+                'bg-salmon-50': !publishingInfo.token_verification,
+              }"
+            >
+              {{
+                publishingInfo.token_verification ? 'Approved' : 'Not approved'
+              }}
+            </span>
           </div>
           <span class="error" role="alert" v-if="publishingError.publisher_id">
             {{ publishingError.publisher_id }}
@@ -68,11 +80,11 @@
             />
             <span
               v-if="publishingInfo.isVerificationRequested"
-              :class="
-                publishingInfo.token_verification
-                  ? 'tag__correct'
-                  : 'tag__incorrect'
-              "
+              class="tag"
+              :class="{
+                'bg-spring-50': publishingInfo.token_verification,
+                'bg-salmon-50': !publishingInfo.token_verification,
+              }"
             >
               {{ publishingInfo.token_verification ? 'Correct' : 'Incorrect' }}
             </span>
@@ -121,6 +133,7 @@ export default defineComponent({
     }
 
     function autoVerify() {
+      console.log('a');
       emit('submitPublishing');
     }
 
