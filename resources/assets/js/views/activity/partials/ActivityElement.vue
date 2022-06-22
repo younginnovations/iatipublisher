@@ -783,6 +783,10 @@ export default defineComponent({
       type: Object,
       required: true,
     },
+    activityId: {
+      type: Number,
+      required: true,
+    },
     title: {
       type: String,
       required: true,
@@ -803,10 +807,6 @@ export default defineComponent({
     },
     completed: {
       type: Boolean,
-      required: true,
-    },
-    activityId: {
-      type: Number,
       required: true,
     },
   },

@@ -38,7 +38,7 @@ class SectorRequest extends ActivityBaseRequest
      *
      * @return array|mixed
      */
-    public function getSectorsRules($formFields): array|mixed
+    public function getSectorsRules($formFields): array
     {
         $rules = [];
         foreach ($formFields as $sectorIndex => $sector) {

@@ -1,36 +1,53 @@
 <template>
-  <div class="bg-paper px-10 pt-4 pb-[71px]">
+  <div class="relative bg-paper px-10 pt-4 pb-[71px]">
     <!-- title section -->
-    <Toast
-      v-if="toast.visibility"
-      :message="toast.message"
-      :type="toast.type"
-    ></Toast>
     <div class="page-title mb-6">
       <div class="flex items-end gap-4">
         <div class="title grow-0">
-          <div class="mb-4 text-caption-c1 text-n-40">
+          <div class="max-w-sm pb-4 text-caption-c1 text-n-40">
             <nav aria-label="breadcrumbs" class="rank-math-breadcrumb">
-              <p>
-                <a class="font-bold" href="/activities">Your Activities</a>
+              <div class="flex">
+                <a class="whitespace-nowrap font-bold" href="/activities"
+                  >Your Activities</a
+                >
                 <span class="separator mx-4"> / </span>
-                <span class="last text-n-30">{{ pageTitle }}</span>
-              </p>
+                <div class="breadcrumb__title">
+                  <span
+                    class="breadcrumb__title last overflow-hidden text-n-30"
+                    >{{ pageTitle }}</span
+                  >
+                  <span class="ellipsis__title--hover w-[calc(100%_+_35px)]">{{
+                    pageTitle
+                  }}</span>
+                </div>
+              </div>
             </nav>
           </div>
-          <div class="inline-flex items-center">
+          <div class="inline-flex max-w-3xl items-center">
             <div class="mr-3">
               <a href="/activities">
                 <svg-vue icon="arrow-short-left"></svg-vue>
               </a>
             </div>
-            <h4 class="mr-4 font-bold">
-              {{ pageTitle }}
-            </h4>
+            <div class="">
+              <h4 class="ellipsis__title relative mr-4 text-2xl font-bold">
+                <span class="ellipsis__title overflow-hidden">{{
+                  pageTitle ? pageTitle : 'Untitled'
+                }}</span>
+                <span class="ellipsis__title--hover">{{ pageTitle }}</span>
+              </h4>
+            </div>
           </div>
         </div>
-        <div class="actions flex grow justify-end">
-          <div class="inline-flex justify-center">
+        <div class="actions flex grow flex-col items-end justify-end">
+          <div class="mb-3">
+            <Toast
+              v-if="toast.visibility"
+              :message="toast.message"
+              :type="toast.type"
+            ></Toast>
+          </div>
+          <div class="inline-flex justify-end">
             <!-- Download File -->
             <button
               class="button secondary-btn mr-3.5 font-bold"
@@ -206,6 +223,7 @@
               <HoverText
                 hover_text="You cannot publish an activity until all the mandatory fields have been filled."
                 name=""
+                class="hover-text"
                 position="right"
               ></HoverText>
             </div>
@@ -218,6 +236,7 @@
               <HoverText
                 hover_text="You cannot publish an activity until all the mandatory fields have been filled."
                 name=""
+                class="hover-text"
               ></HoverText>
             </div>
             <div class="mb-3 flex justify-between">
@@ -228,6 +247,7 @@
               <HoverText
                 hover_text="You cannot publish an activity until all the mandatory fields have been filled."
                 name=""
+                class="hover-text"
               ></HoverText>
             </div>
             <div class="flex justify-between">
@@ -238,6 +258,7 @@
               <HoverText
                 hover_text="You cannot publish an activity until all the mandatory fields have been filled."
                 name=""
+                class="hover-text"
               ></HoverText>
             </div>
           </div>
@@ -249,7 +270,7 @@
         />
       </aside>
       <div class="activities__content">
-        <div class="inline-flex flex-wrap gap-2">
+        <div class="mb-3 inline-flex flex-wrap gap-2">
           <a
             v-for="(post, key, index) in groupedData"
             :key="index"
@@ -285,7 +306,21 @@
                 :title="name"
                 :activityId="activity.id"
                 :width="
-                  name === 'title' || name === 'description' ? 'full' : ''
+                  name === 'title' ||
+                  name === 'description' ||
+                  name === 'activity_date' ||
+                  name === 'contact_info' ||
+                  name === 'participating_org' ||
+                  name === 'recipient_country' ||
+                  name === 'recipient_region' ||
+                  name === 'sector' ||
+                  name === 'policy_marker' ||
+                  name === 'tag' ||
+                  name === 'country_budget_items' ||
+                  name === 'humanitarian_scope' ||
+                  name === 'results'
+                    ? 'full'
+                    : ''
                 "
                 :completed="status[name] ?? false"
                 tooltip="Example text"
@@ -479,6 +514,11 @@ export default defineComponent({
 
     svg {
       @apply text-n-20;
+    }
+  }
+  .hover-text {
+    svg {
+      @apply text-n-30;
     }
   }
 }

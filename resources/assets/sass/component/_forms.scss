@@ -48,6 +48,9 @@ form {
     .help-text {
       @apply mt-2 text-xs leading-relaxed;
     }
+    .code {
+      @apply mb-0;
+    }
   }
 
   > .form-field {

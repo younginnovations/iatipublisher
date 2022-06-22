@@ -173,7 +173,7 @@ class BaseForm extends Form
             'required'      => $field['required'] ?? false,
             'multiple'      => $field['multiple'] ?? false,
             'attr' => [
-                'class' => 'form__input border-0',
+                'class' => 'form__input code border-0',
                 'readonly' => (array_key_exists('read_only', $field) && $field['read_only'] == true) ? 'readonly' : false,
             ],
             'wrapper' => [

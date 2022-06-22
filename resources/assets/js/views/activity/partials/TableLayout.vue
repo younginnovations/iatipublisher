@@ -1,6 +1,6 @@
 <template>
   <div class="iati-list-table overflow-auto">
-    <table class="">
+    <table>
       <thead>
         <tr class="bg-n-10">
           <th id="title" scope="col">
@@ -47,13 +47,13 @@
           <td class="title">
             <a
               :href="'/activities/' + datum['id']"
-              class="hover:text-sp50 inline-flex items-start text-n-50 transition duration-500"
+              class="hover:text-sp50 inline-flex max-w-screen-md items-start text-n-50 transition duration-500"
             >
               <svg-vue
                 class="mr-3 mt-1 shrink-0 text-base text-spring-50"
                 icon="approved-cloud"
               ></svg-vue>
-              <span>{{ datum['title'][0]['narrative'] }}</span>
+              <span class="ellipsis">{{ datum['title'][0]['narrative'] }}</span>
             </a>
           </td>
 
@@ -144,3 +144,12 @@ export default defineComponent({
   },
 });
 </script>
+
+<style lang="scss">
+.ellipsis {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  @apply overflow-hidden text-ellipsis;
+}
+</style>
