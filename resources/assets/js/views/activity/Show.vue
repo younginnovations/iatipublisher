@@ -1,34 +1,38 @@
 <template>
-  <div class="bg-paper px-10 pt-4 pb-[71px]">
+  <div class="relative bg-paper px-10 pt-4 pb-[71px]">
     <!-- title section -->
-    <Toast
-      v-if="toast.visibility"
-      :message="toast.message"
-      :type="toast.type"
-    ></Toast>
     <div class="page-title mb-6">
       <div class="flex items-end gap-4">
         <div class="title grow-0">
-          <div class="mb-4 text-caption-c1 text-n-40">
+          <div class="w-80 pb-4 text-caption-c1 text-n-40">
             <nav aria-label="breadcrumbs" class="rank-math-breadcrumb">
-              <p>
+              <div class="overflow-hidden text-ellipsis whitespace-nowrap">
                 <a class="font-bold" href="/activities">Your Activities</a>
                 <span class="separator mx-4"> / </span>
-                <span class="last text-n-30">{{ pageTitle }}</span>
-              </p>
+                <span :title="pageTitle" class="last text-n-30">{{
+                  pageTitle
+                }}</span>
+              </div>
             </nav>
           </div>
-          <div class="inline-flex items-center">
+          <div class="inline-flex max-w-[615px] items-center">
             <div class="mr-3">
               <a href="/activities">
                 <svg-vue icon="arrow-short-left"></svg-vue>
               </a>
             </div>
-            <h4 class="mr-4 font-bold">
-              {{ pageTitle }}
+            <h4
+              class="mr-4 overflow-hidden text-ellipsis whitespace-nowrap font-bold"
+            >
+              <span :title="pageTitle">{{ pageTitle }}</span>
             </h4>
           </div>
         </div>
+        <Toast
+          v-if="toast.visibility"
+          :message="toast.message"
+          :type="toast.type"
+        ></Toast>
         <div class="actions flex grow justify-end">
           <div class="inline-flex justify-center">
             <!-- Download File -->
@@ -206,6 +210,7 @@
               <HoverText
                 hover_text="You cannot publish an activity until all the mandatory fields have been filled."
                 name=""
+                class="hover-text"
                 position="right"
               ></HoverText>
             </div>
@@ -218,6 +223,7 @@
               <HoverText
                 hover_text="You cannot publish an activity until all the mandatory fields have been filled."
                 name=""
+                class="hover-text"
               ></HoverText>
             </div>
             <div class="mb-3 flex justify-between">
@@ -228,6 +234,7 @@
               <HoverText
                 hover_text="You cannot publish an activity until all the mandatory fields have been filled."
                 name=""
+                class="hover-text"
               ></HoverText>
             </div>
             <div class="flex justify-between">
@@ -238,6 +245,7 @@
               <HoverText
                 hover_text="You cannot publish an activity until all the mandatory fields have been filled."
                 name=""
+                class="hover-text"
               ></HoverText>
             </div>
           </div>
@@ -245,7 +253,7 @@
         <Elements :activity-id="activity.id" :data="elements" />
       </aside>
       <div class="activities__content">
-        <div class="inline-flex flex-wrap gap-2">
+        <div class="mb-3 inline-flex flex-wrap gap-2">
           <a
             v-for="(post, key, index) in groupedData"
             :key="index"
@@ -279,6 +287,7 @@
                 :data="element"
                 :types="props.types"
                 :title="name"
+                :activityId="activity.id"
                 :width="
                   name === 'title' || name === 'description' ? 'full' : ''
                 "
@@ -469,6 +478,11 @@ export default defineComponent({
 
     svg {
       @apply text-n-20;
+    }
+  }
+  .hover-text {
+    svg {
+      @apply text-n-30;
     }
   }
 }

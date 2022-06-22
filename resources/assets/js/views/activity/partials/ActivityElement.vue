@@ -1,6 +1,6 @@
 <template>
   <div :class="layout" class="activities__content--element px-3 py-3">
-    <div class="rounded-lg bg-white p-4">
+    <div class="rounded-lg bg-white p-4 text-justify">
       <div class="mb-4 flex">
         <div class="title flex grow">
           <template
@@ -49,7 +49,7 @@
 
         <div class="icons flex">
           <a
-            :href="`/activities/1/${title}`"
+            :href="`/activities/${activityId}/${title}`"
             class="edit-button mr-2.5 flex items-center text-xs font-bold uppercase"
           >
             <svg-vue class="mr-0.5 text-base" icon="edit"></svg-vue>
@@ -785,6 +785,10 @@ export default defineComponent({
   props: {
     data: {
       type: Object,
+      required: true,
+    },
+    activityId: {
+      type: String,
       required: true,
     },
     title: {

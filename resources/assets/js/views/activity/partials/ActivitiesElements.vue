@@ -17,6 +17,7 @@
         <button
           class="button panel-btn dropdown-btn"
           @click="searchBtnToggle()"
+          ref="dropdownBtn"
         >
           <svg-vue
             :icon="
@@ -36,28 +37,20 @@
         </button>
         <div
           v-show="searchBtnValue"
+          ref="dropdown"
           class="button__dropdown button dropdown-btn absolute right-0 top-full z-10 w-[118px] bg-white text-left shadow-dropdown"
         >
           <ul class="w-full bg-eggshell py-2">
-            <li
-              class="flex py-1.5 px-3.5 hover:bg-white"
-              @click="dropdownFilter('')"
-            >
-              <svg-vue class="mr-1 text-lg" icon="box"></svg-vue>
+            <li @click="dropdownFilter('')">
+              <svg-vue icon="box"></svg-vue>
               <span>All Elements</span>
             </li>
-            <li
-              class="flex py-1.5 px-3.5 hover:bg-white"
-              @click="dropdownFilter('core')"
-            >
-              <svg-vue class="mr-1 text-lg" icon="core"></svg-vue>
+            <li @click="dropdownFilter('core')">
+              <svg-vue icon="core"></svg-vue>
               <span>Core</span>
             </li>
-            <li
-              class="flex py-1.5 px-3.5 hover:bg-white"
-              @click="dropdownFilter('completed')"
-            >
-              <svg-vue class="mr-1 text-lg" icon="double-tick"></svg-vue>
+            <li @click="dropdownFilter('completed')">
+              <svg-vue icon="double-tick"></svg-vue>
               <span>Completed</span>
             </li>
           </ul>
@@ -109,7 +102,7 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, reactive } from 'vue';
+import { computed, defineComponent, reactive, onMounted, ref } from 'vue';
 import { useToggle } from '@vueuse/core';
 
 export default defineComponent({
@@ -126,6 +119,8 @@ export default defineComponent({
     },
   },
   setup(props) {
+    const dropdown = ref();
+    const dropdownBtn = ref();
     const [searchBtnValue, searchBtnToggle] = useToggle();
     /**
      * Search functionality
@@ -142,7 +137,6 @@ export default defineComponent({
           return key.toLowerCase().includes(elements.search.toLowerCase());
         } else {
           if (value[elements.status]) {
-            console.log(elements.status);
             return key.toLowerCase().includes(elements.search.toLowerCase());
           }
         }
@@ -157,12 +151,26 @@ export default defineComponent({
       searchBtnToggle();
     };
 
+    onMounted(() => {
+      window.addEventListener('click', (e) => {
+        if (
+          !dropdownBtn.value.contains(e.target) &&
+          !dropdown.value.contains(e.target) &&
+          searchBtnValue.value
+        ) {
+          searchBtnToggle();
+        }
+      });
+    });
+
     return {
       searchBtnValue,
       searchBtnToggle,
       elements,
       filteredElements,
       dropdownFilter,
+      dropdown,
+      dropdownBtn,
     };
   },
 });
@@ -187,6 +195,15 @@ export default defineComponent({
 
   .hover__text {
     @apply ml-1;
+  }
+  .button__dropdown {
+    li {
+      @apply flex py-1.5 px-3.5 hover:bg-white;
+
+      svg {
+        @apply mr-1 text-lg;
+      }
+    }
   }
 }
 </style>
