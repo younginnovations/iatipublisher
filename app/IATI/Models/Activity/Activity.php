@@ -93,13 +93,13 @@ class Activity extends Model
     ];
 
     /**
-     * Activity belongs to an organisation.
+     * Factory for creating activity.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return ActivityFactory
      */
-    public function organization(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    public static function newFactory(): ActivityFactory
     {
-        return $this->belongsTo(Organization::class, 'org_id');
+        return new ActivityFactory();
     }
 
     /**
@@ -115,11 +115,13 @@ class Activity extends Model
     /**
      * Factory for creating activity.
      *
-     * @return ActivityFactory
+     * Activity belongs to an organisation.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public static function newFactory(): ActivityFactory
+    public function organization(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
-        return new ActivityFactory();
+        return $this->belongsTo(Organization::class, 'org_id');
     }
 
     /**
@@ -291,7 +293,7 @@ class Activity extends Model
      *
      * @return bool
      */
-    public function isFirstLevelElementCompleted($element, $data): bool
+    public function isLevelOneElementCompleted($element, $data): bool
     {
         if (empty($data)) {
             return false;
@@ -320,7 +322,7 @@ class Activity extends Model
      *
      * @return bool
      */
-    public function isTwoLevelElementCompleted($element, $data): bool
+    public function isLevelTwoElementCompleted($element, $data): bool
     {
         if (!$this->singleDimensionAttributeCheck($element, $data)) {
             return false;
@@ -357,7 +359,7 @@ class Activity extends Model
      *
      * @return bool
      */
-    public function isThreeLevelElementCompleted($element, $data): bool
+    public function isLevelThreeElementCompleted($element, $data): bool
     {
         if (!$this->singleDimensionAttributeCheck($element, $data)) {
             return false;
@@ -410,16 +412,6 @@ class Activity extends Model
     }
 
     /**
-     * Returns other_identifier element complete status.
-     *
-     * @return bool
-     */
-    public function getOtherIdentifierElementCompletedAttribute(): bool
-    {
-        return $this->isTwoLevelElementCompleted('other_identifier', $this->other_identifier);
-    }
-
-    /**
      * Returns title element complete status.
      *
      * @return bool
@@ -440,7 +432,127 @@ class Activity extends Model
      */
     public function getDescriptionElementCompletedAttribute(): bool
     {
-        return $this->isFirstLevelElementCompleted('description', $this->description);
+        return $this->isLevelOneElementCompleted('description', $this->description);
+    }
+
+    /**
+     * Returns activity_date element complete status.
+     *
+     * @return bool
+     */
+    public function getActivityDateElementCompletedAttribute(): bool
+    {
+        return $this->isLevelOneElementCompleted('activity_date', $this->activity_date);
+    }
+
+    /**
+     * Returns recipient_country element complete status.
+     *
+     * @return bool
+     */
+    public function getRecipientCountryElementCompletedAttribute(): bool
+    {
+        return $this->isLevelOneElementCompleted('recipient_country', $this->recipient_country);
+    }
+
+    /**
+     * Returns budget element complete status.
+     *
+     * @return bool
+     */
+    public function getBudgetElementCompletedAttribute(): bool
+    {
+        return $this->isLevelOneElementCompleted('budget', $this->budget);
+    }
+
+    /**
+     * Returns recipient_region element complete status.
+     *
+     * @return bool
+     */
+    public function getRecipientRegionElementCompletedAttribute(): bool
+    {
+        return $this->isLevelOneElementCompleted('recipient_region', $this->recipient_region);
+    }
+
+    /**
+     * Returns default_aid_type element complete status.
+     *
+     * @return bool
+     */
+    public function getDefaultAidTypeElementCompletedAttribute(): bool
+    {
+        return $this->isLevelOneElementCompleted('default_aid_type', $this->default_aid_type);
+    }
+
+    /**
+     * Returns other_identifier element complete status.
+     *
+     * @return bool
+     */
+    public function getOtherIdentifierElementCompletedAttribute(): bool
+    {
+        return $this->isLevelTwoElementCompleted('other_identifier', $this->other_identifier);
+    }
+
+    /**
+     * Returns related_activity element complete status.
+     *
+     * @return bool
+     */
+    public function getRelatedActivityElementCompletedAttribute(): bool
+    {
+        return $this->isLevelOneElementCompleted('related_activity', $this->related_activity);
+    }
+
+    /**
+     * Returns description element complete status.
+     *
+     * @return bool
+     */
+    public function getSectorElementCompletedAttribute(): bool
+    {
+        return $this->isLevelOneElementCompleted('sector', $this->sector);
+    }
+
+    /**
+     * Returns humanitarian_scope element complete status.
+     *
+     * @return bool
+     */
+    public function getHumanitarianScopeElementCompletedAttribute(): bool
+    {
+        return $this->isLevelOneElementCompleted('humanitarian_scope', $this->humanitarian_scope);
+    }
+
+    /**
+     * Returns legacy_data element complete status.
+     *
+     * @return bool
+     */
+    public function getLegacyDataElementCompletedAttribute(): bool
+    {
+        return $this->isLevelOneElementCompleted('legacy_data', $this->legacy_data);
+    }
+
+    /**
+     * Returns tag element complete status.
+     *
+     * @return bool
+     */
+    public function getTagElementCompletedAttribute(): bool
+    {
+        return $this->isLevelOneElementCompleted('tag', $this->tag);
+    }
+
+    /**
+     * Returns policy_marker element complete status.
+     *
+     * @return bool
+     */
+    public function getPolicyMarkerElementCompletedAttribute(): bool
+    {
+        return $this->isLevelOneElementCompleted('policy_marker', $this->policy_marker);
     }
 
     /**
@@ -454,16 +566,6 @@ class Activity extends Model
     }
 
     /**
-     * Returns activity_date element complete status.
-     *
-     * @return bool
-     */
-    public function getActivityDateElementCompletedAttribute(): bool
-    {
-        return $this->isFirstLevelElementCompleted('activity_date', $this->activity_date);
-    }
-
-    /**
      * Returns activity_scope element complete status.
      *
      * @return bool
@@ -471,26 +573,6 @@ class Activity extends Model
     public function getActivityScopeElementCompletedAttribute(): bool
     {
         return !empty($this->activity_scope);
-    }
-
-    /**
-     * Returns recipient_country element complete status.
-     *
-     * @return bool
-     */
-    public function getRecipientCountryElementCompletedAttribute(): bool
-    {
-        return $this->isFirstLevelElementCompleted('recipient_country', $this->recipient_country);
-    }
-
-    /**
-     * Returns recipient_region element complete status.
-     *
-     * @return bool
-     */
-    public function getRecipientRegionElementCompletedAttribute(): bool
-    {
-        return $this->isFirstLevelElementCompleted('recipient_region', $this->recipient_region);
     }
 
     /**
@@ -524,16 +606,6 @@ class Activity extends Model
     }
 
     /**
-     * Returns default_aid_type element complete status.
-     *
-     * @return bool
-     */
-    public function getDefaultAidTypeElementCompletedAttribute(): bool
-    {
-        return $this->isFirstLevelElementCompleted('default_aid_type', $this->default_aid_type);
-    }
-
-    /**
      * Returns default_tied_status element complete status.
      *
      * @return bool
@@ -554,73 +626,13 @@ class Activity extends Model
     }
 
     /**
-     * Returns related_activity element complete status.
-     *
-     * @return bool
-     */
-    public function getRelatedActivityElementCompletedAttribute(): bool
-    {
-        return $this->isFirstLevelElementCompleted('related_activity', $this->related_activity);
-    }
-
-    /**
-     * Returns description element complete status.
-     *
-     * @return bool
-     */
-    public function getSectorElementCompletedAttribute(): bool
-    {
-        return $this->isFirstLevelElementCompleted('sector', $this->sector);
-    }
-
-    /**
-     * Returns humanitarian_scope element complete status.
-     *
-     * @return bool
-     */
-    public function getHumanitarianScopeElementCompletedAttribute(): bool
-    {
-        return $this->isFirstLevelElementCompleted('humanitarian_scope', $this->humanitarian_scope);
-    }
-
-    /**
-     * Returns legacy_data element complete status.
-     *
-     * @return bool
-     */
-    public function getLegacyDataElementCompletedAttribute(): bool
-    {
-        return $this->isFirstLevelElementCompleted('legacy_data', $this->legacy_data);
-    }
-
-    /**
-     * Returns tag element complete status.
-     *
-     * @return bool
-     */
-    public function getTagElementCompletedAttribute(): bool
-    {
-        return $this->isFirstLevelElementCompleted('tag', $this->tag);
-    }
-
-    /**
-     * Returns policy_marker element complete status.
-     *
-     * @return bool
-     */
-    public function getPolicyMarkerElementCompletedAttribute(): bool
-    {
-        return $this->isFirstLevelElementCompleted('policy_marker', $this->policy_marker);
-    }
-
-    /**
      * Returns conditions element complete status.
      *
      * @return bool
      */
     public function getConditionsElementCompletedAttribute(): bool
     {
-        return $this->isTwoLevelElementCompleted('conditions', $this->conditions);
+        return $this->isLevelTwoElementCompleted('conditions', $this->conditions);
     }
 
     /**
@@ -630,16 +642,6 @@ class Activity extends Model
      */
     public function getCountryBudgetItemsElementCompletedAttribute(): bool
     {
-        return $this->isThreeLevelElementCompleted('country_budget_items', $this->country_budget_items);
-    }
-
-    /**
-     * Returns budget element complete status.
-     *
-     * @return bool
-     */
-    public function getBudgetElementCompletedAttribute(): bool
-    {
-        return $this->isFirstLevelElementCompleted('budget', $this->budget);
+        return $this->isLevelThreeElementCompleted('country_budget_items', $this->country_budget_items);
     }
 }
