@@ -267,7 +267,9 @@ class ActivityController extends Controller
             'legacy_data'          => $activity->legacy_data_element_completed,
             'tag'                  => $activity->tag_element_completed,
             'policy_marker'        => $activity->policy_marker_element_completed,
-            'conditions'           => $activity->conditions_element_completed,
+            'other_identifier'     => $activity->other_identifier_element_completed,
+            'country_budget_items' => $activity->country_budget_items_element_completed,
+            'budget'               => $activity->budget_element_completed,
         ];
     }
 }

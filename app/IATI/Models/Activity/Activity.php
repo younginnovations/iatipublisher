@@ -103,6 +103,16 @@ class Activity extends Model
     }
 
     /**
+     * Activity hasmany results.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function results(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(Result::class, 'activity_id', 'id');
+    }
+
+    /**
      * Factory for creating activity.
      *
      * @return ActivityFactory
@@ -143,7 +153,7 @@ class Activity extends Model
     {
         $mandatoryElements = [];
 
-        foreach ($fields as $fieldName => $field) {
+        foreach ($fields as $field) {
             $mandatoryFields = [];
 
             if ($field['criteria'] == 'mandatory') {
@@ -161,7 +171,7 @@ class Activity extends Model
             }
 
             if (!empty($mandatoryFields)) {
-                $mandatoryElements[$fieldName] = $mandatoryFields;
+                $mandatoryElements[$field['name']] = $mandatoryFields;
             }
         }
 
@@ -624,11 +634,12 @@ class Activity extends Model
     }
 
     /**
-     * Activity hasmany results.
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * Returns budget element complete status.
+     *
+     * @return bool
      */
-    public function results(): \Illuminate\Database\Eloquent\Relations\HasMany
+    public function getBudgetElementCompletedAttribute(): bool
     {
-        return $this->hasMany(Result::class, 'activity_id', 'id');
+        return $this->isFirstLevelElementCompleted('budget', $this->budget);
     }
 }
