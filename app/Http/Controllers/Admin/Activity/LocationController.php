@@ -5,18 +5,18 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Admin\Activity;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Activity\ContactInfo\ContactInfoRequest;
+use App\Http\Requests\Activity\Location\LocationRequest;
 use App\IATI\Elements\Builder\ParentCollectionFormCreator;
-use App\IATI\Services\Activity\ContactInfoService;
+use App\IATI\Services\Activity\LocationService;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 
 /**
- * Class ContactInfoController
+ * Class LocationController
  *.
  */
-class ContactInfoController extends Controller
+class LocationController extends Controller
 {
     /**
      * @var ParentCollectionFormCreator
@@ -24,20 +24,20 @@ class ContactInfoController extends Controller
     protected ParentCollectionFormCreator $parentCollectionFormCreator;
 
     /**
-     * @var ContactInfoService
+     * @var LocationService
      */
-    protected ContactInfoService $contactInfoService;
+    protected LocationService $locationService;
 
     /**
-     * ContactInfoControllerConstructor.
+     * LocationController Constructor.
      *
      * @param ParentCollectionFormCreator $parentCollectionFormCreator
-     * @param ContactInfoService $contactInfoService
+     * @param LocationService $locationService
      */
-    public function __construct(ContactInfoService $contactInfoService, ParentCollectionFormCreator $parentCollectionFormCreator)
+    public function __construct(LocationService $locationService, ParentCollectionFormCreator $parentCollectionFormCreator)
     {
         $this->parentCollectionFormCreator = $parentCollectionFormCreator;
-        $this->contactInfoService = $contactInfoService;
+        $this->locationService = $locationService;
     }
 
     /**
@@ -51,12 +51,12 @@ class ContactInfoController extends Controller
     {
         try {
             $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
-            $activity = $this->contactInfoService->getActivityData($id);
-            $model = $this->contactInfoService->getContactInfoData($id) ?: [];
-            $this->parentCollectionFormCreator->url = route('admin.activities.contact-info.update', [$id]);
-            $form = $this->parentCollectionFormCreator->editForm($model, $element['contact_info']);
+            $activity = $this->locationService->getActivityData($id);
+            $model = $this->locationService->getLocationData($id) ?: [];
+            $this->parentCollectionFormCreator->url = route('admin.activities.location.update', [$id]);
+            $form = $this->parentCollectionFormCreator->editForm($model, $element['location']);
 
-            return view('activity.contactInfo.contactInfo', compact('form', 'activity'));
+            return view('activity.location.location', compact('form', 'activity'));
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
@@ -67,18 +67,18 @@ class ContactInfoController extends Controller
     /**
      * Updates country budget item data.
      *
-     * @param ContactInfoRequest $request
+     * @param LocationRequest $request
      * @param $id
      *
      * @return JsonResponse|RedirectResponse
      */
-    public function update(ContactInfoRequest $request, $id): JsonResponse|RedirectResponse
+    public function update(LocationRequest $request, $id): JsonResponse|RedirectResponse
     {
         try {
-            $activityData = $this->contactInfoService->getActivityData($id);
+            $activityData = $this->locationService->getActivityData($id);
             $activityCountryBudgetItem = $request->except(['_token', '_method']);
 
-            if (!$this->contactInfoService->update($activityCountryBudgetItem, $activityData)) {
+            if (!$this->locationService->update($activityCountryBudgetItem, $activityData)) {
                 return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while updating country budget item.');
             }
 

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Admin\Activity;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Activity\DocumentLink\ContactInfoRequest;
+use App\Http\Requests\Activity\DocumentLink\DocumentLinkRequest;
 use App\IATI\Elements\Builder\BaseFormCreator;
 use App\IATI\Elements\Builder\MultilevelSubElementFormCreator;
 use App\IATI\Services\Activity\DocumentLinkService;
@@ -56,12 +56,11 @@ class DocumentLinkController extends Controller
             $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
             $activity = $this->documentLinkService->getActivityData($id);
             $model = $this->documentLinkService->getDocumentLinkData($id) ?: [];
-            $this->baseFormCreator->url = route('admin.activities.contact-info.update', [$id]);
-            $form = $this->baseFormCreator->editForm($model, $element['contact-info']);
+            $this->baseFormCreator->url = route('admin.activities.document-link.update', [$id]);
+            $form = $this->baseFormCreator->editForm($model, $element['document-link']);
 
-            return view('activity.contactInfo.contactInfo', compact('form', 'activity'));
+            return view('activity.documentLink.documentLink', compact('form', 'activity'));
         } catch (\Exception $e) {
-            dd($e);
             logger()->error($e->getMessage());
 
             return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while rendering contact info form.');
@@ -71,12 +70,12 @@ class DocumentLinkController extends Controller
     /**
      * Updates country budget item data.
      *
-     * @param ContactInfoRequest $request
+     * @param DocumentLinkRequest $request
      * @param $id
      *
      * @return JsonResponse|RedirectResponse
      */
-    public function update(ContactInfoRequest $request, $id): JsonResponse|RedirectResponse
+    public function update(DocumentLinkRequest $request, $id): JsonResponse|RedirectResponse
     {
         try {
             $activityData = $this->documentLinkService->getActivityData($id);

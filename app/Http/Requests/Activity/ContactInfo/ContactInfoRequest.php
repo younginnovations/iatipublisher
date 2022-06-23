@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Http\Requests\Activity\ContactInfo;
 
 use App\Http\Requests\Activity\ActivityBaseRequest;
-use Illuminate\Support\Arr;
 
 /**
  * Class ContactInfoRequest.
@@ -17,87 +16,39 @@ class ContactInfoRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    public function rules(): array
+    public function rules()
     {
-        return [];
-        // return $this->getRulesForCountryBudgetItem(request()->except(['_token', '_method']));
+        return $this->getRulesForContactInfo($this->get('contact_info'));
     }
 
-    // /**
-    //  * Get the error message as required.
-    //  *
-    //  * @return array
-    //  */
-    // public function messages(): array
-    // {
-    //     return $this->getMessagesForCountryBudgetItem(request()->except(['_token', '_method']));
-    // }
-
     /**
-     * Returns rules for related activity.
-     *
-     * @param array $formFields
-     *
      * @return array
      */
-    protected function getRulesForCountryBudgetItem(array $formFields): array
+    public function messages()
+    {
+        return $this->getMessagesForContactInfo($this->get('contact_info'));
+    }
+
+    /**
+     * @param array $formFields
+     * @return array
+     */
+    protected function getRulesForContactInfo(array $formFields)
     {
         $rules = [];
 
-//        $rules['vocabulary'] = 'required';
-        $code = $formFields['country_budget_vocabulary'] == 1 ? 'code' : 'code_text';
-        $rules = array_merge(
-            $rules,
-            $this->getBudgetItemRules($formFields['budget_item'], $code)
-        );
-
-        return $rules;
-    }
-
-    /**
-     * Returns messages for related activity validations.
-     *
-     * @param array $formFields
-     *
-     * @return array
-     */
-    protected function getMessagesForCountryBudgetItem(array $formFields): array
-    {
-        $messages = [];
-
-        $code = $formFields['country_budget_vocabulary'] == 1 ? 'code' : 'code_text';
-        // $messages[sprintf('vocabulary.required')] = 'The @vocabulary field is required.';
-        $messages = array_merge(
-            $messages,
-            $this->getBudgetItemMessages($formFields['budget_item'], $code)
-        );
-
-        return $messages;
-    }
-
-    /**
-     * returns budget item validation rules.
-     *
-     * @param $formFields
-     * @param $code
-     *
-     * @return array
-     */
-    public function getBudgetItemRules(array $formFields, $code)
-    {
-        $rules = [];
-
-        foreach ($formFields as $budgetItemIndex => $budgetItem) {
-            $budgetItemForm = sprintf('budget_item.%s', $budgetItemIndex);
-            $rules[sprintf('%s.percentage', $budgetItemForm)] = 'nullable|numeric|max:100';
-//            $rules[sprintf('%s.%s', $budgetItemForm, $code)] = 'required';
+        foreach ($formFields as $contactInfoIndex => $contactInfo) {
+            $contactInfoForm = sprintf('contact_info.%s', $contactInfoIndex);
             $rules = array_merge(
                 $rules,
-                $this->getBudgetItemDescriptionRules($budgetItem['description'], $budgetItemForm)
-            );
-            $rules = array_merge(
-                $rules,
-                $this->getRulesForPercentage(request()->except(['_token', '_method']))
+                $this->getRulesForDepartment($contactInfo['department'], $contactInfoForm),
+                $this->getRulesForOrganisation($contactInfo['organisation'], $contactInfoForm),
+                $this->getRulesForPersonName($contactInfo['person_name'], $contactInfoForm),
+                $this->getRulesForJobTitle($contactInfo['job_title'], $contactInfoForm),
+                $this->getRulesForMailingAddress($contactInfo['mailing_address'], $contactInfoForm),
+                $this->getRulesForTelephone($contactInfo['telephone'], $contactInfoForm),
+                $this->getRulesForEmail($contactInfo['email'], $contactInfoForm),
+                $this->getRulesForWebsite($contactInfo['website'], $contactInfoForm)
             );
         }
 
@@ -105,27 +56,25 @@ class ContactInfoRequest extends ActivityBaseRequest
     }
 
     /**
-     * return budget item error message.
-     *
-     * @param $formFields
-     * @param $code
-     *
+     * @param array $formFields
      * @return array
      */
-    public function getBudgetItemMessages(array $formFields, $code)
+    protected function getMessagesForContactInfo(array $formFields)
     {
         $messages = [];
-        foreach ($formFields as $budgetItemIndex => $budgetItem) {
-            $budgetItemForm = sprintf('budget_item.%s', $budgetItemIndex);
-//            $messages[sprintf('%s.%s.required', $budgetItemForm, $code)] = 'The @code field is required.';
-            $messages[sprintf('%s.percentage.%s', $budgetItemForm, 'numeric')] = 'The @percentage field must be a number.';
-            $messages[sprintf('%s.percentage.%s', $budgetItemForm, 'max')] = 'The @percentage field cannot be greater than 100.';
-            $messages[sprintf('%s.percentage.sum', $budgetItemForm)] = 'The sum of @percentage must add up to 100.';
-//            $messages[sprintf('%s.percentage.required', $budgetItemForm)] = 'The @percentage field is required when there are multiple codes.';
-            $messages[sprintf('%s.percentage.total', $budgetItemForm)] = 'The @percentage field should be 100 when there is only one budget item.';
+
+        foreach ($formFields as $contactInfoIndex => $contactInfo) {
+            $contactInfoForm = sprintf('contact_info.%s', $contactInfoIndex);
             $messages = array_merge(
                 $messages,
-                $this->getBudgetItemDescriptionMessages($budgetItem['description'], $budgetItemForm)
+                $this->getMessagesForDepartment($contactInfo['department'], $contactInfoForm),
+                $this->getMessagesForOrganisation($contactInfo['organisation'], $contactInfoForm),
+                $this->getMessagesForPersonName($contactInfo['person_name'], $contactInfoForm),
+                $this->getMessagesForJobTitle($contactInfo['job_title'], $contactInfoForm),
+                $this->getMessagesForMailingAddress($contactInfo['mailing_address'], $contactInfoForm),
+                $this->getMessagesForTelephone($contactInfo['telephone'], $contactInfoForm),
+                $this->getMessagesForEmail($contactInfo['email'], $contactInfoForm),
+                $this->getMessagesForWebsite($contactInfo['website'], $contactInfoForm)
             );
         }
 
@@ -133,78 +82,277 @@ class ContactInfoRequest extends ActivityBaseRequest
     }
 
     /**
-     * return budget item description rule.
-     *
      * @param $formFields
      * @param $formBase
-     *
      * @return array
      */
-    public function getBudgetItemDescriptionRules(array $formFields, $formBase)
+    protected function getRulesForOrganisation($formFields, $formBase)
     {
         $rules = [];
 
-        foreach ($formFields as $descriptionIndex => $description) {
-            $descriptionForm = sprintf('%s.description.%s', $formBase, $descriptionIndex);
-            $rules = $this->getRulesForNarrative($description['narrative'], $descriptionForm);
+        foreach ($formFields as $organisationIndex => $organisation) {
+            $organisationForm = sprintf('%s.organisation.%s', $formBase, $organisationIndex);
+            $rules = array_merge($rules, $this->getRulesForNarrative($organisation['narrative'], $organisationForm));
         }
 
         return $rules;
     }
 
     /**
-     * return budget item description error message.
-     *
      * @param $formFields
      * @param $formBase
-     *
      * @return array
      */
-    public function getBudgetItemDescriptionMessages(array $formFields, $formBase)
+    protected function getMessagesForOrganisation($formFields, $formBase)
     {
         $messages = [];
 
-        foreach ($formFields as $descriptionIndex => $description) {
-            $descriptionForm = sprintf('%s.description.%s', $formBase, $descriptionIndex);
-            $messages = $this->getMessagesForNarrative($description['narrative'], $descriptionForm);
+        foreach ($formFields as $organisationIndex => $organisation) {
+            $organisationForm = sprintf('%s.organisation.%s', $formBase, $organisationIndex);
+            $messages = array_merge($messages, $this->getMessagesForNarrative($organisation['narrative'], $organisationForm));
         }
 
         return $messages;
     }
 
-    /** Returns rules for percentage.
-     *
-     * @param $countryBudget
-     *
+    /**
+     * @param $formFields
+     * @param $formBase
      * @return array
      */
-    protected function getRulesForPercentage($countryBudget)
+    protected function getRulesForDepartment($formFields, $formBase)
     {
-        $countryBudgetItems = Arr::get($countryBudget, 'budget_item', []);
-        $totalPercentage = 0;
-//        $isEmpty = false;
-//        $countryBudgetPercentage = 0;
         $rules = [];
 
-        if (count($countryBudgetItems) > 1) {
-            foreach ($countryBudgetItems as $key => $countryBudgetItem) {
-//                (!empty($countryBudgetItem['percentage'])) ? $countryBudgetPercentage = $countryBudgetItem['percentage'] : $isEmpty = true;
-                $countryBudgetPercentage = $countryBudgetItem['percentage'] ?: 0;
-                $totalPercentage = $totalPercentage + $countryBudgetPercentage;
-            }
-
-            foreach ($countryBudgetItems as $key => $countryBudgetItem) {
-//                if ($isEmpty) {
-//                    $rules["budget_item.$key.percentage"] = 'required';
-//                } else
-                if ($totalPercentage != 100) {
-                    $rules["budget_item.$key.percentage"] = 'sum';
-                }
-            }
-        } else {
-            $rules['budget_item.0.percentage'] = 'nullable|total';
+        foreach ($formFields as $departmentIndex => $department) {
+            $departmentForm = sprintf('%s.department.%s', $formBase, $departmentIndex);
+            $rules = array_merge($rules, $this->getRulesForNarrative($department['narrative'], $departmentForm));
         }
 
         return $rules;
+    }
+
+    /**
+     * @param $formFields
+     * @param $formBase
+     * @return array
+     */
+    protected function getMessagesForDepartment($formFields, $formBase)
+    {
+        $messages = [];
+
+        foreach ($formFields as $departmentIndex => $department) {
+            $departmentForm = sprintf('%s.department.%s', $formBase, $departmentIndex);
+            $messages = array_merge($messages, $this->getMessagesForNarrative($department['narrative'], $departmentForm));
+        }
+
+        return $messages;
+    }
+
+    /**
+     * @param $formFields
+     * @param $formBase
+     * @return array
+     */
+    protected function getRulesForPersonName($formFields, $formBase)
+    {
+        $rules = [];
+
+        foreach ($formFields as $personNameIndex => $personName) {
+            $personNameForm = sprintf('%s.person_name.%s', $formBase, $personNameIndex);
+            $rules = array_merge($rules, $this->getRulesForNarrative($personName['narrative'], $personNameForm));
+        }
+
+        return $rules;
+    }
+
+    /**
+     * @param $formFields
+     * @param $formBase
+     * @return array
+     */
+    protected function getMessagesForPersonName($formFields, $formBase)
+    {
+        $messages = [];
+
+        foreach ($formFields as $personNameIndex => $personName) {
+            $personNameForm = sprintf('%s.person_name.%s', $formBase, $personNameIndex);
+            $messages = array_merge($messages, $this->getMessagesForNarrative($personName['narrative'], $personNameForm));
+        }
+
+        return $messages;
+    }
+
+    /**
+     * @param $formFields
+     * @param $formBase
+     * @return array
+     */
+    protected function getRulesForJobTitle($formFields, $formBase)
+    {
+        $rules = [];
+
+        foreach ($formFields as $jobTitleIndex => $jobTitle) {
+            $jobTitleForm = sprintf('%s.job_title.%s', $formBase, $jobTitleIndex);
+            $rules = array_merge($rules, $this->getRulesForNarrative($jobTitle['narrative'], $jobTitleForm));
+        }
+
+        return $rules;
+    }
+
+    /**
+     * @param $formFields
+     * @param $formBase
+     * @return array
+     */
+    protected function getMessagesForJobTitle($formFields, $formBase)
+    {
+        $messages = [];
+
+        foreach ($formFields as $jobTitleIndex => $jobTitle) {
+            $jobTitleForm = sprintf('%s.job_title.%s', $formBase, $jobTitleIndex);
+            $messages = array_merge($messages, $this->getMessagesForNarrative($jobTitle['narrative'], $jobTitleForm));
+        }
+
+        return $messages;
+    }
+
+    /**
+     * @param $formFields
+     * @param $formBase
+     * @return array
+     */
+    protected function getRulesForMailingAddress($formFields, $formBase)
+    {
+        $rules = [];
+
+        foreach ($formFields as $mailingAddressIndex => $mailingAddress) {
+            $mailingAddressForm = sprintf('%s.mailing_address.%s', $formBase, $mailingAddressIndex);
+            $rules = array_merge($rules, $this->getRulesForNarrative($mailingAddress['narrative'], $mailingAddressForm));
+        }
+
+        return $rules;
+    }
+
+    /**
+     * @param $formFields
+     * @param $formBase
+     * @return array
+     */
+    protected function getMessagesForMailingAddress($formFields, $formBase)
+    {
+        $messages = [];
+
+        foreach ($formFields as $mailingAddressIndex => $mailingAddress) {
+            $mailingAddressForm = sprintf('%s.mailing_address.%s', $formBase, $mailingAddressIndex);
+            $messages = array_merge($messages, $this->getMessagesForNarrative($mailingAddress['narrative'], $mailingAddressForm));
+        }
+
+        return $messages;
+    }
+
+    /**
+     * @param $formFields
+     * @param $formBase
+     * @return array
+     */
+    protected function getRulesForTelephone($formFields, $formBase)
+    {
+        $rules = [];
+
+        foreach ($formFields as $telephoneIndex => $telephone) {
+            $rules[sprintf('%s.telephone.%s.telephone', $formBase, $telephoneIndex)] = 'numeric';
+        }
+
+        return $rules;
+    }
+
+    /**
+     * @param $formFields
+     * @param $formBase
+     * @return array
+     */
+    protected function getMessagesForTelephone($formFields, $formBase)
+    {
+        $messages = [];
+
+        foreach ($formFields as $telephoneIndex => $telephone) {
+            $messages[sprintf('%s.telephone.%s.telephone.numeric', $formBase, $telephoneIndex)] = trans(
+                'validation.number',
+                ['attribute' => trans('elementForm.telephone')]
+            );
+        }
+
+        return $messages;
+    }
+
+    /**
+     * @param $formFields
+     * @param $formBase
+     * @return array
+     */
+    protected function getRulesForEmail($formFields, $formBase)
+    {
+        $rules = [];
+
+        foreach ($formFields as $emailIndex => $email) {
+            $rules[sprintf('%s.email.%s.email', $formBase, $emailIndex)] = 'email';
+        }
+
+        return $rules;
+    }
+
+    /**
+     * @param $formFields
+     * @param $formBase
+     * @return array
+     */
+    protected function getMessagesForEmail($formFields, $formBase)
+    {
+        $messages = [];
+
+        foreach ($formFields as $emailIndex => $email) {
+            $messages[sprintf('%s.email.%s.email.email', $formBase, $emailIndex)] = trans(
+                'validation.email',
+                ['attribute' => trans('elementForm.email')]
+            );
+        }
+
+        return $messages;
+    }
+
+    /**
+     * rule for website.
+     * @param $formFields
+     * @param $formBase
+     * @return array
+     */
+    protected function getRulesForWebsite($formFields, $formBase)
+    {
+        $rules = [];
+
+        foreach ($formFields as $websiteIndex => $website) {
+            $rules[sprintf('%s.website.%s.website', $formBase, $websiteIndex)] = 'nullable|url';
+        }
+
+        return $rules;
+    }
+
+    /**
+     * @param $formFields
+     * @param $formBase
+     * @return array
+     */
+    protected function getMessagesForWebsite($formFields, $formBase)
+    {
+        $messages = [];
+
+        foreach ($formFields as $websiteIndex => $website) {
+            $messages[sprintf('%s.website.%s.website.url', $formBase, $websiteIndex)] = trans(
+                'validation.url'
+            );
+        }
+
+        return $messages;
     }
 }

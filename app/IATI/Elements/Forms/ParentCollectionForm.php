@@ -2,6 +2,8 @@
 
 namespace App\IATI\Elements\Forms;
 
+use Illuminate\Support\Arr;
+
 /**
  * Class ParentCollectionForm.
  */
@@ -14,6 +16,8 @@ class ParentCollectionForm extends BaseForm
      */
     public function buildForm():void
     {
+        $field = $this->getData();
+
         $this->add(
             $this->getData('name'),
             'collection',
@@ -28,6 +32,11 @@ class ParentCollectionForm extends BaseForm
                     'label' => false,
                     'wrapper' => [
                         'class' => 'multi-form relative',
+                    ],
+                    'dynamic_wrapper' => [
+                        'class' => (isset($field['add_more']) && $field['add_more']) ?
+                        (strtolower($field['name']) === 'narrative' && Arr::get($field, 'attributes', null) ? 'border-l border-spring-50 pb-11' : 'subelement rounded-tl-lg border-l border-spring-50 pb-11')
+                        : 'subelement rounded-tl-lg border-l border-spring-50 mb-6',
                     ],
                 ],
             ]

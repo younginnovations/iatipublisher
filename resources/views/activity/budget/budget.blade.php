@@ -45,9 +45,9 @@
                             <div class="line grow h-px border-b border-n-40 ml-4"></div>
                         </div>
                         {!! form($form) !!}
-{{--                        <div class="hidden collection-container"--}}
-{{--                             data-prototype="{{ form_row($form->budget->prototype()) }}">--}}
-{{--                        </div>--}}
+                       <div class="hidden parent-collection"
+                             data-prototype="{{ form_row($form->budget->prototype()) }}">
+                        </div>
                     </div>
                 </div>
             </div>

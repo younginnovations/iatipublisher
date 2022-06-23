@@ -113,6 +113,7 @@
       "owner-org": {
         "name": "owner_org",
         "criteria": "",
+        "add_more": true,
         "label": "Owner Organisation",
         "attributes": {
           "reference": {
@@ -131,6 +132,7 @@
             "add_more": true,
             "criteria": "",
             "label": "narrative",
+            "add_more": true,
             "attr": {
               "row": 4
             },
@@ -180,6 +182,7 @@
         "add_more": true,
         "criteria": "mandatory",
         "label": "narrative",
+        "add_more": true,
         "hover_text": "The free text name or description of the item being described. This can be repeated in multiple languages. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/title/narrative/'> For more information </a>",
         "help_text": "",
         "attr": {
@@ -187,6 +190,7 @@
         },
         "hover_text": "The free text name or description of the item being described. This can be repeated in multiple languages. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/description/narrative/'>For more information</a>",
         "help_text": "",
+        "sub_elements": false,
         "attributes": {
           "lang": {
             "name": "language",
@@ -439,6 +443,7 @@
     "label": "Activity Sector",
     "name": "sector",
     "criteria": "mandatory",
+    "add_more" : true,
     "attributes": {
       "vocabulary": {
         "name": "sector_vocabulary",
@@ -1199,141 +1204,144 @@
       }
     },
     "sub_elements": {
-        "title": {
-          "name": "title",
-          "label": "Title",
-          "criteria": "",
-          "required": false,
-          "add_more": false,
-          "attributes": false,
-          "sub_elements": {
-            "narrative": {
-              "name": "narrative",
-              "type": "textarea",
-              "required": false,
-              "criteria": "",
-              "label": "narrative",
-              "attr": {
-                "row": 4
-              },
-              "hover_text": "The free text name or description of the item being described. This can be repeated in multiple languages. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/description/narrative/'>For more information</a>",
-              "help_text": "",
-              "attributes": {
-                "lang": {
-                  "name": "language",
-                  "type": "select",
-                  "multiSelect": false,
-                  "required": false,
-                  "criteria": "",
-                  "label": "@xml:lang",
-                  "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/description/narrative/'>For more information</a>",
-                  "help_text": "",
-                  "choices": "Activity/Language.json"
-                }
+      "title": {
+        "name": "title",
+        "label": "Title",
+        "criteria": "",
+        "required": false,
+        "add_more": false,
+        "attributes": false,
+        "sub_elements": {
+          "narrative": {
+            "name": "narrative",
+            "type": "textarea",
+            "required": false,
+            "add_more": true,
+            "criteria": "",
+            "label": "narrative",
+            "attr": {
+              "row": 4
+            },
+            "hover_text": "The free text name or description of the item being described. This can be repeated in multiple languages. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/description/narrative/'>For more information</a>",
+            "help_text": "",
+            "attributes": {
+              "lang": {
+                "name": "language",
+                "type": "select",
+                "multiSelect": false,
+                "required": false,
+                "criteria": "",
+                "label": "@xml:lang",
+                "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/description/narrative/'>For more information</a>",
+                "help_text": "",
+                "choices": "Activity/Language.json"
               }
-            }
-          }
-        },
-        "description": {
-          "name": "description",
-          "label": "Description",
-          "criteria": "",
-          "required": false,
-          "add_more": false,
-          "attributes": false,
-          "sub_elements": {
-            "narrative": {
-              "name": "narrative",
-              "type": "textarea",
-              "required": false,
-              "criteria": "",
-              "label": "narrative",
-              "attr": {
-                "row": 4
-              },
-              "hover_text": "The free text name or description of the item being described. This can be repeated in multiple languages. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/description/narrative/'>For more information</a>",
-              "help_text": "",
-              "attributes": {
-                "lang": {
-                  "name": "language",
-                  "type": "select",
-                  "multiSelect": false,
-                  "required": false,
-                  "criteria": "",
-                  "label": "@xml:lang",
-                  "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/description/narrative/'>For more information</a>",
-                  "help_text": "",
-                  "choices": "Activity/Language.json"
-                }
-              }
-            }
-          }
-        },
-        "category": {
-          "name": "category",
-          "label": "Category",
-          "criteria": "",
-          "required": false,
-          "add_more": true,
-          "attributes": {
-            "code": {
-              "name": "code",
-              "type": "select",
-              "multiSelect": false,
-              "required": true,
-              "criteria": "",
-              "label": "@code",
-              "hover_text": "",
-              "help_text": "",
-              "choices": "Activity/DocumentCategory.json"
-            }
-          }
-        },
-        "language": {
-          "name": "language",
-          "label": "Language",
-          "criteria": "",
-          "required": false,
-          "add_more": true,
-          "attributes": {
-            "code": {
-              "name": "code",
-              "type": "select",
-              "multiSelect": false,
-              "required": true,
-              "criteria": "",
-              "label": "@code",
-              "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/description/narrative/'>For more information</a>",
-              "help_text": "",
-              "choices": "Activity/Language.json"
-            }
-          }
-        },
-        "document_date": {
-          "name": "document_date",
-          "label": "Document Date",
-          "criteria": "",
-          "required": false,
-          "add_more": false,
-          "attributes": {
-            "date": {
-              "name": "date",
-              "type": "date",
-              "required": true,
-              "criteria": "",
-              "label": "date",
-              "hover_text": "",
-              "help_text": ""
             }
           }
         }
+      },
+      "description": {
+        "name": "description",
+        "label": "Description",
+        "criteria": "",
+        "required": false,
+        "add_more": false,
+        "attributes": false,
+        "sub_elements": {
+          "narrative": {
+            "name": "narrative",
+            "type": "textarea",
+            "required": false,
+            "add_more": false,
+            "criteria": "",
+            "label": "narrative",
+            "attr": {
+              "row": 4
+            },
+            "hover_text": "The free text name or description of the item being described. This can be repeated in multiple languages. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/description/narrative/'>For more information</a>",
+            "help_text": "",
+            "sub_elements": false,
+            "attributes": {
+              "lang": {
+                "name": "language",
+                "type": "select",
+                "multiSelect": false,
+                "required": false,
+                "criteria": "",
+                "label": "@xml:lang",
+                "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/description/narrative/'>For more information</a>",
+                "help_text": "",
+                "choices": "Activity/Language.json"
+              }
+            }
+          }
+        }
+      },
+      "category": {
+        "name": "category",
+        "label": "Category",
+        "criteria": "",
+        "required": false,
+        "add_more": true,
+        "attributes": {
+          "code": {
+            "name": "code",
+            "type": "select",
+            "multiSelect": false,
+            "required": true,
+            "criteria": "",
+            "label": "@code",
+            "hover_text": "",
+            "help_text": "",
+            "choices": "Activity/DocumentCategory.json"
+          }
+        }
+      },
+      "language": {
+        "name": "language",
+        "label": "Language",
+        "criteria": "",
+        "required": false,
+        "add_more": true,
+        "attributes": {
+          "code": {
+            "name": "code",
+            "type": "select",
+            "multiSelect": false,
+            "required": true,
+            "criteria": "",
+            "label": "@code",
+            "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/description/narrative/'>For more information</a>",
+            "help_text": "",
+            "choices": "Activity/Language.json"
+          }
+        }
+      },
+      "document_date": {
+        "name": "document_date",
+        "label": "Document Date",
+        "criteria": "",
+        "required": false,
+        "add_more": false,
+        "attributes": {
+          "date": {
+            "name": "date",
+            "type": "date",
+            "required": true,
+            "criteria": "",
+            "label": "date",
+            "hover_text": "",
+            "help_text": ""
+          }
+        }
+      }
     }
   },
   "contact_info": {
-    "name": "contact_information",
+    "name": "contact_info",
     "label": "Document Link",
     "criteria": "",
-    "add_more": false,
+    "add_more": true,
     "attributes": {
       "type": {
         "name": "type",
@@ -1348,231 +1356,565 @@
       }
     },
     "sub_elements": {
-        "organisation": {
-          "name": "organisation",
-          "label": "Organisation",
-          "criteria": "",
-          "required": false,
-          "add_more": false,
-          "attributes": false,
-          "sub_elements": {
-            "narrative": {
-              "name": "narrative",
-              "type": "textarea",
-              "required": false,
-              "criteria": "",
-              "label": "narrative",
-              "attr": {
-                "row": 4
-              },
-              "hover_text": "The free text name or description of the item being described. This can be repeated in multiple languages. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/description/narrative/'>For more information</a>",
-              "help_text": "",
-              "attributes": {
-                "lang": {
-                  "name": "language",
-                  "type": "select",
-                  "multiSelect": false,
-                  "required": false,
-                  "criteria": "",
-                  "label": "@xml:lang",
-                  "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/description/narrative/'>For more information</a>",
-                  "help_text": "",
-                  "choices": "Activity/Language.json"
-                }
-              }
-            }
-          }
-        },
-        "department": {
-          "name": "department",
-          "label": "Department",
-          "criteria": "",
-          "required": false,
-          "add_more": false,
-          "sub_elements": {
-            "narrative": {
-              "name": "narrative",
-              "type": "textarea",
-              "required": false,
-              "criteria": "",
-              "label": "narrative",
-              "attr": {
-                "row": 4
-              },
-              "hover_text": "The free text name or description of the item being described. This can be repeated in multiple languages. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/description/narrative/'>For more information</a>",
-              "help_text": "",
-              "attributes": {
-                "lang": {
-                  "name": "language",
-                  "type": "select",
-                  "multiSelect": false,
-                  "required": false,
-                  "criteria": "",
-                  "label": "@xml:lang",
-                  "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/description/narrative/'>For more information</a>",
-                  "help_text": "",
-                  "choices": "Activity/Language.json"
-                }
-              }
-            }
-          }
-        },
-        "person_name": {
-          "name": "person_name",
-          "label": "Person Name",
-          "criteria": "",
-          "required": false,
-          "add_more": true,
-          "sub_elements": {
-            "narrative": {
-              "name": "narrative",
-              "type": "textarea",
-              "required": false,
-              "criteria": "",
-              "label": "narrative",
-              "attr": {
-                "row": 4
-              },
-              "hover_text": "The free text name or description of the item being described. This can be repeated in multiple languages. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/description/narrative/'>For more information</a>",
-              "help_text": "",
-              "attributes": {
-                "lang": {
-                  "name": "language",
-                  "type": "select",
-                  "multiSelect": false,
-                  "required": false,
-                  "criteria": "",
-                  "label": "@xml:lang",
-                  "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/description/narrative/'>For more information</a>",
-                  "help_text": "",
-                  "choices": "Activity/Language.json"
-                }
-              }
-            }
-          }
-        },
-        "job_title": {
-          "name": "job_title",
-          "label": "Job Title",
-          "criteria": "",
-          "required": false,
-          "add_more": true,
-          "sub_elements": {
-            "narrative": {
-              "name": "narrative",
-              "type": "textarea",
-              "required": false,
-              "criteria": "",
-              "label": "narrative",
-              "attr": {
-                "row": 4
-              },
-              "hover_text": "The free text name or description of the item being described. This can be repeated in multiple languages. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/description/narrative/'>For more information</a>",
-              "help_text": "",
-              "attributes": {
-                "lang": {
-                  "name": "language",
-                  "type": "select",
-                  "multiSelect": false,
-                  "required": false,
-                  "criteria": "",
-                  "label": "@xml:lang",
-                  "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/description/narrative/'>For more information</a>",
-                  "help_text": "",
-                  "choices": "Activity/Language.json"
-                }
-              }
-            }
-          }
-        },
-        "telephone": {
-          "name": "telephone",
-          "label": "Telephone",
-          "criteria": "",
-          "required": false,
-          "add_more": true,
-          "attributes": {
-            "telephone": {
-              "name": "telephone",
-              "type": "text",
-              "required": true,
-              "criteria": "",
-              "label": "telephone",
-              "hover_text": "",
-              "help_text": ""
-            }
-          }
-        },
-        "email": {
-          "name": "email",
-          "label": "Email",
-          "criteria": "",
-          "required": false,
-          "add_more": true,
-          "attributes": {
-            "email": {
-              "name": "email",
-              "type": "text",
-              "required": true,
-              "criteria": "",
-              "label": "Email",
-              "hover_text": "",
-              "help_text": ""
-            }
-          }
-        },
-        "website": {
-          "name": "website",
-          "label": "Website",
-          "criteria": "",
-          "required": false,
-          "add_more": true,
-          "attributes": {
-            "website": {
-              "name": "website",
-              "type": "text",
-              "required": true,
-              "criteria": "",
-              "label": "Website",
-              "hover_text": "",
-              "help_text": ""
-            }
-          }
-        },
-        "mailing_address": {
-          "name": "mailing_address",
-          "label": "Mailing Address",
-          "criteria": "",
-          "required": false,
-          "add_more": true,
-          "sub_elements": {
-            "narrative": {
-              "name": "narrative",
-              "type": "textarea",
-              "required": false,
-              "criteria": "",
-              "label": "narrative",
-              "attr": {
-                "row": 4
-              },
-              "hover_text": "The free text name or description of the item being described. This can be repeated in multiple languages. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/description/narrative/'>For more information</a>",
-              "help_text": "",
-              "attributes": {
-                "lang": {
-                  "name": "language",
-                  "type": "select",
-                  "multiSelect": false,
-                  "required": false,
-                  "criteria": "",
-                  "label": "@xml:lang",
-                  "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/description/narrative/'>For more information</a>",
-                  "help_text": "",
-                  "choices": "Activity/Language.json"
-                }
+      "organisation": {
+        "name": "organisation",
+        "label": "Organisation",
+        "criteria": "",
+        "required": false,
+        "add_more": false,
+        "attributes": false,
+        "sub_elements": {
+          "narrative": {
+            "name": "narrative",
+            "type": "textarea",
+            "required": false,
+            "add_more": true,
+            "criteria": "",
+            "label": "narrative",
+            "attr": {
+              "row": 4
+            },
+            "hover_text": "The free text name or description of the item being described. This can be repeated in multiple languages. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/description/narrative/'>For more information</a>",
+            "help_text": "",
+            "attributes": {
+              "lang": {
+                "name": "language",
+                "type": "select",
+                "multiSelect": false,
+                "required": false,
+                "criteria": "",
+                "label": "@xml:lang",
+                "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/description/narrative/'>For more information</a>",
+                "help_text": "",
+                "choices": "Activity/Language.json"
               }
             }
           }
         }
+      },
+      "department": {
+        "name": "department",
+        "label": "Department",
+        "criteria": "",
+        "required": false,
+        "add_more": false,
+        "attributes": false,
+        "sub_elements": {
+          "narrative": {
+            "name": "narrative",
+            "type": "textarea",
+            "required": false,
+            "add_more": true,
+            "criteria": "",
+            "label": "narrative",
+            "attr": {
+              "row": 4
+            },
+            "hover_text": "The free text name or description of the item being described. This can be repeated in multiple languages. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/description/narrative/'>For more information</a>",
+            "help_text": "",
+            "attributes": {
+              "lang": {
+                "name": "language",
+                "type": "select",
+                "multiSelect": false,
+                "required": false,
+                "criteria": "",
+                "label": "@xml:lang",
+                "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/description/narrative/'>For more information</a>",
+                "help_text": "",
+                "choices": "Activity/Language.json"
+              }
+            }
+          }
+        }
+      },
+      "person_name": {
+        "name": "person_name",
+        "label": "Person Name",
+        "criteria": "",
+        "required": false,
+        "add_more": false,
+        "attributes": false,
+        "sub_elements": {
+          "narrative": {
+            "name": "narrative",
+            "type": "textarea",
+            "required": false,
+            "add_more": true,
+            "criteria": "",
+            "label": "narrative",
+            "attr": {
+              "row": 4
+            },
+            "hover_text": "The free text name or description of the item being described. This can be repeated in multiple languages. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/description/narrative/'>For more information</a>",
+            "help_text": "",
+            "attributes": {
+              "lang": {
+                "name": "language",
+                "type": "select",
+                "multiSelect": false,
+                "required": false,
+                "criteria": "",
+                "label": "@xml:lang",
+                "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/description/narrative/'>For more information</a>",
+                "help_text": "",
+                "choices": "Activity/Language.json"
+              }
+            }
+          }
+        }
+      },
+      "job_title": {
+        "name": "job_title",
+        "label": "Job Title",
+        "criteria": "",
+        "required": false,
+        "add_more": false,
+        "attributes": false,
+        "sub_elements": {
+          "narrative": {
+            "name": "narrative",
+            "type": "textarea",
+            "required": false,
+            "add_more": true,
+            "criteria": "",
+            "label": "narrative",
+            "attr": {
+              "row": 4
+            },
+            "hover_text": "The free text name or description of the item being described. This can be repeated in multiple languages. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/description/narrative/'>For more information</a>",
+            "help_text": "",
+            "attributes": {
+              "lang": {
+                "name": "language",
+                "type": "select",
+                "multiSelect": false,
+                "required": false,
+                "criteria": "",
+                "label": "@xml:lang",
+                "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/description/narrative/'>For more information</a>",
+                "help_text": "",
+                "choices": "Activity/Language.json"
+              }
+            }
+          }
+        }
+      },
+      "telephone": {
+        "name": "telephone",
+        "label": "Telephone",
+        "criteria": "",
+        "required": false,
+        "add_more": true,
+        "attributes": {
+          "telephone": {
+            "name": "telephone",
+            "type": "text",
+            "required": true,
+            "criteria": "",
+            "label": "telephone",
+            "hover_text": "",
+            "help_text": ""
+          }
+        }
+      },
+      "email": {
+        "name": "email",
+        "label": "Email",
+        "criteria": "",
+        "required": false,
+        "add_more": true,
+        "attributes": {
+          "email": {
+            "name": "email",
+            "type": "text",
+            "required": true,
+            "criteria": "",
+            "label": "Email",
+            "hover_text": "",
+            "help_text": ""
+          }
+        }
+      },
+      "website": {
+        "name": "website",
+        "label": "Website",
+        "criteria": "",
+        "required": false,
+        "add_more": true,
+        "attributes": {
+          "website": {
+            "name": "website",
+            "type": "text",
+            "required": true,
+            "criteria": "",
+            "label": "Website",
+            "hover_text": "",
+            "help_text": ""
+          }
+        }
+      },
+      "mailing_address": {
+        "name": "mailing_address",
+        "label": "Mailing Address",
+        "criteria": "",
+        "required": false,
+        "add_more": true,
+        "attributes": false,
+        "sub_elements": {
+          "narrative": {
+            "name": "narrative",
+            "type": "textarea",
+            "required": false,
+            "add_more": true,
+            "criteria": "",
+            "label": "narrative",
+            "attr": {
+              "row": 4
+            },
+            "hover_text": "The free text name or description of the item being described. This can be repeated in multiple languages. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/description/narrative/'>For more information</a>",
+            "help_text": "",
+            "attributes": {
+              "lang": {
+                "name": "language",
+                "type": "select",
+                "multiSelect": false,
+                "required": false,
+                "criteria": "",
+                "label": "@xml:lang",
+                "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/description/narrative/'>For more information</a>",
+                "help_text": "",
+                "choices": "Activity/Language.json"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "location": {
+    "name": "location",
+    "label": "Document Link",
+    "criteria": "",
+    "add_more": true,
+    "attributes": {
+      "ref": {
+        "name": "ref",
+        "label": "@ref",
+        "criteria": "",
+        "required": true,
+        "multiselect": false,
+        "type": "select",
+        "choices": "Activity/ContactType.json",
+        "hover_text": "",
+        "help_text": ""
+      }
+    },
+    "sub_elements": {
+      "location_reach": {
+        "name": "location_reach",
+        "label": "location-reach",
+        "criteria": "",
+        "required": false,
+        "add_more": false,
+        "attributes": {
+          "code": {
+            "name": "code",
+            "label": "@code",
+            "criteria": "",
+            "required": true,
+            "multiselect": false,
+            "type": "select",
+            "choices": "Activity/GeographicLocationReach.json",
+            "hover_text": "",
+            "help_text": ""
+          }
+        }
+      },
+      "location_id": {
+        "name": "location_id",
+        "label": "location-id",
+        "criteria": "",
+        "required": false,
+        "add_more": true,
+        "attributes": {
+          "vocabulary": {
+            "name": "vocabulary",
+            "label": "@vocabulary",
+            "criteria": "",
+            "required": false,
+            "multiselect": false,
+            "type": "select",
+            "choices": "Activity/GeographicVocabulary.json",
+            "hover_text": "",
+            "help_text": ""
+          },
+          "ref": {
+            "name": "code",
+            "label": "@code",
+            "criteria": "",
+            "required": false,
+            "type": "text",
+            "hover_text": "",
+            "help_text": ""
+          }
+        }
+      },
+      "name": {
+        "name": "name",
+        "label": "name",
+        "criteria": "",
+        "required": false,
+        "add_more": false,
+        "attributes": false,
+        "sub_elements": {
+          "narrative": {
+            "name": "narrative",
+            "type": "textarea",
+            "required": false,
+            "add_more": true,
+            "criteria": "",
+            "label": "narrative",
+            "attr": {
+              "row": 4
+            },
+            "hover_text": "The free text name or description of the item being described. This can be repeated in multiple languages. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/description/narrative/'>For more information</a>",
+            "help_text": "",
+            "attributes": {
+              "lang": {
+                "name": "language",
+                "type": "select",
+                "multiSelect": false,
+                "required": false,
+                "criteria": "",
+                "label": "@xml:lang",
+                "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/description/narrative/'>For more information</a>",
+                "help_text": "",
+                "choices": "Activity/Language.json"
+              }
+            }
+          }
+        }
+      },
+      "description": {
+        "name": "description",
+        "label": "description",
+        "criteria": "",
+        "required": false,
+        "add_more": false,
+        "attributes": false,
+        "sub_elements": {
+          "narrative": {
+            "name": "narrative",
+            "type": "textarea",
+            "required": false,
+            "add_more": true,
+            "criteria": "",
+            "label": "narrative",
+            "attr": {
+              "row": 4
+            },
+            "hover_text": "The free text name or description of the item being described. This can be repeated in multiple languages. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/description/narrative/'>For more information</a>",
+            "help_text": "",
+            "attributes": {
+              "lang": {
+                "name": "language",
+                "type": "select",
+                "multiSelect": false,
+                "required": false,
+                "criteria": "",
+                "label": "@xml:lang",
+                "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/description/narrative/'>For more information</a>",
+                "help_text": "",
+                "choices": "Activity/Language.json"
+              }
+            }
+          }
+        }
+      },
+      "activity_description": {
+        "name": "activity_description",
+        "label": "activity-description",
+        "criteria": "",
+        "required": false,
+        "add_more": false,
+        "attributes": false,
+        "sub_elements": {
+          "narrative": {
+            "name": "narrative",
+            "type": "textarea",
+            "required": false,
+            "add_more": true,
+            "criteria": "",
+            "label": "narrative",
+            "attr": {
+              "row": 4
+            },
+            "hover_text": "The free text name or description of the item being described. This can be repeated in multiple languages. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/description/narrative/'>For more information</a>",
+            "help_text": "",
+            "attributes": {
+              "lang": {
+                "name": "language",
+                "type": "select",
+                "multiSelect": false,
+                "required": false,
+                "criteria": "",
+                "label": "@xml:lang",
+                "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/description/narrative/'>For more information</a>",
+                "help_text": "",
+                "choices": "Activity/Language.json"
+              }
+            }
+          }
+        }
+      },
+      "administrative": {
+        "name": "administrative",
+        "label": "administrative",
+        "criteria": "",
+        "required": false,
+        "add_more": false,
+        "attributes": {
+          "vocabulary": {
+            "name": "vocabulary",
+            "label": "@vocabulary",
+            "criteria": "",
+            "required": false,
+            "multiselect": false,
+            "type": "select",
+            "choices": "Activity/GeographicVocabulary.json",
+            "hover_text": "",
+            "help_text": ""
+          },
+          "code": {
+            "name": "code",
+            "type": "text",
+            "required": true,
+            "criteria": "",
+            "label": "@code",
+            "hover_text": "",
+            "help_text": ""
+          },
+          "level": {
+            "name": "level",
+            "type": "text",
+            "required": true,
+            "criteria": "",
+            "label": "@level",
+            "hover_text": "",
+            "help_text": ""
+          }
+        }
+      },
+      "point": {
+        "name": "point",
+        "label": "point",
+        "criteria": "",
+        "required": false,
+        "add_more": false,
+        "attributes": {
+          "srs_name": {
+            "name": "srs_name",
+            "type": "select",
+            "multiSelect": false,
+            "required": false,
+            "criteria": "",
+            "label": "@srsName",
+            "hover_text": "",
+            "help_text": "",
+            "choices": "Activity/LocationType.json"
+          }
+        },
+        "sub_elements": {
+          "pos": {
+            "name": "pos",
+            "hover_text": "The free text name or description of the item being described. This can be repeated in multiple languages. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/description/narrative/'>For more information</a>",
+            "help_text": "",
+            "attributes": {
+              "latitude": {
+                "name": "latitude",
+                "type": "text",
+                "multiSelect": false,
+                "required": false,
+                "criteria": "",
+                "label": "latitude",
+                "hover_text": "",
+                "help_text": ""
+              },
+              "longitude": {
+                "name": "longitude",
+                "type": "text",
+                "multiSelect": false,
+                "required": false,
+                "criteria": "",
+                "label": "longitude",
+                "hover_text": "",
+                "help_text": ""
+              }
+            }
+          }
+        }
+      },
+      "exactness": {
+        "name": "exactness",
+        "label": "Exactness",
+        "criteria": "",
+        "required": false,
+        "add_more": false,
+        "attributes": {
+          "code": {
+            "name": "code",
+            "type": "select",
+            "multiSelect": false,
+            "required": false,
+            "criteria": "",
+            "label": "@code",
+            "hover_text": "",
+            "help_text": "",
+            "choices": "Activity/LocationType.json"
+          }
+        }
+      },
+      "location_class": {
+        "name": "location_class",
+        "label": "location-class",
+        "criteria": "",
+        "required": false,
+        "add_more": false,
+        "attributes": {
+          "code": {
+            "name": "code",
+            "type": "select",
+            "multiSelect": false,
+            "required": false,
+            "criteria": "",
+            "label": "@code",
+            "hover_text": "",
+            "help_text": "",
+            "choices": "Activity/LocationType.json"
+          }
+        }
+      },
+      "feature_designation": {
+        "name": "feature_designation",
+        "label": "Feature Designation",
+        "criteria": "",
+        "required": false,
+        "add_more": false,
+        "attributes": {
+          "code": {
+            "name": "code",
+            "type": "select",
+            "multiSelect": false,
+            "required": false,
+            "criteria": "",
+            "label": "@code",
+            "hover_text": "",
+            "help_text": "",
+            "choices": "Activity/LocationType.json"
+          }
+        }
+      }
     }
   },
   "participating-org": {
@@ -1639,6 +1981,7 @@
         "name": "narrative",
         "type": "textarea",
         "required": false,
+        "add_more": true,
         "criteria": "",
         "label": "narrative",
         "attr": {

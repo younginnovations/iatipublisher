@@ -21,7 +21,7 @@ class SubElementForm extends Form
         $this->setClientValidationEnabled(false);
 
         if (Arr::get($data, 'type', null)) {
-            $this->buildFields($this->getData());
+            $this->buildFields($this->getData(), false);
         }
 
         if (isset($data['attributes'])) {
@@ -29,7 +29,7 @@ class SubElementForm extends Form
 
             foreach ($attributes as $attribute) {
                 if (is_array($attribute)) {
-                    $this->buildFields($attribute);
+                    $this->buildFields($attribute, true);
                 }
             }
         }
@@ -50,7 +50,7 @@ class SubElementForm extends Form
      *
      * @return void
      */
-    public function buildFields($field): void
+    public function buildFields($field, $isAttribute = false): void
     {
         $options = [
             'label' => $field['label'] ?? '',

@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Http\Requests\Activity\DocumentLink;
 
 use App\Http\Requests\Activity\ActivityBaseRequest;
-use Illuminate\Support\Arr;
 
 /**
  * Class DocumentLinkRequest.
@@ -19,8 +18,7 @@ class DocumentLinkRequest extends ActivityBaseRequest
      */
     public function rules(): array
     {
-        return [];
-        // return $this->getRulesForCountryBudgetItem(request()->except(['_token', '_method']));
+        return $this->getRulesForDocumentLink();
     }
 
     // /**
@@ -34,70 +32,26 @@ class DocumentLinkRequest extends ActivityBaseRequest
     // }
 
     /**
-     * Returns rules for related activity.
-     *
      * @param array $formFields
-     *
      * @return array
      */
-    protected function getRulesForCountryBudgetItem(array $formFields): array
+    public function getRulesForDocumentLink(array $formFields)
     {
         $rules = [];
-
-//        $rules['vocabulary'] = 'required';
-        $code = $formFields['country_budget_vocabulary'] == 1 ? 'code' : 'code_text';
-        $rules = array_merge(
-            $rules,
-            $this->getBudgetItemRules($formFields['budget_item'], $code)
-        );
-
-        return $rules;
-    }
-
-    /**
-     * Returns messages for related activity validations.
-     *
-     * @param array $formFields
-     *
-     * @return array
-     */
-    protected function getMessagesForCountryBudgetItem(array $formFields): array
-    {
-        $messages = [];
-
-        $code = $formFields['country_budget_vocabulary'] == 1 ? 'code' : 'code_text';
-        // $messages[sprintf('vocabulary.required')] = 'The @vocabulary field is required.';
-        $messages = array_merge(
-            $messages,
-            $this->getBudgetItemMessages($formFields['budget_item'], $code)
-        );
-
-        return $messages;
-    }
-
-    /**
-     * returns budget item validation rules.
-     *
-     * @param $formFields
-     * @param $code
-     *
-     * @return array
-     */
-    public function getBudgetItemRules(array $formFields, $code)
-    {
-        $rules = [];
-
-        foreach ($formFields as $budgetItemIndex => $budgetItem) {
-            $budgetItemForm = sprintf('budget_item.%s', $budgetItemIndex);
-            $rules[sprintf('%s.percentage', $budgetItemForm)] = 'nullable|numeric|max:100';
-//            $rules[sprintf('%s.%s', $budgetItemForm, $code)] = 'required';
-            $rules = array_merge(
-                $rules,
-                $this->getBudgetItemDescriptionRules($budgetItem['description'], $budgetItemForm)
+        foreach ($formFields as $documentLinkIndex => $documentLink) {
+            $documentLinkForm = sprintf(
+                'document_link.%s',
+                $documentLinkIndex
             );
+            $rules[sprintf('document_link.%s.url', $documentLinkIndex)] = 'required|url';
+            $rules[sprintf('document_link.%s.format', $documentLinkIndex)] = 'required';
+            $rules[sprintf('document_link.%s.document_date.0.date', $documentLinkIndex)] = 'date';
             $rules = array_merge(
                 $rules,
-                $this->getRulesForPercentage(request()->except(['_token', '_method']))
+                $this->getRulesForNarrative($documentLink['title'][0]['narrative'], sprintf('%s.title.0', $documentLinkForm), true),
+                $this->getRulesForNarrative($documentLink['description'][0]['narrative'], sprintf('%s.description.0', $documentLinkForm)),
+                $this->getRulesForDocumentCategory($documentLink['category'], $documentLinkForm),
+                $this->getRulesForRecipientCountry($documentLink['recipient_country'], $documentLinkForm)
             );
         }
 
@@ -105,106 +59,33 @@ class DocumentLinkRequest extends ActivityBaseRequest
     }
 
     /**
-     * return budget item error message.
-     *
-     * @param $formFields
-     * @param $code
-     *
+     * @param array $formFields
      * @return array
      */
-    public function getBudgetItemMessages(array $formFields, $code)
+    public function getMessagesForDocumentLink(array $formFields)
     {
         $messages = [];
-        foreach ($formFields as $budgetItemIndex => $budgetItem) {
-            $budgetItemForm = sprintf('budget_item.%s', $budgetItemIndex);
-//            $messages[sprintf('%s.%s.required', $budgetItemForm, $code)] = 'The @code field is required.';
-            $messages[sprintf('%s.percentage.%s', $budgetItemForm, 'numeric')] = 'The @percentage field must be a number.';
-            $messages[sprintf('%s.percentage.%s', $budgetItemForm, 'max')] = 'The @percentage field cannot be greater than 100.';
-            $messages[sprintf('%s.percentage.sum', $budgetItemForm)] = 'The sum of @percentage must add up to 100.';
-//            $messages[sprintf('%s.percentage.required', $budgetItemForm)] = 'The @percentage field is required when there are multiple codes.';
-            $messages[sprintf('%s.percentage.total', $budgetItemForm)] = 'The @percentage field should be 100 when there is only one budget item.';
+        foreach ($formFields as $documentLinkIndex => $documentLink) {
+            $documentLinkForm = sprintf(
+                'document_link.%s',
+                $documentLinkIndex
+            );
+            $messages[sprintf('document_link.%s.url.required', $documentLinkIndex)] = trans('validation.required', ['attribute' => trans('elementForm.url')]);
+            $messages[sprintf(
+                'document_link.%s.url.url',
+                $documentLinkIndex
+            )] = trans('validation.url');
+            $messages[sprintf('document_link.%s.format.required', $documentLinkIndex)] = trans('validation.required', ['attribute' => trans('elementForm.format')]);
+            $messages[sprintf('document_link.%s.document_date.0.date.date', $documentLinkIndex)] = trans('validation.date', ['attribute' => trans('elementForm.date')]);
             $messages = array_merge(
                 $messages,
-                $this->getBudgetItemDescriptionMessages($budgetItem['description'], $budgetItemForm)
+                $this->getMessagesForNarrative($documentLink['title'][0]['narrative'], sprintf('%s.title.0', $documentLinkForm)),
+                $this->getMessagesForNarrative($documentLink['description'][0]['narrative'], sprintf('%s.description.0', $documentLinkForm)),
+                $this->getMessagesForDocumentCategory($documentLink['category'], $documentLinkForm),
+                $this->getMessagesForRecipientCountry($documentLink['recipient_country'], $documentLinkForm)
             );
         }
 
         return $messages;
-    }
-
-    /**
-     * return budget item description rule.
-     *
-     * @param $formFields
-     * @param $formBase
-     *
-     * @return array
-     */
-    public function getBudgetItemDescriptionRules(array $formFields, $formBase)
-    {
-        $rules = [];
-
-        foreach ($formFields as $descriptionIndex => $description) {
-            $descriptionForm = sprintf('%s.description.%s', $formBase, $descriptionIndex);
-            $rules = $this->getRulesForNarrative($description['narrative'], $descriptionForm);
-        }
-
-        return $rules;
-    }
-
-    /**
-     * return budget item description error message.
-     *
-     * @param $formFields
-     * @param $formBase
-     *
-     * @return array
-     */
-    public function getBudgetItemDescriptionMessages(array $formFields, $formBase)
-    {
-        $messages = [];
-
-        foreach ($formFields as $descriptionIndex => $description) {
-            $descriptionForm = sprintf('%s.description.%s', $formBase, $descriptionIndex);
-            $messages = $this->getMessagesForNarrative($description['narrative'], $descriptionForm);
-        }
-
-        return $messages;
-    }
-
-    /** Returns rules for percentage.
-     *
-     * @param $countryBudget
-     *
-     * @return array
-     */
-    protected function getRulesForPercentage($countryBudget)
-    {
-        $countryBudgetItems = Arr::get($countryBudget, 'budget_item', []);
-        $totalPercentage = 0;
-//        $isEmpty = false;
-//        $countryBudgetPercentage = 0;
-        $rules = [];
-
-        if (count($countryBudgetItems) > 1) {
-            foreach ($countryBudgetItems as $key => $countryBudgetItem) {
-//                (!empty($countryBudgetItem['percentage'])) ? $countryBudgetPercentage = $countryBudgetItem['percentage'] : $isEmpty = true;
-                $countryBudgetPercentage = $countryBudgetItem['percentage'] ?: 0;
-                $totalPercentage = $totalPercentage + $countryBudgetPercentage;
-            }
-
-            foreach ($countryBudgetItems as $key => $countryBudgetItem) {
-//                if ($isEmpty) {
-//                    $rules["budget_item.$key.percentage"] = 'required';
-//                } else
-                if ($totalPercentage != 100) {
-                    $rules["budget_item.$key.percentage"] = 'sum';
-                }
-            }
-        } else {
-            $rules['budget_item.0.percentage'] = 'nullable|total';
-        }
-
-        return $rules;
     }
 }

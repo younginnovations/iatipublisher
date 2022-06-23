@@ -6,7 +6,6 @@ class FormBuilder {
   public addForm(ev: Event): void {
     ev.preventDefault();
     let target = ev.target as EventTarget;
-    console.log($('.collection-container'));
     let container = $(target).attr('form_type') ? $(`.collection-container[form_type ='${$(target).attr('form_type')}']`) : $('.collection-container');
     console.log('target', target, 'container', container);
     let count = $(target).attr('child_count')
@@ -21,6 +20,7 @@ class FormBuilder {
     proto = proto.replace(/__NAME__/g, count);
 
     $(target).prev().append($(proto));
+
     if ($(target).attr('form_type')) {
       $(target).prev().last().find('.select2').select2({
         placeholder: 'Select an option'
@@ -55,18 +55,9 @@ class FormBuilder {
     $('.multi-form').last().find('.select2').select2({
       placeholder: 'Select an option',
     });
-    $('.multi-form')
-      .last()
-      .find('.add_to_collection')
-      .attr('parent_count', count);
-    $('.multi-form')
-      .last()
-      .find('.attribute')
-      .wrapAll(
-        $(
-          '<div class="form-field-group flex flex-wrap rounded-br-lg border-y border-r border-spring-50 attribute-wrapper"></div>'
-        )
-      );
+
+    this.addWrapperOnAdd();
+
     $(target).attr('child_count', count);
 
     this.humanitarianScopeHideVocabularyUri();
@@ -112,12 +103,41 @@ class FormBuilder {
 
   //add wrapper div around the attributes
   public addWrapper(): void {
-    $('.multi-form').each(function () {
-      $(this)
-        .find('.attribute')
+    $('.multi-form').each(function(){
+
+      $(this).find('.attribute')
+      .wrapAll(
+        $(
+          '<div class="form-field-group flex flex-wrap rounded-br-lg border-y border-r border-spring-50 attribute-wrapper"></div>'
+        )
+      );
+    })
+
+    $('.subelement').find('.wrapped-child-body').each(function () {
+      $(this).find('.sub-attribute')
         .wrapAll(
           $(
-            '<div class="form-field-group flex flex-wrap rounded-br-lg border-y border-r border-spring-50 attribute-wrapper"></div>'
+            '<div class="form-field-group flex flex-wrap rounded-br-lg border-y border-r border-spring-50 sub-attribute-wrapper"></div>'
+          )
+        );
+    });
+  }
+
+  public addWrapperOnAdd(): void {
+    $('.multi-form')
+      .last()
+      .find('.attribute')
+      .wrapAll(
+        $(
+          '<div class="form-field-group flex flex-wrap rounded-br-lg border-y border-r border-spring-50 attribute-wrapper"></div>'
+        )
+      );
+
+    $('.multi-form').last().find('.subelement').find('.wrapped-child-body').each(function () {
+      $(this).find('.sub-attribute')
+        .wrapAll(
+          $(
+            '<div class="form-field-group flex flex-wrap rounded-br-lg border-y border-r border-spring-50 sub-attribute-wrapper"></div>'
           )
         );
     });
