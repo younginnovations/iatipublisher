@@ -54,8 +54,9 @@ class StatusController extends Controller
             $model['activity_status'] = $this->statusService->getStatusData($id);
             $this->baseFormCreator->url = route('admin.activities.status.update', [$id]);
             $form = $this->baseFormCreator->editForm($model, $element['activity_status']);
+            $data = ['core'=> $element['activity_status']['criteria'], 'status'=> $activity->activity_status_element_completed, 'title'=> $element['activity_status']['label'], 'name'=>'activity_status'];
 
-            return view('activity.status.status', compact('form', 'activity'));
+            return view('activity.status.status', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 

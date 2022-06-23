@@ -11,7 +11,7 @@
                     <div class="flex items-end gap-4">
                         <div class="title grow-0">
                             <div class="mb-4 text-caption-c1 text-n-40">
-                                <nav aria-label="breadcrumbs" class="rank-math-breadcrumb">
+                                <nav aria-label="breadcrumbs" class="breadcrumb">
                                     <p>
                                         <a href="/activities" class="font-bold">Your Activities</a>
                                         <span class="separator mx-4"> / </span>

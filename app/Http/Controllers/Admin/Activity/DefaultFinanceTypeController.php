@@ -54,8 +54,9 @@ class DefaultFinanceTypeController extends Controller
             $model['default_finance_type'] = $this->defaultFinanceTypeService->getDefaultFinanceTypeData($id);
             $this->baseFormCreator->url = route('admin.activities.default-finance-type.update', [$id]);
             $form = $this->baseFormCreator->editForm($model, $element['default_finance_type']);
+            $data = ['core'=> $element['default_finance_type']['criteria'], 'status'=> $activity->default_finance_type_element_completed, 'title'=> $element['default_finance_type']['label'], 'name'=>'default_finance_type'];
 
-            return view('activity.defaultFinanceType.defaultFinanceType', compact('form', 'activity'));
+            return view('activity.defaultFinanceType.defaultFinanceType', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 

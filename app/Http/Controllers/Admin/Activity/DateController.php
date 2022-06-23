@@ -54,8 +54,9 @@ class DateController extends Controller
             $model['activity_date'] = $this->dateService->getDateData($id);
             $this->parentCollectionFormCreator->url = route('admin.activities.date.update', [$id]);
             $form = $this->parentCollectionFormCreator->editForm($model, $element['activity_date']);
+            $data = ['core'=> $element['activity_date']['criteria'], 'status'=> $activity->activity_date_element_completed, 'title'=> $element['activity_date']['label'], 'name'=>'activity_date'];
 
-            return view('activity.date.date', compact('form', 'activity'));
+            return view('activity.date.date', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 

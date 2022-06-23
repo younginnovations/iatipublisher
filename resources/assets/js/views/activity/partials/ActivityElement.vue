@@ -31,7 +31,9 @@
             ></svg-vue>
           </template>
 
-          <div class="title text-sm font-bold">{{ title }}</div>
+          <div class="title text-sm font-bold">
+            {{ title.toString().replace(/_/g, '-') }}
+          </div>
 
           <div
             :class="{

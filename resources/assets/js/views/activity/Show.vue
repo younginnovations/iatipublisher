@@ -10,7 +10,7 @@
       <div class="flex items-end gap-4">
         <div class="title grow-0">
           <div class="mb-4 text-caption-c1 text-n-40">
-            <nav aria-label="breadcrumbs" class="rank-math-breadcrumb">
+            <nav aria-label="breadcrumbs" class="breadcrumb">
               <p>
                 <a class="font-bold" href="/activities">Your Activities</a>
                 <span class="separator mx-4"> / </span>
@@ -242,11 +242,7 @@
             </div>
           </div>
         </div>
-        <Elements
-          :activity-id="activity.id"
-          :data="elements"
-          :status="status"
-        />
+        <Elements :activity-id="activity.id" :data="elements" />
       </aside>
       <div class="activities__content">
         <div class="inline-flex flex-wrap gap-2">
@@ -282,10 +278,13 @@
                 :id="key"
                 :data="element"
                 :types="props.types"
-                :title="name"
+                :title="name.toString()"
                 :activityId="activity.id"
                 :width="
-                  name === 'title' || name === 'description' ? 'full' : ''
+                  name.toString() === 'title' ||
+                  name.toString() === 'description'
+                    ? 'full'
+                    : ''
                 "
                 :completed="status[name] ?? false"
                 tooltip="Example text"
@@ -411,7 +410,6 @@ export default defineComponent({
           activities[key]['elements'][k]['content'] = detailData[k];
           flag = true;
         } else {
-          // activities[key]['elements'][k]['content'] = [];
           delete activities[key][k];
         }
       });
@@ -428,6 +426,17 @@ export default defineComponent({
       } else {
         groupedData[key]['status'] = 'disabled';
       }
+    });
+
+    /**
+     * Grouping all elements and theirs completed status
+     *
+     * combining props.elements and props.status
+     *
+     * @returns object
+     */
+    Object.keys(props.elements).map((key, index) => {
+      props.elements[key]['completed'] = props.status[key] ?? false;
     });
 
     return {

@@ -23,7 +23,7 @@
               elements.status
                 ? elements.status === 'completed'
                   ? 'double-tick'
-                  : elements.status
+                  : 'core'
                 : 'box'
             "
             class="text-lg"
@@ -48,7 +48,7 @@
             </li>
             <li
               class="flex py-1.5 px-3.5 hover:bg-white"
-              @click="dropdownFilter('core')"
+              @click="dropdownFilter('criteria')"
             >
               <svg-vue class="mr-1 text-lg" icon="core"></svg-vue>
               <span>Core</span>
@@ -73,12 +73,12 @@
       >
         <div class="status_icons absolute top-0 right-0 mt-1 mr-1 inline-flex">
           <svg-vue
-            v-if="status[index] ?? false"
+            v-if="post.completed"
             class="text-base text-spring-50"
             icon="double-tick"
           ></svg-vue>
           <svg-vue
-            v-if="post.core"
+            v-if="post.criteria"
             class="text-base text-camel-50"
             icon="core"
           ></svg-vue>
@@ -102,7 +102,9 @@
             class="text-base"
           ></svg-vue>
         </template>
-        <div class="title mt-1 text-xs">{{ index }}</div>
+        <div class="title mt-1 text-xs">
+          {{ index.toString().replace(/_/g, '-') }}
+        </div>
       </a>
     </div>
   </div>
@@ -124,10 +126,6 @@ export default defineComponent({
       type: Number,
       required: true,
     },
-    status: {
-      type: Object,
-      required: true,
-    },
   },
   setup(props) {
     const [searchBtnValue, searchBtnToggle] = useToggle();
@@ -146,7 +144,6 @@ export default defineComponent({
           return key.toLowerCase().includes(elements.search.toLowerCase());
         } else {
           if (value[elements.status]) {
-            console.log(elements.status);
             return key.toLowerCase().includes(elements.search.toLowerCase());
           }
         }

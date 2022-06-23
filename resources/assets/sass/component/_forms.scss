@@ -33,13 +33,14 @@ form {
     }
   }
   button.delete-item {
-    @apply absolute h-8 w-8 cursor-pointer overflow-hidden rounded-full rounded-full bg-n-40 p-1.5 indent-7 text-lg text-n-40 text-white;
+    @apply absolute h-8 w-8 cursor-pointer overflow-hidden rounded-full bg-n-40 indent-10;
     &:after {
-      background: url('/images/delete.svg') no-repeat center;
-      background-size: 18px;
-      filter: invert(100%);
+      background: url('/images/trash_full.svg') no-repeat center;
       content: '';
-      @apply absolute left-1/2 top-1/2 h-8 w-8 -translate-x-1/2 -translate-y-1/2;
+      @apply absolute left-1/2 top-1/2 h-[18px] w-[18px] -translate-x-1/2 -translate-y-1/2;
+    }
+    &:hover {
+      @apply bg-bluecoral;
     }
   }
 
@@ -64,8 +65,9 @@ form {
     }
   }
   input[type='text'],
-  input[type='date'] {
-    @apply mt-0 h-12 w-full rounded border border-n-30 px-4 py-2.5 text-sm leading-normal outline-none duration-300;
+  input[type='date'],
+  textarea {
+    @apply mt-0 w-full rounded border border-n-30 px-4 py-2.5 text-sm leading-normal outline-none duration-300;
     &::placeholder {
       @apply text-sm text-n-40;
     }
@@ -76,6 +78,16 @@ form {
       @apply text-n-50;
     }
   }
+
+  input[type='text'],
+  input[type='date'] {
+    @apply h-12;
+  }
+
+  textarea {
+    @apply h-24;
+  }
+
   select {
     @apply w-full rounded border border-n-30 px-4 py-3 text-sm text-n-40 outline-none duration-300;
     &:focus {
@@ -108,6 +120,11 @@ form {
     .subelement,
     .subelement + button {
       @apply ml-6;
+    }
+
+    .form-field-group:only-of-type .delete-item,
+    > .multi-form:only-of-type .delete-parent {
+      @apply hidden;
     }
   }
 }

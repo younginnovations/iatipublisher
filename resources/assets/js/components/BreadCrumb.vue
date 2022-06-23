@@ -1,6 +1,6 @@
 <template>
   <div>
-    <nav aria-label="breadcrumbs" class="rank-math-breadcrumb">
+    <nav aria-label="breadcrumbs" class="breadcrumb">
       <p>
         <a href="/" class="font-bold text-n-40">Your Activities</a>
         <span class="separator"> / </span>
