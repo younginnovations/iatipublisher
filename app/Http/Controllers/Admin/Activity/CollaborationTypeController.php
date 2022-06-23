@@ -54,8 +54,9 @@ class CollaborationTypeController extends Controller
             $model['collaboration_type'] = $this->collaborationTypeService->getCollaborationTypeData($id);
             $this->baseFormCreator->url = route('admin.activities.collaboration-type.update', [$id]);
             $form = $this->baseFormCreator->editForm($model, $element['collaboration_type']);
+            $data = ['core'=> $element['collaboration_type']['criteria'], 'status'=> $activity->collaboration_type_element_completed, 'title'=> $element['collaboration_type']['label'], 'name'=>'collaboration_type'];
 
-            return view('activity.collaborationType.collaborationType', compact('form', 'activity'));
+            return view('activity.collaborationType.collaborationType', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 

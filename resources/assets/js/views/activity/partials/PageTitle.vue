@@ -3,7 +3,7 @@
     <div class="flex items-end gap-4">
       <div class="title grow-0">
         <div class="mb-4 text-caption-c1 text-n-40">
-          <nav aria-label="breadcrumbs" class="rank-math-breadcrumb">
+          <nav aria-label="breadcrumbs" class="breadcrumb">
             <p>
               <span class="last font-bold">Your Activities</span>
             </p>

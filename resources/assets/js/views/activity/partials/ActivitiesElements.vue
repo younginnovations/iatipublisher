@@ -24,7 +24,7 @@
               elements.status
                 ? elements.status === 'completed'
                   ? 'double-tick'
-                  : elements.status
+                  : 'core'
                 : 'box'
             "
             class="text-lg"
@@ -41,16 +41,25 @@
           class="button__dropdown button dropdown-btn"
         >
           <ul class="w-full bg-eggshell py-2">
-            <li @click="dropdownFilter('')">
-              <svg-vue icon="box"></svg-vue>
+            <li
+              class="flex py-1.5 px-3.5 hover:bg-white"
+              @click="dropdownFilter('')"
+            >
+              <svg-vue class="mr-1 text-lg" icon="box"></svg-vue>
               <span>All Elements</span>
             </li>
-            <li @click="dropdownFilter('core')">
-              <svg-vue icon="core"></svg-vue>
+            <li
+              class="flex py-1.5 px-3.5 hover:bg-white"
+              @click="dropdownFilter('criteria')"
+            >
+              <svg-vue class="mr-1 text-lg" icon="core"></svg-vue>
               <span>Core</span>
             </li>
-            <li @click="dropdownFilter('completed')">
-              <svg-vue icon="double-tick"></svg-vue>
+            <li
+              class="flex py-1.5 px-3.5 hover:bg-white"
+              @click="dropdownFilter('completed')"
+            >
+              <svg-vue class="mr-1 text-lg" icon="double-tick"></svg-vue>
               <span>Completed</span>
             </li>
           </ul>
@@ -66,12 +75,12 @@
       >
         <div class="status_icons absolute top-0 right-0 mt-1 mr-1 inline-flex">
           <svg-vue
-            v-if="status[index] ?? false"
+            v-if="post.completed"
             class="text-base text-spring-50"
             icon="double-tick"
           ></svg-vue>
           <svg-vue
-            v-if="post.core"
+            v-if="post.criteria"
             class="text-base text-camel-50"
             icon="core"
           ></svg-vue>
@@ -95,7 +104,9 @@
             class="text-base"
           ></svg-vue>
         </template>
-        <div class="title mt-1 text-xs">{{ index }}</div>
+        <div class="title mt-1 text-xs">
+          {{ index.toString().replace(/_/g, '-') }}
+        </div>
       </a>
     </div>
   </div>
@@ -115,10 +126,6 @@ export default defineComponent({
     },
     activityId: {
       type: Number,
-      required: true,
-    },
-    status: {
-      type: Object,
       required: true,
     },
   },
