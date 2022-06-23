@@ -79,7 +79,7 @@ class DateController extends Controller
             $messages = $this->validateData($request->get('activity_date'));
 
             if ($messages) {
-                return response()->json(['success' => false, 'error' => array_unique($messages)]);
+                return redirect()->route('admin.activities.date.edit', $id)->with('error', array_unique($messages));
             }
 
             if (!$this->dateService->update($activityDate, $activityData)) {

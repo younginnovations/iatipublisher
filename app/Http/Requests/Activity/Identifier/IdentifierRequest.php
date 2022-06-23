@@ -36,10 +36,13 @@ class IdentifierRequest extends ActivityBaseRequest
     {
         $activityIdentifiers = [];
         $organizationActivityIdentifiers = $this->activityService->getActivityIdentifiersForOrganization(auth()->user()->organization->id);
+        $activity = $this->activityService->getActivity(request()->segment(2));
 
         if (count($organizationActivityIdentifiers)) {
             foreach ($organizationActivityIdentifiers as $identifier) {
-                $activityIdentifiers[] = $identifier->identifier['activity_identifier'];
+                if ($identifier->identifier['activity_identifier'] != $activity->identifier['activity_identifier']) {
+                    $activityIdentifiers[] = $identifier->identifier['activity_identifier'];
+                }
             }
         }
 

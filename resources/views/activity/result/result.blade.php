@@ -2,6 +2,7 @@
 
 @section('content')
     <section class="section min-h-[calc(100vh_-_60px)]">
+
         <div class="px-10 pt-4 pb-[71px]">
             <div class="page-title mb-6">
                 <div class="flex items-end gap-4">
@@ -12,7 +13,7 @@
                                     <a class="font-bold" href="/">Your Activities</a>
                                     <span class="separator mx-4"> / </span>
                                     <span class="last text-n-30"><a
-                                            href="/activities/{{ $activity['id'] }}">{{ $activity['title'][0]['narrative'] }}</a></span>
+                                                href="/activities/{{ $activity['id'] }}">{{ $activity['title'][0]['narrative'] }}</a></span>
                                 </p>
                             </nav>
                         </div>
@@ -34,15 +35,6 @@
                     <elements-note></elements-note>
                 </aside>
                 <div class="activities__content">
-                    @if (session()->has('error'))
-                        <div class="alert alert-danger">
-                            <ul>
-                                @foreach (session()->get('error') as $error)
-                                    {{ $error }}
-                                @endforeach
-                            </ul>
-                        </div>
-                    @endif
                     <div class="py-[6.06%] px-[12%] bg-white">
                         <div class="status flex justify-end rounded-lg mb-1.5">
                             <div class="flex status text-xs leading-relaxed text-salmon-50">
@@ -50,15 +42,24 @@
                             </div>
                         </div>
                         <div class="title flex items-center mb-4">
-                            <div class="text-sm shrink-0 uppercase text-n-40 font-bold">Activity Date</div>
+                            <div class="text-sm shrink-0 uppercase text-n-40 font-bold">Activity Result</div>
                             <div class="line grow h-px border-b border-n-40 ml-4"></div>
                         </div>
                         {!! form($form) !!}
-                        <div class="hidden parent-collection" data_name="description"
-                            data-prototype="{{ form_row($form->activity_date->prototype()) }}">
+                        <div class="hidden parent-collection" form_type="document_link"
+                             data-prototype="{{ form_row($form->document_link->prototype()) }}">
                         </div>
-                        <div class="hidden collection-container" form_type="narrative"
-                            data-prototype="{{ str_replace('activity_date[0]','activity_date[__PARENT_NAME__]',form_row($form->activity_date->getChildren()[0]->getChild('narrative')->prototype())) }}">
+                        <div class="hidden parent-collection" form_type="reference"
+                             data-prototype="{{ form_row($form->reference->prototype()) }}">
+                        </div>
+{{--                        <div class="hidden collection-container" form_type="narrative"--}}
+{{--                             data-prototype="{{ str_replace('condition[0]','condition[__PARENT_NAME__]',form_row($form->condition->getChildren()[0]->getChild('narrative')->prototype())) }}">--}}
+{{--                        </div>--}}
+                        <div class="hidden collection-container title" form_type="title_narrative"
+                             data-prototype="{{ form_row($form->title->getChildren()[0]->getChild('narrative')->prototype()) }}">
+                        </div>
+                        <div class="hidden collection-container title" form_type="description_narrative"
+                             data-prototype="{{ form_row($form->description->getChildren()[0]->getChild('narrative')->prototype()) }}">
                         </div>
                     </div>
                 </div>

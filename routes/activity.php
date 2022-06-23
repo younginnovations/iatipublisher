@@ -74,4 +74,6 @@ Route::name('admin.')->group(function () {
     // Route::put('activities/{id}/participating_org', [\App\Http\Controllers\Admin\Activity\ParticipatingOrganizationController::class, 'update'])->name('activities.participating-org.update');
     Route::get('activities/{id}/budget', [\App\Http\Controllers\Admin\Activity\BudgetController::class, 'edit'])->name('activities.budget.edit');
     Route::put('activities/{id}/budget', [\App\Http\Controllers\Admin\Activity\BudgetController::class, 'update'])->name('activities.budget.update');
+
+    Route::resource('activities.results', \App\Http\Controllers\Admin\Activity\ResultController::class);
 });

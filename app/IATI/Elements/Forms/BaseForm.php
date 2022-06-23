@@ -83,7 +83,7 @@ class BaseForm extends Form
                     'label' => sprintf('add more %s', str_replace('_', ' ', Arr::get($field, 'name', ''))),
                     'attr' => [
                         'class' => 'add_to_collection add_more button relative -translate-y-1/2 pl-3.5 text-xs font-bold uppercase leading-normal text-spring-50 text-bluecoral ',
-                        'form_type' => $field['name'],
+                        'form_type' => !empty(Arr::get($this->getData(), 'name', null)) ? sprintf('%s_%s', Arr::get($this->getData(), 'name', ''), $field['name']) : $field['name'],
                         'icon' => true,
                     ],
                 ]);
@@ -102,7 +102,7 @@ class BaseForm extends Form
         $sub_elements = Arr::get($element, 'sub_elements', null);
 
         if ($attributes) {
-            if (Arr::get($element, 'add_more', false) && !$sub_elements) {
+            if (Arr::get($element, 'add_more', false) && !$sub_elements && Arr::get($element, 'collection', false)) {
                 $this->buildCollection($attributes);
             } else {
                 foreach ($attributes as $attribute) {
@@ -117,13 +117,13 @@ class BaseForm extends Form
             foreach ($sub_elements as $sub_element) {
                 $this->buildCollection($sub_element);
 
-                // if (Arr::get($element, 'add_more', false) && Arr::get($sub_element, 'add_more', false)) {
-                //     $this->add('delete_'.$sub_element, 'button', [
-                //         'attr' => [
-                //             'class' => 'delete-parent delete-item absolute right-0 top-16 -translate-y-1/2 translate-x-1/2',
-                //         ],
-                //     ]);
-                // }
+//                if (Arr::get($element, 'add_more', false) && Arr::get($sub_element, 'add_more', false)) {
+//                    $this->add('delete', 'button', [
+//                        'attr' => [
+//                            'class' => 'delete-parent delete-item absolute right-0 top-16 -translate-y-1/2 translate-x-1/2',
+//                        ],
+//                    ]);
+//                }
             }
         }
     }
