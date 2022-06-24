@@ -71,9 +71,9 @@
         class="elements__item relative flex cursor-pointer flex-col items-center justify-center rounded border border-dashed border-n-40 p-2.5 text-n-30"
         :href="`/activities/${activityId}/${index}`"
       >
-        <div class="status_icons absolute right-0 top-0 mt-1 mr-1 inline-flex">
+        <div class="status_icons absolute top-0 right-0 mt-1 mr-1 inline-flex">
           <svg-vue
-            v-if="post.completed"
+            v-if="status[index] ?? false"
             class="text-base text-spring-50"
             icon="double-tick"
           ></svg-vue>
@@ -122,6 +122,10 @@ export default defineComponent({
     },
     activityId: {
       type: Number,
+      required: true,
+    },
+    status: {
+      type: Object,
       required: true,
     },
   },

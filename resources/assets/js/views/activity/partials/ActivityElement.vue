@@ -34,22 +34,21 @@
           <div class="title text-sm font-bold">{{ title }}</div>
 
           <div
-            v-if="'completed' in data"
             :class="{
-              'text-spring-50': data.completed === true,
-              'text-crimson-50': data.completed === false,
+              'text-spring-50': completed === true,
+              'text-crimson-50': completed === false,
             }"
             class="status ml-2.5 flex text-xs leading-5"
           >
             <b class="mr-2 text-base leading-3">.</b>
-            <span v-if="data.completed">completed</span>
+            <span v-if="completed">completed</span>
             <span v-else>not completed</span>
           </div>
         </div>
 
         <div class="icons flex">
           <a
-            :href="`/activities/1/${title}`"
+            :href="`/activities/${activityId}/${title}`"
             class="edit-button mr-2.5 flex items-center text-xs font-bold uppercase"
           >
             <svg-vue class="mr-0.5 text-base" icon="edit"></svg-vue>
@@ -84,9 +83,6 @@
 
       <template v-else-if="title === 'identifier'">
         <div class="identifier-content">
-          <div v-if="data.content.activity_identifier" class="mb-4 text-sm">
-            {{ data.content.activity_identifier }}
-          </div>
           <div v-if="data.content.iati_identifier_text" class="text-sm">
             {{ data.content.iati_identifier_text }}
           </div>
@@ -803,6 +799,14 @@ export default defineComponent({
     },
     types: {
       type: Object,
+      required: true,
+    },
+    completed: {
+      type: Boolean,
+      required: true,
+    },
+    activityId: {
+      type: Number,
       required: true,
     },
   },

@@ -22,7 +22,7 @@ return new class extends Migration {
             $table->enum('status', ['draft', 'ready_to_publish', 'published'])->default('draft');
             $table->json('activity_date')->nullable();
             $table->json('contact_info')->nullable();
-            $table->json('activity_scope')->nullable();
+            $table->integer('activity_scope')->nullable();
             $table->json('participating_organization')->nullable();
             $table->json('recipient_country')->nullable();
             $table->json('recipient_region')->nullable();
@@ -31,14 +31,14 @@ return new class extends Migration {
             $table->json('country_budget_items')->nullable();
             $table->json('humanitarian_scope')->nullable();
             $table->json('policy_marker')->nullable();
-            $table->json('collaboration_type')->nullable();
-            $table->json('default_flow_type')->nullable();
-            $table->json('default_finance_type')->nullable();
+            $table->integer('collaboration_type')->nullable();
+            $table->integer('default_flow_type')->nullable();
+            $table->integer('default_finance_type')->nullable();
             $table->json('default_aid_type')->nullable();
-            $table->json('default_tied_status')->nullable();
+            $table->integer('default_tied_status')->nullable();
             $table->json('budget')->nullable();
             $table->json('planned_disbursement')->nullable();
-            $table->json('capital_spend')->nullable();
+            $table->float('capital_spend')->nullable();
             $table->json('document_link')->nullable();
             $table->json('related_activity')->nullable();
             $table->json('legacy_data')->nullable();
