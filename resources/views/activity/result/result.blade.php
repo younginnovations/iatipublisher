@@ -61,6 +61,12 @@
                         <div class="hidden collection-container title" form_type="description_narrative"
                              data-prototype="{{ form_row($form->description->getChildren()[0]->getChild('narrative')->prototype()) }}">
                         </div>
+                        <div class="hidden collection-container title" form_type="document_link_category"
+                             data-prototype="{{ form_row($form->document_link->getChildren()[0]->getChild('category')->prototype()) }}">
+                        </div>
+                        <div class="hidden collection-container title" form_type="document_link_language"
+                             data-prototype="{{ form_row($form->document_link->getChildren()[0]->getChild('language')->prototype()) }}">
+                        </div>
                     </div>
                 </div>
             </div>

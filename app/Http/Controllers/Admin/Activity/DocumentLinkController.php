@@ -58,6 +58,7 @@ class DocumentLinkController extends Controller
             $model = $this->documentLinkService->getDocumentLinkData($id) ?: [];
             $this->baseFormCreator->url = route('admin.activities.document-link.update', [$id]);
             $form = $this->baseFormCreator->editForm($model, $element['document-link']);
+            dd($form);
 
             return view('activity.documentLink.documentLink', compact('form', 'activity'));
         } catch (\Exception $e) {

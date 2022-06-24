@@ -2245,7 +2245,7 @@
             "label": "Title",
             "criteria": "mandatory",
             "required": false,
-            "add_more": false,
+            "add_more": true,
             "attributes": false,
             "sub_elements": {
               "narrative": {
@@ -2280,7 +2280,7 @@
             "label": "Description",
             "criteria": "",
             "required": false,
-            "add_more": false,
+            "add_more": true,
             "attributes": false,
             "sub_elements": {
               "narrative": {
@@ -2380,7 +2380,7 @@
         "attributes": {
           "name": "reference",
           "add_more": true,
-          "collection": false,
+          "make_collection": false,
           "reference_vocabulary": {
             "name": "vocabulary",
             "label": "@vocabulary",
