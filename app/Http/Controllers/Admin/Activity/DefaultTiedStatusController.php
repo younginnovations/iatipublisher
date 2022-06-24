@@ -53,13 +53,13 @@ class DefaultTiedStatusController extends Controller
             $activity = $this->defaultTiedStatusService->getActivityData($id);
             $model['default_tied_status'] = $this->defaultTiedStatusService->getDefaultTiedStatusData($id);
             $this->baseFormCreator->url = route('admin.activities.default-tied-status.update', [$id]);
-            $form = $this->baseFormCreator->editForm($model, $element['default-tied-status']);
+            $form = $this->baseFormCreator->editForm($model, $element['default_tied_status']);
 
             return view('activity.defaultTiedStatus.defaultTiedStatus', compact('form', 'activity'));
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while updating default tied status.');
+            return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while rendering default tied status form.');
         }
     }
 

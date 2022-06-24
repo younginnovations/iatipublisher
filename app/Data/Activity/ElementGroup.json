@@ -97,6 +97,9 @@
       "default_finance_type": {
         "label": "Default Finance Type"
       },
+      "default_aid_type": {
+        "label": "Default Aid Type"
+      },
       "default_tied_status": {
         "label": "Default Tied Status"
       },
@@ -133,7 +136,7 @@
   "related_documents": {
     "label": "Related Documents",
     "elements": {
-      "document_links": {
+      "document_link": {
         "label": "Document Links"
       }
     }
@@ -172,4 +175,3 @@
     }
   }
 }
-

@@ -52,4 +52,28 @@ Route::name('admin.')->group(function () {
     Route::put('activities/{id}/conditions', [\App\Http\Controllers\Admin\Activity\ConditionController::class, 'update'])->name('activities.conditions.update');
     Route::get('activities/{id}/country_budget_items', [\App\Http\Controllers\Admin\Activity\CountryBudgetItemController::class, 'edit'])->name('activities.country-budget-items.edit');
     Route::put('activities/{id}/country_budget_items', [\App\Http\Controllers\Admin\Activity\CountryBudgetItemController::class, 'update'])->name('activities.country-budget-items.update');
+    Route::get('activities/{id}/default_aid_type', [\App\Http\Controllers\Admin\Activity\DefaultAidTypeController::class, 'edit'])->name('activities.default-aid-type.edit');
+    Route::put('activities/{id}/default_aid_type', [\App\Http\Controllers\Admin\Activity\DefaultAidTypeController::class, 'update'])->name('activities.default-aid-type.update');
+    Route::get('activities/{id}/policy_marker', [\App\Http\Controllers\Admin\Activity\PolicyMarkerController::class, 'edit'])->name('activities.policy-marker.edit');
+    Route::put('activities/{id}/policy_marker', [\App\Http\Controllers\Admin\Activity\PolicyMarkerController::class, 'update'])->name('activities.policy-marker.update');
+    Route::get('activities/{id}/recipient_region', [\App\Http\Controllers\Admin\Activity\RecipientRegionController::class, 'edit'])->name('activities.recipient-region.edit');
+    Route::put('activities/{id}/recipient_region', [\App\Http\Controllers\Admin\Activity\RecipientRegionController::class, 'update'])->name('activities.recipient-region.update');
+    Route::get('activities/{id}/tag', [\App\Http\Controllers\Admin\Activity\TagController::class, 'edit'])->name('activities.tag.edit');
+    Route::put('activities/{id}/tag', [\App\Http\Controllers\Admin\Activity\TagController::class, 'update'])->name('activities.tag.update');
+    Route::get('activities/{id}/other_identifier', [\App\Http\Controllers\Admin\Activity\OtherIdentifierController::class, 'edit'])->name('activities.other-identifier.edit');
+    Route::put('activities/{id}/other_identifier', [\App\Http\Controllers\Admin\Activity\OtherIdentifierController::class, 'update'])->name('activities.other-identifier.update');
+    Route::get('activities/{id}/iati_identifier', [\App\Http\Controllers\Admin\Activity\IdentifierController::class, 'edit'])->name('activities.identifier.edit');
+    Route::put('activities/{id}/iati_identifier', [\App\Http\Controllers\Admin\Activity\IdentifierController::class, 'update'])->name('activities.identifier.update');
+    // Route::get('activities/{id}/document_link', [\App\Http\Controllers\Admin\Activity\DocumentLinkController::class, 'edit'])->name('activities.document-link.edit');
+    // Route::put('activities/{id}/document_link', [\App\Http\Controllers\Admin\Activity\DocumentLinkController::class, 'update'])->name('activities.document-link.update');
+    // Route::get('activities/{id}/contact_info', [\App\Http\Controllers\Admin\Activity\ContactInfoController::class, 'edit'])->name('activities.contact-info.edit');
+    // Route::put('activities/{id}/contact_info', [\App\Http\Controllers\Admin\Activity\ContactInfoController::class, 'update'])->name('activities.contact-info.update');
+    // Route::get('activities/{id}/location', [\App\Http\Controllers\Admin\Activity\LocationController::class, 'edit'])->name('activities.location.edit');
+    // Route::put('activities/{id}/location', [\App\Http\Controllers\Admin\Activity\LocationController::class, 'update'])->name('activities.location.update');
+    // Route::get('activities/{id}/participating_org', [\App\Http\Controllers\Admin\Activity\ParticipatingOrganizationController::class, 'edit'])->name('activities.participating-org.edit');
+    // Route::put('activities/{id}/participating_org', [\App\Http\Controllers\Admin\Activity\ParticipatingOrganizationController::class, 'update'])->name('activities.participating-org.update');
+    Route::get('activities/{id}/budget', [\App\Http\Controllers\Admin\Activity\BudgetController::class, 'edit'])->name('activities.budget.edit');
+    Route::put('activities/{id}/budget', [\App\Http\Controllers\Admin\Activity\BudgetController::class, 'update'])->name('activities.budget.update');
+
+//    Route::resource('activities.results', \App\Http\Controllers\Admin\Activity\ResultController::class);
 });

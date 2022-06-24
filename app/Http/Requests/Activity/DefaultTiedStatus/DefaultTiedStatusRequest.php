@@ -17,7 +17,7 @@ class DefaultTiedStatusRequest extends ActivityBaseRequest
     public function rules(): array
     {
         return [
-            'default_tied_status' => ['required', 'in:3,4,5'],
+            'default_tied_status' => ['nullable', 'in:3,4,5'],
         ];
     }
 
@@ -29,7 +29,6 @@ class DefaultTiedStatusRequest extends ActivityBaseRequest
     public function messages(): array
     {
         return [
-            'required'  => 'The Code is required.',
             'in'        => 'The selected code does not exist.',
         ];
     }

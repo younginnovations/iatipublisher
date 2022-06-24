@@ -18,8 +18,10 @@ class SubElementForm extends Form
     public function buildForm():void
     {
         $data = $this->getData();
+        $this->setClientValidationEnabled(false);
+
         if (Arr::get($data, 'type', null)) {
-            $this->buildFields($this->getData());
+            $this->buildFields($this->getData(), false);
         }
 
         if (isset($data['attributes'])) {
@@ -27,16 +29,18 @@ class SubElementForm extends Form
 
             foreach ($attributes as $attribute) {
                 if (is_array($attribute)) {
-                    $this->buildFields($attribute);
+                    $this->buildFields($attribute, true);
                 }
             }
         }
 
-        $this->add('delete', 'button', [
-            'attr' => [
-                'class' => 'delete delete-item absolute right-0 top-2/4 -translate-y-1/2 translate-x-1/2',
-            ],
-        ]);
+        if (Arr::get($data, 'add_more', false)) {
+            $this->add('delete', 'button', [
+                'attr' => [
+                    'class' => 'delete delete-item absolute right-0 top-2/4 -translate-y-1/2 translate-x-1/2',
+                ],
+            ]);
+        }
     }
 
     /**
@@ -46,7 +50,7 @@ class SubElementForm extends Form
      *
      * @return void
      */
-    public function buildFields($field): void
+    public function buildFields($field, $isAttribute = false): void
     {
         $options = [
             'label' => $field['label'] ?? '',

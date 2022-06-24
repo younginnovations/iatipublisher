@@ -17,7 +17,7 @@ class CollaborationTypeRequest extends ActivityBaseRequest
     public function rules(): array
     {
         return [
-            'collaboration_type' => ['required', 'in:1,2,3,4,5,6,7,8'],
+            'collaboration_type' => ['nullable', 'in:1,2,3,4,5,6,7,8'],
         ];
     }
 
@@ -29,7 +29,6 @@ class CollaborationTypeRequest extends ActivityBaseRequest
     public function messages(): array
     {
         return [
-            'required'  => 'The Code is required.',
             'in'        => 'The selected code does not exist.',
         ];
     }

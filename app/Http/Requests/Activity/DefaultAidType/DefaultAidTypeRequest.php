@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Requests\Activity\DefaultAidType;
 
 use App\Http\Requests\Activity\ActivityBaseRequest;
@@ -16,9 +18,7 @@ class DefaultAidTypeRequest extends ActivityBaseRequest
      */
     public function rules(): array
     {
-        return [
-            'default_aid_type' => ['required', 'in:10,20,21,22,30,35,36,37,40,50'],
-        ];
+        return $this->getRulesForDefaultAidType($this->get('default_aid_type'));
     }
 
     /**
@@ -28,9 +28,34 @@ class DefaultAidTypeRequest extends ActivityBaseRequest
      */
     public function messages(): array
     {
-        return [
-            'required'  => 'The Code is required.',
-            'in'        => 'The selected code does not exist.',
-        ];
+        return $this->getMessagesForDefaultAidType($this->get('default_aid_type'));
+    }
+
+    /**
+     * Returns rules for related activity.
+     *
+     * @param array $formFields
+     *
+     * @return array
+     */
+    protected function getRulesForDefaultAidType(array $formFields): array
+    {
+        $rules = [];
+
+        return $rules;
+    }
+
+    /**
+     * Returns messages for related activity validations.
+     *
+     * @param array $formFields
+     *
+     * @return array
+     */
+    protected function getMessagesForDefaultAidType(array $formFields): array
+    {
+        $messages = [];
+
+        return $messages;
     }
 }

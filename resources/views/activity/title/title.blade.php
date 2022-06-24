@@ -50,7 +50,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="hidden collection-container" data-prototype="{{ form_row($form->narrative->prototype()) }}">
+                <div class="hidden collection-container" form_type="narrative" data-prototype="{{ form_row($form->narrative->prototype()) }}">
                 </div>
             </div>
         </div>

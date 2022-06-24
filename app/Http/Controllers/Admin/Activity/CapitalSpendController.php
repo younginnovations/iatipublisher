@@ -53,13 +53,13 @@ class CapitalSpendController extends Controller
             $activity = $this->capitalSpendService->getActivityData($id);
             $model['capital_spend'] = $this->capitalSpendService->getCapitalSpendData($id);
             $this->baseFormCreator->url = route('admin.activities.capital-spend.update', [$id]);
-            $form = $this->baseFormCreator->editForm($model, $element['capital-spend']);
+            $form = $this->baseFormCreator->editForm($model, $element['capital_spend']);
 
             return view('activity.capitalSpend.capitalSpend', compact('form', 'activity'));
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while updating activity capital spend.');
+            return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while rendering activity capital spend form.');
         }
     }
 

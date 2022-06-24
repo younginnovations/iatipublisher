@@ -59,7 +59,7 @@ class ConditionController extends Controller
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while updating activity condition.');
+            return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while rendering activity condition form.');
         }
     }
 

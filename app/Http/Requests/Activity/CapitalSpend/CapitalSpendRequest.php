@@ -17,7 +17,7 @@ class CapitalSpendRequest extends ActivityBaseRequest
     public function rules(): array
     {
         return [
-            'capital_spend' => ['required', 'numeric', 'between:0, 100'],
+            'capital_spend' => ['nullable', 'numeric', 'between:0, 100'],
         ];
     }
 
@@ -29,7 +29,6 @@ class CapitalSpendRequest extends ActivityBaseRequest
     public function messages(): array
     {
         return [
-            'required'  => 'The Percentage is required.',
         ];
     }
 }

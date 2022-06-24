@@ -53,13 +53,13 @@ class CollaborationTypeController extends Controller
             $activity = $this->collaborationTypeService->getActivityData($id);
             $model['collaboration_type'] = $this->collaborationTypeService->getCollaborationTypeData($id);
             $this->baseFormCreator->url = route('admin.activities.collaboration-type.update', [$id]);
-            $form = $this->baseFormCreator->editForm($model, $element['collaboration-type']);
+            $form = $this->baseFormCreator->editForm($model, $element['collaboration_type']);
 
             return view('activity.collaborationType.collaborationType', compact('form', 'activity'));
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while updating activity collaboration type.');
+            return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while rendering activity collaboration type form.');
         }
     }
 

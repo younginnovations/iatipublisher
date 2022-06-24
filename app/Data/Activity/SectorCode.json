@@ -1,9 +1,9 @@
 {
-  "name": "Sector",
+  "name": "SectorCode",
   "date-last-modified": "2020-10-06T13:20:25.751546+00:00",
   "version": "",
   "xml:lang": "en",
-  "Sector": [
+  "SectorCode": [
     {
       "code": "11110",
       "name": "Education policy and administrative management",

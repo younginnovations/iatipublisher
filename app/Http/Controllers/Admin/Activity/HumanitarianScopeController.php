@@ -53,13 +53,13 @@ class HumanitarianScopeController extends Controller
             $activity = $this->humanitarianScopeService->getActivityData($id);
             $model['humanitarian_scope'] = $this->humanitarianScopeService->getHumanitarianScopeData($id);
             $this->parentCollectionFormCreator->url = route('admin.activities.humanitarian-scope.update', [$id]);
-            $form = $this->parentCollectionFormCreator->editForm($model, $element['humanitarian-scope']);
+            $form = $this->parentCollectionFormCreator->editForm($model, $element['humanitarian_scope']);
 
             return view('activity.humanitarianScope.humanitarianScope', compact('form', 'activity'));
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while updating humanitarian scope.');
+            return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while rendering humanitarian scope form.');
         }
     }
 

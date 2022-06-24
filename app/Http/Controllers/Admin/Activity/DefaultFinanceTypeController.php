@@ -53,13 +53,13 @@ class DefaultFinanceTypeController extends Controller
             $activity = $this->defaultFinanceTypeService->getActivityData($id);
             $model['default_finance_type'] = $this->defaultFinanceTypeService->getDefaultFinanceTypeData($id);
             $this->baseFormCreator->url = route('admin.activities.default-finance-type.update', [$id]);
-            $form = $this->baseFormCreator->editForm($model, $element['default-finance-type']);
+            $form = $this->baseFormCreator->editForm($model, $element['default_finance_type']);
 
             return view('activity.defaultFinanceType.defaultFinanceType', compact('form', 'activity'));
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while updating default finance type.');
+            return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while rendering default finance type form.');
         }
     }
 

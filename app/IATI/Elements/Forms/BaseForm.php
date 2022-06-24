@@ -17,6 +17,8 @@ class BaseForm extends Form
      */
     public function buildCollection($field): void
     {
+        $element = $this->getData();
+
         if (!Arr::get($field, 'type', null) && array_key_exists('sub_elements', $field)) {
             $this->add(
                 $field['name'],
@@ -31,14 +33,30 @@ class BaseForm extends Form
                         'data'  => $field,
                         'label' => false,
                         'wrapper' => [
-                            'class' => 'form-field-group form-child-body flex flex-wrap rounded-br-lg border-y border-r border-spring-50 p-6',
+                            'class' => 'wrapped-child-body',
+                        ],
+                        'dynamic_wrapper' => [
+                            'class' => (isset($field['add_more']) && $field['add_more']) ?
+                                ((!Arr::get($element, 'attributes', null) && strtolower($field['name']) === 'narrative') ? 'border-l border-spring-50 pb-11' : 'subelement rounded-tl-lg border-l border-spring-50 pb-11')
+                                : ((!Arr::get($element, 'attributes', null) && $field['sub_elements'] && isset($field['sub_elements']['narrative'])) ? 'subelement rounded-tl-lg mb-6' : 'subelement rounded-tl-lg border-l border-spring-50 mb-6'),
                         ],
                     ],
                 ]
             );
+
+            if (isset($field['add_more']) && $field['add_more']) {
+                $this->add('add_to_collection_' . $field['name'], 'button', [
+                    'label' => 'Add More',
+                    'attr' => [
+                        'class' => 'add_to_collection add_more button relative -translate-y-1/2 pl-3.5 text-xs font-bold uppercase leading-normal text-spring-50 text-bluecoral ',
+                        'form_type' => $field['name'],
+                        'icon' => true,
+                    ],
+                ]);
+            }
         } else {
             $this->add(
-                $field['name'],
+                $field['name'] ?? $element['name'],
                 'collection',
                 [
                     'type'    => 'form',
@@ -52,29 +70,41 @@ class BaseForm extends Form
                         'wrapper' => [
                             'class' => 'form-field-group form-child-body flex flex-wrap rounded-br-lg border-y border-r border-spring-50 p-6',
                         ],
+                        'dynamic_wrapper' => [
+                            'class' => ((isset($field['add_more']) && $field['add_more']) || Arr::get($element, 'add_more_attributes', false)) ?
+                                (!Arr::get($element, 'attributes', null) && strtolower($field['name']) === 'narrative' ? 'border-l border-spring-50 pb-11' : 'subelement rounded-tl-lg border-l border-spring-50 pb-11')
+                                : 'subelement rounded-tl-lg border-l border-spring-50 mb-6',
+                        ],
                     ],
                 ]
-            )->add('add_to_collection', 'button', [
-                'label' => 'Add More',
-                'attr' => [
-                    'class' => 'add_to_collection add_more button relative -translate-y-1/2 pl-3.5 text-xs font-bold uppercase leading-normal text-spring-50 text-bluecoral',
-                    'icon' => true,
-                ],
-            ]);
+            );
+
+            $name = isset($field['name']) ? $field['name'] : $element['name'];
+            if ((isset($field['add_more']) && $field['add_more']) || Arr::get($element, 'add_more_attributes', false)) {
+                $this->add('add_to_collection_' . $name, 'button', [
+                    'label' => sprintf('add more %s', str_replace('_', ' ', '')),
+                    'attr' => [
+                        'class' => 'add_to_collection add_more button relative -translate-y-1/2 pl-3.5 text-xs font-bold uppercase leading-normal text-spring-50 text-bluecoral ',
+                        'form_type' => !empty(Arr::get($this->getData(), 'name', null)) ? sprintf('%s_%s', Arr::get($this->getData(), 'name', ''), $name) : $name,
+                        'icon' => true,
+                    ],
+                ]);
+            }
         }
     }
 
     /**
      * @return mixed|void
      */
-    public function buildForm():void
+    public function buildForm(): void
     {
+        $this->setClientValidationEnabled(false);
         $element = $this->getData();
         $attributes = Arr::get($element, 'attributes', null);
         $sub_elements = Arr::get($element, 'sub_elements', null);
 
         if ($attributes) {
-            if (Arr::get($element, 'add_more', false) && !$sub_elements) {
+            if (Arr::get($element, 'add_more', false) && !$sub_elements && Arr::get($element, 'attributes.make_collection', true)) {
                 $this->buildCollection($attributes);
             } else {
                 foreach ($attributes as $attribute) {
@@ -89,8 +119,8 @@ class BaseForm extends Form
             foreach ($sub_elements as $sub_element) {
                 $this->buildCollection($sub_element);
 
-                if (Arr::get($element, 'add_more', false)) {
-                    $this->add('delete', 'button', [
+                if (Arr::get($element, 'add_more', false) && Arr::get($sub_element, 'add_more', false)) {
+                    $this->add('delete_' . $sub_element['name'], 'button', [
                         'attr' => [
                             'class' => 'delete-parent delete-item absolute right-0 top-16 -translate-y-1/2 translate-x-1/2',
                         ],
@@ -144,6 +174,7 @@ class BaseForm extends Form
             'multiple'      => $field['multiple'] ?? false,
             'attr' => [
                 'class' => 'form__input border-0',
+                'readonly' => (array_key_exists('read_only', $field) && $field['read_only'] == true) ? 'readonly' : false,
             ],
             'wrapper' => [
                 'class' => 'form-field basis-6/12 max-w-half attribute',

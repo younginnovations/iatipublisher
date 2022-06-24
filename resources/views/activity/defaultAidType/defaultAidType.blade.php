@@ -12,7 +12,7 @@
                                     <a class="font-bold" href="/">Your Activities</a>
                                     <span class="separator mx-4"> / </span>
                                     <span class="last text-n-30"><a
-                                            href="/activities/{{ $activity['id'] }}">{{ $activity['title'][0]['narrative'] }}</a></span>
+                                                href="/activities/{{ $activity['id'] }}">{{ $activity['title'][0]['narrative'] }}</a></span>
                                 </p>
                             </nav>
                         </div>
@@ -41,18 +41,16 @@
                             </div>
                         </div>
                         <div class="title flex items-center mb-4">
-                            <div class="text-sm shrink-0 uppercase text-n-40 font-bold">Default Aid Type</div>
+                            <div class="text-sm shrink-0 uppercase text-n-40 font-bold">Activity Default Aid Type</div>
                             <div class="line grow h-px border-b border-n-40 ml-4"></div>
                         </div>
                         {!! form($form) !!}
+                        <div class="hidden collection-container" form_type="default_aid_type_default_aid_type"
+                             data-prototype="{{ form_row($form->default_aid_type->prototype()) }}">
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-        </div>
     </section>
 @endsection
-
-@push('scripts')
-    <script src="{{ asset('/js/aidtype.js') }}"></script>
-@endpush

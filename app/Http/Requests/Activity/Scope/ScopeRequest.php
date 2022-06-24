@@ -17,7 +17,7 @@ class ScopeRequest extends ActivityBaseRequest
     public function rules(): array
     {
         return [
-            'activity_scope' => ['required', 'in:1,2,3,4,5,6,7,8'],
+            'activity_scope' => ['nullable', 'in:1,2,3,4,5,6,7,8'],
         ];
     }
 
@@ -29,7 +29,6 @@ class ScopeRequest extends ActivityBaseRequest
     public function messages(): array
     {
         return [
-            'required'  => 'The Scope is required.',
             'in'        => 'The selected code does not exist.',
         ];
     }

@@ -51,13 +51,13 @@ class RelatedActivityController extends Controller
             $activity = $this->relatedActivityService->getActivityData($id);
             $model['related_activity'] = $this->relatedActivityService->getRelatedActivityData($id);
             $this->baseFormCreator->url = route('admin.activities.related-activity.update', [$id]);
-            $form = $this->baseFormCreator->editForm($model, $element['related-activity']);
+            $form = $this->baseFormCreator->editForm($model, $element['related_activity']);
 
             return view('activity.relatedActivity.relatedActivity', compact('form', 'activity'));
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while updating related activity.');
+            return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while opening related activity form.');
         }
     }
 

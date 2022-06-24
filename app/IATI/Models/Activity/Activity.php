@@ -134,4 +134,13 @@ class Activity extends Model
 
         return false;
     }
+
+    /**
+     * Activity hasmany results.
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function results(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(Result::class, 'activity_id', 'id');
+    }
 }

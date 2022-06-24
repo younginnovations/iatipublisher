@@ -53,13 +53,13 @@ class CountryBudgetItemController extends Controller
             $activity = $this->countryBudgetItemService->getActivityData($id);
             $model = $this->countryBudgetItemService->getCountryBudgetItemData($id) ?: [];
             $this->multilevelSubElementFormCreator->url = route('admin.activities.country-budget-items.update', [$id]);
-            $form = $this->multilevelSubElementFormCreator->editForm($model, $element['country-budget-items']);
+            $form = $this->multilevelSubElementFormCreator->editForm($model, $element['country_budget_items']);
 
             return view('activity.countryBudgetItem.countryBudgetItem', compact('form', 'activity'));
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while updating country budget item.');
+            return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while rendering country budget item form.');
         }
     }
 

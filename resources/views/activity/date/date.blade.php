@@ -34,6 +34,15 @@
                     <elements-note></elements-note>
                 </aside>
                 <div class="activities__content">
+                    @if (session()->has('error'))
+                        <div class="alert alert-danger">
+                            <ul>
+                                @foreach (session()->get('error') as $error)
+                                    {{ $error }}
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
                     <div class="py-[6.06%] px-[12%] bg-white">
                         <div class="status flex justify-end rounded-lg mb-1.5">
                             <div class="flex status text-xs leading-relaxed text-salmon-50">
@@ -48,7 +57,7 @@
                         <div class="hidden parent-collection" data_name="description"
                             data-prototype="{{ form_row($form->activity_date->prototype()) }}">
                         </div>
-                        <div class="hidden collection-container"
+                        <div class="hidden collection-container" form_type="activity_date_narrative"
                             data-prototype="{{ str_replace('activity_date[0]','activity_date[__PARENT_NAME__]',form_row($form->activity_date->getChildren()[0]->getChild('narrative')->prototype())) }}">
                         </div>
                     </div>

@@ -1,0 +1,62 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\IATI\Services\Activity;
+
+use App\IATI\Repositories\Activity\ResultRepository;
+use Illuminate\Database\Eloquent\Model;
+
+/**
+ * Class ResultService.
+ */
+class ResultService
+{
+    /**
+     * @var ResultRepository
+     */
+    protected ResultRepository $resultRepository;
+
+    /**
+     * ResultService constructor.
+     *
+     * @param ResultRepository $resultRepository
+     */
+    public function __construct(ResultRepository $resultRepository)
+    {
+        $this->resultRepository = $resultRepository;
+    }
+
+    /**
+     * Create a new ActivityResult.
+     *
+     * @param array $resultData
+     * @return Model
+     */
+    public function create(array $resultData): Model
+    {
+        return $this->resultRepository->create($resultData);
+    }
+
+    /**
+     * Update Activity Result.
+     * @param array          $resultData
+     * @param $activityResult
+     * @return bool
+     */
+    public function update(array $resultData, $activityResult): bool
+    {
+        return $this->resultRepository->update($resultData, $activityResult);
+    }
+
+    /**
+     * Return specific result.
+     * @param $id
+     * @param $activityId
+     * @return Model
+     */
+    public function getResult($id, $activityId): Model
+    {
+        return $this->resultRepository->getResult($id, $activityId);
+    }
+}

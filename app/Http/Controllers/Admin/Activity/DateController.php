@@ -59,7 +59,7 @@ class DateController extends Controller
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while updating activity date.');
+            return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while rendering activity date form.');
         }
     }
 
@@ -79,7 +79,7 @@ class DateController extends Controller
             $messages = $this->validateData($request->get('activity_date'));
 
             if ($messages) {
-                return response()->json(['success' => false, 'error' => array_unique($messages)]);
+                return redirect()->route('admin.activities.date.edit', $id)->with('error', array_unique($messages));
             }
 
             if (!$this->dateService->update($activityDate, $activityData)) {
@@ -102,48 +102,41 @@ class DateController extends Controller
     private function validateData(array $activityDates): array
     {
         $messages = [];
-        $hasStart = false;
 
         foreach ($activityDates as $activityDateIndex => $activityDate) {
             $blockIndex = $activityDateIndex + 1;
             $date = $activityDate['date'];
             $type = $activityDate['type'];
 
-            if ($type == 2 || $type == 4) {
-                (strtotime($date) <= strtotime(date('Y-m-d'))) ?: $messages[] = sprintf('Actual Start Date and Actual End Date must be Today or past days. (block %s)', $blockIndex);
-            }
+            if (isset($date) && isset($type)) {
+                if ($type == 2 || $type == 4) {
+                    (strtotime($date) <= strtotime(date('Y-m-d'))) ?: $messages[] = sprintf('Actual Start Date and Actual End Date must be Today or past days. (block %s)', $blockIndex);
+                }
 
-            if ($type == 4) {
-                $actualStartDate = array_column(array_filter($activityDates, function ($date) {
-                    return $date['type'] == 2;
-                }), 'date');
+                if ($type == 4) {
+                    $actualStartDate = array_column(array_filter($activityDates, function ($date) {
+                        return $date['type'] == 2;
+                    }), 'date');
 
-                if (count($actualStartDate)) {
-                    foreach ($actualStartDate as $startDate) {
-                        strtotime($date) > strtotime($startDate) ?: $messages[] = sprintf('End date must be later than the start date. (Block %s)', $blockIndex);
+                    if (count($actualStartDate)) {
+                        foreach ($actualStartDate as $startDate) {
+                            strtotime($date) > strtotime($startDate) ?: $messages[] = sprintf('End date must be later than the start date. (Block %s)', $blockIndex);
+                        }
+                    }
+                }
+
+                if ($type == 3) {
+                    $plannedStartDate = array_column(array_filter($activityDates, function ($date) {
+                        return $date['type'] == 1;
+                    }), 'date');
+
+                    if (count($plannedStartDate)) {
+                        foreach ($plannedStartDate as $startDate) {
+                            strtotime($date) > strtotime($startDate) ?: $messages[] = sprintf('End date must be later than the start date. (Block %s)', $blockIndex);
+                        }
                     }
                 }
             }
-
-            if ($type == 3) {
-                $plannedStartDate = array_column(array_filter($activityDates, function ($date) {
-                    return $date['type'] == 1;
-                }), 'date');
-
-                if (count($plannedStartDate)) {
-                    foreach ($plannedStartDate as $startDate) {
-                        strtotime($date) > strtotime($startDate) ?: $messages[] = sprintf('End date must be later than the start date. (Block %s)', $blockIndex);
-                    }
-                }
-            }
-
-            if ($type == 1 || $type == 2) {
-                $hasStart = true;
-            }
-        }
-
-        if (!$hasStart) {
-            array_unshift($messages, 'Planned Start or Actual Start in Activity Date Type is required.');
         }
 
         return $messages;

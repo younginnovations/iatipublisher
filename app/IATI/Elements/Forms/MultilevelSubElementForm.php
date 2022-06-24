@@ -5,7 +5,7 @@ namespace App\IATI\Elements\Forms;
 use Illuminate\Support\Arr;
 
 /**
- * Class ParentCollectionForm.
+ * Class MultilevelSubElementForm.
  */
 class MultilevelSubElementForm extends BaseForm
 {
@@ -16,8 +16,10 @@ class MultilevelSubElementForm extends BaseForm
      */
     public function buildForm():void
     {
+        $element = $this->getData();
         $attributes = Arr::get($this->getData(), 'attributes', null);
         $sub_elements = Arr::get($this->getData(), 'sub_elements', null);
+        $this->setClientValidationEnabled(false);
 
         if ($attributes) {
             if (Arr::get($this->getData(), 'add_more', false) && !$sub_elements) {
@@ -48,10 +50,14 @@ class MultilevelSubElementForm extends BaseForm
                             'wrapper' => [
                                 'class' => 'multi-form relative',
                             ],
-                        ],
+                            'dynamic_wrapper' => [
+                                'class' => (isset($sub_element['add_more']) && $sub_element['add_more']) ?
+                                (strtolower($sub_element['name']) === 'narrative' && !isset($sub_element['attributes']) && !count($sub_element['attributes']) > 0 ? 'border-l border-spring-50 pb-11' : 'subelement rounded-tl-lg border-l border-spring-50 pb-11')
+                                : 'subelement rounded-tl-lg border-l border-spring-50 mb-6',
+                            ],                        ],
                     ]
                 )->add('add_to_collection', 'button', [
-                    'label' => 'add more',
+                    'label' => sprintf('add more %s', str_replace('_', ' ', $this->getData(sprintf('sub_elements.%s.name', $name)))),
                     'attr' => [
                         'class' => 'add_to_parent add_more button relative -translate-y-1/2 pl-3.5 text-xs font-bold uppercase leading-normal text-spring-50 text-bluecoral',
                         'icon' => true,                    ],

@@ -18,7 +18,7 @@ class SectorRequest extends ActivityBaseRequest
      */
     public function rules(): array
     {
-        return $this->getRulesForSector($this->get('sector'));
+        return $this->getSectorsRules($this->get('sector'));
     }
 
     /**
@@ -28,48 +28,111 @@ class SectorRequest extends ActivityBaseRequest
      */
     public function messages(): array
     {
-        return $this->getMessagesForSector($this->get('sector'));
+        return $this->getSectorsMessages($this->get('sector'));
     }
 
     /**
-     * Returns rules for related activity.
-     * @param array $formFields
-     * @return array
+     * returns rules for sector.
+     *
+     * @param $formFields
+     *
+     * @return array|mixed
      */
-    protected function getRulesForSector(array $formFields): array
+    public function getSectorsRules($formFields): array|mixed
     {
         $rules = [];
-
         foreach ($formFields as $sectorIndex => $sector) {
             $sectorForm = sprintf('sector.%s', $sectorIndex);
-            $rules[sprintf('%s.type', $sectorForm)] = 'required';
-            $rules = array_merge(
-                $rules,
-                $this->getRulesForRequiredNarrative($sector['narrative'], $sectorForm)
-            );
+
+            if (isset($sector['vocabulary']) && $sector['vocabulary'] === '99') {
+                $rules[sprintf('%s.vocabulary_uri', $sectorForm)] = 'nullable|url';
+            }
+
+            $rules[sprintf('%s.percentage', $sectorForm)] = 'nullable|numeric|max:100';
+
+            $rules = array_merge($this->getRulesForNarrative($sector['narrative'], $sectorForm), $rules);
+        }
+
+        $totalPercentage = $this->getRulesForPercentage($this->get('sector'));
+
+        $indexes = [];
+
+        foreach ($totalPercentage as $index => $value) {
+            if (is_numeric($index) && $value != 100) {
+                $indexes[] = $index;
+            }
+        }
+
+        $fields = [];
+
+        foreach ($totalPercentage as $i => $percentage) {
+            foreach ($indexes as $index) {
+                if ($index == $percentage) {
+                    $fields[] = $i;
+                }
+            }
+        }
+
+        foreach ($fields as $field) {
+            $rules[$field] = 'nullable|sum|numeric|max:100';
         }
 
         return $rules;
     }
 
     /**
-     * Returns messages for related activity validations.
-     * @param array $formFields
-     * @return array
+     * returns messages for sector.
+     *
+     * @param $formFields
+     *
+     * @return array|mixed
      */
-    protected function getMessagesForSector(array $formFields): array
+    public function getSectorsMessages($formFields): array
     {
         $messages = [];
 
-        foreach ($formFields as $sectorIndex => $d) {
-            $dForm = sprintf('sector.%s', $sectorIndex);
-            $messages[sprintf('%s.type.required', $dForm)] = 'Type is required.';
-            $messages = array_merge(
-                $messages,
-                $this->getMessagesForRequiredNarrative($d['narrative'], $dForm)
-            );
+        foreach ($formFields as $sectorIndex => $sector) {
+            $sectorForm = sprintf('sector.%s', $sectorIndex);
+            $messages[sprintf('%s.vocabulary_uri.url', $sectorForm)] = 'The @vocabulary-uri field must be a valid url.';
+            $messages[sprintf('%s.percentage.numeric', $sectorForm)] = 'The @percentage field must be a number.';
+            $messages[sprintf('%s.percentage.max', $sectorForm)] = 'The @percentage field cannot be greater than 100.';
+            $messages[sprintf('%s.percentage.sum', $sectorForm)] = 'The sum of @percentage within a vocabulary must add upto 100.';
+            $messages = array_merge($this->getMessagesForNarrative($sector['narrative'], $sectorForm), $messages);
         }
 
         return $messages;
+    }
+
+    /**
+     * write brief description.
+     *
+     * @param $sectors
+     *
+     * @return array
+     */
+    protected function getRulesForPercentage($sectors): array
+    {
+        $array = [];
+        $totalPercentage = 0;
+
+        if (count($sectors) > 1) {
+            foreach ($sectors as $sectorIndex => $sector) {
+                $sectorForm = sprintf('sector.%s', $sectorIndex);
+                $percentage = $sector['percentage'] ?: 0;
+                $sectorVocabulary = $sector['sector_vocabulary'] ?: 'Not Specified';
+
+                if (array_key_exists($sectorVocabulary, $array)) {
+                    $totalPercentage = $array[$sectorVocabulary] + (float) $percentage;
+                    $array[$sectorVocabulary] = $totalPercentage;
+                    $array[sprintf('%s.percentage', $sectorForm)] = $sectorVocabulary;
+                } else {
+                    $array[$sectorVocabulary] = $percentage;
+
+                    $array[sprintf('%s.percentage', $sectorForm)] = $sectorVocabulary;
+                }
+            }
+        }
+
+        return $array;
     }
 }
