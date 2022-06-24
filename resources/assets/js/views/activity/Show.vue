@@ -344,6 +344,10 @@ export default defineComponent({
       type: Object,
       required: true,
     },
+    status: {
+      type: Object,
+      required: true,
+    },
   },
   setup(props) {
     const toast = reactive({

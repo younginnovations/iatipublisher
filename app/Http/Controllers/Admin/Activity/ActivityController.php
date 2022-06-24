@@ -107,9 +107,10 @@ class ActivityController extends Controller
             $elements = json_decode(file_get_contents(app_path('Data/Activity/Element.json')), true);
             $elementGroups = json_decode(file_get_contents(app_path('Data/Activity/ElementGroup.json')), true);
             $types = $this->getActivityDetailDataType();
+            $status = $this->getActivityDetailStatus($activity);
             $progress = 75;
 
-            return view('admin.activity.show', compact('elements', 'elementGroups', 'progress', 'activity', 'toast', 'types'));
+            return view('admin.activity.show', compact('elements', 'elementGroups', 'progress', 'activity', 'toast', 'types', 'status'));
         } catch (Exception $e) {
             logger()->error($e->getMessage());
         }
@@ -248,7 +249,7 @@ class ActivityController extends Controller
     public function getActivityDetailStatus($activity): array
     {
         return [
-            'iati_identifier'      => $activity->identifier_element_completed,
+            'identifier'           => $activity->identifier_element_completed,
             'title'                => $activity->title_element_completed,
             'description'          => $activity->description_element_completed,
             'activity_status'      => $activity->activity_status_element_completed,
