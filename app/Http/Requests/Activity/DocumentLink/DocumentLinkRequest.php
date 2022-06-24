@@ -18,26 +18,30 @@ class DocumentLinkRequest extends ActivityBaseRequest
      */
     public function rules(): array
     {
-        return $this->getRulesForDocumentLink();
+        return $this->getRulesForDocumentLink($this->get('document_link'));
     }
 
-    // /**
-    //  * Get the error message as required.
-    //  *
-    //  * @return array
-    //  */
-    // public function messages(): array
-    // {
-    //     return $this->getMessagesForCountryBudgetItem(request()->except(['_token', '_method']));
-    // }
-
     /**
-     * @param array $formFields
+     * Get the error message as required.
+     *
      * @return array
      */
-    public function getRulesForDocumentLink(array $formFields)
+    public function messages(): array
+    {
+        return $this->getMessagesForCountryBudgetItem(request()->except(['_token', '_method']));
+    }
+
+    /**
+     * Rules for document link.
+     *
+     * @param array $formFields
+     *
+     * @return array
+     */
+    public function getRulesForDocumentLink(array $formFields): array
     {
         $rules = [];
+
         foreach ($formFields as $documentLinkIndex => $documentLink) {
             $documentLinkForm = sprintf(
                 'document_link.%s',
@@ -59,12 +63,16 @@ class DocumentLinkRequest extends ActivityBaseRequest
     }
 
     /**
+     * Customized error message for document link.
+     *
      * @param array $formFields
+     *
      * @return array
      */
-    public function getMessagesForDocumentLink(array $formFields)
+    public function getMessagesForDocumentLink(array $formFields): array
     {
         $messages = [];
+
         foreach ($formFields as $documentLinkIndex => $documentLink) {
             $documentLinkForm = sprintf(
                 'document_link.%s',

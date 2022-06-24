@@ -29,7 +29,6 @@ class StatusRequest extends ActivityBaseRequest
     public function messages(): array
     {
         return [
-//            'required'  => 'The Code is required.',
             'in'        => 'The selected code does not exist.',
         ];
     }

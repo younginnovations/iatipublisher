@@ -33,36 +33,28 @@ class LegacyDataRequest extends ActivityBaseRequest
 
     /**
      * Returns rules for related activity.
+     *
      * @param array $formFields
+     *
      * @return array
      */
     protected function getRulesForActivityLegacyData(array $formFields): array
     {
         $rules = [];
 
-//        foreach ($formFields as $legacyDataIndex => $legacyData) {
-//            $legacyDataForm = sprintf('legacy_data.%s', $legacyDataIndex);
-//            $rules[sprintf('%s.name', $legacyDataForm)] = 'required';
-//            $rules[sprintf('%s.value', $legacyDataForm)] = 'required';
-//        }
-
         return $rules;
     }
 
     /**
      * Returns messages for related activity validations.
+     *
      * @param array $formFields
+     *
      * @return array
      */
     protected function getMessagesForActivityLegacyData(array $formFields): array
     {
         $messages = [];
-
-//        foreach ($formFields as $legacyDataIndex => $legacyData) {
-//            $legacyDataForm = sprintf('legacy_data.%s', $legacyDataIndex);
-//            $messages[sprintf('%s.name.required', $legacyDataForm)] = 'The @name field is required';
-//            $messages[sprintf('%s.value.required', $legacyDataForm)] = 'The @value field is required';
-//        }
 
         return $messages;
     }

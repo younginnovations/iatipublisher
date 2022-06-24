@@ -16,7 +16,7 @@ class ContactInfoRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    public function rules()
+    public function rules(): array
     {
         return $this->getRulesForContactInfo($this->get('contact_info'));
     }
@@ -26,7 +26,7 @@ class ContactInfoRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    public function messages()
+    public function messages(): array
     {
         return $this->getMessagesForContactInfo($this->get('contact_info'));
     }
@@ -38,7 +38,7 @@ class ContactInfoRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    protected function getRulesForContactInfo(array $formFields)
+    protected function getRulesForContactInfo(array $formFields): array
     {
         $rules = [];
 
@@ -67,7 +67,7 @@ class ContactInfoRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    protected function getMessagesForContactInfo(array $formFields)
+    protected function getMessagesForContactInfo(array $formFields): array
     {
         $messages = [];
 
@@ -97,7 +97,7 @@ class ContactInfoRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    protected function getRulesForOrganisation($formFields, $formBase)
+    protected function getRulesForOrganisation($formFields, $formBase): array
     {
         $rules = [];
 
@@ -117,7 +117,7 @@ class ContactInfoRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    protected function getMessagesForOrganisation($formFields, $formBase)
+    protected function getMessagesForOrganisation($formFields, $formBase): array
     {
         $messages = [];
 
@@ -137,7 +137,7 @@ class ContactInfoRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    protected function getRulesForDepartment($formFields, $formBase)
+    protected function getRulesForDepartment($formFields, $formBase): array
     {
         $rules = [];
 
@@ -157,7 +157,7 @@ class ContactInfoRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    protected function getMessagesForDepartment($formFields, $formBase)
+    protected function getMessagesForDepartment($formFields, $formBase): array
     {
         $messages = [];
 
@@ -177,7 +177,7 @@ class ContactInfoRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    protected function getRulesForPersonName($formFields, $formBase)
+    protected function getRulesForPersonName($formFields, $formBase): array
     {
         $rules = [];
 
@@ -197,7 +197,7 @@ class ContactInfoRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    protected function getMessagesForPersonName($formFields, $formBase)
+    protected function getMessagesForPersonName($formFields, $formBase): array
     {
         $messages = [];
 
@@ -217,7 +217,7 @@ class ContactInfoRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    protected function getRulesForJobTitle($formFields, $formBase)
+    protected function getRulesForJobTitle($formFields, $formBase): array
     {
         $rules = [];
 
@@ -237,7 +237,7 @@ class ContactInfoRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    protected function getMessagesForJobTitle($formFields, $formBase)
+    protected function getMessagesForJobTitle($formFields, $formBase): array
     {
         $messages = [];
 
@@ -257,7 +257,7 @@ class ContactInfoRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    protected function getRulesForMailingAddress($formFields, $formBase)
+    protected function getRulesForMailingAddress($formFields, $formBase): array
     {
         $rules = [];
 
@@ -277,7 +277,7 @@ class ContactInfoRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    protected function getMessagesForMailingAddress($formFields, $formBase)
+    protected function getMessagesForMailingAddress($formFields, $formBase): array
     {
         $messages = [];
 
@@ -297,7 +297,7 @@ class ContactInfoRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    protected function getRulesForTelephone($formFields, $formBase)
+    protected function getRulesForTelephone($formFields, $formBase): array
     {
         $rules = [];
 
@@ -316,7 +316,7 @@ class ContactInfoRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    protected function getMessagesForTelephone($formFields, $formBase)
+    protected function getMessagesForTelephone($formFields, $formBase): array
     {
         $messages = [];
 
@@ -338,7 +338,7 @@ class ContactInfoRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    protected function getRulesForEmail($formFields, $formBase)
+    protected function getRulesForEmail($formFields, $formBase): array
     {
         $rules = [];
 
@@ -357,7 +357,7 @@ class ContactInfoRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    protected function getMessagesForEmail($formFields, $formBase)
+    protected function getMessagesForEmail($formFields, $formBase): array
     {
         $messages = [];
 
@@ -379,7 +379,7 @@ class ContactInfoRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    protected function getRulesForWebsite($formFields, $formBase)
+    protected function getRulesForWebsite($formFields, $formBase): array
     {
         $rules = [];
 
@@ -398,7 +398,7 @@ class ContactInfoRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    protected function getMessagesForWebsite($formFields, $formBase)
+    protected function getMessagesForWebsite($formFields, $formBase): array
     {
         $messages = [];
 

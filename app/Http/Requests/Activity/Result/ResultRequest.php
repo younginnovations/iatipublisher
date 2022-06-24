@@ -112,7 +112,7 @@ class ResultRequest extends ActivityBaseRequest
      *
      * @return array|mixed
      */
-    public function getRulesForDocumentLink($formFields)
+    public function getRulesForDocumentLink($formFields): array|mixed
     {
         $rules = [];
 
@@ -193,7 +193,7 @@ class ResultRequest extends ActivityBaseRequest
      *
      * @return array|mixed
      */
-    public function getMessagesForDocumentLink($formFields)
+    public function getMessagesForDocumentLink($formFields): array|mixed
     {
         $messages = [];
 
@@ -243,7 +243,7 @@ class ResultRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    protected function getMessagesForDocumentDate($formFields, $formIndex)
+    protected function getMessagesForDocumentDate($formFields, $formIndex): array
     {
         $messages = [];
 
@@ -264,7 +264,7 @@ class ResultRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    protected function getRulesForDocumentDate($formFields, $formIndex, $documentLink)
+    protected function getRulesForDocumentDate($formFields, $formIndex, $documentLink): array
     {
         $rules = [];
 
@@ -282,7 +282,7 @@ class ResultRequest extends ActivityBaseRequest
      *
      * @return array|mixed
      */
-    protected function getRulesforReferences($formFields)
+    protected function getRulesforReferences($formFields): array|mixed
     {
         $rules = [];
 
@@ -308,7 +308,7 @@ class ResultRequest extends ActivityBaseRequest
      *
      * @return array|mixed
      */
-    protected function getMessagesForReferences($formFields)
+    protected function getMessagesForReferences($formFields): array|mixed
     {
         $messages = [];
 

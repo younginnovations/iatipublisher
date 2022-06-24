@@ -33,56 +33,22 @@ class SectorRequest extends ActivityBaseRequest
 
     /**
      * returns rules for sector.
+     *
      * @param $formFields
+     *
      * @return array|mixed
      */
-    public function getSectorsRules($formFields)
+    public function getSectorsRules($formFields): array|mixed
     {
         $rules = [];
         foreach ($formFields as $sectorIndex => $sector) {
             $sectorForm = sprintf('sector.%s', $sectorIndex);
-//            $rules[sprintf('%s.vocabulary', $sectorForm)] = 'required';
-//            $vocabulary = $sector['sector_vocabulary'];
 
             if (isset($sector['vocabulary']) && $sector['vocabulary'] === '99') {
                 $rules[sprintf('%s.vocabulary_uri', $sectorForm)] = 'nullable|url';
             }
 
-//            switch ($vocabulary) {
-//                case '1':
-//                    $rules[sprintf('%s.code', $sectorForm)] = 'required';
-//                    break;
-//                case '2':
-//                    $rules[sprintf('%s.category_code', $sectorForm)] = 'required';
-//                    break;
-//                case '7':
-//                    $rules[sprintf('%s.sdg_goal', $sectorForm)] = 'required';
-//                    break;
-//                case '8':
-//                    $rules[sprintf('%s.sdg_target', $sectorForm)] = 'required';
-//                    break;
-//                case '98':
-//                case '99':
-//                    $rules[sprintf('%s.text', $sectorForm)] = 'required';
-//                    $rules[sprintf('%s.vocabulary_uri', $sectorForm)] = 'nullable|url';
-//
-//                    foreach ($sector['narrative'] as $narrativeKey => $narrative) {
-//                        $rules[sprintf('%s.narrative.%s.narrative', $sectorForm, $narrativeKey)] = 'required|required_with_language';
-//                    }
-//                    break;
-//                default:
-//                    $rules[sprintf('%s.text', $sectorForm)] = 'required';
-//            }
-
-//            if (!$vocabulary) {
-//                $rules[sprintf('%s.code', $sectorForm)] = 'required';
-//            }
-
             $rules[sprintf('%s.percentage', $sectorForm)] = 'nullable|numeric|max:100';
-
-//            if (count($formFields) > 1) {
-//                $rules[sprintf('%s.percentage', $sectorForm)] = 'required|numeric|max:100';
-//            }
 
             $rules = array_merge($this->getRulesForNarrative($sector['narrative'], $sectorForm), $rules);
         }
@@ -116,60 +82,20 @@ class SectorRequest extends ActivityBaseRequest
 
     /**
      * returns messages for sector.
+     *
      * @param $formFields
+     *
      * @return array|mixed
      */
-    public function getSectorsMessages($formFields)
+    public function getSectorsMessages($formFields): array
     {
         $messages = [];
 
         foreach ($formFields as $sectorIndex => $sector) {
             $sectorForm = sprintf('sector.%s', $sectorIndex);
             $messages[sprintf('%s.vocabulary_uri.url', $sectorForm)] = 'The @vocabulary-uri field must be a valid url.';
-//            $messages[sprintf('%s.vocabulary.required', $sectorForm)] = trans('validation.required', ['attribute' => trans('elementForm.sector_vocabulary')]);
-
-//            $vocabulary = $sector['sector_vocabulary'];
-
-//            switch ($vocabulary) {
-//                case '1':
-//                    $messages[sprintf('%s.code.%s', $sectorForm, 'required')] = trans('validation.required', ['attribute' => trans('elementForm.sector_code')]);
-//                    break;
-//                case '2':
-//                    $messages[sprintf('%s.category_code.%s', $sectorForm, 'required')] = trans('validation.required', ['attribute' => trans('elementForm.sector_code')]);
-//                    break;
-//                case '7':
-//                    $messages[sprintf('%s.sdg_goal.%s', $sectorForm, 'required')] = trans('validation.required', ['attribute' => trans('elementForm.sector_code')]);
-//
-//                    break;
-//                case '8':
-//                    $messages[sprintf('%s.sdg_target.%s', $sectorForm, 'required')] = trans('validation.required', ['attribute' => trans('elementForm.sector_code')]);
-//                    break;
-//                case '98':
-//                case '99':
-//                    $messages[sprintf('%s.text.%s', $sectorForm, 'required')] = trans('validation.required', ['attribute' => trans('elementForm.sector_code')]);
-//                    $messages[sprintf('%s.vocabulary_uri.%s', $sectorForm, 'required')] = trans('validation.required', ['attribute' => trans('elementForm.vocabulary_uri')]);
-//
-//                    foreach ($sector['narrative'] as $narrativeKey => $narrative) {
-//                        $messages[sprintf('%s.narrative.%s.narrative.%s', $sectorForm, $narrativeKey, 'required')] = trans('validation.required', ['attribute' => trans('elementForm.narrative')]);
-//                        $messages[sprintf(
-//                            '%s.narrative.%s.narrative.required_with_language',
-//                            $sectorForm,
-//                            $narrativeKey
-//                        )] = trans('validation.required_with', ['attribute' => trans('elementForm.narrative'), 'values' => trans('elementForm.languages')]);
-//                    }
-//                    break;
-//                default:
-//                    $messages[sprintf('%s.text.%s', $sectorForm, 'required')] = trans('validation.required', ['attribute' => trans('elementForm.sector_code')]);
-//                    break;
-//            }
-
-//            if (!$vocabulary) {
-//                $messages[sprintf('%s.code.%s', $sectorForm, 'required')] = trans('validation.required', ['attribute' => trans('elementForm.sector_code')]);
-//            }
-
             $messages[sprintf('%s.percentage.numeric', $sectorForm)] = 'The @percentage field must be a number.';
             $messages[sprintf('%s.percentage.max', $sectorForm)] = 'The @percentage field cannot be greater than 100.';
-//            $messages[sprintf('%s.percentage.required', $sectorForm)] = trans('validation.required', ['attribute' => trans('elementForm.percentage')]);
             $messages[sprintf('%s.percentage.sum', $sectorForm)] = 'The sum of @percentage within a vocabulary must add upto 100.';
             $messages = array_merge($this->getMessagesForNarrative($sector['narrative'], $sectorForm), $messages);
         }
@@ -184,7 +110,7 @@ class SectorRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    protected function getRulesForPercentage($sectors)
+    protected function getRulesForPercentage($sectors): array
     {
         $array = [];
         $totalPercentage = 0;

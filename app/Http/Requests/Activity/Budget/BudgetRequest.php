@@ -71,7 +71,7 @@ class BudgetRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    public function getRulesForPeriodStart($formFields, $formBase)
+    public function getRulesForPeriodStart($formFields, $formBase): array
     {
         $rules = [];
 
@@ -90,7 +90,7 @@ class BudgetRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    public function getRulesForPeriodEnd($formFields, $formBase)
+    public function getRulesForPeriodEnd($formFields, $formBase): array
     {
         $rules = [];
 
@@ -114,7 +114,7 @@ class BudgetRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    protected function getRulesForValue($formFields, $formBase)
+    protected function getRulesForValue($formFields, $formBase): array
     {
         $rules = [];
 
@@ -162,7 +162,7 @@ class BudgetRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    public function getMessagesForPeriodStart($formFields, $formBase)
+    public function getMessagesForPeriodStart($formFields, $formBase): array
     {
         $messages = [];
 
@@ -181,7 +181,7 @@ class BudgetRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    public function getMessagesForPeriodEnd($formFields, $formBase)
+    public function getMessagesForPeriodEnd($formFields, $formBase): array
     {
         $messages = [];
 
@@ -201,7 +201,7 @@ class BudgetRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    protected function getMessagesForValue($formFields, $formBase)
+    protected function getMessagesForValue($formFields, $formBase): array
     {
         $messages = [];
 

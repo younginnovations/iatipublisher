@@ -43,7 +43,6 @@ class CountryBudgetItemRequest extends ActivityBaseRequest
     {
         $rules = [];
 
-//        $rules['vocabulary'] = 'required';
         $code = $formFields['country_budget_vocabulary'] == 1 ? 'code' : 'code_text';
         $rules = array_merge(
             $rules,
@@ -65,7 +64,6 @@ class CountryBudgetItemRequest extends ActivityBaseRequest
         $messages = [];
 
         $code = $formFields['country_budget_vocabulary'] == 1 ? 'code' : 'code_text';
-        // $messages[sprintf('vocabulary.required')] = 'The @vocabulary field is required.';
         $messages = array_merge(
             $messages,
             $this->getBudgetItemMessages($formFields['budget_item'], $code)
@@ -82,14 +80,13 @@ class CountryBudgetItemRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    public function getBudgetItemRules(array $formFields, $code)
+    public function getBudgetItemRules(array $formFields, $code): array
     {
         $rules = [];
 
         foreach ($formFields as $budgetItemIndex => $budgetItem) {
             $budgetItemForm = sprintf('budget_item.%s', $budgetItemIndex);
             $rules[sprintf('%s.percentage', $budgetItemForm)] = 'nullable|numeric|max:100';
-//            $rules[sprintf('%s.%s', $budgetItemForm, $code)] = 'required';
             $rules = array_merge(
                 $rules,
                 $this->getBudgetItemDescriptionRules($budgetItem['description'], $budgetItemForm)
@@ -111,16 +108,15 @@ class CountryBudgetItemRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    public function getBudgetItemMessages(array $formFields, $code)
+    public function getBudgetItemMessages(array $formFields, $code): array
     {
         $messages = [];
+
         foreach ($formFields as $budgetItemIndex => $budgetItem) {
             $budgetItemForm = sprintf('budget_item.%s', $budgetItemIndex);
-//            $messages[sprintf('%s.%s.required', $budgetItemForm, $code)] = 'The @code field is required.';
             $messages[sprintf('%s.percentage.%s', $budgetItemForm, 'numeric')] = 'The @percentage field must be a number.';
             $messages[sprintf('%s.percentage.%s', $budgetItemForm, 'max')] = 'The @percentage field cannot be greater than 100.';
             $messages[sprintf('%s.percentage.sum', $budgetItemForm)] = 'The sum of @percentage must add up to 100.';
-//            $messages[sprintf('%s.percentage.required', $budgetItemForm)] = 'The @percentage field is required when there are multiple codes.';
             $messages[sprintf('%s.percentage.total', $budgetItemForm)] = 'The @percentage field should be 100 when there is only one budget item.';
             $messages = array_merge(
                 $messages,
@@ -139,7 +135,7 @@ class CountryBudgetItemRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    public function getBudgetItemDescriptionRules(array $formFields, $formBase)
+    public function getBudgetItemDescriptionRules(array $formFields, $formBase): array
     {
         $rules = [];
 
@@ -159,7 +155,7 @@ class CountryBudgetItemRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    public function getBudgetItemDescriptionMessages(array $formFields, $formBase)
+    public function getBudgetItemDescriptionMessages(array $formFields, $formBase): array
     {
         $messages = [];
 
@@ -171,31 +167,27 @@ class CountryBudgetItemRequest extends ActivityBaseRequest
         return $messages;
     }
 
-    /** Returns rules for percentage.
+    /**
+     * Returns rules for percentage.
      *
      * @param $countryBudget
      *
      * @return array
      */
-    protected function getRulesForPercentage($countryBudget)
+    protected function getRulesForPercentage($countryBudget): array
     {
         $countryBudgetItems = Arr::get($countryBudget, 'budget_item', []);
         $totalPercentage = 0;
-//        $isEmpty = false;
-//        $countryBudgetPercentage = 0;
+
         $rules = [];
 
         if (count($countryBudgetItems) > 1) {
             foreach ($countryBudgetItems as $key => $countryBudgetItem) {
-//                (!empty($countryBudgetItem['percentage'])) ? $countryBudgetPercentage = $countryBudgetItem['percentage'] : $isEmpty = true;
                 $countryBudgetPercentage = $countryBudgetItem['percentage'] ?: 0;
                 $totalPercentage = $totalPercentage + $countryBudgetPercentage;
             }
 
             foreach ($countryBudgetItems as $key => $countryBudgetItem) {
-//                if ($isEmpty) {
-//                    $rules["budget_item.$key.percentage"] = 'required';
-//                } else
                 if ($totalPercentage != 100) {
                     $rules["budget_item.$key.percentage"] = 'sum';
                 }

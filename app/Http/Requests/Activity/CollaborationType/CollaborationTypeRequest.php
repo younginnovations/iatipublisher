@@ -29,7 +29,6 @@ class CollaborationTypeRequest extends ActivityBaseRequest
     public function messages(): array
     {
         return [
-//            'required'  => 'The @code field is required.',
             'in'        => 'The selected code does not exist.',
         ];
     }

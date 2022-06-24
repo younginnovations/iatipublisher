@@ -29,7 +29,6 @@ class ScopeRequest extends ActivityBaseRequest
     public function messages(): array
     {
         return [
-//            'required'  => 'The Scope is required.',
             'in'        => 'The selected code does not exist.',
         ];
     }

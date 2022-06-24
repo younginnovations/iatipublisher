@@ -16,28 +16,32 @@ class LocationRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    public function rules()
+    public function rules(): array
     {
         return $this->getRulesForLocation($this->get('location'));
     }
 
     /**
      * prepare the error message.
+     *
      * @return array
      */
-    public function messages()
+    public function messages(): array
     {
         return $this->getMessagesForLocation($this->get('location'));
     }
 
     /**
      * returns rules for location form.
+     *
      * @param $formFields
+     *
      * @return array
      */
-    protected function getRulesForLocation($formFields)
+    protected function getRulesForLocation($formFields): array
     {
         $rules = [];
+
         foreach ($formFields as $locationIndex => $location) {
             $locationForm = 'location.' . $locationIndex;
             $rules = array_merge(
@@ -56,12 +60,15 @@ class LocationRequest extends ActivityBaseRequest
 
     /**
      * returns messages for location form.
+     *
      * @param $formFields
+     *
      * @return array
      */
-    protected function getMessagesForLocation($formFields)
+    protected function getMessagesForLocation($formFields): array
     {
         $messages = [];
+
         foreach ($formFields as $locationIndex => $location) {
             $locationForm = 'location.' . $locationIndex;
             $messages = array_merge(
@@ -79,19 +86,24 @@ class LocationRequest extends ActivityBaseRequest
     }
 
     /**
-     * returns rules for location id.
+     * returns rules for validating location id.
+     *
      * @param $formFields
      * @param $formBase
+
      * @return array
      */
-    protected function getRulesForLocationId($formFields, $formBase)
+    protected function getRulesForLocationId($formFields, $formBase): array
     {
         $rules = [];
+
         foreach ($formFields as $locationIdIndex => $locationId) {
             $locationIdForm = sprintf('%s.location_id.%s', $formBase, $locationIdIndex);
+
             if ($locationId['code'] != '') {
                 $rules[sprintf('%s.vocabulary', $locationIdForm)] = 'required_with:' . sprintf('%s.code', $locationIdForm);
             }
+
             if ($locationId['vocabulary'] != '') {
                 $rules[sprintf('%s.code', $locationIdForm)] = 'required_with:' . sprintf('%s.vocabulary', $locationIdForm);
             }
@@ -101,14 +113,17 @@ class LocationRequest extends ActivityBaseRequest
     }
 
     /**
-     * returns messages for location id.
+     * returns messages for validating location id.
+     *
      * @param $formFields
      * @param $formBase
+     *
      * @return array
      */
-    protected function getMessagesForLocationId($formFields, $formBase)
+    protected function getMessagesForLocationId($formFields, $formBase): array
     {
         $messages = [];
+
         foreach ($formFields as $locationIdIndex => $locationId) {
             $locationIdForm = sprintf('%s.location_id.%s', $formBase, $locationIdIndex);
 
@@ -118,6 +133,7 @@ class LocationRequest extends ActivityBaseRequest
                     ['attribute' => trans('elementForm.vocabulary'), 'values' => trans('elementForm.code')]
                 );
             }
+
             if ($locationId['vocabulary'] != '') {
                 $messages[sprintf('%s.code.required_with', $locationIdForm)] = trans(
                     'validation.required_with',
@@ -131,13 +147,16 @@ class LocationRequest extends ActivityBaseRequest
 
     /**
      * returns rules for name.
+     *
      * @param $formFields
      * @param $formBase
+     *
      * @return array
      */
-    protected function getRulesForName($formFields, $formBase)
+    protected function getRulesForName($formFields, $formBase): array
     {
         $rules = [];
+
         foreach ($formFields as $nameIndex => $name) {
             $narrativeForm = sprintf('%s.name.%s', $formBase, $nameIndex);
             $rules = array_merge($rules, $this->getRulesForRequiredNarrative($name['narrative'], $narrativeForm));
@@ -148,13 +167,16 @@ class LocationRequest extends ActivityBaseRequest
 
     /**
      * returns messages for name.
+     *
      * @param $formFields
      * @param $formBase
+     *
      * @return array
      */
-    protected function getMessagesForName($formFields, $formBase)
+    protected function getMessagesForName($formFields, $formBase): array
     {
         $messages = [];
+
         foreach ($formFields as $nameIndex => $name) {
             $narrativeForm = sprintf('%s.name.%s', $formBase, $nameIndex);
             $messages = array_merge($messages, $this->getMessagesForRequiredNarrative($name['narrative'], $narrativeForm));
@@ -165,13 +187,16 @@ class LocationRequest extends ActivityBaseRequest
 
     /**
      * returns rules for location description.
+     *
      * @param $formFields
      * @param $formBase
+     *
      * @return array
      */
-    protected function getRulesForLocationDescription($formFields, $formBase)
+    protected function getRulesForLocationDescription($formFields, $formBase): array
     {
         $rules = [];
+
         foreach ($formFields as $descriptionIndex => $description) {
             $narrativeForm = sprintf('%s.location_description.%s', $formBase, $descriptionIndex);
             $rules = array_merge($rules, $this->getRulesForNarrative($description['narrative'], $narrativeForm));
@@ -182,13 +207,16 @@ class LocationRequest extends ActivityBaseRequest
 
     /**
      * returns messages for location description.
+     *
      * @param $formFields
      * @param $formBase
+     *
      * @return array
      */
-    protected function getMessagesForLocationDescription($formFields, $formBase)
+    protected function getMessagesForLocationDescription($formFields, $formBase): array
     {
         $messages = [];
+
         foreach ($formFields as $descriptionIndex => $description) {
             $narrativeForm = sprintf('%s.location_description.%s', $formBase, $descriptionIndex);
             $messages = array_merge($messages, $this->getMessagesForNarrative($description['narrative'], $narrativeForm));
@@ -199,13 +227,16 @@ class LocationRequest extends ActivityBaseRequest
 
     /**
      * returns rules for activity description.
+     *
      * @param $formFields
      * @param $formBase
+     *
      * @return array
      */
-    protected function getRulesForActivityDescription($formFields, $formBase)
+    protected function getRulesForActivityDescription($formFields, $formBase): array
     {
         $rules = [];
+
         foreach ($formFields as $descriptionIndex => $description) {
             $narrativeForm = sprintf('%s.activity_description.%s', $formBase, $descriptionIndex);
             $rules = array_merge($rules, $this->getRulesForNarrative($description['narrative'], $narrativeForm));
@@ -216,13 +247,16 @@ class LocationRequest extends ActivityBaseRequest
 
     /**
      * returns messages for activity description.
+     *
      * @param $formFields
      * @param $formBase
+     *
      * @return array
      */
-    protected function getMessagesForActivityDescription($formFields, $formBase)
+    protected function getMessagesForActivityDescription($formFields, $formBase): array
     {
         $messages = [];
+
         foreach ($formFields as $descriptionIndex => $description) {
             $narrativeForm = sprintf('%s.activity_description.%s', $formBase, $descriptionIndex);
             $messages = array_merge($messages, $this->getMessagesForNarrative($description['narrative'], $narrativeForm));
@@ -233,26 +267,32 @@ class LocationRequest extends ActivityBaseRequest
 
     /**
      * returns rules for administrative.
+     *
      * @param $formFields
      * @param $formBase
+     *
      * @return array
      */
-    protected function getRulesForAdministrative($formFields, $formBase)
+    protected function getRulesForAdministrative($formFields, $formBase): array
     {
         $rules = [];
+
         foreach ($formFields as $administrativeIndex => $administrative) {
             $administrativeForm = sprintf('%s.administrative.%s', $formBase, $administrativeIndex);
 
             if ($administrative['code'] != '') {
                 $rules[sprintf('%s.vocabulary', $administrativeForm)] = 'required_with:' . sprintf('%s.code', $administrativeForm);
             }
+
             if ($administrative['vocabulary'] != '') {
                 $rules[sprintf('%s.code', $administrativeForm)] = 'required_with:' . sprintf('%s.vocabulary', $administrativeForm);
             }
+
             if ($administrative['level'] != '') {
                 $rules[sprintf('%s.vocabulary', $administrativeForm)] = 'required_with:' . sprintf('%s.level', $administrativeForm);
                 $rules[sprintf('%s.code', $administrativeForm)] = 'required_with:' . sprintf('%s.level', $administrativeForm);
             }
+
             $rules[sprintf('%s.level', $administrativeForm)] = 'nullable|min:0|integer';
         }
 
@@ -261,15 +301,19 @@ class LocationRequest extends ActivityBaseRequest
 
     /**
      * returns messages for administrative.
+     *
      * @param $formFields
      * @param $formBase
+     *
      * @return array
      */
-    protected function getMessagesForAdministrative($formFields, $formBase)
+    protected function getMessagesForAdministrative($formFields, $formBase): array
     {
         $messages = [];
+
         foreach ($formFields as $administrativeIndex => $administrative) {
             $administrativeForm = sprintf('%s.administrative.%s', $formBase, $administrativeIndex);
+
             if ($administrative['code'] != '') {
                 $messages[sprintf('%s.vocabulary.required_with', $administrativeForm)] = trans(
                     'validation.required_with',
@@ -303,11 +347,13 @@ class LocationRequest extends ActivityBaseRequest
 
     /**
      * returns rules for point.
+     *
      * @param $formFields
      * @param $formBase
+     *
      * @return array
      */
-    protected function getRulesForPoint($formFields, $formBase)
+    protected function getRulesForPoint($formFields, $formBase): array
     {
         $rules = [];
         $pointForm = sprintf('%s.point.0', $formBase);
@@ -323,11 +369,13 @@ class LocationRequest extends ActivityBaseRequest
 
     /**
      * returns messages for point.
+     *
      * @param $formFields
      * @param $formBase
+     *
      * @return array
      */
-    protected function getMessagesForPoint($formFields, $formBase)
+    protected function getMessagesForPoint($formFields, $formBase): array
     {
         $messages = [];
         $pointForm = sprintf('%s.point.0', $formBase);

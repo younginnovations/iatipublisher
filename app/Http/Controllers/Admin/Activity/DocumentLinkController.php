@@ -23,6 +23,10 @@ class DocumentLinkController extends Controller
      * @var MultilevelSubElementFormCreator
      */
     protected MultilevelSubElementFormCreator $multilevelSubElementFormCreator;
+
+    /**
+     * @var BaseFormCreator
+     */
     protected BaseFormCreator $baseFormCreator;
 
     /**
@@ -58,7 +62,6 @@ class DocumentLinkController extends Controller
             $model = $this->documentLinkService->getDocumentLinkData($id) ?: [];
             $this->baseFormCreator->url = route('admin.activities.document-link.update', [$id]);
             $form = $this->baseFormCreator->editForm($model, $element['document_link']);
-            dd($form);
 
             return view('activity.documentLink.documentLink', compact('form', 'activity'));
         } catch (\Exception $e) {

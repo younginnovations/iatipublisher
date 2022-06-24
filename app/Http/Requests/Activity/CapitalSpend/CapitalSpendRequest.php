@@ -29,7 +29,6 @@ class CapitalSpendRequest extends ActivityBaseRequest
     public function messages(): array
     {
         return [
-//            'required'  => 'The @percentage field is required.',
         ];
     }
 }
