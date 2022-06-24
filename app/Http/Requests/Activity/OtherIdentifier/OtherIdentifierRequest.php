@@ -23,6 +23,8 @@ class OtherIdentifierRequest extends ActivityBaseRequest
     }
 
     /**
+     * Get validation messages.
+     *
      * @return array
      */
     public function messages()
@@ -31,7 +33,10 @@ class OtherIdentifierRequest extends ActivityBaseRequest
     }
 
     /**
+     * Returns rules for other identifier.
+     *
      * @param array $formFields
+     *
      * @return array
      */
     public function getRulesForOtherIdentifier(array $formFields)
@@ -55,7 +60,10 @@ class OtherIdentifierRequest extends ActivityBaseRequest
     }
 
     /**
+     * Returns messages for other identifier.
+     *
      * @param array $formFields
+     *
      * @return array
      */
     public function getMessagesForOtherIdentifier(array $formFields)

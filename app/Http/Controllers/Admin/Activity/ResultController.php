@@ -53,13 +53,14 @@ class ResultController extends Controller
      */
     public function index()
     {
-        dd('index');
+        //
     }
 
     /**
      * Show the form for creating a new resource.
      *
      * @param $id
+     *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Http\RedirectResponse|\Illuminate\Contracts\Foundation\Application
      */
     public function create($id): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Http\RedirectResponse|\Illuminate\Contracts\Foundation\Application
@@ -85,6 +86,7 @@ class ResultController extends Controller
      * Store a newly created resource in storage.
      *
      * @param ResultRequest $request
+     *
      * @return \Illuminate\Http\RedirectResponse
      */
     public function store(ResultRequest $request, $activityId): \Illuminate\Http\RedirectResponse
@@ -120,11 +122,12 @@ class ResultController extends Controller
      * Display the specified resource.
      *
      * @param \App\IATI\Models\Activity\Result $result
+     *
      * @return \Illuminate\Http\Response
      */
     public function show(Result $result)
     {
-        dd('show');
+        //
     }
 
     /**
@@ -132,6 +135,7 @@ class ResultController extends Controller
      *
      * @param $activityId
      * @param $resultId
+     *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Http\RedirectResponse|\Illuminate\Contracts\Foundation\Application
      */
     public function edit(
@@ -161,8 +165,10 @@ class ResultController extends Controller
      *
      * @param $activityId
      * @param $resultId
+     *
+     * @return \Illuminate\Http\RedirectResponse
      */
-    public function update(ResultRequest $request, $activityId, $resultId)
+    public function update(ResultRequest $request, $activityId, $resultId): \Illuminate\Http\RedirectResponse
     {
         try {
             $resultData = $request->except(['_method', '_token']);
@@ -196,10 +202,11 @@ class ResultController extends Controller
      * Remove the specified resource from storage.
      *
      * @param \App\IATI\Models\Activity\Result $result
+     *
      * @return \Illuminate\Http\Response
      */
     public function destroy(Result $result)
     {
-        dd('destroy');
+        //
     }
 }

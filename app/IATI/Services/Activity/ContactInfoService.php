@@ -8,8 +8,7 @@ use App\IATI\Repositories\Activity\ContactInfoRepository;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * Class DocumentLink
- *Service.
+ * Class ContactInfoService.
  */
 class ContactInfoService
 {
@@ -53,15 +52,15 @@ class ContactInfoService
     }
 
     /**
-     * Updates activity country budget item.
+     * Updates activity contact info.
      *
-     * @param $documentLink
+     * @param $contactInfo
      * @param $activity
      *
      * @return bool
      */
-    public function update($documentLink, $activity): bool
+    public function update($contactInfo, $activity): bool
     {
-        return $this->contactInfoRepository->update($documentLink, $activity);
+        return $this->contactInfoRepository->update($contactInfo, $activity);
     }
 }

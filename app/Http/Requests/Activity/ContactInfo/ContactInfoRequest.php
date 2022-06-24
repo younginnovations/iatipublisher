@@ -22,6 +22,8 @@ class ContactInfoRequest extends ActivityBaseRequest
     }
 
     /**
+     * Get validation messages.
+     *
      * @return array
      */
     public function messages()
@@ -30,7 +32,10 @@ class ContactInfoRequest extends ActivityBaseRequest
     }
 
     /**
+     * Returns rules for contact info.
+     *
      * @param array $formFields
+     *
      * @return array
      */
     protected function getRulesForContactInfo(array $formFields)
@@ -56,7 +61,10 @@ class ContactInfoRequest extends ActivityBaseRequest
     }
 
     /**
+     * Returns messages for contact info.
+     *
      * @param array $formFields
+     *
      * @return array
      */
     protected function getMessagesForContactInfo(array $formFields)
@@ -82,8 +90,11 @@ class ContactInfoRequest extends ActivityBaseRequest
     }
 
     /**
+     * Returns rules for organisation.
+     *
      * @param $formFields
      * @param $formBase
+     *
      * @return array
      */
     protected function getRulesForOrganisation($formFields, $formBase)
@@ -99,8 +110,11 @@ class ContactInfoRequest extends ActivityBaseRequest
     }
 
     /**
+     * Returns messages for organisation.
+     *
      * @param $formFields
      * @param $formBase
+     *
      * @return array
      */
     protected function getMessagesForOrganisation($formFields, $formBase)
@@ -116,8 +130,11 @@ class ContactInfoRequest extends ActivityBaseRequest
     }
 
     /**
+     * Returns rules for department.
+     *
      * @param $formFields
      * @param $formBase
+     *
      * @return array
      */
     protected function getRulesForDepartment($formFields, $formBase)
@@ -133,8 +150,11 @@ class ContactInfoRequest extends ActivityBaseRequest
     }
 
     /**
+     * Returns messagess for department.
+     *
      * @param $formFields
      * @param $formBase
+     *
      * @return array
      */
     protected function getMessagesForDepartment($formFields, $formBase)
@@ -150,8 +170,11 @@ class ContactInfoRequest extends ActivityBaseRequest
     }
 
     /**
+     * Returns rules for person name.
+     *
      * @param $formFields
      * @param $formBase
+     *
      * @return array
      */
     protected function getRulesForPersonName($formFields, $formBase)
@@ -167,8 +190,11 @@ class ContactInfoRequest extends ActivityBaseRequest
     }
 
     /**
+     * Returns messaged for person name.
+     *
      * @param $formFields
      * @param $formBase
+     *
      * @return array
      */
     protected function getMessagesForPersonName($formFields, $formBase)
@@ -184,8 +210,11 @@ class ContactInfoRequest extends ActivityBaseRequest
     }
 
     /**
+     * Returns rules for job title.
+     *
      * @param $formFields
      * @param $formBase
+     *
      * @return array
      */
     protected function getRulesForJobTitle($formFields, $formBase)
@@ -201,8 +230,11 @@ class ContactInfoRequest extends ActivityBaseRequest
     }
 
     /**
+     * Returns messages for job title.
+     *
      * @param $formFields
      * @param $formBase
+     *
      * @return array
      */
     protected function getMessagesForJobTitle($formFields, $formBase)
@@ -218,8 +250,11 @@ class ContactInfoRequest extends ActivityBaseRequest
     }
 
     /**
+     * Returns rules for mailing address.
+     *
      * @param $formFields
      * @param $formBase
+     *
      * @return array
      */
     protected function getRulesForMailingAddress($formFields, $formBase)
@@ -235,8 +270,11 @@ class ContactInfoRequest extends ActivityBaseRequest
     }
 
     /**
+     * Returns messages for mailing address.
+     *
      * @param $formFields
      * @param $formBase
+     *
      * @return array
      */
     protected function getMessagesForMailingAddress($formFields, $formBase)
@@ -252,8 +290,11 @@ class ContactInfoRequest extends ActivityBaseRequest
     }
 
     /**
+     * Returns rules for telephone.
+     *
      * @param $formFields
      * @param $formBase
+     *
      * @return array
      */
     protected function getRulesForTelephone($formFields, $formBase)
@@ -268,8 +309,11 @@ class ContactInfoRequest extends ActivityBaseRequest
     }
 
     /**
+     * Returns messages for telephone.
+     *
      * @param $formFields
      * @param $formBase
+     *
      * @return array
      */
     protected function getMessagesForTelephone($formFields, $formBase)
@@ -287,8 +331,11 @@ class ContactInfoRequest extends ActivityBaseRequest
     }
 
     /**
+     * Returns rules for email.
+     *
      * @param $formFields
      * @param $formBase
+     *
      * @return array
      */
     protected function getRulesForEmail($formFields, $formBase)
@@ -303,8 +350,11 @@ class ContactInfoRequest extends ActivityBaseRequest
     }
 
     /**
+     * Returns messages for email.
+     *
      * @param $formFields
      * @param $formBase
+     *
      * @return array
      */
     protected function getMessagesForEmail($formFields, $formBase)
@@ -323,8 +373,10 @@ class ContactInfoRequest extends ActivityBaseRequest
 
     /**
      * rule for website.
+     *
      * @param $formFields
      * @param $formBase
+     *
      * @return array
      */
     protected function getRulesForWebsite($formFields, $formBase)
@@ -339,8 +391,11 @@ class ContactInfoRequest extends ActivityBaseRequest
     }
 
     /**
+     * returns messages for website.
+     *
      * @param $formFields
      * @param $formBase
+     *
      * @return array
      */
     protected function getMessagesForWebsite($formFields, $formBase)

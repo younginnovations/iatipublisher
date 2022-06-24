@@ -55,10 +55,10 @@
 {{--                        <div class="hidden collection-container" form_type="narrative"--}}
 {{--                             data-prototype="{{ str_replace('condition[0]','condition[__PARENT_NAME__]',form_row($form->condition->getChildren()[0]->getChild('narrative')->prototype())) }}">--}}
 {{--                        </div>--}}
-                        <div class="hidden collection-container title" form_type="title_narrative"
+                        <div class="hidden collection-container title" form_type="title"
                              data-prototype="{{ form_row($form->title->getChildren()[0]->getChild('narrative')->prototype()) }}">
                         </div>
-                        <div class="hidden collection-container title" form_type="description_narrative"
+                        <div class="hidden collection-container title" form_type="description"
                              data-prototype="{{ form_row($form->description->getChildren()[0]->getChild('narrative')->prototype()) }}">
                         </div>
                         <div class="hidden collection-container title" form_type="document_link_category"

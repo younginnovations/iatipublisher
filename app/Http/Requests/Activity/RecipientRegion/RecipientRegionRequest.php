@@ -18,6 +18,11 @@ class RecipientRegionRequest extends ActivityBaseRequest
      */
     protected $recipientCountryService;
 
+    /**
+     * RecipientRegionRequest Constructor.
+     *
+     * @param RecipientCountryService $recipientCountryService
+     */
     public function __construct(RecipientCountryService $recipientCountryService)
     {
         parent::__construct();
@@ -46,7 +51,9 @@ class RecipientRegionRequest extends ActivityBaseRequest
 
     /**
      * Returns rules for related activity.
+     *
      * @param array $formFields
+     *
      * @return array
      */
     protected function getRulesForRecipientRegion(array $formFields): array
@@ -110,7 +117,9 @@ class RecipientRegionRequest extends ActivityBaseRequest
 
     /**
      * Returns messages for related activity validations.
+     *
      * @param array $formFields
+     *
      * @return array
      */
     protected function getMessagesForRecipientRegion(array $formFields): array
@@ -140,7 +149,9 @@ class RecipientRegionRequest extends ActivityBaseRequest
 
     /**
      * generate rules for percentage.
+     *
      * @param $regions
+     *
      * @return array
      */
     protected function getPercentageRules($regions): array

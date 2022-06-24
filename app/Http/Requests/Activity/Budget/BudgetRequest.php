@@ -34,7 +34,9 @@ class BudgetRequest extends ActivityBaseRequest
 
     /**
      * Returns rules for related activity.
+     *
      * @param array $formFields
+     *
      * @return array
      */
     protected function getRulesForBudget(array $formFields): array
@@ -63,8 +65,10 @@ class BudgetRequest extends ActivityBaseRequest
 
     /**
      * returns rules for period start form.
+     *
      * @param $formFields
      * @param $formBase
+     *
      * @return array
      */
     public function getRulesForPeriodStart($formFields, $formBase)
@@ -80,8 +84,10 @@ class BudgetRequest extends ActivityBaseRequest
 
     /**
      * returns rules for period end form.
+     *
      * @param $formFields
      * @param $formBase
+     *
      * @return array
      */
     public function getRulesForPeriodEnd($formFields, $formBase)
@@ -101,8 +107,11 @@ class BudgetRequest extends ActivityBaseRequest
     }
 
     /**
+     * Returns rules for value.
+     *
      * @param $formFields
      * @param $formBase
+     *
      * @return array
      */
     protected function getRulesForValue($formFields, $formBase)
@@ -120,7 +129,9 @@ class BudgetRequest extends ActivityBaseRequest
 
     /**
      * Returns messages for related activity validations.
+     *
      * @param array $formFields
+     *
      * @return array
      */
     protected function getMessagesForBudget(array $formFields): array
@@ -145,8 +156,10 @@ class BudgetRequest extends ActivityBaseRequest
 
     /**
      * returns messages for period start form.
+     *
      * @param $formFields
      * @param $formBase
+     *
      * @return array
      */
     public function getMessagesForPeriodStart($formFields, $formBase)
@@ -162,8 +175,10 @@ class BudgetRequest extends ActivityBaseRequest
 
     /**
      * returns messages for period end form.
+     *
      * @param $formFields
      * @param $formBase
+     *
      * @return array
      */
     public function getMessagesForPeriodEnd($formFields, $formBase)
@@ -179,8 +194,11 @@ class BudgetRequest extends ActivityBaseRequest
     }
 
     /**
+     * Returns messages for value.
+     *
      * @param $formFields
      * @param $formBase
+     *
      * @return array
      */
     protected function getMessagesForValue($formFields, $formBase)

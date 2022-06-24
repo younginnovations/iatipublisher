@@ -106,8 +106,10 @@ class ResultRequest extends ActivityBaseRequest
 
     /**
      * returns rules for Document Link.
+     *
      * @param $formFields
      * @param $formBase
+     *
      * @return array|mixed
      */
     public function getRulesForDocumentLink($formFields)
@@ -186,7 +188,9 @@ class ResultRequest extends ActivityBaseRequest
 
     /**
      * returns messages for Document Link.
+     *
      * @param $formFields
+     *
      * @return array|mixed
      */
     public function getMessagesForDocumentLink($formFields)
@@ -232,8 +236,11 @@ class ResultRequest extends ActivityBaseRequest
     }
 
     /**
+     * returns messages for document date.
+     *
      * @param $formFields
      * @param $formIndex
+     *
      * @return array
      */
     protected function getMessagesForDocumentDate($formFields, $formIndex)
@@ -249,9 +256,12 @@ class ResultRequest extends ActivityBaseRequest
     }
 
     /**
+     * returns rules for document date.
+     *
      * @param $formFields
      * @param $formIndex
      * @param $documentLink
+     *
      * @return array
      */
     protected function getRulesForDocumentDate($formFields, $formIndex, $documentLink)
@@ -267,7 +277,9 @@ class ResultRequest extends ActivityBaseRequest
 
     /**
      * returns rules for Reference.
+     *
      * @param $formFields
+     *
      * @return array|mixed
      */
     protected function getRulesforReferences($formFields)
@@ -291,7 +303,9 @@ class ResultRequest extends ActivityBaseRequest
 
     /**
      * returns messages for Reference.
+     *
      * @param $formFields
+     *
      * @return array|mixed
      */
     protected function getMessagesForReferences($formFields)

@@ -102,7 +102,6 @@ class DateController extends Controller
     private function validateData(array $activityDates): array
     {
         $messages = [];
-//        $hasStart = false;
 
         foreach ($activityDates as $activityDateIndex => $activityDate) {
             $blockIndex = $activityDateIndex + 1;
@@ -137,16 +136,8 @@ class DateController extends Controller
                         }
                     }
                 }
-
-//                if ($type == 1 || $type == 2) {
-//                    $hasStart = true;
-//                }
             }
         }
-
-//        if (!$hasStart) {
-//            array_unshift($messages, 'Planned Start or Actual Start in Activity Date Type is required.');
-//        }
 
         return $messages;
     }

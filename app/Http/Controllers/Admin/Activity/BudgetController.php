@@ -40,6 +40,8 @@ class BudgetController extends Controller
     }
 
     /**
+     * Renders budget edit form.
+     *
      * @param int $id
      *
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|void

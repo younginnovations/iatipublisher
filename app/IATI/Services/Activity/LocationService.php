@@ -8,8 +8,7 @@ use App\IATI\Repositories\Activity\LocationRepository;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * Class DocumentLink
- *Service.
+ * Class LocationService.
  */
 class LocationService
 {
@@ -55,13 +54,13 @@ class LocationService
     /**
      * Updates activity location.
      *
-     * @param $documentLink
+     * @param $location
      * @param $activity
      *
      * @return bool
      */
-    public function update($documentLink, $activity): bool
+    public function update($location, $activity): bool
     {
-        return $this->locationRepository->update($documentLink, $activity);
+        return $this->locationRepository->update($location, $activity);
     }
 }

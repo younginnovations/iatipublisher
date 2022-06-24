@@ -8,8 +8,7 @@ use App\IATI\Repositories\Activity\DocumentLinkRepository;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * Class DocumentLink
- *Service.
+ * Class DocumentLinkService.
  */
 class DocumentLinkService
 {

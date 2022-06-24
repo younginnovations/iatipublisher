@@ -32,7 +32,7 @@
     "label": "Title",
     "multiple": false
   },
-  "reporting-org": {
+  "reporting_org": {
     "sub-elements": {
       "narrative": {
         "type": "text",
@@ -64,7 +64,7 @@
     "criteria": "mandatory",
     "label": "Title"
   },
-  "activity-identifier": {
+  "activity_identifier": {
     "label": "Activity Identifier",
     "criteria": "mandatory",
     "attributes": {
@@ -132,7 +132,6 @@
             "add_more": true,
             "criteria": "",
             "label": "narrative",
-            "add_more": true,
             "attr": {
               "row": 4
             },
@@ -294,7 +293,7 @@
       }
     }
   },
-  "recipient-country": {
+  "recipient_country": {
     "name": "recipient_country",
     "label": "Recipient Country",
     "criteria": "recommended",
@@ -350,7 +349,7 @@
       }
     }
   },
-  "recipient-region": {
+  "recipient_region": {
     "name": "recipient_region",
     "label": "Recipient Region",
     "criteria": "recommended",
@@ -624,7 +623,7 @@
       }
     }
   },
-  "policy-marker": {
+  "policy_marker": {
     "name": "policy_marker",
     "label": "Activity Policy Marker",
     "criteria": "",
@@ -713,7 +712,7 @@
       }
     }
   },
-  "collaboration-type": {
+  "collaboration_type": {
     "label": "Activity Collaboration Type",
     "criteria": "recommended",
     "attributes": {
@@ -730,7 +729,7 @@
       }
     }
   },
-  "default-flow-type": {
+  "default_flow_type": {
     "label": "Activity Default Flow Type",
     "criteria": "recommended",
     "attributes": {
@@ -747,7 +746,7 @@
       }
     }
   },
-  "default-finance-type": {
+  "default_finance_type": {
     "label": "Activity Default Finance Type",
     "criteria": "recommended",
     "attributes": {
@@ -763,13 +762,13 @@
       }
     }
   },
-  "default-aid-type": {
-    "label": "Activity Default Aid Type",
+  "default_aid_type": {
+    "label": "default_aid_type",
     "criteria": "recommended",
     "add_more": true,
+    "name": "default_aid_type",
+    "add_more_attributes": true,
     "attributes": {
-      "name": "default_aid_type",
-      "add_more": true,
       "vocabulary": {
         "label": "@vocabulary",
         "name": "default_aidtype_vocabulary",
@@ -830,7 +829,7 @@
       }
     }
   },
-  "default-tied-status": {
+  "default_tied_status": {
     "label": "Activity Default Tied Status",
     "criteria": "recommended",
     "attributes": {
@@ -847,7 +846,7 @@
       }
     }
   },
-  "country-budget-items": {
+  "country_budget_items": {
     "label": "Activity Country Budget Items",
     "name": "activity_country_budget_items",
     "criteria": "",
@@ -943,7 +942,7 @@
       }
     }
   },
-  "humanitarian-scope": {
+  "humanitarian_scope": {
     "name": "humanitarian_scope",
     "label": "Humanitarian Scope",
     "criteria": "",
@@ -1020,7 +1019,7 @@
       }
     }
   },
-  "capital-spend": {
+  "capital_spend": {
     "label": "Activity Capital Spend",
     "criteria": "",
     "attributes": {
@@ -1036,13 +1035,13 @@
       }
     }
   },
-  "related-activity": {
+  "related_activity": {
     "label": "Related Activity",
     "criteria": "",
     "add_more": true,
+    "name": "related_activity",
+    "add_more_attributes": true,
     "attributes": {
-      "name": "related_activity",
-      "add_more": true,
       "reference": {
         "name": "activity_identifier",
         "label": "@ref",
@@ -1137,13 +1136,13 @@
       }
     }
   },
-  "legacy-data": {
+  "legacy_data": {
     "label": "Activity Legacy Data",
     "criteria": "",
     "add_more": true,
+    "add_more_attributes": true,
+    "name": "legacy_data",
     "attributes": {
-      "name": "legacy_data",
-      "add_more": true,
       "name_attribute": {
         "name": "name",
         "label": "@name",
@@ -1173,7 +1172,7 @@
       }
     }
   },
-  "document-link": {
+  "document_link": {
     "name": "activity_document_link",
     "label": "Document Link",
     "criteria": "",
@@ -1336,7 +1335,7 @@
   },
   "contact_info": {
     "name": "contact_info",
-    "label": "Document Link",
+    "label": "Contact Info",
     "criteria": "",
     "add_more": true,
     "attributes": {
@@ -1914,7 +1913,7 @@
       }
     }
   },
-  "participating-org": {
+  "participating_org": {
     "name": "participating_org",
     "label": "Participating Organization",
     "criteria": "",
@@ -2378,8 +2377,6 @@
         "add_more": true,
         "sub_elements": false,
         "attributes": {
-          "name": "reference",
-          "add_more": true,
           "make_collection": false,
           "reference_vocabulary": {
             "name": "vocabulary",
