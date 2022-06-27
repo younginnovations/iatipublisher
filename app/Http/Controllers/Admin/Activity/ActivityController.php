@@ -112,6 +112,7 @@ class ActivityController extends Controller
 
             return view('admin.activity.show', compact('elements', 'elementGroups', 'progress', 'activity', 'toast', 'types', 'status'));
         } catch (Exception $e) {
+            dd($e->getMessage());
             logger()->error($e->getMessage());
         }
     }
@@ -272,9 +273,15 @@ class ActivityController extends Controller
             'other_identifier'     => $activity->other_identifier_element_completed,
             'country_budget_items' => $activity->country_budget_items_element_completed,
             'budget'               => $activity->budget_element_completed,
-            'participating_org'    => false,
-            'transaction'          => false,
+            'participating_org'    => $activity->participating_org_element_completed,
             'reporting_org'        => false,
+            'document_link'        => false,
+            'contact_info'         => $activity->contact_info_element_completed,
+            'location'             => $activity->location_element_completed,
+            'planned_disbursement' => false,
+            'transaction'          => false,
+            'result'               => false,
+            'indicator'            => false,
         ];
     }
 

@@ -322,7 +322,7 @@ class Activity extends Model
      *
      * @return bool
      */
-    public function isLevelTwoElementCompleted($element, $data): bool
+    public function isLevelTwoSingleDimensionElementCompleted($element, $data): bool
     {
         if (!$this->singleDimensionAttributeCheck($element, $data)) {
             return false;
@@ -345,6 +345,50 @@ class Activity extends Model
 
             if (!$this->isSubElementDataCompleted($mandatoryChildSubElements, $tempData)) {
                 return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Checks if two level sub element is complete.
+     *
+     * @param $element
+     * @param $data
+     *
+     * @return bool
+     */
+    public function isLevelTwoMultiDimensionElementCompleted($element, $data): bool
+    {
+        $elementSchema = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
+
+        if (array_key_exists('attributes', $elementSchema[$element])) {
+            if (!$this->isAttributeDataCompleted($this->mandatoryAttributes($elementSchema[$element]['attributes']), $data)) {
+                return false;
+            }
+        }
+
+        $subElements = $elementSchema[$element]['sub_elements'];
+
+        foreach ($subElements as $key => $subElement) {
+            $subElementAttributes = $subElement['attributes'];
+            $mandatorySubElementAttributes = $this->mandatoryAttributes($subElementAttributes);
+
+            foreach ($data as $datum) {
+                $tempData = $datum[$key];
+
+                if (!$this->isAttributeDataCompleted($mandatorySubElementAttributes, $tempData)) {
+                    //dd('sub-element-attribute-check:', $mandatorySubElementAttributes, $tempData);
+                    return false;
+                }
+
+                $childSubElements = $subElement['sub_elements'];
+                $mandatoryChildSubElements = $this->mandatorySubElements($childSubElements);
+
+                if (!$this->isSubElementDataCompleted($mandatoryChildSubElements, $tempData)) {
+                    return false;
+                }
             }
         }
 
@@ -486,16 +530,6 @@ class Activity extends Model
     }
 
     /**
-     * Returns other_identifier element complete status.
-     *
-     * @return bool
-     */
-    public function getOtherIdentifierElementCompletedAttribute(): bool
-    {
-        return $this->isLevelTwoElementCompleted('other_identifier', $this->other_identifier);
-    }
-
-    /**
      * Returns related_activity element complete status.
      *
      * @return bool
@@ -553,6 +587,16 @@ class Activity extends Model
     public function getPolicyMarkerElementCompletedAttribute(): bool
     {
         return $this->isLevelOneElementCompleted('policy_marker', $this->policy_marker);
+    }
+
+    /**
+     * Returns participating_org_element_completed element complete status.
+     *
+     * @return bool
+     */
+    public function getParticipatingOrgElementCompletedAttribute(): bool
+    {
+        return $this->isLevelOneElementCompleted('participating_org', $this->participating_organization);
     }
 
     /**
@@ -626,13 +670,43 @@ class Activity extends Model
     }
 
     /**
+     * Returns other_identifier element complete status.
+     *
+     * @return bool
+     */
+    public function getOtherIdentifierElementCompletedAttribute(): bool
+    {
+        return $this->isLevelTwoSingleDimensionElementCompleted('other_identifier', $this->other_identifier);
+    }
+
+    /**
      * Returns conditions element complete status.
      *
      * @return bool
      */
     public function getConditionsElementCompletedAttribute(): bool
     {
-        return $this->isLevelTwoElementCompleted('conditions', $this->conditions);
+        return $this->isLevelTwoSingleDimensionElementCompleted('conditions', $this->conditions);
+    }
+
+    /**
+     * Returns contact_info element complete status.
+     *
+     * @return bool
+     */
+    public function getContactInfoElementCompletedAttribute(): bool
+    {
+        return $this->isLevelTwoMultiDimensionElementCompleted('contact_info', $this->contact_info);
+    }
+
+    /**
+     * Returns location element complete status.
+     *
+     * @return bool
+     */
+    public function getLocationElementCompletedAttribute(): bool
+    {
+        return $this->isLevelTwoMultiDimensionElementCompleted('location', $this->location);
     }
 
     /**

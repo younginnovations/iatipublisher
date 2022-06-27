@@ -1358,7 +1358,7 @@
         "criteria": "",
         "required": false,
         "add_more": false,
-        "attributes": false,
+        "attributes": {},
         "sub_elements": {
           "narrative": {
             "name": "narrative",
@@ -1394,7 +1394,7 @@
         "criteria": "",
         "required": false,
         "add_more": false,
-        "attributes": false,
+        "attributes": {},
         "sub_elements": {
           "narrative": {
             "name": "narrative",
@@ -1430,7 +1430,7 @@
         "criteria": "",
         "required": false,
         "add_more": false,
-        "attributes": false,
+        "attributes": {},
         "sub_elements": {
           "narrative": {
             "name": "narrative",
@@ -1466,7 +1466,7 @@
         "criteria": "",
         "required": false,
         "add_more": false,
-        "attributes": false,
+        "attributes": {},
         "sub_elements": {
           "narrative": {
             "name": "narrative",
@@ -1512,7 +1512,8 @@
             "hover_text": "",
             "help_text": ""
           }
-        }
+        },
+        "sub_elements": {}
       },
       "email": {
         "name": "email",
@@ -1530,7 +1531,8 @@
             "hover_text": "",
             "help_text": ""
           }
-        }
+        },
+        "sub_elements": {}
       },
       "website": {
         "name": "website",
@@ -1548,7 +1550,8 @@
             "hover_text": "",
             "help_text": ""
           }
-        }
+        },
+        "sub_elements": {}
       },
       "mailing_address": {
         "name": "mailing_address",
@@ -1556,7 +1559,7 @@
         "criteria": "",
         "required": false,
         "add_more": true,
-        "attributes": false,
+        "attributes": {},
         "sub_elements": {
           "narrative": {
             "name": "narrative",
@@ -1590,12 +1593,12 @@
   },
   "location": {
     "name": "location",
-    "label": "Document Link",
+    "label": "Location",
     "criteria": "",
     "add_more": true,
     "attributes": {
       "ref": {
-        "name": "ref",
+        "name": "reference",
         "label": "@ref",
         "criteria": "",
         "required": true,
@@ -1625,7 +1628,8 @@
             "hover_text": "",
             "help_text": ""
           }
-        }
+        },
+        "sub_elements": {}
       },
       "location_id": {
         "name": "location_id",
@@ -1654,7 +1658,8 @@
             "hover_text": "",
             "help_text": ""
           }
-        }
+        },
+        "sub_elements": {}
       },
       "name": {
         "name": "name",
@@ -1662,7 +1667,7 @@
         "criteria": "",
         "required": false,
         "add_more": false,
-        "attributes": false,
+        "attributes": {},
         "sub_elements": {
           "narrative": {
             "name": "narrative",
@@ -1692,13 +1697,13 @@
           }
         }
       },
-      "description": {
-        "name": "description",
+      "location_description": {
+        "name": "location_description",
         "label": "description",
         "criteria": "",
         "required": false,
         "add_more": false,
-        "attributes": false,
+        "attributes": {},
         "sub_elements": {
           "narrative": {
             "name": "narrative",
@@ -1734,7 +1739,7 @@
         "criteria": "",
         "required": false,
         "add_more": false,
-        "attributes": false,
+        "attributes": {},
         "sub_elements": {
           "narrative": {
             "name": "narrative",
@@ -1800,7 +1805,8 @@
             "hover_text": "",
             "help_text": ""
           }
-        }
+        },
+        "sub_elements": {}
       },
       "point": {
         "name": "point",
@@ -1826,6 +1832,7 @@
             "name": "pos",
             "hover_text": "The free text name or description of the item being described. This can be repeated in multiple languages. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/description/narrative/'>For more information</a>",
             "help_text": "",
+            "criteria": "",
             "attributes": {
               "latitude": {
                 "name": "latitude",
@@ -1869,7 +1876,8 @@
             "help_text": "",
             "choices": "Activity/LocationType.json"
           }
-        }
+        },
+        "sub_elements": {}
       },
       "location_class": {
         "name": "location_class",
@@ -1889,7 +1897,8 @@
             "help_text": "",
             "choices": "Activity/LocationType.json"
           }
-        }
+        },
+        "sub_elements": {}
       },
       "feature_designation": {
         "name": "feature_designation",
@@ -1909,7 +1918,8 @@
             "help_text": "",
             "choices": "Activity/LocationType.json"
           }
-        }
+        },
+        "sub_elements": {}
       }
     }
   },
@@ -1919,9 +1929,9 @@
     "criteria": "",
     "attributes": {
       "ref": {
-        "name": "ref",
+        "name": "identifier",
         "type": "select",
-        "criteria": "mandatory",
+        "criteria": "recommended",
         "required": true,
         "multiselect": false,
         "label": "@ref",
@@ -1930,9 +1940,9 @@
         "help_text": ""
       },
       "type": {
-        "name": "type",
+        "name": "organization_type",
         "type": "select",
-        "criteria": "mandatory",
+        "criteria": "recommended",
         "required": true,
         "multiselect": false,
         "label": "@type",
@@ -1941,7 +1951,7 @@
         "help_text": ""
       },
       "role": {
-        "name": "type",
+        "name": "organization_role",
         "type": "checkbox",
         "criteria": "mandatory",
         "required": true,
@@ -1953,7 +1963,7 @@
       "activity_id": {
         "name": "activity_id",
         "type": "text",
-        "criteria": "mandatory",
+        "criteria": "recommended",
         "required": true,
         "multiselect": false,
         "label": "@activity-id",
@@ -1963,7 +1973,7 @@
       "crs_channel_code": {
         "name": "crs_channel_code",
         "type": "select",
-        "criteria": "mandatory",
+        "criteria": "",
         "required": true,
         "multiselect": false,
         "label": "@crs-channel-code",
@@ -1978,7 +1988,7 @@
         "type": "textarea",
         "required": false,
         "add_more": true,
-        "criteria": "",
+        "criteria": "recommended",
         "label": "narrative",
         "attr": {
           "row": 4
@@ -1991,7 +2001,7 @@
             "type": "select",
             "multiSelect": false,
             "required": false,
-            "criteria": "",
+            "criteria": "recommended",
             "label": "@xml:lang",
             "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/description/narrative/'>For more information</a>",
             "help_text": "",
