@@ -9,9 +9,9 @@
 
     <title>{{ config('app.name', 'IATI Publisher') }}</title>
 
-    <link href="{{ asset('css/app.css') }}" rel="stylesheet">
-    <script defer src="{{ asset('js/script.js') }}"></script>
-    <script defer src="{{ asset('js/app.js') }}"></script>
+    <link href="{{ mix('css/app.css') }}" rel="stylesheet">
+    <script defer src="{{ mix('js/script.js') }}"></script>
+    <script defer src="{{ mix('js/app.js') }}"></script>
 
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <link rel="icon"
@@ -20,7 +20,7 @@
 
     {{-- select2 --}}
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    {{-- <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script> --}}
 
 </head>
 

@@ -15,9 +15,9 @@
         href="https://prod-iati-website.azureedge.net/prod-iati-website/favicons/favicon-32x32.png">
 
     <!-- Scripts -->
-    <script src="{{ asset('js/app.js') }}" defer></script>
-    <script defer src="{{ asset('js/script.js') }}"></script>
-    <script defer src="{{ asset('js/formbuilder.js') }}"></script>
+    <script src="{{ mix('js/app.js') }}" defer></script>
+    <script defer src="{{ mix('js/script.js') }}"></script>
+    <script defer src="{{ mix('js/formbuilder.js') }}"></script>
 
     <!-- Fonts -->
     {{-- <link href="http://fonts.cdnfonts.com/css/arial" rel="stylesheet"> --}}
