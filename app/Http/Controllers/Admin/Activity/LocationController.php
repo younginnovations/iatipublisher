@@ -41,7 +41,7 @@ class LocationController extends Controller
     }
 
     /**
-     * Renders country budget item edit form.
+     * Renders location edit form.
      *
      * @param int $id
      *
@@ -52,7 +52,7 @@ class LocationController extends Controller
         try {
             $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
             $activity = $this->locationService->getActivityData($id);
-            $model = $this->locationService->getLocationData($id) ?: [];
+            $model['location'] = $this->locationService->getLocationData($id) ?: [];
             $this->parentCollectionFormCreator->url = route('admin.activities.location.update', [$id]);
             $form = $this->parentCollectionFormCreator->editForm($model, $element['location']);
 
@@ -60,12 +60,12 @@ class LocationController extends Controller
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while rendering country budget item form.');
+            return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while rendering location form.');
         }
     }
 
     /**
-     * Updates country budget item data.
+     * Updates location data.
      *
      * @param LocationRequest $request
      * @param $id
@@ -79,14 +79,14 @@ class LocationController extends Controller
             $activityCountryBudgetItem = $request->except(['_token', '_method']);
 
             if (!$this->locationService->update($activityCountryBudgetItem, $activityData)) {
-                return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while updating country budget item.');
+                return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while updating location.');
             }
 
-            return redirect()->route('admin.activities.show', $id)->with('success', 'Country budget item updated successfully.');
+            return redirect()->route('admin.activities.show', $id)->with('success', 'Location updated successfully.');
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while updating country budget item.');
+            return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while updating location.');
         }
     }
 }
