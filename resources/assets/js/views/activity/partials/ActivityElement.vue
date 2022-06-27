@@ -82,7 +82,7 @@
       <template v-if="title === 'title'">
         <!-- Title content -->
         <div
-          v-for="(post, index) in content"
+          v-for="(post, index) in data.content"
           :key="index"
           class="title-content"
         >
