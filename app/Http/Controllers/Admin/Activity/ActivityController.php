@@ -139,6 +139,7 @@ class ActivityController extends Controller
                 compact('elements', 'elementGroups', 'progress', 'activity', 'toast', 'types', 'status', 'results', 'hasIndicatorPeriod', 'transactions')
             );
         } catch (Exception $e) {
+            dd($e->getMessage());
             logger()->error($e->getMessage());
 
             return response()->json(['success' => false, 'error' => 'Error has occurred rendering activity detail page']);
@@ -254,7 +255,6 @@ class ActivityController extends Controller
             'descriptionType'             => getCodeList('DescriptionType', 'Activity', false),
             'humanitarianScopeType'       => getCodeList('HumanitarianScopeType', 'Activity', false),
             'humanitarianScopeVocabulary' => getCodeList('HumanitarianScopeVocabulary', 'Activity', false),
-            'aidTypeVocabulary'           => getCodeList('AidTypeVocabulary', 'Activity', false),
             'earmarkingCategory'          => getCodeList('EarmarkingCategory', 'Activity', false),
             'earmarkingModality'          => getCodeList('EarmarkingModality', 'Activity', false),
             'cashandVoucherModalities'    => getCodeList('CashandVoucherModalities', 'Activity', false),
@@ -298,7 +298,7 @@ class ActivityController extends Controller
      *
      * @return array
      */
-    public function getActivityDetailStatus($activity): array
+    public function getActivityDetailStatus(Activity $activity): array
     {
         return [
             'iati_identifier'      => $activity->identifier_element_completed,
@@ -310,11 +310,13 @@ class ActivityController extends Controller
             'recipient_country'    => $activity->recipient_country_element_completed,
             'recipient_region'     => $activity->recipient_region_element_completed,
             'collaboration_type'   => $activity->collaboration_type_element_completed,
+            'default_flow_type'    => $activity->default_flow_type_element_completed,
             'default_finance_type' => $activity->default_finance_type_element_completed,
             'default_aid_type'     => $activity->default_aid_type_element_completed,
             'default_tied_status'  => $activity->default_tied_status_element_completed,
             'capital_spend'        => $activity->capital_spend_element_completed,
             'related_activity'     => $activity->related_activity_element_completed,
+            'conditions'           => $activity->conditions_element_completed,
             'sector'               => $activity->sector_element_completed,
             'humanitarian_scope'   => $activity->humanitarian_scope_element_completed,
             'legacy_data'          => $activity->legacy_data_element_completed,
@@ -323,6 +325,14 @@ class ActivityController extends Controller
             'other_identifier'     => $activity->other_identifier_element_completed,
             'country_budget_items' => $activity->country_budget_items_element_completed,
             'budget'               => $activity->budget_element_completed,
+            'participating_org'    => $activity->participating_org_element_completed,
+            'reporting_org'        => false,
+            'document_link'        => $activity->document_link_element_completed,
+            'contact_info'         => $activity->contact_info_element_completed,
+            'location'             => $activity->location_element_completed,
+            'planned_disbursement' => $activity->planned_disbursement_element_completed,
+            'transactions'          => $activity->transactions_element_completed,
+            'result'               => $activity->result_element_completed,
         ];
     }
 }

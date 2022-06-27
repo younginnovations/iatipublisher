@@ -623,8 +623,10 @@
         "hover_text": "The code for the tag as defined in the specified vocabulary. This attribute is required. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/tag/'>For more information</a>",
         "help_text": "",
         "parent": {
-          "name": "region_vocabulary",
-          "value": ["2"]
+          "name": "tag_vocabulary",
+          "value": [
+            "2"
+          ]
         }
       },
       "targets_tag_code": {
@@ -638,8 +640,10 @@
         "hover_text": "The code for the tag as defined in the specified vocabulary. This attribute is required. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/tag/'>For more information</a>",
         "help_text": "",
         "parent": {
-          "name": "region_vocabulary",
-          "value": ["3"]
+          "name": "tag_vocabulary",
+          "value": [
+            "3"
+          ]
         }
       },
       "tag_text": {
@@ -652,8 +656,11 @@
         "hover_text": "The code for the tag as defined in the specified vocabulary. This attribute is required. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/tag/'>For more information</a>",
         "help_text": "",
         "parent": {
-          "name": "region_vocabulary",
-          "value": ["1", "99"]
+          "name": "tag_vocabulary",
+          "value": [
+            "1",
+            "99"
+          ]
         }
       },
       "vocabulary_uri": {
@@ -666,8 +673,10 @@
         "hover_text": "The URI where this vocabulary is defined. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/tag/'>For more information</a>",
         "help_text": "",
         "parent": {
-          "name": "region_vocabulary",
-          "value": ["99"]
+          "name": "tag_vocabulary",
+          "value": [
+            "99"
+          ]
         }
       }
     },
@@ -710,8 +719,8 @@
       "policy_marker_text": {}
     },
     "attributes": {
-      "policymarker_vocabulary": {
-        "name": "policymarker_vocabulary",
+      "policy_marker_vocabulary": {
+        "name": "policy_marker_vocabulary",
         "label": "@vocabulary",
         "type": "select",
         "choices": "Activity/PolicyMarkerVocabulary.json",
@@ -730,8 +739,10 @@
         "hover_text": "If the vocabulary is 99 (reporting organisation), the URI where this internal vocabulary is defined. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/policy-marker/'>For more information</a>",
         "help_text": "",
         "parent": {
-          "name": "sector_vocabulary",
-          "value": ["99"]
+          "name": "policy_marker_vocabulary",
+          "value": [
+            "99"
+          ]
         }
       },
       "significance": {
@@ -754,8 +765,10 @@
         "hover_text": "A policy marker code from the codelist specified in the vocabulary. This attribute is required. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/policy-marker/'>For more information</a>",
         "help_text": "",
         "parent": {
-          "name": "sector_vocabulary",
-          "value": ["1"]
+          "name": "policy_marker_vocabulary",
+          "value": [
+            "1"
+          ]
         }
       },
       "policy_marker_text": {
@@ -768,8 +781,10 @@
         "hover_text": "A policy marker code from the codelist specified in the vocabulary. This attribute is required. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/policy-marker/'>For more information</a></a>",
         "help_text": "mandatory",
         "parent": {
-          "name": "sector_vocabulary",
-          "value": ["99"]
+          "name": "policy_marker_vocabulary",
+          "value": [
+            "99"
+          ]
         }
       }
     },

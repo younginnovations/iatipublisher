@@ -57,9 +57,9 @@ if (!function_exists('getCodeList')) {
      * @param string $encryptedString
      * @param string $key
      *
-     * @return mixed
+     * @return bool|string|null
      */
-    function decryptString($encryptedString, $key): mixed
+    function decryptString(string $encryptedString, string $key): bool|string|null
     {
         $json = json_decode(base64_decode($encryptedString), true);
 
