@@ -1177,28 +1177,27 @@
     }
   },
   "document_link": {
-    "name": "activity_document_link",
+    "name": "document_link",
     "label": "Document Link",
-    "criteria": "",
-    "add_more": false,
+    "add_more": true,
     "attributes": {
       "url": {
         "name": "url",
         "label": "@url",
+        "type": "text",
         "criteria": "",
         "required": true,
-        "type": "text",
         "hover_text": "",
         "help_text": ""
       },
       "format": {
         "name": "format",
         "label": "@format",
-        "criteria": "",
-        "required": true,
-        "multiselect": false,
         "type": "select",
         "choices": "Activity/FileFormat.json",
+        "multiselect": false,
+        "criteria": "",
+        "required": true,
         "hover_text": "",
         "help_text": ""
       }
@@ -1207,18 +1206,16 @@
       "title": {
         "name": "title",
         "label": "Title",
-        "criteria": "",
-        "required": false,
         "add_more": false,
-        "attributes": false,
+        "attributes": {},
         "sub_elements": {
           "narrative": {
             "name": "narrative",
+            "label": "narrative",
             "type": "textarea",
+            "criteria": "",
             "required": false,
             "add_more": true,
-            "criteria": "",
-            "label": "narrative",
             "attr": {
               "row": 4
             },
@@ -1227,14 +1224,14 @@
             "attributes": {
               "lang": {
                 "name": "language",
+                "label": "@xml:lang",
                 "type": "select",
                 "multiSelect": false,
+                "choices": "Activity/Language.json",
                 "required": false,
                 "criteria": "",
-                "label": "@xml:lang",
                 "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/description/narrative/'>For more information</a>",
-                "help_text": "",
-                "choices": "Activity/Language.json"
+                "help_text": ""
               }
             }
           }
@@ -1243,97 +1240,92 @@
       "description": {
         "name": "description",
         "label": "Description",
-        "criteria": "",
-        "required": false,
         "add_more": false,
-        "attributes": false,
+        "attributes": {},
         "sub_elements": {
           "narrative": {
             "name": "narrative",
+            "label": "narrative",
             "type": "textarea",
             "required": false,
             "add_more": false,
             "criteria": "",
-            "label": "narrative",
             "attr": {
               "row": 4
             },
             "hover_text": "The free text name or description of the item being described. This can be repeated in multiple languages. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/description/narrative/'>For more information</a>",
             "help_text": "",
-            "sub_elements": false,
             "attributes": {
               "lang": {
                 "name": "language",
+                "label": "@xml:lang",
                 "type": "select",
                 "multiSelect": false,
+                "choices": "Activity/Language.json",
                 "required": false,
                 "criteria": "",
-                "label": "@xml:lang",
                 "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/description/narrative/'>For more information</a>",
-                "help_text": "",
-                "choices": "Activity/Language.json"
+                "help_text": ""
               }
-            }
+            },
+            "sub_elements": {}
           }
         }
       },
       "category": {
         "name": "category",
         "label": "Category",
-        "criteria": "",
-        "required": false,
         "add_more": true,
         "attributes": {
           "code": {
             "name": "code",
+            "label": "@code",
             "type": "select",
             "multiSelect": false,
+            "choices": "Activity/DocumentCategory.json",
             "required": true,
             "criteria": "",
-            "label": "@code",
             "hover_text": "",
-            "help_text": "",
-            "choices": "Activity/DocumentCategory.json"
+            "help_text": ""
           }
-        }
+        },
+        "sub_elements": {}
       },
       "language": {
         "name": "language",
         "label": "Language",
-        "criteria": "",
-        "required": false,
         "add_more": true,
         "attributes": {
           "code": {
             "name": "code",
+            "label": "@code",
             "type": "select",
             "multiSelect": false,
+            "choices": "Activity/Language.json",
             "required": true,
             "criteria": "",
-            "label": "@code",
             "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/description/narrative/'>For more information</a>",
-            "help_text": "",
-            "choices": "Activity/Language.json"
+            "help_text": ""
           }
-        }
+        },
+        "sub_elements": {}
       },
       "document_date": {
         "name": "document_date",
         "label": "Document Date",
-        "criteria": "",
-        "required": false,
         "add_more": false,
         "attributes": {
           "date": {
             "name": "date",
+            "label": "date",
             "type": "date",
             "required": true,
             "criteria": "",
-            "label": "date",
             "hover_text": "",
             "help_text": ""
           }
-        }
+        },
+        "sub_elements": {}
       }
     }
   },

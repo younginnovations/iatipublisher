@@ -274,7 +274,7 @@ class ActivityController extends Controller
             'budget'               => $activity->budget_element_completed,
             'participating_org'    => $activity->participating_org_element_completed,
             'reporting_org'        => false,
-            'document_link'        => false,
+            'document_link'        => $activity->document_link_element_completed,
             'contact_info'         => $activity->contact_info_element_completed,
             'location'             => $activity->location_element_completed,
             'planned_disbursement' => $activity->planned_disbursement_element_completed,

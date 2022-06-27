@@ -690,6 +690,21 @@ class Activity extends Model
     }
 
     /**
+     * Returns conditions element complete status.
+     *
+     * @return bool
+     */
+    public function getDocumentLinkElementCompletedAttribute(): bool
+    {
+        $tempData = json_decode(
+            '[{"url":"","format":"image\/png","title":[{"narrative":[{"narrative":"document-link-narrative1","language":"en"}]}],"description":[{"narrative":[{"narrative":null,"language":null}]}],"category":[{"code":"A01"}],"language":[{"language":null}],"document_date":[{"date":null}]}]',
+            true
+        );
+
+        return $this->isLevelTwoMultiDimensionElementCompleted('document_link', $tempData);
+    }
+
+    /**
      * Returns contact_info element complete status.
      *
      * @return bool
