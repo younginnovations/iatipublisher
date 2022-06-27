@@ -110,7 +110,7 @@
       }
     },
     "sub_elements": {
-      "owner-org": {
+      "owner_org": {
         "name": "owner_org",
         "criteria": "",
         "add_more": true,
@@ -865,7 +865,7 @@
       }
     },
     "sub_elements": {
-      "budget-item": {
+      "budget_item": {
         "name": "budget_item",
         "label": "Budget Item",
         "criteria": "",

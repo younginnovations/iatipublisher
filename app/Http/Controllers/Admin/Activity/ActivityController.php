@@ -119,6 +119,7 @@ class ActivityController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
+     *
      * @param Activity $activity
      *
      * @return void

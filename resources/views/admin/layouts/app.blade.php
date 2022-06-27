@@ -34,7 +34,7 @@
 
 </head>
 
-<body>
+<body class="overflow-x-hidden">
     <div id="app">
         <loggedin-header :user="{{ Auth::user() }}" :organization="{{ Auth::user()->organization }}"
             :languages="{{ json_encode(getCodeListArray('Languages', 'ActivityArray')) }}"></loggedin-header>

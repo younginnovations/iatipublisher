@@ -2,6 +2,7 @@
   <div class="help">
     <button>
       <svg-vue
+        class="text-n-40"
         :class="props.icon_size ? 'text-tiny' : iconSize"
         icon="help"
       ></svg-vue>
