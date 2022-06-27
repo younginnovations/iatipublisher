@@ -17,7 +17,7 @@
                     >{{ pageTitle ?? 'Untitled' }}</span
                   >
                   <span class="ellipsis__title--hover w-[calc(100%_+_35px)]">{{
-                    pageTitle
+                    pageTitle ? pageTitle : 'Untitled'
                   }}</span>
                 </div>
               </div>
@@ -34,7 +34,9 @@
                 <span class="ellipsis__title overflow-hidden">{{
                   pageTitle ? pageTitle : 'Untitled'
                 }}</span>
-                <span class="ellipsis__title--hover">{{ pageTitle }}</span>
+                <span class="ellipsis__title--hover">{{
+                  pageTitle ? pageTitle : 'Untitled'
+                }}</span>
               </h4>
             </div>
           </div>
