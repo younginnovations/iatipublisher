@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\IATI\Services\Activity;
 
 use App\IATI\Repositories\Activity\DocumentLinkRepository;
+use App\IATI\Repositories\Document\DocumentRepository;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -18,13 +19,20 @@ class DocumentLinkService
     protected DocumentLinkRepository $documentLinkRepository;
 
     /**
+     * @var DocumentRepository
+     */
+    protected DocumentRepository $documentRepo;
+
+    /**
      * DocumentLinkService constructor.
      *
      * @param DocumentLinkRepository $documentLinkRepository
+     * @param DocumentRepository $documentRepo
      */
-    public function __construct(DocumentLinkRepository $documentLinkRepository)
+    public function __construct(DocumentLinkRepository $documentLinkRepository, DocumentRepository $documentRepo)
     {
         $this->documentLinkRepository = $documentLinkRepository;
+        $this->documentRepo = $documentRepo;
     }
 
     /**

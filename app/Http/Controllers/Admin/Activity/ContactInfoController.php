@@ -52,15 +52,16 @@ class ContactInfoController extends Controller
         try {
             $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
             $activity = $this->contactInfoService->getActivityData($id);
-            $model = $this->contactInfoService->getContactInfoData($id) ?: [];
+            $model['contact_info'] = $this->contactInfoService->getContactInfoData($id) ?: [];
             $this->parentCollectionFormCreator->url = route('admin.activities.contact-info.update', [$id]);
             $form = $this->parentCollectionFormCreator->editForm($model, $element['contact_info']);
+            $data = ['core'=> $element['contact_info']['criteria'], 'status'=> false, 'title'=> $element['contact_info']['label'], 'name'=>'contact_info'];
 
-            return view('activity.contactInfo.contactInfo', compact('form', 'activity'));
+            return view('activity.contactInfo.contactInfo', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while rendering country budget item form.');
+            return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while rendering contact info controller item form.');
         }
     }
 
@@ -79,14 +80,14 @@ class ContactInfoController extends Controller
             $activityCountryBudgetItem = $request->except(['_token', '_method']);
 
             if (!$this->contactInfoService->update($activityCountryBudgetItem, $activityData)) {
-                return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while updating country budget item.');
+                return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while updating contact info.');
             }
 
-            return redirect()->route('admin.activities.show', $id)->with('success', 'Country budget item updated successfully.');
+            return redirect()->route('admin.activities.show', $id)->with('success', 'Contact Info updated successfully.');
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while updating country budget item.');
+            return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while updating contact info.');
         }
     }
 }
