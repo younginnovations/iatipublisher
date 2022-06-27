@@ -46,15 +46,19 @@ class FormBuilder {
     ev.preventDefault();
     let target = ev.target as EventTarget;
     let container = $('.parent-collection');
+    console.log(container);
+    console.log(container.attr('data-prototype'));
     let count = $(target).attr('child_count')
       ? parseInt($(target).attr('child_count') as string) + 1
       : $('.multi-form').length;
     let proto = container.data('prototype').replace(/__PARENT_NAME__/g, count);
     proto = proto.replace(/__NAME__/g, 0);
+    console.log($('.multi-form').last());
     $('.multi-form').last().after($(proto));
     $('.multi-form').last().find('.select2').select2({
       placeholder: 'Select an option',
     });
+    console.log('here');
 
     this.addWrapperOnAdd();
 
@@ -123,6 +127,7 @@ class FormBuilder {
   }
 
   public addWrapperOnAdd(): void {
+    console.log('lKDJAsd',$('.multi-form'));
     $('.multi-form')
       .last()
       .find('.attribute')
@@ -894,6 +899,11 @@ $(function () {
   formBuilder.addWrapper();
   formBuilder.hideShowFormFields();
   formBuilder.updateActivityIdentifier();
+  console.log('here');
+
+  $('.delete').on('click', ()=>{
+    console.log('clicked');
+  })
 
   $('body').on('click', '.add_to_collection', (event: Event) => {
     formBuilder.addForm(event);
@@ -914,6 +924,7 @@ $(function () {
     childOrParent = '';
 
   $('body').on('click', '.delete', (event: Event) => {
+    console.log('yo');
     deleteConfirmation.fadeIn();
     deleteIndex = event;
     childOrParent = 'child';

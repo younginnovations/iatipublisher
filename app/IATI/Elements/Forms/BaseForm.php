@@ -38,7 +38,7 @@ class BaseForm extends Form
                         'dynamic_wrapper' => [
                             'class' => (isset($field['add_more']) && $field['add_more']) ?
                                 ((!Arr::get($element, 'attributes', null) && strtolower($field['name']) === 'narrative') ? 'border-l border-spring-50 pb-11' : 'subelement rounded-tl-lg border-l border-spring-50 pb-11')
-                                : ((!Arr::get($element, 'attributes', null) && $field['sub_elements'] && isset($field['sub_elements']['narrative'])) ? 'subelement rounded-tl-lg mb-6' : 'subelement rounded-tl-lg border-l border-spring-50 mb-6'),
+                                : ((!Arr::get($field, 'attributes', null) && $field['sub_elements'] && isset($field['sub_elements']['narrative'])) ? 'subelement rounded-tl-lg mb-6' : 'subelement rounded-tl-lg border-l border-spring-50 mb-6'),
                         ],
                     ],
                 ]
@@ -80,6 +80,7 @@ class BaseForm extends Form
             );
 
             $name = isset($field['name']) ? $field['name'] : $element['name'];
+
             if ((isset($field['add_more']) && $field['add_more']) || Arr::get($element, 'add_more_attributes', false)) {
                 $this->add('add_to_collection_' . $name, 'button', [
                     'label' => sprintf('add more %s', str_replace('_', ' ', '')),
