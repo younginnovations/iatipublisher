@@ -1,5 +1,5 @@
 <template>
-  <div class="iati-list-table overflow-auto">
+  <div class="iati-list-table">
     <table>
       <thead>
         <tr class="bg-n-10">
@@ -45,18 +45,26 @@
           @click="goToDetail(datum['id'])"
         >
           <td class="title">
-            <a
-              :href="'/activities/' + datum['id']"
-              class="hover:text-sp50 inline-flex max-w-screen-md items-start text-n-50 transition duration-500"
+            <div
+              class="inline-flex items-start transition duration-500 hover:text-spring-50"
             >
               <svg-vue
                 class="mr-3 mt-1 shrink-0 text-base text-spring-50"
                 icon="approved-cloud"
               ></svg-vue>
-              <span class="ellipsis">{{
-                datum['title'][0]['narrative'] ?? 'Untitled'
-              }}</span>
-            </a>
+              <div class="ellipsis relative">
+                <a
+                  :href="'/activities/' + datum['id']"
+                  class="ellipsis overflow-hidden text-n-50"
+                  >{{ datum['title'][0]['narrative'] ?? 'Untitled' }}</a
+                >
+                <div class="w-52">
+                  <span class="ellipsis__title--hover">{{
+                    datum['title'][0]['narrative'] ?? 'Untitled'
+                  }}</span>
+                </div>
+              </div>
+            </div>
           </td>
 
           <td class="text-n-40">{{ formatDate(datum.created_at) }}</td>
@@ -146,12 +154,3 @@ export default defineComponent({
   },
 });
 </script>
-
-<style lang="scss">
-.ellipsis {
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
-  @apply overflow-hidden text-ellipsis;
-}
-</style>
