@@ -8,7 +8,8 @@
     "plugin:vue/vue3-essential",
     "eslint:recommended",
     "plugin:@typescript-eslint/eslint-recommended",
-    "plugin:@typescript-eslint/recommended"
+    "plugin:@typescript-eslint/recommended",
+    "prettier"
   ],
   "parser": "vue-eslint-parser",
   "parserOptions": {
