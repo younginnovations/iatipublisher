@@ -14,7 +14,7 @@
                 <div class="breadcrumb__title">
                   <span
                     class="breadcrumb__title last overflow-hidden text-n-30"
-                    >{{ pageTitle }}</span
+                    >{{ pageTitle ?? 'Untitled' }}</span
                   >
                   <span class="ellipsis__title--hover w-[calc(100%_+_35px)]">{{
                     pageTitle
@@ -263,11 +263,7 @@
             </div>
           </div>
         </div>
-        <Elements
-          :activity-id="activity.id"
-          :data="elements"
-          :status="status"
-        />
+        <Elements :activity-id="activity.id" :data="elements" />
       </aside>
       <div class="activities__content">
         <div class="mb-3 inline-flex flex-wrap gap-2">
@@ -303,7 +299,7 @@
                 :id="key"
                 :data="element"
                 :types="props.types"
-                :title="name"
+                :title="name.toString()"
                 :activityId="activity.id"
                 :width="
                   name === 'title' ||
@@ -446,7 +442,6 @@ export default defineComponent({
           activities[key]['elements'][k]['content'] = detailData[k];
           flag = true;
         } else {
-          // activities[key]['elements'][k]['content'] = [];
           delete activities[key][k];
         }
       });
@@ -463,6 +458,17 @@ export default defineComponent({
       } else {
         groupedData[key]['status'] = 'disabled';
       }
+    });
+
+    /**
+     * Grouping all elements and theirs completed status
+     *
+     * combining props.elements and props.status
+     *
+     * @returns object
+     */
+    Object.keys(props.elements).map((key, index) => {
+      props.elements[key]['completed'] = props.status[key] ?? false;
     });
 
     return {

@@ -54,8 +54,9 @@ class DefaultFlowTypeController extends Controller
             $model['default_flow_type'] = $this->defaultFlowTypeService->getDefaultFlowTypeData($id);
             $this->baseFormCreator->url = route('admin.activities.default-flow-type.update', [$id]);
             $form = $this->baseFormCreator->editForm($model, $element['default_flow_type']);
+            $data = ['core'=> $element['default_flow_type']['criteria'], 'status'=> $activity->default_flow_type_element_completed, 'title'=> $element['default_flow_type']['label'], 'name'=>'default_flow_type'];
 
-            return view('activity.defaultFlowType.defaultFlowType', compact('form', 'activity'));
+            return view('activity.defaultFlowType.defaultFlowType', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 

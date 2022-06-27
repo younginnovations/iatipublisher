@@ -53,7 +53,9 @@
                 class="mr-3 mt-1 shrink-0 text-base text-spring-50"
                 icon="approved-cloud"
               ></svg-vue>
-              <span class="ellipsis">{{ datum['title'][0]['narrative'] }}</span>
+              <span class="ellipsis">{{
+                datum['title'][0]['narrative'] ?? 'Untitled'
+              }}</span>
             </a>
           </td>
 

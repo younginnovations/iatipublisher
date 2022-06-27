@@ -96,7 +96,6 @@ class FormBuilder {
     $('.add_to_parent').attr('child_count', count);
 
     if (collectionLength > 2) {
-      console.log($(target).parent());
       $(target).parent().remove();
     }
   }
@@ -904,12 +903,47 @@ $(function () {
     formBuilder.addParentForm(event);
   });
 
+  /**
+   * Delete function
+   *
+   */
+  var deleteConfirmation = $('.delete-confirmation'),
+    cancelPopup = '.cancel-popup',
+    deleteConfirm = '.delete-confirm',
+    deleteIndex = {},
+    childOrParent = '';
+
   $('body').on('click', '.delete', (event: Event) => {
-    formBuilder.deleteForm(event);
+    deleteConfirmation.fadeIn();
+    deleteIndex = event;
+    childOrParent = 'child';
   });
 
+  $('body').on('click', cancelPopup, (event: Event) => {
+    deleteConfirmation.fadeOut();
+    deleteIndex = {};
+    childOrParent = '';
+  });
+
+  $('body').on('click', deleteConfirm, (event: Event) => {
+    if (childOrParent === 'child') {
+      formBuilder.deleteForm(deleteIndex as Event);
+    } else if (childOrParent === 'parent') {
+      formBuilder.deleteParentForm(deleteIndex as Event);
+    }
+
+    deleteConfirmation.fadeOut();
+    deleteIndex = {};
+    childOrParent = '';
+  });
+
+  /**
+   * Delete parent element
+   */
   $('body').on('click', '.delete-parent', (event: Event) => {
-    formBuilder.deleteParentForm(event);
+    deleteConfirmation.fadeIn();
+    deleteIndex = event;
+    childOrParent = 'parent';
   });
 
   $('.select2').select2({

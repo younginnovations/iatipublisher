@@ -64,8 +64,8 @@
     "criteria": "mandatory",
     "label": "Title"
   },
-  "activity_identifier": {
-    "label": "Activity Identifier",
+  "iati_identifier": {
+    "label": "Identifier",
     "criteria": "mandatory",
     "attributes": {
       "iati-activity-identifier": {
@@ -204,7 +204,7 @@
     }
   },
   "activity_status": {
-    "label": "Activity Status",
+    "label": "Status",
     "criteria": "mandatory",
     "attributes": {
       "code": {
@@ -222,7 +222,7 @@
   },
   "activity_date": {
     "name": "activity_date",
-    "label": "Activity Date",
+    "label": "Date",
     "criteria": "mandatory",
     "add_more": true,
     "attributes": {
@@ -277,7 +277,7 @@
     }
   },
   "activity_scope": {
-    "label": "Activity Scope",
+    "label": "Scope",
     "criteria": "",
     "attributes": {
       "code": {
@@ -436,7 +436,7 @@
     }
   },
   "sector": {
-    "label": "Activity Sector",
+    "label": "Sector",
     "name": "sector",
     "criteria": "mandatory",
     "add_more" : true,
@@ -534,7 +534,7 @@
   },
   "tag": {
     "name": "tag",
-    "label": "Activity Tag",
+    "label": "Tag",
     "criteria": "",
     "add_more": true,
     "attributes": {
@@ -625,7 +625,7 @@
   },
   "policy_marker": {
     "name": "policy_marker",
-    "label": "Activity Policy Marker",
+    "label": "Policy Marker",
     "criteria": "",
     "add_more": true,
     "attributes": {
@@ -713,7 +713,7 @@
     }
   },
   "collaboration_type": {
-    "label": "Activity Collaboration Type",
+    "label": "Collaboration Type",
     "criteria": "recommended",
     "attributes": {
       "code": {
@@ -730,7 +730,7 @@
     }
   },
   "default_flow_type": {
-    "label": "Activity Default Flow Type",
+    "label": "Default Flow Type",
     "criteria": "recommended",
     "attributes": {
       "code": {
@@ -747,7 +747,7 @@
     }
   },
   "default_finance_type": {
-    "label": "Activity Default Finance Type",
+    "label": "Default Finance Type",
     "criteria": "recommended",
     "attributes": {
       "code": {
@@ -830,7 +830,7 @@
     }
   },
   "default_tied_status": {
-    "label": "Activity Default Tied Status",
+    "label": "Default Tied Status",
     "criteria": "recommended",
     "attributes": {
       "code": {
@@ -847,7 +847,7 @@
     }
   },
   "country_budget_items": {
-    "label": "Activity Country Budget Items",
+    "label": "Country Budget Items",
     "name": "activity_country_budget_items",
     "criteria": "",
     "add_more": true,
@@ -1020,7 +1020,7 @@
     }
   },
   "capital_spend": {
-    "label": "Activity Capital Spend",
+    "label": "Capital Spend",
     "criteria": "",
     "attributes": {
       "percentage": {
@@ -1066,7 +1066,7 @@
   },
   "conditions": {
     "name": "activity_condition",
-    "label": "Activity Conditions",
+    "label": "Conditions",
     "criteria": "",
     "add_more": true,
     "attributes": {
@@ -1137,7 +1137,7 @@
     }
   },
   "legacy_data": {
-    "label": "Activity Legacy Data",
+    "label": "Legacy Data",
     "criteria": "",
     "add_more": true,
     "add_more_attributes": true,
