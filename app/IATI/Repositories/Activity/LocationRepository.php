@@ -36,7 +36,7 @@ class LocationRepository
      */
     public function getLocationData($activityId): ?array
     {
-        return $this->activity->findorFail($activityId)->contact_info;
+        return $this->activity->findorFail($activityId)->location;
     }
 
     /**
@@ -63,11 +63,13 @@ class LocationRepository
     {
         $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true)['location'];
 
-        foreach (array_keys($element['sub_elements']) as $subelement) {
-            $location[$subelement] = array_values($location[$subelement]);
+        foreach ($location['location'] as $key => $location_value) {
+            foreach (array_keys($element['sub_elements']) as $subelement) {
+                $location['location'][$key][$subelement] = array_values($location_value[$subelement]);
+            }
         }
 
-        $activity->contact_info = $location;
+        $activity->location = $location['location'];
 
         return $activity->save();
     }

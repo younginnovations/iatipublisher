@@ -439,7 +439,7 @@
     "label": "Sector",
     "name": "sector",
     "criteria": "mandatory",
-    "add_more" : true,
+    "add_more": true,
     "attributes": {
       "vocabulary": {
         "name": "sector_vocabulary",
@@ -1913,11 +1913,255 @@
       }
     }
   },
+  "planned_disbursement": {
+    "name": "planned_disbursement",
+    "label": "planned-disbursement",
+    "add_more": true,
+    "attributes": {
+      "type": {
+        "name": "planned_disbursement_type",
+        "type": "select",
+        "criteria": "mandatory",
+        "required": true,
+        "multiselect": false,
+        "label": "@type",
+        "choices": "Activity/BudgetType.json",
+        "hover_text": "A code for the type of event or action being classified. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/humanitarian-scope/'>For more information</a>",
+        "help_text": ""
+      }
+    },
+    "sub_elements": {
+      "period_start": {
+        "name": "period_start",
+        "label": "period-start",
+        "add_more": false,
+        "attributes": {
+          "iso_date": {
+            "name": "iso_date",
+            "label": "@iso-date",
+            "type": "date",
+            "required": true,
+            "criteria": "mandatory",
+            "hover_text": "",
+            "help_text": ""
+          }
+        },
+        "sub_elements": {}
+      },
+      "period_end": {
+        "name": "period_end",
+        "label": "period-end",
+        "add_more": false,
+        "attributes": {
+          "iso_date": {
+            "name": "iso_date",
+            "label": "@iso-date",
+            "type": "date",
+            "required": true,
+            "criteria": "mandatory",
+            "hover_text": "",
+            "help_text": ""
+          }
+        },
+        "sub_elements": {}
+      },
+      "value": {
+        "name": "value",
+        "label": "value",
+        "add_more": false,
+        "attributes": {
+          "amount": {
+            "name": "amount",
+            "label": "@amount",
+            "type": "text",
+            "required": true,
+            "criteria": "mandatory",
+            "hover_text": "",
+            "help_text": ""
+          },
+          "currency": {
+            "name": "currency",
+            "label": "@currency",
+            "type": "select",
+            "choices": "Activity/Currency.json",
+            "required": true,
+            "criteria": "mandatory",
+            "hover_text": "",
+            "help_text": ""
+          },
+          "value_date": {
+            "name": "value_date",
+            "label": "@value-date",
+            "type": "date",
+            "required": true,
+            "criteria": "mandatory",
+            "hover_text": "",
+            "help_text": ""
+          }
+        },
+        "sub_elements": {}
+      },
+      "provider_org": {
+        "name": "provider_org",
+        "label": "Title",
+        "add_more": false,
+        "attributes": {
+          "ref": {
+            "name": "ref",
+            "label": "@ref",
+            "type": "text",
+            "required": true,
+            "criteria": "mandatory",
+            "hover_text": "",
+            "help_text": ""
+          },
+          "provider_activity_id": {
+            "name": "provider_activity_id",
+            "label": "@provider-activity-id",
+            "type": "text",
+            "required": true,
+            "criteria": "mandatory",
+            "hover_text": "",
+            "help_text": ""
+          },
+          "type": {
+            "name": "type",
+            "label": "@type",
+            "type": "select",
+            "choices": "Organization/OrganizationType.json",
+            "required": true,
+            "criteria": "mandatory",
+            "hover_text": "",
+            "help_text": ""
+          }
+        },
+        "sub_elements": {
+          "narrative": {
+            "name": "narrative",
+            "label": "narrative",
+            "type": "textarea",
+            "required": true,
+            "criteria": "mandatory",
+            "add_more": true,
+            "hover_text": "The free text name or description of the item being described. This can be repeated in multiple languages. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/title/narrative/'>For more information</a>",
+            "help_text": "",
+            "attr": {
+              "row": 4
+            },
+            "attributes": {
+              "lang": {
+                "name": "language",
+                "label": "@xml:lang",
+                "type": "select",
+                "choices": "Activity/Language.json",
+                "multiSelect": false,
+                "required": false,
+                "criteria": "",
+                "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/title/narrative/'>For more information</a>",
+                "help_text": ""
+              }
+            }
+          }
+        }
+      },
+      "receiver_org": {
+        "name": "receiver_org",
+        "label": "receiver-org",
+        "add_more": false,
+        "attributes": {
+          "ref": {
+            "name": "ref",
+            "label": "@ref",
+            "type": "text",
+            "required": true,
+            "criteria": "mandatory",
+            "hover_text": "",
+            "help_text": ""
+          },
+          "provider_activity_id": {
+            "name": "provider_activity_id",
+            "label": "@provider-activity-id",
+            "type": "text",
+            "required": true,
+            "criteria": "mandatory",
+            "hover_text": "",
+            "help_text": ""
+          },
+          "type": {
+            "name": "type",
+            "label": "@type",
+            "type": "select",
+            "choices": "Organization/OrganizationType.json",
+            "required": true,
+            "criteria": "mandatory",
+            "hover_text": "",
+            "help_text": ""
+          }
+        },
+        "sub_elements": {
+          "narrative": {
+            "name": "narrative",
+            "label": "narrative",
+            "type": "textarea",
+            "required": true,
+            "criteria": "mandatory",
+            "hover_text": "The free text name or description of the item being described. This can be repeated in multiple languages. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/title/narrative/'>For more information</a>",
+            "help_text": "",
+            "attr": {
+              "row": 4
+            },
+            "attributes": {
+              "lang": {
+                "name": "language",
+                "label": "@xml:lang",
+                "type": "select",
+                "choices": "Activity/Language.json",
+                "multiSelect": false,
+                "required": false,
+                "criteria": "",
+                "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/title/narrative/'>For more information</a>",
+                "help_text": ""
+              }
+            }
+          }
+        }
+      },
+      "capital_spend": {
+        "name": "capital_spend",
+        "label": "capital-spend",
+        "add_more": false,
+        "attributes": {
+          "percentage": {
+            "name": "percentage",
+            "label": "@percentage",
+            "type": "text",
+            "required": true,
+            "criteria": "mandatory",
+            "hover_text": "",
+            "help_text": ""
+          }
+        },
+        "sub_elements": {}
+      }
+    }
+  },
   "participating_org": {
-    "name": "participating_org",
+    "name": "participating_organization",
     "label": "Participating Organization",
     "criteria": "",
+    "add_more" : true,
     "attributes": {
+      "role": {
+        "name": "organization_role",
+        "type": "select",
+        "criteria": "mandatory",
+        "required": true,
+        "multiselect": false,
+        "label": "@role",
+        "choices": "Organization/OrganizationRole.json",
+        "hover_text": "",
+        "help_text": ""
+      },
       "ref": {
         "name": "ref",
         "type": "select",
@@ -1926,7 +2170,7 @@
         "multiselect": false,
         "label": "@ref",
         "choices": "Activity/HumanitarianScopeType.json",
-        "hover_text": "A code for the type of event or action being classified. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/humanitarian-scope/'>For more information</a>",
+        "hover_text": "",
         "help_text": ""
       },
       "type": {
@@ -1937,21 +2181,11 @@
         "multiselect": false,
         "label": "@type",
         "choices": "Organization/OrganizationType.json",
-        "hover_text": "A code for the type of event or action being classified. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/humanitarian-scope/'>For more information</a>",
-        "help_text": ""
-      },
-      "role": {
-        "name": "type",
-        "type": "checkbox",
-        "criteria": "mandatory",
-        "required": true,
-        "multiselect": false,
-        "label": "@role",
         "hover_text": "",
         "help_text": ""
       },
       "activity_id": {
-        "name": "activity_id",
+        "name": "identifier",
         "type": "text",
         "criteria": "mandatory",
         "required": true,
