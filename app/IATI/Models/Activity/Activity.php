@@ -400,7 +400,7 @@ class Activity extends Model
      *
      * @return bool
      */
-    public function getActivityIdentifierElementCompletedAttribute(): bool
+    public function getIdentifierElementCompletedAttribute(): bool
     {
         $identifier = $this->identifier;
 

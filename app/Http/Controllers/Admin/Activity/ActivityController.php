@@ -97,7 +97,7 @@ class ActivityController extends Controller
      *
      * @param Activity $activity
      *
-     * @return View
+     * @return View|JsonResponse
      */
     public function show(Activity $activity): View|JsonResponse
     {
@@ -108,7 +108,7 @@ class ActivityController extends Controller
             $elementGroups = json_decode(file_get_contents(app_path('Data/Activity/ElementGroup.json')), true);
             $types = $this->getActivityDetailDataType();
             $status = $this->getActivityDetailStatus($activity);
-            $progress = 75;
+            $progress = $this->activityPublishingProgress($status);
 
             return view('admin.activity.show', compact('elements', 'elementGroups', 'progress', 'activity', 'toast', 'types', 'status'));
         } catch (Exception $e) {
@@ -118,7 +118,6 @@ class ActivityController extends Controller
 
     /**
      * Show the form for editing the specified resource.
-     *
      *
      * @param Activity $activity
      *
@@ -247,7 +246,7 @@ class ActivityController extends Controller
      *
      * @return array
      */
-    public function getActivityDetailStatus($activity): array
+    public function getActivityDetailStatus(Activity $activity): array
     {
         return [
             'identifier'           => $activity->identifier_element_completed,
@@ -259,6 +258,7 @@ class ActivityController extends Controller
             'recipient_country'    => $activity->recipient_country_element_completed,
             'recipient_region'     => $activity->recipient_region_element_completed,
             'collaboration_type'   => $activity->collaboration_type_element_completed,
+            'default_flow_type'    => $activity->default_flow_type_element_completed,
             'default_finance_type' => $activity->default_finance_type_element_completed,
             'default_aid_type'     => $activity->default_aid_type_element_completed,
             'default_tied_status'  => $activity->default_tied_status_element_completed,
@@ -272,6 +272,45 @@ class ActivityController extends Controller
             'other_identifier'     => $activity->other_identifier_element_completed,
             'country_budget_items' => $activity->country_budget_items_element_completed,
             'budget'               => $activity->budget_element_completed,
+            'participating_org'    => false,
+            'transaction'          => false,
+            'reporting_org'        => false,
         ];
+    }
+
+    /**
+     * Return activity publishing progress in percentage.
+     *
+     * @param $elements_status
+     *
+     * @return float|int
+     */
+    public function activityPublishingProgress($elements_status): float|int
+    {
+        $core_elements = [
+            'title',
+            'description',
+            'budget',
+            'transaction',
+            'sector',
+            'participating_org',
+            'activity_status',
+            'activity_date',
+            'recipient_country',
+            'recipient_region',
+            'collaboration_type',
+            'default_flow_type',
+            'default_finance_type',
+            'default_aid_type',
+        ];
+        $completed_core_element_count = 0;
+
+        foreach ($core_elements as $core_element) {
+            if (array_key_exists($core_element, $elements_status) && $elements_status[$core_element]) {
+                $completed_core_element_count++;
+            }
+        }
+
+        return ($completed_core_element_count / count($core_elements)) * 100;
     }
 }
