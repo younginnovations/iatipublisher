@@ -45,9 +45,9 @@
         <div class="actions flex grow flex-col items-end justify-end">
           <div class="mb-3">
             <Toast
-              v-if="toast.visibility"
-              :message="toast.message"
-              :type="toast.type"
+              v-if="toastData.visibility"
+              :message="toastData.message"
+              :type="toastData.type"
             />
           </div>
           <div class="inline-flex justify-end">
@@ -304,14 +304,8 @@
         </div>
 
         <div class="activities__content--elements -mx-3 flex flex-wrap">
-          <template
-            v-for="(post, key, index) in activities"
-            :key="index"
-          >
-            <template
-              v-for="(element, name, i) in post.elements"
-              :key="i"
-            >
+           <template v-for="(post, key, index) in activities" :key="index">
+            <template v-for="(element, name, i) in post.elements" :key="i">
               <ActivityElement
                 v-if="
                   typeof element.content === 'object'
@@ -320,23 +314,23 @@
                 "
                 :id="key"
                 :data="element"
-                :types="props.types"
+                :types="types"
                 :title="name.toString()"
-                :activity-id="activity.id"
+                :activityId="activity.id"
                 :width="
                   name === 'title' ||
-                    name === 'description' ||
-                    name === 'activity_date' ||
-                    name === 'contact_info' ||
-                    name === 'participating_org' ||
-                    name === 'recipient_country' ||
-                    name === 'recipient_region' ||
-                    name === 'sector' ||
-                    name === 'policy_marker' ||
-                    name === 'tag' ||
-                    name === 'country_budget_items' ||
-                    name === 'humanitarian_scope' ||
-                    name === 'results'
+                  name === 'description' ||
+                  name === 'activity_date' ||
+                  name === 'contact_info' ||
+                  name === 'participating_org' ||
+                  name === 'recipient_country' ||
+                  name === 'recipient_region' ||
+                  name === 'sector' ||
+                  name === 'policy_marker' ||
+                  name === 'tag' ||
+                  name === 'country_budget_items' ||
+                  name === 'humanitarian_scope' ||
+                  name === 'results'
                     ? 'full'
                     : ''
                 "
@@ -377,7 +371,7 @@ export default defineComponent({
       type: Object,
       required: true,
     },
-    elementGroup: {
+    groups: {
       type: Object,
       required: true,
     },
@@ -389,7 +383,7 @@ export default defineComponent({
       type: Number,
       required: true,
     },
-    toastData: {
+    toast: {
       type: Object,
       required: true,
     },
@@ -403,7 +397,7 @@ export default defineComponent({
     },
   },
   setup(props) {
-    const toast = reactive({
+    const toastData = reactive({
       visibility: false,
       message: '',
       type: true,
@@ -418,14 +412,14 @@ export default defineComponent({
     const [downloadValue, downloadToggle] = useToggle();
 
     onMounted(() => {
-      if (props.toastData.message !== '') {
-        toast.type = props.toastData.type;
-        toast.visibility = true;
-        toast.message = props.toastData.message;
+      if (props.toast.message !== '') {
+        toastData.type = props.toast.type;
+        toastData.visibility = true;
+        toastData.message = props.toast.message;
       }
 
       setTimeout(() => {
-        toast.visibility = false;
+        toastData.visibility = false;
       }, 5000);
     });
 
@@ -453,10 +447,10 @@ export default defineComponent({
      *
      * this data is created using props.element_group and props.activity
      */
-    const groupedData = { ...props.element_group },
+    const groupedData = { ...props.groups },
       // eslint-disable-next-line vue/no-setup-props-destructure
       detailData = props.activity,
-      activities = { ...props.element_group };
+      activities = { ...props.groups };
 
     // generating available elements
     Object.keys(activities).map((key) => {
@@ -508,8 +502,7 @@ export default defineComponent({
       deleteToggle,
       downloadValue,
       downloadToggle,
-      toast,
-      props,
+      toastData
     };
   },
 });
