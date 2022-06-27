@@ -112,7 +112,6 @@ class ActivityController extends Controller
 
             return view('admin.activity.show', compact('elements', 'elementGroups', 'progress', 'activity', 'toast', 'types', 'status'));
         } catch (Exception $e) {
-            dd($e->getMessage());
             logger()->error($e->getMessage());
         }
     }
@@ -278,7 +277,7 @@ class ActivityController extends Controller
             'document_link'        => false,
             'contact_info'         => $activity->contact_info_element_completed,
             'location'             => $activity->location_element_completed,
-            'planned_disbursement' => false,
+            'planned_disbursement' => $activity->planned_disbursement_element_completed,
             'transaction'          => false,
             'result'               => false,
             'indicator'            => false,

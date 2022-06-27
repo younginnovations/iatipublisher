@@ -710,6 +710,16 @@ class Activity extends Model
     }
 
     /**
+     * Returns planned_disbursement element complete status.
+     *
+     * @return bool
+     */
+    public function getPlannedDisbursementElementCompletedAttribute(): bool
+    {
+        return $this->isLevelTwoMultiDimensionElementCompleted('planned_disbursement', $this->planned_disbursement);
+    }
+
+    /**
      * Returns country_budget_items element complete status.
      *
      * @return bool
