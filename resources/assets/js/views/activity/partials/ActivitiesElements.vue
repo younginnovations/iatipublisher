@@ -72,7 +72,7 @@
       <a
         v-for="(post, index) in filteredElements"
         :key="index"
-        class="elements__item relative flex cursor-pointer flex-col items-center justify-center rounded border border-dashed border-n-40 py-2.5 px-1 text-n-30"
+        class="elements__item relative flex cursor-pointer flex-col items-center justify-center rounded border border-dashed border-n-40 py-2.5 text-n-30"
         :href="`/activities/${activityId}/${index}`"
       >
         <div class="status_icons absolute top-0 right-0 mt-1 mr-1 inline-flex">

@@ -2,6 +2,7 @@
 
 namespace App\IATI\Models\Activity;
 
+use App\IATI\Models\Document\Document;
 use App\IATI\Models\Organization\Organization;
 use Database\Factories\IATI\Models\Activity\ActivityFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -100,6 +101,16 @@ class Activity extends Model
     public static function newFactory(): ActivityFactory
     {
         return new ActivityFactory();
+    }
+
+    /**
+     * An Activity has many ActivityDocumentLink.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function documentLinks()
+    {
+        return $this->hasMany(Document::class);
     }
 
     /**
