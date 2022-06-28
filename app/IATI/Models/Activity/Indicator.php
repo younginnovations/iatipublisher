@@ -33,4 +33,13 @@ class Indicator extends Model
         = [
             'indicator' => 'json',
         ];
+
+    /**
+     * Indicator hasmany periods.
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function periods(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(Period::class, 'indicator_id', 'id');
+    }
 }
