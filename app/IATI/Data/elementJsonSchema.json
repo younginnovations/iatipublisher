@@ -8,7 +8,7 @@
         "add_more": true,
         "criteria": "mandatory",
         "label": "narrative",
-        "hover_text": "The free text name or description of the item being described. This can be repeated in multiple languages. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/title/narrative/'> For more information </a>",
+        "hover_text": "The free text name or description of the item being described. This can be repeated in multiple languages. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/title/narrative/'> For more information </a>",
         "help_text": "",
         "attr": {
           "row": 4
@@ -21,7 +21,7 @@
             "required": true,
             "criteria": "mandatory",
             "label": "@xml:lang",
-            "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/title/narrative/' target='_blank'>For more information</a>",
+            "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/title/narrative/' target='_blank'>For more information</a>",
             "help_text": "",
             "choices": "Activity/Language.json"
           }
@@ -135,7 +135,7 @@
             "attr": {
               "row": 4
             },
-            "hover_text": "The free text name or description of the item being described. This can be repeated in multiple languages. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/description/narrative/'>For more information</a>",
+            "hover_text": "The free text name or description of the item being described. This can be repeated in multiple languages. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/description/narrative/'>For more information</a>",
             "help_text": "",
             "attributes": {
               "lang": {
@@ -145,7 +145,7 @@
                 "required": false,
                 "criteria": "",
                 "label": "@xml:lang",
-                "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/description/narrative/'>For more information</a>",
+                "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/description/narrative/'>For more information</a>",
                 "help_text": "",
                 "choices": "Activity/Language.json"
               }
@@ -169,7 +169,7 @@
         "criteria": "mandatory",
         "multiselect": false,
         "choices": "Activity/DescriptionType.json",
-        "hover_text": "Activity description types. (General, objectives, etc)<br>Following are the description types:<br>1. General - Unstructured, long description of the activity<br>2. Objectives - Specific objectives for the activity, e.g. taken from logical framework<br>3. Target Groups - Details of groups that are intended to benefit from the activity<br>4. Other - For miscellaneous use. A further classification or breakdown may be included in the narrative. <br><a href='https://iatistandard.org/en/iati-standard/203/codelists/descriptiontype/'>For more information</a>",
+        "hover_text": "Activity description types. (General, objectives, etc)<br>Following are the description types:<br>1. General - Unstructured, long description of the activity<br>2. Objectives - Specific objectives for the activity, e.g. taken from logical framework<br>3. Target Groups - Details of groups that are intended to benefit from the activity<br>4. Other - For miscellaneous use. A further classification or breakdown may be included in the narrative. <br><a target='_blank' href='https://iatistandard.org/en/iati-standard/203/codelists/descriptiontype/'>For more information</a>",
         "help_text": ""
       }
     },
@@ -184,7 +184,7 @@
         "attr": {
           "row": 4
         },
-        "hover_text": "The free text name or description of the item being described. This can be repeated in multiple languages. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/description/narrative/'>For more information</a>",
+        "hover_text": "The free text name or description of the item being described. This can be repeated in multiple languages. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/description/narrative/'>For more information</a>",
         "help_text": "",
         "sub_elements": false,
         "attributes": {
@@ -195,7 +195,7 @@
             "required": true,
             "criteria": "mandatory",
             "label": "@xml:lang",
-            "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/description/narrative/'>For more information</a>",
+            "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/description/narrative/'>For more information</a>",
             "help_text": "",
             "choices": "Activity/Language.json"
           }
@@ -215,7 +215,7 @@
         "criteria": "mandatory",
         "label": "@code",
         "choices": "Activity/ActivityStatus.json",
-        "hover_text": "An IATI code defining the current status of the activity. This attribute is required. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/activity-status/'>For more information</a>",
+        "hover_text": "An IATI code defining the current status of the activity. This attribute is required. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/activity-status/'>For more information</a>",
         "help_text": ""
       }
     }
@@ -234,7 +234,7 @@
         "label": "@type",
         "choices": "Activity/ActivityDateType.json",
         "multiselect": false,
-        "hover_text": "An IATI code defining the type of activity date being reported. This attribute is required. <a href='https://iatistandard.org/en/iati-standard/203/codelists/activitydatetype/'>For more information</a>",
+        "hover_text": "An IATI code defining the type of activity date being reported. This attribute is required. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/codelists/activitydatetype/'>For more information</a>",
         "help_text": ""
       },
       "iso-date": {
@@ -243,7 +243,7 @@
         "required": true,
         "criteria": "mandatory",
         "label": "@iso-date",
-        "hover_text": "This attribute is required. This value must be of type xsd:date. <br>11.1.2: The planned start date of the activity must be before the planned end date.<br>11.1.3: The actual start date of the activity must be before the actual end date.<br>11.1.4: The actual start date of the activity must not be in the future.<br>11.1.5: The actual end date of the activity must not be in the future. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/activity-date/'>For more information</a>",
+        "hover_text": "This attribute is required. This value must be of type xsd:date. <br>11.1.2: The planned start date of the activity must be before the planned end date.<br>11.1.3: The actual start date of the activity must be before the actual end date.<br>11.1.4: The actual start date of the activity must not be in the future.<br>11.1.5: The actual end date of the activity must not be in the future. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/activity-date/'>For more information</a>",
         "help_text": ""
       }
     },
@@ -258,7 +258,7 @@
         "attr": {
           "row": 4
         },
-        "hover_text": "The free text name or description of the item being described. This can be repeated in multiple languages. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/description/narrative/'>For more information</a>",
+        "hover_text": "The free text name or description of the item being described. This can be repeated in multiple languages. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/description/narrative/'>For more information</a>",
         "help_text": "",
         "attributes": {
           "lang": {
@@ -268,7 +268,7 @@
             "required": false,
             "criteria": "",
             "label": "@xml:lang",
-            "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/description/narrative/'>For more information</a>",
+            "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/description/narrative/'>For more information</a>",
             "help_text": "",
             "choices": "Activity/Language.json"
           }
@@ -288,7 +288,7 @@
         "label": "@code",
         "type": "select",
         "choices": "Activity/ActivityScope.json",
-        "hover_text": "The geographical scope. See IATI codelist for values.This attribute is required.This value must be of type xsd:string. <a href='https://iatistandard.org/en/iati-standard/203/codelists/activityscope/'>For more information</a>",
+        "hover_text": "The geographical scope. See IATI codelist for values.This attribute is required.This value must be of type xsd:string. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/codelists/activityscope/'>For more information</a>",
         "help_text": ""
       }
     }
@@ -307,7 +307,7 @@
         "multiselect": false,
         "label": "@code",
         "choices": "Activity/Country.json",
-        "hover_text": "ISO 3166-1 alpha-2 code for the country. This attribute is required. <a href='https://iatistandard.org/en/iati-standard/203/codelists/country/'>For more information</a>",
+        "hover_text": "ISO 3166-1 alpha-2 code for the country. This attribute is required. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/codelists/country/'>For more information</a>",
         "help_text": ""
       },
       "percentage": {
@@ -316,7 +316,7 @@
         "criteria": "recommended",
         "required": false,
         "label": "@percentage",
-        "hover_text": "The percentage of total commitments or total activity budget to this item. Content must be a decimal number between 0 and 100 inclusive, with no percentage sign. Percentages for all reported countries and regions within a vocabulary MUST add up to 100. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/recipient-country/'>For more information</a>",
+        "hover_text": "The percentage of total commitments or total activity budget to this item. Content must be a decimal number between 0 and 100 inclusive, with no percentage sign. Percentages for all reported countries and regions within a vocabulary MUST add up to 100. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/recipient-country/'>For more information</a>",
         "help_text": ""
       }
     },
@@ -331,7 +331,7 @@
         "attr": {
           "row": 4
         },
-        "hover_text": "The free text name or description of the item being described. This can be repeated in multiple languages. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/description/narrative/'>For more information</a>",
+        "hover_text": "The free text name or description of the item being described. This can be repeated in multiple languages. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/description/narrative/'>For more information</a>",
         "help_text": "",
         "attributes": {
           "lang": {
@@ -341,7 +341,7 @@
             "required": false,
             "criteria": "",
             "label": "@xml:lang",
-            "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/description/narrative/'>For more information</a>",
+            "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/description/narrative/'>For more information</a>",
             "help_text": "",
             "choices": "Activity/Language.json"
           }
@@ -363,7 +363,7 @@
         "type": "select",
         "multiselect": false,
         "choices": "Activity/RegionVocabulary.json",
-        "hover_text": "An IATI code for the vocabulary from which the region code is drawn. If it is not present 1 - ‘OECD DAC’ is assumed. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/transaction/recipient-region/'>For more information</a>",
+        "hover_text": "An IATI code for the vocabulary from which the region code is drawn. If it is not present 1 - ‘OECD DAC’ is assumed. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/transaction/recipient-region/'>For more information</a>",
         "help_text": ""
       },
       "oecd_region_code": {
@@ -374,7 +374,7 @@
         "criteria": "mandatory",
         "label": "@code",
         "choices": "Activity/Region.json",
-        "hover_text": "Either an OECD DAC or UN region code. Codelist is determined by vocabulary attribute. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/transaction/recipient-region/'>For more information</a>",
+        "hover_text": "Either an OECD DAC or UN region code. Codelist is determined by vocabulary attribute. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/transaction/recipient-region/'>For more information</a>",
         "help_text": ""
       },
       "region_code": {
@@ -383,7 +383,7 @@
         "required": true,
         "criteria": "mandatory",
         "label": "@code",
-        "hover_text": "Either an OECD DAC or UN region code. Codelist is determined by vocabulary attribute. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/transaction/recipient-region/'>For more information</a>",
+        "hover_text": "Either an OECD DAC or UN region code. Codelist is determined by vocabulary attribute. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/transaction/recipient-region/'>For more information</a>",
         "help_text": "",
         "hidden": true
       },
@@ -393,7 +393,7 @@
         "criteria": "recommended",
         "required": false,
         "type": "text",
-        "hover_text": "The URI where this vocabulary is defined. If the vocabulary is 99 (reporting organisation), the URI where this internal vocabulary is defined. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/transaction/recipient-region/'>For more information</a>",
+        "hover_text": "The URI where this vocabulary is defined. If the vocabulary is 99 (reporting organisation), the URI where this internal vocabulary is defined. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/transaction/recipient-region/'>For more information</a>",
         "help_text": ""
       },
       "percentage": {
@@ -417,7 +417,7 @@
         "attr": {
           "row": 4
         },
-        "hover_text": "The free text name or description of the item being described. This can be repeated in multiple languages. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/description/narrative/'>For more information</a>",
+        "hover_text": "The free text name or description of the item being described. This can be repeated in multiple languages. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/description/narrative/'>For more information</a>",
         "help_text": "",
         "attributes": {
           "lang": {
@@ -427,7 +427,7 @@
             "required": false,
             "criteria": "",
             "label": "@xml:lang",
-            "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/description/narrative/'>For more information</a>",
+            "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/description/narrative/'>For more information</a>",
             "help_text": "",
             "choices": "Activity/Language.json"
           }
@@ -514,7 +514,7 @@
         "attr": {
           "row": 4
         },
-        "hover_text": "The free text name or description of the item being described. This can be repeated in multiple languages. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/description/narrative/'>For more information</a>",
+        "hover_text": "The free text name or description of the item being described. This can be repeated in multiple languages. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/description/narrative/'>For more information</a>",
         "help_text": "",
         "attributes": {
           "lang": {
@@ -524,7 +524,7 @@
             "required": false,
             "criteria": "",
             "label": "@xml:lang",
-            "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/description/narrative/'>For more information</a>",
+            "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/description/narrative/'>For more information</a>",
             "help_text": "",
             "choices": "Activity/Language.json"
           }
@@ -546,7 +546,7 @@
         "criteria": "",
         "label": "@vocabulary",
         "choices": "Activity/TagVocabulary.json",
-        "hover_text": "An IATI code for the vocabulary or taxonomy (see non-embedded codelist) used for tag classifications. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/tag/'>For more information</a>",
+        "hover_text": "An IATI code for the vocabulary or taxonomy (see non-embedded codelist) used for tag classifications. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/tag/'>For more information</a>",
         "help_text": ""
       },
       "goals_tag_code": {
@@ -557,7 +557,7 @@
         "criteria": "",
         "label": "@code",
         "choices": "Activity/UNSDG-Goals.json",
-        "hover_text": "The code for the tag as defined in the specified vocabulary. This attribute is required. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/tag/'>For more information</a>",
+        "hover_text": "The code for the tag as defined in the specified vocabulary. This attribute is required. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/tag/'>For more information</a>",
         "help_text": "",
         "hidden": true
       },
@@ -569,7 +569,7 @@
         "criteria": "",
         "label": "@code",
         "choices": "Activity/UNSDG-Targets.json",
-        "hover_text": "The code for the tag as defined in the specified vocabulary. This attribute is required. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/tag/'>For more information</a>",
+        "hover_text": "The code for the tag as defined in the specified vocabulary. This attribute is required. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/tag/'>For more information</a>",
         "help_text": "",
         "hidden": true
       },
@@ -579,7 +579,7 @@
         "required": true,
         "criteria": "",
         "label": "@code",
-        "hover_text": "The code for the tag as defined in the specified vocabulary. This attribute is required. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/tag/'>For more information</a>",
+        "hover_text": "The code for the tag as defined in the specified vocabulary. This attribute is required. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/tag/'>For more information</a>",
         "help_text": "",
         "hidden": true
       },
@@ -589,7 +589,7 @@
         "criteria": "",
         "required": false,
         "type": "text",
-        "hover_text": "The URI where this vocabulary is defined. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/tag/'>For more information</a>",
+        "hover_text": "The URI where this vocabulary is defined. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/tag/'>For more information</a>",
         "help_text": "",
         "hidden": true
       }
@@ -605,7 +605,7 @@
         "attr": {
           "row": 4
         },
-        "hover_text": "The free text name or description of the item being described. This can be repeated in multiple languages. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/description/narrative/'>For more information</a>",
+        "hover_text": "The free text name or description of the item being described. This can be repeated in multiple languages. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/description/narrative/'>For more information</a>",
         "help_text": "",
         "attributes": {
           "lang": {
@@ -615,7 +615,7 @@
             "required": false,
             "criteria": "",
             "label": "@xml:lang",
-            "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/description/narrative/'>For more information</a>",
+            "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/description/narrative/'>For more information</a>",
             "help_text": "",
             "choices": "Activity/Language.json"
           }
@@ -637,7 +637,7 @@
         "type": "select",
         "multiselect": false,
         "choices": "Activity/PolicyMarkerVocabulary.json",
-        "hover_text": "An IATI code for the vocabulary to be used to define policy markers. If omitted then the OECD DAC vocabulary is assumed. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/policy-marker/'>For more information</a>",
+        "hover_text": "An IATI code for the vocabulary to be used to define policy markers. If omitted then the OECD DAC vocabulary is assumed. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/policy-marker/'>For more information</a>",
         "help_text": ""
       },
       "vocabulary-uri": {
@@ -646,7 +646,7 @@
         "criteria": "",
         "required": false,
         "type": "text",
-        "hover_text": "If the vocabulary is 99 (reporting organisation), the URI where this internal vocabulary is defined. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/policy-marker/'>For more information</a>",
+        "hover_text": "If the vocabulary is 99 (reporting organisation), the URI where this internal vocabulary is defined. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/policy-marker/'>For more information</a>",
         "help_text": "",
         "hidden": true
       },
@@ -658,7 +658,7 @@
         "criteria": "",
         "label": "@significance",
         "choices": "Activity/PolicySignificance.json",
-        "hover_text": "An OECD DAC CRS code indicating the significance of the policy marker for this activity. This attribute MUST be used for all OECD DAC CRS vocabularies. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/policy-marker/'>For more information</a>",
+        "hover_text": "An OECD DAC CRS code indicating the significance of the policy marker for this activity. This attribute MUST be used for all OECD DAC CRS vocabularies. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/policy-marker/'>For more information</a>",
         "help_text": ""
       },
       "policy_marker_code": {
@@ -669,7 +669,7 @@
         "criteria": "",
         "label": "@code",
         "choices": "Activity/PolicyMarker.json",
-        "hover_text": "A policy marker code from the codelist specified in the vocabulary. This attribute is required. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/policy-marker/'>For more information</a>",
+        "hover_text": "A policy marker code from the codelist specified in the vocabulary. This attribute is required. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/policy-marker/'>For more information</a>",
         "help_text": ""
       },
       "policy_marker_text": {
@@ -678,7 +678,7 @@
         "criteria": "",
         "required": true,
         "type": "text",
-        "hover_text": "A policy marker code from the codelist specified in the vocabulary. This attribute is required. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/policy-marker/'>For more information</a></a>",
+        "hover_text": "A policy marker code from the codelist specified in the vocabulary. This attribute is required. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/policy-marker/'>For more information</a></a>",
         "help_text": "",
         "hidden": true
       }
@@ -694,7 +694,7 @@
         "attr": {
           "row": 4
         },
-        "hover_text": "The free text name or description of the item being described. This can be repeated in multiple languages. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/description/narrative/'>For more information</a>",
+        "hover_text": "The free text name or description of the item being described. This can be repeated in multiple languages. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/description/narrative/'>For more information</a>",
         "help_text": "",
         "attributes": {
           "lang": {
@@ -704,7 +704,7 @@
             "required": false,
             "criteria": "",
             "label": "@xml:lang",
-            "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/description/narrative/'>For more information</a>",
+            "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/description/narrative/'>For more information</a>",
             "help_text": "",
             "choices": "Activity/Language.json"
           }
@@ -724,7 +724,7 @@
         "required": true,
         "type": "select",
         "choices": "Activity/CollaborationType.json",
-        "hover_text": "A code from the OECD DAC CRS “Bi_Multi” codelist. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/collaboration-type/'>For more information</a>",
+        "hover_text": "A code from the OECD DAC CRS “Bi_Multi” codelist. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/collaboration-type/'>For more information</a>",
         "help_text": ""
       }
     }
@@ -741,7 +741,7 @@
         "required": true,
         "type": "select",
         "choices": "Activity/FlowType.json",
-        "hover_text": "A code from the OECD DAC CRS “Type of flow” codelist. This attribute is required. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/default-flow-type/'>For more information</a>",
+        "hover_text": "A code from the OECD DAC CRS “Type of flow” codelist. This attribute is required. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/default-flow-type/'>For more information</a>",
         "help_text": ""
       }
     }
@@ -758,7 +758,7 @@
         "required": true,
         "type": "select",
         "choices": "Activity/FinanceType.json",
-        "hover_text": "A code from the OECD DAC CRS “Type of finance” codelist. This attribute is required. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/default-finance-type/'>For more information</a>"
+        "hover_text": "A code from the OECD DAC CRS “Type of finance” codelist. This attribute is required. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/default-finance-type/'>For more information</a>"
       }
     }
   },
@@ -777,7 +777,7 @@
         "type": "select",
         "multiselect": false,
         "choices": "Activity/AidTypeVocabulary.json",
-        "hover_text": "A code for the vocabulary aid-type classifications. If omitted the AidType (OECD DAC) codelist is assumed. The code must be a valid value in the AidTypeVocabulary codelist. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/default-aid-type/'>For more information</a>",
+        "hover_text": "A code for the vocabulary aid-type classifications. If omitted the AidType (OECD DAC) codelist is assumed. The code must be a valid value in the AidTypeVocabulary codelist. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/default-aid-type/'>For more information</a>",
         "help_text": ""
       },
       "default_aid_type_code": {
@@ -788,7 +788,7 @@
         "type": "select",
         "multiselect": false,
         "choices": "Activity/AidType.json",
-        "hover_text": "A code from the specified vocabulary. This attribute is required. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/default-aid-type/'>For more information</a>",
+        "hover_text": "A code from the specified vocabulary. This attribute is required. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/default-aid-type/'>For more information</a>",
         "help_text": ""
       },
       "earmarking_category_code": {
@@ -799,7 +799,7 @@
         "type": "select",
         "multiselect": false,
         "choices": "Activity/EarmarkingCategory.json",
-        "hover_text": "A code from the specified vocabulary. This attribute is required. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/default-aid-type/'>For more information</a>",
+        "hover_text": "A code from the specified vocabulary. This attribute is required. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/default-aid-type/'>For more information</a>",
         "help_text": "",
         "hidden": true
       },
@@ -811,7 +811,7 @@
         "type": "select",
         "multiselect": false,
         "choices": "Activity/EarmarkingModality.json",
-        "hover_text": "A code from the specified vocabulary. This attribute is required. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/default-aid-type/'>For more information</a>",
+        "hover_text": "A code from the specified vocabulary. This attribute is required. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/default-aid-type/'>For more information</a>",
         "help_text": "",
         "hidden": true
       },
@@ -823,7 +823,7 @@
         "type": "select",
         "multiselect": false,
         "choices": "Activity/CashandVoucherModalities.json",
-        "hover_text": "A code from the specified vocabulary. This attribute is required. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/default-aid-type/'>For more information</a>",
+        "hover_text": "A code from the specified vocabulary. This attribute is required. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/default-aid-type/'>For more information</a>",
         "help_text": "",
         "hidden": true
       }
@@ -841,7 +841,7 @@
         "required": true,
         "type": "select",
         "choices": "Activity/TiedStatus.json",
-        "hover_text": "An IATI code interpreting the usage of Columns 36-38 of the CRS++ reporting format. (Amount tied, Amount partially untied, Amount tied). <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/default-tied-status/'>For more information</a>",
+        "hover_text": "An IATI code interpreting the usage of Columns 36-38 of the CRS++ reporting format. (Amount tied, Amount partially untied, Amount tied). <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/default-tied-status/'>For more information</a>",
         "help_text": ""
       }
     }
@@ -860,7 +860,7 @@
         "type": "select",
         "multiselect": false,
         "choices": "Activity/BudgetIdentifierVocabulary.json",
-        "hover_text": "An IATI code for the common functional classification or country system (This allows for common codes, country-specific, or any other classification agreed between countries and donors). <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/country-budget-items/'>For more information</a>",
+        "hover_text": "An IATI code for the common functional classification or country system (This allows for common codes, country-specific, or any other classification agreed between countries and donors). <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/country-budget-items/'>For more information</a>",
         "help_text": ""
       }
     },
@@ -878,7 +878,7 @@
             "required": true,
             "criteria": "",
             "label": "@code",
-            "hover_text": "A code for the budget-item from the vocabulary specified. This attribute is required. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/country-budget-items/budget-item/'>For more information</a>",
+            "hover_text": "A code for the budget-item from the vocabulary specified. This attribute is required. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/country-budget-items/budget-item/'>For more information</a>",
             "help_text": ""
           },
           "code": {
@@ -889,7 +889,7 @@
             "criteria": "",
             "label": "@code",
             "choices": "Activity/BudgetIdentifier.json",
-            "hover_text": "A code for the budget-item from the vocabulary specified. This attribute is required. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/country-budget-items/budget-item/'>For more information</a>",
+            "hover_text": "A code for the budget-item from the vocabulary specified. This attribute is required. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/country-budget-items/budget-item/'>For more information</a>",
             "help_text": ""
           },
           "percentage": {
@@ -898,7 +898,7 @@
             "criteria": "",
             "required": false,
             "label": "@percentage",
-            "hover_text": "When multiple budget-item elements are declared within a single country-budget-items element, then, for each vocabulary used, the percentage values should sum 100%. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/country-budget-items/budget-item/'>For more information</a>",
+            "hover_text": "When multiple budget-item elements are declared within a single country-budget-items element, then, for each vocabulary used, the percentage values should sum 100%. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/country-budget-items/budget-item/'>For more information</a>",
             "help_text": ""
           }
         },
@@ -909,6 +909,7 @@
             "criteria": "",
             "required": false,
             "add_more": false,
+            "attributes" : {},
             "sub_elements": {
               "narrative": {
                 "name": "narrative",
@@ -920,7 +921,7 @@
                 "attr": {
                   "row": 4
                 },
-                "hover_text": "The free text name or description of the item being described. This can be repeated in multiple languages. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/description/narrative/'>For more information</a>",
+                "hover_text": "The free text name or description of the item being described. This can be repeated in multiple languages. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/description/narrative/'>For more information</a>",
                 "help_text": "",
                 "attributes": {
                   "lang": {
@@ -930,7 +931,7 @@
                     "required": false,
                     "criteria": "",
                     "label": "@xml:lang",
-                    "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/description/narrative/'>For more information</a>",
+                    "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/description/narrative/'>For more information</a>",
                     "help_text": "",
                     "choices": "Activity/Language.json"
                   }
@@ -956,7 +957,7 @@
         "multiselect": false,
         "label": "@type",
         "choices": "Activity/HumanitarianScopeType.json",
-        "hover_text": "A code for the type of event or action being classified. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/humanitarian-scope/'>For more information</a>",
+        "hover_text": "A code for the type of event or action being classified. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/humanitarian-scope/'>For more information</a>",
         "help_text": ""
       },
       "vocabulary": {
@@ -967,7 +968,7 @@
         "multiselect": false,
         "type": "select",
         "choices": "Activity/HumanitarianScopeVocabulary.json",
-        "hover_text": "A code for a recognised vocabulary of terms classifying the event or action. This attribute is required. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/humanitarian-scope/'>For more information</a>",
+        "hover_text": "A code for a recognised vocabulary of terms classifying the event or action. This attribute is required. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/humanitarian-scope/'>For more information</a>",
         "help_text": ""
       },
       "vocabulary-uri": {
@@ -976,7 +977,7 @@
         "criteria": "",
         "required": false,
         "type": "text",
-        "hover_text": "A u.r.i. for the vocabulary specified which provides access to the list of codes and descriptions. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/humanitarian-scope/'>For more information</a>",
+        "hover_text": "A u.r.i. for the vocabulary specified which provides access to the list of codes and descriptions. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/humanitarian-scope/'>For more information</a>",
         "help_text": "",
         "hidden": true
       },
@@ -986,7 +987,7 @@
         "required": true,
         "criteria": "",
         "label": "@code",
-        "hover_text": "A code for the event or action from the vocabulary specified. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/humanitarian-scope/'>For more information</a>",
+        "hover_text": "A code for the event or action from the vocabulary specified. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/humanitarian-scope/'>For more information</a>",
         "help_text": ""
       }
     },
@@ -1001,7 +1002,7 @@
         "attr": {
           "row": 4
         },
-        "hover_text": "The free text name or description of the item being described. This can be repeated in multiple languages. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/description/narrative/'>For more information</a>",
+        "hover_text": "The free text name or description of the item being described. This can be repeated in multiple languages. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/description/narrative/'>For more information</a>",
         "help_text": "",
         "attributes": {
           "lang": {
@@ -1011,7 +1012,7 @@
             "required": false,
             "criteria": "",
             "label": "@xml:lang",
-            "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/description/narrative/'>For more information</a>",
+            "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/description/narrative/'>For more information</a>",
             "help_text": "",
             "choices": "Activity/Language.json"
           }
@@ -1030,7 +1031,7 @@
         "criteria": "",
         "required": true,
         "type": "text",
-        "hover_text": "The percentage of the total commitment allocated to or planned for capital expenditure. Content must be a decimal number between 0 and 100 inclusive, with no percentage sign. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/capital-spend/'>For more information</a>",
+        "hover_text": "The percentage of the total commitment allocated to or planned for capital expenditure. Content must be a decimal number between 0 and 100 inclusive, with no percentage sign. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/capital-spend/'>For more information</a>",
         "help_text": ""
       }
     }
@@ -1116,7 +1117,7 @@
             "attr": {
               "row": 4
             },
-            "hover_text": "The free text name or description of the item being described. This can be repeated in multiple languages. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/description/narrative/'>For more information</a>",
+            "hover_text": "The free text name or description of the item being described. This can be repeated in multiple languages. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/description/narrative/'>For more information</a>",
             "help_text": "",
             "attributes": {
               "lang": {
@@ -1126,7 +1127,7 @@
                 "required": false,
                 "criteria": "",
                 "label": "@xml:lang",
-                "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/description/narrative/'>For more information</a>",
+                "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/description/narrative/'>For more information</a>",
                 "help_text": "",
                 "choices": "Activity/Language.json"
               }
@@ -1173,28 +1174,36 @@
     }
   },
   "document_link": {
-    "name": "activity_document_link",
+    "name": "document_link",
     "label": "Document Link",
-    "criteria": "",
-    "add_more": false,
+    "add_more": true,
     "attributes": {
       "url": {
         "name": "url",
         "label": "@url",
+        "type": "text",
         "criteria": "",
         "required": true,
-        "type": "text",
         "hover_text": "",
         "help_text": ""
       },
       "format": {
         "name": "format",
         "label": "@format",
-        "criteria": "",
-        "required": true,
-        "multiselect": false,
         "type": "select",
         "choices": "Activity/FileFormat.json",
+        "multiselect": false,
+        "criteria": "",
+        "required": true,
+        "hover_text": "",
+        "help_text": ""
+      },
+      "document" : {
+        "name": "document",
+        "label": "document",
+        "type": "file",
+        "criteria": "",
+        "required": false,
         "hover_text": "",
         "help_text": ""
       }
@@ -1203,34 +1212,32 @@
       "title": {
         "name": "title",
         "label": "Title",
-        "criteria": "",
-        "required": false,
         "add_more": false,
-        "attributes": false,
+        "attributes": {},
         "sub_elements": {
           "narrative": {
             "name": "narrative",
+            "label": "narrative",
             "type": "textarea",
+            "criteria": "",
             "required": false,
             "add_more": true,
-            "criteria": "",
-            "label": "narrative",
             "attr": {
               "row": 4
             },
-            "hover_text": "The free text name or description of the item being described. This can be repeated in multiple languages. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/description/narrative/'>For more information</a>",
+            "hover_text": "The free text name or description of the item being described. This can be repeated in multiple languages. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/description/narrative/'>For more information</a>",
             "help_text": "",
             "attributes": {
               "lang": {
                 "name": "language",
+                "label": "@xml:lang",
                 "type": "select",
                 "multiSelect": false,
+                "choices": "Activity/Language.json",
                 "required": false,
                 "criteria": "",
-                "label": "@xml:lang",
-                "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/description/narrative/'>For more information</a>",
-                "help_text": "",
-                "choices": "Activity/Language.json"
+                "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/description/narrative/'>For more information</a>",
+                "help_text": ""
               }
             }
           }
@@ -1239,97 +1246,92 @@
       "description": {
         "name": "description",
         "label": "Description",
-        "criteria": "",
-        "required": false,
         "add_more": false,
-        "attributes": false,
+        "attributes": {},
         "sub_elements": {
           "narrative": {
             "name": "narrative",
+            "label": "narrative",
             "type": "textarea",
             "required": false,
             "add_more": false,
             "criteria": "",
-            "label": "narrative",
             "attr": {
               "row": 4
             },
-            "hover_text": "The free text name or description of the item being described. This can be repeated in multiple languages. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/description/narrative/'>For more information</a>",
+            "hover_text": "The free text name or description of the item being described. This can be repeated in multiple languages. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/description/narrative/'>For more information</a>",
             "help_text": "",
-            "sub_elements": false,
             "attributes": {
               "lang": {
                 "name": "language",
+                "label": "@xml:lang",
                 "type": "select",
                 "multiSelect": false,
+                "choices": "Activity/Language.json",
                 "required": false,
                 "criteria": "",
-                "label": "@xml:lang",
-                "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/description/narrative/'>For more information</a>",
-                "help_text": "",
-                "choices": "Activity/Language.json"
+                "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/description/narrative/'>For more information</a>",
+                "help_text": ""
               }
-            }
+            },
+            "sub_elements": {}
           }
         }
       },
       "category": {
         "name": "category",
         "label": "Category",
-        "criteria": "",
-        "required": false,
         "add_more": true,
         "attributes": {
           "code": {
             "name": "code",
+            "label": "@code",
             "type": "select",
             "multiSelect": false,
+            "choices": "Activity/DocumentCategory.json",
             "required": true,
             "criteria": "",
-            "label": "@code",
             "hover_text": "",
-            "help_text": "",
-            "choices": "Activity/DocumentCategory.json"
+            "help_text": ""
           }
-        }
+        },
+        "sub_elements": {}
       },
       "language": {
         "name": "language",
         "label": "Language",
-        "criteria": "",
-        "required": false,
         "add_more": true,
         "attributes": {
           "code": {
             "name": "code",
+            "label": "@code",
             "type": "select",
             "multiSelect": false,
+            "choices": "Activity/Language.json",
             "required": true,
             "criteria": "",
-            "label": "@code",
-            "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/description/narrative/'>For more information</a>",
-            "help_text": "",
-            "choices": "Activity/Language.json"
+            "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/description/narrative/'>For more information</a>",
+            "help_text": ""
           }
-        }
+        },
+        "sub_elements": {}
       },
       "document_date": {
         "name": "document_date",
         "label": "Document Date",
-        "criteria": "",
-        "required": false,
         "add_more": false,
         "attributes": {
           "date": {
             "name": "date",
+            "label": "date",
             "type": "date",
             "required": true,
             "criteria": "",
-            "label": "date",
             "hover_text": "",
             "help_text": ""
           }
-        }
+        },
+        "sub_elements": {}
       }
     }
   },
@@ -1370,7 +1372,7 @@
             "attr": {
               "row": 4
             },
-            "hover_text": "The free text name or description of the item being described. This can be repeated in multiple languages. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/description/narrative/'>For more information</a>",
+            "hover_text": "The free text name or description of the item being described. This can be repeated in multiple languages. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/description/narrative/'>For more information</a>",
             "help_text": "",
             "attributes": {
               "lang": {
@@ -1380,7 +1382,7 @@
                 "required": false,
                 "criteria": "",
                 "label": "@xml:lang",
-                "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/description/narrative/'>For more information</a>",
+                "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/description/narrative/'>For more information</a>",
                 "help_text": "",
                 "choices": "Activity/Language.json"
               }
@@ -1406,7 +1408,7 @@
             "attr": {
               "row": 4
             },
-            "hover_text": "The free text name or description of the item being described. This can be repeated in multiple languages. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/description/narrative/'>For more information</a>",
+            "hover_text": "The free text name or description of the item being described. This can be repeated in multiple languages. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/description/narrative/'>For more information</a>",
             "help_text": "",
             "attributes": {
               "lang": {
@@ -1416,7 +1418,7 @@
                 "required": false,
                 "criteria": "",
                 "label": "@xml:lang",
-                "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/description/narrative/'>For more information</a>",
+                "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/description/narrative/'>For more information</a>",
                 "help_text": "",
                 "choices": "Activity/Language.json"
               }
@@ -1442,7 +1444,7 @@
             "attr": {
               "row": 4
             },
-            "hover_text": "The free text name or description of the item being described. This can be repeated in multiple languages. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/description/narrative/'>For more information</a>",
+            "hover_text": "The free text name or description of the item being described. This can be repeated in multiple languages. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/description/narrative/'>For more information</a>",
             "help_text": "",
             "attributes": {
               "lang": {
@@ -1452,7 +1454,7 @@
                 "required": false,
                 "criteria": "",
                 "label": "@xml:lang",
-                "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/description/narrative/'>For more information</a>",
+                "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/description/narrative/'>For more information</a>",
                 "help_text": "",
                 "choices": "Activity/Language.json"
               }
@@ -1478,7 +1480,7 @@
             "attr": {
               "row": 4
             },
-            "hover_text": "The free text name or description of the item being described. This can be repeated in multiple languages. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/description/narrative/'>For more information</a>",
+            "hover_text": "The free text name or description of the item being described. This can be repeated in multiple languages. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/description/narrative/'>For more information</a>",
             "help_text": "",
             "attributes": {
               "lang": {
@@ -1488,7 +1490,7 @@
                 "required": false,
                 "criteria": "",
                 "label": "@xml:lang",
-                "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/description/narrative/'>For more information</a>",
+                "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/description/narrative/'>For more information</a>",
                 "help_text": "",
                 "choices": "Activity/Language.json"
               }
@@ -1568,7 +1570,7 @@
             "attr": {
               "row": 4
             },
-            "hover_text": "The free text name or description of the item being described. This can be repeated in multiple languages. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/description/narrative/'>For more information</a>",
+            "hover_text": "The free text name or description of the item being described. This can be repeated in multiple languages. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/description/narrative/'>For more information</a>",
             "help_text": "",
             "attributes": {
               "lang": {
@@ -1578,7 +1580,7 @@
                 "required": false,
                 "criteria": "",
                 "label": "@xml:lang",
-                "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/description/narrative/'>For more information</a>",
+                "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/description/narrative/'>For more information</a>",
                 "help_text": "",
                 "choices": "Activity/Language.json"
               }
@@ -1674,7 +1676,7 @@
             "attr": {
               "row": 4
             },
-            "hover_text": "The free text name or description of the item being described. This can be repeated in multiple languages. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/description/narrative/'>For more information</a>",
+            "hover_text": "The free text name or description of the item being described. This can be repeated in multiple languages. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/description/narrative/'>For more information</a>",
             "help_text": "",
             "attributes": {
               "lang": {
@@ -1684,7 +1686,7 @@
                 "required": false,
                 "criteria": "",
                 "label": "@xml:lang",
-                "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/description/narrative/'>For more information</a>",
+                "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/description/narrative/'>For more information</a>",
                 "help_text": "",
                 "choices": "Activity/Language.json"
               }
@@ -1710,7 +1712,7 @@
             "attr": {
               "row": 4
             },
-            "hover_text": "The free text name or description of the item being described. This can be repeated in multiple languages. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/description/narrative/'>For more information</a>",
+            "hover_text": "The free text name or description of the item being described. This can be repeated in multiple languages. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/description/narrative/'>For more information</a>",
             "help_text": "",
             "attributes": {
               "lang": {
@@ -1720,7 +1722,7 @@
                 "required": false,
                 "criteria": "",
                 "label": "@xml:lang",
-                "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/description/narrative/'>For more information</a>",
+                "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/description/narrative/'>For more information</a>",
                 "help_text": "",
                 "choices": "Activity/Language.json"
               }
@@ -1746,7 +1748,7 @@
             "attr": {
               "row": 4
             },
-            "hover_text": "The free text name or description of the item being described. This can be repeated in multiple languages. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/description/narrative/'>For more information</a>",
+            "hover_text": "The free text name or description of the item being described. This can be repeated in multiple languages. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/description/narrative/'>For more information</a>",
             "help_text": "",
             "attributes": {
               "lang": {
@@ -1756,7 +1758,7 @@
                 "required": false,
                 "criteria": "",
                 "label": "@xml:lang",
-                "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/description/narrative/'>For more information</a>",
+                "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/description/narrative/'>For more information</a>",
                 "help_text": "",
                 "choices": "Activity/Language.json"
               }
@@ -1824,7 +1826,7 @@
         "sub_elements": {
           "pos": {
             "name": "pos",
-            "hover_text": "The free text name or description of the item being described. This can be repeated in multiple languages. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/description/narrative/'>For more information</a>",
+            "hover_text": "The free text name or description of the item being described. This can be repeated in multiple languages. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/description/narrative/'>For more information</a>",
             "help_text": "",
             "attributes": {
               "latitude": {
@@ -1926,7 +1928,7 @@
         "multiselect": false,
         "label": "@type",
         "choices": "Activity/BudgetType.json",
-        "hover_text": "A code for the type of event or action being classified. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/humanitarian-scope/'>For more information</a>",
+        "hover_text": "A code for the type of event or action being classified. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/humanitarian-scope/'>For more information</a>",
         "help_text": ""
       }
     },
@@ -2043,7 +2045,7 @@
             "required": true,
             "criteria": "mandatory",
             "add_more": true,
-            "hover_text": "The free text name or description of the item being described. This can be repeated in multiple languages. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/title/narrative/'>For more information</a>",
+            "hover_text": "The free text name or description of the item being described. This can be repeated in multiple languages. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/title/narrative/'>For more information</a>",
             "help_text": "",
             "attr": {
               "row": 4
@@ -2057,7 +2059,7 @@
                 "multiSelect": false,
                 "required": false,
                 "criteria": "",
-                "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/title/narrative/'>For more information</a>",
+                "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/title/narrative/'>For more information</a>",
                 "help_text": ""
               }
             }
@@ -2105,7 +2107,7 @@
             "type": "textarea",
             "required": true,
             "criteria": "mandatory",
-            "hover_text": "The free text name or description of the item being described. This can be repeated in multiple languages. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/title/narrative/'>For more information</a>",
+            "hover_text": "The free text name or description of the item being described. This can be repeated in multiple languages. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/title/narrative/'>For more information</a>",
             "help_text": "",
             "attr": {
               "row": 4
@@ -2119,7 +2121,7 @@
                 "multiSelect": false,
                 "required": false,
                 "criteria": "",
-                "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/title/narrative/'>For more information</a>",
+                "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/title/narrative/'>For more information</a>",
                 "help_text": ""
               }
             }
@@ -2217,7 +2219,7 @@
         "attr": {
           "row": 4
         },
-        "hover_text": "The free text name or description of the item being described. This can be repeated in multiple languages. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/description/narrative/'>For more information</a>",
+        "hover_text": "The free text name or description of the item being described. This can be repeated in multiple languages. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/description/narrative/'>For more information</a>",
         "help_text": "",
         "attributes": {
           "lang": {
@@ -2227,7 +2229,7 @@
             "required": false,
             "criteria": "",
             "label": "@xml:lang",
-            "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/description/narrative/'>For more information</a>",
+            "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/description/narrative/'>For more information</a>",
             "help_text": "",
             "choices": "Activity/Language.json"
           }
@@ -2249,7 +2251,7 @@
         "type": "select",
         "multiselect": false,
         "choices": "Activity/BudgetType.json",
-        "hover_text": "Whether this is the original budget (prepared when the original commitment was made) or has subsequently been revised. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/budget/'>For more information</a>",
+        "hover_text": "Whether this is the original budget (prepared when the original commitment was made) or has subsequently been revised. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/budget/'>For more information</a>",
         "help_text": ""
       },
       "status": {
@@ -2260,7 +2262,7 @@
         "type": "select",
         "multiselect": false,
         "choices": "Activity/BudgetStatus.json",
-        "hover_text": "The status explains whether the budget being reported is indicative or has been formally committed. The value should appear within the BudgetStatus codelist. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/budget/'>For more information</a>",
+        "hover_text": "The status explains whether the budget being reported is indicative or has been formally committed. The value should appear within the BudgetStatus codelist. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/budget/'>For more information</a>",
         "help_text": ""
       }
     },
@@ -2278,7 +2280,7 @@
             "criteria": "mandatory",
             "required": true,
             "type": "date",
-            "hover_text": "This attribute is required. This value must be of type xsd:date. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/budget/period-start/'>For more information</a>",
+            "hover_text": "This attribute is required. This value must be of type xsd:date. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/budget/period-start/'>For more information</a>",
             "help_text": ""
           }
         }
@@ -2296,7 +2298,7 @@
             "criteria": "mandatory",
             "required": true,
             "type": "date",
-            "hover_text": "This attribute is required. This value must be of type xsd:date. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/budget/period-end/'>For more information</a>",
+            "hover_text": "This attribute is required. This value must be of type xsd:date. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/budget/period-end/'>For more information</a>",
             "help_text": ""
           }
         }
@@ -2325,7 +2327,7 @@
             "type": "select",
             "multiselect": false,
             "choices": "Activity/Currency.json",
-            "hover_text": "A three letter ISO 4217 code for the original currency of the amount. This is required for all currency amounts unless the iati-organisation/@default-currency attribute is specified. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/budget/value/'>For more information</a>",
+            "hover_text": "A three letter ISO 4217 code for the original currency of the amount. This is required for all currency amounts unless the iati-organisation/@default-currency attribute is specified. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/budget/value/'>For more information</a>",
             "help_text": ""
           },
           "value_date": {
@@ -2334,7 +2336,7 @@
             "criteria": "mandatory",
             "required": true,
             "type": "date",
-            "hover_text": "The date to be used for determining the exchange rate for currency conversions.This attribute is required. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/budget/value/'>For more information</a>",
+            "hover_text": "The date to be used for determining the exchange rate for currency conversions.This attribute is required. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/budget/value/'>For more information</a>",
             "help_text": ""
           }
         }
@@ -2352,9 +2354,7 @@
         "type": "select",
         "multiselect": false,
         "choices": "Activity/ResultType.json",
-        "required": true,
-        "criteria": "mandatory",
-        "hover_text": "An IATI code for the type of result being reported. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/'>For more information.</a>",
+        "hover_text": "An IATI code for the type of result being reported. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/'>For more information.</a>",
         "help_text": ""
       },
       "result_aggregation_status": {
@@ -2366,9 +2366,7 @@
           "0": "False",
           "1": "True"
         },
-        "required": false,
-        "criteria": "",
-        "hover_text": "Boolean flag indicating whether the data in the result set are suitable for aggregation. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/'>For more information.</a>",
+        "hover_text": "Boolean flag indicating whether the data in the result set are suitable for aggregation. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/'>For more information.</a>",
         "help_text": ""
       }
     },
@@ -2423,7 +2421,7 @@
             "attr": {
               "row": 4
             },
-            "hover_text": "The free text name or description of the item being described. This can be repeated in multiple languages. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/description/narrative/'>For more information</a>",
+            "hover_text": "The free text name or description of the item being described. This can be repeated in multiple languages. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/description/narrative/'>For more information</a>",
             "help_text": "",
             "attributes": {
               "lang": {
@@ -2483,7 +2481,7 @@
                 "attr": {
                   "row": 4
                 },
-                "hover_text": "The free text name or description of the item being described. This can be repeated in multiple languages. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/document-link/title/narrative/'>For more information</a>",
+                "hover_text": "The free text name or description of the item being described. This can be repeated in multiple languages. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/document-link/title/narrative/'>For more information</a>",
                 "help_text": "",
                 "attributes": {
                   "lang": {
@@ -2516,7 +2514,7 @@
                 "attr": {
                   "row": 4
                 },
-                "hover_text": "The free text name or description of the item being described. This can be repeated in multiple languages. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/document-link/description/narrative/'>For more information</a>",
+                "hover_text": "The free text name or description of the item being described. This can be repeated in multiple languages. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/document-link/description/narrative/'>For more information</a>",
                 "help_text": "",
                 "attributes": {
                   "lang": {
@@ -2732,7 +2730,7 @@
             "attr": {
               "row": 4
             },
-            "hover_text": "The free text name or description of the item being described. This can be repeated in multiple languages. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/indicator/description/narrative/'>For more information</a>",
+            "hover_text": "The free text name or description of the item being described. This can be repeated in multiple languages. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/indicator/description/narrative/'>For more information</a>",
             "help_text": "",
             "attributes": {
               "lang": {
@@ -2794,7 +2792,7 @@
                 "attr": {
                   "row": 4
                 },
-                "hover_text": "The free text name or description of the item being described. This can be repeated in multiple languages. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/document-link/title/narrative/'>For more information</a>",
+                "hover_text": "The free text name or description of the item being described. This can be repeated in multiple languages. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/document-link/title/narrative/'>For more information</a>",
                 "help_text": "",
                 "attributes": {
                   "lang": {
@@ -2829,7 +2827,7 @@
                 "attr": {
                   "row": 4
                 },
-                "hover_text": "The free text name or description of the item being described. This can be repeated in multiple languages. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/indicator/document-link/description/narrative/'>For more information</a>",
+                "hover_text": "The free text name or description of the item being described. This can be repeated in multiple languages. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/indicator/document-link/description/narrative/'>For more information</a>",
                 "help_text": "",
                 "attributes": {
                   "lang": {
@@ -3001,7 +2999,7 @@
                 "attr": {
                   "row": 4
                 },
-                "hover_text": "The free text name or description of the item being described. This can be repeated in multiple languages. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/indicator/baseline/comment/narrative/'>For more information</a>",
+                "hover_text": "The free text name or description of the item being described. This can be repeated in multiple languages. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/indicator/baseline/comment/narrative/'>For more information</a>",
                 "help_text": "",
                 "attributes": {
                   "lang": {
@@ -3092,7 +3090,7 @@
                     "attr": {
                       "row": 4
                     },
-                    "hover_text": "The free text name or description of the item being described. This can be repeated in multiple languages. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/indicator/baseline/document-link/title/narrative/'>For more information</a>",
+                    "hover_text": "The free text name or description of the item being described. This can be repeated in multiple languages. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/indicator/baseline/document-link/title/narrative/'>For more information</a>",
                     "help_text": "",
                     "attributes": {
                       "lang": {
@@ -3127,7 +3125,7 @@
                     "attr": {
                       "row": 4
                     },
-                    "hover_text": "The free text name or description of the item being described. This can be repeated in multiple languages. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/indicator/baseline/document-link/description/narrative/'>For more information</a>",
+                    "hover_text": "The free text name or description of the item being described. This can be repeated in multiple languages. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/indicator/baseline/document-link/description/narrative/'>For more information</a>",
                     "help_text": "",
                     "attributes": {
                       "lang": {

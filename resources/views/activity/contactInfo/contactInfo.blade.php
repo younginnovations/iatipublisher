@@ -4,7 +4,7 @@
     <section class="section min-h-[calc(100vh_-_60px)]">
 
         <div class="px-10 pt-4 pb-[71px]">
-            < @include('admin.layouts.activityTitle')
+            @include('admin.layouts.activityTitle')
             <div class="activities">
                 <aside class="activities__sidebar">
                     <elements-note></elements-note>

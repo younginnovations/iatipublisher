@@ -1,5 +1,8 @@
 <template>
   <div :class="layout" class="activities__content--element px-3 py-3">
+    <!-- <div class=" uppercase text-sm text-n-40 mb-4 mr-4">{{  }}
+      <span class="title-border relative"></span>
+    </div> -->
     <div class="rounded-lg bg-white p-4">
       <div class="mb-4 flex">
         <div class="title flex grow">
@@ -73,9 +76,7 @@
 
       <template v-if="title === 'title'">
         <div v-for="(post, i) in data.content" :key="i" class="title-content">
-          <div class="language mb-1.5 text-sm italic text-n-30">
-            (Language: {{ post.language }})
-          </div>
+          <div class="language mb-1.5">(Language: {{ post.language }})</div>
           <div v-if="post.narrative" class="description text-sm">
             {{ post.narrative }}
           </div>
@@ -106,9 +107,7 @@
             :class="{ 'mb-4': i !== post.narrative.length - 1 }"
             class="description-content"
           >
-            <div class="language mb-1.5 text-xs italic text-n-30">
-              (Language: {{ item.language }})
-            </div>
+            <div class="language mb-1.5">(Language: {{ item.language }})</div>
             <div v-if="item.narrative" class="description text-sm">
               {{ item.narrative }}
             </div>
@@ -134,9 +133,7 @@
           >
             <span class="w-[100px] text-xs text-n-40">Description</span>
             <div class="ml-2">
-              <div class="language mb-1.5 text-xs italic text-n-30">
-                (Language: {{ item.language }})
-              </div>
+              <div class="language mb-1.5">(Language: {{ item.language }})</div>
               <div v-if="item.narrative" class="description text-xs leading-5">
                 {{ item.narrative }}
               </div>
@@ -164,9 +161,7 @@
             :class="{ 'mb-4': i !== post.narrative.length - 1 }"
             class="recipient_country-content description"
           >
-            <div class="language mb-1.5 text-xs text-n-30">
-              (Language: {{ item.language }})
-            </div>
+            <div class="language mb-1.5">(Language: {{ item.language }})</div>
             <div v-if="item.narrative" class="text-sm">
               {{ item.narrative }}
             </div>
@@ -235,7 +230,7 @@
                 :class="{ 'mb-4': i !== post.narrative.length - 1 }"
                 class="description-content"
               >
-                <div class="language mb-1.5 text-xs italic text-n-30">
+                <div class="language mb-1.5">
                   (Language: {{ item.language }})
                 </div>
                 <div v-if="item.narrative" class="text-sm">
@@ -295,9 +290,7 @@
               :class="{ 'mb-4': i !== post.narrative.length - 1 }"
               class="description"
             >
-              <div class="language mb-1.5 text-xs italic text-n-30">
-                (Language: {{ item.language }})
-              </div>
+              <div class="language mb-1.5">(Language: {{ item.language }})</div>
               <div v-if="item.narrative" class="text-sm">
                 {{ item.narrative }}
               </div>
@@ -404,7 +397,7 @@
                     class="item description"
                     :class="{ 'mb-4': k !== item.narrative - 1 }"
                   >
-                    <div class="language mb-1.5 text-sm italic text-n-30">
+                    <div class="language mb-1.5">
                       (Language: {{ i.language }})
                     </div>
                     <div v-if="i.narrative" class="text-sm">
@@ -481,9 +474,7 @@
                 class="country_budget_items description"
                 :class="{ 'mb-4': k !== post.narrative - 1 }"
               >
-                <div class="language mb-1.5 text-xs italic text-n-30">
-                  (Language: {{ i.language }})
-                </div>
+                <div class="language mb-1.5">(Language: {{ i.language }})</div>
                 <div v-if="i.narrative" class="text-sm">
                   {{ i.narrative }}
                 </div>
@@ -539,9 +530,7 @@
                 class="item description"
                 :class="{ 'mb-4': k !== post.narrative - 1 }"
               >
-                <div class="language mb-1.5 text-xs italic text-n-30">
-                  (Language: {{ i.language }})
-                </div>
+                <div class="language mb-1.5">(Language: {{ i.language }})</div>
                 <div v-if="i.narrative" class="text-sm">
                   {{ i.narrative }}
                 </div>
@@ -591,12 +580,10 @@
               <div
                 v-for="(i, k) in post.narrative"
                 :key="k"
-                class="item"
+                class="item description"
                 :class="{ 'mb-4': k !== post.narrative.length - 1 }"
               >
-                <div class="language mb-1.5 text-sm italic text-n-30">
-                  (Language: {{ i.language }})
-                </div>
+                <div class="language mb-1.5">(Language: {{ i.language }})</div>
                 <div v-if="i.narrative" class="text-sm">
                   {{ i.narrative }}
                 </div>
@@ -655,9 +642,7 @@
                 class="item description"
                 :class="{ 'mb-4': k !== post.narrative.length - 1 }"
               >
-                <div class="language mb-1.5 text-sm italic text-n-30">
-                  (Language: {{ i.language }})
-                </div>
+                <div class="language mb-1.5">(Language: {{ i.language }})</div>
                 <div v-if="i.narrative" class="text-sm">
                   {{ i.narrative }}
                 </div>
@@ -716,13 +701,335 @@
                 class="item description"
                 :class="{ 'mb-4': k !== post.narrative.length - 1 }"
               >
-                <div class="language mb-1.5 text-sm italic text-n-30">
-                  (Language: {{ i.language }})
-                </div>
+                <div class="language mb-1.5">(Language: {{ i.language }})</div>
                 <div v-if="i.narrative" class="text-sm">
                   {{ i.narrative }}
                 </div>
               </div>
+            </div>
+          </div>
+        </div>
+      </template>
+
+      <template v-else-if="title === 'budget'">
+        {{ post }}
+        <div
+          v-for="(post, key) in data.content"
+          :key="key"
+          class="text-xs leading-5 text-n-50"
+          :class="{ 'mb-4': key !== data.content.length - 1 }"
+        >
+          <div class="space text-sm font-bold">
+            {{ post.budget_type }}
+          </div>
+          <div class="space text-sm">
+            {{ post.budget_status }}
+          </div>
+          <div
+            v-for="(item, i) in post.period_start"
+            :key="i"
+            class="space"
+            :class="{ 'mb-4': i !== post.period_start.length - 1 }"
+          >
+            <div v-if="item.date" class="flex flex-col text-sm">
+              <div class="font-bold text-n-50">Period start</div>
+              <span>{{ item.date }}</span>
+            </div>
+          </div>
+          <div
+            v-for="(item, i) in post.period_end"
+            :key="i"
+            class="space"
+            :class="{ 'mb-4': i !== post.period_end.length - 1 }"
+          >
+            <div v-if="item.date" class="flex flex-col text-sm">
+              <div class="font-bold text-n-50">Period end</div>
+              <span>{{ item.date }}</span>
+            </div>
+          </div>
+          <div
+            v-for="(item, i) in post.budget_value"
+            :key="i"
+            class="space flex flex-col"
+            :class="{ 'mb-4': i !== post.budget_value.length - 1 }"
+          >
+            <div class="text-sm font-bold text-n-50">Budget value</div>
+            <div v-if="item.amount" class="flex space-x-2">
+              <span>Amount</span>
+              <span>{{ item.amount }}</span>
+            </div>
+            <div v-if="item.currency" class="flex space-x-2">
+              <span>currency</span>
+              <span>{{ item.currency }}</span>
+            </div>
+            <div v-if="item.value_date" class="flex space-x-2">
+              <span>Value date</span>
+              <span>{{ item.value_date }}</span>
+            </div>
+          </div>
+        </div>
+      </template>
+
+      <template v-else-if="title === 'contact_info'">
+        <div
+          v-for="(post, key) in data.content"
+          :key="key"
+          class="contact-info"
+          :class="{ 'mb-4': key !== data.content.length - 1 }"
+        >
+          <div class="space text-sm font-bold">
+            {{ post.type }}
+          </div>
+          <div
+            v-for="(item, i) in post.organisation"
+            :key="i"
+            :class="{ 'mb-4': i !== post.organisation.length - 1 }"
+          >
+            <div
+              v-for="(narrative, j) in item.narrative"
+              :key="j"
+              :class="{ 'mb-4': j !== item.narrative.length - 1 }"
+            >
+              <table v-if="narrative.narrative" class="flex flex-col">
+                <tr>
+                  <td>Organisation</td>
+                  <td>
+                    <span class="language"
+                      >(Language: {{ narrative.language }})</span
+                    >
+                    <span>{{ narrative.narrative }}</span>
+                  </td>
+                </tr>
+              </table>
+            </div>
+          </div>
+
+          <div
+            v-for="(item, i) in post.department"
+            :key="i"
+            :class="{ 'mb-4': i !== post.department.length - 1 }"
+          >
+            <div
+              v-for="(narrative, j) in item.narrative"
+              :key="j"
+              :class="{ 'mb-4': j !== item.narrative.length - 1 }"
+            >
+              <table v-if="narrative.narrative" class="flex flex-col">
+                <tr>
+                  <td>Department</td>
+                  <td>
+                    <span class="language"
+                      >(Language: {{ narrative.language }})</span
+                    >
+                    <span>{{ narrative.narrative }}</span>
+                  </td>
+                </tr>
+              </table>
+            </div>
+          </div>
+
+          <div
+            v-for="(item, i) in post.person_name"
+            :key="i"
+            :class="{ 'mb-4': i !== post.person_name.length - 1 }"
+          >
+            <div
+              v-for="(narrative, j) in item.narrative"
+              :key="j"
+              :class="{ 'mb-4': j !== item.narrative.length - 1 }"
+            >
+              <table v-if="narrative.narrative" class="flex flex-col">
+                <tr>
+                  <td>Person Name</td>
+                  <td>
+                    <span class="language"
+                      >(Language: {{ narrative.language }})</span
+                    >
+                    <span>{{ narrative.narrative }}</span>
+                  </td>
+                </tr>
+              </table>
+            </div>
+          </div>
+
+          <div
+            v-for="(item, i) in post.job_title"
+            :key="i"
+            :class="{ 'mb-4': i !== post.job_title.length - 1 }"
+          >
+            <div
+              v-for="(narrative, j) in item.narrative"
+              :key="j"
+              :class="{ 'mb-4': j !== item.narrative.length - 1 }"
+            >
+              <table v-if="narrative.narrative" class="flex flex-col">
+                <tr>
+                  <td>Job Title</td>
+                  <td>
+                    <span class="language"
+                      >(Language: {{ narrative.language }})</span
+                    >
+                    <span>{{ narrative.narrative }}</span>
+                  </td>
+                </tr>
+              </table>
+            </div>
+          </div>
+
+          <div
+            v-for="(item, i) in post.telephone"
+            :key="i"
+            :class="{ 'mb-4': i !== post.telephone.length - 1 }"
+          >
+            <table v-if="item.telephone" class="flex flex-col">
+              <tr>
+                <td>Telephone</td>
+                <td>
+                  <span>{{ item.telephone }}</span>
+                </td>
+              </tr>
+            </table>
+          </div>
+
+          <div
+            v-for="(item, i) in post.email"
+            :key="i"
+            :class="{ 'mb-4': i !== post.email.length - 1 }"
+          >
+            <table v-if="item.email" class="flex flex-col">
+              <tr>
+                <td>Email</td>
+                <td>
+                  <span>{{ item.email }}</span>
+                </td>
+              </tr>
+            </table>
+          </div>
+
+          <div
+            v-for="(item, i) in post.website"
+            :key="i"
+            :class="{ 'mb-4': i !== post.website.length - 1 }"
+          >
+            <table v-if="item.website" class="flex flex-col">
+              <tr>
+                <td>Website</td>
+                <td>
+                  <span>{{ item.website }}</span>
+                </td>
+              </tr>
+            </table>
+          </div>
+
+          <div
+            v-for="(item, i) in post.mailing_address"
+            :key="i"
+            :class="{ 'mb-4': i !== post.mailing_address.length - 1 }"
+          >
+            <div
+              v-for="(narrative, j) in item.narrative"
+              :key="j"
+              :class="{ 'mb-4': j !== item.narrative.length - 1 }"
+            >
+              <table v-if="narrative.narrative" class="flex flex-col">
+                <tr>
+                  <td>Mailing Address</td>
+                  <td>
+                    <span
+                      >{{ narrative.narrative }} (Language:
+                      {{ narrative.language }})</span
+                    >
+                  </td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </div>
+      </template>
+
+      <template v-else-if="title === 'location'">
+        <!-- { "ref": "1", "location_reach": [ { "code": "1" } ], "location_id": [ {
+        "vocabulary": "A1", "code": "123" } ], "name": [ { "narrative": [ {
+        "narrative": "afsdgdfhffh", "language": "aa" } ] } ], "description": [ {
+        "narrative": [ { "narrative": "asfgdhhghkh", "language": "aa" } ] } ],
+        "activity_description": [ { "narrative": [ { "narrative": "gddfhfjghk",
+        "language": "ab" } ] } ], "administrative": [ { "vocabulary": "A2",
+        "code": "123", "level": "2" } ], "point": [ { "srs_name": "FRMQ", "pos":
+        [ { "latitude": "dsfdsgsgsg", "longitude": "dg" } ] } ], "exactness": [
+        { "code": "CMPQ" } ], "location_class": [ { "code": "AIRQ" } ],
+        "feature_designation": [ { "code": "FRMQ" } ] } -->
+        <div
+          v-for="(post, key) in data.content"
+          :key="key"
+          class="contact-info"
+          :class="{ 'mb-4': key !== data.content.length - 1 }"
+        >
+          <table>
+            <tr>
+              <td>Reference</td>
+              <td>{{ post.ref }}</td>
+            </tr>
+          </table>
+
+          <div
+            v-for="(item, i) in post.location_reach"
+            :key="i"
+            :class="{ 'mb-4': i !== post.location_reach.length - 1 }"
+          >
+            <table v-if="item.code" class="flex flex-col">
+              <tr>
+                <td>Location Reach</td>
+                <td>
+                  <span>{{ item.code }}</span>
+                </td>
+              </tr>
+            </table>
+          </div>
+
+          <div
+            v-for="(item, i) in post.location_id"
+            :key="i"
+            :class="{ 'mb-4': i !== post.location_id.length - 1 }"
+          >
+            <table v-if="item.vocabulary" class="flex flex-col">
+              <tr>
+                <td>Location Id</td>
+                <td>
+                  <span>{{ item.vocabulary }}</span>
+                </td>
+              </tr>
+            </table>
+            <table v-if="item.code" class="flex flex-col">
+              <tr>
+                <td></td>
+                <td>
+                  <span>{{ item.code }}</span>
+                </td>
+              </tr>
+            </table>
+          </div>
+
+          <div
+            v-for="(item, i) in post.name"
+            :key="i"
+            :class="{ 'mb-4': i !== post.name.length - 1 }"
+          >
+            <div
+              v-for="(narrative, j) in item.narrative"
+              :key="j"
+              :class="{ 'mb-4': j !== item.narrative.length - 1 }"
+            >
+              <table v-if="narrative.narrative" class="flex flex-col">
+                <tr>
+                  <td>Name</td>
+                  <td>
+                    <span class="language"
+                      >(Language: {{ narrative.language }})</span
+                    >
+                    <span>{{ narrative.narrative }}</span>
+                  </td>
+                </tr>
+              </table>
             </div>
           </div>
         </div>
@@ -833,5 +1140,39 @@ export default defineComponent({
 }
 .description {
   width: 575px;
+}
+.space {
+  @apply mb-4;
+
+  span:nth-child(1) {
+    @apply text-n-40;
+    width: 100px;
+  }
+}
+.contact-info {
+  @apply flex flex-col text-xs text-n-50;
+
+  & * {
+    @apply leading-5;
+  }
+
+  td:nth-child(1) {
+    @apply text-n-40;
+    width: 100px;
+  }
+  td:nth-child(2) {
+    @apply flex flex-col text-xs;
+  }
+  tr {
+    @apply mb-1 flex space-x-2;
+  }
+}
+.language {
+  @apply text-xs italic text-n-30;
+}
+.title-border::after {
+  content: '';
+  @apply absolute top-2 left-4 h-px bg-n-30;
+  width: 932px;
 }
 </style>
