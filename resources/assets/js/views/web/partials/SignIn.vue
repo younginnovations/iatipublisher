@@ -5,7 +5,7 @@
   >
     <Loader v-if="isLoaderVisible"></Loader>
 
-    <div class="right__container flex flex-col" @keyup.enter="login">
+    <div class="right__container flex w-full flex-col" @keyup.enter="login">
       <h2 class="mb-2 hidden sm:block">Sign In.</h2>
       <span class="text-n-40">Welcome back! Please enter your details.</span>
       <div

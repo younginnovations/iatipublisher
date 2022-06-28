@@ -302,21 +302,15 @@
                 :title="name.toString()"
                 :activityId="activity.id"
                 :width="
-                  name === 'title' ||
-                  name === 'description' ||
-                  name === 'activity_date' ||
-                  name === 'contact_info' ||
-                  name === 'participating_org' ||
-                  name === 'recipient_country' ||
-                  name === 'recipient_region' ||
-                  name === 'sector' ||
-                  name === 'policy_marker' ||
-                  name === 'tag' ||
-                  name === 'country_budget_items' ||
-                  name === 'humanitarian_scope' ||
-                  name === 'results'
-                    ? 'full'
-                    : ''
+                  name === 'identifier' ||
+                  name === 'activity_status' ||
+                  name === 'activity_scope' ||
+                  name === 'collaboration_type' ||
+                  name === 'default_flow_type' ||
+                  name === 'default_tied_status' ||
+                  name === 'default_finance_type'
+                    ? 'basis-6/12'
+                    : 'full'
                 "
                 :completed="status[name] ?? false"
                 tooltip="Example text"
