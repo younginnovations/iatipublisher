@@ -84,7 +84,6 @@ class ParticipatingOrganizationController extends Controller
 
             return redirect()->route('admin.activities.show', $id)->with('success', 'Participating organization updated successfully.');
         } catch (\Exception $e) {
-            dd($e);
             logger()->error($e->getMessage());
 
             return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while updating participating organization.');

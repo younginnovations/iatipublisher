@@ -21,18 +21,22 @@
                             <div class="line grow h-px border-b border-n-40 ml-4"></div>
                         </div>
                         {!! form($form) !!}
-                        <div class="hidden collection-container title" form_type="title"
-                            data-prototype="{{ form_row($form->title->getChildren()[0]->getChild('narrative')->prototype()) }}">
+                        <div class="hidden parent-collection"
+                            data-prototype="{{ form_row($form->document_link->prototype()) }}">
+                        </div>
+                        <div class="hidden collection-container title_narrative" form_type="title_narrative"
+                            data-prototype="{{ form_row($form->document_link->getChildren()[0]->getChild('title')->getChildren()[0]->getChild('narrative')->prototype()) }}">
                         </div>
                         <div class="hidden collection-container description" form_type="description"
-                            data-prototype="{{ form_row($form->description->getChildren()[0]->getChild('narrative')->prototype()) }}">
+                            data-prototype="{{ form_row($form->document_link->getChildren()[0]->getChild('description')->getChildren()[0]->getChild('narrative')->prototype()) }}">
                         </div>
                         <div class="hidden collection-container category" form_type="category"
-                            data-prototype="{{ form_row($form->category->prototype()) }}">
+                            data-prototype="{{ form_row($form->document_link->getChildren()[0]->getChild('category')->prototype()) }}">
                         </div>
                         <div class="hidden collection-container language" form_type="language"
-                            data-prototype="{{ form_row($form->language->prototype()) }}">
+                            data-prototype="{{ form_row($form->document_link->getChildren()[0]->getChild('language')->prototype()) }}">
                         </div>
+                        <div class="hidden endpoint" endpoint="{{ env('MINIO_ENDPOINT').'/document_link/'.$activity['id'] }}">
                     </div>
                 </div>
             </div>
