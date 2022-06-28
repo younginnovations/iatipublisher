@@ -301,7 +301,7 @@ export default defineComponent({
   }
 }
 .form-group-title-container {
-  @apply mb-1 flex space-x-1;
+  @apply mb-1.5 flex space-x-1;
 }
 .form-group-title {
   @apply text-xs font-bold text-bluecoral;

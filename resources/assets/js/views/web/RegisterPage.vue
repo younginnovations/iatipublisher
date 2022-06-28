@@ -571,7 +571,7 @@ export default defineComponent({
 
 <style lang="scss">
 .label {
-  @apply text-sm font-normal text-n-50;
+  @apply mb-2 text-sm font-normal text-n-50;
 }
 
 .section {

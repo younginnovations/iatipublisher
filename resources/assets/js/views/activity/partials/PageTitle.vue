@@ -26,17 +26,16 @@
                   ‘activity’ is an individual project or piece of development
                   and humanitarian work. The unit of work described by an
                   ‘activity’ is determined by the organisation that is
-                  publishing the data.
-                </p>
-                <p>
-                  For example, an activity could be a donor government providing
-                  US$ 100 million to a recipient country’s state bank to
-                  implement basic education over 8 years.
+                  publishing the data. For example, an activity could be a donor
+                  government providing US$ 50 million to a recipient country’s
+                  government in order to implement basic education over 5 years.
+                  Another activity could be an NGO spending US$ 500,000 to
+                  deliver clean drinking water to 1000 households over 6 months.
                 </p>
                 <p class="text-n-40">
-                  To know more about how to publish data on activities according
-                  to the IATI read the
-                  <a href="#" class="text-bluecoral"><b>full guidance</b></a
+                  Learn more about how to publish data on activities in IATI’s
+                  publishing
+                  <a href="#" class="text-bluecoral"><b>guidance.</b></a
                   >.
                 </p>
               </div>
