@@ -6,10 +6,12 @@ namespace App\Http\Controllers\Admin\Activity;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Activity\DocumentLink\DocumentLinkRequest;
-use App\IATI\Elements\Builder\BaseFormCreator;
 use App\IATI\Elements\Builder\MultilevelSubElementFormCreator;
+use App\IATI\Elements\Builder\ParentCollectionFormCreator;
 use App\IATI\Services\Activity\DocumentLinkService;
+use App\IATI\Services\Document\DocumentService;
 use Illuminate\Contracts\View\View;
+use Illuminate\Database\DatabaseManager;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 
@@ -25,9 +27,9 @@ class DocumentLinkController extends Controller
     protected MultilevelSubElementFormCreator $multilevelSubElementFormCreator;
 
     /**
-     * @var BaseFormCreator
+     * @var ParentCollectionFormCreator
      */
-    protected BaseFormCreator $baseFormCreator;
+    protected ParentCollectionFormCreator $parentCollectionFormCreator;
 
     /**
      * @var DocumentLinkService
@@ -35,16 +37,28 @@ class DocumentLinkController extends Controller
     protected DocumentLinkService $documentLinkService;
 
     /**
+     * @var DocumentService
+     */
+    protected DocumentService $documentService;
+
+    /**
+     * @var DatabaseManager
+     */
+    protected DatabaseManager $db;
+
+    /**
      * DocumentLinkControllerConstructor.
      *
      * @param MultilevelSubElementFormCreator $multilevelSubElementFormCreator
      * @param DocumentLinkService $documentLinkService
      */
-    public function __construct(MultilevelSubElementFormCreator $multilevelSubElementFormCreator, DocumentLinkService $documentLinkService, BaseFormCreator $baseFormCreator)
+    public function __construct(MultilevelSubElementFormCreator $multilevelSubElementFormCreator, DocumentLinkService $documentLinkService, DocumentService $documentService, DatabaseManager $db, ParentCollectionFormCreator $parentCollectionFormCreator)
     {
         $this->multilevelSubElementFormCreator = $multilevelSubElementFormCreator;
-        $this->baseFormCreator = $baseFormCreator;
+        $this->parentCollectionFormCreator = $parentCollectionFormCreator;
         $this->documentLinkService = $documentLinkService;
+        $this->documentService = $documentService;
+        $this->db = $db;
     }
 
     /**
@@ -54,20 +68,36 @@ class DocumentLinkController extends Controller
      *
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|void
      */
-    public function edit(int $id):View|RedirectResponse
+    public function edit(int $id): View|RedirectResponse
     {
         try {
             $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
             $activity = $this->documentLinkService->getActivityData($id);
-            $model = $this->documentLinkService->getDocumentLinkData($id) ?: [];
-            $this->baseFormCreator->url = route('admin.activities.document-link.update', [$id]);
-            $form = $this->baseFormCreator->editForm($model, $element['document_link']);
+            $model['document_link'] = $this->documentLinkService->getDocumentLinkData($id) ?: [];
+            $documentLinks = $activity->documentLinks()->orderBy('updated_at', 'desc')->get()->toArray();
+
+            foreach ($model['document_link'] as $key => $document) {
+                foreach ($documentLinks as $findIndex => $file) {
+                    unset($document['document']);
+                    $document_link = (array) json_decode($file['document_link']);
+                    unset($document_link['document']);
+
+                    if (json_encode($document) == json_encode($document_link)) {
+                        $model['document_link'][$key]['url'] = env('MINIO_ENDPOINT') . '/document_link/' . $activity['id'] . '/' . $file['filename'];
+                        $model['document_link'][$key]['document'] = '';
+                    }
+                }
+            }
+
+            $this->parentCollectionFormCreator->url = route('admin.activities.document-link.update', [$id]);
+            $form = $this->parentCollectionFormCreator->editForm($model, $element['document_link']);
 
             return view('activity.documentLink.documentLink', compact('form', 'activity'));
         } catch (\Exception $e) {
+            dd($e);
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while rendering contact info form.');
+            return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while rendering document link form.');
         }
     }
 
@@ -83,17 +113,21 @@ class DocumentLinkController extends Controller
     {
         try {
             $activityData = $this->documentLinkService->getActivityData($id);
-            $activityCountryBudgetItem = $request->except(['_token', '_method']);
+            $documentLink = $request->except(['_token', '_method']);
 
-            if (!$this->documentLinkService->update($activityCountryBudgetItem, $activityData)) {
-                return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while updating contact info.');
-            }
+            $this->db->beginTransaction();
 
-            return redirect()->route('admin.activities.show', $id)->with('success', 'contact info updated successfully.');
+            $this->documentLinkService->update($documentLink, $activityData);
+            $this->documentService->update($documentLink, $activityData);
+
+            $this->db->commit();
+
+            return redirect()->route('admin.activities.show', $id)->with('success', 'Document link updated successfully.');
         } catch (\Exception $e) {
+            dd($e);
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while updating contact info.');
+            return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while updating document link.');
         }
     }
 }

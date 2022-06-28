@@ -22,4 +22,14 @@ class DocumentRepository extends Repository
     {
         return Document::class;
     }
+
+    /**
+     * Update or create document link.
+     *
+     * @return mixed
+     */
+    public function updateOrCreateDocument($filename, $activity_id, $data): mixed
+    {
+        return $this->model->updateOrCreate(['filename' => $filename, 'activity_id' => $activity_id], $data);
+    }
 }

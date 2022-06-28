@@ -59,7 +59,6 @@ class PlannedDisbursementController extends Controller
 
             return view('activity.plannedDisbursement.plannedDisbursement', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {
-            dd($e);
             logger()->error($e->getMessage());
 
             return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while rendering planned disbursement form.');
@@ -86,7 +85,6 @@ class PlannedDisbursementController extends Controller
 
             return redirect()->route('admin.activities.show', $id)->with('success', 'Planned disbursement updated successfully.');
         } catch (\Exception $e) {
-            dd($e);
             logger()->error($e->getMessage());
 
             return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while updating planned disbursement.');

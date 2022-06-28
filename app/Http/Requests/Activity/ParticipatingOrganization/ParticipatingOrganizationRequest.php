@@ -18,7 +18,6 @@ class ParticipatingOrganizationRequest extends ActivityBaseRequest
      */
     public function rules()
     {
-        // dd($_REQUEST);
         return $this->getRulesForParticipatingOrg($this->get('participating_organization'));
     }
 
