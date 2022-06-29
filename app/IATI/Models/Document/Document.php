@@ -23,6 +23,7 @@ class Document extends Model
         'activity_id',
         'filename',
         'extension',
+        'document_link',
         'size',
     ];
 

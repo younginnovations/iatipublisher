@@ -25,6 +25,13 @@ class FormBuilder {
       $(target).prev().last().find('.select2').select2({
         placeholder: 'Select an option'
       });
+
+      $(this).find('.sub-attribute')
+        .wrapAll(
+          $(
+            '<div class="form-field-group flex flex-wrap rounded-br-lg border-y border-r border-spring-50 sub-attribute-wrapper"></div>'
+          )
+        );
     } else {
       $(target)
         .parent()
@@ -127,7 +134,6 @@ class FormBuilder {
   }
 
   public addWrapperOnAdd(): void {
-    console.log('lKDJAsd',$('.multi-form'));
     $('.multi-form')
       .last()
       .find('.attribute')
@@ -924,7 +930,6 @@ $(function () {
     childOrParent = '';
 
   $('body').on('click', '.delete', (event: Event) => {
-    console.log('yo');
     deleteConfirmation.fadeIn();
     deleteIndex = event;
     childOrParent = 'child';
@@ -961,4 +966,13 @@ $(function () {
     placeholder: 'Select an option',
     allowClear: true,
   });
+
+  let file = 'input[id*="[document]"]';
+
+  $('body').on('change','input[id*="document"]', function(){
+    let endpoint = $('.endpoint').attr('endpoint')??'';
+    let file_name = ($(this).val()?.split('\\').pop()).replace(' ', '_');
+    $(this).closest('.form-field-group').find('input[id*="[url]"]').val(`${endpoint}/${file_name}`);
+  })
+
 });

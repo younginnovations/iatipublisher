@@ -18,6 +18,7 @@ return new class extends Migration {
             $table->integer('activity_id');
             $table->string('filename');
             $table->string('extension');
+            $table->json('document_link');
             $table->float('size')->nullable();
             $table->timestamps();
         });
