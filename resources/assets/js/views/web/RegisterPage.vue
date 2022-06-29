@@ -61,7 +61,7 @@
                 :key="field.name"
                 :class="field.class"
               >
-                <div class="flex items-center justify-between">
+                <div class="mb-2 flex items-center justify-between">
                   <label :for="field.id" class="label"
                     >{{ field.label }}
                     <span v-if="field.required" class="text-salmon-40"> *</span>
@@ -620,7 +620,7 @@ export default defineComponent({
 
 <style lang="scss">
 .label {
-  @apply mb-2 text-sm font-normal text-n-50;
+  @apply text-sm font-normal text-n-50;
 }
 
 .section {
