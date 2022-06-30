@@ -249,6 +249,8 @@ export default defineComponent({
     }
 
     function storeActivity() {
+      loaderVisibility.value = true;
+
       axios
         .post('/activities', formData)
         .then((res) => {

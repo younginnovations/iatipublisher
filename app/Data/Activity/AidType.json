@@ -34,11 +34,29 @@
     {
       "category": "B",
       "code": "B02",
-      "name": "Core contributions to multilateral institutions",
+      "name": "Core contributions to multilateral institutions and global funds",
       "language": "en",
       "category-description": "For contributions under this category, the donor relinquishes the exclusive control of its funds by sharing the responsibility with other stakeholders (other donors, NGOs, multilateral institutions, Public Private Partnerships). The category covers both core contributions (B01 and B02), and pooled contributions with a specific earmarking (B03 and B04).",
       "category-name": "Core contributions and pooled programmes and funds",
       "description": "These funds are classified as multilateral ODA (all other categories fall under bilateral ODA). The recipient multilateral institution pools contributions so that they lose their identity and become an integral part of its financial assets. See Annex 2 of the DAC Directives for a comprehensive list of agencies core contributions to which may be reported under B02 (Section I. Multilateral institutions)."
+    },
+    {
+      "category": "B02",
+      "code": "B021",
+      "name": "Core contributions to multilateral institutions",
+      "language": "en",
+      "category-description": "For contributions under this category, the donor relinquishes the exclusive control of its funds by sharing the responsibility with other stakeholders (other donors, NGOs, multilateral institutions, Public Private Partnerships). The category covers both core contributions (B01 and B02), and pooled contributions with a specific earmarking (B03 and B04).",
+      "category-name": "Core contributions and pooled programmes and funds",
+      "description": "Contributions in this category are pooled by the recipient multilateral institution and become an integral part of its financial assets or liabilities."
+    },
+    {
+      "category": "B02",
+      "code": "B022",
+      "name": "Core contributions to global funds",
+      "language": "en",
+      "category-description": "For contributions under this category, the donor relinquishes the exclusive control of its funds by sharing the responsibility with other stakeholders (other donors, NGOs, multilateral institutions, Public Private Partnerships). The category covers both core contributions (B01 and B02), and pooled contributions with a specific earmarking (B03 and B04).",
+      "category-name": "Core contributions and pooled programmes and funds",
+      "description": "Contributions to global funds classified as multilateral including Financial Intermediary Funds for which the World Bank is the Trustee and which have gone through the Annex 2 process (GEF, CIFs) as well as some UN inter-agency pooled funds, e.g. CERF and the UN Peacebuilding Fund."
     },
     {
       "category": "B",
@@ -134,6 +152,33 @@
       "category-description": "Groups a number of contributions that do not give rise to a cross-border flow.",
       "category-name": "Other in-donor expenditures",
       "description": "Official sector expenditures for the sustenance of refugees in donor countries during the first twelve months of their stay."
+    },
+    {
+      "category": "H",
+      "code": "H03",
+      "name": "Asylum-seekers ultimately accepted",
+      "language": "en",
+      "category-description": "Groups a number of contributions that do not give rise to a cross-border flow.",
+      "category-name": "Other in-donor expenditures",
+      "description": "Costs incurred in donor countries for basic assistance to asylum seekers, when these are ultimately accepted. This category includes only costs incurred prior to recognition."
+    },
+    {
+      "category": "H",
+      "code": "H04",
+      "name": "Asylum-seekers ultimately rejected",
+      "language": "en",
+      "category-description": "Groups a number of contributions that do not give rise to a cross-border flow.",
+      "category-name": "Other in-donor expenditures",
+      "description": "Costs incurred in donor countries for basic assistance to asylum seekers, when these are ultimately rejected. This category includes only costs incurred prior to rejection. Members may base their reporting on the first instance rejection, where a final decision on status is anticipated to occur after a 12-month period, and this facilitates the establishment of a conservative estimate. For further guidance on how to proceed with calculating costs related to rejected asylum seekers, see Clarification 5, third bullet in section II.6 of the Reporting Directives."
+    },
+    {
+      "category": "H",
+      "code": "H05",
+      "name": "Recognised refugees",
+      "language": "en",
+      "category-description": "Groups a number of contributions that do not give rise to a cross-border flow.",
+      "category-name": "Other in-donor expenditures",
+      "description": "Costs incurred in donor countries for basic assistance to refugees with a recognised status. This category only includes costs after recognition (or after date of entry into a country through a resettlement programme)."
     }
   ]
 }
