@@ -95,12 +95,12 @@
                   :placeholder="field.placeholder"
                   :type="field.type"
                   :value="
-                    formData.registrationAgency +
+                    formData.registration_agency +
                       '-' +
                       formData.registration_number
                   "
                   disabled="true"
-                >
+                />
 
                 <Multiselect
                   v-if="field.type === 'select'"
@@ -249,7 +249,7 @@ export default defineComponent({
       type: [String, Object],
       required: true,
     },
-    registrationAgency: {
+    agency: {
       type: [String, Object],
       required: true,
     },
@@ -260,11 +260,15 @@ export default defineComponent({
     const publisherExists = ref(true);
     const isLoaderVisible = ref(false);
 
-    const errorData = reactive({
+    interface ObjectType {
+      [key: string]: any;
+    }
+
+    const errorData: ObjectType = reactive({
       publisher_name: '',
       publisher_id: '',
       country: '',
-      registrationAgency: '',
+      registration_agency: '',
       registration_number: '',
       identifier: '',
       username: '',
@@ -274,11 +278,11 @@ export default defineComponent({
       password_confirmation: '',
     });
 
-    const formData = reactive({
+    const formData: ObjectType = reactive({
       publisher_name: '',
       publisher_id: '',
       country: '',
-      registrationAgency: '',
+      registration_agency: '',
       registration_number: '',
       identifier: '',
       username: '',
@@ -291,12 +295,12 @@ export default defineComponent({
     watch(
       () => formData.country,
       () => {
-        formData.registrationAgency = '';
+        formData.registration_agency = '';
       }
     );
 
-    const registrationAgency = computed(() => {
-      const agencies = props.registrationAgency!;
+    const registration_agency = computed(() => {
+      const agencies = props.agency!;
 
       if (formData.country) {
         const uncategorized = ['XI', 'XR'];
@@ -374,16 +378,16 @@ export default defineComponent({
             class: 'mb-4 lg:mb-2 relative',
             help_text: '',
           },
-          organization_registrationAgency: {
+          organization_registration_agency: {
             label: 'Organisation Registration Agency',
-            name: 'registrationAgency',
+            name: 'registration_agency',
             placeholder: 'Select an Organisation Registration Agency',
             id: 'registration-agency',
             required: true,
             hover_text:
               'Provide the name of the agency in your country where you organisation is registered. If you do not know this information please email support@iatistandard.org.',
             type: 'select',
-            options: registrationAgency,
+            options: registration_agency,
             class: 'mb-4 lg:mb-2 relative',
             help_text: '',
           },
@@ -485,7 +489,7 @@ export default defineComponent({
     });
 
     function verifyPublisher() {
-      formData.identifier = `${formData.registrationAgency}-${formData.registration_number}`;
+      formData.identifier = `${formData.registration_agency}-${formData.registration_number}`;
       isLoaderVisible.value = true;
 
       formData.identifier = `${formData.registrationAgency}-${formData.registration_number}`;
@@ -510,8 +514,8 @@ export default defineComponent({
           errorData.publisher_id = errors.publisher_id
             ? errors.publisher_id[0]
             : '';
-          errorData.registrationAgency = errors.registrationAgency
-            ? errors.registrationAgency[0]
+          errorData.registration_agency = errors.registration_agency
+            ? errors.registration_agency[0]
             : '';
           errorData.registration_number = errors.registration_number
             ? errors.registration_number[0]
