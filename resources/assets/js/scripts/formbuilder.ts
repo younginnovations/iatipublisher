@@ -25,6 +25,13 @@ class FormBuilder {
       $(target).prev().last().find('.select2').select2({
         placeholder: 'Select an option'
       });
+
+      $(this).find('.sub-attribute')
+        .wrapAll(
+          $(
+            '<div class="form-field-group flex flex-wrap rounded-br-lg border-y border-r border-spring-50 sub-attribute-wrapper"></div>'
+          )
+        );
     } else {
       $(target)
         .parent()
@@ -46,15 +53,19 @@ class FormBuilder {
     ev.preventDefault();
     let target = ev.target as EventTarget;
     let container = $('.parent-collection');
+    console.log(container);
+    console.log(container.attr('data-prototype'));
     let count = $(target).attr('child_count')
       ? parseInt($(target).attr('child_count') as string) + 1
       : $('.multi-form').length;
     let proto = container.data('prototype').replace(/__PARENT_NAME__/g, count);
     proto = proto.replace(/__NAME__/g, 0);
+    console.log($('.multi-form').last());
     $('.multi-form').last().after($(proto));
     $('.multi-form').last().find('.select2').select2({
       placeholder: 'Select an option',
     });
+    console.log('here');
 
     this.addWrapperOnAdd();
 
@@ -894,6 +905,11 @@ $(function () {
   formBuilder.addWrapper();
   formBuilder.hideShowFormFields();
   formBuilder.updateActivityIdentifier();
+  console.log('here');
+
+  $('.delete').on('click', ()=>{
+    console.log('clicked');
+  })
 
   $('body').on('click', '.add_to_collection', (event: Event) => {
     formBuilder.addForm(event);
@@ -950,4 +966,13 @@ $(function () {
     placeholder: 'Select an option',
     allowClear: true,
   });
+
+  let file = 'input[id*="[document]"]';
+
+  $('body').on('change','input[id*="document"]', function(){
+    let endpoint = $('.endpoint').attr('endpoint')??'';
+    let file_name = ($(this).val()??'').toString();
+    $(this).closest('.form-field-group').find('input[id*="[url]"]').val(`${endpoint}/${(file_name?.split('\\').pop())?.replace(' ', '_')}`);
+  })
+
 });

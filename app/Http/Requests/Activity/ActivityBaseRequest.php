@@ -98,13 +98,13 @@ class ActivityBaseRequest extends FormRequest
 
         foreach ($formFields as $narrativeIndex => $narrative) {
             if (boolval($narrative['language'])) {
-                $rules[sprintf('%s.narrative.%s.narrative', $formBase, $narrativeIndex)] = 'required_with:' . sprintf(
-                    '%s.narrative.%s.language',
-                    $formBase,
-                    $narrativeIndex
-                );
+                // $rules[sprintf('%s.narrative.%s.narrative', $formBase, $narrativeIndex)] = 'required_with:' . sprintf(
+                //     '%s.narrative.%s.language',
+                //     $formBase,
+                //     $narrativeIndex
+                // );
             } else {
-                $rules[sprintf('%s.narrative.%s.narrative', $formBase, $narrativeIndex)] = 'required';
+                // $rules[sprintf('%s.narrative.%s.narrative', $formBase, $narrativeIndex)] = 'required';
             }
         }
 
@@ -187,6 +187,80 @@ class ActivityBaseRequest extends FormRequest
                 $formBase,
                 $narrativeIndex
             )] = 'The narrative field is required with @xml:lang field.';
+        }
+
+        return $messages;
+    }
+
+    /**
+     * returns rules for period start form.
+     * @param $formFields
+     * @param $formBase
+     * @return array
+     */
+    public function getRulesForPeriodStart($formFields, $formBase)
+    {
+        $rules = [];
+        foreach ($formFields as $periodStartKey => $periodStartVal) {
+            $rules[$formBase . '.period_start.' . $periodStartKey . '.date'] = 'date';
+        }
+
+        return $rules;
+    }
+
+    /**
+     * returns messages for period start form.
+     * @param $formFields
+     * @param $formBase
+     * @return array
+     */
+    public function getMessagesForPeriodStart($formFields, $formBase)
+    {
+        $messages = [];
+        foreach ($formFields as $periodStartKey => $periodStartVal) {
+            $messages[$formBase . '.period_start.' . $periodStartKey . '.date.required'] = trans('validation.required', ['attribute' => trans('elementForm.period_start')]);
+            $messages[$formBase . '.period_end.' . $periodStartKey . '.date.date'] = 'Period end must be a date.';
+        }
+
+        return $messages;
+    }
+
+    /**
+     * returns rules for period end form.
+     * @param $formFields
+     * @param $formBase
+     * @return array
+     */
+    public function getRulesForPeriodEnd($formFields, $formBase)
+    {
+        $rules = [];
+
+        foreach ($formFields as $periodEndKey => $periodEndVal) {
+            // $rules[$formBase . '.period_end.' . $periodEndKey . '.date'][] = 'required';
+            $rules[$formBase . '.period_end.' . $periodEndKey . '.date'][] = 'date';
+            $rules[$formBase . '.period_end.' . $periodEndKey . '.date'][] = sprintf(
+                'after:%s',
+                $formBase . '.period_start.' . $periodEndKey . '.date'
+            );
+        }
+
+        return $rules;
+    }
+
+    /**
+     * returns messages for period end form.
+     * @param $formFields
+     * @param $formBase
+     * @return array
+     */
+    public function getMessagesForPeriodEnd($formFields, $formBase)
+    {
+        $messages = [];
+
+        foreach ($formFields as $periodEndKey => $periodEndVal) {
+            $messages[$formBase . '.period_end.' . $periodEndKey . '.date.required'] = 'Period end is a required field';
+            $messages[$formBase . '.period_end.' . $periodEndKey . '.date.date'] = 'Period end must be a date field';
+            $messages[$formBase . '.period_end.' . $periodEndKey . '.date.after'] = 'Period end must be a date after period';
         }
 
         return $messages;

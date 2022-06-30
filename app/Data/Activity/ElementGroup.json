@@ -162,16 +162,5 @@
         "label": "Results"
       }
     }
-  },
-  "oecd_reporting": {
-    "label": "OECD Reporting",
-    "elements": {
-      "crs-add": {
-        "label": "CRS-ADD"
-      },
-      "fss": {
-        "label": "FSS"
-      }
-    }
   }
 }
