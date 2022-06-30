@@ -11,12 +11,6 @@
       "description": "Official Development Assistance"
     },
     {
-      "code": "20",
-      "name": "OOF",
-      "language": "en",
-      "description": "Other Official Flows"
-    },
-    {
       "code": "21",
       "name": "Non-export credit OOF",
       "language": "en",
@@ -33,12 +27,6 @@
       "name": "Private grants",
       "language": "en",
       "description": "made by NGOs and other civil society organisations (e.e. philantropic foundations) based in the reporting DAC country"
-    },
-    {
-      "code": "35",
-      "name": "Private market",
-      "language": "en",
-      "description": "Private market"
     },
     {
       "code": "36",
