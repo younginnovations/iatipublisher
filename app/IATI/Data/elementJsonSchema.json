@@ -1162,8 +1162,8 @@
         "hover_text": "The original field value in the reporting organisation’s system",
         "help_text": ""
       },
-      "iati-equivalent": {
-        "name": "iati-equivalent",
+      "iati_equivalent": {
+        "name": "iati_equivalent",
         "label": "@iati-equivalent",
         "criteria": "",
         "required": false,
