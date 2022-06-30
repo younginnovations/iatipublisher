@@ -73,7 +73,7 @@
 
           <HoverText
             v-if="tooltip"
-            :hover_text="tooltip"
+            :hoverText="tooltip"
             class="text-n-40"
           />
         </div>
