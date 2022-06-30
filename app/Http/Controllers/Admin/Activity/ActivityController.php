@@ -242,6 +242,16 @@ class ActivityController extends Controller
             'policySignificance'          => getCodeList('PolicySignificance', 'Activity'),
             'policyMarker'                => getCodeList('PolicyMarker', 'Activity'),
             'tagVocabulary'               => getCodeList('TagVocabulary', 'Activity'),
+            'budgetType'                  => getCodeList('BudgetType', 'Activity'),
+            'budgetStatus'                => getCodeList('BudgetStatus', 'Activity'),
+            'otherIdentifierType'         => getCodeList('OtherIdentifierType', 'Activity'),
+            'contactType'                 => getCodeList('ContactType', 'Activity'),
+            'country'                     => getCodeList('Country', 'Activity'),
+            'locationType'                => getCodeList('LocationType', 'Activity'),
+            'currency'                    => getCodeList('Currency', 'Activity'),
+            'geographicVocabulary'        => getCodeList('GeographicVocabulary', 'Activity'),
+            'budgetIdentifier'            => getCodeList('BudgetIdentifier', 'Activity'),
+            'organizationType'            => getCodeList('OrganizationType', 'Organization'),
         ];
     }
 
