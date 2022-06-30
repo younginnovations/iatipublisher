@@ -105,7 +105,7 @@
                     '-' +
                     formData.registration_number
                   "
-                  disabled="disabled"
+                  disabled="true"
                 />
 
                 <Multiselect
@@ -184,22 +184,25 @@
               v-for="(ele, i) in registerForm"
               :key="ele.title"
               :class="[
-                step == parseInt(i)
+                step == parseInt(i.toString())
                   ? 'relative font-bold text-n-50'
                   : 'mb-6 flex items-center',
               ]"
             >
-              <span v-if="step == parseInt(i)" class="list__active"></span>
+              <span
+                v-if="step == parseInt(i.toString())"
+                class="list__active"
+              ></span>
               <div class="flex items-center">
-                <span v-if="!ele.is_complete" class="mr-3 ml-6">
+                <span v-if="!ele.is_complete" class="ml-6 mr-3">
                   {{ i }}
                 </span>
-                <span v-if="ele.is_complete" class="mr-3 ml-6">
+                <span v-if="ele.is_complete" class="ml-6 mr-3">
                   <svg-vue class="text-xs" icon="checked"> </svg-vue>
                 </span>
                 <span
                   :class="[
-                    step == parseInt(i)
+                    step == parseInt(i.toString())
                       ? 'font-bold text-n-50'
                       : ele.is_complete
                       ? 'font-bold text-bluecoral'
@@ -210,7 +213,7 @@
                 </span>
               </div>
               <p
-                v-if="step == parseInt(i)"
+                v-if="step == parseInt(i.toString())"
                 class="detail mt-2 mb-6 font-normal xl:pr-2"
               >
                 {{ ele.description }}
@@ -256,7 +259,11 @@ export default defineComponent({
     const publisherExists = ref(true);
     const isLoaderVisible = ref(false);
 
-    const errorData = reactive({
+    interface ObjectType {
+      [key: string]: any;
+    }
+
+    const errorData: ObjectType = reactive({
       publisher_name: '',
       publisher_id: '',
       country: '',
@@ -270,7 +277,7 @@ export default defineComponent({
       password_confirmation: '',
     });
 
-    const formData = reactive({
+    const formData: ObjectType = reactive({
       publisher_name: '',
       publisher_id: '',
       country: '',
@@ -309,7 +316,7 @@ export default defineComponent({
       }
     });
 
-    const registerForm = reactive({
+    const registerForm: ObjectType = reactive({
       1: {
         title: 'Publisher Information',
         is_complete: false,
@@ -473,7 +480,6 @@ export default defineComponent({
         password_confirmation: encrypt(formData.password_confirmation, 'test'),
       };
 
-      console.log({ ...formData, ...form });
       axios
         .post('/verifyPublisher', { ...formData, ...form })
         .then((res) => {
@@ -577,7 +583,6 @@ export default defineComponent({
           }
         })
         .catch((error) => {
-          console.log(error);
           const { errors } = error.response.data;
           isLoaderVisible.value = false;
           errorData.username = errors.username ? errors.username[0] : '';

@@ -14,8 +14,9 @@
                 <div class="breadcrumb__title">
                   <span
                     class="breadcrumb__title last overflow-hidden text-n-30"
-                    >{{ pageTitle ?? 'Untitled' }}</span
                   >
+                    {{ pageTitle ?? 'Untitled' }}
+                  </span>
                   <span class="ellipsis__title--hover w-[calc(100%_+_35px)]">{{
                     pageTitle ? pageTitle : 'Untitled'
                   }}</span>
@@ -304,13 +305,13 @@
                 :title="name.toString()"
                 :activityId="activity.id"
                 :width="
-                  name === 'identifier' ||
-                  name === 'activity_status' ||
-                  name === 'activity_scope' ||
-                  name === 'collaboration_type' ||
-                  name === 'default_flow_type' ||
-                  name === 'default_tied_status' ||
-                  name === 'default_finance_type'
+                  name === Number('identifier') ||
+                  name === Number('activity_status') ||
+                  name === Number('activity_scope') ||
+                  name === Number('collaboration_type') ||
+                  name === Number('default_flow_type') ||
+                  name === Number('default_tied_status') ||
+                  name === Number('default_finance_type')
                     ? 'basis-6/12'
                     : 'full'
                 "
