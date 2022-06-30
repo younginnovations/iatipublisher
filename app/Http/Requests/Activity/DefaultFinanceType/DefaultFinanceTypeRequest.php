@@ -16,8 +16,10 @@ class DefaultFinanceTypeRequest extends ActivityBaseRequest
      */
     public function rules(): array
     {
+        $financeTypeKeys = implode(',', array_keys(getCodeList('FinanceType', 'Activity')));
+
         return [
-            'default_finance_type' => ['nullable', 'in:110,111,210,211,310,311,410,411,412,413,414,421,422,423,424,425,431,432,433'],
+            'default_finance_type' => ['nullable', 'in:' . $financeTypeKeys],
         ];
     }
 
