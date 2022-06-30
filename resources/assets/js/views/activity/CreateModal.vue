@@ -38,7 +38,7 @@
                 </div>
                 <input
                   v-model="formData.narrative"
-                  class="form__input"
+                  class="form__input mt-2"
                   :class="{
                     error__input: errorData.narrative != '',
                   }"
@@ -119,7 +119,7 @@
                 </div>
                 <input
                   v-model="formData.activity_identifier"
-                  class="form__input"
+                  class="form__input mt-2"
                   :class="{
                     error__input: errorData.activity_identifier != '',
                   }"
@@ -153,7 +153,7 @@
                   </label>
                 </div>
                 <input
-                  class="form__input"
+                  class="form__input mt-2"
                   type="text"
                   placeholder=""
                   :value="
