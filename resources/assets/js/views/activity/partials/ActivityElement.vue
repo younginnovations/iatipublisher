@@ -1354,16 +1354,16 @@
                 </table>
               </div>
               <div
-                v-for="(item, i) in post.capital_spend"
-                :key="i"
+                v-for="(d, count) in post.capital_spend"
+                :key="count"
                 class="mb-4"
-                :class="{ 'mb-4': i !== post.capital_spend.length - 1 }"
+                :class="{ 'mb-4': count !== post.capital_spend.length - 1 }"
               >
-                <table v-if="item.percentage" class="flex flex-col">
+                <table v-if="d.percentage" class="flex flex-col">
                   <tr>
                     <td>Capital Spend</td>
                     <td>
-                      <span>{{ item.percentage }}%</span>
+                      <span>{{ d.percentage }}%</span>
                     </td>
                   </tr>
                 </table>
@@ -1417,7 +1417,7 @@ import { defineComponent } from 'vue';
 import HoverText from '../../../components/HoverText.vue';
 
 export default defineComponent({
-  name: 'activity-element',
+  name: 'ActivityElement',
   components: { HoverText },
   props: {
     data: {

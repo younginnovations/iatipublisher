@@ -1,12 +1,6 @@
 <template>
-  <button
-    class="button relative font-bold text-n-40"
-    :class="btnType"
-  >
-    <svg-vue
-      v-if="icon"
-      :icon="icon"
-    />
+  <button class="relative font-bold button text-n-40" :class="btnType">
+    <svg-vue v-if="icon" :icon="icon" />
     <span>{{ text }}</span>
   </button>
 </template>
@@ -24,7 +18,8 @@ export default defineComponent({
     },
     icon: {
       type: String,
-      required: true,
+      required: false,
+      default: '',
     },
     type: {
       type: String,

@@ -977,11 +977,11 @@ $(function () {
     allowClear: true,
   });
 
-  let file = 'input[id*="[document]"]';
+  // const file = 'input[id*="[document]"]';
 
   $('body').on('change', 'input[id*="document"]', function () {
-    let endpoint = $('.endpoint').attr('endpoint') ?? '';
-    let file_name = ($(this).val() ?? '').toString();
+    const endpoint = $('.endpoint').attr('endpoint') ?? '';
+    const file_name = ($(this).val() ?? '').toString();
     $(this)
       .closest('.form-field-group')
       .find('input[id*="[url]"]')

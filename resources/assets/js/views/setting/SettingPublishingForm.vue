@@ -1,10 +1,8 @@
 <template>
   <div>
     <div class="registry__info">
-      <div class="mb-4 text-sm font-bold text-n-50">
-        Registry Information
-      </div>
-      <div class="mb-4 flex items-center text-xs text-n-50">
+      <div class="mb-4 text-sm font-bold text-n-50">Registry Information</div>
+      <div class="flex items-center mb-4 text-xs text-n-50">
         <button>
           <HoverText
             name="IATI Registry Information"
@@ -13,7 +11,7 @@
         </button>
       </div>
     </div>
-    <div class="register mt-6" @keyup.enter="autoVerify">
+    <div class="mt-6 register" @keyup.enter="autoVerify">
       <div class="register__container">
         <div>
           <div class="relative">
@@ -29,22 +27,18 @@
             </div>
             <input
               id="publisher-id"
-              class="register__input mb-2"
+              class="mb-2 register__input"
               :class="{
-                'error__input' : publishingError.publisher_id
+                error__input: publishingError.publisher_id,
               }"
               type="text"
               placeholder="Type Publisher ID here"
               :value="props.organization.publisher_id"
               disabled="true"
               @input="updateStore('publisher_id')"
-            >
+            />
           </div>
-          <span
-            v-if="publishingError.publisher_id"
-            class="error"
-            role="alert"
-          >
+          <span v-if="publishingError.publisher_id" class="error" role="alert">
             {{ publishingError.publisher_id }}
           </span>
         </div>
@@ -62,37 +56,30 @@
             <input
               id="api-token"
               v-model="publishingForm.api_token"
-              class="register__input mb-2"
+              class="mb-2 register__input"
               :class="{
-                'error__input' : publishingError.api_token
+                error__input: publishingError.api_token,
               }"
               type="text"
               placeholder="Type API Token here"
               @input="updateStore('api_token')"
-            >
+            />
             <span
               v-if="publishingInfo.isVerificationRequested"
               :class="{
-                'tag__correct' : publishingInfo.token_verification,
-                'tag__incorrect' : !publishingInfo.token_verification
+                tag__correct: publishingInfo.token_verification,
+                tag__incorrect: !publishingInfo.token_verification,
               }"
             >
               {{ publishingInfo.token_verification ? 'Correct' : 'Incorrect' }}
             </span>
           </div>
-          <span
-            v-if="publishingError.api_token"
-            class="error"
-            role="alert"
-          >
+          <span v-if="publishingError.api_token" class="error" role="alert">
             {{ publishingError.api_token }}
           </span>
         </div>
       </div>
-      <button
-        class="primary-btn verify-btn"
-        @click="submitPublishing"
-      >
+      <button class="primary-btn verify-btn" @click="submitPublishing">
         Verify
       </button>
     </div>
@@ -110,7 +97,7 @@ export default defineComponent({
   },
   props: {
     organization: {
-      type: [Object,String],
+      type: [Object, String],
       required: true,
     },
   },
@@ -120,18 +107,23 @@ export default defineComponent({
     const tab = ref('publish');
     const store = useStore();
 
+    interface ObjectType {
+      [key: string]: any;
+    }
+
     const publishingForm = computed(() => store.state.publishingForm);
 
     const publishingInfo = computed(() => store.state.publishingInfo);
 
-    const publishingError = computed(() => store.state.publishingError);
+    const publishingError: ObjectType = computed(
+      () => store.state.publishingError
+    );
 
     function submitPublishing() {
       emit('submitPublishing');
     }
 
     function autoVerify() {
-      console.log('a');
       emit('submitPublishing');
     }
 
