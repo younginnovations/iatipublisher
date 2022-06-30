@@ -2,23 +2,16 @@
   <section class="section mb-7 sm:mx-10 sm:mb-10 md:mb-14 xl:mx-24 xl:px-1">
     <Loader v-if="isLoaderVisible" />
     <div class="section__container">
-      <div class="section__title mt-7 text-center leading-10 sm:mt-14">
+      <div class="leading-10 text-center section__title mt-7 sm:mt-14">
         <h2>Create IATI Publisher Account</h2>
         <p>
           Register your organisation to start your IATI publishing journey by
           creating an account in IATI publisher.
         </p>
       </div>
-      <div class="section__wrapper flex">
-        <EmailVerification
-          v-if="checkStep('3')"
-          :email="formData['email']"
-        />
-        <div
-          v-else
-          class="form input__field"
-          @keyup.enter="goToNextForm"
-        >
+      <div class="flex section__wrapper">
+        <EmailVerification v-if="checkStep('3')" :email="formData['email']" />
+        <div v-else class="form input__field" @keyup.enter="goToNextForm">
           <div class="form__container">
             <div class="flex items-center space-x-1">
               <HoverText
@@ -33,25 +26,39 @@
             </div>
             <div
               v-if="!publisherExists"
-              class="feedback mt-6 h-32 border-l-2 border-crimson-50 bg-crimson-10 p-4 text-sm text-n-50"
+              class="
+                h-32
+                p-4
+                mt-6
+                text-sm
+                border-l-2
+                feedback
+                border-crimson-50
+                bg-crimson-10
+                text-n-50
+              "
             >
-              <p class="mb-2 flex font-bold">
-                <svg-vue
-                  class="mr-2 text-xl"
-                  icon="warning"
-                />
+              <p class="flex mb-2 font-bold">
+                <svg-vue class="mr-2 text-xl" icon="warning" />
                 Sorry, the information you provided doesn’t match your IATI
                 Registry information.
               </p>
               <p class="ml-8 xl:mr-1">
                 Please note that if you’re an account holder in
-                <span><a href="https://iatiregistry.org/">IATI Registry</a></span>, make sure your
-                <span class="font-bold">Publisher Name, Publisher ID and IATI Organisation ID</span>
+                <span
+                  ><a href="https://iatiregistry.org/">IATI Registry</a></span
+                >, make sure your
+                <span class="font-bold"
+                  >Publisher Name, Publisher ID and IATI Organisation ID</span
+                >
                 match your IATI Registry Information. Contact
-                <span><a
-                  class="text-bluecoral"
-                  href="mailto:support@iatistandard.org"
-                >support@iatistandard.org</a></span>
+                <span
+                  ><a
+                    class="text-bluecoral"
+                    href="mailto:support@iatistandard.org"
+                    >support@iatistandard.org</a
+                  ></span
+                >
                 for more details.
               </p>
             </div>
@@ -61,6 +68,7 @@
                   'fields'
                 ]"
                 :key="key"
+                :class="field.class"
               >
                 <div class="mb-2 flex items-center justify-between">
                   <label :for="field.id" class="label"
@@ -69,7 +77,7 @@
                   </label>
                   <HoverText
                     v-if="field.hover_text !== ''"
-                    :hover-text="field.hover_text"
+                    :hoverText="field.hover_text"
                     :name="field.label"
                   />
                 </div>
@@ -78,29 +86,29 @@
                   :id="field.id"
                   v-model="formData[field.name]"
                   :class="{
-                    'error_input form__input': errorData[field.name],
-                    form__input: !errorData[field.name],
+                    'error_input form__input mt-2 ': errorData[field.name],
+                    'form__input mt-2': !errorData[field.name],
                   }"
                   :placeholder="field.placeholder"
                   :type="field.type"
-                >
+                />
 
                 <input
                   v-if="field.name === 'identifier'"
                   v-model="formData[field.name]"
                   :class="{
                     'error_input form__input': errorData[field.name],
-                    form__input: !errorData[field.name],
+                    'form__input mt-2': !errorData[field.name],
                   }"
                   :placeholder="field.placeholder"
                   :type="field.type"
                   :value="
-                    formData.registrationAgency +
-                      '-' +
-                      formData.registration_number
+                    formData.registration_agency +
+                    '-' +
+                    formData.registration_number
                   "
                   disabled="true"
-                >
+                />
 
                 <Multiselect
                   v-if="field.type === 'select'"
@@ -116,7 +124,7 @@
                 <span
                   v-if="field.help_text && errorData[field.name] === ''"
                   class="text-xs font-normal text-n-40"
-                >{{ field.help_text }}
+                  >{{ field.help_text }}
                 </span>
 
                 <span
@@ -135,46 +143,52 @@
               class="btn-back"
               @click="goToPreviousForm()"
             >
-              <svg-vue
-                class="mr-3 cursor-pointer"
-                icon="left-arrow"
-              />
+              <svg-vue class="mr-3 cursor-pointer" icon="left-arrow" />
               Go back
             </button>
-            <span
-              v-if="checkStep(1)"
-              class="text-sm font-normal text-n-40"
-            >Already have an account?
+            <span v-if="checkStep(1)" class="text-sm font-normal text-n-40"
+              >Already have an account?
               <a
-                class="border-b-2 border-b-transparent font-bold text-bluecoral hover:border-b-2 hover:border-b-turquoise hover:text-bluecoral"
+                class="
+                  font-bold
+                  border-b-2 border-b-transparent
+                  text-bluecoral
+                  hover:border-b-2 hover:border-b-turquoise hover:text-bluecoral
+                "
                 href="/"
-              >Sign In.</a></span>
+                >Sign In.</a
+              ></span
+            >
             <button
               v-if="!checkStep(3)"
-              class="btn btn-next w-40"
+              class="w-40 btn btn-next"
               @click="goToNextForm()"
             >
               Next Step
-              <svg-vue
-                class="text-2xl"
-                icon="right-arrow"
-              />
+              <svg-vue class="text-2xl" icon="right-arrow" />
             </button>
           </div>
-          <div
-            v-if="checkStep(2)"
-            class="mt-6 text-center"
-          >
-            <span class="text-sm font-normal text-n-40">Already have an account?
+          <div v-if="checkStep(2)" class="mt-6 text-center">
+            <span class="text-sm font-normal text-n-40"
+              >Already have an account?
               <a
-                class="border-b-2 border-b-transparent font-bold text-bluecoral hover:border-b-2 hover:border-b-turquoise hover:text-bluecoral"
+                class="
+                  font-bold
+                  border-b-2 border-b-transparent
+                  text-bluecoral
+                  hover:border-b-2 hover:border-b-turquoise hover:text-bluecoral
+                "
                 href="/"
-              >Sign In.</a></span>
+                >Sign In.</a
+              ></span
+            >
           </div>
         </div>
 
         <aside class="register__sidebar">
-          <span class="text-base font-bold">Step {{ getCurrentStep() }} out of 3</span>
+          <span class="text-base font-bold"
+            >Step {{ getCurrentStep() }} out of 3</span
+          >
           <ul class="relative mt-6 text-sm text-n-40">
             <li
               v-for="(form, key, i) in registerForm"
@@ -184,24 +198,12 @@
                 'mb-6 flex items-center': !checkStep(key),
               }"
             >
-              <span
-                v-if="checkStep(key)"
-                class="list__active"
-              />
-              <span
-                v-if="!form['is_complete']"
-                class="mr-3 ml-6"
-              >
+              <span v-if="checkStep(key)" class="list__active" />
+              <span v-if="!form['is_complete']" class="ml-6 mr-3">
                 {{ key }}
               </span>
-              <span
-                v-if="form['is_complete']"
-                class="mr-3 ml-6"
-              >
-                <svg-vue
-                  class="text-xs"
-                  icon="checked"
-                />
+              <span v-if="form['is_complete']" class="ml-6 mr-3">
+                <svg-vue class="text-xs" icon="checked" />
               </span>
               <span
                 class="font-bold"
@@ -215,7 +217,7 @@
               </span>
               <p
                 v-if="checkStep(key)"
-                class="detail mt-2 mb-6 font-normal xl:pr-2"
+                class="mt-2 mb-6 font-normal detail xl:pr-2"
               >
                 {{ form['description'] }}
               </p>
@@ -249,7 +251,7 @@ export default defineComponent({
       type: [String, Object],
       required: true,
     },
-    registrationAgency: {
+    agency: {
       type: [String, Object],
       required: true,
     },
@@ -260,11 +262,15 @@ export default defineComponent({
     const publisherExists = ref(true);
     const isLoaderVisible = ref(false);
 
-    const errorData = reactive({
+    interface ObjectType {
+      [key: string]: string;
+    }
+
+    const errorData: ObjectType = reactive({
       publisher_name: '',
       publisher_id: '',
       country: '',
-      registrationAgency: '',
+      registration_agency: '',
       registration_number: '',
       identifier: '',
       username: '',
@@ -274,11 +280,11 @@ export default defineComponent({
       password_confirmation: '',
     });
 
-    const formData = reactive({
+    const formData: ObjectType = reactive({
       publisher_name: '',
       publisher_id: '',
       country: '',
-      registrationAgency: '',
+      registration_agency: '',
       registration_number: '',
       identifier: '',
       username: '',
@@ -291,12 +297,12 @@ export default defineComponent({
     watch(
       () => formData.country,
       () => {
-        formData.registrationAgency = '';
+        formData.registration_agency = '';
       }
     );
 
-    const registrationAgency = computed(() => {
-      const agencies = props.registrationAgency!;
+    const registration_agency = computed(() => {
+      const agencies = props.agency!;
 
       if (formData.country) {
         const uncategorized = ['XI', 'XR'];
@@ -376,14 +382,14 @@ export default defineComponent({
           },
           organization_registration_agency: {
             label: 'Organisation Registration Agency',
-            name: 'registrationAgency',
+            name: 'registration_agency',
             placeholder: 'Select an Organisation Registration Agency',
             id: 'registration-agency',
             required: true,
             hover_text:
               'Provide the name of the agency in your country where you organisation is registered. If you do not know this information please email support@iatistandard.org.',
             type: 'select',
-            options: registrationAgency,
+            options: registration_agency,
             class: 'mb-4 lg:mb-2 relative',
             help_text: '',
           },
@@ -485,7 +491,7 @@ export default defineComponent({
     });
 
     function verifyPublisher() {
-      formData.identifier = `${formData.registrationAgency}-${formData.registration_number}`;
+      formData.identifier = `${formData.registration_agency}-${formData.registration_number}`;
       isLoaderVisible.value = true;
 
       formData.identifier = `${formData.registration_agency}-${formData.registration_number}`;
@@ -519,8 +525,8 @@ export default defineComponent({
           errorData.publisher_id = errors.publisher_id
             ? errors.publisher_id[0]
             : '';
-          errorData.registrationAgency = errors.registrationAgency
-            ? errors.registrationAgency[0]
+          errorData.registration_agency = errors.registration_agency
+            ? errors.registration_agency[0]
             : '';
           errorData.registration_number = errors.registration_number
             ? errors.registration_number[0]

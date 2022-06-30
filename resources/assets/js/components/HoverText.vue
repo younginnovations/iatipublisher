@@ -35,6 +35,7 @@ export default defineComponent({
     name: {
       type: String,
       required: false,
+      default: ''
     },
     hoverText: {
       type: String,
@@ -48,10 +49,12 @@ export default defineComponent({
     position: {
       type: String,
       required: false,
+      default: ''
     },
     link: {
       type: String,
       required: false,
+      default: ''
     },
     iconSize: {
       type: String,
