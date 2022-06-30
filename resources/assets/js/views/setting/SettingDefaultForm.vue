@@ -1,10 +1,8 @@
 <template>
   <div>
     <div class="registry__info">
-      <div class="mb-4 text-sm font-bold text-n-50">
-        Default Values
-      </div>
-      <div class="mb-4 flex items-center text-xs text-n-50">
+      <div class="mb-4 text-sm font-bold text-n-50">Default Values</div>
+      <div class="flex items-center mb-4 text-xs text-n-50">
         <button>
           <HoverText
             name="Default Values"
@@ -14,8 +12,8 @@
       </div>
     </div>
     <span class="text-sm font-bold text-n-50">Default for all data</span>
-    <div class="register mt-4 mb-6">
-      <div class="register__container mb-0">
+    <div class="mt-4 mb-6 register">
+      <div class="mb-0 register__container">
         <div>
           <div class="flex justify-between">
             <label for="default-currency">Default Currency</label>
@@ -35,11 +33,7 @@
             :searchable="true"
             @click="updateStore('default_currency')"
           />
-          <span
-            v-if="defaultError.default_currency"
-            class="error"
-            role="alert"
-          >
+          <span v-if="defaultError.default_currency" class="error" role="alert">
             {{ defaultError.default_currency }}
           </span>
 
@@ -70,11 +64,7 @@
             :options="props.languages"
             @click="updateStore('default_language')"
           />
-          <span
-            v-if="defaultError.default_language"
-            class="error"
-            role="alert"
-          >
+          <span v-if="defaultError.default_language" class="error" role="alert">
             {{ defaultError.default_language }}
           </span>
 
@@ -87,7 +77,7 @@
       </div>
     </div>
     <span class="text-sm font-bold text-n-50">Default for activity data</span>
-    <div class="register mt-4">
+    <div class="mt-4 register">
       <div class="register__container">
         <div>
           <div class="flex justify-between">
@@ -105,16 +95,12 @@
           <input
             id="default-hierarchy"
             v-model="defaultForm.hierarchy"
-            class="register__input mb-2"
+            class="mb-2 register__input"
             type="text"
             placeholder="Type default hierarchy here"
             @input="updateStore('hierarchy')"
-          >
-          <span
-            v-if="defaultError.hierarchy"
-            class="error"
-            role="alert"
-          >
+          />
+          <span v-if="defaultError.hierarchy" class="error" role="alert">
             {{ defaultError.hierarchy }}
           </span>
           <p v-if="!defaultError.hierarchy">
@@ -147,11 +133,7 @@
             :searchable="true"
             @click="updateStore('humanitarian')"
           />
-          <span
-            v-if="defaultError.humanitarian"
-            class="error"
-            role="alert"
-          >
+          <span v-if="defaultError.humanitarian" class="error" role="alert">
             {{ defaultError.humanitarian }}
           </span>
           <p v-if="!defaultError.hierarchy">
@@ -164,7 +146,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, ref } from 'vue';
+import { defineComponent, computed } from 'vue';
 import Multiselect from '@vueform/multiselect';
 import { useStore } from '../../store';
 import { ActionTypes } from '../../store/setting/actions';
