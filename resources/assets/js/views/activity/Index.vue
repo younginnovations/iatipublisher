@@ -13,7 +13,6 @@
       />
       <div v-if="!isEmpty" class="mt-6">
         <Pagination
-          :current_page="activities.current_page"
           :page_count="activities.last_page"
           @fetchActivities="fetchActivities"
         />
