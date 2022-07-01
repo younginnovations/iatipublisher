@@ -7,7 +7,6 @@ namespace App\IATI\Services\Activity;
 use App\IATI\Repositories\Activity\DocumentLinkRepository;
 use App\IATI\Repositories\Document\DocumentRepository;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Storage;
 
 /**
  * Class DocumentLinkService.
@@ -69,14 +68,6 @@ class DocumentLinkService
      */
     public function update($documentLink, $activity): bool
     {
-        // foreach($documentLink['document_link'] as  $document){
-        //     // dd($document['document']);
-        //     try{
-        //         dd(Storage::disk('s3')->files('content/artwork'),Storage::disk('s3'),$document['document'],Storage::disk('s3')->put('/', $document['document']));
-        //         Storage::disk('s3')->put('/', file_get_content($document['document']));
-        //     } catch(\Exception $e) {
-        //     }
-        // }
         return $this->documentLinkRepository->update($documentLink, $activity);
     }
 }

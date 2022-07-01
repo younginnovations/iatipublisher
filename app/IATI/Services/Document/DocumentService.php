@@ -57,10 +57,10 @@ class DocumentService
                     }
                 }
 
-                if (!$file_exists) {
+                if (!$file_exists && isset($document['document'])) {
                     $file = $document['document'];
                     $data['filename'] = str_replace(' ', '_', $file->getClientOriginalName());
-                    Storage::disk('s3')->putFileAs('/document_link/' . $activity['id'], $file, $data['filename']);
+                    Storage::disk('minio')->putFileAs('/document_link/' . $activity['id'], $file, $data['filename']);
                     $data['activity_id'] = $activity['id'];
                     $data['extension'] = pathinfo($file->getClientOriginalName(), PATHINFO_EXTENSION);
                     $data['document_link'] = json_encode($document);
@@ -72,7 +72,7 @@ class DocumentService
         if (count($savedDocumentLinks) > 0) {
             foreach ($savedDocumentLinks as $id => $savedFile) {
                 $this->documentRepo->delete($savedFile['id']);
-                Storage::disk('s3')->delete('/document_link/' . $activity['id'] . '/' . $savedFile['filename']);
+                Storage::disk('minio')->delete('/document_link/' . $activity['id'] . '/' . $savedFile['filename']);
             }
         }
 
