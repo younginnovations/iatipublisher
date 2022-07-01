@@ -3,11 +3,46 @@
 namespace App\Http\Controllers\Admin\Activity;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Activity\Period\PeriodRequest;
+use App\IATI\Elements\Builder\ResultElementFormCreator;
 use App\IATI\Models\Activity\Period;
-use Illuminate\Http\Request;
+use App\IATI\Services\Activity\ActivityService;
+use App\IATI\Services\Activity\PeriodService;
 
 class PeriodController extends Controller
 {
+    /**
+     * @var ResultElementFormCreator
+     */
+    protected ResultElementFormCreator $resultElementFormCreator;
+
+    /**
+     * @var PeriodService
+     */
+    protected PeriodService $periodService;
+
+    /**
+     * @var ActivityService
+     */
+    protected ActivityService $activityService;
+
+    /**
+     * IndicatorController Constructor.
+     *
+     * @param ResultElementFormCreator $resultElementFormCreator
+     * @param PeriodService $periodService
+     * @param ActivityService $activityService
+     */
+    public function __construct(
+        ResultElementFormCreator $resultElementFormCreator,
+        PeriodService $periodService,
+        ActivityService $activityService
+    ) {
+        $this->resultElementFormCreator = $resultElementFormCreator;
+        $this->periodService = $periodService;
+        $this->activityService = $activityService;
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -21,22 +56,68 @@ class PeriodController extends Controller
     /**
      * Show the form for creating a new resource.
      *
-     * @return \Illuminate\Http\Response
+     * @param $activityId
+     * @param $resultId
+     * @param $indicatorId
+     *
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Http\RedirectResponse|\Illuminate\Contracts\Foundation\Application
      */
-    public function create()
+    public function create($activityId, $resultId, $indicatorId): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Http\RedirectResponse|\Illuminate\Contracts\Foundation\Application
     {
-        //
+        try {
+            $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
+            $activity = $this->activityService->getActivity($activityId);
+            $this->resultElementFormCreator->url = route('admin.activities.results.indicators.periods.store', [$activityId, $resultId, $indicatorId]);
+            $form = $this->resultElementFormCreator->editForm([], $element['period']);
+
+            return view('activity.period.period', compact('form', 'activity'));
+        } catch (\Exception $e) {
+            logger()->error($e->getMessage());
+
+            return redirect()->route('admin.activities.show', $activityId)->with(
+                'error',
+                'Error has occurred while rendering indicator period form.'
+            );
+        }
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param  PeriodRequest  $request
+     * @param $activityId
+     * @param $resultId
+     * @param $indicatorId
+     *
+     * @return \Illuminate\Http\RedirectResponse
      */
-    public function store(Request $request)
+    public function store(PeriodRequest $request, $activityId, $resultId, $indicatorId): \Illuminate\Http\RedirectResponse
     {
-        //
+        try {
+            $periodData = $request->except(['_token']);
+
+            if (!$this->periodService->create([
+                'indicator_id'  => $indicatorId,
+                'period'        => $periodData,
+            ])) {
+                return redirect()->route('admin.activities.show', $activityId)->with(
+                    'error',
+                    'Error has occurred while creating indicator period.'
+                );
+            }
+
+            return redirect()->route('admin.activities.show', $activityId)->with(
+                'success',
+                'Indicator period created successfully.'
+            );
+        } catch (\Exception $e) {
+            logger()->error($e->getMessage());
+
+            return redirect()->route('admin.activities.show', $activityId)->with(
+                'error',
+                'Error has occurred while creating indicator period.'
+            );
+        }
     }
 
     /**
@@ -53,24 +134,72 @@ class PeriodController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\IATI\Models\Activity\Period  $period
-     * @return \Illuminate\Http\Response
+     * @param $activityId
+     * @param $resultId
+     * @param $indicatorId
+     * @param $periodId
+     *
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Http\RedirectResponse|\Illuminate\Contracts\Foundation\Application
      */
-    public function edit(Period $period)
+    public function edit($activityId, $resultId, $indicatorId, $periodId): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Http\RedirectResponse|\Illuminate\Contracts\Foundation\Application
     {
-        //
+        try {
+            $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
+            $activity = $this->activityService->getActivity($activityId);
+            $indicatorPeriod = $this->periodService->getIndicatorPeriod($indicatorId, $periodId);
+            $this->resultElementFormCreator->url = route('admin.activities.results.indicators.periods.update', [$activityId, $resultId, $indicatorId, $periodId]);
+            $form = $this->resultElementFormCreator->editForm($indicatorPeriod->period, $element['period'], 'PUT');
+
+            return view('activity.period.period', compact('form', 'activity'));
+        } catch (\Exception $e) {
+            logger()->error($e->getMessage());
+
+            return redirect()->route('admin.activities.show', $activityId)->with(
+                'error',
+                'Error has occurred while rendering indicator period form.'
+            );
+        }
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\IATI\Models\Activity\Period  $period
-     * @return \Illuminate\Http\Response
+     * @param  PeriodRequest  $request
+     * @param $activityId
+     * @param $resultId
+     * @param $indicatorId
+     * @param $periodId
+     *
+     * @return
      */
-    public function update(Request $request, Period $period)
+    public function update(PeriodRequest $request, $activityId, $resultId, $indicatorId, $periodId)
     {
-        //
+        try {
+            $periodData = $request->except(['_method', '_token']);
+            $period = $this->periodService->getIndicatorPeriod($indicatorId, $periodId);
+
+            if (!$this->periodService->update([
+                'indicator_id'  => $indicatorId,
+                'period'        => $periodData,
+            ], $period)) {
+                return redirect()->route('admin.activities.show', $activityId)->with(
+                    'error',
+                    'Error has occurred while updating indicator period.'
+                );
+            }
+
+            return redirect()->route('admin.activities.show', $activityId)->with(
+                'success',
+                'Indicator period updated successfully.'
+            );
+        } catch (\Exception $e) {
+            logger()->error($e->getMessage());
+
+            return redirect()->route('admin.activities.show', $activityId)->with(
+                'error',
+                'Error has occurred while updating indicator period.'
+            );
+        }
     }
 
     /**
