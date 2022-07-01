@@ -63,17 +63,12 @@ class DocumentLinkRepository
     {
         $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true)['document_link'];
 
-        // foreach (array_keys($element['sub_elements']) as $subelement) {
-        //     $documentLink[$subelement] = array_values($documentLink[$subelement]);
-        // }
-
         foreach ($documentLink['document_link'] as $key => $document) {
             foreach (array_keys($element['sub_elements']) as $subelement) {
                 $documentLink['document_link'][$key][$subelement] = array_values($document[$subelement]);
             }
         }
 
-        // dd($documentLink);
         $activity->document_link = $documentLink['document_link'];
 
         return $activity->save();

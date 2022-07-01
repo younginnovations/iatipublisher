@@ -36,7 +36,7 @@
                         <div class="hidden collection-container language" form_type="language"
                             data-prototype="{{ form_row($form->document_link->getChildren()[0]->getChild('language')->prototype()) }}">
                         </div>
-                        <div class="hidden endpoint" endpoint="{{ env('MINIO_ENDPOINT').'/document_link/'.$activity['id'] }}">
+                        <div class="hidden endpoint" endpoint="{{ env('AWS_ENDPOINT').'/document_link/'.$activity['id'] }}">
                     </div>
                 </div>
             </div>

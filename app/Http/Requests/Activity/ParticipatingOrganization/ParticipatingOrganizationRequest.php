@@ -18,7 +18,7 @@ class ParticipatingOrganizationRequest extends ActivityBaseRequest
      */
     public function rules()
     {
-        return $this->getRulesForParticipatingOrg($this->get('participating_organization'));
+        return $this->getRulesForParticipatingOrg($this->get('participating_org'));
     }
 
     /**
@@ -27,7 +27,7 @@ class ParticipatingOrganizationRequest extends ActivityBaseRequest
      */
     public function messages()
     {
-        return $this->getMessagesForParticipatingOrg($this->get('participating_organization'));
+        return $this->getMessagesForParticipatingOrg($this->get('participating_org'));
     }
 
     /**
@@ -40,7 +40,7 @@ class ParticipatingOrganizationRequest extends ActivityBaseRequest
         $rules = [];
 
         foreach ($formFields as $participatingOrgIndex => $participatingOrg) {
-            $participatingOrgForm = 'participating_organization.' . $participatingOrgIndex;
+            $participatingOrgForm = 'participating_org.' . $participatingOrgIndex;
             // $rules[$participatingOrgForm . '.organization_role'] = 'required';
             $identifier = $participatingOrgForm . '.identifier';
             $narrative = sprintf('%s.narrative.0.narrative', $participatingOrgForm);
@@ -65,7 +65,7 @@ class ParticipatingOrganizationRequest extends ActivityBaseRequest
         $messages = [];
 
         foreach ($formFields as $participatingOrgIndex => $participatingOrg) {
-            $participatingOrgForm = 'participating_organization.' . $participatingOrgIndex;
+            $participatingOrgForm = 'participating_org.' . $participatingOrgIndex;
             $messages[$participatingOrgForm . '.organization_role.required'] = trans('validation.required', ['attribute' => trans('elementForm.organisation_role')]);
             $identifier = $participatingOrgForm . '.identifier';
             $narrative = sprintf('%s.narrative.0.narrative', $participatingOrgForm);

@@ -120,7 +120,7 @@
             "name": "ref",
             "type": "text",
             "required": false,
-            "label": "Reference",
+            "label": "@ref",
             "criteria": ""
           }
         },
@@ -2148,7 +2148,7 @@
     }
   },
   "participating_org": {
-    "name": "participating_organization",
+    "name": "participating_org",
     "label": "Participating Organization",
     "criteria": "",
     "add_more" : true,
