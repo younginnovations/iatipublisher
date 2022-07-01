@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Requests\Activity;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Validator;
 
 /**
@@ -261,6 +262,137 @@ class ActivityBaseRequest extends FormRequest
             $messages[$formBase . '.period_end.' . $periodEndKey . '.date.required'] = 'Period end is a required field';
             $messages[$formBase . '.period_end.' . $periodEndKey . '.date.date'] = 'Period end must be a date field';
             $messages[$formBase . '.period_end.' . $periodEndKey . '.date.after'] = 'Period end must be a date after period';
+        }
+
+        return $messages;
+    }
+
+    /**
+     * returns rules for Document Link.
+     *
+     * @param $formFields
+     * @param $formBase
+     *
+     * @return array
+     */
+    public function getRulesForDocumentLink($formFields, $formBase = null): array
+    {
+        $rules = [];
+
+        foreach ($formFields as $documentLinkIndex => $documentLink) {
+            if ($formBase) {
+                $documentLinkForm = sprintf('%s.document_link.%s', $formBase, $documentLinkIndex);
+            } else {
+                $documentLinkForm = sprintf('document_link.%s', $documentLinkIndex);
+            }
+
+            if (Arr::get($documentLink, 'url', null) != '') {
+                $rules[sprintf('%s.url', $documentLinkForm)] = 'nullable|url';
+            }
+
+            if (Arr::get($documentLink, 'document_date', null) != '') {
+                $rules = array_merge(
+                    $rules,
+                    $this->getRulesForDocumentDate($documentLink['document_date'], $documentLinkForm),
+                );
+            }
+
+            $rules = array_merge(
+                $rules,
+                $this->getRulesForNarrative(
+                    $documentLink['title'][0]['narrative'],
+                    sprintf('%s.title.0', $documentLinkForm)
+                ),
+                $this->getRulesForNarrative(
+                    $documentLink['description'][0]['narrative'],
+                    sprintf('%s.description.0', $documentLinkForm)
+                ),
+            );
+        }
+
+        return $rules;
+    }
+
+    /**
+     * returns rules for document date.
+     *
+     * @param $formFields
+     * @param $formIndex
+     *
+     * @return array
+     */
+    protected function getRulesForDocumentDate($formFields, $formIndex): array
+    {
+        $rules = [];
+
+        foreach ($formFields as $documentCategoryIndex => $documentCategory) {
+            $rules[sprintf('%s.document_date.%s.date', $formIndex, $documentCategoryIndex)] = 'nullable|date';
+        }
+
+        return $rules;
+    }
+
+    /**
+     * returns messages for Document Link.
+     *
+     * @param $formFields
+     * @param $formBase
+     *
+     * @return array
+     */
+    public function getMessagesForDocumentLink($formFields, $formBase = null): array
+    {
+        $messages = [];
+
+        foreach ($formFields as $documentLinkIndex => $documentLink) {
+            if ($formBase) {
+                $documentLinkForm = sprintf('%s.document_link.%s', $formBase, $documentLinkIndex);
+            } else {
+                $documentLinkForm = sprintf('document_link.%s', $documentLinkIndex);
+            }
+
+            if (Arr::get($documentLink, 'url', null) != '') {
+                $messages[sprintf('%s.url.url', $documentLinkForm)] = 'The @url field must be a valid url.';
+            }
+
+            if (Arr::get($documentLink, 'document_date', null) != '') {
+                $messages = array_merge(
+                    $messages,
+                    $this->getMessagesForDocumentDate($documentLink['document_date'], $documentLinkForm)
+                );
+            }
+
+            $messages = array_merge(
+                $messages,
+                $this->getMessagesForNarrative(
+                    $documentLink['title'][0]['narrative'],
+                    sprintf('%s.title.0', $documentLinkForm)
+                ),
+                $this->getMessagesForNarrative(
+                    $documentLink['description'][0]['narrative'],
+                    sprintf('%s.description.0', $documentLinkForm)
+                ),
+            );
+        }
+
+        return $messages;
+    }
+
+    /**
+     * returns messages for document date.
+     *
+     * @param $formFields
+     * @param $formIndex
+     *
+     * @return array
+     */
+    protected function getMessagesForDocumentDate($formFields, $formIndex): array
+    {
+        $messages = [];
+
+        foreach ($formFields as $documentCategoryIndex => $documentCategory) {
+            $messages[sprintf('%s.document_date.%s.date.date', $formIndex, $documentCategoryIndex)]
+                = 'The @iso-date field must be a proper date.';
         }
 
         return $messages;
