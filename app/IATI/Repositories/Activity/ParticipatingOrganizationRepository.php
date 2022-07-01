@@ -38,7 +38,7 @@ class ParticipatingOrganizationRepository
      */
     public function getParticipatingOrganizationData($activityId): ?array
     {
-        return $this->activity->findorFail($activityId)->participating_organization;
+        return $this->activity->findorFail($activityId)->participating_org;
     }
 
     /**
@@ -63,11 +63,11 @@ class ParticipatingOrganizationRepository
      */
     public function update($participatingOrganization, $activity): bool
     {
-        foreach ($participatingOrganization['participating_organization'] as $key => $participating_org) {
-            $participatingOrganization['participating_organization'][$key]['narrative'] = array_values($participating_org['narrative']);
+        foreach ($participatingOrganization['participating_org'] as $key => $participating_org) {
+            $participatingOrganization['participating_org'][$key]['narrative'] = array_values($participating_org['narrative']);
         }
 
-        $activity->participating_organization = $participatingOrganization['participating_organization'];
+        $activity->participating_org = $participatingOrganization['participating_org'];
 
         return $activity->save();
     }
