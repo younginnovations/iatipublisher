@@ -9,8 +9,6 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <title>{{ config('app.name', 'IATI Publisher') }}</title>
-    <!-- CSRF Token -->
-    <meta name="csrf-token" content="{{ csrf_token() }}">
     <link rel="icon" type="image"
         href="https://prod-iati-website.azureedge.net/prod-iati-website/favicons/favicon-32x32.png">
 

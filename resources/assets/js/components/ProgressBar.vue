@@ -23,7 +23,6 @@ export default {
   props: {
     percent: Number,
   },
-  setup(props) {},
 };
 </script>
 

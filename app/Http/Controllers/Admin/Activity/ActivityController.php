@@ -102,15 +102,15 @@ class ActivityController extends Controller
     public function show(Activity $activity): View|JsonResponse
     {
         try {
-            $toast['message'] = Session::has('error') ? Session::get('error') : (Session::get('success') ? Session::get('success') : '');
-            $toast['type'] = Session::has('error') ? 'error' : 'success';
+            $toastData['message'] = Session::has('error') ? Session::get('error') : (Session::get('success') ? Session::get('success') : '');
+            $toastData['type'] = Session::has('error') ? 'error' : 'success';
             $elements = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
             $elementGroups = json_decode(file_get_contents(app_path('Data/Activity/ElementGroup.json')), true);
             $types = $this->getActivityDetailDataType();
             $status = $this->getActivityDetailStatus($activity);
             $progress = 75;
 
-            return view('admin.activity.show', compact('elements', 'elementGroups', 'progress', 'activity', 'toast', 'types', 'status'));
+            return view('admin.activity.show', compact('elements', 'elementGroups', 'progress', 'activity', 'toastData', 'types', 'status'));
         } catch (Exception $e) {
             logger()->error($e->getMessage());
         }
