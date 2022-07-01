@@ -47,10 +47,10 @@
                         </div>
                         {!! form($form) !!}
                         <div class="hidden parent-collection"
-                            data-prototype="{{ str_replace('participating_organization[0]','participating_organization[__PARENT_NAME__]',form_row($form->participating_organization->prototype())) }}">
+                            data-prototype="{{ str_replace('participating_org[0]','participating_org[__PARENT_NAME__]',form_row($form->participating_org->prototype())) }}">
                         </div>
-                        <div class="hidden collection-container participating_organization_narrative" form_type="participating_organization_narrative"
-                            data-prototype="{{ str_replace('participating_organization[0]','participating_organization[__PARENT_NAME__]',form_row($form->participating_organization->getChildren()[0]->getChild('narrative')->prototype())) }}">
+                        <div class="hidden collection-container participating_org_narrative" form_type="participating_org_narrative"
+                            data-prototype="{{ str_replace('participating_org[0]','participating_org[__PARENT_NAME__]',form_row($form->participating_org->getChildren()[0]->getChild('narrative')->prototype())) }}">
                         </div>
                     </div>
                 </div>

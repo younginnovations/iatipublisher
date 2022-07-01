@@ -43,8 +43,11 @@ class OtherIdentifierRequest extends ActivityBaseRequest
     {
         $rules = [];
 
+        $rules['reference'] = ['nullable', 'not_regex:/(&|!|\/|\||\?)/'];
+
         foreach ($formFields as $ownerOrgIndex => $ownerOrg) {
             $ownerOrgForm = sprintf('owner_org.%s', $ownerOrgIndex);
+            $rules[sprintf('owner_org.%s.ref', $ownerOrgIndex)] = ['nullable', 'not_regex:/(&|!|\/|\||\?)/'];
             $rules = array_merge(
                 $rules,
                 $this->getRulesForNarrative($ownerOrg['narrative'], $ownerOrgForm)
@@ -67,6 +70,7 @@ class OtherIdentifierRequest extends ActivityBaseRequest
 
         foreach ($formFields as $ownerOrgIndex => $ownerOrg) {
             $ownerOrgForm = sprintf('owner_org.%s', $ownerOrgIndex);
+            $messages[sprintf('%s.ref.not_regex', $ownerOrgForm)] = 'The @ref field shouldn\'t contain the symbols /, &, | or ?.';
             $messages = array_merge(
                 $messages,
                 $this->getMessagesForNarrative($ownerOrg['narrative'], $ownerOrgForm)

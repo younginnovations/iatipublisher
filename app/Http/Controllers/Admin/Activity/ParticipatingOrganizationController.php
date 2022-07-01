@@ -52,7 +52,7 @@ class ParticipatingOrganizationController extends Controller
         try {
             $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
             $activity = $this->participatingOrganizationService->getActivityData($id);
-            $model['participating_organization'] = $this->participatingOrganizationService->getParticipatingOrganizationData($id) ?: [];
+            $model['participating_org'] = $this->participatingOrganizationService->getParticipatingOrganizationData($id) ?: [];
             $this->parentCollectionFormCreator->url = route('admin.activities.participating-org.update', [$id]);
             $form = $this->parentCollectionFormCreator->editForm($model, $element['participating_org']);
 
