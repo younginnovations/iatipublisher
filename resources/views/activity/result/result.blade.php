@@ -20,6 +20,7 @@
                             <div class="text-sm shrink-0 uppercase text-n-40 font-bold">Activity Result</div>
                             <div class="line grow h-px border-b border-n-40 ml-4"></div>
                         </div>
+
                         {!! form($form) !!}
                         <div class="hidden parent-collection" form_type="document_link"
                              data-prototype="{{ form_row($form->document_link->prototype()) }}">

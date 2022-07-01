@@ -79,4 +79,6 @@ Route::name('admin.')->group(function () {
     Route::put('activities/{id}/budget', [\App\Http\Controllers\Admin\Activity\BudgetController::class, 'update'])->name('activities.budget.update');
 
     Route::resource('activities.results', \App\Http\Controllers\Admin\Activity\ResultController::class);
+    Route::resource('activities.results.indicators', \App\Http\Controllers\Admin\Activity\IndicatorController::class);
+    Route::resource('activities.results.indicators.periods', \App\Http\Controllers\Admin\Activity\PeriodController::class);
 });
