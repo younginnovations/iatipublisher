@@ -972,6 +972,7 @@ $(function () {
   $('body').on('change','input[id*="document"]', function(){
     let endpoint = $('.endpoint').attr('endpoint')??'';
     let file_name = ($(this).val()??'').toString();
+    console.log(`${endpoint}/${(file_name?.split('\\').pop())?.replace(' ', '_')}`);
     $(this).closest('.form-field-group').find('input[id*="[url]"]').val(`${endpoint}/${(file_name?.split('\\').pop())?.replace(' ', '_')}`);
   })
 

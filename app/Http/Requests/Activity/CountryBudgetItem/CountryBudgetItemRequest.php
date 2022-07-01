@@ -86,7 +86,7 @@ class CountryBudgetItemRequest extends ActivityBaseRequest
 
         foreach ($formFields as $budgetItemIndex => $budgetItem) {
             $budgetItemForm = sprintf('budget_item.%s', $budgetItemIndex);
-            $rules[sprintf('%s.percentage', $budgetItemForm)] = 'nullable|numeric|max:100|digits_between:0,3';
+            $rules[sprintf('%s.percentage', $budgetItemForm)] = 'nullable|numeric|max:100|not_regex:/^0{2,}/';
             $rules = array_merge(
                 $rules,
                 $this->getBudgetItemDescriptionRules($budgetItem['description'], $budgetItemForm)
@@ -116,7 +116,7 @@ class CountryBudgetItemRequest extends ActivityBaseRequest
             $budgetItemForm = sprintf('budget_item.%s', $budgetItemIndex);
             $messages[sprintf('%s.percentage.%s', $budgetItemForm, 'numeric')] = 'The @percentage field must be a number.';
             $messages[sprintf('%s.percentage.%s', $budgetItemForm, 'max')] = 'The @percentage field cannot be greater than 100.';
-            $messages[sprintf('%s.percentage.%s', $budgetItemForm, 'digits_between')] = 'The @percentage field cannot be greater than 3 digits.';
+            $messages[sprintf('%s.percentage.%s', $budgetItemForm, 'not_regex')] = 'The @percentage field format invalid.';
             $messages[sprintf('%s.percentage.sum', $budgetItemForm)] = 'The sum of @percentage must add up to 100.';
             $messages[sprintf('%s.percentage.total', $budgetItemForm)] = 'The @percentage field should be 100 when there is only one budget item.';
             $messages = array_merge(
@@ -185,7 +185,7 @@ class CountryBudgetItemRequest extends ActivityBaseRequest
         if (count($countryBudgetItems) > 1) {
             foreach ($countryBudgetItems as $key => $countryBudgetItem) {
                 $countryBudgetPercentage = $countryBudgetItem['percentage'] ?: 0;
-                $totalPercentage = $totalPercentage + $countryBudgetPercentage;
+                $totalPercentage = $totalPercentage + (float) $countryBudgetPercentage;
             }
 
             foreach ($countryBudgetItems as $key => $countryBudgetItem) {
