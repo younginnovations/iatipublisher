@@ -112,6 +112,7 @@ class ActivityController extends Controller
 
             return view('admin.activity.show', compact('elements', 'elementGroups', 'progress', 'activity', 'toast', 'types', 'status'));
         } catch (Exception $e) {
+            dd($e);
             logger()->error($e->getMessage());
         }
     }
@@ -247,6 +248,9 @@ class ActivityController extends Controller
             'geographicVocabulary'        => getCodeList('GeographicVocabulary', 'Activity'),
             'budgetIdentifier'            => getCodeList('BudgetIdentifier', 'Activity'),
             'organizationType'            => getCodeList('OrganizationType', 'Organization'),
+            'geographicLocationReach'     => getCodeList('GeographicLocationReach', 'Activity'),
+            'organisationRole'            => getCodeList('OrganisationRole', 'Organization'),
+            'documentCategory'            => getCodeList('DocumentCategory', 'Activity'),
         ];
     }
 

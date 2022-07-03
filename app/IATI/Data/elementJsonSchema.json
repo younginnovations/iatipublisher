@@ -2160,7 +2160,7 @@
         "required": true,
         "multiselect": false,
         "label": "@role",
-        "choices": "Organization/OrganizationRole.json",
+        "choices": "Organization/OrganisationRole.json",
         "hover_text": "",
         "help_text": ""
       },
