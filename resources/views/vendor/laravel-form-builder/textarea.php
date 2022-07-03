@@ -3,7 +3,7 @@
         <div <?= $options['wrapperAttrs'] ?>>
         <?php endif; ?>
     <?php endif; ?>
-    <div class="form-field-label">
+    <div class="form-field-label items-center">
         <?php if ($showLabel && $options['label'] !== false && $options['label_show'] && $options['required']) : ?>
             <?= Html::decode(Form::customLabel($name, $options['label'] . '<span class="text-salmon-40"> *</span>')) ?>
         <?php endif; ?>
