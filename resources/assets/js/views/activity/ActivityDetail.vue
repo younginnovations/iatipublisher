@@ -441,8 +441,8 @@ export default defineComponent({
     // generating available elements
     Object.keys(activities).map((key) => {
       let flag = false;
-      Object.keys(activities[key]['elements']).map((k) => {
-        if (detailData[k]) {
+      Object.keys(activities[key]['elements']).map((k, i) => {
+        if (detailData[k] || typeof detailData[k] === 'number') {
           activities[key]['elements'][k]['content'] = detailData[k];
           flag = true;
         } else {

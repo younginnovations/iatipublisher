@@ -14,7 +14,7 @@ class ResultElementForm extends BaseForm
      *
      * @return mixed|void
      */
-    public function buildForm():void
+    public function buildForm(): void
     {
         $attributes = Arr::get($this->getData(), 'attributes', null);
         $sub_elements = Arr::get($this->getData(), 'sub_elements', null);
@@ -34,7 +34,20 @@ class ResultElementForm extends BaseForm
 
         if ($sub_elements) {
             foreach ($sub_elements as $name => $sub_element) {
-                $this->add(sprintf('sub_elements.%s.name_heading', $name), 'static');
+                $this->add(sprintf('sub_elements.%s.name_heading', $name), 'static', [
+                    'title' => true,
+                    'content' => '<div class="bg-white">
+                    <div class="status flex justify-end rounded-lg mb-1.5">
+                        <div class="flex status text-xs leading-relaxed text-salmon-50">
+                            <b class="mr-2 text-base leading-3">.</b><span>not completed</span>
+                        </div>
+                    </div>
+                    <div class="title flex items-center mb-4">
+                        <div class="text-sm shrink-0 uppercase text-n-40 font-bold">' . $name . '</div>
+                        <div class="line grow h-px border-b border-n-40 ml-4"></div>
+                    </div>',
+                ]);
+
                 $this->add(
                     $this->getData(sprintf('sub_elements.%s.name', $name)),
                     'collection',
@@ -50,6 +63,11 @@ class ResultElementForm extends BaseForm
                             'wrapper' => [
                                 'class' => 'multi-form relative',
                             ],
+                            'dynamic_wrapper' => [
+                                'class' => (isset($sub_element['add_more']) && $sub_element['add_more']) ?
+                                    ((!Arr::get($sub_element, 'attributes', null) && strtolower($sub_element['name']) === 'narrative') ? 'border-l border-spring-50 pb-11' : 'subelement rounded-tl-lg border-l border-spring-50 pb-11')
+                                    : ((empty($sub_element['attributes']) && $sub_element['sub_elements'] && isset($sub_element['sub_elements']['narrative'])) ? 'subelement rounded-tl-lg mb-6' : 'subelement rounded-tl-lg border-l border-spring-50 mb-6'),
+                            ],
                         ],
                     ]
                 );
@@ -61,7 +79,7 @@ class ResultElementForm extends BaseForm
                             'class' => 'add_to_parent add_more button relative -translate-y-1/2 pl-3.5 text-xs font-bold uppercase leading-normal text-spring-50 text-bluecoral',
                             'form_type' => $sub_element['name'],
                             'icon' => true,
-                            ],
+                        ],
                     ]);
                 }
             }
