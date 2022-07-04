@@ -1,6 +1,6 @@
 <?php if ($showLabel && $showField): ?>
     <?php if (isset($options['options']['dynamic_wrapper'])): ?>
-    <div class="<?= $options['options']['dynamic_wrapper']['class'] ?>" >
+        <div class="<?= strtolower($options['label'])==="narrative" ? $options['options']['dynamic_wrapper']['class'].' narrative' : $options['options']['dynamic_wrapper']['class'] ?> " >
     <?php endif; ?>
     <?php if (!isset($options['options']['dynamic_wrapper']) && $options['wrapper']): ?>
         <div <?= $options['wrapperAttrs'] ?> >
