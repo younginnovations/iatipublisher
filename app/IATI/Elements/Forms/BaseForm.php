@@ -20,6 +20,8 @@ class BaseForm extends Form
         $element = $this->getData();
 
         if (!Arr::get($field, 'type', null) && array_key_exists('sub_elements', $field)) {
+            $field['parent'] = $element['name'];
+
             $this->add(
                 $field['name'],
                 'collection',

@@ -70,10 +70,11 @@ class ResultController extends Controller
             $activity = $this->activityService->getActivity($id);
             $this->resultElementFormCreator->url = route('admin.activities.results.store', $id);
             $form = $this->resultElementFormCreator->editForm([], $element['result']);
-//            dd($form->document_link->getChildren()[0]->getChild('title')->getChildren()[0]->getChild('narrative')->prototype());
+            //    dd($form->document_link->getChildren()[0]->getChild('title')->getChildren()[0]->getChild('narrative')->prototype());
 
             return view('activity.result.result', compact('form', 'activity'));
         } catch (\Exception $e) {
+            dd($e);
             logger()->error($e->getMessage());
 
             return redirect()->route('admin.activities.show', $id)->with(
