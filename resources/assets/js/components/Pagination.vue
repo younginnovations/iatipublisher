@@ -1,6 +1,5 @@
 <template>
   <nav class="pagination" aria-label="Pagination">
-    {{ page_count > 1 }}
     <a
       href="#"
       class="prev-btn"
