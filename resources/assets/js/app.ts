@@ -3,7 +3,7 @@
  * includes Vue and other libraries. It is a great starting point when
  * building robust, powerful web applications using Vue and Laravel.
  */
-import {createApp} from 'vue';
+import { createApp } from 'vue';
 import VueSmoothScroll from 'vue3-smooth-scroll';
 import SvgVue from 'svg-vue3';
 import ExampleComponent from './components/ExampleComponent.vue';
@@ -19,6 +19,7 @@ import RegisterPage from './views/web/RegisterPage.vue';
 import Activity from './views/activity/Index.vue';
 import LoggedInHeader from './components/AdminHeader.vue';
 import ActivitiesDetail from './views/activity/Show.vue';
+import ResultDetail from './views/activity/results/ResultDetail.vue';
 import StaticDescriptionForm from './components/DescriptionForm.vue';
 import ElementsNote from './views/activity/partials/ElementsNote.vue';
 
@@ -64,6 +65,7 @@ app.component('register-form', RegisterPage);
 app.component('activity-template', Activity);
 app.component('loggedin-header', LoggedInHeader);
 app.component('activities-detail', ActivitiesDetail);
+app.component('result-detail', ResultDetail);
 app.component('description-form', StaticDescriptionForm);
 app.component('elements-note', ElementsNote);
 
@@ -88,7 +90,7 @@ app.component('hover-text', HoverText);
  */
 app.use(SvgVue);
 
-app.use(VueSmoothScroll)
+app.use(VueSmoothScroll);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
