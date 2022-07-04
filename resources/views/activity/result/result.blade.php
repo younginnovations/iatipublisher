@@ -23,26 +23,31 @@
 
                         {!! form($form) !!}
                         <div class="hidden parent-collection" form_type="document_link"
-                             data-prototype="{{ form_row($form->document_link->prototype()) }}">
+                            data-prototype="{{ form_row($form->document_link->prototype()) }}">
                         </div>
                         <div class="hidden parent-collection" form_type="reference"
-                             data-prototype="{{ form_row($form->reference->prototype()) }}">
+                            data-prototype="{{ form_row($form->reference->prototype()) }}">
                         </div>
-{{--                        <div class="hidden collection-container" form_type="narrative"--}}
-{{--                             data-prototype="{{ str_replace('condition[0]','condition[__PARENT_NAME__]',form_row($form->condition->getChildren()[0]->getChild('narrative')->prototype())) }}">--}}
-{{--                        </div>--}}
-                        <div class="hidden collection-container title" form_type="title"
-                             data-prototype="{{ form_row($form->title->getChildren()[0]->getChild('narrative')->prototype()) }}">
+
+                        <div class="hidden collection-container title_narrative" form_type="title_narrative"
+                            data-prototype="{{ form_row($form->title->getChildren()[0]->getChild('narrative')->prototype()) }}">
                         </div>
-                        <div class="hidden collection-container title" form_type="description"
-                             data-prototype="{{ form_row($form->description->getChildren()[0]->getChild('narrative')->prototype()) }}">
+                        <div class="hidden collection-container description_narrative" form_type="description_narrative"
+                            data-prototype="{{ form_row($form->description->getChildren()[0]->getChild('narrative')->prototype()) }}">
                         </div>
-                        <div class="hidden collection-container title" form_type="category"
-                             data-prototype="{{ form_row($form->document_link->getChildren()[0]->getChild('category')->prototype()) }}">
+                        <div class="hidden collection-container document_link_title_narrative" form_type="document_link_title_narrative"
+                            data-prototype="{{ str_replace('document_link[0]','document_link[__PARENT_NAME__]',form_row($form->document_link->getChildren()[0]->getChild('title')->getChildren()[0]->getChild('narrative')->prototype())) }}">
                         </div>
-                        <div class="hidden collection-container title" form_type="document_link_language"
-                             data-prototype="{{ form_row($form->document_link->getChildren()[0]->getChild('language')->prototype()) }}">
+                        <div class="hidden collection-container document_link_description_narrative" form_type="document_link_description_narrative"
+                        data-prototype="{{ str_replace('document_link[0]','document_link[__PARENT_NAME__]',form_row($form->document_link->getChildren()[0]->getChild('description')->getChildren()[0]->getChild('narrative')->prototype())) }}">
+                    </div>
+                        <div class="hidden collection-container category" form_type="category"
+                            data-prototype="{{ str_replace('document_link[0]', 'document_link[__PARENT_NAME__]',form_row($form->document_link->getChildren()[0]->getChild('category')->prototype())) }}">
                         </div>
+                        <div class="hidden collection-container language" form_type="language"
+                            data-prototype="{{ str_replace('document_link[0]','document_link[__PARENT_NAME__]',form_row($form->document_link->getChildren()[0]->getChild('language')->prototype())) }}">
+                        </div>
+
                     </div>
                 </div>
             </div>
