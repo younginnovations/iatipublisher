@@ -87,9 +87,6 @@
       <!-- Identifier -->
       <template v-else-if="title === 'identifier'">
         <div class="identifier-content">
-          <div v-if="data.content.activity_identifier" class="text-sm">
-            {{ data.content.activity_identifier }}
-          </div>
           <div v-if="data.content.iati_identifier_text" class="text-sm">
             {{ data.content.iati_identifier_text }}
           </div>
@@ -139,14 +136,19 @@
             :class="{ 'mb-4': i !== post.narrative.length - 1 }"
             class="date-content elements-detail"
           >
-            <div class="flex flex-col">
-              <span v-if="item.language" class="language mb-1.5"
-                >(Language: {{ types.languages[item.language] }})</span
-              >
-              <span v-if="item.narrative" class="description text-sm">{{
-                item.narrative
-              }}</span>
-            </div>
+            <table class="ml-5">
+              <tr v-if="item.narrative" class="multiline">
+                <td>Narrative</td>
+                <td>
+                  <span v-if="item.language" class="language top"
+                    >(Language: {{ types.languages[item.language] }})</span
+                  >
+                  <span v-if="item.narrative" class="description">
+                    {{ item.narrative }}
+                  </span>
+                </td>
+              </tr>
+            </table>
           </div>
         </div>
       </template>
@@ -285,7 +287,7 @@
               class="multiline"
               :class="{ 'mb-0': i !== post.narrative.length - 1 }"
             >
-              <td v-if="item.narrative">Description</td>
+              <td v-if="item.narrative">Narrative</td>
               <td>
                 <span v-if="item.language" class="language top">
                   (Language: {{ types.languages[item.language] }})
@@ -381,17 +383,11 @@
                 >
                   <td>Vocabulary</td>
                   <td>
-                    <span v-if="narrative.language" class="language top"
-                      >(Language:
-                      {{ types.languages[narrative.language] }})</span
-                    >
-                    <span>
-                      {{
-                        props.types.budgetIdentifierVocabulary[
-                          data.content.country_budget_vocabulary
-                        ]
-                      }}
-                    </span>
+                    {{
+                      props.types.budgetIdentifierVocabulary[
+                        data.content.country_budget_vocabulary
+                      ]
+                    }}
                   </td>
                 </tr>
                 <tr class="multiline">
@@ -452,8 +448,8 @@
             :class="{ 'mb-0': k !== post.narrative - 1 }"
           >
             <table>
-              <tr class="multiline">
-                <td v-if="narrative.narrative">Description</td>
+              <tr v-if="narrative.narrative" class="multiline">
+                <td>Narrative</td>
                 <td>
                   <span v-if="narrative.language" class="language top"
                     >(Language: {{ types.languages[narrative.language] }})</span
@@ -524,8 +520,8 @@
             :class="{ 'mb-4': k !== post.narrative - 1 }"
           >
             <table class="flex flex-col">
-              <tr class="multiline">
-                <td v-if="narrative.narrative">Description</td>
+              <tr v-if="narrative.narrative" class="multiline">
+                <td>Narrative</td>
                 <td>
                   <span v-if="narrative.language" class="language"
                     >(Language: {{ types.languages[narrative.language] }})</span
@@ -574,8 +570,8 @@
                   :class="{ 'mb-4': k !== post.narrative.length - 1 }"
                 >
                   <table class="flex flex-col">
-                    <tr class="multiline">
-                      <td v-if="i.narrative">Narrative</td>
+                    <tr v-if="i.narrative" class="multiline">
+                      <td>Narrative</td>
                       <td>
                         <span v-if="i.language" class="language"
                           >(Language: {{ types.languages[i.language] }})</span
@@ -627,7 +623,7 @@
               class="multiline"
               :class="{ 'mb-4': k !== post.narrative.length - 1 }"
             >
-              <td v-if="narrative.narrative">Description</td>
+              <td v-if="narrative.narrative">Narrative</td>
               <td>
                 <span v-if="narrative.language" class="language top"
                   >(Language: {{ types.languages[narrative.language] }})</span
@@ -671,8 +667,8 @@
             class="ml-5"
             :class="{ 'mb-4': k !== post.narrative.length - 1 }"
           >
-            <tr class="multiline">
-              <td v-if="narrative.narrative">Description</td>
+            <tr v-if="narrative.narrative" class="multiline">
+              <td>Narrative</td>
               <td>
                 <span v-if="narrative.language" class="language top"
                   >(Language: {{ types.languages[narrative.language] }})</span
@@ -759,28 +755,6 @@
           <div class="category text-sm font-bold">
             {{ types.contactType[post.type] }}
           </div>
-
-          <div
-            v-for="(item, i) in post.person_name"
-            :key="i"
-            :class="{ 'mb-4': i !== post.person_name.length - 1 }"
-          >
-            <div
-              v-for="(narrative, j) in item.narrative"
-              :key="j"
-              :class="{ 'mb-4': j !== item.narrative.length - 1 }"
-            >
-              <div class="value items-center text-sm">
-                <span v-if="narrative.narrative">{{
-                  narrative.narrative
-                }}</span>
-                <span v-if="narrative.language" class="language"
-                  >(Language: {{ types.languages[narrative.language] }})</span
-                >
-              </div>
-            </div>
-          </div>
-
           <div class="ml-5">
             <div
               v-for="(item, i) in post.organisation"
@@ -793,8 +767,8 @@
                 :class="{ 'mb-4': j !== item.narrative.length - 1 }"
               >
                 <table class="flex flex-col">
-                  <tr class="multiline">
-                    <td v-if="narrative.narrative">Organisation</td>
+                  <tr v-if="narrative.narrative" class="multiline">
+                    <td>Organisation</td>
                     <td>
                       <span v-if="narrative.language" class="language"
                         >(Language:
@@ -820,8 +794,36 @@
                 :class="{ 'mb-4': j !== item.narrative.length - 1 }"
               >
                 <table class="flex flex-col">
-                  <tr class="multiline">
-                    <td v-if="narrative.narrative">Department</td>
+                  <tr v-if="narrative.narrative" class="multiline">
+                    <td>Department</td>
+                    <td>
+                      <span v-if="narrative.language" class="language"
+                        >(Language:
+                        {{ types.languages[narrative.language] }})</span
+                      >
+                      <span v-if="narrative.narrative" class="description">{{
+                        narrative.narrative
+                      }}</span>
+                    </td>
+                  </tr>
+                </table>
+              </div>
+            </div>
+
+            <div
+              v-for="(item, i) in post.person_name"
+              :key="i"
+              :class="{ 'mb-4': i !== post.person_name.length - 1 }"
+            >
+              <div
+                v-for="(narrative, j) in item.narrative"
+                :key="j"
+                class="elements-detail"
+                :class="{ 'mb-4': j !== item.narrative.length - 1 }"
+              >
+                <table>
+                  <tr v-if="narrative.narrative" class="multiline">
+                    <td>Person Name</td>
                     <td>
                       <span v-if="narrative.language" class="language"
                         >(Language:
@@ -847,8 +849,8 @@
                 :class="{ 'mb-4': j !== item.narrative.length - 1 }"
               >
                 <table class="flex flex-col">
-                  <tr class="multiline">
-                    <td v-if="narrative.narrative">Job Title</td>
+                  <tr v-if="narrative.narrative" class="multiline">
+                    <td>Job Title</td>
                     <td>
                       <span v-if="narrative.language" class="language"
                         >(Language:
@@ -919,8 +921,8 @@
                 :class="{ 'mb-4': j !== item.narrative.length - 1 }"
               >
                 <table class="flex">
-                  <tr class="multiline">
-                    <td v-if="narrative.narrative">Mailing Address</td>
+                  <tr v-if="narrative.narrative" class="multiline">
+                    <td>Mailing Address</td>
                     <td>
                       <span v-if="narrative.narrative" class="description"
                         >{{ narrative.narrative }}
@@ -1018,10 +1020,10 @@
                 :class="{ 'mb-4': j !== item.narrative.length - 1 }"
               >
                 <table class="flex flex-col">
-                  <tr class="multiline">
-                    <td v-if="narrative.narrative">Description</td>
+                  <tr v-if="narrative.narrative" class="multiline">
+                    <td>Description</td>
                     <td>
-                      <span v-if="narrative.language" class="language"
+                      <span v-if="narrative.language" class="language top"
                         >(Language:
                         {{ types.languages[narrative.language] }})</span
                       >
@@ -1045,10 +1047,10 @@
                 :class="{ 'mb-4': j !== item.narrative.length - 1 }"
               >
                 <table class="flex flex-col">
-                  <tr class="multiline">
-                    <td v-if="narrative.narrative">Activity Description</td>
+                  <tr v-if="narrative.narrative" class="multiline">
+                    <td>Activity Description</td>
                     <td>
-                      <span v-if="narrative.language" class="language"
+                      <span v-if="narrative.language" class="language top"
                         >(Language:
                         {{ types.languages[narrative.language] }})</span
                       >
@@ -1237,8 +1239,8 @@
                 :class="{ 'mb-4': j !== item.narrative.length - 1 }"
               >
                 <table class="flex flex-col">
-                  <tr class="multiline">
-                    <td v-if="narrative.narrative">Narrative</td>
+                  <tr v-if="narrative.narrative" class="multiline">
+                    <td>Narrative</td>
                     <td>
                       <span v-if="narrative.language" class="language"
                         >(Language:
@@ -1281,8 +1283,8 @@
                 :class="{ 'mb-4': j !== item.narrative.length - 1 }"
               >
                 <table class="flex flex-col">
-                  <tr class="multiline">
-                    <td v-if="narrative.narrative">Narrative</td>
+                  <tr v-if="narrative.narrative" class="multiline">
+                    <td>Narrative</td>
                     <td>
                       <span v-if="narrative.language" class="language"
                         >(Language:
@@ -1343,8 +1345,8 @@
             :class="{ 'mb-4': i !== post.narrative.length - 1 }"
           >
             <table class="flex flex-col">
-              <tr class="multiline">
-                <td v-if="narrative.narrative">Organisation Name</td>
+              <tr v-if="narrative.narrative" class="multiline">
+                <td>Organisation Name</td>
                 <td>
                   <span v-if="narrative.language" class="language top"
                     >(Language: {{ types.languages[narrative.language] }})</span
@@ -1449,8 +1451,8 @@
           <div v-for="(description, i) in post.description" :key="i">
             <div v-for="(narrative, j) in description.narrative" :key="j">
               <table class="ml-5">
-                <tr class="multiline">
-                  <td v-if="narrative.narrative">Description</td>
+                <tr v-if="narrative.narrative" class="multiline">
+                  <td>Description</td>
                   <td>
                     <span v-if="narrative.language" class="language"
                       >(Language:
