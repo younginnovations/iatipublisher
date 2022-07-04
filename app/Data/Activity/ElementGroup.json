@@ -37,6 +37,11 @@
         "completed": true,
         "label": "Activity Status"
       },
+      "activity_scope": {
+        "core": true,
+        "completed": true,
+        "label": "Activity Scope"
+      },
       "activity_date": {
         "core": true,
         "completed": true,
@@ -46,11 +51,6 @@
         "core": true,
         "completed": true,
         "label": "Contact info"
-      },
-      "activity_scope": {
-        "core": true,
-        "completed": true,
-        "label": "Activity Scope"
       }
     }
   },
