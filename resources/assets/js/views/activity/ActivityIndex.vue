@@ -9,7 +9,7 @@
       <TableLayout
         v-if="!isEmpty"
         :data="activities"
-        @showOrHide="showOrHide"
+        @show-or-hide="showOrHide"
       />
       <div
         v-if="!isEmpty"
@@ -18,7 +18,7 @@
         <Pagination
           :current_page="activities.current_page"
           :page-count="activities.last_page"
-          @fetchActivities="fetchActivities"
+          @fetch-activities="fetchActivities"
         />
       </div>
     </div>

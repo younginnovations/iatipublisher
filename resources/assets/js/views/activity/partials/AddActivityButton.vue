@@ -43,7 +43,7 @@
     <CreateModal
       :modal-active="modalValue"
       @close="modalToggle"
-      @closeModal="modalToggle"
+      @close-modal="modalToggle"
       @toast="toast"
     />
   </div>

@@ -12,7 +12,6 @@
 </template>
 
 <script>
-import { ref, onMounted } from 'vue';
 import CircleProgress from 'vue3-circle-progress';
 import 'vue3-circle-progress/dist/circle-progress.css';
 export default {
@@ -21,7 +20,7 @@ export default {
     CircleProgress: CircleProgress,
   },
   props: {
-    percent: Number,
+    percent: { type: Number, default: 0 },
   },
 };
 </script>

@@ -46,7 +46,7 @@ export default defineComponent({
     HoverText,
   },
   props: {},
-  setup(props) {
+  setup() {
     return {};
   },
 });

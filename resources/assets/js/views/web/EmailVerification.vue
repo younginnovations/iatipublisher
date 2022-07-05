@@ -34,7 +34,7 @@ import { defineComponent } from 'vue';
 
 export default defineComponent({
   props: {
-    email: String,
+    email: {type: String, default: ''},
   },
 
   setup(props) {
