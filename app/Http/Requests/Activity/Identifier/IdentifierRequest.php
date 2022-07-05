@@ -47,7 +47,7 @@ class IdentifierRequest extends ActivityBaseRequest
         }
 
         return [
-            'activity_identifier'   => ['required', Rule::notIn($activityIdentifiers)],
+            'activity_identifier'   => ['required', Rule::notIn($activityIdentifiers), 'not_regex:/(&|!|\/|\||\?)/'],
             'iati_identifier_text'  => ['sometimes'],
         ];
     }

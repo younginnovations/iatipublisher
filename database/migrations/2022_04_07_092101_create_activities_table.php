@@ -23,7 +23,7 @@ return new class extends Migration {
             $table->json('activity_date')->nullable();
             $table->json('contact_info')->nullable();
             $table->integer('activity_scope')->nullable();
-            $table->json('participating_organization')->nullable();
+            $table->json('participating_org')->nullable();
             $table->json('recipient_country')->nullable();
             $table->json('recipient_region')->nullable();
             $table->json('location')->nullable();

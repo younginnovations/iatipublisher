@@ -15,7 +15,7 @@
           </div>
         </nav>
       </div>
-      <div class="activity__title inline-flex items-center max-w-[768px]">
+      <div class="activity__title inline-flex items-center max-w-screen-md">
         <div class="mr-3">
           <a href="/activities/{{ $activity['id'] }}">
             <svg-vue icon="arrow-short-left"></svg-vue>

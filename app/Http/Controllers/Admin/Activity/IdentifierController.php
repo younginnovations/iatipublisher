@@ -58,7 +58,6 @@ class IdentifierController extends Controller
 
             return view('activity.identifier.identifier', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {
-            dd($e);
             logger()->error($e->getMessage());
 
             return response()->json(['success' => false, 'error' => 'Error has occurred while rendering activity identifier form.']);

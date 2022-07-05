@@ -302,7 +302,7 @@ class ContactInfoRequest extends ActivityBaseRequest
         $rules = [];
 
         foreach ($formFields as $telephoneIndex => $telephone) {
-            $rules[sprintf('%s.telephone.%s.telephone', $formBase, $telephoneIndex)] = 'numeric';
+            $rules[sprintf('%s.telephone.%s.telephone', $formBase, $telephoneIndex)] = ['nullable', 'numeric'];
         }
 
         return $rules;
@@ -321,10 +321,7 @@ class ContactInfoRequest extends ActivityBaseRequest
         $messages = [];
 
         foreach ($formFields as $telephoneIndex => $telephone) {
-            $messages[sprintf('%s.telephone.%s.telephone.numeric', $formBase, $telephoneIndex)] = trans(
-                'validation.number',
-                ['attribute' => trans('elementForm.telephone')]
-            );
+            $messages[sprintf('%s.telephone.%s.telephone.numeric', $formBase, $telephoneIndex)] = 'Telephone number must be valid numeric value';
         }
 
         return $messages;
@@ -343,7 +340,7 @@ class ContactInfoRequest extends ActivityBaseRequest
         $rules = [];
 
         foreach ($formFields as $emailIndex => $email) {
-            $rules[sprintf('%s.email.%s.email', $formBase, $emailIndex)] = 'email';
+            $rules[sprintf('%s.email.%s.email', $formBase, $emailIndex)] = ['nullable', ' email'];
         }
 
         return $rules;
@@ -362,10 +359,7 @@ class ContactInfoRequest extends ActivityBaseRequest
         $messages = [];
 
         foreach ($formFields as $emailIndex => $email) {
-            $messages[sprintf('%s.email.%s.email.email', $formBase, $emailIndex)] = trans(
-                'validation.email',
-                ['attribute' => trans('elementForm.email')]
-            );
+            $messages[sprintf('%s.email.%s.email.email', $formBase, $emailIndex)] = 'Email must be valid';
         }
 
         return $messages;

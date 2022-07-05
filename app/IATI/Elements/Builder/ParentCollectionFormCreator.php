@@ -58,7 +58,7 @@ class ParentCollectionFormCreator
                 'clear'    => [
                     'label'     => 'Cancel',
                     'attr'      => [
-                        'type'      => 'clear',
+                        'type'      => 'back',
                         'class'     => 'ghost-btn mr-8',
                     ],
                 ],

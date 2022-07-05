@@ -18,7 +18,7 @@ module.exports = {
   ],
   theme: {
     fontFamily: {
-      sans: ['Arial CE', 'sans-serif'],
+      sans: ['Arial', 'sans-serif'],
     },
     colors: {
       black: withOpacity('--black'),
@@ -104,6 +104,7 @@ module.exports = {
       },
       boxShadow: {
         dropdown: '0px 4px 40px rgba(0, 0, 0, 0.1)',
+        default: '0px 2px 10px 10px rgba(0, 0, 0, 0.02)',
       },
     },
   },

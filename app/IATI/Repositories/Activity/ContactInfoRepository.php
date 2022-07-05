@@ -63,11 +63,13 @@ class ContactInfoRepository
     {
         $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true)['contact_info'];
 
-        foreach (array_keys($element['sub_elements']) as $subelement) {
-            $contactInfo[$subelement] = array_values($contactInfo[$subelement]);
+        foreach ($contactInfo['contact_info'] as $key => $contact) {
+            foreach (array_keys($element['sub_elements']) as $subelement) {
+                $contactInfo['contact_info'][$key][$subelement] = array_values($contact[$subelement]);
+            }
         }
 
-        $activity->contact_info = $contactInfo;
+        $activity->contact_info = $contactInfo['contact_info'];
 
         return $activity->save();
     }

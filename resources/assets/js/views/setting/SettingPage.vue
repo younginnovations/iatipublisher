@@ -34,7 +34,6 @@
           </button>
         </div>
         <SettingPublishingForm
-          @keyup.enter="submitForm"
           v-if="tab === 'publish'"
           :organization="props.organization"
           @submitPublishing="submitForm"

@@ -12,7 +12,7 @@
                     <div class="py-[6.06%] px-[12%] bg-white">
                         @include('admin.activity.partial.form-title')
                         {!! form($form) !!}
-                        <div class="hidden collection-container"
+                        <div class="hidden collection-container" form_type="default_aid_type_default_aid_type"
                             data-prototype="{{ form_row($form->default_aid_type->prototype()) }}">
                         </div>
                     </div>

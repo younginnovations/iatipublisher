@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\Activity\ActivityController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -13,7 +14,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 Route::name('admin.')->group(function () {
-    Route::resource('/activities', \App\Http\Controllers\Admin\Activity\ActivityController::class);
+    Route::resource('/activities', ActivityController::class);
     Route::get('/activity/page/{page?}', [App\Http\Controllers\Admin\Activity\ActivityController::class, 'getActivities'])->name('paginate');
     Route::get('/activity/codelists', [App\Http\Controllers\Admin\Activity\ActivityController::class, 'getLanguagesOrganization'])->name('codelist');
     Route::get('activities/{id}/title', [\App\Http\Controllers\Admin\Activity\TitleController::class, 'edit'])->name('activities.title.edit');
@@ -67,14 +68,27 @@ Route::name('admin.')->group(function () {
     Route::put('activities/{id}/iati_identifier', [\App\Http\Controllers\Admin\Activity\IdentifierController::class, 'update'])->name('activities.identifier.update');
     // Route::get('activities/{id}/document_link', [\App\Http\Controllers\Admin\Activity\DocumentLinkController::class, 'edit'])->name('activities.document-link.edit');
     // Route::put('activities/{id}/document_link', [\App\Http\Controllers\Admin\Activity\DocumentLinkController::class, 'update'])->name('activities.document-link.update');
-    // Route::get('activities/{id}/contact_info', [\App\Http\Controllers\Admin\Activity\ContactInfoController::class, 'edit'])->name('activities.contact-info.edit');
-    // Route::put('activities/{id}/contact_info', [\App\Http\Controllers\Admin\Activity\ContactInfoController::class, 'update'])->name('activities.contact-info.update');
-    // Route::get('activities/{id}/location', [\App\Http\Controllers\Admin\Activity\LocationController::class, 'edit'])->name('activities.location.edit');
-    // Route::put('activities/{id}/location', [\App\Http\Controllers\Admin\Activity\LocationController::class, 'update'])->name('activities.location.update');
+    Route::get('activities/{id}/contact_info', [\App\Http\Controllers\Admin\Activity\ContactInfoController::class, 'edit'])->name('activities.contact-info.edit');
+    Route::put('activities/{id}/contact_info', [\App\Http\Controllers\Admin\Activity\ContactInfoController::class, 'update'])->name('activities.contact-info.update');
+    Route::get('activities/{id}/location', [\App\Http\Controllers\Admin\Activity\LocationController::class, 'edit'])->name('activities.location.edit');
+    Route::put('activities/{id}/location', [\App\Http\Controllers\Admin\Activity\LocationController::class, 'update'])->name('activities.location.update');
     // Route::get('activities/{id}/participating_org', [\App\Http\Controllers\Admin\Activity\ParticipatingOrganizationController::class, 'edit'])->name('activities.participating-org.edit');
     // Route::put('activities/{id}/participating_org', [\App\Http\Controllers\Admin\Activity\ParticipatingOrganizationController::class, 'update'])->name('activities.participating-org.update');
+    Route::get('activities/{id}/planned_disbursement', [\App\Http\Controllers\Admin\Activity\PlannedDisbursementController::class, 'edit'])->name('activities.planned-disbursement.edit');
+    Route::put('activities/{id}/planned_disbursement', [\App\Http\Controllers\Admin\Activity\PlannedDisbursementController::class, 'update'])->name('activities.planned-disbursement.update');
     Route::get('activities/{id}/budget', [\App\Http\Controllers\Admin\Activity\BudgetController::class, 'edit'])->name('activities.budget.edit');
     Route::put('activities/{id}/budget', [\App\Http\Controllers\Admin\Activity\BudgetController::class, 'update'])->name('activities.budget.update');
 
-//    Route::resource('activities.results', \App\Http\Controllers\Admin\Activity\ResultController::class);
+    Route::resource('activities.results', \App\Http\Controllers\Admin\Activity\ResultController::class);
+    Route::resource('activities.results.indicators', \App\Http\Controllers\Admin\Activity\IndicatorController::class);
+    Route::resource('activities.results.indicators.periods', \App\Http\Controllers\Admin\Activity\PeriodController::class);
+
+    // static route for static pages
+    Route::get('/activities/{id}/result', function () {
+        return view('admin.activity.result.result');
+    });
+
+    Route::get('/activities/{id}/result-detail', function () {
+        return view('admin.activity.result.detail');
+    });
 });

@@ -8,12 +8,13 @@
         "php": "^8.0",
         "fruitcake/laravel-cors": "^2.0.5",
         "guzzlehttp/guzzle": "^7.4",
+        "kris/laravel-form-builder": "1.*",
         "laravel/framework": "^9.0",
         "laravel/sanctum": "^2.14",
         "laravel/tinker": "^2.7",
         "laravel/ui": "^3.4",
-        "symfony/psr-http-message-bridge": "^2.1",
-        "kris/laravel-form-builder": "1.*"
+        "league/flysystem-aws-s3-v3": "^3.0",
+        "symfony/psr-http-message-bridge": "^2.1"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.6",

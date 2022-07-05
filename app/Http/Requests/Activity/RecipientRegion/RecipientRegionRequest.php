@@ -63,7 +63,7 @@ class RecipientRegionRequest extends ActivityBaseRequest
         foreach ($formFields as $recipientRegionIndex => $recipientRegion) {
             $recipientRegionForm = 'recipient_region.' . $recipientRegionIndex;
             $rules[$recipientRegionForm . '.vocabulary_uri'] = 'nullable|url';
-            $rules[$recipientRegionForm . '.percentage'] = 'nullable|numeric|max:100';
+            $rules[$recipientRegionForm . '.percentage'] = 'nullable|numeric|max:100|not_regex:/^0{2,}.+/';
 
             $rules = array_merge(
                 $rules,
@@ -115,6 +115,7 @@ class RecipientRegionRequest extends ActivityBaseRequest
             $recipientRegionForm = 'recipient_region.' . $recipientRegionIndex;
             $messages[$recipientRegionForm . '.percentage.numeric'] = 'The @percentage field must be a number.';
             $messages[$recipientRegionForm . '.percentage.max'] = 'The @percentage cannot be greater than 100.';
+            $messages[$recipientRegionForm . '.percentage.not_regex'] = 'The @percentage field has invalid format.';
 
             $messages = array_merge(
                 $messages,
@@ -150,7 +151,7 @@ class RecipientRegionRequest extends ActivityBaseRequest
 
             foreach ($regions as $regionIndex => $region) {
                 $regionVocab = $region['region_vocabulary'] ?: 'Not Specified';
-                $regionVocabs[$regionVocab] += Arr::get($region, 'percentage', 0);
+                $regionVocabs[$regionVocab] += (float) Arr::get($region, 'percentage', 0);
                 $regionForm = sprintf('recipient_region.%s', $regionIndex);
                 $percentage = $region['percentage'] ?: 0;
                 $recipient_region = $regionVocab;

@@ -90,7 +90,7 @@
               </li>
               <li class="dropdown__list" @click="logout">
                 <svg-vue icon="logout"></svg-vue>
-                <button>Logout</button>
+                <button class="text-sm">Logout</button>
               </li>
             </ul>
           </div>
@@ -262,33 +262,6 @@ export default defineComponent({
   @apply absolute  left-2/4 z-50;
   transform: translate(-50%, -50%);
 }
-.form-group {
-  @apply rounded-lg border border-n-20 p-5;
-
-  &:last-child {
-    margin-bottom: 0;
-  }
-
-  .form__content {
-    margin-top: 0;
-  }
-}
-.form-group-title-container {
-  @apply mb-1 flex space-x-1;
-}
-.form-group-title {
-  @apply text-xs font-bold text-bluecoral;
-}
-.search {
-  position: relative;
-
-  &__input {
-    @apply mr-3.5 border border-n-30 bg-transparent outline-none;
-    border-radius: 20px;
-    padding: 10px 42px 10px 34px;
-  }
-}
-
 .profile__dropdown {
   @apply invisible absolute right-10 z-20 bg-white text-left text-sm text-bluecoral opacity-0 shadow-dropdown  duration-300;
   top: 50px;

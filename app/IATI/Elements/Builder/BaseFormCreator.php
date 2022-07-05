@@ -59,8 +59,9 @@ class BaseFormCreator
                 'clear'    => [
                     'label'     => 'Cancel',
                     'attr'      => [
-                        'type'      => 'clear',
+                        'type'      => 'button',
                         'class'     => 'ghost-btn mr-8',
+                        '',
                     ],
                 ],
 

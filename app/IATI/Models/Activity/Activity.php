@@ -2,6 +2,7 @@
 
 namespace App\IATI\Models\Activity;
 
+use App\IATI\Models\Document\Document;
 use App\IATI\Models\Organization\Organization;
 use Database\Factories\IATI\Models\Activity\ActivityFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -31,7 +32,7 @@ class Activity extends Model
         'activity_date',
         'contact_info',
         'activity_scope',
-        'participating_organization',
+        'participating_org',
         'recipient_country',
         'recipient_region',
         'location',
@@ -68,7 +69,7 @@ class Activity extends Model
         'activity_date'              => 'json',
         'contact_info'               => 'json',
         'activity_scope'             => 'json',
-        'participating_organization' => 'json',
+        'participating_org' => 'json',
         'recipient_country'          => 'json',
         'recipient_region'           => 'json',
         'location'                   => 'json',
@@ -100,6 +101,16 @@ class Activity extends Model
     public static function newFactory(): ActivityFactory
     {
         return new ActivityFactory();
+    }
+
+    /**
+     * An Activity has many ActivityDocumentLink.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function documentLinks()
+    {
+        return $this->hasMany(Document::class);
     }
 
     /**
