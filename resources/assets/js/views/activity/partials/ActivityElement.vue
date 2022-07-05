@@ -73,7 +73,7 @@
 
           <HoverText
             v-if="tooltip"
-            :hoverText="tooltip"
+            :hover-text="tooltip"
             class="text-n-40"
           />
         </div>
@@ -439,19 +439,19 @@
                   :key="i"
                 >
                   <div
-                    v-for="(i, k) in item.narrative"
+                    v-for="(j, k) in item.narrative"
                     :key="k"
                     class="item description"
                     :class="{ 'mb-4': k !== item.narrative - 1 }"
                   >
                     <div class="language mb-1.5 text-sm italic text-n-30">
-                      (Language: {{ i.language }})
+                      (Language: {{ j.language }})
                     </div>
                     <div
-                      v-if="i.narrative"
+                      v-if="j.narrative"
                       class="text-sm"
                     >
-                      {{ i.narrative }}
+                      {{ j.narrative }}
                     </div>
                   </div>
                 </template>

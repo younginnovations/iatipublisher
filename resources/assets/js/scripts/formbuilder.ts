@@ -234,9 +234,7 @@ class FormBuilder {
       });
 
       //hide/show based on value cleared
-      countryBudgetVocabulary.on('select2:clear', (e) => {
-        const index = e.target as HTMLElement;
-
+      countryBudgetVocabulary.on('select2:clear', () => {
         this.hideCountryBudgetField('');
       });
     }
@@ -246,8 +244,7 @@ class FormBuilder {
    * Hide Country Budget Fields
    */
   public hideCountryBudgetField(value: string) {
-    const countryBudgetVocabulary = $('select#country_budget_vocabulary'),
-      countryBudgetCodeInput = 'input[id^="budget_item"][id*="[code_text]"]',
+    const countryBudgetCodeInput = 'input[id^="budget_item"][id*="[code_text]"]',
       countryBudgetCodeSelect = 'select[id^="budget_item"][id*="[code]"]';
 
     if (value === '1') {
@@ -274,7 +271,6 @@ class FormBuilder {
    */
   public aidTypeVocabularyHideField() {
     const aidtype_vocabulary = $('select[id*="default_aidtype_vocabulary"]');
-    const index = $(this);
 
     if (aidtype_vocabulary.length > 0) {
       $.each(aidtype_vocabulary, (index, item) => {
@@ -919,13 +915,13 @@ $(function () {
     childOrParent = 'child';
   });
 
-  $('body').on('click', cancelPopup, (event: Event) => {
+  $('body').on('click', cancelPopup, () => {
     deleteConfirmation.fadeOut();
     deleteIndex = {};
     childOrParent = '';
   });
 
-  $('body').on('click', deleteConfirm, (event: Event) => {
+  $('body').on('click', deleteConfirm, () => {
     if (childOrParent === 'child') {
       formBuilder.deleteForm(deleteIndex as Event);
     } else if (childOrParent === 'parent') {

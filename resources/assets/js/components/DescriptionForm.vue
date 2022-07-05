@@ -99,7 +99,7 @@ Education and psychosocial support to children in Aleppo Governorate</textarea>
           </div>
         </div>
         <button
-          class="add_to_collection add_more button relative ml-6 -translate-y-1/2 pl-3.5 text-xs font-bold uppercase leading-normal text-spring-50 text-bluecoral"
+          class="add_to_collection add_more button relative ml-6 -translate-y-1/2 pl-3.5 text-xs font-bold uppercase leading-normal text-bluecoral"
           icon=""
           type="button"
         >
@@ -111,7 +111,7 @@ Education and psychosocial support to children in Aleppo Governorate</textarea>
       </div>
     </div>
     <button
-      class="add_to_parent add_more button relative -translate-y-1/2 pl-3.5 text-xs font-bold uppercase leading-normal text-spring-50 text-bluecoral"
+      class="add_to_parent add_more button relative -translate-y-1/2 pl-3.5 text-xs font-bold uppercase leading-normal text-bluecoral"
       icon=""
       type="button"
     >
@@ -130,7 +130,7 @@ export default defineComponent({
   name: 'DescriptionForm',
   components: {},
   props: {},
-  setup(props) {
+  setup() {
     return {};
   },
 });

@@ -77,7 +77,7 @@
                   </label>
                   <HoverText
                     v-if="field.hover_text !== ''"
-                    :hoverText="field.hover_text"
+                    :hover-text="field.hover_text"
                     :name="field.label"
                   />
                 </div>
@@ -302,6 +302,7 @@ export default defineComponent({
     );
 
     const registration_agency = computed(() => {
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       const agencies = props.agency!;
 
       if (formData.country) {

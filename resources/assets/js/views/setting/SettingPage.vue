@@ -44,7 +44,7 @@
           v-if="tab === 'publish'"
           :organization="props.organization"
           @keyup.enter="submitForm"
-          @submitPublishing="submitForm"
+          @submit-publishing="submitForm"
         />
         <SettingDefaultForm
           v-else
