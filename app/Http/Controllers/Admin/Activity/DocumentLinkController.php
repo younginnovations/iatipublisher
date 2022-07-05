@@ -94,7 +94,6 @@ class DocumentLinkController extends Controller
 
             return view('activity.documentLink.documentLink', compact('form', 'activity'));
         } catch (\Exception $e) {
-            dd($e);
             logger()->error($e->getMessage());
 
             return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while rendering document link form.');
@@ -124,7 +123,6 @@ class DocumentLinkController extends Controller
 
             return redirect()->route('admin.activities.show', $id)->with('success', 'Document link updated successfully.');
         } catch (\Exception $e) {
-            dd($e);
             logger()->error($e->getMessage());
 
             return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while updating document link.');
