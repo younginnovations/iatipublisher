@@ -70,11 +70,10 @@ class ResultController extends Controller
             $activity = $this->activityService->getActivity($id);
             $this->resultElementFormCreator->url = route('admin.activities.results.store', $id);
             $form = $this->resultElementFormCreator->editForm([], $element['result']);
-            //    dd($form->document_link->getChildren()[0]->getChild('title')->getChildren()[0]->getChild('narrative')->prototype());
+            $data = ['core'=> $element['result']['criteria'] ?? false, 'status'=> false, 'title'=> $element['result']['label'], 'name'=>'result'];
 
-            return view('activity.result.result', compact('form', 'activity'));
+            return view('activity.result.result', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {
-            dd($e);
             logger()->error($e->getMessage());
 
             return redirect()->route('admin.activities.show', $id)->with(
@@ -150,8 +149,9 @@ class ResultController extends Controller
             $activityResult = $this->resultService->getResult($resultId, $activityId);
             $this->resultElementFormCreator->url = route('admin.activities.results.update', [$activityId, $resultId]);
             $form = $this->resultElementFormCreator->editForm($activityResult->result, $element['result'], 'PUT');
+            $data = ['core'=> $element['result']['criteria'] ?? false, 'status'=> false, 'title'=> $element['result']['label'], 'name'=>'result'];
 
-            return view('activity.result.result', compact('form', 'activity'));
+            return view('activity.result.result', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 

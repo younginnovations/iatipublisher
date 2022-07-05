@@ -79,14 +79,14 @@ class OtherIdentifierController extends Controller
             $activityCondition = $request->except(['_token', '_method']);
 
             if (!$this->otherIdentifierService->update($activityCondition, $activityData)) {
-                return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while updating activity condition.');
+                return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while updating other identifier.');
             }
 
-            return redirect()->route('admin.activities.show', $id)->with('success', 'Activity condition updated successfully.');
+            return redirect()->route('admin.activities.show', $id)->with('success', 'Other identifier updated successfully.');
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while updating activity condition.');
+            return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while updating other identifier.');
         }
     }
 }
