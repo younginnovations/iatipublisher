@@ -288,7 +288,6 @@ class Activity extends Model
 
         foreach ($mandatoryAttributes as $mandatoryAttribute) {
             if (array_key_exists($mandatoryAttribute, $data) && empty($data[$mandatoryAttribute])) {
-                //dd('attribute-check:', $mandatoryAttributes, $data);
                 return false;
             }
         }
@@ -347,7 +346,6 @@ class Activity extends Model
             $tempData = $data[$key];
 
             if (!$this->isAttributeDataCompleted($mandatorySubElementAttributes, $tempData)) {
-                //dd('sub-element-attribute-check:', $mandatorySubElementAttributes, $tempData);
                 return false;
             }
 
@@ -385,7 +383,6 @@ class Activity extends Model
             $tempData = $data[$key];
 
             if (!$this->isAttributeDataCompleted($mandatorySubElementAttributes, $tempData)) {
-                //dd('sub-element-attribute-check:', $mandatorySubElementAttributes, $tempData);
                 return false;
             }
 
@@ -396,7 +393,6 @@ class Activity extends Model
 
                 foreach ($tempData as $tempDatum) {
                     if (!$this->isSubElementDataCompleted($mandatoryChildSubElements, $tempDatum[$innerKey])) {
-                        //dd('third-level-sub-element-check:', $mandatoryChildSubElements, $tempDatum[$innerKey]);
                         return false;
                     }
                 }
