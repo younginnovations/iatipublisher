@@ -117,7 +117,6 @@ class ActivityController extends Controller
 
             return view('admin.activity.show', compact('elements', 'elementGroups', 'progress', 'activity', 'toast', 'types', 'status'));
         } catch (Exception $e) {
-            dd($e);
             logger()->error($e->getMessage());
 
             return response()->json(['success' => false, 'error' => 'Error has occurred rendering activity detail page']);
