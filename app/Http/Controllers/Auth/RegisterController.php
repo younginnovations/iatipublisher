@@ -96,7 +96,6 @@ class RegisterController extends Controller
     {
         try {
             $postData = $request->all();
-
             $request['password'] = isset($request['password']) && $request['password'] ? decryptString($request['password'], 'test') : '';
             $request['password_confirmation'] = isset($request['password_confirmation']) && $request['password_confirmation'] ? decryptString($request['password_confirmation'], 'test') : '';
 

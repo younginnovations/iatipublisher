@@ -69,11 +69,12 @@ if (!function_exists('getCodeList')) {
         }
 
         $cipherText = base64_decode($json['ciphertext']);
-
         $iterations = intval(abs($json['iterations']));
+
         if ($iterations <= 0) {
             $iterations = 999;
         }
+
         $hashKey = hash_pbkdf2('sha512', $key, $salt, $iterations, (256 / 4));
         unset($iterations, $json, $salt);
 

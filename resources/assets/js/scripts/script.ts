@@ -17,10 +17,3 @@ $(document).ready(() => {
     }
   });
 });
-
-window.onpopstate = function (event) {
-  console.log('here', document.location);
-  event.preventDefault();
-
-  // console.log("location: " + document.location + ", state: " + JSON.stringify(event.state));
-};
