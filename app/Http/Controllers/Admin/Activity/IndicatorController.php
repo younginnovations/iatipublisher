@@ -8,6 +8,7 @@ use App\IATI\Elements\Builder\ResultElementFormCreator;
 use App\IATI\Models\Activity\Indicator;
 use App\IATI\Services\Activity\ActivityService;
 use App\IATI\Services\Activity\IndicatorService;
+use Illuminate\Http\Request;
 
 class IndicatorController extends Controller
 {
@@ -68,6 +69,7 @@ class IndicatorController extends Controller
             $activity = $this->activityService->getActivity($activityId);
             $this->resultElementFormCreator->url = route('admin.activities.results.indicators.store', [$activityId, $resultId]);
             $form = $this->resultElementFormCreator->editForm([], $element['indicator']);
+//            dd($form->baseline->getChildren()[0]->getChild('document_link')->getChildren()[0]->getChild('title')->getChildren()[0]->getChild('narrative')->prototype());
 
             return view('activity.indicator.indicator', compact('form', 'activity'));
         } catch (\Exception $e) {
@@ -89,7 +91,7 @@ class IndicatorController extends Controller
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function store(IndicatorRequest $request, $activityId, $resultId): \Illuminate\Http\RedirectResponse
+    public function store(Request $request, $activityId, $resultId): \Illuminate\Http\RedirectResponse
     {
         try {
             $indicatorData = $request->except(['_token']);

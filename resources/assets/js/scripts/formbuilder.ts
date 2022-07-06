@@ -51,6 +51,8 @@ class FormBuilder {
 
     $(target).attr('child_count', count);
     this.aidTypeVocabularyHideField();
+    this.sectorVocabularyHideField();
+    this.transactionAidTypeVocabularyHideField();
   }
 
   // adds parent collection
@@ -183,6 +185,7 @@ class FormBuilder {
     this.recipientVocabularyHideField();
     this.sectorVocabularyHideField();
     this.tagVocabularyHideField();
+    this.transactionAidTypeVocabularyHideField();
   }
 
   /**
@@ -324,6 +327,36 @@ class FormBuilder {
   }
 
   /**
+   * AidType Form Page
+   *
+   * @Logic hide vocabulary-uri and codes field based on '@vocabulary' field value
+   */
+  public transactionAidTypeVocabularyHideField() {
+    let aidtype_vocabulary = $('select[id*="aidtype_vocabulary"]');
+    let index = $(this);
+
+    if (aidtype_vocabulary.length > 0) {
+      $.each(aidtype_vocabulary, (index, item) => {
+        let data = $(item).val() ?? '1';
+        this.hideTransactionAidTypeSelectField($(item), data.toString());
+      });
+
+      aidtype_vocabulary.on('select2:select', (e) => {
+        let data = e.params.data.id;
+        let target = e.target as HTMLElement;
+
+        this.hideTransactionAidTypeSelectField($(target), data);
+      });
+
+      aidtype_vocabulary.on('select2:clear', (e) => {
+        let target = e.target as HTMLElement;
+
+        this.hideTransactionAidTypeSelectField($(target), '');
+      });
+    }
+  }
+
+  /**
    * Hide Aid Type Select Fields
    */
   public hideAidTypeSelectField(index: JQuery, value: string) {
@@ -406,6 +439,92 @@ class FormBuilder {
           .hide()
           .closest('.form-field')
           .hide();
+    }
+  }
+
+  /**
+   * Hide Transaction Aid Type Select Fields
+   */
+  public hideTransactionAidTypeSelectField(index: JQuery, value: string) {
+    let aid_type = 'select[id*="[aid_type]"]',
+        earmarking_category = 'select[id*="[earmarking_category]"]',
+        earmarking_modality = 'select[id*="[earmarking_modality]"]',
+        cash_and_voucher_modalities =
+            'select[id*="[cash_and_voucher_modalities]"]',
+        case1 =
+            'select[id*="[earmarking_category]"],select[id*="[earmarking_modality]"],select[id*="[cash_and_voucher_modalities]"]',
+        case2 =
+            'select[id*="[aid_type]"],select[id*="[earmarking_modality]"],select[id*="[cash_and_voucher_modalities]"]',
+        case3 =
+            'select[id*="[aid_type]"],select[id*="[earmarking_category]"],select[id*="[cash_and_voucher_modalities]"]',
+        case4 =
+            'select[id*="[aid_type]"],select[id*="[earmarking_category]"],select[id*="[earmarking_modality]"]';
+
+    switch (value) {
+      case '2':
+        index
+            .closest('.form-field-group')
+            .find(earmarking_category)
+            .show()
+            .closest('.form-field')
+            .show();
+        index
+            .closest('.form-field-group')
+            .find(case2)
+            .val('')
+            .trigger('change')
+            .hide()
+            .closest('.form-field')
+            .hide();
+        break;
+      case '3':
+        index
+            .closest('.form-field-group')
+            .find(earmarking_modality)
+            .show()
+            .closest('.form-field')
+            .show();
+        index
+            .closest('.form-field-group')
+            .find(case3)
+            .val('')
+            .trigger('change')
+            .hide()
+            .closest('.form-field')
+            .hide();
+        break;
+
+      case '4':
+        index
+            .closest('.form-field-group')
+            .find(cash_and_voucher_modalities)
+            .show()
+            .closest('.form-field')
+            .show();
+        index
+            .closest('.form-field-group')
+            .find(case4)
+            .val('')
+            .trigger('change')
+            .hide()
+            .closest('.form-field')
+            .hide();
+        break;
+      default:
+        index
+            .closest('.form-field-group')
+            .find(aid_type)
+            .show()
+            .closest('.form-field')
+            .show();
+        index
+            .closest('.form-field-group')
+            .find(case1)
+            .val('')
+            .trigger('change')
+            .hide()
+            .closest('.form-field')
+            .hide();
     }
   }
 
