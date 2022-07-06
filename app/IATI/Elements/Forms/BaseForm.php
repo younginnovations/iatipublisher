@@ -51,7 +51,7 @@ class BaseForm extends Form
                     'label' => 'Add More',
                     'attr' => [
                         'class' => 'add_to_collection add_more button relative -translate-y-1/2 pl-3.5 text-xs font-bold uppercase leading-normal text-spring-50 text-bluecoral ',
-                        'form_type' => $field['name'],
+                        'form_type' => $field['parent'] . '_' . $field['name'],
                         'icon' => true,
                     ],
                 ]);

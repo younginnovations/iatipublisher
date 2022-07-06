@@ -35,10 +35,10 @@
                         <div class="hidden collection-container document_link_description_narrative" form_type="document_link_description_narrative"
                         data-prototype="{{ str_replace('document_link[0]','document_link[__PARENT_NAME__]',form_row($form->document_link->getChildren()[0]->getChild('description')->getChildren()[0]->getChild('narrative')->prototype())) }}">
                     </div>
-                        <div class="hidden collection-container category" form_type="category"
+                        <div class="hidden collection-container category" form_type="document_link_category"
                             data-prototype="{{ str_replace('document_link[0]', 'document_link[__PARENT_NAME__]',form_row($form->document_link->getChildren()[0]->getChild('category')->prototype())) }}">
                         </div>
-                        <div class="hidden collection-container language" form_type="language"
+                        <div class="hidden collection-container language" form_type="document_link_language"
                             data-prototype="{{ str_replace('document_link[0]','document_link[__PARENT_NAME__]',form_row($form->document_link->getChildren()[0]->getChild('language')->prototype())) }}">
                         </div>
 
