@@ -6,16 +6,16 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * Class Result.
+ * Class Transaction.
  */
-class Result extends Model
+class Transaction extends Model
 {
     use HasFactory;
 
     /**
      * @var string
      */
-    protected $table = 'activity_results';
+    protected $table = 'activity_transactions';
 
     /**
      * Fillable property for mass assignment.
@@ -25,7 +25,7 @@ class Result extends Model
     protected $fillable
         = [
             'activity_id',
-            'result',
+            'transaction',
         ];
 
     /**
@@ -33,26 +33,16 @@ class Result extends Model
      */
     protected $casts
         = [
-            'result' => 'json',
+            'transaction' => 'json',
         ];
 
     /**
-     * Result belongs to activity.
+     * Transaction belongs to an activity.
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function activity(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(Activity::class, 'activity_id', 'id');
-    }
-
-    /**
-     * Result hasmany indicators.
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function indicators(): \Illuminate\Database\Eloquent\Relations\HasMany
-    {
-        return $this->hasMany(Indicator::class, 'result_id', 'id');
     }
 }

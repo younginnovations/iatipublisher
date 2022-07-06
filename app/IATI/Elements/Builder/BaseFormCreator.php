@@ -37,15 +37,16 @@ class BaseFormCreator
      *
      * @param array $model
      * @param       $formData
+     * @param $method
      *
      * @return Form
      */
-    public function editForm(array $model, $formData): Form
+    public function editForm(array $model, $formData, $method = 'PUT'): Form
     {
         return $this->formBuilder->create(
             'App\IATI\Elements\Forms\BaseForm',
             [
-                'method' => 'PUT',
+                'method' => $method,
                 'model'  => $model,
                 'url'    => $this->url,
                 'data'   => $formData,
