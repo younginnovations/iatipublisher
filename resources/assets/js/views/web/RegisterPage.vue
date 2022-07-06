@@ -469,14 +469,23 @@ export default defineComponent({
       formData.identifier = `${formData.registration_agency}-${formData.registration_number}`;
 
       let form = {
-        password: encrypt(formData.password, 'test'),
-        password_confirmation: encrypt(formData.password_confirmation, 'test'),
+        password: encrypt(
+          formData.password,
+          process.env.MIX_ENCRYPTION_KEY ?? ''
+        ),
+        password_confirmation: encrypt(
+          formData.password_confirmation,
+          process.env.MIX_ENCRYPTION_KEY ?? ''
+        ),
       };
 
-      console.log({ ...formData, ...form });
       axios
         .post('/verifyPublisher', { ...formData, ...form })
         .then((res) => {
+          if (res.request.responseURL.includes('activities')) {
+            window.location.href = '/activities';
+          }
+
           const response = res.data;
           publisherExists.value = true;
           const errors =
@@ -543,11 +552,17 @@ export default defineComponent({
     }
 
     function submitForm() {
-      // isLoaderVisible.value = true;
+      isLoaderVisible.value = true;
 
       let form = {
-        password: encrypt(formData.password, 'test'),
-        password_confirmation: encrypt(formData.password_confirmation, 'test'),
+        password: encrypt(
+          formData.password,
+          process.env.MIX_ENCRYPTION_KEY ?? ''
+        ),
+        password_confirmation: encrypt(
+          formData.password_confirmation,
+          process.env.MIX_ENCRYPTION_KEY ?? ''
+        ),
       };
 
       axios
@@ -560,6 +575,7 @@ export default defineComponent({
           const response = res.data;
           const errors =
             !response.success || 'errors' in response ? response.errors : [];
+
           errorData.username = errors.username ? errors.username[0] : '';
           errorData.full_name = errors.full_name ? errors.full_name[0] : '';
           errorData.email = errors.email ? errors.email[0] : '';
@@ -569,6 +585,7 @@ export default defineComponent({
             : errors.password
             ? errors.password[0]
             : '';
+
           isLoaderVisible.value = false;
 
           if (response.success) {
@@ -577,9 +594,10 @@ export default defineComponent({
           }
         })
         .catch((error) => {
-          console.log(error);
           const { errors } = error.response.data;
+
           isLoaderVisible.value = false;
+
           errorData.username = errors.username ? errors.username[0] : '';
           errorData.full_name = errors.full_name ? errors.full_name[0] : '';
           errorData.email = errors.email ? errors.email[0] : '';

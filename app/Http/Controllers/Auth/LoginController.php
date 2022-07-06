@@ -111,7 +111,7 @@ class LoginController extends Controller
     public function login(Request $request): RedirectResponse|Response|JsonResponse|ValidationException
     {
         if (isset($request['password'])) {
-            $request['password'] = decryptString($request['password'], 'test');
+            $request['password'] = decryptString($request['password'], env('MIX_ENCRYPTION_KEY'));
         }
 
         $this->validateLogin($request);

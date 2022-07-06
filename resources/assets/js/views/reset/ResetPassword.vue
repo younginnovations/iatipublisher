@@ -126,8 +126,14 @@ export default defineComponent({
       let form = {
         email: formData.email,
         token: props.reset_token,
-        password_confirmation: encrypt(formData.password_confirmation, 'test'),
-        password: encrypt(formData.password, 'test'),
+        password_confirmation: encrypt(
+          formData.password_confirmation,
+          process.env.MIX_ENCRYPTION_KEY ?? ''
+        ),
+        password: encrypt(
+          formData.password,
+          process.env.MIX_ENCRYPTION_KEY ?? ''
+        ),
       };
 
       axios

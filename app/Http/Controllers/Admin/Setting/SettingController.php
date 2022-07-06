@@ -91,8 +91,12 @@ class SettingController extends Controller
             $publisherData['publisher_id'] = Auth::user()->organization->publisher_id;
             $publisherData['publisher_verification'] = ($this->verifyPublisher($publisherData))['validation'];
             $publisherData['token_verification'] = ($this->verifyApi($publisherData))['validation'];
+            $message = $publisherData['publisher_verification'] ?
+                ($publisherData['token_verification'] ? 'API token verified successfully' : 'API token incorrect. Please enter valid API token.')
+                : 'API token incorrect. Please make sure that your publisher is approved in IATI Registry.';
+            $success = $publisherData['publisher_verification'] && $publisherData['token_verification'] ? true : false;
 
-            return response()->json(['success' => true, 'message' => 'API token verified successfully.', 'data' => $publisherData]);
+            return response()->json(['success' => $success, 'message' => $message, 'data' => $publisherData]);
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 

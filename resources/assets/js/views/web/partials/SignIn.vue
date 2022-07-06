@@ -126,7 +126,10 @@ export default defineComponent({
 
       let form = {
         username: formData.username,
-        password: encrypt(formData.password, 'test'),
+        password: encrypt(
+          formData.password,
+          process.env.MIX_ENCRYPTION_KEY ?? ''
+        ),
       };
 
       axios
@@ -135,7 +138,6 @@ export default defineComponent({
           errorData.username = '';
           errorData.password = '';
           if (response.status) window.location.href = 'activities';
-          isLoaderVisible.value = false;
         })
         .catch((error) => {
           console.log(error);

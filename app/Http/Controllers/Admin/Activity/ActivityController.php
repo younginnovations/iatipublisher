@@ -10,6 +10,7 @@ use Exception;
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\DatabaseManager;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
@@ -97,11 +98,15 @@ class ActivityController extends Controller
      *
      * @param Activity $activity
      *
-     * @return View
+     * @return View|JsonResponse|RedirectResponse
      */
-    public function show(Activity $activity): View|JsonResponse
+    public function show(Activity $activity): View|JsonResponse|RedirectResponse
     {
         try {
+            if ($activity['org_id'] !== Auth::user()->organization_id) {
+                return redirect()->route('admin.activities.index');
+            }
+
             $toast['message'] = Session::has('error') ? Session::get('error') : (Session::get('success') ? Session::get('success') : '');
             $toast['type'] = Session::has('error') ? 'error' : 'success';
             $elements = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
