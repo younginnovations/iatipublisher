@@ -16,7 +16,7 @@
                             data-prototype="{{ form_row($form->sector->prototype()) }}">
                         </div>
                         <div class="hidden collection-container" form_type="sector_narrative"
-                            data-prototype="{{ str_replace('description[0]','description[__PARENT_NAME__]',form_row($form->sector->getChildren()[0]->getChild('narrative')->prototype())) }}">
+                            data-prototype="{{ str_replace('sector[0]','sector[__PARENT_NAME__]',form_row($form->sector->getChildren()[0]->getChild('narrative')->prototype())) }}">
                         </div>
                     </div>
                 </div>

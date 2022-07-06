@@ -40,12 +40,12 @@ class ParentCollectionFormCreator
      *
      * @return Form
      */
-    public function editForm(array $model, $formData): Form
+    public function editForm(array $model, $formData, $method = 'PUT'): Form
     {
         return $this->formBuilder->create(
             'App\IATI\Elements\Forms\ParentCollectionForm',
             [
-                'method' => 'PUT',
+                'method' => $method,
                 'model'  => $model,
                 'url'    => $this->url,
                 'data'   => $formData,
