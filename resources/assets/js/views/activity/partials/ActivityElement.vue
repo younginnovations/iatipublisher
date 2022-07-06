@@ -128,7 +128,7 @@
         >
           <div class="date-type mb-1 flex flex-col space-y-2 text-sm font-bold">
             <span>{{ props.types.activityDate[post.type] }}</span>
-            <span class="text-sm font-normal">{{ post.date }}</span>
+            <span class="text-sm font-normal">{{ formatDate(post.date) }}</span>
           </div>
           <div
             v-for="(item, i) in post.narrative"
@@ -191,10 +191,10 @@
           :class="{ 'mb-4': key !== data.content.length - 1 }"
         >
           <div class="related-content text-sm">
-            <div>{{ post.activity_identifier }}</div>
-            <div>
+            <div class="category">
               {{ props.types.relatedActivityType[post.relationship_type] }}
             </div>
+            <div>{{ post.activity_identifier }}</div>
           </div>
         </div>
       </template>
@@ -712,7 +712,9 @@
             <div class="value text-sm">
               <span>{{ item.amount }}</span>
               <span>{{ item.currency }}</span>
-              <span v-if="item.value_date">({{ item.value_date }})</span>
+              <span v-if="item.value_date"
+                >({{ formatDate(item.value_date) }})</span
+              >
             </div>
           </div>
           <div class="ml-5">
@@ -724,7 +726,7 @@
               <table v-if="item.date">
                 <tr>
                   <td>Period Start</td>
-                  <td>{{ item.date }}</td>
+                  <td>{{ formatDate(item.date) }}</td>
                 </tr>
               </table>
             </div>
@@ -736,7 +738,7 @@
               <table v-if="item.date">
                 <tr>
                   <td>Period end</td>
-                  <td>{{ item.date }}</td>
+                  <td>{{ formatDate(item.date) }}</td>
                 </tr>
               </table>
             </div>
@@ -1176,7 +1178,9 @@
             <div class="value text-sm">
               <span>{{ item.amount }}</span>
               <span>{{ types.currency[item.currency] }}</span>
-              <span v-if="item.value_date">({{ item.value_date }})</span>
+              <span v-if="item.value_date"
+                >({{ formatDate(item.value_date) }})</span
+              >
             </div>
           </div>
           <div class="ml-5">
@@ -1189,7 +1193,7 @@
                 <tr>
                   <td>Period Start</td>
                   <td>
-                    <span>{{ item.iso_date }}</span>
+                    <span>{{ formatDate(item.iso_date) }}</span>
                   </td>
                 </tr>
               </table>
@@ -1204,7 +1208,7 @@
                 <tr>
                   <td>Period End</td>
                   <td>
-                    <span>{{ item.iso_date }}</span>
+                    <span>{{ formatDate(item.iso_date) }}</span>
                   </td>
                 </tr>
               </table>
@@ -1418,7 +1422,7 @@
                 <tr>
                   <td>Date</td>
                   <td>
-                    {{ document_date.date }}
+                    {{ formatDate(document_date.date) }}
                   </td>
                 </tr>
               </table>
@@ -1511,6 +1515,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import HoverText from '../../../components/HoverText.vue';
+import moment from 'moment';
 
 export default defineComponent({
   name: 'activity-element',
@@ -1554,7 +1559,11 @@ export default defineComponent({
       layout = 'basis-full';
     }
 
-    return { layout, status, props };
+    function formatDate(date: Date) {
+      return moment(date).format('LL');
+    }
+
+    return { layout, status, props, formatDate };
   },
 });
 </script>
