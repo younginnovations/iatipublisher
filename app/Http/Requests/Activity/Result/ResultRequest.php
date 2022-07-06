@@ -32,7 +32,7 @@ class ResultRequest extends ActivityBaseRequest
     }
 
     /**
-     * Returns rules for related activity.
+     * Returns rules for transaction.
      *
      * @param array $formFields
      *
@@ -54,7 +54,7 @@ class ResultRequest extends ActivityBaseRequest
     }
 
     /**
-     * Returns messages for related activity validations.
+     * Returns messages for transaction validations.
      *
      * @param array $formFields
      *

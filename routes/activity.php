@@ -81,4 +81,5 @@ Route::name('admin.')->group(function () {
     Route::resource('activities.results', \App\Http\Controllers\Admin\Activity\ResultController::class);
     Route::resource('activities.results.indicators', \App\Http\Controllers\Admin\Activity\IndicatorController::class);
     Route::resource('activities.results.indicators.periods', \App\Http\Controllers\Admin\Activity\PeriodController::class);
+    Route::resource('activities.transactions', \App\Http\Controllers\Admin\Activity\TransactionController::class);
 });

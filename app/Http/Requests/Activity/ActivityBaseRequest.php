@@ -81,6 +81,17 @@ class ActivityBaseRequest extends FormRequest
                 return $check;
             }
         );
+
+        Validator::extend(
+            'exclude_operators',
+            function ($attribute, $value, $parameters, $validator) {
+                if ($value) {
+                    return !preg_match('/[\&\|\?|]+/', $value);
+                }
+
+                return true;
+            }
+        );
     }
 
     /**
