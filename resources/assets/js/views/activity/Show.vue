@@ -17,7 +17,7 @@
                     >{{ pageTitle ?? 'Untitled' }}</span
                   >
                   <span class="ellipsis__title--hover w-[calc(100%_+_35px)]">{{
-                    pageTitle
+                    pageTitle ? pageTitle : 'Untitled'
                   }}</span>
                 </div>
               </div>
@@ -34,7 +34,9 @@
                 <span class="ellipsis__title overflow-hidden">{{
                   pageTitle ? pageTitle : 'Untitled'
                 }}</span>
-                <span class="ellipsis__title--hover">{{ pageTitle }}</span>
+                <span class="ellipsis__title--hover">{{
+                  pageTitle ? pageTitle : 'Untitled'
+                }}</span>
               </h4>
             </div>
           </div>
@@ -302,21 +304,15 @@
                 :title="name.toString()"
                 :activityId="activity.id"
                 :width="
-                  name === 'title' ||
-                  name === 'description' ||
-                  name === 'activity_date' ||
-                  name === 'contact_info' ||
-                  name === 'participating_org' ||
-                  name === 'recipient_country' ||
-                  name === 'recipient_region' ||
-                  name === 'sector' ||
-                  name === 'policy_marker' ||
-                  name === 'tag' ||
-                  name === 'country_budget_items' ||
-                  name === 'humanitarian_scope' ||
-                  name === 'results'
-                    ? 'full'
-                    : ''
+                  name === 'identifier' ||
+                  name === 'activity_status' ||
+                  name === 'activity_scope' ||
+                  name === 'collaboration_type' ||
+                  name === 'default_flow_type' ||
+                  name === 'default_tied_status' ||
+                  name === 'default_finance_type'
+                    ? 'basis-6/12'
+                    : 'full'
                 "
                 :completed="status[name] ?? false"
                 tooltip="Example text"

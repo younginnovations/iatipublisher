@@ -22,7 +22,7 @@
           <div class="form-group">
             <div class="form__content">
               <div>
-                <div class="flex items-center justify-between">
+                <div class="label-field">
                   <label class="label" for="narrative"
                     >narrative
                     <span class="text-salmon-40"> *</span>
@@ -51,7 +51,7 @@
                 </span>
               </div>
               <div>
-                <div class="flex items-center justify-between">
+                <div class="label-field">
                   <label class="label" for=""
                     >@xml: lang
                     <span class="text-salmon-40"> *</span>
@@ -101,7 +101,7 @@
           <div class="form-group">
             <div class="form__content">
               <div>
-                <div class="flex items-center justify-between">
+                <div class="label-field">
                   <label class="label" for=""
                     >activity identifier
                     <span class="text-salmon-40"> *</span>
@@ -133,7 +133,7 @@
                 </span>
               </div>
               <div>
-                <div class="flex items-center justify-between">
+                <div class="label-field">
                   <label class="label" for=""
                     >iati-identifier
                     <span class="text-salmon-40"> *</span>
@@ -298,10 +298,14 @@ export default defineComponent({
 
   .form__content {
     margin-top: 0;
+
+    .label-field {
+      @apply mb-2 flex items-center justify-between;
+    }
   }
 }
 .form-group-title-container {
-  @apply mb-1 flex space-x-1;
+  @apply mb-1.5 flex space-x-1;
 }
 .form-group-title {
   @apply text-xs font-bold text-bluecoral;
