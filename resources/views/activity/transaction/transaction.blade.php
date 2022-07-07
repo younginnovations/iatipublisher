@@ -21,6 +21,8 @@
                             <div class="line grow h-px border-b border-n-40 ml-4"></div>
                         </div>
 
+                        @include('admin.activity.partial.form-title')
+
                         {!! form($form) !!}
 
                         <div class="hidden collection-container title_narrative" form_type="transaction_description_narrative"

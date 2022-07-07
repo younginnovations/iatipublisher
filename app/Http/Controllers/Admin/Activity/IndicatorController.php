@@ -67,11 +67,11 @@ class IndicatorController extends Controller
         try {
             $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
             $activity = $this->activityService->getActivity($activityId);
-            $this->resultElementFormCreator->url = route('admin.activities.results.indicators.store', [$activityId, $resultId]);
+            $this->resultElementFormCreator->url = route('admin.activities.result.indicator.store', [$activityId, $resultId]);
             $form = $this->resultElementFormCreator->editForm([], $element['indicator']);
-//            dd($form->baseline->getChildren()[0]->getChild('document_link')->getChildren()[0]->getChild('title')->getChildren()[0]->getChild('narrative')->prototype());
+            $data = ['core'=> $element['indicator']['criteria'] ?? false, 'status'=> false, 'title'=> $element['indicator']['label'], 'name'=>'indicator'];
 
-            return view('activity.indicator.indicator', compact('form', 'activity'));
+            return view('activity.indicator.indicator', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
@@ -146,10 +146,11 @@ class IndicatorController extends Controller
             $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
             $activity = $this->activityService->getActivity($activityId);
             $resultIndicator = $this->indicatorService->getResultIndicator($resultId, $indicatorId);
-            $this->resultElementFormCreator->url = route('admin.activities.results.indicators.update', [$activityId, $resultId, $indicatorId]);
+            $this->resultElementFormCreator->url = route('admin.activities.result.indicator.update', [$activityId, $resultId, $indicatorId]);
             $form = $this->resultElementFormCreator->editForm($resultIndicator->indicator, $element['indicator'], 'PUT');
+            $data = ['core'=> $element['indicator']['criteria'] ?? false, 'status'=> false, 'title'=> $element['indicator']['label'], 'name'=>'indicator'];
 
-            return view('activity.indicator.indicator', compact('form', 'activity'));
+            return view('activity.indicator.indicator', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 

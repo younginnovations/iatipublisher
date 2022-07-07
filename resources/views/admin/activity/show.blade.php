@@ -8,6 +8,9 @@
         :lang="{{json_encode('lang file')}}"
         :types="{{json_encode($types)}}"
         :status="{{json_encode($status)}}"
-        :toast="{{ json_encode($toast) }}">
+        :toast="{{ json_encode($toast) }}"
+        :results="{{ json_encode($results) }}"
+        :has_indicator="{{ $hasIndicator }}"
+        :has_period="{{ $hasPeriod }}">
     </activities-detail>
 @endsection
