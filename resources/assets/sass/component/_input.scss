@@ -14,7 +14,7 @@
   }
   &::placeholder {
     letter-spacing: -0.02em;
-    @apply text-n-40;
+    @apply font-normal text-n-40;
   }
   &:focus::placeholder {
     @apply text-n-50;

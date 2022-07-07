@@ -664,7 +664,16 @@ export default defineComponent({
   components: {
     ResultElement,
   },
-  props: {},
+  props: {
+    activity: {
+      type: Object,
+      required: true,
+    },
+    result: {
+      type: Object,
+      required: true,
+    },
+  },
   setup(props) {
     const linkClasses =
       'flex items-center w-full bg-white rounded p-2 text-sm text-n-50 font-bold leading-relaxed mb-2 shadow-default';
