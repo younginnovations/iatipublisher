@@ -48,7 +48,7 @@ class SectorRequest extends ActivityBaseRequest
                 $rules[sprintf('%s.vocabulary_uri', $sectorForm)] = 'nullable|url';
             }
 
-            $rules[sprintf('%s.percentage', $sectorForm)] = 'nullable|numeric|max:100|not_regex:/^0{2,}/';
+            $rules[sprintf('%s.percentage', $sectorForm)] = 'nullable|numeric|max:100';
 
             $rules = array_merge($this->getRulesForNarrative($sector['narrative'], $sectorForm), $rules);
         }
@@ -96,7 +96,6 @@ class SectorRequest extends ActivityBaseRequest
             $messages[sprintf('%s.vocabulary_uri.url', $sectorForm)] = 'The @vocabulary-uri field must be a valid url.';
             $messages[sprintf('%s.percentage.numeric', $sectorForm)] = 'The @percentage field must be a number.';
             $messages[sprintf('%s.percentage.max', $sectorForm)] = 'The @percentage field cannot be greater than 100.';
-            $messages[sprintf('%s.percentage.not_regex', $sectorForm)] = 'The @percentage field has invalid format.';
             $messages[sprintf('%s.percentage.sum', $sectorForm)] = 'The sum of @percentage within a vocabulary must add upto 100.';
             $messages = array_merge($this->getMessagesForNarrative($sector['narrative'], $sectorForm), $messages);
         }

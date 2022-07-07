@@ -58,11 +58,11 @@ class ParentCollectionFormCreator
                 'clear'    => [
                     'label'     => 'Cancel',
                     'attr'      => [
-                        'type'      => 'back',
+                        'type'      => 'anchor',
                         'class'     => 'ghost-btn mr-8',
+                        'href' => back()->getTargetUrl(),
                     ],
                 ],
-
                 'submit'    => [
                     'label'     => 'Save Publishing Setting',
                     'attr'      => [

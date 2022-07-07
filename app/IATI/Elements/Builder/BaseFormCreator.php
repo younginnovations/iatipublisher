@@ -60,9 +60,9 @@ class BaseFormCreator
                 'clear'    => [
                     'label'     => 'Cancel',
                     'attr'      => [
-                        'type'      => 'button',
+                        'type'      => 'anchor',
                         'class'     => 'ghost-btn mr-8',
-                        '',
+                        'href' => back()->getTargetUrl(),
                     ],
                 ],
 

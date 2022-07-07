@@ -76,7 +76,7 @@ class CapitalSpendController extends Controller
     {
         try {
             $activityData = $this->capitalSpendService->getActivityData($id);
-            $activityCapitalSpend = $request->get('capital_spend') ? (float) $request->get('capital_spend') : null;
+            $activityCapitalSpend = $request->get('capital_spend') != null ? (float) $request->get('capital_spend') : null;
 
             if (!$this->capitalSpendService->update($activityCapitalSpend, $activityData)) {
                 return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while updating activity capital spend.');
