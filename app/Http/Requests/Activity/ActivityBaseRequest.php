@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Requests\Activity;
 
+use GuzzleHttp\Client;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Validator;
@@ -79,6 +80,33 @@ class ActivityBaseRequest extends FormRequest
                 ($value != 100) ? $check = false : $check = true;
 
                 return $check;
+            }
+        );
+
+        Validator::extendImplicit(
+            'organization_exists',
+            function ($attribute, $value, $parameters, $validator) {
+                try {
+                    $client = new Client(
+                        [
+                            'base_uri' => env('IATI_API_ENDPOINT'),
+                            'headers'  => [
+                                'X-CKAN-API-Key' => env('IATI_API_KEY'),
+                            ],
+                        ]
+                    );
+
+                    $res = $client->request('GET', env('IATI_API_ENDPOINT') . '/action/organization_show', [
+                        'auth'            => [env('IATI_USERNAME'), env('IATI_PASSWORD')],
+                        'query'           => ['id' => $value],
+                    ]);
+
+                    $response = json_decode($res->getBody()->getContents())->result;
+
+                    return $response ? true : false;
+                } catch (\Exception $e) {
+                    return false;
+                }
             }
         );
 

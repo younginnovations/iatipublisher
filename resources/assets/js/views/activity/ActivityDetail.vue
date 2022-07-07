@@ -302,9 +302,9 @@
             <template v-for="(element, name, i) in post.elements" :key="i">
               <ActivityElement
                 v-if="
-                  typeof element.content === 'object'
+                  (typeof element.content === 'object'
                     ? Object.keys(element.content).length > 0
-                    : element.content
+                    : element.content) || typeof element.content === 'number'
                 "
                 :id="key"
                 :data="element"

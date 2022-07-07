@@ -120,8 +120,10 @@ class ActivityController extends Controller
                 return redirect()->route('admin.activities.index');
             }
 
-            $toast['message'] = Session::has('error') ? Session::get('error') : (Session::get('success') ? Session::get('success') : '');
-            $toast['type'] = Session::has('error') ? 'error' : 'success';
+            $toast['message'] = Session::exists('error') ? Session::get('error') : (Session::exists('success') ? Session::get('success') : '');
+            $toast['type'] = Session::exists('error') ? false : 'success';
+            Session::forget('success');
+            Session::forget('error');
             $elements = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
             $elementGroups = json_decode(file_get_contents(app_path('Data/Activity/ElementGroup.json')), true);
             $types = $this->getActivityDetailDataType();

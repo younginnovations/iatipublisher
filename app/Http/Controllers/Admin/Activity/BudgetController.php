@@ -54,8 +54,9 @@ class BudgetController extends Controller
             $model['budget'] = $this->budgetService->getBudgetData($id);
             $this->parentCollectionFormCreator->url = route('admin.activities.budget.update', [$id]);
             $form = $this->parentCollectionFormCreator->editForm($model, $element['budget']);
+            $data = ['core'=> $element['description']['criteria'], 'status'=> $activity->description_element_completed, 'title'=> $element['description']['label'], 'name'=>'description'];
 
-            return view('activity.budget.budget', compact('form', 'activity'));
+            return view('activity.budget.budget', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
