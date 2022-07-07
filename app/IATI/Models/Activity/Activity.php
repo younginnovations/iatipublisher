@@ -136,7 +136,7 @@ class Activity extends Model
         $mandatoryAttributes = [];
 
         foreach ($attributes as $attribute) {
-            if ($attribute['criteria'] == 'mandatory') {
+            if (array_key_exists('criteria', $attribute) && $attribute['criteria'] == 'mandatory') {
                 $mandatoryAttributes[] = $attribute['name'];
             }
         }
@@ -158,7 +158,7 @@ class Activity extends Model
         foreach ($fields as $field) {
             $mandatoryFields = [];
 
-            if ($field['criteria'] == 'mandatory') {
+            if (array_key_exists('criteria', $field) && $field['criteria'] == 'mandatory') {
                 $mandatoryFields[] = $field['name'];
             }
 
@@ -166,7 +166,7 @@ class Activity extends Model
                 $attributes = $field['attributes'];
 
                 foreach ($attributes as $attribute) {
-                    if ($attribute['criteria'] == 'mandatory') {
+                    if (array_key_exists('criteria', $attribute) && $attribute['criteria'] == 'mandatory') {
                         $mandatoryFields[] = $attribute['name'];
                     }
                 }
@@ -219,11 +219,15 @@ class Activity extends Model
             return true;
         }
 
+        if (empty($data)) {
+            return false;
+        }
+
         foreach ($mandatoryAttributes as $mandatoryAttribute) {
-            foreach ($data as $datum) {
-                if (array_key_exists($mandatoryAttribute, $datum) && empty($datum[$mandatoryAttribute])) {
-                    return false;
-                }
+            if (!array_key_exists($mandatoryAttribute, $data) || (empty($data[$mandatoryAttribute]))) {
+                dd('isAttributeDataCompleted fx called', ' Attribute is empty', 'attribute-check:', $mandatoryAttributes, $data);
+
+                return false;
             }
         }
 
@@ -244,10 +248,29 @@ class Activity extends Model
             return true;
         }
 
+        if (empty($data)) {
+            return false;
+        }
+
         foreach ($mandatorySubElements as $key => $mandatorySubElement) {
-            foreach ($data as $datum) {
-                if (array_key_exists($key, $datum)) {
-                    if (!$this->isDataCompleted($mandatorySubElement, $datum[$key])) {
+            if (!array_key_exists($key, $data)) {
+                dd('isSubElementDataCompleted fx called', 'Whole Sub element has not filled yet', 'sub-element-check:', $mandatorySubElement, $data);
+
+                return false;
+            }
+            $items = $data[$key];
+
+            if (empty($items)) {
+                dd('isSubElementDataCompleted fx called', 'Sub element has not filled yet', 'sub-element-check:', $mandatorySubElement, $data, $items);
+
+                return false;
+            }
+
+            foreach ($mandatorySubElement as $mandatoryField) {
+                foreach ($items as $item) {
+                    if (!array_key_exists($mandatoryField, $item) || (empty($item[$mandatoryField]))) {
+                        dd('isSubElementDataCompleted fx called', ' Sub element is empty', 'sub-element-check:', $mandatoryField, $item);
+
                         return false;
                     }
                 }
@@ -272,13 +295,56 @@ class Activity extends Model
         }
 
         $elementSchema = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
-        $attributes = $elementSchema[$element]['attributes'];
-        $mandatoryAttributes = $this->mandatoryAttributes($attributes);
+        $mandatoryAttributes = $this->mandatoryAttributes($elementSchema[$element]['attributes']);
 
-        foreach ($mandatoryAttributes as $mandatoryAttribute) {
-            if (array_key_exists($mandatoryAttribute, $data) && empty($data[$mandatoryAttribute])) {
-                //dd('attribute-check:', $mandatoryAttributes, $data);
+        if (!empty($mandatoryAttributes)) {
+            if (!$this->isAttributeDataCompleted($mandatoryAttributes, $data)) {
+                //dd('singleDimensionAttributeCheck fx called', 'Level2 single dimension attribute is empty', 'attribute-check:', $mandatoryAttributes, $data);
+
                 return false;
+            }
+        }
+
+        return true;
+    }
+
+    public function isSubElementCompleted($subElements, $data): bool
+    {
+        foreach ($subElements as $key => $subElement) {
+            $mandatorySubElementAttributes = array_key_exists('attributes', $subElement) ? $this->mandatoryAttributes($subElement['attributes']) : [];
+            $mandatoryChildSubElements = array_key_exists('sub_elements', $subElement) ? $this->mandatorySubElements($subElement['sub_elements']) : [];
+
+            if (!empty($mandatorySubElementAttributes) || !empty($mandatoryChildSubElements)) {
+                foreach ($data as $datum) {
+                    if (!$this->isElementCompleted($mandatorySubElementAttributes, $mandatoryChildSubElements, $datum[$key])) {
+                        return false;
+                    }
+                }
+            }
+        }
+
+        return true;
+    }
+
+    public function isElementCompleted($mandatoryAttributes, $mandatorySubElements, $data): bool
+    {
+        if (!empty($mandatoryAttributes) || !empty($mandatorySubElements)) {
+            if (empty($data)) {
+                return false;
+            }
+
+            foreach ($data as $datum) {
+                if (!$this->isAttributeDataCompleted($mandatoryAttributes, $datum)) {
+                    dd('isElementCompleted fx is called', 'Attribute is empty', 'attribute-check:', $mandatoryAttributes, $data, $datum);
+
+                    return false;
+                }
+
+                if (!$this->isSubElementDataCompleted($mandatorySubElements, $datum)) {
+                    dd('isElementCompleted fx is called', 'Sub element is empty', 'sub-element-check:', $mandatorySubElements, $data, $datum);
+
+                    return false;
+                }
             }
         }
 
@@ -293,25 +359,13 @@ class Activity extends Model
      *
      * @return bool
      */
-    public function isLevelOneElementCompleted($element, $data): bool
+    public function isLevelOneMultiDimensionElementCompleted($element, $data): bool
     {
-        if (empty($data)) {
-            return false;
-        }
-
         $elementSchema = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
+        $mandatoryAttributes = array_key_exists('attributes', $elementSchema[$element]) ? $this->mandatoryAttributes($elementSchema[$element]['attributes']) : [];
+        $mandatorySubElements = array_key_exists('sub_elements', $elementSchema[$element]) ? $this->mandatorySubElements($elementSchema[$element]['sub_elements']) : [];
 
-        if (array_key_exists('attributes', $elementSchema[$element])) {
-            if (!$this->isAttributeDataCompleted($this->mandatoryAttributes($elementSchema[$element]['attributes']), $data)) {
-                return false;
-            }
-        }
-
-        if (array_key_exists('sub_elements', $elementSchema[$element])) {
-            return $this->isSubElementDataCompleted($this->mandatorySubElements($elementSchema[$element]['sub_elements']), $data);
-        }
-
-        return true;
+        return $this->isElementCompleted($this->mandatoryAttributes($mandatoryAttributes), $this->mandatorySubElements($mandatorySubElements), $data);
     }
 
     /**
@@ -324,26 +378,22 @@ class Activity extends Model
      */
     public function isLevelTwoSingleDimensionElementCompleted($element, $data): bool
     {
+        if (empty($data)) {
+            return false;
+        }
+
         if (!$this->singleDimensionAttributeCheck($element, $data)) {
             return false;
         }
+
         $elementSchema = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
         $subElements = $elementSchema[$element]['sub_elements'];
 
         foreach ($subElements as $key => $subElement) {
-            $subElementAttributes = $subElement['attributes'];
-            $mandatorySubElementAttributes = $this->mandatoryAttributes($subElementAttributes);
-            $tempData = $data[$key];
+            $mandatoryAttributes = array_key_exists('attributes', $subElement) ? $this->mandatoryAttributes($subElement['attributes']) : [];
+            $mandatorySubElements = array_key_exists('sub_elements', $subElement) ? $this->mandatorySubElements($subElement['sub_elements']) : [];
 
-            if (!$this->isAttributeDataCompleted($mandatorySubElementAttributes, $tempData)) {
-                //dd('sub-element-attribute-check:', $mandatorySubElementAttributes, $tempData);
-                return false;
-            }
-
-            $childSubElements = $subElement['sub_elements'];
-            $mandatoryChildSubElements = $this->mandatorySubElements($childSubElements);
-
-            if (!$this->isSubElementDataCompleted($mandatoryChildSubElements, $tempData)) {
+            if (!$this->isElementCompleted($mandatoryAttributes, $mandatorySubElements, $data[$key])) {
                 return false;
             }
         }
@@ -362,37 +412,17 @@ class Activity extends Model
     public function isLevelTwoMultiDimensionElementCompleted($element, $data): bool
     {
         $elementSchema = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
+        $mandatoryAttributes = array_key_exists('attributes', $elementSchema[$element]) ? $this->mandatoryAttributes($elementSchema[$element]['attributes']) : [];
 
-        if (array_key_exists('attributes', $elementSchema[$element])) {
-            if (!$this->isAttributeDataCompleted($this->mandatoryAttributes($elementSchema[$element]['attributes']), $data)) {
-                return false;
-            }
-        }
-
-        $subElements = $elementSchema[$element]['sub_elements'];
-
-        foreach ($subElements as $key => $subElement) {
-            $subElementAttributes = $subElement['attributes'];
-            $mandatorySubElementAttributes = $this->mandatoryAttributes($subElementAttributes);
-
+        if (!empty($mandatoryAttributes)) {
             foreach ($data as $datum) {
-                $tempData = $datum[$key];
-
-                if (!$this->isAttributeDataCompleted($mandatorySubElementAttributes, $tempData)) {
-                    //dd('sub-element-attribute-check:', $mandatorySubElementAttributes, $tempData);
-                    return false;
-                }
-
-                $childSubElements = $subElement['sub_elements'];
-                $mandatoryChildSubElements = $this->mandatorySubElements($childSubElements);
-
-                if (!$this->isSubElementDataCompleted($mandatoryChildSubElements, $tempData)) {
+                if (!$this->isAttributeDataCompleted($mandatoryAttributes, $datum)) {
                     return false;
                 }
             }
         }
 
-        return true;
+        return $this->isSubElementCompleted($elementSchema[$element]['sub_elements'], $data);
     }
 
     /**
@@ -403,8 +433,12 @@ class Activity extends Model
      *
      * @return bool
      */
-    public function isLevelThreeElementCompleted($element, $data): bool
+    public function isLevelThreeSingleDimensionElementCompleted($element, $data): bool
     {
+        if (empty($data)) {
+            return false;
+        }
+
         if (!$this->singleDimensionAttributeCheck($element, $data)) {
             return false;
         }
@@ -413,27 +447,22 @@ class Activity extends Model
         $subElements = $elementSchema[$element]['sub_elements'];
 
         foreach ($subElements as $key => $subElement) {
-            $subElementAttributes = $subElement['attributes'];
-            $mandatorySubElementAttributes = $this->mandatoryAttributes($subElementAttributes);
+            $mandatorySubElementAttributes = array_key_exists('attributes', $subElement) ? $this->mandatoryAttributes($subElement['attributes']) : [];
             $tempData = $data[$key];
 
-            if (!$this->isAttributeDataCompleted($mandatorySubElementAttributes, $tempData)) {
-                //dd('sub-element-attribute-check:', $mandatorySubElementAttributes, $tempData);
-                return false;
-            }
-
-            $childSubElements = $subElement['sub_elements'];
-
-            foreach ($childSubElements as $innerKey => $childSubElement) {
-                $mandatoryChildSubElements = $this->mandatorySubElements($childSubElement['sub_elements']);
-
-                foreach ($tempData as $tempDatum) {
-                    if (!$this->isSubElementDataCompleted($mandatoryChildSubElements, $tempDatum[$innerKey])) {
-                        //dd('third-level-sub-element-check:', $mandatoryChildSubElements, $tempDatum[$innerKey]);
+            if (!empty($mandatorySubElementAttributes)) {
+                if (empty($tempData)) {
+                    return false;
+                }
+                foreach ($tempData as $datum) {
+                    dd($mandatorySubElementAttributes, $datum);
+                    if (!$this->isAttributeDataCompleted($mandatorySubElementAttributes, $datum)) {
                         return false;
                     }
                 }
             }
+
+            return $this->isSubElementCompleted($subElement['sub_elements'], $tempData);
         }
 
         return true;
@@ -476,7 +505,7 @@ class Activity extends Model
      */
     public function getDescriptionElementCompletedAttribute(): bool
     {
-        return $this->isLevelOneElementCompleted('description', $this->description);
+        return $this->isLevelOneMultiDimensionElementCompleted('description', $this->description);
     }
 
     /**
@@ -486,7 +515,7 @@ class Activity extends Model
      */
     public function getActivityDateElementCompletedAttribute(): bool
     {
-        return $this->isLevelOneElementCompleted('activity_date', $this->activity_date);
+        return $this->isLevelOneMultiDimensionElementCompleted('activity_date', $this->activity_date);
     }
 
     /**
@@ -496,7 +525,7 @@ class Activity extends Model
      */
     public function getRecipientCountryElementCompletedAttribute(): bool
     {
-        return $this->isLevelOneElementCompleted('recipient_country', $this->recipient_country);
+        return $this->isLevelOneMultiDimensionElementCompleted('recipient_country', $this->recipient_country);
     }
 
     /**
@@ -506,7 +535,7 @@ class Activity extends Model
      */
     public function getBudgetElementCompletedAttribute(): bool
     {
-        return $this->isLevelOneElementCompleted('budget', $this->budget);
+        return $this->isLevelOneMultiDimensionElementCompleted('budget', $this->budget);
     }
 
     /**
@@ -516,7 +545,7 @@ class Activity extends Model
      */
     public function getRecipientRegionElementCompletedAttribute(): bool
     {
-        return $this->isLevelOneElementCompleted('recipient_region', $this->recipient_region);
+        return $this->isLevelOneMultiDimensionElementCompleted('recipient_region', $this->recipient_region);
     }
 
     /**
@@ -526,7 +555,7 @@ class Activity extends Model
      */
     public function getDefaultAidTypeElementCompletedAttribute(): bool
     {
-        return $this->isLevelOneElementCompleted('default_aid_type', $this->default_aid_type);
+        return $this->isLevelOneMultiDimensionElementCompleted('default_aid_type', $this->default_aid_type);
     }
 
     /**
@@ -536,7 +565,7 @@ class Activity extends Model
      */
     public function getRelatedActivityElementCompletedAttribute(): bool
     {
-        return $this->isLevelOneElementCompleted('related_activity', $this->related_activity);
+        return $this->isLevelOneMultiDimensionElementCompleted('related_activity', $this->related_activity);
     }
 
     /**
@@ -546,7 +575,7 @@ class Activity extends Model
      */
     public function getSectorElementCompletedAttribute(): bool
     {
-        return $this->isLevelOneElementCompleted('sector', $this->sector);
+        return $this->isLevelOneMultiDimensionElementCompleted('sector', $this->sector);
     }
 
     /**
@@ -556,7 +585,7 @@ class Activity extends Model
      */
     public function getHumanitarianScopeElementCompletedAttribute(): bool
     {
-        return $this->isLevelOneElementCompleted('humanitarian_scope', $this->humanitarian_scope);
+        return $this->isLevelOneMultiDimensionElementCompleted('humanitarian_scope', $this->humanitarian_scope);
     }
 
     /**
@@ -566,7 +595,7 @@ class Activity extends Model
      */
     public function getLegacyDataElementCompletedAttribute(): bool
     {
-        return $this->isLevelOneElementCompleted('legacy_data', $this->legacy_data);
+        return $this->isLevelOneMultiDimensionElementCompleted('legacy_data', $this->legacy_data);
     }
 
     /**
@@ -576,7 +605,7 @@ class Activity extends Model
      */
     public function getTagElementCompletedAttribute(): bool
     {
-        return $this->isLevelOneElementCompleted('tag', $this->tag);
+        return $this->isLevelOneMultiDimensionElementCompleted('tag', $this->tag);
     }
 
     /**
@@ -586,7 +615,7 @@ class Activity extends Model
      */
     public function getPolicyMarkerElementCompletedAttribute(): bool
     {
-        return $this->isLevelOneElementCompleted('policy_marker', $this->policy_marker);
+        return $this->isLevelOneMultiDimensionElementCompleted('policy_marker', $this->policy_marker);
     }
 
     /**
@@ -596,7 +625,7 @@ class Activity extends Model
      */
     public function getParticipatingOrgElementCompletedAttribute(): bool
     {
-        return $this->isLevelOneElementCompleted('participating_org', $this->participating_organization);
+        return $this->isLevelOneMultiDimensionElementCompleted('participating_org', $this->participating_organization);
     }
 
     /**
@@ -741,6 +770,6 @@ class Activity extends Model
      */
     public function getCountryBudgetItemsElementCompletedAttribute(): bool
     {
-        return $this->isLevelThreeElementCompleted('country_budget_items', $this->country_budget_items);
+        return $this->isLevelThreeSingleDimensionElementCompleted('country_budget_items', $this->country_budget_items);
     }
 }
