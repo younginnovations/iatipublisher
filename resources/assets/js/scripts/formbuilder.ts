@@ -7,18 +7,31 @@ class FormBuilder {
     ev.preventDefault();
     let target = ev.target as EventTarget;
     let container = $(target).attr('form_type') ? $(`.collection-container[form_type ='${$(target).attr('form_type')}']`) : $('.collection-container');
+    console.log(container);
+
     let count = $(target).attr('child_count')
       ? parseInt($(target).attr('child_count') as string) + 1
       : $(target).parent().find('.form-child-body').length;
+
     let parent_count = $(target).attr('parent_count')
       ? parseInt($(target).attr('parent_count') as string)
       : $(target).parent().prevAll('.multi-form').length;
+
+    let wrapper_parent_count = $(target).attr('wrapper_parent_count') ?
+      $(target).attr('wrapper_parent_count') :
+      $(target).parent().find('.wrapper-child-body').length;
+
+    let isParent = $(target).attr('has_children');
+
     let proto = container
       .data('prototype')
       .replace(/__PARENT_NAME__/g, parent_count);
     proto = proto.replace(/__NAME__/g, count);
+    proto = proto.replace(/__WRAPPER_NAME__/g, wrapper_parent_count??0);
 
     $(target).prev().append($(proto));
+
+    $(target).prev().find('.wrapped-child-body').last().find('.add_to_collection').attr('wrapper_parent_count', wrapper_parent_count??0);
 
     if ($(target).attr('form_type')) {
       $(target).prev().last().find('.select2').select2({
@@ -435,84 +448,84 @@ class FormBuilder {
    */
   public hideTransactionAidTypeSelectField(index: JQuery, value: string) {
     let aid_type = 'select[id*="[aid_type]"]',
-        earmarking_category = 'select[id*="[earmarking_category]"]',
-        earmarking_modality = 'select[id*="[earmarking_modality]"]',
-        cash_and_voucher_modalities =
-            'select[id*="[cash_and_voucher_modalities]"]',
-        case1 =
-            'select[id*="[earmarking_category]"],select[id*="[earmarking_modality]"],select[id*="[cash_and_voucher_modalities]"]',
-        case2 =
-            'select[id*="[aid_type]"],select[id*="[earmarking_modality]"],select[id*="[cash_and_voucher_modalities]"]',
-        case3 =
-            'select[id*="[aid_type]"],select[id*="[earmarking_category]"],select[id*="[cash_and_voucher_modalities]"]',
-        case4 =
-            'select[id*="[aid_type]"],select[id*="[earmarking_category]"],select[id*="[earmarking_modality]"]';
+      earmarking_category = 'select[id*="[earmarking_category]"]',
+      earmarking_modality = 'select[id*="[earmarking_modality]"]',
+      cash_and_voucher_modalities =
+        'select[id*="[cash_and_voucher_modalities]"]',
+      case1 =
+        'select[id*="[earmarking_category]"],select[id*="[earmarking_modality]"],select[id*="[cash_and_voucher_modalities]"]',
+      case2 =
+        'select[id*="[aid_type]"],select[id*="[earmarking_modality]"],select[id*="[cash_and_voucher_modalities]"]',
+      case3 =
+        'select[id*="[aid_type]"],select[id*="[earmarking_category]"],select[id*="[cash_and_voucher_modalities]"]',
+      case4 =
+        'select[id*="[aid_type]"],select[id*="[earmarking_category]"],select[id*="[earmarking_modality]"]';
 
     switch (value) {
       case '2':
         index
-            .closest('.form-field-group')
-            .find(earmarking_category)
-            .show()
-            .closest('.form-field')
-            .show();
+          .closest('.form-field-group')
+          .find(earmarking_category)
+          .show()
+          .closest('.form-field')
+          .show();
         index
-            .closest('.form-field-group')
-            .find(case2)
-            .val('')
-            .trigger('change')
-            .hide()
-            .closest('.form-field')
-            .hide();
+          .closest('.form-field-group')
+          .find(case2)
+          .val('')
+          .trigger('change')
+          .hide()
+          .closest('.form-field')
+          .hide();
         break;
       case '3':
         index
-            .closest('.form-field-group')
-            .find(earmarking_modality)
-            .show()
-            .closest('.form-field')
-            .show();
+          .closest('.form-field-group')
+          .find(earmarking_modality)
+          .show()
+          .closest('.form-field')
+          .show();
         index
-            .closest('.form-field-group')
-            .find(case3)
-            .val('')
-            .trigger('change')
-            .hide()
-            .closest('.form-field')
-            .hide();
+          .closest('.form-field-group')
+          .find(case3)
+          .val('')
+          .trigger('change')
+          .hide()
+          .closest('.form-field')
+          .hide();
         break;
 
       case '4':
         index
-            .closest('.form-field-group')
-            .find(cash_and_voucher_modalities)
-            .show()
-            .closest('.form-field')
-            .show();
+          .closest('.form-field-group')
+          .find(cash_and_voucher_modalities)
+          .show()
+          .closest('.form-field')
+          .show();
         index
-            .closest('.form-field-group')
-            .find(case4)
-            .val('')
-            .trigger('change')
-            .hide()
-            .closest('.form-field')
-            .hide();
+          .closest('.form-field-group')
+          .find(case4)
+          .val('')
+          .trigger('change')
+          .hide()
+          .closest('.form-field')
+          .hide();
         break;
       default:
         index
-            .closest('.form-field-group')
-            .find(aid_type)
-            .show()
-            .closest('.form-field')
-            .show();
+          .closest('.form-field-group')
+          .find(aid_type)
+          .show()
+          .closest('.form-field')
+          .show();
         index
-            .closest('.form-field-group')
-            .find(case1)
-            .val('')
-            .trigger('change')
-            .hide()
-            .closest('.form-field')
-            .hide();
+          .closest('.form-field-group')
+          .find(case1)
+          .val('')
+          .trigger('change')
+          .hide()
+          .closest('.form-field')
+          .hide();
     }
   }
 
