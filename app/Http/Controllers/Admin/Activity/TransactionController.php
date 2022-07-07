@@ -67,9 +67,9 @@ class TransactionController extends Controller
             $activity = $this->activityService->getActivity($activityId);
             $this->baseFormCreator->url = route('admin.activities.transactions.store', $activityId);
             $form = $this->baseFormCreator->editForm([], $element['transactions'], 'POST');
-//            dd($form->sector->getChildren()[0]->getChild('narrative'));
+            $data = ['core'=> $element['transactions']['criteria'] ?? false, 'status'=> false, 'title'=> $element['transactions']['label'], 'name'=>'transactions'];
 
-            return view('activity.transaction.transaction', compact('form', 'activity'));
+            return view('activity.transaction.transaction', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
@@ -143,8 +143,9 @@ class TransactionController extends Controller
             $activityTransaction = $this->transactionService->getTransaction($transactionId, $activityId);
             $this->baseFormCreator->url = route('admin.activities.transactions.update', [$activityId, $transactionId]);
             $form = $this->baseFormCreator->editForm($activityTransaction->transaction, $element['transactions'], 'PUT');
+            $data = ['core'=> $element['transactions']['criteria'] ?? false, 'status'=> false, 'title'=> $element['transactions']['label'], 'name'=>'transactions'];
 
-            return view('activity.transaction.transaction', compact('form', 'activity'));
+            return view('activity.transaction.transaction', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 

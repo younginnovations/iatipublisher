@@ -20,6 +20,7 @@
                             <div class="text-sm shrink-0 uppercase text-n-40 font-bold">Result Indicator</div>
                             <div class="line grow h-px border-b border-n-40 ml-4"></div>
                         </div>
+                        @include('admin.activity.partial.form-title')
 
                         {!! form($form) !!}
                         <div class="hidden collection-container title" form_type="title_narrative"

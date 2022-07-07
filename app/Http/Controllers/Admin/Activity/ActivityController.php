@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Activity\ActivityCreateRequest;
 use App\IATI\Models\Activity\Activity;
 use App\IATI\Services\Activity\ActivityService;
+use App\IATI\Services\Activity\ResultService;
 use Exception;
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\DatabaseManager;
@@ -31,14 +32,22 @@ class ActivityController extends Controller
     protected DatabaseManager $db;
 
     /**
+     * @var ResultService
+     */
+    protected ResultService $resultService;
+
+    /**
      * ActivityController Constructor.
      *
      * @param ActivityService $activityService
+     * @param DatabaseManager $db
+     * @param ResultService $resultService
      */
-    public function __construct(ActivityService $activityService, DatabaseManager $db)
+    public function __construct(ActivityService $activityService, DatabaseManager $db, ResultService $resultService)
     {
         $this->activityService = $activityService;
         $this->db = $db;
+        $this->resultService = $resultService;
     }
 
     /**
@@ -85,7 +94,11 @@ class ActivityController extends Controller
             $activity = $this->activityService->store($input);
             $this->db->commit();
 
-            return response()->json(['success' => true, 'message' => 'Activity created successfully.', 'data' => $activity]);
+            return response()->json([
+                'success' => true,
+                'message' => 'Activity created successfully.',
+                'data'    => $activity,
+            ]);
         } catch (Exception $e) {
             logger()->error($e->getMessage());
 
@@ -113,9 +126,30 @@ class ActivityController extends Controller
             $elementGroups = json_decode(file_get_contents(app_path('Data/Activity/ElementGroup.json')), true);
             $types = $this->getActivityDetailDataType();
             $status = $this->getActivityDetailStatus($activity);
+            $results = $this->resultService->getActivityResultsWithIndicatorsAndPeriods($activity->id);
             $progress = 75;
+            $hasIndicator = 0;
+            $hasPeriod = 0;
 
-            return view('admin.activity.show', compact('elements', 'elementGroups', 'progress', 'activity', 'toast', 'types', 'status'));
+            if (count($results)) {
+                foreach ($results as $result) {
+                    if (count($result->indicators)) {
+                        $hasIndicator = 1;
+
+                        foreach ($result->indicators as $indicator) {
+                            if (count($indicator->periods)) {
+                                $hasPeriod = 1;
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+
+            return view(
+                'admin.activity.show',
+                compact('elements', 'elementGroups', 'progress', 'activity', 'toast', 'types', 'status', 'results', 'hasIndicator', 'hasPeriod')
+            );
         } catch (Exception $e) {
             logger()->error($e->getMessage());
 
@@ -139,7 +173,7 @@ class ActivityController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param Request  $request
+     * @param Request $request
      * @param Activity $activity
      *
      * @return void
@@ -171,7 +205,11 @@ class ActivityController extends Controller
         try {
             $activities = $this->activityService->getPaginatedActivities($page);
 
-            return response()->json(['success' => true, 'message' => 'Activities fetched successfully', 'data' => $activities]);
+            return response()->json([
+                'success' => true,
+                'message' => 'Activities fetched successfully',
+                'data'    => $activities,
+            ]);
         } catch (Exception $e) {
             logger()->error($e->getMessage());
 

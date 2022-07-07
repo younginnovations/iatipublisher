@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\IATI\Services\Activity;
 
 use App\IATI\Repositories\Activity\ResultRepository;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -58,5 +59,30 @@ class ResultService
     public function getResult($id, $activityId): Model
     {
         return $this->resultRepository->getResult($id, $activityId);
+    }
+
+    /**
+     * Returns all results with its indicators and their periods for a particular activity.
+     *
+     * @param $activityId
+     *
+     * @return Collection
+     */
+    public function getActivityResultsWithIndicatorsAndPeriods($activityId): Collection
+    {
+        return $this->resultRepository->getActivityResultsWithIndicatorsAndPeriods($activityId);
+    }
+
+    /**
+     * Returns result with its indicators and their periods.
+     *
+     * @param $resultId
+     * @param $activityId
+     *
+     * @return Model
+     */
+    public function getResultWithIndicatorAndPeriod($resultId, $activityId): Model
+    {
+        return $this->resultRepository->getResultWithIndicatorAndPeriod($resultId, $activityId);
     }
 }
