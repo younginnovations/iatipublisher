@@ -24,14 +24,14 @@
                         <div class="hidden collection-container title_narrative" form_type="transaction_receiver_organization_narrative"
                              data-prototype="{{ form_row($form->receiver_organization->getChildren()[0]->getChild('narrative')->prototype()) }}">
                         </div>
-                        <div class="hidden collection-container title_narrative" form_type="sector"
+                        <div class="hidden collection-container transaction_sector" form_type="transaction_sector" has_children="true"
                              data-prototype="{{ form_row($form->sector->prototype()) }}">
                         </div>
                         <div class="hidden collection-container" form_type="transaction_sector_narrative"
-                             data-prototype="{{ str_replace('sector[0]','sector[__PARENT_NAME__]',form_row($form->sector->getChildren()[0]->getChild('narrative')->prototype())) }}">
+                             data-prototype="{{ str_replace('sector[0]','sector[__WRAPPER_NAME__]',form_row($form->sector->getChildren()[0]->getChild('narrative')->prototype())) }}">
                         </div>
                         <div class="hidden parent-collection" form_type="transaction_sector"
-                             data-prototype="{{ str_replace('sector[0]','sector[__PARENT_NAME__]',form_row($form->sector->prototype())) }}">
+                             data-prototype="{{ str_replace('sector[0]','sector[__WRAPPER_NAME__]',form_row($form->sector->prototype())) }}">
                         </div>
                         <div class="hidden collection-container title_narrative" form_type="transaction_recipient_country_narrative"
                              data-prototype="{{ form_row($form->recipient_country->getChildren()[0]->getChild('narrative')->prototype()) }}">
