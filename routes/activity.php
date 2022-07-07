@@ -79,17 +79,17 @@ Route::name('admin.')->group(function () {
     Route::get('activities/{id}/budget', [\App\Http\Controllers\Admin\Activity\BudgetController::class, 'edit'])->name('activities.budget.edit');
     Route::put('activities/{id}/budget', [\App\Http\Controllers\Admin\Activity\BudgetController::class, 'update'])->name('activities.budget.update');
 
-    Route::resource('activities.results', \App\Http\Controllers\Admin\Activity\ResultController::class);
-    Route::resource('activities.results.indicators', \App\Http\Controllers\Admin\Activity\IndicatorController::class);
-    Route::resource('activities.results.indicators.periods', \App\Http\Controllers\Admin\Activity\PeriodController::class);
+    Route::resource('activities.result', \App\Http\Controllers\Admin\Activity\ResultController::class);
+    Route::resource('activities.result.indicator', \App\Http\Controllers\Admin\Activity\IndicatorController::class);
+    Route::resource('activities.result.indicator.period', \App\Http\Controllers\Admin\Activity\PeriodController::class);
     Route::resource('activities.transactions', \App\Http\Controllers\Admin\Activity\TransactionController::class);
 
     // static route for static pages
-    Route::get('/activities/{id}/result', function () {
-        return view('admin.activity.result.result');
-    });
-
-    Route::get('/activities/{id}/result-detail', function () {
-        return view('admin.activity.result.detail');
-    });
+//    Route::get('/activities/{id}/result', function () {
+//        return view('admin.activity.result.result');
+//    });
+//
+//    Route::get('/activities/{id}/result-detail', function () {
+//        return view('admin.activity.result.detail');
+//    });
 });

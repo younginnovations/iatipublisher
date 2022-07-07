@@ -375,6 +375,18 @@ export default defineComponent({
       type: Object,
       required: true,
     },
+    results: {
+      type: Array,
+      required: true,
+    },
+    has_indicator: {
+      type: Number,
+      required: true,
+    },
+    has_period: {
+      type: Number,
+      required: true,
+    },
   },
   setup(props) {
     const toast = reactive({

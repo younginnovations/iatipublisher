@@ -68,7 +68,7 @@ class ResultController extends Controller
         try {
             $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
             $activity = $this->activityService->getActivity($id);
-            $this->resultElementFormCreator->url = route('admin.activities.results.store', $id);
+            $this->resultElementFormCreator->url = route('admin.activities.result.store', $id);
             $form = $this->resultElementFormCreator->editForm([], $element['result']);
             $data = ['core'=> $element['result']['criteria'] ?? false, 'status'=> false, 'title'=> $element['result']['label'], 'name'=>'result'];
 
@@ -122,13 +122,26 @@ class ResultController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param \App\IATI\Models\Activity\Result $result
+     * @param $activityId
+     * @param $resultId
      *
-     * @return \Illuminate\Http\Response
+     * @return
      */
-    public function show(Result $result)
+    public function show($activityId, $resultId)
     {
-        //
+        try {
+            $activity = $this->activityService->getActivity($activityId);
+            $result = $this->resultService->getResultWithIndicatorAndPeriod($resultId, $activityId);
+
+            return view('admin.activity.result.detail', compact('activity', 'result'));
+        } catch (\Exception $e) {
+            logger()->error($e->getMessage());
+
+            return redirect()->route('admin.activities.show', $activityId)->with(
+                'error',
+                'Error has occurred while rending result detail page.'
+            );
+        }
     }
 
     /**
@@ -147,7 +160,7 @@ class ResultController extends Controller
             $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
             $activity = $this->activityService->getActivity($activityId);
             $activityResult = $this->resultService->getResult($resultId, $activityId);
-            $this->resultElementFormCreator->url = route('admin.activities.results.update', [$activityId, $resultId]);
+            $this->resultElementFormCreator->url = route('admin.activities.result.update', [$activityId, $resultId]);
             $form = $this->resultElementFormCreator->editForm($activityResult->result, $element['result'], 'PUT');
             $data = ['core'=> $element['result']['criteria'] ?? false, 'status'=> false, 'title'=> $element['result']['label'], 'name'=>'result'];
 

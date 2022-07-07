@@ -67,10 +67,11 @@ class PeriodController extends Controller
         try {
             $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
             $activity = $this->activityService->getActivity($activityId);
-            $this->resultElementFormCreator->url = route('admin.activities.results.indicators.periods.store', [$activityId, $resultId, $indicatorId]);
+            $this->resultElementFormCreator->url = route('admin.activities.result.indicator.period.store', [$activityId, $resultId, $indicatorId]);
             $form = $this->resultElementFormCreator->editForm([], $element['period']);
+            $data = ['core'=> $element['period']['criteria'] ?? false, 'status'=> false, 'title'=> $element['period']['label'], 'name'=>'period'];
 
-            return view('activity.period.period', compact('form', 'activity'));
+            return view('activity.period.period', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
@@ -147,10 +148,11 @@ class PeriodController extends Controller
             $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
             $activity = $this->activityService->getActivity($activityId);
             $indicatorPeriod = $this->periodService->getIndicatorPeriod($indicatorId, $periodId);
-            $this->resultElementFormCreator->url = route('admin.activities.results.indicators.periods.update', [$activityId, $resultId, $indicatorId, $periodId]);
+            $this->resultElementFormCreator->url = route('admin.activities.result.indicator.period.update', [$activityId, $resultId, $indicatorId, $periodId]);
             $form = $this->resultElementFormCreator->editForm($indicatorPeriod->period, $element['period'], 'PUT');
+            $data = ['core'=> $element['period']['criteria'] ?? false, 'status'=> false, 'title'=> $element['period']['label'], 'name'=>'period'];
 
-            return view('activity.period.period', compact('form', 'activity'));
+            return view('activity.period.period', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
