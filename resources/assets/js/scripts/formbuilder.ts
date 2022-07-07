@@ -58,13 +58,13 @@ class FormBuilder {
   // adds parent collection
   public addParentForm(ev: Event): void {
     ev.preventDefault();
+    console.log('parent');
     let target = ev.target as EventTarget;
     let container = $(target).attr('form_type') ? $(`.parent-collection[form_type ='${$(target).attr('form_type')}']`) : $('.parent-collection');
-    console.log($(target).attr('parent_count'), $(target).prev().find('.multi-form').length );
 
     let count = $(target).attr('parent_count')
       ? parseInt($(target).attr('parent_count') as string) + 1
-      : $(target).prev().find('.multi-form').length;
+      : ($(target).prev().find('.multi-form').length ? $(target).prev().find('.multi-form').length : $(target).prev().find('.wrapped-child-body').length);
     let proto = container.data('prototype').replace(/__PARENT_NAME__/g, count);
     proto = proto.replace(/__NAME__/g, 0);
 
@@ -1105,6 +1105,7 @@ $(function () {
   $('.select2').select2({
     placeholder: 'Select an option',
     allowClear: true,
+
   });
 
   $('body').on('change', 'input[id*="document"]', function () {
@@ -1124,4 +1125,12 @@ $(function () {
       formBuilder.textAreaHeight(event);
     });
   }
+
+  $('body').on('select2:open','.select2', (e)=> {
+    let target = e.target;
+    console.log($('.select2-search__field'));
+    $('.select2-search__field').trigger("focus");
+  })
 });
+
+
