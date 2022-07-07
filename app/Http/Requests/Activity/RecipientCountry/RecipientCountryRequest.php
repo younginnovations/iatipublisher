@@ -44,7 +44,7 @@ class RecipientCountryRequest extends ActivityBaseRequest
 
         foreach ($formFields as $recipientCountryIndex => $recipientCountry) {
             $recipientCountryForm = 'recipient_country.' . $recipientCountryIndex;
-            $rules[$recipientCountryForm . '.percentage'] = 'nullable|numeric|max:100|not_regex:/^0{2,}/';
+            $rules[$recipientCountryForm . '.percentage'] = 'nullable|numeric|max:100';
 
             $rules = array_merge(
                 $rules,
@@ -100,7 +100,6 @@ class RecipientCountryRequest extends ActivityBaseRequest
             $recipientCountryForm = 'recipient_country.' . $recipientCountryIndex;
             $messages[$recipientCountryForm . '.percentage.numeric'] = 'The @percentage must be a number.';
             $messages[$recipientCountryForm . '.percentage.max'] = 'The @percentage cannot be greater than 100';
-            $messages[$recipientCountryForm . '.percentage.not_regex'] = 'The @percentage field format is invalid.';
 
             $messages = array_merge(
                 $messages,

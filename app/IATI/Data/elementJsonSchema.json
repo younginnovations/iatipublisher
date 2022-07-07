@@ -1270,7 +1270,7 @@
             "label": "narrative",
             "type": "textarea",
             "required": false,
-            "add_more": false,
+            "add_more": true,
             "criteria": "",
             "attr": {
               "row": 4
@@ -1376,7 +1376,7 @@
         "criteria": "",
         "required": false,
         "add_more": false,
-        "attributes": false,
+        "attributes": {},
         "sub_elements": {
           "narrative": {
             "name": "narrative",
@@ -1412,7 +1412,7 @@
         "criteria": "",
         "required": false,
         "add_more": false,
-        "attributes": false,
+        "attributes": {},
         "sub_elements": {
           "narrative": {
             "name": "narrative",
@@ -1448,7 +1448,7 @@
         "criteria": "",
         "required": false,
         "add_more": false,
-        "attributes": false,
+        "attributes": {},
         "sub_elements": {
           "narrative": {
             "name": "narrative",
@@ -1484,7 +1484,7 @@
         "criteria": "",
         "required": false,
         "add_more": false,
-        "attributes": false,
+        "attributes": {},
         "sub_elements": {
           "narrative": {
             "name": "narrative",
@@ -1574,7 +1574,7 @@
         "criteria": "",
         "required": false,
         "add_more": true,
-        "attributes": false,
+        "attributes": {},
         "sub_elements": {
           "narrative": {
             "name": "narrative",
@@ -1608,18 +1608,16 @@
   },
   "location": {
     "name": "location",
-    "label": "Document Link",
+    "label": "Location",
     "criteria": "",
     "add_more": true,
     "attributes": {
       "ref": {
         "name": "ref",
         "label": "@ref",
-        "criteria": "",
+        "type": "text",
         "required": true,
-        "multiselect": false,
-        "type": "select",
-        "choices": "Activity/ContactType.json",
+        "criteria": "",
         "hover_text": "",
         "help_text": ""
       }
@@ -1635,10 +1633,10 @@
           "code": {
             "name": "code",
             "label": "@code",
-            "criteria": "",
-            "required": true,
-            "multiselect": false,
             "type": "select",
+            "required": true,
+            "criteria": "",
+            "multiselect": false,
             "choices": "Activity/GeographicLocationReach.json",
             "hover_text": "",
             "help_text": ""
@@ -1655,10 +1653,10 @@
           "vocabulary": {
             "name": "vocabulary",
             "label": "@vocabulary",
-            "criteria": "",
-            "required": false,
-            "multiselect": false,
             "type": "select",
+            "required": false,
+            "criteria": "",
+            "multiselect": false,
             "choices": "Activity/GeographicVocabulary.json",
             "hover_text": "",
             "help_text": ""
@@ -1666,9 +1664,9 @@
           "ref": {
             "name": "code",
             "label": "@code",
-            "criteria": "",
-            "required": false,
             "type": "text",
+            "required": false,
+            "criteria": "",
             "hover_text": "",
             "help_text": ""
           }
@@ -1680,15 +1678,15 @@
         "criteria": "",
         "required": false,
         "add_more": false,
-        "attributes": false,
+        "attributes": {},
         "sub_elements": {
           "narrative": {
             "name": "narrative",
+            "label": "narrative",
             "type": "textarea",
             "required": false,
-            "add_more": true,
             "criteria": "",
-            "label": "narrative",
+            "add_more": true,
             "attr": {
               "row": 4
             },
@@ -1697,11 +1695,11 @@
             "attributes": {
               "lang": {
                 "name": "language",
-                "type": "select",
-                "multiSelect": false,
-                "required": false,
-                "criteria": "",
                 "label": "@xml:lang",
+                "type": "select",
+                "required": false,
+                "multiSelect": false,
+                "criteria": "",
                 "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/description/narrative/'>For more information</a>",
                 "help_text": "",
                 "choices": "Activity/Language.json"
@@ -1713,18 +1711,18 @@
       "description": {
         "name": "description",
         "label": "description",
-        "criteria": "",
         "required": false,
+        "criteria": "",
         "add_more": false,
-        "attributes": false,
+        "attributes": {},
         "sub_elements": {
           "narrative": {
             "name": "narrative",
+            "label": "narrative",
             "type": "textarea",
             "required": false,
-            "add_more": true,
             "criteria": "",
-            "label": "narrative",
+            "add_more": true,
             "attr": {
               "row": 4
             },
@@ -1733,11 +1731,11 @@
             "attributes": {
               "lang": {
                 "name": "language",
-                "type": "select",
-                "multiSelect": false,
-                "required": false,
-                "criteria": "",
                 "label": "@xml:lang",
+                "type": "select",
+                "required": false,
+                "multiSelect": false,
+                "criteria": "",
                 "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/description/narrative/'>For more information</a>",
                 "help_text": "",
                 "choices": "Activity/Language.json"
@@ -1752,15 +1750,15 @@
         "criteria": "",
         "required": false,
         "add_more": false,
-        "attributes": false,
+        "attributes": {},
         "sub_elements": {
           "narrative": {
             "name": "narrative",
+            "label": "narrative",
             "type": "textarea",
             "required": false,
-            "add_more": true,
             "criteria": "",
-            "label": "narrative",
+            "add_more": true,
             "attr": {
               "row": 4
             },
@@ -1769,11 +1767,11 @@
             "attributes": {
               "lang": {
                 "name": "language",
-                "type": "select",
-                "multiSelect": false,
-                "required": false,
-                "criteria": "",
                 "label": "@xml:lang",
+                "type": "select",
+                "required": false,
+                "multiSelect": false,
+                "criteria": "",
                 "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/description/narrative/'>For more information</a>",
                 "help_text": "",
                 "choices": "Activity/Language.json"
@@ -1792,29 +1790,29 @@
           "vocabulary": {
             "name": "vocabulary",
             "label": "@vocabulary",
-            "criteria": "",
-            "required": false,
-            "multiselect": false,
             "type": "select",
             "choices": "Activity/GeographicVocabulary.json",
+            "required": false,
+            "criteria": "",
+            "multiselect": false,
             "hover_text": "",
             "help_text": ""
           },
           "code": {
             "name": "code",
+            "label": "@code",
             "type": "text",
             "required": true,
             "criteria": "",
-            "label": "@code",
             "hover_text": "",
             "help_text": ""
           },
           "level": {
             "name": "level",
+            "label": "@level",
             "type": "text",
             "required": true,
             "criteria": "",
-            "label": "@level",
             "hover_text": "",
             "help_text": ""
           }
@@ -1829,14 +1827,13 @@
         "attributes": {
           "srs_name": {
             "name": "srs_name",
-            "type": "select",
+            "label": "@srsName",
+            "type": "text",
             "multiSelect": false,
             "required": false,
             "criteria": "",
-            "label": "@srsName",
             "hover_text": "",
-            "help_text": "",
-            "choices": "Activity/LocationType.json"
+            "help_text": ""
           }
         },
         "sub_elements": {
@@ -1847,21 +1844,21 @@
             "attributes": {
               "latitude": {
                 "name": "latitude",
-                "type": "text",
-                "multiSelect": false,
-                "required": false,
-                "criteria": "",
                 "label": "latitude",
+                "type": "text",
+                "required": false,
+                "multiSelect": false,
+                "criteria": "",
                 "hover_text": "",
                 "help_text": ""
               },
               "longitude": {
                 "name": "longitude",
-                "type": "text",
-                "multiSelect": false,
-                "required": false,
-                "criteria": "",
                 "label": "longitude",
+                "type": "text",
+                "required": false,
+                "multiSelect": false,
+                "criteria": "",
                 "hover_text": "",
                 "help_text": ""
               }
@@ -1878,14 +1875,14 @@
         "attributes": {
           "code": {
             "name": "code",
-            "type": "select",
-            "multiSelect": false,
-            "required": false,
-            "criteria": "",
             "label": "@code",
+            "type": "select",
+            "required": false,
+            "multiSelect": false,
+            "criteria": "",
             "hover_text": "",
             "help_text": "",
-            "choices": "Activity/LocationType.json"
+            "choices": "Activity/GeographicExactness.json"
           }
         }
       },
@@ -1898,14 +1895,14 @@
         "attributes": {
           "code": {
             "name": "code",
-            "type": "select",
-            "multiSelect": false,
-            "required": false,
-            "criteria": "",
             "label": "@code",
+            "type": "select",
+            "required": false,
+            "multiSelect": false,
+            "criteria": "",
             "hover_text": "",
             "help_text": "",
-            "choices": "Activity/LocationType.json"
+            "choices": "Activity/GeographicLocationClass.json"
           }
         }
       },
@@ -1918,11 +1915,11 @@
         "attributes": {
           "code": {
             "name": "code",
-            "type": "select",
-            "multiSelect": false,
-            "required": false,
-            "criteria": "",
             "label": "@code",
+            "type": "select",
+            "required": false,
+            "multiSelect": false,
+            "criteria": "",
             "hover_text": "",
             "help_text": "",
             "choices": "Activity/LocationType.json"
@@ -1938,11 +1935,11 @@
     "attributes": {
       "type": {
         "name": "planned_disbursement_type",
-        "type": "select",
-        "criteria": "mandatory",
-        "required": true,
-        "multiselect": false,
         "label": "@type",
+        "type": "select",
+        "required": true,
+        "criteria": "mandatory",
+        "multiselect": false,
         "choices": "Activity/BudgetType.json",
         "hover_text": "A code for the type of event or action being classified. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/humanitarian-scope/'>For more information</a>",
         "help_text": ""
@@ -2180,14 +2177,21 @@
         "hover_text": "",
         "help_text": ""
       },
+      "organization": {
+        "name": "organization_id",
+        "type": "text",
+        "criteria": "mandatory",
+        "required": false,
+        "label": "organization_id",
+        "hover_text": "",
+        "help_text": ""
+      },
       "ref": {
         "name": "ref",
-        "type": "select",
+        "type": "text",
         "criteria": "mandatory",
-        "required": true,
-        "multiselect": false,
+        "required": false,
         "label": "@ref",
-        "choices": "Activity/HumanitarianScopeType.json",
         "hover_text": "",
         "help_text": ""
       },
@@ -2195,7 +2199,7 @@
         "name": "type",
         "type": "select",
         "criteria": "mandatory",
-        "required": true,
+        "required": false,
         "multiselect": false,
         "label": "@type",
         "choices": "Organization/OrganizationType.json",
@@ -2206,7 +2210,7 @@
         "name": "identifier",
         "type": "text",
         "criteria": "mandatory",
-        "required": true,
+        "required": false,
         "multiselect": false,
         "label": "@activity-id",
         "hover_text": "",
@@ -2216,7 +2220,7 @@
         "name": "crs_channel_code",
         "type": "select",
         "criteria": "mandatory",
-        "required": true,
+        "required": false,
         "multiselect": false,
         "label": "@crs-channel-code",
         "choices": "Activity/CRSChannelCode.json",

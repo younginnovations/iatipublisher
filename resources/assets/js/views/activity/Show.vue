@@ -294,9 +294,9 @@
             <template v-for="(element, name, i) in post.elements" :key="i">
               <ActivityElement
                 v-if="
-                  typeof element.content === 'object'
+                  (typeof element.content === 'object'
                     ? Object.keys(element.content).length > 0
-                    : element.content
+                    : element.content) || typeof element.content === 'number'
                 "
                 :id="key"
                 :data="element"
@@ -304,13 +304,13 @@
                 :title="name.toString()"
                 :activityId="activity.id"
                 :width="
-                  name === 'identifier' ||
-                  name === 'activity_status' ||
-                  name === 'activity_scope' ||
-                  name === 'collaboration_type' ||
-                  name === 'default_flow_type' ||
-                  name === 'default_tied_status' ||
-                  name === 'default_finance_type'
+                  name.toString() === 'identifier' ||
+                  name.toString() === 'activity_status' ||
+                  name.toString() === 'activity_scope' ||
+                  name.toString() === 'collaboration_type' ||
+                  name.toString() === 'default_flow_type' ||
+                  name.toString() === 'default_tied_status' ||
+                  name.toString() === 'default_finance_type'
                     ? 'basis-6/12'
                     : 'full'
                 "

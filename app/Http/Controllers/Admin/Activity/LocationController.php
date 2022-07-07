@@ -55,8 +55,9 @@ class LocationController extends Controller
             $model['location'] = $this->locationService->getLocationData($id) ?: [];
             $this->parentCollectionFormCreator->url = route('admin.activities.location.update', [$id]);
             $form = $this->parentCollectionFormCreator->editForm($model, $element['location']);
+            $data = ['core'=> $element['location']['criteria'], 'status'=> $activity->location_element_completed ?? false, 'title'=> $element['location']['label'], 'name'=>'location'];
 
-            return view('activity.location.location', compact('form', 'activity'));
+            return view('activity.location.location', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 

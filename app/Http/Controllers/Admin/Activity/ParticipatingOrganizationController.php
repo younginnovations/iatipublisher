@@ -58,6 +58,7 @@ class ParticipatingOrganizationController extends Controller
 
             return view('activity.participatingOrganization.participatingOrganization', compact('form', 'activity'));
         } catch (\Exception $e) {
+            dd($e);
             logger()->error($e->getMessage());
 
             return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while rendering participating organization form.');
