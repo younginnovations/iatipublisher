@@ -304,13 +304,13 @@
                 :title="name.toString()"
                 :activityId="activity.id"
                 :width="
-                  name.toString() === 'identifier' ||
-                  name.toString() === 'activity_status' ||
-                  name.toString() === 'activity_scope' ||
-                  name.toString() === 'collaboration_type' ||
-                  name.toString() === 'default_flow_type' ||
-                  name.toString() === 'default_tied_status' ||
-                  name.toString() === 'default_finance_type'
+                  name === 'identifier' ||
+                  name === 'activity_status' ||
+                  name === 'activity_scope' ||
+                  name === 'collaboration_type' ||
+                  name === 'default_flow_type' ||
+                  name === 'default_tied_status' ||
+                  name === 'default_finance_type'
                     ? 'basis-6/12'
                     : 'full'
                 "

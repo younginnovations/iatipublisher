@@ -2140,23 +2140,6 @@
             }
           }
         }
-      },
-      "capital_spend": {
-        "name": "capital_spend",
-        "label": "capital-spend",
-        "add_more": false,
-        "attributes": {
-          "percentage": {
-            "name": "percentage",
-            "label": "@percentage",
-            "type": "text",
-            "required": true,
-            "criteria": "mandatory",
-            "hover_text": "",
-            "help_text": ""
-          }
-        },
-        "sub_elements": {}
       }
     }
   },

@@ -112,18 +112,18 @@ class LocationRequest extends ActivityBaseRequest
         foreach ($formFields as $locationIdIndex => $locationId) {
             $locationIdForm = sprintf('%s.location_id.%s', $formBase, $locationIdIndex);
 
-            if ($locationId['code'] != '') {
-                $messages[sprintf('%s.vocabulary.required_with', $locationIdForm)] = trans(
-                    'validation.required_with',
-                    ['attribute' => trans('elementForm.vocabulary'), 'values' => trans('elementForm.code')]
-                );
-            }
-            if ($locationId['vocabulary'] != '') {
-                $messages[sprintf('%s.code.required_with', $locationIdForm)] = trans(
-                    'validation.required_with',
-                    ['attribute' => trans('elementForm.code'), 'values' => trans('elementForm.vocabulary')]
-                );
-            }
+            // if ($locationId['code'] != '') {
+            //     $messages[sprintf('%s.vocabulary.required_with', $locationIdForm)] = trans(
+            //         'validation.required_with',
+            //         ['attribute' => trans('elementForm.vocabulary'), 'values' => trans('elementForm.code')]
+            //     );
+            // }
+            // if ($locationId['vocabulary'] != '') {
+            //     $messages[sprintf('%s.code.required_with', $locationIdForm)] = trans(
+            //         'validation.required_with',
+            //         ['attribute' => trans('elementForm.code'), 'values' => trans('elementForm.vocabulary')]
+            //     );
+            // }
         }
 
         return $messages;
@@ -243,16 +243,16 @@ class LocationRequest extends ActivityBaseRequest
         foreach ($formFields as $administrativeIndex => $administrative) {
             $administrativeForm = sprintf('%s.administrative.%s', $formBase, $administrativeIndex);
 
-            if ($administrative['code'] != '') {
-                $rules[sprintf('%s.vocabulary', $administrativeForm)] = 'required_with:' . sprintf('%s.code', $administrativeForm);
-            }
-            if ($administrative['vocabulary'] != '') {
-                $rules[sprintf('%s.code', $administrativeForm)] = 'required_with:' . sprintf('%s.vocabulary', $administrativeForm);
-            }
-            if ($administrative['level'] != '') {
-                $rules[sprintf('%s.vocabulary', $administrativeForm)] = 'required_with:' . sprintf('%s.level', $administrativeForm);
-                $rules[sprintf('%s.code', $administrativeForm)] = 'required_with:' . sprintf('%s.level', $administrativeForm);
-            }
+            // if ($administrative['code'] != '') {
+            //     $rules[sprintf('%s.vocabulary', $administrativeForm)] = 'required_with:' . sprintf('%s.code', $administrativeForm);
+            // }
+            // if ($administrative['vocabulary'] != '') {
+            //     $rules[sprintf('%s.code', $administrativeForm)] = 'required_with:' . sprintf('%s.vocabulary', $administrativeForm);
+            // }
+            // if ($administrative['level'] != '') {
+            //     $rules[sprintf('%s.vocabulary', $administrativeForm)] = 'required_with:' . sprintf('%s.level', $administrativeForm);
+            //     $rules[sprintf('%s.code', $administrativeForm)] = 'required_with:' . sprintf('%s.level', $administrativeForm);
+            // }
             $rules[sprintf('%s.level', $administrativeForm)] = 'nullable|min:0|integer';
         }
 
@@ -315,8 +315,8 @@ class LocationRequest extends ActivityBaseRequest
         $positionForm = sprintf('%s.position.0', $pointForm);
         $latitude = sprintf('%s.latitude', $positionForm);
         $longitude = sprintf('%s.longitude', $positionForm);
-        $rules[$latitude] = sprintf('required_with:%s|nullable|numeric', $longitude);
-        $rules[$longitude] = sprintf('required_with:%s|nullable|numeric', $latitude);
+        // $rules[$latitude] = sprintf('required_with:%s|nullable|numeric', $longitude);
+        // $rules[$longitude] = sprintf('required_with:%s|nullable|numeric', $latitude);
 
         return $rules;
     }
