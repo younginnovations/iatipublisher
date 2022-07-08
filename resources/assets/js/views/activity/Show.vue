@@ -387,6 +387,10 @@ export default defineComponent({
       type: Number,
       required: true,
     },
+    transactions: {
+      type: Array,
+      required: true,
+    },
   },
   setup(props) {
     const toast = reactive({

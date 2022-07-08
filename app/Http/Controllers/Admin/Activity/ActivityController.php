@@ -7,6 +7,7 @@ use App\Http\Requests\Activity\ActivityCreateRequest;
 use App\IATI\Models\Activity\Activity;
 use App\IATI\Services\Activity\ActivityService;
 use App\IATI\Services\Activity\ResultService;
+use App\IATI\Services\Activity\TransactionService;
 use Exception;
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\DatabaseManager;
@@ -37,23 +38,30 @@ class ActivityController extends Controller
     protected ResultService $resultService;
 
     /**
+     * @var TransactionService
+     */
+    protected TransactionService $transactionService;
+
+    /**
      * ActivityController Constructor.
      *
      * @param ActivityService $activityService
      * @param DatabaseManager $db
      * @param ResultService $resultService
+     * @param TransactionService $transactionService
      */
-    public function __construct(ActivityService $activityService, DatabaseManager $db, ResultService $resultService)
+    public function __construct(ActivityService $activityService, DatabaseManager $db, ResultService $resultService, TransactionService $transactionService)
     {
         $this->activityService = $activityService;
         $this->db = $db;
         $this->resultService = $resultService;
+        $this->transactionService = $transactionService;
     }
 
     /**
      * Display a listing of the resource.
      *
-     * @return View
+     * @return View|JsonResponse
      */
     public function index(): View|JsonResponse
     {
@@ -129,6 +137,7 @@ class ActivityController extends Controller
             $types = $this->getActivityDetailDataType();
             $status = $this->getActivityDetailStatus($activity);
             $results = $this->resultService->getActivityResultsWithIndicatorsAndPeriods($activity->id);
+            $transactions = $this->transactionService->getActivityTransactions($activity->id);
             $progress = 75;
             $hasIndicator = 0;
             $hasPeriod = 0;
@@ -150,7 +159,7 @@ class ActivityController extends Controller
 
             return view(
                 'admin.activity.show',
-                compact('elements', 'elementGroups', 'progress', 'activity', 'toast', 'types', 'status', 'results', 'hasIndicator', 'hasPeriod')
+                compact('elements', 'elementGroups', 'progress', 'activity', 'toast', 'types', 'status', 'results', 'hasIndicator', 'hasPeriod', 'transactions')
             );
         } catch (Exception $e) {
             logger()->error($e->getMessage());

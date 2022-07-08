@@ -35,7 +35,7 @@ class ResultElementForm extends BaseForm
         if ($sub_elements) {
             foreach ($sub_elements as $name => $sub_element) {
                 $this->add(sprintf('sub_elements.%s.name_heading', $name), 'static', [
-                    'title' => true,
+                    'title'   => true,
                     'content' => '<div class="bg-white">
                     <div class="status flex justify-end rounded-lg mb-1.5">
                         <div class="flex status text-xs leading-relaxed text-salmon-50">
@@ -52,20 +52,22 @@ class ResultElementForm extends BaseForm
                     $this->getData(sprintf('sub_elements.%s.name', $name)),
                     'collection',
                     [
-                        'type'    => 'form',
-                        'property' => 'name',
-                        'prototype' => true,
+                        'type'           => 'form',
+                        'property'       => 'name',
+                        'prototype'      => true,
                         'prototype_name' => '__PARENT_NAME__',
-                        'options' => [
-                            'class' => 'App\IATI\Elements\Forms\BaseForm',
-                            'data'  => $this->getData(sprintf('sub_elements.%s', $name)),
-                            'label' => false,
-                            'wrapper' => [
+                        'options'        => [
+                            'class'           => 'App\IATI\Elements\Forms\BaseForm',
+                            'data'            => $this->getData(sprintf('sub_elements.%s', $name)),
+                            'label'           => false,
+                            'wrapper'         => [
                                 'class' => 'multi-form relative',
                             ],
                             'dynamic_wrapper' => [
                                 'class' => (isset($sub_element['add_more']) && $sub_element['add_more']) ?
-                                    ((!Arr::get($sub_element, 'attributes', null) && strtolower($sub_element['name']) === 'narrative') ? 'border-l border-spring-50 pb-11' : 'subelement rounded-tl-lg border-l border-spring-50 pb-11')
+                                    ((!Arr::get($sub_element, 'attributes', null) && strtolower(
+                                        $sub_element['name']
+                                    ) === 'narrative') ? 'border-l border-spring-50 pb-11' : 'subelement rounded-tl-lg border-l border-spring-50 pb-11')
                                     : ((empty($sub_element['attributes']) && $sub_element['sub_elements'] && isset($sub_element['sub_elements']['narrative'])) ? 'subelement rounded-tl-lg mb-6' : 'subelement rounded-tl-lg border-l border-spring-50 mb-6'),
                             ],
                         ],
@@ -74,11 +76,14 @@ class ResultElementForm extends BaseForm
 
                 if (Arr::get($sub_element, 'add_more', false)) {
                     $this->add('add_to_collection_' . $sub_element['name'], 'button', [
-                        'label' => sprintf('add more %s', str_replace('_', ' ', $this->getData(sprintf('sub_elements.%s.name', $name)))),
-                        'attr' => [
-                            'class' => 'add_to_parent add_more button relative -translate-y-1/2 pl-3.5 text-xs font-bold uppercase leading-normal text-spring-50 text-bluecoral',
+                        'label' => sprintf(
+                            'add more %s',
+                            str_replace('_', ' ', $this->getData(sprintf('sub_elements.%s.name', $name)))
+                        ),
+                        'attr'  => [
+                            'class'     => 'add_to_parent add_more button relative -translate-y-1/2 pl-3.5 text-xs font-bold uppercase leading-normal text-spring-50 text-bluecoral',
                             'form_type' => $sub_element['name'],
-                            'icon' => true,
+                            'icon'      => true,
                         ],
                     ]);
                 }
