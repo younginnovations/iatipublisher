@@ -86,7 +86,7 @@
       <template v-else-if="title === 'identifier'">
         <div class="identifier-content">
           <div v-if="data.content.iati_identifier_text" class="text-sm">
-            {{ data.content.iati_identifier_text }}
+            <pre>{{ data.content.iati_identifier_text }}</pre>
           </div>
         </div>
       </template>
