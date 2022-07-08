@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\IATI\Services\Activity;
 
 use App\IATI\Repositories\Activity\TransactionRepository;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -88,5 +89,17 @@ class TransactionService
     public function getTransactionReferencesExcept($activityId, $transactionId): array
     {
         return $this->transactionRepository->getTransactionReferencesExcept($activityId, $transactionId);
+    }
+
+    /**
+     * Returns all transactions of a particular activity.
+     *
+     * @param $activityId
+     *
+     * @return Collection|null
+     */
+    public function getActivityTransactions($activityId): ?Collection
+    {
+        return $this->transactionRepository->getActivityTransactions($activityId);
     }
 }
