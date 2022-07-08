@@ -41,6 +41,7 @@ class WrapperCollectionForm extends Form
                     'collection',
                     [
                         'type'           => 'form',
+
                         'property'       => 'name',
                         'prototype'      => true,
                         'prototype_name' => '__NAME__',
