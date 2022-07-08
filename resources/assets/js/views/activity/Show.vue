@@ -310,7 +310,8 @@
                   name === 'collaboration_type' ||
                   name === 'default_flow_type' ||
                   name === 'default_tied_status' ||
-                  name === 'default_finance_type'
+                  name === 'default_finance_type' ||
+                  name === 'capital_spend'
                     ? 'basis-6/12'
                     : 'full'
                 "
@@ -501,43 +502,3 @@ export default defineComponent({
   },
 });
 </script>
-
-<style lang="scss">
-.activities {
-  @apply flex gap-7;
-
-  &__sidebar {
-    width: 280px;
-    flex-shrink: 0;
-  }
-
-  &__content {
-    @apply grow;
-  }
-
-  &__card {
-    @apply flex flex-col bg-white text-center text-xs text-n-40;
-    padding: 13px;
-  }
-
-  .progress {
-    @apply items-center;
-    border-radius: 8px 0px 0px 8px;
-    width: 151px;
-    height: 174px;
-  }
-
-  .tab-btn:disabled {
-    @apply pointer-events-none text-n-20;
-
-    svg {
-      @apply text-n-20;
-    }
-  }
-  .hover-text {
-    svg {
-      @apply text-n-30;
-    }
-  }
-}
-</style>
