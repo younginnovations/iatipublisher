@@ -3892,7 +3892,9 @@
           "transaction_type_code": {
             "name": "transaction_type_code",
             "label": "@code",
-            "type": "text",
+            "type": "select",
+            "multiselect": false,
+            "choices": "Activity/TransactionType.json",
             "required": true,
             "criteria": "mandatory",
             "hover_text": "A code from the specified vocabulary. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/transaction/transaction-type/'>For more information</a>",
