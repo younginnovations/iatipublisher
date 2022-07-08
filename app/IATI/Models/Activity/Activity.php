@@ -225,7 +225,7 @@ class Activity extends Model
 
         foreach ($mandatoryAttributes as $mandatoryAttribute) {
             if (!array_key_exists($mandatoryAttribute, $data) || (empty($data[$mandatoryAttribute]))) {
-                dd('isAttributeDataCompleted fx called', ' Attribute is empty', 'attribute-check:', $mandatoryAttributes, $data);
+                dd('isAttributeDataCompleted fx called1', ' Attribute is empty', 'attribute-check:', $mandatoryAttributes, $data);
 
                 return false;
             }
@@ -254,14 +254,14 @@ class Activity extends Model
 
         foreach ($mandatorySubElements as $key => $mandatorySubElement) {
             if (!array_key_exists($key, $data)) {
-                dd('isSubElementDataCompleted fx called', 'Whole Sub element has not filled yet', 'sub-element-check:', $mandatorySubElement, $data);
+                dd('isSubElementDataCompleted fx called1', 'Whole Sub element has not filled yet', 'sub-element-check:', $mandatorySubElement, $data);
 
                 return false;
             }
             $items = $data[$key];
 
             if (empty($items)) {
-                dd('isSubElementDataCompleted fx called', 'Sub element has not filled yet', 'sub-element-check:', $mandatorySubElement, $data, $items);
+                dd('isSubElementDataCompleted fx called2', 'Sub element array is empty', 'sub-element-check:', $mandatorySubElement, $data, $items);
 
                 return false;
             }
@@ -269,7 +269,7 @@ class Activity extends Model
             foreach ($mandatorySubElement as $mandatoryField) {
                 foreach ($items as $item) {
                     if (!array_key_exists($mandatoryField, $item) || (empty($item[$mandatoryField]))) {
-                        dd('isSubElementDataCompleted fx called', ' Sub element is empty', 'sub-element-check:', $mandatoryField, $item);
+                        dd('isSubElementDataCompleted fx called3', 'Sub element is empty', 'sub-element-check:', $mandatoryField, $item);
 
                         return false;
                     }
@@ -290,16 +290,16 @@ class Activity extends Model
      */
     public function singleDimensionAttributeCheck($element, $data): bool
     {
-        if (empty($data)) {
-            return false;
-        }
-
         $elementSchema = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
         $mandatoryAttributes = $this->mandatoryAttributes($elementSchema[$element]['attributes']);
 
         if (!empty($mandatoryAttributes)) {
+            if (empty($data)) {
+                return false;
+            }
+
             if (!$this->isAttributeDataCompleted($mandatoryAttributes, $data)) {
-                //dd('singleDimensionAttributeCheck fx called', 'Level2 single dimension attribute is empty', 'attribute-check:', $mandatoryAttributes, $data);
+                dd('singleDimensionAttributeCheck fx called1', 'Level2 single dimension attribute is empty', 'attribute-check:', $mandatoryAttributes, $data);
 
                 return false;
             }
@@ -308,6 +308,14 @@ class Activity extends Model
         return true;
     }
 
+    /**
+     * Checks if sub element is complete.
+     *
+     * @param $subElements
+     * @param $data
+     *
+     * @return bool
+     */
     public function isSubElementCompleted($subElements, $data): bool
     {
         foreach ($subElements as $key => $subElement) {
@@ -315,8 +323,27 @@ class Activity extends Model
             $mandatoryChildSubElements = array_key_exists('sub_elements', $subElement) ? $this->mandatorySubElements($subElement['sub_elements']) : [];
 
             if (!empty($mandatorySubElementAttributes) || !empty($mandatoryChildSubElements)) {
+                if (empty($data)) {
+                    return false;
+                }
+
                 foreach ($data as $datum) {
+                    if (!array_key_exists($key, $datum)) {
+                        dd(
+                            'isSubElementCompleted fx called1',
+                            'Whole Sub element has not filled yet',
+                            'sub-element-check:',
+                            $mandatorySubElementAttributes,
+                            $mandatoryChildSubElements,
+                            $key,
+                            $datum
+                        );
+
+                        return false;
+                    }
                     if (!$this->isElementCompleted($mandatorySubElementAttributes, $mandatoryChildSubElements, $datum[$key])) {
+                        dd('isSubElementCompleted fx called2', 'sub-element-empty', 'sub-element-check:', $mandatorySubElementAttributes, $mandatoryChildSubElements, $key, $datum);
+
                         return false;
                     }
                 }
@@ -326,6 +353,15 @@ class Activity extends Model
         return true;
     }
 
+    /**
+     * Checks if element attribute and sub elements both are complete.
+     *
+     * @param $mandatoryAttributes
+     * @param $mandatorySubElements
+     * @param $data
+     *
+     * @return bool
+     */
     public function isElementCompleted($mandatoryAttributes, $mandatorySubElements, $data): bool
     {
         if (!empty($mandatoryAttributes) || !empty($mandatorySubElements)) {
@@ -335,13 +371,13 @@ class Activity extends Model
 
             foreach ($data as $datum) {
                 if (!$this->isAttributeDataCompleted($mandatoryAttributes, $datum)) {
-                    dd('isElementCompleted fx is called', 'Attribute is empty', 'attribute-check:', $mandatoryAttributes, $data, $datum);
+                    dd('isElementCompleted fx is called1', 'Attribute is empty', 'attribute-check:', $mandatoryAttributes, $data, $datum);
 
                     return false;
                 }
 
                 if (!$this->isSubElementDataCompleted($mandatorySubElements, $datum)) {
-                    dd('isElementCompleted fx is called', 'Sub element is empty', 'sub-element-check:', $mandatorySubElements, $data, $datum);
+                    dd('isElementCompleted fx is called2', 'Sub element is empty', 'sub-element-check:', $mandatorySubElements, $data, $datum);
 
                     return false;
                 }
@@ -378,10 +414,6 @@ class Activity extends Model
      */
     public function isLevelTwoSingleDimensionElementCompleted($element, $data): bool
     {
-        if (empty($data)) {
-            return false;
-        }
-
         if (!$this->singleDimensionAttributeCheck($element, $data)) {
             return false;
         }
@@ -415,6 +447,9 @@ class Activity extends Model
         $mandatoryAttributes = array_key_exists('attributes', $elementSchema[$element]) ? $this->mandatoryAttributes($elementSchema[$element]['attributes']) : [];
 
         if (!empty($mandatoryAttributes)) {
+            if (empty($data)) {
+                return false;
+            }
             foreach ($data as $datum) {
                 if (!$this->isAttributeDataCompleted($mandatoryAttributes, $datum)) {
                     return false;
@@ -435,10 +470,6 @@ class Activity extends Model
      */
     public function isLevelThreeSingleDimensionElementCompleted($element, $data): bool
     {
-        if (empty($data)) {
-            return false;
-        }
-
         if (!$this->singleDimensionAttributeCheck($element, $data)) {
             return false;
         }
@@ -448,21 +479,30 @@ class Activity extends Model
 
         foreach ($subElements as $key => $subElement) {
             $mandatorySubElementAttributes = array_key_exists('attributes', $subElement) ? $this->mandatoryAttributes($subElement['attributes']) : [];
-            $tempData = $data[$key];
 
             if (!empty($mandatorySubElementAttributes)) {
-                if (empty($tempData)) {
+                if (!array_key_exists($key, $data)) {
+                    dd('isLevelThreeSingleDimensionElementCompleted fx called1', 'sub-element-empty', 'sub-element-check:', $mandatorySubElementAttributes, $key, $data);
+
                     return false;
                 }
+
+                if (empty($data[$key])) {
+                    dd('isLevelThreeSingleDimensionElementCompleted fx called2', 'sub-element-empty', 'sub-element-check:', $mandatorySubElementAttributes, $key, $data);
+
+                    return false;
+                }
+
+                $tempData = $data[$key];
+
                 foreach ($tempData as $datum) {
-                    dd($mandatorySubElementAttributes, $datum);
                     if (!$this->isAttributeDataCompleted($mandatorySubElementAttributes, $datum)) {
                         return false;
                     }
                 }
             }
 
-            return $this->isSubElementCompleted($subElement['sub_elements'], $tempData);
+            return $this->isSubElementCompleted($subElement['sub_elements'], $data[$key]);
         }
 
         return true;
