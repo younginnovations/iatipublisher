@@ -5,6 +5,7 @@ class FormBuilder {
   // adds new collection of sub-element
   public addForm(ev: Event): void {
     ev.preventDefault();
+    console.log('here');
     let target = ev.target as EventTarget;
     let container = $(target).attr('form_type') ? $(`.collection-container[form_type ='${$(target).attr('form_type')}']`) : $('.collection-container');
 
@@ -25,8 +26,10 @@ class FormBuilder {
     let proto = container
       .data('prototype')
       .replace(/__PARENT_NAME__/g, parent_count);
+    console.log(proto);
 
     if ($(target).attr('has_child_collection')) {
+      console.log('here');
       proto = proto.replace(/__WRAPPER_NAME__/g, count);
       proto = proto.replace(/__NAME__/g, 0);
     } else {
