@@ -51,7 +51,7 @@ class MultilevelSubElementForm extends BaseForm
                                 'class' => 'multi-form relative',
                             ],
                             'dynamic_wrapper' => [
-                                'class' => (isset($sub_element['add_more']) && $sub_element['add_more']) ?
+                                'class' => (isset($sub_element['add_more']) && $sub_element['add_more'] || Arr::get($element, 'add_more_attributes', false)) ?
                                 (strtolower($sub_element['name']) === 'narrative' && !isset($sub_element['attributes']) && !count($sub_element['attributes']) > 0 ? 'border-l border-spring-50 pb-11' : 'subelement rounded-tl-lg border-l border-spring-50 pb-11')
                                 : 'subelement rounded-tl-lg border-l border-spring-50 mb-6',
                             ],                        ],
