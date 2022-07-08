@@ -44,7 +44,7 @@ class ParticipatingOrganizationRequest extends ActivityBaseRequest
             $identifier = $participatingOrgForm . '.identifier';
             $narrative = sprintf('%s.narrative.0.narrative', $participatingOrgForm);
             $rules[$identifier] = 'exclude|required_without:' . $narrative;
-            $rules[$participatingOrgForm . '.organization_id'] = 'organization_exists';
+            $rules[$participatingOrgForm . '.organization_id'] = 'nullable|organization_exists';
             $rules[$identifier] = 'exclude|required_without:' . $narrative;
             // $rules[$narrative][]                                 = 'required_without:' . $identifier;
             $rules = array_merge_recursive(

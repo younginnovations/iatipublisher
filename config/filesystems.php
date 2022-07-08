@@ -59,6 +59,7 @@ return [
             'bucket'                  => env('AWS_BUCKET'),
             'url'                     => env('AWS_URL'),
             'endpoint'                => env('AWS_ENDPOINT'),
+            'use_path_style_endpoint' => true,
         ],
     ],
 

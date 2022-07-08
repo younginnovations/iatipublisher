@@ -83,7 +83,6 @@ class DocumentLinkController extends Controller
                     unset($document_link['document']);
 
                     if (json_encode($document) == json_encode($document_link)) {
-                        $model['document_link'][$key]['url'] = env('MINIO_ENDPOINT') . '/document_link/' . $activity['id'] . '/' . $file['filename'];
                         $model['document_link'][$key]['document'] = '';
                     }
                 }
