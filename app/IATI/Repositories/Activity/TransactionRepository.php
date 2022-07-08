@@ -6,6 +6,7 @@ namespace App\IATI\Repositories\Activity;
 
 use App\IATI\Models\Activity\Activity;
 use App\IATI\Models\Activity\Transaction;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -148,5 +149,17 @@ class TransactionRepository
         }
 
         return $references;
+    }
+
+    /**
+     * Returns all transactions of a particular activity.
+     *
+     * @param $activityId
+     *
+     * @return Collection|null
+     */
+    public function getActivityTransactions($activityId): ?Collection
+    {
+        return $this->activityTransaction->where('activity_id', $activityId)->get();
     }
 }
