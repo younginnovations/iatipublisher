@@ -55,11 +55,7 @@
                         </div>
                         {{-- baseline document link --}}
                         <div class="hidden collection-container title" form_type="baseline_document_link"
-                            data-prototype="{{ str_replace('baseline[0]','baseline[__PARENT_NAME__]',form_row($form->baseline->getChildren()[0]->getChild('document_link')->prototype())) }}">
-                        </div>
-
-                        <div class="hidden parent-collection" form_type="document_link"
-                            data-prototype="{{ str_replace('baseline[0][document_link][0]','baseline[__PARENT_NAME__][document_link][__WRAPPER_NAME__]',form_row($form->baseline->getChildren()[0]->getChild('document_link')->prototype())) }}">
+                            data-prototype="{{ str_replace('baseline[0][document_link][__NAME__]','baseline[__PARENT_NAME__][document_link][__WRAPPER_NAME__]',form_row($form->baseline->getChildren()[0]->getChild('document_link')->prototype())) }}">
                         </div>
                         <div class="hidden collection-container baseline_title_narrative"
                             form_type="baseline_title_narrative"
