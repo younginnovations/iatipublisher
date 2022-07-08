@@ -64,7 +64,7 @@ class TransactionElementFormCreator
                     ],
                 ],
                 'submit'    => [
-                    'label'     => 'Save Publishing Setting',
+                    'label'     => 'Save and Exit',
                     'attr'      => [
                         'type'      => 'submit',
                         'class'     => 'primary-btn save-btn',
