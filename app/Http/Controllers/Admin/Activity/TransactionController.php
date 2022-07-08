@@ -5,12 +5,18 @@ namespace App\Http\Controllers\Admin\Activity;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Activity\Transaction\TransactionRequest;
 use App\IATI\Elements\Builder\BaseFormCreator;
+use App\IATI\Elements\Builder\TransactionElementFormCreator;
 use App\IATI\Models\Activity\Transaction;
 use App\IATI\Services\Activity\ActivityService;
 use App\IATI\Services\Activity\TransactionService;
 
 class TransactionController extends Controller
 {
+    /**
+     * @var TransactionElementFormCreator
+     */
+    protected TransactionElementFormCreator $transactionElementFormCreator;
+
     /**
      * @var BaseFormCreator
      */
@@ -29,16 +35,19 @@ class TransactionController extends Controller
     /**
      * TransactionController Constructor.
      *
+     * @param TransactionElementFormCreator $transactionElementFormCreator
      * @param BaseFormCreator $baseFormCreator
      * @param TransactionService $transactionService
      * @param ActivityService $activityService
      */
     public function __construct(
+        TransactionElementFormCreator $transactionElementFormCreator,
         BaseFormCreator $baseFormCreator,
         TransactionService $transactionService,
         ActivityService $activityService
     ) {
         $this->baseFormCreator = $baseFormCreator;
+        $this->transactionElementFormCreator = $transactionElementFormCreator;
         $this->transactionService = $transactionService;
         $this->activityService = $activityService;
     }
@@ -65,12 +74,13 @@ class TransactionController extends Controller
         try {
             $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
             $activity = $this->activityService->getActivity($activityId);
-            $this->baseFormCreator->url = route('admin.activities.transactions.store', $activityId);
-            $form = $this->baseFormCreator->editForm([], $element['transactions'], 'POST');
+            $this->transactionElementFormCreator->url = route('admin.activities.transactions.store', $activityId);
+            $form = $this->transactionElementFormCreator->editForm([], $element['transactions'], 'POST');
             $data = ['core'=> $element['transactions']['criteria'] ?? false, 'status'=> false, 'title'=> $element['transactions']['label'], 'name'=>'transactions'];
 
             return view('activity.transaction.transaction', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {
+            dd($e);
             logger()->error($e->getMessage());
 
             return redirect()->route('admin.activities.show', $activityId)->with(
@@ -141,8 +151,8 @@ class TransactionController extends Controller
             $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
             $activity = $this->activityService->getActivity($activityId);
             $activityTransaction = $this->transactionService->getTransaction($transactionId, $activityId);
-            $this->baseFormCreator->url = route('admin.activities.transactions.update', [$activityId, $transactionId]);
-            $form = $this->baseFormCreator->editForm($activityTransaction->transaction, $element['transactions'], 'PUT');
+            $this->transactionFormCreator->url = route('admin.activities.transactions.update', [$activityId, $transactionId]);
+            $form = $this->transactionFormCreator->editForm($activityTransaction->transaction, $element['transactions'], 'PUT');
             $data = ['core'=> $element['transactions']['criteria'] ?? false, 'status'=> false, 'title'=> $element['transactions']['label'], 'name'=>'transactions'];
 
             return view('activity.transaction.transaction', compact('form', 'activity', 'data'));
