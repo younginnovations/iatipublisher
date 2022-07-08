@@ -306,6 +306,8 @@ class ActivityController extends Controller
             'geographicLocationReach'     => getCodeList('GeographicLocationReach', 'Activity'),
             'organisationRole'            => getCodeList('OrganisationRole', 'Organization'),
             'documentCategory'            => getCodeList('DocumentCategory', 'Activity'),
+            'geographicExactness'         => getCodeList('GeographicExactness', 'Activity'),
+            'geographicLocationClass'     => getCodeList('GeographicLocationClass', 'Activity'),
         ];
     }
 

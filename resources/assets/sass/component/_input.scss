@@ -110,3 +110,12 @@
     @apply text-n-40;
   }
 }
+.search {
+  position: relative;
+
+  &__input {
+    @apply mr-3.5 border border-n-30 bg-transparent outline-none;
+    padding: 10px 42px 10px 34px;
+    border-radius: 20px;
+  }
+}
