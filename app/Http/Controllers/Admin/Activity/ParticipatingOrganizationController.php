@@ -55,10 +55,10 @@ class ParticipatingOrganizationController extends Controller
             $model['participating_org'] = $this->participatingOrganizationService->getParticipatingOrganizationData($id) ?: [];
             $this->parentCollectionFormCreator->url = route('admin.activities.participating-org.update', [$id]);
             $form = $this->parentCollectionFormCreator->editForm($model, $element['participating_org']);
+            $data = ['core'=> $element['participating_org']['criteria'], 'status'=> $activity->participating_org_element_completed ?? false, 'title'=> $element['participating_org']['label'], 'name'=>'participating_org'];
 
-            return view('activity.participatingOrganization.participatingOrganization', compact('form', 'activity'));
+            return view('activity.participatingOrganization.participatingOrganization', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {
-            dd($e);
             logger()->error($e->getMessage());
 
             return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while rendering participating organization form.');

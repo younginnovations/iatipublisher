@@ -2434,7 +2434,7 @@
   },
   "result": {
     "name": "result",
-    "label": "Activity Result",
+    "label": "result",
     "add_more": false,
     "attributes": {
       "result_type": {
