@@ -20,18 +20,26 @@ class FormBuilder {
       parseInt($(target).attr('wrapped_parent_count') as string) :
       $(target).parent('.subelement').find('.wrapped-child-body').length;
 
+    console.log(parent_count, wrapper_parent_count, count);
+
     let proto = container
       .data('prototype')
       .replace(/__PARENT_NAME__/g, parent_count);
-    proto = proto.replace(/__NAME__/g, count);
-    proto = proto.replace(/__WRAPPER_NAME__/g, wrapper_parent_count);
+
+    if ($(target).attr('has_child_collection')) {
+      proto = proto.replace(/__WRAPPER_NAME__/g, count);
+      proto = proto.replace(/__NAME__/g, 0);
+    } else {
+      proto = proto.replace(/__NAME__/g, count);
+      proto = proto.replace(/__WRAPPER_NAME__/g, wrapper_parent_count);
+    }
 
     $(target).prev().append($(proto));
     if ($(target).attr('has_child_collection')) {
-      let child =  $(target).prev('.subelement').children('.wrapped-child-body').last();
-      console.log(child);
-      $(target).prev('.subelement').children('.wrapped-child-body').last().find('.add_to_collection').attr('wrapped_parent_count', count );
-      $(target).prev('.subelement').children('.wrapped-child-body').last().find('.add_to_collection').attr('parent_count', parent_count );
+      console.log('here has child collection');
+      let child = $(target).prev('.subelement').children('.wrapped-child-body').last();
+      $(target).prev('.subelement').children('.wrapped-child-body').last().find('.add_to_collection').attr('wrapped_parent_count', count);
+      $(target).prev('.subelement').children('.wrapped-child-body').last().find('.add_to_collection').attr('parent_count', parent_count);
     }
 
 
