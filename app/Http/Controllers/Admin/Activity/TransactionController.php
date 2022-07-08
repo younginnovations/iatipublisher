@@ -80,7 +80,6 @@ class TransactionController extends Controller
 
             return view('activity.transaction.transaction', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {
-            dd($e);
             logger()->error($e->getMessage());
 
             return redirect()->route('admin.activities.show', $activityId)->with(
@@ -151,8 +150,8 @@ class TransactionController extends Controller
             $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
             $activity = $this->activityService->getActivity($activityId);
             $activityTransaction = $this->transactionService->getTransaction($transactionId, $activityId);
-            $this->transactionFormCreator->url = route('admin.activities.transactions.update', [$activityId, $transactionId]);
-            $form = $this->transactionFormCreator->editForm($activityTransaction->transaction, $element['transactions'], 'PUT');
+            $this->transactionElementFormCreator->url = route('admin.activities.transactions.update', [$activityId, $transactionId]);
+            $form = $this->transactionElementFormCreator->editForm($activityTransaction->transaction, $element['transactions'], 'PUT');
             $data = ['core'=> $element['transactions']['criteria'] ?? false, 'status'=> false, 'title'=> $element['transactions']['label'], 'name'=>'transactions'];
 
             return view('activity.transaction.transaction', compact('form', 'activity', 'data'));
