@@ -11,6 +11,7 @@
         :toast="{{ json_encode($toast) }}"
         :results="{{ json_encode($results) }}"
         :has_indicator="{{ $hasIndicator }}"
-        :has_period="{{ $hasPeriod }}">
+        :has_period="{{ $hasPeriod }}"
+        :transactions="{{ json_encode($transactions) }}">
     </activities-detail>
 @endsection
