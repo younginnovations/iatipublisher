@@ -67,7 +67,7 @@
     }
   },
   "iati_identifier": {
-    "label": "Identifier",
+    "label": "iati-identifier",
     "criteria": "mandatory",
     "attributes": {
       "iati-activity-identifier": {
@@ -954,7 +954,7 @@
             "required": false,
             "criteria": "",
             "add_more": false,
-            "attributes" : {},
+            "attributes": {},
             "sub_elements": {
               "narrative": {
                 "name": "narrative",
@@ -1248,7 +1248,7 @@
         "hover_text": "",
         "help_text": ""
       },
-      "document" : {
+      "document": {
         "name": "document",
         "label": "document",
         "type": "file",
@@ -2228,7 +2228,7 @@
     "name": "participating_org",
     "label": "Participating Organization",
     "criteria": "",
-    "add_more" : true,
+    "add_more": true,
     "attributes": {
       "role": {
         "name": "organization_role",

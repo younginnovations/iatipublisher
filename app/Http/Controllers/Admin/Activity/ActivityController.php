@@ -108,6 +108,7 @@ class ActivityController extends Controller
                 'data'    => $activity,
             ]);
         } catch (Exception $e) {
+            dd($e);
             logger()->error($e->getMessage());
 
             return response()->json(['success' => false, 'error' => 'Error has occurred while saving activity.']);
@@ -308,6 +309,7 @@ class ActivityController extends Controller
             'documentCategory'            => getCodeList('DocumentCategory', 'Activity'),
             'geographicExactness'         => getCodeList('GeographicExactness', 'Activity'),
             'geographicLocationClass'     => getCodeList('GeographicLocationClass', 'Activity'),
+            'resultType'                  => getCodeList('ResultType', 'Activity'),
         ];
     }
 
@@ -321,7 +323,7 @@ class ActivityController extends Controller
     public function getActivityDetailStatus($activity): array
     {
         return [
-            'identifier'           => $activity->identifier_element_completed,
+            'iati_identifier'           => $activity->identifier_element_completed,
             'title'                => $activity->title_element_completed,
             'description'          => $activity->description_element_completed,
             'activity_status'      => $activity->activity_status_element_completed,

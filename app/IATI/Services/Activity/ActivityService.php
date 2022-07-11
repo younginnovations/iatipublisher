@@ -73,7 +73,7 @@ class ActivityService
         ];
 
         return $this->activityRepository->store([
-            'identifier'    => $activity_identifier,
+            'iati_identifier'    => $activity_identifier,
             'title'         => $activity_title,
             'org_id'        => Auth::user()->organization_id,
         ]);
