@@ -3,13 +3,37 @@
 @section('content')
     <section class="section min-h-[calc(100vh_-_60px)]">
 
-        <div class="px-10 pt-4 pb-[71px]">
+        <div class="px-10 pt-4 pb-[71px] max-w-[1000px] mx-auto">
             @include('admin.layouts.activityTitle')
             <div class="activities">
-                <aside class="activities__sidebar">
-                    <elements-note></elements-note>
-                </aside>
                 <div class="activities__content">
+                    <div class="inline-flex flex-wrap gap-2 mb-8">
+                        <a href='#title' class="tab-btn-anchor" v-smooth-scroll>
+                            <button class="tab-btn">
+                                <span>title</span>
+                            </button>
+                        </a>
+                        <a href="#description" class="tab-btn-anchor" v-smooth-scroll>
+                            <button class="tab-btn">
+                                <span>description</span>
+                            </button>
+                        </a>
+                        <a href="#document_link" class="tab-btn-anchor" v-smooth-scroll>
+                            <button class="tab-btn">
+                                <span>document-link</span>
+                            </button>
+                        </a>
+                        <a href="#reference" class="tab-btn-anchor" v-smooth-scroll>
+                            <button class="tab-btn">
+                                <span>reference</span>
+                            </button>
+                        </a>
+                        <a href="#baseline" class="tab-btn-anchor" v-smooth-scroll>
+                            <button class="tab-btn">
+                                <span>baseline</span>
+                            </button>
+                        </a>
+                    </div>
                     <div class="py-[6.06%] px-[12%] bg-white">
                         @include('admin.activity.partial.form-title')
 
