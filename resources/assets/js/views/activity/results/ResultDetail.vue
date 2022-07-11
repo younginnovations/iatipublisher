@@ -58,18 +58,19 @@
               </a>
             </li>
           </ul>
-          <button
+          <a
+            :href="`/activities/${result.activity_id}/result/${result.id}/indicator/create`"
             class="flex w-full rounded border border-dashed border-n-40 bg-white p-2 text-sm font-bold leading-relaxed"
           >
             <svg-vue icon="add" class="mr-2 text-n-40"></svg-vue>
             add indicator
-          </button>
+          </a>
         </div>
       </aside>
       <div class="activities__content">
         <div class="mb-11 flex justify-end">
           <a
-            href="#"
+            :href="`/activities/${result.activity_id}/result/${result.id}/edit`"
             class="edit-button mr-2.5 flex items-center text-tiny font-bold uppercase"
           >
             <svg-vue class="mr-0.5 text-base" icon="edit"></svg-vue>
@@ -115,7 +116,7 @@
                 </div>
                 <div class="icons flex items-center">
                   <a
-                    href="#"
+                    :href="`/activities/${result.activity_id}/result/${result.id}/indicator/create`"
                     class="mr-2.5 flex items-center text-tiny font-bold uppercase"
                   >
                     <svg-vue class="mr-0.5 text-base" icon="add"></svg-vue>
@@ -137,7 +138,7 @@
               <div class="indicator">
                 <!-- loop item -->
 
-                <template v-for="(post, i) in result.indicators" :key="i">
+                <template v-for="(post, ri) in result.indicators" :key="ri">
                   <div class="item">
                     <div class="elements-detail wider">
                       <div class="category flex">
@@ -146,7 +147,7 @@
                         </div>
                         <div class="flex shrink-0 grow justify-between">
                           <a
-                            href="#"
+                            :href="`/activities/${result.activity_id}/result/${result.id}/indicator/${post.id}/edit`"
                             class="mr-2.5 flex items-center text-tiny font-bold uppercase text-bluecoral"
                           >
                             <svg-vue
@@ -156,7 +157,7 @@
                             <span>Edit Indicator</span>
                           </a>
                           <a
-                            href="#"
+                            :href="`/activities/${result.activity_id}/result/${result.id}/indicator/${post.id}/period/create`"
                             class="mr-2.5 flex items-center text-tiny font-bold uppercase text-bluecoral"
                           >
                             <svg-vue
@@ -169,470 +170,524 @@
                       </div>
                       <div class="ml-4">
                         <!-- for indicators -->
-                        <table class="mb-3">
-                          <tbody>
-                            <tr>
-                              <td>Indicator Title</td>
-                              <td>
-                                <template
-                                  v-for="(title, t) in post.indicator.title[0]
-                                    .narrative"
-                                  :key="t"
-                                >
+                        <div class="indicators">
+                          <table class="mb-3">
+                            <tbody>
+                              <tr>
+                                <td>Indicator Title</td>
+                                <td>
+                                  <template
+                                    v-for="(title, t) in post.indicator.title[0]
+                                      .narrative"
+                                    :key="t"
+                                  >
+                                    <div
+                                      class="title-content"
+                                      :class="{
+                                        'mb-1.5':
+                                          t !==
+                                          post.indicator.title[0].narrative
+                                            .length -
+                                            1,
+                                      }"
+                                    >
+                                      <div class="language mb-1">
+                                        (Language: {{ title.language }})
+                                      </div>
+                                      <div class="description text-xs">
+                                        {{ title.narrative }}
+                                      </div>
+                                    </div>
+                                  </template>
+                                </td>
+                              </tr>
+
+                              <tr v-if="post.indicator.measure">
+                                <td>Measure</td>
+                                <td>{{ post.indicator.measure }}</td>
+                              </tr>
+
+                              <tr v-if="post.indicator.aggregation_status">
+                                <td>Aggregation Status</td>
+                                <td>{{ post.indicator.aggregation_status }}</td>
+                              </tr>
+
+                              <tr>
+                                <td>Description</td>
+                                <td>
+                                  <template
+                                    v-for="(description, d) in post.indicator
+                                      .description[0].narrative"
+                                    :key="d"
+                                  >
+                                    <div
+                                      class="title-content"
+                                      :class="{
+                                        'mb-1.5':
+                                          d !==
+                                          post.indicator.description[0]
+                                            .narrative.length -
+                                            1,
+                                      }"
+                                    >
+                                      <div class="language mb-1">
+                                        (Language: {{ description.language }})
+                                      </div>
+                                      <div class="description text-xs">
+                                        {{ description.narrative }}
+                                      </div>
+                                    </div>
+                                  </template>
+                                </td>
+                              </tr>
+
+                              <tr>
+                                <td>Reference</td>
+                                <td>
                                   <div
-                                    class="title-content"
+                                    v-for="(ref, r) in post.indicator.reference"
+                                    :key="r"
                                     :class="{
                                       'mb-1.5':
-                                        t !==
-                                        post.indicator.title[0].narrative
-                                          .length -
-                                          1,
+                                        r !==
+                                        post.indicator.reference.length - 1,
                                     }"
                                   >
-                                    <div class="language mb-1">
-                                      (Language: {{ title.language }})
-                                    </div>
-                                    <div class="description text-xs">
-                                      {{ title.narrative }}
-                                    </div>
+                                    <span v-if="ref.vocabulary">
+                                      Vocabulary: {{ ref.vocabulary }},
+                                    </span>
+                                    <span v-if="ref.code">
+                                      Code: {{ ref.code }},
+                                    </span>
+                                    <span v-if="ref.indicator_uri">
+                                      Indicator URI: {{ ref.indicator_uri }}
+                                    </span>
                                   </div>
-                                </template>
-                              </td>
-                            </tr>
+                                </td>
+                              </tr>
 
-                            <tr v-if="post.indicator.measure">
-                              <td>Measure</td>
-                              <td>{{ post.indicator.measure }}</td>
-                            </tr>
-
-                            <tr v-if="post.indicator.aggregation_status">
-                              <td>Aggregation Status</td>
-                              <td>{{ post.indicator.aggregation_status }}</td>
-                            </tr>
-
-                            <tr>
-                              <td>Description</td>
-                              <td>
-                                <template
-                                  v-for="(description, d) in post.indicator
-                                    .description[0].narrative"
-                                  :key="d"
-                                >
+                              <tr>
+                                <td>Baseline</td>
+                                <td>
                                   <div
-                                    class="title-content"
+                                    v-for="(base, b) in post.indicator.baseline"
+                                    :key="b"
                                     :class="{
                                       'mb-1.5':
-                                        d !==
-                                        post.indicator.description[0].narrative
-                                          .length -
-                                          1,
+                                        b !==
+                                        post.indicator.baseline.length - 1,
                                     }"
                                   >
-                                    <div class="language mb-1">
-                                      (Language: {{ description.language }})
-                                    </div>
-                                    <div class="description text-xs">
-                                      {{ description.narrative }}
-                                    </div>
-                                  </div>
-                                </template>
-                              </td>
-                            </tr>
-
-                            <tr>
-                              <td>Reference</td>
-                              <td>
-                                <div
-                                  v-for="(ref, r) in post.indicator.reference"
-                                  :key="r"
-                                  :class="{
-                                    'mb-1.5':
-                                      r !== post.indicator.reference.length - 1,
-                                  }"
-                                >
-                                  <span v-if="ref.vocabulary">
-                                    Vocabulary: {{ ref.vocabulary }},
-                                  </span>
-                                  <span v-if="ref.code">
-                                    Code: {{ ref.code }},
-                                  </span>
-                                  <span v-if="ref.indicator_uri">
-                                    Indicator URI: {{ ref.indicator_uri }}
-                                  </span>
-                                </div>
-                              </td>
-                            </tr>
-
-                            <tr>
-                              <td>Baseline</td>
-                              <td>
-                                <div
-                                  v-for="(base, b) in post.indicator.baseline"
-                                  :key="b"
-                                  :class="{
-                                    'mb-1.5':
-                                      b !== post.indicator.baseline.length - 1,
-                                  }"
-                                >
-                                  <div>
-                                    <span>
-                                      Year:
-                                      <template v-if="base.year">
-                                        {{ base.year }}
-                                      </template>
-                                      <template v-else>Not Available</template>
-                                      ,
-                                    </span>
-                                    <span>
-                                      Date:
-                                      <template v-if="base.date">
-                                        {{ base.date }}
-                                      </template>
-                                      <template v-else>Not Available</template>
-                                      ,
-                                    </span>
-                                    <span>
-                                      Date:
-                                      <template v-if="base.value">
-                                        {{ base.value }}
-                                      </template>
-                                      <template v-else>Not Available</template>
-                                    </span>
-                                  </div>
-                                  <div class="flex">
-                                    <div>Location:</div>
                                     <div>
-                                      <div
-                                        v-for="(loc, l) in base.location
-                                          .baseline"
-                                        :key="l"
-                                        :class="{
-                                          'mb-1.5':
-                                            l !== base.location.length - 1,
-                                        }"
-                                      >
-                                        <template v-if="loc.reference">
-                                          {{ loc.reference }}
+                                      <span>
+                                        Year:
+                                        <template v-if="base.year">
+                                          {{ base.year }}
                                         </template>
                                         <template v-else
                                           >Not Available</template
                                         >
+                                        ,
+                                      </span>
+                                      <span>
+                                        Date:
+                                        <template v-if="base.date">
+                                          {{ base.date }}
+                                        </template>
+                                        <template v-else
+                                          >Not Available</template
+                                        >
+                                        ,
+                                      </span>
+                                      <span>
+                                        Date:
+                                        <template v-if="base.value">
+                                          {{ base.value }}
+                                        </template>
+                                        <template v-else
+                                          >Not Available</template
+                                        >
+                                      </span>
+                                    </div>
+                                    <div class="flex">
+                                      <div>Location:&nbsp;</div>
+                                      <div>
+                                        <div
+                                          v-for="(loc, l) in base.location"
+                                          :key="l"
+                                          class="item"
+                                          :class="{
+                                            'mb-1.5':
+                                              l !== base.location.length - 1,
+                                          }"
+                                        >
+                                          <template v-if="loc.reference">
+                                            {{ loc.reference }}
+                                          </template>
+                                          <template v-else
+                                            >Not Available</template
+                                          >
+                                        </div>
+                                      </div>
+                                    </div>
+
+                                    <div class="flex">
+                                      <div>Dimension:&nbsp;</div>
+                                      <div>
+                                        <div
+                                          v-for="(dim, d) in base.dimension"
+                                          :key="d"
+                                          :class="{
+                                            'mb-1.5':
+                                              d !== base.dimension.length - 1,
+                                          }"
+                                        >
+                                          <div>
+                                            <span>
+                                              <template v-if="dim.name">
+                                                {{ dim.name }}
+                                              </template>
+                                              <template v-else>
+                                                Not Available
+                                              </template>
+                                              &nbsp;
+                                            </span>
+                                            <span>
+                                              <template v-if="dim.value">
+                                                ({{ dim.value }})
+                                              </template>
+                                              <template v-else>
+                                                (Not Available)
+                                              </template>
+                                            </span>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+
+                                    <div class="flex">
+                                      <div>Comment:&nbsp;</div>
+                                      <div>
+                                        <div
+                                          v-for="(com, c) in base.comment[0]
+                                            .narrative"
+                                          :key="c"
+                                          class="item"
+                                          :class="{
+                                            'mb-1.5':
+                                              c !==
+                                              base.comment[0].narrative - 1,
+                                          }"
+                                        >
+                                          <div>
+                                            <span>
+                                              <template v-if="com.narrative">
+                                                {{ com.narrative }}
+                                              </template>
+                                              <template v-else>
+                                                Not Available
+                                              </template>
+                                              &nbsp;
+                                            </span>
+                                            <span>
+                                              (Language:
+                                              <template v-if="com.language">
+                                                {{ com.language }})
+                                              </template>
+                                              <template v-else>
+                                                Not Available)
+                                              </template>
+                                            </span>
+                                          </div>
+                                        </div>
                                       </div>
                                     </div>
                                   </div>
-                                  Year: 2021, Date: 2021-01-01, Value: 0 <br />
-                                  Location: Africa, Asia, Latin America and
-                                  Europe/International<br />
-                                  Dimension: Not Available (Not Available)<br />
-                                  Comment: Not Available (Language: English)
-                                </div>
-                              </td>
-                            </tr>
-                          </tbody>
-                        </table>
+                                </td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </div>
                         <!-- for periods -->
-                        <table>
-                          <tbody>
-                            <tr>
-                              <td>
-                                <div class="category">Period 1</div>
-                              </td>
-                              <td>
-                                <div class="category flex">
-                                  <div class="mr-10">
-                                    January 01, 2021 - December 31, 2025
-                                  </div>
-                                  <div
-                                    class="flex shrink-0 grow justify-between"
-                                  >
-                                    <a
-                                      href="#"
-                                      class="flex items-center text-tiny font-bold uppercase text-bluecoral"
+                        <div class="periods">
+                          <table v-for="(item, i) in post.periods" :key="i">
+                            <tbody>
+                              <tr>
+                                <td>
+                                  <div class="category">Period {{ i + 1 }}</div>
+                                </td>
+                                <td>
+                                  <div class="category flex">
+                                    <div class="mr-10">
+                                      {{
+                                        dateFormat(
+                                          item.period.period_start[0].date,
+                                          'MMMM DD, YYYY'
+                                        )
+                                      }}
+                                      -
+                                      {{
+                                        dateFormat(
+                                          item.period.period_end[0].date,
+                                          'MMMM DD, YYYY'
+                                        )
+                                      }}
+                                    </div>
+                                    <div
+                                      class="flex shrink-0 grow justify-between"
                                     >
-                                      <svg-vue
-                                        class="mr-0.5 text-base"
-                                        icon="edit"
-                                      ></svg-vue>
-                                      <span>Edit Period</span>
-                                    </a>
+                                      <a
+                                        :href="`/activities/${result.activity_id}/result/${result.id}/indicator/${post.id}/period/${item.id}/edit`"
+                                        class="flex items-center text-tiny font-bold uppercase text-bluecoral"
+                                      >
+                                        <svg-vue
+                                          class="mr-0.5 text-base"
+                                          icon="edit"
+                                        ></svg-vue>
+                                        <span>Edit Period</span>
+                                      </a>
+                                    </div>
                                   </div>
-                                </div>
-                              </td>
-                            </tr>
-                            <tr>
-                              <td>Target Value</td>
-                              <td>
-                                <div>
-                                  73 units<br />
-                                  Location Reference: Not Available<br />
-                                  Dimension: Not Available<br />
-                                  Description: Not Available
-                                </div>
-                              </td>
-                            </tr>
-                            <tr>
-                              <td>Actual Value</td>
-                              <td>
-                                <div>
-                                  Not Available<br />
-                                  Location Reference: Not Available<br />
-                                  Dimension Not Available<br />
-                                  Description Not Available
-                                </div>
-                              </td>
-                            </tr>
-                          </tbody>
-                        </table>
+                                </td>
+                              </tr>
+                              <tr>
+                                <td>Target Value</td>
+                                <td>
+                                  <template
+                                    v-for="(tar, t) in item.period.target"
+                                    :key="t"
+                                  >
+                                    <div
+                                      class="item"
+                                      :class="{
+                                        'mb-1.5': t !== item.period.target - 1,
+                                      }"
+                                    >
+                                      <div class="language target_value mb-1">
+                                        {{ tar.value }}
+                                      </div>
+
+                                      <div class="location_reference flex">
+                                        <div>Location Reference:&nbsp;</div>
+                                        <div>
+                                          <div
+                                            v-for="(loc, l) in tar.location"
+                                            :key="l"
+                                            class="item"
+                                            :class="{
+                                              'mb-1.5':
+                                                l !== tar.location.length - 1,
+                                            }"
+                                          >
+                                            <div>
+                                              <span>
+                                                <template v-if="loc.reference">
+                                                  {{ loc.reference }}
+                                                </template>
+                                                <template v-else>
+                                                  Not Available
+                                                </template>
+                                              </span>
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
+
+                                      <div class="dimension flex">
+                                        <div>Dimension:&nbsp;</div>
+                                        <div>
+                                          <div
+                                            v-for="(dim, d) in tar.dimension"
+                                            :key="d"
+                                            class="item"
+                                            :class="{
+                                              'mb-1.5':
+                                                d !== tar.dimension.length - 1,
+                                            }"
+                                          >
+                                            <span>
+                                              <template v-if="dim.name">
+                                                {{ dim.name }}
+                                              </template>
+                                              <template v-else>
+                                                Not Available
+                                              </template>
+                                            </span>
+                                            <span>
+                                              <template v-if="dim.value">
+                                                ({{ dim.value }})
+                                              </template>
+                                              <template v-else>
+                                                (Not Available)
+                                              </template>
+                                            </span>
+                                          </div>
+                                        </div>
+                                      </div>
+
+                                      <div class="flex">
+                                        <div>Comment:&nbsp;</div>
+                                        <div>
+                                          <div
+                                            v-for="(com, c) in tar.comment[0]
+                                              .narrative"
+                                            :key="c"
+                                            class="item"
+                                            :class="{
+                                              'mb-1.5':
+                                                c !== tar.comment.length - 1,
+                                            }"
+                                          >
+                                            <div>
+                                              <span>
+                                                <template v-if="com.narrative">
+                                                  {{ com.narrative }}
+                                                </template>
+                                                <template v-else>
+                                                  Not Available
+                                                </template>
+                                                &nbsp;
+                                              </span>
+                                              <span>
+                                                (Language:
+                                                <template v-if="com.language">
+                                                  {{ com.language }})
+                                                </template>
+                                                <template v-else>
+                                                  Not Available)
+                                                </template>
+                                              </span>
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </template>
+                                </td>
+                              </tr>
+
+                              <tr>
+                                <td>Actual Value</td>
+                                <td>
+                                  <template
+                                    v-for="(tar, t) in item.period.actual"
+                                    :key="t"
+                                  >
+                                    <div
+                                      class="item"
+                                      :class="{
+                                        'mb-1.5': t !== item.period.target - 1,
+                                      }"
+                                    >
+                                      <div class="language target_value mb-1">
+                                        {{ tar.value }}
+                                      </div>
+
+                                      <div class="location_reference flex">
+                                        <div>Location Reference:&nbsp;</div>
+                                        <div>
+                                          <div
+                                            v-for="(loc, l) in tar.location"
+                                            :key="l"
+                                            class="item"
+                                            :class="{
+                                              'mb-1.5':
+                                                l !== tar.location.length - 1,
+                                            }"
+                                          >
+                                            <div>
+                                              <span>
+                                                <template v-if="loc.reference">
+                                                  {{ loc.reference }}
+                                                </template>
+                                                <template v-else>
+                                                  Not Available
+                                                </template>
+                                              </span>
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
+
+                                      <div class="dimension flex">
+                                        <div>Dimension:&nbsp;</div>
+                                        <div>
+                                          <div
+                                            v-for="(dim, d) in tar.dimension"
+                                            :key="d"
+                                            class="item"
+                                            :class="{
+                                              'mb-1.5':
+                                                d !== tar.dimension.length - 1,
+                                            }"
+                                          >
+                                            <span>
+                                              <template v-if="dim.name">
+                                                {{ dim.name }}
+                                              </template>
+                                              <template v-else>
+                                                Not Available
+                                              </template>
+                                            </span>
+                                            <span>
+                                              <template v-if="dim.value">
+                                                ({{ dim.value }})
+                                              </template>
+                                              <template v-else>
+                                                (Not Available)
+                                              </template>
+                                            </span>
+                                          </div>
+                                        </div>
+                                      </div>
+
+                                      <div class="flex">
+                                        <div>Comment:&nbsp;</div>
+                                        <div>
+                                          <div
+                                            v-for="(com, c) in tar.comment[0]
+                                              .narrative"
+                                            :key="c"
+                                            class="item"
+                                            :class="{
+                                              'mb-1.5':
+                                                c !== tar.comment.length - 1,
+                                            }"
+                                          >
+                                            <div>
+                                              <span>
+                                                <template v-if="com.narrative">
+                                                  {{ com.narrative }}
+                                                </template>
+                                                <template v-else>
+                                                  Not Available
+                                                </template>
+                                                &nbsp;
+                                              </span>
+                                              <span>
+                                                (Language:
+                                                <template v-if="com.language">
+                                                  {{ com.language }})
+                                                </template>
+                                                <template v-else>
+                                                  Not Available)
+                                                </template>
+                                              </span>
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </template>
+                                </td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </div>
                       </div>
                     </div>
                   </div>
                 </template>
-              </div>
-            </div>
-          </div>
-
-          <!-- static design for results -->
-          <div
-            class="activities__content--element basis-full px-3 py-3 text-n-50"
-            id=""
-          >
-            <small
-              >Note: Results element below is for activity detail page.</small
-            >
-            <div class="rounded-lg bg-white p-4">
-              <div class="mb-4 flex">
-                <div class="title flex grow items-center">
-                  <svg-vue
-                    class="mr-1.5 text-xl text-bluecoral"
-                    icon="bill"
-                  ></svg-vue>
-                  <div class="title text-sm font-bold">Results</div>
-                  <div
-                    class="status ml-2.5 flex text-xs leading-5 text-crimson-50"
-                  >
-                    <b class="mr-2 text-base leading-3">.</b>
-                    <span>not completed</span>
-                  </div>
-                </div>
-                <div class="icons flex items-center">
-                  <a
-                    href="/activities/1/result"
-                    class="mr-2.5 flex items-center text-tiny font-bold uppercase"
-                  >
-                    <svg-vue class="mr-0.5 text-base" icon="add"></svg-vue>
-                    <span>Add Result</span>
-                  </a>
-                  <svg-vue class="mr-1.5" icon="core"></svg-vue>
-                  <div class="help text-n-40">
-                    <button>
-                      <svg-vue icon="help"></svg-vue>
-                    </button>
-                    <div class="help__text right-0 w-60">
-                      <span class="font-bold text-bluecoral"></span>
-                      <p>Example text</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="divider mb-4 h-px w-full bg-n-20"></div>
-              <div class="results">
-                <div class="item">
-                  <div class="elements-detail">
-                    <div>
-                      <!-- title -->
-                      <div class="category flex">
-                        <div class="mr-4">
-                          1. WHRDs and WROs are resourced, coordinated and
-                          resilient.
-                        </div>
-                        <div class="flex shrink-0">
-                          <a
-                            href="#"
-                            class="mr-2.5 flex items-center text-tiny font-bold uppercase text-bluecoral"
-                          >
-                            <svg-vue
-                              class="mr-0.5 text-base"
-                              icon="eye"
-                            ></svg-vue>
-                            <span>View Result</span>
-                          </a>
-                          <a
-                            href="#"
-                            class="flex items-center text-tiny font-bold uppercase"
-                          >
-                            <svg-vue
-                              class="mr-0.5 text-base"
-                              icon="edit"
-                            ></svg-vue>
-                            <span>Edit Result</span>
-                          </a>
-                        </div>
-                      </div>
-                      <!-- content -->
-                      <div class="ml-4">
-                        <table class="mb-3">
-                          <tr>
-                            <td>Result Type</td>
-                            <td>Outcome</td>
-                          </tr>
-                          <tr>
-                            <td>Description</td>
-                            <td>
-                              <div class="title-content">
-                                <div class="language mb-1.5">
-                                  (Language: English)
-                                </div>
-                                <div class="description text-xs">
-                                  This programme will bring change for boys and
-                                  girls to enjoy their rights to be protected
-                                  from the worst forms of child labour in
-                                  Central African Republic, the Democratic
-                                  Republic of the Congo (DRC) and Ethiopia.
-                                </div>
-                              </div>
-                            </td>
-                          </tr>
-                        </table>
-
-                        <!-- indicator -->
-                        <div
-                          class="indicator overflow-hidden rounded-t-lg border border-n-20"
-                        >
-                          <div
-                            class="head flex justify-between bg-n-10 py-2.5 px-6"
-                          >
-                            <div class="text-xs font-bold text-n-50">
-                              Indicator
-                            </div>
-                            <div>
-                              <a
-                                href="#"
-                                class="flex items-center text-tiny font-bold uppercase"
-                              >
-                                <svg-vue
-                                  class="mr-0.5 text-base"
-                                  icon="add"
-                                ></svg-vue>
-                                <span>Add New Indicator</span>
-                              </a>
-                            </div>
-                          </div>
-                          <div class="body">
-                            <!-- loop -->
-                            <div
-                              class="indicator-content flex border-b border-n-20 px-6 py-2"
-                            >
-                              <div class="content grow">
-                                <div class="mb-0.5 flex">
-                                  <div class="mr-4 font-bold">
-                                    5.1 # of laws, policies and strategies
-                                    blocked, adopted and improved
-                                  </div>
-                                  <div class="flex shrink-0">
-                                    <a
-                                      href="#"
-                                      class="mr-2.5 flex items-center text-tiny font-bold uppercase text-bluecoral"
-                                    >
-                                      <svg-vue
-                                        class="mr-0.5 text-base"
-                                        icon="edit"
-                                      ></svg-vue>
-                                      <span>Edit Indicator</span>
-                                    </a>
-                                  </div>
-                                </div>
-                                <table>
-                                  <tr>
-                                    <td>Baseline:</td>
-                                    <td>
-                                      <div class="mb-1">
-                                        <div class="description text-xs">
-                                          Value : 100, Date: September 19, 2021,
-                                          Year: 2021
-                                        </div>
-                                      </div>
-                                      <div class="">
-                                        <div class="description text-xs">
-                                          Value : 100, Date: September 19, 2021,
-                                          Year: 2021
-                                        </div>
-                                      </div>
-                                    </td>
-                                  </tr>
-                                </table>
-                              </div>
-                              <div class="add_period shrink-0">
-                                <a
-                                  href="#"
-                                  class="mr-2.5 flex items-center text-tiny font-bold uppercase text-bluecoral"
-                                >
-                                  <svg-vue
-                                    class="mr-0.5 text-base"
-                                    icon="add"
-                                  ></svg-vue>
-                                  <span>Add Period</span>
-                                </a>
-                              </div>
-                            </div>
-                            <div class="indicator-content flex px-6 py-2">
-                              <div class="content grow">
-                                <div class="mb-0.5 flex">
-                                  <div class="mr-4 font-bold">
-                                    5.1 # of laws, policies and strategies
-                                    blocked, adopted and improved
-                                  </div>
-                                  <div class="flex shrink-0">
-                                    <a
-                                      href="#"
-                                      class="mr-2.5 flex items-center text-tiny font-bold uppercase text-bluecoral"
-                                    >
-                                      <svg-vue
-                                        class="mr-0.5 text-base"
-                                        icon="edit"
-                                      ></svg-vue>
-                                      <span>Edit Indicator</span>
-                                    </a>
-                                  </div>
-                                </div>
-                                <table>
-                                  <tr>
-                                    <td>Baseline:</td>
-                                    <td>
-                                      <div class="mb-1">
-                                        <div class="description text-xs">
-                                          Value : 100, Date: September 19, 2021,
-                                          Year: 2021
-                                        </div>
-                                      </div>
-                                      <div class="">
-                                        <div class="description text-xs">
-                                          Value : 100, Date: September 19, 2021,
-                                          Year: 2021
-                                        </div>
-                                      </div>
-                                    </td>
-                                  </tr>
-                                </table>
-                              </div>
-                              <div class="add_period shrink-0">
-                                <a
-                                  href="#"
-                                  class="mr-2.5 flex items-center text-tiny font-bold uppercase text-bluecoral"
-                                >
-                                  <svg-vue
-                                    class="mr-0.5 text-base"
-                                    icon="add"
-                                  ></svg-vue>
-                                  <span>Add Period</span>
-                                </a>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
               </div>
             </div>
           </div>
@@ -658,6 +713,7 @@
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
 import ResultElement from './ResultElement.vue';
+import dateFormat from './../../../composable/dateFormat';
 
 export default defineComponent({
   name: 'result-detail',
@@ -682,79 +738,10 @@ export default defineComponent({
     return {
       linkClasses,
       elements,
+      dateFormat,
     };
   },
 });
 </script>
 
-<style lang="scss" scoped>
-.activities__content--element > div {
-  .edit-button {
-    opacity: 0;
-    visibility: hidden;
-    transition: all 0.4s ease;
-  }
-
-  &:hover .edit-button {
-    opacity: 1;
-    visibility: visible;
-  }
-}
-.description {
-  width: 775px;
-}
-.space {
-  @apply mb-4;
-
-  span:nth-child(1) {
-    @apply text-n-40;
-    width: 100px;
-  }
-}
-
-.elements-detail {
-  @apply flex flex-col text-xs text-n-50;
-
-  & * {
-    @apply leading-5;
-  }
-
-  td:nth-child(1) {
-    @apply whitespace-nowrap text-n-40;
-    width: 100px;
-  }
-  &.wider {
-    td:nth-child(1) {
-      @apply whitespace-nowrap text-n-40;
-      width: 190px;
-    }
-  }
-
-  td:nth-child(2) {
-    @apply flex flex-col text-xs text-n-50;
-  }
-  tr {
-    @apply mb-1 flex space-x-2;
-  }
-  .multiline {
-    @apply items-start;
-  }
-}
-.value {
-  @apply flex space-x-1 text-n-50;
-}
-.category {
-  @apply mb-2 text-sm font-bold text-n-50;
-}
-.language {
-  @apply text-xs italic text-n-30;
-}
-.title-border::after {
-  content: '';
-  @apply absolute top-2 left-4 h-px bg-n-30;
-  width: 932px;
-}
-.top {
-  margin-top: 1px;
-}
-</style>
+<style lang="scss" scoped></style>

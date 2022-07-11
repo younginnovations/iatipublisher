@@ -14,7 +14,7 @@ return new class extends Migration {
     {
         Schema::create('activities', function (Blueprint $table) {
             $table->increments('id');
-            $table->json('identifier');
+            $table->json('iati_identifier');
             $table->json('other_identifier')->nullable();
             $table->json('title')->nullable();
             $table->json('description')->nullable();

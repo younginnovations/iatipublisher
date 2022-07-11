@@ -292,32 +292,45 @@
         <div class="activities__content--elements -mx-3 flex flex-wrap">
           <template v-for="(post, key, index) in activities" :key="index">
             <template v-for="(element, name, i) in post.elements" :key="i">
-              <ActivityElement
-                v-if="
-                  (typeof element.content === 'object'
-                    ? Object.keys(element.content).length > 0
-                    : element.content) || typeof element.content === 'number'
-                "
-                :id="key"
-                :data="element"
-                :types="props.types"
-                :title="name.toString()"
-                :activityId="activity.id"
-                :width="
-                  name === 'identifier' ||
-                  name === 'activity_status' ||
-                  name === 'activity_scope' ||
-                  name === 'collaboration_type' ||
-                  name === 'default_flow_type' ||
-                  name === 'default_tied_status' ||
-                  name === 'default_finance_type' ||
-                  name === 'capital_spend'
-                    ? 'basis-6/12'
-                    : 'full'
-                "
-                :completed="status[name] ?? false"
-                tooltip="Example text"
-              />
+              <template v-if="name.toString() !== 'result'">
+                <ActivityElement
+                  v-if="
+                    (typeof element.content === 'object'
+                      ? Object.keys(element.content).length > 0
+                      : element.content) || typeof element.content === 'number'
+                  "
+                  :id="key"
+                  :data="element"
+                  :types="props.types"
+                  :title="name.toString()"
+                  :activityId="activity.id"
+                  :width="
+                    name === 'iati_identifier' ||
+                    name === 'activity_status' ||
+                    name === 'activity_scope' ||
+                    name === 'collaboration_type' ||
+                    name === 'default_flow_type' ||
+                    name === 'default_tied_status' ||
+                    name === 'default_finance_type' ||
+                    name === 'capital_spend'
+                      ? 'basis-6/12'
+                      : 'full'
+                  "
+                  :completed="status[name] ?? false"
+                  tooltip="Example text"
+                />
+              </template>
+              <template v-else>
+                <Results
+                  :id="key"
+                  :data="element"
+                  :types="props.types"
+                  :title="name.toString()"
+                  :activityId="activity.id"
+                  :completed="status[name] ?? false"
+                  tooltip="Example text"
+                />
+              </template>
             </template>
           </template>
         </div>
@@ -333,6 +346,7 @@ import HoverText from '../../components/HoverText.vue';
 import ProgressBar from '../../components/ProgressBar.vue';
 import Elements from './partials/ActivitiesElements.vue';
 import ActivityElement from './partials/ActivityElement.vue';
+import Results from './partials/ActivityResult.vue';
 import Modal from '../../components/PopupModal.vue';
 import BtnComponent from '../../components/ButtonComponent.vue';
 import Toast from '../../components/Toast.vue';
@@ -343,6 +357,7 @@ export default defineComponent({
     ProgressBar,
     Elements,
     ActivityElement,
+    Results,
     Modal,
     BtnComponent,
     Toast,
@@ -378,14 +393,6 @@ export default defineComponent({
     },
     results: {
       type: Array,
-      required: true,
-    },
-    has_indicator: {
-      type: Number,
-      required: true,
-    },
-    has_period: {
-      type: Number,
       required: true,
     },
     transactions: {
@@ -443,9 +450,11 @@ export default defineComponent({
      *
      * this data is created using props.element_group and props.activity
      */
+
     const groupedData = { ...props.element_group },
       detailData = props.activity,
       activities = { ...props.element_group };
+    detailData.result = props.results;
 
     // generating available elements
     Object.keys(activities).map((key, index) => {
@@ -482,6 +491,16 @@ export default defineComponent({
      */
     Object.keys(props.elements).map((key, index) => {
       props.elements[key]['completed'] = props.status[key] ?? false;
+
+      props.elements[key]['has_data'] = 0;
+
+      if (key in props.activity) {
+        if (typeof props.activity[key] === 'object' && props.activity[key]) {
+          if (Object.keys(props.activity[key]).length > 0) {
+            props.elements[key]['has_data'] = 1;
+          }
+        }
+      }
     });
 
     return {

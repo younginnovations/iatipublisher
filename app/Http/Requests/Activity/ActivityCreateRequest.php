@@ -49,7 +49,7 @@ class ActivityCreateRequest extends FormRequest
 
         if (count($organizationActivityIdentifiers)) {
             foreach ($organizationActivityIdentifiers as $identifier) {
-                $activityIdentifiers[] = $identifier->identifier['activity_identifier'];
+                $activityIdentifiers[] = $identifier->iati_identifier['activity_identifier'];
             }
         }
 

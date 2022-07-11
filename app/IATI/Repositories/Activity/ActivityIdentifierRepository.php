@@ -33,7 +33,7 @@ class ActivityIdentifierRepository
      */
     public function getActivityIdentifierData($activityId): ?array
     {
-        return $this->activity->findorFail($activityId)->identifier;
+        return $this->activity->findorFail($activityId)->iati_identifier;
     }
 
     /**
@@ -54,7 +54,7 @@ class ActivityIdentifierRepository
      */
     public function update($activityIdentifier, $activity): bool
     {
-        $activity->identifier = $activityIdentifier;
+        $activity->iati_identifier = $activityIdentifier;
 
         return $activity->save();
     }
