@@ -147,7 +147,7 @@ export default defineComponent({
 
       let form = {
         email: formData.email,
-        token: props.reset_token,
+        token: props.resetToken,
         password_confirmation: encrypt(
           formData.password_confirmation,
           process.env.MIX_ENCRYPTION_KEY ?? ''
