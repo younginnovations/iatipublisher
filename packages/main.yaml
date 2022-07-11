@@ -211,6 +211,58 @@ spec:
             secretKeyRef:
               name: iati-secret
               key: IATI_YIPL_IDENTIFIER
+        - name: IATI_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: iati-secret
+              key: IATI_API_KEY
+        - name: FILESYSTEM_DRIVER
+          value: minio
+        - name: AWS_ENDPOINT
+          valueFrom:
+            secretKeyRef:
+              name: iati-secret
+              key: AWS_ENDPOINT
+        - name: AWS_URL
+          valueFrom:
+            secretKeyRef:
+              name: iati-secret
+              key: AWS_URL
+        - name: AWS_ACCESS_KEY_ID
+          valueFrom:
+            secretKeyRef:
+              name: iati-secret
+              key: AWS_ACCESS_KEY_ID
+        - name: AWS_SECRET_ACCESS_KEY
+          valueFrom:
+            secretKeyRef:
+              name: iati-secret
+              key: AWS_SECRET_ACCESS_KEY
+        - name: AWS_DEFAULT_REGION
+          valueFrom:
+            secretKeyRef:
+              name: iati-secret
+              key: AWS_DEFAULT_REGION
+        - name: AWS_BUCKET
+          valueFrom:
+            secretKeyRef:
+              name: iati-secret
+              key: AWS_BUCKET
+        - name: AWS_GLIDE_BUCKET
+          valueFrom:
+            secretKeyRef:
+              name: iati-secret
+              key: AWS_GLIDE_BUCKET
+        - name: AWS_EXPORT_CACHE_BUCKET
+          valueFrom:
+            secretKeyRef:
+              name: iati-secret
+              key: AWS_EXPORT_CACHE_BUCKET
+        - name: MIX_ENCRYPTION_KEY
+          valueFrom:
+            secretKeyRef:
+              name: iati-secret
+              key: MIX_ENCRYPTION_KEY
         resources:
           limits:
             memory: "500Mi"
