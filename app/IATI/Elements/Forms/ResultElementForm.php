@@ -36,7 +36,7 @@ class ResultElementForm extends BaseForm
             foreach ($sub_elements as $name => $sub_element) {
                 $this->add(sprintf('sub_elements.%s.name_heading', $name), 'static', [
                     'title'   => true,
-                    'content' => '<div class="bg-white">
+                    'content' => '<div class="bg-white" id=' . $sub_element['label'] . '>
                     <div class="status flex justify-end rounded-lg mb-1.5">
                         <div class="flex status text-xs leading-relaxed text-salmon-50">
                             <b class="mr-2 text-base leading-3">.</b><span>not completed</span>

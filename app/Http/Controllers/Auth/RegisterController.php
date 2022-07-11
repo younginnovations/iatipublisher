@@ -96,8 +96,8 @@ class RegisterController extends Controller
     {
         try {
             $postData = $request->all();
-            $request['password'] = isset($request['password']) && $request['password'] ? decryptString($request['password'], 'test') : '';
-            $request['password_confirmation'] = isset($request['password_confirmation']) && $request['password_confirmation'] ? decryptString($request['password_confirmation'], 'test') : '';
+            $request['password'] = isset($request['password']) && $request['password'] ? decryptString($request['password'], env('MIX_ENCRYPTION_KEY')) : '';
+            $request['password_confirmation'] = isset($request['password_confirmation']) && $request['password_confirmation'] ? decryptString($request['password_confirmation'], env('MIX_ENCRYPTION_KEY')) : '';
 
             $validator = Validator::make($postData, [
                 'publisher_id'        => ['required', 'string', 'max:255', 'unique:organizations,publisher_id'],
@@ -204,8 +204,8 @@ class RegisterController extends Controller
      */
     public function register(Request $request): \Illuminate\Http\JsonResponse|\Illuminate\Http\RedirectResponse
     {
-        $request['password'] = isset($request['password']) && $request['password'] ? decryptString($request['password'], 'test') : '';
-        $request['password_confirmation'] = isset($request['password_confirmation']) && $request['password_confirmation'] ? decryptString($request['password_confirmation'], 'test') : '';
+        $request['password'] = isset($request['password']) && $request['password'] ? decryptString($request['password'], env('MIX_ENCRYPTION_KEY')) : '';
+        $request['password_confirmation'] = isset($request['password_confirmation']) && $request['password_confirmation'] ? decryptString($request['password_confirmation'], env('MIX_ENCRYPTION_KEY')) : '';
 
         $validator = Validator::make($request->all(), [
             'username'              => ['required', 'max:255', 'string', 'regex:/^[A-Za-z]([0-9A-Za-z _])*$/', 'unique:users,username'],
