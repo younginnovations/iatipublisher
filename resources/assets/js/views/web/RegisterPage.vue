@@ -15,13 +15,13 @@
           <div class="form__container">
             <div class="flex items-center space-x-1">
               <HoverText
-                v-if="registerForm['3']['hover_text']"
-                :hover-text="registerForm['3']['hover_text']"
-                :name="registerForm['3'].title"
+                v-if="registerForm[getCurrentStep()]['hover_text']"
+                :hoverText="registerForm[getCurrentStep()]['hover_text']"
+                :name="registerForm[getCurrentStep()].title"
                 position="right"
               />
               <span class="text-2xl font-bold text-n-50">{{
-                registerForm['3'].title
+                registerForm[getCurrentStep()].title
               }}</span>
             </div>
             <div
@@ -77,7 +77,7 @@
                   </label>
                   <HoverText
                     v-if="field.hover_text !== ''"
-                    :hover-text="field.hover_text"
+                    :hoverText="field.hover_text"
                     :name="field.label"
                   />
                 </div>
@@ -86,8 +86,8 @@
                   :id="field.id"
                   v-model="formData[field.name]"
                   :class="{
-                    'error_input form__input mt-2 ': errorData[field.name],
-                    'form__input mt-2': !errorData[field.name],
+                    'error_input form__input': errorData[field.name],
+                    form__input: !errorData[field.name],
                   }"
                   :placeholder="field.placeholder"
                   :type="field.type"
@@ -98,7 +98,7 @@
                   v-model="formData[field.name]"
                   :class="{
                     'error_input form__input': errorData[field.name],
-                    'form__input mt-2': !errorData[field.name],
+                    form__input: !errorData[field.name],
                   }"
                   :placeholder="field.placeholder"
                   :type="field.type"
@@ -199,22 +199,24 @@
               }"
             >
               <span v-if="checkStep(key)" class="list__active" />
-              <span v-if="!form['is_complete']" class="ml-6 mr-3">
-                {{ key }}
-              </span>
-              <span v-if="form['is_complete']" class="ml-6 mr-3">
-                <svg-vue class="text-xs" icon="checked" />
-              </span>
-              <span
-                class="font-bold"
+                           <div class="flex items-center">
+                <span v-if="!form['is_complete']" class="mr-3 ml-6">
+                  {{ i+1 }}
+                </span>
+                <span v-if="form['is_complete']" class="mr-3 ml-6">
+                  <svg-vue class="text-xs" icon="checked"> </svg-vue>
+                </span>
+                <span
+                    class="font-bold"
                 :class="{
                   'text-n-50': checkStep(key),
                   'text-bluecoral': !checkStep(key) && form.is_complete,
                   'text-n-40': !checkStep(key) && !form.is_complete,
                 }"
-              >
+                >
                 {{ form['title'] }}
-              </span>
+                </span>
+              </div>
               <p
                 v-if="checkStep(key)"
                 class="mt-2 mb-6 font-normal detail xl:pr-2"
@@ -302,7 +304,6 @@ export default defineComponent({
     );
 
     const registration_agency = computed(() => {
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       const agencies = props.agency!;
 
       if (formData.country) {
@@ -492,29 +493,19 @@ export default defineComponent({
     });
 
     function verifyPublisher() {
-      formData.identifier = `${formData.registration_agency}-${formData.registration_number}`;
       isLoaderVisible.value = true;
 
       formData.identifier = `${formData.registration_agency}-${formData.registration_number}`;
 
       let form = {
-        password: encrypt(
-          formData.password,
-          process.env.MIX_ENCRYPTION_KEY ?? ''
-        ),
-        password_confirmation: encrypt(
-          formData.password_confirmation,
-          process.env.MIX_ENCRYPTION_KEY ?? ''
-        ),
+        password: encrypt(formData.password, 'test'),
+        password_confirmation: encrypt(formData.password_confirmation, 'test'),
       };
 
+      console.log({ ...formData, ...form });
       axios
         .post('/verifyPublisher', { ...formData, ...form })
         .then((res) => {
-          if (res.request.responseURL.includes('activities')) {
-            window.location.href = '/activities';
-          }
-
           const response = res.data;
           publisherExists.value = true;
           const errors =
@@ -584,14 +575,8 @@ export default defineComponent({
       isLoaderVisible.value = true;
 
       let form = {
-        password: encrypt(
-          formData.password,
-          process.env.MIX_ENCRYPTION_KEY ?? ''
-        ),
-        password_confirmation: encrypt(
-          formData.password_confirmation,
-          process.env.MIX_ENCRYPTION_KEY ?? ''
-        ),
+        password: encrypt(formData.password, 'test'),
+        password_confirmation: encrypt(formData.password_confirmation, 'test'),
       };
 
       axios
@@ -604,7 +589,6 @@ export default defineComponent({
           const response = res.data;
           const errors =
             !response.success || 'errors' in response ? response.errors : [];
-
           errorData.username = errors.username ? errors.username[0] : '';
           errorData.full_name = errors.full_name ? errors.full_name[0] : '';
           errorData.email = errors.email ? errors.email[0] : '';
@@ -614,7 +598,6 @@ export default defineComponent({
             : errors.password
             ? errors.password[0]
             : '';
-
           isLoaderVisible.value = false;
 
           if (response.success) {
@@ -623,10 +606,9 @@ export default defineComponent({
           }
         })
         .catch((error) => {
+          console.log(error);
           const { errors } = error.response.data;
-
           isLoaderVisible.value = false;
-
           errorData.username = errors.username ? errors.username[0] : '';
           errorData.full_name = errors.full_name ? errors.full_name[0] : '';
           errorData.email = errors.email ? errors.email[0] : '';

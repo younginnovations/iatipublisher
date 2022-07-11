@@ -116,8 +116,9 @@ class ActivityController extends Controller
             $status = $this->getActivityDetailStatus($activity);
             $progress = 75;
 
-            return view('admin.activity.show', compact('elements', 'elementGroups', 'progress', 'activity', 'toastData', 'types', 'status'));
+            return view('admin.activity.show', compact('elements', 'elementGroups', 'progress', 'activity', 'toast', 'types', 'status'));
         } catch (Exception $e) {
+            dd($e);
             logger()->error($e->getMessage());
         }
     }

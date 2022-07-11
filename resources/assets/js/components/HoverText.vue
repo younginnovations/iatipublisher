@@ -2,9 +2,10 @@
   <div class="help">
     <button>
       <svg-vue
+        class="text-n-40"
         :class="{
           'text-tiny': iconSize,
-          svgIconSize: !iconSize,
+          iconSize: !iconSize,
         }"
         icon="help"
       />
@@ -13,30 +14,27 @@
       :class="[
         position === 'right'
           ? 'help__text left-0 ' + width
-          : 'help__text right-0 ' + width
+          : 'help__text right-0 ' + width,
       ]"
     >
       <span class="font-bold text-bluecoral">{{ name }}</span>
-      <!-- eslint-disable-next-line vue/no-v-html -->
       <p v-html="hoverText" />
-      <a
-        v-if="link"
-        :href="link"
-        class="inline-block font-bold text-bluecoral"
-      >Learn more</a>
+      <a v-if="link" :href="link" class="inline-block font-bold text-bluecoral"
+        >Learn more</a
+      >
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, ref } from 'vue';
 
 export default defineComponent({
   props: {
     name: {
       type: String,
       required: false,
-      default: ''
+      default: '',
     },
     hoverText: {
       type: String,
@@ -45,22 +43,22 @@ export default defineComponent({
     width: {
       type: String,
       required: false,
-      default: 'w-60'
+      default: 'w-60',
     },
     position: {
       type: String,
       required: false,
-      default: ''
+      default: '',
     },
     link: {
       type: String,
       required: false,
-      default: ''
+      default: '',
     },
     iconSize: {
       type: String,
       required: false,
-      default: 'text-sm'
+      default: '',
     },
   },
 });
