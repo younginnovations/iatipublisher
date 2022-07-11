@@ -59,7 +59,11 @@ class TransactionController extends Controller
      */
     public function index()
     {
-        //
+        // try {
+        //     return view('activity.result.result', compact('form', 'activity', 'data'));
+        // } catch (\Exception $e) {
+        //     logger()->error($e->getMessage());
+        // }
     }
 
     /**
@@ -131,9 +135,20 @@ class TransactionController extends Controller
      * @param  \App\IATI\Models\Activity\Transaction  $transaction
      * @return \Illuminate\Http\Response
      */
-    public function show(Transaction $transaction)
+    public function show($transactionId, $activityId)
     {
-        //
+        try {
+            $transaction = $this->transactionService->getTransaction($transactionId, $activityId);
+
+            return view('activity.transaction.detail', compact('transaction'));
+        } catch (\Exception $e) {
+            logger()->error($e->getMessage());
+
+            return redirect()->route('admin.activities.show', $activityId)->with(
+                'error',
+                'Error has occurred while rending transaction detail page.'
+            );
+        }
     }
 
     /**
