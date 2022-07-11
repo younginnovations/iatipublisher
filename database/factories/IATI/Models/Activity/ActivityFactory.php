@@ -20,7 +20,7 @@ class ActivityFactory extends Factory
     public function definition()
     {
         return [
-            'identifier' => [
+            'iati_identifier' => [
                 'activity_identifier'   => 'SYRZ000041',
                 'iati_identifier_text'  => 'CZ-ICO-25755277-SYRZ000041',
             ],

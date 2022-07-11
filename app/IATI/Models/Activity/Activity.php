@@ -23,7 +23,7 @@ class Activity extends Model
      * @var array
      */
     protected $fillable = [
-        'identifier',
+        'iati_identifier',
         'other_identifier',
         'title',
         'description',
@@ -62,7 +62,7 @@ class Activity extends Model
      * @var array
      */
     protected $casts = [
-        'identifier'                 => 'json',
+        'iati_identifier'                 => 'json',
         'other_identifier'           => 'json',
         'title'                      => 'json',
         'description'                => 'json',
