@@ -108,6 +108,7 @@ class ActivityController extends Controller
                 'data'    => $activity,
             ]);
         } catch (Exception $e) {
+            dd($e);
             logger()->error($e->getMessage());
 
             return response()->json(['success' => false, 'error' => 'Error has occurred while saving activity.']);

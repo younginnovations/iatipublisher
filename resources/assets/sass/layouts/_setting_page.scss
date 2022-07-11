@@ -1,0 +1,79 @@
+.section {
+  @apply bg-paper;
+
+  .setting {
+    max-width: 1000px;
+    height: calc(100vh - 80px);
+    margin: auto;
+    padding: 16px 0px 24px;
+
+    &__container {
+      @apply relative rounded-lg bg-white py-14 px-20;
+      max-height: 65vh;
+      overflow-y: auto;
+
+      .vue__select {
+        margin: 8px 0px;
+      }
+      .registry__info {
+        @apply my-4 flex justify-between border-b border-b-n-20;
+      }
+      p {
+        @apply text-xs leading-5 text-n-40;
+      }
+      .text {
+        @apply mb-8 text-sm;
+      }
+      label {
+        @apply text-xs text-n-50;
+      }
+    }
+    .register {
+      @apply rounded-lg border border-n-30 p-6;
+
+      &__container {
+        @apply grid grid-cols-2 gap-6;
+
+        .tag__correct {
+          @apply absolute right-2 top-10 flex h-5 cursor-pointer items-center justify-center rounded bg-spring-40 text-center text-xs text-white;
+          width: 50px;
+        }
+
+        .tag__incorrect {
+          @apply absolute right-2 top-10 flex h-5 cursor-pointer items-center justify-center rounded bg-salmon-50 text-center text-xs text-white;
+          width: 61px;
+        }
+      }
+      .verify-btn {
+        width: 120px;
+        margin-top: 14px;
+        @apply flex h-10 justify-center;
+      }
+    }
+    .register__input {
+      @apply mt-2 w-full border border-n-30 outline-none duration-300;
+      padding: 13px 16px;
+      border-radius: 4px;
+
+      &::placeholder {
+        @apply text-sm text-n-40;
+        letter-spacing: -0.02em;
+      }
+      &:focus {
+        @apply border border-n-50 bg-n-10;
+      }
+      &:focus::placeholder {
+        @apply text-n-50;
+      }
+    }
+    .error__input {
+      @apply border border-crimson-50;
+    }
+  }
+}
+.save-btn {
+  @apply px-4;
+}
+.btn__active {
+  @apply font-bold text-white;
+}

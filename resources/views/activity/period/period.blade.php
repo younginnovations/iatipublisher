@@ -3,13 +3,32 @@
 @section('content')
     <section class="section min-h-[calc(100vh_-_60px)]">
 
-        <div class="px-10 pt-4 pb-[71px]">
+        <div class="px-10 pt-4 pb-[71px] max-w-[1000px] mx-auto">
             @include('admin.layouts.activityTitle')
             <div class="activities">
-                <aside class="activities__sidebar">
-                    <elements-note></elements-note>
-                </aside>
                 <div class="activities__content">
+                    <div class="inline-flex flex-wrap gap-2 mb-8">
+                        <a href='#period_start' class="tab-btn-anchor" v-smooth-scroll>
+                            <button class="tab-btn">
+                                <span>period-start</span>
+                            </button>
+                        </a>
+                        <a href="#period_end" class="tab-btn-anchor" v-smooth-scroll>
+                            <button class="tab-btn">
+                                <span>period-end</span>
+                            </button>
+                        </a>
+                        <a href="#target" class="tab-btn-anchor" v-smooth-scroll>
+                            <button class="tab-btn">
+                                <span>target</span>
+                            </button>
+                        </a>
+                        <a href="#actual" class="tab-btn-anchor" v-smooth-scroll>
+                            <button class="tab-btn">
+                                <span>actual</span>
+                            </button>
+                        </a>
+                    </div>
                     <div class="py-[6.06%] px-[12%] bg-white">
 
                         @include('admin.activity.partial.form-title')
@@ -38,7 +57,6 @@
                             data-prototype="{{ str_replace('actual[0]','actual[__PARENT_NAME__]',form_row($form->target->getChildren()[0]->getChild('dimension')->prototype())) }}">
                         </div>
                         {{-- period document link --}}
-                        {{ str_replace('target[0][document_link][__NAME__]','target[__PARENT_NAME__][document_link][__WRAPPER_NAME__]',form_row($form->target->getChildren()[0]->getChild('document_link')->prototype())) }}
                         <div class="hidden collection-container title" form_type="target_document_link"
                             data-prototype="{{ str_replace('target[0][document_link][__NAME__]','target[__PARENT_NAME__][document_link][__WRAPPER_NAME__]',form_row($form->target->getChildren()[0]->getChild('document_link')->prototype())) }}">
                         </div>
