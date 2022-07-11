@@ -65,7 +65,7 @@ spec:
     spec:
       containers:
       - name: iati-publisher
-        image: ghcr.io/younginnovations/iatipublisher:145-ghcr-config
+        image: ghcr.io/younginnovations/iatipublisher:main
         imagePullPolicy: Always
         lifecycle:
           postStart:
@@ -94,7 +94,7 @@ spec:
         - name: APP_NAME
           value: IATI Publisher
         - name: APP_ENV
-          value: production
+          value: staging
         - name: APP_KEY
           valueFrom:
             secretKeyRef:
