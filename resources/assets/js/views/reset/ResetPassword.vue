@@ -93,7 +93,7 @@ export default defineComponent({
       type: String,
       required: true,
     },
-    resetToken: {
+    token: {
       type: String,
       required: true,
     },
@@ -102,7 +102,7 @@ export default defineComponent({
     const loaderVisibility = ref(false);
     const formData = reactive({
       email: props.email,
-      token: props.resetToken,
+      token: props.token,
       password: '',
       password_confirmation: '',
     });
@@ -147,7 +147,7 @@ export default defineComponent({
 
       let form = {
         email: formData.email,
-        token: props.resetToken,
+        token: props.token,
         password_confirmation: encrypt(
           formData.password_confirmation,
           process.env.MIX_ENCRYPTION_KEY ?? ''

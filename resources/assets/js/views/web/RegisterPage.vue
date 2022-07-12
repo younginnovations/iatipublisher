@@ -199,22 +199,22 @@
               }"
             >
               <span v-if="checkStep(key)" class="list__active" />
-                           <div class="flex items-center">
+              <div class="flex items-center">
                 <span v-if="!form['is_complete']" class="mr-3 ml-6">
-                  {{ i+1 }}
+                  {{ i + 1 }}
                 </span>
                 <span v-if="form['is_complete']" class="mr-3 ml-6">
                   <svg-vue class="text-xs" icon="checked"> </svg-vue>
                 </span>
                 <span
-                    class="font-bold"
-                :class="{
-                  'text-n-50': checkStep(key),
-                  'text-bluecoral': !checkStep(key) && form.is_complete,
-                  'text-n-40': !checkStep(key) && !form.is_complete,
-                }"
+                  class="font-bold"
+                  :class="{
+                    'text-n-50': checkStep(key),
+                    'text-bluecoral': !checkStep(key) && form.is_complete,
+                    'text-n-40': !checkStep(key) && !form.is_complete,
+                  }"
                 >
-                {{ form['title'] }}
+                  {{ form['title'] }}
                 </span>
               </div>
               <p
@@ -498,11 +498,16 @@ export default defineComponent({
       formData.identifier = `${formData.registration_agency}-${formData.registration_number}`;
 
       let form = {
-        password: encrypt(formData.password, 'test'),
-        password_confirmation: encrypt(formData.password_confirmation, 'test'),
+        password: encrypt(
+          formData.password,
+          process.env.MIX_ENCRYPTION_KEY ?? ''
+        ),
+        password_confirmation: encrypt(
+          formData.password_confirmation,
+          process.env.MIX_ENCRYPTION_KEY ?? ''
+        ),
       };
 
-      console.log({ ...formData, ...form });
       axios
         .post('/verifyPublisher', { ...formData, ...form })
         .then((res) => {
@@ -575,8 +580,14 @@ export default defineComponent({
       isLoaderVisible.value = true;
 
       let form = {
-        password: encrypt(formData.password, 'test'),
-        password_confirmation: encrypt(formData.password_confirmation, 'test'),
+        password: encrypt(
+          formData.password,
+          process.env.MIX_ENCRYPTION_KEY ?? ''
+        ),
+        password_confirmation: encrypt(
+          formData.password_confirmation,
+          process.env.MIX_ENCRYPTION_KEY ?? ''
+        ),
       };
 
       axios
