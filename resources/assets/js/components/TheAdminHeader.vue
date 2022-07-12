@@ -10,10 +10,7 @@
     />
     <figure class="flex grow-0 items-center">
       <a href="/activities">
-        <svg-vue
-          icon="logo"
-          class="text-4xl"
-        />
+        <svg-vue icon="logo" class="text-4xl" />
       </a>
     </figure>
     <nav class="flex grow-0">
@@ -58,11 +55,8 @@
             class="search__input"
             type="text"
             placeholder="Search activity..."
-          >
-          <svg-vue
-            class="absolute left-3 top-3 text-base"
-            icon="search"
           />
+          <svg-vue class="absolute left-3 top-3 text-base" icon="search" />
         </div>
         <!--        <input type="text" v-model="keyword">-->
         <button
@@ -73,21 +67,16 @@
         </button>
         <button class="button secondary-btn dropdown-btn">
           <svg-vue icon="user-profile" />
-          <svg-vue
-            class="dropdown__arrow"
-            icon="dropdown-arrow"
-          />
+          <svg-vue class="dropdown__arrow" icon="dropdown-arrow" />
           <div class="profile__dropdown">
             <ul>
               <li class="border-b border-b-n-20">
                 <div>
-                  <svg-vue
-                    class="user-profile"
-                    icon="user-profile"
-                  />
+                  <svg-vue class="user-profile" icon="user-profile" />
                 </div>
                 <div class="flex flex-col break-all capitalize leading-4">
-                  <span class="text-n-50">{{ props.user.full_name }}</span><span class="text-tiny text-n-40">{{
+                  <span class="text-n-50">{{ props.user.full_name }}</span
+                  ><span class="text-tiny text-n-40">{{
                     props.organization.publisher_name
                   }}</span>
                 </div>

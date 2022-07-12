@@ -1,14 +1,8 @@
 <template>
   <div>
-    <nav
-      aria-label="breadcrumbs"
-      class="breadcrumb"
-    >
+    <nav aria-label="breadcrumbs" class="breadcrumb">
       <p>
-        <a
-          href="/"
-          class="font-bold text-n-40"
-        >Your Activities</a>
+        <a href="/" class="font-bold text-n-40">Your Activities</a>
         <span class="separator"> / </span>
         <span class="last">Partnership against child exploitation</span>
       </p>

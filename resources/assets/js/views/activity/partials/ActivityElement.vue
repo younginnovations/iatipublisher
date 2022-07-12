@@ -1,17 +1,14 @@
 <template>
-  <div
-    :class="layout"
-    class="activities__content--element px-3 py-3"
-  >
+  <div :class="layout" class="activities__content--element px-3 py-3">
     <div class="rounded-lg bg-white p-4">
       <div class="mb-4 flex">
         <div class="title flex grow">
           <template
             v-if="
               title === 'reporting_org' ||
-                title === 'default_tied_status' ||
-                title === 'crs_add' ||
-                title === 'fss'
+              title === 'default_tied_status' ||
+              title === 'crs_add' ||
+              title === 'fss'
             "
           >
             <svg-vue
@@ -56,26 +53,15 @@
             :href="`/activities/${activityId}/${title}`"
             class="edit-button mr-2.5 flex items-center text-xs font-bold uppercase"
           >
-            <svg-vue
-              class="mr-0.5 text-base"
-              icon="edit"
-            />
+            <svg-vue class="mr-0.5 text-base" icon="edit" />
             <span>Edit</span>
           </a>
 
           <template v-if="'core' in data">
-            <svg-vue
-              v-if="data.core"
-              class="mr-1.5"
-              icon="core"
-            />
+            <svg-vue v-if="data.core" class="mr-1.5" icon="core" />
           </template>
 
-          <HoverText
-            v-if="tooltip"
-            :hover-text="tooltip"
-            class="text-n-40"
-          />
+          <HoverText v-if="tooltip" :hover-text="tooltip" class="text-n-40" />
         </div>
       </div>
       <div class="divider mb-4 h-px w-full bg-n-20" />
@@ -92,16 +78,13 @@
           >
             (Language: {{ post.language }})
           </div>
-            {{ post.narrative }}
-            </div>
+          {{ post.narrative }}
+        </div>
       </template>
 
       <template v-else-if="title === 'identifier'">
         <div class="identifier-content">
-          <div
-            v-if="data.content.iati_identifier_text"
-            class="text-sm"
-          >
+          <div v-if="data.content.iati_identifier_text" class="text-sm">
             {{ data.content.iati_identifier_text }}
           </div>
         </div>
@@ -183,10 +166,7 @@
             <div class="language mb-1.5 text-xs text-n-30">
               (Language: {{ item.language }})
             </div>
-            <div
-              v-if="item.narrative"
-              class="text-sm"
-            >
+            <div v-if="item.narrative" class="text-sm">
               {{ item.narrative }}
             </div>
           </div>
@@ -203,9 +183,7 @@
             <div class="type mb-1.5 text-sm italic text-n-30">
               {{ props.types.relatedActivityType[post.relationship_type] }}
             </div>
-            <div class="text-sm">
-              ref: {{ post.activity_identifier }}
-            </div>
+            <div class="text-sm">ref: {{ post.activity_identifier }}</div>
           </div>
         </div>
       </template>
@@ -217,12 +195,8 @@
           :class="{ 'mb-4': key !== data.content.length - 1 }"
         >
           <div class="related-content">
-            <div class="text-sm">
-              name: {{ post.name }}
-            </div>
-            <div class="text-sm">
-              value: {{ post.value }}
-            </div>
+            <div class="text-sm">name: {{ post.name }}</div>
+            <div class="text-sm">value: {{ post.value }}</div>
             <div class="text-sm">
               iati-equivalent: {{ post.iati_equivalent }}
             </div>
@@ -240,7 +214,9 @@
             <span> Attached: </span>
             <span class="font-normal italic text-n-30">
               <span v-if="data.content.condition_attached === '0'">No</span>
-              <span v-else-if="data.content.condition_attached === '1'">Yes</span>
+              <span v-else-if="data.content.condition_attached === '1'"
+                >Yes</span
+              >
             </span>
           </div>
           <div class="tb-content condition-contents px-6 py-2">
@@ -261,10 +237,7 @@
                 <div class="language mb-1.5 text-xs italic text-n-30">
                   (Language: {{ item.language }})
                 </div>
-                <div
-                  v-if="item.narrative"
-                  class="text-sm"
-                >
+                <div v-if="item.narrative" class="text-sm">
                   {{ item.narrative }}
                 </div>
               </div>
@@ -305,10 +278,7 @@
                 </span>
               </div>
             </li>
-            <li
-              v-if="post.vocabulary === '99'"
-              class="inline-block"
-            >
+            <li v-if="post.vocabulary === '99'" class="inline-block">
               <div class="date-type flex gap-1 text-sm font-bold">
                 <span>Vocabulary Uri: </span>
                 <span class="text-sm font-normal italic text-n-30">
@@ -327,10 +297,7 @@
               <div class="language mb-1.5 text-xs italic text-n-30">
                 (Language: {{ item.language }})
               </div>
-              <div
-                v-if="item.narrative"
-                class="text-sm"
-              >
+              <div v-if="item.narrative" class="text-sm">
                 {{ item.narrative }}
               </div>
             </div>
@@ -350,10 +317,7 @@
               {{ types.aidTypeVocabulary[post.default_aidtype_vocabulary] }}
             </div>
 
-            <div
-              v-if="post.default_aidtype_vocabulary === '2'"
-              class="text-sm"
-            >
+            <div v-if="post.default_aidtype_vocabulary === '2'" class="text-sm">
               {{ types.earmarkingCategory[post.earmarking_category] }}
             </div>
 
@@ -373,10 +337,7 @@
               }}
             </div>
 
-            <div
-              v-else
-              class="text-sm"
-            >
+            <div v-else class="text-sm">
               {{ post.default_aid_type }}
             </div>
           </div>
@@ -413,10 +374,7 @@
                     </span>
                   </div>
                 </li>
-                <li
-                  v-else
-                  class="inline-block"
-                >
+                <li v-else class="inline-block">
                   <div class="date-type flex gap-1 text-sm font-bold">
                     <span>Code: {{ post.code_text }}</span>
                     <span class="text-sm font-normal italic text-n-30">
@@ -434,10 +392,7 @@
                 </li>
               </ul>
               <div class="country_budget_item-content">
-                <template
-                  v-for="(item, i) in post.description"
-                  :key="i"
-                >
+                <template v-for="(item, i) in post.description" :key="i">
                   <div
                     v-for="(j, k) in item.narrative"
                     :key="k"
@@ -447,10 +402,7 @@
                     <div class="language mb-1.5 text-sm italic text-n-30">
                       (Language: {{ j.language }})
                     </div>
-                    <div
-                      v-if="j.narrative"
-                      class="text-sm"
-                    >
+                    <div v-if="j.narrative" class="text-sm">
                       {{ j.narrative }}
                     </div>
                   </div>
@@ -476,7 +428,7 @@
               <li
                 v-if="
                   post.sector_vocabulary === '98' ||
-                    post.sector_vocabulary === '99'
+                  post.sector_vocabulary === '99'
                 "
               >
                 <div class="flex gap-1 text-sm font-bold">
@@ -527,10 +479,7 @@
                 <div class="language mb-1.5 text-xs italic text-n-30">
                   (Language: {{ i.language }})
                 </div>
-                <div
-                  v-if="i.narrative"
-                  class="text-sm"
-                >
+                <div v-if="i.narrative" class="text-sm">
                   {{ i.narrative }}
                 </div>
               </div>
@@ -588,10 +537,7 @@
                 <div class="language mb-1.5 text-xs italic text-n-30">
                   (Language: {{ i.language }})
                 </div>
-                <div
-                  v-if="i.narrative"
-                  class="text-sm"
-                >
+                <div v-if="i.narrative" class="text-sm">
                   {{ i.narrative }}
                 </div>
               </div>
@@ -646,10 +592,7 @@
                 <div class="language mb-1.5 text-sm italic text-n-30">
                   (Language: {{ i.language }})
                 </div>
-                <div
-                  v-if="i.narrative"
-                  class="text-sm"
-                >
+                <div v-if="i.narrative" class="text-sm">
                   {{ i.narrative }}
                 </div>
               </div>
@@ -710,10 +653,7 @@
                 <div class="language mb-1.5 text-sm italic text-n-30">
                   (Language: {{ i.language }})
                 </div>
-                <div
-                  v-if="i.narrative"
-                  class="text-sm"
-                >
+                <div v-if="i.narrative" class="text-sm">
                   {{ i.narrative }}
                 </div>
               </div>
@@ -741,7 +681,7 @@
                     <span
                       v-if="
                         post.tag_vocabulary === '1' ||
-                          post.tag_vocabulary === '99'
+                        post.tag_vocabulary === '99'
                       "
                     >
                       {{ post.tag_text }}
@@ -774,10 +714,7 @@
                 <div class="language mb-1.5 text-sm italic text-n-30">
                   (Language: {{ i.language }})
                 </div>
-                <div
-                  v-if="i.narrative"
-                  class="text-sm"
-                >
+                <div v-if="i.narrative" class="text-sm">
                   {{ i.narrative }}
                 </div>
               </div>

@@ -56,7 +56,8 @@ export default defineComponent({
     const pageContent = ref(props.page === 'signin' ? 'Join Now' : 'Sign In');
 
     function togglePage() {
-      pageContent.value = pageContent.value === 'Join Now' ? 'Sign In' : 'Join Now';
+      pageContent.value =
+        pageContent.value === 'Join Now' ? 'Sign In' : 'Join Now';
     }
 
     return {

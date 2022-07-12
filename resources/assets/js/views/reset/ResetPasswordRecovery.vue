@@ -6,10 +6,7 @@
         An email has been sent with further instructions, please check it out
         when you get it.
       </p>
-      <svg-vue
-        class="verification m-auto"
-        icon="ic-verification"
-      />
+      <svg-vue class="verification m-auto" icon="ic-verification" />
     </div>
   </div>
 </template>

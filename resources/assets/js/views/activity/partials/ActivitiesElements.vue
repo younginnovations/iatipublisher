@@ -11,7 +11,7 @@
           class="panel__input"
           placeholder="Search elements to add/edit"
           type="text"
-        >
+        />
       </div>
       <div class="relative grid justify-items-end">
         <button
@@ -31,7 +31,7 @@
           />
           <svg-vue
             :class="{
-              'rotate-180' : searchBtnValue
+              'rotate-180': searchBtnValue,
             }"
             class="w-2.5 text-xs transition duration-200 ease-linear"
             icon="dropdown-arrow"
@@ -47,30 +47,21 @@
               class="flex py-1.5 px-3.5 hover:bg-white"
               @click="dropdownFilter('')"
             >
-              <svg-vue
-                class="mr-1 text-lg"
-                icon="box"
-              />
+              <svg-vue class="mr-1 text-lg" icon="box" />
               <span>All Elements</span>
             </li>
             <li
               class="flex py-1.5 px-3.5 hover:bg-white"
               @click="dropdownFilter('criteria')"
             >
-              <svg-vue
-                class="mr-1 text-lg"
-                icon="core"
-              />
+              <svg-vue class="mr-1 text-lg" icon="core" />
               <span>Core</span>
             </li>
             <li
               class="flex py-1.5 px-3.5 hover:bg-white"
               @click="dropdownFilter('completed')"
             >
-              <svg-vue
-                class="mr-1 text-lg"
-                icon="double-tick"
-              />
+              <svg-vue class="mr-1 text-lg" icon="double-tick" />
               <span>Completed</span>
             </li>
           </ul>
@@ -99,21 +90,15 @@
         <template
           v-if="
             index === 'reporting_org' ||
-              index === 'default_tied_status' ||
-              index === 'crs_add' ||
-              index === 'fss'
+            index === 'default_tied_status' ||
+            index === 'crs_add' ||
+            index === 'fss'
           "
         >
-          <svg-vue
-            class="text-base"
-            icon="activity-elements/building"
-          />
+          <svg-vue class="text-base" icon="activity-elements/building" />
         </template>
         <template v-else>
-          <svg-vue
-            :icon="'activity-elements/' + index"
-            class="text-base"
-          />
+          <svg-vue :icon="'activity-elements/' + index" class="text-base" />
         </template>
         <div class="title mt-1 text-xs">
           {{ index.toString().replace(/_/g, '-') }}

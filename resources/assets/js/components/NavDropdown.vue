@@ -6,10 +6,7 @@
         <p class="mt-2 mb-4 text-sm text-n-50">
           {{ props.text }}
         </p>
-        <a
-          class="read__more"
-          href="#"
-        >{{ props.btnText }}</a>
+        <a class="read__more" href="#">{{ props.btnText }}</a>
       </div>
     </div>
   </div>

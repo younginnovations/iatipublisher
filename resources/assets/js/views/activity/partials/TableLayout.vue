@@ -3,10 +3,7 @@
     <table>
       <thead>
         <tr class="bg-n-10">
-          <th
-            id="title"
-            scope="col"
-          >
+          <th id="title" scope="col">
             <a
               class="text-n-50 transition duration-500 hover:text-spring-50"
               href="#"
@@ -17,10 +14,7 @@
               <span>Activity Title</span>
             </a>
           </th>
-          <th
-            id="date"
-            scope="col"
-          >
+          <th id="date" scope="col">
             <a
               class="text-n-50 transition duration-500 hover:text-spring-50"
               href="#"
@@ -31,22 +25,13 @@
               <span>Updated On</span>
             </a>
           </th>
-          <th
-            id="status"
-            scope="col"
-          >
+          <th id="status" scope="col">
             <span class="hidden">Status</span>
           </th>
-          <th
-            id="publish"
-            scope="col"
-          >
+          <th id="publish" scope="col">
             <span class="hidden">Status</span>
           </th>
-          <th
-            id="cb"
-            scope="col"
-          >
+          <th id="cb" scope="col">
             <span class="">
               <svg-vue icon="checkbox" />
             </span>
@@ -110,14 +95,8 @@
             </button>
           </td>
 
-          <th
-            class="check-column"
-            @click="(e) => e.stopPropagation()"
-          >
-            <label
-              class="sr-only"
-              for=""
-            >
+          <th class="check-column" @click="(e) => e.stopPropagation()">
+            <label class="sr-only" for="">
               Select "{{ datum['title'][0]['narrative'] }}"
             </label>
             <label class="checkbox">
@@ -126,7 +105,7 @@
                 :value="datum.id"
                 type="checkbox"
                 @change="emitShowOrHide"
-              >
+              />
               <span class="checkmark" />
             </label>
           </th>

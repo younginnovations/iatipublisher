@@ -18,7 +18,9 @@
       ]"
     >
       <span class="font-bold text-bluecoral">{{ name }}</span>
+      <!-- eslint-disable vue/no-v-html -->
       <p v-html="hoverText" />
+      <!--eslint-enable-->
       <a v-if="link" :href="link" class="inline-block font-bold text-bluecoral"
         >Learn more</a
       >
@@ -27,7 +29,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue';
+import { defineComponent } from 'vue';
 
 export default defineComponent({
   props: {

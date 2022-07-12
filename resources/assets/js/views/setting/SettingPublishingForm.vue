@@ -2,7 +2,7 @@
   <div>
     <div class="registry__info">
       <div class="mb-4 text-sm font-bold text-n-50">Registry Information</div>
-      <div class="flex items-center mb-4 text-xs text-n-50">
+      <div class="mb-4 flex items-center text-xs text-n-50">
         <button>
           <HoverText
             name="IATI Registry Information"
@@ -27,7 +27,7 @@
             </div>
             <input
               id="publisher-id"
-              class="mb-2 register__input"
+              class="register__input mb-2"
               :class="{
                 error__input: publishingError.publisher_id,
               }"
@@ -56,7 +56,7 @@
             <input
               id="api-token"
               v-model="publishingForm.api_token"
-              class="mb-2 register__input"
+              class="register__input mb-2"
               :class="{
                 error__input: publishingError.api_token,
               }"

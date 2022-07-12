@@ -3,10 +3,7 @@
     class="flex border-l-2 px-3 py-2.5 text-sm leading-relaxed"
     :class="type"
   >
-    <svg-vue
-      :icon="icon"
-      class="mr-2 mt-0.5 text-lg"
-    />
+    <svg-vue :icon="icon" class="mr-2 mt-0.5 text-lg" />
     <b><slot /></b>
   </div>
 </template>
@@ -19,9 +16,9 @@ export default defineComponent({
   components: {},
   props: {
     type: {
-      type : String,
-      required : false,
-      default : 'success'
+      type: String,
+      required: false,
+      default: 'success',
     },
   },
   setup(props) {

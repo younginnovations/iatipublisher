@@ -1,24 +1,16 @@
 <template>
   <div class="mt-14">
     <Loader v-if="loaderVisibility" />
-    <div
-      class="reset reset__password"
-      @keyup.enter="reset"
-    >
+    <div class="reset reset__password" @keyup.enter="reset">
       <h2>Reset Password</h2>
       <p>Please enter your new password</p>
-      <span
-        v-if="errorData.email != ''"
-        class="error"
-        role="alert"
-      >
+      <span v-if="errorData.email != ''" class="error" role="alert">
         {{ errorData.email }}
       </span>
       <div class="reset__content mt-8">
-        <label
-          class="text-sm font-bold text-bluecoral"
-          for="password"
-        >New Password</label>
+        <label class="text-sm font-bold text-bluecoral" for="password"
+          >New Password</label
+        >
         <input
           id="new_password"
           v-model="formData.password"
@@ -28,16 +20,9 @@
           }"
           type="password"
           placeholder="Enter a new password"
-        >
-        <svg-vue
-          class="reset__icon text-lg"
-          icon="pw-lock"
         />
-        <span
-          v-if="errorData.password != ''"
-          class="error"
-          role="alert"
-        >
+        <svg-vue class="reset__icon text-lg" icon="pw-lock" />
+        <span v-if="errorData.password != ''" class="error" role="alert">
           {{ errorData.password }}
         </span>
       </div>
@@ -45,21 +30,21 @@
         <label
           class="text-sm font-bold text-bluecoral"
           for="password_confirmation"
-        >Repeat Password</label>
+          >Repeat Password</label
+        >
         <input
           id="repeat_password"
           v-model="formData.password_confirmation"
           class="input"
           :class="{
-            error__input: errorData.password_confirmation ||(errorData.password && formData.password != '') != '',
+            error__input:
+              errorData.password_confirmation ||
+              (errorData.password && formData.password != '') != '',
           }"
           type="password"
           placeholder="Re-enter your password"
-        >
-        <svg-vue
-          class="reset__icon text-lg"
-          icon="pw-lock"
         />
+        <svg-vue class="reset__icon text-lg" icon="pw-lock" />
         <span
           v-if="errorData.password_confirmation != ''"
           class="error"
@@ -68,11 +53,7 @@
           {{ errorData.password_confirmation }}
         </span>
       </div>
-      <button
-        type="submit"
-        class="btn reset-btn"
-        @click="reset()"
-      >
+      <button type="submit" class="btn reset-btn" @click="reset()">
         Reset Password
       </button>
     </div>

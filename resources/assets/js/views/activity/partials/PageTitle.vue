@@ -3,19 +3,14 @@
     <div class="flex items-end gap-4">
       <div class="title grow-0">
         <div class="mb-4 text-caption-c1 text-n-40">
-          <nav
-            aria-label="breadcrumbs"
-            class="breadcrumb"
-          >
+          <nav aria-label="breadcrumbs" class="breadcrumb">
             <p>
               <span class="last font-bold">Your Activities</span>
             </p>
           </nav>
         </div>
         <div class="inline-flex items-center">
-          <h4 class="mr-4 font-bold">
-            Your Activities
-          </h4>
+          <h4 class="mr-4 font-bold">Your Activities</h4>
           <div class="tooltip-btn">
             <button class="">
               <svg-vue icon="question-mark" />
@@ -99,36 +94,21 @@
     <!-- =====================
           Toggle modal
     ==========================-->
-    <Modal
-      :modal-active="modalValue"
-      @close="modalToggle"
-    >
+    <Modal :modal-active="modalValue" @close="modalToggle">
       <div class="eligible-activities mb-6 text-sm leading-relaxed">
         <div class="title mb-6 flex">
-          <svg-vue
-            icon="tick"
-            class="mr-1 mt-0.5 text-lg text-spring-50"
-          />
+          <svg-vue icon="tick" class="mr-1 mt-0.5 text-lg text-spring-50" />
           <b>The following activities are eligible for publishing</b>
         </div>
         <div class="eligible-list rounded-lg bg-mint px-6">
           <div class="list border-b border-n-20 py-6">
-            <a
-              href="#"
-              class=""
-            > EU-Angola Dialogue Facility </a>
+            <a href="#" class=""> EU-Angola Dialogue Facility </a>
           </div>
           <div class="list border-b border-n-20 py-6">
-            <a
-              href="#"
-              class=""
-            > Programme in support of Higher Education </a>
+            <a href="#" class=""> Programme in support of Higher Education </a>
           </div>
           <div class="list py-6">
-            <a
-              href="#"
-              class=""
-            >
+            <a href="#" class="">
               AGO.S1 Leadership, advocacy and communication to fast track the
               AIDS response
             </a>
@@ -146,22 +126,13 @@
         </div>
         <div class="eligible-list rounded-lg bg-rose px-6">
           <div class="list border-b border-n-20 py-6">
-            <a
-              href="#"
-              class=""
-            > EU-Angola Dialogue Facility </a>
+            <a href="#" class=""> EU-Angola Dialogue Facility </a>
           </div>
           <div class="list border-b border-n-20 py-6">
-            <a
-              href="#"
-              class=""
-            > Programme in support of Higher Education </a>
+            <a href="#" class=""> Programme in support of Higher Education </a>
           </div>
           <div class="list py-6">
-            <a
-              href="#"
-              class=""
-            >
+            <a href="#" class="">
               UNFPA Angola Improved national population data systems to map and
               address inequalities; to advance achievement of the Sustainable
               Development Goals and the commitments of the Programme of Action

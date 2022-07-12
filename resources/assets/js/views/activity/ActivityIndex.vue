@@ -11,10 +11,7 @@
         :data="activities"
         @show-or-hide="showOrHide"
       />
-      <div
-        v-if="!isEmpty"
-        class="mt-6"
-      >
+      <div v-if="!isEmpty" class="mt-6">
         <Pagination
           :current_page="activities.current_page"
           :page-count="activities.last_page"
@@ -46,13 +43,11 @@ export default defineComponent({
     const activities = reactive({});
 
     onMounted(async () => {
-      axios
-        .get('/activity/page')
-        .then((res) => {
-          const response = res.data;
-          Object.assign(activities, response.data);
-          isEmpty.value = response.data.data.length ? false : true;
-        })
+      axios.get('/activity/page').then((res) => {
+        const response = res.data;
+        Object.assign(activities, response.data);
+        isEmpty.value = response.data.data.length ? false : true;
+      });
     });
 
     const state = reactive({
@@ -70,13 +65,11 @@ export default defineComponent({
     };
 
     function fetchActivities(active_page: number) {
-      axios
-        .get('/activity/page/' + active_page)
-        .then((res) => {
-          const response = res.data;
-          Object.assign(activities, response.data);
-          isEmpty.value = response.data ? false : true;
-        })
+      axios.get('/activity/page/' + active_page).then((res) => {
+        const response = res.data;
+        Object.assign(activities, response.data);
+        isEmpty.value = response.data ? false : true;
+      });
     }
 
     return { activities, state, isEmpty, showOrHide, fetchActivities };

@@ -19,23 +19,15 @@
       >
         <ul>
           <li>
-            <a
-              href="#"
-              :class="liClass"
-              @click="modalValue = true"
-            >Add activity manually</a>
+            <a href="#" :class="liClass" @click="modalValue = true"
+              >Add activity manually</a
+            >
           </li>
           <li>
-            <a
-              href="#"
-              :class="liClass"
-            >Upload activities from .xml</a>
+            <a href="#" :class="liClass">Upload activities from .xml</a>
           </li>
           <li>
-            <a
-              href="#"
-              :class="liClass"
-            >Upload activities from .csv</a>
+            <a href="#" :class="liClass">Upload activities from .csv</a>
           </li>
         </ul>
       </div>

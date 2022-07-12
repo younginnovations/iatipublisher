@@ -1,19 +1,19 @@
 <template>
   <div class="relative bg-paper px-10 pt-4 pb-[71px]">
     <!-- title section -->
-    <div class="mb-6 page-title">
+    <div class="page-title mb-6">
       <div class="flex items-end gap-4">
         <div class="title grow-0">
           <div class="max-w-sm pb-4 text-caption-c1 text-n-40">
             <nav aria-label="breadcrumbs" class="rank-math-breadcrumb">
               <div class="flex">
-                <a class="font-bold whitespace-nowrap" href="/activities"
+                <a class="whitespace-nowrap font-bold" href="/activities"
                   >Your Activities</a
                 >
-                <span class="mx-4 separator"> / </span>
+                <span class="separator mx-4"> / </span>
                 <div class="breadcrumb__title">
                   <span
-                    class="overflow-hidden breadcrumb__title last text-n-30"
+                    class="breadcrumb__title last overflow-hidden text-n-30"
                     >{{ pageTitle ?? 'Untitled' }}</span
                   >
                   <span class="ellipsis__title--hover w-[calc(100%_+_35px)]">{{
@@ -23,15 +23,15 @@
               </div>
             </nav>
           </div>
-          <div class="inline-flex items-center max-w-3xl">
+          <div class="inline-flex max-w-3xl items-center">
             <div class="mr-3">
               <a href="/activities">
                 <svg-vue icon="arrow-short-left" />
               </a>
             </div>
             <div class="">
-              <h4 class="relative mr-4 text-2xl font-bold ellipsis__title">
-                <span class="overflow-hidden ellipsis__title">{{
+              <h4 class="ellipsis__title relative mr-4 text-2xl font-bold">
+                <span class="ellipsis__title overflow-hidden">{{
                   pageTitle ? pageTitle : 'Untitled'
                 }}</span>
                 <span class="ellipsis__title--hover">{{
@@ -41,7 +41,7 @@
             </div>
           </div>
         </div>
-        <div class="flex flex-col items-end justify-end actions grow">
+        <div class="actions flex grow flex-col items-end justify-end">
           <div class="mb-3">
             <Toast
               v-if="toastData.visibility"
@@ -63,21 +63,21 @@
               @close="downloadToggle"
             >
               <div class="mb-4">
-                <div class="flex mb-6 title">
+                <div class="title mb-6 flex">
                   <svg-vue
                     class="mr-1 mt-0.5 text-lg text-spring-50"
                     icon="download-file"
                   />
                   <b>Download file.</b>
                 </div>
-                <div class="p-4 rounded-lg bg-mint">
+                <div class="rounded-lg bg-mint p-4">
                   Click the download button to save the file.
                 </div>
               </div>
               <div class="flex justify-end">
                 <div class="inline-flex">
                   <BtnComponent
-                    class="px-6 uppercase bg-white"
+                    class="bg-white px-6 uppercase"
                     text="Go Back"
                     type=""
                     @click="downloadValue = false"
@@ -105,21 +105,21 @@
               @close="deleteToggle"
             >
               <div class="mb-4">
-                <div class="flex mb-6 title">
+                <div class="title mb-6 flex">
                   <svg-vue
                     class="mr-1 mt-0.5 text-lg text-crimson-40"
                     icon="delete"
                   />
                   <b>Delete activity</b>
                 </div>
-                <div class="p-4 rounded-lg bg-rose">
+                <div class="rounded-lg bg-rose p-4">
                   Are you sure you want to delete this activity?
                 </div>
               </div>
               <div class="flex justify-end">
                 <div class="inline-flex">
                   <BtnComponent
-                    class="px-6 uppercase bg-white"
+                    class="bg-white px-6 uppercase"
                     text="Go Back"
                     type=""
                     @click="deleteValue = false"
@@ -148,21 +148,21 @@
               @close="unpublishToggle"
             >
               <div class="mb-4">
-                <div class="flex mb-6 title">
+                <div class="title mb-6 flex">
                   <svg-vue
                     class="mr-1 mt-0.5 text-lg text-crimson-40"
                     icon="cancel-cloud"
                   />
                   <b>Unpublish activity</b>
                 </div>
-                <div class="p-4 rounded-lg bg-rose">
+                <div class="rounded-lg bg-rose p-4">
                   Are you sure you want to unpublish this activity?
                 </div>
               </div>
               <div class="flex justify-end">
                 <div class="inline-flex">
                   <BtnComponent
-                    class="px-6 uppercase bg-white"
+                    class="bg-white px-6 uppercase"
                     text="Go Back"
                     type=""
                     @click="unpublishValue = false"
@@ -179,7 +179,7 @@
 
             <!-- Publish Activity -->
             <button
-              class="relative font-bold button primary-btn"
+              class="button primary-btn relative font-bold"
               @click="publishValue = true"
             >
               <svg-vue icon="approved-cloud" />
@@ -191,21 +191,21 @@
               @close="publishToggle"
             >
               <div class="mb-4">
-                <div class="flex mb-6 title">
+                <div class="title mb-6 flex">
                   <svg-vue
                     class="mr-1 mt-0.5 text-lg text-spring-50"
                     icon="approved-cloud"
                   />
                   <b>Publish activity?</b>
                 </div>
-                <div class="p-4 rounded-lg bg-mint">
+                <div class="rounded-lg bg-mint p-4">
                   Are you ready to publish this activity?
                 </div>
               </div>
               <div class="flex justify-end">
                 <div class="inline-flex">
                   <BtnComponent
-                    class="px-6 uppercase bg-white"
+                    class="bg-white px-6 uppercase"
                     text="Go Back"
                     type=""
                     @click="publishValue = false"
@@ -226,9 +226,9 @@
     <!-- title section ends -->
     <div class="activities">
       <aside class="activities__sidebar">
-        <div class="flex mb-1">
-          <div class="mr-1 activities__card progress">
-            <div class="flex items-center justify-between mb-2">
+        <div class="mb-1 flex">
+          <div class="activities__card progress mr-1">
+            <div class="mb-2 flex items-center justify-between">
               <span class="mr-2">Publishing Progress</span>
               <HoverText
                 hover-text="You cannot publish an activity until all the mandatory fields have been filled."
@@ -241,7 +241,7 @@
             <span>Fill core elements to get 100% score</span>
           </div>
           <div class="activities__card elements">
-            <div class="flex items-center justify-between mb-7">
+            <div class="mb-7 flex items-center justify-between">
               <span>Elements</span>
               <HoverText
                 hover-text="You cannot publish an activity until all the mandatory fields have been filled."
@@ -249,7 +249,7 @@
                 class="hover-text"
               />
             </div>
-            <div class="flex justify-between mb-3">
+            <div class="mb-3 flex justify-between">
               <div class="flex items-center space-x-1">
                 <svg-vue icon="core" />
                 <span>Core</span>
@@ -276,7 +276,7 @@
         <Elements :activity-id="activity.id" :data="elements" />
       </aside>
       <div class="activities__content">
-        <div class="inline-flex flex-wrap gap-2 mb-3">
+        <div class="mb-3 inline-flex flex-wrap gap-2">
           <a
             v-for="(post, key, index) in groupedData"
             :key="index"
@@ -297,7 +297,7 @@
           </a>
         </div>
 
-        <div class="flex flex-wrap -mx-3 activities__content--elements">
+        <div class="activities__content--elements -mx-3 flex flex-wrap">
           <template v-for="(post, key, index) in activities" :key="index">
             <template v-for="(element, name, i) in post.elements" :key="i">
               <ActivityElement

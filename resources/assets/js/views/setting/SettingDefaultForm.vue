@@ -2,7 +2,7 @@
   <div>
     <div class="registry__info">
       <div class="mb-4 text-sm font-bold text-n-50">Default Values</div>
-      <div class="flex items-center mb-4 text-xs text-n-50">
+      <div class="mb-4 flex items-center text-xs text-n-50">
         <button>
           <HoverText
             name="Default Values"
@@ -12,8 +12,8 @@
       </div>
     </div>
     <span class="text-sm font-bold text-n-50">Default for all data</span>
-    <div class="mt-4 mb-6 register">
-      <div class="mb-0 register__container">
+    <div class="register mt-4 mb-6">
+      <div class="register__container mb-0">
         <div>
           <div class="flex justify-between">
             <label for="default-currency">Default Currency</label>
@@ -77,7 +77,7 @@
       </div>
     </div>
     <span class="text-sm font-bold text-n-50">Default for activity data</span>
-    <div class="mt-4 register">
+    <div class="register mt-4">
       <div class="register__container">
         <div>
           <div class="flex justify-between">
@@ -95,7 +95,7 @@
           <input
             id="default-hierarchy"
             v-model="defaultForm.hierarchy"
-            class="mb-2 register__input"
+            class="register__input mb-2"
             type="text"
             placeholder="Type default hierarchy here"
             @input="updateStore('hierarchy')"

@@ -5,14 +5,8 @@
         <nav
           class="relative z-10 mt-6 flex items-center justify-between rounded-md bg-white px-5 pt-5 text-xs sm:mt-12 sm:px-10"
         >
-          <a
-            class="pb-5"
-            href="/"
-          >
-            <svg-vue
-              class="w-52 text-6xl sm:w-60"
-              icon="header-logo"
-            />
+          <a class="pb-5" href="/">
+            <svg-vue class="w-52 text-6xl sm:w-60" icon="header-logo" />
           </a>
           <div>
             <ul
@@ -54,13 +48,12 @@
               </li>
               <li class="absolute bottom-4 left-0 right-0 xl:hidden">
                 <div class="flex items-center justify-center">
-                  <span class="mr-2 pt-5 pb-5 uppercase text-white xl:pt-0">Language:</span>
+                  <span class="mr-2 pt-5 pb-5 uppercase text-white xl:pt-0"
+                    >Language:</span
+                  >
                   <ul class="languages flex items-center justify-center">
                     <li class="nav__links">
-                      <a
-                        class="nav__active links__active"
-                        href="/"
-                      >EN</a>
+                      <a class="nav__active links__active" href="/">EN</a>
                     </li>
                     <li class="nav__links">
                       <a href="/">FR</a>
@@ -78,10 +71,7 @@
               <span class="mr-2 pt-5 pb-5 uppercase xl:pt-0">Language:</span>
               <ul class="flex items-center justify-center">
                 <li class="nav__links">
-                  <a
-                    class="nav__active links__active"
-                    href="/"
-                  >EN</a>
+                  <a class="nav__active links__active" href="/">EN</a>
                 </li>
                 <li class="nav__links">
                   <a href="/">FR</a>

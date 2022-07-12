@@ -9,15 +9,9 @@
     >
       <div class="grow">
         <div class="flex items-center">
-          <svg-vue
-            icon="alert"
-            class="mr-1 grow-0 text-base text-crimson-50"
-          />
+          <svg-vue icon="alert" class="mr-1 grow-0 text-base text-crimson-50" />
           <p class="grow">
-            Please <a
-              href="#"
-              class="font-bold"
-            >complete your setup</a> in
+            Please <a href="#" class="font-bold">complete your setup</a> in
             order to enable complete features of IATI publisher tool.
           </p>
         </div>
@@ -35,10 +29,7 @@
       class="mb-6 flex h-[150px] w-[150px] items-center justify-center rounded-full"
       style="background: linear-gradient(180deg, #e3ecfa 0%, #dae7ff 100%)"
     >
-      <svg-vue
-        icon="folder"
-        class="text-[94px]"
-      />
+      <svg-vue icon="folder" class="text-[94px]" />
     </div>
     <h5 class="mb-[5px] text-heading-5 font-bold leading-9">
       No activity has been added yet.
