@@ -511,6 +511,10 @@ export default defineComponent({
       axios
         .post('/verifyPublisher', { ...formData, ...form })
         .then((res) => {
+          if (res.request.responseURL.includes('activities')) {
+            window.location.href = '/activities';
+          }
+
           const response = res.data;
           publisherExists.value = true;
           const errors =
