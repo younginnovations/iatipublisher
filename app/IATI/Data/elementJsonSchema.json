@@ -2241,15 +2241,6 @@
         "hover_text": "",
         "help_text": ""
       },
-      "organization": {
-        "name": "organization_id",
-        "type": "text",
-        "criteria": "mandatory",
-        "required": false,
-        "label": "organization_id",
-        "hover_text": "",
-        "help_text": ""
-      },
       "ref": {
         "name": "ref",
         "label": "@ref",

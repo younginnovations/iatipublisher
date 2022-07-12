@@ -309,7 +309,7 @@
                   "
                   :id="key"
                   :data="element"
-                  :types="props.types"
+                  :types="types"
                   :title="name.toString()"
                   :activityId="activity.id"
                   :width="
@@ -332,7 +332,7 @@
                 <Results
                   :id="key"
                   :data="element"
-                  :types="props.types"
+                  :types="types"
                   :title="name.toString()"
                   :activityId="activity.id"
                   :completed="status[name] ?? false"
