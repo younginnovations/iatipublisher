@@ -53,6 +53,9 @@
                         <div class="hidden collection-container title" form_type="baseline_dimension"
                             data-prototype="{{ str_replace('baseline[0]','baseline[__PARENT_NAME__]',form_row($form->baseline->getChildren()[0]->getChild('dimension')->prototype())) }}">
                         </div>
+                        <div class="hidden collection-container title" form_type="baseline_location"
+                             data-prototype="{{ str_replace('baseline[0]','baseline[__PARENT_NAME__]',form_row($form->baseline->getChildren()[0]->getChild('location')->prototype())) }}">
+                        </div>
                         {{-- baseline document link --}}
                         <div class="hidden collection-container title" form_type="baseline_document_link"
                             data-prototype="{{ str_replace('baseline[0][document_link][__NAME__]','baseline[__PARENT_NAME__][document_link][__WRAPPER_NAME__]',form_row($form->baseline->getChildren()[0]->getChild('document_link')->prototype())) }}">
