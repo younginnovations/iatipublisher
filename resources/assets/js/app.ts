@@ -18,7 +18,7 @@ import RegisterPage from './views/web/RegisterPage.vue';
 import StaticDescriptionForm from './components/DescriptionForm.vue';
 import ElementsNote from './views/activity/partials/ElementsNote.vue';
 import Activity from './views/activity/ActivityIndex.vue';
-import LoggedInHeader from './components/TheAdminHeader.vue';
+import LoggedInHeader from './components/AdminHeader.vue';
 import ActivitiesDetail from './views/activity/ActivityDetail.vue';
 
 /**
@@ -30,7 +30,7 @@ import SettingPage from './views/setting/SettingPage.vue';
  * vue component for password reset
  */
 import ResetPage from './views/reset/ResetPage.vue';
-import ResetPasswordRecovery from './views/reset/ResetPasswordRecovery.vue';
+import PasswordRecovery from './views/reset/PasswordRecovery.vue';
 import ResetPassword from './views/reset/ResetPassword.vue';
 
 /**
@@ -73,7 +73,7 @@ app.component('SettingPage', SettingPage);
 Registering vue component for password reset
 */
 app.component('ResetPage', ResetPage);
-app.component('PasswordRecovery', ResetPasswordRecovery);
+app.component('PasswordRecovery', PasswordRecovery);
 app.component('ResetPassword', ResetPassword);
 
 /**
