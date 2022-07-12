@@ -1,23 +1,23 @@
 <template>
   <nav class="pagination" aria-label="Pagination">
     <a href="#" class="prev-btn" @click="previousPage">
-      <svg-vue icon="arrow-left"></svg-vue>
+      <svg-vue icon="arrow-left" />
       <span class="">Prev</span>
     </a>
 
     <a
-      v-for="index in parseInt(props.page_count)"
+      v-for="index in parseInt(props.pageCount)"
       :key="index"
       href="#"
       aria-current="page"
-      @click="updateActivePage(index)"
       :class="active_page === index ? 'current' : ''"
+      @click="updateActivePage(index)"
     >
       {{ index }}
     </a>
     <a href="#" class="next-btn" @click="nextPage">
       <span class="">Next</span>
-      <svg-vue icon="arrow-right"></svg-vue>
+      <svg-vue icon="arrow-right" />
     </a>
   </nav>
 </template>
@@ -26,10 +26,10 @@
 import { defineComponent, ref, watch } from 'vue';
 
 export default defineComponent({
-  name: 'pagination-component',
+  name: 'PaginationComponent',
   components: {},
   props: {
-    page_count: {
+    pageCount: {
       type: [String],
       required: true,
     },
@@ -48,7 +48,7 @@ export default defineComponent({
 
     function nextPage() {
       active_page.value =
-        active_page.value === parseInt(props.page_count)
+        active_page.value === parseInt(props.pageCount)
           ? 1
           : active_page.value + 1;
     }
@@ -56,7 +56,7 @@ export default defineComponent({
     function previousPage() {
       active_page.value =
         active_page.value === 1
-          ? parseInt(props.page_count)
+          ? parseInt(props.pageCount)
           : active_page.value - 1;
     }
 

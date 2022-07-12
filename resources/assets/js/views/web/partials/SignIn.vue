@@ -13,42 +13,37 @@
       >
         <label class="mb-2" for="Username">Username</label>
         <input
-          :class="
-            errorData.username != ''
-              ? 'error__input username input sm:h-16'
-              : 'username input sm:h-16'
-          "
-          type="text"
-          placeholder="Enter a registered username"
           id="username"
           v-model="formData.username"
+          class="username input sm:h-16"
+          :class="{
+            error_input: errorData.username,
+          }"
+          type="text"
+          placeholder="Enter a registered username"
         />
-        <svg-vue
-          class="absolute top-12 left-5 text-xl sm:left-6"
-          icon="user"
-        ></svg-vue>
-        <span class="error" role="alert" v-if="errorData.username != ''">
+        <svg-vue class="absolute top-12 left-5 text-xl sm:left-6" icon="user" />
+        <span v-if="errorData.username != ''" class="error" role="alert">
           {{ errorData.username }}
         </span>
       </div>
       <div class="relative mb-4 flex flex-col text-sm font-bold text-bluecoral">
         <label class="mb-2" for="Password">Password</label>
         <input
-          :class="
-            errorData.password || errorData.username != ''
-              ? 'error__input password input sm:h-16'
-              : 'password input sm:h-16'
-          "
-          type="password"
-          placeholder="Enter a correct password"
           id="password"
           v-model="formData.password"
+          class="password input sm:h-16"
+          :class="{
+            error__input: errorData.password || errorData.username,
+          }"
+          type="password"
+          placeholder="Enter a correct password"
         />
         <svg-vue
           class="absolute top-12 left-5 text-xl sm:left-6"
           icon="pw-lock"
-        ></svg-vue>
-        <span class="error" role="alert" v-if="errorData.password">{{
+        />
+        <span v-if="errorData.password" class="error" role="alert">{{
           errorData.password
         }}</span>
       </div>
@@ -62,9 +57,9 @@
           ></span
         >
       </p>
-      <button type="submit" id="btn" class="btn" @click="login">
+      <button id="btn" type="submit" class="btn" @click="login">
         SIGN IN
-        <svg-vue class="" icon="right-arrow"></svg-vue>
+        <svg-vue class="" icon="right-arrow" />
       </button>
     </div>
   </div>

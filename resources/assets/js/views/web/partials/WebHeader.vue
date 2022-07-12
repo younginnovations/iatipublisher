@@ -6,7 +6,7 @@
           class="relative z-10 mt-6 flex items-center justify-between rounded-md bg-white px-5 pt-5 text-xs sm:mt-12 sm:px-10"
         >
           <a class="pb-5" href="/">
-            <svg-vue class="w-52 text-6xl sm:w-60" icon="header-logo"></svg-vue>
+            <svg-vue class="w-52 text-6xl sm:w-60" icon="header-logo" />
           </a>
           <div>
             <ul
@@ -18,16 +18,16 @@
                 <NavDropdown
                   name="About"
                   text="IATI Publisher helps small and medium-sized organisations publish IATI data on development and humanitarian financing and activities"
-                  btnText="Learn more"
-                ></NavDropdown>
+                  btn-text="Learn more"
+                />
               </li>
               <li class="nav__links active dropdown">
                 <a href="/">PUBLISHING CHECKLIST</a>
                 <NavDropdown
                   name="Publishing checklist"
                   text="New to IATI? Use our checklist to track each step required for your organisation to successfully publish IATI data"
-                  btnText="Read more"
-                ></NavDropdown>
+                  btn-text="Read more"
+                />
               </li>
               <li class="nav__links active dropdown relative">
                 <a href="/">IATI STANDARD</a>
@@ -35,16 +35,16 @@
                   name="IATI Standard"
                   text="The IATI Standard provides information and guidance on all the data fields that
                         your organisation can publish IATI data on"
-                  btnText="See all data fields"
-                ></NavDropdown>
+                  btn-text="See all data fields"
+                />
               </li>
               <li class="nav__links active dropdown">
                 <a href="/">SUPPORT</a>
                 <NavDropdown
                   name="Support"
                   text=" Any questions? Get help to publish your organisation’s data"
-                  btnText="Read more"
-                ></NavDropdown>
+                  btn-text="Read more"
+                />
               </li>
               <li class="absolute bottom-4 left-0 right-0 xl:hidden">
                 <div class="flex items-center justify-center">
@@ -55,8 +55,12 @@
                     <li class="nav__links">
                       <a class="nav__active links__active" href="/">EN</a>
                     </li>
-                    <li class="nav__links"><a href="/">FR</a></li>
-                    <li class="nav__links"><a href="/">ES</a></li>
+                    <li class="nav__links">
+                      <a href="/">FR</a>
+                    </li>
+                    <li class="nav__links">
+                      <a href="/">ES</a>
+                    </li>
                   </ul>
                 </div>
               </li>
@@ -69,8 +73,12 @@
                 <li class="nav__links">
                   <a class="nav__active links__active" href="/">EN</a>
                 </li>
-                <li class="nav__links"><a href="/">FR</a></li>
-                <li class="nav__links"><a href="/">ES</a></li>
+                <li class="nav__links">
+                  <a href="/">FR</a>
+                </li>
+                <li class="nav__links">
+                  <a href="/">ES</a>
+                </li>
               </ul>
             </div>
           </div>
@@ -80,13 +88,13 @@
           >
             <span
               class="absolute h-1 w-10 rounded-lg bg-bluecoral duration-300"
-            ></span>
+            />
             <span
               class="absolute h-1 w-10 rounded-lg bg-bluecoral duration-300"
-            ></span>
+            />
             <span
               class="absolute h-1 w-10 rounded-lg bg-bluecoral duration-300"
-            ></span>
+            />
           </div>
         </nav>
         <div

@@ -13,7 +13,7 @@
           <h4 class="mr-4 font-bold">Your Activities</h4>
           <div class="tooltip-btn">
             <button class="">
-              <svg-vue icon="question-mark"></svg-vue>
+              <svg-vue icon="question-mark" />
               <span>What is activity?</span>
             </button>
             <div class="tooltip-btn__content z-[1]">
@@ -46,26 +46,26 @@
       <div class="actions flex grow justify-end">
         <div class="inline-flex justify-center">
           <BtnComponent
+            v-if="showButtons"
             class="mr-3.5"
             type="secondary"
             text="Download Selected"
             icon="download-file"
-            v-if="showButtons"
           />
           <BtnComponent
+            v-if="showButtons"
             class="mr-3.5"
             type="secondary"
             text="Publish Selected"
             icon="approved-cloud"
-            v-if="showButtons"
             @click="modalValue = true"
           />
           <BtnComponent
+            v-if="showButtons"
             class="mr-3.5"
             type="secondary"
             text="Delete Selected"
             icon="delete"
-            v-if="showButtons"
           />
           <BtnComponent
             class="mr-3.5"
@@ -94,13 +94,10 @@
     <!-- =====================
           Toggle modal
     ==========================-->
-    <Modal @close="modalToggle" :modalActive="modalValue">
+    <Modal :modal-active="modalValue" @close="modalToggle">
       <div class="eligible-activities mb-6 text-sm leading-relaxed">
         <div class="title mb-6 flex">
-          <svg-vue
-            icon="tick"
-            class="mr-1 mt-0.5 text-lg text-spring-50"
-          ></svg-vue>
+          <svg-vue icon="tick" class="mr-1 mt-0.5 text-lg text-spring-50" />
           <b>The following activities are eligible for publishing</b>
         </div>
         <div class="eligible-list rounded-lg bg-mint px-6">
@@ -124,7 +121,7 @@
           <svg-vue
             icon="warning-fill"
             class="mr-1 mt-0.5 text-lg text-crimson-40"
-          ></svg-vue>
+          />
           <b>The following activities are eligible for publishing</b>
         </div>
         <div class="eligible-list rounded-lg bg-rose px-6">
@@ -149,14 +146,14 @@
         <div class="inline-flex">
           <BtnComponent
             class="bg-white px-6 uppercase"
-            @click="modalValue = false"
             text="Cancel"
+            @click="modalValue = false"
           />
           <BtnComponent
             class="space"
             type="primary"
-            @click="modalValue = false"
             text="Publish"
+            @click="modalValue = false"
           />
         </div>
       </div>
@@ -173,7 +170,7 @@ import Modal from '../../../components/PopupModal.vue';
 import BtnComponent from '../../../components/ButtonComponent.vue';
 
 export default defineComponent({
-  name: 'page-title',
+  name: 'PageTitle',
   components: {
     AddActivityButton,
     Modal,

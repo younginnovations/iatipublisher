@@ -1,6 +1,6 @@
 <template>
   <div :class="className">
-    <svg-vue :icon="props.type ? 'check-circle' : 'times-circle'"></svg-vue>
+    <svg-vue :icon="props.type ? 'check-circle' : 'times-circle'" />
     <span>{{ props.message }}</span>
   </div>
 </template>
@@ -9,7 +9,7 @@
 import { defineComponent, ref } from 'vue';
 
 export default defineComponent({
-  name: 'toast-cmp',
+  name: 'ToastCmp',
   components: {},
   props: {
     message: {

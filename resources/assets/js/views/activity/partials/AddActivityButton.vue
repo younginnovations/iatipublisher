@@ -1,17 +1,17 @@
 <template>
   <div>
     <Toast
-      class="toast top-28"
       v-if="toastVisibility"
+      class="toast top-28"
       :message="toastMessage"
       :type="toastType"
-    ></Toast>
+    />
     <button
+      ref="dropdownBtn"
       class="button primary-btn relative font-bold"
       @click="toggle"
-      ref="dropdownBtn"
     >
-      <svg-vue icon="plus"></svg-vue>
+      <svg-vue icon="plus" />
       <span>Add Activity</span>
       <div
         v-if="state.isVisible"
@@ -19,37 +19,37 @@
       >
         <ul>
           <li>
-            <a href="#" @click="modalValue = true" :class="liClass"
+            <a href="#" :class="liClass" @click="modalValue = true"
               >Add activity manually</a
             >
           </li>
-          <li><a href="#" :class="liClass">Upload activities from .xml</a></li>
-          <li><a href="#" :class="liClass">Upload activities from .csv</a></li>
+          <li>
+            <a href="#" :class="liClass">Upload activities from .xml</a>
+          </li>
+          <li>
+            <a href="#" :class="liClass">Upload activities from .csv</a>
+          </li>
         </ul>
       </div>
     </button>
     <CreateModal
+      :modal-active="modalValue"
       @close="modalToggle"
-      :modalActive="modalValue"
-      @closeModal="modalToggle"
+      @close-modal="modalToggle"
       @toast="toast"
-    ></CreateModal>
+    />
   </div>
 </template>
 
 <script lang="ts">
 import { reactive, defineComponent, ref, onMounted } from 'vue';
-import Model from '../../../components/PopupModal.vue';
-import HoverText from '../../../components/HoverText.vue';
 import CreateModal from '../CreateModal.vue';
 import { useToggle } from '@vueuse/core';
 import Toast from '../../../components/Toast.vue';
 
 export default defineComponent({
-  name: 'add-activity-button',
+  name: 'AddActivityButton',
   components: {
-    Model,
-    HoverText,
     CreateModal,
     Toast,
   },

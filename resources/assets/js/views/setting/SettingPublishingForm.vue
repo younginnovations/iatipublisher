@@ -6,8 +6,8 @@
         <button>
           <HoverText
             name="IATI Registry Information"
-            hover_text="IATI Publisher needs to add your organisation's data to the IATI Registry (iatiregistry.org). To do this, we need to access your organisation's IATI Registry Publisher Account. Please provide your organisation's credentials from the IATI Registry."
-          ></HoverText>
+            hover-text="IATI Publisher needs to add your organisation's data to the IATI Registry (iatiregistry.org). To do this, we need to access your organisation's IATI Registry Publisher Account. Please provide your organisation's credentials from the IATI Registry."
+          />
         </button>
       </div>
     </div>
@@ -21,25 +21,24 @@
                 <HoverText
                   width="w-72"
                   name="Publisher ID"
-                  hover_text="This is the unique ID for your organisation that you created when you set up your IATI Registry Publisher Account. It is a shortened version of your organisation's name, which will include lowercase letters and may include numbers and also - (dash) and _ (underscore). For example nef_mali' for Near East Foundation Mali."
-                ></HoverText>
+                  hover-text="This is the unique ID for your organisation that you created when you set up your IATI Registry Publisher Account. It is a shortened version of your organisation's name, which will include lowercase letters and may include numbers and also - (dash) and _ (underscore). For example nef_mali' for Near East Foundation Mali."
+                />
               </button>
             </div>
             <input
               id="publisher-id"
-              :class="
-                publishingError.publisher_id
-                  ? 'register__input error__input mb-2'
-                  : 'register__input mb-2'
-              "
+              class="register__input mb-2"
+              :class="{
+                error__input: publishingError.publisher_id,
+              }"
               type="text"
               placeholder="Type Publisher ID here"
               :value="props.organization.publisher_id"
+              disabled="true"
               @input="updateStore('publisher_id')"
-              disabled="disabled"
             />
           </div>
-          <span class="error" role="alert" v-if="publishingError.publisher_id">
+          <span v-if="publishingError.publisher_id" class="error" role="alert">
             {{ publishingError.publisher_id }}
           </span>
         </div>
@@ -50,34 +49,32 @@
               <button>
                 <HoverText
                   name="API Token"
-                  hover_text="The API token is a unique key that is generated from your organisation's IATI Registry Publisher Account. It is required to give IATI Publisher permission to add data to the IATI Registry on your behalf. Generate a Token in the 'My Account' tab by <a href='https://www.iatiregistry.org/user/login' target='_blank' target='_blank'>logging</a> into to the IATI Registry."
-                ></HoverText>
+                  hover-text="The API token is a unique key that is generated from your organisation's IATI Registry Publisher Account. It is required to give IATI Publisher permission to add data to the IATI Registry on your behalf. Generate a Token in the 'My Account' tab by <a href='https://www.iatiregistry.org/user/login' target='_blank' target='_blank'>logging</a> into to the IATI Registry."
+                />
               </button>
             </div>
             <input
               id="api-token"
-              :class="
-                publishingError.api_token
-                  ? 'register__input error__input mb-2'
-                  : 'register__input mb-2'
-              "
+              v-model="publishingForm.api_token"
+              class="register__input mb-2"
+              :class="{
+                error__input: publishingError.api_token,
+              }"
               type="text"
               placeholder="Type API Token here"
-              v-model="publishingForm.api_token"
               @input="updateStore('api_token')"
             />
             <span
               v-if="publishingInfo.isVerificationRequested"
-              :class="
-                publishingInfo.token_verification
-                  ? 'tag__correct'
-                  : 'tag__incorrect'
-              "
+              :class="{
+                tag__correct: publishingInfo.token_verification,
+                tag__incorrect: !publishingInfo.token_verification,
+              }"
             >
               {{ publishingInfo.token_verification ? 'Correct' : 'Incorrect' }}
             </span>
           </div>
-          <span class="error" role="alert" v-if="publishingError.api_token">
+          <span v-if="publishingError.api_token" class="error" role="alert">
             {{ publishingError.api_token }}
           </span>
         </div>
@@ -98,23 +95,30 @@ export default defineComponent({
   components: {
     HoverText,
   },
-  emits: ['submitPublishing'],
   props: {
     organization: {
-      type: Object,
+      type: [Object, String],
       required: true,
     },
   },
+  emits: ['submitPublishing'],
 
   setup(props, { emit }) {
     const tab = ref('publish');
     const store = useStore();
 
+    interface ObjectType {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      [key: string]: any;
+    }
+
     const publishingForm = computed(() => store.state.publishingForm);
 
     const publishingInfo = computed(() => store.state.publishingInfo);
 
-    const publishingError = computed(() => store.state.publishingError);
+    const publishingError: ObjectType = computed(
+      () => store.state.publishingError
+    );
 
     function submitPublishing() {
       emit('submitPublishing');

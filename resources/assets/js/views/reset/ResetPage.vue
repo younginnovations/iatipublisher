@@ -1,6 +1,6 @@
 <template>
   <div class="mt-14">
-    <Loader v-if="loaderVisibility"></Loader>
+    <Loader v-if="loaderVisibility" />
     <div class="reset" @keyup.enter="reset">
       <div class="mb-8 flex flex-col">
         <h2>Password Recovery</h2>
@@ -16,13 +16,16 @@
         >
         <input
           id="email"
+          v-model="formData.email"
           type="email"
           placeholder="Enter your email address"
-          :class="emailError != '' ? 'error__input input' : 'input'"
-          v-model="formData.email"
+          class="input"
+          :class="{
+            error__input: emailError != '',
+          }"
         />
-        <svg-vue class="reset__icon mail__icon" icon="mail"></svg-vue>
-        <span class="error" role="alert" v-if="emailError"
+        <svg-vue class="reset__icon mail__icon" icon="mail" />
+        <span v-if="emailError" class="error" role="alert"
           >{{ emailError }}
         </span>
       </div>

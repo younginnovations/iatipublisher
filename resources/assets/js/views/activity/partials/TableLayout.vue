@@ -9,7 +9,7 @@
               href="#"
             >
               <span class="sorting-indicator descending">
-                <svg-vue icon="descending-arrow"></svg-vue>
+                <svg-vue icon="descending-arrow" />
               </span>
               <span>Activity Title</span>
             </a>
@@ -20,7 +20,7 @@
               href="#"
             >
               <span class="sorting-indicator ascending">
-                <svg-vue icon="ascending-arrow"></svg-vue>
+                <svg-vue icon="ascending-arrow" />
               </span>
               <span>Updated On</span>
             </a>
@@ -33,7 +33,7 @@
           </th>
           <th id="cb" scope="col">
             <span class="">
-              <svg-vue icon="checkbox"></svg-vue>
+              <svg-vue icon="checkbox" />
             </span>
           </th>
         </tr>
@@ -67,14 +67,16 @@
             </div>
           </td>
 
-          <td class="text-n-40">{{ formatDate(datum.created_at) }}</td>
+          <td class="text-n-40">
+            {{ formatDate(datum.created_at) }}
+          </td>
 
           <td>
             <button
               class="inline-flex items-center text-n-40 transition duration-500 hover:text-spring-50"
             >
               <span class="mr-1 text-base">
-                <svg-vue icon="document-write"></svg-vue>
+                <svg-vue icon="document-write" />
               </span>
               <span class="text-sm leading-relaxed">{{ datum['status'] }}</span>
             </button>
@@ -83,12 +85,12 @@
           <td>
             <button
               v-if="
-                datum['status'] != 'draft' && datum['status'] != 'published'
+                datum['status'] !== 'draft' && datum['status'] !== 'published'
               "
               class="button primary-outline-btn w-20"
             >
               {{
-                datum['status'] == 'ready_to_publish' ? 'Publish' : 'RePublish'
+                datum['status'] === 'ready_to_publish' ? 'Publish' : 'RePublish'
               }}
             </button>
           </td>
@@ -104,7 +106,7 @@
                 type="checkbox"
                 @change="emitShowOrHide"
               />
-              <span class="checkmark"></span>
+              <span class="checkmark" />
             </label>
           </th>
         </tr>
@@ -118,15 +120,15 @@ import { defineComponent, reactive } from 'vue';
 import moment from 'moment';
 
 export default defineComponent({
-  name: 'table-layout',
+  name: 'TableLayout',
   components: {},
-  emits: ['showOrHide'],
   props: {
     data: {
       type: [Object],
       required: true,
     },
   },
+  emits: ['showOrHide'],
   setup(props, { emit }) {
     const state = reactive({
       selected: [],
@@ -140,7 +142,7 @@ export default defineComponent({
       return moment(date).fromNow();
     }
 
-    function goToDetail(id: Number) {
+    function goToDetail(id: number) {
       window.location.href = '/activities/' + id;
     }
 

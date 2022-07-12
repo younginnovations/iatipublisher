@@ -10,10 +10,10 @@
         >. Please click on the link in the email to verify and activate your new
         IATI publisher account.
       </p>
-      <svg-vue class="verification" icon="ic-verification"></svg-vue>
+      <svg-vue class="verification" icon="ic-verification" />
       <a href="/activities" class="btn btn-next get-started-btn">
         Get started
-        <svg-vue class="text-2xl" icon="right-arrow"></svg-vue>
+        <svg-vue class="text-2xl" icon="right-arrow" />
       </a>
     </div>
   </form>
@@ -24,7 +24,7 @@ import { defineComponent } from 'vue';
 
 export default defineComponent({
   props: {
-    email: String,
+    email: { type: String, default: '' },
   },
 
   setup(props) {

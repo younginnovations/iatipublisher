@@ -3,7 +3,6 @@
 
 php artisan test && \
 npx stylelint "resources/**/*.scss" --fix && \
-npm run prettier:format && \
 npm run lint && \
 composer lint && \
 git add .

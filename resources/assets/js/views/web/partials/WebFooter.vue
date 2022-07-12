@@ -12,7 +12,7 @@
               <svg-vue
                 class="h-auto w-60 text-6xl sm:w-64"
                 icon="footer-logo"
-              ></svg-vue>
+              />
             </a>
           </div>
           <div class="footer__links">
@@ -40,7 +40,7 @@
               <p>Documentation licensed under CC BY 3.0</p>
             </div>
             <div class="my-5 flex items-center space-x-2 text-n-10">
-              <svg-vue class="text-2xl" icon="headphone"></svg-vue>
+              <svg-vue class="text-2xl" icon="headphone" />
               <span class="text-xs font-bold uppercase"
                 >Any questions? Contact Support</span
               >
@@ -61,15 +61,15 @@
     <div class="mx-5 py-7 sm:mx-10 xl:mx-24 xl:px-1">
       <div class="footer__container grid gap-3 sm:grid-cols-2">
         <span class="flex items-center text-n-30">
-          <svg-vue class="mr-1 text-base" icon="copyright"></svg-vue>
+          <svg-vue class="mr-1 text-base" icon="copyright" />
           Copyright IATI 2022. All rights reserved.</span
         >
         <div class="flex sm:justify-end">
           <a href="/">
-            <svg-vue class="mt-1 mr-1 text-4xl" icon="youtube"></svg-vue>
+            <svg-vue class="mt-1 mr-1 text-4xl" icon="youtube" />
           </a>
           <a class="ml-4" href="/">
-            <svg-vue class="mt-1 mr-1 text-4xl" icon="twitter"></svg-vue>
+            <svg-vue class="mt-1 mr-1 text-4xl" icon="twitter" />
           </a>
         </div>
       </div>

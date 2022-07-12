@@ -13,7 +13,7 @@
 import { defineComponent } from 'vue';
 
 export default defineComponent({
-  name: 'toast-message',
+  name: 'ToastMessage',
   components: {},
   setup() {
     return {};

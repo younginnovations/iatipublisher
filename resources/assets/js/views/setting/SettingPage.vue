@@ -1,11 +1,11 @@
 <template>
   <section class="section">
-    <Loader v-if="loaderVisibility"></Loader>
+    <Loader v-if="loaderVisibility" />
     <div class="setting input__field">
       <span class="text-xs font-bold text-n-40">Settings</span>
       <div class="flex items-center justify-between">
         <div class="mt-4 mb-6 flex items-center">
-          <a href="/activities"><svg-vue icon="left-arrow"></svg-vue></a>
+          <a href="/activities"><svg-vue icon="left-arrow" /></a>
           <h2 class="ml-3 text-heading-4 font-bold text-n-50">Settings</h2>
         </div>
         <div>
@@ -13,21 +13,25 @@
             v-if="toastVisibility"
             :message="toastMessage"
             :type="toastType"
-          ></Toast>
+          />
         </div>
       </div>
       <div class="setting__container overflow-x-hidden">
         <div class="flex">
           <button
-            :class="
-              tab === 'publish' ? 'tab-btn active__tab mr-2' : 'tab-btn mr-2'
-            "
+            class="tab-btn mr-2"
+            :class="{
+              active__tab: tab === 'publish',
+            }"
             @click="toggleTab('publish')"
           >
             Publishing Settings
           </button>
           <button
-            :class="tab === 'default' ? 'tab-btn active__tab' : 'tab-btn'"
+            class="tab-btn"
+            :class="{
+              active__tab: tab === 'default',
+            }"
             @click="toggleTab('default')"
           >
             Default Values
@@ -36,15 +40,16 @@
         <SettingPublishingForm
           v-if="tab === 'publish'"
           :organization="props.organization"
-          @submitPublishing="submitForm"
-        ></SettingPublishingForm>
-        <SettingDefaultForm
           @keyup.enter="submitForm"
+          @submit-publishing="submitForm"
+        />
+        <SettingDefaultForm
           v-else
           :currencies="currencies"
           :languages="languages"
           :humanitarian="humanitarian"
-        ></SettingDefaultForm>
+          @keyup.enter="submitForm"
+        />
       </div>
     </div>
     <div class="fixed bottom-0 w-full bg-eggshell py-5 pr-40 shadow-dropdown">

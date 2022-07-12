@@ -10,7 +10,7 @@
       </span>
       <a href="#" class="right__content pointer-events-none mb-6">
         <div class="right__icon">
-          <svg-vue class="text-6xl" icon="default-1"></svg-vue>
+          <svg-vue class="text-6xl" icon="default-1" />
         </div>
         <div class="details mx-4 xl:px-1">
           <span class="text-sm font-bold text-bluecoral">I am new to IATI</span>
@@ -20,12 +20,12 @@
           </p>
         </div>
         <div>
-          <svg-vue class="right__arrow text-2xl" icon="right-arrow"></svg-vue>
+          <svg-vue class="right__arrow text-2xl" icon="right-arrow" />
         </div>
       </a>
       <a href="/register" class="right__content mb-4">
         <div class="right__icon">
-          <svg-vue class="text-6xl" icon="default-2"></svg-vue>
+          <svg-vue class="text-6xl" icon="default-2" />
         </div>
         <div class="details mx-4 xl:px-1">
           <span class="text-sm font-bold text-bluecoral"
@@ -40,7 +40,7 @@
           </p>
         </div>
         <div>
-          <svg-vue class="right__arrow text-2xl" icon="right-arrow"></svg-vue>
+          <svg-vue class="right__arrow text-2xl" icon="right-arrow" />
         </div>
       </a>
       <span class="text-sm text-n-40"

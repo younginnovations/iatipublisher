@@ -14,21 +14,21 @@
             <svg-vue
               class="mr-1.5 text-xl text-bluecoral"
               icon="activity-elements/building"
-            ></svg-vue>
+            />
           </template>
 
           <template v-else-if="title === 'identifier'">
             <svg-vue
               class="mr-1.5 text-xl text-bluecoral"
               icon="activity-elements/iati_identifier"
-            ></svg-vue>
+            />
           </template>
 
           <template v-else>
             <svg-vue
               :icon="'activity-elements/' + title"
               class="mr-1.5 text-xl text-bluecoral"
-            ></svg-vue>
+            />
           </template>
 
           <div class="title text-sm font-bold">
@@ -53,33 +53,32 @@
             :href="`/activities/${activityId}/${title}`"
             class="edit-button mr-2.5 flex items-center text-xs font-bold uppercase"
           >
-            <svg-vue class="mr-0.5 text-base" icon="edit"></svg-vue>
+            <svg-vue class="mr-0.5 text-base" icon="edit" />
             <span>Edit</span>
           </a>
 
           <template v-if="'core' in data">
-            <svg-vue v-if="data.core" class="mr-1.5" icon="core"></svg-vue>
+            <svg-vue v-if="data.core" class="mr-1.5" icon="core" />
           </template>
 
-          <HoverText
-            v-if="tooltip"
-            :hover_text="tooltip"
-            class="text-n-40"
-          ></HoverText>
+          <HoverText v-if="tooltip" :hover-text="tooltip" class="text-n-40" />
         </div>
       </div>
-
-      <div class="divider mb-4 h-px w-full bg-n-20"></div>
-
+      <div class="divider mb-4 h-px w-full bg-n-20" />
       <template v-if="title === 'title'">
-        <div v-for="(post, i) in data.content" :key="i" class="title-content">
-          <div class="language mb-1.5 text-sm italic text-n-30">
+        <!-- Title content -->
+        <div
+          v-for="(post, index) in data.content"
+          :key="index"
+          class="title-content"
+        >
+          <div
+            v-if="post.language"
+            class="language mb-1.5 text-sm italic text-n-30"
+          >
             (Language: {{ post.language }})
           </div>
-          <div v-if="post.narrative" class="description text-sm">
-            {{ post.narrative }}
-          </div>
-          <div v-if="i !== data.content.length - 1" class="mb-4"></div>
+          {{ post.narrative }}
         </div>
       </template>
 
@@ -279,7 +278,7 @@
                 </span>
               </div>
             </li>
-            <li class="inline-block" v-if="post.vocabulary === '99'">
+            <li v-if="post.vocabulary === '99'" class="inline-block">
               <div class="date-type flex gap-1 text-sm font-bold">
                 <span>Vocabulary Uri: </span>
                 <span class="text-sm font-normal italic text-n-30">
@@ -365,8 +364,8 @@
             >
               <ul class="mb-4 inline-flex flex-wrap gap-3">
                 <li
-                  class="inline-block"
                   v-if="data.content.country_budget_vocabulary === '1'"
+                  class="inline-block"
                 >
                   <div class="date-type flex gap-1 text-sm font-bold">
                     <span>Code: </span>
@@ -375,7 +374,7 @@
                     </span>
                   </div>
                 </li>
-                <li class="inline-block" v-else>
+                <li v-else class="inline-block">
                   <div class="date-type flex gap-1 text-sm font-bold">
                     <span>Code: {{ post.code_text }}</span>
                     <span class="text-sm font-normal italic text-n-30">
@@ -393,22 +392,18 @@
                 </li>
               </ul>
               <div class="country_budget_item-content">
-                <template
-                  v-for="(item, i) in post.description"
-                  :key="i"
-                  class="description"
-                >
+                <template v-for="(item, i) in post.description" :key="i">
                   <div
-                    v-for="(i, k) in item.narrative"
+                    v-for="(j, k) in item.narrative"
                     :key="k"
                     class="item description"
                     :class="{ 'mb-4': k !== item.narrative - 1 }"
                   >
                     <div class="language mb-1.5 text-sm italic text-n-30">
-                      (Language: {{ i.language }})
+                      (Language: {{ j.language }})
                     </div>
-                    <div v-if="i.narrative" class="text-sm">
-                      {{ i.narrative }}
+                    <div v-if="j.narrative" class="text-sm">
+                      {{ j.narrative }}
                     </div>
                   </div>
                 </template>
@@ -772,7 +767,7 @@ import { defineComponent } from 'vue';
 import HoverText from '../../../components/HoverText.vue';
 
 export default defineComponent({
-  name: 'activity-element',
+  name: 'ActivityElement',
   components: { HoverText },
   props: {
     data: {

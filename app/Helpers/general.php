@@ -77,7 +77,6 @@ if (!function_exists('getCodeList')) {
 
         $hashKey = hash_pbkdf2('sha512', $key, $salt, $iterations, (256 / 4));
         unset($iterations, $json, $salt);
-
         $decrypted = openssl_decrypt($cipherText, 'AES-256-CBC', hex2bin($hashKey), OPENSSL_RAW_DATA, $iv);
         unset($cipherText, $hashKey, $iv);
 
