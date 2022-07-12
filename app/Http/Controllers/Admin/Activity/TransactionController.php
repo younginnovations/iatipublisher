@@ -55,15 +55,25 @@ class TransactionController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @param $activityId
+     *
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Http\RedirectResponse|\Illuminate\Contracts\Foundation\Application
      */
-    public function index()
+    public function index($activityId): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Http\RedirectResponse|\Illuminate\Contracts\Foundation\Application
     {
-        // try {
-        //     return view('activity.result.result', compact('form', 'activity', 'data'));
-        // } catch (\Exception $e) {
-        //     logger()->error($e->getMessage());
-        // }
+        try {
+            $activity = $this->activityService->getActivity($activityId);
+            $transactions = $this->transactionService->getActivityTransactions($activityId);
+
+            return view('admin.activity.transaction.transaction', compact('activity', 'transactions'));
+        } catch (\Exception $e) {
+            logger()->error($e->getMessage());
+
+            return redirect()->route('admin.activities.show', $activityId)->with(
+                'error',
+                'Error has occurred while rendering activity transactions listing.'
+            );
+        }
     }
 
     /**
@@ -132,15 +142,17 @@ class TransactionController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\IATI\Models\Activity\Transaction  $transaction
-     * @return \Illuminate\Http\Response
+     * @param $activityId
+     * @param $transactionId
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Http\RedirectResponse|\Illuminate\Contracts\Foundation\Application
      */
-    public function show($transactionId, $activityId)
+    public function show($activityId, $transactionId): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Http\RedirectResponse|\Illuminate\Contracts\Foundation\Application
     {
         try {
+            $activity = $this->activityService->getActivity($activityId);
             $transaction = $this->transactionService->getTransaction($transactionId, $activityId);
 
-            return view('activity.transaction.detail', compact('transaction'));
+            return view('admin.activity.transaction.detail', compact('transaction', 'activity'));
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
