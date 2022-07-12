@@ -65,7 +65,7 @@ app.component('LoggedinHeader', LoggedInHeader);
 app.component('ActivitiesDetail', ActivitiesDetail);
 app.component('DescriptionForm', StaticDescriptionForm);
 app.component('ElementsNote', ElementsNote);
-app.component('result-detail', ResultDetail);
+app.component('ResultDetail', ResultDetail);
 
 /*
 setting page

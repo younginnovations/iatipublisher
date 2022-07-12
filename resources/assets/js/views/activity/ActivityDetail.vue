@@ -311,7 +311,7 @@
                   :data="element"
                   :types="types"
                   :title="name.toString()"
-                  :activityId="activity.id"
+                  :activity-id="activity.id"
                   :width="
                     String(name) === 'identifier' ||
                     String(name) === 'activity_status' ||
@@ -334,7 +334,7 @@
                   :data="element"
                   :types="types"
                   :title="name.toString()"
-                  :activityId="activity.id"
+                  :activity-id="activity.id"
                   :completed="status[name] ?? false"
                   tooltip="Example text"
                 />
@@ -459,8 +459,10 @@ export default defineComponent({
      */
 
     const groupedData = { ...props.groups },
+      // eslint-disable-next-line vue/no-setup-props-destructure
       detailData = props.activity,
       activities = { ...props.groups };
+    // eslint-disable-next-line vue/no-setup-props-destructure
     detailData.result = props.results;
 
     // generating available elements
@@ -500,11 +502,13 @@ export default defineComponent({
       // eslint-disable-next-line vue/no-mutating-props
       props.elements[key]['completed'] = props.status[key] ?? false;
 
+      // eslint-disable-next-line vue/no-mutating-props
       props.elements[key]['has_data'] = 0;
 
       if (key in props.activity) {
         if (typeof props.activity[key] === 'object' && props.activity[key]) {
           if (Object.keys(props.activity[key]).length > 0) {
+            // eslint-disable-next-line vue/no-mutating-props
             props.elements[key]['has_data'] = 1;
           }
         }

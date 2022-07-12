@@ -6,8 +6,8 @@
       :class="{
         'pointer-events-none': page_count <= 1,
       }"
-      @click="previousPage"
       aria-disabled=""
+      @click="previousPage"
     >
       <svg-vue icon="arrow-left"></svg-vue>
       <span class="">Prev</span>
@@ -15,6 +15,7 @@
 
     <a
       v-for="index in page_count"
+      :key = "index"
       :class="active_page === index ? 'current' : ''"
     >
       {{ index }}
@@ -40,7 +41,7 @@ export default defineComponent({
   name: 'PaginationComponent',
   components: {},
   props: {
-    page_count: {
+    pageCount: {
       type: Number,
       required: true,
     },
@@ -59,12 +60,12 @@ export default defineComponent({
 
     function nextPage() {
       active_page.value =
-        active_page.value === props.page_count ? 1 : active_page.value + 1;
+        active_page.value === props.pageCount ? 1 : active_page.value + 1;
     }
 
     function previousPage() {
       active_page.value =
-        active_page.value === 1 ? props.page_count : active_page.value - 1;
+        active_page.value === 1 ? props.pageCount : active_page.value - 1;
     }
 
     return { props, active_page, updateActivePage, nextPage, previousPage };

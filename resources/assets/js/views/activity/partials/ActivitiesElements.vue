@@ -71,6 +71,9 @@
     <div class="elements__listing mt-3 grid grid-cols-2 gap-2">
       <template v-for="(post, index) in filteredElements" :key="index">
         <a
+          v-if="
+            !(index.toString() === 'indicator' || index.toString() === 'period')
+          "
           class="elements__item relative flex cursor-pointer flex-col items-center justify-center rounded border border-dashed border-n-40 py-2.5 text-n-30"
           :href="
             post.has_data
@@ -78,9 +81,6 @@
               : index === 'result'
               ? `/activities/${activityId}/${index}/create`
               : `/activities/${activityId}/${index}`
-          "
-          v-if="
-            !(index.toString() === 'indicator' || index.toString() === 'period')
           "
         >
           <div

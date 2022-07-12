@@ -1,11 +1,11 @@
 <template>
   <div
+    id=""
     class="activities__content--element px-3 py-3 text-n-50"
     :class="{
       'basis-full': width === 'full',
       'basis-6/12': width === '',
     }"
-    id=""
   >
     <div class="rounded-lg bg-white p-4">
       <div class="mb-4 flex">
@@ -187,10 +187,9 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import HoverText from '../../../components/HoverText.vue';
-import moment from 'moment';
 
 export default defineComponent({
-  name: 'activity-element',
+  name: 'ActivityElement',
   components: { HoverText },
   props: {
     data: {
@@ -211,7 +210,7 @@ export default defineComponent({
       default: '',
     },
   },
-  setup(props) {
+  setup() {
     return {};
   },
 });

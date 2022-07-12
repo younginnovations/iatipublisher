@@ -1,6 +1,6 @@
 <template>
   <div :class="layout" class="activities__content--element p-3 text-n-50">
-    <div class="rounded-lg bg-white p-4" :id="title">
+    <div :id="title" class="rounded-lg bg-white p-4">
       <div class="mb-4 flex">
         <div class="title flex grow">
           <template
@@ -76,7 +76,7 @@
               {{ post.narrative }}
             </span>
           </div>
-          <span class="text-sm italic" v-else>Title Not Available</span>
+          <span v-else class="text-sm italic">Title Not Available</span>
           <div v-if="i !== data.content.length - 1" class="mb-4"></div>
         </div>
       </template>
@@ -101,7 +101,7 @@
             <span v-if="post.type">
               {{ props.types.descriptionType[post.type] }}
             </span>
-            <span class="italic" v-else>Type Not Available</span>
+            <span v-else class="italic">Type Not Available</span>
           </div>
           <div
             v-for="(item, i) in post.narrative"
@@ -117,7 +117,7 @@
                 {{ item.narrative }}
               </span>
             </div>
-            <span class="italic" v-else>Narrative Not Available</span>
+            <span v-else class="italic">Narrative Not Available</span>
           </div>
         </div>
       </template>
@@ -134,7 +134,7 @@
               <span v-if="post.type" class="font-bold">{{
                 props.types.activityDate[post.type]
               }}</span>
-              <span class="text-sm font-bold italic" v-else
+              <span v-else class="text-sm font-bold italic"
                 >Type Not Available</span
               >
             </div>
@@ -142,7 +142,7 @@
               <span v-if="post.date" class="text-sm font-normal">{{
                 formatDate(post.date)
               }}</span>
-              <span class="text-sm italic" v-else>Date Not Available</span>
+              <span v-else class="text-sm italic">Date Not Available</span>
             </div>
           </div>
           <div
@@ -163,7 +163,7 @@
                       {{ item.narrative }}
                     </span>
                   </div>
-                  <span class="italic" v-else>Not Available</span>
+                  <span v-else class="italic">Not Available</span>
                 </td>
               </tr>
             </table>
@@ -185,7 +185,7 @@
                 >({{ post.percentage }}%)</span
               >
             </div>
-            <span class="italic" v-else>Not Available</span>
+            <span v-else class="italic">Not Available</span>
           </div>
 
           <div
@@ -200,7 +200,7 @@
               </span>
               <span>{{ item.narrative }}</span>
             </div>
-            <span class="italic" v-else>Narrative Not Available</span>
+            <span v-else class="italic">Narrative Not Available</span>
           </div>
         </div>
       </template>
@@ -217,13 +217,13 @@
               <span v-if="post.relationship_type">{{
                 props.types.relatedActivityType[post.relationship_type]
               }}</span>
-              <span class="italic" v-else>Type Not Available</span>
+              <span v-else class="italic">Type Not Available</span>
             </div>
             <div>
               <span v-if="post.activity_identifier">{{
                 post.activity_identifier
               }}</span>
-              <span class="italic" v-else>Reference Not Available</span>
+              <span v-else class="italic">Reference Not Available</span>
             </div>
           </div>
         </div>
@@ -239,21 +239,21 @@
         >
           <div class="mb-1 text-sm">
             <div v-if="post.name">{{ post.name }}</div>
-            <span class="italic" v-else>Name Not Available</span>
+            <span v-else class="italic">Name Not Available</span>
           </div>
           <div class="ml-5">
             <table>
               <tr>
                 <td>Value</td>
                 <td v-if="post.value">{{ post.value }}</td>
-                <td class="italic" v-else>Not Available</td>
+                <td v-else class="italic">Not Available</td>
               </tr>
             </table>
             <table>
               <tr>
                 <td>Iati-Equivalent</td>
                 <td v-if="post.iati_equivalent">{{ post.iati_equivalent }}</td>
-                <td class="italic" v-else>Not Available</td>
+                <td v-else class="italic">Not Available</td>
               </tr>
             </table>
           </div>
@@ -276,7 +276,7 @@
                 <div v-if="post.condition_type">
                   {{ props.types.conditionType[post.condition_type] }}
                 </div>
-                <span class="italic" v-else>Type Not Available</span>
+                <span v-else class="italic">Type Not Available</span>
               </div>
               <table class="ml-5">
                 <tr>
@@ -304,13 +304,13 @@
                       >
                       <span v-if="item.narrative">{{ item.narrative }}</span>
                     </div>
-                    <span class="italic" v-else>Not Available</span>
+                    <span v-else class="italic">Not Available</span>
                   </td>
                 </tr>
               </table>
             </div>
           </div>
-          <span class="text-sm italic" v-else>Condition not Attached</span>
+          <span v-else class="text-sm italic">Condition not Attached</span>
         </div>
       </template>
 
@@ -326,7 +326,7 @@
             <span v-if="post.type">{{
               types.humanitarianScopeType[post.type]
             }}</span>
-            <span class="italic" v-else>Type Not Available</span>
+            <span v-else class="italic">Type Not Available</span>
           </div>
           <div
             v-for="(item, i) in post.narrative"
@@ -342,7 +342,7 @@
                 (Language: {{ types.languages[item.language] }})
               </span>
             </div>
-            <span class="italic" v-else>Narrative Not Available</span>
+            <span v-else class="italic">Narrative Not Available</span>
           </div>
           <table class="ml-5">
             <tr>
@@ -350,17 +350,17 @@
               <td v-if="post.vocabulary">
                 {{ types.humanitarianScopeVocabulary[post.vocabulary] }}
               </td>
-              <td class="italic" v-else>Not Available</td>
+              <td v-else class="italic">Not Available</td>
             </tr>
             <tr>
               <td>Vocabulary URI</td>
               <td v-if="post.vocabulary_uri">{{ post.vocabulary_uri }}</td>
-              <td class="italic" v-else>Not Available</td>
+              <td v-else class="italic">Not Available</td>
             </tr>
             <tr>
               <td>Code</td>
               <td v-if="post.code">{{ post.code }}</td>
-              <td class="italic" v-else>Not Available</td>
+              <td v-else class="italic">Not Available</td>
             </tr>
           </table>
         </div>
@@ -379,35 +379,35 @@
               <span v-if="post.default_aidtype_vocabulary">{{
                 types.aidTypeVocabulary[post.default_aidtype_vocabulary]
               }}</span>
-              <span class="italic" v-else>Vocabulary Not Available</span>
+              <span v-else class="italic">Vocabulary Not Available</span>
             </div>
 
             <div v-if="post.default_aidtype_vocabulary === '2'" class="text-sm">
               <span v-if="post.earmarking_category">{{
                 types.earmarkingCategory[post.earmarking_category]
               }}</span>
-              <span class="italic" v-else>Not Available</span>
+              <span v-else class="italic">Not Available</span>
             </div>
 
             <div v-else-if="post.default_aidtype_Code === '3'" class="text-sm">
               <span v-if="post.earmarking_modality">{{
                 types.earmarkingModality[post.earmarking_modality]
               }}</span>
-              <span class="italic" v-else>Not Available</span>
+              <span v-else class="italic">Not Available</span>
             </div>
 
             <div v-else-if="post.default_aidtype_Code === '4'" class="text-sm">
               <span v-if="post.cash_and_voucher_modalities">{{
                 types.cashandVoucherModalities[post.cash_and_voucher_modalities]
               }}</span>
-              <span class="italic" v-else>Not Available</span>
+              <span v-else class="italic">Not Available</span>
             </div>
 
             <div v-else class="max-w-[887px] text-sm">
               <span v-if="post.default_aid_type">{{
                 types.aidType[post.default_aid_type]
               }}</span>
-              <span class="italic" v-else>Not Available</span>
+              <span v-else class="italic">Not Available</span>
             </div>
           </div>
         </div>
@@ -431,11 +431,11 @@
               </span>
               <span>({{ post.percentage }}%)</span>
             </div>
-            <span class="italic" v-else>Not Available</span>
+            <span v-else class="italic">Not Available</span>
           </div>
           <div v-else class="text-sm">
             <span v-if="post.code_text">{{ post.code_text }}</span>
-            <span class="italic" v-else>Not Available</span>
+            <span v-else class="italic">Not Available</span>
           </div>
           <template v-for="(item, i) in post.description" :key="i">
             <div
@@ -453,7 +453,7 @@
                         data.content.country_budget_vocabulary
                       ]
                     }}</span>
-                    <span class="italic" v-else>Not Available</span>
+                    <span v-else class="italic">Not Available</span>
                   </td>
                 </tr>
                 <tr class="multiline">
@@ -466,7 +466,7 @@
                       >
                       <span class="description">{{ narrative.narrative }}</span>
                     </div>
-                    <span class="italic" v-else>Not Available</span>
+                    <span v-else class="italic">Not Available</span>
                   </td>
                 </tr>
               </table>
@@ -487,35 +487,35 @@
             <span v-if="post.sector_vocabulary">{{
               types.sectorVocabulary[post.sector_vocabulary]
             }}</span>
-            <span class="italic" v-else>Vocabulary Not Available</span>
+            <span v-else class="italic">Vocabulary Not Available</span>
           </div>
           <div class="mb-1 flex space-x-1 text-sm">
             <div>
               <div v-if="post.sector_vocabulary === '1'">
                 <span v-if="post.code">{{ types.sectorCode[post.code] }}</span>
-                <span class="italic" v-else>Not Available</span>
+                <span v-else class="italic">Not Available</span>
               </div>
               <div v-else-if="post.sector_vocabulary === '2'">
                 <span v-if="post.category_code">{{
                   types.sectorCategory[post.category_code]
                 }}</span>
-                <span class="italic" v-else>Not Available</span>
+                <span v-else class="italic">Not Available</span>
               </div>
               <div v-else-if="post.sector_vocabulary === '7'">
                 <span v-if="post.sdg_goal">{{
                   types.sdgGoals[post.sdg_goal]
                 }}</span>
-                <span class="italic" v-else>Not Available</span>
+                <span v-else class="italic">Not Available</span>
               </div>
               <div v-else-if="post.sector_vocabulary === '8'">
                 <span v-if="post.sdg_target">{{
                   types.sdgTarget[post.sdg_target]
                 }}</span>
-                <span class="italic" v-else>Not Available</span>
+                <span v-else class="italic">Not Available</span>
               </div>
               <div v-else>
                 <span v-if="post.text">{{ post.text }}</span>
-                <span class="italic" v-else>Not Available</span>
+                <span v-else class="italic">Not Available</span>
               </div>
             </div>
             <span v-if="post.percentage" class="text-sm"
@@ -539,7 +539,7 @@
                     >
                     <span class="description">{{ narrative.narrative }}</span>
                   </div>
-                  <span class="italic" v-else>Not Available</span>
+                  <span v-else class="italic">Not Available</span>
                 </td>
               </tr>
               <tr
@@ -553,7 +553,7 @@
                   <span v-if="post.vocabulary_uri">{{
                     post.vocabulary_uri
                   }}</span>
-                  <span class="italic" v-else>Not Available</span>
+                  <span v-else class="italic">Not Available</span>
                 </td>
               </tr>
             </table>
@@ -572,18 +572,18 @@
             <span v-if="post.region_vocabulary">{{
               types.regionVocabulary[post.region_vocabulary]
             }}</span>
-            <span class="italic" v-else>Vocabulary Not Available</span>
+            <span v-else class="italic">Vocabulary Not Available</span>
           </div>
           <div class="flex space-x-1 text-sm">
             <div v-if="post.region_vocabulary === '1'">
               <span v-if="post.region_code">{{
                 types.region[post.region_code]
               }}</span>
-              <span class="italic" v-else>Not Available</span>
+              <span v-else class="italic">Not Available</span>
             </div>
             <div v-else>
               <span v-if="post.custom_code">{{ post.custom_code }}</span>
-              <span class="italic" v-else>Not Available</span>
+              <span v-else class="italic">Not Available</span>
             </div>
             <span v-if="post.percentage">({{ post.percentage }}%)</span>
           </div>
@@ -595,7 +595,7 @@
                   <span v-if="post.vocabulary_uri">{{
                     post.vocabulary_uri
                   }}</span>
-                  <span class="italic" v-else>Not Available</span>
+                  <span v-else class="italic">Not Available</span>
                 </td>
               </tr>
             </table>
@@ -620,7 +620,7 @@
                       narrative.narrative
                     }}</span>
                   </div>
-                  <span class="italic" v-else>Not Available</span>
+                  <span v-else class="italic">Not Available</span>
                 </td>
               </tr>
             </table>
@@ -635,13 +635,13 @@
             <span v-if="data.content.reference_type">{{
               types.otherIdentifierType[data.content.reference_type]
             }}</span>
-            <span class="italic" v-else>Type Not Available</span>
+            <span v-else class="italic">Type Not Available</span>
           </div>
           <div class="text-sm">
             <span v-if="data.content.reference">{{
               data.content.reference
             }}</span>
-            <span class="italic" v-else>Reference Not Available</span>
+            <span v-else class="italic">Reference Not Available</span>
           </div>
           <div>
             <div class="tb-content ml-5">
@@ -654,7 +654,7 @@
                   <tr>
                     <td>Owner Organisation Reference</td>
                     <td v-if="post.ref">{{ post.ref }}</td>
-                    <td class="italic" v-else>Not Available</td>
+                    <td v-else class="italic">Not Available</td>
                   </tr>
                 </table>
                 <div
@@ -675,7 +675,7 @@
                             i.narrative
                           }}</span>
                         </div>
-                        <span class="italic" v-else>Not Available</span>
+                        <span v-else class="italic">Not Available</span>
                       </td>
                     </tr>
                   </table>
@@ -698,20 +698,20 @@
             <span v-if="post.policymarker_vocabulary">{{
               types.policyMarkerVocabulary[post.policymarker_vocabulary]
             }}</span>
-            <span class="italic" v-else>Vocabulary Not Available</span>
+            <span v-else class="italic">Vocabulary Not Available</span>
           </div>
           <div class="text-sm">
             <div v-if="post.policymarker_vocabulary === '1'">
               <span v-if="post.policy_marker">
                 {{ types.policyMarker[post.policy_marker] }}
               </span>
-              <span class="italic" v-else>Not Available</span>
+              <span v-else class="italic">Not Available</span>
             </div>
             <div v-else>
               <span v-if="post.policy_marker_text">{{
                 post.policy_marker_text
               }}</span>
-              <span class="italic" v-else>Not Available</span>
+              <span v-else class="italic">Not Available</span>
             </div>
           </div>
           <table class="ml-5">
@@ -721,7 +721,7 @@
                 <span v-if="post.vocabulary_uri">{{
                   post.vocabulary_uri
                 }}</span>
-                <span class="italic" v-else>Not Available</span>
+                <span v-else class="italic">Not Available</span>
               </td>
             </tr>
             <tr>
@@ -730,7 +730,7 @@
                 <span v-if="post.significance">{{
                   types.policySignificance[post.significance]
                 }}</span>
-                <span class="italic" v-else>Not Available</span>
+                <span v-else class="italic">Not Available</span>
               </td>
             </tr>
             <tr
@@ -747,7 +747,7 @@
                   >
                   <span class="description">{{ narrative.narrative }}</span>
                 </div>
-                <span class="italic" v-else>Not Available</span>
+                <span v-else class="italic">Not Available</span>
               </td>
             </tr>
           </table>
@@ -766,26 +766,26 @@
             <span v-if="post.tag_vocabulary">{{
               types.tagVocabulary[post.tag_vocabulary]
             }}</span>
-            <span class="italic" v-else>Vocabulary Not Available</span>
+            <span v-else class="italic">Vocabulary Not Available</span>
           </div>
           <div class="max-w-[887px] text-sm">
             <span
               v-if="post.tag_vocabulary === '1' || post.tag_vocabulary === '99'"
             >
               <span v-if="post.tag_text">{{ post.tag_text }}</span>
-              <span class="italic" v-else>Not Available</span>
+              <span v-else class="italic">Not Available</span>
             </span>
             <span v-if="post.tag_vocabulary === '2'">
               <span v-if="post.goals_tag_code">{{
                 types.sdgGoals[post.goals_tag_code]
               }}</span>
-              <span class="italic" v-else>Not Available</span>
+              <span v-else class="italic">Not Available</span>
             </span>
             <span v-if="post.tag_vocabulary === '3'">
               <span v-if="post.targets_tag_code">{{
                 types.sdgTarget[post.targets_tag_code]
               }}</span>
-              <span class="italic" v-else>Not Available</span>
+              <span v-else class="italic">Not Available</span>
             </span>
           </div>
           <table
@@ -803,7 +803,7 @@
                   >
                   <span class="description">{{ narrative.narrative }}</span>
                 </div>
-                <span class="italic" v-else>Not Available</span>
+                <span v-else class="italic">Not Available</span>
               </td>
             </tr>
             <tr v-if="post.tag_vocabulary === '99'">
@@ -812,7 +812,7 @@
                 <span v-if="post.vocabulary_uri">
                   {{ post.vocabulary_uri }}
                 </span>
-                <span class="italic" v-else>Not Available</span>
+                <span v-else class="italic">Not Available</span>
               </td>
             </tr>
           </table>
@@ -831,7 +831,7 @@
             <span v-if="post.budget_type">{{
               types.budgetType[post.budget_type]
             }}</span>
-            <span class="italic" v-else>Type Not Available</span>
+            <span v-else class="italic">Type Not Available</span>
           </div>
 
           <div
@@ -848,7 +848,7 @@
                   >(Valued at {{ formatDate(item.value_date) }})</span
                 >
               </div>
-              <span class="italic" v-else>Budget Value Not Available</span>
+              <span v-else class="italic">Budget Value Not Available</span>
             </div>
           </div>
           <div class="ml-5">
@@ -861,7 +861,7 @@
                 <tr>
                   <td>Period Start</td>
                   <td v-if="item.date">{{ formatDate(item.date) }}</td>
-                  <td class="italic" v-else>Not Available</td>
+                  <td v-else class="italic">Not Available</td>
                 </tr>
               </table>
             </div>
@@ -874,7 +874,7 @@
                 <tr>
                   <td>Period end</td>
                   <td v-if="item.date">{{ formatDate(item.date) }}</td>
-                  <td class="italic" v-else>Not Available</td>
+                  <td v-else class="italic">Not Available</td>
                 </tr>
               </table>
             </div>
@@ -885,7 +885,7 @@
                   <span v-if="post.budget_status">{{
                     types.budgetStatus[post.budget_status]
                   }}</span>
-                  <span class="italic" v-else>Not Available</span>
+                  <span v-else class="italic">Not Available</span>
                 </td>
               </tr>
             </table>
@@ -903,7 +903,7 @@
         >
           <div class="category text-sm font-bold">
             <span v-if="post.type">{{ types.contactType[post.type] }}</span>
-            <span class="italic" v-else>Type Not Available</span>
+            <span v-else class="italic">Type Not Available</span>
           </div>
 
           <div
@@ -923,7 +923,7 @@
                   >(Language: {{ types.languages[narrative.language] }})</span
                 >
               </div>
-              <span class="text-sm italic" v-else
+              <span v-else class="text-sm italic"
                 >Person Name Not Available</span
               >
             </div>
@@ -946,7 +946,7 @@
                   >(Language: {{ types.languages[narrative.language] }})</span
                 >
               </div>
-              <span class="italic" v-else>Organisation Not Available</span>
+              <span v-else class="italic">Organisation Not Available</span>
             </div>
           </div>
           <div class="ml-5">
@@ -973,7 +973,7 @@
                           narrative.narrative
                         }}</span>
                       </div>
-                      <span class="italic" v-else>Not Available</span>
+                      <span v-else class="italic">Not Available</span>
                     </td>
                   </tr>
                 </table>
@@ -1003,7 +1003,7 @@
                           narrative.narrative
                         }}</span>
                       </div>
-                      <span class="italic" v-else>Not Available</span>
+                      <span v-else class="italic">Not Available</span>
                     </td>
                   </tr>
                 </table>
@@ -1020,7 +1020,7 @@
                   <td>Telephone</td>
                   <td>
                     <span v-if="item.telephone">{{ item.telephone }}</span>
-                    <span class="italic" v-else>Not Available</span>
+                    <span v-else class="italic">Not Available</span>
                   </td>
                 </tr>
               </table>
@@ -1036,7 +1036,7 @@
                   <td>Email</td>
                   <td>
                     <span v-if="item.email">{{ item.email }}</span>
-                    <span class="italic" v-else>Not Available</span>
+                    <span v-else class="italic">Not Available</span>
                   </td>
                 </tr>
               </table>
@@ -1052,7 +1052,7 @@
                   <td>Website</td>
                   <td>
                     <span v-if="item.website">{{ item.website }}</span>
-                    <span class="italic" v-else>Not Available</span>
+                    <span v-else class="italic">Not Available</span>
                   </td>
                 </tr>
               </table>
@@ -1081,7 +1081,7 @@
                           ></span
                         >
                       </div>
-                      <span class="italic" v-else>Not Available</span>
+                      <span v-else class="italic">Not Available</span>
                     </td>
                   </tr>
                 </table>
@@ -1108,7 +1108,7 @@
               <span v-if="item.code">
                 {{ types.geographicLocationReach[item.code] }}
               </span>
-              <span class="italic" v-else>Location Reach Not Available</span>
+              <span v-else class="italic">Location Reach Not Available</span>
             </div>
           </div>
 
@@ -1132,7 +1132,7 @@
                   >(Language: {{ types.languages[narrative.language] }})</span
                 >
               </div>
-              <span class="italic" v-else>Name Not Available</span>
+              <span v-else class="italic">Name Not Available</span>
             </div>
           </div>
 
@@ -1142,7 +1142,7 @@
                 <td>Reference</td>
                 <td class="text-sm">
                   <span v-if="post.ref">{{ types.contactType[post.ref] }}</span>
-                  <span class="italic" v-else>Not Available</span>
+                  <span v-else class="italic">Not Available</span>
                 </td>
               </tr>
             </table>
@@ -1163,13 +1163,13 @@
                         <span v-if="item.vocabulary"
                           >{{ types.geographicVocabulary[item.vocabulary] }},
                         </span>
-                        <span class="italic" v-else
+                        <span v-else class="italic"
                           >(Vocabulary Not Available)</span
                         >
                       </div>
                       <div>
                         <span v-if="item.code">code {{ item.code }}</span>
-                        <span class="italic" v-else>(Not Available)</span>
+                        <span v-else class="italic">(Not Available)</span>
                       </div>
                     </div>
                   </td>
@@ -1200,7 +1200,7 @@
                           narrative.narrative
                         }}</span>
                       </div>
-                      <span class="italic" v-else>Not Available</span>
+                      <span v-else class="italic">Not Available</span>
                     </td>
                   </tr>
                 </table>
@@ -1230,7 +1230,7 @@
                           narrative.narrative
                         }}</span>
                       </div>
-                      <span class="italic" v-else>Not Available</span>
+                      <span v-else class="italic">Not Available</span>
                     </td>
                   </tr>
                 </table>
@@ -1252,17 +1252,17 @@
                           >Vocabulary -
                           {{ types.geographicVocabulary[item.vocabulary] }}
                         </span>
-                        <span class="italic" v-else
+                        <span v-else class="italic"
                           >(Vocabulary Not Available)</span
                         >
                       </div>
                       <div>
                         <span v-if="item.code">, code {{ item.code }}</span>
-                        <span class="ml-1 italic" v-else> (Not Available)</span>
+                        <span v-else class="ml-1 italic"> (Not Available)</span>
                       </div>
                       <div>
                         <span v-if="item.level">, level {{ item.level }}</span>
-                        <span class="ml-1 italic" v-else>
+                        <span v-else class="ml-1 italic">
                           (Level Not Available)</span
                         >
                       </div>
@@ -1285,7 +1285,7 @@
                     <div class="flex space-x-1">
                       <div>
                         <span v-if="item.srs_name">({{ item.srs_name }})</span>
-                        <span class="italic" v-else>
+                        <span v-else class="italic">
                           (SRS Name Not Available)</span
                         >
                       </div>
@@ -1293,7 +1293,7 @@
                         <span v-if="item.pos[0].latitude">
                           latitude {{ item.pos[0].latitude }},
                         </span>
-                        <span class="italic" v-else>
+                        <span v-else class="italic">
                           (Latitude Not Available)</span
                         >
                       </div>
@@ -1301,7 +1301,7 @@
                         <span v-if="item.pos[0].longitude"
                           >longitude {{ item.pos[0].longitude }}</span
                         >
-                        <span class="italic" v-else>
+                        <span v-else class="italic">
                           (Longitude Not Available)</span
                         >
                       </div>
@@ -1323,7 +1323,7 @@
                     <span v-if="item.code">{{
                       types.geographicExactness[item.code]
                     }}</span>
-                    <span class="italic" v-else>Not Available</span>
+                    <span v-else class="italic">Not Available</span>
                   </td>
                 </tr>
               </table>
@@ -1341,7 +1341,7 @@
                     <span v-if="item.code">{{
                       types.geographicLocationClass[item.code]
                     }}</span>
-                    <span class="italic" v-else>Not Available</span>
+                    <span v-else class="italic">Not Available</span>
                   </td>
                 </tr>
               </table>
@@ -1359,7 +1359,7 @@
                     <span v-if="item.code">{{
                       types.locationType[item.code]
                     }}</span>
-                    <span class="italic" v-else>Not Available</span>
+                    <span v-else class="italic">Not Available</span>
                   </td>
                 </tr>
               </table>
@@ -1380,7 +1380,7 @@
             <span v-if="post.planned_disbursement_type">{{
               types.budgetType[post.planned_disbursement_type]
             }}</span>
-            <span class="italic" v-else>Type Not Available</span>
+            <span v-else class="italic">Type Not Available</span>
           </div>
 
           <div
@@ -1396,7 +1396,7 @@
                   >({{ formatDate(item.value_date) }})</span
                 >
               </div>
-              <span class="italic" v-else>Value Not Available</span>
+              <span v-else class="italic">Value Not Available</span>
             </div>
           </div>
           <div class="ml-5">
@@ -1412,7 +1412,7 @@
                     <span v-if="item.iso_date">{{
                       formatDate(item.iso_date)
                     }}</span>
-                    <span class="italic" v-else>Date Not Available</span>
+                    <span v-else class="italic">Date Not Available</span>
                   </td>
                 </tr>
               </table>
@@ -1429,7 +1429,7 @@
                     <span v-if="item.iso_date">{{
                       formatDate(item.iso_date)
                     }}</span>
-                    <span class="italic" v-else>Date Not Available</span>
+                    <span v-else class="italic">Date Not Available</span>
                   </td>
                 </tr>
               </table>
@@ -1445,7 +1445,7 @@
               <span v-if="item.type">{{
                 types.organizationType[item.type]
               }}</span>
-              <span class="italic" v-else>Type Not Available</span>
+              <span v-else class="italic">Type Not Available</span>
             </div>
             <div class="ml-5">
               <table>
@@ -1458,7 +1458,7 @@
                           >Provider Activity Id -
                           {{ item.provider_activity_id }}</span
                         >
-                        <span class="italic" v-else
+                        <span v-else class="italic"
                           >Provider Activity Id Not Available</span
                         >
                       </div>
@@ -1466,7 +1466,7 @@
                         <span v-if="item.ref"
                           >(Reference - {{ item.ref }})</span
                         >
-                        <span class="italic" v-else
+                        <span v-else class="italic"
                           >(Reference Not Available)</span
                         >
                       </div>
@@ -1492,7 +1492,7 @@
                           narrative.narrative
                         }}</span>
                       </div>
-                      <span class="italic" v-else>Not Available</span>
+                      <span v-else class="italic">Not Available</span>
                     </td>
                   </tr>
                 </table>
@@ -1508,7 +1508,7 @@
               <span v-if="item.type">{{
                 types.organizationType[item.type]
               }}</span>
-              <span class="italic" v-else>Not Available</span>
+              <span v-else class="italic">Not Available</span>
             </div>
             <div class="ml-5">
               <table>
@@ -1521,7 +1521,7 @@
                           >Provider Activity Id -
                           {{ item.provider_activity_id }}</span
                         >
-                        <span class="italic" v-else
+                        <span v-else class="italic"
                           >Provider Activity Id Not Available</span
                         >
                       </div>
@@ -1529,7 +1529,7 @@
                         <span v-if="item.ref"
                           >(Reference - {{ item.ref }})</span
                         >
-                        <span class="italic" v-else
+                        <span v-else class="italic"
                           >(Reference Not Available)</span
                         >
                       </div>
@@ -1555,7 +1555,7 @@
                           narrative.narrative
                         }}</span>
                       </div>
-                      <span class="italic" v-else>Not Available</span>
+                      <span v-else class="italic">Not Available</span>
                     </td>
                   </tr>
                 </table>
@@ -1577,7 +1577,7 @@
             <span v-if="post.organization_role">{{
               types.organisationRole[post.organization_role]
             }}</span>
-            <span class="italic" v-else>Organization Role Not Available</span>
+            <span v-else class="italic">Organization Role Not Available</span>
           </div>
 
           <div
@@ -1587,7 +1587,7 @@
           >
             <div class="text-sm">
               <span v-if="item.narrative">{{ item.narrative }}</span>
-              <span class="italic" v-else>Narrative Not Available</span>
+              <span v-else class="italic">Narrative Not Available</span>
             </div>
           </div>
 
@@ -1610,41 +1610,41 @@
                       narrative.narrative
                     }}</span>
                   </div>
-                  <span class="italic" v-else>Not Available</span>
+                  <span v-else class="italic">Not Available</span>
                 </td>
               </tr>
               <tr>
                 <td>Organisation Id</td>
                 <td v-if="post.organization">{{ post.organization }}</td>
-                <td class="italic" v-else>Not Available</td>
+                <td v-else class="italic">Not Available</td>
               </tr>
               <tr>
                 <td>Organisation Type</td>
                 <td v-if="post.type">
                   {{ types.organizationType[post.type] }}
                 </td>
-                <td class="italic" v-else>Not Available</td>
+                <td v-else class="italic">Not Available</td>
               </tr>
               <tr>
                 <td>Organisation Role</td>
                 <td v-if="post.organization_role">
                   {{ types.organisationRole[post.organization_role] }}
                 </td>
-                <td class="italic" v-else>Not Available</td>
+                <td v-else class="italic">Not Available</td>
               </tr>
               <tr>
                 <td>Ref</td>
                 <td v-if="post.ref">
                   {{ types.humanitarianScopeType[post.ref] }}
                 </td>
-                <td class="italic" v-else>Not Available</td>
+                <td v-else class="italic">Not Available</td>
               </tr>
               <tr>
                 <td>Activity Id</td>
                 <td>
                   <div>
                     <span v-if="post.identifier">{{ post.identifier }}</span>
-                    <span class="italic" v-else>Not Available</span>
+                    <span v-else class="italic">Not Available</span>
                   </div>
                 </td>
               </tr>
@@ -1669,7 +1669,7 @@
             <div v-if="post.url" class="max-w-[887px] text-sm">
               <a href="#">{{ post.url }}</a>
             </div>
-            <span class="italic" v-else>URL Not Available</span>
+            <span v-else class="italic">URL Not Available</span>
           </div>
           <div class="ml-5">
             <div>
@@ -1681,7 +1681,7 @@
                       <span v-if="language.code">{{
                         types.languages[language.code]
                       }}</span>
-                      <span class="italic" v-else>Not Available</span>
+                      <span v-else class="italic">Not Available</span>
                     </td>
                   </tr>
                 </table>
@@ -1694,7 +1694,7 @@
                       <span v-if="document_date.date">{{
                         formatDate(document_date.date)
                       }}</span>
-                      <span class="italic" v-else>Not Available</span>
+                      <span v-else class="italic">Not Available</span>
                     </td>
                   </tr>
                 </table>
@@ -1718,7 +1718,7 @@
                           {{ narrative.narrative }}
                         </span>
                       </div>
-                      <span class="italic" v-else>Not Available</span>
+                      <span v-else class="italic">Not Available</span>
                     </td>
                   </tr>
                 </table>
@@ -1732,7 +1732,7 @@
                     <span v-if="category.code">{{
                       types.documentCategory[category.code]
                     }}</span>
-                    <span class="italic" v-else>Not Available</span>
+                    <span v-else class="italic">Not Available</span>
                   </td>
                 </tr>
               </table>
@@ -1741,7 +1741,7 @@
               <tr>
                 <td>Format</td>
                 <td v-if="post.format">{{ post.format }}</td>
-                <td class="italic" v-else>Not Available</td>
+                <td v-else class="italic">Not Available</td>
               </tr>
             </table>
             <div v-for="(description, i) in post.description" :key="i">
@@ -1759,7 +1759,7 @@
                           narrative.narrative
                         }}</span>
                       </div>
-                      <span class="italic" v-else>Not Available</span>
+                      <span v-else class="italic">Not Available</span>
                     </td>
                   </tr>
                 </table>
@@ -1775,47 +1775,47 @@
             <span v-if="data.content">{{
               props.types.activityStatus[data.content]
             }}</span>
-            <span class="italic" v-else>Not Available</span>
+            <span v-else class="italic">Not Available</span>
           </template>
 
           <template v-else-if="title === 'activity_scope'">
             <span v-if="data.content">{{
               props.types.activityScope[data.content]
             }}</span>
-            <span class="italic" v-else>Not Available</span>
+            <span v-else class="italic">Not Available</span>
           </template>
 
           <template v-else-if="title === 'collaboration_type'">
             <span v-if="data.content">{{
               props.types.collaborationType[data.content]
             }}</span>
-            <span class="italic" v-else>Not Available</span>
+            <span v-else class="italic">Not Available</span>
           </template>
 
           <template v-else-if="title === 'default_flow_type'">
             <span v-if="data.content">{{
               props.types.flowType[data.content]
             }}</span>
-            <span class="italic" v-else>Not Available</span>
+            <span v-else class="italic">Not Available</span>
           </template>
 
           <template v-else-if="title === 'default_tied_status'">
             <span v-if="data.content">{{
               props.types.tiedStatus[data.content]
             }}</span>
-            <span class="italic" v-else>Not Available</span>
+            <span v-else class="italic">Not Available</span>
           </template>
 
           <template v-else-if="title === 'capital_spend'">
             <span v-if="data.content">{{ data.content.toString() }}%</span>
-            <span class="italic" v-else>Not Available</span>
+            <span v-else class="italic">Not Available</span>
           </template>
 
           <template v-else-if="title === 'default_finance_type'">
             <span v-if="data.content">
               {{ props.types.financeType[data.content] }}</span
             >
-            <span class="italic" v-else>Not Available</span>
+            <span v-else class="italic">Not Available</span>
           </template>
 
           <template v-else>
@@ -1856,7 +1856,7 @@ export default defineComponent({
     width: {
       type: String,
       required: false,
-      default: '',
+      default: 'full',
     },
     types: {
       type: Object,

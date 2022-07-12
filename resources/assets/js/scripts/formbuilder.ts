@@ -6,27 +6,24 @@ class FormBuilder {
   public addForm(ev: Event): void {
     ev.preventDefault();
     console.log('here');
-    let target = ev.target as EventTarget;
-    let container = $(target).attr('form_type') ? $(`.collection-container[form_type ='${$(target).attr('form_type')}']`) : $('.collection-container');
+    const target = ev.target as EventTarget;
+    const container = $(target).attr('form_type') ? $(`.collection-container[form_type ='${$(target).attr('form_type')}']`) : $('.collection-container');
 
-    let count = $(target).attr('child_count')
+    const count = $(target).attr('child_count')
       ? parseInt($(target).attr('child_count') as string) + 1
       : $(target).parent().find('.form-child-body').length;
 
-    let parent_count = $(target).attr('parent_count')
+    const parent_count = $(target).attr('parent_count')
       ? parseInt($(target).attr('parent_count') as string)
       : $(target).parent().prevAll('.multi-form').length;
 
-    let wrapper_parent_count = $(target).attr('wrapped_parent_count') ?
+    const wrapper_parent_count = $(target).attr('wrapped_parent_count') ?
       parseInt($(target).attr('wrapped_parent_count') as string) :
       $(target).parent('.subelement').find('.wrapped-child-body').length;
-
-    console.log(parent_count, wrapper_parent_count, count);
 
     let proto = container
       .data('prototype')
       .replace(/__PARENT_NAME__/g, parent_count);
-    console.log(proto);
 
     if ($(target).attr('has_child_collection')) {
       console.log('here');
@@ -38,14 +35,11 @@ class FormBuilder {
     }
 
     $(target).prev().append($(proto));
+
     if ($(target).attr('has_child_collection')) {
-      console.log('here has child collection');
-      let child = $(target).prev('.subelement').children('.wrapped-child-body').last();
       $(target).prev('.subelement').children('.wrapped-child-body').last().find('.add_to_collection').attr('wrapped_parent_count', count);
       $(target).prev('.subelement').children('.wrapped-child-body').last().find('.add_to_collection').attr('parent_count', parent_count);
     }
-
-
 
     $(target).prev().find('.wrapped-child-body').last().find('.add_to_collection').attr('wrapper_parent_count', wrapper_parent_count ?? 0);
 
@@ -86,10 +80,10 @@ class FormBuilder {
   // adds parent collection
   public addParentForm(ev: Event): void {
     ev.preventDefault();
-    let target = ev.target as EventTarget;
-    let container = $(target).attr('form_type') ? $(`.parent-collection[form_type ='${$(target).attr('form_type')}']`) : $('.parent-collection');
+    const target = ev.target as EventTarget;
+    const container = $(target).attr('form_type') ? $(`.parent-collection[form_type ='${$(target).attr('form_type')}']`) : $('.parent-collection');
 
-    let count = $(target).attr('parent_count')
+    const count = $(target).attr('parent_count')
       ? parseInt($(target).attr('parent_count') as string) + 1
       : ($(target).prev().find('.multi-form').length ? $(target).prev().find('.multi-form').length : $(target).prev().find('.wrapped-child-body').length);
     let proto = container.data('prototype').replace(/__PARENT_NAME__/g, count);
@@ -358,24 +352,23 @@ class FormBuilder {
    * @Logic hide vocabulary-uri and codes field based on '@vocabulary' field value
    */
   public transactionAidTypeVocabularyHideField() {
-    let aidtype_vocabulary = $('select[id*="aidtype_vocabulary"]');
-    let index = $(this);
+    const aidtype_vocabulary = $('select[id*="aidtype_vocabulary"]');
 
     if (aidtype_vocabulary.length > 0) {
       $.each(aidtype_vocabulary, (index, item) => {
-        let data = $(item).val() ?? '1';
+        const data = $(item).val() ?? '1';
         this.hideTransactionAidTypeSelectField($(item), data.toString());
       });
 
       aidtype_vocabulary.on('select2:select', (e) => {
-        let data = e.params.data.id;
-        let target = e.target as HTMLElement;
+        const data = e.params.data.id;
+        const target = e.target as HTMLElement;
 
         this.hideTransactionAidTypeSelectField($(target), data);
       });
 
       aidtype_vocabulary.on('select2:clear', (e) => {
-        let target = e.target as HTMLElement;
+        const target = e.target as HTMLElement;
 
         this.hideTransactionAidTypeSelectField($(target), '');
       });
@@ -472,7 +465,7 @@ class FormBuilder {
    * Hide Transaction Aid Type Select Fields
    */
   public hideTransactionAidTypeSelectField(index: JQuery, value: string) {
-    let aid_type = 'select[id*="[aid_type_code]"]',
+    const aid_type = 'select[id*="[aid_type_code]"]',
       earmarking_category = 'select[id*="[earmarking_category]"]',
       earmarking_modality = 'select[id*="[earmarking_modality]"]',
       cash_and_voucher_modalities =
@@ -1155,8 +1148,7 @@ $(function () {
     });
   }
 
-  $('body').on('select2:open', '.select2', (e) => {
-    let target = e.target;
+  $('body').on('select2:open', '.select2', () => {
     $('.select2-search__field').trigger("focus");
   })
 });

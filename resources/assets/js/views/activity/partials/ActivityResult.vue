@@ -1,9 +1,9 @@
 <template>
   <div
-    class="activities__content--element basis-full px-3 py-3 text-n-50"
     id=""
+    class="activities__content--element basis-full px-3 py-3 text-n-50"
   >
-    <div class="rounded-lg bg-white p-4" :id="title">
+    <div :id="title" class="rounded-lg bg-white p-4">
       <div class="mb-4 flex">
         <div class="title flex grow items-center">
           <svg-vue class="mr-1.5 text-xl text-bluecoral" icon="bill"></svg-vue>
@@ -44,11 +44,11 @@
       </div>
       <div class="divider mb-4 h-px w-full bg-n-20"></div>
       <div class="results">
-        <template v-for="(result, r) in results" :key="r">
+        <template v-for="(result, r) in data.content" :key="r">
           <div
             class="item"
             :class="{
-              'mb-4': r !== results.length - 1,
+              'mb-4': r !== data.content.length - 1,
             }"
           >
             <div class="elements-detail">
@@ -61,7 +61,15 @@
                   <div class="flex shrink-0">
                     <a
                       :href="`/activities/${activityId}/${title}/${result.id}`"
-                      class="mr-2.5 flex items-center text-tiny font-bold uppercase text-bluecoral"
+                      class="
+                        mr-2.5
+                        flex
+                        items-center
+                        text-tiny
+                        font-bold
+                        uppercase
+                        text-bluecoral
+                      "
                     >
                       <svg-vue class="mr-0.5 text-base" icon="eye"></svg-vue>
                       <span>View Result</span>
@@ -123,9 +131,7 @@
                             class="description-content"
                             :class="{
                               'mb-4':
-                                t !==
-                                result.result.description[0].narrative.length -
-                                  1,
+                                t !== (result.result.description[0].narrative.length -1),
                             }"
                           >
                             <div class="language mb-1.5">
@@ -142,14 +148,25 @@
 
                   <!-- indicator -->
                   <div
-                    class="indicator overflow-hidden rounded-t-lg border border-n-20"
+                    class="
+                      indicator
+                      overflow-hidden
+                      rounded-t-lg
+                      border border-n-20
+                    "
                   >
                     <div class="head flex justify-between bg-n-10 py-2.5 px-6">
                       <div class="text-xs font-bold text-n-50">Indicator</div>
                       <div>
                         <a
                           :href="`/activities/${activityId}/${title}/${result.id}/indicator/create`"
-                          class="flex items-center text-tiny font-bold uppercase"
+                          class="
+                            flex
+                            items-center
+                            text-tiny
+                            font-bold
+                            uppercase
+                          "
                         >
                           <svg-vue
                             class="mr-0.5 text-base"
@@ -182,7 +199,15 @@
                               <div class="flex shrink-0 grow justify-between">
                                 <a
                                   :href="`/activities/${activityId}/${title}/${result.id}/indicator/${indicator.id}/edit`"
-                                  class="mr-2.5 flex items-center text-tiny font-bold uppercase text-bluecoral"
+                                  class="
+                                    mr-2.5
+                                    flex
+                                    items-center
+                                    text-tiny
+                                    font-bold
+                                    uppercase
+                                    text-bluecoral
+                                  "
                                 >
                                   <svg-vue
                                     class="mr-0.5 text-base"
@@ -192,7 +217,15 @@
                                 </a>
                                 <a
                                   :href="`/activities/${activityId}/${title}/${result.id}/indicator/${indicator.id}/period/create`"
-                                  class="mr-2.5 flex items-center text-tiny font-bold uppercase text-bluecoral"
+                                  class="
+                                    mr-2.5
+                                    flex
+                                    items-center
+                                    text-tiny
+                                    font-bold
+                                    uppercase
+                                    text-bluecoral
+                                  "
                                 >
                                   <svg-vue
                                     class="mr-0.5 text-base"
@@ -207,10 +240,10 @@
                                 <td>Baseline:</td>
                                 <td>
                                   <div
-                                    class=""
                                     v-for="(baseline, b) in indicator.indicator
                                       .baseline"
                                     :key="b"
+                                    class=""
                                     :class="{
                                       'mb-1':
                                         b !==
@@ -244,9 +277,9 @@
                                 <td>Period:</td>
                                 <td>
                                   <div
-                                    class=""
                                     v-for="(period, p) in indicator.periods"
                                     :key="p"
+                                    class=""
                                     :class="{
                                       'mb-1':
                                         p !== indicator.periods.length - 1,
@@ -286,14 +319,14 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import HoverText from '../../../components/HoverText.vue';
+// import HoverText from '../../../components/HoverText.vue';
 import moment from 'moment';
 
 export default defineComponent({
-  name: 'activity-result',
-  components: {
-    HoverText,
-  },
+  name: 'ActivityResult',
+  // components: {
+  // HoverText,
+  // },
   props: {
     data: {
       type: Object,
@@ -321,12 +354,10 @@ export default defineComponent({
       required: true,
     },
   },
-  setup(props) {
-    const results = props.data.content,
-      format = 'MMMM DD, YYYY';
+  setup() {
+    const format = 'MMMM DD, YYYY';
 
-    console.log(results);
-    return { results, moment, format };
+    return { moment, format };
   },
 });
 </script>

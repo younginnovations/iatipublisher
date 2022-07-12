@@ -78,7 +78,7 @@
           </a>
         </div>
         <div class="activities__content--elements -mx-3 -mt-3 flex flex-wrap">
-          <template v-for="(post, key) in elements" :key="key">
+          <template v-for="(post, key) in result.result" :key="key">
             <ResultElement
               :data="post"
               :element-name="key.toString()"
@@ -96,8 +96,8 @@
 
           <!-- Indicator -->
           <div
-            class="activities__content--element basis-full px-3 py-3 text-n-50"
             id=""
+            class="activities__content--element basis-full px-3 py-3 text-n-50"
           >
             <div class="rounded-lg bg-white p-4">
               <div class="mb-4 flex">
@@ -711,12 +711,12 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue';
+import { defineComponent } from 'vue';
 import ResultElement from './ResultElement.vue';
 import dateFormat from './../../../composable/dateFormat';
 
 export default defineComponent({
-  name: 'result-detail',
+  name: 'ResultDetail',
   components: {
     ResultElement,
   },
@@ -730,14 +730,12 @@ export default defineComponent({
       required: true,
     },
   },
-  setup(props) {
+  setup() {
     const linkClasses =
       'flex items-center w-full bg-white rounded p-2 text-sm text-n-50 font-bold leading-relaxed mb-2 shadow-default';
 
-    const elements = props.result.result;
     return {
       linkClasses,
-      elements,
       dateFormat,
     };
   },
