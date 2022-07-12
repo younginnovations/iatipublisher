@@ -11,20 +11,10 @@
       <div class="mb-4 flex">
         <div class="title flex grow">
           <div class="title text-sm font-bold">{{ elementName }}</div>
-          <!-- <div class="status ml-2.5 flex text-xs leading-5 text-spring-50">
-            <b class="mr-2 text-base leading-3">.</b><span>completed</span>
-          </div> -->
         </div>
         <div class="icons flex items-center">
-          <!-- <a
-            href="{{editUrl}}"
-            class="edit-button mr-2.5 flex items-center text-tiny font-bold uppercase"
-          >
-            <svg-vue class="mr-0.5 text-base" icon="edit"></svg-vue>
-            <span>Edit</span>
-          </a> -->
           <svg-vue class="mr-1.5" icon="core"></svg-vue>
-          <HoverText hover_text="example text" class="text-n-40"></HoverText>
+          <HoverText hover_text="example text" class="text-n-40 text-sm"></HoverText>
         </div>
       </div>
       <div class="divider mb-4 h-px w-full bg-n-20"></div>

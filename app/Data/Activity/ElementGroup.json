@@ -97,11 +97,11 @@
       "default_finance_type": {
         "label": "Default Finance Type"
       },
-      "default_aid_type": {
-        "label": "Default Aid Type"
-      },
       "default_tied_status": {
         "label": "Default Tied Status"
+      },
+      "default_aid_type": {
+        "label": "Default Aid Type"
       },
       "country_budget_items": {
         "label": "Country Budget Items"
