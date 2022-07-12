@@ -29,7 +29,7 @@
                 <svg-vue icon="arrow-short-left" />
               </a>
             </div>
-            <div class="">
+            <div>
               <h4 class="ellipsis__title relative mr-4 text-2xl font-bold">
                 <span class="ellipsis__title overflow-hidden">{{
                   pageTitle ? pageTitle : 'Untitled'
@@ -275,7 +275,7 @@
         </div>
         <Elements :activity-id="activity.id" :data="elements" />
       </aside>
-      <div class="activities__content">
+      <div class="activities__content overflow-hidden">
         <div class="mb-3 inline-flex flex-wrap gap-2">
           <a
             v-for="(post, key, index) in groupedData"
@@ -296,9 +296,13 @@
             </button>
           </a>
         </div>
-
         <div class="activities__content--elements -mx-3 flex flex-wrap">
-          <template v-for="(post, key, index) in activities" :key="index">
+          <template v-for="(post, key, index) in groupedData" :key="index">
+            <div
+              class="elements-title relative mx-3 mb-1 mt-3 flex w-full items-center text-sm uppercase text-n-40"
+            >
+              <div class="mr-4 shrink-0">{{ formatTitle(key) }}</div>
+            </div>
             <template v-for="(element, name, i) in post.elements" :key="i">
               <template v-if="name.toString() !== 'result'">
                 <ActivityElement
@@ -313,7 +317,7 @@
                   :title="name.toString()"
                   :activityId="activity.id"
                   :width="
-                    String(name) === 'identifier' ||
+                    String(name) === 'iati_identifier' ||
                     String(name) === 'activity_status' ||
                     String(name) === 'activity_scope' ||
                     String(name) === 'collaboration_type' ||
@@ -511,6 +515,10 @@ export default defineComponent({
       }
     });
 
+    function formatTitle(title: string) {
+      return title.replace(/_/gi, ' ');
+    }
+
     return {
       groupedData,
       activities,
@@ -524,6 +532,8 @@ export default defineComponent({
       downloadValue,
       downloadToggle,
       toastData,
+      props,
+      formatTitle,
     };
   },
 });

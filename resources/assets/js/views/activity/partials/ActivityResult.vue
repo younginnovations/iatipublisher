@@ -31,15 +31,10 @@
             <span>Add Result</span>
           </a>
           <svg-vue class="mr-1.5" icon="core"></svg-vue>
-          <div class="help text-n-40">
-            <button>
-              <svg-vue icon="help"></svg-vue>
-            </button>
-            <div class="help__text right-0 w-60">
-              <span class="font-bold text-bluecoral"></span>
-              <p>Example text</p>
-            </div>
-          </div>
+          <HoverText
+            hover_text="example text"
+            class="text-sm text-n-40"
+          ></HoverText>
         </div>
       </div>
       <div class="divider mb-4 h-px w-full bg-n-20"></div>

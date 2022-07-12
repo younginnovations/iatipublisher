@@ -9,9 +9,9 @@
       <h2 class="mb-2 hidden sm:block">Sign In.</h2>
       <span class="text-n-40">Welcome back! Please enter your details.</span>
       <div
-        class="relative mt-6 mb-4 flex flex-col text-sm font-bold text-bluecoral"
+        class="relative mt-6 mb-4 flex flex-col text-sm text-bluecoral"
       >
-        <label class="mb-2" for="Username">Username</label>
+        <label for="Username">Username</label>
         <input
           id="username"
           v-model="formData.username"
@@ -27,8 +27,8 @@
           {{ errorData.username }}
         </span>
       </div>
-      <div class="relative mb-4 flex flex-col text-sm font-bold text-bluecoral">
-        <label class="mb-2" for="Password">Password</label>
+      <div class="relative mb-4 flex flex-col text-sm text-bluecoral">
+        <label for="Password">Password</label>
         <input
           id="password"
           v-model="formData.password"
@@ -172,5 +172,8 @@ export default defineComponent({
 }
 .password {
   @apply mb-2;
+}
+label {
+  @apply font-bold mb-2;
 }
 </style>
