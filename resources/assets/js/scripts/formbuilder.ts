@@ -6,7 +6,9 @@ class FormBuilder {
   public addForm(ev: Event): void {
     ev.preventDefault();
     const target = ev.target as EventTarget;
-    const container = $(target).attr('form_type') ? $(`.collection-container[form_type ='${$(target).attr('form_type')}']`) : $('.collection-container');
+    const container = $(target).attr('form_type')
+      ? $(`.collection-container[form_type ='${$(target).attr('form_type')}']`)
+      : $('.collection-container');
     console.log('target', target, 'container', container);
     const count = $(target).attr('child_count')
       ? parseInt($(target).attr('child_count') as string) + 1
@@ -23,7 +25,7 @@ class FormBuilder {
 
     if ($(target).attr('form_type')) {
       $(target).prev().last().find('.select2').select2({
-        placeholder: 'Select an option'
+        placeholder: 'Select an option',
       });
     } else {
       $(target)
@@ -35,7 +37,6 @@ class FormBuilder {
           placeholder: 'Select an option',
         });
     }
-
 
     $(target).attr('child_count', count);
     this.aidTypeVocabularyHideField();
@@ -102,24 +103,27 @@ class FormBuilder {
 
   //add wrapper div around the attributes
   public addWrapper(): void {
-    $('.multi-form').each(function(){
-
-      $(this).find('.attribute')
-      .wrapAll(
-        $(
-          '<div class="form-field-group flex flex-wrap rounded-br-lg border-y border-r border-spring-50 attribute-wrapper"></div>'
-        )
-      );
-    })
-
-    $('.subelement').find('.wrapped-child-body').each(function () {
-      $(this).find('.sub-attribute')
+    $('.multi-form').each(function () {
+      $(this)
+        .find('.attribute')
         .wrapAll(
           $(
-            '<div class="form-field-group flex flex-wrap rounded-br-lg border-y border-r border-spring-50 sub-attribute-wrapper"></div>'
+            '<div class="form-field-group flex flex-wrap rounded-br-lg border-y border-r border-spring-50 attribute-wrapper"></div>'
           )
         );
     });
+
+    $('.subelement')
+      .find('.wrapped-child-body')
+      .each(function () {
+        $(this)
+          .find('.sub-attribute')
+          .wrapAll(
+            $(
+              '<div class="form-field-group flex flex-wrap rounded-br-lg border-y border-r border-spring-50 sub-attribute-wrapper"></div>'
+            )
+          );
+      });
   }
 
   public addWrapperOnAdd(): void {
@@ -132,14 +136,19 @@ class FormBuilder {
         )
       );
 
-    $('.multi-form').last().find('.subelement').find('.wrapped-child-body').each(function () {
-      $(this).find('.sub-attribute')
-        .wrapAll(
-          $(
-            '<div class="form-field-group flex flex-wrap rounded-br-lg border-y border-r border-spring-50 sub-attribute-wrapper"></div>'
-          )
-        );
-    });
+    $('.multi-form')
+      .last()
+      .find('.subelement')
+      .find('.wrapped-child-body')
+      .each(function () {
+        $(this)
+          .find('.sub-attribute')
+          .wrapAll(
+            $(
+              '<div class="form-field-group flex flex-wrap rounded-br-lg border-y border-r border-spring-50 sub-attribute-wrapper"></div>'
+            )
+          );
+      });
   }
 
   /**
@@ -244,7 +253,8 @@ class FormBuilder {
    * Hide Country Budget Fields
    */
   public hideCountryBudgetField(value: string) {
-    const countryBudgetCodeInput = 'input[id^="budget_item"][id*="[code_text]"]',
+    const countryBudgetCodeInput =
+        'input[id^="budget_item"][id*="[code_text]"]',
       countryBudgetCodeSelect = 'select[id^="budget_item"][id*="[code]"]';
 
     if (value === '1') {
@@ -883,6 +893,12 @@ class FormBuilder {
           .hide();
     }
   }
+
+  public textAreaHeight(ev: Event) {
+    const target = ev.target as HTMLElement;
+    const height = target.scrollHeight;
+    $(target).css('height', height);
+  }
 }
 
 $(function () {
@@ -905,8 +921,8 @@ $(function () {
    */
   const deleteConfirmation = $('.delete-confirmation'),
     cancelPopup = '.cancel-popup',
-    deleteConfirm = '.delete-confirm'
-  let  deleteIndex = {},
+    deleteConfirm = '.delete-confirm';
+  let deleteIndex = {},
     childOrParent = '';
 
   $('body').on('click', '.delete', (event: Event) => {
@@ -957,4 +973,13 @@ $(function () {
       .find('input[id*="[url]"]')
       .val(`${endpoint}/${file_name?.split('\\').pop()?.replace(' ', '_')}`);
   });
+  /**
+   * Text area height on typing
+   */
+  const textAreaTarget = $('textarea.form__input');
+  if (textAreaTarget.length > 0) {
+    $('body').on('input', 'textarea.form__input', (event: Event) => {
+      formBuilder.textAreaHeight(event);
+    });
+  }
 });
