@@ -44,6 +44,7 @@ import ResetPassword from './views/reset/ResetPassword.vue';
  * Organisation data
  */
  import OrganisationData from './views/organisation/OrganisationData.vue';
+ import OrganisationDetail from './views/organisation/OrganisationDetail.vue';
 
 /**
  * Additional Components
@@ -104,7 +105,8 @@ app.component('LoadingState', LoadingState);
 /**
  * Organisation data
  */
-app.component('organisation-data', OrganisationData);
+app.component('OrganisationData', OrganisationData);
+app.component('OrganisationDetail', OrganisationDetail);
 
 /**
  * Extension to inline SVG files with Vue.js and optimize them automatically with SVGO

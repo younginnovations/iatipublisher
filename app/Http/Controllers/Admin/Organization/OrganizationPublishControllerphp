@@ -1,0 +1,143 @@
+<?php
+
+namespace App\Http\Controllers\Admin\Organization;
+
+use App\Http\Controllers\Controller;
+use App\IATI\Services\Organization\OrganizationPublishService;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
+
+/**
+ * Class OrganizationPublish.
+ */
+class OrganizationPublish extends Controller
+{
+    /**
+     * @var OrganizationPublishServices
+     */
+    protected $organizationPublishService;
+
+    /**
+     * OrganizationPublish Constructor.
+     * @param OrganizationPublishService $organizationPublishService
+     */
+    public function __construct(OrganizationPublishService $organizationPublishService)
+    {
+        $this->organizationPublishService = $organizationPublishService;
+    }
+
+    /**
+     * Display a listing of the resource.
+     */
+    public function index()
+    {
+        try {
+            $toast['message'] = Session::has('error') ? Session::get('error') : (Session::get('success') ? Session::get('success') : '');
+            $toast['type'] = Session::has('error') ? 'error' : 'success';
+            $elements = json_decode(file_get_contents(app_path('IATI/Data/organizationElementJsonSchema.json')), true);
+            $elementGroups = json_decode(file_get_contents(app_path('Data/Organization/OrganisationElementsGroup.json')), true);
+            $types = $this->getOrganizationTypes();
+            $progress = 75;
+            $organization = $this->organizationPublishService->getOrganizationData(Auth::user()->organization_id);
+            $organization['organisation_identifier'] = $organization['identifier'];
+
+            return view('admin.organisation.index', compact('elements', 'elementGroups', 'progress', 'organization', 'toast', 'types'));
+        } catch (\Exception $e) {
+            logger()->error($e->getMessage());
+
+            return redirect()->route('admin.activities.index')->with('error', 'Error has occurred while opening organization detail page]12345.');
+        }
+    }
+
+    /**
+     * Show the form for creating a new resource.O
+     *
+     * @return void
+     */
+    public function create(): void
+    {
+        //
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return void
+     */
+    public function store(Request $request): void
+    {
+        //
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  \App\IATI\Models\Organization\Organization  $organization
+     * @return void
+     */
+    public function show($organization): void
+    {
+        //
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  \App\IATI\Models\Organization\Organization  $organization
+     * @return void
+     */
+    public function edit($organization): void
+    {
+        //
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\IATI\Models\Organization\Organization  $organization
+     * @return void
+     */
+    public function update(Request $request, $organization): void
+    {
+        //
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  \App\IATI\Models\Organization\Organization  $organization
+     * @return void
+     */
+    public function destroy($organization): void
+    {
+        //
+    }
+
+    public function getOrganizationTypes()
+    {
+        return [
+            'budgetType'       => getCodeList('BudgetStatus', 'Activity', false),
+            'languages'        => getCodeList('Language', 'Organization', false),
+            'documentCategory' => getCodeList('DocumentCategory', 'Activity', false),
+            'documentCategory' => getCodeList('DocumentCategory', 'Activity', false),
+            'organizationType' => getCodeList('OrganizationType', 'Organization', false),
+        ];
+    }
+
+    public function getRegistrationAgency($country_code)
+    {
+        $registration_agency = getCodeList('OrganizationRegistrationAgency', 'Organization');
+        $filtered_agency = [];
+
+        foreach ($registration_agency as $key => $value) {
+            if (in_array(str_split($key, 2)[0], [$country_code, 'XI', 'XR'])) {
+                $filtered_agency[$key] = $value;
+            }
+        }
+
+        return ['message' => 'Filtered Agency successfully fetched', 'data' => $filtered_agency];
+    }
+}

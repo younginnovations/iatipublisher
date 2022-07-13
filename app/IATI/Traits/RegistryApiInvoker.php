@@ -14,9 +14,9 @@ trait RegistryApiInvoker
     /**
      * Make an api request to the given action.
      *
-     * @param        $action
-     * @param        $requestParameter
-     * @param null $apiKey
+     * @param $action
+     * @param $requestParameter
+     * @param $apiKey
      *
      * @return mixed
      */
