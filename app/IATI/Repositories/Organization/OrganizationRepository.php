@@ -6,6 +6,7 @@ namespace App\IATI\Repositories\Organization;
 
 use App\IATI\Models\Organization\Organization;
 use App\IATI\Repositories\Repository;
+use Illuminate\Database\Eloquent\Model;
 
 /**
  * Class OrganizationRepository.
@@ -32,5 +33,17 @@ class OrganizationRepository extends Repository
     public function createOrganization(array $data): mixed
     {
         return $this->model->updateOrCreate(['publisher_id' => $data['publisher_id']], $data);
+    }
+
+    /**
+     * Returns organization object.
+     *
+     * @param $id
+     *
+     * @return Model
+     */
+    public function getOrganizationData($id): Model
+    {
+        return $this->model->findOrFail($id);
     }
 }

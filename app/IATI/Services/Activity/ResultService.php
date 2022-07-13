@@ -76,6 +76,16 @@ class ResultService
     }
 
     /**
+     * Return specific result.
+     * @param $activityId
+     * @return array
+     */
+    public function getActivityResult($activityId): array
+    {
+        return $this->resultRepository->getActivityResult($activityId);
+    }
+
+    /**
      * Returns all results with its indicators and their periods for a particular activity.
      *
      * @param $activityId

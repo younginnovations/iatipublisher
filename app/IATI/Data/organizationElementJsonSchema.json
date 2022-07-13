@@ -1,0 +1,1369 @@
+{
+  "organization_identifier": {
+    "label": "organisation-identifier",
+    "criteria": "mandatory",
+    "attributes": {
+      "iati-activity-identifier": {
+        "name": "organization_identifier",
+        "label": "organisation-identifier",
+        "type": "text",
+        "required": true,
+        "criteria": "mandatory",
+        "hover_text": "",
+        "help_text": ""
+      }
+    },
+    "sub_elements": {}
+  },
+  "name": {
+    "label": "name",
+    "multiple": false,
+    "attributes": {},
+    "sub_elements": {
+      "narrative": {
+        "name": "narrative",
+        "label": "narrative",
+        "type": "text",
+        "required": true,
+        "criteria": "mandatory",
+        "add_more": true,
+        "hover_text": "The free text name or description of the item being described. This can be repeated in multiple languages. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/title/narrative/'> For more information </a>",
+        "help_text": "",
+        "attr": {
+          "row": 4
+        },
+        "attributes": {
+          "lang": {
+            "name": "language",
+            "label": "@xml:lang",
+            "type": "select",
+            "multiSelect": false,
+            "choices": "Activity/Language.json",
+            "required": true,
+            "criteria": "mandatory",
+            "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/title/narrative/' target='_blank'>For more information</a>",
+            "help_text": ""
+          }
+        },
+        "sub_elements": {}
+      }
+    }
+  },
+  "reporting_org": {
+    "name": "reporting_org",
+    "label": "reporting-org",
+    "criteria": "mandatory",
+    "add_more": "true",
+    "attributes": {
+      "ref": {
+        "name": "ref",
+        "label": "@ref",
+        "type": "text",
+        "required": true,
+        "criteria": "mandatory",
+        "hover_text": "",
+        "help_text": ""
+      },
+      "type": {
+        "name": "type",
+        "label": "@type",
+        "type": "select",
+        "multiSelect": false,
+        "choices": "Organization/OrganizationType.json",
+        "required": true,
+        "criteria": "mandatory",
+        "hover_text": "",
+        "help_text": ""
+      },
+      "secondary_reporter": {
+        "name": "secondary_reporter",
+        "label": "@secondary-reporter",
+        "type": "select",
+        "choices": {
+          "1": "True",
+          "0": "False"
+        },
+        "required": false,
+        "criteria": "mandatory",
+        "hover_text": "",
+        "help_text": ""
+      }
+    },
+    "sub_elements": {
+      "narrative": {
+        "name": "narrative",
+        "label": "narrative",
+        "type": "textarea",
+        "required": false,
+        "criteria": "",
+        "add_more": true,
+        "attr": {
+          "row": 4
+        },
+        "hover_text": "The free text name or description of the item being described. This can be repeated in multiple languages. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/description/narrative/'>For more information</a>",
+        "help_text": "",
+        "attributes": {
+          "lang": {
+            "name": "language",
+            "label": "@xml:lang",
+            "type": "select",
+            "multiSelect": false,
+            "choices": "Activity/Language.json",
+            "required": false,
+            "criteria": "",
+            "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/description/narrative/'>For more information</a>",
+            "help_text": ""
+          }
+        },
+        "sub_elements": {}
+      }
+    }
+  },
+  "total_budget": {
+    "name": "total_budget",
+    "label": "total-budget",
+    "add_more": true,
+    "attributes": {
+      "status": {
+        "name": "total_budget_status",
+        "label": "@status",
+        "type": "select",
+        "multiselect": false,
+        "choices": "Activity/BudgetStatus.json",
+        "required": false,
+        "criteria": "mandatory",
+        "hover_text": "",
+        "help_text": ""
+      }
+    },
+    "sub_elements": {
+      "period_start": {
+        "name": "period_start",
+        "label": "period-start",
+        "add_more": false,
+        "attributes": {
+          "date": {
+            "name": "date",
+            "label": "@iso-date",
+            "type": "date",
+            "required": true,
+            "criteria": "mandatory",
+            "hover_text": "",
+            "help_text": ""
+          }
+        },
+        "sub_elements": {}
+      },
+      "period_end": {
+        "name": "period_end",
+        "label": "period-end",
+        "add_more": false,
+        "attributes": {
+          "date": {
+            "name": "date",
+            "label": "@iso-date",
+            "type": "date",
+            "required": true,
+            "criteria": "mandatory",
+            "hover_text": "",
+            "help_text": ""
+          }
+        },
+        "sub_elements": {}
+      },
+      "value": {
+        "name": "value",
+        "label": "value",
+        "add_more": false,
+        "attributes": {
+          "amount": {
+            "name": "amount",
+            "label": "@amount",
+            "type": "text",
+            "required": true,
+            "criteria": "mandatory",
+            "hover_text": "",
+            "help_text": ""
+          },
+          "currency": {
+            "name": "currency",
+            "label": "@currency",
+            "type": "select",
+            "multiselect": false,
+            "choices": "Activity/Currency.json",
+            "required": true,
+            "criteria": "mandatory",
+            "hover_text": "A three letter ISO 4217 code for the original currency of the amount. This is required for all currency amounts unless the iati-organisation/@default-currency attribute is specified. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/budget/value/'>For more information</a>",
+            "help_text": ""
+          },
+          "value_date": {
+            "name": "value_date",
+            "label": "@value-date",
+            "type": "date",
+            "required": true,
+            "criteria": "mandatory",
+            "hover_text": "",
+            "help_text": ""
+          }
+        },
+        "sub_elements": {}
+      },
+      "budget_line": {
+        "name": "budget_line",
+        "label": "budget-line",
+        "add_more": true,
+        "attributes": {
+          "ref": {
+            "name": "ref",
+            "label": "@ref",
+            "type": "text",
+            "required": true,
+            "criteria": "mandatory",
+            "hover_text": "",
+            "help_text": ""
+          }
+        },
+        "sub_elements": {
+          "value": {
+            "name": "value",
+            "label": "value",
+            "add_more": false,
+            "attributes": {
+              "amount": {
+                "name": "amount",
+                "label": "@amount",
+                "type": "text",
+                "required": true,
+                "criteria": "mandatory",
+                "hover_text": "",
+                "help_text": ""
+              },
+              "currency": {
+                "name": "currency",
+                "label": "@currency",
+                "type": "select",
+                "multiselect": false,
+                "choices": "Activity/Currency.json",
+                "required": true,
+                "criteria": "mandatory",
+                "hover_text": "A three letter ISO 4217 code for the original currency of the amount. This is required for all currency amounts unless the iati-organisation/@default-currency attribute is specified. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/budget/value/'>For more information</a>",
+                "help_text": ""
+              },
+              "value_date": {
+                "name": "value_date",
+                "label": "@value-date",
+                "type": "date",
+                "required": true,
+                "criteria": "mandatory",
+                "hover_text": "",
+                "help_text": ""
+              }
+            },
+            "sub_elements": {}
+          },
+          "narrative": {
+            "name": "narrative",
+            "label": "narrative",
+            "type": "textarea",
+            "required": true,
+            "criteria": "mandatory",
+            "add_more": true,
+            "hover_text": "The free text name or description of the item being described. This can be repeated in multiple languages. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/title/narrative/'>For more information</a>",
+            "help_text": "",
+            "attr": {
+              "row": 4
+            },
+            "attributes": {
+              "lang": {
+                "name": "language",
+                "label": "@xml:lang",
+                "type": "select",
+                "multiSelect": false,
+                "choices": "Activity/Language.json",
+                "required": false,
+                "criteria": "",
+                "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/title/narrative/'>For more information</a>",
+                "help_text": ""
+              }
+            },
+            "sub_elements": {}
+          }
+        }
+      }
+    }
+  },
+  "recipient_org_budget": {
+    "name": "recipient_org_budget",
+    "label": "recipient-org-budget",
+    "add_more": true,
+    "attributes": {
+      "status": {
+        "name": "status",
+        "label": "@status",
+        "type": "select",
+        "multiselect": false,
+        "choices": "Activity/BudgetStatus.json",
+        "required": true,
+        "criteria": "mandatory",
+        "hover_text": "ISO 3166-1 alpha-2 code for the country. This attribute is required. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/codelists/country/'>For more information</a>",
+        "help_text": ""
+      }
+    },
+    "sub_elements": {
+      "recipient_org": {
+        "name": "recipient_org",
+        "label": "recipient-org",
+        "add_more": false,
+        "attributes": {
+          "ref": {
+            "name": "ref",
+            "label": "@ref",
+            "type": "text",
+            "required": true,
+            "criteria": "mandatory",
+            "hover_text": "",
+            "help_text": ""
+          }
+        },
+        "sub_elements": {
+          "narrative": {
+            "name": "narrative",
+            "label": "narrative",
+            "type": "textarea",
+            "required": true,
+            "criteria": "mandatory",
+            "add_more": true,
+            "hover_text": "The free text name or description of the item being described. This can be repeated in multiple languages. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/title/narrative/'>For more information</a>",
+            "help_text": "",
+            "attr": {
+              "row": 4
+            },
+            "attributes": {
+              "lang": {
+                "name": "language",
+                "label": "@xml:lang",
+                "type": "select",
+                "multiSelect": false,
+                "choices": "Activity/Language.json",
+                "required": false,
+                "criteria": "",
+                "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/title/narrative/'>For more information</a>",
+                "help_text": ""
+              }
+            },
+            "sub_elements": {}
+          }
+        }
+      },
+      "period_start": {
+        "name": "period_start",
+        "label": "period-start",
+        "add_more": false,
+        "attributes": {
+          "date": {
+            "name": "date",
+            "label": "@iso-date",
+            "type": "date",
+            "required": true,
+            "criteria": "mandatory",
+            "hover_text": "",
+            "help_text": ""
+          }
+        },
+        "sub_elements": {}
+      },
+      "period_end": {
+        "name": "period_end",
+        "label": "period-end",
+        "add_more": false,
+        "attributes": {
+          "iso_date": {
+            "name": "iso_date",
+            "label": "@iso-date",
+            "type": "date",
+            "required": true,
+            "criteria": "mandatory",
+            "hover_text": "",
+            "help_text": ""
+          }
+        },
+        "sub_elements": {}
+      },
+      "value": {
+        "name": "value",
+        "label": "value",
+        "add_more": false,
+        "attributes": {
+          "amount": {
+            "name": "amount",
+            "label": "@amount",
+            "type": "text",
+            "required": true,
+            "criteria": "mandatory",
+            "hover_text": "",
+            "help_text": ""
+          },
+          "currency": {
+            "name": "currency",
+            "label": "@currency",
+            "type": "select",
+            "multiselect": false,
+            "choices": "Activity/Currency.json",
+            "required": true,
+            "criteria": "mandatory",
+            "hover_text": "A three letter ISO 4217 code for the original currency of the amount. This is required for all currency amounts unless the iati-organisation/@default-currency attribute is specified. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/budget/value/'>For more information</a>",
+            "help_text": ""
+          },
+          "value_date": {
+            "name": "value_date",
+            "label": "@value-date",
+            "type": "date",
+            "required": true,
+            "criteria": "mandatory",
+            "hover_text": "",
+            "help_text": ""
+          }
+        },
+        "sub_elements": {}
+      },
+      "budget_line": {
+        "name": "budget_line",
+        "label": "budget-line",
+        "add_more": true,
+        "attributes": {
+          "ref": {
+            "name": "ref",
+            "label": "@ref",
+            "type": "text",
+            "required": true,
+            "criteria": "mandatory",
+            "hover_text": "",
+            "help_text": ""
+          }
+        },
+        "sub_elements": {
+          "value": {
+            "name": "value",
+            "label": "value",
+            "add_more": false,
+            "attributes": {
+              "amount": {
+                "name": "amount",
+                "label": "@amount",
+                "type": "text",
+                "required": true,
+                "criteria": "mandatory",
+                "hover_text": "",
+                "help_text": ""
+              },
+              "currency": {
+                "name": "currency",
+                "label": "@currency",
+                "type": "select",
+                "multiselect": false,
+                "choices": "Activity/Currency.json",
+                "required": true,
+                "criteria": "mandatory",
+                "hover_text": "A three letter ISO 4217 code for the original currency of the amount. This is required for all currency amounts unless the iati-organisation/@default-currency attribute is specified. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/budget/value/'>For more information</a>",
+                "help_text": ""
+              },
+              "value_date": {
+                "name": "value_date",
+                "label": "@value-date",
+                "type": "date",
+                "required": true,
+                "criteria": "mandatory",
+                "hover_text": "",
+                "help_text": ""
+              }
+            },
+            "sub_elements": {}
+          },
+          "narrative": {
+            "name": "narrative",
+            "label": "narrative",
+            "type": "textarea",
+            "required": true,
+            "criteria": "mandatory",
+            "add_more": true,
+            "hover_text": "The free text name or description of the item being described. This can be repeated in multiple languages. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/title/narrative/'>For more information</a>",
+            "help_text": "",
+            "attr": {
+              "row": 4
+            },
+            "attributes": {
+              "lang": {
+                "name": "language",
+                "label": "@xml:lang",
+                "type": "select",
+                "multiSelect": false,
+                "choices": "Activity/Language.json",
+                "required": false,
+                "criteria": "",
+                "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/title/narrative/'>For more information</a>",
+                "help_text": ""
+              }
+            },
+            "sub_elements": {}
+          }
+        }
+      }
+    }
+  },
+  "recipient_region_budget": {
+    "name": "recipient_region_budget",
+    "label": "recipient-region-budget",
+    "add_more": true,
+    "attributes": {
+      "status": {
+        "name": "status",
+        "label": "@status",
+        "type": "select",
+        "multiselect": false,
+        "choices": "Activity/BudgetStatus.json",
+        "required": true,
+        "criteria": "mandatory",
+        "hover_text": "ISO 3166-1 alpha-2 code for the country. This attribute is required. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/codelists/country/'>For more information</a>",
+        "help_text": ""
+      }
+    },
+    "sub_elements": {
+      "recipient_region": {
+        "name": "recipient_region",
+        "label": "Recipient Region",
+        "criteria": "recommended",
+        "add_more": true,
+        "attributes": {
+          "vocabulary": {
+            "name": "region_vocabulary",
+            "label": "@vocabulary",
+            "type": "select",
+            "multiselect": false,
+            "choices": "Activity/RegionVocabulary.json",
+            "required": true,
+            "criteria": "recommended",
+            "hover_text": "An IATI code for the vocabulary from which the region code is drawn. If it is not present 1 - ‘OECD DAC’ is assumed. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/transaction/recipient-region/'>For more information</a>",
+            "help_text": ""
+          },
+          "oecd_region_code": {
+            "name": "region_code",
+            "label": "@code",
+            "type": "select",
+            "multiselect": false,
+            "choices": "Activity/Region.json",
+            "required": true,
+            "criteria": "mandatory",
+            "hover_text": "Either an OECD DAC or UN region code. Codelist is determined by vocabulary attribute. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/transaction/recipient-region/'>For more information</a>",
+            "help_text": ""
+          },
+          "region_code": {
+            "name": "code",
+            "label": "@code",
+            "type": "text",
+            "required": true,
+            "criteria": "mandatory",
+            "hidden": true,
+            "hover_text": "Either an OECD DAC or UN region code. Codelist is determined by vocabulary attribute. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/transaction/recipient-region/'>For more information</a>",
+            "help_text": ""
+          },
+          "vocabulary-uri": {
+            "name": "vocabulary_uri",
+            "label": "@vocabulary-uri",
+            "type": "text",
+            "required": false,
+            "criteria": "recommended",
+            "hover_text": "The URI where this vocabulary is defined. If the vocabulary is 99 (reporting organisation), the URI where this internal vocabulary is defined. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/transaction/recipient-region/'>For more information</a>",
+            "help_text": ""
+          }
+        },
+        "sub_elements": {
+          "narrative": {
+            "name": "narrative",
+            "label": "narrative",
+            "type": "textarea",
+            "required": false,
+            "criteria": "",
+            "add_more": true,
+            "attr": {
+              "row": 4
+            },
+            "hover_text": "The free text name or description of the item being described. This can be repeated in multiple languages. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/description/narrative/'>For more information</a>",
+            "help_text": "",
+            "attributes": {
+              "lang": {
+                "name": "language",
+                "label": "@xml:lang",
+                "type": "select",
+                "multiSelect": false,
+                "choices": "Activity/Language.json",
+                "required": false,
+                "criteria": "",
+                "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/description/narrative/'>For more information</a>",
+                "help_text": ""
+              }
+            },
+            "sub_elements": {}
+          }
+        }
+      },
+      "period_start": {
+        "name": "period_start",
+        "label": "period-start",
+        "add_more": false,
+        "attributes": {
+          "date": {
+            "name": "date",
+            "label": "@iso-date",
+            "type": "date",
+            "required": true,
+            "criteria": "mandatory",
+            "hover_text": "",
+            "help_text": ""
+          }
+        },
+        "sub_elements": {}
+      },
+      "period_end": {
+        "name": "period_end",
+        "label": "period-end",
+        "add_more": false,
+        "attributes": {
+          "date": {
+            "name": "date",
+            "label": "@iso-date",
+            "type": "date",
+            "required": true,
+            "criteria": "mandatory",
+            "hover_text": "",
+            "help_text": ""
+          }
+        },
+        "sub_elements": {}
+      },
+      "value": {
+        "name": "value",
+        "label": "value",
+        "add_more": false,
+        "attributes": {
+          "amount": {
+            "name": "amount",
+            "label": "@amount",
+            "type": "text",
+            "required": true,
+            "criteria": "mandatory",
+            "hover_text": "",
+            "help_text": ""
+          },
+          "currency": {
+            "name": "currency",
+            "label": "@currency",
+            "type": "select",
+            "multiselect": false,
+            "choices": "Activity/Currency.json",
+            "required": true,
+            "criteria": "mandatory",
+            "hover_text": "A three letter ISO 4217 code for the original currency of the amount. This is required for all currency amounts unless the iati-organisation/@default-currency attribute is specified. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/budget/value/'>For more information</a>",
+            "help_text": ""
+          },
+          "value_date": {
+            "name": "value_date",
+            "label": "@value-date",
+            "type": "date",
+            "required": true,
+            "criteria": "mandatory",
+            "hover_text": "",
+            "help_text": ""
+          }
+        },
+        "sub_elements": {}
+      },
+      "budget_line": {
+        "name": "budget_line",
+        "label": "budget-line",
+        "add_more": true,
+        "attributes": {
+          "ref": {
+            "name": "ref",
+            "label": "@ref",
+            "type": "text",
+            "required": true,
+            "criteria": "mandatory",
+            "hover_text": "",
+            "help_text": ""
+          }
+        },
+        "sub_elements": {
+          "value": {
+            "name": "value",
+            "label": "value",
+            "add_more": false,
+            "attributes": {
+              "amount": {
+                "name": "amount",
+                "label": "@amount",
+                "type": "text",
+                "required": true,
+                "criteria": "mandatory",
+                "hover_text": "",
+                "help_text": ""
+              },
+              "currency": {
+                "name": "currency",
+                "label": "@currency",
+                "type": "select",
+                "multiselect": false,
+                "choices": "Activity/Currency.json",
+                "required": true,
+                "criteria": "mandatory",
+                "hover_text": "A three letter ISO 4217 code for the original currency of the amount. This is required for all currency amounts unless the iati-organisation/@default-currency attribute is specified. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/budget/value/'>For more information</a>",
+                "help_text": ""
+              },
+              "value_date": {
+                "name": "value_date",
+                "label": "@value-date",
+                "type": "date",
+                "required": true,
+                "criteria": "mandatory",
+                "hover_text": "",
+                "help_text": ""
+              }
+            },
+            "sub_elements": {}
+          },
+          "narrative": {
+            "name": "narrative",
+            "label": "narrative",
+            "type": "textarea",
+            "required": true,
+            "criteria": "mandatory",
+            "add_more": true,
+            "hover_text": "The free text name or description of the item being described. This can be repeated in multiple languages. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/title/narrative/'>For more information</a>",
+            "help_text": "",
+            "attr": {
+              "row": 4
+            },
+            "attributes": {
+              "lang": {
+                "name": "language",
+                "label": "@xml:lang",
+                "type": "select",
+                "multiSelect": false,
+                "choices": "Activity/Language.json",
+                "required": false,
+                "criteria": "",
+                "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/title/narrative/'>For more information</a>",
+                "help_text": ""
+              }
+            },
+            "sub_elements": {}
+          }
+        }
+      }
+    }
+  },
+  "recipient_country_budget": {
+    "name": "recipient_country_budget",
+    "label": "recipient-country-budget",
+    "add_more": true,
+    "attributes": {
+      "status": {
+        "name": "status",
+        "label": "@status",
+        "type": "select",
+        "multiselect": false,
+        "choices": "Activity/BudgetStatus.json",
+        "required": true,
+        "criteria": "mandatory",
+        "hover_text": "ISO 3166-1 alpha-2 code for the country. This attribute is required. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/codelists/country/'>For more information</a>",
+        "help_text": ""
+      }
+    },
+    "sub_elements": {
+      "recipient_country": {
+        "name": "recipient_country",
+        "label": "recipient-country",
+        "criteria": "",
+        "add_more": true,
+        "attributes": {
+          "code": {
+            "name": "code",
+            "label": "@code",
+            "type": "select",
+            "multiselect": false,
+            "choices": "Activity/Country.json",
+            "required": true,
+            "criteria": "mandatory",
+            "hover_text": "Either an OECD DAC or UN region code. Codelist is determined by vocabulary attribute. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/transaction/recipient-region/'>For more information</a>",
+            "help_text": ""
+          }
+        },
+        "sub_elements": {
+          "narrative": {
+            "name": "narrative",
+            "label": "narrative",
+            "type": "textarea",
+            "required": false,
+            "criteria": "",
+            "add_more": true,
+            "attr": {
+              "row": 4
+            },
+            "hover_text": "The free text name or description of the item being described. This can be repeated in multiple languages. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/description/narrative/'>For more information</a>",
+            "help_text": "",
+            "attributes": {
+              "lang": {
+                "name": "language",
+                "label": "@xml:lang",
+                "type": "select",
+                "multiSelect": false,
+                "choices": "Activity/Language.json",
+                "required": false,
+                "criteria": "",
+                "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/description/narrative/'>For more information</a>",
+                "help_text": ""
+              }
+            },
+            "sub_elements": {}
+          }
+        }
+      },
+      "period_start": {
+        "name": "period_start",
+        "label": "period-start",
+        "add_more": false,
+        "attributes": {
+          "iso_date": {
+            "name": "iso_date",
+            "label": "@iso-date",
+            "type": "date",
+            "required": true,
+            "criteria": "mandatory",
+            "hover_text": "",
+            "help_text": ""
+          }
+        },
+        "sub_elements": {}
+      },
+      "period_end": {
+        "name": "period_end",
+        "label": "period-end",
+        "add_more": false,
+        "attributes": {
+          "iso_date": {
+            "name": "iso_date",
+            "label": "@iso-date",
+            "type": "date",
+            "required": true,
+            "criteria": "mandatory",
+            "hover_text": "",
+            "help_text": ""
+          }
+        },
+        "sub_elements": {}
+      },
+      "value": {
+        "name": "value",
+        "label": "value",
+        "add_more": false,
+        "attributes": {
+          "amount": {
+            "name": "amount",
+            "label": "@amount",
+            "type": "text",
+            "required": true,
+            "criteria": "mandatory",
+            "hover_text": "",
+            "help_text": ""
+          },
+          "currency": {
+            "name": "currency",
+            "label": "@currency",
+            "type": "select",
+            "multiselect": false,
+            "choices": "Activity/Currency.json",
+            "required": true,
+            "criteria": "mandatory",
+            "hover_text": "A three letter ISO 4217 code for the original currency of the amount. This is required for all currency amounts unless the iati-organisation/@default-currency attribute is specified. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/budget/value/'>For more information</a>",
+            "help_text": ""
+          },
+          "value_date": {
+            "name": "value_date",
+            "label": "@value-date",
+            "type": "date",
+            "required": true,
+            "criteria": "mandatory",
+            "hover_text": "",
+            "help_text": ""
+          }
+        },
+        "sub_elements": {}
+      },
+      "budget_line": {
+        "name": "budget_line",
+        "label": "budget-line",
+        "add_more": true,
+        "attributes": {
+          "ref": {
+            "name": "ref",
+            "label": "@ref",
+            "type": "text",
+            "required": true,
+            "criteria": "mandatory",
+            "hover_text": "",
+            "help_text": ""
+          }
+        },
+        "sub_elements": {
+          "value": {
+            "name": "value",
+            "label": "value",
+            "add_more": false,
+            "attributes": {
+              "amount": {
+                "name": "amount",
+                "label": "@amount",
+                "type": "text",
+                "required": true,
+                "criteria": "mandatory",
+                "hover_text": "",
+                "help_text": ""
+              },
+              "currency": {
+                "name": "currency",
+                "label": "@currency",
+                "type": "select",
+                "multiselect": false,
+                "choices": "Activity/Currency.json",
+                "required": true,
+                "criteria": "mandatory",
+                "hover_text": "A three letter ISO 4217 code for the original currency of the amount. This is required for all currency amounts unless the iati-organisation/@default-currency attribute is specified. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/budget/value/'>For more information</a>",
+                "help_text": ""
+              },
+              "value_date": {
+                "name": "value_date",
+                "label": "@value-date",
+                "type": "date",
+                "required": true,
+                "criteria": "mandatory",
+                "hover_text": "",
+                "help_text": ""
+              }
+            },
+            "sub_elements": {}
+          },
+          "narrative": {
+            "name": "narrative",
+            "label": "narrative",
+            "type": "textarea",
+            "required": true,
+            "criteria": "mandatory",
+            "add_more": true,
+            "hover_text": "The free text name or description of the item being described. This can be repeated in multiple languages. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/title/narrative/'>For more information</a>",
+            "help_text": "",
+            "attr": {
+              "row": 4
+            },
+            "attributes": {
+              "lang": {
+                "name": "language",
+                "label": "@xml:lang",
+                "type": "select",
+                "multiSelect": false,
+                "choices": "Activity/Language.json",
+                "required": false,
+                "criteria": "",
+                "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/title/narrative/'>For more information</a>",
+                "help_text": ""
+              }
+            },
+            "sub_elements": {}
+          }
+        }
+      }
+    }
+  },
+  "total_expenditure": {
+    "name": "total_expenditure",
+    "label": "total-expenditure",
+    "add_more": true,
+    "attributes": {
+      "ref": {
+        "name": "ref",
+        "label": "@ref",
+        "type": "text",
+        "required": true,
+        "criteria": "mandatory",
+        "hover_text": "",
+        "help_text": ""
+      }
+    },
+    "sub_elements": {
+      "period_start": {
+        "name": "period_start",
+        "label": "period-start",
+        "add_more": false,
+        "attributes": {
+          "iso_date": {
+            "name": "iso_date",
+            "label": "@iso-date",
+            "type": "date",
+            "required": true,
+            "criteria": "mandatory",
+            "hover_text": "",
+            "help_text": ""
+          }
+        },
+        "sub_elements": {}
+      },
+      "period_end": {
+        "name": "period_end",
+        "label": "period-end",
+        "add_more": false,
+        "attributes": {
+          "iso_date": {
+            "name": "iso_date",
+            "label": "@iso-date",
+            "type": "date",
+            "required": true,
+            "criteria": "mandatory",
+            "hover_text": "",
+            "help_text": ""
+          }
+        },
+        "sub_elements": {}
+      },
+      "value": {
+        "name": "value",
+        "label": "value",
+        "add_more": false,
+        "attributes": {
+          "amount": {
+            "name": "amount",
+            "label": "@amount",
+            "type": "text",
+            "required": true,
+            "criteria": "mandatory",
+            "hover_text": "",
+            "help_text": ""
+          },
+          "currency": {
+            "name": "currency",
+            "label": "@currency",
+            "type": "select",
+            "multiselect": false,
+            "choices": "Activity/Currency.json",
+            "required": true,
+            "criteria": "mandatory",
+            "hover_text": "A three letter ISO 4217 code for the original currency of the amount. This is required for all currency amounts unless the iati-organisation/@default-currency attribute is specified. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/budget/value/'>For more information</a>",
+            "help_text": ""
+          },
+          "value_date": {
+            "name": "value_date",
+            "label": "@value-date",
+            "type": "date",
+            "required": true,
+            "criteria": "mandatory",
+            "hover_text": "",
+            "help_text": ""
+          }
+        },
+        "sub_elements": {}
+      },
+      "expense_line": {
+        "name": "expense_line",
+        "label": "expense-line",
+        "add_more": true,
+        "attributes": {
+          "ref": {
+            "name": "ref",
+            "label": "@ref",
+            "type": "text",
+            "required": true,
+            "criteria": "mandatory",
+            "hover_text": "",
+            "help_text": ""
+          }
+        },
+        "sub_elements": {
+          "value": {
+            "name": "value",
+            "label": "value",
+            "add_more": false,
+            "attributes": {
+              "amount": {
+                "name": "amount",
+                "label": "@amount",
+                "type": "text",
+                "required": true,
+                "criteria": "mandatory",
+                "hover_text": "",
+                "help_text": ""
+              },
+              "currency": {
+                "name": "currency",
+                "label": "@currency",
+                "type": "select",
+                "multiselect": false,
+                "choices": "Activity/Currency.json",
+                "required": true,
+                "criteria": "mandatory",
+                "hover_text": "A three letter ISO 4217 code for the original currency of the amount. This is required for all currency amounts unless the iati-organisation/@default-currency attribute is specified. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/budget/value/'>For more information</a>",
+                "help_text": ""
+              },
+              "value_date": {
+                "name": "value_date",
+                "label": "@value-date",
+                "type": "date",
+                "required": true,
+                "criteria": "mandatory",
+                "hover_text": "",
+                "help_text": ""
+              }
+            },
+            "sub_elements": {}
+          },
+          "narrative": {
+            "name": "narrative",
+            "label": "narrative",
+            "type": "textarea",
+            "required": true,
+            "criteria": "mandatory",
+            "add_more": true,
+            "hover_text": "The free text name or description of the item being described. This can be repeated in multiple languages. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/title/narrative/'>For more information</a>",
+            "help_text": "",
+            "attr": {
+              "row": 4
+            },
+            "attributes": {
+              "lang": {
+                "name": "language",
+                "label": "@xml:lang",
+                "type": "select",
+                "multiSelect": false,
+                "choices": "Activity/Language.json",
+                "required": false,
+                "criteria": "",
+                "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/title/narrative/'>For more information</a>",
+                "help_text": ""
+              }
+            },
+            "sub_elements": {}
+          }
+        }
+      }
+    }
+  },
+  "document_link": {
+    "name": "document_link",
+    "label": "Document Link",
+    "add_more": true,
+    "attributes": {
+      "url": {
+        "name": "url",
+        "label": "@url",
+        "type": "text",
+        "required": true,
+        "criteria": "",
+        "hover_text": "",
+        "help_text": ""
+      },
+      "format": {
+        "name": "format",
+        "label": "@format",
+        "type": "select",
+        "multiselect": false,
+        "choices": "Activity/FileFormat.json",
+        "required": true,
+        "criteria": "",
+        "hover_text": "",
+        "help_text": ""
+      },
+      "document": {
+        "name": "document",
+        "label": "document",
+        "type": "file",
+        "required": false,
+        "criteria": "",
+        "hover_text": "",
+        "help_text": ""
+      }
+    },
+    "sub_elements": {
+      "title": {
+        "name": "title",
+        "label": "title",
+        "add_more": false,
+        "attributes": {},
+        "sub_elements": {
+          "narrative": {
+            "name": "narrative",
+            "label": "narrative",
+            "type": "textarea",
+            "required": false,
+            "criteria": "",
+            "add_more": true,
+            "attr": {
+              "row": 4
+            },
+            "hover_text": "The free text name or description of the item being described. This can be repeated in multiple languages. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/description/narrative/'>For more information</a>",
+            "help_text": "",
+            "attributes": {
+              "lang": {
+                "name": "language",
+                "label": "@xml:lang",
+                "type": "select",
+                "multiSelect": false,
+                "choices": "Activity/Language.json",
+                "required": false,
+                "criteria": "",
+                "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/description/narrative/'>For more information</a>",
+                "help_text": ""
+              }
+            },
+            "sub_elements": {}
+          }
+        }
+      },
+      "description": {
+        "name": "description",
+        "label": "Description",
+        "add_more": false,
+        "attributes": {},
+        "sub_elements": {
+          "narrative": {
+            "name": "narrative",
+            "label": "narrative",
+            "type": "textarea",
+            "required": false,
+            "criteria": "",
+            "add_more": true,
+            "attr": {
+              "row": 4
+            },
+            "hover_text": "The free text name or description of the item being described. This can be repeated in multiple languages. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/description/narrative/'>For more information</a>",
+            "help_text": "",
+            "attributes": {
+              "lang": {
+                "name": "language",
+                "label": "@xml:lang",
+                "type": "select",
+                "multiSelect": false,
+                "choices": "Activity/Language.json",
+                "required": false,
+                "criteria": "",
+                "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/description/narrative/'>For more information</a>",
+                "help_text": ""
+              }
+            },
+            "sub_elements": {}
+          }
+        }
+      },
+      "category": {
+        "name": "category",
+        "label": "Category",
+        "add_more": true,
+        "wrapper_collection": false,
+        "attributes": {
+          "code": {
+            "name": "code",
+            "label": "@code",
+            "type": "select",
+            "multiSelect": false,
+            "choices": "Activity/DocumentCategory.json",
+            "required": true,
+            "criteria": "",
+            "hover_text": "",
+            "help_text": ""
+          }
+        },
+        "sub_elements": {}
+      },
+      "language": {
+        "name": "language",
+        "label": "Language",
+        "add_more": true,
+        "wrapper_collection": false,
+        "attributes": {
+          "code": {
+            "name": "code",
+            "label": "@code",
+            "type": "select",
+            "multiSelect": false,
+            "choices": "Activity/Language.json",
+            "required": true,
+            "criteria": "",
+            "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/description/narrative/'>For more information</a>",
+            "help_text": ""
+          }
+        },
+        "sub_elements": {}
+      },
+      "document_date": {
+        "name": "document_date",
+        "label": "Document Date",
+        "add_more": false,
+        "attributes": {
+          "date": {
+            "name": "date",
+            "label": "date",
+            "type": "date",
+            "required": true,
+            "criteria": "",
+            "hover_text": "",
+            "help_text": ""
+          }
+        },
+        "sub_elements": {}
+      },
+      "recipient_country": {
+        "name": "recipient_country",
+        "label": "recipient-country",
+        "criteria": "",
+        "add_more": true,
+        "attributes": {
+          "code": {
+            "name": "code",
+            "label": "@code",
+            "type": "select",
+            "multiselect": false,
+            "choices": "Activity/Country.json",
+            "required": true,
+            "criteria": "mandatory",
+            "hover_text": "Either an OECD DAC or UN region code. Codelist is determined by vocabulary attribute. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/transaction/recipient-region/'>For more information</a>",
+            "help_text": ""
+          }
+        },
+        "sub_elements": {
+          "narrative": {
+            "name": "narrative",
+            "label": "narrative",
+            "type": "textarea",
+            "required": false,
+            "criteria": "",
+            "add_more": true,
+            "attr": {
+              "row": 4
+            },
+            "hover_text": "The free text name or description of the item being described. This can be repeated in multiple languages. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/description/narrative/'>For more information</a>",
+            "help_text": "",
+            "attributes": {
+              "lang": {
+                "name": "language",
+                "label": "@xml:lang",
+                "type": "select",
+                "multiSelect": false,
+                "choices": "Activity/Language.json",
+                "required": false,
+                "criteria": "",
+                "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/description/narrative/'>For more information</a>",
+                "help_text": ""
+              }
+            },
+            "sub_elements": {}
+          }
+        }
+      }
+    }
+  }
+}

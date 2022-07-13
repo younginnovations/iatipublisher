@@ -74,6 +74,17 @@ class ResultRepository
     }
 
     /**
+     * Return specific result.
+     * @param $id
+     * @param $activityId
+     * @return array
+     */
+    public function getActivityResult($activityId): array
+    {
+        return $this->activityResult->where('activity_id', $activityId)->get()->toArray();
+    }
+
+    /**
      * Function to sanitize result data.
      * @param array $resultData
      * @return array

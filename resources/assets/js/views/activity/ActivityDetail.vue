@@ -239,7 +239,7 @@
             </div>
             <RadialProgressBar
               class="mb-3 h-20 text-8xl"
-              :isPercent="true"
+              :is-percent="true"
             ></RadialProgressBar>
             <span>Fill core elements to get 100% score</span>
           </div>
@@ -536,7 +536,6 @@ export default defineComponent({
       downloadToggle,
       toastData,
       elementProps,
-      props,
       formatTitle,
       pageTitle
     };
