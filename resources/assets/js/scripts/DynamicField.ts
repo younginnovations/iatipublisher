@@ -706,15 +706,16 @@ export class DynamicField {
    * Hides Recipient Region Form Fields
    */
   public hideRecipientRegionField(index: JQuery, value: string) {
-    const case1_show = 'select[id*="[region_code]"],input[id*="[custom_code]"]',
-      case2_show = 'input[id*="[custom_code]"]',
-      case99_show = 'input[id*="[custom_code]"],input[id*="[vocabulary_uri]"]',
-      case1 = 'input[id*="[custom_code]"],input[id*="[vocabulary_uri]"]',
+    const case1_show = 'select[id*="[region_code]"]',
+      case2_show = 'input[id*="[custom_code]"], input[id*="[code]"]',
+      case99_show = 'input[id*="[custom_code]"],input[id*="[vocabulary_uri]"], input[id*="[code]"]',
+      case1 = 'input[id*="[custom_code]"],input[id*="[vocabulary_uri]"],input[id*="[code]"]',
       case2 = 'select[id*="[region_code]"],input[id*="[vocabulary_uri]"]',
       case99 = 'select[id*="[region_code]"]';
 
     switch (value) {
       case '1':
+        console.log(case1_show);
         index
           .closest('.form-field-group')
           .find(case1_show)

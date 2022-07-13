@@ -3,12 +3,12 @@
     :diameter="80"
     :completed-steps="completedPercent"
     :total-steps="totalPercent"
-    :isClockwise="false"
-    innerStrokeColor="#17997b26"
-    startColor="#17997B"
-    stopColor="#17997B"
-    :strokeWidth="6"
-    :innerStrokeWidth="6"
+    :is-clockwise="false"
+    inner-stroke-color="#17997b26"
+    start-color="#17997B"
+    stop-color="#17997B"
+    :stroke-width="6"
+    :inner-stroke-width="6"
   >
     <!-- Your inner content here -->
     <p class="z-10 text-base text-spring-50">{{ completedPercent }} %</p>

@@ -3,18 +3,18 @@
     "core": true,
     "completed": true
   },
-  "organisation_name": {
+  "name": {
     "core": true,
     "completed": true
   },
-  "reporting_organisation": {
+  "reporting_org": {
     "completed": true
   },
   "total_budget": {
     "core": true,
     "completed": true
   },
-  "recipient_organisation_budget": {
+  "recipient_org_budget": {
     "core": true,
     "completed": true
   },

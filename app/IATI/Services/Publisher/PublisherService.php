@@ -22,6 +22,7 @@ class PublisherService extends RegistryApiHandler
      * @var Model|null
      */
     protected $activityPublished = null;
+    protected $organizationPublished = null;
 
     /**
      * Publishes the activity xml file to the IATI registry.
@@ -40,12 +41,48 @@ class PublisherService extends RegistryApiHandler
     }
 
     /**
+     * Publishes the activity xml file to the IATI registry.
+     *
+     * @param $registryInfo
+     * @param $organizationPublished
+     * @param $organization
+     */
+    public function publishOrganizationFile($registryInfo, $organizationPublished, $organization)
+    {
+        $this->organizationPublished = $organizationPublished;
+        $this->init(env('IATI_API_ENDPOINT'), Arr::get($registryInfo, 'api_token', ''))
+             ->setPublisher(Arr::get($registryInfo, 'publisher_id', ''));
+        $this->searchForPublisher($this->publisherId);
+        $this->publishOrganizationToRegistry($organization, $organizationPublished->filename);
+    }
+
+    /**
      * Set the file attribute.
      * @param $activityPublished
      */
     protected function setFile($activityPublished)
     {
         $this->activityPublished = $activityPublished;
+    }
+
+    /**
+     * Publish File to the IATI Registry.
+     *
+     * @param $organization
+     * @param $filename
+     */
+    protected function publishOrganizationToRegistry($organization, $filename)
+    {
+        $data = $this->generateOrganizationPayload($organization, $filename);
+        $packageId = $this->extractPackage($filename);
+
+        if ($this->isPackageAvailable($packageId, $this->apiKey)) {
+            $this->client->package_update($data);
+        } else {
+            $this->client->package_create($data);
+        }
+
+        $this->updateOrganizationStatus();
     }
 
     /**
@@ -86,6 +123,26 @@ class PublisherService extends RegistryApiHandler
         $title = $this->extractTitle($organization, $fileType);
 
         return $this->formatHeaders($this->extractPackage($filename), $organization, $this->activityPublished, $key, $fileType, $title);
+    }
+
+    /**
+     * Returns the request header payload while publishing any files to the IATI Registry.
+     *
+     * @param      $organization
+     * @param      $filename
+     * @param      $publishingType
+     * @param null $publishedFile
+     *
+     * @return string
+     */
+    protected function generateOrganizationPayload($organization, $filename): string
+    {
+        $code = $this->getCode($filename);
+        $key = $this->getKey($code);
+        $fileType = $this->getFileType($code);
+        $title = $this->extractTitle($organization, $fileType);
+
+        return $this->formatOrganizationHeaders($this->extractPackage($filename), $organization, $this->organizationPublished, $key, $fileType, $title);
     }
 
     /**
@@ -177,6 +234,48 @@ class PublisherService extends RegistryApiHandler
      *
      * @return string
      */
+    protected function formatOrganizationHeaders($filename, $organization, $publishedFile, $key, $code, $title): string
+    {
+        $data = [
+            'title'        => $title,
+            'name'         => $filename,
+            'author_email' => $organization->user->email,
+            'owner_org'    => $this->publisherId,
+            'license_id'   => 'other-open',
+            'resources'    => [
+                [
+                    'format'   => 'IATI-XML',
+                    'mimetype' => 'application/xml',
+                    'url'      => Storage::disk('minio')->url('iati/organizationXmlFiles/' . $filename . '.xml'),
+                ],
+            ],
+            'filetype'     => ($code != 'organisation') ? 'activity' : $code,
+            $key           => ($code == 'activities' || $code == 'organisation') ? '' : $code,
+            'data_updated' => $publishedFile->updated_at->toDateTimeString(),
+            'language'     => 'en',
+            'verified'     => 'no',
+            'state'        => 'active',
+        ];
+
+        // if ($code != 'organisation') {
+        //     $data['activity_count'] = count($publishedFile->published_activities);
+        // }
+
+        return json_encode($data);
+    }
+
+    /**
+     * Format headers required to publish into the IATI Registry.
+     *
+     * @param $filename
+     * @param $organization
+     * @param $publishedFile
+     * @param $key
+     * @param $code
+     * @param $title
+     *
+     * @return string
+     */
     protected function formatHeaders($filename, $organization, $publishedFile, $key, $code, $title): string
     {
         $data = [
@@ -248,5 +347,14 @@ class PublisherService extends RegistryApiHandler
     {
         $this->activityPublished->published_to_registry = 1;
         $this->activityPublished->save();
+    }
+
+    /**
+     * Updates activity published table.
+     */
+    protected function updateOrganizationStatus()
+    {
+        $this->organizationPublished->published_to_registry = 1;
+        $this->organizationPublished->save();
     }
 }

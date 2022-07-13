@@ -6,6 +6,7 @@ namespace App\IATI\Services\Organization;
 
 use App\IATI\Models\Organization\Organization;
 use App\IATI\Repositories\Organization\OrganizationRepository;
+use Illuminate\Database\Eloquent\Model;
 
 /**
  * Class OrganizationService.
@@ -32,7 +33,7 @@ class OrganizationService
      *
      * @param array $data
      */
-    public function create(array $data): \Illuminate\Database\Eloquent\Model
+    public function create(array $data): Model
     {
         return $this->organizationRepo->store($data);
     }
@@ -47,18 +48,18 @@ class OrganizationService
     public function getReportingOrgXmlData(Organization $organization)
     {
         $organizationData = [];
-//        $orgReportingOrg = (array) $organization->reporting_org;
-//
-//        foreach ($orgReportingOrg as $OrgReportingOrg) {
-//            $organizationData[] = [
-//                '@attributes' => [
-//                    'type'               => $OrgReportingOrg['reporting_organization_type'],
-//                    'ref'                => $OrgReportingOrg['reporting_organization_identifier'],
-//                    'secondary-reporter' => $organization->secondary_reporter
-//                ],
-//                'narrative'   => $this->buildNarrative($OrgReportingOrg['narrative']),
-//            ];
-//        }
+        //        $orgReportingOrg = (array) $organization->reporting_org;
+        //
+        //        foreach ($orgReportingOrg as $OrgReportingOrg) {
+        //            $organizationData[] = [
+        //                '@attributes' => [
+        //                    'type'               => $OrgReportingOrg['reporting_organization_type'],
+        //                    'ref'                => $OrgReportingOrg['reporting_organization_identifier'],
+        //                    'secondary-reporter' => $organization->secondary_reporter
+        //                ],
+        //                'narrative'   => $this->buildNarrative($OrgReportingOrg['narrative']),
+        //            ];
+        //        }
 
         $organizationData[] = [
             '@attributes' => [
@@ -77,5 +78,44 @@ class OrganizationService
         ];
 
         return $organizationData;
+    }
+
+    /**
+     * Returns Organization object.
+     *
+     * @param $id
+     *
+     * @return Model
+     */
+    public function getOrganizationData($id): Model
+    {
+        return $this->organizationRepo->getOrganizationData($id);
+    }
+
+    /**
+     * Returns required service file.
+     *
+     * @param $serviceName
+     *
+     * @return \Illuminate\Contracts\Foundation\Application|mixed
+     */
+    public function getService($serviceName)
+    {
+        return app(sprintf("App\IATI\Services\Organization\%s", $serviceName));
+    }
+
+    /**
+     * Updates status column of activity row.
+     *
+     * @param $organization
+     * @param $status
+     * @param $alreadyPublished
+     * @param $linkedToIati
+     *
+     * @return bool
+     */
+    public function updatePublishedStatus($organization, $status, $alreadyPublished, $linkedToIati): bool
+    {
+        return $this->organizationRepo->updatePublishedStatus($organization, $status, $alreadyPublished, $linkedToIati);
     }
 }
