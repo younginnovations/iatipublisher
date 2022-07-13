@@ -6,7 +6,7 @@
       :class="{
         'pointer-events-none': pageCount <= 1,
       }"
-      aria-disabled=""
+      aria-disabled="true"
       @click="previousPage"
     >
       <svg-vue icon="arrow-left"></svg-vue>
@@ -15,7 +15,7 @@
 
     <a
       v-for="index in pageCount"
-      :key = "index"
+      :key="index"
       :class="active_page === index ? 'current' : ''"
     >
       {{ index }}

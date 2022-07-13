@@ -121,8 +121,16 @@ form {
       @apply ml-6;
     }
 
-    .form-field-group:only-of-type .delete-item,
-    > .multi-form:only-of-type .delete-parent {
+    .wrapped-child-body {
+      @apply relative;
+      > .delete-parent {
+        @apply block;
+      }
+    }
+
+    .form-field-group:only-of-type > .delete-item,
+    > .multi-form:only-of-type > .delete-parent,
+    .wrapped-child-body:only-of-type > .delete-parent {
       @apply hidden;
     }
   }

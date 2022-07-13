@@ -1,19 +1,19 @@
 <template>
   <div class="bg-paper px-10 pt-4 pb-[71px]">
-    <div class="page-title mb-6">
+    <div class="mb-6 page-title">
       <div class="flex items-end gap-4">
         <div class="title grow-0">
           <div class="mb-4 text-caption-c1 text-n-40">
             <nav aria-label="breadcrumbs" class="breadcrumb">
               <p>
                 <a href="/activities" class="font-bold"> Your Activities </a>
-                <span class="separator mx-4"> / </span>
+                <span class="mx-4 separator"> / </span>
                 <span class="text-n-30">
                   <a href="/activities/1">Activity Name</a>
                 </span>
-                <span class="separator mx-4"> / </span>
+                <span class="mx-4 separator"> / </span>
                 <span class="text-n-30"> Add Result </span>
-                <span class="separator mx-4"> / </span>
+                <span class="mx-4 separator"> / </span>
                 <span class="last text-n-30"> Result Detail </span>
               </p>
             </nav>
@@ -31,7 +31,7 @@
     </div>
     <div class="activities">
       <aside class="activities__sidebar">
-        <div class="indicator rounded-lg bg-eggshell px-6 py-4 text-n-50">
+        <div class="px-6 py-4 rounded-lg indicator bg-eggshell text-n-50">
           <ul class="text-sm font-bold leading-relaxed">
             <li>
               <a href="#" :class="linkClasses">
@@ -60,7 +60,7 @@
           </ul>
           <a
             :href="`/activities/${result.activity_id}/result/${result.id}/indicator/create`"
-            class="flex w-full rounded border border-dashed border-n-40 bg-white p-2 text-sm font-bold leading-relaxed"
+            class="flex w-full p-2 text-sm font-bold leading-relaxed bg-white border border-dashed rounded border-n-40"
           >
             <svg-vue icon="add" class="mr-2 text-n-40"></svg-vue>
             add indicator
@@ -68,7 +68,7 @@
         </div>
       </aside>
       <div class="activities__content">
-        <div class="mb-11 flex justify-end">
+        <div class="flex justify-end mb-11">
           <a
             :href="`/activities/${result.activity_id}/result/${result.id}/edit`"
             class="edit-button mr-2.5 flex items-center text-tiny font-bold uppercase"
@@ -77,7 +77,7 @@
             <span>Edit Result</span>
           </a>
         </div>
-        <div class="activities__content--elements -mx-3 -mt-3 flex flex-wrap">
+        <div class="flex flex-wrap -mx-3 -mt-3 activities__content--elements">
           <template v-for="(post, key) in result.result" :key="key">
             <ResultElement
               :data="post"
@@ -97,16 +97,16 @@
           <!-- Indicator -->
           <div
             id=""
-            class="activities__content--element basis-full px-3 py-3 text-n-50"
+            class="px-3 py-3 activities__content--element basis-full text-n-50"
           >
-            <div class="rounded-lg bg-white p-4">
-              <div class="mb-4 flex">
-                <div class="title flex grow items-center">
+            <div class="p-4 bg-white rounded-lg">
+              <div class="flex mb-4">
+                <div class="flex items-center title grow">
                   <svg-vue
                     class="mr-1.5 text-xl text-bluecoral"
                     icon="bill"
                   ></svg-vue>
-                  <div class="title text-sm font-bold">Indicator</div>
+                  <div class="text-sm font-bold title">Indicator</div>
                   <div
                     class="status ml-2.5 flex text-xs leading-5 text-crimson-50"
                   >
@@ -114,7 +114,7 @@
                     <span>not completed</span>
                   </div>
                 </div>
-                <div class="icons flex items-center">
+                <div class="flex items-center icons">
                   <a
                     :href="`/activities/${result.activity_id}/result/${result.id}/indicator/create`"
                     class="mr-2.5 flex items-center text-tiny font-bold uppercase"
@@ -127,25 +127,25 @@
                     <button>
                       <svg-vue icon="help"></svg-vue>
                     </button>
-                    <div class="help__text right-0 w-60">
+                    <div class="right-0 help__text w-60">
                       <span class="font-bold text-bluecoral"></span>
                       <p>Example text</p>
                     </div>
                   </div>
                 </div>
               </div>
-              <div class="divider mb-4 h-px w-full bg-n-20"></div>
+              <div class="w-full h-px mb-4 divider bg-n-20"></div>
               <div class="indicator">
                 <!-- loop item -->
 
                 <template v-for="(post, ri) in result.indicators" :key="ri">
                   <div class="item">
                     <div class="elements-detail wider">
-                      <div class="category flex">
+                      <div class="flex category">
                         <div class="mr-4">
                           {{ post.indicator.title[0].narrative[0].narrative }}
                         </div>
-                        <div class="flex shrink-0 grow justify-between">
+                        <div class="flex justify-between shrink-0 grow">
                           <a
                             :href="`/activities/${result.activity_id}/result/${result.id}/indicator/${post.id}/edit`"
                             class="mr-2.5 flex items-center text-tiny font-bold uppercase text-bluecoral"
@@ -191,10 +191,10 @@
                                             1,
                                       }"
                                     >
-                                      <div class="language mb-1">
+                                      <div class="mb-1 language">
                                         (Language: {{ title.language }})
                                       </div>
-                                      <div class="description text-xs">
+                                      <div class="text-xs description">
                                         {{ title.narrative }}
                                       </div>
                                     </div>
@@ -230,10 +230,10 @@
                                             1,
                                       }"
                                     >
-                                      <div class="language mb-1">
+                                      <div class="mb-1 language">
                                         (Language: {{ description.language }})
                                       </div>
-                                      <div class="description text-xs">
+                                      <div class="text-xs description">
                                         {{ description.narrative }}
                                       </div>
                                     </div>
@@ -410,14 +410,16 @@
                         </div>
                         <!-- for periods -->
                         <div class="periods">
-                          <table v-for="(item, i) in post.periods" :key="i">
+                          <table v-for="(item, key) in post.periods" :key="key">
                             <tbody>
                               <tr>
                                 <td>
-                                  <div class="category">Period {{ i + 1 }}</div>
+                                  <div class="category">
+                                    Period {{ Number(key) + 1 }}
+                                  </div>
                                 </td>
                                 <td>
-                                  <div class="category flex">
+                                  <div class="flex category">
                                     <div class="mr-10">
                                       {{
                                         dateFormat(
@@ -434,11 +436,11 @@
                                       }}
                                     </div>
                                     <div
-                                      class="flex shrink-0 grow justify-between"
+                                      class="flex justify-between shrink-0 grow"
                                     >
                                       <a
                                         :href="`/activities/${result.activity_id}/result/${result.id}/indicator/${post.id}/period/${item.id}/edit`"
-                                        class="flex items-center text-tiny font-bold uppercase text-bluecoral"
+                                        class="flex items-center font-bold uppercase text-tiny text-bluecoral"
                                       >
                                         <svg-vue
                                           class="mr-0.5 text-base"
@@ -463,11 +465,11 @@
                                         'mb-1.5': t !== item.period.target - 1,
                                       }"
                                     >
-                                      <div class="language target_value mb-1">
+                                      <div class="mb-1 language target_value">
                                         {{ tar.value }}
                                       </div>
 
-                                      <div class="location_reference flex">
+                                      <div class="flex location_reference">
                                         <div>Location Reference:&nbsp;</div>
                                         <div>
                                           <div
@@ -493,7 +495,7 @@
                                         </div>
                                       </div>
 
-                                      <div class="dimension flex">
+                                      <div class="flex dimension">
                                         <div>Dimension:&nbsp;</div>
                                         <div>
                                           <div
@@ -579,11 +581,11 @@
                                         'mb-1.5': t !== item.period.target - 1,
                                       }"
                                     >
-                                      <div class="language target_value mb-1">
+                                      <div class="mb-1 language target_value">
                                         {{ tar.value }}
                                       </div>
 
-                                      <div class="location_reference flex">
+                                      <div class="flex location_reference">
                                         <div>Location Reference:&nbsp;</div>
                                         <div>
                                           <div
@@ -609,7 +611,7 @@
                                         </div>
                                       </div>
 
-                                      <div class="dimension flex">
+                                      <div class="flex dimension">
                                         <div>Dimension:&nbsp;</div>
                                         <div>
                                           <div
@@ -695,11 +697,11 @@
 
         <!-- indicator button -->
         <button
-          class="add_indicator flex w-full rounded border border-dashed border-n-40 bg-white py-6 px-9 text-xs leading-normal"
+          class="flex w-full py-6 text-xs leading-normal bg-white border border-dashed rounded add_indicator border-n-40 px-9"
         >
-          <div class="grow text-left">You haven't added any indicator yet.</div>
+          <div class="text-left grow">You haven't added any indicator yet.</div>
           <div
-            class="flex shrink-0 items-center font-bold uppercase text-bluecoral"
+            class="flex items-center font-bold uppercase shrink-0 text-bluecoral"
           >
             <svg-vue icon="add" class="mr-1 shrink-0"></svg-vue>
             <span class="grow">Add new indicator</span>

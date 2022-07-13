@@ -1,13 +1,13 @@
 <template>
   <div
     id=""
-    class="activities__content--element basis-full px-3 py-3 text-n-50"
+    class="px-3 py-3 activities__content--element basis-full text-n-50"
   >
-    <div :id="title" class="rounded-lg bg-white p-4">
-      <div class="mb-4 flex">
-        <div class="title flex grow items-center">
+    <div :id="title" class="p-4 bg-white rounded-lg">
+      <div class="flex mb-4">
+        <div class="flex items-center title grow">
           <svg-vue class="mr-1.5 text-xl text-bluecoral" icon="bill"></svg-vue>
-          <div class="title text-sm font-bold">
+          <div class="text-sm font-bold title">
             {{ title.toString().replace(/_/g, '-') }}
           </div>
           <div
@@ -22,7 +22,7 @@
             <span v-else>not completed</span>
           </div>
         </div>
-        <div class="icons flex items-center">
+        <div class="flex items-center icons">
           <a
             :href="`/activities/${activityId}/${title}/create`"
             class="mr-2.5 flex items-center text-tiny font-bold uppercase"
@@ -35,14 +35,14 @@
             <button>
               <svg-vue icon="help"></svg-vue>
             </button>
-            <div class="help__text right-0 w-60">
+            <div class="right-0 help__text w-60">
               <span class="font-bold text-bluecoral"></span>
               <p>Example text</p>
             </div>
           </div>
         </div>
       </div>
-      <div class="divider mb-4 h-px w-full bg-n-20"></div>
+      <div class="w-full h-px mb-4 divider bg-n-20"></div>
       <div class="results">
         <template v-for="(result, r) in data.content" :key="r">
           <div
@@ -54,29 +54,21 @@
             <div class="elements-detail">
               <div>
                 <!-- title -->
-                <div class="category flex">
+                <div class="flex category">
                   <div class="mr-4">
                     {{ result.result.title[0].narrative[0].narrative }}
                   </div>
                   <div class="flex shrink-0">
                     <a
                       :href="`/activities/${activityId}/${title}/${result.id}`"
-                      class="
-                        mr-2.5
-                        flex
-                        items-center
-                        text-tiny
-                        font-bold
-                        uppercase
-                        text-bluecoral
-                      "
+                      class="mr-2.5 flex items-center text-tiny font-bold uppercase text-bluecoral"
                     >
                       <svg-vue class="mr-0.5 text-base" icon="eye"></svg-vue>
                       <span>View Result</span>
                     </a>
                     <a
                       :href="`/activities/${activityId}/${title}/${result.id}/edit`"
-                      class="flex items-center text-tiny font-bold uppercase"
+                      class="flex items-center font-bold uppercase text-tiny"
                     >
                       <svg-vue class="mr-0.5 text-base" icon="edit"></svg-vue>
                       <span>Edit Result</span>
@@ -90,7 +82,7 @@
                       <td>Title</td>
                       <td>
                         <template
-                          v-for="(title, t) in result.result.title[0].narrative"
+                          v-for="(ti, t) in result.result.title[0].narrative"
                           :key="t"
                         >
                           <div
@@ -102,10 +94,10 @@
                             }"
                           >
                             <div class="language mb-1.5">
-                              (Language: {{ title.language }})
+                              (Language: {{ ti.language }})
                             </div>
-                            <div class="description text-sm">
-                              {{ title.narrative }}
+                            <div class="text-sm description">
+                              {{ ti.narrative }}
                             </div>
                           </div>
                         </template>
@@ -114,7 +106,7 @@
                     <tr>
                       <td>Result Type</td>
                       <td>
-                        <div class="description text-sm">
+                        <div class="text-sm description">
                           {{ types.resultType[result.result.type] }}
                         </div>
                       </td>
@@ -131,13 +123,15 @@
                             class="description-content"
                             :class="{
                               'mb-4':
-                                t !== (result.result.description[0].narrative.length -1),
+                                t !==
+                                result.result.description[0].narrative.length -
+                                  1,
                             }"
                           >
                             <div class="language mb-1.5">
                               (Language: {{ description.language }})
                             </div>
-                            <div class="description text-sm">
+                            <div class="text-sm description">
                               {{ description.narrative }}
                             </div>
                           </div>
@@ -148,25 +142,14 @@
 
                   <!-- indicator -->
                   <div
-                    class="
-                      indicator
-                      overflow-hidden
-                      rounded-t-lg
-                      border border-n-20
-                    "
+                    class="overflow-hidden border rounded-t-lg indicator border-n-20"
                   >
                     <div class="head flex justify-between bg-n-10 py-2.5 px-6">
                       <div class="text-xs font-bold text-n-50">Indicator</div>
                       <div>
                         <a
                           :href="`/activities/${activityId}/${title}/${result.id}/indicator/create`"
-                          class="
-                            flex
-                            items-center
-                            text-tiny
-                            font-bold
-                            uppercase
-                          "
+                          class="flex items-center font-bold uppercase text-tiny"
                         >
                           <svg-vue
                             class="mr-0.5 text-base"
@@ -182,32 +165,24 @@
                         :key="i"
                       >
                         <div
-                          class="indicator-content flex px-6 py-2"
+                          class="flex px-6 py-2 indicator-content"
                           :class="{
                             'mb-2 border-b border-n-20':
                               r !== result.indicators.length - 1,
                           }"
                         >
                           <div class="elements-detail wider grow">
-                            <div class="category flex">
+                            <div class="flex category">
                               <div class="mr-4">
                                 {{
                                   indicator.indicator.title[0].narrative[0]
                                     .narrative
                                 }}
                               </div>
-                              <div class="flex shrink-0 grow justify-between">
+                              <div class="flex justify-between shrink-0 grow">
                                 <a
                                   :href="`/activities/${activityId}/${title}/${result.id}/indicator/${indicator.id}/edit`"
-                                  class="
-                                    mr-2.5
-                                    flex
-                                    items-center
-                                    text-tiny
-                                    font-bold
-                                    uppercase
-                                    text-bluecoral
-                                  "
+                                  class="mr-2.5 flex items-center text-tiny font-bold uppercase text-bluecoral"
                                 >
                                   <svg-vue
                                     class="mr-0.5 text-base"
@@ -217,15 +192,7 @@
                                 </a>
                                 <a
                                   :href="`/activities/${activityId}/${title}/${result.id}/indicator/${indicator.id}/period/create`"
-                                  class="
-                                    mr-2.5
-                                    flex
-                                    items-center
-                                    text-tiny
-                                    font-bold
-                                    uppercase
-                                    text-bluecoral
-                                  "
+                                  class="mr-2.5 flex items-center text-tiny font-bold uppercase text-bluecoral"
                                 >
                                   <svg-vue
                                     class="mr-0.5 text-base"
@@ -250,7 +217,7 @@
                                         indicator.indicator.baseline.length - 1,
                                     }"
                                   >
-                                    <div class="description text-xs">
+                                    <div class="text-xs description">
                                       <span>
                                         Value:
                                         <template v-if="baseline.value">
@@ -285,7 +252,7 @@
                                         p !== indicator.periods.length - 1,
                                     }"
                                   >
-                                    <div class="description text-xs">
+                                    <div class="text-xs description">
                                       {{
                                         moment(
                                           period.period.period_start[0].date
