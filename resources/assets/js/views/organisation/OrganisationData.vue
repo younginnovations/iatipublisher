@@ -260,14 +260,14 @@
                     : element.content
                 "
                 :data="element"
-                :title="name"
+                :title="String(name)"
                 :width="
-                  name === 'total_budget' ||
-                  name === 'recipient_organisation_budget' ||
-                  name === 'recipient_region_budget' ||
-                  name === 'recipient_country_budget' ||
-                  name === 'total_expenditure' ||
-                  name === 'document_link'
+                  String(name) === 'total_budget' ||
+                  String(name) === 'recipient_organisation_budget' ||
+                  String(name) === 'recipient_region_budget' ||
+                  String(name) === 'recipient_country_budget' ||
+                  String(name) === 'total_expenditure' ||
+                  String(name) === 'document_link'
                     ? 'full'
                     : ''
                 "
@@ -284,7 +284,7 @@
 <script lang="ts">
 import { defineComponent, reactive, ref } from 'vue';
 import HoverText from '../../components/HoverText.vue';
-import ActivityElement from '../activity/partials/ActivityElement.vue';
+// import ActivityElement from '../activity/partials/ActivityElement.vue';
 import RadialProgressBar from '../../components/RadialProgressBar.vue';
 import OrganisationElements from './OrganisationElements.vue';
 import OrganisationElementsDetail from './OrganisationElementsDetail.vue';
@@ -297,7 +297,7 @@ export default defineComponent({
   name: 'organisation-elements',
   components: {
     HoverText,
-    ActivityElement,
+    // ActivityElement,
     RadialProgressBar,
     OrganisationElements,
     OrganisationElementsDetail,

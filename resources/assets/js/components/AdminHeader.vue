@@ -169,7 +169,7 @@ export default defineComponent({
         },
         {
           name: 'Organisation DATA',
-          permalink: '#',
+          permalink: '/organisation',
           active: false,
         },
         {

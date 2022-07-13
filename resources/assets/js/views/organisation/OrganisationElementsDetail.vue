@@ -80,9 +80,9 @@
         <div v-if="title == 'total_budget'">
           <div v-for="(total_budget, index) in props.content" :key="index">
             <div
-              class="mb-4 flex flex-col"
               v-for="(indicative, i) in total_budget.indicative"
               :key="i"
+              class="mb-4 flex flex-col"
             >
               <span class="element-title">{{ indicative.indicative }}</span>
               <span class="mb-1 text-sm">{{ indicative.budget }}</span>
@@ -103,9 +103,9 @@
                   budget line
                 </div>
                 <div
-                  class="mt-2 border-b border-b-n-20 pl-6 text-xs"
                   v-for="(budget_line, j) in indicative.budget_line"
                   :key="j"
+                  class="mt-2 border-b border-b-n-20 pl-6 text-xs"
                 >
                   <table>
                     <tr>
@@ -145,9 +145,9 @@
             </div>
 
             <div
-              class="flex flex-col"
               v-for="(committed, i) in total_budget.committed"
               :key="i"
+              class="flex flex-col"
             >
               <span class="element-title">{{ committed.committed }}</span>
               <span class="mb-1 text-sm">{{ committed.budget }}</span>
@@ -168,9 +168,9 @@
                   budget line
                 </div>
                 <div
-                  class="mt-2 border-b border-b-n-20 pl-6 text-xs"
                   v-for="(budget_line, j) in committed.budget_line"
                   :key="j"
+                  class="mt-2 border-b border-b-n-20 pl-6 text-xs"
                 >
                   <table>
                     <tr>
@@ -219,11 +219,11 @@
             :key="index"
           >
             <div
-              class="mb-4 flex flex-col"
               v-for="(
                 indicative, i
               ) in recipient_organisation_budget.indicative"
               :key="i"
+              class="mb-4 flex flex-col"
             >
               <span class="element-title">{{ indicative.indicative }}</span>
               <span class="mb-1 text-sm">{{ indicative.budget }}</span>
@@ -262,9 +262,9 @@
                   budget line
                 </div>
                 <div
-                  class="mt-2 border-b border-b-n-20 pl-6 text-xs"
                   v-for="(budget_line, j) in indicative.budget_line"
                   :key="j"
+                  class="mt-2 border-b border-b-n-20 pl-6 text-xs"
                 >
                   <table>
                     <tr>
@@ -304,9 +304,9 @@
             </div>
 
             <div
-              class="flex flex-col"
               v-for="(committed, i) in recipient_organisation_budget.committed"
               :key="i"
+              class="flex flex-col"
             >
               <span class="element-title">{{ committed.committed }}</span>
               <span class="mb-1 text-sm">{{ committed.budget }}</span>
@@ -345,9 +345,9 @@
                   budget line
                 </div>
                 <div
-                  class="mt-2 border-b border-b-n-20 pl-6 text-xs"
                   v-for="(budget_line, j) in committed.budget_line"
                   :key="j"
+                  class="mt-2 border-b border-b-n-20 pl-6 text-xs"
                 >
                   <table>
                     <tr>
@@ -396,9 +396,9 @@
             :key="index"
           >
             <div
-              class="mb-4 flex flex-col"
               v-for="(indicative, i) in recipient_region_budget.indicative"
               :key="i"
+              class="mb-4 flex flex-col"
             >
               <span class="element-title">{{ indicative.indicative }}</span>
               <span class="mb-1 text-sm">{{ indicative.budget }}</span>
@@ -442,9 +442,9 @@
                   budget line
                 </div>
                 <div
-                  class="mt-2 border-b border-b-n-20 pl-6 text-xs"
                   v-for="(budget_line, j) in indicative.budget_line"
                   :key="j"
+                  class="mt-2 border-b border-b-n-20 pl-6 text-xs"
                 >
                   <table>
                     <tr>
@@ -484,9 +484,9 @@
             </div>
 
             <div
-              class="flex flex-col"
               v-for="(committed, i) in recipient_region_budget.committed"
               :key="i"
+              class="flex flex-col"
             >
               <span class="element-title">{{ committed.committed }}</span>
               <span class="mb-1 text-sm">{{ committed.budget }}</span>
@@ -530,9 +530,9 @@
                   budget line
                 </div>
                 <div
-                  class="mt-2 border-b border-b-n-20 pl-6 text-xs"
                   v-for="(budget_line, j) in committed.budget_line"
                   :key="j"
+                  class="mt-2 border-b border-b-n-20 pl-6 text-xs"
                 >
                   <table>
                     <tr>
@@ -581,9 +581,9 @@
             :key="index"
           >
             <div
-              class="mb-4 flex flex-col"
               v-for="(indicative, i) in recipient_country_budget.indicative"
               :key="i"
+              class="mb-4 flex flex-col"
             >
               <span class="element-title">{{ indicative.indicative }}</span>
               <span class="mb-1 text-sm">{{ indicative.budget }}</span>
@@ -618,9 +618,9 @@
                   budget line
                 </div>
                 <div
-                  class="mt-2 border-b border-b-n-20 pl-6 text-xs"
                   v-for="(budget_line, j) in indicative.budget_line"
                   :key="j"
+                  class="mt-2 border-b border-b-n-20 pl-6 text-xs"
                 >
                   <table>
                     <tr>
@@ -660,9 +660,9 @@
             </div>
 
             <div
-              class="flex flex-col"
               v-for="(committed, i) in recipient_country_budget.committed"
               :key="i"
+              class="flex flex-col"
             >
               <span class="element-title">{{ committed.committed }}</span>
               <span class="mb-1 text-sm">{{ committed.budget }}</span>
@@ -696,9 +696,9 @@
                   budget line
                 </div>
                 <div
-                  class="mt-2 border-b border-b-n-20 pl-6 text-xs"
                   v-for="(budget_line, j) in committed.budget_line"
                   :key="j"
+                  class="mt-2 border-b border-b-n-20 pl-6 text-xs"
                 >
                   <table>
                     <tr>
@@ -744,9 +744,9 @@
         <div v-if="title == 'total_expenditure'">
           <div v-for="(total_expenditure, index) in props.content" :key="index">
             <div
-              class="mb-4 flex flex-col"
               v-for="(indicative, i) in total_expenditure.indicative"
               :key="i"
+              class="mb-4 flex flex-col"
             >
               <span class="element-title">{{ indicative.indicative }}</span>
               <span class="mb-1 text-sm">{{ indicative.budget }}</span>
@@ -767,9 +767,9 @@
                   budget line
                 </div>
                 <div
-                  class="mt-2 border-b border-b-n-20 pl-6 text-xs"
                   v-for="(budget_line, j) in indicative.budget_line"
                   :key="j"
+                  class="mt-2 border-b border-b-n-20 pl-6 text-xs"
                 >
                   <table>
                     <tr>
@@ -809,9 +809,9 @@
             </div>
 
             <div
-              class="flex flex-col"
               v-for="(committed, i) in total_expenditure.committed"
               :key="i"
+              class="flex flex-col"
             >
               <span class="element-title">{{ committed.committed }}</span>
               <span class="mb-1 text-sm">{{ committed.budget }}</span>
@@ -832,9 +832,9 @@
                   budget line
                 </div>
                 <div
-                  class="mt-2 border-b border-b-n-20 pl-6 text-xs"
                   v-for="(budget_line, j) in committed.budget_line"
                   :key="j"
+                  class="mt-2 border-b border-b-n-20 pl-6 text-xs"
                 >
                   <table>
                     <tr>
@@ -877,7 +877,7 @@
         <!-- total expenditure ends -->
 
         <!-- document link -->
-        <div class="document-link text-xs" v-if="title == 'document_link'">
+        <div v-if="title == 'document_link'" class="document-link text-xs">
           <span class="text-sm font-bold text-n-50">{{
             props.content.document_title
           }}</span>

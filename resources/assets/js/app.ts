@@ -89,7 +89,7 @@ app.component('HoverText', HoverText);
 /**
  * Organisation data
  */
-app.component('organisation-data', OrganisationData);
+app.component('OrganisationData', OrganisationData);
 
 /**
  * Extension to inline SVG files with Vue.js and optimize them automatically with SVGO
