@@ -4,7 +4,7 @@
       href="#"
       class="prev-btn"
       :class="{
-        'pointer-events-none': page_count <= 1,
+        'pointer-events-none': pageCount <= 1,
       }"
       aria-disabled=""
       @click="previousPage"
@@ -14,7 +14,7 @@
     </a>
 
     <a
-      v-for="index in page_count"
+      v-for="index in pageCount"
       :key = "index"
       :class="active_page === index ? 'current' : ''"
     >
@@ -24,7 +24,7 @@
       href="#"
       class="next-btn"
       :class="{
-        'pointer-events-none': page_count <= 1,
+        'pointer-events-none': pageCount <= 1,
       }"
       @click="nextPage"
     >

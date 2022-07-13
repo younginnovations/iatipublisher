@@ -5,7 +5,6 @@ class FormBuilder {
   // adds new collection of sub-element
   public addForm(ev: Event): void {
     ev.preventDefault();
-    console.log('here');
     const target = ev.target as EventTarget;
     const container = $(target).attr('form_type') ? $(`.collection-container[form_type ='${$(target).attr('form_type')}']`) : $('.collection-container');
 
@@ -21,6 +20,7 @@ class FormBuilder {
       parseInt($(target).attr('wrapped_parent_count') as string) :
       $(target).parent('.subelement').find('.wrapped-child-body').length;
 
+
     let proto = container
       .data('prototype')
       .replace(/__PARENT_NAME__/g, parent_count);
@@ -35,17 +35,18 @@ class FormBuilder {
     }
 
     $(target).prev().append($(proto));
-
     if ($(target).attr('has_child_collection')) {
       $(target).prev('.subelement').children('.wrapped-child-body').last().find('.add_to_collection').attr('wrapped_parent_count', count);
       $(target).prev('.subelement').children('.wrapped-child-body').last().find('.add_to_collection').attr('parent_count', parent_count);
     }
 
+
+
     $(target).prev().find('.wrapped-child-body').last().find('.add_to_collection').attr('wrapper_parent_count', wrapper_parent_count ?? 0);
 
     if ($(target).attr('form_type')) {
       $(target).prev().last().find('.select2').select2({
-        placeholder: 'Select an option',
+        placeholder: 'Select an option'
       });
 
       $(this).find('.sub-attribute')
@@ -71,6 +72,7 @@ class FormBuilder {
           placeholder: 'Select an option',
         });
     }
+
 
     $(target).attr('child_count', count);
     this.aidTypeVocabularyHideField();
@@ -160,18 +162,6 @@ class FormBuilder {
           )
         );
     });
-
-    $('.subelement')
-      .find('.wrapped-child-body')
-      .each(function () {
-        $(this)
-          .find('.sub-attribute')
-          .wrapAll(
-            $(
-              '<div class="form-field-group flex flex-wrap rounded-br-lg border-y border-r border-spring-50 sub-attribute-wrapper"></div>'
-            )
-          );
-      });
   }
 
   public addWrapperOnAdd(target: EventTarget): void {
@@ -297,7 +287,7 @@ class FormBuilder {
    */
   public hideCountryBudgetField(value: string) {
     const countryBudgetCodeInput =
-        'input[id^="budget_item"][id*="[code_text]"]',
+      'input[id^="budget_item"][id*="[code_text]"]',
       countryBudgetCodeSelect = 'select[id^="budget_item"][id*="[code]"]';
 
     if (value === '1') {
@@ -1130,14 +1120,12 @@ $(function () {
 
   });
 
-  $('body').on('change', 'input[id*="document"]', function () {
+  $('body').on('change', 'input[id*="[document]"]', function () {
     const endpoint = $('.endpoint').attr('endpoint') ?? '';
     const file_name = ($(this).val() ?? '').toString();
-    $(this)
-      .closest('.form-field-group')
-      .find('input[id*="[url]"]')
-      .val(`${endpoint}/${file_name?.split('\\').pop()?.replace(' ', '_')}`);
-  });
+    $(this).closest('.form-field-group').find('input[id*="[url]"]').val(`${endpoint}/${(file_name?.split('\\').pop())?.replace(' ', '_')}`);
+  })
+
   /**
    * Text area height on typing
    */

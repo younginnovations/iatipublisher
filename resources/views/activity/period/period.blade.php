@@ -35,10 +35,10 @@
 
                         {!! form($form) !!}
 
-                        <div class="hidden collection-container title_narrative" form_type="target"
+                        <div class="hidden parent-collection title_narrative" form_type="target"
                             data-prototype="{{ form_row($form->target->prototype()) }}">
                         </div>
-                        <div class="hidden collection-container title_narrative" form_type="actual"
+                        <div class="hidden parent-collection title_narrative" form_type="actual"
                             data-prototype="{{ form_row($form->actual->prototype()) }}">
                         </div>
                         <div class="hidden collection-container title_narrative" form_type="target_comment_narrative"

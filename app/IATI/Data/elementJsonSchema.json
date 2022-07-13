@@ -3154,6 +3154,7 @@
               "title": {
                 "name": "title",
                 "label": "Title",
+                "add_more": false,
                 "attributes": {},
                 "sub_elements": {
                   "narrative": {
@@ -3188,6 +3189,7 @@
               "description": {
                 "name": "description",
                 "label": "Description",
+                "add_more": false,
                 "attributes": {},
                 "sub_elements": {
                   "narrative": {

@@ -79,6 +79,28 @@ class WrapperCollectionForm extends Form
                 }
             }
         }
+
+        if (isset($data['add_more']) && $data['add_more']) {
+            $this->add(sprintf('sub_elements.%s.name_heading', $data['name'] . '12'), 'static', [
+                'title'   => true,
+                'content' => '<div class="bg-white" >
+                            <div class="status flex justify-end rounded-lg mb-1.5">
+                                <div class="flex status text-xs leading-relaxed text-salmon-50">
+                                    <b class="mr-2 text-base leading-3">.</b><span>not completed</span>
+                                </div>
+                            </div>
+                            <div class="title flex items-center mb-4">
+                                <div class="text-sm shrink-0 uppercase text-n-40 font-bold">' . $data['name'] . '</div>
+                                <div class="line grow h-px border-b border-n-40 ml-4"></div>
+                            </div>
+                            </div>',
+            ]);
+            $this->add('delete_' . $data['name'] . '12', 'button', [
+                'attr' => [
+                    'class' => 'delete-parent delete-item absolute right-0 top-16 -translate-y-1/2 translate-x-1/2',
+                ],
+            ]);
+        }
     }
 
     /**
@@ -199,5 +221,11 @@ class WrapperCollectionForm extends Form
                 ],
             ]);
         }
+
+        $this->add('delete_' . $field['name'], 'button', [
+            'attr' => [
+                'class' => 'delete-parent delete-item absolute right-0 top-16 -translate-y-1/2 translate-x-1/2',
+            ],
+        ]);
     }
 }

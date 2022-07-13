@@ -79,21 +79,21 @@ class PeriodRepository
             if (is_array($period)) {
                 $periodData['period'][$period_key] = array_values($period);
 
-                foreach ($period as $sub_key => $sub_element) {
+                foreach ($periodData['period'][$period_key] as $sub_key => $sub_element) {
                     if (is_array($sub_element)) {
-                        foreach ($sub_element as $inner_key => $inner_element) {
+                        foreach ($periodData['period'][$period_key][$sub_key] as $inner_key => $inner_element) {
                             if (is_array($inner_element)) {
                                 $periodData['period'][$period_key][$sub_key][$inner_key] = array_values($inner_element);
 
-                                foreach ($inner_element as $deep_key => $deep_element) {
+                                foreach ($periodData['period'][$period_key][$sub_key][$inner_key] as $deep_key => $deep_element) {
                                     if (is_array($deep_element)) {
-                                        foreach ($deep_element as $inner_deep_key => $inner_deep_element) {
+                                        foreach ($periodData['period'][$period_key][$sub_key][$inner_key][$deep_key] as $inner_deep_key => $inner_deep_element) {
                                             if (is_array($inner_deep_element)) {
                                                 $periodData['period'][$period_key][$sub_key][$inner_key][$deep_key][$inner_deep_key] = array_values($inner_deep_element);
 
-                                                foreach ($inner_deep_element as $deeperKey => $deeperValue) {
+                                                foreach ($periodData['period'][$period_key][$sub_key][$inner_key][$deep_key][$inner_deep_key] as $deeperKey => $deeperValue) {
                                                     if (is_array($deeperValue)) {
-                                                        foreach ($deeperValue as $innerDeeperKey => $innerDeeperValue) {
+                                                        foreach ($periodData['period'][$period_key][$sub_key][$inner_key][$deep_key][$inner_deep_key][$deeperKey] as $innerDeeperKey => $innerDeeperValue) {
                                                             if (is_array($innerDeeperValue)) {
                                                                 $periodData['period'][$period_key][$sub_key][$inner_key][$deep_key][$inner_deep_key][$deeperKey][$innerDeeperKey] = array_values($innerDeeperValue);
                                                             }

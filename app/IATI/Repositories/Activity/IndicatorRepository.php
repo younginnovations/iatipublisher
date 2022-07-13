@@ -62,7 +62,9 @@ class IndicatorRepository
     public function update(array $indicatorData, Indicator $activityResultIndicator): bool
     {
         $indicatorData = $this->sanitizeIndicatorData($indicatorData);
+        // dd($indicatorData);
         $activityResultIndicator->indicator = $indicatorData['indicator'];
+        // dd($activityResultIndicator);
 
         return $activityResultIndicator->save();
     }
@@ -91,21 +93,21 @@ class IndicatorRepository
             if (is_array($indicator)) {
                 $indicatorData['indicator'][$indicator_key] = array_values($indicator);
 
-                foreach ($indicator as $sub_key => $sub_element) {
+                foreach ($indicatorData['indicator'][$indicator_key] as $sub_key => $sub_element) {
                     if (is_array($sub_element)) {
-                        foreach ($sub_element as $inner_key => $inner_element) {
+                        foreach ($indicatorData['indicator'][$indicator_key][$sub_key] as $inner_key => $inner_element) {
                             if (is_array($inner_element)) {
                                 $indicatorData['indicator'][$indicator_key][$sub_key][$inner_key] = array_values($inner_element);
 
-                                foreach ($inner_element as $deep_key => $deep_element) {
+                                foreach ($indicatorData['indicator'][$indicator_key][$sub_key][$inner_key] as $deep_key => $deep_element) {
                                     if (is_array($deep_element)) {
-                                        foreach ($deep_element as $inner_deep_key => $inner_deep_element) {
+                                        foreach ($indicatorData['indicator'][$indicator_key][$sub_key][$inner_key][$deep_key] as $inner_deep_key => $inner_deep_element) {
                                             if (is_array($inner_deep_element)) {
                                                 $indicatorData['indicator'][$indicator_key][$sub_key][$inner_key][$deep_key][$inner_deep_key] = array_values($inner_deep_element);
 
-                                                foreach ($inner_deep_element as $deeperKey => $deeperValue) {
+                                                foreach ($indicatorData['indicator'][$indicator_key][$sub_key][$inner_key][$deep_key][$inner_deep_key] as $deeperKey => $deeperValue) {
                                                     if (is_array($deeperValue)) {
-                                                        foreach ($deeperValue as $innerDeeperKey => $innerDeeperValue) {
+                                                        foreach ($indicatorData['indicator'][$indicator_key][$sub_key][$inner_key][$deep_key][$inner_deep_key][$deeperKey] as $innerDeeperKey => $innerDeeperValue) {
                                                             if (is_array($innerDeeperValue)) {
                                                                 $indicatorData['indicator'][$indicator_key][$sub_key][$inner_key][$deep_key][$inner_deep_key][$deeperKey][$innerDeeperKey] = array_values($innerDeeperValue);
                                                             }

@@ -38,7 +38,6 @@ class DocumentService
     public function update($documentLink, $activity): bool
     {
         $savedDocumentLinks = $activity->documentLinks()->orderBy('updated_at', 'desc')->get()->toArray();
-        dump($savedDocumentLinks, $documentLink);
 
         foreach ($documentLink['document_link'] as $key => $document) {
             if (isset($document['document']) || !empty($document['url'])) {
