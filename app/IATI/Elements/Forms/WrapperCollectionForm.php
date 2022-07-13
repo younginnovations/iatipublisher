@@ -50,7 +50,9 @@ class WrapperCollectionForm extends Form
                             'data'            => $field,
                             'label'           => false,
                             'wrapper'         => [
-                                'class' => 'form-field-group form-child-body flex flex-wrap rounded-br-lg border-y border-r border-spring-50 p-6',
+                                'class' => ((Arr::get($data, 'attributes', null) && isset($field['name']) && strtolower(
+                                    $field['name']
+                                ) === 'narrative') ? 'form-field-group form-child-body flex flex-wrap rounded-tl-lg rounded-br-lg border-y border-r border-spring-50 p-6' : 'form-field-group form-child-body flex flex-wrap rounded-br-lg border-y border-r border-spring-50 p-6'),
                             ],
                             'dynamic_wrapper' => [
                                 'class' => (isset($field['add_more']) && $field['add_more']) ?

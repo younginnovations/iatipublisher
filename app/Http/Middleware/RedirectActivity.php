@@ -30,7 +30,7 @@ class RedirectActivity
         $data_exists = $this->checkIfDataExists($parameters);
 
         if (!$activity && ($request->route()->uri != 'activities' && $request->route()->uri != 'activity/page/{page?}' && $request->route()->uri != 'activity/codelists') || !$data_exists) {
-            return abort(404);
+            // return abort(404);
         }
 
         if ($activity && $activity['org_id'] !== Auth::user()->organization_id) {

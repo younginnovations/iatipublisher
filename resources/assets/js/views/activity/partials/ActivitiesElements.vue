@@ -43,10 +43,7 @@
           class="button__dropdown button dropdown-btn"
         >
           <ul class="w-full py-2 bg-eggshell">
-            <li
-              class="flex py-1.5 px-3.5 hover:bg-white"
-              @click="dropdownFilter('')"
-            >
+            <li class="flex py-1.5 px-3.5 hover:bg-white" @click="dropdownFilter('')">
               <svg-vue class="mr-1 text-lg" icon="box" />
               <span>All Elements</span>
             </li>
@@ -71,9 +68,7 @@
     <div class="grid grid-cols-2 gap-2 mt-3 elements__listing">
       <template v-for="(post, index) in filteredElements" :key="index">
         <a
-          v-if="
-            !(index.toString() === 'indicator' || index.toString() === 'period')
-          "
+          v-if="!(index.toString() === 'indicator' || index.toString() === 'period')"
           class="elements__item relative flex cursor-pointer flex-col items-center justify-center rounded border border-dashed border-n-40 py-2.5 text-n-30"
           :href="
             post.has_data
@@ -83,9 +78,7 @@
               : `/activities/${activityId}/${index}`
           "
         >
-          <div
-            class="absolute top-0 right-0 inline-flex mt-1 mr-1 status_icons"
-          >
+          <div class="absolute top-0 right-0 inline-flex mt-1 mr-1 status_icons">
             <svg-vue
               v-if="post.completed"
               class="text-base text-spring-50"
@@ -105,19 +98,13 @@
               index === 'fss'
             "
           >
-            <svg-vue
-              class="text-base"
-              icon="activity-elements/building"
-            ></svg-vue>
+            <svg-vue class="text-base" icon="activity-elements/building"></svg-vue>
           </template>
           <template v-else>
-            <svg-vue
-              :icon="'activity-elements/' + index"
-              class="text-base"
-            ></svg-vue>
+            <svg-vue :icon="'activity-elements/' + index" class="text-base"></svg-vue>
           </template>
           <div class="mt-1 text-xs title">
-            {{ index.toString().replace(/_/g, '-') }}
+            {{ index.toString().replace(/_/g, "-") }}
           </div>
         </a>
       </template>
@@ -126,11 +113,11 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, reactive, onMounted, ref } from 'vue';
-import { useToggle } from '@vueuse/core';
+import { computed, defineComponent, reactive, onMounted, ref } from "vue";
+import { useToggle } from "@vueuse/core";
 
 export default defineComponent({
-  name: 'ActivitiesElements',
+  name: "ActivitiesElements",
   components: {},
   props: {
     data: {
@@ -150,8 +137,8 @@ export default defineComponent({
      * Search functionality
      */
     const elements = reactive({
-      search: '',
-      status: '',
+      search: "",
+      status: "",
     });
 
     const asArrayData = Object.entries(props.data);
@@ -160,16 +147,12 @@ export default defineComponent({
         if (!elements.status) {
           return key
             .toLowerCase()
-            .includes(
-              elements.search.toLowerCase().replace('_', '').replace('-', '_')
-            );
+            .includes(elements.search.toLowerCase().replace("_", "").replace("-", "_"));
         } else {
           if (value[elements.status]) {
             return key
               .toLowerCase()
-              .includes(
-                elements.search.toLowerCase().replace('_', '').replace('-', '_')
-              );
+              .includes(elements.search.toLowerCase().replace("_", "").replace("-", "_"));
           }
         }
       });
@@ -184,7 +167,7 @@ export default defineComponent({
     };
 
     onMounted(() => {
-      window.addEventListener('click', (e) => {
+      window.addEventListener("click", (e) => {
         if (
           !dropdownBtn.value.contains(e.target) &&
           !dropdown.value.contains(e.target) &&

@@ -1749,7 +1749,7 @@
             "name": "narrative",
             "label": "narrative",
             "type": "textarea",
-            "required": true,
+            "required": false,
             "criteria": "mandatory",
             "add_more": true,
             "attr": {
