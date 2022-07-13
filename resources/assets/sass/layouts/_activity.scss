@@ -55,6 +55,11 @@
 .elements-detail {
   @apply flex flex-col text-xs text-n-50;
 
+  // table {
+  //   font-size: inherit;
+
+  // }
+
   & * {
     @apply leading-5;
   }

@@ -1,54 +1,79 @@
 <template>
-  <div class="page-height bg-paper px-10 pt-4 pb-[71px]">
+  <div class="relative bg-paper px-10 pt-4 pb-[71px]">
     <!-- title section -->
-    <div class="page-title mb-6">
-      <div class="mb-6 text-caption-c1 text-n-40">
-        <BreadCrumb
-          title="Organisation Name"
-          link="Your Organisation Data"
-        ></BreadCrumb>
-      </div>
+    <div class="mb-6 page-title">
       <div class="flex items-end gap-4">
         <div class="title grow-0">
-          <div class="inline-flex items-center">
+          <div class="max-w-sm pb-4 text-caption-c1 text-n-40">
+            <nav aria-label="breadcrumbs" class="rank-math-breadcrumb">
+              <div class="flex">
+                <a class="font-bold whitespace-nowrap" href="/activities"
+                  >Your Organisation</a
+                >
+                <span class="mx-4 separator"> / </span>
+                <div class="breadcrumb__title">
+                  <span class="overflow-hidden breadcrumb__title last text-n-30"
+                    >{{ organization.name ? (organization.name['0'].narrative??'Untitled') :'Untitled' }}</span
+                  >
+                  <span class="ellipsis__title--hover w-[calc(100%_+_35px)]">
+                    {{ organization.name ? (organization.name['0'].narrative??'Untitled') : 'Untitled' }}
+                  </span>
+                </div>
+              </div>
+            </nav>
+          </div>
+          <div class="inline-flex items-center max-w-3xl">
             <div class="mr-3">
               <a href="/activities">
-                <svg-vue icon="arrow-short-left"></svg-vue>
+                <svg-vue icon="arrow-short-left" />
               </a>
             </div>
-            <h4 class="mr-4 font-bold">IMA World Health</h4>
+            <div>
+              <h4 class="ellipsis__title relative mr-4 text-2xl font-bold">
+                <span class="ellipsis__title overflow-hidden"> {{ organization.name ? (organization.name['0'].narrative??'Untitled') : 'Untitled' }} </span>
+              </h4>
+            </div>
           </div>
         </div>
-        <div class="actions flex grow justify-end">
-          <div class="inline-flex justify-center">
+        <div class="flex flex-col items-end justify-end actions grow">
+          <div class="mb-3">
+            <Toast
+              v-if="toastData.visibility"
+              :message="toastData.message"
+              :type="toastData.type"
+            />
+          </div>
+          <div class="inline-flex justify-end">
+            <!-- Download File -->
             <button
               class="button secondary-btn mr-3.5 font-bold"
               @click="downloadValue = true"
             >
-              <svg-vue icon="download-file"></svg-vue>
+              <svg-vue icon="download-file" />
             </button>
             <Modal
-              :modalActive="downloadValue"
+              :modal-active="downloadValue"
               width="583"
               @close="downloadToggle"
             >
               <div class="mb-4">
-                <div class="title mb-6 flex">
+                <div class="flex mb-6 title">
                   <svg-vue
                     class="mr-1 mt-0.5 text-lg text-spring-50"
                     icon="download-file"
-                  ></svg-vue>
+                  />
                   <b>Download file.</b>
                 </div>
-                <div class="rounded-lg bg-mint p-4">
+                <div class="p-4 rounded-lg bg-mint">
                   Click the download button to save the file.
                 </div>
               </div>
               <div class="flex justify-end">
                 <div class="inline-flex">
                   <BtnComponent
-                    class="bg-white px-6 uppercase"
+                    class="px-6 uppercase bg-white"
                     text="Go Back"
+                    type=""
                     @click="downloadValue = false"
                   />
                   <BtnComponent
@@ -66,26 +91,31 @@
               class="button secondary-btn mr-3.5 font-bold"
               @click="deleteValue = true"
             >
-              <svg-vue icon="delete"></svg-vue>
+              <svg-vue icon="delete" />
             </button>
-            <Modal :modalActive="deleteValue" width="583" @close="deleteToggle">
+            <Modal
+              :modal-active="deleteValue"
+              width="583"
+              @close="deleteToggle"
+            >
               <div class="mb-4">
-                <div class="title mb-6 flex">
+                <div class="flex mb-6 title">
                   <svg-vue
                     class="mr-1 mt-0.5 text-lg text-crimson-40"
                     icon="delete"
-                  ></svg-vue>
-                  <b>Delete activity</b>
+                  />
+                  <b>Delete organisation</b>
                 </div>
-                <div class="rounded-lg bg-rose p-4">
-                  Are you sure you want to delete this activity?
+                <div class="p-4 rounded-lg bg-rose">
+                  Are you sure you want to delete this organisation?
                 </div>
               </div>
               <div class="flex justify-end">
                 <div class="inline-flex">
                   <BtnComponent
-                    class="bg-white px-6 uppercase"
+                    class="px-6 uppercase bg-white"
                     text="Go Back"
+                    type=""
                     @click="deleteValue = false"
                   />
                   <BtnComponent
@@ -103,31 +133,32 @@
               class="button secondary-btn mr-3.5 font-bold"
               @click="unpublishValue = true"
             >
-              <svg-vue icon="cancel-cloud"></svg-vue>
+              <svg-vue icon="cancel-cloud" />
               <span>Unpublish</span>
             </button>
             <Modal
-              :modalActive="unpublishValue"
+              :modal-active="unpublishValue"
               width="583"
               @close="unpublishToggle"
             >
               <div class="mb-4">
-                <div class="title mb-6 flex">
+                <div class="flex mb-6 title">
                   <svg-vue
                     class="mr-1 mt-0.5 text-lg text-crimson-40"
                     icon="cancel-cloud"
-                  ></svg-vue>
-                  <b>Unpublish activity</b>
+                  />
+                  <b>Unpublish organisation</b>
                 </div>
-                <div class="rounded-lg bg-rose p-4">
-                  Are you sure you want to unpublish this activity?
+                <div class="p-4 rounded-lg bg-rose">
+                  Are you sure you want to unpublish this organisation?
                 </div>
               </div>
               <div class="flex justify-end">
                 <div class="inline-flex">
                   <BtnComponent
-                    class="bg-white px-6 uppercase"
+                    class="px-6 uppercase bg-white"
                     text="Go Back"
+                    type=""
                     @click="unpublishValue = false"
                   />
                   <BtnComponent
@@ -142,34 +173,35 @@
 
             <!-- Publish Activity -->
             <button
-              class="button primary-btn relative font-bold"
+              class="relative font-bold button primary-btn"
               @click="publishValue = true"
             >
-              <svg-vue icon="approved-cloud"></svg-vue>
+              <svg-vue icon="approved-cloud" />
               <span>Publish</span>
             </button>
             <Modal
-              :modalActive="publishValue"
+              :modal-active="publishValue"
               width="583"
               @close="publishToggle"
             >
               <div class="mb-4">
-                <div class="title mb-6 flex">
+                <div class="flex mb-6 title">
                   <svg-vue
                     class="mr-1 mt-0.5 text-lg text-spring-50"
                     icon="approved-cloud"
-                  ></svg-vue>
-                  <b>Publish activity?</b>
+                  />
+                  <b>Publish organisation?</b>
                 </div>
-                <div class="rounded-lg bg-mint p-4">
-                  Are you ready to publish this activity?
+                <div class="p-4 rounded-lg bg-mint">
+                  Are you ready to publish this organisation?
                 </div>
               </div>
               <div class="flex justify-end">
                 <div class="inline-flex">
                   <BtnComponent
-                    class="bg-white px-6 uppercase"
+                    class="px-6 uppercase bg-white"
                     text="Go Back"
+                    type=""
                     @click="publishValue = false"
                   />
                   <BtnComponent
@@ -186,52 +218,68 @@
       </div>
     </div>
     <!-- title section ends -->
-
     <div class="activities">
       <aside class="activities__sidebar">
-        <div class="mb-1 flex">
-          <div class="activities__card progress mr-1">
-            <div class="mb-2 flex items-center justify-between">
+        <div class="flex mb-1">
+          <div class="mr-1 activities__card progress">
+            <div class="flex items-center justify-between mb-2">
               <span class="mr-2">Publishing Progress</span>
               <HoverText
-                hover_text="You cannot publish an activity until all the mandatory fields have been filled."
+                hover-text="You cannot publish an activity until all the mandatory fields have been filled."
                 name=""
+                class="hover-text"
                 position="right"
-              ></HoverText>
+              />
             </div>
-            <RadialProgressBar class="mb-3 h-20 text-8xl"></RadialProgressBar>
+            <RadialProgressBar
+              class="mb-3 h-20 text-8xl"
+              :is-percent="true"
+            ></RadialProgressBar>
             <span>Fill core elements to get 100% score</span>
           </div>
           <div class="activities__card elements">
-            <div class="mb-11 flex items-center justify-between">
+            <div class="flex items-center justify-between mb-7">
               <span>Elements</span>
               <HoverText
-                hover_text="You cannot publish an activity until all the mandatory fields have been filled."
+                hover-text="You cannot publish an activity until all the mandatory fields have been filled."
                 name=""
-              ></HoverText>
+                class="hover-text"
+              />
+            </div>
+            <div class="flex justify-between mb-3">
+              <div class="flex items-center space-x-1">
+                <svg-vue icon="core" />
+                <span>Core</span>
+              </div>
+              <HoverText
+                hover-text="You cannot publish an activity until all the mandatory fields have been filled."
+                name=""
+                class="hover-text"
+              />
             </div>
             <div class="flex justify-between">
               <div class="flex items-center space-x-1">
-                <svg-vue
-                  icon="double-tick"
-                  class="text-base text-spring-50"
-                ></svg-vue>
+                <svg-vue icon="double-tick" class="text-spring-50"></svg-vue>
                 <span>Completed</span>
               </div>
               <HoverText
-                hover_text="You cannot publish an activity until all the mandatory fields have been filled."
+                hover-text="You cannot publish an activity until all the mandatory fields have been filled."
                 name=""
-              ></HoverText>
+                class="hover-text"
+              />
             </div>
           </div>
         </div>
-        <OrganisationElements :data="elements" />
+        <OrganisationElements
+          :activity-id="organization.id"
+          :data="elementProps"
+        />
       </aside>
-      <div class="activities__content">
+      <div class="activities__content overflow-hidden">
         <div class="mb-3 inline-flex flex-wrap gap-2">
           <a
-            v-for="(post, key) in groupedData"
-            :key="key"
+            v-for="(post, key, index) in groupedData"
+            :key="index"
             v-smooth-scroll
             :href="`#${key}`"
             class="tab-btn-anchor"
@@ -241,37 +289,51 @@
               <span class="hover__text">
                 <HoverText
                   :name="post.label"
-                  hover_text="You cannot publish an activity until all the mandatory fields have been filled."
+                  hover-text="You cannot publish an activity until all the mandatory fields have been filled."
                   icon_size="text-tiny"
-                ></HoverText>
+                />
               </span>
             </button>
           </a>
         </div>
-
         <div class="activities__content--elements -mx-3 flex flex-wrap">
-          <template v-for="(post, key, index) in organisation" :key="index">
+          <template v-for="(post, key, index) in groupedData" :key="index">
+              <div class="ml-4 uppercase">{{ key }}</div>
+            <div
+              class="
+                elements-title
+                relative
+                mx-3
+                mb-1
+                mt-3
+                flex
+                w-full
+                items-center
+                text-sm
+                uppercase
+                text-n-40
+              "
+            >
+            </div>
             <template v-for="(element, name, i) in post.elements" :key="i">
               <OrganisationElementsDetail
+                v-if="
+                  (typeof element.content === 'object'
+                    ? Object.keys(element.content).length > 0
+                    : element.content) || typeof element.content === 'number'
+                "
                 :id="key"
-                :content="
-                  elementsDetail.data.hasOwnProperty(key)
-                    ? elementsDetail.data[key][name]
-                    : element.content
-                "
                 :data="element"
-                :title="name"
+                :title="name.toString()"
+                :activity-id="organization.id"
+                :content="element.content"
+                :types="types"
+                :tooltip="elements[name]['hover_text']"
                 :width="
-                  name === 'total_budget' ||
-                  name === 'recipient_organisation_budget' ||
-                  name === 'recipient_region_budget' ||
-                  name === 'recipient_country_budget' ||
-                  name === 'total_expenditure' ||
-                  name === 'document_link'
-                    ? 'full'
-                    : ''
+                  String(name) === 'organisation_identifier'
+                    ? ''
+                    : 'full'
                 "
-                tooltip="Example text"
               />
             </template>
           </template>
@@ -282,27 +344,25 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, ref } from 'vue';
+import { defineComponent, reactive, ref, onMounted, toRefs } from 'vue';
 import HoverText from '../../components/HoverText.vue';
-import ActivityElement from '../activity/partials/ActivityElement.vue';
 import RadialProgressBar from '../../components/RadialProgressBar.vue';
 import OrganisationElements from './OrganisationElements.vue';
 import OrganisationElementsDetail from './OrganisationElementsDetail.vue';
-import BreadCrumb from '../../components/BreadCrumb.vue';
 import Modal from '../../components/PopupModal.vue';
 import BtnComponent from '../../components/ButtonComponent.vue';
+import Toast from '../../components/Toast.vue';
 import { useToggle } from '@vueuse/core';
 
 export default defineComponent({
-  name: 'organisation-elements',
+  name: 'OrganisationData',
   components: {
     HoverText,
-    ActivityElement,
     RadialProgressBar,
     OrganisationElements,
     OrganisationElementsDetail,
-    BreadCrumb,
     Modal,
+    Toast,
     BtnComponent,
   },
   props: {
@@ -314,7 +374,7 @@ export default defineComponent({
       type: Object,
       required: true,
     },
-    activity: {
+    organization: {
       type: Object,
       required: true,
     },
@@ -322,788 +382,83 @@ export default defineComponent({
       type: Number,
       required: true,
     },
+    toast: {
+      type: Object,
+      required: true,
+    },
+    types: {
+      type: Object,
+      required: true,
+    },
   },
   setup(props) {
-    const tab = ref('identification');
-    function toggleTab(page: string) {
-      tab.value = page;
-    }
-    const elements = reactive({
-      organisation_identifier: '',
-      name: '',
-      reporting_org: '',
-      total_budget: '',
-      recipient_org_budget: '',
-      recipient_country_budget: '',
-      recipient_region_budget: '',
-      total_expenditure: '',
-      document_link: '',
+    const toastData = reactive({
+      visibility: false,
+      message: '',
+      type: true,
     });
 
-    const elementsDetail = reactive({
-      data: {
-        identification: {
-          organisation_identifier: {
-            identifier: 'AF-COA-1234',
-          },
-          organisation_name: {
-            name: 'Younginnovations',
-          },
-          reporting_organisation: {
-            language: '(Language: English)',
-            narrative: 'Partnership Against Child Exploitation',
-          },
-        },
-        budget: {
-          total_budget: [
-            {
-              indicative: [
-                {
-                  indicative: 'Indicative',
-                  budget: '84,967,593 USD',
-                  period: 'January 19, 2022 - January 20, 2024',
-                  value_date: 'January 19, 2022',
+    console.log('here you go', props);
+    const [publishValue, publishToggle] = useToggle();
+    const [unpublishValue, unpublishToggle] = useToggle();
+    const [deleteValue, deleteToggle] = useToggle();
+    const [downloadValue, downloadToggle] = useToggle();
 
-                  budget_line: [
-                    {
-                      budget: '200,000 USD',
-                      reference: '1234',
-                      narrative: [
-                        {
-                          language: '(Language: English)',
-                          narrative: 'Budget divided as extra living expenses',
-                        },
-                        {
-                          language: '(Language: English)',
-                          narrative: 'Budget divided as extra living expenses',
-                        },
-                      ],
-                    },
-                    {
-                      budget: '200,000 USD',
-                      reference: '1234',
-                      narrative: [
-                        {
-                          language: '(Language: English)',
-                          narrative: 'Budget divided as extra living expenses',
-                        },
-                        {
-                          language: '(Language: English)',
-                          narrative: 'Budget divided as extra living expenses',
-                        },
-                      ],
-                    },
-                  ],
-                },
-                {
-                  budget: '84,967,593 USD',
-                  period: 'January 19, 2022 - January 20, 2024',
-                  value_date: 'January 19, 2022',
+    onMounted(() => {
+      console.log('on mounted');
+      if (props.toast.message !== '') {
+        toastData.type = props.toast.type;
+        toastData.visibility = true;
+        toastData.message = props.toast.message;
+      }
 
-                  budget_line: [
-                    {
-                      budget: '200,000 USD',
-                      reference: '1234',
-                      narrative: [
-                        {
-                          language: '(Language: English)',
-                          narrative: 'Budget divided as extra living expenses',
-                        },
-                        {
-                          language: '(Language: English)',
-                          narrative: 'Budget divided as extra living expenses',
-                        },
-                      ],
-                    },
-                    {
-                      budget: '200,000 USD',
-                      reference: '1234',
-                      narrative: [
-                        {
-                          language: '(Language: English)',
-                          narrative: 'Budget divided as extra living expenses',
-                        },
-                        {
-                          language: '(Language: English)',
-                          narrative: 'Budget divided as extra living expenses',
-                        },
-                      ],
-                    },
-                  ],
-                },
-              ],
-            },
-            {
-              committed: [
-                {
-                  committed: 'Committed',
-                  budget: '84,967,593 USD',
-                  period: 'January 19, 2022 - January 20, 2024',
-                  value_date: 'January 19, 2022',
-
-                  budget_line: [
-                    {
-                      budget: '200,000 USD',
-                      reference: '1234',
-                      narrative: [
-                        {
-                          language: '(Language: English)',
-                          narrative: 'Budget divided as extra living expenses',
-                        },
-                        {
-                          language: '(Language: English)',
-                          narrative: 'Budget divided as extra living expenses',
-                        },
-                      ],
-                    },
-                    {
-                      budget: '200,000 USD',
-                      reference: '1234',
-                      narrative: [
-                        {
-                          language: '(Language: English)',
-                          narrative: 'Budget divided as extra living expenses',
-                        },
-                        {
-                          language: '(Language: English)',
-                          narrative: 'Budget divided as extra living expenses',
-                        },
-                      ],
-                    },
-                  ],
-                },
-              ],
-            },
-          ],
-          recipient_organisation_budget: [
-            {
-              indicative: [
-                {
-                  indicative: 'Indicative',
-                  budget: '84,967,593 USD',
-                  recipient_organisation: {
-                    reference: 'Reference -AA445GH',
-                    language: '(Language: English)',
-                    cash: 'Mama Cash',
-                  },
-                  value_date: 'January 19, 2022',
-                  period: 'January 19, 2022 - January 20, 2024',
-
-                  budget_line: [
-                    {
-                      budget: '200,000 USD',
-                      reference: '1234',
-                      narrative: [
-                        {
-                          language: '(Language: English)',
-                          narrative: 'Budget divided as extra living expenses',
-                        },
-                        {
-                          language: '(Language: English)',
-                          narrative: 'Budget divided as extra living expenses',
-                        },
-                      ],
-                    },
-                    {
-                      budget: '200,000 USD',
-                      reference: '1234',
-                      narrative: [
-                        {
-                          language: '(Language: English)',
-                          narrative: 'Budget divided as extra living expenses',
-                        },
-                        {
-                          language: '(Language: English)',
-                          narrative: 'Budget divided as extra living expenses',
-                        },
-                      ],
-                    },
-                  ],
-                },
-                {
-                  budget: '84,967,593 USD',
-                  recipient_organisation: {
-                    reference: 'Reference -AA445GH',
-                    language: '(Language: English)',
-                    cash: 'Mama Cash',
-                  },
-                  value_date: 'January 19, 2022',
-                  period: 'January 19, 2022 - January 20, 2024',
-
-                  budget_line: [
-                    {
-                      budget: '200,000 USD',
-                      reference: '1234',
-                      narrative: [
-                        {
-                          language: '(Language: English)',
-                          narrative: 'Budget divided as extra living expenses',
-                        },
-                        {
-                          language: '(Language: English)',
-                          narrative: 'Budget divided as extra living expenses',
-                        },
-                      ],
-                    },
-                    {
-                      budget: '200,000 USD',
-                      reference: '1234',
-                      narrative: [
-                        {
-                          language: '(Language: English)',
-                          narrative: 'Budget divided as extra living expenses',
-                        },
-                        {
-                          language: '(Language: English)',
-                          narrative: 'Budget divided as extra living expenses',
-                        },
-                      ],
-                    },
-                  ],
-                },
-              ],
-            },
-            {
-              committed: [
-                {
-                  committed: 'Committed',
-                  budget: '84,967,593 USD',
-                  recipient_organisation: {
-                    reference: 'Reference -AA445GH',
-                    language: '(Language: English)',
-                    cash: 'Mama Cash',
-                  },
-                  value_date: 'January 19, 2022',
-                  period: 'January 19, 2022 - January 20, 2024',
-
-                  budget_line: [
-                    {
-                      budget: '200,000 USD',
-                      reference: '1234',
-                      narrative: [
-                        {
-                          language: '(Language: English)',
-                          narrative: 'Budget divided as extra living expenses',
-                        },
-                        {
-                          language: '(Language: English)',
-                          narrative: 'Budget divided as extra living expenses',
-                        },
-                      ],
-                    },
-                    {
-                      budget: '200,000 USD',
-                      reference: '1234',
-                      narrative: [
-                        {
-                          language: '(Language: English)',
-                          narrative: 'Budget divided as extra living expenses',
-                        },
-                        {
-                          language: '(Language: English)',
-                          narrative: 'Budget divided as extra living expenses',
-                        },
-                      ],
-                    },
-                  ],
-                },
-              ],
-            },
-          ],
-          recipient_region_budget: [
-            {
-              indicative: [
-                {
-                  indicative: 'Indicative',
-                  budget: '84,967,593 USD',
-                  value_date: 'January 19, 2022',
-                  vocabulary: '1 - OECD',
-                  vocabulary_URI: 'http://example.com/vocab.html',
-                  code: '289 - south of sahara, regional',
-                  description: {
-                    language: '(Language: English)',
-                    text: 'This is to cover the isolated cases where the organisation publishing the data may not agree with name of a country or region given by the lookup codelists IATI uses.',
-                  },
-                  period: 'January 19, 2022 - January 20, 2024',
-
-                  budget_line: [
-                    {
-                      budget: '200,000 USD',
-                      reference: '1234',
-                      narrative: [
-                        {
-                          language: '(Language: English)',
-                          narrative: 'Budget divided as extra living expenses',
-                        },
-                        {
-                          language: '(Language: English)',
-                          narrative: 'Budget divided as extra living expenses',
-                        },
-                      ],
-                    },
-                    {
-                      budget: '200,000 USD',
-                      reference: '1234',
-                      narrative: [
-                        {
-                          language: '(Language: English)',
-                          narrative: 'Budget divided as extra living expenses',
-                        },
-                        {
-                          language: '(Language: English)',
-                          narrative: 'Budget divided as extra living expenses',
-                        },
-                      ],
-                    },
-                  ],
-                },
-                {
-                  budget: '84,967,593 USD',
-                  value_date: 'January 19, 2022',
-                  vocabulary: '1 - OECD',
-                  vocabulary_URI: 'http://example.com/vocab.html',
-                  code: '289 - south of sahara, regional',
-                  description: {
-                    language: '(Language: English)',
-                    text: 'This is to cover the isolated cases where the organisation publishing the data may not agree with name of a country or region given by the lookup codelists IATI uses.',
-                  },
-                  period: 'January 19, 2022 - January 20, 2024',
-
-                  budget_line: [
-                    {
-                      budget: '200,000 USD',
-                      reference: '1234',
-                      narrative: [
-                        {
-                          language: '(Language: English)',
-                          narrative: 'Budget divided as extra living expenses',
-                        },
-                        {
-                          language: '(Language: English)',
-                          narrative: 'Budget divided as extra living expenses',
-                        },
-                      ],
-                    },
-                    {
-                      budget: '200,000 USD',
-                      reference: '1234',
-                      narrative: [
-                        {
-                          language: '(Language: English)',
-                          narrative: 'Budget divided as extra living expenses',
-                        },
-                        {
-                          language: '(Language: English)',
-                          narrative: 'Budget divided as extra living expenses',
-                        },
-                      ],
-                    },
-                  ],
-                },
-              ],
-            },
-            {
-              committed: [
-                {
-                  committed: 'Committed',
-                  budget: '84,967,593 USD',
-                  value_date: 'January 19, 2022',
-                  vocabulary: '1 - OECD',
-                  vocabulary_URI: 'http://example.com/vocab.html',
-                  code: '289 - south of sahara, regional',
-                  description: {
-                    language: '(Language: English)',
-                    text: 'This is to cover the isolated cases where the organisation publishing the data may not agree with name of a country or region given by the lookup codelists IATI uses.',
-                  },
-                  period: 'January 19, 2022 - January 20, 2024',
-
-                  budget_line: [
-                    {
-                      budget: '200,000 USD',
-                      reference: '1234',
-                      narrative: [
-                        {
-                          language: '(Language: English)',
-                          narrative: 'Budget divided as extra living expenses',
-                        },
-                        {
-                          language: '(Language: English)',
-                          narrative: 'Budget divided as extra living expenses',
-                        },
-                      ],
-                    },
-                    {
-                      budget: '200,000 USD',
-                      reference: '1234',
-                      narrative: [
-                        {
-                          language: '(Language: English)',
-                          narrative: 'Budget divided as extra living expenses',
-                        },
-                        {
-                          language: '(Language: English)',
-                          narrative: 'Budget divided as extra living expenses',
-                        },
-                      ],
-                    },
-                  ],
-                },
-              ],
-            },
-          ],
-          recipient_country_budget: [
-            {
-              indicative: [
-                {
-                  indicative: 'Indicative',
-                  budget: '84,967,593 USD',
-                  value_date: 'January 19, 2022',
-                  code: '289 - south of sahara, regional',
-                  description: {
-                    language: '(Language: English)',
-                    text: 'This is to cover the isolated cases where the organisation publishing the data may not agree with name of a country or region given by the lookup codelists IATI uses.',
-                  },
-                  period: 'January 19, 2022 - January 20, 2024',
-
-                  budget_line: [
-                    {
-                      budget: '200,000 USD',
-                      reference: '1234',
-                      narrative: [
-                        {
-                          language: '(Language: English)',
-                          narrative: 'Budget divided as extra living expenses',
-                        },
-                        {
-                          language: '(Language: English)',
-                          narrative: 'Budget divided as extra living expenses',
-                        },
-                      ],
-                    },
-                    {
-                      budget: '200,000 USD',
-                      reference: '1234',
-                      narrative: [
-                        {
-                          language: '(Language: English)',
-                          narrative: 'Budget divided as extra living expenses',
-                        },
-                        {
-                          language: '(Language: English)',
-                          narrative: 'Budget divided as extra living expenses',
-                        },
-                      ],
-                    },
-                  ],
-                },
-                {
-                  budget: '84,967,593 USD',
-                  value_date: 'January 19, 2022',
-                  code: '289 - south of sahara, regional',
-                  description: {
-                    language: '(Language: English)',
-                    text: 'This is to cover the isolated cases where the organisation publishing the data may not agree with name of a country or region given by the lookup codelists IATI uses.',
-                  },
-                  period: 'January 19, 2022 - January 20, 2024',
-
-                  budget_line: [
-                    {
-                      budget: '200,000 USD',
-                      reference: '1234',
-                      narrative: [
-                        {
-                          language: '(Language: English)',
-                          narrative: 'Budget divided as extra living expenses',
-                        },
-                        {
-                          language: '(Language: English)',
-                          narrative: 'Budget divided as extra living expenses',
-                        },
-                      ],
-                    },
-                    {
-                      budget: '200,000 USD',
-                      reference: '1234',
-                      narrative: [
-                        {
-                          language: '(Language: English)',
-                          narrative: 'Budget divided as extra living expenses',
-                        },
-                        {
-                          language: '(Language: English)',
-                          narrative: 'Budget divided as extra living expenses',
-                        },
-                      ],
-                    },
-                  ],
-                },
-              ],
-            },
-            {
-              committed: [
-                {
-                  committed: 'Committed',
-                  budget: '84,967,593 USD',
-                  value_date: 'January 19, 2022',
-                  code: '289 - south of sahara, regional',
-                  description: {
-                    language: '(Language: English)',
-                    text: 'This is to cover the isolated cases where the organisation publishing the data may not agree with name of a country or region given by the lookup codelists IATI uses.',
-                  },
-                  period: 'January 19, 2022 - January 20, 2024',
-
-                  budget_line: [
-                    {
-                      budget: '200,000 USD',
-                      reference: '1234',
-                      narrative: [
-                        {
-                          language: '(Language: English)',
-                          narrative: 'Budget divided as extra living expenses',
-                        },
-                        {
-                          language: '(Language: English)',
-                          narrative: 'Budget divided as extra living expenses',
-                        },
-                      ],
-                    },
-                    {
-                      budget: '200,000 USD',
-                      reference: '1234',
-                      narrative: [
-                        {
-                          language: '(Language: English)',
-                          narrative: 'Budget divided as extra living expenses',
-                        },
-                        {
-                          language: '(Language: English)',
-                          narrative: 'Budget divided as extra living expenses',
-                        },
-                      ],
-                    },
-                  ],
-                },
-              ],
-            },
-          ],
-        },
-        expenditure: {
-          total_expenditure: [
-            {
-              indicative: [
-                {
-                  indicative: 'Indicative',
-                  budget: '84,967,593 USD',
-                  period: 'January 19, 2022 - January 20, 2024',
-                  value_date: 'January 19, 2022',
-
-                  budget_line: [
-                    {
-                      budget: '200,000 USD',
-                      reference: '1234',
-                      narrative: [
-                        {
-                          language: '(Language: English)',
-                          narrative: 'Budget divided as extra living expenses',
-                        },
-                        {
-                          language: '(Language: English)',
-                          narrative: 'Budget divided as extra living expenses',
-                        },
-                      ],
-                    },
-                    {
-                      budget: '200,000 USD',
-                      reference: '1234',
-                      narrative: [
-                        {
-                          language: '(Language: English)',
-                          narrative: 'Budget divided as extra living expenses',
-                        },
-                        {
-                          language: '(Language: English)',
-                          narrative: 'Budget divided as extra living expenses',
-                        },
-                      ],
-                    },
-                  ],
-                },
-                {
-                  budget: '84,967,593 USD',
-                  period: 'January 19, 2022 - January 20, 2024',
-                  value_date: 'January 19, 2022',
-
-                  budget_line: [
-                    {
-                      budget: '200,000 USD',
-                      reference: '1234',
-                      narrative: [
-                        {
-                          language: '(Language: English)',
-                          narrative: 'Budget divided as extra living expenses',
-                        },
-                        {
-                          language: '(Language: English)',
-                          narrative: 'Budget divided as extra living expenses',
-                        },
-                      ],
-                    },
-                    {
-                      budget: '200,000 USD',
-                      reference: '1234',
-                      narrative: [
-                        {
-                          language: '(Language: English)',
-                          narrative: 'Budget divided as extra living expenses',
-                        },
-                        {
-                          language: '(Language: English)',
-                          narrative: 'Budget divided as extra living expenses',
-                        },
-                      ],
-                    },
-                  ],
-                },
-              ],
-            },
-            {
-              committed: [
-                {
-                  committed: 'Committed',
-                  budget: '84,967,593 USD',
-                  period: 'January 19, 2022 - January 20, 2024',
-                  value_date: 'January 19, 2022',
-
-                  budget_line: [
-                    {
-                      budget: '200,000 USD',
-                      reference: '1234',
-                      narrative: [
-                        {
-                          language: '(Language: English)',
-                          narrative: 'Budget divided as extra living expenses',
-                        },
-                        {
-                          language: '(Language: English)',
-                          narrative: 'Budget divided as extra living expenses',
-                        },
-                      ],
-                    },
-                    {
-                      budget: '200,000 USD',
-                      reference: '1234',
-                      narrative: [
-                        {
-                          language: '(Language: English)',
-                          narrative: 'Budget divided as extra living expenses',
-                        },
-                        {
-                          language: '(Language: English)',
-                          narrative: 'Budget divided as extra living expenses',
-                        },
-                      ],
-                    },
-                  ],
-                },
-              ],
-            },
-          ],
-        },
-        document: {
-          document_link: {
-            document_title: 'Document link title',
-            title: [
-              {
-                language: '(Language: English)',
-                document_link_title: 'Document link title',
-              },
-              {
-                language: '(Language: Nepali)',
-                document_link_title: 'Document link title',
-              },
-            ],
-            link: 'iatipublisher.org',
-            description: [
-              {
-                language: '(Language: English)',
-                text: 'This programme will bring change for boys and girls to enjoy their rights to be protected from the worst forms of child labour in Central African Republic, the Democratic Republic of the Congo (DRC) and Ethiopia.',
-              },
-              {
-                language: '(Language: English)',
-                text: 'This programme will bring change for boys and girls to enjoy their rights to be protected from the worst forms of child labour in Central African Republic, the Democratic Republic of the Congo (DRC) and Ethiopia.',
-              },
-            ],
-            category: [
-              {
-                A: 'A01 - Pre- and post-project impact appraisal',
-              },
-              {
-                B: 'A01 - Pre- and post-project impact appraisal',
-              },
-            ],
-            language: 'English, Nepali',
-            document_date: 'November 20,2022',
-            recipient_country: [
-              {
-                country: 'AF- Afghanistan',
-                language: '(Language: English)',
-                text: 'This programme will bring change for boys and girls to enjoy their rights to be protected from the worst forms of child labour in Central African Republic, the Democratic Republic of the Congo (DRC) and Ethiopia.',
-              },
-              {
-                language: '(Language: English)',
-                text: 'This programme will bring change for boys and girls to enjoy their rights to be protected from the worst forms of child labour in Central African Republic, the Democratic Republic of the Congo (DRC) and Ethiopia.',
-              },
-            ],
-          },
-        },
-      },
+      setTimeout(() => {
+        toastData.visibility = false;
+      }, 5000);
     });
-
-    let pageTitle = '';
 
     /**
      * Grouping all the data's for scroll function
      *
      * this data is created using props.groups and props.activity
      */
-    const groupedData = { ...props.groups },
-      detailData = props.activity,
-      organisation = { ...props.groups };
+    const { groups, organization, elements } = toRefs(props),
+      groupedData = groups.value,
+      organizationProps = organization.value,
+      organizationData = groups.value,
+      elementProps = elements.value;
 
     // generating available elements
-    Object.keys(organisation).map((key) => {
+    Object.keys(organizationData).map((key) => {
       let flag = false;
-      Object.keys(organisation[key]['elements']).map((k) => {
-        if (detailData[k]) {
-          organisation[key]['elements'][k]['content'] = detailData[k];
+
+      Object.keys(organizationData[key]['elements']).map((k) => {
+        if (organizationProps[k] || typeof organizationProps[k] === 'number') {
+          organizationData[key]['elements'][k]['content'] =
+            organizationProps[k];
           flag = true;
         } else {
-          organisation[key]['elements'][k]['content'] = [];
+          delete organizationData[key][k];
         }
       });
 
-      // generating available categories of elements
-      Object.keys(groupedData).map((key) => {
-        if (organisation.hasOwnProperty(key)) {
-          groupedData[key]['status'] = 'enabled';
-        } else {
-          groupedData[key]['status'] = 'disabled';
-        }
-      });
+      if (flag === false) {
+        delete organizationData[key];
+      }
     });
 
-    const [publishValue, publishToggle] = useToggle();
-    const [unpublishValue, unpublishToggle] = useToggle();
-    const [deleteValue, deleteToggle] = useToggle();
-    const [downloadValue, downloadToggle] = useToggle();
+    // generating available categories of elements
+    Object.keys(groupedData).map((key) => {
+      if (Object.prototype.hasOwnProperty.call(organizationData,key)) {
+        groupedData[key]['status'] = 'enabled';
+      } else {
+        groupedData[key]['status'] = 'disabled';
+      }
+    });
 
     return {
-      elements,
-      organisation,
       groupedData,
-      pageTitle,
-      tab,
-      toggleTab,
+      organizationData,
       publishValue,
       publishToggle,
       unpublishValue,
@@ -1112,7 +467,9 @@ export default defineComponent({
       deleteToggle,
       downloadValue,
       downloadToggle,
-      elementsDetail,
+      elementProps,
+      toastData,
+      // elementsDetail,
     };
   },
 });

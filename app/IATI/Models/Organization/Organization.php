@@ -35,12 +35,31 @@ class Organization extends Model
         'is_published',
         'registration_agency',
         'registration_number',
+        'reporting_org',
+        'total_budget',
+        'recipient_org_budget',
+        'recipient_region_budget',
+        'recipient_country_budget',
+        'document_link',
+        'total_expenditure',
+        'organisation_identifier',
+        'name',
     ];
 
     /**
      * @var array
      */
-    protected $casts = ['reporting_org' => 'json'];
+    protected $casts = [
+        'reporting_org' => 'json',
+        'total_budget' => 'json',
+        'recipient_org_budget' => 'json',
+        'recipient_region_budget' => 'json',
+        'recipient_country_budget' => 'json',
+        'document_link' => 'json',
+        'total_expenditure' => 'json',
+        'organisation_identifier' => 'json',
+        'name' => 'json',
+    ];
 
     /**
      * Organisation has many activities.

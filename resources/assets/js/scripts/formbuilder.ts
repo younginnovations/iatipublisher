@@ -234,7 +234,6 @@ class FormBuilder
   }
 
   public addToCollection() {
-
     $('body').on('click', '.add_to_collection', (event: Event) => {
       this.addForm(event);
     });
@@ -322,4 +321,52 @@ $(function () {
       select_search.focus();
     }
   })
+
+  /**
+   * checks registration agency, country and registration number to deduce identifier
+   */
+  updateRegistrationAgency($('#organization_country'));
+  console.log($('#organisation_identifier'));
+  $('#organisation_identifier').attr('disabled', 'disabled');
+
+  function updateRegistrationAgency(country: JQuery){
+    console.log(country);
+    if(country.val()){
+      $.ajax({ url: '/organisation/agency/' + country.val() })
+      .then((response) => {
+        const current_val = $('#organization_registration_agency').val()??'';
+        let val = false;
+
+        for (const data in response.data) {
+          if(data===current_val){
+            val=true;
+          }
+
+          $('#organization_registration_agency').append(new Option(response.data[data], data, true, true)).val('').trigger('change');
+        }
+
+        $('#organization_registration_agency').val(val?current_val:'').trigger('change');
+      });
+    }
+  }
+
+  $('body').on('select2:select', '#organization_country', function () {
+    updateRegistrationAgency($(this));
+  })
+
+  $('body').on('select2:select', '#organization_registration_agency', function () {
+    const identifier = $(this).val() + '-' + $('#registration_number').val();
+    $('#organisation_identifier').val(identifier);
+  })
+
+  $('body').on('select2:clear', '#organization_registration_agency', function () {
+    const identifier = '-' + $('#registration_number').val();
+    $('#organisation_identifier').val(identifier);
+  })
+
+  $('body').on('keyup', '#registration_number', function () {
+    const identifier = $('#organization_registration_agency').val() + '-' + $(this).val();
+    $('#organisation_identifier').val(identifier);
+  })
+
 });

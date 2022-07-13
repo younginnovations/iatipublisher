@@ -7,23 +7,16 @@
         "completed": true,
         "label": "Organisation Identifier"
       },
-      "organisation_name": {
+      "name": {
         "core": true,
         "completed": true,
         "label": "Organisation Name"
       },
-      "reporting_organisation": {
+      "reporting_org": {
         "core": true,
         "completed": true,
         "label": "Reporting Organisation"
       }
-    }
-  },
-
-  "basic_information": {
-    "label": "Basic Information",
-    "elements": {
-
     }
   },
 
@@ -34,7 +27,7 @@
         "core": true,
         "label": "Total Budget"
       },
-      "recipient_organisation_budget": {
+      "recipient_org_budget": {
         "core": true,
         "label": "Recipient Org Budget"
       },
