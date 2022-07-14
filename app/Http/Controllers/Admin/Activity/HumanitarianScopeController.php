@@ -60,7 +60,7 @@ class HumanitarianScopeController extends Controller
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while rendering humanitarian scope form.');
+            return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while rendering humanitarian-scope form.');
         }
     }
 
@@ -79,14 +79,14 @@ class HumanitarianScopeController extends Controller
             $activityHumanitarianScope = $request->all();
 
             if (!$this->humanitarianScopeService->update($activityHumanitarianScope, $activityData)) {
-                return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while updating humanitarian scope.');
+                return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while updating humanitarian-scope.');
             }
 
-            return redirect()->route('admin.activities.show', $id)->with('success', 'Humanitarian scope updated successfully.');
+            return redirect()->route('admin.activities.show', $id)->with('success', 'Humanitarian-scope updated successfully.');
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while updating humanitarian scope.');
+            return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while updating humanitarian-scope.');
         }
     }
 }

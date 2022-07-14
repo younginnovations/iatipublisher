@@ -60,12 +60,12 @@ class RecipientCountryController extends Controller
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while opening recipient country form.');
+            return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while opening recipient-country form.');
         }
     }
 
     /**
-     * Update the recipient country data.
+     * Update the recipient-country data.
      *
      * @param RecipientCountryRequest $request
      * @param $id
@@ -79,14 +79,14 @@ class RecipientCountryController extends Controller
             $activityRecipientCountry = $request->all();
 
             if (!$this->recipientCountryService->update($activityRecipientCountry, $activityData)) {
-                return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while updating recipient country.');
+                return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while updating recipient-country.');
             }
 
-            return redirect()->route('admin.activities.show', $id)->with('success', 'Recipient country updated successfully.');
+            return redirect()->route('admin.activities.show', $id)->with('success', 'Recipient-country updated successfully.');
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while updating recipient country.');
+            return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while updating recipient-country.');
         }
     }
 }

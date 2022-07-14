@@ -60,7 +60,7 @@ class IdentifierController extends Controller
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return response()->json(['success' => false, 'error' => 'Error has occurred while rendering activity identifier form.']);
+            return response()->json(['success' => false, 'error' => 'Error has occurred while rendering iati-identifier form.']);
         }
     }
 
@@ -79,14 +79,14 @@ class IdentifierController extends Controller
             $activityIdentifier = $request->except(['_method', '_token']);
 
             if (!$this->identifierService->update($activityIdentifier, $activityData)) {
-                return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while updating activity identifier.');
+                return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while updating iati-identifier.');
             }
 
-            return redirect()->route('admin.activities.show', $id)->with('success', 'Activity identifier updated successfully.');
+            return redirect()->route('admin.activities.show', $id)->with('success', 'Iati-identifier updated successfully.');
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return response()->json(['success' => false, 'error' => 'Error has occurred while updating activity identifier.']);
+            return response()->json(['success' => false, 'error' => 'Error has occurred while updating iati-identifier.']);
         }
     }
 }

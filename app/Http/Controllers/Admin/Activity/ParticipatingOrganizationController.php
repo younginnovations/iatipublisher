@@ -61,12 +61,12 @@ class ParticipatingOrganizationController extends Controller
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while rendering participating organization form.');
+            return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while rendering participating-organization form.');
         }
     }
 
     /**
-     * Updates participating organization data.
+     * Updates participating-organization data.
      *
      * @param ParticipatingOrganizationRequest $request
      * @param $id
@@ -80,14 +80,14 @@ class ParticipatingOrganizationController extends Controller
             $activityCountryBudgetItem = $request->except(['_token', '_method']);
 
             if (!$this->participatingOrganizationService->update($activityCountryBudgetItem, $activityData)) {
-                return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while updating participating organization.');
+                return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while updating participating-organization.');
             }
 
-            return redirect()->route('admin.activities.show', $id)->with('success', 'Participating organization updated successfully.');
+            return redirect()->route('admin.activities.show', $id)->with('success', 'Participating-organization updated successfully.');
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while updating participating organization.');
+            return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while updating participating-organization.');
         }
     }
 }

@@ -60,12 +60,12 @@ class PolicyMarkerController extends Controller
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while opening policy marker form.');
+            return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while opening policy-marker form.');
         }
     }
 
     /**
-     * Updates policy marker form.
+     * Updates policy-marker form.
      *
      * @param PolicyMarkerRequest $request
      * @param $id
@@ -79,14 +79,14 @@ class PolicyMarkerController extends Controller
             $activityPolicyMarker = $request->all();
 
             if (!$this->policyMarkerService->update($activityPolicyMarker, $activityData)) {
-                return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while updating policy marker.');
+                return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while updating policy-marker.');
             }
 
-            return redirect()->route('admin.activities.show', $id)->with('success', 'Policy Marker updated successfully.');
+            return redirect()->route('admin.activities.show', $id)->with('success', 'Policy-marker updated successfully.');
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while updating policy marker.');
+            return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while updating policy-marker.');
         }
     }
 }

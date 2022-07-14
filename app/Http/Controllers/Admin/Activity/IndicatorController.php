@@ -77,7 +77,7 @@ class IndicatorController extends Controller
 
             return redirect()->route('admin.activities.show', $activityId)->with(
                 'error',
-                'Error has occurred while rendering result indicator form.'
+                'Error has occurred while rendering indicator form.'
             );
         }
     }
@@ -156,7 +156,7 @@ class IndicatorController extends Controller
 
             return redirect()->route('admin.activities.show', $activityId)->with(
                 'error',
-                'Error has occurred while rendering result indicator form.'
+                'Error has occurred while rendering indicator form.'
             );
         }
     }
@@ -189,14 +189,14 @@ class IndicatorController extends Controller
 
             return redirect()->route('admin.activities.show', $activityId)->with(
                 'success',
-                'Result indicator updated successfully.'
+                'Indicator updated successfully.'
             );
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
             return redirect()->route('admin.activities.show', $activityId)->with(
                 'error',
-                'Error has occurred while updating result indicator.'
+                'Error has occurred while updating indicator.'
             );
         }
     }

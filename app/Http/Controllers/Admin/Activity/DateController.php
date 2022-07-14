@@ -60,7 +60,7 @@ class DateController extends Controller
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while rendering activity date form.');
+            return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while rendering date form.');
         }
     }
 
@@ -84,14 +84,14 @@ class DateController extends Controller
             }
 
             if (!$this->dateService->update($activityDate, $activityData)) {
-                return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while updating activity date.');
+                return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while updating date.');
             }
 
-            return redirect()->route('admin.activities.show', $id)->with('success', 'Activity date updated successfully.');
+            return redirect()->route('admin.activities.show', $id)->with('success', 'Date updated successfully.');
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while updating activity date.');
+            return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while updating date.');
         }
     }
 

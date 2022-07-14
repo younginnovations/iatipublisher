@@ -61,12 +61,12 @@ class PlannedDisbursementController extends Controller
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while rendering planned disbursement form.');
+            return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while rendering planned-disbursement form.');
         }
     }
 
     /**
-     * Updates country budget item data.
+     * Updates planned disbursement data.
      *
      * @param PlannedDisbursementRequest $request
      * @param $id
@@ -80,14 +80,14 @@ class PlannedDisbursementController extends Controller
             $activityCountryBudgetItem = $request->except(['_token', '_method']);
 
             if (!$this->plannedDisbursementService->update($activityCountryBudgetItem, $activityData)) {
-                return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while updating planned disbursement.');
+                return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while updating planned-disbursement.');
             }
 
-            return redirect()->route('admin.activities.show', $id)->with('success', 'Planned disbursement updated successfully.');
+            return redirect()->route('admin.activities.show', $id)->with('success', 'Planned-disbursement updated successfully.');
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while updating planned disbursement.');
+            return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while updating planned-disbursement.');
         }
     }
 }

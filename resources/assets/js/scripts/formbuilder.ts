@@ -241,7 +241,7 @@ class FormBuilder {
       index
         .closest('.form-field-group')
         .find(humanitarianScopeHideVocabularyUri)
-        .show()
+        .show().removeAttr('disabled')
         .closest('.form-field')
         .show();
     } else {
@@ -250,7 +250,7 @@ class FormBuilder {
         .find(humanitarianScopeHideVocabularyUri)
         .val('')
         .trigger('change')
-        .hide()
+        .hide().attr('disabled', 'disabled')
         .closest('.form-field')
         .hide();
     }
@@ -293,12 +293,12 @@ class FormBuilder {
     if (value === '1') {
       $(countryBudgetCodeInput)
         .val('')
-        .trigger('change')
+        .trigger('change').attr('disabled', 'disabled')
         .closest('.form-field')
         .hide();
-      $(countryBudgetCodeSelect).closest('.form-field').show();
+      $(countryBudgetCodeSelect).removeAttr('disabled').closest('.form-field').show();
     } else {
-      $(countryBudgetCodeInput).closest('.form-field').show();
+      $(countryBudgetCodeInput).removeAttr('disabled').closest('.form-field').show();
       $(countryBudgetCodeSelect)
         .val('')
         .trigger('change')
@@ -388,7 +388,7 @@ class FormBuilder {
         index
           .closest('.form-field-group')
           .find(earmarking_category)
-          .show()
+          .show().removeAttr('disabled')
           .closest('.form-field')
           .show();
         index
@@ -396,7 +396,7 @@ class FormBuilder {
           .find(case2)
           .val('')
           .trigger('change')
-          .hide()
+          .hide().attr('disabled', 'disabled')
           .closest('.form-field')
           .hide();
         break;
@@ -404,7 +404,7 @@ class FormBuilder {
         index
           .closest('.form-field-group')
           .find(earmarking_modality)
-          .show()
+          .show().removeAttr('disabled')
           .closest('.form-field')
           .show();
         index
@@ -412,7 +412,7 @@ class FormBuilder {
           .find(case3)
           .val('')
           .trigger('change')
-          .hide()
+          .hide().attr('disabled', 'disabled')
           .closest('.form-field')
           .hide();
         break;
@@ -421,7 +421,7 @@ class FormBuilder {
         index
           .closest('.form-field-group')
           .find(cash_and_voucher_modalities)
-          .show()
+          .show().removeAttr('disabled')
           .closest('.form-field')
           .show();
         index
@@ -429,7 +429,7 @@ class FormBuilder {
           .find(case4)
           .val('')
           .trigger('change')
-          .hide()
+          .hide().attr('disabled', 'disabled')
           .closest('.form-field')
           .hide();
         break;
@@ -437,7 +437,7 @@ class FormBuilder {
         index
           .closest('.form-field-group')
           .find(default_aid_type)
-          .show()
+          .show().removeAttr('disabled')
           .closest('.form-field')
           .show();
         index
@@ -445,7 +445,7 @@ class FormBuilder {
           .find(case1)
           .val('')
           .trigger('change')
-          .hide()
+          .hide().attr('disabled', 'disabled')
           .closest('.form-field')
           .hide();
     }
@@ -474,7 +474,7 @@ class FormBuilder {
         index
           .closest('.form-field-group')
           .find(earmarking_category)
-          .show()
+          .show().removeAttr('disabled')
           .closest('.form-field')
           .show();
         index
@@ -482,7 +482,7 @@ class FormBuilder {
           .find(case2)
           .val('')
           .trigger('change')
-          .hide()
+          .hide().attr('disabled', 'disabled')
           .closest('.form-field')
           .hide();
         break;
@@ -490,7 +490,7 @@ class FormBuilder {
         index
           .closest('.form-field-group')
           .find(earmarking_modality)
-          .show()
+          .show().removeAttr('disabled')
           .closest('.form-field')
           .show();
         index
@@ -498,7 +498,7 @@ class FormBuilder {
           .find(case3)
           .val('')
           .trigger('change')
-          .hide()
+          .hide().attr('disabled', 'disabled')
           .closest('.form-field')
           .hide();
         break;
@@ -507,7 +507,7 @@ class FormBuilder {
         index
           .closest('.form-field-group')
           .find(cash_and_voucher_modalities)
-          .show()
+          .show().removeAttr('disabled')
           .closest('.form-field')
           .show();
         index
@@ -515,7 +515,7 @@ class FormBuilder {
           .find(case4)
           .val('')
           .trigger('change')
-          .hide()
+          .hide().attr('disabled', 'disabled')
           .closest('.form-field')
           .hide();
         break;
@@ -523,7 +523,7 @@ class FormBuilder {
         index
           .closest('.form-field-group')
           .find(aid_type)
-          .show()
+          .show().removeAttr('disabled')
           .closest('.form-field')
           .show();
         index
@@ -531,7 +531,7 @@ class FormBuilder {
           .find(case1)
           .val('')
           .trigger('change')
-          .hide()
+          .hide().attr('disabled', 'disabled')
           .closest('.form-field')
           .hide();
     }
@@ -581,7 +581,7 @@ class FormBuilder {
         index
           .closest('.form-field-group')
           .find(case1_show)
-          .show()
+          .show().removeAttr('disabled')
           .closest('.form-field')
           .show();
         index
@@ -589,7 +589,7 @@ class FormBuilder {
           .find(case1)
           .val('')
           .trigger('change')
-          .hide()
+          .hide().attr('disabled', 'disabled')
           .closest('.form-field')
           .hide();
         break;
@@ -597,7 +597,7 @@ class FormBuilder {
         index
           .closest('.form-field-group')
           .find(case2_show)
-          .show()
+          .show().removeAttr('disabled')
           .closest('.form-field')
           .show();
         index
@@ -605,7 +605,7 @@ class FormBuilder {
           .find(case2)
           .val('')
           .trigger('change')
-          .hide()
+          .hide().attr('disabled', 'disabled')
           .closest('.form-field')
           .hide();
         break;
@@ -613,7 +613,7 @@ class FormBuilder {
         index
           .closest('.form-field-group')
           .find(case1_show)
-          .show()
+          .show().removeAttr('disabled')
           .closest('.form-field')
           .show();
         index
@@ -621,7 +621,7 @@ class FormBuilder {
           .find(case1)
           .val('')
           .trigger('change')
-          .hide()
+          .hide().attr('disabled', 'disabled')
           .closest('.form-field')
           .hide();
     }
@@ -684,7 +684,7 @@ class FormBuilder {
         index
           .closest('.form-field-group')
           .find(case1_show)
-          .show()
+          .show().removeAttr('disabled')
           .closest('.form-field')
           .show();
         index
@@ -692,7 +692,7 @@ class FormBuilder {
           .find(case1)
           .val('')
           .trigger('change')
-          .hide()
+          .hide().attr('disabled', 'disabled')
           .closest('.form-field')
           .hide();
         break;
@@ -700,7 +700,7 @@ class FormBuilder {
         index
           .closest('.form-field-group')
           .find(case2_show)
-          .show()
+          .show().removeAttr('disabled')
           .closest('.form-field')
           .show();
         index
@@ -708,7 +708,7 @@ class FormBuilder {
           .find(case2)
           .val('')
           .trigger('change')
-          .hide()
+          .hide().attr('disabled', 'disabled')
           .closest('.form-field')
           .hide();
         break;
@@ -716,7 +716,7 @@ class FormBuilder {
         index
           .closest('.form-field-group')
           .find(case7_show)
-          .show()
+          .show().removeAttr('disabled')
           .closest('.form-field')
           .show();
         index
@@ -724,7 +724,7 @@ class FormBuilder {
           .find(case7)
           .val('')
           .trigger('change')
-          .hide()
+          .hide().attr('disabled', 'disabled')
           .closest('.form-field')
           .hide();
         break;
@@ -732,7 +732,7 @@ class FormBuilder {
         index
           .closest('.form-field-group')
           .find(case8_show)
-          .show()
+          .show().removeAttr('disabled')
           .closest('.form-field')
           .show();
         index
@@ -740,7 +740,7 @@ class FormBuilder {
           .find(case8)
           .val('')
           .trigger('change')
-          .hide()
+          .hide().attr('disabled', 'disabled')
           .closest('.form-field')
           .hide();
         break;
@@ -748,7 +748,7 @@ class FormBuilder {
         index
           .closest('.form-field-group')
           .find(case98_99_show)
-          .show()
+          .show().removeAttr('disabled')
           .closest('.form-field')
           .show();
         index
@@ -756,7 +756,7 @@ class FormBuilder {
           .find(case98_99)
           .val('')
           .trigger('change')
-          .hide()
+          .hide().attr('disabled', 'disabled')
           .closest('.form-field')
           .hide();
         break;
@@ -764,7 +764,7 @@ class FormBuilder {
         index
           .closest('.form-field-group')
           .find(case98_99_show)
-          .show()
+          .show().removeAttr('disabled')
           .closest('.form-field')
           .show();
         index
@@ -772,7 +772,7 @@ class FormBuilder {
           .find(case98_99)
           .val('')
           .trigger('change')
-          .hide()
+          .hide().attr('disabled', 'disabled')
           .closest('.form-field')
           .hide();
         break;
@@ -780,7 +780,7 @@ class FormBuilder {
         index
           .closest('.form-field-group')
           .find(default_show)
-          .show()
+          .show().removeAttr('disabled')
           .closest('.form-field')
           .show();
 
@@ -789,7 +789,7 @@ class FormBuilder {
           .find(default_hide)
           .val('')
           .trigger('change')
-          .hide()
+          .hide().attr('disabled', 'disabled')
           .closest('.form-field')
           .hide();
     }
@@ -840,7 +840,7 @@ class FormBuilder {
         index
           .closest('.form-field-group')
           .find(case1_show)
-          .show()
+          .show().removeAttr('disabled')
           .closest('.form-field')
           .show();
         index
@@ -848,7 +848,7 @@ class FormBuilder {
           .find(case1)
           .val('')
           .trigger('change')
-          .hide()
+          .hide().attr('disabled', 'disabled')
           .closest('.form-field')
           .hide();
         break;
@@ -856,7 +856,7 @@ class FormBuilder {
         index
           .closest('.form-field-group')
           .find(case2_show)
-          .show()
+          .show().removeAttr('disabled')
           .closest('.form-field')
           .show();
         index
@@ -864,7 +864,7 @@ class FormBuilder {
           .find(case2)
           .val('')
           .trigger('change')
-          .hide()
+          .hide().attr('disabled', 'disabled')
           .closest('.form-field')
           .hide();
         break;
@@ -872,7 +872,7 @@ class FormBuilder {
         index
           .closest('.form-field-group')
           .find(case99_show)
-          .show()
+          .show().removeAttr('disabled')
           .closest('.form-field')
           .show();
         index
@@ -880,7 +880,7 @@ class FormBuilder {
           .find(case99)
           .val('')
           .trigger('change')
-          .hide()
+          .hide().attr('disabled', 'disabled')
           .closest('.form-field')
           .hide();
         break;
@@ -888,7 +888,7 @@ class FormBuilder {
         index
           .closest('.form-field-group')
           .find(case2_show)
-          .show()
+          .show().removeAttr('disabled')
           .closest('.form-field')
           .show();
         index
@@ -896,7 +896,7 @@ class FormBuilder {
           .find(case2)
           .val('')
           .trigger('change')
-          .hide()
+          .hide().attr('disabled', 'disabled')
           .closest('.form-field')
           .hide();
     }
@@ -968,7 +968,7 @@ class FormBuilder {
         index
           .closest('.form-field-group')
           .find(case1_show)
-          .show()
+          .show().removeAttr('disabled')
           .closest('.form-field')
           .show();
         index
@@ -976,7 +976,7 @@ class FormBuilder {
           .find(case1)
           .val('')
           .trigger('change')
-          .hide()
+          .hide().attr('disabled', 'disabled')
           .closest('.form-field')
           .hide();
         break;
@@ -984,7 +984,7 @@ class FormBuilder {
         index
           .closest('.form-field-group')
           .find(case2_show)
-          .show()
+          .show().removeAttr('disabled')
           .closest('.form-field')
           .show();
         index
@@ -992,7 +992,7 @@ class FormBuilder {
           .find(case2)
           .val('')
           .trigger('change')
-          .hide()
+          .hide().attr('disabled', 'disabled')
           .closest('.form-field')
           .hide();
         break;
@@ -1000,7 +1000,7 @@ class FormBuilder {
         index
           .closest('.form-field-group')
           .find(case3_show)
-          .show()
+          .show().removeAttr('disabled')
           .closest('.form-field')
           .show();
         index
@@ -1008,7 +1008,7 @@ class FormBuilder {
           .find(case3)
           .val('')
           .trigger('change')
-          .hide()
+          .hide().attr('disabled', 'disabled')
           .closest('.form-field')
           .hide();
         break;
@@ -1016,7 +1016,7 @@ class FormBuilder {
         index
           .closest('.form-field-group')
           .find(case99_show)
-          .show()
+          .show().removeAttr('disabled')
           .closest('.form-field')
           .show();
         index
@@ -1024,7 +1024,7 @@ class FormBuilder {
           .find(case99)
           .val('')
           .trigger('change')
-          .hide()
+          .hide().attr('disabled', 'disabled')
           .closest('.form-field')
           .hide();
         break;
@@ -1032,7 +1032,7 @@ class FormBuilder {
         index
           .closest('.form-field-group')
           .find(case1_show)
-          .show()
+          .show().removeAttr('disabled')
           .closest('.form-field')
           .show();
         index
@@ -1040,7 +1040,7 @@ class FormBuilder {
           .find(case1)
           .val('')
           .trigger('change')
-          .hide()
+          .hide().attr('disabled', 'disabled')
           .closest('.form-field')
           .hide();
     }
@@ -1137,7 +1137,11 @@ $(function () {
   }
 
   $('body').on('select2:open', '.select2', () => {
-    $('.select2-search__field').trigger("focus");
+    const select_search = document.querySelector('.select2-search__field') as HTMLElement;
+
+    if(select_search){
+      select_search.focus();
+    }
   })
 });
 
