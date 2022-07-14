@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\IATI\Services\Activity;
 
 use App\IATI\Elements\Builder\BaseFormCreator;
+use App\IATI\Models\Activity\Activity;
 use App\IATI\Repositories\Activity\CapitalSpendRepository;
 use Illuminate\Database\Eloquent\Model;
 use Kris\LaravelFormBuilder\Form;
@@ -87,5 +88,28 @@ class CapitalSpendService
         $this->baseFormCreator->url = route('admin.activities.capital-spend.update', [$id]);
 
         return $this->baseFormCreator->editForm($model, $element['capital_spend'], 'PUT', '/activities/' . $id);
+    }
+
+    /**
+     * Returns data in required xml array format.
+     *
+     *
+     * @param Activity $activity
+     *
+     * @return array
+     */
+    public function getXmlData(Activity $activity): array
+    {
+        $activityData = [];
+
+        if ($activity->capital_spend) {
+            $activityData = [
+                '@attributes' => [
+                    'percentage' => $activity->capital_spend,
+                ],
+            ];
+        }
+
+        return $activityData;
     }
 }

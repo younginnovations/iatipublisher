@@ -19,7 +19,7 @@ return new class extends Migration {
             $table->json('title')->nullable();
             $table->json('description')->nullable();
             $table->integer('activity_status')->nullable();
-            $table->enum('status', ['draft', 'ready_to_publish', 'published'])->default('draft');
+            $table->enum('status', ['draft', 'published'])->default('draft');
             $table->json('activity_date')->nullable();
             $table->json('contact_info')->nullable();
             $table->integer('activity_scope')->nullable();
@@ -45,7 +45,8 @@ return new class extends Migration {
             $table->json('conditions')->nullable();
             $table->integer('org_id');
             $table->json('default_field_values')->nullable();
-            $table->boolean('is_published')->default(0);
+            $table->boolean('already_published')->default(0);
+            $table->boolean('linked_to_iati')->default(0);
             $table->json('tag')->nullable();
             $table->json('element_status')->nullable()->default('{"iati_identifier":false, "title":false, "description":false, "activity_status":false, "activity_date":false, "activity_scope":false, "recipient_country":false, "recipient_region":false, "collaboration_type":false, "default_flow_type":false, "default_finance_type":false, "default_aid_type":false, "default_tied_status":false, "capital_spend":false, "related_activity":false, "conditions":false, "sector":false, "humanitarian_scope":false, "legacy_data":false, "tag":false, "policy_marker":false, "other_identifier":false, "country_budget_items":false, "budget":false, "participating_org":false, "document_link":false, "contact_info":false, "location":false, "planned_disbursement":false, "transactions":false, "result":false}');
             $table->timestamps();

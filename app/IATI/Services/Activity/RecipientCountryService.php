@@ -5,8 +5,11 @@ declare(strict_types=1);
 namespace App\IATI\Services\Activity;
 
 use App\IATI\Elements\Builder\ParentCollectionFormCreator;
+use App\IATI\Models\Activity\Activity;
 use App\IATI\Repositories\Activity\RecipientCountryRepository;
+use App\IATI\Traits\XmlBaseElement;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Arr;
 use Kris\LaravelFormBuilder\Form;
 
 /**
@@ -14,6 +17,8 @@ use Kris\LaravelFormBuilder\Form;
  */
 class RecipientCountryService
 {
+    use XmlBaseElement;
+
     /**
      * @var RecipientCountryRepository
      */
@@ -87,5 +92,32 @@ class RecipientCountryService
         $this->parentCollectionFormCreator->url = route('admin.activities.recipient-country.update', [$id]);
 
         return $this->parentCollectionFormCreator->editForm($model, $element['recipient_country'], 'PUT', '/activities/' . $id);
+    }
+
+    /**
+     * Returns data in required xml array format.
+     *
+     * @param Activity $activity
+     *
+     * @return array
+     */
+    public function getXmlData(Activity $activity): array
+    {
+        $activityData = [];
+        $recipientCountries = (array) $activity->recipient_country;
+
+        if (count($recipientCountries)) {
+            foreach ($recipientCountries as $recipientCountry) {
+                $activityData[] = [
+                    '@attributes' => [
+                        'code'       => Arr::get($recipientCountry, 'country_code', null),
+                        'percentage' => Arr::get($recipientCountry, 'percentage', null),
+                    ],
+                    'narrative'   => $this->buildNarrative(Arr::get($recipientCountry, 'narrative', null)),
+                ];
+            }
+        }
+
+        return $activityData;
     }
 }

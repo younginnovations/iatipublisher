@@ -29,9 +29,9 @@ class TitleRepository
     /**
      * Returns title data of an activity.
      * @param $activityId
-     * @return array
+     * @return array|null
      */
-    public function getTitleData($activityId): array
+    public function getTitleData($activityId): ?array
     {
         return $this->activity->findorFail($activityId)->title;
     }
