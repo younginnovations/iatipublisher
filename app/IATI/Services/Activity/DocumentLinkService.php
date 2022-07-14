@@ -5,9 +5,12 @@ declare(strict_types=1);
 namespace App\IATI\Services\Activity;
 
 use App\IATI\Elements\Builder\ParentCollectionFormCreator;
+use App\IATI\Models\Activity\Activity;
 use App\IATI\Repositories\Activity\DocumentLinkRepository;
 use App\IATI\Repositories\Document\DocumentRepository;
+use App\IATI\Traits\XmlBaseElement;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Arr;
 use Kris\LaravelFormBuilder\Form;
 
 /**
@@ -15,6 +18,8 @@ use Kris\LaravelFormBuilder\Form;
  */
 class DocumentLinkService
 {
+    use XmlBaseElement;
+
     /**
      * @var DocumentLinkRepository
      */
@@ -108,5 +113,61 @@ class DocumentLinkService
         $this->parentCollectionFormCreator->url = route('admin.activities.document-link.update', [$id]);
 
         return $this->parentCollectionFormCreator->editForm($model, $element['document_link'], 'PUT', '/activities/' . $id);
+    }
+
+    /**
+     * Returns data in required xml array format.
+     *
+     * @param Activity $activity
+     *
+     * @return array
+     */
+    public function getXmlData(Activity $activity): array
+    {
+        $activityData = [];
+        $documentLinks = (array) $activity->document_link;
+
+        if (count($documentLinks)) {
+            foreach ($documentLinks as $documentLink) {
+                $categories = [];
+
+                foreach (Arr::get($documentLink, 'category', []) as $value) {
+                    $categories[] = [
+                        '@attributes' => ['code' => Arr::get($value, 'code', null)],
+                    ];
+                }
+
+                $languages = [];
+
+                foreach (Arr::get($documentLink, 'language', []) as $language) {
+                    $languages[] = [
+                        '@attributes' => ['code' => Arr::get($language, 'code', null)],
+                    ];
+                }
+
+                $activityData[] = [
+                    '@attributes'   => [
+                        'url'    => Arr::get($documentLink, 'url', null),
+                        'format' => Arr::get($documentLink, 'format', null),
+                    ],
+                    'title'         => [
+                        'narrative' => $this->buildNarrative(Arr::get($documentLink, 'title.0.narrative', [])),
+                    ],
+                    'description'   => [
+                        'narrative' => $this->buildNarrative(Arr::get($documentLink, 'description.0.narrative', [])),
+                    ],
+                    'category'      => $categories,
+
+                    'language'      => $languages,
+                    'document-date' => [
+                        '@attributes' => [
+                            'iso-date' => Arr::get($documentLink, 'document_date.0.date', null),
+                        ],
+                    ],
+                ];
+            }
+        }
+
+        return $activityData;
     }
 }

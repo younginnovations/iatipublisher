@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\IATI\Services\Activity;
 
 use App\IATI\Elements\Builder\BaseFormCreator;
+use App\IATI\Models\Activity\Activity;
 use App\IATI\Repositories\Activity\DefaultFlowTypeRepository;
 use Illuminate\Database\Eloquent\Model;
 use Kris\LaravelFormBuilder\Form;
@@ -87,5 +88,27 @@ class DefaultFlowTypeService
         $this->baseFormCreator->url = route('admin.activities.default-flow-type.update', [$id]);
 
         return $this->baseFormCreator->editForm($model, $element['default_flow_type'], 'PUT', '/activities/' . $id);
+    }
+
+    /**
+     * Returns data in required xml array format.
+     *
+     * @param Activity $activity
+     *
+     * @return array
+     */
+    public function getXmlData(Activity $activity): array
+    {
+        $activityData = [];
+
+        if ($activity->default_flow_type) {
+            $activityData = [
+                '@attributes' => [
+                    'code' => $activity->default_flow_type,
+                ],
+            ];
+        }
+
+        return $activityData;
     }
 }

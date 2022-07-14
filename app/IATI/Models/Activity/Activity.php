@@ -66,7 +66,6 @@ class Activity extends Model
      */
     protected $casts = [
         'iati_identifier'      => 'json',
-        'identifier'           => 'json',
         'other_identifier'     => 'json',
         'title'                => 'json',
         'description'          => 'json',

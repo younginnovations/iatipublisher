@@ -177,13 +177,29 @@ class ActivityController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param Activity $activity
+     * @param $activityId
      *
-     * @return void
+     * @return RedirectResponse
      */
-    public function destroy(Activity $activity): void
+    public function destroy($activityId): RedirectResponse
     {
-        //
+        try {
+            $activity = $this->activityService->getActivity($activityId);
+
+            if ($activity->linked_to_iati) {
+                return redirect()->route('admin.activities.show', $activityId)->with('error', 'You need to un-publish this activity before publishing.');
+            }
+
+            if ($this->activityService->deleteActivity($activity)) {
+                return redirect()->route('admin.activities.show', $activityId)->with('error', 'Activity has been deleted successfully.');
+            }
+
+            return redirect()->route('admin.activities.show', $activityId)->with('error', 'Error has occurred while deleting activity.');
+        } catch (\Exception $e) {
+            logger()->error($e->getMessage());
+
+            return redirect()->route('admin.activities.show', $activityId)->with('error', 'Error has occurred while deleting activity.');
+        }
     }
 
     /*

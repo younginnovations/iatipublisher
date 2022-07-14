@@ -58,4 +58,35 @@ class ActivityRepository extends Repository
     {
         return $this->model->where('org_id', $organizationId)->paginate(10, ['*'], 'activity', $page);
     }
+
+    /**
+     * Updates status column of activity row.
+     *
+     * @param $activity
+     * @param $status
+     * @param $alreadyPublished
+     * @param $linkedToIati
+     *
+     * @return bool
+     */
+    public function updatePublishedStatus($activity, $status, $alreadyPublished, $linkedToIati): bool
+    {
+        $activity->status = $status;
+        $activity->already_published = $alreadyPublished;
+        $activity->linked_to_iati = $linkedToIati;
+
+        return $activity->save();
+    }
+
+    /**
+     * Deletes desired activity.
+     *
+     * @param Activity $activity
+     *
+     * @return bool
+     */
+    public function deleteActivity(Activity $activity): bool
+    {
+        return $activity->delete();
+    }
 }
