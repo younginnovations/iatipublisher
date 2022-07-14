@@ -84,6 +84,9 @@ Route::name('admin.')->group(function () {
     Route::resource('activities.result.indicator.period', \App\Http\Controllers\Admin\Activity\PeriodController::class);
     Route::resource('activities.transactions', \App\Http\Controllers\Admin\Activity\TransactionController::class);
 
+    // Publish Activity
+    Route::get('activities/{activityId}/publish', [\App\Http\Controllers\Admin\Workflow\ActivityWorkflowController::class, 'publish'])->name('activities.publish');
+
     // static route for static pages
 //    Route::get('/activities/{id}/result', function () {
 //        return view('admin.activity.result.result');
