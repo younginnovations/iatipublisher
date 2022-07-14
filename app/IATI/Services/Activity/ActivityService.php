@@ -102,4 +102,58 @@ class ActivityService
     {
         return $this->activityRepository->find($id);
     }
+
+    /**
+     * Generates toast array.
+     *
+     * @return array
+     */
+    public function generateToastData(): array
+    {
+        $toast['message'] = Session::exists('error') ? Session::get('error') : (Session::exists('success') ? Session::get('success') : '');
+        $toast['type'] = Session::exists('error') ? false : 'success';
+        Session::forget('success');
+        Session::forget('error');
+
+        return $toast;
+    }
+
+    /**
+     * Returns required service file.
+     *
+     * @param $serviceName
+     *
+     * @return \Illuminate\Contracts\Foundation\Application|mixed
+     */
+    public function getService($serviceName)
+    {
+        return app(sprintf("App\IATI\Services\Activity\%s", $serviceName));
+    }
+
+    /**
+     * Updates status column of activity row.
+     *
+     * @param $activity
+     * @param $status
+     * @param $alreadyPublished
+     * @param $linkedToIati
+     *
+     * @return bool
+     */
+    public function updatePublishedStatus($activity, $status, $alreadyPublished, $linkedToIati): bool
+    {
+        return $this->activityRepository->updatePublishedStatus($activity, $status, $alreadyPublished, $linkedToIati);
+    }
+
+    /**
+     * Deletes desired activity.
+     *
+     * @param Activity $activity
+     *
+     * @return bool
+     */
+    public function deleteActivity(Activity $activity): bool
+    {
+        return $this->activityRepository->deleteActivity($activity);
+    }
 }

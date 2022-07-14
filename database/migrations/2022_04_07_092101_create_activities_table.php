@@ -19,7 +19,7 @@ return new class extends Migration {
             $table->json('title')->nullable();
             $table->json('description')->nullable();
             $table->integer('activity_status')->nullable();
-            $table->enum('status', ['draft', 'ready_to_publish', 'published'])->default('draft');
+            $table->enum('status', ['draft', 'published'])->default('draft');
             $table->json('activity_date')->nullable();
             $table->json('contact_info')->nullable();
             $table->integer('activity_scope')->nullable();
@@ -45,7 +45,8 @@ return new class extends Migration {
             $table->json('conditions')->nullable();
             $table->integer('org_id');
             $table->json('default_field_values')->nullable();
-            $table->boolean('is_published')->default(0);
+            $table->boolean('already_published')->default(0);
+            $table->boolean('linked_to_iati')->default(0);
             $table->json('tag')->nullable();
             $table->timestamps();
 

@@ -93,7 +93,9 @@
     "sub_elements": {}
   },
   "other_identifier": {
+    "name": "other_identifier",
     "label": "other-identifier",
+    "add_more": true,
     "attributes": {
       "reference": {
         "name": "reference",
@@ -119,7 +121,7 @@
       "owner_org": {
         "name": "owner_org",
         "label": "owner-org",
-        "add_more": true,
+        "add_more": false,
         "attributes": {
           "ref": {
             "name": "ref",

@@ -62,7 +62,7 @@ class Activity extends Model
      * @var array
      */
     protected $casts = [
-        'iati_identifier'                 => 'json',
+        'iati_identifier'            => 'json',
         'other_identifier'           => 'json',
         'title'                      => 'json',
         'description'                => 'json',
@@ -495,7 +495,7 @@ class Activity extends Model
      */
     public function getOtherIdentifierElementCompletedAttribute(): bool
     {
-        return $this->isLevelTwoElementCompleted('other_identifier', $this->other_identifier);
+        return $this->isLevelOneElementCompleted('other_identifier', $this->other_identifier);
     }
 
     /**
@@ -646,5 +646,15 @@ class Activity extends Model
     public function getCountryBudgetItemsElementCompletedAttribute(): bool
     {
         return $this->isLevelThreeElementCompleted('country_budget_items', $this->country_budget_items);
+    }
+
+    /**
+     * Activity has many transactions.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function transactions(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(Transaction::class, 'activity_id', 'id');
     }
 }

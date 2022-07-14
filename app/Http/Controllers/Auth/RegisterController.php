@@ -111,7 +111,7 @@ class RegisterController extends Controller
                 return response()->json(['success' => false, 'errors' => $validator->errors()]);
             }
 
-            $clientConfig = ['base_uri' => env('IATI_URL')];
+            $clientConfig = ['base_uri' => env('IATI_API_ENDPOINT')];
             $requestConfig = [
                 'http_errors' => false,
                 'query'       => ['id' => $postData['publisher_id'] ?? ''],
