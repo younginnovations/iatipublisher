@@ -69,8 +69,8 @@ class ResultController extends Controller
             $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
             $activity = $this->activityService->getActivity($id);
             $this->resultElementFormCreator->url = route('admin.activities.result.store', $id);
-            $form = $this->resultElementFormCreator->editForm([], $element['result']);
-            $data = ['core'=> $element['result']['criteria'] ?? false, 'status'=> false, 'title'=> $element['result']['label'], 'name'=>'result'];
+            $form = $this->resultElementFormCreator->editForm([], $element['result'], 'POST', '/activities/' . $id);
+            $data = ['core' => $element['result']['criteria'] ?? false, 'status' => false, 'title' => $element['result']['label'], 'name' => 'result'];
 
             return view('activity.result.result', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {
@@ -161,8 +161,8 @@ class ResultController extends Controller
             $activity = $this->activityService->getActivity($activityId);
             $activityResult = $this->resultService->getResult($resultId, $activityId);
             $this->resultElementFormCreator->url = route('admin.activities.result.update', [$activityId, $resultId]);
-            $form = $this->resultElementFormCreator->editForm($activityResult->result, $element['result'], 'PUT');
-            $data = ['core'=> $element['result']['criteria'] ?? false, 'status'=> false, 'title'=> $element['result']['label'], 'name'=>'result'];
+            $form = $this->resultElementFormCreator->editForm($activityResult->result, $element['result'], 'PUT', '/activities/' . $activityId);
+            $data = ['core' => $element['result']['criteria'] ?? false, 'status' => false, 'title' => $element['result']['label'], 'name' => 'result'];
 
             return view('activity.result.result', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {

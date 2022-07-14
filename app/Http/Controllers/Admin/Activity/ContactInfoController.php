@@ -47,15 +47,15 @@ class ContactInfoController extends Controller
      *
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|void
      */
-    public function edit(int $id):View|RedirectResponse
+    public function edit(int $id): View|RedirectResponse
     {
         try {
             $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
             $activity = $this->contactInfoService->getActivityData($id);
             $model['contact_info'] = $this->contactInfoService->getContactInfoData($id) ?: [];
             $this->parentCollectionFormCreator->url = route('admin.activities.contact-info.update', [$id]);
-            $form = $this->parentCollectionFormCreator->editForm($model, $element['contact_info']);
-            $data = ['core'=> $element['contact_info']['criteria'], 'status'=> false, 'title'=> $element['contact_info']['label'], 'name'=>'contact_info'];
+            $form = $this->parentCollectionFormCreator->editForm($model, $element['contact_info'], 'PUT', '/activities/' . $id);
+            $data = ['core' => $element['contact_info']['criteria'], 'status' => false, 'title' => $element['contact_info']['label'], 'name' => 'contact_info'];
 
             return view('activity.contactInfo.contactInfo', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {

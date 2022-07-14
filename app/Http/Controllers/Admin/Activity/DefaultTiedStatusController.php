@@ -53,8 +53,8 @@ class DefaultTiedStatusController extends Controller
             $activity = $this->defaultTiedStatusService->getActivityData($id);
             $model['default_tied_status'] = $this->defaultTiedStatusService->getDefaultTiedStatusData($id);
             $this->baseFormCreator->url = route('admin.activities.default-tied-status.update', [$id]);
-            $form = $this->baseFormCreator->editForm($model, $element['default_tied_status']);
-            $data = ['core'=> $element['default_tied_status']['criteria'], 'status'=> $activity->default_tied_status_element_completed, 'title'=> $element['default_tied_status']['label'], 'name'=>'default_tied_status'];
+            $form = $this->baseFormCreator->editForm($model, $element['default_tied_status'], 'PUT', '/activities/' . $id);
+            $data = ['core' => $element['default_tied_status']['criteria'], 'status' => $activity->default_tied_status_element_completed, 'title' => $element['default_tied_status']['label'], 'name' => 'default_tied_status'];
 
             return view('activity.defaultTiedStatus.defaultTiedStatus', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {

@@ -47,15 +47,15 @@ class PlannedDisbursementController extends Controller
      *
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|void
      */
-    public function edit(int $id):View|RedirectResponse
+    public function edit(int $id): View|RedirectResponse
     {
         try {
             $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
             $activity = $this->plannedDisbursementService->getActivityData($id);
             $model['planned_disbursement'] = $this->plannedDisbursementService->getPlannedDisbursementData($id) ?: [];
             $this->parentCollectionFormCreator->url = route('admin.activities.planned-disbursement.update', [$id]);
-            $form = $this->parentCollectionFormCreator->editForm($model, $element['planned_disbursement']);
-            $data = ['core'=> $element['planned_disbursement']['criteria'] ?? 'core', 'status'=> true, 'title'=> $element['planned_disbursement']['label'], 'name'=>'title'];
+            $form = $this->parentCollectionFormCreator->editForm($model, $element['planned_disbursement'], 'PUT', '/activities/' . $id);
+            $data = ['core' => $element['planned_disbursement']['criteria'] ?? 'core', 'status' => true, 'title' => $element['planned_disbursement']['label'], 'name' => 'title'];
 
             return view('activity.plannedDisbursement.plannedDisbursement', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {

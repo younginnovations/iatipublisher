@@ -157,11 +157,12 @@ export default defineComponent({
     const asArrayData = Object.entries(props.data);
     const filteredElements = computed(() => {
       const filtered = asArrayData.filter(([key, value]) => {
+
         if (!elements.status) {
-          return key.toLowerCase().includes(elements.search.toLowerCase());
+          return key.toLowerCase().includes(elements.search.toLowerCase().replace('_','').replace('-','_'));
         } else {
           if (value[elements.status]) {
-            return key.toLowerCase().includes(elements.search.toLowerCase());
+            return key.toLowerCase().includes(elements.search.toLowerCase().replace('_','').replace('-','_'));
           }
         }
       });

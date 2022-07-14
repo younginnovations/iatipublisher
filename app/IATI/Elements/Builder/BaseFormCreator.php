@@ -38,10 +38,11 @@ class BaseFormCreator
      * @param array $model
      * @param       $formData
      * @param $method
+     * @param $parent_url
      *
      * @return Form
      */
-    public function editForm(array $model, $formData, $method = 'PUT'): Form
+    public function editForm(array $model, $formData, $method, string $parent_url): Form
     {
         return $this->formBuilder->create(
             'App\IATI\Elements\Forms\BaseForm',
@@ -52,6 +53,7 @@ class BaseFormCreator
                 'data'   => $formData,
             ]
         )
+
         ->add('buttons', 'buttongroup', [
             'wrapper' => [
                 'class' => 'fixed left-0 bottom-0 w-full bg-eggshell py-5 pr-40 shadow-dropdown z-50',
@@ -62,7 +64,7 @@ class BaseFormCreator
                     'attr'      => [
                         'type'      => 'anchor',
                         'class'     => 'ghost-btn mr-8',
-                        'href' => back()->getTargetUrl(),
+                        'href' => $parent_url,
                     ],
                 ],
 

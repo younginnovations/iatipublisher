@@ -46,14 +46,6 @@
 .description {
   width: 775px;
 }
-.space {
-  @apply mb-4;
-
-  span:nth-child(1) {
-    @apply text-n-40;
-    width: 100px;
-  }
-}
 
 .elements-detail {
   @apply flex flex-col text-xs text-n-50;

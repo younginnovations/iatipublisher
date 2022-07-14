@@ -53,7 +53,7 @@ class SectorController extends Controller
             $activity = $this->sectorService->getActivityData($id);
             $model['sector'] = $this->sectorService->getSectorData($id);
             $this->parentCollectionFormCreator->url = route('admin.activities.sector.update', [$id]);
-            $form = $this->parentCollectionFormCreator->editForm($model, $element['sector']);
+            $form = $this->parentCollectionFormCreator->editForm($model, $element['sector'], 'PUT', '/activities/' . $id);
             $data = ['core'=> $element['sector']['criteria'], 'status'=> $activity->sector_element_completed, 'title'=> $element['sector']['label'], 'name'=>'sector'];
 
             return view('activity.sector.sector', compact('form', 'activity', 'data'));

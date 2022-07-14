@@ -500,6 +500,23 @@ export default defineComponent({
       }
     });
 
+
+    /**
+     * Finding current language - activity title
+     */
+    let pageTitle = '';
+    const found = activityProps.title.find((e: { language: string }) => {
+      const currentLanguage = 'en';
+      return e.language === currentLanguage;
+    });
+
+    // callback if language not available in data
+    if (found) {
+      pageTitle = found.narrative;
+    } else {
+      pageTitle = activityProps.title[0].narrative;
+    }
+
     function formatTitle(title: string) {
       return title.replace(/_/gi, ' ');
     }
@@ -519,6 +536,7 @@ export default defineComponent({
       elementProps,
       props,
       formatTitle,
+      pageTitle
     };
   },
 });

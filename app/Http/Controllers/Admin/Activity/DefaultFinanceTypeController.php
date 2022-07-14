@@ -46,15 +46,15 @@ class DefaultFinanceTypeController extends Controller
      *
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|void
      */
-    public function edit(int $id):View|RedirectResponse
+    public function edit(int $id): View|RedirectResponse
     {
         try {
             $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
             $activity = $this->defaultFinanceTypeService->getActivityData($id);
             $model['default_finance_type'] = $this->defaultFinanceTypeService->getDefaultFinanceTypeData($id);
             $this->baseFormCreator->url = route('admin.activities.default-finance-type.update', [$id]);
-            $form = $this->baseFormCreator->editForm($model, $element['default_finance_type']);
-            $data = ['core'=> $element['default_finance_type']['criteria'], 'status'=> $activity->default_finance_type_element_completed, 'title'=> $element['default_finance_type']['label'], 'name'=>'default_finance_type'];
+            $form = $this->baseFormCreator->editForm($model, $element['default_finance_type'], 'PUT', '/activities/' . $id);
+            $data = ['core' => $element['default_finance_type']['criteria'], 'status' => $activity->default_finance_type_element_completed, 'title' => $element['default_finance_type']['label'], 'name' => 'default_finance_type'];
 
             return view('activity.defaultFinanceType.defaultFinanceType', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {

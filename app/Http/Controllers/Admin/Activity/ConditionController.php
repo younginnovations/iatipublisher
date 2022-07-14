@@ -46,15 +46,15 @@ class ConditionController extends Controller
      *
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|void
      */
-    public function edit(int $id):View|RedirectResponse
+    public function edit(int $id): View|RedirectResponse
     {
         try {
             $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
             $activity = $this->conditionService->getActivityData($id);
             $model = $this->conditionService->getConditionData($id) ?: [];
             $this->multilevelSubElementFormCreator->url = route('admin.activities.conditions.update', [$id]);
-            $form = $this->multilevelSubElementFormCreator->editForm($model, $element['conditions']);
-            $data = ['core'=> $element['conditions']['criteria'], 'status'=> $activity->conditions_element_completed, 'title'=> $element['conditions']['label'], 'name'=>'conditions'];
+            $form = $this->multilevelSubElementFormCreator->editForm($model, $element['conditions'], 'PUT', '/activities/' . $id);
+            $data = ['core' => $element['conditions']['criteria'], 'status' => $activity->conditions_element_completed, 'title' => $element['conditions']['label'], 'name' => 'conditions'];
 
             return view('activity.condition.condition', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {

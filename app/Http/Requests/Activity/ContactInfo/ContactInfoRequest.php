@@ -302,7 +302,7 @@ class ContactInfoRequest extends ActivityBaseRequest
         $rules = [];
 
         foreach ($formFields as $telephoneIndex => $telephone) {
-            $rules[sprintf('%s.telephone.%s.telephone', $formBase, $telephoneIndex)] = ['nullable', 'numeric'];
+            $rules[sprintf('%s.telephone.%s.telephone', $formBase, $telephoneIndex)] = ['nullable', 'numeric', 'regex:/^\+(?:[0-9]●?){6,14}[0-9]$/'];
         }
 
         return $rules;
@@ -322,6 +322,7 @@ class ContactInfoRequest extends ActivityBaseRequest
 
         foreach ($formFields as $telephoneIndex => $telephone) {
             $messages[sprintf('%s.telephone.%s.telephone.numeric', $formBase, $telephoneIndex)] = 'Telephone number must be valid numeric value';
+            $messages[sprintf('%s.telephone.%s.telephone.regex', $formBase, $telephoneIndex)] = 'The format of telephone number is invalid. Please add valid country code followed by telephone number.';
         }
 
         return $messages;

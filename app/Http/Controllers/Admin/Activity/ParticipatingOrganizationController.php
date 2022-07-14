@@ -47,15 +47,15 @@ class ParticipatingOrganizationController extends Controller
      *
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|void
      */
-    public function edit(int $id):View|RedirectResponse
+    public function edit(int $id): View|RedirectResponse
     {
         try {
             $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
             $activity = $this->participatingOrganizationService->getActivityData($id);
             $model['participating_org'] = $this->participatingOrganizationService->getParticipatingOrganizationData($id) ?: [];
             $this->parentCollectionFormCreator->url = route('admin.activities.participating-org.update', [$id]);
-            $form = $this->parentCollectionFormCreator->editForm($model, $element['participating_org']);
-            $data = ['core'=> $element['participating_org']['criteria'], 'status'=> $activity->participating_org_element_completed ?? false, 'title'=> $element['participating_org']['label'], 'name'=>'participating_org'];
+            $form = $this->parentCollectionFormCreator->editForm($model, $element['participating_org'], 'PUT', '/activities/' . $id);
+            $data = ['core' => $element['participating_org']['criteria'], 'status' => $activity->participating_org_element_completed ?? false, 'title' => $element['participating_org']['label'], 'name' => 'participating_org'];
 
             return view('activity.participatingOrganization.participatingOrganization', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {

@@ -40,8 +40,8 @@ class IdentifierRequest extends ActivityBaseRequest
 
         if (count($organizationActivityIdentifiers)) {
             foreach ($organizationActivityIdentifiers as $identifier) {
-                if ($identifier->identifier['activity_identifier'] != $activity->identifier['activity_identifier']) {
-                    $activityIdentifiers[] = $identifier->identifier['activity_identifier'];
+                if ($identifier->iati_identifier['activity_identifier'] != $activity->iati_identifier['activity_identifier']) {
+                    $activityIdentifiers[] = $identifier->iati_identifier['activity_identifier'];
                 }
             }
         }

@@ -88,7 +88,7 @@ class PeriodRequest extends ActivityBaseRequest
         $rules = [];
 
         foreach ($formFields as $periodStartKey => $periodStartVal) {
-            $rules[sprintf('%s.%s.date', $periodType, $periodStartKey)] = 'nullable|date';
+            $rules[sprintf('%s.%s.date', $periodType, $periodStartKey)] = 'nullable|date|date_greater_than:1900';
         }
 
         return $rules;
@@ -108,6 +108,7 @@ class PeriodRequest extends ActivityBaseRequest
 
         foreach ($formFields as $periodStartKey => $periodStartVal) {
             $messages[sprintf('%s.%s.date.date', $periodType, $periodStartKey)] = 'The @date field must be a proper date.';
+            $messages[sprintf('%s.%s.date.date_greater_than', $periodType, $periodStartKey)] = 'The @date field must date after year 1900.';
         }
 
         return $messages;

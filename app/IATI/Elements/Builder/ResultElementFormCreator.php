@@ -37,10 +37,12 @@ class ResultElementFormCreator
      *
      * @param array $model
      * @param       $formData
+     * @param       $method
+     * @param       $parent_url
      *
      * @return Form
      */
-    public function editForm(array $model, $formData, $method = 'POST'): Form
+    public function editForm(array $model, $formData, $method, string $parent_url): Form
     {
         return $this->formBuilder->create(
             'App\IATI\Elements\Forms\ResultElementForm',

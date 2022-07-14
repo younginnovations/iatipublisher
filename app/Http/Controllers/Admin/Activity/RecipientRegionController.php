@@ -53,8 +53,8 @@ class RecipientRegionController extends Controller
             $activity = $this->recipientRegionService->getActivityData($id);
             $model['recipient_region'] = $this->recipientRegionService->getRecipientRegionData($id);
             $this->parentCollectionFormCreator->url = route('admin.activities.recipient-region.update', [$id]);
-            $form = $this->parentCollectionFormCreator->editForm($model, $element['recipient_region']);
-            $data = ['core'=> $element['recipient_region']['criteria'], 'status'=> $activity->recipient_region_element_completed, 'title'=> $element['recipient_region']['label'], 'name'=>'recipient_region'];
+            $form = $this->parentCollectionFormCreator->editForm($model, $element['recipient_region'], 'PUT', '/activities/' . $id);
+            $data = ['core' => $element['recipient_region']['criteria'], 'status' => $activity->recipient_region_element_completed, 'title' => $element['recipient_region']['label'], 'name' => 'recipient_region'];
 
             return view('activity.recipientRegion.recipientRegion', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {

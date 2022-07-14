@@ -79,8 +79,8 @@ class TransactionController extends Controller
             $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
             $activity = $this->activityService->getActivity($activityId);
             $this->transactionElementFormCreator->url = route('admin.activities.transactions.store', $activityId);
-            $form = $this->transactionElementFormCreator->editForm([], $element['transactions'], 'POST');
-            $data = ['core'=> $element['transactions']['criteria'] ?? false, 'status'=> false, 'title'=> $element['transactions']['label'], 'name'=>'transactions'];
+            $form = $this->transactionElementFormCreator->editForm([], $element['transactions'], 'POST', '/activities/' . $activityId);
+            $data = ['core' => $element['transactions']['criteria'] ?? false, 'status' => false, 'title' => $element['transactions']['label'], 'name' => 'transactions'];
 
             return view('activity.transaction.transaction', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {
@@ -106,9 +106,9 @@ class TransactionController extends Controller
             $transactionData = $request->except('_token');
 
             if (!$this->transactionService->create([
-                    'activity_id' => $activityId,
-                    'transaction' => $transactionData,
-                ])) {
+                'activity_id' => $activityId,
+                'transaction' => $transactionData,
+            ])) {
                 return redirect()->route('admin.activities.show', $activityId)->with(
                     'error',
                     'Error has occurred while creating activity transaction.'
@@ -166,8 +166,8 @@ class TransactionController extends Controller
             $activity = $this->activityService->getActivity($activityId);
             $activityTransaction = $this->transactionService->getTransaction($transactionId, $activityId);
             $this->transactionElementFormCreator->url = route('admin.activities.transactions.update', [$activityId, $transactionId]);
-            $form = $this->transactionElementFormCreator->editForm($activityTransaction->transaction, $element['transactions'], 'PUT');
-            $data = ['core'=> $element['transactions']['criteria'] ?? false, 'status'=> false, 'title'=> $element['transactions']['label'], 'name'=>'transactions'];
+            $form = $this->transactionElementFormCreator->editForm($activityTransaction->transaction, $element['transactions'], 'PUT', '/activities/' . $activityId);
+            $data = ['core' => $element['transactions']['criteria'] ?? false, 'status' => false, 'title' => $element['transactions']['label'], 'name' => 'transactions'];
 
             return view('activity.transaction.transaction', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {

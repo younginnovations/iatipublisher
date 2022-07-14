@@ -46,15 +46,15 @@ class CollaborationTypeController extends Controller
      *
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|void
      */
-    public function edit(int $id):View|RedirectResponse
+    public function edit(int $id): View|RedirectResponse
     {
         try {
             $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
             $activity = $this->collaborationTypeService->getActivityData($id);
             $model['collaboration_type'] = $this->collaborationTypeService->getCollaborationTypeData($id);
             $this->baseFormCreator->url = route('admin.activities.collaboration-type.update', [$id]);
-            $form = $this->baseFormCreator->editForm($model, $element['collaboration_type']);
-            $data = ['core'=> $element['collaboration_type']['criteria'], 'status'=> $activity->collaboration_type_element_completed, 'title'=> $element['collaboration_type']['label'], 'name'=>'collaboration_type'];
+            $form = $this->baseFormCreator->editForm($model, $element['collaboration_type'], 'PUT', '/activities/' . $id);
+            $data = ['core' => $element['collaboration_type']['criteria'], 'status' => $activity->collaboration_type_element_completed, 'title' => $element['collaboration_type']['label'], 'name' => 'collaboration_type'];
 
             return view('activity.collaborationType.collaborationType', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {

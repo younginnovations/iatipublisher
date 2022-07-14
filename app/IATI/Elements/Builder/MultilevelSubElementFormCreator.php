@@ -37,15 +37,17 @@ class MultilevelSubElementFormCreator
      *
      * @param array $model
      * @param       $formData
+     * @param       $method
+     * @param       $parent_url
      *
      * @return Form
      */
-    public function editForm(array $model, $formData): Form
+    public function editForm(array $model, $formData, $method, string $parent_url): Form
     {
         return $this->formBuilder->create(
             'App\IATI\Elements\Forms\MultilevelSubElementForm',
             [
-                'method' => 'PUT',
+                'method' => $method,
                 'model'  => $model,
                 'url'    => $this->url,
                 'data'   => $formData,
@@ -60,7 +62,7 @@ class MultilevelSubElementFormCreator
                     'attr'      => [
                         'type'      => 'anchor',
                         'class'     => 'ghost-btn mr-8',
-                        'href' => back()->getTargetUrl(),
+                        'href'      => $parent_url,
                     ],
                 ],
                 'submit'    => [

@@ -53,8 +53,8 @@ class TagController extends Controller
             $activity = $this->tagService->getActivityData($id);
             $model['tag'] = $this->tagService->getTagData($id);
             $this->parentCollectionFormCreator->url = route('admin.activities.tag.update', [$id]);
-            $form = $this->parentCollectionFormCreator->editForm($model, $element['tag']);
-            $data = ['core'=> $element['tag']['criteria'], 'status'=> $activity->tag_element_completed, 'title'=> $element['tag']['label'], 'name'=>'tag'];
+            $form = $this->parentCollectionFormCreator->editForm($model, $element['tag'], 'PUT', '/activities/' . $id);
+            $data = ['core' => $element['tag']['criteria'], 'status' => $activity->tag_element_completed, 'title' => $element['tag']['label'], 'name' => 'tag'];
 
             return view('activity.tag.tag', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {

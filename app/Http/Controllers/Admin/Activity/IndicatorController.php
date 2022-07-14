@@ -68,8 +68,8 @@ class IndicatorController extends Controller
             $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
             $activity = $this->activityService->getActivity($activityId);
             $this->resultElementFormCreator->url = route('admin.activities.result.indicator.store', [$activityId, $resultId]);
-            $form = $this->resultElementFormCreator->editForm([], $element['indicator']);
-            $data = ['core'=> $element['indicator']['criteria'] ?? false, 'status'=> false, 'title'=> $element['indicator']['label'], 'name'=>'indicator'];
+            $form = $this->resultElementFormCreator->editForm([], $element['indicator'], 'POST', '/activities/' . $activityId);
+            $data = ['core' => $element['indicator']['criteria'] ?? false, 'status' => false, 'title' => $element['indicator']['label'], 'name' => 'indicator'];
 
             return view('activity.indicator.indicator', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {
@@ -147,8 +147,8 @@ class IndicatorController extends Controller
             $activity = $this->activityService->getActivity($activityId);
             $resultIndicator = $this->indicatorService->getResultIndicator($resultId, $indicatorId);
             $this->resultElementFormCreator->url = route('admin.activities.result.indicator.update', [$activityId, $resultId, $indicatorId]);
-            $form = $this->resultElementFormCreator->editForm($resultIndicator->indicator, $element['indicator'], 'PUT');
-            $data = ['core'=> $element['indicator']['criteria'] ?? false, 'status'=> false, 'title'=> $element['indicator']['label'], 'name'=>'indicator'];
+            $form = $this->resultElementFormCreator->editForm($resultIndicator->indicator, $element['indicator'], 'PUT', '/activities/' . $activityId);
+            $data = ['core' => $element['indicator']['criteria'] ?? false, 'status' => false, 'title' => $element['indicator']['label'], 'name' => 'indicator'];
 
             return view('activity.indicator.indicator', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {

@@ -51,8 +51,8 @@ class RelatedActivityController extends Controller
             $activity = $this->relatedActivityService->getActivityData($id);
             $model['related_activity'] = $this->relatedActivityService->getRelatedActivityData($id);
             $this->baseFormCreator->url = route('admin.activities.related-activity.update', [$id]);
-            $form = $this->baseFormCreator->editForm($model, $element['related_activity']);
-            $data = ['core'=> $element['related_activity']['criteria'], 'status'=> $activity->related_activity_element_completed, 'title'=> $element['related_activity']['label'], 'name'=>'related_activity'];
+            $form = $this->baseFormCreator->editForm($model, $element['related_activity'], 'PUT', '/activities/' . $id);
+            $data = ['core' => $element['related_activity']['criteria'], 'status' => $activity->related_activity_element_completed, 'title' => $element['related_activity']['label'], 'name' => 'related_activity'];
 
             return view('activity.relatedActivity.relatedActivity', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {

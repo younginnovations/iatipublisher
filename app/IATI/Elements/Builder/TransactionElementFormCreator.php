@@ -37,10 +37,12 @@ class TransactionElementFormCreator
      *
      * @param array $model
      * @param       $formData
+     * @param       $method
+     * @param string $parent_url
      *
      * @return Form
      */
-    public function editForm(array $model, $formData, $method = 'POST'): Form
+    public function editForm(array $model, $formData, $method, string $parent_url): Form
     {
         return $this->formBuilder->create(
             'App\IATI\Elements\Forms\TransactionElementForm',
@@ -60,7 +62,7 @@ class TransactionElementFormCreator
                     'attr'      => [
                         'type'      => 'anchor',
                         'class'     => 'ghost-btn mr-8',
-                        'href' => back()->getTargetUrl(),
+                        'href' => $parent_url,
                     ],
                 ],
                 'submit'    => [

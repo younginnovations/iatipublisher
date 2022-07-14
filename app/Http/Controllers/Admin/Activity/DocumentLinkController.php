@@ -89,8 +89,8 @@ class DocumentLinkController extends Controller
             }
 
             $this->parentCollectionFormCreator->url = route('admin.activities.document-link.update', [$id]);
-            $form = $this->parentCollectionFormCreator->editForm($model, $element['document_link']);
-            $data = ['core'=> false, 'status'=> $activity->document_link_element_completed ?? false, 'title'=> $element['document_link']['label'], 'name'=>'document_link'];
+            $form = $this->parentCollectionFormCreator->editForm($model, $element['document_link'], 'PUT', '/activities/' . $id);
+            $data = ['core' => false, 'status' => $activity->document_link_element_completed ?? false, 'title' => $element['document_link']['label'], 'name' => 'document_link'];
 
             return view('activity.documentLink.documentLink', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {

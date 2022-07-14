@@ -7,6 +7,7 @@ namespace App\Http\Requests\Activity;
 use GuzzleHttp\Client;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Validator;
 
 /**
@@ -124,6 +125,17 @@ class ActivityBaseRequest extends FormRequest
                 return true;
             }
         );
+
+        Validator::extend(
+            'date_greater_than',
+            function ($attribute, $value, $parameters, $validator) {
+            $inserted = Carbon::parse($value)->year;
+            // dd($attribute, $value, $inserted);
+            $since = $parameters[0];
+
+            return $inserted >= $since;
+        }
+        );
     }
 
     /**
@@ -168,21 +180,21 @@ class ActivityBaseRequest extends FormRequest
         $messages = [];
         $messages[sprintf('%s.narrative.unique_lang', $formBase)] = 'The @xml:lang field must be unique.';
 
-//        foreach ($formFields as $narrativeIndex => $narrative) {
-//            if (boolval($narrative['language'])) {
-//                $messages[sprintf(
-//                    '%s.narrative.%s.narrative.required_with',
-//                    $formBase,
-//                    $narrativeIndex
-//                )] = 'The text field is required with @xml:lang field.';
-//            } else {
-//                $messages[sprintf(
-//                    '%s.narrative.%s.narrative.required',
-//                    $formBase,
-//                    $narrativeIndex
-//                )] = 'The text field is required.';
-//            }
-//        }
+        //        foreach ($formFields as $narrativeIndex => $narrative) {
+        //            if (boolval($narrative['language'])) {
+        //                $messages[sprintf(
+        //                    '%s.narrative.%s.narrative.required_with',
+        //                    $formBase,
+        //                    $narrativeIndex
+        //                )] = 'The text field is required with @xml:lang field.';
+        //            } else {
+        //                $messages[sprintf(
+        //                    '%s.narrative.%s.narrative.required',
+        //                    $formBase,
+        //                    $narrativeIndex
+        //                )] = 'The text field is required.';
+        //            }
+        //        }
 
         return $messages;
     }
@@ -201,13 +213,13 @@ class ActivityBaseRequest extends FormRequest
         $rules[sprintf('%s.narrative', $formBase)][] = 'unique_lang';
         $rules[sprintf('%s.narrative', $formBase)][] = 'unique_default_lang';
 
-//        foreach ($formFields as $narrativeIndex => $narrative) {
-//            $rules[sprintf('%s.narrative.%s.narrative', $formBase, $narrativeIndex)][] = 'required_with:' . sprintf(
-//                '%s.narrative.%s.language',
-//                $formBase,
-//                $narrativeIndex
-//            );
-//        }
+        //        foreach ($formFields as $narrativeIndex => $narrative) {
+        //            $rules[sprintf('%s.narrative.%s.narrative', $formBase, $narrativeIndex)][] = 'required_with:' . sprintf(
+        //                '%s.narrative.%s.language',
+        //                $formBase,
+        //                $narrativeIndex
+        //            );
+        //        }
 
         return $rules;
     }
@@ -246,8 +258,9 @@ class ActivityBaseRequest extends FormRequest
     {
         $rules = [];
         foreach ($formFields as $periodStartKey => $periodStartVal) {
-            $rules[$formBase . '.period_start.' . $periodStartKey . '.date'] = 'date';
+            $rules[$formBase . '.period_start.' . $periodStartKey . '.date'] = 'date|date_greater_than:1900';
         }
+        dd('here', $rules);
 
         return $rules;
     }
@@ -264,6 +277,7 @@ class ActivityBaseRequest extends FormRequest
         foreach ($formFields as $periodStartKey => $periodStartVal) {
             $messages[$formBase . '.period_start.' . $periodStartKey . '.date.required'] = trans('validation.required', ['attribute' => trans('elementForm.period_start')]);
             $messages[$formBase . '.period_end.' . $periodStartKey . '.date.date'] = 'Period end must be a date.';
+            $messages[$formBase . '.period_end.' . $periodStartKey . '.date.date_greater_than'] = 'Period end date must be date greater than year 1900.';
         }
 
         return $messages;
@@ -281,7 +295,7 @@ class ActivityBaseRequest extends FormRequest
 
         foreach ($formFields as $periodEndKey => $periodEndVal) {
             // $rules[$formBase . '.period_end.' . $periodEndKey . '.date'][] = 'required';
-            $rules[$formBase . '.period_end.' . $periodEndKey . '.date'][] = 'date';
+            $rules[$formBase . '.period_end.' . $periodEndKey . '.date'][] = 'date|date_greater_than:1900';
             $rules[$formBase . '.period_end.' . $periodEndKey . '.date'][] = sprintf(
                 'after:%s',
                 $formBase . '.period_start.' . $periodEndKey . '.date'
@@ -305,6 +319,7 @@ class ActivityBaseRequest extends FormRequest
             $messages[$formBase . '.period_end.' . $periodEndKey . '.date.required'] = 'Period end is a required field';
             $messages[$formBase . '.period_end.' . $periodEndKey . '.date.date'] = 'Period end must be a date field';
             $messages[$formBase . '.period_end.' . $periodEndKey . '.date.after'] = 'Period end must be a date after period';
+            $messages[$formBase . '.period_end.' . $periodEndKey . '.date.date_greater_than'] = 'Period end date must be date greater than year 1900.';
         }
 
         return $messages;

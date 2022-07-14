@@ -47,15 +47,15 @@ class LocationController extends Controller
      *
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|void
      */
-    public function edit(int $id):View|RedirectResponse
+    public function edit(int $id): View|RedirectResponse
     {
         try {
             $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
             $activity = $this->locationService->getActivityData($id);
             $model['location'] = $this->locationService->getLocationData($id) ?: [];
             $this->parentCollectionFormCreator->url = route('admin.activities.location.update', [$id]);
-            $form = $this->parentCollectionFormCreator->editForm($model, $element['location']);
-            $data = ['core'=> $element['location']['criteria'], 'status'=> $activity->location_element_completed ?? false, 'title'=> $element['location']['label'], 'name'=>'location'];
+            $form = $this->parentCollectionFormCreator->editForm($model, $element['location'], 'PUT', '/activities/' . $id);
+            $data = ['core' => $element['location']['criteria'], 'status' => $activity->location_element_completed ?? false, 'title' => $element['location']['label'], 'name' => 'location'];
 
             return view('activity.location.location', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {

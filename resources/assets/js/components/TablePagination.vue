@@ -4,7 +4,7 @@
       href="#"
       class="prev-btn"
       :class="{
-        'pointer-events-none': pageCount <= 1,
+        'pointer-events-none': data.last_page <= 1,
       }"
       aria-disabled="true"
       @click="previousPage"
@@ -14,7 +14,7 @@
     </a>
 
     <a
-      v-for="index in pageCount"
+      v-for="index in data.last_page"
       :key="index"
       :class="active_page === index ? 'current' : ''"
     >
@@ -24,7 +24,7 @@
       href="#"
       class="next-btn"
       :class="{
-        'pointer-events-none': pageCount <= 1,
+        'pointer-events-none': data.last_page <= 1,
       }"
       @click="nextPage"
     >
@@ -41,8 +41,8 @@ export default defineComponent({
   name: 'PaginationComponent',
   components: {},
   props: {
-    pageCount: {
-      type: Number,
+    data: {
+      type: [Object],
       required: true,
     },
   },
@@ -60,12 +60,12 @@ export default defineComponent({
 
     function nextPage() {
       active_page.value =
-        active_page.value === props.pageCount ? 1 : active_page.value + 1;
+        active_page.value === props.data.last_page ? 1 : active_page.value + 1;
     }
 
     function previousPage() {
       active_page.value =
-        active_page.value === 1 ? props.pageCount : active_page.value - 1;
+        active_page.value === 1 ? props.data.last_page : active_page.value - 1;
     }
 
     return { props, active_page, updateActivePage, nextPage, previousPage };

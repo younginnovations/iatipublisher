@@ -76,7 +76,7 @@ class BudgetRequest extends ActivityBaseRequest
         $rules = [];
 
         foreach ($formFields as $periodStartKey => $periodStartVal) {
-            $rules[$formBase . '.period_start.' . $periodStartKey . '.date'] = 'nullable|date';
+            $rules[$formBase . '.period_start.' . $periodStartKey . '.date'] = 'nullable|date|date_greater_than:1900';
         }
 
         return $rules;
@@ -101,6 +101,7 @@ class BudgetRequest extends ActivityBaseRequest
                 'after:%s',
                 $formBase . '.period_start.' . $periodEndKey . '.date'
             );
+            $rules[$formBase . '.period_end.' . $periodEndKey . '.date'][] = 'date_greater_than:1900';
         }
 
         return $rules;
@@ -168,6 +169,7 @@ class BudgetRequest extends ActivityBaseRequest
 
         foreach ($formFields as $periodStartKey => $periodStartVal) {
             $messages[$formBase . '.period_start.' . $periodStartKey . '.date.date'] = 'The @iso-date field must be a valid date.';
+            $messages[$formBase . '.period_start.' . $periodStartKey . '.date.date_greater_than'] = 'The @iso-date field must date after year 1900.';
         }
 
         return $messages;
@@ -187,6 +189,7 @@ class BudgetRequest extends ActivityBaseRequest
 
         foreach ($formFields as $periodEndKey => $periodEndVal) {
             $messages[$formBase . '.period_end.' . $periodEndKey . '.date.date'] = 'The @iso-date field must be a valid date.';
+            $messages[$formBase . '.period_end.' . $periodEndKey . '.date.date_greater_than'] = 'The @iso-date field must be date after year 1900.';
             $messages[$formBase . '.period_end.' . $periodEndKey . '.date.after'] = 'The Period End @iso-date must be a date after Period Start @iso-date';
         }
 

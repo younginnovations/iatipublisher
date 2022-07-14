@@ -46,15 +46,15 @@ class CountryBudgetItemController extends Controller
      *
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|void
      */
-    public function edit(int $id):View|RedirectResponse
+    public function edit(int $id): View|RedirectResponse
     {
         try {
             $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
             $activity = $this->countryBudgetItemService->getActivityData($id);
             $model = $this->countryBudgetItemService->getCountryBudgetItemData($id) ?: [];
             $this->multilevelSubElementFormCreator->url = route('admin.activities.country-budget-items.update', [$id]);
-            $form = $this->multilevelSubElementFormCreator->editForm($model, $element['country_budget_items']);
-            $data = ['core'=> $element['country_budget_items']['criteria'], 'status'=> $activity->country_budget_items_element_completed, 'title'=> $element['country_budget_items']['label'], 'name'=>'country_budget_items'];
+            $form = $this->multilevelSubElementFormCreator->editForm($model, $element['country_budget_items'], 'PUT', '/activities/' . $id);
+            $data = ['core' => $element['country_budget_items']['criteria'], 'status' => $activity->country_budget_items_element_completed, 'title' => $element['country_budget_items']['label'], 'name' => 'country_budget_items'];
 
             return view('activity.countryBudgetItem.countryBudgetItem', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {

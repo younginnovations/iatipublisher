@@ -46,15 +46,15 @@ class DateController extends Controller
      *
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|void
      */
-    public function edit(int $id):View|RedirectResponse
+    public function edit(int $id): View|RedirectResponse
     {
         try {
             $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
             $activity = $this->dateService->getActivityData($id);
             $model['activity_date'] = $this->dateService->getDateData($id);
             $this->parentCollectionFormCreator->url = route('admin.activities.date.update', [$id]);
-            $form = $this->parentCollectionFormCreator->editForm($model, $element['activity_date']);
-            $data = ['core'=> $element['activity_date']['criteria'], 'status'=> $activity->activity_date_element_completed, 'title'=> $element['activity_date']['label'], 'name'=>'activity_date'];
+            $form = $this->parentCollectionFormCreator->editForm($model, $element['activity_date'], 'PUT', '/activities/' . $id);
+            $data = ['core' => $element['activity_date']['criteria'], 'status' => $activity->activity_date_element_completed, 'title' => $element['activity_date']['label'], 'name' => 'activity_date'];
 
             return view('activity.date.date', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {

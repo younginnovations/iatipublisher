@@ -1,6 +1,6 @@
 {
   "title": {
-    "label": "Title",
+    "label": "title",
     "criteria": "mandatory",
     "multiple": false,
     "attributes": {},
@@ -35,7 +35,7 @@
     }
   },
   "reporting_org": {
-    "label": "Title",
+    "label": "reporting-org",
     "criteria": "mandatory",
     "attributes": {
       "ref": {
@@ -93,7 +93,7 @@
     "sub_elements": {}
   },
   "other_identifier": {
-    "label": "Other Identifier",
+    "label": "other-identifier",
     "criteria": "",
     "attributes": {
       "reference": {
@@ -120,7 +120,7 @@
     "sub_elements": {
       "owner_org": {
         "name": "owner_org",
-        "label": "Owner Organisation",
+        "label": "owner-org",
         "criteria": "",
         "add_more": true,
         "attributes": {
@@ -168,7 +168,7 @@
   },
   "description": {
     "name": "description",
-    "label": "Description",
+    "label": "description",
     "criteria": "mandatory",
     "add_more": true,
     "attributes": {
@@ -215,7 +215,7 @@
     }
   },
   "activity_status": {
-    "label": "Status",
+    "label": "status",
     "criteria": "mandatory",
     "attributes": {
       "code": {
@@ -234,7 +234,7 @@
   },
   "activity_date": {
     "name": "activity_date",
-    "label": "Date",
+    "label": "date",
     "criteria": "mandatory",
     "add_more": true,
     "attributes": {
@@ -290,7 +290,7 @@
     }
   },
   "activity_scope": {
-    "label": "Scope",
+    "label": "scope",
     "criteria": "",
     "attributes": {
       "code": {
@@ -309,7 +309,7 @@
   },
   "recipient_country": {
     "name": "recipient_country",
-    "label": "Recipient Country",
+    "label": "recipient-country",
     "criteria": "recommended",
     "add_more": true,
     "attributes": {
@@ -366,7 +366,7 @@
   },
   "recipient_region": {
     "name": "recipient_region",
-    "label": "Recipient Region",
+    "label": "recipient-region",
     "criteria": "recommended",
     "add_more": true,
     "attributes": {
@@ -452,7 +452,7 @@
     }
   },
   "sector": {
-    "label": "Sector",
+    "label": "sector",
     "name": "sector",
     "criteria": "mandatory",
     "add_more": true,
@@ -572,7 +572,7 @@
   },
   "tag": {
     "name": "tag",
-    "label": "Tag",
+    "label": "tag",
     "criteria": "",
     "add_more": true,
     "attributes": {
@@ -664,7 +664,7 @@
   },
   "policy_marker": {
     "name": "policy_marker",
-    "label": "Policy Marker",
+    "label": "policy-marker",
     "criteria": "",
     "add_more": true,
     "attributes": {
@@ -753,7 +753,7 @@
     }
   },
   "collaboration_type": {
-    "label": "Collaboration Type",
+    "label": "collaboration-type",
     "criteria": "recommended",
     "attributes": {
       "code": {
@@ -771,7 +771,7 @@
     "sub_elements": {}
   },
   "default_flow_type": {
-    "label": "Default Flow Type",
+    "label": "default-flow-type",
     "criteria": "recommended",
     "attributes": {
       "code": {
@@ -789,7 +789,7 @@
     "sub_elements": {}
   },
   "default_finance_type": {
-    "label": "Default Finance Type",
+    "label": "default-finance-type",
     "criteria": "recommended",
     "attributes": {
       "code": {
@@ -807,7 +807,7 @@
   },
   "default_aid_type": {
     "name": "default_aid_type",
-    "label": "default_aid_type",
+    "label": "default-aid-type",
     "criteria": "recommended",
     "add_more": true,
     "add_more_attributes": true,
@@ -874,7 +874,7 @@
     "sub_elements": {}
   },
   "default_tied_status": {
-    "label": "Default Tied Status",
+    "label": "default-tied-status",
     "criteria": "recommended",
     "attributes": {
       "code": {
@@ -893,7 +893,7 @@
   },
   "country_budget_items": {
     "name": "activity_country_budget_items",
-    "label": "Country Budget Items",
+    "label": "country-budget-items",
     "criteria": "",
     "add_more": true,
     "attributes": {
@@ -912,7 +912,7 @@
     "sub_elements": {
       "budget_item": {
         "name": "budget_item",
-        "label": "Budget Item",
+        "label": "budget-item",
         "required": false,
         "criteria": "",
         "add_more": true,
@@ -950,7 +950,7 @@
         "sub_elements": {
           "description": {
             "name": "description",
-            "label": "Description",
+            "label": "description",
             "required": false,
             "criteria": "",
             "add_more": false,
@@ -991,7 +991,7 @@
   },
   "humanitarian_scope": {
     "name": "humanitarian_scope",
-    "label": "Humanitarian Scope",
+    "label": "humanitarian-scope",
     "criteria": "",
     "add_more": true,
     "attributes": {
@@ -1068,7 +1068,7 @@
     }
   },
   "capital_spend": {
-    "label": "Capital Spend",
+    "label": "capital-spend",
     "criteria": "",
     "attributes": {
       "percentage": {
@@ -1085,7 +1085,7 @@
   },
   "related_activity": {
     "name": "related_activity",
-    "label": "Related Activity",
+    "label": "related-activity",
     "criteria": "",
     "add_more": true,
     "add_more_attributes": true,
@@ -1188,7 +1188,7 @@
   },
   "legacy_data": {
     "name": "legacy_data",
-    "label": "Legacy Data",
+    "label": "legacy-data",
     "criteria": "",
     "add_more": true,
     "add_more_attributes": true,
@@ -1225,7 +1225,7 @@
   },
   "document_link": {
     "name": "document_link",
-    "label": "Document Link",
+    "label": "document-link",
     "add_more": true,
     "attributes": {
       "url": {
@@ -1296,7 +1296,7 @@
       },
       "description": {
         "name": "description",
-        "label": "Description",
+        "label": "description",
         "add_more": false,
         "attributes": {},
         "sub_elements": {
@@ -1331,7 +1331,7 @@
       },
       "category": {
         "name": "category",
-        "label": "Category",
+        "label": "category",
         "add_more": true,
         "wrapper_collection": false,
         "attributes": {
@@ -1351,7 +1351,7 @@
       },
       "language": {
         "name": "language",
-        "label": "Language",
+        "label": "language",
         "add_more": true,
         "wrapper_collection": false,
         "attributes": {
@@ -1371,7 +1371,7 @@
       },
       "document_date": {
         "name": "document_date",
-        "label": "Document Date",
+        "label": "document-date",
         "add_more": false,
         "attributes": {
           "date": {
@@ -1390,7 +1390,7 @@
   },
   "contact_info": {
     "name": "contact_info",
-    "label": "Contact Info",
+    "label": "contact-info",
     "criteria": "",
     "add_more": true,
     "hover_text": "Contact information for the activity. Specify whatever is available. You may repeat this element for each contact person. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/contact-info/'>For more information</a>",
@@ -1410,7 +1410,7 @@
     "sub_elements": {
       "organisation": {
         "name": "organisation",
-        "label": "Organisation",
+        "label": "organisation",
         "required": false,
         "criteria": "",
         "add_more": false,
@@ -1448,7 +1448,7 @@
       },
       "department": {
         "name": "department",
-        "label": "Department",
+        "label": "department",
         "required": false,
         "criteria": "",
         "add_more": false,
@@ -1486,7 +1486,7 @@
       },
       "person_name": {
         "name": "person_name",
-        "label": "Person Name",
+        "label": "person-name",
         "required": false,
         "criteria": "",
         "add_more": false,
@@ -1524,7 +1524,7 @@
       },
       "job_title": {
         "name": "job_title",
-        "label": "Job Title",
+        "label": "job-title",
         "required": false,
         "criteria": "",
         "add_more": false,
@@ -1562,7 +1562,7 @@
       },
       "telephone": {
         "name": "telephone",
-        "label": "Telephone",
+        "label": "telephone",
         "required": false,
         "criteria": "",
         "add_more": true,
@@ -1582,7 +1582,7 @@
       },
       "email": {
         "name": "email",
-        "label": "Email",
+        "label": "email",
         "required": false,
         "criteria": "",
         "add_more": true,
@@ -1602,7 +1602,7 @@
       },
       "website": {
         "name": "website",
-        "label": "Website",
+        "label": "website",
         "required": false,
         "criteria": "",
         "add_more": true,
@@ -1622,7 +1622,7 @@
       },
       "mailing_address": {
         "name": "mailing_address",
-        "label": "Mailing Address",
+        "label": "mailing-address",
         "required": false,
         "criteria": "",
         "add_more": true,
@@ -1662,7 +1662,7 @@
   },
   "location": {
     "name": "location",
-    "label": "Location",
+    "label": "location",
     "criteria": "",
     "add_more": true,
     "hover_text": "The sub-national geographical identification of the target locations of an activity. These can be described by gazetteer reference, coordinates, administrative areas or a textual description. Any number of locations may be reported. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/location/'>For more information</a>",
@@ -1937,7 +1937,7 @@
       },
       "exactness": {
         "name": "exactness",
-        "label": "Exactness",
+        "label": "exactness",
         "required": false,
         "criteria": "",
         "add_more": false,
@@ -1981,7 +1981,7 @@
       },
       "feature_designation": {
         "name": "feature_designation",
-        "label": "Feature Designation",
+        "label": "feature-designation",
         "required": false,
         "criteria": "",
         "add_more": false,
@@ -2094,7 +2094,7 @@
       },
       "provider_org": {
         "name": "provider_org",
-        "label": "Title",
+        "label": "provider-org",
         "add_more": false,
         "attributes": {
           "ref": {
@@ -2226,7 +2226,7 @@
   },
   "participating_org": {
     "name": "participating_org",
-    "label": "Participating Organization",
+    "label": "participating-organization",
     "criteria": "",
     "add_more": true,
     "attributes": {
@@ -2457,7 +2457,7 @@
     "sub_elements": {
       "title": {
         "name": "title",
-        "label": "Title",
+        "label": "title",
         "add_more": false,
         "attributes": {},
         "sub_elements": {
@@ -2492,7 +2492,7 @@
       },
       "description": {
         "name": "description",
-        "label": "Description",
+        "label": "description",
         "add_more": false,
         "attributes": {},
         "sub_elements": {
@@ -2527,7 +2527,7 @@
       },
       "document_link": {
         "name": "document_link",
-        "label": "Document Link",
+        "label": "document-link",
         "add_more": true,
         "attributes": {
           "url": {
@@ -2554,7 +2554,7 @@
         "sub_elements": {
           "title": {
             "name": "title",
-            "label": "Title",
+            "label": "title",
             "attributes": {},
             "sub_elements": {
               "narrative": {
@@ -2588,7 +2588,7 @@
           },
           "description": {
             "name": "description",
-            "label": "Description",
+            "label": "description",
             "attributes": {},
             "sub_elements": {
               "narrative": {
@@ -2622,7 +2622,7 @@
           },
           "category": {
             "name": "category",
-            "label": "Category",
+            "label": "category",
             "add_more": true,
             "wrapper_collection": false,
             "attributes": {
@@ -2642,7 +2642,7 @@
           },
           "language": {
             "name": "language",
-            "label": "Language",
+            "label": "language",
             "add_more": true,
             "wrapper_collection": false,
             "attributes": {
@@ -2662,7 +2662,7 @@
           },
           "document_date": {
             "name": "document_date",
-            "label": "Document Date",
+            "label": "document-date",
             "add_more": false,
             "attributes": {
               "date": {
@@ -2681,7 +2681,7 @@
       },
       "reference": {
         "name": "reference",
-        "label": "Reference",
+        "label": "reference",
         "add_more": true,
         "attributes": {
           "make_collection": false,
@@ -2721,7 +2721,7 @@
   },
   "indicator": {
     "name": "indicator",
-    "label": "Result Indicator",
+    "label": "indicator",
     "criteria": "mandatory",
     "add_more": false,
     "attributes": {
@@ -2768,7 +2768,7 @@
     "sub_elements": {
       "title": {
         "name": "title",
-        "label": "Title",
+        "label": "title",
         "add_more": false,
         "attributes": {},
         "sub_elements": {
@@ -2803,7 +2803,7 @@
       },
       "description": {
         "name": "description",
-        "label": "Description",
+        "label": "description",
         "add_more": false,
         "attributes": {},
         "sub_elements": {
@@ -2838,7 +2838,7 @@
       },
       "document_link": {
         "name": "document_link",
-        "label": "Document Link",
+        "label": "document-link",
         "add_more": true,
         "attributes": {
           "url": {
@@ -2865,7 +2865,7 @@
         "sub_elements": {
           "title": {
             "name": "title",
-            "label": "Title",
+            "label": "title",
             "attributes": {},
             "sub_elements": {
               "narrative": {
@@ -2899,7 +2899,7 @@
           },
           "description": {
             "name": "description",
-            "label": "Description",
+            "label": "description",
             "attributes": {},
             "sub_elements": {
               "narrative": {
@@ -2933,7 +2933,7 @@
           },
           "category": {
             "name": "category",
-            "label": "Category",
+            "label": "category",
             "add_more": true,
             "wrapper_collection": false,
             "attributes": {
@@ -2953,7 +2953,7 @@
           },
           "language": {
             "name": "language",
-            "label": "Language",
+            "label": "language",
             "add_more": true,
             "wrapper_collection": false,
             "attributes": {
@@ -2973,7 +2973,7 @@
           },
           "document_date": {
             "name": "document_date",
-            "label": "Document Date",
+            "label": "document-date",
             "add_more": false,
             "attributes": {
               "date": {
@@ -2992,7 +2992,7 @@
       },
       "reference": {
         "name": "reference",
-        "label": "Reference",
+        "label": "reference",
         "add_more": true,
         "attributes": {
           "make_collection": false,
@@ -3030,7 +3030,7 @@
       },
       "baseline": {
         "name": "baseline",
-        "label": "Baseline",
+        "label": "baseline",
         "add_more": true,
         "attributes": {
           "year": {
@@ -3064,7 +3064,7 @@
         "sub_elements": {
           "comment": {
             "name": "comment",
-            "label": "Comment",
+            "label": "comment",
             "attributes": {},
             "sub_elements": {
               "narrative": {
@@ -3098,7 +3098,7 @@
           },
           "dimension": {
             "name": "dimension",
-            "label": "Dimension",
+            "label": "dimension",
             "add_more": true,
             "wrapper_collection": false,
             "attributes": {
@@ -3125,7 +3125,7 @@
           },
           "document_link": {
             "name": "document_link",
-            "label": "Document Link",
+            "label": "document-link",
             "criteria": "",
             "add_more": true,
             "attributes": {
@@ -3153,7 +3153,7 @@
             "sub_elements": {
               "title": {
                 "name": "title",
-                "label": "Title",
+                "label": "title",
                 "add_more": false,
                 "attributes": {},
                 "sub_elements": {
@@ -3188,7 +3188,7 @@
               },
               "description": {
                 "name": "description",
-                "label": "Description",
+                "label": "description",
                 "add_more": false,
                 "attributes": {},
                 "sub_elements": {
@@ -3223,7 +3223,7 @@
               },
               "category": {
                 "name": "category",
-                "label": "Category",
+                "label": "category",
                 "add_more": true,
                 "wrapper_collection": false,
                 "attributes": {
@@ -3243,7 +3243,7 @@
               },
               "language": {
                 "name": "language",
-                "label": "Language",
+                "label": "language",
                 "add_more": true,
                 "wrapper_collection": false,
                 "attributes": {
@@ -3263,7 +3263,7 @@
               },
               "document_date": {
                 "name": "document_date",
-                "label": "Document Date",
+                "label": "document-date",
                 "add_more": false,
                 "attributes": {
                   "date": {
@@ -3282,7 +3282,7 @@
           },
           "location": {
             "name": "location",
-            "label": "Baseline Location",
+            "label": "location",
             "add_more": "true",
             "attributes": {
               "reference": {
@@ -3303,13 +3303,13 @@
   },
   "period": {
     "name": "period",
-    "label": "Indicator Period",
+    "label": "period",
     "add_more": false,
     "attributes": {},
     "sub_elements": {
       "period_start": {
         "name": "period_start",
-        "label": "Period Start",
+        "label": "period-start",
         "add_more": false,
         "attributes": {
           "date": {
@@ -3326,7 +3326,7 @@
       },
       "period_end": {
         "name": "period_end",
-        "label": "Period End",
+        "label": "period-end",
         "add_more": false,
         "attributes": {
           "date": {
@@ -3343,7 +3343,7 @@
       },
       "target": {
         "name": "target",
-        "label": "Target",
+        "label": "target",
         "add_more": true,
         "attributes": {
           "value": {
@@ -3359,7 +3359,7 @@
         "sub_elements": {
           "comment": {
             "name": "comment",
-            "label": "Comment",
+            "label": "comment",
             "attributes": {},
             "sub_elements": {
               "narrative": {
@@ -3393,7 +3393,7 @@
           },
           "dimension": {
             "name": "dimension",
-            "label": "Dimension",
+            "label": "dimension",
             "add_more": true,
             "wrapper_collection": false,
             "attributes": {
@@ -3420,7 +3420,7 @@
           },
           "document_link": {
             "name": "document_link",
-            "label": "Document Link",
+            "label": "document-link",
             "add_more": true,
             "attributes": {
               "url": {
@@ -3447,7 +3447,7 @@
             "sub_elements": {
               "title": {
                 "name": "title",
-                "label": "Title",
+                "label": "title",
                 "attributes": {},
                 "sub_elements": {
                   "narrative": {
@@ -3481,7 +3481,7 @@
               },
               "description": {
                 "name": "description",
-                "label": "Description",
+                "label": "description",
                 "attributes": {},
                 "sub_elements": {
                   "narrative": {
@@ -3515,7 +3515,7 @@
               },
               "category": {
                 "name": "category",
-                "label": "Category",
+                "label": "category",
                 "add_more": true,
                 "wrapper_collection": false,
                 "attributes": {
@@ -3535,7 +3535,7 @@
               },
               "language": {
                 "name": "language",
-                "label": "Language",
+                "label": "language",
                 "add_more": true,
                 "wrapper_collection": false,
                 "attributes": {
@@ -3555,7 +3555,7 @@
               },
               "document_date": {
                 "name": "document_date",
-                "label": "Document Date",
+                "label": "document-date",
                 "add_more": false,
                 "attributes": {
                   "date": {
@@ -3574,7 +3574,7 @@
           },
           "location": {
             "name": "location",
-            "label": "Target Location",
+            "label": "location",
             "add_more": "true",
             "wrapper_collection": false,
             "attributes": {
@@ -3594,7 +3594,7 @@
       },
       "actual": {
         "name": "actual",
-        "label": "Actual",
+        "label": "actual",
         "add_more": true,
         "attributes": {
           "value": {
@@ -3610,7 +3610,7 @@
         "sub_elements": {
           "comment": {
             "name": "comment",
-            "label": "Comment",
+            "label": "comment",
             "attributes": {},
             "sub_elements": {
               "narrative": {
@@ -3644,7 +3644,7 @@
           },
           "dimension": {
             "name": "dimension",
-            "label": "Dimension",
+            "label": "dimension",
             "add_more": true,
             "wrapper_collection": false,
             "attributes": {
@@ -3671,7 +3671,7 @@
           },
           "document_link": {
             "name": "document_link",
-            "label": "Document Link",
+            "label": "document-link",
             "add_more": true,
             "attributes": {
               "url": {
@@ -3698,7 +3698,7 @@
             "sub_elements": {
               "title": {
                 "name": "title",
-                "label": "Title",
+                "label": "title",
                 "attributes": {},
                 "sub_elements": {
                   "narrative": {
@@ -3732,7 +3732,7 @@
               },
               "description": {
                 "name": "description",
-                "label": "Description",
+                "label": "description",
                 "attributes": {},
                 "sub_elements": {
                   "narrative": {
@@ -3766,7 +3766,7 @@
               },
               "category": {
                 "name": "category",
-                "label": "Category",
+                "label": "category",
                 "add_more": true,
                 "wrapper_collection": false,
                 "attributes": {
@@ -3786,7 +3786,7 @@
               },
               "language": {
                 "name": "language",
-                "label": "Language",
+                "label": "language",
                 "add_more": true,
                 "wrapper_collection": false,
                 "attributes": {
@@ -3806,7 +3806,7 @@
               },
               "document_date": {
                 "name": "document_date",
-                "label": "Document Date",
+                "label": "document-date",
                 "add_more": false,
                 "attributes": {
                   "date": {
@@ -3825,7 +3825,7 @@
           },
           "location": {
             "name": "location",
-            "label": "Target Location",
+            "label": "location",
             "add_more": "true",
             "wrapper_collection": false,
             "attributes": {
@@ -3847,7 +3847,7 @@
   },
   "transactions": {
     "name": "transaction",
-    "label": "Activity Transaction",
+    "label": "transaction",
     "criteria": "recommended",
     "add_more": false,
     "attributes": {
@@ -3878,7 +3878,7 @@
     "sub_elements": {
       "transaction_type": {
         "name": "transaction_type",
-        "label": "Transaction Type",
+        "label": "transaction-type",
         "criteria": "mandatory",
         "add_more": false,
         "attributes": {
@@ -3898,7 +3898,7 @@
       },
       "transaction_date": {
         "name": "transaction_date",
-        "label": "Transaction Date",
+        "label": "transaction-date",
         "criteria": "mandatory",
         "add_more": false,
         "attributes": {
@@ -3916,7 +3916,7 @@
       },
       "transaction_value": {
         "name": "value",
-        "label": "Transaction Value",
+        "label": "transaction-value",
         "criteria": "mandatory",
         "add_more": false,
         "attributes": {
@@ -3954,7 +3954,7 @@
       },
       "description": {
         "name": "description",
-        "label": "Description",
+        "label": "description",
         "add_more": false,
         "attributes": {},
         "sub_elements": {
@@ -3989,7 +3989,7 @@
       },
       "provider_organization": {
         "name": "provider_organization",
-        "label": "Provider Organisation",
+        "label": "provider-organisation",
         "criteria": "recommended",
         "add_more": false,
         "attributes": {
@@ -4055,7 +4055,7 @@
       },
       "receiver_organization": {
         "name": "receiver_organization",
-        "label": "Receiver Organisation",
+        "label": "receiver-organisation",
         "criteria": "recommended",
         "add_more": false,
         "attributes": {
@@ -4121,7 +4121,7 @@
       },
       "transaction_disbursement_channel": {
         "name": "disbursement_channel",
-        "label": "Disbursement Channel",
+        "label": "disbursement-channel",
         "criteria": "",
         "add_more": false,
         "attributes": {
@@ -4249,7 +4249,7 @@
       },
       "recipient_country": {
         "name": "recipient_country",
-        "label": "Recipient Country",
+        "label": "recipient-country",
         "criteria": "",
         "add_more": false,
         "attributes": {
@@ -4296,7 +4296,7 @@
       },
       "recipient_region": {
         "name": "recipient_region",
-        "label": "Recipient Region",
+        "label": "recipient-region",
         "criteria": "",
         "add_more": false,
         "attributes": {
@@ -4374,7 +4374,7 @@
       },
       "flow_type": {
         "name": "flow_type",
-        "label": "Flow Type",
+        "label": "flow-type",
         "criteria": "",
         "add_more": false,
         "attributes": {
@@ -4394,7 +4394,7 @@
       },
       "finance_type": {
         "name": "finance_type",
-        "label": "Finance Type",
+        "label": "finance-type",
         "criteria": "",
         "add_more": false,
         "attributes": {
@@ -4414,7 +4414,7 @@
       },
       "aid_type": {
         "name": "aid_type",
-        "label": "Aid Type",
+        "label": "aid-type",
         "criteria": "",
         "add_more": false,
         "add_more_attributes": true,
@@ -4483,7 +4483,7 @@
       },
       "tied_status": {
         "name": "tied_status",
-        "label": "Tied Status",
+        "label": "tied-status",
         "criteria": "",
         "add_more": false,
         "attributes": {

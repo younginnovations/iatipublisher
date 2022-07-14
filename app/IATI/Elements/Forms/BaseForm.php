@@ -57,12 +57,6 @@ class BaseForm extends Form
             );
 
             if (isset($field['add_more']) && $field['add_more']) {
-                // $this->add('delete_' . $field['name'].'123', 'button', [
-                //     'attr' => [
-                //         'class' => 'delete-parent delete-item absolute right-0 top-16 -translate-y-1/2 translate-x-1/2',
-                //     ],
-                // ]);
-
                 $this->add('add_to_collection_' . $field['name'], 'button', [
                     'label' => 'Add More',
                     'attr'  => [
