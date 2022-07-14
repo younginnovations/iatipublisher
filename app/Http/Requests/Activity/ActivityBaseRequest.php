@@ -129,12 +129,12 @@ class ActivityBaseRequest extends FormRequest
         Validator::extend(
             'date_greater_than',
             function ($attribute, $value, $parameters, $validator) {
-            $inserted = Carbon::parse($value)->year;
-            // dd($attribute, $value, $inserted);
-            $since = $parameters[0];
+                $inserted = Carbon::parse($value)->year;
+                // dd($attribute, $value, $inserted);
+                $since = $parameters[0];
 
-            return $inserted >= $since;
-        }
+                return $inserted >= $since;
+            }
         );
     }
 
