@@ -130,10 +130,47 @@ class ActivityBaseRequest extends FormRequest
             'date_greater_than',
             function ($attribute, $value, $parameters, $validator) {
                 $inserted = Carbon::parse($value)->year;
-                // dd($attribute, $value, $inserted);
                 $since = $parameters[0];
 
                 return $inserted >= $since;
+            }
+        );
+
+        Validator::extendImplicit(
+            'unique_category',
+            function ($attribute, $value) {
+                $categoryCodes = [];
+
+                foreach ($value as $category) {
+                    $code = $category['code'];
+
+                    if (in_array($code, $categoryCodes)) {
+                        return false;
+                    }
+
+                    $categoryCodes[] = $code;
+                }
+
+                return true;
+            }
+        );
+
+        Validator::extendImplicit(
+            'unique_language',
+            function ($attribute, $value) {
+                $languageCodes = [];
+
+                foreach ($value as $language) {
+                    $code = $language['code'];
+
+                    if (in_array($code, $languageCodes)) {
+                        return false;
+                    }
+
+                    $languageCodes[] = $code;
+                }
+
+                return true;
             }
         );
     }
@@ -260,7 +297,6 @@ class ActivityBaseRequest extends FormRequest
         foreach ($formFields as $periodStartKey => $periodStartVal) {
             $rules[$formBase . '.period_start.' . $periodStartKey . '.date'] = 'date|date_greater_than:1900';
         }
-        dd('here', $rules);
 
         return $rules;
     }
@@ -355,6 +391,9 @@ class ActivityBaseRequest extends FormRequest
                 );
             }
 
+            $rules[sprintf('%s.category', $documentLinkForm)][] = 'unique_category';
+            $rules[sprintf('%s.language', $documentLinkForm)][] = 'unique_language';
+
             $rules = array_merge(
                 $rules,
                 $this->getRulesForNarrative(
@@ -419,6 +458,10 @@ class ActivityBaseRequest extends FormRequest
                     $this->getMessagesForDocumentDate($documentLink['document_date'], $documentLinkForm)
                 );
             }
+
+            $messages[sprintf('%s.category.unique_category', $documentLinkForm)] = 'The @code field must be a unique.';
+
+            $messages[sprintf('%s.language.unique_language', $documentLinkForm)] = 'The @code field must be a unique.';
 
             $messages = array_merge(
                 $messages,

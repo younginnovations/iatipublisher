@@ -62,7 +62,7 @@ class ResultElementFormCreator
                     'attr'      => [
                         'type'      => 'anchor',
                         'class'     => 'ghost-btn mr-8',
-                        'href' => back()->getTargetUrl(),
+                        'href' => $parent_url,
                     ],
                 ],
                 'submit'    => [

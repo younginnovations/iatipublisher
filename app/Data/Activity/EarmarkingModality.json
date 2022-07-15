@@ -36,12 +36,12 @@
         },
         {
             "code": "G",
-            "name": "Directed to an aid organiastion’s country operations",
+            "name": "Directed to an aid organisation’s country operations",
             "description": "Financial contribution, directed to a specific country, otherwise fully flexible."
         },
         {
             "code": "H",
-            "name": "Directed to sub-objective/targe",
+            "name": "Directed to sub-objective/target",
             "description": "Financial contribution, directed to subcategories of strategic objectives, e.g. health/malaria or education /teacher training, but without geographical limitations."
         },
         {

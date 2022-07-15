@@ -66,7 +66,7 @@
       <template v-if="title === 'iati_identifier'">
         <div class="identifier-content">
           <div v-if="data.content.iati_identifier_text" class="text-sm">
-            <span>{{ data.content.iati_identifier_text }}</span>
+            <span class="whitespace-pre">{{ data.content.iati_identifier_text }}</span>
           </div>
         </div>
       </template>
@@ -771,7 +771,7 @@
                         >
                       </div>
                       <div>
-                        <span v-if="item.code">, code {{ item.code }}</span>
+                        <span v-if="item.code">, code {{ types.country[item.code] }}</span>
                         <span v-else class="ml-1 italic">
                           (Code Not Available)</span
                         >
@@ -1541,7 +1541,7 @@
         >
           <div>
             <div v-if="post.url" class="max-w-[887px] text-sm">
-              <a :href="post.url">{{ post.url }}</a>
+              <a :href="post.url" target="_blank">{{ post.url }}</a>
             </div>
             <span v-else class="italic">URL Not Available</span>
           </div>
