@@ -309,6 +309,7 @@ class ActivityController extends Controller
             'geographicExactness'         => getCodeList('GeographicExactness', 'Activity'),
             'geographicLocationClass'     => getCodeList('GeographicLocationClass', 'Activity'),
             'resultType'                  => getCodeList('ResultType', 'Activity'),
+            'transactionType'             => getCodeList('TransactionType', 'Activity'),
         ];
     }
 

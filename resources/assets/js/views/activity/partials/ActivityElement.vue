@@ -50,11 +50,20 @@
 
         <div class="flex items-center icons">
           <a
+            v-if="title !== 'transactions'"
             :href="`/activities/${activityId}/${title}`"
             class="edit-button mr-2.5 flex items-center text-tiny font-bold uppercase"
           >
             <svg-vue class="mr-0.5 text-base" icon="edit" />
             <span>Edit</span>
+          </a>
+
+          <a
+            v-else
+            :href="`/activities/${activityId}/${title}`"
+            class="mr-2.5 flex items-center bg-n-10 p-1 text-tiny font-bold uppercase"
+          >
+            <span>Show full transaction list</span>
           </a>
 
           <svg-vue v-if="data.core" class="mr-1.5" icon="core"></svg-vue>
@@ -1769,6 +1778,32 @@
         </div>
       </template>
 
+      <template v-else-if="title === 'transactions'">
+        <div
+          v-for="(trans, t) in data.content"
+          :key="t"
+          class=""
+          :class="{ 'mb-4': t !== data.content.length - 1 }"
+        >
+          <div class="mb-4 text-sm font-bold">
+            {{
+              types.transactionType[
+                trans.transaction.transaction_type[0].transaction_type_code
+              ]
+            }}
+          </div>
+          <div
+            v-for="(val, v) in trans.transaction.value"
+            :key="v"
+            class="text-sm description"
+            :class="{ 'mb-4': t !== data.content.length - 1 }"
+          >
+            {{ val.amount }} {{ val.currency }} - valued at
+            {{ dateFormat(val.date, 'MMMM DD, YYYY') }}
+          </div>
+        </div>
+      </template>
+
       <template v-else>
         <div class="text-sm content">
           <template v-if="title === 'activity_status'">
@@ -1831,6 +1866,7 @@
 import { defineComponent } from 'vue';
 import HoverText from '../../../components/HoverText.vue';
 import moment from 'moment';
+import dateFormat from '../../../composable/dateFormat';
 
 export default defineComponent({
   name: 'ActivityElement',
@@ -1878,7 +1914,7 @@ export default defineComponent({
       return moment(date).format('LL');
     }
 
-    return { layout, status, props, formatDate };
+    return { layout, status, props, formatDate, dateFormat };
   },
 });
 </script>

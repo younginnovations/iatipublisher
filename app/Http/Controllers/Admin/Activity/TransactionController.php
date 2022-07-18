@@ -64,8 +64,9 @@ class TransactionController extends Controller
         try {
             $activity = $this->activityService->getActivity($activityId);
             $transactions = $this->transactionService->getActivityTransactions($activityId);
+            $types = getTransactionTypes();
 
-            return view('admin.activity.transaction.transaction', compact('activity', 'transactions'));
+            return view('admin.activity.transaction.transaction', compact('activity', 'transactions', 'types'));
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
@@ -151,8 +152,9 @@ class TransactionController extends Controller
         try {
             $activity = $this->activityService->getActivity($activityId);
             $transaction = $this->transactionService->getTransaction($transactionId, $activityId);
+            $types = getTransactionTypes();
 
-            return view('admin.activity.transaction.detail', compact('transaction', 'activity'));
+            return view('admin.activity.transaction.detail', compact('transaction', 'activity', 'types'));
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 

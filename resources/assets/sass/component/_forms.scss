@@ -127,12 +127,14 @@ form {
         @apply block;
       }
     }
-
-    .form-field-group:only-of-type > .delete-item,
     > .multi-form:only-of-type > .delete-parent,
     .wrapped-child-body:only-of-type > .delete-parent {
       @apply hidden;
     }
+  }
+
+  .form-field-group:only-of-type > .delete-item {
+    @apply hidden;
   }
 }
 

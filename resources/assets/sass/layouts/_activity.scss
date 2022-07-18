@@ -63,12 +63,12 @@
   }
 
   td:nth-child(1) {
-    @apply whitespace-nowrap text-n-40;
+    @apply text-n-40;
     width: 100px;
   }
   &.wider {
     td:nth-child(1) {
-      @apply whitespace-nowrap text-n-40;
+      @apply text-n-40;
       width: 190px;
     }
   }

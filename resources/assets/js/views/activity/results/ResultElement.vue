@@ -1,45 +1,37 @@
 <template>
   <div
-    id=""
-    class="activities__content--element px-3 py-3 text-n-50"
+    :id="elementName"
+    class="px-3 py-3 activities__content--element text-n-50"
     :class="{
       'basis-full': width === 'full',
       'basis-6/12': width === '',
     }"
   >
-    <div class="rounded-lg bg-white p-4">
-      <div class="mb-4 flex">
-        <div class="title flex grow">
-          <div class="title text-sm font-bold">{{ elementName }}</div>
-          <!-- <div class="status ml-2.5 flex text-xs leading-5 text-spring-50">
-            <b class="mr-2 text-base leading-3">.</b><span>completed</span>
-          </div> -->
+    <div class="p-4 bg-white rounded-lg">
+      <div class="flex mb-4">
+        <div class="flex title grow">
+          <div class="text-sm font-bold title">{{ elementName }}</div>
         </div>
-        <div class="icons flex items-center">
-          <!-- <a
-            href="{{editUrl}}"
-            class="edit-button mr-2.5 flex items-center text-tiny font-bold uppercase"
-          >
-            <svg-vue class="mr-0.5 text-base" icon="edit"></svg-vue>
-            <span>Edit</span>
-          </a> -->
+        <div class="flex items-center icons">
           <svg-vue class="mr-1.5" icon="core"></svg-vue>
-          <HoverText hover_text="example text" class="text-n-40"></HoverText>
+          <HoverText hover-text="example text" class="text-n-40"></HoverText>
         </div>
       </div>
-      <div class="divider mb-4 h-px w-full bg-n-20"></div>
+      <div class="w-full h-px mb-4 divider bg-n-20"></div>
       <div>
         <!-- for title / DESCRIPTION -->
         <template
           v-if="elementName === 'title' || elementName === 'description'"
         >
-          <template v-for="(post, i) in data[0].narrative" :key="i">
+          <template v-for="(post, i) in tdData[0].narrative" :key="i">
             <div
               class="title-content"
-              :class="{ 'mb-4': i !== data[0].narrative.length - 1 }"
+              :class="{
+                'mb-4': i !== Object.keys(tdData[0].narrative).length - 1,
+              }"
             >
               <div class="language mb-1.5">(Language: {{ post.language }})</div>
-              <div class="description text-sm">
+              <div class="text-sm description">
                 {{ post.narrative }}
               </div>
             </div>
@@ -56,7 +48,7 @@
           <div class="documents">
             <template v-for="(post, i) in data" :key="i">
               <div class="item elements-detail">
-                <div class="category flex">
+                <div class="flex category">
                   {{ post.title[0].narrative[0].narrative }}
                 </div>
                 <div class="ml-4">
@@ -69,10 +61,10 @@
                           :key="n"
                         >
                           <div class="title-content mb-1.5">
-                            <div class="language mb-1">
+                            <div class="mb-1 language">
                               (Language: {{ na.language }})
                             </div>
-                            <div class="description text-xs">
+                            <div class="text-xs description">
                               {{ na.narrative }}
                             </div>
                           </div>
@@ -100,10 +92,10 @@
                           :key="n"
                         >
                           <div class="description-content mb-1.5">
-                            <div class="language mb-1">
+                            <div class="mb-1 language">
                               (Language: {{ na.language }})
                             </div>
-                            <div class="description text-xs">
+                            <div class="text-xs description">
                               {{ na.narrative }}
                             </div>
                           </div>
@@ -126,11 +118,7 @@
                       <td>Language</td>
                       <td>
                         <div class="text-xs">
-                          {{
-                            post.language
-                              .map((entry) => entry.language)
-                              .join(', ')
-                          }}
+                          {{ getLanguages(post.language) }}
                         </div>
                       </td>
                     </tr>
@@ -157,7 +145,7 @@
               class="item elements-detail"
               :class="{ 'mb-4': Number(r) !== data.length - 1 }"
             >
-              <div class="category flex">{{ ref.vocabulary }}</div>
+              <div class="flex category">{{ ref.vocabulary }}</div>
               <div class="ml-4">
                 <table class="mb-3">
                   <tbody>
@@ -185,7 +173,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, toRefs } from 'vue';
 import HoverText from '../../../components/HoverText.vue';
 
 export default defineComponent({
@@ -210,8 +198,38 @@ export default defineComponent({
       default: '',
     },
   },
-  setup() {
-    return {};
+  setup(props) {
+    /**
+     * Reactive data for title or description
+     */
+
+    interface NarrativeArray {
+      [index: number]: { language: string; narrative: string };
+    }
+
+    interface Narratives {
+      [index: number]: {
+        narrative: NarrativeArray;
+      };
+    }
+
+    let { data } = toRefs(props);
+
+    const tdData = data.value as Narratives;
+
+    /**
+     * Joins data from array with a comma
+     * @param language
+     */
+
+    interface Entry {
+      [key: string]: string;
+    }
+
+    function getLanguages(language: Entry[]) {
+      return language.map((entry) => entry.language).join(', ');
+    }
+    return { tdData, getLanguages };
   },
 });
 </script>

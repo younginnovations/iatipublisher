@@ -168,7 +168,7 @@
                           class="flex px-6 py-2 indicator-content"
                           :class="{
                             'mb-2 border-b border-n-20':
-                              r !== result.indicators.length - 1,
+                              i !== result.indicators.length - 1,
                           }"
                         >
                           <div class="elements-detail wider grow">

@@ -440,15 +440,17 @@ export default defineComponent({
      * this data is created using props.element_group and props.activity
      */
 
-    const { groups, activity, elements, status } = toRefs(props),
+    const { groups, activity, elements, status, transactions } = toRefs(props),
       groupedData = groups.value,
       activityProps = activity.value,
       activities = groups.value,
       elementProps = elements.value,
-      statusProps = status.value;
+      statusProps = status.value,
+      transactionProps = transactions.value;
 
     const { results } = toRefs(props);
     activityProps.result = results.value;
+    activityProps.transactions = transactionProps;
 
     // generating available elements
     Object.keys(activities).map((key) => {
