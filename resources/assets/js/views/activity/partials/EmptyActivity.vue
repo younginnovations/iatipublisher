@@ -50,7 +50,6 @@ export default defineComponent({
   components: {
     ActivityButton,
   },
-  props: {},
   setup() {
     const state = reactive({
       dismiss: true,

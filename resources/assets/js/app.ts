@@ -16,6 +16,8 @@ import RegisterPage from './views/web/RegisterPage.vue';
  *
  */
 import ResultDetail from './views/activity/results/ResultDetail.vue';
+import TransactionList from './views/activity/transactions/TransactionList.vue';
+import TransactionDetail from './views/activity/transactions/TransactionDetail.vue';
 import StaticDescriptionForm from './components/DescriptionForm.vue';
 import ElementsNote from './views/activity/partials/ElementsNote.vue';
 import Activity from './views/activity/ActivityIndex.vue';
@@ -42,41 +44,39 @@ import HoverText from './components/HoverText.vue';
 const app = createApp({});
 
 /**
- * The following block of code may be used to automatically register your
- * Vue components. It will recursively scan this directory for the Vue
- * components and automatically register them with their "basename".
- *
- * Eg. ./components/ExampleComponent.vue -> <example-component></example-component>
+ * Global Components
  */
 
-// const files = require.context('./', true, /\.vue$/i)
-// files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
-
-app.component('WebHeader', WebHeader);
-app.component('WebFooter', WebFooter);
-app.component('WelcomeSignin', WelcomeSignIn);
-app.component('RegisterForm', RegisterPage);
+app
+  .component('WebHeader', WebHeader)
+  .component('WebFooter', WebFooter)
+  .component('WelcomeSignin', WelcomeSignIn)
+  .component('RegisterForm', RegisterPage);
 
 /**
  * Registering vue component for activity listing
  */
-app.component('ActivityTemplate', Activity);
-app.component('LoggedinHeader', LoggedInHeader);
-app.component('ActivitiesDetail', ActivitiesDetail);
-app.component('DescriptionForm', StaticDescriptionForm);
-app.component('ElementsNote', ElementsNote);
-app.component('ResultDetail', ResultDetail);
+app
+  .component('ActivityTemplate', Activity)
+  .component('LoggedinHeader', LoggedInHeader)
+  .component('ActivitiesDetail', ActivitiesDetail)
+  .component('DescriptionForm', StaticDescriptionForm)
+  .component('ElementsNote', ElementsNote)
+  .component('ResultDetail', ResultDetail)
+  .component('TransactionList', TransactionList)
+  .component('TransactionDetail', TransactionDetail);
 
 /*
-setting page
-*/
+ * Setting page
+ */
 app.component('SettingPage', SettingPage);
 /*
 Registering vue component for password reset
 */
-app.component('ResetPage', ResetPage);
-app.component('PasswordRecovery', PasswordRecovery);
-app.component('ResetPassword', ResetPassword);
+app
+  .component('ResetPage', ResetPage)
+  .component('PasswordRecovery', PasswordRecovery)
+  .component('ResetPassword', ResetPassword);
 
 /**
  * Registering Additional Components
