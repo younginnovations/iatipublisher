@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Http\Controllers\Organization\Organization;
 use App\IATI\Services\Organization\OrganizationService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
 
 /**
  * Class OrganizationController.
@@ -28,12 +30,21 @@ class OrganizationController extends Controller
 
     /**
      * Display a listing of the resource.
-     *
-     * @return void
      */
-    public function index(): void
+    public function index()
     {
-        //
+        try {
+            $toast['message'] = Session::has('error') ? Session::get('error') : (Session::get('success') ? Session::get('success') : '');
+            $toast['type'] = Session::has('error') ? 'error' : 'success';
+            $elements = json_decode(file_get_contents(app_path('IATI/Data/organizationElementJsonSchema.json')), true);
+            $elements = json_decode(file_get_contents(app_path('Data/Organization/OrganisationElements.json')), true);
+            $elementGroups = json_decode(file_get_contents(app_path('Data/Organization/OrganisationElementsGroup.json')), true);
+            $progress = 75;
+            $activity = $this->organizationService->getOrganizationData(Auth::user()->organization_id);
+
+            return view('admin.organisation.index', compact('elements', 'elementGroups', 'progress', 'activity', 'toast'));
+        } catch (\Exception $e) {
+        }
     }
 
     /**

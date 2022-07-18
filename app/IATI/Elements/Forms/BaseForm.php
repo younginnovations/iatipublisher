@@ -50,6 +50,7 @@ class BaseForm extends Form
                     'attr' => [
                         'class' => 'add_to_collection add_more button relative -translate-y-1/2 pl-3.5 text-xs font-bold uppercase leading-normal text-spring-50 text-bluecoral ',
                         'form_type' => $field['name'],
+                        'has_child_collection' => 1,
                         'icon' => true,
                     ],
                 ]);
@@ -102,6 +103,7 @@ class BaseForm extends Form
         $element = $this->getData();
         $attributes = Arr::get($element, 'attributes', null);
         $sub_elements = Arr::get($element, 'sub_elements', null);
+        // dd($element, $sub_elements, $attributes);
 
         if ($attributes) {
             if (Arr::get($element, 'add_more', false) && !$sub_elements && Arr::get($element, 'attributes.make_collection', true)) {
