@@ -552,25 +552,27 @@ class Activity extends Model
         foreach ($subElements as $key => $subElement) {
             $mandatorySubElementAttributes = array_key_exists('attributes', $subElement) ? $this->mandatoryAttributes($subElement['attributes']) : [];
 
-            if (!empty($mandatorySubElementAttributes)) {
-                if (!array_key_exists($key, $data)) {
-                    //dd('isLevelThreeSingleDimensionElementCompleted fx called1', 'sub-element-empty', 'sub-element-check:', $mandatorySubElementAttributes, $key, $data);
+            if (empty($mandatorySubElementAttributes)) {
+                continue;
+            }
 
+            if (!array_key_exists($key, $data)) {
+                //dd('isLevelThreeSingleDimensionElementCompleted fx called1', 'sub-element-empty', 'sub-element-check:', $mandatorySubElementAttributes, $key, $data);
+
+                return false;
+            }
+
+            if (empty($data[$key])) {
+                //dd('isLevelThreeSingleDimensionElementCompleted fx called2', 'sub-element-empty', 'sub-element-check:', $mandatorySubElementAttributes, $key, $data);
+
+                return false;
+            }
+
+            $tempData = $data[$key];
+
+            foreach ($tempData as $datum) {
+                if (!$this->isAttributeDataCompleted($mandatorySubElementAttributes, $datum)) {
                     return false;
-                }
-
-                if (empty($data[$key])) {
-                    //dd('isLevelThreeSingleDimensionElementCompleted fx called2', 'sub-element-empty', 'sub-element-check:', $mandatorySubElementAttributes, $key, $data);
-
-                    return false;
-                }
-
-                $tempData = $data[$key];
-
-                foreach ($tempData as $datum) {
-                    if (!$this->isAttributeDataCompleted($mandatorySubElementAttributes, $datum)) {
-                        return false;
-                    }
                 }
             }
 
