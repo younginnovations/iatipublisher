@@ -169,9 +169,9 @@ class Activity extends Model
         foreach ($fields as $field) {
             $mandatoryFields = [];
 
-            if ($field['criteria'] == 'mandatory') {
-                $mandatoryFields[] = $field['name'];
-            }
+            // if ($field['criteria'] == 'mandatory') {
+            //     $mandatoryFields[] = $field['name'];
+            // }
 
             if (isset($field['attributes'])) {
                 $attributes = $field['attributes'];

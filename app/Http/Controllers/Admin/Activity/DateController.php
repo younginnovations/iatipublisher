@@ -54,13 +54,13 @@ class DateController extends Controller
             $model['activity_date'] = $this->dateService->getDateData($id);
             $this->parentCollectionFormCreator->url = route('admin.activities.date.update', [$id]);
             $form = $this->parentCollectionFormCreator->editForm($model, $element['activity_date'], 'PUT', '/activities/' . $id);
-            $data = ['core' => $element['activity_date']['criteria'], 'status' => $activity->activity_date_element_completed, 'title' => $element['activity_date']['label'], 'name' => 'activity_date'];
+            $data = ['core' => $element['activity_date']['criteria'] ?? '', 'status' => $activity->activity_date_element_completed, 'title' => $element['activity_date']['label'], 'name' => 'activity_date'];
 
             return view('activity.date.date', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while rendering date form.');
+            return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while rendering activity-date form.');
         }
     }
 
@@ -84,14 +84,14 @@ class DateController extends Controller
             }
 
             if (!$this->dateService->update($activityDate, $activityData)) {
-                return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while updating date.');
+                return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while updating activity-date.');
             }
 
-            return redirect()->route('admin.activities.show', $id)->with('success', 'Date updated successfully.');
+            return redirect()->route('admin.activities.show', $id)->with('success', 'Activity-date updated successfully.');
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while updating date.');
+            return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while updating activity-date.');
         }
     }
 

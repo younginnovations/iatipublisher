@@ -54,7 +54,7 @@ class CapitalSpendController extends Controller
             $model['capital_spend'] = $this->capitalSpendService->getCapitalSpendData($id);
             $this->baseFormCreator->url = route('admin.activities.capital-spend.update', [$id]);
             $form = $this->baseFormCreator->editForm($model, $element['capital_spend'], 'PUT', '/activities/' . $id);
-            $data = ['core' => $element['capital_spend']['criteria'], 'status' => $activity->capital_spend_element_completed, 'title' => $element['capital_spend']['label'], 'name' => 'capital_spend'];
+            $data = ['core' => $element['capital_spend']['criteria'] ?? '', 'status' => $activity->capital_spend_element_completed, 'title' => $element['capital_spend']['label'], 'name' => 'capital_spend'];
 
             return view('activity.capitalSpend.capitalSpend', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {

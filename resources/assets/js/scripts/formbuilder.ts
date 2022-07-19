@@ -342,7 +342,7 @@ class FormBuilder {
    * @Logic hide vocabulary-uri and codes field based on '@vocabulary' field value
    */
   public transactionAidTypeVocabularyHideField() {
-    const aidtype_vocabulary = $('select[id*="aidtype_vocabulary"]');
+    const aidtype_vocabulary = $('select[id*="aid_type_vocabulary"]');
 
     if (aidtype_vocabulary.length > 0) {
       $.each(aidtype_vocabulary, (index, item) => {

@@ -31,7 +31,7 @@
             </div>
             <div>
               <h4 class="ellipsis__title relative mr-4 text-2xl font-bold">
-                <span class="ellipsis__title overflow-hidden">{{
+                <span class="ellipsis__title overflow-hidden" id="activity_title">{{
                   pageTitle ? pageTitle : 'Untitled'
                 }}</span>
                 <span class="ellipsis__title--hover">{{

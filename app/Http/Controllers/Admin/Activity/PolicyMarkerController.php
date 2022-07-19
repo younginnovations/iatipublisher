@@ -54,7 +54,7 @@ class PolicyMarkerController extends Controller
             $model['policy_marker'] = $this->policyMarkerService->getPolicyMarkerData($id);
             $this->parentCollectionFormCreator->url = route('admin.activities.policy-marker.update', [$id]);
             $form = $this->parentCollectionFormCreator->editForm($model, $element['policy_marker'], 'PUT', '/activities/' . $id);
-            $data = ['core' => $element['policy_marker']['criteria'], 'status' => $activity->policy_marker_element_completed, 'title' => $element['policy_marker']['label'], 'name' => 'policy_marker'];
+            $data = ['core' => $element['policy_marker']['criteria'] ?? '', 'status' => $activity->policy_marker_element_completed, 'title' => $element['policy_marker']['label'], 'name' => 'policy_marker'];
 
             return view('activity.policyMarker.policyMarker', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {

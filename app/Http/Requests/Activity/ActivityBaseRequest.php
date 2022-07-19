@@ -161,7 +161,7 @@ class ActivityBaseRequest extends FormRequest
                 $languageCodes = [];
 
                 foreach ($value as $language) {
-                    $code = $language['code'];
+                    $code = $language['code'] ?? $language['language'];
 
                     if (in_array($code, $languageCodes)) {
                         return false;
@@ -250,13 +250,13 @@ class ActivityBaseRequest extends FormRequest
         $rules[sprintf('%s.narrative', $formBase)][] = 'unique_lang';
         $rules[sprintf('%s.narrative', $formBase)][] = 'unique_default_lang';
 
-        //        foreach ($formFields as $narrativeIndex => $narrative) {
-        //            $rules[sprintf('%s.narrative.%s.narrative', $formBase, $narrativeIndex)][] = 'required_with:' . sprintf(
-        //                '%s.narrative.%s.language',
-        //                $formBase,
-        //                $narrativeIndex
-        //            );
-        //        }
+        //    foreach ($formFields as $narrativeIndex => $narrative) {
+        //        $rules[sprintf('%s.narrative.%s.narrative', $formBase, $narrativeIndex)][] = 'required_with:' . sprintf(
+        //            '%s.narrative.%s.language',
+        //            $formBase,
+        //            $narrativeIndex
+        //        );
+        //    }
 
         return $rules;
     }

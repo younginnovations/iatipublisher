@@ -54,7 +54,7 @@ class DescriptionController extends Controller
             $model['description'] = $this->descriptionService->getDescriptionData($id);
             $this->parentCollectionFormCreator->url = route('admin.activities.description.update', [$id]);
             $form = $this->parentCollectionFormCreator->editForm($model, $element['description'], 'PUT', '/activities/' . $id);
-            $data = ['core' => $element['description']['criteria'], 'status' => $activity->description_element_completed, 'title' => $element['description']['label'], 'name' => 'description'];
+            $data = ['core' => $element['description']['criteria'] ?? '', 'status' => $activity->description_element_completed, 'title' => $element['description']['label'], 'name' => 'description'];
 
             return view('activity.description.description', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {

@@ -132,7 +132,7 @@ class BaseForm extends Form
         if ($attributes) {
             if (Arr::get($element, 'add_more', false) && !$sub_elements && Arr::get(
                 $element,
-                'attributes.make_collection',
+                'make_collection',
                 true
             )) {
                 $this->buildCollection($attributes);

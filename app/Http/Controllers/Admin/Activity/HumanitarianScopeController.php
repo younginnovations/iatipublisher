@@ -54,7 +54,7 @@ class HumanitarianScopeController extends Controller
             $model['humanitarian_scope'] = $this->humanitarianScopeService->getHumanitarianScopeData($id);
             $this->parentCollectionFormCreator->url = route('admin.activities.humanitarian-scope.update', [$id]);
             $form = $this->parentCollectionFormCreator->editForm($model, $element['humanitarian_scope'], 'PUT', '/activities/' . $id);
-            $data = ['core' => $element['humanitarian_scope']['criteria'], 'status' => $activity->humanitarian_scope_element_completed, 'title' => $element['humanitarian_scope']['label'], 'name' => 'humanitarian_scope'];
+            $data = ['core' => $element['humanitarian_scope']['criteria'] ?? '', 'status' => $activity->humanitarian_scope_element_completed, 'title' => $element['humanitarian_scope']['label'], 'name' => 'humanitarian_scope'];
 
             return view('activity.humanitarianScope.humanitarianScope', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {

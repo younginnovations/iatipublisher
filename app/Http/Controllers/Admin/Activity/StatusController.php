@@ -46,7 +46,7 @@ class StatusController extends Controller
      *
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|void
      */
-    public function edit(int $id): View|RedirectResponse
+    public function edit(int $id): View|RedirectResponse|JsonResponse
     {
         try {
             $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
@@ -54,13 +54,13 @@ class StatusController extends Controller
             $model['activity_status'] = $this->statusService->getStatusData($id);
             $this->baseFormCreator->url = route('admin.activities.status.update', [$id]);
             $form = $this->baseFormCreator->editForm($model, $element['activity_status'], 'PUT', '/activities/' . $id);
-            $data = ['core' => $element['activity_status']['criteria'], 'status' => $activity->activity_status_element_completed, 'title' => $element['activity_status']['label'], 'name' => 'activity_status'];
+            $data = ['core' => $element['activity_status']['criteria'] ?? false, 'status' => $activity->activity_status_element_completed ?? false, 'title' => $element['activity_status']['label'], 'name' => 'activity_status'];
 
             return view('activity.status.status', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return response()->json(['success' => false, 'error' => 'Error has occurred while opening activity status form.']);
+            return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while opening activity title form.');
         }
     }
 

@@ -1676,7 +1676,7 @@
           :class="{ 'mb-4': key !== data.content.length - 1 }"
         >
           <div class="mb-1 text-sm">
-            <div v-if="post.name">{{ post.name }}</div>
+            <div v-if="post.legacy_name">{{ post.legacy_name }}</div>
             <span v-else class="italic">Name Not Available</span>
           </div>
           <div class="ml-5">
