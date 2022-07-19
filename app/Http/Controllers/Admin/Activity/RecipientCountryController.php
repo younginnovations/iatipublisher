@@ -54,10 +54,11 @@ class RecipientCountryController extends Controller
             $model['recipient_country'] = $this->recipientCountryService->getRecipientCountryData($id);
             $this->parentCollectionFormCreator->url = route('admin.activities.recipient-country.update', [$id]);
             $form = $this->parentCollectionFormCreator->editForm($model, $element['recipient_country'], 'PUT', '/activities/' . $id);
-            $data = ['core' => $element['recipient_country']['criteria'], 'status' => $activity->recipient_country_element_completed, 'title' => $element['recipient_country']['label'], 'name' => 'recipient_country'];
+            $data = ['core' => $element['recipient_country']['criteria'] ?? '', 'status' => $activity->recipient_country_element_completed, 'title' => $element['recipient_country']['label'], 'name' => 'recipient_country'];
 
             return view('activity.recipientCountry.recipientCountry', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {
+            dd($e);
             logger()->error($e->getMessage());
 
             return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while opening recipient-country form.');

@@ -54,7 +54,7 @@ class ScopeController extends Controller
             $model['activity_scope'] = $this->scopeService->getScopeData($id);
             $this->baseFormCreator->url = route('admin.activities.scope.update', [$id]);
             $form = $this->baseFormCreator->editForm($model, $element['activity_scope'], 'PUT', '/activities/' . $id);
-            $data = ['core' => $element['activity_scope']['criteria'], 'status' => $activity->activity_scope_element_completed, 'title' => $element['activity_scope']['label'], 'name' => 'activity_scope'];
+            $data = ['core' => $element['activity_scope']['criteria'] ?? '', 'status' => $activity->activity_scope_element_completed, 'title' => $element['activity_scope']['label'], 'name' => 'activity_scope'];
 
             return view('activity.scope.scope', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {

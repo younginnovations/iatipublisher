@@ -54,13 +54,13 @@ class IdentifierController extends Controller
             $model['activity_identifier'] = $this->identifierService->getActivityIdentifierData($id);
             $this->baseFormCreator->url = route('admin.activities.identifier.update', [$id]);
             $form = $this->baseFormCreator->editForm($model['activity_identifier'], $element['iati_identifier'], 'PUT', '/activities/' . $id);
-            $data = ['core' => $element['iati_identifier']['criteria'], 'status' => $activity->identifier_element_completed, 'title' => $element['iati_identifier']['label'], 'name' => 'iati_identifier'];
+            $data = ['core' => $element['iati_identifier']['criteria'] ?? '', 'status' => $activity->identifier_element_completed, 'title' => $element['iati_identifier']['label'], 'name' => 'iati_identifier'];
 
             return view('activity.identifier.identifier', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return response()->json(['success' => false, 'error' => 'Error has occurred while rendering iati-identifier form.']);
+            return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while opening activity title form.');
         }
     }
 

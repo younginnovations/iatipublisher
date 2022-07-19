@@ -55,7 +55,7 @@ class ContactInfoController extends Controller
             $model['contact_info'] = $this->contactInfoService->getContactInfoData($id) ?: [];
             $this->parentCollectionFormCreator->url = route('admin.activities.contact-info.update', [$id]);
             $form = $this->parentCollectionFormCreator->editForm($model, $element['contact_info'], 'PUT', '/activities/' . $id);
-            $data = ['core' => $element['contact_info']['criteria'], 'status' => false, 'title' => $element['contact_info']['label'], 'name' => 'contact_info'];
+            $data = ['core' => $element['contact_info']['criteria'] ?? '', 'status' => false, 'title' => $element['contact_info']['label'], 'name' => 'contact_info'];
 
             return view('activity.contactInfo.contactInfo', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {

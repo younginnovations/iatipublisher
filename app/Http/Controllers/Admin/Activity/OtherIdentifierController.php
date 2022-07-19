@@ -54,7 +54,7 @@ class OtherIdentifierController extends Controller
             $model = $this->otherIdentifierService->getOtherIdentifierData($id) ?: [];
             $this->multilevelSubElementFormCreator->url = route('admin.activities.other-identifier.update', [$id]);
             $form = $this->multilevelSubElementFormCreator->editForm($model, $element['other_identifier'], 'PUT', '/activities/' . $id);
-            $data = ['core' => $element['other_identifier']['criteria'], 'status' => $activity->other_identifier_element_completed, 'title' => $element['other_identifier']['label'], 'name' => 'other_identifier'];
+            $data = ['core' => $element['other_identifier']['criteria'] ?? '', 'status' => $activity->other_identifier_element_completed, 'title' => $element['other_identifier']['label'], 'name' => 'other_identifier'];
 
             return view('activity.otherIdentifier.other_identifier', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {

@@ -54,10 +54,11 @@ class ConditionController extends Controller
             $model = $this->conditionService->getConditionData($id) ?: [];
             $this->multilevelSubElementFormCreator->url = route('admin.activities.conditions.update', [$id]);
             $form = $this->multilevelSubElementFormCreator->editForm($model, $element['conditions'], 'PUT', '/activities/' . $id);
-            $data = ['core' => $element['conditions']['criteria'], 'status' => $activity->conditions_element_completed, 'title' => $element['conditions']['label'], 'name' => 'conditions'];
+            $data = ['core' => $element['conditions']['criteria'] ?? false, 'status' => $activity->conditions_element_completed, 'title' => $element['conditions']['label'], 'name' => 'conditions'];
 
             return view('activity.condition.condition', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {
+            dd($e);
             logger()->error($e->getMessage());
 
             return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while rendering activity condition form.');

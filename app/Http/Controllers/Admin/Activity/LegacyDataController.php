@@ -54,10 +54,11 @@ class LegacyDataController extends Controller
             $activity = $this->activityLegacyDataService->getActivityData($id);
             $this->baseFormCreator->url = route('admin.activities.legacy-data.update', [$id]);
             $form = $this->baseFormCreator->editForm($model, $element['legacy_data'], 'PUT', '/activities/' . $id);
-            $data = ['core' => $element['legacy_data']['criteria'], 'status' => $activity->legacy_data_element_completed, 'title' => $element['legacy_data']['label'], 'name' => 'legacy_data'];
+            $data = ['core' => $element['legacy_data']['criteria'] ?? '', 'status' => $activity->legacy_data_element_completed, 'title' => $element['legacy_data']['label'], 'name' => 'legacy_data'];
 
             return view('activity.legacyData.legacyData', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {
+            dd($e);
             logger()->error($e->getMessage());
 
             return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while rendering legacy-data form.');
