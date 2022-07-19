@@ -132,7 +132,8 @@ class ActivityController extends Controller
             $results = $this->resultService->getActivityResultsWithIndicatorsAndPeriods($activity->id);
             $hasIndicatorPeriod = $this->resultService->checkResultIndicatorPeriod($results);
             $transactions = $this->transactionService->getActivityTransactions($activity->id);
-            $progress = 75;
+            $progress = $this->activityPublishingProgress($status);
+            dd($progress);
 
             return view(
                 'admin.activity.show',
@@ -331,8 +332,44 @@ class ActivityController extends Controller
             'contact_info'         => $activity->contact_info_element_completed,
             'location'             => $activity->location_element_completed,
             'planned_disbursement' => $activity->planned_disbursement_element_completed,
-            'transactions'          => $activity->transactions_element_completed,
+            'transactions'         => $activity->transactions_element_completed,
             'result'               => $activity->result_element_completed,
         ];
+    }
+
+    /**
+     * Return activity publishing progress in percentage.
+     *
+     * @param $elements_status
+     *
+     * @return float|int
+     */
+    public function activityPublishingProgress($elements_status): float|int
+    {
+        $core_elements = [
+            'title',
+            'description',
+            'budget',
+            'transactions',
+            'sector',
+            'participating_org',
+            'activity_status',
+            'activity_date',
+            'recipient_country',
+            'recipient_region',
+            'collaboration_type',
+            'default_flow_type',
+            'default_finance_type',
+            'default_aid_type',
+        ];
+        $completed_core_element_count = 0;
+
+        foreach ($core_elements as $core_element) {
+            if (array_key_exists($core_element, $elements_status) && $elements_status[$core_element]) {
+                $completed_core_element_count++;
+            }
+        }
+
+        return ($completed_core_element_count / count($core_elements)) * 100;
     }
 }
