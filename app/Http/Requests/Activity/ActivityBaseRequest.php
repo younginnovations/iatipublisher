@@ -161,7 +161,7 @@ class ActivityBaseRequest extends FormRequest
                 $languageCodes = [];
 
                 foreach ($value as $language) {
-                    $code = $language['code'] ?? $language['language'];
+                    $code = isset($language['code']) ? $language['code'] : ($language['language'] ?? '');
 
                     if (in_array($code, $languageCodes)) {
                         return false;
