@@ -80,4 +80,14 @@ class ElementCompleteTest extends TestCase
     {
         $this->assertTrue($this->activityObj->isLevelOneMultiDimensionElementCompleted($element, $actualData));
     }
+
+    protected function test_level_two_single_dimensional_element_incomplete($element, $actualData)
+    {
+        $this->assertFalse($this->activityObj->isLevelTwoSingleDimensionElementCompleted($element, $actualData));
+    }
+
+    protected function test_level_two_single_dimensional_element_complete($element, $actualData)
+    {
+        $this->assertTrue($this->activityObj->isLevelTwoSingleDimensionElementCompleted($element, $actualData));
+    }
 }
