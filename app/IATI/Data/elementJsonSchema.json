@@ -2271,7 +2271,7 @@
         "choices": "Organization/OrganisationRole.json",
         "required": true,
         "criteria": "mandatory",
-        "hover_text": "",
+        "hover_text": "An organisation involved with the activity. May be a donor, fund, agency, etc. Specifying the @ref identifier is strongly recommended. May contain the organisation name as narrative. If the reporting organisation plays a role in the activity it should be repeated here. One organisation may play more than one role (eg, funding and implementing): in such a case each role should be reported and the name of the organisation repeated. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/participating-org/'>For more information</a>",
         "help_text": ""
       },
       "ref": {
@@ -2280,7 +2280,7 @@
         "type": "text",
         "required": true,
         "criteria": "mandatory",
-        "hover_text": "",
+        "hover_text": "Machine-readable identification string for the organisation issuing the report. Must be in the format {RegistrationAgency}-{RegistrationNumber} where {RegistrationAgency} is a valid code in the Organisation Registration Agency code list and {RegistrationNumber} is a valid identifier issued by the {RegistrationAgency}. If this is not present then the narrative MUST contain the name of the organisation. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/participating-org/'>For more information</a>",
         "help_text": ""
       },
       "type": {
@@ -2290,7 +2290,7 @@
         "choices": "Organization/OrganizationType.json",
         "required": true,
         "criteria": "mandatory",
-        "hover_text": "",
+        "hover_text": "The type of organisation issuing the report. See IATI codelist for values.</b> This value must be of type xsd:string. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/participating-org/'>For more information</a>",
         "help_text": ""
       },
       "activity_id": {
@@ -2299,7 +2299,7 @@
         "type": "text",
         "required": true,
         "criteria": "mandatory",
-        "hover_text": "",
+        "hover_text": "A valid activity identifier published by the participating organisation which points to the activity that it has published to IATI that describes its role in this activity.</b> This value must be of type xsd:string. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/participating-org/'>For more information</a>",
         "help_text": ""
       },
       "crs_channel_code": {
@@ -2309,7 +2309,7 @@
         "choices": "Activity/CRSChannelCode.json",
         "required": true,
         "criteria": "mandatory",
-        "hover_text": "",
+        "hover_text": "Under CRS++ Reporting Directives this code identifies the implementing agency. Codes ending in ‘00’ are generic and are similar to the OrganisationType code.</b> This value must be of type xsd:string. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/participating-org/'>For more information</a>",
         "help_text": ""
       }
     },

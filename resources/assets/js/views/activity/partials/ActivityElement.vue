@@ -467,11 +467,11 @@
                   <span v-else class="italic">Not Available</span>
                 </td>
               </tr>
-              <tr>
+              <!-- <tr>
                 <td>Organisation Id</td>
                 <td v-if="post.organization">{{ post.organization }}</td>
                 <td v-else class="italic">Not Available</td>
-              </tr>
+              </tr> -->
               <tr>
                 <td>Organisation Type</td>
                 <td v-if="post.type">
@@ -489,7 +489,7 @@
               <tr>
                 <td>Ref</td>
                 <td v-if="post.ref">
-                  {{ types.humanitarianScopeType[post.ref] }}
+                  {{ post.ref }}
                 </td>
                 <td v-else class="italic">Not Available</td>
               </tr>
@@ -1796,7 +1796,8 @@
 
           <!-- Capital Spend -->
           <template v-else-if="title === 'capital_spend'">
-            <span v-if="data.content">{{ data.content.toString() }}%</span>
+          <!-- {{data.content.toString()}} -->
+            <span v-if="data.content.toString()">{{ data.content.toString() }}%</span>
             <span v-else class="italic">Not Available</span>
           </template>
 
