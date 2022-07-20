@@ -17,7 +17,7 @@ class Activity extends Model
 
     protected $appends = ['title_element_completed'];
 
-    private $element = '';
+    public $element = '';
 
     /**
      * Fillable property for mass assignment.
