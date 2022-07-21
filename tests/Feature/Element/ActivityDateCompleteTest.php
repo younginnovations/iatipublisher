@@ -81,7 +81,10 @@ class ActivityDateCompleteTest extends ElementCompleteTest
 
     public function test_activity_date_element_complete()
     {
-        $activity_dateData = json_decode('[{"type":"1","narrative":[{"narrative":"DGGF Track 3 English","language":"en"},{"narrative":"DGGF Track 3 French","language":"fr"}]}]', true);
+        $activity_dateData = json_decode(
+            '[{"type":"1","date":"2020-02-02","narrative":[{"narrative":"DGGF Track 3 English","language":"en"},{"narrative":"DGGF Track 3 French","language":"fr"}]}]',
+            true
+        );
 
         $this->test_level_one_multi_dimensional_element_complete($this->element, $activity_dateData);
     }
