@@ -494,7 +494,7 @@ class Activity extends Model
         $subElements              = array_key_exists('sub_elements', $elementSchema) ? $elementSchema['sub_elements'] : [];
         $mandatorySubElementsFlag = false;
 
-        foreach ($subElements as $subElement) {
+        foreach ($subElements as $key => $subElement) {
             $mandatorySubElementAttributes = array_key_exists('attributes', $subElement) ? $this->mandatoryAttributes($subElement['attributes']) : [];
 
             if (!empty($mandatorySubElementAttributes)) {
@@ -511,6 +511,9 @@ class Activity extends Model
         }
 
         if ($mandatorySubElementsFlag) {
+            if (empty($data)) {
+                return false;
+            }
             foreach ($data as $datum) {
                 if (!$this->isSubElementCompleted($subElements, $datum)) {
                     return false;
