@@ -15,7 +15,8 @@ class ParticipatingOrgCompleteTest extends ElementCompleteTest
 
     public function test_participating_org_mandatory_attributes()
     {
-        $this->test_mandatory_attributes($this->element, ['organization_role', 'ref', 'type', 'identifier', 'crs_channel_code']);
+        //$this->test_mandatory_attributes($this->element, ['organization_role', 'ref', 'type', 'identifier', 'crs_channel_code']);
+        $this->test_mandatory_attributes($this->element, ['organization_role']);
     }
 
     public function test_participating_org_mandatory_sub_elements()
@@ -46,7 +47,9 @@ class ParticipatingOrgCompleteTest extends ElementCompleteTest
 
     public function test_participating_org_empty_all_attributes()
     {
-        $participating_orgData = json_decode('[{"organization_role":"","ref":"","type":"","identifier":"","crs_channel_code":"","narrative":[{"narrative":"participating-org1-narrative1","language":"ab"}]}]', true);
+        //$participating_orgData = json_decode('[{"organization_role":"","ref":"","type":"","identifier":"","crs_channel_code":"","narrative":[{"narrative":"participating-org1-narrative1",
+        //"language":"ab"}]}]', true);
+        $participating_orgData = json_decode('[{"organization_role":"","ref":"1","type":"1","identifier":"123","crs_channel_code":"123","narrative":[{"narrative":"participating-org1-narrative1","language":"ab"}]}]', true);
 
         $this->test_level_one_multi_dimensional_element_incomplete($this->element, $participating_orgData);
     }
@@ -65,7 +68,7 @@ class ParticipatingOrgCompleteTest extends ElementCompleteTest
         $this->test_level_one_multi_dimensional_element_incomplete($this->element, $participating_orgData);
     }
 
-    public function test_participating_org_attribute_empty_ref()
+    /*public function test_participating_org_attribute_empty_ref()
     {
         $participating_orgData = json_decode('[{"organization_role":"1","ref":"","type":"10","identifier":"1231231","crs_channel_code":"10000","narrative":[{"narrative":"participating-org1-narrative1","language":"ab"}]}]', true);
 
@@ -119,7 +122,7 @@ class ParticipatingOrgCompleteTest extends ElementCompleteTest
         $participating_orgData = json_decode('[{"organization_role":"1","ref":"1","type":"1","identifier":"10000","narrative":[{"narrative":"participating-org1-narrative1","language":"ab"}]}]', true);
 
         $this->test_level_one_multi_dimensional_element_incomplete($this->element, $participating_orgData);
-    }
+    }*/
 
     public function test_participating_org_element_complete()
     {

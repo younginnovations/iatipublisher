@@ -1875,8 +1875,7 @@
             "name": "code",
             "label": "@code",
             "type": "select",
-            "choices": "Activity/Country.json",
-            "required": true,
+            "choices": "Activity/Country.json",            "required": true,
             "criteria": "",
             "hover_text": "The code for the administrative area being reported from the vocabulary specified. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/location/administrative/'>For more information</a>",
             "help_text": ""
