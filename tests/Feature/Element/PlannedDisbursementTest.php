@@ -13,6 +13,16 @@ class PlannedDisbursementTest extends ElementCompleteTest
         $this->activityObj->element = $this->element;
     }
 
+    public function test_humanitarian_scope_mandatory_attributes()
+    {
+        $this->test_mandatory_attributes($this->element, []);
+    }
+
+    public function test_humanitarian_scope_mandatory_sub_elements()
+    {
+        $this->test_mandatory_sub_elements($this->element, ['period_start'=>['iso_date'], 'period_end'=>['iso_date'], 'value'=>['amount', 'currency', 'value_date']]);
+    }
+
     public function test_planned_disbursement_empty_data()
     {
         $actualData = '';
@@ -34,7 +44,7 @@ class PlannedDisbursementTest extends ElementCompleteTest
         $this->test_level_two_multi_dimensional_element_incomplete($this->element, $actualData);
     }
 
-    public function test_planned_disbursement_attribute_no_planned_disbursement_type_key()
+    /*public function test_planned_disbursement_attribute_no_planned_disbursement_type_key()
     {
         $actualData = json_decode(
             '[{"period_start":[{"iso_date":"2022-07-19"}],"period_end":[{"iso_date":"2022-07-27"}],"value":[{"amount":"1111","currency":"AOA","value_date":"2022-07-30"}],"provider_org":[{"ref":"provider-org-ref","provider_activity_id":"123123123","type":"11","narrative":[{"narrative":"asdasdasdads","language":"ab"}]}],"receiver_org":[{"ref":"receiver-org-ref","provider_activity_id":"5555","type":"23","narrative":[{"narrative":"asdasdadasdasd","language":"af"}]}]}]',
@@ -42,7 +52,7 @@ class PlannedDisbursementTest extends ElementCompleteTest
         );
 
         $this->test_level_two_multi_dimensional_element_incomplete($this->element, $actualData);
-    }
+    }*/
 
     public function test_planned_disbursement_sub_element_no_period_start_key()
     {
@@ -74,7 +84,7 @@ class PlannedDisbursementTest extends ElementCompleteTest
         $this->test_level_two_multi_dimensional_element_incomplete($this->element, $actualData);
     }
 
-    public function test_planned_disbursement_sub_element_no_provider_org_key()
+    /*public function test_planned_disbursement_sub_element_no_provider_org_key()
     {
         $actualData = json_decode(
             '[{"planned_disbursement_type":"1","period_start":[{"iso_date":"2022-07-19"}],"value":[{"amount":"1111","currency":"AOA","value_date":"2022-07-30"}],"receiver_org":[{"ref":"receiver-org-ref","provider_activity_id":"5555","type":"23","narrative":[{"narrative":"asdasdadasdasd","language":"af"}]}]}]',
@@ -82,7 +92,7 @@ class PlannedDisbursementTest extends ElementCompleteTest
         );
 
         $this->test_level_two_multi_dimensional_element_incomplete($this->element, $actualData);
-    }
+    }*/
 
     public function test_planned_disbursement_sub_element_no_receiver_org_key()
     {
@@ -104,7 +114,7 @@ class PlannedDisbursementTest extends ElementCompleteTest
         $this->test_level_two_multi_dimensional_element_incomplete($this->element, $actualData);
     }
 
-    public function test_planned_disbursement_attribute_empty_planned_disbursement_type()
+    /*public function test_planned_disbursement_attribute_empty_planned_disbursement_type()
     {
         $actualData = json_decode(
             '[{"planned_disbursement_type":"","period_start":[{"iso_date":"2022-07-19"}],"period_end":[{"iso_date":"2022-07-27"}],"value":[{"amount":"1111","currency":"AOA","value_date":"2022-07-30"}],"provider_org":[{"ref":"provider-org-ref","provider_activity_id":"123123123","type":"11","narrative":[{"narrative":"asdasdasdads","language":"ab"}]}],"receiver_org":[{"ref":"receiver-org-ref","provider_activity_id":"5555","type":"23","narrative":[{"narrative":"asdasdadasdasd","language":"af"}]}]}]',
@@ -112,7 +122,7 @@ class PlannedDisbursementTest extends ElementCompleteTest
         );
 
         $this->test_level_two_multi_dimensional_element_incomplete($this->element, $actualData);
-    }
+    }*/
 
     public function test_planned_disbursement_sub_element_empty_period_start()
     {
@@ -294,7 +304,7 @@ class PlannedDisbursementTest extends ElementCompleteTest
         $this->test_level_two_multi_dimensional_element_incomplete($this->element, $actualData);
     }
 
-    public function test_planned_disbursement_sub_element_empty_provider_org()
+    /*public function test_planned_disbursement_sub_element_empty_provider_org()
     {
         $actualData = json_decode(
             '[{"planned_disbursement_type":"1","period_start":[{"iso_date":"2022-07-19"}],"period_end":[{"iso_date":"2022-07-27"}],"value":[{"amount":"1111","currency":"AOA","value_date":"2022-07-30"}],"provider_org":"","receiver_org":[{"ref":"receiver-org-ref","provider_activity_id":"5555","type":"23","narrative":[{"narrative":"asdasdadasdasd","language":"af"}]}]}]',
@@ -572,7 +582,7 @@ class PlannedDisbursementTest extends ElementCompleteTest
         );
 
         $this->test_level_two_multi_dimensional_element_incomplete($this->element, $actualData);
-    }
+    }*/
 
     public function test_planned_disbursement_element_complete()
     {
