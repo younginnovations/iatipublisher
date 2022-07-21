@@ -23,105 +23,105 @@ class DescriptionCompleteTest extends ElementCompleteTest
         $this->test_mandatory_sub_elements($this->element, ['narrative' => ['narrative', 'language']]);
     }
 
-    public function test_description_element_empty()
+    public function test_description_empty_data()
     {
         $descriptionData = '';
 
         $this->test_level_one_multi_dimensional_element_incomplete($this->element, $descriptionData);
     }
 
-    public function test_description_element_empty_array()
+    public function test_description_empty_array()
     {
         $descriptionData = json_decode('[]', true);
 
         $this->test_level_one_multi_dimensional_element_incomplete($this->element, $descriptionData);
     }
 
-    public function test_description_element_empty_json_array()
+    public function test_description_empty_json_array()
     {
         $descriptionData = json_decode('[{}]', true);
 
         $this->test_level_one_multi_dimensional_element_incomplete($this->element, $descriptionData);
     }
 
-    public function test_description_element_type_and_narrative_and_description_empty()
+    public function test_description_empty_type_and_narrative_and_description()
     {
         $descriptionData = json_decode('[{"type":"","narrative":[{"narrative":"","language":""}]}]', true);
 
         $this->test_level_one_multi_dimensional_element_incomplete($this->element, $descriptionData);
     }
 
-    public function test_description_no_type_key()
+    public function test_description_attribute_no_type_key()
     {
         $descriptionData = json_decode('[{"narrative":[{"narrative":"test-narrative","language":"en"}]}]', true);
 
         $this->test_level_one_multi_dimensional_element_incomplete($this->element, $descriptionData);
     }
 
-    public function test_description_no_narrative_key()
+    public function test_description_sub_element_no_narrative_key()
     {
         $descriptionData = json_decode('[{"type":"1"}]', true);
 
         $this->test_level_one_multi_dimensional_element_incomplete($this->element, $descriptionData);
     }
 
-    public function test_description_empty_type()
+    public function test_description_attribute_empty_type()
     {
         $descriptionData = json_decode('[{"type":"","narrative":[{"narrative":"test-narrative","language":"en"}]}]', true);
 
         $this->test_level_one_multi_dimensional_element_incomplete($this->element, $descriptionData);
     }
 
-    public function test_description_empty_narrative()
+    public function test_description_sub_element_empty_narrative()
     {
         $descriptionData = json_decode('[{"type":"1","narrative":""}]', true);
 
         $this->test_level_one_multi_dimensional_element_incomplete($this->element, $descriptionData);
     }
 
-    public function test_description_empty_narrative_array()
+    public function test_description_sub_element_empty_narrative_array()
     {
         $descriptionData = json_decode('[{"type":"1","narrative":[]}]', true);
 
         $this->test_level_one_multi_dimensional_element_incomplete($this->element, $descriptionData);
     }
 
-    public function test_description_empty_narrative_json_array()
+    public function test_description_sub_element_narrative_empty_narrative_json_array()
     {
         $descriptionData = json_decode('[{"type":"","narrative":[{}]}]', true);
 
         $this->test_level_one_multi_dimensional_element_incomplete($this->element, $descriptionData);
     }
 
-    public function test_description_element_empty_narrative_and_empty_language()
+    public function test_description_sub_element_narrative_empty_narrative_and_language()
     {
         $descriptionData = json_decode('[{"type":"1","narrative":[{"narrative":"","language":""}]}]', true);
 
         $this->test_level_one_multi_dimensional_element_incomplete($this->element, $descriptionData);
     }
 
-    public function test_description_no_inner_narrative_key()
+    public function test_description_sub_element_narrative_no_narrative_key()
     {
         $descriptionData = json_decode('[{"type":"1", "narrative":[{"language":"en"}]}]', true);
 
         $this->test_level_one_multi_dimensional_element_incomplete($this->element, $descriptionData);
     }
 
-    public function test_description_no_inner_language_key()
+    public function test_description_sub_element_narrative_no_language_key()
     {
         $descriptionData = json_decode('[{"type":"1", "narrative":[{"narrative":"test-narrative"}]}]', true);
 
         $this->test_level_one_multi_dimensional_element_incomplete($this->element, $descriptionData);
     }
 
-    public function test_description_element_empty_narrative()
+    public function test_description_sub_element_narrative_empty_narrative()
     {
         $descriptionData = json_decode('[{"type":"1","narrative":[{"narrative":"","language":"en"}]}]', true);
 
         $this->test_level_one_multi_dimensional_element_incomplete($this->element, $descriptionData);
     }
 
-    public function test_description_element_empty_language()
+    public function test_description_sub_element_narrative_empty_language()
     {
         $descriptionData = json_decode('[{"type":"1","narrative":[{"narrative":"asdasd","language":""}]}]', true);
 

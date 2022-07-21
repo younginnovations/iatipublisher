@@ -13,21 +13,21 @@ class PlannedDisbursementTest extends ElementCompleteTest
         $this->activityObj->element = $this->element;
     }
 
-    public function test_planned_disbursement_element_empty()
+    public function test_planned_disbursement_empty_data()
     {
         $actualData = '';
 
         $this->test_level_one_multi_dimensional_element_incomplete($this->element, $actualData);
     }
 
-    public function test_planned_disbursement_element_empty_array()
+    public function test_planned_disbursement_empty_array()
     {
         $actualData = json_decode('[]', true);
 
         $this->test_level_one_multi_dimensional_element_incomplete($this->element, $actualData);
     }
 
-    public function test_planned_disbursement_element_empty_json_array()
+    public function test_planned_disbursement_empty_json_array()
     {
         $actualData = json_decode('[{}]', true);
 

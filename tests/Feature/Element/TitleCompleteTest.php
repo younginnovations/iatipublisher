@@ -18,54 +18,54 @@ class TitleCompleteTest extends ElementCompleteTest
         $this->test_mandatory_sub_elements($this->element, ['narrative' => ['narrative', 'language']]);
     }
 
-    public function test_title_element_empty()
+    public function test_title_empty_data()
     {
         $this->test_sub_element_empty($this->element, ['narrative' => '']);
     }
 
-    public function test_title_element_empty_array()
+    public function test_title_empty_array()
     {
         $titleData = json_decode('[]', true);
 
         $this->test_sub_element_empty($this->element, ['narrative' => $titleData]);
     }
 
-    public function test_title_element_empty_json_array()
+    public function test_title_empty_json_array()
     {
         $titleData = json_decode('[{}]', true);
 
         $this->test_sub_element_empty($this->element, ['narrative' => $titleData]);
     }
 
-    public function test_title_element_narrative_and_title_empty()
+    public function test_title_sub_element_empty_narrative_and_title()
     {
         $titleData = json_decode('[{"narrative":"","language":""}]', true);
 
         $this->test_sub_element_empty($this->element, ['narrative' => $titleData]);
     }
 
-    public function test_title_no_narrative_key()
+    public function test_title_sub_element_no_narrative_key()
     {
         $titleData = json_decode('[{"language":"en"}]', true);
 
         $this->test_sub_element_empty($this->element, ['narrative' => $titleData]);
     }
 
-    public function test_title_no_language_key()
+    public function test_title_sub_element_no_language_key()
     {
         $titleData = json_decode('[{"narrative":"asdad"}]', true);
 
         $this->test_sub_element_empty($this->element, ['narrative' => $titleData]);
     }
 
-    public function test_title_empty_narrative()
+    public function test_title_sub_element_empty_narrative()
     {
         $titleData = json_decode('[{"narrative":"", "language":""}]', true);
 
         $this->test_sub_element_empty($this->element, ['narrative' => $titleData]);
     }
 
-    public function test_title_empty_language()
+    public function test_title_sub_element_empty_language()
     {
         $titleData = json_decode('[{"narrative":"asdad", "language":""}]', true);
 
