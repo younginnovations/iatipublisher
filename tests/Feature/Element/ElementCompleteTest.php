@@ -110,4 +110,9 @@ class ElementCompleteTest extends TestCase
     {
         $this->assertTrue($this->activityObj->isLevelThreeSingleDimensionElementCompleted($element, $actualData));
     }
+
+    protected function test_transaction_data_complete($subElements, $actualData)
+    {
+        $this->assertTrue($this->activityObj->checkTransactionData($subElements, $actualData));
+    }
 }
