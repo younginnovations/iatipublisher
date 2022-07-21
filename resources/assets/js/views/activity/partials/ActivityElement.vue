@@ -511,7 +511,7 @@
             <div v-if="participating_org.country_code" class="space-x-1">
               <span>{{ types.country[participating_org.country_code] }}</span>
               <span v-if="participating_org.percentage" class="text-sm font-normal"
-                >({{ participating_org.percentage }}%)</span
+                >({{ roundFloat(participating_org.percentage) }}%)</span
               >
             </div>
             <span v-else class="italic">Not Available</span>
@@ -558,7 +558,7 @@
               <span v-if="post.custom_code">{{ post.custom_code }}</span>
               <span v-else class="italic">Not Available</span>
             </div>
-            <span v-if="post.percentage">({{ post.percentage }}%)</span>
+            <span v-if="post.percentage">({{ roundFloat(post.percentage) }}%)</span>
           </div>
           <div class="elements-detail ml-5">
             <table>
@@ -913,7 +913,7 @@
               </div>
             </div>
             <span v-if="post.percentage" class="text-sm"
-              >({{ post.percentage }}%)</span
+              >({{ roundFloat(post.percentage) }}%)</span
             >
           </div>
           <div
@@ -1151,7 +1151,7 @@
               <span>
                 {{ types.budgetIdentifier[post.code] }}
               </span>
-              <span>({{ post.percentage }}%)</span>
+              <span>({{ post.percentage.toFixed(2) }}%)</span>
             </div>
             <span v-else class="italic">Not Available</span>
           </div>
@@ -1308,9 +1308,9 @@
                 </tr>
               </table>
             </div>
-            <table class="text-sm">
+            <table>
               <tr>
-                <td>status</td>
+                <td>Status</td>
                 <td>
                   <span v-if="post.budget_status">{{
                     types.budgetStatus[post.budget_status]
@@ -1857,7 +1857,11 @@ export default defineComponent({
       return moment(date).format('LL');
     }
 
-    return { layout, status, props, formatDate };
+    function roundFloat(num: string) {
+      return parseFloat(num).toFixed(2);
+    }
+
+    return { layout, status, props, formatDate, roundFloat };
   },
 });
 </script>

@@ -121,7 +121,7 @@ class WrapperCollectionForm extends Form
             $options['attr']['class'] = 'select2';
             $options['empty_value'] = $field['empty_value'] ?? 'Select a value';
             $options['choices'] = $field['choices'] ? (is_string($field['choices']) ? ($this->getCodeList($field['choices'])) : $field['choices']) : false;
-            $options['default_value'] = $field['default'] ?? false;
+            $options['default_value'] = $field['default'] ?? '';
         }
 
         $this

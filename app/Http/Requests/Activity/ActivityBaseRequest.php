@@ -331,7 +331,7 @@ class ActivityBaseRequest extends FormRequest
 
         foreach ($formFields as $periodEndKey => $periodEndVal) {
             // $rules[$formBase . '.period_end.' . $periodEndKey . '.date'][] = 'required';
-            $rules[$formBase . '.period_end.' . $periodEndKey . '.date'][] = 'date|date_greater_than:1900';
+            $rules[$formBase . '.period_end.' . $periodEndKey . '.date'][] = ['date', 'date_greater_than:1900'];
             $rules[$formBase . '.period_end.' . $periodEndKey . '.date'][] = sprintf(
                 'after:%s',
                 $formBase . '.period_start.' . $periodEndKey . '.date'
@@ -423,7 +423,7 @@ class ActivityBaseRequest extends FormRequest
         $rules = [];
 
         foreach ($formFields as $documentCategoryIndex => $documentCategory) {
-            $rules[sprintf('%s.document_date.%s.date', $formIndex, $documentCategoryIndex)] = 'nullable|date';
+            $rules[sprintf('%s.document_date.%s.date', $formIndex, $documentCategoryIndex)] = 'nullable|date|date_greater_than:1900';
         }
 
         return $rules;
@@ -494,6 +494,8 @@ class ActivityBaseRequest extends FormRequest
         foreach ($formFields as $documentCategoryIndex => $documentCategory) {
             $messages[sprintf('%s.document_date.%s.date.date', $formIndex, $documentCategoryIndex)]
                 = 'The @iso-date field must be a proper date.';
+            $messages[sprintf('%s.document_date.%s.date.date_greater_than', $formIndex, $documentCategoryIndex)]
+                = 'The @iso-date field must be a greater than 1900.';
         }
 
         return $messages;

@@ -189,4 +189,80 @@ class PlannedDisbursementRequest extends ActivityBaseRequest
 
         return $messages;
     }
+
+    /**
+     * returns rules for period start form.
+     * @param $formFields
+     * @param $formBase
+     * @return array
+     */
+    public function getRulesForPeriodStart($formFields, $formBase)
+    {
+        $rules = [];
+        foreach ($formFields as $periodStartKey => $periodStartVal) {
+            $rules[$formBase . '.period_start.' . $periodStartKey . '.iso_date'] = 'date';
+        }
+
+        return $rules;
+    }
+
+    /**
+     * returns messages for period start form.
+     * @param $formFields
+     * @param $formBase
+     * @return array
+     */
+    public function getMessagesForPeriodStart($formFields, $formBase)
+    {
+        $messages = [];
+        foreach ($formFields as $periodStartKey => $periodStartVal) {
+            $messages[$formBase . '.period_start.' . $periodStartKey . '.iso_date.required'] = trans('validation.required', ['attribute' => trans('elementForm.period_start')]);
+            $messages[$formBase . '.period_end.' . $periodStartKey . '.iso_date.date'] = 'Period end must be a date.';
+            $messages[$formBase . '.period_end.' . $periodStartKey . '.iso_date.date_greater_than'] = 'Period end date must be date greater than year 1900.';
+        }
+
+        return $messages;
+    }
+
+    /**
+     * returns rules for period end form.
+     * @param $formFields
+     * @param $formBase
+     * @return array
+     */
+    public function getRulesForPeriodEnd($formFields, $formBase)
+    {
+        $rules = [];
+
+        foreach ($formFields as $periodEndKey => $periodEndVal) {
+            // $rules[$formBase . '.period_end.' . $periodEndKey . '.date'][] = 'required';
+            $rules[$formBase . '.period_end.' . $periodEndKey . '.iso_date'][] = 'date';
+            $rules[$formBase . '.period_end.' . $periodEndKey . '.iso_date'][] = sprintf(
+                'after:%s',
+                $formBase . '.period_start.' . $periodEndKey . '.iso_date'
+            );
+        }
+
+        return $rules;
+    }
+
+    /**
+     * returns messages for period end form.
+     * @param $formFields
+     * @param $formBase
+     * @return array
+     */
+    public function getMessagesForPeriodEnd($formFields, $formBase)
+    {
+        $messages = [];
+
+        foreach ($formFields as $periodEndKey => $periodEndVal) {
+            $messages[$formBase . '.period_end.' . $periodEndKey . '.iso_date.required'] = 'Period end is a required field';
+            $messages[$formBase . '.period_end.' . $periodEndKey . '.iso_date.date'] = 'Period end must be a date field';
+            $messages[$formBase . '.period_end.' . $periodEndKey . '.iso_date.after'] = 'Period end must be a date after period';
+            $messages[$formBase . '.period_end.' . $periodEndKey . '.iso_date.date_greater_than'] = 'Period end date must be date greater than year 1900.';
+        }
+
+        return $messages;
+    }
 }

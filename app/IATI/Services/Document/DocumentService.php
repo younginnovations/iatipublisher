@@ -49,7 +49,7 @@ class DocumentService
                     $fileLink = (array) $savedLink['document_link'];
                     unset($fileLink['document']);
 
-                    if (json_encode($temp_document) == json_encode($fileLink) || $temp_document['url'] === env('MINIO_ENDPOINT') . '/document_link/' . $activity['id'] . '/' . $savedLink['filename']) {
+                    if (json_encode($temp_document) == json_encode($fileLink) || $temp_document['url'] === env('AWS_ENDPOINT') . '/' . env('AWS_BUCKET') . '/document_link/' . $activity['id'] . '/' . $savedLink['filename']) {
                         unset($savedDocumentLinks[$id]);
                         $data = ['document_link' => json_encode($document)];
                         $this->documentRepo->updateOrCreateDocument($savedLink['filename'], $activity['id'], $data);
