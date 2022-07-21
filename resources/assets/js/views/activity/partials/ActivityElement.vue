@@ -422,39 +422,32 @@
       <!-- Participating Org -->
       <template v-else-if="title === 'participating_org'">
         <div
-          v-for="(post, key) in data.content"
+          v-for="(participating_org, key) in data.content"
           :key="key"
           class="elements-detail"
           :class="{ 'mb-4': key !== data.content.length - 1 }"
         >
           <div class="category">
-            <span v-if="post.organization_role">{{
-              types.organisationRole[post.organization_role]
+            <span v-if="participating_org.organization_role">{{
+              types.organisationRole[participating_org.organization_role]
             }}</span>
             <span v-else class="italic">Organization Role Not Available</span>
           </div>
-
-          <div
-            v-for="(item, i) in post.narrative"
-            :key="i"
-            :class="{ 'mb-4': i !== post.narrative.length - 1 }"
-          >
-            <div class="text-sm">
-              <span v-if="item.narrative">{{ item.narrative }}</span>
+        
+            <div class="text-sm mb-4">
+              <span v-if="participating_org.narrative['0'].narrative">{{ participating_org.narrative['0'].narrative }}</span>
               <span v-else class="italic">Narrative Not Available</span>
             </div>
-          </div>
 
           <div
-            v-for="(narrative, i) in post.narrative"
-            :key="i"
             class="ml-5"
-            :class="{ 'mb-4': i !== post.narrative.length - 1 }"
+            :class="{ 'mb-4': i !== participating_org.narrative.length - 1 }"
           >
             <table class="flex flex-col">
               <tr class="multiline">
                 <td>Organisation Name</td>
-                <td>
+                <td >
+                  <div  v-for="(narrative, i) in participating_org.narrative" :key="i" class="flex flex-col">
                   <div v-if="narrative.narrative" class="flex flex-col">
                     <span v-if="narrative.language" class="language top"
                       >(Language:
@@ -465,31 +458,27 @@
                     }}</span>
                   </div>
                   <span v-else class="italic">Not Available</span>
+                  </div>
                 </td>
               </tr>
-              <!-- <tr>
-                <td>Organisation Id</td>
-                <td v-if="post.organization">{{ post.organization }}</td>
-                <td v-else class="italic">Not Available</td>
-              </tr> -->
               <tr>
                 <td>Organisation Type</td>
-                <td v-if="post.type">
-                  {{ types.organizationType[post.type] }}
+                <td v-if="participating_org.type">
+                  {{ types.organizationType[participating_org.type] }}
                 </td>
                 <td v-else class="italic">Not Available</td>
               </tr>
               <tr>
                 <td>Organisation Role</td>
-                <td v-if="post.organization_role">
-                  {{ types.organisationRole[post.organization_role] }}
+                <td v-if="participating_org.organization_role">
+                  {{ types.organisationRole[participating_org.organization_role] }}
                 </td>
                 <td v-else class="italic">Not Available</td>
               </tr>
               <tr>
                 <td>Ref</td>
-                <td v-if="post.ref">
-                  {{ post.ref }}
+                <td v-if="participating_org.ref">
+                  {{ participating_org.ref }}
                 </td>
                 <td v-else class="italic">Not Available</td>
               </tr>
@@ -497,14 +486,14 @@
                 <td>Activity Id</td>
                 <td>
                   <div>
-                    <span v-if="post.identifier">{{ post.identifier }}</span>
+                    <span v-if="participating_org.identifier">{{ participating_org.identifier }}</span>
                     <span v-else class="italic">Not Available</span>
                   </div>
                 </td>
               </tr>
-              <tr v-if="post.crs_channel_code">
+              <tr v-if="participating_org.crs_channel_code">
                 <td>CRS Channel Code</td>
-                <td>{{ post.crs_channel_code }}</td>
+                <td>{{ participating_org.crs_channel_code }}</td>
               </tr>
             </table>
           </div>
@@ -514,24 +503,24 @@
       <!-- Recipient Country -->
       <template v-else-if="title === 'recipient_country'">
         <div
-          v-for="(post, key) in data.content"
+          v-for="(participating_org, key) in data.content"
           :key="key"
           :class="{ 'mb-4': key !== data.content.length - 1 }"
         >
           <div class="recipient_country-code mb-2 text-sm">
-            <div v-if="post.country_code" class="space-x-1">
-              <span>{{ types.country[post.country_code] }}</span>
-              <span v-if="post.percentage" class="text-sm font-normal"
-                >({{ post.percentage }}%)</span
+            <div v-if="participating_org.country_code" class="space-x-1">
+              <span>{{ types.country[participating_org.country_code] }}</span>
+              <span v-if="participating_org.percentage" class="text-sm font-normal"
+                >({{ participating_org.percentage }}%)</span
               >
             </div>
             <span v-else class="italic">Not Available</span>
           </div>
 
           <div
-            v-for="(item, i) in post.narrative"
+            v-for="(item, i) in participating_org.narrative"
             :key="i"
-            :class="{ 'mb-4': i !== post.narrative.length - 1 }"
+            :class="{ 'mb-4': i !== participating_org.narrative.length - 1 }"
             class="recipient_country-content text-sm"
           >
             <div v-if="item.narrative" class="flex max-w-[887px] flex-col">
@@ -1796,7 +1785,6 @@
 
           <!-- Capital Spend -->
           <template v-else-if="title === 'capital_spend'">
-          <!-- {{data.content.toString()}} -->
             <span v-if="data.content.toString()">{{ data.content.toString() }}%</span>
             <span v-else class="italic">Not Available</span>
           </template>

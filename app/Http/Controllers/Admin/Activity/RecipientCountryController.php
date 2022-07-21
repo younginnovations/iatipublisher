@@ -58,7 +58,6 @@ class RecipientCountryController extends Controller
 
             return view('activity.recipientCountry.recipientCountry', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {
-            dd($e);
             logger()->error($e->getMessage());
 
             return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while opening recipient-country form.');

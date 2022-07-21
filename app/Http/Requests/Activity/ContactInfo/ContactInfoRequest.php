@@ -341,7 +341,7 @@ class ContactInfoRequest extends ActivityBaseRequest
         $rules = [];
 
         foreach ($formFields as $emailIndex => $email) {
-            $rules[sprintf('%s.email.%s.email', $formBase, $emailIndex)] = ['nullable', ' email'];
+            $rules[sprintf('%s.email.%s.email', $formBase, $emailIndex)] = ['nullable', ' email', 'regex:/^([a-z0-9\+_\-]+)(\.[a-z0-9\+_\-]+)*@([a-z0-9\-]+\.)+[a-z]{2,6}$/ix'];
         }
 
         return $rules;
@@ -361,6 +361,7 @@ class ContactInfoRequest extends ActivityBaseRequest
 
         foreach ($formFields as $emailIndex => $email) {
             $messages[sprintf('%s.email.%s.email.email', $formBase, $emailIndex)] = 'Email must be valid';
+            $messages[sprintf('%s.email.%s.email.regex', $formBase, $emailIndex)] = 'The email format is invalid';
         }
 
         return $messages;

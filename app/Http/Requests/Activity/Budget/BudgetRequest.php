@@ -120,7 +120,7 @@ class BudgetRequest extends ActivityBaseRequest
         $rules = [];
 
         foreach ($formFields as $valueIndex => $value) {
-            $valueForm = sprintf('%s.value.%s', $formBase, $valueIndex);
+            $valueForm = sprintf('%s.budget_value.%s', $formBase, $valueIndex);
             $rules[sprintf('%s.amount', $valueForm)] = 'nullable|numeric';
             $rules[sprintf('%s.value_date', $valueForm)] = 'nullable|date';
         }
@@ -209,8 +209,8 @@ class BudgetRequest extends ActivityBaseRequest
         $messages = [];
 
         foreach ($formFields as $valueIndex => $value) {
-            $valueForm = sprintf('%s.value.%s', $formBase, $valueIndex);
-            $messages[sprintf('%s.amount.numeric', $valueForm)] = 'The @amount field must be a number.';
+            $valueForm = sprintf('%s.budget_value.%s', $formBase, $valueIndex);
+            $messages[sprintf('%s.amount.numeric', $valueForm)] = 'The amount field must be a number.';
             $messages[sprintf('%s.value_date.date', $valueForm)] = 'The @value-date field must be a valid date.';
         }
 

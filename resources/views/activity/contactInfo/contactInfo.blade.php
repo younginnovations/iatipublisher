@@ -29,9 +29,9 @@
   </div>
   <div class="hidden collection-container contact_info_mailing_address_narrative"
     form_type="contact_info_mailing_address_narrative"
-    data-prototype="{{ str_replace('contact_info[0]','contact_info[__PARENT_NAME__]',form_row($form->contact_info->getChildren()[0]->getChild('mailing_address')->getChildren()[0]->getChild('narrative')->prototype())) }}">
+    data-prototype="{{ str_replace('contact_info[0][mailing_address][0]','contact_info[__PARENT_NAME__][mailing_address][__WRAPPER_NAME__]',form_row($form->contact_info->getChildren()[0]->getChild('mailing_address')->getChildren()[0]->getChild('narrative')->prototype())) }}">
   </div>
   <div class="hidden collection-container mailing_address" form_type="contact_info_mailing_address"
-    data-prototype="{{ str_replace('contact_info[0]','contact_info[__PARENT_NAME__]',form_row($form->contact_info->getChildren()[0]->getChild('mailing_address')->prototype())) }}">
+    data-prototype="{{ str_replace('contact_info[0][mailing_address][__NAME__]','contact_info[__PARENT_NAME__][mailing_address][__WRAPPER_NAME__]',form_row($form->contact_info->getChildren()[0]->getChild('mailing_address')->prototype())) }}">
   </div>
 @endsection
