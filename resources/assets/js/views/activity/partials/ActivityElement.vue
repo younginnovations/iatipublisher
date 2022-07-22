@@ -46,30 +46,27 @@
         </div>
 
         <div class="flex items-center icons">
-          <a
+          <Btn
+            v-if="title === 'transactions'"
+            text="Add Transaction"
+            icon="add"
+            :link="`/activities/${activityId}/${title}/create`"
+            class="mr-2.5"
+          />
+          <Btn
             v-if="title !== 'transactions'"
-            :href="`/activities/${activityId}/${title}`"
-            class="
-              edit-button
-              mr-2.5
-              flex
-              items-center
-              text-tiny
-              font-bold
-              uppercase
-            "
-          >
-            <svg-vue class="mr-0.5 text-base" icon="edit" />
-            <span>Edit</span>
-          </a>
-
-          <a
+            text="Edit"
+            :link="`/activities/${activityId}/${title}`"
+            class="edit-button mr-2.5"
+          />
+          <Btn
             v-else
-            :href="`/activities/${activityId}/${title}`"
-            class="mr-2.5 flex items-center bg-n-10 p-1 text-tiny font-bold uppercase"
-          >
-            <span>Show full transaction list</span>
-          </a>
+            text="Show full transaction list"
+            icon=""
+            design="bgText"
+            :link="`/activities/${activityId}/${title}`"
+            class="mr-2.5"
+          />
 
           <svg-vue v-if="data.core" class="mr-1.5" icon="core"></svg-vue>
 
@@ -1905,13 +1902,16 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
+//components
+import Btn from 'Components/buttons/Link.vue';
 import HoverText from '../../../components/HoverText.vue';
+
 import moment from 'moment';
 import dateFormat from '../../../composable/dateFormat';
 
 export default defineComponent({
   name: 'ActivityElement',
-  components: { HoverText },
+  components: { HoverText, Btn },
   props: {
     data: {
       type: Object,

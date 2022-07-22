@@ -16,6 +16,9 @@ import RegisterPage from './views/web/RegisterPage.vue';
  *
  */
 import ResultDetail from './views/activity/results/ResultDetail.vue';
+import ResultList from './views/activity/results/ResultList.vue';
+import IndicatorDetail from './views/activity/indicators/IndicatorDetail.vue';
+import IndicatorList from './views/activity/indicators/IndicatorList.vue';
 import TransactionList from './views/activity/transactions/TransactionList.vue';
 import TransactionDetail from './views/activity/transactions/TransactionDetail.vue';
 import StaticDescriptionForm from './components/DescriptionForm.vue';
@@ -63,6 +66,9 @@ app
   .component('DescriptionForm', StaticDescriptionForm)
   .component('ElementsNote', ElementsNote)
   .component('ResultDetail', ResultDetail)
+  .component('ResultList', ResultList)
+  .component('IndicatorDetail', IndicatorDetail)
+  .component('IndicatorList', IndicatorList)
   .component('TransactionList', TransactionList)
   .component('TransactionDetail', TransactionDetail);
 
