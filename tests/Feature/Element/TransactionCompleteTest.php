@@ -2,23 +2,41 @@
 
 namespace Tests\Feature\Element;
 
+/**
+ * Class TransactionCompleteTest.
+ */
 class TransactionCompleteTest extends ElementCompleteTest
 {
     private string $element = 'transactions';
 
-    public function __construct(?string $name = null, array $data = [], $dataName = '')
+    /**
+     * @param string|null $name
+     * @param array       $data
+     * @param string      $dataName
+     */
+    public function __construct(?string $name = null, array $data = [], string $dataName = '')
     {
         parent::__construct($name, $data, $dataName);
 
         $this->activityObj->element = $this->element;
     }
 
-    public function test_transaction_mandatory_attributes()
+    /**
+     * Mandatory attribute test.
+     *
+     * @return void
+     */
+    public function test_transaction_mandatory_attributes(): void
     {
         $this->test_mandatory_attributes($this->element, []);
     }
 
-    public function test_transaction_mandatory_sub_elements()
+    /**
+     * Mandatory sub element test.
+     *
+     * @return void
+     */
+    public function test_transaction_mandatory_sub_elements(): void
     {
         $this->test_mandatory_sub_elements($this->element, [
             'transaction_type' => ['transaction_type_code'],
@@ -29,7 +47,12 @@ class TransactionCompleteTest extends ElementCompleteTest
         ]);
     }
 
-    public function test_transaction_element_complete()
+    /**
+     * Transaction element complete test.
+     *
+     * @return void
+     */
+    public function test_transaction_element_complete(): void
     {
         $elementSchema = $this->elementSchema($this->element);
         $actualData = json_decode(

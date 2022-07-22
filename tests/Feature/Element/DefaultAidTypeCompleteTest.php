@@ -2,93 +2,190 @@
 
 namespace Tests\Feature\Element;
 
+/**
+ * Class DefaultAidTypeCompleteTest.
+ */
 class DefaultAidTypeCompleteTest extends ElementCompleteTest
 {
     private string $element = 'default_aid_type';
 
-    public function __construct(?string $name = null, array $data = [], $dataName = '')
+    /**
+     * Construct function.
+     *
+     * @param string|null $name
+     * @param array       $data
+     * @param string      $dataName
+     */
+    public function __construct(?string $name = null, array $data = [], string $dataName = '')
     {
         parent::__construct($name, $data, $dataName);
 
         $this->activityObj->element = $this->element;
     }
 
-    public function test_default_aid_type_mandatory_attributes()
+    /**
+     * Mandatory attribute test.
+     *
+     * @return void
+     */
+    public function test_default_aid_type_mandatory_attributes(): void
     {
         $this->test_mandatory_attributes($this->element, ['default_aid_type', 'earmarking_category', 'earmarking_modality', 'cash_and_voucher_modalities']);
     }
 
-    public function test_default_aid_type_mandatory_sub_elements()
+    /**
+     * Mandatory sub element test.
+     *
+     * @return void
+     */
+    public function test_default_aid_type_mandatory_sub_elements(): void
     {
         $this->test_mandatory_sub_elements($this->element, []);
     }
 
-    public function test_default_aid_type_all_element_empty()
+    /**
+     * Empty all element test.
+     *
+     * @return void
+     */
+    public function test_default_aid_type_all_element_empty(): void
     {
-        $default_aid_typeData = json_decode('[{"default_aid_type_vocabulary":"1","default_aid_type":""},{"default_aid_type_vocabulary":"2","earmarking_category":""},{"default_aid_type_vocabulary":"3","earmarking_modality":""},{"default_aid_type_vocabulary":"4","cash_and_voucher_modalities":""}]', true);
+        $default_aid_typeData = json_decode(
+            '[{"default_aid_type_vocabulary":"1","default_aid_type":""},{"default_aid_type_vocabulary":"2","earmarking_category":""},{"default_aid_type_vocabulary":"3","earmarking_modality":""},{"default_aid_type_vocabulary":"4","cash_and_voucher_modalities":""}]',
+            true
+        );
 
         $this->test_level_one_multi_dimensional_element_incomplete($this->element, $default_aid_typeData);
     }
 
-    public function test_default_aid_type_attribute_empty_default_aid_type_for_default_aid_type_vocabulary_1()
+    /**
+     * Attribute default_aid_type empty for default_aid_type_vocabulary 1 test.
+     *
+     * @return void
+     */
+    public function test_default_aid_type_attribute_empty_default_aid_type_for_default_aid_type_vocabulary_1(): void
     {
-        $default_aid_typeData = json_decode('[{"default_aid_type_vocabulary":"1","default_aid_type":""},{"default_aid_type_vocabulary":"2","earmarking_category":"1"},{"default_aid_type_vocabulary":"3","earmarking_modality":"A"},{"default_aid_type_vocabulary":"4","cash_and_voucher_modalities":"1"}]', true);
+        $default_aid_typeData = json_decode(
+            '[{"default_aid_type_vocabulary":"1","default_aid_type":""},{"default_aid_type_vocabulary":"2","earmarking_category":"1"},{"default_aid_type_vocabulary":"3","earmarking_modality":"A"},{"default_aid_type_vocabulary":"4","cash_and_voucher_modalities":"1"}]',
+            true
+        );
 
         $this->test_level_one_multi_dimensional_element_incomplete($this->element, $default_aid_typeData);
     }
 
-    public function test_default_aid_type_attribute_no_default_aid_type_key_for_default_aid_type_vocabulary_1()
+    /**
+     * Attribute default_aid_type no key for default_aid_type_vocabulary 1 test.
+     *
+     * @return void
+     */
+    public function test_default_aid_type_attribute_no_default_aid_type_key_for_default_aid_type_vocabulary_1(): void
     {
-        $default_aid_typeData = json_decode('[{"default_aid_type_vocabulary":"1"},{"default_aid_type_vocabulary":"2","earmarking_category":"1"},{"default_aid_type_vocabulary":"3","earmarking_modality":"A"},{"default_aid_type_vocabulary":"4","cash_and_voucher_modalities":"1"}]', true);
+        $default_aid_typeData = json_decode(
+            '[{"default_aid_type_vocabulary":"1"},{"default_aid_type_vocabulary":"2","earmarking_category":"1"},{"default_aid_type_vocabulary":"3","earmarking_modality":"A"},{"default_aid_type_vocabulary":"4","cash_and_voucher_modalities":"1"}]',
+            true
+        );
 
         $this->test_level_one_multi_dimensional_element_incomplete($this->element, $default_aid_typeData);
     }
 
-    public function test_default_aid_type_attribute_empty_earmarking_category_for_default_aid_type_vocabulary_2()
+    /**
+     * Attribute earmarking_category empty for default_aid_type_vocabulary 2 test.
+     *
+     * @return void
+     */
+    public function test_default_aid_type_attribute_empty_earmarking_category_for_default_aid_type_vocabulary_2(): void
     {
-        $default_aid_typeData = json_decode('[{"default_aid_type_vocabulary":"1","default_aid_type":"1"},{"default_aid_type_vocabulary":"2","earmarking_category":""},{"default_aid_type_vocabulary":"3","earmarking_modality":"A"},{"default_aid_type_vocabulary":"4","cash_and_voucher_modalities":"1"}]', true);
+        $default_aid_typeData = json_decode(
+            '[{"default_aid_type_vocabulary":"1","default_aid_type":"1"},{"default_aid_type_vocabulary":"2","earmarking_category":""},{"default_aid_type_vocabulary":"3","earmarking_modality":"A"},{"default_aid_type_vocabulary":"4","cash_and_voucher_modalities":"1"}]',
+            true
+        );
 
         $this->test_level_one_multi_dimensional_element_incomplete($this->element, $default_aid_typeData);
     }
 
-    public function test_default_aid_type_attribute_no_earmarking_category_key_for_default_aid_type_vocabulary_2()
+    /**
+     * Attribute earmarking_category no key for default_aid_type_vocabulary 2 test.
+     *
+     * @return void
+     */
+    public function test_default_aid_type_attribute_no_earmarking_category_key_for_default_aid_type_vocabulary_2(): void
     {
-        $default_aid_typeData = json_decode('[{"default_aid_type_vocabulary":"1"},{"default_aid_type_vocabulary":"2"},{"default_aid_type_vocabulary":"3","earmarking_modality":"A"},{"default_aid_type_vocabulary":"4","cash_and_voucher_modalities":"1"}]', true);
+        $default_aid_typeData = json_decode(
+            '[{"default_aid_type_vocabulary":"1"},{"default_aid_type_vocabulary":"2"},{"default_aid_type_vocabulary":"3","earmarking_modality":"A"},{"default_aid_type_vocabulary":"4","cash_and_voucher_modalities":"1"}]',
+            true
+        );
 
         $this->test_level_one_multi_dimensional_element_incomplete($this->element, $default_aid_typeData);
     }
 
-    public function test_default_aid_type_attribute_empty_earmarking_modality_for_default_aid_type_vocabulary_3()
+    /**
+     * Attribute earmarking_modality empty for default_aid_type_vocabulary 3 test.
+     *
+     * @return void
+     */
+    public function test_default_aid_type_attribute_empty_earmarking_modality_for_default_aid_type_vocabulary_3(): void
     {
-        $default_aid_typeData = json_decode('[{"default_aid_type_vocabulary":"1","default_aid_type":"1"},{"default_aid_type_vocabulary":"2","earmarking_category":""},{"default_aid_type_vocabulary":"3","earmarking_modality":""},{"default_aid_type_vocabulary":"4","cash_and_voucher_modalities":"1"}]', true);
+        $default_aid_typeData = json_decode(
+            '[{"default_aid_type_vocabulary":"1","default_aid_type":"1"},{"default_aid_type_vocabulary":"2","earmarking_category":""},{"default_aid_type_vocabulary":"3","earmarking_modality":""},{"default_aid_type_vocabulary":"4","cash_and_voucher_modalities":"1"}]',
+            true
+        );
 
         $this->test_level_one_multi_dimensional_element_incomplete($this->element, $default_aid_typeData);
     }
 
-    public function test_default_aid_type_attribute_no_earmarking_modality_key_for_default_aid_type_vocabulary_3()
+    /**
+     * Attribute earmarking_modality no key for default_aid_type_vocabulary 3 test.
+     *
+     * @return void
+     */
+    public function test_default_aid_type_attribute_no_earmarking_modality_key_for_default_aid_type_vocabulary_3(): void
     {
-        $default_aid_typeData = json_decode('[{"default_aid_type_vocabulary":"1"},{"default_aid_type_vocabulary":"2"},{"default_aid_type_vocabulary":"3"},{"default_aid_type_vocabulary":"4","cash_and_voucher_modalities":"1"}]', true);
+        $default_aid_typeData = json_decode(
+            '[{"default_aid_type_vocabulary":"1"},{"default_aid_type_vocabulary":"2"},{"default_aid_type_vocabulary":"3"},{"default_aid_type_vocabulary":"4","cash_and_voucher_modalities":"1"}]',
+            true
+        );
 
         $this->test_level_one_multi_dimensional_element_incomplete($this->element, $default_aid_typeData);
     }
 
-    public function test_default_aid_type_attribute_empty_cash_and_voucher_modalities_for_default_aid_type_vocabulary_4()
+    /**
+     * Attribute cash_and_voucher_modalities empty for default_aid_type_vocabulary 4 test.
+     *
+     * @return void
+     */
+    public function test_default_aid_type_attribute_empty_cash_and_voucher_modalities_for_default_aid_type_vocabulary_4(): void
     {
-        $default_aid_typeData = json_decode('[{"default_aid_type_vocabulary":"1","default_aid_type":"1"},{"default_aid_type_vocabulary":"2","earmarking_category":""},{"default_aid_type_vocabulary":"3","earmarking_modality":""},{"default_aid_type_vocabulary":"4","cash_and_voucher_modalities":""}]', true);
+        $default_aid_typeData = json_decode(
+            '[{"default_aid_type_vocabulary":"1","default_aid_type":"1"},{"default_aid_type_vocabulary":"2","earmarking_category":""},{"default_aid_type_vocabulary":"3","earmarking_modality":""},{"default_aid_type_vocabulary":"4","cash_and_voucher_modalities":""}]',
+            true
+        );
 
         $this->test_level_one_multi_dimensional_element_incomplete($this->element, $default_aid_typeData);
     }
 
-    public function test_default_aid_type_attribute_no_cash_and_voucher_modalities_key_for_default_aid_type_vocabulary_4()
+    /**
+     * Attribute cash_and_voucher_modalities no key for default_aid_type_vocabulary 4 test.
+     *
+     * @return void
+     */
+    public function test_default_aid_type_attribute_no_cash_and_voucher_modalities_key_for_default_aid_type_vocabulary_4(): void
     {
         $default_aid_typeData = json_decode('[{"default_aid_type_vocabulary":"1"},{"default_aid_type_vocabulary":"2"},{"default_aid_type_vocabulary":"3"},{"default_aid_type_vocabulary":"4"}]', true);
 
         $this->test_level_one_multi_dimensional_element_incomplete($this->element, $default_aid_typeData);
     }
 
-    public function test_default_aid_type_element_complete()
+    /**
+     * Default Aid Type element complete test.
+     *
+     * @return void
+     */
+    public function test_default_aid_type_element_complete(): void
     {
-        $default_aid_typeData = json_decode('[{"default_aid_type_vocabulary":"1","default_aid_type":"A01"},{"default_aid_type_vocabulary":"2","earmarking_category":"1"},{"default_aid_type_vocabulary":"3","earmarking_modality":"A"},{"default_aid_type_vocabulary":"4","cash_and_voucher_modalities":"1"}]', true);
+        $default_aid_typeData = json_decode(
+            '[{"default_aid_type_vocabulary":"1","default_aid_type":"A01"},{"default_aid_type_vocabulary":"2","earmarking_category":"1"},{"default_aid_type_vocabulary":"3","earmarking_modality":"A"},{"default_aid_type_vocabulary":"4","cash_and_voucher_modalities":"1"}]',
+            true
+        );
 
         $this->test_level_one_multi_dimensional_element_complete($this->element, $default_aid_typeData);
     }

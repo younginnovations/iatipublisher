@@ -2,74 +2,157 @@
 
 namespace Tests\Feature\Element;
 
+/**
+ * Class OtherIndentifierCompleteTest.
+ */
 class OtherIndentifierCompleteTest extends ElementCompleteTest
 {
     private string $element = 'other_identifier';
 
-    public function __construct(?string $name = null, array $data = [], $dataName = '')
+    /**
+     * Construct function.
+     *
+     * @param string|null $name
+     * @param array       $data
+     * @param string      $dataName
+     */
+    public function __construct(?string $name = null, array $data = [], string $dataName = '')
     {
         parent::__construct($name, $data, $dataName);
 
         $this->activityObj->element = $this->element;
     }
 
-    public function test_other_identifier_first_level_mandatory_attributes()
+    /**
+     * Mandatory attribute test.
+     *
+     * @return void
+     */
+    public function test_other_identifier_mandatory_attributes(): void
     {
         $this->test_mandatory_attributes($this->element, ['reference', 'reference_type']);
     }
 
-    public function test_other_identifier_empty_data()
+    /**
+     * Mandatory sub element test.
+     *
+     * @return void
+     */
+    public function test_other_identifier_mandatory_sub_elements(): void
+    {
+        $this->test_mandatory_sub_elements($this->element, []);
+    }
+
+    /**
+     * Empty data test.
+     *
+     * @return void
+     */
+    public function test_other_identifier_empty_data(): void
     {
         $actualData = '';
 
         $this->test_level_two_single_dimensional_element_incomplete($this->element, $actualData);
     }
 
-    public function test_other_identifier_empty_json()
+    /**
+     * Empty json test.
+     *
+     * @return void
+     */
+    public function test_other_identifier_empty_json(): void
     {
         $actualData = json_decode('{}', true);
 
         $this->test_level_two_single_dimensional_element_incomplete($this->element, $actualData);
     }
 
-    public function test_other_identifier_attribute_no_reference_key()
+    /**
+     * Attribute reference_key no key test.
+     *
+     * @return void
+     */
+    public function test_other_identifier_attribute_no_reference_key(): void
     {
-        $actualData = json_decode('{"reference_type":"A1","owner_org":[{"ref":"OwnerOrg Ref-1","narrative":[{"narrative":"","language":"aa"},{"narrative":"asdsasdasd","language":"ab"}]},{"ref":"OwnerOrg Ref-2","narrative":[{"narrative":"asdasd","language":"af"}]}]}', true);
+        $actualData = json_decode(
+            '{"reference_type":"A1","owner_org":[{"ref":"OwnerOrg Ref-1","narrative":[{"narrative":"","language":"aa"},{"narrative":"asdsasdasd","language":"ab"}]},{"ref":"OwnerOrg Ref-2","narrative":[{"narrative":"asdasd","language":"af"}]}]}',
+            true
+        );
 
         $this->test_level_two_single_dimensional_element_incomplete($this->element, $actualData);
     }
 
-    public function test_other_identifier_attribute_no_reference_type_key()
+    /**
+     * Attribute reference_type no key test.
+     *
+     * @return void
+     */
+    public function test_other_identifier_attribute_no_reference_type_key(): void
     {
-        $actualData = json_decode('{"reference":"1","owner_org":[{"ref":"OwnerOrg Ref-1","narrative":[{"narrative":"","language":"aa"},{"narrative":"asdsasdasd","language":"ab"}]},{"ref":"OwnerOrg Ref-2","narrative":[{"narrative":"asdasd","language":"af"}]}]}', true);
+        $actualData = json_decode(
+            '{"reference":"1","owner_org":[{"ref":"OwnerOrg Ref-1","narrative":[{"narrative":"","language":"aa"},{"narrative":"asdsasdasd","language":"ab"}]},{"ref":"OwnerOrg Ref-2","narrative":[{"narrative":"asdasd","language":"af"}]}]}',
+            true
+        );
 
         $this->test_level_two_single_dimensional_element_incomplete($this->element, $actualData);
     }
 
-    public function test_other_identifier_attribute_empty_reference_and_reference_type()
+    /**
+     * Attribute reference and reference_type empty test.
+     *
+     * @return void
+     */
+    public function test_other_identifier_attribute_empty_reference_and_reference_type(): void
     {
-        $actualData = json_decode('{"reference":"","reference_type":"","owner_org":[{"ref":"OwnerOrg Ref-1","narrative":[{"narrative":"","language":"aa"},{"narrative":"asdsasdasd","language":"ab"}]},{"ref":"OwnerOrg Ref-2","narrative":[{"narrative":"asdasd","language":"af"}]}]}', true);
+        $actualData = json_decode(
+            '{"reference":"","reference_type":"","owner_org":[{"ref":"OwnerOrg Ref-1","narrative":[{"narrative":"","language":"aa"},{"narrative":"asdsasdasd","language":"ab"}]},{"ref":"OwnerOrg Ref-2","narrative":[{"narrative":"asdasd","language":"af"}]}]}',
+            true
+        );
 
         $this->test_level_two_single_dimensional_element_incomplete($this->element, $actualData);
     }
 
-    public function test_other_identifier_attribute_empty_reference()
+    /**
+     * Attribute reference empty test.
+     *
+     * @return void
+     */
+    public function test_other_identifier_attribute_empty_reference(): void
     {
-        $actualData = json_decode('{"reference":"","reference_type":"A1","owner_org":[{"ref":"OwnerOrg Ref-1","narrative":[{"narrative":"","language":"aa"},{"narrative":"asdsasdasd","language":"ab"}]},{"ref":"OwnerOrg Ref-2","narrative":[{"narrative":"asdasd","language":"af"}]}]}', true);
+        $actualData = json_decode(
+            '{"reference":"","reference_type":"A1","owner_org":[{"ref":"OwnerOrg Ref-1","narrative":[{"narrative":"","language":"aa"},{"narrative":"asdsasdasd","language":"ab"}]},{"ref":"OwnerOrg Ref-2","narrative":[{"narrative":"asdasd","language":"af"}]}]}',
+            true
+        );
 
         $this->test_level_two_single_dimensional_element_incomplete($this->element, $actualData);
     }
 
-    public function test_other_identifier_attribute_empty_reference_type()
+    /**
+     * Attribute reference_type empty test.
+     *
+     * @return void
+     */
+    public function test_other_identifier_attribute_empty_reference_type(): void
     {
-        $actualData = json_decode('{"reference":"1","reference_type":"","owner_org":[{"ref":"OwnerOrg Ref-1","narrative":[{"narrative":"","language":"aa"},{"narrative":"asdsasdasd","language":"ab"}]},{"ref":"OwnerOrg Ref-2","narrative":[{"narrative":"asdasd","language":"af"}]}]}', true);
+        $actualData = json_decode(
+            '{"reference":"1","reference_type":"","owner_org":[{"ref":"OwnerOrg Ref-1","narrative":[{"narrative":"","language":"aa"},{"narrative":"asdsasdasd","language":"ab"}]},{"ref":"OwnerOrg Ref-2","narrative":[{"narrative":"asdasd","language":"af"}]}]}',
+            true
+        );
 
         $this->test_level_two_single_dimensional_element_incomplete($this->element, $actualData);
     }
 
-    public function test_other_identifier_element_complete()
+    /**
+     * Other Identifier element complete test.
+     *
+     * @return void
+     */
+    public function test_other_identifier_element_complete(): void
     {
-        $actualData = json_decode('{"reference":"1","reference_type":"A1","owner_org":[{"ref":"OwnerOrg Ref-1","narrative":[{"narrative":"","language":"aa"},{"narrative":"asdsasdasd","language":"ab"}]},{"ref":"OwnerOrg Ref-2","narrative":[{"narrative":"asdasd","language":"af"}]}]}', true);
+        $actualData = json_decode(
+            '{"reference":"1","reference_type":"A1","owner_org":[{"ref":"OwnerOrg Ref-1","narrative":[{"narrative":"","language":"aa"},{"narrative":"asdsasdasd","language":"ab"}]},{"ref":"OwnerOrg Ref-2","narrative":[{"narrative":"asdasd","language":"af"}]}]}',
+            true
+        );
 
         $this->test_level_two_single_dimensional_element_complete($this->element, $actualData);
     }

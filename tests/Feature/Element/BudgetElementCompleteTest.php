@@ -2,91 +2,176 @@
 
 namespace Tests\Feature\Element;
 
+/**
+ * Class BudgetElementCompleteTest.
+ */
 class BudgetElementCompleteTest extends ElementCompleteTest
 {
     private string $element = 'budget';
 
-    public function __construct(?string $name = null, array $data = [], $dataName = '')
+    /**
+     * Construct function.
+     *
+     * @param string|null $name
+     * @param array       $data
+     * @param string      $dataName
+     */
+    public function __construct(?string $name = null, array $data = [], string $dataName = '')
     {
         parent::__construct($name, $data, $dataName);
 
         $this->activityObj->element = $this->element;
     }
 
-    public function test_budget_mandatory_attributes()
+    /**
+     * Mandatory attribute test.
+     *
+     * @return void
+     */
+    public function test_budget_mandatory_attributes(): void
     {
         $this->test_mandatory_attributes($this->element, []);
     }
 
-    public function test_budget_mandatory_sub_elements()
+    /**
+     * Mandatory sub element test.
+     *
+     * @return void
+     */
+    public function test_budget_mandatory_sub_elements(): void
     {
         $this->test_mandatory_sub_elements($this->element, ['period_start' => ['date'], 'period_end' => ['date'], 'budget_value' => ['value_date']]);
     }
 
-    public function test_budget_empty_data()
+    /**
+     * Empty budget data test.
+     *
+     * @return void
+     */
+    public function test_budget_empty_data(): void
     {
         $budgetData = '';
 
         $this->test_level_one_multi_dimensional_element_incomplete($this->element, $budgetData);
     }
 
-    public function test_budget_empty_array()
+    /**
+     * Empty budget array test.
+     *
+     * @return void
+     */
+    public function test_budget_empty_array(): void
     {
         $budgetData = json_decode('[]', true);
 
         $this->test_level_one_multi_dimensional_element_incomplete($this->element, $budgetData);
     }
 
-    public function test_budget_empty_json_array()
+    /**
+     * Empty budget json array test.
+     *
+     * @return void
+     */
+    public function test_budget_empty_json_array(): void
     {
         $budgetData = json_decode('[{}]', true);
 
         $this->test_level_one_multi_dimensional_element_incomplete($this->element, $budgetData);
     }
 
-    public function test_budget_sub_element_empty_period_start()
+    /**
+     * Empty sub element period_start test.
+     *
+     * @return void
+     */
+    public function test_budget_sub_element_empty_period_start(): void
     {
-        $budgetData = json_decode('[{"budget_type":"1","budget_status":"1","period_start":"","period_end":[{"date":"2016-12-02"}],"budget_value":[{"amount":"100","currency":"AFN","value_date":"2022-07-27"}]}]', true);
+        $budgetData = json_decode(
+            '[{"budget_type":"1","budget_status":"1","period_start":"","period_end":[{"date":"2016-12-02"}],"budget_value":[{"amount":"100","currency":"AFN","value_date":"2022-07-27"}]}]',
+            true
+        );
 
         $this->test_level_one_multi_dimensional_element_incomplete($this->element, $budgetData);
     }
 
-    public function test_budget_sub_element_no_period_start_key()
+    /**
+     * No sub element period_start key test.
+     *
+     * @return void
+     */
+    public function test_budget_sub_element_no_period_start_key(): void
     {
         $budgetData = json_decode('[{"budget_type":"1","budget_status":"1","period_end":[{"date":"2016-12-02"}],"budget_value":[{"amount":"100","currency":"AFN","value_date":"2022-07-27"}]}]', true);
 
         $this->test_level_one_multi_dimensional_element_incomplete($this->element, $budgetData);
     }
 
-    public function test_budget_sub_element_empty_period_start_array()
+    /**
+     * Empty sub element period_start array test.
+     *
+     * @return void
+     */
+    public function test_budget_sub_element_empty_period_start_array(): void
     {
-        $budgetData = json_decode('[{"budget_type":"1","budget_status":"1","period_start":[],"period_end":[{"date":"2016-12-02"}],"budget_value":[{"amount":"100","currency":"AFN","value_date":"2022-07-27"}]}]', true);
+        $budgetData = json_decode(
+            '[{"budget_type":"1","budget_status":"1","period_start":[],"period_end":[{"date":"2016-12-02"}],"budget_value":[{"amount":"100","currency":"AFN","value_date":"2022-07-27"}]}]',
+            true
+        );
 
         $this->test_level_one_multi_dimensional_element_incomplete($this->element, $budgetData);
     }
 
-    public function test_budget_sub_element_empty_period_start_json_array()
+    /**
+     * Empty sub element period_start json array test.
+     *
+     * @return void
+     */
+    public function test_budget_sub_element_empty_period_start_json_array(): void
     {
-        $budgetData = json_decode('[{"budget_type":"1","budget_status":"1","period_start":[{}],"period_end":[{"date":"2016-12-02"}],"budget_value":[{"amount":"100","currency":"AFN","value_date":"2022-07-27"}]}]', true);
+        $budgetData = json_decode(
+            '[{"budget_type":"1","budget_status":"1","period_start":[{}],"period_end":[{"date":"2016-12-02"}],"budget_value":[{"amount":"100","currency":"AFN","value_date":"2022-07-27"}]}]',
+            true
+        );
 
         $this->test_level_one_multi_dimensional_element_incomplete($this->element, $budgetData);
     }
 
-    public function test_budget_sub_element_period_start_empty_attribute_date()
+    /**
+     * Sub element period_start empty attribute date test.
+     *
+     * @return void
+     */
+    public function test_budget_sub_element_period_start_empty_attribute_date(): void
     {
-        $budgetData = json_decode('[{"budget_type":"1","budget_status":"1","period_start":[{"date":""}],"period_end":[{"date":"2016-12-02"}],"budget_value":[{"amount":"100","currency":"AFN","value_date":"2022-07-27"}]}]', true);
+        $budgetData = json_decode(
+            '[{"budget_type":"1","budget_status":"1","period_start":[{"date":""}],"period_end":[{"date":"2016-12-02"}],"budget_value":[{"amount":"100","currency":"AFN","value_date":"2022-07-27"}]}]',
+            true
+        );
 
         $this->test_level_one_multi_dimensional_element_incomplete($this->element, $budgetData);
     }
 
-    public function test_budget_sub_element_empty_period_end()
+    /**
+     * Empty sub element period_end data test.
+     *
+     * @return void
+     */
+    public function test_budget_sub_element_empty_period_end(): void
     {
-        $budgetData = json_decode('[{"budget_type":"1","budget_status":"1","period_start":[{"date":"2016-12-02"}],"period_end":"","budget_value":[{"amount":"100","currency":"AFN","value_date":"2022-07-27"}]}]', true);
+        $budgetData = json_decode(
+            '[{"budget_type":"1","budget_status":"1","period_start":[{"date":"2016-12-02"}],"period_end":"","budget_value":[{"amount":"100","currency":"AFN","value_date":"2022-07-27"}]}]',
+            true
+        );
 
         $this->test_level_one_multi_dimensional_element_incomplete($this->element, $budgetData);
     }
 
-    public function test_budget_sub_element_no_period_end_key()
+    /**
+     * No sub element period_end key test.
+     *
+     * @return void
+     */
+    public function test_budget_sub_element_no_period_end_key(): void
     {
         $budgetData = json_decode(
             '[{"budget_type":"1","budget_status":"1","period_start":[{"date":"2016-12-02"}],"budget_value":[{"amount":"100","currency":"AFN","value_date":"2022-07-27"}]}]',
@@ -96,72 +181,140 @@ class BudgetElementCompleteTest extends ElementCompleteTest
         $this->test_level_one_multi_dimensional_element_incomplete($this->element, $budgetData);
     }
 
-    public function test_budget_sub_element_empty_period_end_array()
+    /**
+     * Empty sub element period_end array test.
+     *
+     * @return void
+     */
+    public function test_budget_sub_element_empty_period_end_array(): void
     {
-        $budgetData = json_decode('[{"budget_type":"1","budget_status":"1","period_start":[{"date":"2016-12-02"}],"period_end":[],"budget_value":[{"amount":"100","currency":"AFN","value_date":"2022-07-27"}]}]', true);
+        $budgetData = json_decode(
+            '[{"budget_type":"1","budget_status":"1","period_start":[{"date":"2016-12-02"}],"period_end":[],"budget_value":[{"amount":"100","currency":"AFN","value_date":"2022-07-27"}]}]',
+            true
+        );
 
         $this->test_level_one_multi_dimensional_element_incomplete($this->element, $budgetData);
     }
 
-    public function test_budget_sub_element_empty_period_end_json_array()
+    /**
+     * Empty sub element period_end json array test.
+     *
+     * @return void
+     */
+    public function test_budget_sub_element_empty_period_end_json_array(): void
     {
-        $budgetData = json_decode('[{"budget_type":"1","budget_status":"1","period_start":[{"date":"2016-12-02"}],"period_end":[{}],"budget_value":[{"amount":"100","currency":"AFN","value_date":"2022-07-27"}]}]', true);
+        $budgetData = json_decode(
+            '[{"budget_type":"1","budget_status":"1","period_start":[{"date":"2016-12-02"}],"period_end":[{}],"budget_value":[{"amount":"100","currency":"AFN","value_date":"2022-07-27"}]}]',
+            true
+        );
 
         $this->test_level_one_multi_dimensional_element_incomplete($this->element, $budgetData);
     }
 
-    public function test_budget_sub_element_period_end_empty_attribute_date()
+    /**
+     * Sub element period_end empty attribute date test.
+     *
+     * @return void
+     */
+    public function test_budget_sub_element_period_end_empty_attribute_date(): void
     {
-        $budgetData = json_decode('[{"budget_type":"1","budget_status":"1","period_start":[{"date":"2016-12-02"}],"period_end":[{"date":""}],"budget_value":[{"amount":"100","currency":"AFN","value_date":"2022-07-27"}]}]', true);
+        $budgetData = json_decode(
+            '[{"budget_type":"1","budget_status":"1","period_start":[{"date":"2016-12-02"}],"period_end":[{"date":""}],"budget_value":[{"amount":"100","currency":"AFN","value_date":"2022-07-27"}]}]',
+            true
+        );
 
         $this->test_level_one_multi_dimensional_element_incomplete($this->element, $budgetData);
     }
 
-    public function test_budget_sub_element_empty_budget_value()
+    /**
+     * Sub element budget_value empty data test.
+     *
+     * @return void
+     */
+    public function test_budget_sub_element_empty_budget_value(): void
     {
         $budgetData = json_decode('[{"budget_type":"1","budget_status":"1","period_start":[{"date":"2016-12-02"}],"period_end":[{"date":"2016-12-02"}],"budget_value":""}]', true);
 
         $this->test_level_one_multi_dimensional_element_incomplete($this->element, $budgetData);
     }
 
-    public function test_budget_sub_element_no_budget_value_key()
+    /**
+     * No sub element budget_value key test.
+     *
+     * @return void
+     */
+    public function test_budget_sub_element_no_budget_value_key(): void
     {
         $budgetData = json_decode('[{"budget_type":"1","budget_status":"1","period_start":[{"date":"2016-12-02"}],"period_end":[{"date":"2016-12-02"}]}]', true);
 
         $this->test_level_one_multi_dimensional_element_incomplete($this->element, $budgetData);
     }
 
-    public function test_budget_sub_element_empty_budget_value_array()
+    /**
+     * Empty sub element budget_value array test.
+     *
+     * @return void
+     */
+    public function test_budget_sub_element_empty_budget_value_array(): void
     {
         $budgetData = json_decode('[{"budget_type":"1","budget_status":"1","period_start":[{"date":"2016-12-02"}],"period_end":[{"date":"2016-12-02"}],"budget_value":[]}]', true);
 
         $this->test_level_one_multi_dimensional_element_incomplete($this->element, $budgetData);
     }
 
-    public function test_budget_sub_element_empty_budget_value_json_array()
+    /**
+     * Empty sub element budget_value json array test.
+     *
+     * @return void
+     */
+    public function test_budget_sub_element_empty_budget_value_json_array(): void
     {
         $budgetData = json_decode('[{"budget_type":"1","budget_status":"1","period_start":[{"date":"2016-12-02"}],"period_end":[{"date":"2016-12-02"}],"budget_value":[{}]}]', true);
 
         $this->test_level_one_multi_dimensional_element_incomplete($this->element, $budgetData);
     }
 
-    public function test_budget_sub_element_budget_value_empty_attribute_value_date()
+    /**
+     * Sub element budget_value empty attribute value_date test.
+     *
+     * @return void
+     */
+    public function test_budget_sub_element_budget_value_empty_attribute_value_date(): void
     {
-        $budgetData = json_decode('[{"budget_type":"1","budget_status":"1","period_start":[{"date":"2016-12-02"}],"period_end":[{"date":"2016-12-02"}],"budget_value":[{"amount":"100","currency":"AFN","value_date":""}]}]', true);
+        $budgetData = json_decode(
+            '[{"budget_type":"1","budget_status":"1","period_start":[{"date":"2016-12-02"}],"period_end":[{"date":"2016-12-02"}],"budget_value":[{"amount":"100","currency":"AFN","value_date":""}]}]',
+            true
+        );
 
         $this->test_level_one_multi_dimensional_element_incomplete($this->element, $budgetData);
     }
 
-    public function test_budget_sub_element_budget_value_no_attribute_value_date()
+    /**
+     * Sub element budget_value no attribute value_date key test.
+     *
+     * @return void
+     */
+    public function test_budget_sub_element_budget_value_no_attribute_value_date(): void
     {
-        $budgetData = json_decode('[{"budget_type":"1","budget_status":"1","period_start":[{"date":"2016-12-02"}],"period_end":[{"date":"2016-12-02"}],"budget_value":[{"amount":"100","currency":"AFN"}]}]', true);
+        $budgetData = json_decode(
+            '[{"budget_type":"1","budget_status":"1","period_start":[{"date":"2016-12-02"}],"period_end":[{"date":"2016-12-02"}],"budget_value":[{"amount":"100","currency":"AFN"}]}]',
+            true
+        );
 
         $this->test_level_one_multi_dimensional_element_incomplete($this->element, $budgetData);
     }
 
-    public function test_budget_element_complete()
+    /**
+     * Budget data complete test.
+     *
+     * @return void
+     */
+    public function test_budget_element_complete(): void
     {
-        $budgetData = json_decode('[{"budget_type":"1","budget_status":"1","period_start":[{"date":"2016-10-18"}],"period_end":[{"date":"2016-12-02"}],"budget_value":[{"amount":"100","currency":"AFN","value_date":"2022-07-27"}]},{"budget_type":"2","budget_status":"2","period_start":[{"date":"2022-07-20"}],"period_end":[{"date":"2022-07-29"}],"budget_value":[{"amount":"4444","currency":"AFN","value_date":"2022-08-04"}]}]', true);
+        $budgetData = json_decode(
+            '[{"budget_type":"1","budget_status":"1","period_start":[{"date":"2016-10-18"}],"period_end":[{"date":"2016-12-02"}],"budget_value":[{"amount":"100","currency":"AFN","value_date":"2022-07-27"}]},{"budget_type":"2","budget_status":"2","period_start":[{"date":"2022-07-20"}],"period_end":[{"date":"2022-07-29"}],"budget_value":[{"amount":"4444","currency":"AFN","value_date":"2022-08-04"}]}]',
+            true
+        );
 
         $this->test_level_one_multi_dimensional_element_complete($this->element, $budgetData);
     }
