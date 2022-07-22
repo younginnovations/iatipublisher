@@ -76,7 +76,7 @@ class ScopeController extends Controller
     {
         try {
             $activityData = $this->scopeService->getActivityData($id);
-            $activityScope = (int) $request->get('activity_scope');
+            $activityScope = $request->get('activity_scope') != null ? (int) $request->get('activity_scope') : null;
 
             if (!$this->scopeService->update($activityScope, $activityData)) {
                 return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while updating activity-scope.');

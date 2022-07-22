@@ -5,12 +5,6 @@
   "xml:lang": "en",
   "BudgetIdentifierVocabulary": [
     {
-      "code": "1",
-      "name": "IATI",
-      "language": "en",
-      "description": "The budget identifier reported uses IATI budget identifier categories"
-    },
-    {
       "code": "2",
       "name": "Country Chart of Accounts",
       "language": "en",

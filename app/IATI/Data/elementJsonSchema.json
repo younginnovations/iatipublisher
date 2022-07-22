@@ -2,6 +2,7 @@
   "title": {
     "label": "title",
     "multiple": false,
+    "add_more": false,
     "attributes": {},
     "sub_elements": {
       "narrative": {
@@ -902,8 +903,8 @@
       "cash_and_voucher_modalities": {}
     },
     "attributes": {
-      "default_aidtype_vocabulary": {
-        "name": "default_aidtype_vocabulary",
+      "default_aid_type_vocabulary": {
+        "name": "default_aid_type_vocabulary",
         "label": "@vocabulary",
         "type": "select",
         "choices": "Activity/AidTypeVocabulary.json",
@@ -922,7 +923,7 @@
         "hover_text": "A code from the specified vocabulary. This attribute is required. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/default-aid-type/'>For more information</a>",
         "help_text": "",
         "parent": {
-          "name": "default_aidtype_vocabulary",
+          "name": "default_aid_type_vocabulary",
           "value": [
             "1"
           ]
@@ -939,7 +940,7 @@
         "hover_text": "A code from the specified vocabulary. This attribute is required. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/default-aid-type/'>For more information</a>",
         "help_text": "",
         "parent": {
-          "name": "default_aidtype_vocabulary",
+          "name": "default_aid_type_vocabulary",
           "value": [
             "2"
           ]
@@ -956,7 +957,7 @@
         "hover_text": "A code from the specified vocabulary. This attribute is required. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/default-aid-type/'>For more information</a>",
         "help_text": "",
         "parent": {
-          "name": "default_aidtype_vocabulary",
+          "name": "default_aid_type_vocabulary",
           "value": [
             "3"
           ]
@@ -973,7 +974,7 @@
         "hover_text": "A code from the specified vocabulary. This attribute is required. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/default-aid-type/'>For more information</a>",
         "help_text": "",
         "parent": {
-          "name": "default_aidtype_vocabulary",
+          "name": "default_aid_type_vocabulary",
           "value": [
             "4"
           ]
@@ -1020,15 +1021,6 @@
         "label": "budget-item",
         "add_more": true,
         "attributes": {
-          "code_text": {
-            "name": "code_text",
-            "label": "@code",
-            "type": "text",
-            "required": true,
-            "criteria": "mandatory",
-            "hover_text": "A code for the budget-item from the vocabulary specified. This attribute is required. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/country-budget-items/budget-item/'>For more information</a>",
-            "help_text": ""
-          },
           "code": {
             "name": "code",
             "label": "@code",

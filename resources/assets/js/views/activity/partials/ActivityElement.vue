@@ -433,7 +433,7 @@
             }}</span>
             <span v-else class="italic">Organization Role Not Available</span>
           </div>
-        
+
             <div class="text-sm mb-4">
               <span v-if="participating_org.narrative['0'].narrative">{{ participating_org.narrative['0'].narrative }}</span>
               <span v-else class="italic">Narrative Not Available</span>
@@ -565,9 +565,9 @@
               <tr>
                 <td v-if="post.region_vocabulary === '99'">Vocabulary-uri</td>
                 <td v-if="post.region_vocabulary === '99'">
-                  <span v-if="post.vocabulary_uri">{{
+                  <a target="_blank" :href="post.vocabulary_uri" v-if="post.vocabulary_uri">{{
                     post.vocabulary_uri
-                  }}</span>
+                  }}</a>
                   <span v-else class="italic">Not Available</span>
                 </td>
               </tr>
@@ -944,9 +944,9 @@
               >
                 <td>Vocabulary URI</td>
                 <td>
-                  <span v-if="post.vocabulary_uri">{{
+                  <a target="_blank" :href="post.vocabulary_uri" v-if="post.vocabulary_uri">{{
                     post.vocabulary_uri
-                  }}</span>
+                  }}</a>
                   <span v-else class="italic">Not Available</span>
                 </td>
               </tr>
@@ -987,9 +987,9 @@
             <tr v-if="post.policymarker_vocabulary === '99'">
               <td>Vocabulary URI</td>
               <td>
-                <span v-if="post.vocabulary_uri">{{
+                <a target="_blank" :href="post.vocabulary_uri" v-if="post.vocabulary_uri">{{
                   post.vocabulary_uri
-                }}</span>
+                }}</a>
                 <span v-else class="italic">Not Available</span>
               </td>
             </tr>
@@ -1078,9 +1078,9 @@
             <tr v-if="post.tag_vocabulary === '99'">
               <td>Vocabulary URI</td>
               <td>
-                <span v-if="post.vocabulary_uri">
+                <a target="_blank" :href="post.vocabulary_uri" v-if="post.vocabulary_uri">
                   {{ post.vocabulary_uri }}
-                </span>
+                </a>
                 <span v-else class="italic">Not Available</span>
               </td>
             </tr>
@@ -1098,27 +1098,27 @@
         >
           <div class="default_aid_type-content">
             <div class="date-type mb-2 text-sm font-bold">
-              <span v-if="post.default_aidtype_vocabulary">{{
-                types.aidTypeVocabulary[post.default_aidtype_vocabulary]
+              <span v-if="post.default_aid_type_vocabulary">{{
+                types.aidTypeVocabulary[post.default_aid_type_vocabulary]
               }}</span>
               <span v-else class="italic">Vocabulary Not Available</span>
             </div>
 
-            <div v-if="post.default_aidtype_vocabulary === '2'" class="text-sm">
+            <div v-if="post.default_aid_type_vocabulary === '2'" class="text-sm">
               <span v-if="post.earmarking_category">{{
                 types.earmarkingCategory[post.earmarking_category]
               }}</span>
               <span v-else class="italic">Code Not Available</span>
             </div>
 
-            <div v-else-if="post.default_aidtype_vocabulary === '3'" class="text-sm">
+            <div v-else-if="post.default_aid_type_vocabulary === '3'" class="text-sm">
               <span v-if="post.earmarking_modality">{{
                 types.earmarkingModality[post.earmarking_modality]
               }}</span>
               <span v-else class="italic">Code Not Available</span>
             </div>
 
-            <div v-else-if="post.default_aidtype_vocabulary === '4'" class="text-sm">
+            <div v-else-if="post.default_aid_type_vocabulary === '4'" class="text-sm">
               <span v-if="post.cash_and_voucher_modalities">{{
                 types.cashandVoucherModalities[post.cash_and_voucher_modalities]
               }}</span>
@@ -1156,7 +1156,7 @@
             <span v-else class="italic">Not Available</span>
           </div>
           <div v-else class="text-sm">
-            <span v-if="post.code_text">{{ post.code_text }}</span>
+            <span v-if="post.code">{{ types.budgetIdentifier[post.code] }}</span>
             <span v-else class="italic">Not Available</span>
           </div>
           <template v-for="(item, i) in post.description" :key="i">
@@ -1237,7 +1237,7 @@
             </tr>
             <tr>
               <td>Vocabulary URI</td>
-              <td v-if="post.vocabulary_uri">{{ post.vocabulary_uri }}</td>
+              <td v-if="post.vocabulary_uri"><a target="_blank" :href="post.vocabulary_uri">{{ post.vocabulary_uri }}</a></td>
               <td v-else class="italic">Not Available</td>
             </tr>
             <tr>
@@ -1729,7 +1729,7 @@
                       <span v-if="item.language" class="language top"
                         >(Language: {{ types.languages[item.language] }})</span
                       >
-                      <span v-if="item.narrative">{{ item.narrative }}</span>
+                      <span v-if="item.narrative" class="description">{{ item.narrative }}</span>
                     </div>
                     <span v-else class="italic">Not Available</span>
                   </td>

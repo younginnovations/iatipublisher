@@ -14,9 +14,10 @@
     </a>
 
     <a
-      v-for="index in data.last_page"
+      v-for="(index,i) in data.last_page"
       :key="index"
       :class="active_page === index ? 'current' : ''"
+      @click="changePage(i+1)"
     >
       {{ index }}
     </a>
@@ -58,6 +59,11 @@ export default defineComponent({
       active_page.value = page;
     }
 
+    function changePage(pageNum: number) {
+      active_page.value =
+        active_page.value === props.data.last_page ? 1 : pageNum;
+    }
+
     function nextPage() {
       active_page.value =
         active_page.value === props.data.last_page ? 1 : active_page.value + 1;
@@ -68,7 +74,7 @@ export default defineComponent({
         active_page.value === 1 ? props.data.last_page : active_page.value - 1;
     }
 
-    return { props, active_page, updateActivePage, nextPage, previousPage };
+    return { props, active_page, updateActivePage, nextPage, previousPage, changePage };
   },
 });
 </script>

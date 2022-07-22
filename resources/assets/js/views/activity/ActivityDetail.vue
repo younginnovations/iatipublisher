@@ -493,7 +493,6 @@ export default defineComponent({
 
       if (key in activityProps) {
         if ((typeof activityProps[key] === 'object' || typeof activityProps[key] === 'number') && activityProps[key]) {
-          console.log(key);
           if (Object.keys(activityProps[key]).length > 0 || activityProps[key].toString.length >0) {
             elementProps[key]['has_data'] = 1;
           }

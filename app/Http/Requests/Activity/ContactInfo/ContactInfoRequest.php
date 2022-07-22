@@ -399,9 +399,7 @@ class ContactInfoRequest extends ActivityBaseRequest
         $messages = [];
 
         foreach ($formFields as $websiteIndex => $website) {
-            $messages[sprintf('%s.website.%s.website.url', $formBase, $websiteIndex)] = trans(
-                'validation.url'
-            );
+            $messages[sprintf('%s.website.%s.website.url', $formBase, $websiteIndex)] = 'The website url must be valid url.';
         }
 
         return $messages;

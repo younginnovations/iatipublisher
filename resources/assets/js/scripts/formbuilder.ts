@@ -288,18 +288,18 @@ class FormBuilder {
   public hideCountryBudgetField(value: string) {
     const countryBudgetCodeInput =
       'input[id^="budget_item"][id*="[code_text]"]',
-      countryBudgetCodeSelect = 'select[id^="budget_item"][id*="[code]"]';
+    countryBudgetCodeSelect = 'select[id^="budget_item"][id*="[code]"]';
 
     if (value === '1') {
-      $(countryBudgetCodeInput)
+      $(countryBudgetCodeSelect)
         .val('')
         .trigger('change').attr('disabled', 'disabled')
         .closest('.form-field')
         .hide();
-      $(countryBudgetCodeSelect).removeAttr('disabled').closest('.form-field').show();
-    } else {
       $(countryBudgetCodeInput).removeAttr('disabled').closest('.form-field').show();
-      $(countryBudgetCodeSelect)
+    } else {
+      $(countryBudgetCodeSelect).removeAttr('disabled').closest('.form-field').show();
+      $(countryBudgetCodeInput)
         .val('')
         .trigger('change')
         .closest('.form-field')
@@ -313,7 +313,7 @@ class FormBuilder {
    * @Logic hide vocabulary-uri and codes field based on '@vocabulary' field value
    */
   public aidTypeVocabularyHideField() {
-    const aidtype_vocabulary = $('select[id*="default_aidtype_vocabulary"]');
+    const aidtype_vocabulary = $('select[id*="default_aid_type_vocabulary"]');
 
     if (aidtype_vocabulary.length > 0) {
       $.each(aidtype_vocabulary, (index, item) => {

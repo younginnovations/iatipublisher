@@ -76,7 +76,7 @@ class DefaultFinanceTypeController extends Controller
     {
         try {
             $activityData = $this->defaultFinanceTypeService->getActivityData($id);
-            $activityDefaultFinanceType = (int) $request->get('default_finance_type');
+            $activityDefaultFinanceType = $request->get('default_finance_type') != null ? (int) $request->get('default_finance_type') : null;
 
             if (!$this->defaultFinanceTypeService->update($activityDefaultFinanceType, $activityData)) {
                 return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while updating default-finance-type.');

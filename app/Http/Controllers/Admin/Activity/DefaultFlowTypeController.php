@@ -76,7 +76,7 @@ class DefaultFlowTypeController extends Controller
     {
         try {
             $activityData = $this->defaultFlowTypeService->getActivityData($id);
-            $activityDefaultFlowType = (int) $request->get('default_flow_type');
+            $activityDefaultFlowType = $request->get('default_flow_type') != null ? (int) $request->get('default_flow_type') : null;
 
             if (!$this->defaultFlowTypeService->update($activityDefaultFlowType, $activityData)) {
                 return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while updating default-flow-type.');

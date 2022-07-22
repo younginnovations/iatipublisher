@@ -76,7 +76,7 @@ class CollaborationTypeController extends Controller
     {
         try {
             $activityData = $this->collaborationTypeService->getActivityData($id);
-            $activityCollaborationType = (int) $request->get('collaboration_type');
+            $activityCollaborationType = $request->get('collaboration_type') != null ? (int) $request->get('collaboration_type') : null;
 
             if (!$this->collaborationTypeService->update($activityCollaborationType, $activityData)) {
                 return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while updating activity collaboration-type.');

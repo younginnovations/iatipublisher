@@ -156,8 +156,7 @@ class BaseForm extends Form
         if ($sub_elements) {
             foreach ($sub_elements as $sub_element) {
                 $this->buildCollection($sub_element);
-
-                if (Arr::get($element, 'add_more', false) || Arr::get($sub_element, 'add_more', false)) {
+                if (Arr::get($element, 'add_more', false) && Arr::get($sub_element, 'add_more', false)) {
                     $this->add('delete_' . $sub_element['name'], 'button', [
                         'attr' => [
                             'class' => 'delete-parent delete-item absolute right-0 top-16 -translate-y-1/2 translate-x-1/2',
@@ -166,14 +165,6 @@ class BaseForm extends Form
                 }
             }
         }
-
-        // if (Arr::get($element, 'add_more', false)) {
-        //     $this->add('delete_' . $element['name'].'12', 'button', [
-        //         'attr' => [
-        //             'class' => 'delete-parent delete-item absolute right-0 top-16 -translate-y-1/2 translate-x-1/2',
-        //         ],
-        //     ]);
-        // }
     }
 
     /**

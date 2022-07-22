@@ -76,7 +76,7 @@ class DefaultTiedStatusController extends Controller
     {
         try {
             $activityData = $this->defaultTiedStatusService->getActivityData($id);
-            $activityDefaultTiedStatus = (int) $request->get('default_tied_status');
+            $activityDefaultTiedStatus = $request->get('default_tied_status') != null ? (int) $request->get('default_tied_status') : null;
 
             if (!$this->defaultTiedStatusService->update($activityDefaultTiedStatus, $activityData)) {
                 return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while updating default-tied-status.');

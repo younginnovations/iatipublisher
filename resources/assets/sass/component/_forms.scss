@@ -33,7 +33,7 @@ form {
     }
   }
   button.delete-item {
-    @apply absolute h-8 w-8 cursor-pointer overflow-hidden rounded-full bg-n-40 indent-32;
+    @apply absolute h-8 w-8 cursor-pointer overflow-hidden rounded-full bg-n-40 -indent-40;
     &:after {
       background: url('/images/trash_full.svg') no-repeat center;
       content: '';
