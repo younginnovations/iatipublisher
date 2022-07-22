@@ -235,7 +235,6 @@ class PlannedDisbursementRequest extends ActivityBaseRequest
         $rules = [];
 
         foreach ($formFields as $periodEndKey => $periodEndVal) {
-            // $rules[$formBase . '.period_end.' . $periodEndKey . '.date'][] = 'required';
             $rules[$formBase . '.period_end.' . $periodEndKey . '.iso_date'][] = 'date';
             $rules[$formBase . '.period_end.' . $periodEndKey . '.iso_date'][] = sprintf(
                 'after:%s',

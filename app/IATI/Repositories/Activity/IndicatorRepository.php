@@ -62,9 +62,7 @@ class IndicatorRepository
     public function update(array $indicatorData, Indicator $activityResultIndicator): bool
     {
         $indicatorData = $this->sanitizeIndicatorData($indicatorData);
-        // dd($indicatorData);
         $activityResultIndicator->indicator = $indicatorData['indicator'];
-        // dd($activityResultIndicator);
 
         return $activityResultIndicator->save();
     }

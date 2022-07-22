@@ -189,18 +189,6 @@ class ActivityBaseRequest extends FormRequest
         $rules[sprintf('%s.narrative', $formBase)][] = 'unique_lang';
         $rules[sprintf('%s.narrative', $formBase)][] = 'unique_default_lang';
 
-        foreach ($formFields as $narrativeIndex => $narrative) {
-            if (boolval($narrative['language'])) {
-                // $rules[sprintf('%s.narrative.%s.narrative', $formBase, $narrativeIndex)] = 'required_with:' . sprintf(
-                //     '%s.narrative.%s.language',
-                //     $formBase,
-                //     $narrativeIndex
-                // );
-            } else {
-                // $rules[sprintf('%s.narrative.%s.narrative', $formBase, $narrativeIndex)] = 'required';
-            }
-        }
-
         return $rules;
     }
 
@@ -216,22 +204,6 @@ class ActivityBaseRequest extends FormRequest
     {
         $messages = [];
         $messages[sprintf('%s.narrative.unique_lang', $formBase)] = 'The @xml:lang field must be unique.';
-
-        //        foreach ($formFields as $narrativeIndex => $narrative) {
-        //            if (boolval($narrative['language'])) {
-        //                $messages[sprintf(
-        //                    '%s.narrative.%s.narrative.required_with',
-        //                    $formBase,
-        //                    $narrativeIndex
-        //                )] = 'The text field is required with @xml:lang field.';
-        //            } else {
-        //                $messages[sprintf(
-        //                    '%s.narrative.%s.narrative.required',
-        //                    $formBase,
-        //                    $narrativeIndex
-        //                )] = 'The text field is required.';
-        //            }
-        //        }
 
         return $messages;
     }
@@ -249,14 +221,6 @@ class ActivityBaseRequest extends FormRequest
         $rules = [];
         $rules[sprintf('%s.narrative', $formBase)][] = 'unique_lang';
         $rules[sprintf('%s.narrative', $formBase)][] = 'unique_default_lang';
-
-        //    foreach ($formFields as $narrativeIndex => $narrative) {
-        //        $rules[sprintf('%s.narrative.%s.narrative', $formBase, $narrativeIndex)][] = 'required_with:' . sprintf(
-        //            '%s.narrative.%s.language',
-        //            $formBase,
-        //            $narrativeIndex
-        //        );
-        //    }
 
         return $rules;
     }
@@ -330,7 +294,6 @@ class ActivityBaseRequest extends FormRequest
         $rules = [];
 
         foreach ($formFields as $periodEndKey => $periodEndVal) {
-            // $rules[$formBase . '.period_end.' . $periodEndKey . '.date'][] = 'required';
             $rules[$formBase . '.period_end.' . $periodEndKey . '.date'][] = ['date', 'date_greater_than:1900'];
             $rules[$formBase . '.period_end.' . $periodEndKey . '.date'][] = sprintf(
                 'after:%s',

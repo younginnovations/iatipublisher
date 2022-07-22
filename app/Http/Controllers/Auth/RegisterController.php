@@ -222,8 +222,6 @@ class RegisterController extends Controller
         $user = $this->create($request->all());
         event(new Registered($user));
 
-        // $this->guard()->login($user);
-
         return response()->json(['success' => true, 'message' => 'User registered successfully']);
     }
 

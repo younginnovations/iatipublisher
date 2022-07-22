@@ -565,7 +565,7 @@
               <tr>
                 <td v-if="post.region_vocabulary === '99'">Vocabulary-uri</td>
                 <td v-if="post.region_vocabulary === '99'">
-                  <a target="_blank" :href="post.vocabulary_uri" v-if="post.vocabulary_uri">{{
+                  <a v-if="post.vocabulary_uri" target="_blank" :href="post.vocabulary_uri">{{
                     post.vocabulary_uri
                   }}</a>
                   <span v-else class="italic">Not Available</span>
@@ -944,7 +944,7 @@
               >
                 <td>Vocabulary URI</td>
                 <td>
-                  <a target="_blank" :href="post.vocabulary_uri" v-if="post.vocabulary_uri">{{
+                  <a v-if="post.vocabulary_uri" target="_blank" :href="post.vocabulary_uri">{{
                     post.vocabulary_uri
                   }}</a>
                   <span v-else class="italic">Not Available</span>
@@ -987,7 +987,7 @@
             <tr v-if="post.policymarker_vocabulary === '99'">
               <td>Vocabulary URI</td>
               <td>
-                <a target="_blank" :href="post.vocabulary_uri" v-if="post.vocabulary_uri">{{
+                <a v-if="post.vocabulary_uri" target="_blank" :href="post.vocabulary_uri">{{
                   post.vocabulary_uri
                 }}</a>
                 <span v-else class="italic">Not Available</span>
@@ -1078,7 +1078,7 @@
             <tr v-if="post.tag_vocabulary === '99'">
               <td>Vocabulary URI</td>
               <td>
-                <a target="_blank" :href="post.vocabulary_uri" v-if="post.vocabulary_uri">
+                <a v-if="post.vocabulary_uri" target="_blank" :href="post.vocabulary_uri">
                   {{ post.vocabulary_uri }}
                 </a>
                 <span v-else class="italic">Not Available</span>

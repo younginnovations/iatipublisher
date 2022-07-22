@@ -46,7 +46,6 @@ class ParticipatingOrganizationRequest extends ActivityBaseRequest
             $rules[$identifier] = 'exclude|required_without:' . $narrative;
             $rules[$participatingOrgForm . '.organization_id'] = 'nullable|organization_exists';
             $rules[$identifier] = 'exclude|required_without:' . $narrative;
-            // $rules[$narrative][]                                 = 'required_without:' . $identifier;
             $rules = array_merge_recursive(
                 $rules,
                 $this->getRulesForNarrative($participatingOrg['narrative'], $participatingOrgForm)
@@ -69,7 +68,6 @@ class ParticipatingOrganizationRequest extends ActivityBaseRequest
             $participatingOrgForm = 'participating_org.' . $participatingOrgIndex;
             $messages[$participatingOrgForm . '.organization_role.required'] = trans('validation.required', ['attribute' => trans('elementForm.organisation_role')]);
             $identifier = $participatingOrgForm . '.identifier';
-            // $organization_id = $participatingOrgForm . '.organization_id';
             $narrative = sprintf('%s.narrative.0.narrative', $participatingOrgForm);
             $messages[$identifier . '.required_without'] = trans(
                 'validation.required_without',
@@ -83,7 +81,6 @@ class ParticipatingOrganizationRequest extends ActivityBaseRequest
                 'validation.exclude_operators',
                 ['attribute' => trans('elementForm.identifier'), 'values' => trans('elementForm.identifier')]
             );
-            // $messages[$organization_id . '.organization_exists'] = 'The organization with organization_id doesn\'t exist in IATI registry.';
             $messages = array_merge(
                 $messages,
                 $this->getMessagesForNarrative($participatingOrg['narrative'], $participatingOrgForm)
