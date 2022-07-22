@@ -354,14 +354,14 @@
 <script lang="ts">
 import { defineComponent, onMounted, reactive, toRefs } from 'vue';
 import { useToggle } from '@vueuse/core';
-import HoverText from '../../components/HoverText.vue';
-import ProgressBar from '../../components/ProgressBar.vue';
-import Elements from './partials/ActivitiesElements.vue';
-import ActivityElement from './partials/ActivityElement.vue';
-import Results from './partials/ActivityResult.vue';
-import Modal from '../../components/PopupModal.vue';
-import BtnComponent from '../../components/ButtonComponent.vue';
-import Toast from '../../components/Toast.vue';
+import HoverText from 'Components/HoverText.vue';
+import ProgressBar from 'Components/ProgressBar.vue';
+import Elements from 'Activity/partials/ActivitiesElements.vue';
+import ActivityElement from 'Activity/partials/ActivityElement.vue';
+import Results from 'Activity/partials/ActivityResult.vue';
+import Modal from 'Components/PopupModal.vue';
+import BtnComponent from 'Components/ButtonComponent.vue';
+import Toast from 'Components/Toast.vue';
 
 export default defineComponent({
   components: {

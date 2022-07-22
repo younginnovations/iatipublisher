@@ -110,6 +110,11 @@ if (!function_exists('getList')) {
     }
 }
 
+/*
+ * Get activity transaction data type
+ *
+ * @return array
+ */
 if (!function_exists('getTransactionTypes')) {
     function getTransactionTypes(): array
     {
@@ -132,6 +137,40 @@ if (!function_exists('getTransactionTypes')) {
             'cashAndVoucherModalities'  => getCodeList('CashandVoucherModalities', 'Activity'),
             'earMarkingCategory'        => getCodeList('EarmarkingCategory', 'Activity'),
             'earMarkingModality'        => getCodeList('EarmarkingModality', 'Activity'),
+        ];
+    }
+}
+
+/*
+ * Get activity result data type
+ *
+ * @return array
+ */
+if (!function_exists('getResultTypes')) {
+    function getResultTypes(): array
+    {
+        return [
+            'resultType'                => getCodeList('ResultType', 'Activity'),
+            'resultVocabulary'          => getCodeList('ResultVocabulary', 'Activity'),
+            'indicatorMeasure'          => getCodeList('IndicatorMeasure', 'Activity'),
+            'language'                  => getCodeList('Language', 'Activity', false),
+        ];
+    }
+}
+
+/*
+ * Get activity indicator data type
+ *
+ * @return array
+ */
+if (!function_exists('getIndicatorTypes')) {
+    function getIndicatorTypes(): array
+    {
+        return [
+            'indicatorMeasure'          => getCodeList('IndicatorMeasure', 'Activity'),
+            'language'                  => getCodeList('Language', 'Activity', false),
+            'documentCategory'          => getCodeList('DocumentCategory', 'Activity'),
+            'fileFormat'                => getCodeList('FileFormat', 'Activity', false),
         ];
     }
 }

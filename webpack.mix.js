@@ -1,4 +1,5 @@
 /* eslint-disable import/no-extraneous-dependencies */
+const path = require('path');
 const mix = require('laravel-mix');
 require('laravel-mix-svg-vue');
 const tailwindCss = require('tailwindcss');
@@ -16,6 +17,19 @@ if (mix.inProduction()) {
 } else {
   mix.webpackConfig({ devtool: 'inline-source-map' }).sourceMaps();
 }
+
+mix.webpackConfig({
+  resolve: {
+    alias: {
+      Components: path.resolve(__dirname, './resources/assets/js/components/'),
+      Composable: path.resolve(__dirname, './resources/assets/js/composable/'),
+      Activity: path.resolve(
+        __dirname,
+        './resources/assets/js/views/activity/'
+      ),
+    },
+  },
+});
 
 /*
  |--------------------------------------------------------------------------
