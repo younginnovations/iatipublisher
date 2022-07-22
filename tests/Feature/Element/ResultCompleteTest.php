@@ -2,24 +2,44 @@
 
 namespace Tests\Feature\Element;
 
+/**
+ * Class RelatedActivityCompleteTest.
+ */
 class ResultCompleteTest extends ElementCompleteTest
 {
     private string $element = 'result';
 
-    public function __construct(?string $name = null, array $data = [], $dataName = '')
+    /**
+     * Construct function.
+     *
+     * @param string|null $name
+     * @param array       $data
+     * @param string      $dataName
+     */
+    public function __construct(?string $name = null, array $data = [], string $dataName = '')
     {
         parent::__construct($name, $data, $dataName);
 
         $this->activityObj->element = $this->element;
     }
 
-    public function test_period_mandatory_attributes()
+    /**
+     * Mandatory period attribute test.
+     *
+     * @return void
+     */
+    public function test_period_mandatory_attributes(): void
     {
         $this->element = 'period';
         $this->test_mandatory_attributes($this->element, []);
     }
 
-    public function test_period_mandatory_sub_elements()
+    /**
+     * Mandatory period sub element test.
+     *
+     * @return void
+     */
+    public function test_period_mandatory_sub_elements(): void
     {
         $this->element = 'period';
         $this->test_mandatory_sub_elements($this->element, [
@@ -28,7 +48,12 @@ class ResultCompleteTest extends ElementCompleteTest
         ]);
     }
 
-    public function test_period_element_complete()
+    /**
+     * Period element complete test.
+     *
+     * @return void
+     */
+    public function test_period_element_complete(): void
     {
         $actualData = json_decode(
             '[{"period_start":[{"date":"asd"}],"period_end":[{"date":"asd"}],"target":[{"value":"12","comment":[{"narrative":[{"narrative":"asdasd","language":"ak"}]}], "dimension":[{"name":"asdsad","value":null}],"document_link":[{"url":"www.google.com","format":"asdasd","title":[{"narrative":[{"narrative":"test","language":"fr"}]}],"description":[{"narrative":[{"narrative":"asdasd","language":"en"}]}],"category":[{"code":"AG"}],"language":[{"language":null}],"document_date":[{"date":"2022-08-06"}]}],"location":[{"reference":null}]}],"actual":[{"value":"10","comment":[{"narrative":[{"narrative":"comment actual","language":"bs"}]}],"dimension":[{"name":"asdsad","value":null}],"document_link":[{"url":"www.google.com","format":"asdasd","title":[{"narrative":[{"narrative":"asdasd","language":"en"}]}],"description":[{"narrative":[{"narrative":"asdasda","language":"fr"}]}],"category":[{"code":"AE"}],"language":[{"language":null}],"document_date":[{"date":"2022-08-06"}]}],"location":[{"reference":null}]}]},{"period_start":[{"date":"2022-06-28"}],"period_end":[{"date":"2022-08-06"}],"target":[{"value":"12","comment":[{"narrative":[{"narrative":"comment","language":"ak"}]}],"dimension":[{"name":"asdsad","value":null}],"document_link":[{"url":"www.google.com","format":"asdasd","title":[{"narrative":[{"narrative":"asdasda","language":"ar"}]}],"description":[{"narrative":[{"narrative":"asdasda","language":"gr"}]}],"category":[{"code":"BB"}],"language":[{"language":null}],"document_date":[{"date":"2022-08-06"}]}],"location":[{"reference":null}]}],"actual":[{"value":"10","comment":[{"narrative":[{"narrative":"comment actual","language":"bs"}]}],"dimension":[{"name":"asdasd","value":null}],"document_link":[{"url":"www.google.com","format":"asdasd","title":[{"narrative":[{"narrative":"asdasda","language":"sp"}]}],"description":[{"narrative":[{"narrative":"asdasda","language":"an"}]}],"category":[{"code":"EE"}],"language":[{"language":null}],"document_date":[{"date":"2020"}]}],"location":[{"reference":null}]}]}]',
@@ -38,13 +63,23 @@ class ResultCompleteTest extends ElementCompleteTest
         $this->test_result_data_complete($this->element, $actualData);
     }
 
-    public function test_indicator_mandatory_attributes()
+    /**
+     * Mandatory indicator attribute test.
+     *
+     * @return void
+     */
+    public function test_indicator_mandatory_attributes(): void
     {
         $this->element = 'indicator';
         $this->test_mandatory_attributes($this->element, ['measure']);
     }
 
-    public function test_indicator_mandatory_sub_elements()
+    /**
+     * Mandatory indicator sub element test.
+     *
+     * @return void
+     */
+    public function test_indicator_mandatory_sub_elements(): void
     {
         $this->element = 'indicator';
         $this->test_mandatory_sub_elements($this->element, [
@@ -54,7 +89,12 @@ class ResultCompleteTest extends ElementCompleteTest
         ]);
     }
 
-    public function test_indicator_element_complete()
+    /**
+     * Indicator element complete test.
+     *
+     * @return void
+     */
+    public function test_indicator_element_complete(): void
     {
         $this->element = 'indicator';
         $actualData = json_decode(
@@ -64,13 +104,23 @@ class ResultCompleteTest extends ElementCompleteTest
         $this->test_result_data_complete($this->element, $actualData);
     }
 
-    public function test_result_mandatory_attributes()
+    /**
+     * Mandatory result attribute test.
+     *
+     * @return void
+     */
+    public function test_result_mandatory_attributes(): void
     {
         $this->element = 'result';
         $this->test_mandatory_attributes($this->element, ['type']);
     }
 
-    public function test_result_mandatory_sub_elements()
+    /**
+     * Mandatory result sub element test.
+     *
+     * @return void
+     */
+    public function test_result_mandatory_sub_elements(): void
     {
         $this->element = 'result';
         $this->test_mandatory_sub_elements($this->element, [
@@ -79,7 +129,12 @@ class ResultCompleteTest extends ElementCompleteTest
         ]);
     }
 
-    public function test_result_element_complete()
+    /**
+     * Result element complete test.
+     *
+     * @return void
+     */
+    public function test_result_element_complete(): void
     {
         $this->element = 'result';
         $actualData = json_decode(
