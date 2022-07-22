@@ -115,4 +115,15 @@ class ElementCompleteTest extends TestCase
     {
         $this->assertTrue($this->activityObj->checkTransactionData($subElements, $actualData));
     }
+
+    protected function test_result_data_complete($element, $actualData)
+    {
+        if ($element == 'result') {
+            $this->assertTrue($this->activityObj->isResultElementCompleted($element, $actualData));
+        } elseif ($element == 'indicator') {
+            $this->assertTrue($this->activityObj->isIndicatorElementCompleted($element, $actualData));
+        } elseif ($element == 'period') {
+            $this->assertTrue($this->activityObj->isPeriodElementCompleted($element, $actualData));
+        }
+    }
 }
