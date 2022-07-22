@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\IATI\Services\Activity;
 
+use App\IATI\Models\Activity\Activity;
 use App\IATI\Repositories\Activity\DefaultFinanceTypeRepository;
 use Illuminate\Database\Eloquent\Model;
 
@@ -62,5 +63,27 @@ class DefaultFinanceTypeService
     public function update($activityDefaultFinanceType, $activity): bool
     {
         return $this->defaultFinanceTypeRepository->update($activityDefaultFinanceType, $activity);
+    }
+
+    /**
+     * Returns data in required xml array format.
+     *
+     * @param Activity $activity
+     *
+     * @return array
+     */
+    public function getXmlData(Activity $activity): array
+    {
+        $activityData = [];
+
+        if ($activity->default_finance_type) {
+            $activityData = [
+                '@attributes' => [
+                    'code' => $activity->default_finance_type,
+                ],
+            ];
+        }
+
+        return $activityData;
     }
 }

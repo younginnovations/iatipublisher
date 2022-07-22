@@ -4,14 +4,19 @@ declare(strict_types=1);
 
 namespace App\IATI\Services\Activity;
 
+use App\IATI\Models\Activity\Activity;
 use App\IATI\Repositories\Activity\ConditionRepository;
+use App\IATI\Traits\XmlBaseElement;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Arr;
 
 /**
  * Class ConditionService.
  */
 class ConditionService
 {
+    use XmlBaseElement;
+
     /**
      * @var ConditionRepository
      */
@@ -62,5 +67,56 @@ class ConditionService
     public function update($activityCondition, $activity): bool
     {
         return $this->conditionRepository->update($activityCondition, $activity);
+    }
+
+    /**
+     * Returns data in required xml array format.
+     *
+     * @param Activity $activity
+     *
+     * @return array
+     */
+    public function getXmlData(Activity $activity)
+    {
+        $activityData = [];
+        $conditions = (array) $activity->conditions;
+
+        if (count($conditions)) {
+            $activityData[] = [
+                '@attributes' => [
+                    'attached' => Arr::get($conditions, 'condition_attached', null),
+                ],
+                'condition'   => Arr::get($conditions, 'condition_attached', null) == '1' ? $this->buildCondition(
+                    Arr::get($conditions, 'condition', [])
+                ) : [],
+            ];
+        }
+
+        return $activityData;
+    }
+
+    /**
+     * Returns array of xml conditions.
+     *
+     * @param $conditions
+     *
+     * @return array
+     */
+    private function buildCondition($conditions): array
+    {
+        if (!boolval($conditions)) {
+            $conditions = [['condition_type' => null, 'narrative' => [['narrative' => '', 'language' => '']]]];
+        }
+
+        foreach ($conditions as $condition) {
+            $conditionData[] = [
+                '@attributes' => [
+                    'type' => Arr::get($condition, 'condition_type', null),
+                ],
+                'narrative'   => $this->buildNarrative(Arr::get($condition, 'narrative', null)),
+            ];
+        }
+
+        return $conditionData;
     }
 }

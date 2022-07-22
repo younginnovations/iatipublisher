@@ -4,14 +4,19 @@ declare(strict_types=1);
 
 namespace App\IATI\Services\Activity;
 
+use App\IATI\Models\Activity\Activity;
 use App\IATI\Repositories\Activity\LocationRepository;
+use App\IATI\Traits\XmlBaseElement;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Arr;
 
 /**
  * Class LocationService.
  */
 class LocationService
 {
+    use XmlBaseElement;
+
     /**
      * @var LocationRepository
      */
@@ -62,5 +67,84 @@ class LocationService
     public function update($location, $activity): bool
     {
         return $this->locationRepository->update($location, $activity);
+    }
+
+    /**
+     * Returns data in required xml array format.
+     *
+     * @param Activity $activity
+     *
+     * @return array
+     */
+    public function getXmlData(Activity $activity): array
+    {
+        $activityData = [];
+        $locations = (array) $activity->location;
+
+        if (count($locations)) {
+            foreach ($locations as $location) {
+                $point = [];
+
+                if ((Arr::get($location, 'point.0.pos.0.latitude', '') != '') && (Arr::get($location, 'point.0.pos.0.longitude', '') != '')) {
+                    $point = [
+                        '@attributes' => [
+                            'srsName' => Arr::get($location, 'point.0.srs_name', null),
+                        ],
+                        'pos'         => sprintf('%s %s', Arr::get($location, 'point.0.pos.0.latitude', ''), Arr::get($location, 'point.0.pos.0.longitude', '')),
+                    ];
+                }
+
+                $activityData[] = [
+                    '@attributes'          => [
+                        'ref' => Arr::get($location, 'ref', null),
+                    ],
+                    'location-reach'       => [
+                        '@attributes' => [
+                            'code' => Arr::get($location, 'location_reach.0.code', null),
+                        ],
+                    ],
+                    'location-id'          => [
+                        '@attributes' => [
+                            'code'       => Arr::get($location, 'location_id.0.code', null),
+                            'vocabulary' => Arr::get($location, 'location_id.0.vocabulary', null),
+                        ],
+                    ],
+                    'name'                 => [
+                        'narrative' => $this->buildNarrative(Arr::get($location, 'name.0.narrative', [])),
+                    ],
+                    'description'          => [
+                        'narrative' => $this->buildNarrative(Arr::get($location, 'description.0.narrative', [])),
+                    ],
+                    'activity-description' => [
+                        'narrative' => $this->buildNarrative(Arr::get($location, 'activity_description.0.narrative', [])),
+                    ],
+                    'administrative'       => [
+                        '@attributes' => [
+                            'code'       => Arr::get($location, 'administrative.0.code', null),
+                            'vocabulary' => Arr::get($location, 'administrative.0.vocabulary', null),
+                            'level'      => Arr::get($location, 'administrative.0.level', null),
+                        ],
+                    ],
+                    'point'                => $point,
+                    'exactness'            => [
+                        '@attributes' => [
+                            'code' => Arr::get($location, 'exactness.0.code', null),
+                        ],
+                    ],
+                    'location-class'       => [
+                        '@attributes' => [
+                            'code' => Arr::get($location, 'location_class.0.code', null),
+                        ],
+                    ],
+                    'feature-designation'  => [
+                        '@attributes' => [
+                            'code' => Arr::get($location, 'feature_designation.0.code', null),
+                        ],
+                    ],
+                ];
+            }
+        }
+
+        return $activityData;
     }
 }

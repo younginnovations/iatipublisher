@@ -61,10 +61,14 @@ class OtherIdentifierRepository
      */
     public function update($activityIdentifier, $activity): bool
     {
-        $activityIdentifier['owner_org'] = array_values($activityIdentifier['owner_org']);
+        $activityIdentifier = array_values($activityIdentifier);
 
-        foreach ($activityIdentifier['owner_org'] as $owner_index => $owner_value) {
-            $activityIdentifier['owner_org'][$owner_index]['narrative'] = array_values($owner_value['narrative']);
+        foreach ($activityIdentifier as $index => $other_identifier) {
+            $activityIdentifier[$index]['owner_org'] = array_values($other_identifier['owner_org']);
+
+            foreach ($other_identifier['owner_org'] as $owner_index => $owner_value) {
+                $activityIdentifier[$index]['owner_org'][$owner_index]['narrative'] = array_values($owner_value['narrative']);
+            }
         }
 
         $activity->other_identifier = $activityIdentifier;

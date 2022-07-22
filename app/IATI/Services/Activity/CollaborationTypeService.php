@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\IATI\Services\Activity;
 
+use App\IATI\Models\Activity\Activity;
 use App\IATI\Repositories\Activity\CollaborationTypeRepository;
 use Illuminate\Database\Eloquent\Model;
 
@@ -62,5 +63,27 @@ class CollaborationTypeService
     public function update($activityCollaborationType, $activity): bool
     {
         return $this->collaborationTypeRepository->update($activityCollaborationType, $activity);
+    }
+
+    /**
+     * Returns data in required xml array format.
+     *
+     * @param Activity $activity
+     *
+     * @return array
+     */
+    public function getXmlData(Activity $activity): array
+    {
+        $activityData = [];
+
+        if ($activity->collaboration_type) {
+            $activityData = [
+                '@attributes' => [
+                    'code' => $activity->collaboration_type,
+                ],
+            ];
+        }
+
+        return $activityData;
     }
 }

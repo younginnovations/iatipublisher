@@ -4,14 +4,19 @@ declare(strict_types=1);
 
 namespace App\IATI\Services\Activity;
 
+use App\IATI\Models\Activity\Activity;
 use App\IATI\Repositories\Activity\RecipientCountryRepository;
+use App\IATI\Traits\XmlBaseElement;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Arr;
 
 /**
  * Class RecipientCountryService.
  */
 class RecipientCountryService
 {
+    use XmlBaseElement;
+
     /**
      * @var RecipientCountryRepository
      */
@@ -62,5 +67,32 @@ class RecipientCountryService
     public function update($activityRecipientCountry, $activity): bool
     {
         return $this->recipientCountryRepository->update($activityRecipientCountry, $activity);
+    }
+
+    /**
+     * Returns data in required xml array format.
+     *
+     * @param Activity $activity
+     *
+     * @return array
+     */
+    public function getXmlData(Activity $activity): array
+    {
+        $activityData = [];
+        $recipientCountries = (array) $activity->recipient_country;
+
+        if (count($recipientCountries)) {
+            foreach ($recipientCountries as $recipientCountry) {
+                $activityData[] = [
+                    '@attributes' => [
+                        'code'       => Arr::get($recipientCountry, 'country_code', null),
+                        'percentage' => Arr::get($recipientCountry, 'percentage', null),
+                    ],
+                    'narrative'   => $this->buildNarrative(Arr::get($recipientCountry, 'narrative', null)),
+                ];
+            }
+        }
+
+        return $activityData;
     }
 }

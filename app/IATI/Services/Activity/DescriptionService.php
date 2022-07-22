@@ -4,14 +4,19 @@ declare(strict_types=1);
 
 namespace App\IATI\Services\Activity;
 
+use App\IATI\Models\Activity\Activity;
 use App\IATI\Repositories\Activity\DescriptionRepository;
+use App\IATI\Traits\XmlBaseElement;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Arr;
 
 /**
  * Class DescriptionService.
  */
 class DescriptionService
 {
+    use XmlBaseElement;
+
     /**
      * @var DescriptionRepository
      */
@@ -62,5 +67,31 @@ class DescriptionService
     public function update($descriptionActivity, $activity): bool
     {
         return $this->descriptionRepository->update($descriptionActivity, $activity);
+    }
+
+    /**
+     * Returns data in required xml array format.
+     *
+     * @param Activity $activity
+     *
+     * @return array
+     */
+    public function getXmlData(Activity $activity): array
+    {
+        $activityData = [];
+        $descriptions = (array) $activity->description;
+
+        if (count($descriptions)) {
+            foreach ($descriptions as $description) {
+                $activityData[] = [
+                    '@attributes' => [
+                        'type' => Arr::get($description, 'type', null),
+                    ],
+                    'narrative'   => $this->buildNarrative(Arr::get($description, 'narrative', null)),
+                ];
+            }
+        }
+
+        return $activityData;
     }
 }

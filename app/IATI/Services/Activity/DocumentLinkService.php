@@ -4,15 +4,20 @@ declare(strict_types=1);
 
 namespace App\IATI\Services\Activity;
 
+use App\IATI\Models\Activity\Activity;
 use App\IATI\Repositories\Activity\DocumentLinkRepository;
 use App\IATI\Repositories\Document\DocumentRepository;
+use App\IATI\Traits\XmlBaseElement;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Arr;
 
 /**
  * Class DocumentLinkService.
  */
 class DocumentLinkService
 {
+    use XmlBaseElement;
+
     /**
      * @var DocumentLinkRepository
      */
@@ -69,5 +74,61 @@ class DocumentLinkService
     public function update($documentLink, $activity): bool
     {
         return $this->documentLinkRepository->update($documentLink, $activity);
+    }
+
+    /**
+     * Returns data in required xml array format.
+     *
+     * @param Activity $activity
+     *
+     * @return array
+     */
+    public function getXmlData(Activity $activity): array
+    {
+        $activityData = [];
+        $documentLinks = (array) $activity->document_link;
+
+        if (count($documentLinks)) {
+            foreach ($documentLinks as $documentLink) {
+                $categories = [];
+
+                foreach (Arr::get($documentLink, 'category', []) as $value) {
+                    $categories[] = [
+                        '@attributes' => ['code' => Arr::get($value, 'code', null)],
+                    ];
+                }
+
+                $languages = [];
+
+                foreach (Arr::get($documentLink, 'language', []) as $language) {
+                    $languages[] = [
+                        '@attributes' => ['code' => Arr::get($language, 'code', null)],
+                    ];
+                }
+
+                $activityData[] = [
+                    '@attributes'   => [
+                        'url'    => Arr::get($documentLink, 'url', null),
+                        'format' => Arr::get($documentLink, 'format', null),
+                    ],
+                    'title'         => [
+                        'narrative' => $this->buildNarrative(Arr::get($documentLink, 'title.0.narrative', [])),
+                    ],
+                    'description'   => [
+                        'narrative' => $this->buildNarrative(Arr::get($documentLink, 'description.0.narrative', [])),
+                    ],
+                    'category'      => $categories,
+
+                    'language'      => $languages,
+                    'document-date' => [
+                        '@attributes' => [
+                            'iso-date' => Arr::get($documentLink, 'document_date.0.date', null),
+                        ],
+                    ],
+                ];
+            }
+        }
+
+        return $activityData;
     }
 }

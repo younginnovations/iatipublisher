@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\IATI\Services\Activity;
 
+use App\IATI\Models\Activity\Activity;
 use App\IATI\Repositories\Activity\ScopeRepository;
 use Illuminate\Database\Eloquent\Model;
 
@@ -62,5 +63,27 @@ class ScopeService
     public function update($activityScope, $activity): bool
     {
         return $this->scopeRepository->update($activityScope, $activity);
+    }
+
+    /**
+     * Returns data in required xml array format.
+     *
+     * @param Activity $activity
+     *
+     * @return array
+     */
+    public function getXmlData(Activity $activity): array
+    {
+        $activityData = [];
+
+        if ($activity->activity_scope) {
+            $activityData = [
+                '@attributes' => [
+                    'code' => $activity->activity_scope,
+                ],
+            ];
+        }
+
+        return $activityData;
     }
 }

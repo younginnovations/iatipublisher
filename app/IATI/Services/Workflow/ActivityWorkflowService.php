@@ -6,6 +6,7 @@ namespace App\IATI\Services\Workflow;
 
 use App\IATI\Services\Activity\ActivityService;
 use App\IATI\Services\Organization\OrganizationService;
+use App\IATI\Services\Xml\XmlGeneratorService;
 
 /**
  * Class ActivityWorkflowService.
@@ -23,15 +24,21 @@ class ActivityWorkflowService
     protected ActivityService $activityService;
 
     /**
+     * @var XmlGeneratorService
+     */
+    protected XmlGeneratorService $xmlGeneratorService;
+
+    /**
      * ActivityWorkflowService Constructor.
      *
      * @param OrganizationService $organizationService
      * @param ActivityService $activityService
      */
-    public function __construct(OrganizationService $organizationService, ActivityService $activityService)
+    public function __construct(OrganizationService $organizationService, ActivityService $activityService, XmlGeneratorService $xmlGeneratorService)
     {
         $this->organizationService = $organizationService;
         $this->activityService = $activityService;
+        $this->xmlGeneratorService = $xmlGeneratorService;
     }
 
     /**
@@ -58,5 +65,7 @@ class ActivityWorkflowService
         $organization = $activity->organization;
         $settings = $organization->settings;
         $publishedActivities = $organization->publishedFiles;
+
+        $this->xmlGeneratorService->generateActivityXml($activity, $activity->transactions, $activity->results, $settings, $organization);
     }
 }

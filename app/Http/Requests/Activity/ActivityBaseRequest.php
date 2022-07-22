@@ -260,7 +260,6 @@ class ActivityBaseRequest extends FormRequest
         foreach ($formFields as $periodStartKey => $periodStartVal) {
             $rules[$formBase . '.period_start.' . $periodStartKey . '.date'] = 'date|date_greater_than:1900';
         }
-        dd('here', $rules);
 
         return $rules;
     }

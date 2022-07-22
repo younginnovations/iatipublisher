@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\IATI\Services\Activity;
 
+use App\IATI\Models\Activity\Activity;
 use App\IATI\Repositories\Activity\DefaultTiedStatusRepository;
 use Illuminate\Database\Eloquent\Model;
 
@@ -62,5 +63,27 @@ class DefaultTiedStatusService
     public function update($activityDefaultTiedStatus, $activity): bool
     {
         return $this->defaultTiedStatusRepository->update($activityDefaultTiedStatus, $activity);
+    }
+
+    /**
+     * Returns data in required xml array format.
+     *
+     * @param Activity $activity
+     *
+     * @return array
+     */
+    public function getXmlData(Activity $activity): array
+    {
+        $activityData = [];
+
+        if ($activity->default_tied_status) {
+            $activityData = [
+                '@attributes' => [
+                    'code' => $activity->default_tied_status,
+                ],
+            ];
+        }
+
+        return $activityData;
     }
 }

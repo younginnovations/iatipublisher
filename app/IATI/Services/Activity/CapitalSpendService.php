@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\IATI\Services\Activity;
 
+use App\IATI\Models\Activity\Activity;
 use App\IATI\Repositories\Activity\CapitalSpendRepository;
 use Illuminate\Database\Eloquent\Model;
 
@@ -62,5 +63,27 @@ class CapitalSpendService
     public function update($activityCapitalSpend, $activity): bool
     {
         return $this->capitalSpendRepository->update($activityCapitalSpend, $activity);
+    }
+
+    /**
+     * Returns data in required xml array format.
+     *
+     * @param Activity $activity
+     *
+     * @return array
+     */
+    public function getXmlData(Activity $activity): array
+    {
+        $activityData = [];
+
+        if ($activity->capital_spend) {
+            $activityData = [
+                '@attributes' => [
+                    'percentage' => $activity->capital_spend,
+                ],
+            ];
+        }
+
+        return $activityData;
     }
 }

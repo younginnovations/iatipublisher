@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\IATI\Services\Activity;
 
+use App\IATI\Models\Activity\Activity;
 use App\IATI\Repositories\Activity\StatusRepository;
 use Illuminate\Database\Eloquent\Model;
 
@@ -62,5 +63,27 @@ class StatusService
     public function update($activityStatus, $activity): bool
     {
         return $this->statusRepository->update($activityStatus, $activity);
+    }
+
+    /**
+     * Returns data in required xml array format.
+     *
+     * @param Activity $activity
+     *
+     * @return array
+     */
+    public function getXmlData(Activity $activity): array
+    {
+        $activityData = [];
+
+        if ($activity->activity_status) {
+            $activityData = [
+                '@attributes' => [
+                    'code' => $activity->activity_status,
+                ],
+            ];
+        }
+
+        return $activityData;
     }
 }

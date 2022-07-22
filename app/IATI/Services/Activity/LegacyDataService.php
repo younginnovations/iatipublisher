@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace App\IATI\Services\Activity;
 
+use App\IATI\Models\Activity\Activity;
 use App\IATI\Repositories\Activity\LegacyDataRepository;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Arr;
 
 /**
  * Class LegacyDataService.
@@ -62,5 +64,32 @@ class LegacyDataService
     public function update($activityLegacy, $activity): bool
     {
         return $this->legacyDataRepository->update($activityLegacy, $activity);
+    }
+
+    /**
+     * Returns data in required xml array format.
+     *
+     * @param Activity $activity
+     *
+     * @return array
+     */
+    public function getXmlData(Activity $activity): array
+    {
+        $activityData = [];
+        $legacyDatas = (array) $activity->legacy_data;
+
+        if (count($legacyDatas)) {
+            foreach ($legacyDatas as $legacyData) {
+                $activityData[] = [
+                    '@attributes' => [
+                        'name'            => Arr::get($legacyData, 'name', null),
+                        'value'           => Arr::get($legacyData, 'value', null),
+                        'iati-equivalent' => Arr::get($legacyData, 'iati_equivalent', null),
+                    ],
+                ];
+            }
+        }
+
+        return $activityData;
     }
 }

@@ -4,14 +4,18 @@ declare(strict_types=1);
 
 namespace App\IATI\Services\Activity;
 
+use App\IATI\Models\Activity\Activity;
 use App\IATI\Repositories\Activity\DateRepository;
+use App\IATI\Traits\XmlBaseElement;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Arr;
 
 /**
  * Class DateService.
  */
 class DateService
 {
+    use XmlBaseElement;
     /**
      * @var DateRepository
      */
@@ -62,5 +66,32 @@ class DateService
     public function update($activityDate, $activity): bool
     {
         return $this->dateRepository->update($activityDate, $activity);
+    }
+
+    /**
+     * Returns data in required xml array format.
+     *
+     * @param Activity $activity
+     *
+     * @return array
+     */
+    public function getXmlData(Activity $activity): array
+    {
+        $activityData = [];
+        $activityDate = (array) $activity->activity_date;
+
+        if (count($activityDate)) {
+            foreach ($activityDate as $ActivityDate) {
+                $activityData[] = [
+                    '@attributes' => [
+                        'type'     => Arr::get($ActivityDate, 'type', null),
+                        'iso-date' => Arr::get($ActivityDate, 'date', null),
+                    ],
+                    'narrative'   => $this->buildNarrative(Arr::get($ActivityDate, 'narrative', null)),
+                ];
+            }
+        }
+
+        return $activityData;
     }
 }

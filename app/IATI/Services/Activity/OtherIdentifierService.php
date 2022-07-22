@@ -4,14 +4,19 @@ declare(strict_types=1);
 
 namespace App\IATI\Services\Activity;
 
+use App\IATI\Models\Activity\Activity;
 use App\IATI\Repositories\Activity\OtherIdentifierRepository;
+use App\IATI\Traits\XmlBaseElement;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Arr;
 
 /**
  * Class OtherIdentifierService.
  */
 class OtherIdentifierService
 {
+    use XmlBaseElement;
+
     /**
      * @var otherIdentifierRepository
      */
@@ -62,5 +67,37 @@ class OtherIdentifierService
     public function update($activityIdentifier, $activity): bool
     {
         return $this->otherIdentifierRepository->update($activityIdentifier, $activity);
+    }
+
+    /**
+     * Returns data in required xml array format.
+     *
+     * @param Activity $activity
+     *
+     * @return array
+     */
+    public function getXmlData(Activity $activity): array
+    {
+        $activityData = [];
+        $otherIdentifiers = (array) $activity->other_identifier;
+
+        if (count($otherIdentifiers)) {
+            foreach ($otherIdentifiers as $otherIdentifier) {
+                $activityData[] = [
+                    '@attributes' => [
+                        'ref'  => Arr::get($otherIdentifier, 'reference', null),
+                        'type' => Arr::get($otherIdentifier, 'reference_type', null),
+                    ],
+                    'owner-org'   => [
+                        '@attributes' => [
+                            'ref' => Arr::get($otherIdentifier, 'owner_org.0.ref', null),
+                        ],
+                        'narrative'   => $this->buildNarrative(Arr::get($otherIdentifier, 'owner_org.0.narrative', null)),
+                    ],
+                ];
+            }
+        }
+
+        return $activityData;
     }
 }

@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace App\IATI\Services\Activity;
 
+use App\IATI\Models\Activity\Activity;
 use App\IATI\Repositories\Activity\TitleRepository;
+use App\IATI\Traits\XmlBaseElement;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -12,6 +14,8 @@ use Illuminate\Database\Eloquent\Model;
  */
 class TitleService
 {
+    use XmlBaseElement;
+
     /**
      * @var TitleRepository
      */
@@ -32,9 +36,9 @@ class TitleService
      *
      * @param int $activity_id
      *
-     * @return array
+     * @return array|null
      */
-    public function getTitleData(int $activity_id): array
+    public function getTitleData(int $activity_id): ?array
     {
         return $this->titleRepository->getTitleData($activity_id);
     }
@@ -64,5 +68,26 @@ class TitleService
         $activity->title = array_values($activityTitle['narrative']);
 
         return $activity->save();
+    }
+
+    /**
+     * Returns data in required xml array format.
+     *
+     * @param Activity $activity
+     *
+     * @return array
+     */
+    public function getXmlData(Activity $activity): array
+    {
+        $titles = (array) $activity->title;
+        $activityData = [];
+
+        if (count($titles)) {
+            $activityData[] = [
+                'narrative' => $this->buildNarrative($titles),
+            ];
+        }
+
+        return $activityData;
     }
 }

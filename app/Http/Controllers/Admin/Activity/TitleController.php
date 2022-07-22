@@ -48,7 +48,6 @@ class TitleController extends Controller
             $model['narrative'] = $this->titleService->getTitleData($id);
             $this->baseFormCreator->url = route('admin.activities.title.update', [$id]);
             $form = $this->baseFormCreator->editForm($model, $element['title'], 'PUT', '/activities/' . $id);
-            $status = $activity->title_element_completed;
             $data = ['core' => $element['title']['criteria'], 'status' => $activity->title_element_completed, 'title' => $element['title']['label'], 'name' => 'title'];
 
             return view('activity.title.title', compact('form', 'activity', 'data'));

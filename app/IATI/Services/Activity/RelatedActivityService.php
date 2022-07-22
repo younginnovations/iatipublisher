@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace App\IATI\Services\Activity;
 
+use App\IATI\Models\Activity\Activity;
 use App\IATI\Repositories\Activity\RelatedActivityRepository;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Arr;
 
 /**
  * Class RelatedActivityService.
@@ -62,5 +64,31 @@ class RelatedActivityService
     public function update($activityRelatedActivity, $activity): bool
     {
         return $this->relatedActivityRepository->update($activityRelatedActivity, $activity);
+    }
+
+    /**
+     * Returns data in required xml array format.
+     *
+     * @param Activity $activity
+     *
+     * @return array
+     */
+    public function getXmlData(Activity $activity): array
+    {
+        $activityData = [];
+        $relatedActivities = (array) $activity->related_activity;
+
+        if (count($relatedActivities)) {
+            foreach ($relatedActivities as $relatedActivity) {
+                $activityData[] = [
+                    '@attributes' => [
+                        'ref'  => Arr::get($relatedActivity, 'activity_identifier', null),
+                        'type' => Arr::get($relatedActivity, 'relationship_type', null),
+                    ],
+                ];
+            }
+        }
+
+        return $activityData;
     }
 }

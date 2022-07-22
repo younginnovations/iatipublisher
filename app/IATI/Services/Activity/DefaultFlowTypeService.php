@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\IATI\Services\Activity;
 
+use App\IATI\Models\Activity\Activity;
 use App\IATI\Repositories\Activity\DefaultFlowTypeRepository;
 use Illuminate\Database\Eloquent\Model;
 
@@ -62,5 +63,27 @@ class DefaultFlowTypeService
     public function update($activityDefaultFlowType, $activity): bool
     {
         return $this->defaultFlowTypeRepository->update($activityDefaultFlowType, $activity);
+    }
+
+    /**
+     * Returns data in required xml array format.
+     *
+     * @param Activity $activity
+     *
+     * @return array
+     */
+    public function getXmlData(Activity $activity): array
+    {
+        $activityData = [];
+
+        if ($activity->default_flow_type) {
+            $activityData = [
+                '@attributes' => [
+                    'code' => $activity->default_flow_type,
+                ],
+            ];
+        }
+
+        return $activityData;
     }
 }

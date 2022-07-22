@@ -102,4 +102,16 @@ class ActivityService
     {
         return $this->activityRepository->find($id);
     }
+
+    /**
+     * Returns required service file.
+     *
+     * @param $serviceName
+     *
+     * @return \Illuminate\Contracts\Foundation\Application|mixed
+     */
+    public function getService($serviceName)
+    {
+        return app(sprintf("App\IATI\Services\Activity\%s", $serviceName));
+    }
 }

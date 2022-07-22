@@ -6,7 +6,7 @@ namespace App\Http\Controllers\Admin\Activity;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Activity\OtherIdentifier\OtherIdentifierRequest;
-use App\IATI\Elements\Builder\MultilevelSubElementFormCreator;
+use App\IATI\Elements\Builder\ParentCollectionFormCreator;
 use App\IATI\Services\Activity\OtherIdentifierService;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
@@ -18,9 +18,9 @@ use Illuminate\Http\RedirectResponse;
 class OtherIdentifierController extends Controller
 {
     /**
-     * @var MultilevelSubElementFormCreator
+     * @var ParentCollectionFormCreator
      */
-    protected MultilevelSubElementFormCreator $multilevelSubElementFormCreator;
+    protected ParentCollectionFormCreator $parentCollectionFormCreator;
 
     /**
      * @var otherIdentifierService
@@ -30,12 +30,12 @@ class OtherIdentifierController extends Controller
     /**
      * OtherIdentifierController Constructor.
      *
-     * @param MultilevelSubElementFormCreator $multilevelSubElementFormCreator
+     * @param ParentCollectionFormCreator $parentCollectionFormCreator
      * @param otherIdentifierService $otherIdentifierService
      */
-    public function __construct(MultilevelSubElementFormCreator $multilevelSubElementFormCreator, OtherIdentifierService $otherIdentifierService)
+    public function __construct(ParentCollectionFormCreator $parentCollectionFormCreator, OtherIdentifierService $otherIdentifierService)
     {
-        $this->multilevelSubElementFormCreator = $multilevelSubElementFormCreator;
+        $this->parentCollectionFormCreator = $parentCollectionFormCreator;
         $this->otherIdentifierService = $otherIdentifierService;
     }
 
@@ -51,9 +51,9 @@ class OtherIdentifierController extends Controller
         try {
             $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
             $activity = $this->otherIdentifierService->getActivityData($id);
-            $model = $this->otherIdentifierService->getOtherIdentifierData($id) ?: [];
-            $this->multilevelSubElementFormCreator->url = route('admin.activities.other-identifier.update', [$id]);
-            $form = $this->multilevelSubElementFormCreator->editForm($model, $element['other_identifier'], 'PUT', '/activities/' . $id);
+            $model['other_identifier'] = $this->otherIdentifierService->getOtherIdentifierData($id) ?: [];
+            $this->parentCollectionFormCreator->url = route('admin.activities.other-identifier.update', [$id]);
+            $form = $this->parentCollectionFormCreator->editForm($model, $element['other_identifier'], 'PUT', '/activities/' . $id);
             $data = ['core' => $element['other_identifier']['criteria'], 'status' => $activity->other_identifier_element_completed, 'title' => $element['other_identifier']['label'], 'name' => 'other_identifier'];
 
             return view('activity.otherIdentifier.other_identifier', compact('form', 'activity', 'data'));
@@ -76,7 +76,7 @@ class OtherIdentifierController extends Controller
     {
         try {
             $activityData = $this->otherIdentifierService->getActivityData($id);
-            $activityCondition = $request->except(['_token', '_method']);
+            $activityCondition = $request->get('other_identifier');
 
             if (!$this->otherIdentifierService->update($activityCondition, $activityData)) {
                 return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while updating other-identifier.');
