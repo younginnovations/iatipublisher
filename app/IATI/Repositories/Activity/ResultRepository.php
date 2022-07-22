@@ -123,4 +123,15 @@ class ResultRepository
     {
         return $this->activityResult->where('id', $resultId)->where('activity_id', $activityId)->with(['indicators', 'indicators.periods'])->first();
     }
+
+    /**
+     * Return specific result.
+     *
+     * @param $activityId
+     * @return array
+     */
+    public function getActivityResult($activityId): array
+    {
+        return $this->activityResult->where('activity_id', $activityId)->get()->toArray();
+    }
 }

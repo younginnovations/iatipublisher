@@ -51,9 +51,22 @@ class ResultController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index($activityId): \Illuminate\Contracts\View\View|\Illuminate\Http\RedirectResponse
     {
-        //
+        try {
+            $activity = $this->activityService->getActivity($activityId);
+            $results = $this->resultService->getActivityResult($activityId);
+            $types = getResultTypes();
+
+            return view('admin.activity.result.result', compact('activity', 'results', 'types'));
+        } catch (\Exception $e) {
+            logger()->error($e->getMessage());
+
+            return redirect()->route('admin.activities.show', $activityId)->with(
+                'error',
+                'Error has occurred while rendering activity transactions listing.'
+            );
+        }
     }
 
     /**
@@ -132,8 +145,9 @@ class ResultController extends Controller
         try {
             $activity = $this->activityService->getActivity($activityId);
             $result = $this->resultService->getResultWithIndicatorAndPeriod($resultId, $activityId);
+            $types = getResultTypes();
 
-            return view('admin.activity.result.detail', compact('activity', 'result'));
+            return view('admin.activity.result.detail', compact('activity', 'result', 'types'));
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 

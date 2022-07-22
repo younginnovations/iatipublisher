@@ -4,17 +4,14 @@
     "elements": {
       "iati_identifier": {
         "core": true,
-        "completed": true,
         "label": "IATI Identifier"
       },
       "reporting_org": {
         "core": true,
-        "completed": true,
         "label": "Reporting Organization"
       },
       "other_identifier": {
         "core": false,
-        "completed": true,
         "label": "Other Identifier"
       }
     }
@@ -24,32 +21,26 @@
     "elements": {
       "title": {
         "core": true,
-        "completed": true,
         "label": "Title"
       },
       "description": {
         "core": true,
-        "completed": false,
         "label": "Description"
       },
       "activity_status": {
         "core": true,
-        "completed": true,
         "label": "Activity Status"
       },
       "activity_scope": {
         "core": true,
-        "completed": true,
         "label": "Activity Scope"
       },
       "activity_date": {
         "core": true,
-        "completed": true,
         "label": "Activity Date"
       },
       "contact_info": {
         "core": true,
-        "completed": true,
         "label": "Contact info"
       }
     }
@@ -58,6 +49,7 @@
     "label": "Participating Organizations",
     "elements": {
       "participating_org": {
+        "core": false,
         "label": "Participating Organizations"
       }
     }
@@ -66,9 +58,11 @@
     "label": "Geopolitical Information",
     "elements": {
       "recipient_country": {
+        "core": false,
         "label": "Recipient Country"
       },
       "recipient_region": {
+        "core": false,
         "label": "Recipient Region"
       },
       "location": {
@@ -80,30 +74,39 @@
     "label": "Classifications",
     "elements": {
       "sector": {
+        "core": true,
         "label": "Sector"
       },
       "policy_marker": {
+        "core": false,
         "label": "Policy Maker"
       },
       "tag": {
+        "core": false,
         "label": "Tag"
       },
       "collaboration_type": {
+        "core": false,
         "label": "Collaboration Type"
       },
       "default_flow_type": {
+        "core": false,
         "label": "Default Flow Type"
       },
       "default_finance_type": {
+        "core": false,
         "label": "Default Finance Type"
       },
       "default_aid_type": {
+        "core": false,
         "label": "Default Aid Type"
       },
       "default_tied_status": {
+        "core": false,
         "label": "Default Tied Status"
       },
       "country_budget_items": {
+        "core": false,
         "label": "Country Budget Items"
       }
     }
@@ -112,6 +115,7 @@
     "label": "Humanitarian",
     "elements": {
       "humanitarian_scope": {
+        "core": false,
         "label": "Humanitarian Scope"
       }
     }
@@ -120,15 +124,19 @@
     "label": "Financial",
     "elements": {
       "budget": {
+        "core": false,
         "label": "Budget"
       },
       "transactions": {
+        "core": true,
         "label": "Transactions"
       },
       "planned_disbursement": {
+        "core": false,
         "label": "Planned Disbursement"
       },
       "capital_spend": {
+        "core": false,
         "label": "Capital Spend"
       }
     }
@@ -137,6 +145,7 @@
     "label": "Related Documents",
     "elements": {
       "document_link": {
+        "core": false,
         "label": "Document Links"
       }
     }
@@ -145,9 +154,11 @@
     "label": "Relations",
     "elements": {
       "related_activity": {
+        "core": false,
         "label": "Related Activity"
       },
       "legacy_data": {
+        "core": false,
         "label": "Legacy Data"
       }
     }
@@ -156,9 +167,11 @@
     "label": "Performance",
     "elements": {
       "conditions": {
+        "core": false,
         "label": "Conditions"
       },
       "result": {
+        "core": true,
         "label": "Results"
       }
     }

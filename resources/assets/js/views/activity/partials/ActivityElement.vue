@@ -49,22 +49,27 @@
         </div>
 
         <div class="flex items-center icons">
-          <a
+          <Btn
+            v-if="title === 'transactions'"
+            text="Add Transaction"
+            icon="add"
+            :link="`/activities/${activityId}/${title}/create`"
+            class="mr-2.5"
+          />
+          <Btn
             v-if="title !== 'transactions'"
-            :href="`/activities/${activityId}/${title}`"
-            class="edit-button mr-2.5 flex items-center text-tiny font-bold uppercase"
-          >
-            <svg-vue class="mr-0.5 text-base" icon="edit" />
-            <span>Edit</span>
-          </a>
-
-          <a
+            text="Edit"
+            :link="`/activities/${activityId}/${title}`"
+            class="edit-button mr-2.5"
+          />
+          <Btn
             v-else
-            :href="`/activities/${activityId}/${title}`"
-            class="mr-2.5 flex items-center bg-n-10 p-1 text-tiny font-bold uppercase"
-          >
-            <span>Show full transaction list</span>
-          </a>
+            text="Show full transaction list"
+            icon=""
+            design="bgText"
+            :link="`/activities/${activityId}/${title}`"
+            class="mr-2.5"
+          />
 
           <svg-vue v-if="data.core" class="mr-1.5" icon="core"></svg-vue>
 
@@ -861,35 +866,23 @@
             </div>
           </div>
           <div class="ml-5">
-            <div
-              v-for="(item, i) in post.period_start"
-              :key="i"
-              :class="{ 'mb-4': i !== post.period_start.length - 1 }"
-            >
-              <table>
-                <tr>
-                  <td>Period Start</td>
-                  <td v-if="item.date">{{ formatDate(item.date) }}</td>
-                  <td v-else class="italic">Not Available</td>
-                </tr>
-              </table>
-            </div>
-            <div
-              v-for="(item, i) in post.period_end"
-              :key="i"
-              :class="{ 'mb-4': i !== post.period_end.length - 1 }"
-            >
-              <table>
-                <tr>
-                  <td>Period end</td>
-                  <td v-if="item.date">{{ formatDate(item.date) }}</td>
-                  <td v-else class="italic">Not Available</td>
-                </tr>
-              </table>
-            </div>
-            <table class="text-sm">
+            <table>
               <tr>
-                <td>status</td>
+                <td>Period Start</td>
+                <td v-if="post.period_start[0].date">
+                  {{ formatDate(post.period_start[0].date) }}
+                </td>
+                <td v-else class="italic">Not Available</td>
+              </tr>
+              <tr>
+                <td>Period end</td>
+                <td v-if="post.period_end[0].date">
+                  {{ formatDate(post.period_end[0].date) }}
+                </td>
+                <td v-else class="italic">Not Available</td>
+              </tr>
+              <tr>
+                <td>Status</td>
                 <td>
                   <span v-if="post.budget_status">{{
                     types.budgetStatus[post.budget_status]
@@ -1864,13 +1857,16 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
+//components
+import Btn from 'Components/buttons/Link.vue';
 import HoverText from '../../../components/HoverText.vue';
+
 import moment from 'moment';
 import dateFormat from '../../../composable/dateFormat';
 
 export default defineComponent({
   name: 'ActivityElement',
-  components: { HoverText },
+  components: { HoverText, Btn },
   props: {
     data: {
       type: Object,

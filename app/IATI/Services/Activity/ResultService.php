@@ -85,4 +85,15 @@ class ResultService
     {
         return $this->resultRepository->getResultWithIndicatorAndPeriod($resultId, $activityId);
     }
+
+    /**
+     * Return specific result.
+     *
+     * @param $activityId
+     * @return array
+     */
+    public function getActivityResult($activityId): array
+    {
+        return $this->resultRepository->getActivityResult($activityId);
+    }
 }

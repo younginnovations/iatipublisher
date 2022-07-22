@@ -8,6 +8,7 @@ use App\IATI\Elements\Builder\ResultElementFormCreator;
 use App\IATI\Models\Activity\Indicator;
 use App\IATI\Services\Activity\ActivityService;
 use App\IATI\Services\Activity\IndicatorService;
+use App\IATI\Services\Activity\ResultService;
 use Illuminate\Http\Request;
 
 class IndicatorController extends Controller
@@ -16,6 +17,11 @@ class IndicatorController extends Controller
      * @var ResultElementFormCreator
      */
     protected ResultElementFormCreator $resultElementFormCreator;
+
+    /**
+     * @var ResultService
+     */
+    protected ResultService $resultService;
 
     /**
      * @var IndicatorService
@@ -31,16 +37,19 @@ class IndicatorController extends Controller
      * IndicatorController Constructor.
      *
      * @param ResultElementFormCreator $resultElementFormCreator
+     * @param ResultService $resultService
      * @param IndicatorService $indicatorService
      * @param ActivityService $activityService
      */
     public function __construct(
         ResultElementFormCreator $resultElementFormCreator,
+        ResultService $resultService,
         IndicatorService $indicatorService,
         ActivityService $activityService
     ) {
         $this->resultElementFormCreator = $resultElementFormCreator;
         $this->indicatorService = $indicatorService;
+        $this->resultService = $resultService;
         $this->activityService = $activityService;
     }
 
@@ -49,9 +58,22 @@ class IndicatorController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index($activityId, $resultId): \Illuminate\Contracts\View\View|\Illuminate\Http\RedirectResponse
     {
-        //
+        try {
+            $activity = $this->activityService->getActivity($activityId);
+            $indicators = $this->indicatorService->getResultIndicators($resultId);
+            $types = getIndicatorTypes();
+
+            return view('admin.activity.indicator.indicator', compact('activity', 'indicators', 'types'));
+        } catch (\Exception $e) {
+            logger()->error($e->getMessage());
+
+            return redirect()->route('admin.activities.show', $activityId)->with(
+                'error',
+                'Error has occurred while rendering activity transactions listing.'
+            );
+        }
     }
 
     /**
@@ -126,9 +148,23 @@ class IndicatorController extends Controller
      * @param  \App\IATI\Models\Activity\Indicator  $indicator
      * @return \Illuminate\Http\Response
      */
-    public function show(Indicator $indicator)
+    public function show($activityId, $resultId, $indicatorId)
     {
-        //
+        try {
+            $activity = $this->activityService->getActivity($activityId);
+            $resultTitle = $this->resultService->getResult($resultId, $activityId)['result']['title'];
+            $indicator = $this->indicatorService->getResultIndicator($resultId, $indicatorId);
+            $types = getIndicatorTypes();
+
+            return view('admin.activity.indicator.detail', compact('activity', 'resultTitle', 'indicator', 'types'));
+        } catch (\Exception $e) {
+            logger()->error($e->getMessage());
+
+            return redirect()->route('admin.activities.show', $activityId)->with(
+                'error',
+                'Error has occurred while rending result detail page.'
+            );
+        }
     }
 
     /**
