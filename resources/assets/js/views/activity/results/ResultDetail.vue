@@ -6,15 +6,15 @@
           <div class="mb-4 text-caption-c1 text-n-40">
             <nav aria-label="breadcrumbs" class="breadcrumb">
               <p>
-                <a href="/activities" class="font-bold"> Your Activities </a>
-                <span class="mx-4 separator"> / </span>
+                <a href="/activities" class="font-bold">Your Activities</a>
+                <span class="mx-4 separator">/</span>
                 <span class="text-n-30">
-                  <a href="/activities/1">Activity Name</a>
+                  <a :href="`/activities/${activity.id}`">
+                    {{ activityTitle }}
+                  </a>
                 </span>
                 <span class="mx-4 separator"> / </span>
-                <span class="text-n-30"> Add Result </span>
-                <span class="mx-4 separator"> / </span>
-                <span class="last text-n-30"> Result Detail </span>
+                <span class="last text-n-30">{{ resultTitle }}</span>
               </p>
             </nav>
           </div>
@@ -33,34 +33,23 @@
       <aside class="activities__sidebar">
         <div class="px-6 py-4 rounded-lg indicator bg-eggshell text-n-50">
           <ul class="text-sm font-bold leading-relaxed">
-            <li>
-              <a href="#" :class="linkClasses">
+            <li v-for="(rData, r, ri) in resultsData" :key="ri">
+              <a v-smooth-scroll :href="`#${r}`" :class="linkClasses">
                 <svg-vue icon="moon" class="mr-2 text-base"></svg-vue>
-                title
+                {{ r }}
               </a>
             </li>
-            <li>
-              <a href="#" :class="linkClasses">
+            <li v-if="hasIndicators">
+              <a v-smooth-scroll href="#indicator" :class="linkClasses">
                 <svg-vue icon="moon" class="mr-2 text-base"></svg-vue>
-                description
-              </a>
-            </li>
-            <li>
-              <a href="#" :class="linkClasses">
-                <svg-vue icon="moon" class="mr-2 text-base"></svg-vue>
-                document-link
-              </a>
-            </li>
-            <li>
-              <a href="#" :class="linkClasses">
-                <svg-vue icon="moon" class="mr-2 text-base"></svg-vue>
-                reference
+                indicator
               </a>
             </li>
           </ul>
           <a
+            v-if="!hasIndicators"
             :href="`/activities/${result.activity_id}/result/${result.id}/indicator/create`"
-            class="flex w-full p-2 text-sm font-bold leading-relaxed bg-white border border-dashed rounded border-n-40"
+            class="flex items-center w-full p-2 text-sm font-bold leading-relaxed bg-white border border-dashed rounded border-n-40"
           >
             <svg-vue icon="add" class="mr-2 text-n-40"></svg-vue>
             add indicator
@@ -96,7 +85,8 @@
 
           <!-- Indicator -->
           <div
-            id=""
+            v-if="hasIndicators"
+            id="indicator"
             class="px-3 py-3 activities__content--element basis-full text-n-50"
           >
             <div class="p-4 bg-white rounded-lg">
@@ -138,7 +128,10 @@
               <div class="indicator">
                 <!-- loop item -->
 
-                <template v-for="(post, ri) in result.indicators" :key="ri">
+                <template
+                  v-for="(post, ri) in result.indicators.slice().reverse()"
+                  :key="ri"
+                >
                   <div class="item">
                     <div class="elements-detail wider">
                       <div class="flex category">
@@ -405,11 +398,37 @@
                                   </div>
                                 </td>
                               </tr>
+                              <tr v-if="post.periods.length === 0">
+                                <td></td>
+                                <td>
+                                  <div class="mt-3">
+                                    <a
+                                      :href="`/activities/${result.activity_id}/result/${result.id}/indicator/${post.id}/period/create`"
+                                      class="add_indicator flex w-[442px] max-w-full rounded border border-dashed border-n-40 bg-white px-2 py-2.5 text-xs leading-normal"
+                                    >
+                                      <div class="text-left grow">
+                                        You haven't added any periods yet.
+                                      </div>
+                                      <div
+                                        class="flex items-center font-bold uppercase shrink-0 text-bluecoral"
+                                      >
+                                        <svg-vue
+                                          icon="add"
+                                          class="mr-1 shrink-0"
+                                        ></svg-vue>
+                                        <span class="text-xs grow"
+                                          >Add period</span
+                                        >
+                                      </div>
+                                    </a>
+                                  </div>
+                                </td>
+                              </tr>
                             </tbody>
                           </table>
                         </div>
                         <!-- for periods -->
-                        <div class="periods">
+                        <div v-if="post.periods.length > 0" class="periods">
                           <table v-for="(item, key) in post.periods" :key="key">
                             <tbody>
                               <tr>
@@ -697,6 +716,7 @@
 
         <!-- indicator button -->
         <button
+          v-if="!hasIndicators"
           class="flex w-full py-6 text-xs leading-normal bg-white border border-dashed rounded add_indicator border-n-40 px-9"
         >
           <div class="text-left grow">You haven't added any indicator yet.</div>
@@ -713,9 +733,10 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, toRefs } from 'vue';
 import ResultElement from './ResultElement.vue';
 import dateFormat from './../../../composable/dateFormat';
+import getActivityTitle from './../../../composable/title';
 
 export default defineComponent({
   name: 'ResultDetail',
@@ -732,16 +753,24 @@ export default defineComponent({
       required: true,
     },
   },
-  setup() {
+  setup(props) {
     const linkClasses =
       'flex items-center w-full bg-white rounded p-2 text-sm text-n-50 font-bold leading-relaxed mb-2 shadow-default';
+
+    let { result, activity } = toRefs(props);
+    const hasIndicators = result.value.indicators.length > 0 ? true : false;
+    const resultsData = result.value.result;
+    const activityTitle = getActivityTitle(activity.value.title, 'en');
+    const resultTitle = getActivityTitle(resultsData.title[0].narrative, 'en');
 
     return {
       linkClasses,
       dateFormat,
+      hasIndicators,
+      resultsData,
+      activityTitle,
+      resultTitle,
     };
   },
 });
 </script>
-
-<style lang="scss" scoped></style>

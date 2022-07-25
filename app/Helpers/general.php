@@ -109,3 +109,29 @@ if (!function_exists('getList')) {
         return $data;
     }
 }
+
+if (!function_exists('getTransactionTypes')) {
+    function getTransactionTypes(): array
+    {
+        return [
+            'transactionType'           => getCodeList('TransactionType', 'Activity'),
+            'organizationType'          => getCodeList('OrganizationType', 'Organization'),
+            'disbursementChannel'       => getCodeList('DisbursementChannel', 'Activity'),
+            'sectorVocabulary'          => getCodeList('SectorVocabulary', 'Activity'),
+            'sectorCode'                => getCodeList('SectorCode', 'Activity'),
+            'sectorCategory'            => getCodeList('SectorCategory', 'Activity'),
+            'unsdgGoals'                => getCodeList('UNSDG-Goals', 'Activity'),
+            'unsdgTargets'              => getCodeList('UNSDG-Targets', 'Activity'),
+            'countryCode'               => getCodeList('Country', 'Activity'),
+            'regionCode'                => getCodeList('RegionVocabulary', 'Activity'),
+            'flowType'                  => getCodeList('FlowType', 'Activity'),
+            'financeType'               => getCodeList('FinanceType', 'Activity'),
+            'tiedStatusType'            => getCodeList('TiedStatus', 'Activity'),
+            'aidTypeVocabulary'         => getCodeList('AidTypeVocabulary', 'Activity'),
+            'aidType'                   => getCodeList('AidType', 'Activity'),
+            'cashAndVoucherModalities'  => getCodeList('CashandVoucherModalities', 'Activity'),
+            'earMarkingCategory'        => getCodeList('EarmarkingCategory', 'Activity'),
+            'earMarkingModality'        => getCodeList('EarmarkingModality', 'Activity'),
+        ];
+    }
+}

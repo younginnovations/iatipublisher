@@ -1,4 +1,4 @@
-import {ref} from "vue";
+import { ref } from 'vue';
 
 function useApi(url: RequestInfo, options?: RequestInit) {
   const response = ref();
@@ -9,8 +9,7 @@ function useApi(url: RequestInfo, options?: RequestInit) {
     response.value = data;
   };
 
-  return {response, request};
-
+  return { response, request };
 }
 
 export default useApi;

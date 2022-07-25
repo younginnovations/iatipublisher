@@ -65,6 +65,18 @@
       "description": "The sector reported corresponds to an Inter-Agency Standard Committee Humanitarian Global Cluster code"
     },
     {
+      "code": "11",
+      "name": "North American Industry Classification System (NAICS)",
+      "language": "en",
+      "description": "The sector reported corresponds to the NAICS codelist"
+    },
+    {
+      "code": "12",
+      "name": "UN System Function",
+      "language": "en",
+      "description": "The sector reported corresponds to the UN System Function codelist"
+    },
+    {
       "code": "99",
       "name": "Reporting Organisation",
       "language": "en",

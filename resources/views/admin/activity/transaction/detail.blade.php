@@ -1,8 +1,6 @@
 @extends('admin.layouts.app')
 
 @section('content')
-{{json_encode($transaction)}}
-    <transaction-detail
-        :transaction="{{ json_encode($transaction) }}"
-    ></transaction-detail>
+    <transaction-detail :activity="{{ json_encode($activity) }}" :transaction="{{ json_encode($transaction) }}"
+        :types="{{ json_encode($types) }}"></transaction-detail>
 @endsection
