@@ -6,7 +6,6 @@ namespace App\Http\Controllers\Admin\Activity;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Activity\CollaborationType\CollaborationTypeRequest;
-use App\IATI\Elements\Builder\BaseFormCreator;
 use App\IATI\Services\Activity\CollaborationTypeService;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
@@ -18,11 +17,6 @@ use Illuminate\Http\RedirectResponse;
 class CollaborationTypeController extends Controller
 {
     /**
-     * @var BaseFormCreator
-     */
-    protected BaseFormCreator $baseFormCreator;
-
-    /**
      * @var CollaborationTypeService
      */
     protected CollaborationTypeService $collaborationTypeService;
@@ -33,9 +27,8 @@ class CollaborationTypeController extends Controller
      * @param BaseFormCreator $baseFormCreator
      * @param CollaborationTypeService $collaborationTypeService
      */
-    public function __construct(BaseFormCreator $baseFormCreator, CollaborationTypeService $collaborationTypeService)
+    public function __construct(CollaborationTypeService $collaborationTypeService)
     {
-        $this->baseFormCreator = $baseFormCreator;
         $this->collaborationTypeService = $collaborationTypeService;
     }
 
@@ -46,21 +39,19 @@ class CollaborationTypeController extends Controller
      *
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|void
      */
-    public function edit(int $id):View|RedirectResponse
+    public function edit(int $id): View|RedirectResponse
     {
         try {
             $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
             $activity = $this->collaborationTypeService->getActivityData($id);
-            $model['collaboration_type'] = $this->collaborationTypeService->getCollaborationTypeData($id);
-            $this->baseFormCreator->url = route('admin.activities.collaboration-type.update', [$id]);
-            $form = $this->baseFormCreator->editForm($model, $element['collaboration_type']);
-            $data = ['core'=> $element['collaboration_type']['criteria'], 'status'=> $activity->collaboration_type_element_completed, 'title'=> $element['collaboration_type']['label'], 'name'=>'collaboration_type'];
+            $form = $this->collaborationTypeService->formGenerator($id);
+            $data = ['core' => $element['collaboration_type']['criteria'] ?? '', 'status' => $activity->collaboration_type_element_completed, 'title' => $element['collaboration_type']['label'], 'name' => 'collaboration_type'];
 
-            return view('activity.collaborationType.collaborationType', compact('form', 'activity', 'data'));
+            return view('admin.activity.collaborationType.edit', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while rendering activity collaboration type form.');
+            return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while rendering activity collaboration-type form.');
         }
     }
 
@@ -76,13 +67,13 @@ class CollaborationTypeController extends Controller
     {
         try {
             $activityData = $this->collaborationTypeService->getActivityData($id);
-            $activityCollaborationType = (int) $request->get('collaboration_type');
+            $activityCollaborationType = $request->get('collaboration_type') != null ? (int) $request->get('collaboration_type') : null;
 
             if (!$this->collaborationTypeService->update($activityCollaborationType, $activityData)) {
-                return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while updating activity collaboration type.');
+                return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while updating activity collaboration-type.');
             }
 
-            return redirect()->route('admin.activities.show', $id)->with('success', 'Activity collaboration type updated successfully.');
+            return redirect()->route('admin.activities.show', $id)->with('success', 'Activity collaboration-type updated successfully.');
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 

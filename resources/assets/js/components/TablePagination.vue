@@ -1,21 +1,34 @@
 <template>
   <nav class="pagination" aria-label="Pagination">
-    <a href="#" class="prev-btn" @click="previousPage">
-      <svg-vue icon="arrow-left" />
+    <a
+      href="#"
+      class="prev-btn"
+      :class="{
+        'pointer-events-none': data.last_page <= 1,
+      }"
+      aria-disabled="true"
+      @click="previousPage"
+    >
+      <svg-vue icon="arrow-left"></svg-vue>
       <span class="">Prev</span>
     </a>
 
     <a
-      v-for="index in parseInt(props.pageCount)"
+      v-for="(index,i) in data.last_page"
       :key="index"
-      href="#"
-      aria-current="page"
       :class="active_page === index ? 'current' : ''"
-      @click="updateActivePage(index)"
+      @click="changePage(i+1)"
     >
       {{ index }}
     </a>
-    <a href="#" class="next-btn" @click="nextPage">
+    <a
+      href="#"
+      class="next-btn"
+      :class="{
+        'pointer-events-none': data.last_page <= 1,
+      }"
+      @click="nextPage"
+    >
       <span class="">Next</span>
       <svg-vue icon="arrow-right" />
     </a>
@@ -29,8 +42,8 @@ export default defineComponent({
   name: 'PaginationComponent',
   components: {},
   props: {
-    pageCount: {
-      type: [String],
+    data: {
+      type: [Object],
       required: true,
     },
   },
@@ -46,21 +59,22 @@ export default defineComponent({
       active_page.value = page;
     }
 
+    function changePage(pageNum: number) {
+      active_page.value =
+        active_page.value === props.data.last_page ? 1 : pageNum;
+    }
+
     function nextPage() {
       active_page.value =
-        active_page.value === parseInt(props.pageCount)
-          ? 1
-          : active_page.value + 1;
+        active_page.value === props.data.last_page ? 1 : active_page.value + 1;
     }
 
     function previousPage() {
       active_page.value =
-        active_page.value === 1
-          ? parseInt(props.pageCount)
-          : active_page.value - 1;
+        active_page.value === 1 ? props.data.last_page : active_page.value - 1;
     }
 
-    return { props, active_page, updateActivePage, nextPage, previousPage };
+    return { props, active_page, updateActivePage, nextPage, previousPage, changePage };
   },
 });
 </script>

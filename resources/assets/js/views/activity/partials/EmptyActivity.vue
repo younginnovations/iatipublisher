@@ -5,11 +5,11 @@
   >
     <div
       v-if="state.dismiss"
-      class="absolute left-0 top-0 flex w-full rounded-bl rounded-br bg-rose py-4 px-5 text-sm leading-relaxed text-n-50"
+      class="absolute top-0 left-0 flex w-full px-5 py-4 text-sm leading-relaxed rounded-bl rounded-br bg-rose text-n-50"
     >
       <div class="grow">
         <div class="flex items-center">
-          <svg-vue icon="alert" class="mr-1 grow-0 text-base text-crimson-50" />
+          <svg-vue icon="alert" class="mr-1 text-base grow-0 text-crimson-50" />
           <p class="grow">
             Please <a href="#" class="font-bold">complete your setup</a> in
             order to enable complete features of IATI publisher tool.
@@ -37,7 +37,7 @@
     <div class="mb-[17px] text-caption-c1 leading-5 text-n-50">
       Click on the button below to add a new activity
     </div>
-    <ActivityButton :language="language" />
+    <ActivityButton />
   </div>
 </template>
 
@@ -50,18 +50,13 @@ export default defineComponent({
   components: {
     ActivityButton,
   },
-  props: {
-    language: {
-      type: [String, Object],
-      required: true,
-    },
-  },
-  setup(props) {
+  props: {},
+  setup() {
     const state = reactive({
       dismiss: true,
     });
 
-    return { state, props };
+    return { state };
   },
 });
 </script>

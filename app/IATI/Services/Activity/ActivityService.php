@@ -8,6 +8,7 @@ use App\IATI\Models\Activity\Activity;
 use App\IATI\Repositories\Activity\ActivityRepository;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
 
 /**
  * Class ActivityService.
@@ -73,7 +74,7 @@ class ActivityService
         ];
 
         return $this->activityRepository->store([
-            'identifier'    => $activity_identifier,
+            'iati_identifier'    => $activity_identifier,
             'title'         => $activity_title,
             'org_id'        => Auth::user()->organization_id,
         ]);
@@ -101,5 +102,20 @@ class ActivityService
     public function getActivity($id): Activity
     {
         return $this->activityRepository->find($id);
+    }
+
+    /**
+     * Generates toast array.
+     *
+     * @return array
+     */
+    public function generateToastData(): array
+    {
+        $toast['message'] = Session::exists('error') ? Session::get('error') : (Session::exists('success') ? Session::get('success') : '');
+        $toast['type'] = Session::exists('error') ? false : 'success';
+        Session::forget('success');
+        Session::forget('error');
+
+        return $toast;
     }
 }

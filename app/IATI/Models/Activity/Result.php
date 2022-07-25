@@ -38,10 +38,21 @@ class Result extends Model
 
     /**
      * Result belongs to activity.
+     *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function activity(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(Activity::class, 'activity_id', 'id');
+    }
+
+    /**
+     * Result hasmany indicators.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function indicators(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(Indicator::class, 'result_id', 'id');
     }
 }

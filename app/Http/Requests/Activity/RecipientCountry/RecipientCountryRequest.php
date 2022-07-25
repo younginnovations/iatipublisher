@@ -100,6 +100,7 @@ class RecipientCountryRequest extends ActivityBaseRequest
             $recipientCountryForm = 'recipient_country.' . $recipientCountryIndex;
             $messages[$recipientCountryForm . '.percentage.numeric'] = 'The @percentage must be a number.';
             $messages[$recipientCountryForm . '.percentage.max'] = 'The @percentage cannot be greater than 100';
+
             $messages = array_merge(
                 $messages,
                 $this->getMessagesForNarrative(

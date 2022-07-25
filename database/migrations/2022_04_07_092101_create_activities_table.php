@@ -14,7 +14,7 @@ return new class extends Migration {
     {
         Schema::create('activities', function (Blueprint $table) {
             $table->increments('id');
-            $table->json('identifier');
+            $table->json('iati_identifier');
             $table->json('other_identifier')->nullable();
             $table->json('title')->nullable();
             $table->json('description')->nullable();
@@ -23,7 +23,7 @@ return new class extends Migration {
             $table->json('activity_date')->nullable();
             $table->json('contact_info')->nullable();
             $table->integer('activity_scope')->nullable();
-            $table->json('participating_organization')->nullable();
+            $table->json('participating_org')->nullable();
             $table->json('recipient_country')->nullable();
             $table->json('recipient_region')->nullable();
             $table->json('location')->nullable();

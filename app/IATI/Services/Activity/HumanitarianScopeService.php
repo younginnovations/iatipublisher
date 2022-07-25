@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace App\IATI\Services\Activity;
 
+use App\IATI\Elements\Builder\ParentCollectionFormCreator;
 use App\IATI\Repositories\Activity\HumanitarianScopeRepository;
 use Illuminate\Database\Eloquent\Model;
+use Kris\LaravelFormBuilder\Form;
 
 /**
  * Class HumanitarianScopeService.
@@ -18,13 +20,20 @@ class HumanitarianScopeService
     protected HumanitarianScopeRepository $humanitarianScopeRepository;
 
     /**
+     * @var ParentCollectionFormCreator
+     */
+    protected ParentCollectionFormCreator $parentCollectionFormCreator;
+
+    /**
      * HumanitarianScopeService constructor.
      *
      * @param HumanitarianScopeRepository $humanitarianScopeRepository
+     * @param ParentCollectionFormCreator $parentCollectionFormCreator
      */
-    public function __construct(HumanitarianScopeRepository $humanitarianScopeRepository)
+    public function __construct(HumanitarianScopeRepository $humanitarianScopeRepository, ParentCollectionFormCreator $parentCollectionFormCreator)
     {
         $this->humanitarianScopeRepository = $humanitarianScopeRepository;
+        $this->parentCollectionFormCreator = $parentCollectionFormCreator;
     }
 
     /**
@@ -62,5 +71,21 @@ class HumanitarianScopeService
     public function update($activityHumanitarianScope, $activity): bool
     {
         return $this->humanitarianScopeRepository->update($activityHumanitarianScope, $activity);
+    }
+
+    /**
+     * Generates humanitarian scope form.
+     *
+     * @param id
+     *
+     * @return Form
+     */
+    public function formGenerator($id): Form
+    {
+        $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
+        $model['humanitarian_scope'] = $this->getHumanitarianScopeData($id);
+        $this->parentCollectionFormCreator->url = route('admin.activities.humanitarian-scope.update', [$id]);
+
+        return $this->parentCollectionFormCreator->editForm($model, $element['humanitarian_scope'], 'PUT', '/activities/' . $id);
     }
 }

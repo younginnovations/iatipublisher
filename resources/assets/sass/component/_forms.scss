@@ -33,7 +33,7 @@ form {
     }
   }
   button.delete-item {
-    @apply absolute h-8 w-8 cursor-pointer overflow-hidden rounded-full bg-n-40 indent-10;
+    @apply absolute h-8 w-8 cursor-pointer overflow-hidden rounded-full bg-n-40 -indent-40;
     &:after {
       background: url('/images/trash_full.svg') no-repeat center;
       content: '';
@@ -121,8 +121,16 @@ form {
       @apply ml-6;
     }
 
-    .form-field-group:only-of-type .delete-item,
-    > .multi-form:only-of-type .delete-parent {
+    .wrapped-child-body {
+      @apply relative;
+      > .delete-parent {
+        @apply block;
+      }
+    }
+
+    .form-field-group:only-of-type > .delete-item,
+    > .multi-form:only-of-type > .delete-parent,
+    .wrapped-child-body:only-of-type > .delete-parent {
       @apply hidden;
     }
   }
@@ -159,4 +167,45 @@ span.select2-container--default {
 }
 .max-w-half {
   max-width: 50%;
+}
+
+/**
+  Activity Detail Page
+*/
+.activities {
+  @apply flex gap-7;
+
+  &__sidebar {
+    flex-shrink: 0;
+    width: 280px;
+  }
+
+  &__content {
+    @apply grow;
+  }
+
+  &__card {
+    @apply flex flex-col bg-white text-center text-xs text-n-40;
+    padding: 13px;
+  }
+
+  .progress {
+    @apply items-center;
+    width: 151px;
+    height: 174px;
+    border-radius: 8px 0px 0px 8px;
+  }
+
+  .tab-btn:disabled {
+    @apply pointer-events-none text-n-20;
+
+    svg {
+      @apply text-n-20;
+    }
+  }
+  .hover-text {
+    svg {
+      @apply text-n-30;
+    }
+  }
 }

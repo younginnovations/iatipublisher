@@ -1,11 +1,14 @@
-<?php if ($showLabel && $showField): ?>
+<?php if ($showLabel && $showField && !(isset($options['title']) && $options['title'])): ?>
     <?php if ($options['wrapper'] !== false): ?>
     <div <?= $options['wrapperAttrs'] ?> >
     <?php endif; ?>
 <?php endif; ?>
 
-<?php if ($showLabel && $options['label'] !== false && $options['label_show']): ?>
-    <?= Form::customLabel($name, $options['label'], $options['label_attr']) ?>
+<?php if ($showLabel && $options['label'] !== false && $options['label_show'] && $options['title']): ?>
+    <?= $options['content'] ?>
+<?php else: ?>
+    <?= Html::decode(Form::label($options['content'], $options['label'])) ?>
+
 <?php endif; ?>
 
 <?php if ($showField): ?>
@@ -16,7 +19,7 @@
 <?php endif; ?>
 
 
-<?php if ($showLabel && $showField): ?>
+<?php if ($showLabel && $showField && (!(isset($options['title']) && $options['title']))): ?>
     <?php if ($options['wrapper'] !== false): ?>
     </div>
     <?php endif; ?>

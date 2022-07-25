@@ -37,20 +37,23 @@ class BaseFormCreator
      *
      * @param array $model
      * @param       $formData
+     * @param $method
+     * @param $parent_url
      *
      * @return Form
      */
-    public function editForm(array $model, $formData): Form
+    public function editForm(array $model, $formData, $method, string $parent_url): Form
     {
         return $this->formBuilder->create(
             'App\IATI\Elements\Forms\BaseForm',
             [
-                'method' => 'PUT',
+                'method' => $method,
                 'model'  => $model,
                 'url'    => $this->url,
                 'data'   => $formData,
             ]
         )
+
         ->add('buttons', 'buttongroup', [
             'wrapper' => [
                 'class' => 'fixed left-0 bottom-0 w-full bg-eggshell py-5 pr-40 shadow-dropdown z-50',
@@ -59,13 +62,14 @@ class BaseFormCreator
                 'clear'    => [
                     'label'     => 'Cancel',
                     'attr'      => [
-                        'type'      => 'clear',
+                        'type'      => 'anchor',
                         'class'     => 'ghost-btn mr-8',
+                        'href' => $parent_url,
                     ],
                 ],
 
                 'submit'    => [
-                    'label'     => 'Save Publishing Setting',
+                    'label'     => 'Save and Exit',
                     'attr'      => [
                         'type'      => 'submit',
                         'class'     => 'primary-btn save-btn',

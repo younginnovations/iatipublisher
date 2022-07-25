@@ -6,7 +6,6 @@ namespace App\Http\Controllers\Admin\Activity;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Activity\Status\StatusRequest;
-use App\IATI\Elements\Builder\BaseFormCreator;
 use App\IATI\Services\Activity\StatusService;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
@@ -18,11 +17,6 @@ use Illuminate\Http\RedirectResponse;
 class StatusController extends Controller
 {
     /**
-     * @var BaseFormCreator
-     */
-    protected BaseFormCreator $baseFormCreator;
-
-    /**
      * @var StatusService
      */
     protected StatusService $statusService;
@@ -30,12 +24,10 @@ class StatusController extends Controller
     /**
      * StatusController Constructor.
      *
-     * @param BaseFormCreator $baseFormCreator
      * @param StatusService $statusService
      */
-    public function __construct(BaseFormCreator $baseFormCreator, StatusService $statusService)
+    public function __construct(StatusService $statusService)
     {
-        $this->baseFormCreator = $baseFormCreator;
         $this->statusService = $statusService;
     }
 
@@ -46,21 +38,19 @@ class StatusController extends Controller
      *
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|void
      */
-    public function edit(int $id): View|RedirectResponse
+    public function edit(int $id): View|RedirectResponse|JsonResponse
     {
         try {
             $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
             $activity = $this->statusService->getActivityData($id);
-            $model['activity_status'] = $this->statusService->getStatusData($id);
-            $this->baseFormCreator->url = route('admin.activities.status.update', [$id]);
-            $form = $this->baseFormCreator->editForm($model, $element['activity_status']);
-            $data = ['core'=> $element['activity_status']['criteria'], 'status'=> $activity->activity_status_element_completed, 'title'=> $element['activity_status']['label'], 'name'=>'activity_status'];
+            $form = $this->statusService->formGenerator($id);
+            $data = ['core' => $element['activity_status']['criteria'] ?? false, 'status' => $activity->activity_status_element_completed ?? false, 'title' => $element['activity_status']['label'], 'name' => 'activity_status'];
 
-            return view('activity.status.status', compact('form', 'activity', 'data'));
+            return view('admin.activity.status.edit', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return response()->json(['success' => false, 'error' => 'Error has occurred while opening activity status form.']);
+            return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while opening activity title form.');
         }
     }
 
@@ -76,7 +66,7 @@ class StatusController extends Controller
     {
         try {
             $activityData = $this->statusService->getActivityData($id);
-            $activityStatus = (int) $request->get('activity_status');
+            $activityStatus = $request->get('activity_status') != null ? (int) $request->get('activity_status') : null;
 
             if (!$this->statusService->update($activityStatus, $activityData)) {
                 return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while updating activity status.');

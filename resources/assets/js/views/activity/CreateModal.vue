@@ -20,7 +20,7 @@
             <p class="form-group-title">title</p>
           </div>
           <div class="form-group">
-            <div class="form__content">
+            <div class="form__content gap-6">
               <div>
                 <div class="label-field">
                   <label class="label" for="narrative"
@@ -246,6 +246,8 @@ export default defineComponent({
     }
 
     function storeActivity() {
+      loaderVisibility.value = true;
+
       axios
         .post('/activities', formData)
         .then((res) => {
@@ -285,7 +287,7 @@ export default defineComponent({
 });
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .form-group {
   @apply rounded-lg border border-n-20 p-5;
 
@@ -295,6 +297,7 @@ export default defineComponent({
 
   .form__content {
     margin-top: 0;
+    gap: 25px;
 
     .label-field {
       @apply mb-2 flex items-center justify-between;
@@ -306,14 +309,5 @@ export default defineComponent({
 }
 .form-group-title {
   @apply text-xs font-bold text-bluecoral;
-}
-.search {
-  position: relative;
-
-  &__input {
-    @apply mr-3.5 border border-n-30 bg-transparent outline-none;
-    border-radius: 20px;
-    padding: 10px 42px 10px 34px;
-  }
 }
 </style>

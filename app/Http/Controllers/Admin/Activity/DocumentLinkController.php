@@ -6,10 +6,10 @@ namespace App\Http\Controllers\Admin\Activity;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Activity\DocumentLink\DocumentLinkRequest;
-use App\IATI\Elements\Builder\BaseFormCreator;
-use App\IATI\Elements\Builder\MultilevelSubElementFormCreator;
 use App\IATI\Services\Activity\DocumentLinkService;
+use App\IATI\Services\Document\DocumentService;
 use Illuminate\Contracts\View\View;
+use Illuminate\Database\DatabaseManager;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 
@@ -20,31 +20,31 @@ use Illuminate\Http\RedirectResponse;
 class DocumentLinkController extends Controller
 {
     /**
-     * @var MultilevelSubElementFormCreator
-     */
-    protected MultilevelSubElementFormCreator $multilevelSubElementFormCreator;
-
-    /**
-     * @var BaseFormCreator
-     */
-    protected BaseFormCreator $baseFormCreator;
-
-    /**
      * @var DocumentLinkService
      */
     protected DocumentLinkService $documentLinkService;
 
     /**
+     * @var DocumentService
+     */
+    protected DocumentService $documentService;
+
+    /**
+     * @var DatabaseManager
+     */
+    protected DatabaseManager $db;
+
+    /**
      * DocumentLinkControllerConstructor.
      *
-     * @param MultilevelSubElementFormCreator $multilevelSubElementFormCreator
      * @param DocumentLinkService $documentLinkService
+     * @param DatabaseManager $db
      */
-    public function __construct(MultilevelSubElementFormCreator $multilevelSubElementFormCreator, DocumentLinkService $documentLinkService, BaseFormCreator $baseFormCreator)
+    public function __construct(DocumentLinkService $documentLinkService, DocumentService $documentService, DatabaseManager $db)
     {
-        $this->multilevelSubElementFormCreator = $multilevelSubElementFormCreator;
-        $this->baseFormCreator = $baseFormCreator;
         $this->documentLinkService = $documentLinkService;
+        $this->documentService = $documentService;
+        $this->db = $db;
     }
 
     /**
@@ -54,20 +54,19 @@ class DocumentLinkController extends Controller
      *
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|void
      */
-    public function edit(int $id):View|RedirectResponse
+    public function edit(int $id): View|RedirectResponse
     {
         try {
             $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
             $activity = $this->documentLinkService->getActivityData($id);
-            $model = $this->documentLinkService->getDocumentLinkData($id) ?: [];
-            $this->baseFormCreator->url = route('admin.activities.document-link.update', [$id]);
-            $form = $this->baseFormCreator->editForm($model, $element['document_link']);
+            $form = $this->documentLinkService->formGenerator($id);
+            $data = ['core' => false, 'status' => $activity->document_link_element_completed ?? false, 'title' => $element['document_link']['label'], 'name' => 'document_link'];
 
-            return view('activity.documentLink.documentLink', compact('form', 'activity'));
+            return view('admin.activity.documentLink.edit', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while rendering contact info form.');
+            return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while rendering document-link form.');
         }
     }
 
@@ -83,17 +82,20 @@ class DocumentLinkController extends Controller
     {
         try {
             $activityData = $this->documentLinkService->getActivityData($id);
-            $activityCountryBudgetItem = $request->except(['_token', '_method']);
+            $documentLink = $request->except(['_token', '_method']);
 
-            if (!$this->documentLinkService->update($activityCountryBudgetItem, $activityData)) {
-                return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while updating contact info.');
-            }
+            $this->db->beginTransaction();
 
-            return redirect()->route('admin.activities.show', $id)->with('success', 'contact info updated successfully.');
+            $this->documentLinkService->update($documentLink, $activityData);
+            $this->documentService->update($documentLink, $activityData);
+
+            $this->db->commit();
+
+            return redirect()->route('admin.activities.show', $id)->with('success', 'Document-link updated successfully.');
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while updating contact info.');
+            return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while updating document-link.');
         }
     }
 }

@@ -6,7 +6,6 @@ namespace App\Http\Controllers\Admin\Activity;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Activity\Scope\ScopeRequest;
-use App\IATI\Elements\Builder\BaseFormCreator;
 use App\IATI\Services\Activity\ScopeService;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
@@ -18,11 +17,6 @@ use Illuminate\Http\RedirectResponse;
 class ScopeController extends Controller
 {
     /**
-     * @var BaseFormCreator
-     */
-    protected BaseFormCreator $baseFormCreator;
-
-    /**
      * @var ScopeService
      */
     protected ScopeService $scopeService;
@@ -30,12 +24,10 @@ class ScopeController extends Controller
     /**
      * ScopeController Constructor.
      *
-     * @param BaseFormCreator $baseFormCreator
      * @param ScopeService $scopeService
      */
-    public function __construct(BaseFormCreator $baseFormCreator, ScopeService $scopeService)
+    public function __construct(ScopeService $scopeService)
     {
-        $this->baseFormCreator = $baseFormCreator;
         $this->scopeService = $scopeService;
     }
 
@@ -51,16 +43,14 @@ class ScopeController extends Controller
         try {
             $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
             $activity = $this->scopeService->getActivityData($id);
-            $model['activity_scope'] = $this->scopeService->getScopeData($id);
-            $this->baseFormCreator->url = route('admin.activities.scope.update', [$id]);
-            $form = $this->baseFormCreator->editForm($model, $element['activity_scope']);
-            $data = ['core'=> $element['activity_scope']['criteria'], 'status'=> $activity->activity_scope_element_completed, 'title'=> $element['activity_scope']['label'], 'name'=>'activity_scope'];
+            $form = $this->scopeService->formGenerator($id);
+            $data = ['core' => $element['activity_scope']['criteria'] ?? '', 'status' => $activity->activity_scope_element_completed, 'title' => $element['activity_scope']['label'], 'name' => 'activity_scope'];
 
-            return view('activity.scope.scope', compact('form', 'activity', 'data'));
+            return view('admin.activity.scope.edit', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while opening activity scope form.');
+            return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while opening activity-scope form.');
         }
     }
 
@@ -76,17 +66,17 @@ class ScopeController extends Controller
     {
         try {
             $activityData = $this->scopeService->getActivityData($id);
-            $activityScope = (int) $request->get('activity_scope');
+            $activityScope = $request->get('activity_scope') != null ? (int) $request->get('activity_scope') : null;
 
             if (!$this->scopeService->update($activityScope, $activityData)) {
-                return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while updating activity scope.');
+                return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while updating activity-scope.');
             }
 
-            return redirect()->route('admin.activities.show', $id)->with('success', 'Activity scope updated successfully.');
+            return redirect()->route('admin.activities.show', $id)->with('success', 'Activity-scope updated successfully.');
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while updating activity scope.');
+            return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while updating activity-scope.');
         }
     }
 }

@@ -69,41 +69,58 @@
       </div>
     </div>
     <div class="elements__listing mt-3 grid grid-cols-2 gap-2">
-      <a
-        v-for="(post, index) in filteredElements"
-        :key="index"
-        class="elements__item relative flex cursor-pointer flex-col items-center justify-center rounded border border-dashed border-n-40 py-2.5 px-1 text-n-30"
-        :href="`/activities/${activityId}/${index}`"
-      >
-        <div class="status_icons absolute top-0 right-0 mt-1 mr-1 inline-flex">
-          <svg-vue
-            v-if="post.completed"
-            class="text-base text-spring-50"
-            icon="double-tick"
-          />
-          <svg-vue
-            v-if="post.criteria"
-            class="text-base text-camel-50"
-            icon="core"
-          />
-        </div>
-        <template
+      <template v-for="(post, index) in filteredElements" :key="index">
+        <a
           v-if="
-            index === 'reporting_org' ||
-            index === 'default_tied_status' ||
-            index === 'crs_add' ||
-            index === 'fss'
+            !(index.toString() === 'indicator' || index.toString() === 'period')
+          "
+          class="elements__item relative flex cursor-pointer flex-col items-center justify-center rounded border border-dashed border-n-40 py-2.5 text-n-30"
+          :href="
+            post.has_data
+              ? `#${index}`
+              : index === 'result'
+              ? `/activities/${activityId}/${index}/create`
+              : `/activities/${activityId}/${index}`
           "
         >
-          <svg-vue class="text-base" icon="activity-elements/building" />
-        </template>
-        <template v-else>
-          <svg-vue :icon="'activity-elements/' + index" class="text-base" />
-        </template>
-        <div class="title mt-1 text-xs">
-          {{ index.toString().replace(/_/g, '-') }}
-        </div>
-      </a>
+          <div
+            class="status_icons absolute top-0 right-0 mt-1 mr-1 inline-flex"
+          >
+            <svg-vue
+              v-if="post.completed"
+              class="text-base text-spring-50"
+              icon="double-tick"
+            ></svg-vue>
+            <svg-vue
+              v-if="post.criteria"
+              class="text-base text-camel-50"
+              icon="core"
+            ></svg-vue>
+          </div>
+          <template
+            v-if="
+              index === 'reporting_org' ||
+              index === 'default_tied_status' ||
+              index === 'crs_add' ||
+              index === 'fss'
+            "
+          >
+            <svg-vue
+              class="text-base"
+              icon="activity-elements/building"
+            ></svg-vue>
+          </template>
+          <template v-else>
+            <svg-vue
+              :icon="'activity-elements/' + index"
+              class="text-base"
+            ></svg-vue>
+          </template>
+          <div class="title mt-1 text-xs">
+            {{ index.toString().replace(/_/g, '-') }}
+          </div>
+        </a>
+      </template>
     </div>
   </div>
 </template>
@@ -140,11 +157,12 @@ export default defineComponent({
     const asArrayData = Object.entries(props.data);
     const filteredElements = computed(() => {
       const filtered = asArrayData.filter(([key, value]) => {
+
         if (!elements.status) {
-          return key.toLowerCase().includes(elements.search.toLowerCase());
+          return key.toLowerCase().includes(elements.search.toLowerCase().replace('_','').replace('-','_'));
         } else {
           if (value[elements.status]) {
-            return key.toLowerCase().includes(elements.search.toLowerCase());
+            return key.toLowerCase().includes(elements.search.toLowerCase().replace('_','').replace('-','_'));
           }
         }
       });

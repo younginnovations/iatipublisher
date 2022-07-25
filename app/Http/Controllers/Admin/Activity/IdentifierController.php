@@ -6,7 +6,6 @@ namespace App\Http\Controllers\Admin\Activity;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Activity\Identifier\IdentifierRequest;
-use App\IATI\Elements\Builder\BaseFormCreator;
 use App\IATI\Services\Activity\ActivityIdentifierService;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
@@ -18,11 +17,6 @@ use Illuminate\Http\RedirectResponse;
 class IdentifierController extends Controller
 {
     /**
-     * @var BaseFormCreator
-     */
-    protected BaseFormCreator $baseFormCreator;
-
-    /**
      * @var ActivityIdentifierService
      */
     protected ActivityIdentifierService $identifierService;
@@ -30,12 +24,10 @@ class IdentifierController extends Controller
     /**
      * IdentifierController Constructor.
      *
-     * @param BaseFormCreator $baseFormCreator
      * @param ActivityIdentifierService $identifierService
      */
-    public function __construct(BaseFormCreator $baseFormCreator, ActivityIdentifierService $identifierService)
+    public function __construct(ActivityIdentifierService $identifierService)
     {
-        $this->baseFormCreator = $baseFormCreator;
         $this->identifierService = $identifierService;
     }
 
@@ -51,16 +43,14 @@ class IdentifierController extends Controller
         try {
             $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
             $activity = $this->identifierService->getActivityData($id);
-            $model['activity_identifier'] = $this->identifierService->getActivityIdentifierData($id);
-            $this->baseFormCreator->url = route('admin.activities.identifier.update', [$id]);
-            $form = $this->baseFormCreator->editForm($model['activity_identifier'], $element['iati_identifier']);
-            $data = ['core'=> $element['iati_identifier']['criteria'], 'status'=> $activity->identifier_element_completed, 'title'=> $element['iati_identifier']['label'], 'name'=>'iati_identifier'];
+            $form = $this->identifierService->formGenerator($id);
+            $data = ['core' => $element['iati_identifier']['criteria'] ?? '', 'status' => $activity->identifier_element_completed, 'title' => $element['iati_identifier']['label'], 'name' => 'iati_identifier'];
 
-            return view('activity.identifier.identifier', compact('form', 'activity', 'data'));
+            return view('admin.activity.identifier.edit', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return response()->json(['success' => false, 'error' => 'Error has occurred while rendering activity identifier form.']);
+            return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while opening activity title form.');
         }
     }
 
@@ -79,14 +69,14 @@ class IdentifierController extends Controller
             $activityIdentifier = $request->except(['_method', '_token']);
 
             if (!$this->identifierService->update($activityIdentifier, $activityData)) {
-                return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while updating activity identifier.');
+                return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while updating iati-identifier.');
             }
 
-            return redirect()->route('admin.activities.show', $id)->with('success', 'Activity identifier updated successfully.');
+            return redirect()->route('admin.activities.show', $id)->with('success', 'Iati-identifier updated successfully.');
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return response()->json(['success' => false, 'error' => 'Error has occurred while updating activity identifier.']);
+            return response()->json(['success' => false, 'error' => 'Error has occurred while updating iati-identifier.']);
         }
     }
 }

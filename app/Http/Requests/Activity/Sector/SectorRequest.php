@@ -41,6 +41,8 @@ class SectorRequest extends ActivityBaseRequest
     public function getSectorsRules($formFields): array
     {
         $rules = [];
+        $sectorArray = $this->get('sector');
+
         foreach ($formFields as $sectorIndex => $sector) {
             $sectorForm = sprintf('sector.%s', $sectorIndex);
 
@@ -53,29 +55,35 @@ class SectorRequest extends ActivityBaseRequest
             $rules = array_merge($this->getRulesForNarrative($sector['narrative'], $sectorForm), $rules);
         }
 
-        $totalPercentage = $this->getRulesForPercentage($this->get('sector'));
+        if (count($sectorArray) > 1) {
+            $totalPercentage = $this->getRulesForPercentage($sectorArray);
 
-        $indexes = [];
+            $indexes = [];
 
-        foreach ($totalPercentage as $index => $value) {
-            if (is_numeric($index) && $value != 100) {
-                $indexes[] = $index;
-            }
-        }
-
-        $fields = [];
-
-        foreach ($totalPercentage as $i => $percentage) {
-            foreach ($indexes as $index) {
-                if ($index == $percentage) {
-                    $fields[] = $i;
+            foreach ($totalPercentage as $index => $value) {
+                if (is_numeric($index) && $value != 100) {
+                    $indexes[] = $index;
                 }
             }
+
+            $fields = [];
+
+            foreach ($totalPercentage as $i => $percentage) {
+                foreach ($indexes as $index) {
+                    if ($index == $percentage) {
+                        $fields[] = $i;
+                    }
+                }
+            }
+
+            foreach ($fields as $field) {
+                $rules[$field] = 'nullable|sum|numeric|max:100';
+            }
+
+            return $rules;
         }
 
-        foreach ($fields as $field) {
-            $rules[$field] = 'nullable|sum|numeric|max:100';
-        }
+        $rules['sector.0.percentage'] = 'nullable|in:100';
 
         return $rules;
     }
@@ -97,6 +105,7 @@ class SectorRequest extends ActivityBaseRequest
             $messages[sprintf('%s.percentage.numeric', $sectorForm)] = 'The @percentage field must be a number.';
             $messages[sprintf('%s.percentage.max', $sectorForm)] = 'The @percentage field cannot be greater than 100.';
             $messages[sprintf('%s.percentage.sum', $sectorForm)] = 'The sum of @percentage within a vocabulary must add upto 100.';
+            $messages[sprintf('%s.percentage.in', $sectorForm)] = 'The @percentage for single sector must be either omitted or be 100.';
             $messages = array_merge($this->getMessagesForNarrative($sector['narrative'], $sectorForm), $messages);
         }
 

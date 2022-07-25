@@ -6,7 +6,6 @@ namespace App\Http\Controllers\Admin\Activity;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Activity\Sector\SectorRequest;
-use App\IATI\Elements\Builder\ParentCollectionFormCreator;
 use App\IATI\Services\Activity\SectorService;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
@@ -18,11 +17,6 @@ use Illuminate\Http\RedirectResponse;
 class SectorController extends Controller
 {
     /**
-     * @var ParentCollectionFormCreator
-     */
-    protected ParentCollectionFormCreator $parentCollectionFormCreator;
-
-    /**
      * @var SectorService
      */
     protected SectorService $sectorService;
@@ -30,12 +24,10 @@ class SectorController extends Controller
     /**
      * SectorController Constructor.
      *
-     * @param ParentCollectionFormCreator $parentCollectionFormCreator
      * @param SectorService $sectorService
      */
-    public function __construct(ParentCollectionFormCreator $parentCollectionFormCreator, SectorService $sectorService)
+    public function __construct(SectorService $sectorService)
     {
-        $this->parentCollectionFormCreator = $parentCollectionFormCreator;
         $this->sectorService = $sectorService;
     }
 
@@ -51,12 +43,10 @@ class SectorController extends Controller
         try {
             $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
             $activity = $this->sectorService->getActivityData($id);
-            $model['sector'] = $this->sectorService->getSectorData($id);
-            $this->parentCollectionFormCreator->url = route('admin.activities.sector.update', [$id]);
-            $form = $this->parentCollectionFormCreator->editForm($model, $element['sector']);
-            $data = ['core'=> $element['sector']['criteria'], 'status'=> $activity->sector_element_completed, 'title'=> $element['sector']['label'], 'name'=>'sector'];
+            $form = $this->sectorService->formGenerator($id);
+            $data = ['core'=> $element['sector']['criteria'] ?? '', 'status'=> $activity->sector_element_completed, 'title'=> $element['sector']['label'], 'name'=>'sector'];
 
-            return view('activity.sector.sector', compact('form', 'activity', 'data'));
+            return view('admin.activity.sector.edit', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 

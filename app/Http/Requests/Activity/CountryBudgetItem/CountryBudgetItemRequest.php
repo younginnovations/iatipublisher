@@ -184,7 +184,7 @@ class CountryBudgetItemRequest extends ActivityBaseRequest
         if (count($countryBudgetItems) > 1) {
             foreach ($countryBudgetItems as $key => $countryBudgetItem) {
                 $countryBudgetPercentage = $countryBudgetItem['percentage'] ?: 0;
-                $totalPercentage = $totalPercentage + $countryBudgetPercentage;
+                $totalPercentage = $totalPercentage + (float) $countryBudgetPercentage;
             }
 
             foreach ($countryBudgetItems as $key => $countryBudgetItem) {

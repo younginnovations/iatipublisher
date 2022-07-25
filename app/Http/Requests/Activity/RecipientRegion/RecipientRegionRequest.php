@@ -150,7 +150,7 @@ class RecipientRegionRequest extends ActivityBaseRequest
 
             foreach ($regions as $regionIndex => $region) {
                 $regionVocab = $region['region_vocabulary'] ?: 'Not Specified';
-                $regionVocabs[$regionVocab] += Arr::get($region, 'percentage', 0);
+                $regionVocabs[$regionVocab] += (float) Arr::get($region, 'percentage', 0);
                 $regionForm = sprintf('recipient_region.%s', $regionIndex);
                 $percentage = $region['percentage'] ?: 0;
                 $recipient_region = $regionVocab;

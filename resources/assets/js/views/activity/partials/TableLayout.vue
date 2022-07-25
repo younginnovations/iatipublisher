@@ -39,11 +39,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr
-          v-for="datum in props.data.data"
-          :key="datum['id']"
-          @click="goToDetail(datum['id'])"
-        >
+        <tr v-for="datum in props.data.data" :key="datum['id']">
           <td class="title">
             <div
               class="inline-flex items-start transition duration-500 hover:text-spring-50"

@@ -2,6 +2,7 @@
 
 namespace App\IATI\Models\Activity;
 
+use App\IATI\Models\Document\Document;
 use App\IATI\Models\Organization\Organization;
 use Database\Factories\IATI\Models\Activity\ActivityFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -22,7 +23,7 @@ class Activity extends Model
      * @var array
      */
     protected $fillable = [
-        'identifier',
+        'iati_identifier',
         'other_identifier',
         'title',
         'description',
@@ -31,7 +32,7 @@ class Activity extends Model
         'activity_date',
         'contact_info',
         'activity_scope',
-        'participating_organization',
+        'participating_org',
         'recipient_country',
         'recipient_region',
         'location',
@@ -61,14 +62,14 @@ class Activity extends Model
      * @var array
      */
     protected $casts = [
-        'identifier'                 => 'json',
+        'iati_identifier'                 => 'json',
         'other_identifier'           => 'json',
         'title'                      => 'json',
         'description'                => 'json',
         'activity_date'              => 'json',
         'contact_info'               => 'json',
         'activity_scope'             => 'json',
-        'participating_organization' => 'json',
+        'participating_org' => 'json',
         'recipient_country'          => 'json',
         'recipient_region'           => 'json',
         'location'                   => 'json',
@@ -100,6 +101,16 @@ class Activity extends Model
     public static function newFactory(): ActivityFactory
     {
         return new ActivityFactory();
+    }
+
+    /**
+     * An Activity has many ActivityDocumentLink.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function documentLinks()
+    {
+        return $this->hasMany(Document::class);
     }
 
     /**
@@ -157,10 +168,6 @@ class Activity extends Model
 
         foreach ($fields as $field) {
             $mandatoryFields = [];
-
-            if ($field['criteria'] == 'mandatory') {
-                $mandatoryFields[] = $field['name'];
-            }
 
             if (isset($field['attributes'])) {
                 $attributes = $field['attributes'];

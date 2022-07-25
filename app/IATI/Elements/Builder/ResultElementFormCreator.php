@@ -37,10 +37,12 @@ class ResultElementFormCreator
      *
      * @param array $model
      * @param       $formData
+     * @param       $method
+     * @param       $parent_url
      *
      * @return Form
      */
-    public function editForm(array $model, $formData, $method = 'POST'): Form
+    public function editForm(array $model, $formData, $method, string $parent_url): Form
     {
         return $this->formBuilder->create(
             'App\IATI\Elements\Forms\ResultElementForm',
@@ -58,13 +60,13 @@ class ResultElementFormCreator
                 'clear'    => [
                     'label'     => 'Cancel',
                     'attr'      => [
-                        'type'      => 'clear',
+                        'type'      => 'anchor',
                         'class'     => 'ghost-btn mr-8',
+                        'href' => $parent_url,
                     ],
                 ],
-
                 'submit'    => [
-                    'label'     => 'Save Publishing Setting',
+                    'label'     => 'Save and Exit',
                     'attr'      => [
                         'type'      => 'submit',
                         'class'     => 'primary-btn save-btn',

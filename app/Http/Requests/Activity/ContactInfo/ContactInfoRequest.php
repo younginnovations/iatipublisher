@@ -302,7 +302,7 @@ class ContactInfoRequest extends ActivityBaseRequest
         $rules = [];
 
         foreach ($formFields as $telephoneIndex => $telephone) {
-            $rules[sprintf('%s.telephone.%s.telephone', $formBase, $telephoneIndex)] = 'numeric';
+            $rules[sprintf('%s.telephone.%s.telephone', $formBase, $telephoneIndex)] = ['nullable', 'regex:/^\+(?:[0-9]?){6,14}[0-9]$/'];
         }
 
         return $rules;
@@ -321,10 +321,8 @@ class ContactInfoRequest extends ActivityBaseRequest
         $messages = [];
 
         foreach ($formFields as $telephoneIndex => $telephone) {
-            $messages[sprintf('%s.telephone.%s.telephone.numeric', $formBase, $telephoneIndex)] = trans(
-                'validation.number',
-                ['attribute' => trans('elementForm.telephone')]
-            );
+            $messages[sprintf('%s.telephone.%s.telephone.numeric', $formBase, $telephoneIndex)] = 'Telephone number must be valid numeric value';
+            $messages[sprintf('%s.telephone.%s.telephone.regex', $formBase, $telephoneIndex)] = 'The format of telephone number is invalid. Please add valid country code followed by telephone number.';
         }
 
         return $messages;
@@ -343,7 +341,7 @@ class ContactInfoRequest extends ActivityBaseRequest
         $rules = [];
 
         foreach ($formFields as $emailIndex => $email) {
-            $rules[sprintf('%s.email.%s.email', $formBase, $emailIndex)] = 'email';
+            $rules[sprintf('%s.email.%s.email', $formBase, $emailIndex)] = ['nullable', ' email', 'regex:/^([a-z0-9\+_\-]+)(\.[a-z0-9\+_\-]+)*@([a-z0-9\-]+\.)+[a-z]{2,6}$/ix'];
         }
 
         return $rules;
@@ -362,10 +360,8 @@ class ContactInfoRequest extends ActivityBaseRequest
         $messages = [];
 
         foreach ($formFields as $emailIndex => $email) {
-            $messages[sprintf('%s.email.%s.email.email', $formBase, $emailIndex)] = trans(
-                'validation.email',
-                ['attribute' => trans('elementForm.email')]
-            );
+            $messages[sprintf('%s.email.%s.email.email', $formBase, $emailIndex)] = 'Email must be valid';
+            $messages[sprintf('%s.email.%s.email.regex', $formBase, $emailIndex)] = 'The email format is invalid';
         }
 
         return $messages;
@@ -403,9 +399,7 @@ class ContactInfoRequest extends ActivityBaseRequest
         $messages = [];
 
         foreach ($formFields as $websiteIndex => $website) {
-            $messages[sprintf('%s.website.%s.website.url', $formBase, $websiteIndex)] = trans(
-                'validation.url'
-            );
+            $messages[sprintf('%s.website.%s.website.url', $formBase, $websiteIndex)] = 'The website url must be valid url.';
         }
 
         return $messages;

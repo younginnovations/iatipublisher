@@ -6,7 +6,6 @@ namespace App\Http\Controllers\Admin\Activity;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Activity\Condition\ConditionRequest;
-use App\IATI\Elements\Builder\MultilevelSubElementFormCreator;
 use App\IATI\Services\Activity\ConditionService;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
@@ -18,11 +17,6 @@ use Illuminate\Http\RedirectResponse;
 class ConditionController extends Controller
 {
     /**
-     * @var MultilevelSubElementFormCreator
-     */
-    protected MultilevelSubElementFormCreator $multilevelSubElementFormCreator;
-
-    /**
      * @var ConditionService
      */
     protected ConditionService $conditionService;
@@ -30,12 +24,10 @@ class ConditionController extends Controller
     /**
      * ConditionController Constructor.
      *
-     * @param MultilevelSubElementFormCreator $multilevelSubElementFormCreator
      * @param ConditionService $conditionService
      */
-    public function __construct(MultilevelSubElementFormCreator $multilevelSubElementFormCreator, ConditionService $conditionService)
+    public function __construct(ConditionService $conditionService)
     {
-        $this->multilevelSubElementFormCreator = $multilevelSubElementFormCreator;
         $this->conditionService = $conditionService;
     }
 
@@ -46,17 +38,15 @@ class ConditionController extends Controller
      *
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|void
      */
-    public function edit(int $id):View|RedirectResponse
+    public function edit(int $id): View|RedirectResponse
     {
         try {
             $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
             $activity = $this->conditionService->getActivityData($id);
-            $model = $this->conditionService->getConditionData($id) ?: [];
-            $this->multilevelSubElementFormCreator->url = route('admin.activities.conditions.update', [$id]);
-            $form = $this->multilevelSubElementFormCreator->editForm($model, $element['conditions']);
-            $data = ['core'=> $element['conditions']['criteria'], 'status'=> $activity->conditions_element_completed, 'title'=> $element['conditions']['label'], 'name'=>'conditions'];
+            $form = $this->conditionService->formGenerator($id);
+            $data = ['core' => $element['conditions']['criteria'] ?? false, 'status' => $activity->conditions_element_completed, 'title' => $element['conditions']['label'], 'name' => 'conditions'];
 
-            return view('activity.condition.condition', compact('form', 'activity', 'data'));
+            return view('admin.activity.condition.edit', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 

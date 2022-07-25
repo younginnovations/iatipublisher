@@ -6,7 +6,6 @@ namespace App\Http\Controllers\Admin\Activity;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Activity\DefaultAidType\DefaultAidTypeRequest;
-use App\IATI\Elements\Builder\BaseFormCreator;
 use App\IATI\Services\Activity\DefaultAidTypeService;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
@@ -18,11 +17,6 @@ use Illuminate\Http\RedirectResponse;
 class DefaultAidTypeController extends Controller
 {
     /**
-     * @var BaseFormCreator
-     */
-    protected BaseFormCreator $baseFormCreator;
-
-    /**
      * @var DefaultAidTypeService
      */
     protected DefaultAidTypeService $defaultAidTypeService;
@@ -30,12 +24,10 @@ class DefaultAidTypeController extends Controller
     /**
      * DefaultAidTypeController Constructor.
      *
-     * @param BaseFormCreator $baseFormCreator
      * @param DefaultAidTypeService $defaultAidTypeService
      */
-    public function __construct(BaseFormCreator $baseFormCreator, DefaultAidTypeService $defaultAidTypeService)
+    public function __construct(DefaultAidTypeService $defaultAidTypeService)
     {
-        $this->baseFormCreator = $baseFormCreator;
         $this->defaultAidTypeService = $defaultAidTypeService;
     }
 
@@ -51,16 +43,14 @@ class DefaultAidTypeController extends Controller
         try {
             $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
             $activity = $this->defaultAidTypeService->getActivityData($id);
-            $model['default_aid_type'] = $this->defaultAidTypeService->getDefaultAidTypeData($id);
-            $this->baseFormCreator->url = route('admin.activities.default-aid-type.update', [$id]);
-            $form = $this->baseFormCreator->editForm($model, $element['default_aid_type']);
-            $data = ['core'=> $element['default_aid_type']['criteria'], 'status'=> $activity->default_aid_type_element_completed, 'title'=> $element['default_aid_type']['label'], 'name'=>'default_aid_type'];
+            $form = $this->defaultAidTypeService->formGenerator($id);
+            $data = ['core' => $element['default_aid_type']['criteria'] ?? '', 'status' => $activity->default_aid_type_element_completed, 'title' => $element['default_aid_type']['label'], 'name' => 'default_aid_type'];
 
-            return view('activity.defaultAidType.defaultAidType', compact('form', 'activity', 'data'));
+            return view('admin.activity.defaultAidType.edit', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while rendering default aid type form.');
+            return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while rendering default-aid-type form.');
         }
     }
 
@@ -78,10 +68,10 @@ class DefaultAidTypeController extends Controller
             $activityDefaultAidType = $request->all();
 
             if (!$this->defaultAidTypeService->update($activityDefaultAidType, $activityData)) {
-                return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while updating default aid type.');
+                return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while updating default-aid-type.');
             }
 
-            return redirect()->route('admin.activities.show', $id)->with('success', 'Activity default aid type updated successfully.');
+            return redirect()->route('admin.activities.show', $id)->with('success', 'Default-aid-type updated successfully.');
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
