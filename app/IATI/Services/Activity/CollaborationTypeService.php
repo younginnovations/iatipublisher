@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace App\IATI\Services\Activity;
 
+use App\IATI\Elements\Builder\BaseFormCreator;
 use App\IATI\Repositories\Activity\CollaborationTypeRepository;
 use Illuminate\Database\Eloquent\Model;
+use Kris\LaravelFormBuilder\Form;
 
 /**
  * Class CollaborationTypeService.
@@ -18,13 +20,19 @@ class CollaborationTypeService
     protected CollaborationTypeRepository $collaborationTypeRepository;
 
     /**
+     * @var BaseFormCreator
+     */
+    protected BaseFormCreator $baseFormCreator;
+
+    /**
      * CollaborationTypeService constructor.
      *
      * @param CollaborationTypeRepository $collaborationTypeRepository
      */
-    public function __construct(CollaborationTypeRepository $collaborationTypeRepository)
+    public function __construct(CollaborationTypeRepository $collaborationTypeRepository, BaseFormCreator $baseFormCreator)
     {
         $this->collaborationTypeRepository = $collaborationTypeRepository;
+        $this->baseFormCreator = $baseFormCreator;
     }
 
     /**
@@ -62,5 +70,21 @@ class CollaborationTypeService
     public function update($activityCollaborationType, $activity): bool
     {
         return $this->collaborationTypeRepository->update($activityCollaborationType, $activity);
+    }
+
+    /**
+     * Returns collaboration type form.
+     *
+     * @param $id
+     *
+     * @return Form
+     */
+    public function formGenerator($id): Form
+    {
+        $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
+        $model['collaboration_type'] = $this->getCollaborationTypeData($id);
+        $this->baseFormCreator->url = route('admin.activities.collaboration-type.update', [$id]);
+
+        return $this->baseFormCreator->editForm($model, $element['collaboration_type'], 'PUT', '/activities/' . $id);
     }
 }

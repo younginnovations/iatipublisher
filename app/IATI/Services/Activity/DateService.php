@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace App\IATI\Services\Activity;
 
+use App\IATI\Elements\Builder\ParentCollectionFormCreator;
 use App\IATI\Repositories\Activity\DateRepository;
 use Illuminate\Database\Eloquent\Model;
+use Kris\LaravelFormBuilder\Form;
 
 /**
  * Class DateService.
@@ -18,13 +20,20 @@ class DateService
     protected DateRepository $dateRepository;
 
     /**
+     * @var ParentCollectionFormCreator
+     */
+    protected ParentCollectionFormCreator $parentCollectionFormCreator;
+
+    /**
      * DateService constructor.
      *
      * @param DateRepository $dateRepository
+     * @param ParentCollectionFormCreator $parentCollectionFormCreator
      */
-    public function __construct(DateRepository $dateRepository)
+    public function __construct(DateRepository $dateRepository, ParentCollectionFormCreator $parentCollectionFormCreator)
     {
         $this->dateRepository = $dateRepository;
+        $this->parentCollectionFormCreator = $parentCollectionFormCreator;
     }
 
     /**
@@ -62,5 +71,21 @@ class DateService
     public function update($activityDate, $activity): bool
     {
         return $this->dateRepository->update($activityDate, $activity);
+    }
+
+    /**
+     * Generates date form.
+     *
+     * @param id
+     *
+     * @return Form
+     */
+    public function formGenerator($id): Form
+    {
+        $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
+        $model['activity_date'] = $this->getDateData($id);
+        $this->parentCollectionFormCreator->url = route('admin.activities.date.update', [$id]);
+
+        return $this->parentCollectionFormCreator->editForm($model, $element['activity_date'], 'PUT', '/activities/' . $id);
     }
 }

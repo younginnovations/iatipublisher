@@ -6,7 +6,6 @@ namespace App\Http\Controllers\Admin\Activity;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Activity\DefaultTiedStatus\DefaultTiedStatusRequest;
-use App\IATI\Elements\Builder\BaseFormCreator;
 use App\IATI\Services\Activity\DefaultTiedStatusService;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
@@ -18,11 +17,6 @@ use Illuminate\Http\RedirectResponse;
 class DefaultTiedStatusController extends Controller
 {
     /**
-     * @var BaseFormCreator
-     */
-    protected BaseFormCreator $baseFormCreator;
-
-    /**
      * @var DefaultTiedStatusService
      */
     protected DefaultTiedStatusService $defaultTiedStatusService;
@@ -30,12 +24,10 @@ class DefaultTiedStatusController extends Controller
     /**
      * DefaultTiedStatusController Constructor.
      *
-     * @param BaseFormCreator $baseFormCreator
      * @param DefaultTiedStatusService $defaultTiedStatusService
      */
-    public function __construct(BaseFormCreator $baseFormCreator, DefaultTiedStatusService $defaultTiedStatusService)
+    public function __construct(DefaultTiedStatusService $defaultTiedStatusService)
     {
-        $this->baseFormCreator = $baseFormCreator;
         $this->defaultTiedStatusService = $defaultTiedStatusService;
     }
 
@@ -51,12 +43,10 @@ class DefaultTiedStatusController extends Controller
         try {
             $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
             $activity = $this->defaultTiedStatusService->getActivityData($id);
-            $model['default_tied_status'] = $this->defaultTiedStatusService->getDefaultTiedStatusData($id);
-            $this->baseFormCreator->url = route('admin.activities.default-tied-status.update', [$id]);
-            $form = $this->baseFormCreator->editForm($model, $element['default_tied_status'], 'PUT', '/activities/' . $id);
+            $form = $this->defaultTiedStatusService->formGenerator($id);
             $data = ['core' => $element['default_tied_status']['criteria'] ?? '', 'status' => $activity->default_tied_status_element_completed, 'title' => $element['default_tied_status']['label'], 'name' => 'default_tied_status'];
 
-            return view('activity.defaultTiedStatus.defaultTiedStatus', compact('form', 'activity', 'data'));
+            return view('admin.activity.defaultTiedStatus.edit', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 

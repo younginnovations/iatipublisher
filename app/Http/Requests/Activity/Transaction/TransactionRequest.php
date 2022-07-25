@@ -68,7 +68,6 @@ class TransactionRequest extends ActivityBaseRequest
         ) : $this->transactionService->getTransactionReferences($activityId);
 
         $transactionReference = implode(',', array_filter(array_keys($references)));
-        $rules = [];
 
         if ($transactionReference !== '') {
             $rules['reference'] = 'not_in:' . $transactionReference;

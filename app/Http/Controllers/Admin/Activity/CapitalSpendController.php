@@ -6,7 +6,6 @@ namespace App\Http\Controllers\Admin\Activity;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Activity\CapitalSpend\CapitalSpendRequest;
-use App\IATI\Elements\Builder\BaseFormCreator;
 use App\IATI\Services\Activity\CapitalSpendService;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
@@ -18,11 +17,6 @@ use Illuminate\Http\RedirectResponse;
 class CapitalSpendController extends Controller
 {
     /**
-     * @var BaseFormCreator
-     */
-    protected BaseFormCreator $baseFormCreator;
-
-    /**
      * @var CapitalSpendService
      */
     protected CapitalSpendService $capitalSpendService;
@@ -33,9 +27,8 @@ class CapitalSpendController extends Controller
      * @param BaseFormCreator $baseFormCreator
      * @param CapitalSpendService $capitalSpendService
      */
-    public function __construct(BaseFormCreator $baseFormCreator, CapitalSpendService $capitalSpendService)
+    public function __construct(CapitalSpendService $capitalSpendService)
     {
-        $this->baseFormCreator = $baseFormCreator;
         $this->capitalSpendService = $capitalSpendService;
     }
 
@@ -51,12 +44,10 @@ class CapitalSpendController extends Controller
         try {
             $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
             $activity = $this->capitalSpendService->getActivityData($id);
-            $model['capital_spend'] = $this->capitalSpendService->getCapitalSpendData($id);
-            $this->baseFormCreator->url = route('admin.activities.capital-spend.update', [$id]);
-            $form = $this->baseFormCreator->editForm($model, $element['capital_spend'], 'PUT', '/activities/' . $id);
+            $form = $this->capitalSpendService->formGenerator($id);
             $data = ['core' => $element['capital_spend']['criteria'] ?? '', 'status' => $activity->capital_spend_element_completed, 'title' => $element['capital_spend']['label'], 'name' => 'capital_spend'];
 
-            return view('activity.capitalSpend.capitalSpend', compact('form', 'activity', 'data'));
+            return view('admin.activity.capitalSpend.edit', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 

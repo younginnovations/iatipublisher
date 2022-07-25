@@ -15,7 +15,6 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Session;
 
 /**
  * Class ActivityController.
@@ -124,42 +123,19 @@ class ActivityController extends Controller
     public function show(Activity $activity): View|JsonResponse|RedirectResponse
     {
         try {
-            if ($activity['org_id'] !== Auth::user()->organization_id) {
-                return redirect()->route('admin.activities.index');
-            }
-
-            $toast['message'] = Session::exists('error') ? Session::get('error') : (Session::exists('success') ? Session::get('success') : '');
-            $toast['type'] = Session::exists('error') ? false : 'success';
-            Session::forget('success');
-            Session::forget('error');
+            $toast = $this->activityService->generateToastData();
             $elements = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
             $elementGroups = json_decode(file_get_contents(app_path('Data/Activity/ElementGroup.json')), true);
             $types = $this->getActivityDetailDataType();
             $status = $this->getActivityDetailStatus($activity);
             $results = $this->resultService->getActivityResultsWithIndicatorsAndPeriods($activity->id);
+            $hasIndicatorPeriod = $this->resultService->checkResultIndicatorPeriod($results);
             $transactions = $this->transactionService->getActivityTransactions($activity->id);
             $progress = 75;
-            $hasIndicator = 0;
-            $hasPeriod = 0;
-
-            if (count($results)) {
-                foreach ($results as $result) {
-                    if (count($result->indicators)) {
-                        $hasIndicator = 1;
-
-                        foreach ($result->indicators as $indicator) {
-                            if (count($indicator->periods)) {
-                                $hasPeriod = 1;
-                                break;
-                            }
-                        }
-                    }
-                }
-            }
 
             return view(
                 'admin.activity.show',
-                compact('elements', 'elementGroups', 'progress', 'activity', 'toast', 'types', 'status', 'results', 'hasIndicator', 'hasPeriod', 'transactions')
+                compact('elements', 'elementGroups', 'progress', 'activity', 'toast', 'types', 'status', 'results', 'hasIndicatorPeriod', 'transactions')
             );
         } catch (Exception $e) {
             logger()->error($e->getMessage());

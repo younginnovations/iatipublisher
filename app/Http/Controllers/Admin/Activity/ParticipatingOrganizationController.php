@@ -6,7 +6,6 @@ namespace App\Http\Controllers\Admin\Activity;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Activity\ParticipatingOrganization\ParticipatingOrganizationRequest;
-use App\IATI\Elements\Builder\ParentCollectionFormCreator;
 use App\IATI\Services\Activity\ParticipatingOrganizationService;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
@@ -19,11 +18,6 @@ use Illuminate\Http\RedirectResponse;
 class ParticipatingOrganizationController extends Controller
 {
     /**
-     * @var ParentCollectionFormCreator
-     */
-    protected ParentCollectionFormCreator $parentCollectionFormCreator;
-
-    /**
      * @var ParticipatingOrganizationService
      */
     protected ParticipatingOrganizationService $participatingOrganizationService;
@@ -31,12 +25,10 @@ class ParticipatingOrganizationController extends Controller
     /**
      * ParticipatingOrganizationController Constructor.
      *
-     * @param ParentCollectionFormCreator $parentCollectionFormCreator
      * @param ParticipatingOrganizationService $participatingOrganizationService
      */
-    public function __construct(ParticipatingOrganizationService $participatingOrganizationService, ParentCollectionFormCreator $parentCollectionFormCreator)
+    public function __construct(ParticipatingOrganizationService $participatingOrganizationService)
     {
-        $this->parentCollectionFormCreator = $parentCollectionFormCreator;
         $this->participatingOrganizationService = $participatingOrganizationService;
     }
 
@@ -52,12 +44,10 @@ class ParticipatingOrganizationController extends Controller
         try {
             $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
             $activity = $this->participatingOrganizationService->getActivityData($id);
-            $model['participating_org'] = $this->participatingOrganizationService->getParticipatingOrganizationData($id) ?: [];
-            $this->parentCollectionFormCreator->url = route('admin.activities.participating-org.update', [$id]);
-            $form = $this->parentCollectionFormCreator->editForm($model, $element['participating_org'], 'PUT', '/activities/' . $id);
+            $form = $this->participatingOrganizationService->formGenerator($id);
             $data = ['core' => $element['participating_org']['criteria'] ?? '', 'status' => $activity->participating_org_element_completed ?? false, 'title' => $element['participating_org']['label'], 'name' => 'participating_org'];
 
-            return view('activity.participatingOrganization.participatingOrganization', compact('form', 'activity', 'data'));
+            return view('admin.activity.participatingOrganization.edit', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 

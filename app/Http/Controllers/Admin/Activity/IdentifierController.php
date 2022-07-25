@@ -6,7 +6,6 @@ namespace App\Http\Controllers\Admin\Activity;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Activity\Identifier\IdentifierRequest;
-use App\IATI\Elements\Builder\BaseFormCreator;
 use App\IATI\Services\Activity\ActivityIdentifierService;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
@@ -18,11 +17,6 @@ use Illuminate\Http\RedirectResponse;
 class IdentifierController extends Controller
 {
     /**
-     * @var BaseFormCreator
-     */
-    protected BaseFormCreator $baseFormCreator;
-
-    /**
      * @var ActivityIdentifierService
      */
     protected ActivityIdentifierService $identifierService;
@@ -30,12 +24,10 @@ class IdentifierController extends Controller
     /**
      * IdentifierController Constructor.
      *
-     * @param BaseFormCreator $baseFormCreator
      * @param ActivityIdentifierService $identifierService
      */
-    public function __construct(BaseFormCreator $baseFormCreator, ActivityIdentifierService $identifierService)
+    public function __construct(ActivityIdentifierService $identifierService)
     {
-        $this->baseFormCreator = $baseFormCreator;
         $this->identifierService = $identifierService;
     }
 
@@ -51,12 +43,10 @@ class IdentifierController extends Controller
         try {
             $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
             $activity = $this->identifierService->getActivityData($id);
-            $model['activity_identifier'] = $this->identifierService->getActivityIdentifierData($id);
-            $this->baseFormCreator->url = route('admin.activities.identifier.update', [$id]);
-            $form = $this->baseFormCreator->editForm($model['activity_identifier'], $element['iati_identifier'], 'PUT', '/activities/' . $id);
+            $form = $this->identifierService->formGenerator($id);
             $data = ['core' => $element['iati_identifier']['criteria'] ?? '', 'status' => $activity->identifier_element_completed, 'title' => $element['iati_identifier']['label'], 'name' => 'iati_identifier'];
 
-            return view('activity.identifier.identifier', compact('form', 'activity', 'data'));
+            return view('admin.activity.identifier.edit', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 

@@ -6,7 +6,6 @@ namespace App\Http\Controllers\Admin\Activity;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Activity\PlannedDisbursement\PlannedDisbursementRequest;
-use App\IATI\Elements\Builder\ParentCollectionFormCreator;
 use App\IATI\Services\Activity\PlannedDisbursementService;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
@@ -19,11 +18,6 @@ use Illuminate\Http\RedirectResponse;
 class PlannedDisbursementController extends Controller
 {
     /**
-     * @var ParentCollectionFormCreator
-     */
-    protected ParentCollectionFormCreator $parentCollectionFormCreator;
-
-    /**
      * @var PlannedDisbursementService
      */
     protected PlannedDisbursementService $plannedDisbursementService;
@@ -31,12 +25,10 @@ class PlannedDisbursementController extends Controller
     /**
      * PlannedDisbursementController Constructor.
      *
-     * @param ParentCollectionFormCreator $parentCollectionFormCreator
      * @param PlannedDisbursementService $plannedDisbursementService
      */
-    public function __construct(PlannedDisbursementService $plannedDisbursementService, ParentCollectionFormCreator $parentCollectionFormCreator)
+    public function __construct(PlannedDisbursementService $plannedDisbursementService)
     {
-        $this->parentCollectionFormCreator = $parentCollectionFormCreator;
         $this->plannedDisbursementService = $plannedDisbursementService;
     }
 
@@ -52,12 +44,10 @@ class PlannedDisbursementController extends Controller
         try {
             $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
             $activity = $this->plannedDisbursementService->getActivityData($id);
-            $model['planned_disbursement'] = $this->plannedDisbursementService->getPlannedDisbursementData($id) ?: [];
-            $this->parentCollectionFormCreator->url = route('admin.activities.planned-disbursement.update', [$id]);
-            $form = $this->parentCollectionFormCreator->editForm($model, $element['planned_disbursement'], 'PUT', '/activities/' . $id);
+            $form = $this->plannedDisbursementService->formGenerator($id);
             $data = ['core' => $element['planned_disbursement']['criteria'] ?? 'core', 'status' => true, 'title' => $element['planned_disbursement']['label'], 'name' => 'title'];
 
-            return view('activity.plannedDisbursement.plannedDisbursement', compact('form', 'activity', 'data'));
+            return view('admin.activity.plannedDisbursement.edit', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 

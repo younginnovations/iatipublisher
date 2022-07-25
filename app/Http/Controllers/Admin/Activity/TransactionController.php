@@ -1,22 +1,23 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers\Admin\Activity;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Activity\Transaction\TransactionRequest;
 use App\IATI\Elements\Builder\BaseFormCreator;
-use App\IATI\Elements\Builder\TransactionElementFormCreator;
 use App\IATI\Models\Activity\Transaction;
 use App\IATI\Services\Activity\ActivityService;
 use App\IATI\Services\Activity\TransactionService;
+use Illuminate\Contracts\View\View;
+use Illuminate\Http\RedirectResponse;
 
+/**
+ * TransactionController Class.
+ */
 class TransactionController extends Controller
 {
-    /**
-     * @var TransactionElementFormCreator
-     */
-    protected TransactionElementFormCreator $transactionElementFormCreator;
-
     /**
      * @var BaseFormCreator
      */
@@ -35,19 +36,16 @@ class TransactionController extends Controller
     /**
      * TransactionController Constructor.
      *
-     * @param TransactionElementFormCreator $transactionElementFormCreator
      * @param BaseFormCreator $baseFormCreator
      * @param TransactionService $transactionService
      * @param ActivityService $activityService
      */
     public function __construct(
-        TransactionElementFormCreator $transactionElementFormCreator,
         BaseFormCreator $baseFormCreator,
         TransactionService $transactionService,
         ActivityService $activityService
     ) {
         $this->baseFormCreator = $baseFormCreator;
-        $this->transactionElementFormCreator = $transactionElementFormCreator;
         $this->transactionService = $transactionService;
         $this->activityService = $activityService;
     }
@@ -73,16 +71,15 @@ class TransactionController extends Controller
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Http\RedirectResponse|\Illuminate\Contracts\Foundation\Application
      */
-    public function create($activityId): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Http\RedirectResponse|\Illuminate\Contracts\Foundation\Application
+    public function create($activityId): \Illuminate\Contracts\View\Factory|View|RedirectResponse|\Illuminate\Contracts\Foundation\Application
     {
         try {
             $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
             $activity = $this->activityService->getActivity($activityId);
-            $this->transactionElementFormCreator->url = route('admin.activities.transactions.store', $activityId);
-            $form = $this->transactionElementFormCreator->editForm([], $element['transactions'], 'POST', '/activities/' . $activityId);
+            $form = $this->transactionService->createFormGenerator($activityId);
             $data = ['core' => $element['transactions']['criteria'] ?? false, 'status' => false, 'title' => $element['transactions']['label'], 'name' => 'transactions'];
 
-            return view('activity.transaction.transaction', compact('form', 'activity', 'data'));
+            return view('admin.activity.transaction.edit', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
@@ -100,7 +97,7 @@ class TransactionController extends Controller
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function store(TransactionRequest $request, $activityId): \Illuminate\Http\RedirectResponse
+    public function store(TransactionRequest $request, $activityId): RedirectResponse
     {
         try {
             $transactionData = $request->except('_token');
@@ -132,15 +129,17 @@ class TransactionController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\IATI\Models\Activity\Transaction  $transaction
+     * @param  \App\IATI\Models\Activity\Transaction  $transactionId
+     * @param   $activityId
+     *
      * @return \Illuminate\Http\Response
      */
-    public function show($transactionId, $activityId)
+    public function show($transactionId, $activityId): View|RedirectResponse
     {
         try {
             $transaction = $this->transactionService->getTransaction($transactionId, $activityId);
 
-            return view('activity.transaction.detail', compact('transaction'));
+            return view('admin.activity.transaction.detail', compact('transaction'));
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
@@ -159,17 +158,15 @@ class TransactionController extends Controller
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Http\RedirectResponse|\Illuminate\Contracts\Foundation\Application
      */
-    public function edit($activityId, $transactionId): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Http\RedirectResponse|\Illuminate\Contracts\Foundation\Application
+    public function edit($activityId, $transactionId): \Illuminate\Contracts\View\Factory|View|RedirectResponse|\Illuminate\Contracts\Foundation\Application
     {
         try {
             $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
             $activity = $this->activityService->getActivity($activityId);
-            $activityTransaction = $this->transactionService->getTransaction($transactionId, $activityId);
-            $this->transactionElementFormCreator->url = route('admin.activities.transactions.update', [$activityId, $transactionId]);
-            $form = $this->transactionElementFormCreator->editForm($activityTransaction->transaction, $element['transactions'], 'PUT', '/activities/' . $activityId);
+            $form = $this->transactionService->editFormGenerator($transactionId, $activityId);
             $data = ['core' => $element['transactions']['criteria'] ?? false, 'status' => false, 'title' => $element['transactions']['label'], 'name' => 'transactions'];
 
-            return view('activity.transaction.transaction', compact('form', 'activity', 'data'));
+            return view('admin.activity.transaction.edit', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
@@ -189,7 +186,7 @@ class TransactionController extends Controller
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function update(TransactionRequest $request, $activityId, $transactionId): \Illuminate\Http\RedirectResponse
+    public function update(TransactionRequest $request, $activityId, $transactionId): RedirectResponse
     {
         try {
             $transactionData = $request->except(['_method', '_token']);

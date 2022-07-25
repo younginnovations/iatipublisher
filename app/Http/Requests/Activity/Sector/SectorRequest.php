@@ -55,9 +55,7 @@ class SectorRequest extends ActivityBaseRequest
             $rules = array_merge($this->getRulesForNarrative($sector['narrative'], $sectorForm), $rules);
         }
 
-        dump(count($sectorArray));
         if (count($sectorArray) > 1) {
-            dd('here');
             $totalPercentage = $this->getRulesForPercentage($sectorArray);
 
             $indexes = [];

@@ -6,7 +6,6 @@ namespace App\Http\Controllers\Admin\Activity;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Activity\RelatedActivity\RelatedActivityRequest;
-use App\IATI\Elements\Builder\BaseFormCreator;
 use App\IATI\Services\Activity\RelatedActivityService;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
@@ -18,11 +17,6 @@ use Illuminate\Http\RedirectResponse;
 class RelatedActivityController extends Controller
 {
     /**
-     * @var BaseFormCreator
-     */
-    protected BaseFormCreator $baseFormCreator;
-
-    /**
      * @var RelatedActivityService
      */
     protected RelatedActivityService $relatedActivityService;
@@ -30,12 +24,10 @@ class RelatedActivityController extends Controller
     /**
      * RelatedActivityController Constructor.
      *
-     * @param BaseFormCreator $baseFormCreator
      * @param RelatedActivityService $relatedActivityService
      */
-    public function __construct(BaseFormCreator $baseFormCreator, RelatedActivityService $relatedActivityService)
+    public function __construct(RelatedActivityService $relatedActivityService)
     {
-        $this->baseFormCreator = $baseFormCreator;
         $this->relatedActivityService = $relatedActivityService;
     }
 
@@ -54,7 +46,7 @@ class RelatedActivityController extends Controller
             $form = $this->baseFormCreator->editForm($model, $element['related_activity'], 'PUT', '/activities/' . $id);
             $data = ['core' => $element['related_activity']['criteria'] ?? '', 'status' => $activity->related_activity_element_completed, 'title' => $element['related_activity']['label'], 'name' => 'related_activity'];
 
-            return view('activity.relatedActivity.relatedActivity', compact('form', 'activity', 'data'));
+            return view('admin.activity.relatedActivity.edit', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 

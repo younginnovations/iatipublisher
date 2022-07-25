@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\IATI\Elements\Forms;
 
 use Illuminate\Support\Arr;

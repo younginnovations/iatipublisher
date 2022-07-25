@@ -86,7 +86,7 @@ class DocumentService
      *
      * @return array
      */
-    public function getDocumentLinkData($activity_id)
+    public function getDocumentLinkData($activity_id): array
     {
         return $this->documentRepo->findBy('activity_id', $activity_id)->toArray();
     }

@@ -1,22 +1,21 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers\Admin\Activity;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Activity\Indicator\IndicatorRequest;
-use App\IATI\Elements\Builder\ResultElementFormCreator;
 use App\IATI\Models\Activity\Indicator;
 use App\IATI\Services\Activity\ActivityService;
 use App\IATI\Services\Activity\IndicatorService;
 use Illuminate\Http\Request;
 
+/**
+ * IndicatorController Class.
+ */
 class IndicatorController extends Controller
 {
-    /**
-     * @var ResultElementFormCreator
-     */
-    protected ResultElementFormCreator $resultElementFormCreator;
-
     /**
      * @var IndicatorService
      */
@@ -30,16 +29,13 @@ class IndicatorController extends Controller
     /**
      * IndicatorController Constructor.
      *
-     * @param ResultElementFormCreator $resultElementFormCreator
      * @param IndicatorService $indicatorService
      * @param ActivityService $activityService
      */
     public function __construct(
-        ResultElementFormCreator $resultElementFormCreator,
         IndicatorService $indicatorService,
         ActivityService $activityService
     ) {
-        $this->resultElementFormCreator = $resultElementFormCreator;
         $this->indicatorService = $indicatorService;
         $this->activityService = $activityService;
     }
@@ -67,11 +63,10 @@ class IndicatorController extends Controller
         try {
             $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
             $activity = $this->activityService->getActivity($activityId);
-            $this->resultElementFormCreator->url = route('admin.activities.result.indicator.store', [$activityId, $resultId]);
-            $form = $this->resultElementFormCreator->editForm([], $element['indicator'], 'POST', '/activities/' . $activityId);
+            $form = $this->indicatorService->createFormGenerator($activityId, $resultId);
             $data = ['core' => $element['indicator']['criteria'] ?? false, 'status' => false, 'title' => $element['indicator']['label'], 'name' => 'indicator'];
 
-            return view('activity.indicator.indicator', compact('form', 'activity', 'data'));
+            return view('admin.activity.indicator.edit', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
@@ -145,12 +140,10 @@ class IndicatorController extends Controller
         try {
             $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
             $activity = $this->activityService->getActivity($activityId);
-            $resultIndicator = $this->indicatorService->getResultIndicator($resultId, $indicatorId);
-            $this->resultElementFormCreator->url = route('admin.activities.result.indicator.update', [$activityId, $resultId, $indicatorId]);
-            $form = $this->resultElementFormCreator->editForm($resultIndicator->indicator, $element['indicator'], 'PUT', '/activities/' . $activityId);
+            $form = $this->indicatorService->editFormGenerator($activityId, $resultId, $indicatorId);
             $data = ['core' => $element['indicator']['criteria'] ?? false, 'status' => false, 'title' => $element['indicator']['label'], 'name' => 'indicator'];
 
-            return view('activity.indicator.indicator', compact('form', 'activity', 'data'));
+            return view('admin.activity.indicator.edit', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 

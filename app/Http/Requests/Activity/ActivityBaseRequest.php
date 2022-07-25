@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Http\Requests\Activity;
 
-use GuzzleHttp\Client;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Carbon;
@@ -23,48 +22,14 @@ class ActivityBaseRequest extends FormRequest
         Validator::extendImplicit(
             'unique_lang',
             function ($attribute, $value) {
-                $languages = [];
-
-                foreach ($value as $narrative) {
-                    $language = $narrative['language'];
-
-                    if (in_array($language, $languages)) {
-                        return false;
-                    }
-
-                    $languages[] = $language;
-                }
-
-                return true;
+                return $this->uniqueLangValidator($attribute, $value);
             }
         );
 
         Validator::extendImplicit(
             'unique_default_lang',
             function ($attribute, $value, $parameters, $validator) {
-                $languages = [];
-                $defaultLanguage = 'en';
-
-                $validator->addReplacer(
-                    'unique_default_lang',
-                    function ($message) use ($validator, $defaultLanguage) {
-                        return str_replace(':language', getCodeListArray('Languages', 'ActivityArray')[$defaultLanguage], $message);
-                    }
-                );
-
-                $check = true;
-
-                foreach ($value as $narrative) {
-                    $languages[] = $narrative['language'];
-                }
-
-                if (count($languages) === count(array_unique($languages))) {
-                    if (in_array('', $languages) && in_array($defaultLanguage, $languages)) {
-                        $check = false;
-                    }
-                }
-
-                return $check;
+                return $this->uniqueDefaultLangValidator($attribute, $value, $parameters, $validator);
             }
         );
 
@@ -81,37 +46,6 @@ class ActivityBaseRequest extends FormRequest
                 ($value != 100) ? $check = false : $check = true;
 
                 return $check;
-            }
-        );
-
-        Validator::extendImplicit(
-            'organization_exists',
-            function ($attribute, $value, $parameters, $validator) {
-                if ($value) {
-                    try {
-                        $client = new Client(
-                            [
-                                'base_uri' => env('IATI_API_ENDPOINT'),
-                                'headers'  => [
-                                    'X-CKAN-API-Key' => env('IATI_API_KEY'),
-                                ],
-                            ]
-                        );
-
-                        $res = $client->request('GET', env('IATI_API_ENDPOINT') . '/action/organization_show', [
-                            'auth'            => [env('IATI_USERNAME'), env('IATI_PASSWORD')],
-                            'query'           => ['id' => $value],
-                        ]);
-
-                        $response = json_decode($res->getBody()->getContents())->result;
-
-                        return $response ? true : false;
-                    } catch (\Exception $e) {
-                        return false;
-                    }
-                }
-
-                return true;
             }
         );
 
@@ -139,40 +73,126 @@ class ActivityBaseRequest extends FormRequest
         Validator::extendImplicit(
             'unique_category',
             function ($attribute, $value) {
-                $categoryCodes = [];
-
-                foreach ($value as $category) {
-                    $code = $category['code'];
-
-                    if (in_array($code, $categoryCodes)) {
-                        return false;
-                    }
-
-                    $categoryCodes[] = $code;
-                }
-
-                return true;
+                return $this->uniqueCategoryValidator($attribute, $value);
             }
         );
 
         Validator::extendImplicit(
             'unique_language',
             function ($attribute, $value) {
-                $languageCodes = [];
-
-                foreach ($value as $language) {
-                    $code = isset($language['code']) ? $language['code'] : ($language['language'] ?? '');
-
-                    if (in_array($code, $languageCodes)) {
-                        return false;
-                    }
-
-                    $languageCodes[] = $code;
-                }
-
-                return true;
+                return $this->uniqueLanguageValidator($attribute, $value);
             }
         );
+    }
+
+    /**
+     * Validator for unique lang.
+     *
+     * @param      $attribute
+     * @param      $value
+     *
+     * @return bool
+     */
+    public function uniqueLangValidator($attribute, $value): bool
+    {
+        $languages = [];
+
+        foreach ($value as $narrative) {
+            if (in_array($narrative['language'], $languages)) {
+                return false;
+            }
+
+            $languages[] = $narrative['language'];
+        }
+
+        return true;
+    }
+
+    /**
+     * Validator for unique language/code.
+     *
+     * @param      $attribute
+     * @param      $value
+     *
+     * @return bool
+     */
+    public function uniqueLanguageValidator($attribute, $value): bool
+    {
+        $languageCodes = [];
+
+        foreach ($value as $language) {
+            $code = isset($language['code']) ? $language['code'] : ($language['language'] ?? '');
+
+            if (in_array($code, $languageCodes)) {
+                return false;
+            }
+
+            $languageCodes[] = $code;
+        }
+
+        return true;
+    }
+
+    /**
+     * Validator for category.
+     *
+     * @param      $attribute
+     * @param      $value
+     *
+     * @return bool
+     */
+    public function uniqueCategoryValidator($attribute, $value): bool
+    {
+        $categoryCodes = [];
+
+        foreach ($value as $category) {
+            $code = $category['code'];
+
+            if (in_array($code, $categoryCodes)) {
+                return false;
+            }
+
+            $categoryCodes[] = $code;
+        }
+
+        return true;
+    }
+
+    /**
+     * Validator for unique lang.
+     *
+     * @param      $attribute
+     * @param      $value
+     * @param      $parameter
+     * @param      $validator
+     *
+     * @return bool
+     */
+    public function uniqueDefaultLangValidator($attribute, $value, $parameters, $validator): bool
+    {
+        $languages = [];
+        $defaultLanguage = 'en';
+
+        $validator->addReplacer(
+            'unique_default_lang',
+            function ($message) use ($validator, $defaultLanguage) {
+                return str_replace(':language', getCodeListArray('Languages', 'ActivityArray')[$defaultLanguage], $message);
+            }
+        );
+
+        $check = true;
+
+        foreach ($value as $narrative) {
+            $languages[] = $narrative['language'];
+        }
+
+        if (count($languages) === count(array_unique($languages))) {
+            if (in_array('', $languages) && in_array($defaultLanguage, $languages)) {
+                $check = false;
+            }
+        }
+
+        return $check;
     }
 
     /**
@@ -251,15 +271,18 @@ class ActivityBaseRequest extends FormRequest
 
     /**
      * returns rules for period start form.
+     *
      * @param $formFields
      * @param $formBase
+     *
      * @return array
      */
-    public function getRulesForPeriodStart($formFields, $formBase)
+    public function getRulesForPeriodStart($formFields, $formBase): array
     {
         $rules = [];
+
         foreach ($formFields as $periodStartKey => $periodStartVal) {
-            $rules[$formBase . '.period_start.' . $periodStartKey . '.date'] = 'date|date_greater_than:1900';
+            $rules[$formBase . '.period_start.' . $periodStartKey . '.date'] = 'nullable|date|date_greater_than:1900';
         }
 
         return $rules;
@@ -267,13 +290,16 @@ class ActivityBaseRequest extends FormRequest
 
     /**
      * returns messages for period start form.
+     *
      * @param $formFields
      * @param $formBase
+     *
      * @return array
      */
-    public function getMessagesForPeriodStart($formFields, $formBase)
+    public function getMessagesForPeriodStart($formFields, $formBase): array
     {
         $messages = [];
+
         foreach ($formFields as $periodStartKey => $periodStartVal) {
             $messages[$formBase . '.period_start.' . $periodStartKey . '.date.required'] = trans('validation.required', ['attribute' => trans('elementForm.period_start')]);
             $messages[$formBase . '.period_end.' . $periodStartKey . '.date.date'] = 'Period end must be a date.';
@@ -285,11 +311,13 @@ class ActivityBaseRequest extends FormRequest
 
     /**
      * returns rules for period end form.
+     *
      * @param $formFields
      * @param $formBase
+     *
      * @return array
      */
-    public function getRulesForPeriodEnd($formFields, $formBase)
+    public function getRulesForPeriodEnd($formFields, $formBase): array
     {
         $rules = [];
 
@@ -306,11 +334,13 @@ class ActivityBaseRequest extends FormRequest
 
     /**
      * returns messages for period end form.
+     *
      * @param $formFields
      * @param $formBase
+     *
      * @return array
      */
-    public function getMessagesForPeriodEnd($formFields, $formBase)
+    public function getMessagesForPeriodEnd($formFields, $formBase): array
     {
         $messages = [];
 
@@ -337,11 +367,7 @@ class ActivityBaseRequest extends FormRequest
         $rules = [];
 
         foreach ($formFields as $documentLinkIndex => $documentLink) {
-            if ($formBase) {
-                $documentLinkForm = sprintf('%s.document_link.%s', $formBase, $documentLinkIndex);
-            } else {
-                $documentLinkForm = sprintf('document_link.%s', $documentLinkIndex);
-            }
+            $documentLinkForm = $formBase ? sprintf('%s.document_link.%s', $formBase, $documentLinkIndex) : sprintf('document_link.%s', $documentLinkIndex);
 
             if (Arr::get($documentLink, 'url', null) != '') {
                 $rules[sprintf('%s.url', $documentLinkForm)] = 'nullable|url';

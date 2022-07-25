@@ -6,7 +6,6 @@ namespace App\Http\Controllers\Admin\Activity;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Activity\Date\DateRequest;
-use App\IATI\Elements\Builder\ParentCollectionFormCreator;
 use App\IATI\Services\Activity\DateService;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
@@ -18,11 +17,6 @@ use Illuminate\Http\RedirectResponse;
 class DateController extends Controller
 {
     /**
-     * @var ParentCollectionFormCreator
-     */
-    protected ParentCollectionFormCreator $parentCollectionFormCreator;
-
-    /**
      * @var DateService
      */
     protected DateService $dateService;
@@ -30,12 +24,10 @@ class DateController extends Controller
     /**
      * DateController Constructor.
      *
-     * @param ParentCollectionFormCreator $parentCollectionFormCreator
      * @param DateService $dateService
      */
-    public function __construct(ParentCollectionFormCreator $parentCollectionFormCreator, DateService $dateService)
+    public function __construct(DateService $dateService)
     {
-        $this->parentCollectionFormCreator = $parentCollectionFormCreator;
         $this->dateService = $dateService;
     }
 
@@ -51,12 +43,10 @@ class DateController extends Controller
         try {
             $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
             $activity = $this->dateService->getActivityData($id);
-            $model['activity_date'] = $this->dateService->getDateData($id);
-            $this->parentCollectionFormCreator->url = route('admin.activities.date.update', [$id]);
-            $form = $this->parentCollectionFormCreator->editForm($model, $element['activity_date'], 'PUT', '/activities/' . $id);
+            $form = $this->dateService->formGenerator($id);
             $data = ['core' => $element['activity_date']['criteria'] ?? '', 'status' => $activity->activity_date_element_completed, 'title' => $element['activity_date']['label'], 'name' => 'activity_date'];
 
-            return view('activity.date.date', compact('form', 'activity', 'data'));
+            return view('admin.activity.date.edit', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 

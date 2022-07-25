@@ -48,7 +48,15 @@
         <div class="icons flex items-center">
           <a
             :href="`/activities/${activityId}/${title}`"
-            class="edit-button mr-2.5 flex items-center text-tiny font-bold uppercase"
+            class="
+              edit-button
+              mr-2.5
+              flex
+              items-center
+              text-tiny
+              font-bold
+              uppercase
+            "
           >
             <svg-vue class="mr-0.5 text-base" icon="edit" />
             <span>Edit</span>
@@ -66,7 +74,9 @@
       <template v-if="title === 'iati_identifier'">
         <div class="identifier-content">
           <div v-if="data.content.iati_identifier_text" class="text-sm">
-            <span class="whitespace-pre">{{ data.content.iati_identifier_text }}</span>
+            <span class="whitespace-pre">{{
+              data.content.iati_identifier_text
+            }}</span>
           </div>
         </div>
       </template>
@@ -434,10 +444,12 @@
             <span v-else class="italic">Organization Role Not Available</span>
           </div>
 
-            <div class="text-sm mb-4">
-              <span v-if="participating_org.narrative['0'].narrative">{{ participating_org.narrative['0'].narrative }}</span>
-              <span v-else class="italic">Narrative Not Available</span>
-            </div>
+          <div class="text-sm mb-4">
+            <span v-if="participating_org.narrative['0'].narrative">{{
+              participating_org.narrative['0'].narrative
+            }}</span>
+            <span v-else class="italic">Narrative Not Available</span>
+          </div>
 
           <div
             class="ml-5"
@@ -446,18 +458,22 @@
             <table class="flex flex-col">
               <tr class="multiline">
                 <td>Organisation Name</td>
-                <td >
-                  <div  v-for="(narrative, i) in participating_org.narrative" :key="i" class="flex flex-col">
-                  <div v-if="narrative.narrative" class="flex flex-col">
-                    <span v-if="narrative.language" class="language top"
-                      >(Language:
-                      {{ types.languages[narrative.language] }})</span
-                    >
-                    <span v-if="narrative.narrative" class="description">{{
-                      narrative.narrative
-                    }}</span>
-                  </div>
-                  <span v-else class="italic">Not Available</span>
+                <td>
+                  <div
+                    v-for="(narrative, i) in participating_org.narrative"
+                    :key="i"
+                    class="flex flex-col"
+                  >
+                    <div v-if="narrative.narrative" class="flex flex-col">
+                      <span v-if="narrative.language" class="language top"
+                        >(Language:
+                        {{ types.languages[narrative.language] }})</span
+                      >
+                      <span v-if="narrative.narrative" class="description">{{
+                        narrative.narrative
+                      }}</span>
+                    </div>
+                    <span v-else class="italic">Not Available</span>
                   </div>
                 </td>
               </tr>
@@ -471,7 +487,9 @@
               <tr>
                 <td>Organisation Role</td>
                 <td v-if="participating_org.organization_role">
-                  {{ types.organisationRole[participating_org.organization_role] }}
+                  {{
+                    types.organisationRole[participating_org.organization_role]
+                  }}
                 </td>
                 <td v-else class="italic">Not Available</td>
               </tr>
@@ -486,7 +504,9 @@
                 <td>Activity Id</td>
                 <td>
                   <div>
-                    <span v-if="participating_org.identifier">{{ participating_org.identifier }}</span>
+                    <span v-if="participating_org.identifier">{{
+                      participating_org.identifier
+                    }}</span>
                     <span v-else class="italic">Not Available</span>
                   </div>
                 </td>
@@ -510,7 +530,9 @@
           <div class="recipient_country-code mb-2 text-sm">
             <div v-if="participating_org.country_code" class="space-x-1">
               <span>{{ types.country[participating_org.country_code] }}</span>
-              <span v-if="participating_org.percentage" class="text-sm font-normal"
+              <span
+                v-if="participating_org.percentage"
+                class="text-sm font-normal"
                 >({{ roundFloat(participating_org.percentage) }}%)</span
               >
             </div>
@@ -558,16 +580,21 @@
               <span v-if="post.custom_code">{{ post.custom_code }}</span>
               <span v-else class="italic">Not Available</span>
             </div>
-            <span v-if="post.percentage">({{ roundFloat(post.percentage) }}%)</span>
+            <span v-if="post.percentage"
+              >({{ roundFloat(post.percentage) }}%)</span
+            >
           </div>
           <div class="elements-detail ml-5">
             <table>
               <tr>
                 <td v-if="post.region_vocabulary === '99'">Vocabulary-uri</td>
                 <td v-if="post.region_vocabulary === '99'">
-                  <a v-if="post.vocabulary_uri" target="_blank" :href="post.vocabulary_uri">{{
-                    post.vocabulary_uri
-                  }}</a>
+                  <a
+                    v-if="post.vocabulary_uri"
+                    target="_blank"
+                    :href="post.vocabulary_uri"
+                    >{{ post.vocabulary_uri }}</a
+                  >
                   <span v-else class="italic">Not Available</span>
                 </td>
               </tr>
@@ -648,7 +675,7 @@
               <tr>
                 <td>Reference</td>
                 <td class="text-sm">
-                  <span v-if="post.ref">{{ types.contactType[post.ref] }}</span>
+                  <span v-if="post.ref">{{ post.ref }}</span>
                   <span v-else class="italic">Not Available</span>
                 </td>
               </tr>
@@ -760,7 +787,9 @@
                         >
                       </div>
                       <div>
-                        <span v-if="item.code">, code {{ types.country[item.code] }}</span>
+                        <span v-if="item.code"
+                          >, code {{ types.country[item.code] }}</span
+                        >
                         <span v-else class="ml-1 italic">
                           (Code Not Available)</span
                         >
@@ -944,9 +973,12 @@
               >
                 <td>Vocabulary URI</td>
                 <td>
-                  <a v-if="post.vocabulary_uri" target="_blank" :href="post.vocabulary_uri">{{
-                    post.vocabulary_uri
-                  }}</a>
+                  <a
+                    v-if="post.vocabulary_uri"
+                    target="_blank"
+                    :href="post.vocabulary_uri"
+                    >{{ post.vocabulary_uri }}</a
+                  >
                   <span v-else class="italic">Not Available</span>
                 </td>
               </tr>
@@ -987,9 +1019,12 @@
             <tr v-if="post.policymarker_vocabulary === '99'">
               <td>Vocabulary URI</td>
               <td>
-                <a v-if="post.vocabulary_uri" target="_blank" :href="post.vocabulary_uri">{{
-                  post.vocabulary_uri
-                }}</a>
+                <a
+                  v-if="post.vocabulary_uri"
+                  target="_blank"
+                  :href="post.vocabulary_uri"
+                  >{{ post.vocabulary_uri }}</a
+                >
                 <span v-else class="italic">Not Available</span>
               </td>
             </tr>
@@ -1078,7 +1113,11 @@
             <tr v-if="post.tag_vocabulary === '99'">
               <td>Vocabulary URI</td>
               <td>
-                <a v-if="post.vocabulary_uri" target="_blank" :href="post.vocabulary_uri">
+                <a
+                  v-if="post.vocabulary_uri"
+                  target="_blank"
+                  :href="post.vocabulary_uri"
+                >
                   {{ post.vocabulary_uri }}
                 </a>
                 <span v-else class="italic">Not Available</span>
@@ -1104,21 +1143,30 @@
               <span v-else class="italic">Vocabulary Not Available</span>
             </div>
 
-            <div v-if="post.default_aid_type_vocabulary === '2'" class="text-sm">
+            <div
+              v-if="post.default_aid_type_vocabulary === '2'"
+              class="text-sm"
+            >
               <span v-if="post.earmarking_category">{{
                 types.earmarkingCategory[post.earmarking_category]
               }}</span>
               <span v-else class="italic">Code Not Available</span>
             </div>
 
-            <div v-else-if="post.default_aid_type_vocabulary === '3'" class="text-sm">
+            <div
+              v-else-if="post.default_aid_type_vocabulary === '3'"
+              class="text-sm"
+            >
               <span v-if="post.earmarking_modality">{{
                 types.earmarkingModality[post.earmarking_modality]
               }}</span>
               <span v-else class="italic">Code Not Available</span>
             </div>
 
-            <div v-else-if="post.default_aid_type_vocabulary === '4'" class="text-sm">
+            <div
+              v-else-if="post.default_aid_type_vocabulary === '4'"
+              class="text-sm"
+            >
               <span v-if="post.cash_and_voucher_modalities">{{
                 types.cashandVoucherModalities[post.cash_and_voucher_modalities]
               }}</span>
@@ -1151,12 +1199,18 @@
               <span>
                 {{ types.budgetIdentifier[post.code] }}
               </span>
-              <span>({{ post.percentage.toFixed(2) }}%)</span>
+              <span>({{ roundFloat(post.percentage) }}%)</span>
             </div>
             <span v-else class="italic">Not Available</span>
           </div>
           <div v-else class="text-sm">
-            <span v-if="post.code">{{ types.budgetIdentifier[post.code] }}</span>
+            <span v-if="post.code">{{
+              types.budgetIdentifier[post.code]
+            }}</span>
+            <span v-else class="italic">Not Available</span>
+            <span v-if="post.code"> ({{
+             roundFloat(post.percentage)
+            }} %)</span>
             <span v-else class="italic">Not Available</span>
           </div>
           <template v-for="(item, i) in post.description" :key="i">
@@ -1237,7 +1291,11 @@
             </tr>
             <tr>
               <td>Vocabulary URI</td>
-              <td v-if="post.vocabulary_uri"><a target="_blank" :href="post.vocabulary_uri">{{ post.vocabulary_uri }}</a></td>
+              <td v-if="post.vocabulary_uri">
+                <a target="_blank" :href="post.vocabulary_uri">{{
+                  post.vocabulary_uri
+                }}</a>
+              </td>
               <td v-else class="italic">Not Available</td>
             </tr>
             <tr>
@@ -1463,7 +1521,7 @@
               <span v-if="item.type">{{
                 types.organizationType[item.type]
               }}</span>
-              <span v-else class="italic">Not Available</span>
+              <span v-else class="italic">Type Not Available</span>
             </div>
             <div class="ml-5">
               <table>
@@ -1472,12 +1530,12 @@
                   <td>
                     <div class="value">
                       <div>
-                        <span v-if="item.provider_activity_id"
-                          >Provider Activity Id -
-                          {{ item.provider_activity_id }}</span
+                        <span v-if="item.receiver_activity_id"
+                          >Receiver Activity Id -
+                          {{ item.receiver_activity_id }}</span
                         >
                         <span v-else class="italic"
-                          >Provider Activity Id Not Available</span
+                          >Receiver Activity Id Not Available</span
                         >
                       </div>
                       <div>
@@ -1729,7 +1787,9 @@
                       <span v-if="item.language" class="language top"
                         >(Language: {{ types.languages[item.language] }})</span
                       >
-                      <span v-if="item.narrative" class="description">{{ item.narrative }}</span>
+                      <span v-if="item.narrative" class="description">{{
+                        item.narrative
+                      }}</span>
                     </div>
                     <span v-else class="italic">Not Available</span>
                   </td>
@@ -1785,7 +1845,9 @@
 
           <!-- Capital Spend -->
           <template v-else-if="title === 'capital_spend'">
-            <span v-if="data.content.toString()">{{ data.content.toString() }}%</span>
+            <span v-if="data.content.toString()"
+              >{{ data.content.toString() }}%</span
+            >
             <span v-else class="italic">Not Available</span>
           </template>
 

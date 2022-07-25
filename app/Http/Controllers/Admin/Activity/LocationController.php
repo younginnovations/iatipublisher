@@ -6,7 +6,6 @@ namespace App\Http\Controllers\Admin\Activity;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Activity\Location\LocationRequest;
-use App\IATI\Elements\Builder\ParentCollectionFormCreator;
 use App\IATI\Services\Activity\LocationService;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
@@ -19,11 +18,6 @@ use Illuminate\Http\RedirectResponse;
 class LocationController extends Controller
 {
     /**
-     * @var ParentCollectionFormCreator
-     */
-    protected ParentCollectionFormCreator $parentCollectionFormCreator;
-
-    /**
      * @var LocationService
      */
     protected LocationService $locationService;
@@ -31,12 +25,10 @@ class LocationController extends Controller
     /**
      * LocationController Constructor.
      *
-     * @param ParentCollectionFormCreator $parentCollectionFormCreator
      * @param LocationService $locationService
      */
-    public function __construct(LocationService $locationService, ParentCollectionFormCreator $parentCollectionFormCreator)
+    public function __construct(LocationService $locationService)
     {
-        $this->parentCollectionFormCreator = $parentCollectionFormCreator;
         $this->locationService = $locationService;
     }
 
@@ -52,12 +44,10 @@ class LocationController extends Controller
         try {
             $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
             $activity = $this->locationService->getActivityData($id);
-            $model['location'] = $this->locationService->getLocationData($id) ?: [];
-            $this->parentCollectionFormCreator->url = route('admin.activities.location.update', [$id]);
-            $form = $this->parentCollectionFormCreator->editForm($model, $element['location'], 'PUT', '/activities/' . $id);
+            $form = $this->locationService->formGenerator($id);
             $data = ['core' => $element['location']['criteria'] ?? '', 'status' => $activity->location_element_completed ?? false, 'title' => $element['location']['label'], 'name' => 'location'];
 
-            return view('activity.location.location', compact('form', 'activity', 'data'));
+            return view('admin.activity.location.edit', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 

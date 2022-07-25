@@ -1,21 +1,21 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers\Admin\Activity;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Activity\Period\PeriodRequest;
-use App\IATI\Elements\Builder\ResultElementFormCreator;
 use App\IATI\Models\Activity\Period;
 use App\IATI\Services\Activity\ActivityService;
 use App\IATI\Services\Activity\PeriodService;
+use Illuminate\Http\RedirectResponse;
 
+/**
+ * PeriodController Class.
+ */
 class PeriodController extends Controller
 {
-    /**
-     * @var ResultElementFormCreator
-     */
-    protected ResultElementFormCreator $resultElementFormCreator;
-
     /**
      * @var PeriodService
      */
@@ -29,16 +29,13 @@ class PeriodController extends Controller
     /**
      * IndicatorController Constructor.
      *
-     * @param ResultElementFormCreator $resultElementFormCreator
      * @param PeriodService $periodService
      * @param ActivityService $activityService
      */
     public function __construct(
-        ResultElementFormCreator $resultElementFormCreator,
         PeriodService $periodService,
         ActivityService $activityService
     ) {
-        $this->resultElementFormCreator = $resultElementFormCreator;
         $this->periodService = $periodService;
         $this->activityService = $activityService;
     }
@@ -62,16 +59,15 @@ class PeriodController extends Controller
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Http\RedirectResponse|\Illuminate\Contracts\Foundation\Application
      */
-    public function create($activityId, $resultId, $indicatorId): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Http\RedirectResponse|\Illuminate\Contracts\Foundation\Application
+    public function create($activityId, $resultId, $indicatorId): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|RedirectResponse|\Illuminate\Contracts\Foundation\Application
     {
         try {
             $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
             $activity = $this->activityService->getActivity($activityId);
-            $this->resultElementFormCreator->url = route('admin.activities.result.indicator.period.store', [$activityId, $resultId, $indicatorId]);
-            $form = $this->resultElementFormCreator->editForm([], $element['period'], 'POST', '/activities/' . $activityId);
+            $form = $this->periodService->createFormGenerator($activityId, $resultId, $indicatorId);
             $data = ['core' => $element['period']['criteria'] ?? false, 'status' => false, 'title' => $element['period']['label'], 'name' => 'period'];
 
-            return view('activity.period.period', compact('form', 'activity', 'data'));
+            return view('admin.activity.period.edit', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
@@ -92,7 +88,7 @@ class PeriodController extends Controller
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function store(PeriodRequest $request, $activityId, $resultId, $indicatorId): \Illuminate\Http\RedirectResponse
+    public function store(PeriodRequest $request, $activityId, $resultId, $indicatorId): RedirectResponse
     {
         try {
             $periodData = $request->except(['_token']);
@@ -142,17 +138,15 @@ class PeriodController extends Controller
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Http\RedirectResponse|\Illuminate\Contracts\Foundation\Application
      */
-    public function edit($activityId, $resultId, $indicatorId, $periodId): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Http\RedirectResponse|\Illuminate\Contracts\Foundation\Application
+    public function edit($activityId, $resultId, $indicatorId, $periodId): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|RedirectResponse|\Illuminate\Contracts\Foundation\Application
     {
         try {
             $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
             $activity = $this->activityService->getActivity($activityId);
-            $indicatorPeriod = $this->periodService->getIndicatorPeriod($indicatorId, $periodId);
-            $this->resultElementFormCreator->url = route('admin.activities.result.indicator.period.update', [$activityId, $resultId, $indicatorId, $periodId]);
-            $form = $this->resultElementFormCreator->editForm($indicatorPeriod->period, $element['period'], 'PUT');
+            $form = $this->periodService->editFormGenerator($activityId, $resultId, $indicatorId, $periodId);
             $data = ['core' => $element['period']['criteria'] ?? false, 'status' => false, 'title' => $element['period']['label'], 'name' => 'period'];
 
-            return view('activity.period.period', compact('form', 'activity', 'data'));
+            return view('admin.activity.period.edit', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
@@ -174,7 +168,7 @@ class PeriodController extends Controller
      *
      * @return
      */
-    public function update(PeriodRequest $request, $activityId, $resultId, $indicatorId, $periodId)
+    public function update(PeriodRequest $request, $activityId, $resultId, $indicatorId, $periodId): RedirectResponse
     {
         try {
             $periodData = $request->except(['_method', '_token']);

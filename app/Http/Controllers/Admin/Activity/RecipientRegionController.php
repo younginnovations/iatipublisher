@@ -6,7 +6,6 @@ namespace App\Http\Controllers\Admin\Activity;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Activity\RecipientRegion\RecipientRegionRequest;
-use App\IATI\Elements\Builder\ParentCollectionFormCreator;
 use App\IATI\Services\Activity\RecipientRegionService;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
@@ -18,11 +17,6 @@ use Illuminate\Http\RedirectResponse;
 class RecipientRegionController extends Controller
 {
     /**
-     * @var ParentCollectionFormCreator
-     */
-    protected ParentCollectionFormCreator $parentCollectionFormCreator;
-
-    /**
      * @var RecipientRegionService
      */
     protected RecipientRegionService $recipientRegionService;
@@ -30,12 +24,10 @@ class RecipientRegionController extends Controller
     /**
      * RecipientRegionController Constructor.
      *
-     * @param ParentCollectionFormCreator $parentCollectionFormCreator
      * @param RecipientRegionService $recipientRegionService
      */
-    public function __construct(ParentCollectionFormCreator $parentCollectionFormCreator, RecipientRegionService $recipientRegionService)
+    public function __construct(RecipientRegionService $recipientRegionService)
     {
-        $this->parentCollectionFormCreator = $parentCollectionFormCreator;
         $this->recipientRegionService = $recipientRegionService;
     }
 
@@ -51,12 +43,10 @@ class RecipientRegionController extends Controller
         try {
             $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
             $activity = $this->recipientRegionService->getActivityData($id);
-            $model['recipient_region'] = $this->recipientRegionService->getRecipientRegionData($id);
-            $this->parentCollectionFormCreator->url = route('admin.activities.recipient-region.update', [$id]);
-            $form = $this->parentCollectionFormCreator->editForm($model, $element['recipient_region'], 'PUT', '/activities/' . $id);
+            $form = $this->recipientRegionService->formGenerator($id);
             $data = ['core' => $element['recipient_region']['criteria'] ?? '', 'status' => $activity->recipient_region_element_completed, 'title' => $element['recipient_region']['label'], 'name' => 'recipient_region'];
 
-            return view('activity.recipientRegion.recipientRegion', compact('form', 'activity', 'data'));
+            return view('admin.activity.recipientRegion.edit', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
