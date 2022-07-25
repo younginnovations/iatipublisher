@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace App\IATI\Services\Activity;
 
+use App\IATI\Elements\Builder\BaseFormCreator;
 use App\IATI\Repositories\Activity\DefaultTiedStatusRepository;
 use Illuminate\Database\Eloquent\Model;
+use Kris\LaravelFormBuilder\Form;
 
 /**
  * Class DefaultTiedStatusService.
@@ -18,13 +20,20 @@ class DefaultTiedStatusService
     protected DefaultTiedStatusRepository $defaultTiedStatusRepository;
 
     /**
+     * @var BaseFormCreator
+     */
+    protected BaseFormCreator $baseFormCreator;
+
+    /**
      * DefaultTiedStatusService constructor.
      *
      * @param DefaultTiedStatusRepository $defaultTiedStatusRepository
+     * @param BaseFormCreator $baseFormCreator
      */
-    public function __construct(DefaultTiedStatusRepository $defaultTiedStatusRepository)
+    public function __construct(DefaultTiedStatusRepository $defaultTiedStatusRepository, BaseFormCreator $baseFormCreator)
     {
         $this->defaultTiedStatusRepository = $defaultTiedStatusRepository;
+        $this->baseFormCreator = $baseFormCreator;
     }
 
     /**
@@ -62,5 +71,21 @@ class DefaultTiedStatusService
     public function update($activityDefaultTiedStatus, $activity): bool
     {
         return $this->defaultTiedStatusRepository->update($activityDefaultTiedStatus, $activity);
+    }
+
+    /**
+     * Generates default tied status form.
+     *
+     * @param id
+     *
+     * @return Form
+     */
+    public function formGenerator($id): Form
+    {
+        $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
+        $model['default_tied_status'] = $this->getDefaultTiedStatusData($id);
+        $this->baseFormCreator->url = route('admin.activities.default-tied-status.update', [$id]);
+
+        return $this->baseFormCreator->editForm($model, $element['default_tied_status'], 'PUT', '/activities/' . $id);
     }
 }

@@ -132,9 +132,9 @@ class IndicatorRepository
      * @param $resultId
      * @param $resultIndicatorId
      *
-     * @return Model
+     * @return Model|null
      */
-    public function getResultIndicator($resultId, $resultIndicatorId): Model
+    public function getResultIndicator($resultId, $resultIndicatorId): ?Model
     {
         return $this->resultIndicator->where('id', $resultIndicatorId)->where('result_id', $resultId)->first();
     }

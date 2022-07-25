@@ -4,18 +4,12 @@ namespace App\Http\Controllers\Admin\Activity;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Activity\Period\PeriodRequest;
-use App\IATI\Elements\Builder\ResultElementFormCreator;
 use App\IATI\Models\Activity\Period;
 use App\IATI\Services\Activity\ActivityService;
 use App\IATI\Services\Activity\PeriodService;
 
 class PeriodController extends Controller
 {
-    /**
-     * @var ResultElementFormCreator
-     */
-    protected ResultElementFormCreator $resultElementFormCreator;
-
     /**
      * @var PeriodService
      */
@@ -29,16 +23,13 @@ class PeriodController extends Controller
     /**
      * IndicatorController Constructor.
      *
-     * @param ResultElementFormCreator $resultElementFormCreator
      * @param PeriodService $periodService
      * @param ActivityService $activityService
      */
     public function __construct(
-        ResultElementFormCreator $resultElementFormCreator,
         PeriodService $periodService,
         ActivityService $activityService
     ) {
-        $this->resultElementFormCreator = $resultElementFormCreator;
         $this->periodService = $periodService;
         $this->activityService = $activityService;
     }
@@ -67,11 +58,10 @@ class PeriodController extends Controller
         try {
             $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
             $activity = $this->activityService->getActivity($activityId);
-            $this->resultElementFormCreator->url = route('admin.activities.result.indicator.period.store', [$activityId, $resultId, $indicatorId]);
-            $form = $this->resultElementFormCreator->editForm([], $element['period'], 'POST', '/activities/' . $activityId);
+            $form = $this->periodService->createFormGenerator($activityId, $resultId, $indicatorId);
             $data = ['core' => $element['period']['criteria'] ?? false, 'status' => false, 'title' => $element['period']['label'], 'name' => 'period'];
 
-            return view('activity.period.period', compact('form', 'activity', 'data'));
+            return view('admin.activity.period.edit', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
@@ -147,12 +137,10 @@ class PeriodController extends Controller
         try {
             $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
             $activity = $this->activityService->getActivity($activityId);
-            $indicatorPeriod = $this->periodService->getIndicatorPeriod($indicatorId, $periodId);
-            $this->resultElementFormCreator->url = route('admin.activities.result.indicator.period.update', [$activityId, $resultId, $indicatorId, $periodId]);
-            $form = $this->resultElementFormCreator->editForm($indicatorPeriod->period, $element['period'], 'PUT');
+            $form = $this->periodService->editFormGenerator($activityId, $resultId, $indicatorId, $periodId);
             $data = ['core' => $element['period']['criteria'] ?? false, 'status' => false, 'title' => $element['period']['label'], 'name' => 'period'];
 
-            return view('activity.period.period', compact('form', 'activity', 'data'));
+            return view('admin.activity.period.edit', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 

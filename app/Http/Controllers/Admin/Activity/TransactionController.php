@@ -5,18 +5,12 @@ namespace App\Http\Controllers\Admin\Activity;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Activity\Transaction\TransactionRequest;
 use App\IATI\Elements\Builder\BaseFormCreator;
-use App\IATI\Elements\Builder\TransactionElementFormCreator;
 use App\IATI\Models\Activity\Transaction;
 use App\IATI\Services\Activity\ActivityService;
 use App\IATI\Services\Activity\TransactionService;
 
 class TransactionController extends Controller
 {
-    /**
-     * @var TransactionElementFormCreator
-     */
-    protected TransactionElementFormCreator $transactionElementFormCreator;
-
     /**
      * @var BaseFormCreator
      */
@@ -35,19 +29,16 @@ class TransactionController extends Controller
     /**
      * TransactionController Constructor.
      *
-     * @param TransactionElementFormCreator $transactionElementFormCreator
      * @param BaseFormCreator $baseFormCreator
      * @param TransactionService $transactionService
      * @param ActivityService $activityService
      */
     public function __construct(
-        TransactionElementFormCreator $transactionElementFormCreator,
         BaseFormCreator $baseFormCreator,
         TransactionService $transactionService,
         ActivityService $activityService
     ) {
         $this->baseFormCreator = $baseFormCreator;
-        $this->transactionElementFormCreator = $transactionElementFormCreator;
         $this->transactionService = $transactionService;
         $this->activityService = $activityService;
     }
@@ -78,11 +69,10 @@ class TransactionController extends Controller
         try {
             $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
             $activity = $this->activityService->getActivity($activityId);
-            $this->transactionElementFormCreator->url = route('admin.activities.transactions.store', $activityId);
-            $form = $this->transactionElementFormCreator->editForm([], $element['transactions'], 'POST', '/activities/' . $activityId);
+            $form = $this->transactionService->createFormGenerator($activityId);
             $data = ['core' => $element['transactions']['criteria'] ?? false, 'status' => false, 'title' => $element['transactions']['label'], 'name' => 'transactions'];
 
-            return view('activity.transaction.transaction', compact('form', 'activity', 'data'));
+            return view('admin.activity.transaction.edit', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
@@ -140,7 +130,7 @@ class TransactionController extends Controller
         try {
             $transaction = $this->transactionService->getTransaction($transactionId, $activityId);
 
-            return view('activity.transaction.detail', compact('transaction'));
+            return view('admin.activity.transaction.detail', compact('transaction'));
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
@@ -164,12 +154,10 @@ class TransactionController extends Controller
         try {
             $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
             $activity = $this->activityService->getActivity($activityId);
-            $activityTransaction = $this->transactionService->getTransaction($transactionId, $activityId);
-            $this->transactionElementFormCreator->url = route('admin.activities.transactions.update', [$activityId, $transactionId]);
-            $form = $this->transactionElementFormCreator->editForm($activityTransaction->transaction, $element['transactions'], 'PUT', '/activities/' . $activityId);
+            $form = $this->transactionService->editFormGenerator($transactionId, $activityId);
             $data = ['core' => $element['transactions']['criteria'] ?? false, 'status' => false, 'title' => $element['transactions']['label'], 'name' => 'transactions'];
 
-            return view('activity.transaction.transaction', compact('form', 'activity', 'data'));
+            return view('admin.activity.transaction.edit', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 

@@ -6,7 +6,6 @@ namespace App\Http\Controllers\Admin\Activity;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Activity\OtherIdentifier\OtherIdentifierRequest;
-use App\IATI\Elements\Builder\MultilevelSubElementFormCreator;
 use App\IATI\Services\Activity\OtherIdentifierService;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
@@ -18,11 +17,6 @@ use Illuminate\Http\RedirectResponse;
 class OtherIdentifierController extends Controller
 {
     /**
-     * @var MultilevelSubElementFormCreator
-     */
-    protected MultilevelSubElementFormCreator $multilevelSubElementFormCreator;
-
-    /**
      * @var otherIdentifierService
      */
     protected OtherIdentifierService $otherIdentifierService;
@@ -30,12 +24,10 @@ class OtherIdentifierController extends Controller
     /**
      * OtherIdentifierController Constructor.
      *
-     * @param MultilevelSubElementFormCreator $multilevelSubElementFormCreator
      * @param otherIdentifierService $otherIdentifierService
      */
-    public function __construct(MultilevelSubElementFormCreator $multilevelSubElementFormCreator, OtherIdentifierService $otherIdentifierService)
+    public function __construct(OtherIdentifierService $otherIdentifierService)
     {
-        $this->multilevelSubElementFormCreator = $multilevelSubElementFormCreator;
         $this->otherIdentifierService = $otherIdentifierService;
     }
 
@@ -51,12 +43,10 @@ class OtherIdentifierController extends Controller
         try {
             $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
             $activity = $this->otherIdentifierService->getActivityData($id);
-            $model = $this->otherIdentifierService->getOtherIdentifierData($id) ?: [];
-            $this->multilevelSubElementFormCreator->url = route('admin.activities.other-identifier.update', [$id]);
-            $form = $this->multilevelSubElementFormCreator->editForm($model, $element['other_identifier'], 'PUT', '/activities/' . $id);
+            $form = $this->otherIdentifierService->formGenerator($id);
             $data = ['core' => $element['other_identifier']['criteria'] ?? '', 'status' => $activity->other_identifier_element_completed, 'title' => $element['other_identifier']['label'], 'name' => 'other_identifier'];
 
-            return view('activity.otherIdentifier.other_identifier', compact('form', 'activity', 'data'));
+            return view('admin.activity.otherIdentifier.edit', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 

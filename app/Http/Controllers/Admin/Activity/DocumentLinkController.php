@@ -6,8 +6,6 @@ namespace App\Http\Controllers\Admin\Activity;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Activity\DocumentLink\DocumentLinkRequest;
-use App\IATI\Elements\Builder\MultilevelSubElementFormCreator;
-use App\IATI\Elements\Builder\ParentCollectionFormCreator;
 use App\IATI\Services\Activity\DocumentLinkService;
 use App\IATI\Services\Document\DocumentService;
 use Illuminate\Contracts\View\View;
@@ -21,16 +19,6 @@ use Illuminate\Http\RedirectResponse;
  */
 class DocumentLinkController extends Controller
 {
-    /**
-     * @var MultilevelSubElementFormCreator
-     */
-    protected MultilevelSubElementFormCreator $multilevelSubElementFormCreator;
-
-    /**
-     * @var ParentCollectionFormCreator
-     */
-    protected ParentCollectionFormCreator $parentCollectionFormCreator;
-
     /**
      * @var DocumentLinkService
      */
@@ -49,13 +37,11 @@ class DocumentLinkController extends Controller
     /**
      * DocumentLinkControllerConstructor.
      *
-     * @param MultilevelSubElementFormCreator $multilevelSubElementFormCreator
      * @param DocumentLinkService $documentLinkService
+     * @param DatabaseManager $db
      */
-    public function __construct(MultilevelSubElementFormCreator $multilevelSubElementFormCreator, DocumentLinkService $documentLinkService, DocumentService $documentService, DatabaseManager $db, ParentCollectionFormCreator $parentCollectionFormCreator)
+    public function __construct(DocumentLinkService $documentLinkService, DocumentService $documentService, DatabaseManager $db)
     {
-        $this->multilevelSubElementFormCreator = $multilevelSubElementFormCreator;
-        $this->parentCollectionFormCreator = $parentCollectionFormCreator;
         $this->documentLinkService = $documentLinkService;
         $this->documentService = $documentService;
         $this->db = $db;
@@ -73,26 +59,10 @@ class DocumentLinkController extends Controller
         try {
             $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
             $activity = $this->documentLinkService->getActivityData($id);
-            $model['document_link'] = $this->documentLinkService->getDocumentLinkData($id) ?: [];
-            $documentLinks = $activity->documentLinks()->orderBy('updated_at', 'desc')->get()->toArray();
-
-            foreach ($model['document_link'] as $key => $document) {
-                foreach ($documentLinks as $findIndex => $file) {
-                    unset($document['document']);
-                    $document_link = (array) json_decode($file['document_link']);
-                    unset($document_link['document']);
-
-                    if (json_encode($document) == json_encode($document_link)) {
-                        $model['document_link'][$key]['document'] = '';
-                    }
-                }
-            }
-
-            $this->parentCollectionFormCreator->url = route('admin.activities.document-link.update', [$id]);
-            $form = $this->parentCollectionFormCreator->editForm($model, $element['document_link'], 'PUT', '/activities/' . $id);
+            $form = $this->documentLinkService->formGenerator($id);
             $data = ['core' => false, 'status' => $activity->document_link_element_completed ?? false, 'title' => $element['document_link']['label'], 'name' => 'document_link'];
 
-            return view('activity.documentLink.documentLink', compact('form', 'activity', 'data'));
+            return view('admin.activity.documentLink.edit', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 

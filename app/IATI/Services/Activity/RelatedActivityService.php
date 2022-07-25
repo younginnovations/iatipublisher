@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\IATI\Services\Activity;
 
+use App\IATI\Elements\Builder\BaseFormCreator;
 use App\IATI\Repositories\Activity\RelatedActivityRepository;
 use Illuminate\Database\Eloquent\Model;
 
@@ -18,13 +19,20 @@ class RelatedActivityService
     protected RelatedActivityRepository $relatedActivityRepository;
 
     /**
+     * @var BaseFormCreator
+     */
+    protected BaseFormCreator $baseFormCreator;
+
+    /**
      * RelatedActivityService constructor.
      *
      * @param RelatedActivityRepository $relatedActivityRepository
+     * @param BaseFormCreator $baseFormCreator
      */
-    public function __construct(RelatedActivityRepository $relatedActivityRepository)
+    public function __construct(RelatedActivityRepository $relatedActivityRepository, BaseFormCreator $baseFormCreator)
     {
         $this->relatedActivityRepository = $relatedActivityRepository;
+        $this->baseFormCreator = $baseFormCreator;
     }
 
     /**

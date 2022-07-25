@@ -6,7 +6,6 @@ namespace App\Http\Controllers\Admin\Activity;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Activity\ContactInfo\ContactInfoRequest;
-use App\IATI\Elements\Builder\ParentCollectionFormCreator;
 use App\IATI\Services\Activity\ContactInfoService;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
@@ -19,11 +18,6 @@ use Illuminate\Http\RedirectResponse;
 class ContactInfoController extends Controller
 {
     /**
-     * @var ParentCollectionFormCreator
-     */
-    protected ParentCollectionFormCreator $parentCollectionFormCreator;
-
-    /**
      * @var ContactInfoService
      */
     protected ContactInfoService $contactInfoService;
@@ -31,12 +25,10 @@ class ContactInfoController extends Controller
     /**
      * ContactInfoControllerConstructor.
      *
-     * @param ParentCollectionFormCreator $parentCollectionFormCreator
      * @param ContactInfoService $contactInfoService
      */
-    public function __construct(ContactInfoService $contactInfoService, ParentCollectionFormCreator $parentCollectionFormCreator)
+    public function __construct(ContactInfoService $contactInfoService)
     {
-        $this->parentCollectionFormCreator = $parentCollectionFormCreator;
         $this->contactInfoService = $contactInfoService;
     }
 
@@ -52,12 +44,10 @@ class ContactInfoController extends Controller
         try {
             $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
             $activity = $this->contactInfoService->getActivityData($id);
-            $model['contact_info'] = $this->contactInfoService->getContactInfoData($id) ?: [];
-            $this->parentCollectionFormCreator->url = route('admin.activities.contact-info.update', [$id]);
-            $form = $this->parentCollectionFormCreator->editForm($model, $element['contact_info'], 'PUT', '/activities/' . $id);
+            $form = $this->contactInfoService->formGenerator($id);
             $data = ['core' => $element['contact_info']['criteria'] ?? '', 'status' => false, 'title' => $element['contact_info']['label'], 'name' => 'contact_info'];
 
-            return view('activity.contactInfo.contactInfo', compact('form', 'activity', 'data'));
+            return view('admin.activity.contactInfo.edit', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 

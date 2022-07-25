@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace App\IATI\Services\Activity;
 
+use App\IATI\Elements\Builder\BaseFormCreator;
 use App\IATI\Repositories\Activity\ActivityIdentifierRepository;
 use Illuminate\Database\Eloquent\Model;
+use Kris\LaravelFormBuilder\Form;
 
 /**
  * Class ActivityIdentifierService.
@@ -18,13 +20,20 @@ class ActivityIdentifierService
     protected ActivityIdentifierRepository $activityIdentifierRepository;
 
     /**
+     * @var BaseFormCreator
+     */
+    protected BaseFormCreator $baseFormCreator;
+
+    /**
      * ActivityIdentifierService constructor.
      *
      * @param ActivityIdentifierRepository $activityIdentifierRepository
+     * @param BaseFormCreator $baseFormCreator
      */
-    public function __construct(ActivityIdentifierRepository $activityIdentifierRepository)
+    public function __construct(ActivityIdentifierRepository $activityIdentifierRepository, BaseFormCreator $baseFormCreator)
     {
         $this->activityIdentifierRepository = $activityIdentifierRepository;
+        $this->baseFormCreator = $baseFormCreator;
     }
 
     /**
@@ -62,5 +71,21 @@ class ActivityIdentifierService
     public function update($activityIdentifier, $activity): bool
     {
         return $this->activityIdentifierRepository->update($activityIdentifier, $activity);
+    }
+
+    /**
+     * Generates budget form.
+     *
+     * @param id
+     *
+     * @return Form
+     */
+    public function formGenerator($id): Form
+    {
+        $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
+        $model['activity_identifier'] = $this->getActivityIdentifierData($id);
+        $this->baseFormCreator->url = route('admin.activities.identifier.update', [$id]);
+
+        return $this->baseFormCreator->editForm($model['activity_identifier'], $element['iati_identifier'], 'PUT', '/activities/' . $id);
     }
 }

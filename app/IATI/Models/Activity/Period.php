@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\IATI\Models\Activity;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -21,16 +23,16 @@ class Period extends Model
      * @var array
      */
     protected $fillable
-        = [
-            'indicator_id',
-            'period',
-        ];
+    = [
+        'indicator_id',
+        'period',
+    ];
 
     /**
      * @var array
      */
     protected $casts
-        = [
-            'period' => 'json',
-        ];
+    = [
+        'period' => 'json',
+    ];
 }

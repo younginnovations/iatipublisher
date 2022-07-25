@@ -6,7 +6,6 @@ namespace App\Http\Controllers\Admin\Activity;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Activity\Tag\TagRequest;
-use App\IATI\Elements\Builder\ParentCollectionFormCreator;
 use App\IATI\Services\Activity\TagService;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
@@ -18,11 +17,6 @@ use Illuminate\Http\RedirectResponse;
 class TagController extends Controller
 {
     /**
-     * @var ParentCollectionFormCreator
-     */
-    protected ParentCollectionFormCreator $parentCollectionFormCreator;
-
-    /**
      * @var TagService
      */
     protected TagService $tagService;
@@ -30,12 +24,10 @@ class TagController extends Controller
     /**
      * TagController Constructor.
      *
-     * @param ParentCollectionFormCreator $parentCollectionFormCreator
      * @param TagService $tagService
      */
-    public function __construct(ParentCollectionFormCreator $parentCollectionFormCreator, TagService $tagService)
+    public function __construct(TagService $tagService)
     {
-        $this->parentCollectionFormCreator = $parentCollectionFormCreator;
         $this->tagService = $tagService;
     }
 
@@ -51,12 +43,10 @@ class TagController extends Controller
         try {
             $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
             $activity = $this->tagService->getActivityData($id);
-            $model['tag'] = $this->tagService->getTagData($id);
-            $this->parentCollectionFormCreator->url = route('admin.activities.tag.update', [$id]);
-            $form = $this->parentCollectionFormCreator->editForm($model, $element['tag'], 'PUT', '/activities/' . $id);
+            $form = $this->tagService->formGenerator($id);
             $data = ['core' => $element['tag']['criteria'] ?? '', 'status' => $activity->tag_element_completed, 'title' => $element['tag']['label'], 'name' => 'tag'];
 
-            return view('activity.tag.tag', compact('form', 'activity', 'data'));
+            return view('admin.activity.tag.edit', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 

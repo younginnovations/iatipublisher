@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\IATI\Models\Activity;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -22,19 +24,17 @@ class Transaction extends Model
      *
      * @var array
      */
-    protected $fillable
-        = [
-            'activity_id',
-            'transaction',
-        ];
+    protected $fillable = [
+        'activity_id',
+        'transaction',
+    ];
 
     /**
      * @var array
      */
-    protected $casts
-        = [
-            'transaction' => 'json',
-        ];
+    protected $casts = [
+        'transaction' => 'json',
+    ];
 
     /**
      * Transaction belongs to an activity.

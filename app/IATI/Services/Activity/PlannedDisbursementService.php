@@ -4,12 +4,13 @@ declare(strict_types=1);
 
 namespace App\IATI\Services\Activity;
 
+use App\IATI\Elements\Builder\ParentCollectionFormCreator;
 use App\IATI\Repositories\Activity\PlannedDisbursementRepository;
 use Illuminate\Database\Eloquent\Model;
+use Kris\LaravelFormBuilder\Form;
 
 /**
- * Class planned$plannedDisbursement
- *Service.
+ * Class planned$plannedDisbursementService.
  */
 class PlannedDisbursementService
 {
@@ -19,13 +20,20 @@ class PlannedDisbursementService
     protected PlannedDisbursementRepository $plannedDisbursementRepo;
 
     /**
+     * @var ParentCollectionFormCreator
+     */
+    protected ParentCollectionFormCreator $parentCollectionFormCreator;
+
+    /**
      * PlannedDisbursementService constructor.
      *
      * @param PlannedDisbursementRepository $plannedDisbursementRepo
+     * @param ParentCollectionFormCreator $parentCollectionFormCreator
      */
-    public function __construct(PlannedDisbursementRepository $plannedDisbursementRepo)
+    public function __construct(PlannedDisbursementRepository $plannedDisbursementRepo, ParentCollectionFormCreator $parentCollectionFormCreator)
     {
         $this->plannedDisbursementRepository = $plannedDisbursementRepo;
+        $this->parentCollectionFormCreator = $parentCollectionFormCreator;
     }
 
     /**
@@ -63,5 +71,21 @@ class PlannedDisbursementService
     public function update($plannedDisbursement, $activity): bool
     {
         return $this->plannedDisbursementRepository->update($plannedDisbursement, $activity);
+    }
+
+    /**
+     * Generates planned disbursement form.
+     *
+     * @param id
+     *
+     * @return Form
+     */
+    public function formGenerator($id): Form
+    {
+        $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
+        $model['planned_disbursement'] = $this->getPlannedDisbursementData($id) ?: [];
+        $this->parentCollectionFormCreator->url = route('admin.activities.planned-disbursement.update', [$id]);
+
+        return $this->parentCollectionFormCreator->editForm($model, $element['planned_disbursement'], 'PUT', '/activities/' . $id);
     }
 }

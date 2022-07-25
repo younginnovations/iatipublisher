@@ -19,7 +19,7 @@
                             name=""
                           />
                         </div>
-                    
+
                         <div class="mb-3 flex justify-between">
                           <div class="flex items-center space-x-1">
                             <svg-vue class="text-sm" icon="star" ></svg-vue>
@@ -30,7 +30,7 @@
                             name=""
                           />
                         </div>
-                    
+
                         <div class="mb-3 flex justify-between">
                           <div class="flex items-center space-x-1">
                             <svg-vue class="text-sm" icon="moon" ></svg-vue>
@@ -44,7 +44,7 @@
                       </div>
                 </aside>
                 <div class="activities__content">
-                    <div class="py-[6.06%] px-[12%] bg-white max-w-[1056px]">
+                    <div class="py-[6.06%] px-[12%] bg-white max-w-[1000px]">
                         @include('admin.activity.partial.form-title')
 
                         @yield('form')

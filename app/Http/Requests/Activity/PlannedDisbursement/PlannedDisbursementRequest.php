@@ -12,26 +12,33 @@ use App\Http\Requests\Activity\ActivityBaseRequest;
 class PlannedDisbursementRequest extends ActivityBaseRequest
 {
     /**
+     * Returns planned disbursement rules.
+     *
      * @return array
      */
-    public function rules()
+    public function rules(): array
     {
         return $this->getRulesForPlannedDisbursement($this->get('planned_disbursement'));
     }
 
     /**
+     * Custom messages for planned disbursement rules.
+     *
      * @return array
      */
-    public function messages()
+    public function messages(): array
     {
         return $this->getMessagesForPlannedDisbursement($this->get('planned_disbursement'));
     }
 
     /**
+     * Generates planned disbursement rules.
+     *
      * @param array $formFields
+     *
      * @return array
      */
-    protected function getRulesForPlannedDisbursement(array $formFields)
+    protected function getRulesForPlannedDisbursement(array $formFields): array
     {
         $rules = [];
 
@@ -52,10 +59,13 @@ class PlannedDisbursementRequest extends ActivityBaseRequest
     }
 
     /**
+     * Generates custom error message.
+     *
      * @param array $formFields
+     *
      * @return array
      */
-    protected function getMessagesForPlannedDisbursement(array $formFields)
+    protected function getMessagesForPlannedDisbursement(array $formFields): array
     {
         $messages = [];
 
@@ -76,11 +86,14 @@ class PlannedDisbursementRequest extends ActivityBaseRequest
     }
 
     /**
+     * Rules for provider org.
+     *
      * @param array $formFields
      * @param       $formBase
+     *
      * @return array
      */
-    protected function getRulesForProviderOrg(array $formFields, $formBase)
+    protected function getRulesForProviderOrg(array $formFields, $formBase): array
     {
         $rules = [];
 
@@ -96,11 +109,14 @@ class PlannedDisbursementRequest extends ActivityBaseRequest
     }
 
     /**
+     * Messages for provider org.
+     *
      * @param array $formFields
      * @param       $formBase
+     *
      * @return array
      */
-    protected function getMessagesForProviderOrg(array $formFields, $formBase)
+    protected function getMessagesForProviderOrg(array $formFields, $formBase): array
     {
         $message = [];
 
@@ -116,11 +132,14 @@ class PlannedDisbursementRequest extends ActivityBaseRequest
     }
 
     /**
+     * Rules for receiver org.
+     *
      * @param array $formFields
      * @param       $formBase
+     *
      * @return array
      */
-    protected function getRulesForReceiverOrg(array $formFields, $formBase)
+    protected function getRulesForReceiverOrg(array $formFields, $formBase): array
     {
         $rules = [];
 
@@ -136,11 +155,14 @@ class PlannedDisbursementRequest extends ActivityBaseRequest
     }
 
     /**
+     * Messages for receiver org.
+     *
      * @param array $formFields
      * @param       $formBase
+     *
      * @return array
      */
-    protected function getMessagesForReceiverOrg(array $formFields, $formBase)
+    protected function getMessagesForReceiverOrg(array $formFields, $formBase): array
     {
         $message = [];
 
@@ -156,13 +178,17 @@ class PlannedDisbursementRequest extends ActivityBaseRequest
     }
 
     /**
+     * Rules for value.
+     *
      * @param $formFields
      * @param $formBase
+     *
      * @return array
      */
-    protected function getRulesForValue($formFields, $formBase)
+    protected function getRulesForValue($formFields, $formBase): array
     {
         $rules = [];
+
         foreach ($formFields as $valueIndex => $value) {
             $valueForm = sprintf('%s.value.%s', $formBase, $valueIndex);
             $rules[sprintf('%s.amount', $valueForm)] = 'nullable|numeric';
@@ -173,13 +199,17 @@ class PlannedDisbursementRequest extends ActivityBaseRequest
     }
 
     /**
+     * Messages for value.
+     *
      * @param $formFields
      * @param $formBase
+     *
      * @return array
      */
-    protected function getMessagesForValue($formFields, $formBase)
+    protected function getMessagesForValue($formFields, $formBase): array
     {
         $messages = [];
+
         foreach ($formFields as $valueIndex => $value) {
             $valueForm = sprintf('%s.value.%s', $formBase, $valueIndex);
             $messages[sprintf('%s.amount.required', $valueForm)] = 'Amount field is required';
@@ -192,13 +222,16 @@ class PlannedDisbursementRequest extends ActivityBaseRequest
 
     /**
      * returns rules for period start form.
+     *
      * @param $formFields
      * @param $formBase
+     *
      * @return array
      */
-    public function getRulesForPeriodStart($formFields, $formBase)
+    public function getRulesForPeriodStart($formFields, $formBase): array
     {
         $rules = [];
+
         foreach ($formFields as $periodStartKey => $periodStartVal) {
             $rules[$formBase . '.period_start.' . $periodStartKey . '.iso_date'] = 'date';
         }
@@ -208,13 +241,16 @@ class PlannedDisbursementRequest extends ActivityBaseRequest
 
     /**
      * returns messages for period start form.
+     *
      * @param $formFields
      * @param $formBase
+     *
      * @return array
      */
-    public function getMessagesForPeriodStart($formFields, $formBase)
+    public function getMessagesForPeriodStart($formFields, $formBase): array
     {
         $messages = [];
+
         foreach ($formFields as $periodStartKey => $periodStartVal) {
             $messages[$formBase . '.period_start.' . $periodStartKey . '.iso_date.required'] = trans('validation.required', ['attribute' => trans('elementForm.period_start')]);
             $messages[$formBase . '.period_end.' . $periodStartKey . '.iso_date.date'] = 'Period end must be a date.';
@@ -226,11 +262,13 @@ class PlannedDisbursementRequest extends ActivityBaseRequest
 
     /**
      * returns rules for period end form.
+     *
      * @param $formFields
      * @param $formBase
+     *
      * @return array
      */
-    public function getRulesForPeriodEnd($formFields, $formBase)
+    public function getRulesForPeriodEnd($formFields, $formBase): array
     {
         $rules = [];
 
@@ -247,11 +285,13 @@ class PlannedDisbursementRequest extends ActivityBaseRequest
 
     /**
      * returns messages for period end form.
+     *
      * @param $formFields
      * @param $formBase
+     *
      * @return array
      */
-    public function getMessagesForPeriodEnd($formFields, $formBase)
+    public function getMessagesForPeriodEnd($formFields, $formBase): array
     {
         $messages = [];
 

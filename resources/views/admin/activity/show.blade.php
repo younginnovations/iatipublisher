@@ -10,8 +10,8 @@
         :status="{{json_encode($status)}}"
         :toast="{{ json_encode($toast) }}"
         :results="{{ json_encode($results) }}"
-        :has_indicator="{{ $hasIndicator }}"
-        :has_period="{{ $hasPeriod }}"
+        :has_indicator="{{ $hasIndicatorPeriod['indicator'] }}"
+        :has_period="{{ $hasIndicatorPeriod['period'] }}"
         :transactions="{{ json_encode($transactions) }}">
     </activities-detail>
 @endsection

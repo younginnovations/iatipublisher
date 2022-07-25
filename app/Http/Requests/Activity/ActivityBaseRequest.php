@@ -26,13 +26,11 @@ class ActivityBaseRequest extends FormRequest
                 $languages = [];
 
                 foreach ($value as $narrative) {
-                    $language = $narrative['language'];
-
-                    if (in_array($language, $languages)) {
+                    if (in_array($narrative['language'], $languages)) {
                         return false;
                     }
 
-                    $languages[] = $language;
+                    $languages[] = $narrative['language'];
                 }
 
                 return true;
@@ -258,8 +256,9 @@ class ActivityBaseRequest extends FormRequest
     public function getRulesForPeriodStart($formFields, $formBase)
     {
         $rules = [];
+
         foreach ($formFields as $periodStartKey => $periodStartVal) {
-            $rules[$formBase . '.period_start.' . $periodStartKey . '.date'] = 'date|date_greater_than:1900';
+            $rules[$formBase . '.period_start.' . $periodStartKey . '.date'] = 'nullable|date|date_greater_than:1900';
         }
 
         return $rules;
@@ -274,6 +273,7 @@ class ActivityBaseRequest extends FormRequest
     public function getMessagesForPeriodStart($formFields, $formBase)
     {
         $messages = [];
+
         foreach ($formFields as $periodStartKey => $periodStartVal) {
             $messages[$formBase . '.period_start.' . $periodStartKey . '.date.required'] = trans('validation.required', ['attribute' => trans('elementForm.period_start')]);
             $messages[$formBase . '.period_end.' . $periodStartKey . '.date.date'] = 'Period end must be a date.';
@@ -337,11 +337,7 @@ class ActivityBaseRequest extends FormRequest
         $rules = [];
 
         foreach ($formFields as $documentLinkIndex => $documentLink) {
-            if ($formBase) {
-                $documentLinkForm = sprintf('%s.document_link.%s', $formBase, $documentLinkIndex);
-            } else {
-                $documentLinkForm = sprintf('document_link.%s', $documentLinkIndex);
-            }
+            $documentLinkForm = $formBase ? sprintf('%s.document_link.%s', $formBase, $documentLinkIndex) : sprintf('document_link.%s', $documentLinkIndex);
 
             if (Arr::get($documentLink, 'url', null) != '') {
                 $rules[sprintf('%s.url', $documentLinkForm)] = 'nullable|url';

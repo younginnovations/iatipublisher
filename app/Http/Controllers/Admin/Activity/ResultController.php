@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Admin\Activity;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Activity\Result\ResultRequest;
-use App\IATI\Elements\Builder\ResultElementFormCreator;
 use App\IATI\Models\Activity\Result;
 use App\IATI\Services\Activity\ActivityService;
 use App\IATI\Services\Activity\ResultService;
@@ -14,11 +13,6 @@ use App\IATI\Services\Activity\ResultService;
  */
 class ResultController extends Controller
 {
-    /**
-     * @var ResultElementFormCreator
-     */
-    protected ResultElementFormCreator $resultElementFormCreator;
-
     /**
      * @var ResultService
      */
@@ -32,16 +26,13 @@ class ResultController extends Controller
     /**
      * ResultController Constructor.
      *
-     * @param ResultElementFormCreator $resultElementFormCreator
      * @param ResultService $resultService
      * @param ActivityService $activityService
      */
     public function __construct(
-        ResultElementFormCreator $resultElementFormCreator,
         ResultService $resultService,
         ActivityService $activityService
     ) {
-        $this->resultElementFormCreator = $resultElementFormCreator;
         $this->resultService = $resultService;
         $this->activityService = $activityService;
     }
@@ -68,11 +59,10 @@ class ResultController extends Controller
         try {
             $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
             $activity = $this->activityService->getActivity($id);
-            $this->resultElementFormCreator->url = route('admin.activities.result.store', $id);
-            $form = $this->resultElementFormCreator->editForm([], $element['result'], 'POST', '/activities/' . $id);
+            $form = $this->resultService->createFormGenerator($id);
             $data = ['core' => $element['result']['criteria'] ?? false, 'status' => false, 'title' => $element['result']['label'], 'name' => 'result'];
 
-            return view('activity.result.result', compact('form', 'activity', 'data'));
+            return view('admin.activity.result.edit', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
@@ -150,21 +140,17 @@ class ResultController extends Controller
      * @param $activityId
      * @param $resultId
      *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Http\RedirectResponse|\Illuminate\Contracts\Foundation\Application
+     * @return \Illuminate\Contracts\View\View|\Illuminate\Http\RedirectResponse
      */
-    public function edit(
-        $activityId,
-        $resultId
-    ): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Http\RedirectResponse|\Illuminate\Contracts\Foundation\Application {
+    public function edit($activityId, $resultId): \Illuminate\Contracts\View\View|\Illuminate\Http\RedirectResponse
+    {
         try {
             $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
             $activity = $this->activityService->getActivity($activityId);
-            $activityResult = $this->resultService->getResult($resultId, $activityId);
-            $this->resultElementFormCreator->url = route('admin.activities.result.update', [$activityId, $resultId]);
-            $form = $this->resultElementFormCreator->editForm($activityResult->result, $element['result'], 'PUT', '/activities/' . $activityId);
+            $form = $this->resultService->editFormGenerator($resultId, $activityId);
             $data = ['core' => $element['result']['criteria'] ?? false, 'status' => false, 'title' => $element['result']['label'], 'name' => 'result'];
 
-            return view('activity.result.result', compact('form', 'activity', 'data'));
+            return view('admin.activity.result.edit', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 

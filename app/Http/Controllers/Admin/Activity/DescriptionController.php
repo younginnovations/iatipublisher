@@ -6,7 +6,6 @@ namespace App\Http\Controllers\Admin\Activity;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Activity\Description\DescriptionRequest;
-use App\IATI\Elements\Builder\ParentCollectionFormCreator;
 use App\IATI\Services\Activity\DescriptionService;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
@@ -18,11 +17,6 @@ use Illuminate\Http\RedirectResponse;
 class DescriptionController extends Controller
 {
     /**
-     * @var ParentCollectionFormCreator
-     */
-    protected ParentCollectionFormCreator $parentCollectionFormCreator;
-
-    /**
      * @var DescriptionService
      */
     protected DescriptionService $descriptionService;
@@ -30,12 +24,10 @@ class DescriptionController extends Controller
     /**
      * DescriptionController Constructor.
      *
-     * @param ParentCollectionFormCreator $parentCollectionFormCreator
      * @param DescriptionService $descriptionService
      */
-    public function __construct(ParentCollectionFormCreator $parentCollectionFormCreator, DescriptionService $descriptionService)
+    public function __construct(DescriptionService $descriptionService)
     {
-        $this->parentCollectionFormCreator = $parentCollectionFormCreator;
         $this->descriptionService = $descriptionService;
     }
 
@@ -51,12 +43,10 @@ class DescriptionController extends Controller
         try {
             $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
             $activity = $this->descriptionService->getActivityData($id);
-            $model['description'] = $this->descriptionService->getDescriptionData($id);
-            $this->parentCollectionFormCreator->url = route('admin.activities.description.update', [$id]);
-            $form = $this->parentCollectionFormCreator->editForm($model, $element['description'], 'PUT', '/activities/' . $id);
+            $form = $this->descriptionService->formGenerator($id);
             $data = ['core' => $element['description']['criteria'] ?? '', 'status' => $activity->description_element_completed, 'title' => $element['description']['label'], 'name' => 'description'];
 
-            return view('activity.description.description', compact('form', 'activity', 'data'));
+            return view('admin.activity.description.edit', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 

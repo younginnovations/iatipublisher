@@ -6,7 +6,6 @@ namespace App\Http\Controllers\Admin\Activity;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Activity\Scope\ScopeRequest;
-use App\IATI\Elements\Builder\BaseFormCreator;
 use App\IATI\Services\Activity\ScopeService;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
@@ -18,11 +17,6 @@ use Illuminate\Http\RedirectResponse;
 class ScopeController extends Controller
 {
     /**
-     * @var BaseFormCreator
-     */
-    protected BaseFormCreator $baseFormCreator;
-
-    /**
      * @var ScopeService
      */
     protected ScopeService $scopeService;
@@ -30,12 +24,10 @@ class ScopeController extends Controller
     /**
      * ScopeController Constructor.
      *
-     * @param BaseFormCreator $baseFormCreator
      * @param ScopeService $scopeService
      */
-    public function __construct(BaseFormCreator $baseFormCreator, ScopeService $scopeService)
+    public function __construct(ScopeService $scopeService)
     {
-        $this->baseFormCreator = $baseFormCreator;
         $this->scopeService = $scopeService;
     }
 
@@ -51,12 +43,10 @@ class ScopeController extends Controller
         try {
             $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
             $activity = $this->scopeService->getActivityData($id);
-            $model['activity_scope'] = $this->scopeService->getScopeData($id);
-            $this->baseFormCreator->url = route('admin.activities.scope.update', [$id]);
-            $form = $this->baseFormCreator->editForm($model, $element['activity_scope'], 'PUT', '/activities/' . $id);
+            $form = $this->scopeService->formGenerator($id);
             $data = ['core' => $element['activity_scope']['criteria'] ?? '', 'status' => $activity->activity_scope_element_completed, 'title' => $element['activity_scope']['label'], 'name' => 'activity_scope'];
 
-            return view('activity.scope.scope', compact('form', 'activity', 'data'));
+            return view('admin.activity.scope.edit', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 

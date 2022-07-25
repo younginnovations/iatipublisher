@@ -87,7 +87,9 @@ class FormBuilder {
 
     const count = $(target).attr('parent_count')
       ? parseInt($(target).attr('parent_count') as string) + 1
-      : ($(target).prev().find('.multi-form').length ? $(target).prev().find('.multi-form').length : $(target).prev().find('.wrapped-child-body').length);
+      : ($(target).prev().find('.multi-form').length ? $(target).prev().find('.multi-form').length : $(target).prev().find('.wrapped-child-body').length)+1;
+
+    console.log(count);
     let proto = container.data('prototype').replace(/__PARENT_NAME__/g, count);
     proto = proto.replace(/__NAME__/g, 0);
 
@@ -136,6 +138,7 @@ class FormBuilder {
       ? parseInt($('.add_to_parent').attr('child_count') as string) + 1
       : collectionLength;
     $('.add_to_parent').attr('child_count', count);
+    $('.add_to_parent').attr('parent_count', count);
 
     if (collectionLength > 2) {
       $(target).parent().remove();

@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace App\IATI\Services\Activity;
 
+use App\IATI\Elements\Builder\ResultElementFormCreator;
 use App\IATI\Models\Activity\Indicator;
 use App\IATI\Repositories\Activity\IndicatorRepository;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
+use Kris\LaravelFormBuilder\Form;
 
 /**
  * Class IndicatorService.
@@ -20,13 +22,20 @@ class IndicatorService
     protected IndicatorRepository $indicatorRepository;
 
     /**
+     * @var ResultElementFormCreator
+     */
+    protected ResultElementFormCreator $resultElementFormCreator;
+
+    /**
      * IndicatorService constructor.
      *
      * @param IndicatorRepository $indicatorRepository
+     * @param ResultElementFormCreator $resultElementFormCreator
      */
-    public function __construct(IndicatorRepository $indicatorRepository)
+    public function __construct(IndicatorRepository $indicatorRepository, ResultElementFormCreator $resultElementFormCreator)
     {
         $this->indicatorRepository = $indicatorRepository;
+        $this->resultElementFormCreator = $resultElementFormCreator;
     }
 
     /**
@@ -72,10 +81,45 @@ class IndicatorService
      * @param $resultId
      * @param $resultIndicatorId
      *
-     * @return Model
+     * @return Model|null
      */
-    public function getResultIndicator($resultId, $resultIndicatorId): Model
+    public function getResultIndicator($resultId, $resultIndicatorId): ?Model
     {
         return $this->indicatorRepository->getResultIndicator($resultId, $resultIndicatorId);
+    }
+
+    /**
+     * Generates indicator form.
+     *
+     * @param $activityId
+     * @param $resultId
+     * @param $indicatorId
+     *
+     * @return Form
+     */
+    public function editFormGenerator($activityId, $resultId, $indicatorId): Form
+    {
+        $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
+        $resultIndicator = $this->getResultIndicator($resultId, $indicatorId) ?? [];
+        $this->resultElementFormCreator->url = route('admin.activities.result.indicator.update', [$activityId, $resultId, $indicatorId]);
+
+        return $this->resultElementFormCreator->editForm($resultIndicator->indicator, $element['indicator'], 'PUT', '/activities/' . $activityId);
+    }
+
+    /**
+     * Generates create indicator form.
+     *
+     * @param $activityId
+     * @param $resultId
+     * @param $indicatorId
+     *
+     * @return Form
+     */
+    public function createFormGenerator($activityId, $resultId): Form
+    {
+        $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
+        $this->resultElementFormCreator->url = route('admin.activities.result.indicator.store', [$activityId, $resultId]);
+
+        return $this->resultElementFormCreator->editForm([], $element['indicator'], 'POST', '/activities/' . $activityId);
     }
 }

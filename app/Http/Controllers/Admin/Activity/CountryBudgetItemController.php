@@ -6,7 +6,6 @@ namespace App\Http\Controllers\Admin\Activity;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Activity\CountryBudgetItem\CountryBudgetItemRequest;
-use App\IATI\Elements\Builder\MultilevelSubElementFormCreator;
 use App\IATI\Services\Activity\CountryBudgetItemService;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
@@ -18,11 +17,6 @@ use Illuminate\Http\RedirectResponse;
 class CountryBudgetItemController extends Controller
 {
     /**
-     * @var MultilevelSubElementFormCreator
-     */
-    protected MultilevelSubElementFormCreator $multilevelSubElementFormCreator;
-
-    /**
      * @var CountryBudgetItemService
      */
     protected CountryBudgetItemService $countryBudgetItemService;
@@ -30,12 +24,10 @@ class CountryBudgetItemController extends Controller
     /**
      * CountryBudgetItemController Constructor.
      *
-     * @param MultilevelSubElementFormCreator $multilevelSubElementFormCreator
      * @param CountryBudgetItemService $countryBudgetItemService
      */
-    public function __construct(MultilevelSubElementFormCreator $multilevelSubElementFormCreator, CountryBudgetItemService $countryBudgetItemService)
+    public function __construct(CountryBudgetItemService $countryBudgetItemService)
     {
-        $this->multilevelSubElementFormCreator = $multilevelSubElementFormCreator;
         $this->countryBudgetItemService = $countryBudgetItemService;
     }
 
@@ -51,12 +43,10 @@ class CountryBudgetItemController extends Controller
         try {
             $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
             $activity = $this->countryBudgetItemService->getActivityData($id);
-            $model = $this->countryBudgetItemService->getCountryBudgetItemData($id) ?: [];
-            $this->multilevelSubElementFormCreator->url = route('admin.activities.country-budget-items.update', [$id]);
-            $form = $this->multilevelSubElementFormCreator->editForm($model, $element['country_budget_items'], 'PUT', '/activities/' . $id);
+            $form = $this->countryBudgetItemService->formGenerator($id);
             $data = ['core' => $element['country_budget_items']['criteria'] ?? '', 'status' => $activity->country_budget_items_element_completed, 'title' => $element['country_budget_items']['label'], 'name' => 'country_budget_items'];
 
-            return view('activity.countryBudgetItem.countryBudgetItem', compact('form', 'activity', 'data'));
+            return view('admin.activity.countryBudgetItem.edit', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 

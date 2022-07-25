@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace App\IATI\Services\Activity;
 
+use App\IATI\Elements\Builder\TransactionElementFormCreator;
 use App\IATI\Repositories\Activity\TransactionRepository;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
+use Kris\LaravelFormBuilder\Form;
 
 /**
  * Class TransactionService.
@@ -19,13 +21,20 @@ class TransactionService
     protected TransactionRepository $transactionRepository;
 
     /**
+     * @var TransactionElementFormCreator
+     */
+    protected TransactionElementFormCreator $transactionElementFormCreator;
+
+    /**
      * TransactionService constructor.
      *
      * @param TransactionRepository $transactionRepository
+     * @param TransactionElementFormCreator $transactionElementFormCreator
      */
-    public function __construct(TransactionRepository $transactionRepository)
+    public function __construct(TransactionRepository $transactionRepository, TransactionElementFormCreator $transactionElementFormCreator)
     {
         $this->transactionRepository = $transactionRepository;
+        $this->transactionElementFormCreator = $transactionElementFormCreator;
     }
 
     /**
@@ -101,5 +110,36 @@ class TransactionService
     public function getActivityTransactions($activityId): ?Collection
     {
         return $this->transactionRepository->getActivityTransactions($activityId);
+    }
+
+    /**
+     * Generates transaction create form.
+     *
+     * @param $activityId
+     *
+     * @return Form
+     */
+    public function createFormGenerator($activityId): Form
+    {
+        $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
+        $this->transactionElementFormCreator->url = route('admin.activities.transactions.store', $activityId);
+
+        return $this->transactionElementFormCreator->editForm([], $element['transactions'], 'POST', '/activities/' . $activityId);
+    }
+
+    /**
+     * Generates transaction edit form.
+     *
+     * @param $id
+     *
+     * @return Form
+     */
+    public function editFormGenerator($transactionId, $activityId): Form
+    {
+        $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
+        $activityTransaction = $this->getTransaction($transactionId, $activityId);
+        $this->transactionElementFormCreator->url = route('admin.activities.transactions.update', [$activityId, $transactionId]);
+
+        return $this->transactionElementFormCreator->editForm($activityTransaction->transaction, $element['transactions'], 'PUT', '/activities/' . $activityId);
     }
 }

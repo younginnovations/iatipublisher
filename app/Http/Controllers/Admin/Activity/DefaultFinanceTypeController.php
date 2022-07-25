@@ -6,7 +6,6 @@ namespace App\Http\Controllers\Admin\Activity;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Activity\DefaultFinanceType\DefaultFinanceTypeRequest;
-use App\IATI\Elements\Builder\BaseFormCreator;
 use App\IATI\Services\Activity\DefaultFinanceTypeService;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
@@ -18,11 +17,6 @@ use Illuminate\Http\RedirectResponse;
 class DefaultFinanceTypeController extends Controller
 {
     /**
-     * @var BaseFormCreator
-     */
-    protected BaseFormCreator $baseFormCreator;
-
-    /**
      * @var DefaultFinanceTypeService
      */
     protected DefaultFinanceTypeService $defaultFinanceTypeService;
@@ -30,12 +24,10 @@ class DefaultFinanceTypeController extends Controller
     /**
      * DefaultFinanceTypeController Constructor.
      *
-     * @param BaseFormCreator $baseFormCreator
      * @param DefaultFinanceTypeService $defaultFinanceTypeService
      */
-    public function __construct(BaseFormCreator $baseFormCreator, DefaultFinanceTypeService $defaultFinanceTypeService)
+    public function __construct(DefaultFinanceTypeService $defaultFinanceTypeService)
     {
-        $this->baseFormCreator = $baseFormCreator;
         $this->defaultFinanceTypeService = $defaultFinanceTypeService;
     }
 
@@ -51,12 +43,10 @@ class DefaultFinanceTypeController extends Controller
         try {
             $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
             $activity = $this->defaultFinanceTypeService->getActivityData($id);
-            $model['default_finance_type'] = $this->defaultFinanceTypeService->getDefaultFinanceTypeData($id);
-            $this->baseFormCreator->url = route('admin.activities.default-finance-type.update', [$id]);
-            $form = $this->baseFormCreator->editForm($model, $element['default_finance_type'], 'PUT', '/activities/' . $id);
+            $form = $this->defaultFinanceTypeService->formGenerator($id);
             $data = ['core' => $element['default_finance_type']['criteria'] ?? '', 'status' => $activity->default_finance_type_element_completed, 'title' => $element['default_finance_type']['label'], 'name' => 'default_finance_type'];
 
-            return view('activity.defaultFinanceType.defaultFinanceType', compact('form', 'activity', 'data'));
+            return view('admin.activity.defaultFinanceType.edit', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 

@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace App\IATI\Services\Activity;
 
+use App\IATI\Elements\Builder\BaseFormCreator;
 use App\IATI\Repositories\Activity\TitleRepository;
 use Illuminate\Database\Eloquent\Model;
+use Kris\LaravelFormBuilder\Form;
 
 /**
  * Class TitleService.
@@ -18,13 +20,19 @@ class TitleService
     protected TitleRepository $titleRepository;
 
     /**
+     * @var BaseFormCreator
+     */
+    protected BaseFormCreator $baseFormCreator;
+
+    /**
      * TitleService constructor.
      *
      * @param TitleRepository $titleRepository
      */
-    public function __construct(TitleRepository $titleRepository)
+    public function __construct(TitleRepository $titleRepository, BaseFormCreator $baseFormCreator)
     {
         $this->titleRepository = $titleRepository;
+        $this->baseFormCreator = $baseFormCreator;
     }
 
     /**
@@ -64,5 +72,21 @@ class TitleService
         $activity->title = array_values($activityTitle['narrative']);
 
         return $activity->save();
+    }
+
+    /**
+     * Generates title form.
+     *
+     * @param $id
+     *
+     * @return Form
+     */
+    public function formGenerator($id): Form
+    {
+        $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
+        $model['narrative'] = $this->getTitleData($id);
+        $this->baseFormCreator->url = route('admin.activities.title.update', [$id]);
+
+        return $this->baseFormCreator->editForm($model, $element['title'], 'PUT', '/activities/' . $id);
     }
 }

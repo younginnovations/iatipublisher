@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace App\IATI\Services\Activity;
 
+use App\IATI\Elements\Builder\MultilevelSubElementFormCreator;
 use App\IATI\Repositories\Activity\OtherIdentifierRepository;
 use Illuminate\Database\Eloquent\Model;
+use Kris\LaravelFormBuilder\Form;
 
 /**
  * Class OtherIdentifierService.
@@ -18,13 +20,20 @@ class OtherIdentifierService
     protected OtherIdentifierRepository $otherIdentifierRepository;
 
     /**
+     * @var MultilevelSubElementFormCreator
+     */
+    protected MultilevelSubElementFormCreator $multilevelSubElementFormCreator;
+
+    /**
      * OtherIdentifierService constructor.
      *
      * @param OtherIdentifierRepository $otherIdentifierRepository
+     * @param MultilevelSubElementFormCreator $multilevelSubElementFormCreator
      */
-    public function __construct(OtherIdentifierRepository $otherIdentifierRepository)
+    public function __construct(OtherIdentifierRepository $otherIdentifierRepository, MultilevelSubElementFormCreator $multilevelSubElementFormCreator)
     {
         $this->otherIdentifierRepository = $otherIdentifierRepository;
+        $this->multilevelSubElementFormCreator = $multilevelSubElementFormCreator;
     }
 
     /**
@@ -62,5 +71,21 @@ class OtherIdentifierService
     public function update($activityIdentifier, $activity): bool
     {
         return $this->otherIdentifierRepository->update($activityIdentifier, $activity);
+    }
+
+    /**
+     * Generates other identifier form.
+     *
+     * @param id
+     *
+     * @return Form
+     */
+    public function formGenerator($id): Form
+    {
+        $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
+        $model = $this->getOtherIdentifierData($id) ?: [];
+        $this->multilevelSubElementFormCreator->url = route('admin.activities.other-identifier.update', [$id]);
+
+        return $this->multilevelSubElementFormCreator->editForm($model, $element['other_identifier'], 'PUT', '/activities/' . $id);
     }
 }
