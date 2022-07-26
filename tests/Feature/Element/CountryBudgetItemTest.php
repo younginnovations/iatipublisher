@@ -40,7 +40,7 @@ class CountryBudgetItemTest extends ElementCompleteTest
      */
     public function test_country_budget_items_mandatory_sub_elements(): void
     {
-        $this->test_mandatory_sub_elements($this->element, ['budget_item' => ['code_text', 'code']]);
+        $this->test_mandatory_sub_elements($this->element, ['budget_item' => ['code']]);
     }
 
     /**
@@ -51,7 +51,7 @@ class CountryBudgetItemTest extends ElementCompleteTest
     public function test_country_budget_items_all_empty(): void
     {
         $actualData = json_decode(
-            '{"country_budget_vocabulary":"","budget_item":[{"code_text":"","code":"","percentage":"50","description":[{"narrative":[{"narrative":"","language":"aa"}]}]}]}',
+            '{"country_budget_vocabulary":"","budget_item":[{"code":"","percentage":"50","description":[{"narrative":[{"narrative":"","language":"aa"}]}]}]}',
             true
         );
 
@@ -65,7 +65,7 @@ class CountryBudgetItemTest extends ElementCompleteTest
      */
     public function test_country_budget_items_attribute_no_country_budget_vocabulary_key(): void
     {
-        $actualData = json_decode('{"budget_item":[{"code_text":"asd","code":"12","percentage":"50","description":[{"narrative":[{"narrative":"asdas","language":"aa"}]}]}]}', true);
+        $actualData = json_decode('{"budget_item":[{"code":"12","percentage":"50","description":[{"narrative":[{"narrative":"asdas","language":"aa"}]}]}]}', true);
 
         $this->test_level_three_single_dimensional_element_incomplete($this->element, $actualData);
     }
@@ -78,7 +78,7 @@ class CountryBudgetItemTest extends ElementCompleteTest
     public function test_country_budget_items_attribute_empty_country_budget_vocabulary(): void
     {
         $actualData = json_decode(
-            '{"country_budget_vocabulary":"","budget_item":[{"code_text":"asd","code":"12","percentage":"50","description":[{"narrative":[{"narrative":"asdas","language":"aa"}]}]}]}',
+            '{"country_budget_vocabulary":"","budget_item":[{"code":"12","percentage":"50","description":[{"narrative":[{"narrative":"asdas","language":"aa"}]}]}]}',
             true
         );
 
@@ -122,33 +122,6 @@ class CountryBudgetItemTest extends ElementCompleteTest
     }
 
     /**
-     * Sub element budget_item attribute no code_text key test.
-     *
-     * @return void
-     */
-    public function test_country_budget_items_sub_element_budget_item_attribute_no_code_text_key(): void
-    {
-        $actualData = json_decode('{"country_budget_vocabulary":"2","budget_item":[{"code":"asd","percentage":"50","description":[{"narrative":[{"narrative":"asdas","language":"aa"}]}]}]}', true);
-
-        $this->test_level_three_single_dimensional_element_incomplete($this->element, $actualData);
-    }
-
-    /**
-     * Sub element budget_item attribute empty code_text test.
-     *
-     * @return void
-     */
-    public function test_country_budget_items_sub_element_budget_item_attribute_empty_code_text(): void
-    {
-        $actualData = json_decode(
-            '{"country_budget_vocabulary":"2","budget_item":[{"code_text":"","code":"asd","percentage":"50","description":[{"narrative":[{"narrative":"asdas","language":"aa"}]}]}]}',
-            true
-        );
-
-        $this->test_level_three_single_dimensional_element_incomplete($this->element, $actualData);
-    }
-
-    /**
      * Sub element budget_item attribute no code key test.
      *
      * @return void
@@ -156,7 +129,7 @@ class CountryBudgetItemTest extends ElementCompleteTest
     public function test_country_budget_items_sub_element_budget_item_attribute_no_code_key(): void
     {
         $actualData = json_decode(
-            '{"country_budget_vocabulary":"2","budget_item":[{"code_text":"asd","percentage":"50","description":[{"narrative":[{"narrative":"asdas","language":"aa"}]}]}]}',
+            '{"country_budget_vocabulary":"2","budget_item":[{"percentage":"50","description":[{"narrative":[{"narrative":"asdas","language":"aa"}]}]}]}',
             true
         );
 
@@ -171,7 +144,7 @@ class CountryBudgetItemTest extends ElementCompleteTest
     public function test_country_budget_items_sub_element_budget_item_attribute_empty_code(): void
     {
         $actualData = json_decode(
-            '{"country_budget_vocabulary":"2","budget_item":[{"code_text":"asd","code":"","percentage":"50","description":[{"narrative":[{"narrative":"asdas","language":"aa"}]}]}]}',
+            '{"country_budget_vocabulary":"2","budget_item":[{"code":"","percentage":"50","description":[{"narrative":[{"narrative":"asdas","language":"aa"}]}]}]}',
             true
         );
 
@@ -185,7 +158,7 @@ class CountryBudgetItemTest extends ElementCompleteTest
      */
     public function test_country_budget_items_sub_element_budget_item_sub_element_empty_description(): void
     {
-        $actualData = json_decode('{"country_budget_vocabulary":"2","budget_item":[{"code_text":"asd","code":"123","percentage":"50","description":""}]}', true);
+        $actualData = json_decode('{"country_budget_vocabulary":"2","budget_item":[{"code":"123","percentage":"50","description":""}]}', true);
 
         $this->test_level_three_single_dimensional_element_incomplete($this->element, $actualData);
     }
@@ -197,7 +170,7 @@ class CountryBudgetItemTest extends ElementCompleteTest
      */
     public function test_country_budget_items_sub_element_budget_item_sub_element_empty_description_array(): void
     {
-        $actualData = json_decode('{"country_budget_vocabulary":"2","budget_item":[{"code_text":"asd","code":"123","percentage":"50","description":[]}]}', true);
+        $actualData = json_decode('{"country_budget_vocabulary":"2","budget_item":[{"code":"123","percentage":"50","description":[]}]}', true);
 
         $this->test_level_three_single_dimensional_element_incomplete($this->element, $actualData);
     }
@@ -209,7 +182,7 @@ class CountryBudgetItemTest extends ElementCompleteTest
      */
     public function test_country_budget_items_sub_element_budget_item_sub_element_empty_description_json_array(): void
     {
-        $actualData = json_decode('{"country_budget_vocabulary":"2","budget_item":[{"code_text":"asd","code":"123","percentage":"50","description":[{}]}]}', true);
+        $actualData = json_decode('{"country_budget_vocabulary":"2","budget_item":[{"code":"123","percentage":"50","description":[{}]}]}', true);
 
         $this->test_level_three_single_dimensional_element_incomplete($this->element, $actualData);
     }
@@ -221,7 +194,7 @@ class CountryBudgetItemTest extends ElementCompleteTest
      */
     public function test_country_budget_items_sub_element_budget_item_sub_element_description_empty_narrative(): void
     {
-        $actualData = json_decode('{"country_budget_vocabulary":"2","budget_item":[{"code_text":"asd","code":"123","percentage":"50","description":[{"narrative":""}]}]}', true);
+        $actualData = json_decode('{"country_budget_vocabulary":"2","budget_item":[{"code":"123","percentage":"50","description":[{"narrative":""}]}]}', true);
 
         $this->test_level_three_single_dimensional_element_incomplete($this->element, $actualData);
     }
@@ -233,7 +206,7 @@ class CountryBudgetItemTest extends ElementCompleteTest
      */
     public function test_country_budget_items_sub_element_budget_item_sub_element_description_empty_narrative_array(): void
     {
-        $actualData = json_decode('{"country_budget_vocabulary":"2","budget_item":[{"code_text":"asd","code":"123","percentage":"50","description":[{"narrative":[]}]}]}', true);
+        $actualData = json_decode('{"country_budget_vocabulary":"2","budget_item":[{"code":"123","percentage":"50","description":[{"narrative":[]}]}]}', true);
 
         $this->test_level_three_single_dimensional_element_incomplete($this->element, $actualData);
     }
@@ -245,7 +218,7 @@ class CountryBudgetItemTest extends ElementCompleteTest
      */
     public function test_country_budget_items_sub_element_budget_item_sub_element_description_empty_narrative_json_array(): void
     {
-        $actualData = json_decode('{"country_budget_vocabulary":"2","budget_item":[{"code_text":"asd","code":"123","percentage":"50","description":[{"narrative":[{}]}]}]}', true);
+        $actualData = json_decode('{"country_budget_vocabulary":"2","budget_item":[{"code":"123","percentage":"50","description":[{"narrative":[{}]}]}]}', true);
 
         $this->test_level_three_single_dimensional_element_incomplete($this->element, $actualData);
     }
@@ -258,7 +231,7 @@ class CountryBudgetItemTest extends ElementCompleteTest
     public function test_country_budget_items_sub_element_budget_item_sub_element_description_sub_element_narrative_no_narrative_key(): void
     {
         $actualData = json_decode(
-            '{"country_budget_vocabulary":"2","budget_item":[{"code_text":"asd","code":"123","percentage":"50","description":[{"narrative":[{"language":"en"}]}]}]}',
+            '{"country_budget_vocabulary":"2","budget_item":[{"code":"123","percentage":"50","description":[{"narrative":[{"language":"en"}]}]}]}',
             true
         );
 
@@ -273,7 +246,7 @@ class CountryBudgetItemTest extends ElementCompleteTest
     public function test_country_budget_items_sub_element_budget_item_sub_element_description_sub_element_narrative_empty_narrative(): void
     {
         $actualData = json_decode(
-            '{"country_budget_vocabulary":"2","budget_item":[{"code_text":"asd","code":"123","percentage":"50","description":[{"narrative":[{"narrative":"","language":"en"}]}]}]}',
+            '{"country_budget_vocabulary":"2","budget_item":[{"code":"123","percentage":"50","description":[{"narrative":[{"narrative":"","language":"en"}]}]}]}',
             true
         );
 
@@ -288,7 +261,7 @@ class CountryBudgetItemTest extends ElementCompleteTest
     public function test_country_budget_items_element_complete(): void
     {
         $actualData = json_decode(
-            '{"country_budget_vocabulary":"2","budget_item":[{"code_text":"code text","code":"asdasd","percentage":"50","description":[{"narrative":[{"narrative":"asdas","language":"aa"}]}]},{"code_text":"code-text1","code":"asdad","percentage":"50","description":[{"narrative":[{"narrative":"asdadasddad","language":"ae"}]}]}]}',
+            '{"country_budget_vocabulary":"2","budget_item":[{"code":"asdasd","percentage":"50","description":[{"narrative":[{"narrative":"asdas","language":"aa"}]}]},{"code":"asdad","percentage":"50","description":[{"narrative":[{"narrative":"asdadasddad","language":"ae"}]}]}]}',
             true
         );
 

@@ -105,7 +105,6 @@ class ActivityService
     }
 
     /**
-<<<<<<< HEAD
      * Generates toast array.
      *
      * @return array
@@ -118,7 +117,9 @@ class ActivityService
         Session::forget('error');
 
         return $toast;
-=======
+    }
+
+    /**
      * Returns array containing activity detail status.
      *
      * @param Activity $activity
@@ -197,6 +198,5 @@ class ActivityService
         }
 
         return ($completed_core_element_count / count($core_elements)) * 100;
->>>>>>> [WIP]code refactor
     }
 }
