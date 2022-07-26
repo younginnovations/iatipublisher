@@ -103,7 +103,6 @@ class ActivityService
         return $this->activityRepository->find($id);
     }
 
-
     /**
      * Returns array containing activity detail status.
      *
