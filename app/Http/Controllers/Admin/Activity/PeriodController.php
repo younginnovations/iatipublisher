@@ -8,8 +8,10 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Activity\Period\PeriodRequest;
 use App\IATI\Models\Activity\Period;
 use App\IATI\Services\Activity\ActivityService;
+use App\IATI\Services\Activity\IndicatorService;
 use App\IATI\Services\Activity\PeriodService;
 use Illuminate\Http\RedirectResponse;
+use App\IATI\Services\Activity\ResultService;
 
 /**
  * PeriodController Class.
@@ -22,6 +24,16 @@ class PeriodController extends Controller
     protected PeriodService $periodService;
 
     /**
+     * @var IndicatorService
+     */
+    protected IndicatorService $indicatorService;
+
+    /**
+     * @var ResultService
+     */
+    protected ResultService $ResultService;
+
+    /**
      * @var ActivityService
      */
     protected ActivityService $activityService;
@@ -30,24 +42,48 @@ class PeriodController extends Controller
      * IndicatorController Constructor.
      *
      * @param PeriodService $periodService
+     * @param IndicatorService $indicatorService
+     * @param ResultService $resultService
      * @param ActivityService $activityService
      */
     public function __construct(
         PeriodService $periodService,
+        IndicatorService $indicatorService,
+        ResultService $resultService,
         ActivityService $activityService
     ) {
         $this->periodService = $periodService;
+        $this->indicatorService = $indicatorService;
+        $this->resultService = $resultService;
         $this->activityService = $activityService;
     }
 
     /**
-     * Display a listing of the resource.
+     * Display a listing of the period.
+     *
+     * @param $activityId
+     * @param $resultId
+     * @param $indicatorId
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index($activityId, $resultId, $indicatorId)
     {
-        //
+        try {
+            $activity = $this->activityService->getActivity($activityId);
+            $resultTitle = $this->resultService->getResult($resultId, $activityId)['result']['title'];
+            $indicatorTitle = $this->indicatorService->getResultIndicator($resultId, $indicatorId)['indicator']['title'];
+            $period = $this->periodService->getPeriodOfIndicator($indicatorId)->toArray();
+
+            return view('admin.activity.period.period', compact('activity', 'indicatorTitle', 'resultTitle', 'period'));
+        } catch (\Exception $e) {
+            logger()->error($e->getMessage());
+
+            return redirect()->route('admin.activities.show', $activityId)->with(
+                'error',
+                'Error has occurred while rendering activity transactions listing.'
+            );
+        }
     }
 
     /**
@@ -120,12 +156,30 @@ class PeriodController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\IATI\Models\Activity\Period  $period
+     * @param  $activityId
+     * @param  $resultId
+     * @param  $indicatorId
+     * @param  $periodId
+     *
      * @return \Illuminate\Http\Response
      */
-    public function show(Period $period)
+    public function show($activityId, $resultId, $indicatorId, $periodId)
     {
-        //
+        try {
+            $activity = $this->activityService->getActivity($activityId);
+            $resultTitle = $this->resultService->getResult($resultId, $activityId)['result']['title'];
+            $indicatorTitle = $this->indicatorService->getResultIndicator($resultId, $indicatorId)['indicator']['title'];
+            $period = $this->periodService->getIndicatorPeriod($indicatorId, $periodId);
+
+            return view('admin.activity.period.detail', compact('activity', 'resultTitle', 'indicatorTitle', 'period'));
+        } catch (\Exception $e) {
+            logger()->error($e->getMessage());
+
+            return redirect()->route('admin.activities.show', $activityId)->with(
+                'error',
+                'Error has occurred while rending result detail page.'
+            );
+        }
     }
 
     /**
@@ -145,13 +199,7 @@ class PeriodController extends Controller
             $activity = $this->activityService->getActivity($activityId);
             $form = $this->periodService->editFormGenerator($activityId, $resultId, $indicatorId, $periodId);
             $data = ['core' => $element['period']['criteria'] ?? false, 'status' => false, 'title' => $element['period']['label'], 'name' => 'period'];
-
             return view('admin.activity.period.edit', compact('form', 'activity', 'data'));
-        } catch (\Exception $e) {
-            logger()->error($e->getMessage());
-
-            return redirect()->route('admin.activities.show', $activityId)->with(
-                'error',
                 'Error has occurred while rendering indicator period form.'
             );
         }
