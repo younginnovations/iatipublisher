@@ -7,6 +7,7 @@ namespace App\IATI\Services\Activity;
 use App\IATI\Elements\Builder\BaseFormCreator;
 use App\IATI\Repositories\Activity\RelatedActivityRepository;
 use Illuminate\Database\Eloquent\Model;
+use Kris\LaravelFormBuilder\Form;
 
 /**
  * Class RelatedActivityService.
@@ -70,5 +71,21 @@ class RelatedActivityService
     public function update($activityRelatedActivity, $activity): bool
     {
         return $this->relatedActivityRepository->update($activityRelatedActivity, $activity);
+    }
+
+    /**
+     * Generates related activity form.
+     *
+     * @param id
+     *
+     * @return Form
+     */
+    public function formGenerator($id): Form
+    {
+        $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
+        $model['related_activity'] = $this->getRelatedActivityData($id);
+        $this->baseFormCreator->url = route('admin.activities.related-activity.update', [$id]);
+
+        return $this->baseFormCreator->editForm($model, $element['related_activity'], 'PUT', '/activities/' . $id);
     }
 }

@@ -41,9 +41,7 @@ class RelatedActivityController extends Controller
         try {
             $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
             $activity = $this->relatedActivityService->getActivityData($id);
-            $model['related_activity'] = $this->relatedActivityService->getRelatedActivityData($id);
-            $this->baseFormCreator->url = route('admin.activities.related-activity.update', [$id]);
-            $form = $this->baseFormCreator->editForm($model, $element['related_activity'], 'PUT', '/activities/' . $id);
+            $form = $this->relatedActivityService->formGenerator($id);
             $data = ['core' => $element['related_activity']['criteria'] ?? '', 'status' => $activity->related_activity_element_completed, 'title' => $element['related_activity']['label'], 'name' => 'related_activity'];
 
             return view('admin.activity.relatedActivity.edit', compact('form', 'activity', 'data'));
