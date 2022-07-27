@@ -9,7 +9,9 @@ use App\Http\Requests\Activity\Indicator\IndicatorRequest;
 use App\IATI\Models\Activity\Indicator;
 use App\IATI\Services\Activity\ActivityService;
 use App\IATI\Services\Activity\IndicatorService;
+use App\IATI\Services\Activity\PeriodService;
 use App\IATI\Services\Activity\ResultService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 /**
@@ -33,6 +35,11 @@ class IndicatorController extends Controller
     protected IndicatorService $indicatorService;
 
     /**
+     * @var PeriodService
+     */
+    protected PeriodService $periodService;
+
+    /**
      * @var ActivityService
      */
     protected ActivityService $activityService;
@@ -43,15 +50,18 @@ class IndicatorController extends Controller
      * @param ResultElementFormCreator $resultElementFormCreator
      * @param ResultService $resultService
      * @param IndicatorService $indicatorService
+     * @param PeriodService $periodService
      * @param ActivityService $activityService
      */
     public function __construct(
         ResultElementFormCreator $resultElementFormCreator,
         ResultService $resultService,
         IndicatorService $indicatorService,
+        PeriodService $periodService,
         ActivityService $activityService
     ) {
         $this->indicatorService = $indicatorService;
+        $this->periodService = $periodService;
         $this->resultService = $resultService;
         $this->activityService = $activityService;
     }
@@ -156,9 +166,10 @@ class IndicatorController extends Controller
             $activity = $this->activityService->getActivity($activityId);
             $resultTitle = $this->resultService->getResult($resultId, $activityId)['result']['title'];
             $indicator = $this->indicatorService->getResultIndicator($resultId, $indicatorId);
+            $period = $this->periodService->getPeriodOfIndicator($indicatorId)->toArray();
             $types = getIndicatorTypes();
 
-            return view('admin.activity.indicator.detail', compact('activity', 'resultTitle', 'indicator', 'types'));
+            return view('admin.activity.indicator.detail', compact('activity', 'resultTitle', 'indicator', 'period', 'types'));
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
@@ -246,5 +257,31 @@ class IndicatorController extends Controller
     public function destroy(Indicator $indicator)
     {
         //
+    }
+
+    /*
+     * Get indicator of the corresponding activity
+     *
+     * @param $activityId
+     * @param $resultId
+     * @param $page
+     *
+     * @return JsonResponse
+     */
+    public function getIndicator($activityId, $resultId, $page = 1): JsonResponse
+    {
+        try {
+            $indicator = $this->indicatorService->getPaginatedIndicator($resultId, $page);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Indicators fetched successfully',
+                'data'    => $indicator,
+            ]);
+        } catch (\Exception $e) {
+            logger()->error($e->getMessage());
+
+            return response()->json(['success' => false, 'message' => 'Error occurred while fetching the data']);
+        }
     }
 }

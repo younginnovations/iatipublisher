@@ -7,8 +7,13 @@ namespace App\IATI\Services\Activity;
 use App\IATI\Elements\Builder\ResultElementFormCreator;
 use App\IATI\Models\Activity\Period;
 use App\IATI\Repositories\Activity\PeriodRepository;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
+<<<<<<< HEAD
 use Kris\LaravelFormBuilder\Form;
+=======
+use Illuminate\Pagination\LengthAwarePaginator;
+>>>>>>> f2e79fa6... api for pagination of transaction, result, indicator and period
 
 /**
  * Class PeriodService.
@@ -109,5 +114,30 @@ class PeriodService
         $this->resultElementFormCreator->url = route('admin.activities.result.indicator.period.store', [$activityId, $resultId, $indicatorId]);
 
         return $this->resultElementFormCreator->editForm([], $element['period'], 'POST', '/activities/' . $activityId);
+    }
+
+    /*
+     * Return specific result indicator period.
+     *
+     * @param $indicatorId
+     *
+     * @return Collection
+     */
+    public function getPeriodOfIndicator($indicatorId): Collection
+    {
+        return $this->periodRepository->getPeriodOfIndicator($indicatorId);
+    }
+
+    /**
+     * Returns array of paginated period belonging to indicator of an result.
+     *
+     * @param $indicatorId
+     * @param $page
+     *
+     * return LengthAwarePaginator|Collection
+     */
+    public function getPaginatedPeriod($indicatorId, $page): LengthAwarePaginator|Collection
+    {
+        return $this->periodRepository->getPaginatedPeriod($indicatorId, $page);
     }
 }

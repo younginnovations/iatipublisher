@@ -65,7 +65,15 @@
         <div class="flex justify-end mb-11">
           <a
             :href="`/activities/${activity.id}/result/${indicator.result_id}/indicator/${indicator.id}/edit`"
-            class="edit-button mr-2.5 flex items-center text-tiny font-bold uppercase"
+            class="
+              edit-button
+              mr-2.5
+              flex
+              items-center
+              text-tiny
+              font-bold
+              uppercase
+            "
           >
             <svg-vue class="mr-0.5 text-base" icon="edit"></svg-vue>
             <span>Edit Indicator</span>
@@ -141,13 +149,32 @@
                         <div class="mt-3">
                           <a
                             :href="`/activities/${activity.id}/result/${indicator.result_id}/indicator/${indicator.id}/period/create`"
-                            class="add_period flex w-[442px] max-w-full rounded border border-dashed border-n-40 bg-white px-2 py-2.5 text-xs leading-normal"
+                            class="
+                              add_period
+                              flex
+                              w-[442px]
+                              max-w-full
+                              rounded
+                              border border-dashed border-n-40
+                              bg-white
+                              px-2
+                              py-2.5
+                              text-xs
+                              leading-normal
+                            "
                           >
                             <div class="text-left grow">
                               You haven't added any periods yet.
                             </div>
                             <div
-                              class="flex items-center font-bold uppercase shrink-0 text-bluecoral"
+                              class="
+                                flex
+                                items-center
+                                font-bold
+                                uppercase
+                                shrink-0
+                                text-bluecoral
+                              "
                             >
                               <svg-vue
                                 icon="add"
@@ -225,6 +252,10 @@ export default defineComponent({
       type: Object,
       required: true,
     },
+    // period: {
+    //   type: Object,
+    //   required: true,
+    // },
     types: {
       type: Object,
       required: true,

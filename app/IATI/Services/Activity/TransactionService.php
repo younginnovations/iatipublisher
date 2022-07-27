@@ -8,6 +8,7 @@ use App\IATI\Elements\Builder\TransactionElementFormCreator;
 use App\IATI\Repositories\Activity\TransactionRepository;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Kris\LaravelFormBuilder\Form;
 
 /**
@@ -141,5 +142,18 @@ class TransactionService
         $this->transactionElementFormCreator->url = route('admin.activities.transactions.update', [$activityId, $transactionId]);
 
         return $this->transactionElementFormCreator->editForm($activityTransaction->transaction, $element['transactions'], 'PUT', '/activities/' . $activityId);
+    }
+
+    /*
+     * Returns array of paginated transactions belonging to an activity.
+     *
+     * @param $activityId
+     * @param $page
+     *
+     * return LengthAwarePaginator|Collection
+     */
+    public function getPaginatedTransaction($activityId, $page): LengthAwarePaginator|Collection
+    {
+        return $this->transactionRepository->getPaginatedTransaction($activityId, $page);
     }
 }
