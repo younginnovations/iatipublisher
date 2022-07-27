@@ -26,7 +26,6 @@ class FormBuilder {
       .replace(/__PARENT_NAME__/g, parent_count);
 
     if ($(target).attr('has_child_collection')) {
-      console.log('here');
       proto = proto.replace(/__WRAPPER_NAME__/g, count);
       proto = proto.replace(/__NAME__/g, 0);
     } else {
@@ -89,7 +88,6 @@ class FormBuilder {
       ? parseInt($(target).attr('parent_count') as string) + 1
       : ($(target).prev().find('.multi-form').length ? $(target).prev().find('.multi-form').length : $(target).prev().find('.wrapped-child-body').length)+1;
 
-    console.log(count);
     let proto = container.data('prototype').replace(/__PARENT_NAME__/g, count);
     proto = proto.replace(/__NAME__/g, 0);
 
@@ -1062,9 +1060,8 @@ $(function () {
   formBuilder.hideShowFormFields();
   formBuilder.updateActivityIdentifier();
 
-  $('.delete').on('click', () => {
-    // console.log('clicked');
-  })
+  // $('.delete').on('click', () => {
+  // })
 
   $('body').on('click', '.add_to_collection', (event: Event) => {
     formBuilder.addForm(event);

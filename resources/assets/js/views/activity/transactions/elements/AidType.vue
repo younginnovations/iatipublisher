@@ -9,7 +9,7 @@
       }"
     >
       <div class="category">
-        <span>{{ aidTypeVocabulary[at.aidtype_vocabulary] }}</span>
+        <span>{{ aidTypeVocabulary[at.aid_type_vocabulary] }}</span>
       </div>
       <div clas="ml-4">
         <table class="mb-3">

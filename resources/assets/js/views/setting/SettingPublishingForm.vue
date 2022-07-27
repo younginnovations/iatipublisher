@@ -124,7 +124,6 @@ export default defineComponent({
     }
 
     function autoVerify() {
-      console.log('a');
       emit('submitPublishing');
     }
 

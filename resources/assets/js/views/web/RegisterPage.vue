@@ -288,8 +288,6 @@ export default defineComponent({
     const registration_agency = computed(() => {
       const agencies = agency.value;
 
-      console.log(agencies);
-
       if (formData.country) {
         const uncategorized = ['XI', 'XR'];
 
@@ -605,7 +603,6 @@ export default defineComponent({
           }
         })
         .catch((error) => {
-          console.log(error);
           const { errors } = error.response.data;
           isLoaderVisible.value = false;
           errorData.username = errors.username ? errors.username[0] : '';
