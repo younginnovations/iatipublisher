@@ -6,6 +6,7 @@ namespace App\IATI\Services\Activity;
 
 use App\IATI\Models\Activity\Period;
 use App\IATI\Repositories\Activity\PeriodRepository;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -64,5 +65,17 @@ class PeriodService
     public function getIndicatorPeriod($indicatorId, $indicatorPeriodId): Model
     {
         return $this->periodRepository->getIndicatorPeriod($indicatorId, $indicatorPeriodId);
+    }
+
+    /**
+     * Return specific result indicator period.
+     *
+     * @param $indicatorId
+     *
+     * @return Collection
+     */
+    public function getPeriodOfIndicator($indicatorId): Collection
+    {
+        return $this->periodRepository->getPeriodOfIndicator($indicatorId);
     }
 }
