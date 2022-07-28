@@ -7,6 +7,8 @@ use App\IATI\Models\Organization\Organization;
 use Database\Factories\IATI\Models\Activity\ActivityFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * Class Activity.
@@ -15,10 +17,8 @@ class Activity extends Model
 {
     use HasFactory;
 
+    public string $element = '';
     protected $appends = ['title_element_completed'];
-
-    public $element = '';
-
     /**
      * Fillable property for mass assignment.
      *
@@ -95,6 +95,38 @@ class Activity extends Model
         'default_field_values' => 'json',
         'tag'                  => 'json',
     ];
+    private mixed $title;
+    private mixed $description;
+    private mixed $activity_status;
+    private mixed $activity_date;
+    private mixed $activity_scope;
+    private mixed $recipient_country;
+    private mixed $recipient_region;
+    private mixed $collaboration_type;
+    private mixed $default_flow_type;
+    private mixed $default_finance_type;
+    private mixed $default_aid_type;
+    private mixed $default_tied_status;
+    private mixed $capital_spend;
+    private mixed $related_activity;
+    private mixed $conditions;
+    private mixed $sector;
+    private mixed $humanitarian_scope;
+    private mixed $legacy_data;
+    private mixed $tag;
+    private mixed $policy_marker;
+    private mixed $other_identifier;
+    private mixed $country_budget_items;
+    private mixed $budget;
+    private mixed $participating_org;
+    private mixed $reporting_org;
+    private mixed $document_link;
+    private mixed $contact_info;
+    private mixed $location;
+    private mixed $planned_disbursement;
+    private mixed $transactions;
+    private mixed $result;
+    private mixed $iati_identifier;
 
     /**
      * Factory for creating activity.
@@ -109,9 +141,9 @@ class Activity extends Model
     /**
      * An Activity has many ActivityDocumentLink.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
-    public function documentLinks()
+    public function documentLinks(): HasMany
     {
         return $this->hasMany(Document::class);
     }
@@ -119,9 +151,9 @@ class Activity extends Model
     /**
      * Activity hasmany results.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
-    public function results(): \Illuminate\Database\Eloquent\Relations\HasMany
+    public function results(): HasMany
     {
         return $this->hasMany(Result::class, 'activity_id', 'id');
     }
@@ -131,9 +163,9 @@ class Activity extends Model
      *
      * Activity belongs to an organisation.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return BelongsTo
      */
-    public function organization(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    public function organization(): BelongsTo
     {
         return $this->belongsTo(Organization::class, 'org_id');
     }
@@ -147,15 +179,7 @@ class Activity extends Model
      */
     public function mandatoryAttributes($attributes): array
     {
-        $mandatoryAttributes = [];
-
-        foreach ($attributes as $attribute) {
-            if (array_key_exists('criteria', $attribute) && $attribute['criteria'] == 'mandatory') {
-                $mandatoryAttributes[] = $attribute['name'];
-            }
-        }
-
-        return $mandatoryAttributes;
+        return $this->getMandatoryAttributes($attributes, []);
     }
 
     /**
@@ -172,18 +196,14 @@ class Activity extends Model
         foreach ($fields as $field) {
             $mandatoryFields = [];
 
-            if (array_key_exists('criteria', $field) && $field['criteria'] == 'mandatory') {
+            if ($this->isFieldMandatory($field)) {
                 $mandatoryFields[] = $field['name'];
             }
 
             if (isset($field['attributes'])) {
                 $attributes = $field['attributes'];
 
-                foreach ($attributes as $attribute) {
-                    if (array_key_exists('criteria', $attribute) && $attribute['criteria'] == 'mandatory') {
-                        $mandatoryFields[] = $attribute['name'];
-                    }
-                }
+                $mandatoryFields = $this->getMandatoryAttributes($attributes, $mandatoryFields);
             }
 
             if (!empty($mandatoryFields)) {
@@ -211,17 +231,14 @@ class Activity extends Model
         if (empty($data)) {
             return false;
         }
-        $elementJsonSchema = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
-        $elementSchema = $elementJsonSchema[$this->element];
+        $elementSchema = $this->getJsonSchema($this->element);
 
         foreach ($mandatoryAttributes as $mandatoryAttribute) {
             if (array_key_exists('dependent_attributes', $elementSchema) && array_key_exists($mandatoryAttribute, $elementSchema['dependent_attributes'])) {
                 $parentLevel = $elementSchema['attributes'];
 
-                if (array_key_exists(
-                    'sub_element',
-                    $elementSchema['dependent_attributes'][$mandatoryAttribute]
-                ) && !empty($elementSchema['dependent_attributes'][$mandatoryAttribute]['sub_element'])) {
+                if (array_key_exists('sub_element', $elementSchema['dependent_attributes'][$mandatoryAttribute])
+                    && !empty($elementSchema['dependent_attributes'][$mandatoryAttribute]['sub_element'])) {
                     $parentLevel = $elementSchema['sub_elements'][$elementSchema['dependent_attributes'][$mandatoryAttribute]['sub_element']]['attributes'];
                 }
 
@@ -253,7 +270,7 @@ class Activity extends Model
      */
     public function isSingleDimensionAttributeCompleted($elementSchema, $data): bool
     {
-        $mandatoryAttributes = array_key_exists('attributes', $elementSchema) ? $this->mandatoryAttributes($elementSchema['attributes']) : [];
+        $mandatoryAttributes = $this->getArr($elementSchema);
 
         if (!empty($mandatoryAttributes)) {
             if (empty($data)) {
@@ -280,7 +297,7 @@ class Activity extends Model
      */
     public function isMultiDimensionAttributeCompleted($elementSchema, $data): bool
     {
-        $mandatoryAttributes = array_key_exists('attributes', $elementSchema) ? $this->mandatoryAttributes($elementSchema['attributes']) : [];
+        $mandatoryAttributes = $this->getArr($elementSchema);
 
         if (!empty($mandatoryAttributes)) {
             if (empty($data)) {
@@ -387,8 +404,8 @@ class Activity extends Model
     public function isSubElementCompleted($subElements, $data): bool
     {
         foreach ($subElements as $key => $subElement) {
-            $mandatorySubElementAttributes = array_key_exists('attributes', $subElement) ? $this->mandatoryAttributes($subElement['attributes']) : [];
-            $mandatoryChildSubElements = array_key_exists('sub_elements', $subElement) ? $this->mandatorySubElements($subElement['sub_elements']) : [];
+            $mandatorySubElementAttributes = $this->getArr($subElement);
+            $mandatoryChildSubElements = $this->getArr1($subElement);
 
             if (!empty($mandatorySubElementAttributes) || !empty($mandatoryChildSubElements)) {
                 if (!array_key_exists($key, $data)) {
@@ -421,9 +438,7 @@ class Activity extends Model
      */
     public function singleDimensionAttributeCheck($element, $data): bool
     {
-        $elementSchema = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
-
-        return $this->isSingleDimensionAttributeCompleted($elementSchema[$element], $data);
+        return $this->isSingleDimensionAttributeCompleted($this->getJsonSchema($element), $data);
     }
 
     /**
@@ -436,8 +451,8 @@ class Activity extends Model
      */
     public function isLevelOneMultiDimensionDataCompleted($elementSchema, $data): bool
     {
-        $mandatoryAttributes = array_key_exists('attributes', $elementSchema) ? $this->mandatoryAttributes($elementSchema['attributes']) : [];
-        $mandatorySubElements = array_key_exists('sub_elements', $elementSchema) ? $this->mandatorySubElements($elementSchema['sub_elements']) : [];
+        $mandatoryAttributes = $this->getArr($elementSchema);
+        $mandatorySubElements = $this->getArr1($elementSchema);
 
         return $this->isElementCompleted($mandatoryAttributes, $mandatorySubElements, $data);
     }
@@ -452,9 +467,7 @@ class Activity extends Model
      */
     public function isLevelOneMultiDimensionElementCompleted($element, $data): bool
     {
-        $elementSchema = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
-
-        return $this->isLevelOneMultiDimensionDataCompleted($elementSchema[$element], $data);
+        return $this->isLevelOneMultiDimensionDataCompleted($this->getJsonSchema($element), $data);
     }
 
     /**
@@ -471,10 +484,9 @@ class Activity extends Model
             return false;
         }
 
-        $elementSchema = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
-        $subElements = $elementSchema[$element]['sub_elements'];
+        $elementSchema = $this->getJsonSchema($element);
 
-        return $this->isSubElementCompleted($subElements, $data);
+        return $this->isSubElementCompleted($elementSchema['sub_elements'], $data);
     }
 
     /**
@@ -491,18 +503,18 @@ class Activity extends Model
             return false;
         }
 
-        $subElements = array_key_exists('sub_elements', $elementSchema) ? $elementSchema['sub_elements'] : [];
+        $subElements = $this->extracted($elementSchema, 'sub_elements');
         $mandatorySubElementsFlag = false;
 
-        foreach ($subElements as $key => $subElement) {
-            $mandatorySubElementAttributes = array_key_exists('attributes', $subElement) ? $this->mandatoryAttributes($subElement['attributes']) : [];
+        foreach ($subElements as $subElement) {
+            $mandatorySubElementAttributes = $this->getArr($subElement);
 
             if (!empty($mandatorySubElementAttributes)) {
                 $mandatorySubElementsFlag = true;
                 break;
             }
 
-            $mandatoryChildSubElements = array_key_exists('sub_elements', $subElement) ? $this->mandatorySubElements($subElement['sub_elements']) : [];
+            $mandatoryChildSubElements = $this->getArr1($subElement);
 
             if (!empty($mandatoryChildSubElements)) {
                 $mandatorySubElementsFlag = true;
@@ -534,9 +546,7 @@ class Activity extends Model
      */
     public function isLevelTwoMultiDimensionElementCompleted($element, $data): bool
     {
-        $elementSchema = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
-
-        return $this->isLevelTwoMultiDimensionDataCompleted($elementSchema[$element], $data);
+        return $this->isLevelTwoMultiDimensionDataCompleted($this->getJsonSchema($element), $data);
     }
 
     /**
@@ -553,11 +563,11 @@ class Activity extends Model
             return false;
         }
 
-        $elementSchema = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
-        $subElements = $elementSchema[$element]['sub_elements'];
+        $elementSchema = $this->getJsonSchema($element);
+        $subElements = $elementSchema['sub_elements'];
 
         foreach ($subElements as $key => $subElement) {
-            $mandatorySubElementAttributes = array_key_exists('attributes', $subElement) ? $this->mandatoryAttributes($subElement['attributes']) : [];
+            $mandatorySubElementAttributes = $this->getArr($subElement);
 
             if (empty($mandatorySubElementAttributes)) {
                 continue;
@@ -603,31 +613,31 @@ class Activity extends Model
      *
      * @return bool
      */
-    public function isTargetAndActualAndBaselineCompleted($elementSchema, $data): bool
+    public function isTargetAndActualAndBaselineDataCompleted($elementSchema, $data): bool
     {
         if (!$this->isSingleDimensionAttributeCompleted($elementSchema, $data)) {
             return false;
         }
 
-        $commentData = array_key_exists('comment', $data) ? $data['comment'] : [];
+        $commentData = $this->extracted($data, 'comment');
 
         if (!$this->isLevelOneMultiDimensionDataCompleted($elementSchema['sub_elements']['comment'], $commentData)) {
             return false;
         }
 
-        $dimensionData = array_key_exists('dimension', $data) ? $data['dimension'] : [];
+        $dimensionData = $this->extracted($data, 'dimension');
 
         if (!$this->isLevelOneMultiDimensionDataCompleted($elementSchema['sub_elements']['dimension'], $dimensionData)) {
             return false;
         }
 
-        $locationData = array_key_exists('location', $data) ? $data['location'] : [];
+        $locationData = $this->extracted($data, 'location');
 
         if (!$this->isLevelOneMultiDimensionDataCompleted($elementSchema['sub_elements']['location'], $locationData)) {
             return false;
         }
 
-        $documentLinkData = array_key_exists('document_link', $data) ? $data['document_link'] : [];
+        $documentLinkData = $this->extracted($data, 'document_link');
 
         if (!$this->isLevelTwoMultiDimensionDataCompleted($elementSchema['sub_elements']['document_link'], $documentLinkData)) {
             return false;
@@ -646,36 +656,37 @@ class Activity extends Model
      */
     public function isPeriodElementCompleted($element, $data): bool
     {
-        $elementSchema = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
-        $subElements = array_key_exists('sub_elements', $elementSchema[$element]) ? $elementSchema[$element]['sub_elements'] : [];
+        $elementSchema = $this->getJsonSchema($element);
+        $subElements = $this->getArr1($elementSchema);
 
         foreach ($data as $datum) {
-            $periodStartData = array_key_exists('period_start', $datum) ? $datum['period_start'] : [];
-
-            if (!$this->isLevelOneMultiDimensionDataCompleted($subElements['period_start'], $periodStartData)) {
+            if (!$this->isLevelOneMultiDimensionDataCompleted($subElements['period_start'], $this->extracted($datum, 'period_start'))) {
                 return false;
             }
 
-            $periodEndData = array_key_exists('period_end', $datum) ? $datum['period_end'] : [];
-
-            if (!$this->isLevelOneMultiDimensionDataCompleted($subElements['period_end'], $periodEndData)) {
+            if (!$this->isLevelOneMultiDimensionDataCompleted($subElements['period_end'], $this->extracted($datum, 'period_end'))) {
                 return false;
             }
 
-            $targetData = array_key_exists('target', $datum) ? $datum['target'] : [];
-
-            foreach ($targetData as $targetDatum) {
-                if (!$this->isTargetAndActualAndBaselineCompleted($elementSchema[$element]['sub_elements']['target'], $targetDatum)) {
-                    return false;
-                }
+            if (!$this->isTargetAndActualAndBaselineCompleted($datum, $elementSchema['sub_elements'], 'target')) {
+                return false;
             }
 
-            $actualData = array_key_exists('actual', $datum) ? $datum['actual'] : [];
+            if (!$this->isTargetAndActualAndBaselineCompleted($datum, $elementSchema['sub_elements'], 'actual')) {
+                return false;
+            }
+        }
 
-            foreach ($actualData as $actualDatum) {
-                if (!$this->isTargetAndActualAndBaselineCompleted($elementSchema[$element]['sub_elements']['actual'], $actualDatum)) {
-                    return false;
-                }
+        return true;
+    }
+
+    public function isTargetAndActualAndBaselineCompleted($data, $subElements, $key)
+    {
+        $attributeData = $this->extracted($data, $key);
+
+        foreach ($attributeData as $attributeDatum) {
+            if (!$this->isTargetAndActualAndBaselineDataCompleted($subElements[$key], $attributeDatum)) {
+                return false;
             }
         }
 
@@ -696,27 +707,19 @@ class Activity extends Model
             return false;
         }
 
-        $titleData = array_key_exists('title', $data) ? $data['title'] : [];
-
-        if (!$this->isLevelOneMultiDimensionDataCompleted($elementSchema['sub_elements']['title'], $titleData)) {
+        if (!$this->isLevelOneMultiDimensionDataCompleted($elementSchema['sub_elements']['title'], $this->extracted($data, 'title'))) {
             return false;
         }
 
-        $descriptionData = array_key_exists('description', $data) ? $data['description'] : [];
-
-        if (!$this->isLevelOneMultiDimensionDataCompleted($elementSchema['sub_elements']['description'], $descriptionData)) {
+        if (!$this->isLevelOneMultiDimensionDataCompleted($elementSchema['sub_elements']['description'], $this->extracted($data, 'description'))) {
             return false;
         }
 
-        $referenceData = array_key_exists('reference', $data) ? $data['reference'] : [];
-
-        if (!$this->isLevelOneMultiDimensionDataCompleted($elementSchema['sub_elements']['reference'], $referenceData)) {
+        if (!$this->isLevelOneMultiDimensionDataCompleted($elementSchema['sub_elements']['reference'], $this->extracted($data, 'reference'))) {
             return false;
         }
 
-        $documentLinkData = array_key_exists('document_link', $data) ? $data['document_link'] : [];
-
-        if (!$this->isLevelTwoMultiDimensionDataCompleted($elementSchema['sub_elements']['document_link'], $documentLinkData)) {
+        if (!$this->isLevelTwoMultiDimensionDataCompleted($elementSchema['sub_elements']['document_link'], $this->extracted($data, 'document_link'))) {
             return false;
         }
 
@@ -733,17 +736,15 @@ class Activity extends Model
      */
     public function isIndicatorElementCompleted($element, $data): bool
     {
-        $elementSchema = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
+        $elementSchema = $this->getJsonSchema($element);
 
         foreach ($data as $datum) {
-            if (!$this->isResultAndIndicatorElementCompleted($elementSchema[$element], $datum)) {
+            if (!$this->isResultAndIndicatorElementCompleted($elementSchema, $datum)) {
                 return false;
             }
 
-            $baselineData = $datum['baseline'];
-
-            foreach ($baselineData as $baselineDatum) {
-                $this->isTargetAndActualAndBaselineCompleted($elementSchema[$element]['sub_elements']['baseline'], $baselineDatum);
+            if (!$this->isTargetAndActualAndBaselineCompleted($datum, $elementSchema['sub_elements'], 'baseline')) {
+                return false;
             }
         }
 
@@ -760,10 +761,10 @@ class Activity extends Model
      */
     public function isResultElementCompleted($element, $data): bool
     {
-        $elementSchema = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
+        $elementSchema = $this->getJsonSchema($element);
 
         foreach ($data as $datum) {
-            if (!$this->isResultAndIndicatorElementCompleted($elementSchema[$element], $datum)) {
+            if (!$this->isResultAndIndicatorElementCompleted($elementSchema, $datum)) {
                 return false;
             }
         }
@@ -795,7 +796,7 @@ class Activity extends Model
     public function getTitleElementCompletedAttribute(): bool
     {
         $this->element = 'title';
-        $elementSchema = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
+        $elementSchema = $this->getJsonSchema($this->element);
 
         return $this->isSubElementDataCompleted($this->mandatorySubElements($elementSchema['title']['sub_elements']), ['narrative' => $this->title]);
     }
@@ -1203,7 +1204,7 @@ class Activity extends Model
             '[{"reference":"ref test","humanitarian":"1","transaction_type":[{"transaction_type_code":"1"}],"transaction_date":[{"date":"2022-07-08"}],"value":[{"amount":"5000","date":"2022-07-08","currency":"AED"}],"description":[{"narrative":[{"narrative":"test description","language":"ab"},{"narrative":"description 2","language":"af"}]}],"provider_organization":[{"organization_identifier_code":"provider ref","provider_activity_id":"15","type":"15","narrative":[{"narrative":"narative 1","language":"ae"},{"narrative":"narrative 2","language":"am"}]}],"receiver_organization":[{"organization_identifier_code":"receiver org","receiver_activity_id":"16","type":"15","narrative":[{"narrative":"receiver narrative 1","language":"ab"},{"narrative":"receiver narrative 2","language":"ak"}]}],"disbursement_channel":[{"disbursement_channel_code":"123"}],"sector":[{"sector_vocabulary":"2","vocabulary_uri":null,"code":null,"text":null,"category_code":"112","sdg_goal":null,"sdg_target":null,"narrative":[{"narrative":"test narrative","language":"ab"},{"narrative":"test narrative 2","language":"am"}]},{"sector_vocabulary":"4","vocabulary_uri":null,"code":null,"text":"5638","category_code":null,"sdg_goal":null,"sdg_target":null,"narrative":[{"narrative":"narrative 22","language":"af"},{"narrative":"narrative 23","language":"am"}]}],"recipient_country":[{"country_code":"AL","narrative":[{"narrative":"test narrative","language":"ab"},{"narrative":"test narrative recipient","language":"am"}]}],"recipient_region":[{"region_vocabulary":"99","region_code":"123","custom_code":"test code","vocabulary_uri":"https:\/\/github.com\/younginnovations\/iatipublisher\/runs\/6980821807?check_suite_focus=true","narrative":[{"narrative":"narrative region 1","language":"aa"},{"narrative":"narrative region 2","language":"am"}]}],"flow_type":[{"flow_type":"10"}],"finance_type":[{"finance_type":"210"}],"aid_type":[{"aid_type_vocabulary":"1","aid_type_code":"A02","earmarking_category":"asdasd","earmarking_modality":"asd","cash_and_voucher_modalities":"asdasd"},{"aid_type_vocabulary":"4","aid_type_code":"asdsad","earmarking_category":"asdasd","earmarking_modality":"asdsad","cash_and_voucher_modalities":"1"}],"tied_status":[{"tied_status_code":"3"}]}]',
             true
         );
-        $elementSchema = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
+        $elementSchema = $this->getJsonSchema($this->element);
         $subElements = $elementSchema['transactions']['sub_elements'];
 
         foreach ($transactionData as $transactionDatum) {
@@ -1213,5 +1214,72 @@ class Activity extends Model
         }
 
         return true;
+    }
+
+    /**
+     * @param       $attributes
+     * @param array $mandatoryAttributes
+     *
+     * @return array
+     */
+    public function getMandatoryAttributes($attributes, array $mandatoryAttributes): array
+    {
+        foreach ($attributes as $attribute) {
+            if ($this->isFieldMandatory($attribute)) {
+                $mandatoryAttributes[] = $attribute['name'];
+            }
+        }
+
+        return $mandatoryAttributes;
+    }
+
+    /**
+     * @param $subElement
+     *
+     * @return array
+     */
+    public function getArr($subElement): array
+    {
+        return array_key_exists('attributes', $subElement) ? $this->mandatoryAttributes($subElement['attributes']) : [];
+    }
+
+    /**
+     * @param $subElement
+     *
+     * @return array
+     */
+    public function getArr1($subElement): array
+    {
+        return array_key_exists('sub_elements', $subElement) ? $this->mandatorySubElements($subElement['sub_elements']) : [];
+    }
+
+    /**
+     * @param $data
+     *
+     * @return array
+     */
+    public function extracted($data, $key): array
+    {
+        return array_key_exists($key, $data) ? $data[$key] : [];
+    }
+
+    /**
+     * @param $field
+     *
+     * @return bool
+     */
+    public function isFieldMandatory($field): bool
+    {
+        return array_key_exists('criteria', $field) && $field['criteria'] == 'mandatory';
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getJsonSchema($element): mixed
+    {
+        $elementJsonSchema = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
+
+        return $elementJsonSchema[$element];
     }
 }
