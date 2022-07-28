@@ -129,7 +129,7 @@ class ActivityService
     public function activityDetailStatus(Activity $activity): array
     {
         return [
-            'identifier'           => $activity->identifier_element_completed,
+            'iati_identifier'           => $activity->identifier_element_completed,
             'title'                => $activity->title_element_completed,
             'description'          => $activity->description_element_completed,
             'activity_status'      => $activity->activity_status_element_completed,

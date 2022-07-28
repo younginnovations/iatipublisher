@@ -95,38 +95,6 @@ class Activity extends Model
         'default_field_values' => 'json',
         'tag'                  => 'json',
     ];
-    private mixed $title;
-    private mixed $description;
-    private mixed $activity_status;
-    private mixed $activity_date;
-    private mixed $activity_scope;
-    private mixed $recipient_country;
-    private mixed $recipient_region;
-    private mixed $collaboration_type;
-    private mixed $default_flow_type;
-    private mixed $default_finance_type;
-    private mixed $default_aid_type;
-    private mixed $default_tied_status;
-    private mixed $capital_spend;
-    private mixed $related_activity;
-    private mixed $conditions;
-    private mixed $sector;
-    private mixed $humanitarian_scope;
-    private mixed $legacy_data;
-    private mixed $tag;
-    private mixed $policy_marker;
-    private mixed $other_identifier;
-    private mixed $country_budget_items;
-    private mixed $budget;
-    private mixed $participating_org;
-    private mixed $reporting_org;
-    private mixed $document_link;
-    private mixed $contact_info;
-    private mixed $location;
-    private mixed $planned_disbursement;
-    private mixed $transactions;
-    private mixed $result;
-    private mixed $iati_identifier;
 
     /**
      * Factory for creating activity.
@@ -153,6 +121,16 @@ class Activity extends Model
      *
      * @return HasMany
      */
+    public function transactions(): HasMany
+    {
+        return $this->hasMany(Transaction::class, 'activity_id', 'id');
+    }
+
+    /**
+     * Activity hasmany results.
+     *
+     * @return HasMany
+     */
     public function results(): HasMany
     {
         return $this->hasMany(Result::class, 'activity_id', 'id');
@@ -171,6 +149,62 @@ class Activity extends Model
     }
 
     /**
+     * Checks if array key exists.
+     *
+     * @param $data
+     * @param $key
+     *
+     * @return array
+     */
+    public function extracted($data, $key): array
+    {
+        return array_key_exists($key, $data) ? $data[$key] : [];
+    }
+
+    /**
+     * Returns element schema.
+     *
+     * @param $element
+     *
+     * @return mixed
+     */
+    public function getJsonSchema($element): mixed
+    {
+        $elementJsonSchema = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
+
+        return $this->extracted($elementJsonSchema, $element);
+    }
+
+    /**
+     * Returns mandatory fields.
+     *
+     * @param $field
+     *
+     * @return bool
+     */
+    public function isFieldMandatory($field): bool
+    {
+        return array_key_exists('criteria', $field) && $field['criteria'] == 'mandatory';
+    }
+
+    /**
+     * @param       $fields
+     * @param array $mandatoryFields
+     *
+     * @return array
+     */
+    public function getMandatoryFields($fields, array $mandatoryFields): array
+    {
+        foreach ($fields as $attribute) {
+            if ($this->isFieldMandatory($attribute)) {
+                $mandatoryFields[] = $attribute['name'];
+            }
+        }
+
+        return $mandatoryFields;
+    }
+
+    /**
      * Return mandatory attributes fields.
      *
      * @param $attributes
@@ -179,7 +213,7 @@ class Activity extends Model
      */
     public function mandatoryAttributes($attributes): array
     {
-        return $this->getMandatoryAttributes($attributes, []);
+        return $this->getMandatoryFields($attributes, []);
     }
 
     /**
@@ -203,7 +237,7 @@ class Activity extends Model
             if (isset($field['attributes'])) {
                 $attributes = $field['attributes'];
 
-                $mandatoryFields = $this->getMandatoryAttributes($attributes, $mandatoryFields);
+                $mandatoryFields = $this->getMandatoryFields($attributes, $mandatoryFields);
             }
 
             if (!empty($mandatoryFields)) {
@@ -212,6 +246,26 @@ class Activity extends Model
         }
 
         return $mandatoryElements;
+    }
+
+    /**
+     * @param $subElement
+     *
+     * @return array
+     */
+    public function getMandatoryAttributes($subElement): array
+    {
+        return array_key_exists('attributes', $subElement) ? $this->mandatoryAttributes($subElement['attributes']) : [];
+    }
+
+    /**
+     * @param $subElement
+     *
+     * @return array
+     */
+    public function getMandatorySubElements($subElement): array
+    {
+        return array_key_exists('sub_elements', $subElement) ? $this->mandatorySubElements($subElement['sub_elements']) : [];
     }
 
     /**
@@ -270,7 +324,7 @@ class Activity extends Model
      */
     public function isSingleDimensionAttributeCompleted($elementSchema, $data): bool
     {
-        $mandatoryAttributes = $this->getArr($elementSchema);
+        $mandatoryAttributes = $this->getMandatoryAttributes($elementSchema);
 
         if (!empty($mandatoryAttributes)) {
             if (empty($data)) {
@@ -297,7 +351,7 @@ class Activity extends Model
      */
     public function isMultiDimensionAttributeCompleted($elementSchema, $data): bool
     {
-        $mandatoryAttributes = $this->getArr($elementSchema);
+        $mandatoryAttributes = $this->getMandatoryAttributes($elementSchema);
 
         if (!empty($mandatoryAttributes)) {
             if (empty($data)) {
@@ -404,8 +458,8 @@ class Activity extends Model
     public function isSubElementCompleted($subElements, $data): bool
     {
         foreach ($subElements as $key => $subElement) {
-            $mandatorySubElementAttributes = $this->getArr($subElement);
-            $mandatoryChildSubElements = $this->getArr1($subElement);
+            $mandatorySubElementAttributes = $this->getMandatoryAttributes($subElement);
+            $mandatoryChildSubElements = $this->getMandatorySubElements($subElement);
 
             if (!empty($mandatorySubElementAttributes) || !empty($mandatoryChildSubElements)) {
                 if (!array_key_exists($key, $data)) {
@@ -451,8 +505,8 @@ class Activity extends Model
      */
     public function isLevelOneMultiDimensionDataCompleted($elementSchema, $data): bool
     {
-        $mandatoryAttributes = $this->getArr($elementSchema);
-        $mandatorySubElements = $this->getArr1($elementSchema);
+        $mandatoryAttributes = $this->getMandatoryAttributes($elementSchema);
+        $mandatorySubElements = $this->getMandatorySubElements($elementSchema);
 
         return $this->isElementCompleted($mandatoryAttributes, $mandatorySubElements, $data);
     }
@@ -507,14 +561,14 @@ class Activity extends Model
         $mandatorySubElementsFlag = false;
 
         foreach ($subElements as $subElement) {
-            $mandatorySubElementAttributes = $this->getArr($subElement);
+            $mandatorySubElementAttributes = $this->getMandatoryAttributes($subElement);
 
             if (!empty($mandatorySubElementAttributes)) {
                 $mandatorySubElementsFlag = true;
                 break;
             }
 
-            $mandatoryChildSubElements = $this->getArr1($subElement);
+            $mandatoryChildSubElements = $this->getMandatorySubElements($subElement);
 
             if (!empty($mandatoryChildSubElements)) {
                 $mandatorySubElementsFlag = true;
@@ -567,7 +621,7 @@ class Activity extends Model
         $subElements = $elementSchema['sub_elements'];
 
         foreach ($subElements as $key => $subElement) {
-            $mandatorySubElementAttributes = $this->getArr($subElement);
+            $mandatorySubElementAttributes = $this->getMandatoryAttributes($subElement);
 
             if (empty($mandatorySubElementAttributes)) {
                 continue;
@@ -657,7 +711,7 @@ class Activity extends Model
     public function isPeriodElementCompleted($element, $data): bool
     {
         $elementSchema = $this->getJsonSchema($element);
-        $subElements = $this->getArr1($elementSchema);
+        $subElements = $this->getMandatorySubElements($elementSchema);
 
         foreach ($data as $datum) {
             if (!$this->isLevelOneMultiDimensionDataCompleted($subElements['period_start'], $this->extracted($datum, 'period_start'))) {
@@ -680,7 +734,14 @@ class Activity extends Model
         return true;
     }
 
-    public function isTargetAndActualAndBaselineCompleted($data, $subElements, $key)
+    /**
+     * @param $data
+     * @param $subElements
+     * @param $key
+     *
+     * @return bool
+     */
+    public function isTargetAndActualAndBaselineCompleted($data, $subElements, $key): bool
     {
         $attributeData = $this->extracted($data, $key);
 
@@ -779,7 +840,7 @@ class Activity extends Model
      */
     public function getIdentifierElementCompletedAttribute(): bool
     {
-        $identifier = json_decode($this->iati_identifier, true);
+        $identifier = $this->iati_identifier;
 
         if (!array_key_exists('activity_identifier', $identifier) || empty($identifier['activity_identifier'])) {
             return false;
@@ -798,7 +859,7 @@ class Activity extends Model
         $this->element = 'title';
         $elementSchema = $this->getJsonSchema($this->element);
 
-        return $this->isSubElementDataCompleted($this->mandatorySubElements($elementSchema['title']['sub_elements']), ['narrative' => $this->title]);
+        return $this->isSubElementDataCompleted($this->mandatorySubElements($elementSchema['sub_elements']), ['narrative' => $this->title]);
     }
 
     /**
@@ -1074,12 +1135,7 @@ class Activity extends Model
     {
         $this->element = 'document_link';
 
-        $tempData = json_decode(
-            '[{"url":"asdsad","format":"image\/png","title":[{"narrative":[{"narrative":"document-link-narrative1","language":"en"}]}],"description":[{"narrative":[{"narrative":null,"language":null}]}],"category":[{"code":"A01"}],"language":[{"language":null}],"document_date":[{"date":null}]}]',
-            true
-        );
-
-        return $this->isLevelTwoMultiDimensionElementCompleted('document_link', $tempData);
+        return $this->isLevelTwoMultiDimensionElementCompleted('document_link', $this->document_link);
     }
 
     /**
@@ -1131,18 +1187,50 @@ class Activity extends Model
     }
 
     /**
+     * Returns period, indicator and result data.
+     *
+     * @return array
+     */
+    public function getFormattedResults(): array
+    {
+        $results = $this->results()->with('indicators.periods')->get()->toArray();
+        $resultData = [];
+        $indicatorData = [];
+        $periodData = [];
+
+        if (!empty($results)) {
+            foreach ($results as $result) {
+                $resultData[] = $result['result'];
+                $indicators = $result['indicators'];
+
+                if (!empty($indicators)) {
+                    foreach ($indicators as $indicator) {
+                        $indicatorData[] = $indicator;
+                        $periods = $indicator['periods'];
+
+                        if (!empty($periods)) {
+                            foreach ($periods as $period) {
+                                $periodData[] = $period;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        return [$resultData, $indicatorData, $periodData];
+    }
+
+    /**
      * Returns result element complete status.
      *
      * @return bool
      */
     public function getResultElementCompletedAttribute(): bool
     {
-        $this->element = 'period';
+        [$resultData, $periodData, $indicatorData] = $this->getFormattedResults();
 
-        $periodData = json_decode(
-            '[{"period_start":[{"date":"asd"}],"period_end":[{"date":"asd"}],"target":[{"value":"12","comment":[{"narrative":[{"narrative":"asdasd","language":"ak"}]}], "dimension":[{"name":"asdsad","value":null}],"document_link":[{"url":"www.google.com","format":"asdasd","title":[{"narrative":[{"narrative":"test","language":"fr"}]}],"description":[{"narrative":[{"narrative":"asdasd","language":"en"}]}],"category":[{"code":"AG"}],"language":[{"language":null}],"document_date":[{"date":"2022-08-06"}]}],"location":[{"reference":null}]}],"actual":[{"value":"10","comment":[{"narrative":[{"narrative":"comment actual","language":"bs"}]}],"dimension":[{"name":"asdsad","value":null}],"document_link":[{"url":"www.google.com","format":"asdasd","title":[{"narrative":[{"narrative":"asdasd","language":"en"}]}],"description":[{"narrative":[{"narrative":"asdasda","language":"fr"}]}],"category":[{"code":"AE"}],"language":[{"language":null}],"document_date":[{"date":"2022-08-06"}]}],"location":[{"reference":null}]}]},{"period_start":[{"date":"2022-06-28"}],"period_end":[{"date":"2022-08-06"}],"target":[{"value":"12","comment":[{"narrative":[{"narrative":"comment","language":"ak"}]}],"dimension":[{"name":"asdsad","value":null}],"document_link":[{"url":"www.google.com","format":"asdasd","title":[{"narrative":[{"narrative":"asdasda","language":"ar"}]}],"description":[{"narrative":[{"narrative":"asdasda","language":"gr"}]}],"category":[{"code":"BB"}],"language":[{"language":null}],"document_date":[{"date":"2022-08-06"}]}],"location":[{"reference":null}]}],"actual":[{"value":"10","comment":[{"narrative":[{"narrative":"comment actual","language":"bs"}]}],"dimension":[{"name":"asdasd","value":null}],"document_link":[{"url":"www.google.com","format":"asdasd","title":[{"narrative":[{"narrative":"asdasda","language":"sp"}]}],"description":[{"narrative":[{"narrative":"asdasda","language":"an"}]}],"category":[{"code":"EE"}],"language":[{"language":null}],"document_date":[{"date":"2020"}]}],"location":[{"reference":null}]}]}]',
-            true
-        );
+        $this->element = 'period';
 
         if (!$this->isPeriodElementCompleted('period', $periodData)) {
             return false;
@@ -1150,21 +1238,11 @@ class Activity extends Model
 
         $this->element = 'indicator';
 
-        $indicatorData = json_decode(
-            '[{"measure":"1","ascending":"1","aggregation_status":"1","title":[{"narrative":[{"narrative":"asdasd","language":"ab"},{"narrative":"test title 2","language":"af"}]}],"description":[{"narrative":[{"narrative":"test description 1","language":"ab"},{"narrative":"test description 2","language":"af"}]}],"document_link":[{"url":"/https://minio-stage.yipl.com.np:9000/document_link/1/uahep_prod422.backup","format":"application/3gpp-ims+xml","title":[{"narrative":[{"narrative":"test title 1","language":"ak"},{"narrative":"test title 2","language":"ak"}]}],"description":[{"narrative":[{"narrative":"test description","language":"ab"},{"narrative":"test 2 description","language":"ak"}]}],"category":[{"code":"A03"},{"code":"A04"}],"language":[{"language":"ab"},{"language":"ak"}],"document_date":[{"date":"2022-07-11"}]}],"reference":[{"vocabulary":"2","code":"123","indicator_uri":"http://localhost:8000/activities/1/result/1/indicator/create"},{"vocabulary":"4","code":"456","indicator_uri":"http://localhost:8000/activities/1/result/1/indicator/create"}],"baseline":[{"year":"2020","date":"2020-02-13","value":"12","comment":[{"narrative":[{"narrative":"comment","language":"ae"},{"narrative":"comment 2","language":"am"}]}],"dimension":[{"name":"dimension 1","value":"12"},{"name":"dimension 2","value":"23"}],"document_link":[{"url":"/http://localhost:8000/activities/1/result/1/indicator/create","format":"application/3gpdash-qoe-report+xml","title":[{"narrative":[{"narrative":"test","language":"ab"},{"narrative":"title document link","language":"am"}]}],"description":[{"narrative":[{"narrative":"description 1","language":"ae"},{"narrative":"description 2","language":"am"}]}],"category":[{"code":"A04"},{"code":"A02"}],"language":[{"language":"ab"},{"language":"am"}],"document_date":[{"date":"2022-07-07"}]}],"location":[{"reference":"location 1"}]},{"year":"2022","date":"2022-07-07","value":"123","comment":[{"narrative":[{"narrative":"comment","language":"ae"},{"narrative":"comment 2","language":"am"}]}],"dimension":[{"name":"dimension baseline 2","value":"456"}],"document_link":[{"url":"/http://localhost:8000/activities/1/result/1/indicator/create","format":"application/3gpp-ims+xml","title":[{"narrative":[{"narrative":"narrative 1","language":"af"},{"narrative":"narrative 2","language":"ae"}]}],"description":[{"narrative":[{"narrative":"des","language":"ab"}]}],"category":[{"code":"A05"},{"code":"A06"}],"language":[{"language":"ae"},{"language":"am"}],"document_date":[{"date":"2022-07-07"}]},{"url":"/document_link 2","format":"application/3gpp-ims+xml","title":[{"narrative":[{"narrative":"asdf","language":"ab"}]}],"description":[{"narrative":[{"narrative":"narrative","language":"ab"},{"narrative":"narrative","language":"ak"}]}],"category":{"0":{"code":"A05"},"7":{"code":"A04"}},"language":{"0":{"language":"aa"},"6":{"language":"ak"}},"document_date":[{"date":"2022-07-07"}]},{"url":"/document_link 2","format":"application/3gpp-ims+xml","title":[{"narrative":[{"narrative":"asdf","language":"ab"}]}],"description":[{"narrative":[{"narrative":"narrative","language":"ab"},{"narrative":"narrative","language":"ak"}]}],"category":[{"code":"A05"},{"code":"A04"}],"language":[{"language":"aa"},{"language":"ak"}],"document_date":[{"date":"2022-07-07"}]}],"location":[{"reference":"test location"}]}]}]',
-            true
-        );
-
         if (!$this->isIndicatorElementCompleted('indicator', $indicatorData)) {
             return false;
         }
 
         $this->element = 'result';
-
-        $resultData = json_decode(
-            '[{"type":"1","aggregation_status":"1","title":[{"narrative":[{"narrative":"title narrative 1","language":"aa"},{"narrative":"title narrative 2","language":"am"}]}],"description":[{"narrative":[{"narrative":"description narrative 1","language":"aa"},{"narrative":"description narrative 2","language":"am"}]}],"document_link":[{"url":"https:\/\/minio-stage.yipl.com.np:9000\/document_link\/1\/uahep_prod422.backup","format":"application\/1d-interleaved-parityfec","title":[{"narrative":[{"narrative":"title 11","language":"ab"},{"narrative":"title 12","language":"am"}]}],"description":[{"narrative":[{"narrative":"description 11","language":"aa"},{"narrative":"description 12","language":"am"}]}],"category":[{"code":"A01"},{"code":"A06"}],"language":[{"language":"aa"},{"language":"am"}],"document_date":[{"date":"2022-07-07"}]},{"url":"http:\/\/192.168.254.240:9000\/document_link\/2\/Uahep.postman_collection.json","format":"application\/1d-interleaved-parityfec","title":[{"narrative":[{"narrative":"title 21","language":"aa"},{"narrative":"title 22","language":"am"}]}],"description":[{"narrative":[{"narrative":"description 21","language":"aa"},{"narrative":"description 22","language":"am"}]}],"category":[{"code":"A01"},{"code":"A05"}],"language":[{"language":"aa"},{"language":"am"}],"document_date":[{"date":"asdsad"}]}],"reference":[{"vocabulary":"99","code":"123","vocabulary_uri":"http:\/\/json-parser.com\/8e6e1d55\/1"},{"vocabulary":"99","code":"456","vocabulary_uri":"http:\/\/json-parser.com\/8e6e1d55\/2"}]}]',
-            true
-        );
 
         if (!$this->isResultElementCompleted('result', $resultData)) {
             return false;
@@ -1199,87 +1277,21 @@ class Activity extends Model
      */
     public function getTransactionsElementCompletedAttribute(): bool
     {
-        $this->element = 'transactions';
-        $transactionData = json_decode(
-            '[{"reference":"ref test","humanitarian":"1","transaction_type":[{"transaction_type_code":"1"}],"transaction_date":[{"date":"2022-07-08"}],"value":[{"amount":"5000","date":"2022-07-08","currency":"AED"}],"description":[{"narrative":[{"narrative":"test description","language":"ab"},{"narrative":"description 2","language":"af"}]}],"provider_organization":[{"organization_identifier_code":"provider ref","provider_activity_id":"15","type":"15","narrative":[{"narrative":"narative 1","language":"ae"},{"narrative":"narrative 2","language":"am"}]}],"receiver_organization":[{"organization_identifier_code":"receiver org","receiver_activity_id":"16","type":"15","narrative":[{"narrative":"receiver narrative 1","language":"ab"},{"narrative":"receiver narrative 2","language":"ak"}]}],"disbursement_channel":[{"disbursement_channel_code":"123"}],"sector":[{"sector_vocabulary":"2","vocabulary_uri":null,"code":null,"text":null,"category_code":"112","sdg_goal":null,"sdg_target":null,"narrative":[{"narrative":"test narrative","language":"ab"},{"narrative":"test narrative 2","language":"am"}]},{"sector_vocabulary":"4","vocabulary_uri":null,"code":null,"text":"5638","category_code":null,"sdg_goal":null,"sdg_target":null,"narrative":[{"narrative":"narrative 22","language":"af"},{"narrative":"narrative 23","language":"am"}]}],"recipient_country":[{"country_code":"AL","narrative":[{"narrative":"test narrative","language":"ab"},{"narrative":"test narrative recipient","language":"am"}]}],"recipient_region":[{"region_vocabulary":"99","region_code":"123","custom_code":"test code","vocabulary_uri":"https:\/\/github.com\/younginnovations\/iatipublisher\/runs\/6980821807?check_suite_focus=true","narrative":[{"narrative":"narrative region 1","language":"aa"},{"narrative":"narrative region 2","language":"am"}]}],"flow_type":[{"flow_type":"10"}],"finance_type":[{"finance_type":"210"}],"aid_type":[{"aid_type_vocabulary":"1","aid_type_code":"A02","earmarking_category":"asdasd","earmarking_modality":"asd","cash_and_voucher_modalities":"asdasd"},{"aid_type_vocabulary":"4","aid_type_code":"asdsad","earmarking_category":"asdasd","earmarking_modality":"asdsad","cash_and_voucher_modalities":"1"}],"tied_status":[{"tied_status_code":"3"}]}]',
-            true
-        );
-        $elementSchema = $this->getJsonSchema($this->element);
-        $subElements = $elementSchema['transactions']['sub_elements'];
+        $transactionData = $this->transactions()->get()->toArray();
 
-        foreach ($transactionData as $transactionDatum) {
-            if (!$this->checkTransactionData($subElements, $transactionDatum)) {
-                return false;
+        if (!empty($transactionData)) {
+            $this->element = 'transactions';
+            $elementSchema = $this->getJsonSchema($this->element);
+
+            foreach ($transactionData as $transactionDatum) {
+                if (!$this->checkTransactionData($elementSchema['sub_elements'], $transactionDatum['transaction'])) {
+                    return false;
+                }
             }
+
+            return true;
         }
 
-        return true;
-    }
-
-    /**
-     * @param       $attributes
-     * @param array $mandatoryAttributes
-     *
-     * @return array
-     */
-    public function getMandatoryAttributes($attributes, array $mandatoryAttributes): array
-    {
-        foreach ($attributes as $attribute) {
-            if ($this->isFieldMandatory($attribute)) {
-                $mandatoryAttributes[] = $attribute['name'];
-            }
-        }
-
-        return $mandatoryAttributes;
-    }
-
-    /**
-     * @param $subElement
-     *
-     * @return array
-     */
-    public function getArr($subElement): array
-    {
-        return array_key_exists('attributes', $subElement) ? $this->mandatoryAttributes($subElement['attributes']) : [];
-    }
-
-    /**
-     * @param $subElement
-     *
-     * @return array
-     */
-    public function getArr1($subElement): array
-    {
-        return array_key_exists('sub_elements', $subElement) ? $this->mandatorySubElements($subElement['sub_elements']) : [];
-    }
-
-    /**
-     * @param $data
-     *
-     * @return array
-     */
-    public function extracted($data, $key): array
-    {
-        return array_key_exists($key, $data) ? $data[$key] : [];
-    }
-
-    /**
-     * @param $field
-     *
-     * @return bool
-     */
-    public function isFieldMandatory($field): bool
-    {
-        return array_key_exists('criteria', $field) && $field['criteria'] == 'mandatory';
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getJsonSchema($element): mixed
-    {
-        $elementJsonSchema = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
-
-        return $elementJsonSchema[$element];
+        return false;
     }
 }
