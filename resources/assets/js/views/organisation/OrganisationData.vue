@@ -314,7 +314,6 @@
                 text-n-40
               "
             >
-              <!-- <div class="mr-4 shrink-0">{{ formatTitle(key) }}</div> -->
             </div>
             <template v-for="(element, name, i) in post.elements" :key="i">
 
@@ -358,7 +357,7 @@ import Toast from '../../components/Toast.vue';
 import { useToggle } from '@vueuse/core';
 
 export default defineComponent({
-  name: 'OrganisationElements',
+  name: 'organisation-elements',
   components: {
     HoverText,
     RadialProgressBar,
