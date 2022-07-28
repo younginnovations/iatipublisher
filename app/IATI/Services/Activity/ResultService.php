@@ -7,6 +7,7 @@ namespace App\IATI\Services\Activity;
 use App\IATI\Repositories\Activity\ResultRepository;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 /**
  * Class ResultService.
@@ -95,5 +96,18 @@ class ResultService
     public function getActivityResult($activityId): array
     {
         return $this->resultRepository->getActivityResult($activityId);
+    }
+
+    /**
+     * Returns array of paginated results belonging to an activity.
+     *
+     * @param $activityId
+     * @param $page
+     *
+     * return LengthAwarePaginator|Collection
+     */
+    public function getPaginatedResult($activityId, $page): LengthAwarePaginator|Collection
+    {
+        return $this->resultRepository->getPaginatedResult($activityId, $page);
     }
 }

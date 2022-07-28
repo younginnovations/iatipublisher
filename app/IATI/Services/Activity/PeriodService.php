@@ -8,6 +8,7 @@ use App\IATI\Models\Activity\Period;
 use App\IATI\Repositories\Activity\PeriodRepository;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 /**
  * Class PeriodService.
@@ -77,5 +78,18 @@ class PeriodService
     public function getPeriodOfIndicator($indicatorId): Collection
     {
         return $this->periodRepository->getPeriodOfIndicator($indicatorId);
+    }
+
+    /**
+     * Returns array of paginated period belonging to indicator of an result.
+     *
+     * @param $indicatorId
+     * @param $page
+     *
+     * return LengthAwarePaginator|Collection
+     */
+    public function getPaginatedPeriod($indicatorId, $page): LengthAwarePaginator|Collection
+    {
+        return $this->periodRepository->getPaginatedPeriod($indicatorId, $page);
     }
 }

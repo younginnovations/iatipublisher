@@ -9,6 +9,7 @@ use App\IATI\Elements\Builder\TransactionElementFormCreator;
 use App\IATI\Models\Activity\Transaction;
 use App\IATI\Services\Activity\ActivityService;
 use App\IATI\Services\Activity\TransactionService;
+use Illuminate\Http\JsonResponse;
 
 class TransactionController extends Controller
 {
@@ -91,7 +92,7 @@ class TransactionController extends Controller
             $activity = $this->activityService->getActivity($activityId);
             $this->transactionElementFormCreator->url = route('admin.activities.transactions.store', $activityId);
             $form = $this->transactionElementFormCreator->editForm([], $element['transactions'], 'POST');
-            $data = ['core'=> $element['transactions']['criteria'] ?? false, 'status'=> false, 'title'=> $element['transactions']['label'], 'name'=>'transactions'];
+            $data = ['core' => $element['transactions']['criteria'] ?? false, 'status' => false, 'title' => $element['transactions']['label'], 'name' => 'transactions'];
 
             return view('activity.transaction.transaction', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {
@@ -117,9 +118,9 @@ class TransactionController extends Controller
             $transactionData = $request->except('_token');
 
             if (!$this->transactionService->create([
-                    'activity_id' => $activityId,
-                    'transaction' => $transactionData,
-                ])) {
+                'activity_id' => $activityId,
+                'transaction' => $transactionData,
+            ])) {
                 return redirect()->route('admin.activities.show', $activityId)->with(
                     'error',
                     'Error has occurred while creating activity transaction.'
@@ -181,7 +182,7 @@ class TransactionController extends Controller
             $activityTransaction = $this->transactionService->getTransaction($transactionId, $activityId);
             $this->transactionElementFormCreator->url = route('admin.activities.transactions.update', [$activityId, $transactionId]);
             $form = $this->transactionElementFormCreator->editForm($activityTransaction->transaction, $element['transactions'], 'PUT');
-            $data = ['core'=> $element['transactions']['criteria'] ?? false, 'status'=> false, 'title'=> $element['transactions']['label'], 'name'=>'transactions'];
+            $data = ['core' => $element['transactions']['criteria'] ?? false, 'status' => false, 'title' => $element['transactions']['label'], 'name' => 'transactions'];
 
             return view('activity.transaction.transaction', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {
@@ -242,5 +243,30 @@ class TransactionController extends Controller
     public function destroy(Transaction $transaction)
     {
         //
+    }
+
+    /*
+     * Get transaction of the corresponding activity
+     *
+     * @param $activityId
+     * @param $page
+     *
+     * @return JsonResponse
+     */
+    public function getTransaction($activityId, $page = 1): JsonResponse
+    {
+        try {
+            $transaction = $this->transactionService->getPaginatedTransaction($activityId, $page);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Transactions fetched successfully',
+                'data'    => $transaction,
+            ]);
+        } catch (\Exception $e) {
+            logger()->error($e->getMessage());
+
+            return response()->json(['success' => false, 'message' => 'Error occurred while fetching the data']);
+        }
     }
 }

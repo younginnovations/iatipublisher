@@ -139,4 +139,17 @@ class PeriodRepository
     {
         return $this->indicatorPeriod->where('indicator_id', $indicatorId)->get();
     }
+
+    /**
+     * Returns all period belonging to indicator id.
+     *
+     * @param int $indicatorId
+     * @param int $page
+     *
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public function getPaginatedPeriod($indicatorId, $page = 1): Collection | \Illuminate\Pagination\LengthAwarePaginator
+    {
+        return $this->indicatorPeriod->where('indicator_id', $indicatorId)->orderBy('created_at', 'DESC')->paginate(10, ['*'], 'indicator', $page);
+    }
 }

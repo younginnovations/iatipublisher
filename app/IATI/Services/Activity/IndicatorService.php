@@ -8,6 +8,7 @@ use App\IATI\Models\Activity\Indicator;
 use App\IATI\Repositories\Activity\IndicatorRepository;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 /**
  * Class IndicatorService.
@@ -77,5 +78,18 @@ class IndicatorService
     public function getResultIndicator($resultId, $resultIndicatorId): Model
     {
         return $this->indicatorRepository->getResultIndicator($resultId, $resultIndicatorId);
+    }
+
+    /**
+     * Returns array of paginated indicator belonging to result of an activity.
+     *
+     * @param $resultId
+     * @param $page
+     *
+     * return LengthAwarePaginator|Collection
+     */
+    public function getPaginatedIndicator($resultId, $page): LengthAwarePaginator|Collection
+    {
+        return $this->indicatorRepository->getPaginatedIndicator($resultId, $page);
     }
 }

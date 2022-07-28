@@ -8,6 +8,7 @@ use App\IATI\Elements\Builder\ResultElementFormCreator;
 use App\IATI\Models\Activity\Result;
 use App\IATI\Services\Activity\ActivityService;
 use App\IATI\Services\Activity\ResultService;
+use Illuminate\Http\JsonResponse;
 
 /**
  * Class ResultController.
@@ -83,7 +84,7 @@ class ResultController extends Controller
             $activity = $this->activityService->getActivity($id);
             $this->resultElementFormCreator->url = route('admin.activities.result.store', $id);
             $form = $this->resultElementFormCreator->editForm([], $element['result']);
-            $data = ['core'=> $element['result']['criteria'] ?? false, 'status'=> false, 'title'=> $element['result']['label'], 'name'=>'result'];
+            $data = ['core' => $element['result']['criteria'] ?? false, 'status' => false, 'title' => $element['result']['label'], 'name' => 'result'];
 
             return view('activity.result.result', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {
@@ -176,7 +177,7 @@ class ResultController extends Controller
             $activityResult = $this->resultService->getResult($resultId, $activityId);
             $this->resultElementFormCreator->url = route('admin.activities.result.update', [$activityId, $resultId]);
             $form = $this->resultElementFormCreator->editForm($activityResult->result, $element['result'], 'PUT');
-            $data = ['core'=> $element['result']['criteria'] ?? false, 'status'=> false, 'title'=> $element['result']['label'], 'name'=>'result'];
+            $data = ['core' => $element['result']['criteria'] ?? false, 'status' => false, 'title' => $element['result']['label'], 'name' => 'result'];
 
             return view('activity.result.result', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {
@@ -237,5 +238,30 @@ class ResultController extends Controller
     public function destroy(Result $result)
     {
         //
+    }
+
+    /*
+     * Get results of the corresponding activity
+     *
+     * @param $activityId
+     * @param $page
+     *
+     * @return JsonResponse
+     */
+    public function getResult($activityId, $page = 1): JsonResponse
+    {
+        try {
+            $result = $this->resultService->getPaginatedResult($activityId, $page);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Results fetched successfully',
+                'data'    => $result,
+            ]);
+        } catch (\Exception $e) {
+            logger()->error($e->getMessage());
+
+            return response()->json(['success' => false, 'message' => 'Error occurred while fetching the data']);
+        }
     }
 }

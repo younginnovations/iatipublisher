@@ -140,4 +140,17 @@ class IndicatorRepository
     {
         return $this->resultIndicator->where('id', $resultIndicatorId)->where('result_id', $resultId)->first();
     }
+
+    /**
+     * Returns all indicator belonging to resultId.
+     *
+     * @param int $resultId
+     * @param int $page
+     *
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public function getPaginatedIndicator($resultId, $page = 1): Collection | \Illuminate\Pagination\LengthAwarePaginator
+    {
+        return $this->resultIndicator->where('result_id', $resultId)->orderBy('created_at', 'DESC')->paginate(10, ['*'], 'indicator', $page);
+    }
 }

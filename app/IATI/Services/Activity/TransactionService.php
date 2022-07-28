@@ -7,6 +7,7 @@ namespace App\IATI\Services\Activity;
 use App\IATI\Repositories\Activity\TransactionRepository;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 /**
  * Class TransactionService.
@@ -101,5 +102,18 @@ class TransactionService
     public function getActivityTransactions($activityId): ?Collection
     {
         return $this->transactionRepository->getActivityTransactions($activityId);
+    }
+
+    /**
+     * Returns array of paginated transactions belonging to an activity.
+     *
+     * @param $activityId
+     * @param $page
+     *
+     * return LengthAwarePaginator|Collection
+     */
+    public function getPaginatedTransaction($activityId, $page): LengthAwarePaginator|Collection
+    {
+        return $this->transactionRepository->getPaginatedTransaction($activityId, $page);
     }
 }

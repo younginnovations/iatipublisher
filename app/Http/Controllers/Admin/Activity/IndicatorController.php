@@ -10,6 +10,7 @@ use App\IATI\Services\Activity\ActivityService;
 use App\IATI\Services\Activity\IndicatorService;
 use App\IATI\Services\Activity\PeriodService;
 use App\IATI\Services\Activity\ResultService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class IndicatorController extends Controller
@@ -256,5 +257,31 @@ class IndicatorController extends Controller
     public function destroy(Indicator $indicator)
     {
         //
+    }
+
+    /*
+     * Get indicator of the corresponding activity
+     *
+     * @param $activityId
+     * @param $resultId
+     * @param $page
+     *
+     * @return JsonResponse
+     */
+    public function getIndicator($activityId, $resultId, $page = 1): JsonResponse
+    {
+        try {
+            $indicator = $this->indicatorService->getPaginatedIndicator($resultId, $page);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Indicators fetched successfully',
+                'data'    => $indicator,
+            ]);
+        } catch (\Exception $e) {
+            logger()->error($e->getMessage());
+
+            return response()->json(['success' => false, 'message' => 'Error occurred while fetching the data']);
+        }
     }
 }
