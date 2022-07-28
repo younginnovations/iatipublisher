@@ -2,6 +2,6 @@
 
 @section('content')
     <organisation-data :elements="{{ json_encode($elements) }}" :groups="{{ json_encode($elementGroups) }}"
-        :organization="{{ json_encode($organization) }}" :progress="{{ $progress }}"
-        :toast="{{ json_encode($toast) }}" />
+        :organization="{{ json_encode($organization) }}" :progress="{{ $progress }}" :toast="{{ json_encode($toast) }}"
+        :types="{{ json_encode($types) }}" />
 @endsection

@@ -32,11 +32,11 @@ class OrganizationIdentifierRepository
      *
      * @param $organizationId
      *
-     * @return array
+     * @return string
      */
-    public function getOrganizationIdentifierData($organizationId): array
+    public function getIdentifierData($organizationId): string
     {
-        return $this->organization->findorFail($organizationId)->organization_identifier;
+        return $this->organization->findorFail($organizationId)->identifier;
     }
 
     /**

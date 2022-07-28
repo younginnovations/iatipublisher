@@ -32,11 +32,11 @@ class OrganizationIdentifierService
      *
      * @param int $organization_id
      *
-     * @return array
+     * @return string
      */
-    public function getOrganizationIdentifierData(int $organization_id): array
+    public function getIdentifierData(int $organization_id): string
     {
-        return $this->organizationIdentifierRepository->getOrganizationIdentifierData($organization_id);
+        return $this->organizationIdentifierRepository->getIdentifierData($organization_id);
     }
 
     /**
@@ -61,7 +61,7 @@ class OrganizationIdentifierService
      */
     public function update($organizationIdentifier, $organization): bool
     {
-        $organization->organizationIdentifier = $organizationIdentifier['narrative'];
+        $organization->identifier = $organizationIdentifier['organisation_identifier'];
 
         return $organization->save();
     }

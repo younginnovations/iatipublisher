@@ -52,7 +52,7 @@
               font-bold
               uppercase
             "
-            href="/1/title-form"
+            :href="'/organisation/'+title"
           >
             <svg-vue class="mr-0.5 text-base" icon="edit"></svg-vue>
             <span>Edit</span>
@@ -76,53 +76,110 @@
           {{ content.identifier }}
         </div>
         <div v-if="title == 'name'">
-          {{ content }}
-        </div>
-        <div v-if="title == 'reporting_org'" class="language">
-          {{ content }}
+          <div v-for="(post, i) in data.content" :key="i" class="title-content">
+            <div v-if="post.narrative" class="flex flex-col">
+              <span v-if="post.language" class="language mb-1.5">
+                (Language: {{ types.languages[post.language] }})
+              </span>
+              <span v-if="post.narrative" class="description text-sm">
+                {{ post.narrative }}
+              </span>
+            </div>
+            <span v-else class="text-sm italic">Title Not Available</span>
+            <div v-if="i !== data.content.length - 1" class="mb-4"></div>
+          </div>
         </div>
         <div v-if="title == 'reporting_org'">
-          {{ content.narrative }}
+          <div
+            v-for="(reporting_org, index) in content"
+            :key="index"
+            class="flex flex-col"
+          >
+            <span class="element-title">{{
+             types.organizationType[reporting_org.type]
+            }}</span>
+            <table class="table-head">
+              <tr>
+                <td>Reference</td>
+                <td>
+                  {{ reporting_org.ref }}
+                </td>
+              </tr>
+              <!-- <tr>
+                <td>Type</td>
+                <td>{{ reporting_org.type }}</td>
+              </tr> -->
+              <tr>
+                <td>Secondary Reporter</td>
+                <td>{{ reporting_org.secondary_reporter? 'True' : 'False' }}</td>
+              </tr>
+              <tr>
+                <td>Narrative</td>
+                <td>
+                  <div
+                    v-for="(narrative, j) in reporting_org.narrative"
+                    :key="j"
+                  >
+                    <div class="language">
+                      {{ narrative.language }}
+                    </div>
+                    <span class="">{{ narrative.narrative }}</span>
+                  </div>
+                </td>
+              </tr>
+            </table>
+          </div>
         </div>
         <!-- total budget -->
         <div v-if="title == 'total_budget'">
-          <div v-for="(total_budget, index) in content" :key="index">
-            <!-- {{ total_budget }} -->
-
+          <div
+            v-for="(total_budget, index) in content"
+            :key="index"
+            class="flex flex-col"
+          >
             <span class="element-title">{{
-              total_budget.total_budget_status
+              types.budgetType[total_budget.total_budget_status]
             }}</span>
             <span class="mb-1 text-sm"
               >{{ total_budget.value['0'].amount }}
               {{ total_budget.value['0'].currency }}</span
             >
-            <div v-for="(budget_line, j) in total_budget.budget_line" :key="j">
-              <table class="table-head">
-                <tr>
-                  <td>Period</td>
-                  <td>
-                    {{ total_budget.period_start['0'].date }} -
-                    {{ total_budget.period_end['0'].date }}
-                  </td>
-                </tr>
-                <tr>
-                  <td>Value date</td>
-                  <td>{{ total_budget.value['0'].value_date }}</td>
-                </tr>
-              </table>
+            <table class="table-head">
+              <tr>
+                <td>Period</td>
+                <td>
+                  {{ formatDate(total_budget.period_start['0'].date) }} -
+                  {{ formatDate(total_budget.period_end['0'].date) }}
+                </td>
+              </tr>
+              <tr>
+                <td>Value date</td>
+                <td>{{ formatDate(total_budget.value['0'].value_date) }}</td>
+              </tr>
+            </table>
+            <div
+              class="
+                mx-5
+                overflow-hidden
+                rounded-tl-lg rounded-tr-lg
+                border border-b-0 border-n-20
+              "
+            >
+              <div class="bg-n-10 py-2 pl-6 text-left text-xs font-bold">
+                budget line
+              </div>
               <div
-                class="
-                  mx-5
-                  overflow-hidden
-                  rounded-tl-lg rounded-tr-lg
-                  border border-b-0 border-n-20
-                "
+                v-for="(budget_line, j) in total_budget.budget_line"
+                :key="j"
               >
-                <div class="bg-n-10 py-2 pl-6 text-left text-xs font-bold">
-                  budget line
-                </div>
                 <div class="mt-2 border-b border-b-n-20 pl-6 text-xs">
                   <table>
+                    <tr>
+                      <td class="mb-1 flex flex-col text-xs font-bold">
+                        {{ budget_line.value['0'].amount }}
+                        {{ budget_line.value['0'].currency }}
+                      </td>
+                    </tr>
                     <tr>
                       <td class="mb-1 flex flex-col text-xs font-bold">
                         {{ budget_line.budget }}
@@ -131,13 +188,16 @@
                     <tr>
                       <td class="mb-1 text-n-40">Reference</td>
                       <td class="mb-1 pl-2">
-                        {{ budget_line.reference }}
+                        {{ budget_line.ref }}
                       </td>
                     </tr>
                     <tr>
                       <td class="mb-1 text-n-40">Value</td>
                       <td class="mb-1 pl-2">
-                        {{ budget_line.value }}
+                        {{ budget_line.value['0'].amount }}
+                        {{ budget_line.value['0'].currency }} ({{
+                          formatDate(budget_line.value['0'].value_date)
+                        }})
                       </td>
                     </tr>
                   </table>
@@ -171,20 +231,31 @@
         <!-- recipient organisation budget -->
         <div v-if="title == 'recipient_org_budget'">
           <!-- {{content}} -->
-          <div v-for="(recipient_org_budget, index) in content" :key="index" class="mt-5">
+          <div
+            v-for="(recipient_org_budget, index) in content"
+            :key="index"
+            class="mt-5 flex flex-col"
+          >
             <!-- {{ recipient_org_budget }} -->
-            <span class="element-title">{{ recipient_org_budget.status }}</span>
-            <!-- <span class="mb-1 text-sm">{{ recipient_org_budget.budget }}</span> -->
+            <span class="element-title">{{
+              types.budgetType[recipient_org_budget.status]
+            }}</span>
+            <span class="mb-1 text-sm">
+              {{ recipient_org_budget.value['0'].amount }}
+              {{ recipient_org_budget.value['0'].currency }}
+              {{ formatDate(recipient_org_budget.value['0'].value_date) }}
+            </span>
             <div
-              class="ml-5 flex"
               v-for="(
                 recipient_org, recipient_org_index
               ) in recipient_org_budget.recipient_org"
               :key="recipient_org_index"
+              class="ml-5 flex"
             >
               <div class="w-[118px] text-xs font-normal text-n-40">
                 Recipient Organisation
               </div>
+
               <table
                 class="
                   mb-1
@@ -202,14 +273,17 @@
                 >
                   <td>Reference-{{ recipient_org.ref }}</td>
                   <!-- {{recipient_org.narrative}} -->
-                  <td class="flex flex-col"
+                  <td
                     v-for="(
                       org_narrative, narrative_index
                     ) in recipient_org.narrative"
                     :key="narrative_index"
+                    class="flex flex-col"
                   >
-                    <span class="language">(Language: {{ org_narrative.language }})</span>
-                    <span>{{org_narrative.narrative}}</span>
+                    <span class="language"
+                      >(Language: {{ org_narrative.language }})</span
+                    >
+                    <span>{{ org_narrative.narrative }}</span>
                   </td>
                   <!-- <td>{{ indicative.recipient_org.cash }}</td> -->
                 </tr>
@@ -218,7 +292,12 @@
             <table class="table-head recipient-organisation">
               <tr>
                 <td>Value</td>
-                <td>{{ recipient_org_budget.value['0'].amount }} {{ recipient_org_budget.value['0'].currency }} ({{ recipient_org_budget.value['0'].value_date }})</td>
+                <td>
+                  {{ recipient_org_budget.value['0'].amount }}
+                  {{ recipient_org_budget.value['0'].currency }} ({{
+                    formatDate(recipient_org_budget.value['0'].value_date)
+                  }})
+                </td>
               </tr>
               <tr>
                 <td>Period</td>
@@ -247,7 +326,8 @@
                 <table>
                   <tr>
                     <td class="mb-1 flex flex-col text-xs font-bold">
-                      {{ budget_line.value['0'].amount }} {{ budget_line.value['0'].currency }}
+                      {{ budget_line.value['0'].amount }}
+                      {{ budget_line.value['0'].currency }}
                     </td>
                   </tr>
                   <tr>
@@ -259,7 +339,7 @@
                   <tr>
                     <td class="mb-1 text-n-40">Value date</td>
                     <td class="mb-1 pl-2">
-                      {{ budget_line.value['0'].value_date }}
+                      {{ formatDate(budget_line.value['0'].value_date) }}
                     </td>
                   </tr>
                 </table>
@@ -292,133 +372,68 @@
         <!-- recipient region budget -->
         <div v-if="title == 'recipient_region_budget'">
           <div v-for="(recipient_region_budget, index) in content" :key="index">
-            {{recipient_region_budget}}
-              <span class="element-title">{{ recipient_region_budget.recipient_region_budget }}</span>
-              <span class="mb-1 text-sm">{{ recipient_region_budget.budget }}</span>
-              <table class="table-head recipient-organisation">
-                <tr>
-                  <td>Value date</td>
-                  <td>{{ recipient_region_budget.value['0'].value_date }}</td>
-                </tr>
-                <tr>
-                  <td>Vocabulary</td>
-                  <td>{{ recipient_region_budget.vocabulary }}</td>
-                </tr>
-                <tr>
-                  <td>Vocabulary_URI</td>
-                  <td>
-                    <a href="#">{{ recipient_region_budget.vocabulary_URI }}</a>
-                  </td>
-                </tr>
-                <tr>
-                  <td>Code</td>
-                  <td>{{ recipient_region_budget.code }}</td>
-                </tr>
-                <tr class="flex">
-                  <td class="pr-20 text-n-40">Description</td>
-                  <td class="pl-2 leading-5 lg:w-[500px]">
-                    <div class="language">
-                      <!-- {{ recipient_region_budget.description.language }} -->
-                    </div>
-                    <!-- <span class="">{{ recipient_region_budget.description.text }}</span> -->
-                  </td>
-                </tr>
-                <tr>
-                  <td>Period</td>
-                  <td>{{ recipient_region_budget.period }}</td>
-                </tr>
-              </table>
-              <div
-                class="
-                  mx-5
-                  overflow-hidden
-                  rounded-tl-lg rounded-tr-lg
-                  border border-b-0 border-n-20
-                "
-              >
-                <div class="bg-n-10 py-2 pl-6 text-left text-xs font-bold">
-                  budget line
-                </div>
-                <div
-                  v-for="(budget_line, j) in recipient_region_budget.budget_line"
-                  :key="j"
-                  class="mt-2 border-b border-b-n-20 pl-6 text-xs"
-                >
-                  <table>
-                    <tr>
-                      <td class="mb-1 flex flex-col text-xs font-bold">
-                        {{ budget_line.budget }}
-                      </td>
-                    </tr>
-                    <tr>
-                      <td class="mb-1 text-n-40">Reference</td>
-                      <td class="mb-1 pl-2">
-                        {{ budget_line.reference }}
-                      </td>
-                    </tr>
-                  </table>
-                  <div class="flex leading-5">
-                    <div class="mb-1 w-[100px] text-n-40">Narrative</div>
-                    <div class="flex flex-col">
-                      <div
-                        v-for="(narrative, k) in budget_line.narrative"
-                        :key="k"
-                      >
-                        <table class="mb-2 whitespace-nowrap">
-                          <tr class="mb-1">
-                            <td class="language pl-2">
-                              {{ narrative.language }}
-                            </td>
-                          </tr>
-                          <tr>
-                            <td class="pl-2">{{ narrative.narrative }}</td>
-                          </tr>
-                        </table>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-          </div>
-        </div>
-        <!-- recipient region budget ends -->
-
-        <!-- recipient country budget -->
-        <div v-if="title == 'recipient_country_budget'">
-          <div
-            v-for="(recipient_country_budget, index) in content"
-            :key="index"
-          >
             <span class="element-title">{{
-              recipient_country_budget.recipient_country_budget
+              types.budgetType[recipient_region_budget.recipient_region_budget]
             }}</span>
             <span class="mb-1 text-sm">{{
-              recipient_country_budget.budget
+              recipient_region_budget.budget
             }}</span>
-            <div class="ml-5 flex"></div>
             <table class="table-head recipient-organisation">
               <tr>
                 <td>Value date</td>
-                <td>{{ recipient_country_budget.value_date }}</td>
+                <td>
+                  {{
+                    formatDate(recipient_region_budget.value['0'].value_date)
+                  }}
+                </td>
+              </tr>
+              <tr>
+                <td>Vocabulary</td>
+                <td>
+                  {{
+                    recipient_region_budget.recipient_region['0']
+                      .region_vocabulary
+                  }}
+                </td>
+              </tr>
+              <tr>
+                <td>Vocabulary_URI</td>
+                <td>
+                  <a href="#">{{
+                    recipient_region_budget.recipient_region['0']
+                      .region_vocabulary_URI
+                  }}</a>
+                </td>
               </tr>
               <tr>
                 <td>Code</td>
-                <td>{{ recipient_country_budget.code }}</td>
+                <td>
+                  {{
+                    recipient_region_budget.recipient_region['0'].region_code
+                  }}
+                </td>
               </tr>
               <tr class="flex">
                 <td class="pr-20 text-n-40">Description</td>
                 <td class="pl-2 leading-5 lg:w-[500px]">
-                  <div class="language">
-                    {{ recipient_country_budget.description.language }}
+                  <div
+                    v-for="(narrative, i) in recipient_region_budget
+                      .recipient_region['0'].narrative"
+                    :key="i"
+                  >
+                    <div class="language">
+                      {{ narrative.language }}
+                    </div>
+                    <span class="">{{ narrative.narrative }}</span>
                   </div>
-                  <span class="">{{
-                    recipient_country_budget.description.text
-                  }}</span>
                 </td>
               </tr>
               <tr>
                 <td>Period</td>
-                <td>{{ recipient_country_budget.period }}</td>
+                <td>
+                  {{ recipient_region_budget.period_start['0'].date }} -
+                  {{ recipient_region_budget.period_end['0'].date }}
+                </td>
               </tr>
             </table>
             <div
@@ -433,20 +448,129 @@
                 budget line
               </div>
               <div
-                v-for="(budget_line, j) in indicative.budget_line"
+                v-for="(budget_line, j) in recipient_region_budget.budget_line"
+                :key="j"
+                class="mt-2 border-b border-b-n-20 pl-6 text-xs"
+              >
+                <table>
+                  <tr>
+                    <td class="mb-1 flex flex-col text-xs font-bold col-span-2">
+                      {{ budget_line.value['0'].amount }} ({{
+                        formatDate(budget_line.value['0'].value_date)
+                      }})
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="mb-1 text-n-40">Reference</td>
+                    <td class="mb-1 pl-2">
+                      {{ budget_line.ref }}
+                    </td>
+                  </tr>
+                </table>
+                <div class="flex leading-5">
+                  <div class="mb-1 w-[100px] text-n-40">Narrative</div>
+                  <div class="flex flex-col">
+                    <div
+                      v-for="(narrative, k) in budget_line.narrative"
+                      :key="k"
+                    >
+                      <table class="mb-2 whitespace-nowrap">
+                        <tr class="mb-1">
+                          <td class="language pl-2">
+                            {{ narrative.language }}
+                          </td>
+                        </tr>
+                        <tr>
+                          <td class="pl-2">{{ narrative.narrative }}</td>
+                        </tr>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- recipient region budget ends -->
+
+        <!-- recipient country budget -->
+        <div v-if="title == 'recipient_country_budget'">
+          <div
+            v-for="(recipient_country_budget, index) in content"
+            :key="index"
+            class="flex flex-col"
+          >
+            <span class="element-title">{{
+              types.budgetType[recipient_country_budget.status]
+            }}</span>
+            <span class="mb-1 text-sm">{{
+              recipient_country_budget.value['0'].amount
+            }}</span>
+            <div class="ml-5 flex"></div>
+            <table class="table-head recipient-organisation">
+              <tr>
+                <td>Value date</td>
+                <td>
+                  {{
+                    formatDate(recipient_country_budget.value['0'].value_date)
+                  }}
+                </td>
+              </tr>
+              <tr>
+                <td>Code</td>
+                <td>
+                  {{ recipient_country_budget.recipient_country['0'].code }}
+                </td>
+              </tr>
+              <tr class="flex">
+                <td class="pr-20 text-n-40">Description</td>
+                <td class="pl-2 leading-5 lg:w-[500px]">
+                  <div
+                    v-for="(narrative, j) in recipient_country_budget
+                      .recipient_country['0'].narrative"
+                    :key="j"
+                  >
+                    <div class="language">
+                      {{ narrative.language }}
+                    </div>
+                    <span class="">{{ narrative.narrative }}</span>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td>Period</td>
+                <td>
+                  {{ recipient_country_budget.period_start['0'].iso_date }} -
+                  {{ recipient_country_budget.period_end['0'].iso_date }}
+                </td>
+              </tr>
+            </table>
+            <div
+              class="
+                mx-5
+                overflow-hidden
+                rounded-tl-lg rounded-tr-lg
+                border border-b-0 border-n-20
+              "
+            >
+              <div class="bg-n-10 py-2 pl-6 text-left text-xs font-bold">
+                budget line
+              </div>
+              <div
+                v-for="(budget_line, j) in recipient_country_budget.budget_line"
                 :key="j"
                 class="mt-2 border-b border-b-n-20 pl-6 text-xs"
               >
                 <table>
                   <tr>
                     <td class="mb-1 flex flex-col text-xs font-bold">
-                      {{ budget_line.budget }}
+                      {{ budget_line.value['0'].amount }}
                     </td>
                   </tr>
                   <tr>
                     <td class="mb-1 text-n-40">Reference</td>
                     <td class="mb-1 pl-2">
-                      {{ budget_line.reference }}
+                      {{ budget_line.ref }}
                     </td>
                   </tr>
                 </table>
@@ -478,17 +602,29 @@
 
         <!-- total expenditure -->
         <div v-if="title == 'total_expenditure'">
-          <div v-for="(total_expenditure, index) in content" :key="index">
-            <span class="element-title">{{ total_expenditure.status }}</span>
-            <!-- <span class="mb-1 text-sm">{{ total_expenditure.budget }}</span> -->
+          <div
+            v-for="(total_budget, index) in content"
+            :key="index"
+            class="flex flex-col"
+          >
+            <span class="element-title">{{
+              types.budgetType[total_budget.total_budget_status]
+            }}</span>
+            <span class="mb-1 text-sm"
+              >{{ total_budget.value['0'].amount }}
+              {{ total_budget.value['0'].currency }}</span
+            >
             <table class="table-head">
               <tr>
                 <td>Period</td>
-                <td>{{ total_expenditure.period }}</td>
+                <td>
+                  {{ total_budget.period_start['0'].date }} -
+                  {{ total_budget.period_end['0'].date }}
+                </td>
               </tr>
               <tr>
                 <td>Value date</td>
-                <td>{{ total_expenditure.value }}</td>
+                <td>{{ formatDate(total_budget.value['0'].value_date) }}</td>
               </tr>
             </table>
             <div
@@ -503,40 +639,56 @@
                 budget line
               </div>
               <div
-                v-for="(budget_line, j) in total_expenditure.budget_line"
+                v-for="(budget_line, j) in total_budget.expense_line"
                 :key="j"
-                class="mt-2 border-b border-b-n-20 pl-6 text-xs"
               >
-                <table>
-                  <tr>
-                    <td class="mb-1 flex flex-col text-xs font-bold">
-                      {{ budget_line.budget }}
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="mb-1 text-n-40">Reference</td>
-                    <td class="mb-1 pl-2">
-                      {{ budget_line.reference }}
-                    </td>
-                  </tr>
-                </table>
-                <div class="flex leading-5">
-                  <div class="mb-1 w-[100px] text-n-40">Narrative</div>
-                  <div class="flex flex-col">
-                    <div
-                      v-for="(narrative, k) in budget_line.narrative"
-                      :key="k"
-                    >
-                      <table class="mb-2 whitespace-nowrap">
-                        <tr class="mb-1">
-                          <td class="language pl-2">
-                            {{ narrative.language }}
-                          </td>
-                        </tr>
-                        <tr>
-                          <td class="pl-2">{{ narrative.narrative }}</td>
-                        </tr>
-                      </table>
+                <div class="mt-2 border-b border-b-n-20 pl-6 text-xs">
+                  <table>
+                    <tr>
+                      <td class="mb-1 flex flex-col text-xs font-bold">
+                        {{ budget_line.value['0'].amount }}
+                        {{ budget_line.value['0'].currency }}
+                      </td>
+                    </tr>
+                    <tr>
+                      <td class="mb-1 flex flex-col text-xs font-bold">
+                        {{ budget_line.budget }}
+                      </td>
+                    </tr>
+                    <tr>
+                      <td class="mb-1 text-n-40">Reference</td>
+                      <td class="mb-1 pl-2">
+                        {{ budget_line.ref }}
+                      </td>
+                    </tr>
+                    <tr>
+                      <td class="mb-1 text-n-40">Value</td>
+                      <td class="mb-1 pl-2">
+                        {{ budget_line.value['0'].amount }}
+                        {{ budget_line.value['0'].currency }} ({{
+                          formatDate(budget_line.value['0'].value_date)
+                        }})
+                      </td>
+                    </tr>
+                  </table>
+                  <div class="flex leading-5">
+                    <div class="mb-1 w-[100px] text-n-40">Narrative</div>
+                    <div class="flex flex-col">
+                      <div
+                        v-for="(narrative, k) in budget_line.narrative"
+                        :key="k"
+                      >
+                        <table class="mb-2 whitespace-nowrap">
+                          <tr class="mb-1">
+                            <td class="language pl-2">
+                              {{ narrative.language }}
+                            </td>
+                          </tr>
+                          <tr>
+                            <td class="pl-2">{{ narrative.narrative }}</td>
+                          </tr>
+                        </table>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -544,93 +696,148 @@
             </div>
           </div>
         </div>
+
         <!-- total expenditure ends -->
 
         <!-- document link -->
         <div v-if="title == 'document_link'" class="document-link text-xs">
-          <span class="text-sm font-bold text-n-50">{{
-            content.document_title
-          }}</span>
-          <div class="ml-5 flex">
-            <div class="w-[100px] text-xs text-n-40">Title</div>
-            <table>
-              <tr
-                v-for="(title, i) in content.title"
-                :key="i"
-                class="flex flex-col pl-2"
-              >
-                <td class="language">
-                  {{ title.language }}
-                </td>
-                <td>{{ title.document_link_title }}</td>
-              </tr>
-            </table>
-          </div>
-          <table class="table">
-            <tr>
-              <td>Document Link</td>
-              <td>
-                <a href="#">{{ content.link }}</a>
-              </td>
-            </tr>
-          </table>
-          <div class="ml-5 flex">
-            <div class="w-[100px] pr-20 text-xs text-n-40">Description</div>
-            <table>
-              <tr
-                v-for="(description, i) in content.description"
-                :key="i"
-                class="flex flex-col pl-2"
-              >
-                <td class="language">{{ description.language }}</td>
-                <td class="lg:w-[500px]">
-                  <p>{{ description.text }}</p>
-                </td>
-              </tr>
-            </table>
-          </div>
-          <div class="ml-5 flex">
-            <div class="w-[100px] text-xs text-n-40">Category</div>
+          <div
+            v-for="(document_link, key) in data.content"
+            :key="key"
+            class="elements-detail"
+            :class="{ 'mb-4': key !== data.content.length - 1 }"
+          >
             <div>
-              <div
-                v-for="(category, i) in content.category"
-                :key="i"
-                class="mb-1 pl-2"
-              >
-                <span>{{ category.A }}</span>
-                <span>{{ category.B }}</span>
+              <div v-if="document_link.url" class="max-w-[887px] text-sm">
+                <a :href="document_link.url" target="_blank">{{
+                  document_link.url
+                }}</a>
               </div>
+              <span v-else class="italic">URL Not Available</span>
             </div>
-          </div>
-          <table class="table">
-            <tr>
-              <td>Language</td>
-              <td>{{ content.language }}</td>
-            </tr>
-          </table>
-          <table class="table">
-            <tr>
-              <td>Document Date</td>
-              <td>{{ content.document_date }}</td>
-            </tr>
-          </table>
-          <div class="ml-5 flex">
-            <div class="w-[100px] whitespace-nowrap pr-2 text-xs text-n-40">
-              Recipient Country
+            <div class="ml-5">
+              <div>
+                <div v-for="(language, i) in document_link.language" :key="i">
+                  <table>
+                    <tr>
+                      <td>Language</td>
+                      <td>
+                        <span v-if="language.code">{{
+                          types.languages[language.code]
+                        }}</span>
+                        <span v-else class="italic">Not Available</span>
+                      </td>
+                    </tr>
+                  </table>
+                </div>
+                <div
+                  v-for="(document_date, i) in document_link.document_date"
+                  :key="i"
+                >
+                  <table>
+                    <tr>
+                      <td>Date</td>
+                      <td>
+                        <span v-if="document_date.date">{{
+                          formatDate(document_date.date)
+                        }}</span>
+                        <span v-else class="italic">Not Available</span>
+                      </td>
+                    </tr>
+                  </table>
+                </div>
+              </div>
+              <div class="mb-1 flex items-center space-x-1">
+                <table>
+                  <tr class="multiline">
+                    <td>Title</td>
+                    <td>
+                      <div
+                        v-for="(narrative, j) in document_link.title['0']
+                          .narrative"
+                        :key="j"
+                      >
+                        <span v-if="narrative.language" class="language">
+                          ({{ types.languages[narrative.language] }})
+                        </span>
+                        <div v-if="narrative.narrative" class="flex flex-col">
+                          <span>
+                            {{ narrative.narrative }}
+                          </span>
+                        </div>
+                        <span v-else class="italic">Not Available</span>
+                      </div>
+                    </td>
+                  </tr>
+                </table>
+              </div>
+              <table>
+                <tr>
+                  <td>Category</td>
+                  <td>
+                    <div
+                      v-for="(category, i) in document_link.category"
+                      :key="i"
+                    >
+                      <span v-if="category.code">{{ category.code }}</span>
+                      <span v-else class="italic">Not Available</span>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td>Format</td>
+                  <td v-if="document_link.format">
+                    {{ document_link.format }}
+                  </td>
+                  <td v-else class="italic">Not Available</td>
+                </tr>
+                <tr class="multiline">
+                  <td>Description</td>
+                  <td>
+                    <div
+                      v-for="(narrative, j) in document_link.description['0']
+                        .narrative"
+                      :key="j"
+                    >
+                      <div v-if="narrative.narrative" class="flex flex-col">
+                        <span v-if="narrative.language" class="language"
+                          >(Language:
+                          {{ types.languages[narrative.language] }})</span
+                        >
+                        <span class="description">{{
+                          narrative.narrative
+                        }}</span>
+                      </div>
+                      <span v-else class="italic">Not Available</span>
+                    </div>
+                  </td>
+                </tr>
+                <tr >
+                  <td>Recipient Country</td>
+                  <td>
+                    <div
+                      v-for="(
+                        recipient_country, i
+                      ) in document_link.recipient_country"
+                      :key="i"
+                    >
+                      <span class="mb-1 flex flex-col text-xs font-bold">
+                        {{ recipient_country.code }}
+                      </span>
+                      <div
+                        v-for="(narrative, j) in recipient_country.narrative"
+                        :key="j"
+                      >
+                        <div class="language">
+                          {{ narrative.language }}
+                        </div>
+                        <span class="">{{ narrative.narrative }}</span>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+              </table>
             </div>
-            <table>
-              <tr
-                v-for="(recipient_country, i) in content.recipient_country"
-                :key="i"
-                class="flex flex-col pl-2"
-              >
-                <td>{{ recipient_country.country }}</td>
-                <td class="language">{{ recipient_country.language }}</td>
-                <td class="lg:w-[500px]">
-                  <p>{{ recipient_country.text }}</p>
-                </td>
-              </tr>
-            </table>
           </div>
         </div>
         <!-- document link ends -->
@@ -642,6 +849,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import HoverText from '../../components/HoverText.vue';
+import moment from 'moment';
 
 export default defineComponent({
   name: 'OrganisationElement',
@@ -671,6 +879,10 @@ export default defineComponent({
       type: String,
       required: false,
     },
+    types: {
+      type: Object,
+      required: false,
+    },
   },
   setup(props) {
     const status = '';
@@ -679,9 +891,11 @@ export default defineComponent({
       layout = 'basis-full';
     }
 
-    console.log(props.content);
+    function formatDate(date: Date) {
+      return moment(date).format('LL');
+    }
 
-    return { layout, status, props };
+    return { layout, status, props, formatDate };
   },
 });
 </script>

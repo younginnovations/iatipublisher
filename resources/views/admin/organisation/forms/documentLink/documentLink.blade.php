@@ -31,6 +31,12 @@
                         <div class="hidden collection-container title" form_type="document_link_language"
                             data-prototype="{{ str_replace('document_link[0]','document_link[__PARENT_NAME__]',form_row($form->document_link->getChildren()[0]->getChild('language')->prototype())) }}">
                         </div>
+                        <div class="hidden collection-container" form_type="document_link_recipient_country"
+                        data-prototype="{{ str_replace('document_link[0][recipient_country][__NAME__]','document_link[__PARENT_NAME__][recipient_country][__WRAPPER_NAME__]',form_row($form->document_link->getChildren()[0]->getChild('recipient_country')->prototype())) }}">
+                    </div>
+                    <div class="hidden collection-container" form_type="document_link_recipient_country_narrative"
+                        data-prototype="{{ str_replace('document_link[0][recipient_country][0]','document_link[__PARENT_NAME__][recipient_country][__WRAPPER_NAME__]',form_row($form->document_link->getChildren()[0]->getChild('recipient_country')->getChildren()[0]->getChild('narrative')->prototype())) }}">
+                    </div>
                     </div>
                 </div>
             </div>

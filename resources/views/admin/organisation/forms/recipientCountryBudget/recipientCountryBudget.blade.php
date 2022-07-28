@@ -17,16 +17,16 @@
                         <div class="hidden parent-collection"
                             data-prototype="{{ form_row($form->recipient_country_budget->prototype()) }}">
                         </div>
-                        <div class="hidden collection-container" form_type="recipient_country"
+                        <div class="hidden collection-container" form_type="recipient_country_budget_recipient_country"
                             data-prototype="{{ str_replace('recipient_country_budget[0][recipient_country][__NAME__]','recipient_country_budget[__PARENT_NAME__][recipient_country][__WRAPPER_NAME__]',form_row($form->recipient_country_budget->getChildren()[0]->getChild('recipient_country')->prototype())) }}">
                         </div>
-                        <div class="hidden collection-container" form_type="recipient_country_narrative"
+                        <div class="hidden collection-container" form_type="recipient_country_budget_recipient_country_narrative"
                             data-prototype="{{ str_replace('recipient_country_budget[0][recipient_country][0]','recipient_country_budget[__PARENT_NAME__][recipient_country][__WRAPPER_NAME__]',form_row($form->recipient_country_budget->getChildren()[0]->getChild('recipient_country')->getChildren()[0]->getChild('narrative')->prototype())) }}">
                         </div>
-                        <div class="hidden collection-container" form_type="budget_line"
+                        <div class="hidden collection-container" form_type="recipient_country_budget_budget_line"
                             data-prototype="{{ str_replace('recipient_country_budget[0][budget_line][__NAME__]','recipient_country_budget[__PARENT_NAME__][budget_line][__WRAPPER_NAME__]',form_row($form->recipient_country_budget->getChildren()[0]->getChild('budget_line')->prototype())) }}">
                         </div>
-                        <div class="hidden collection-container" form_type="budget_line_narrative"
+                        <div class="hidden collection-container" form_type="recipient_country_budget_budget_line_narrative"
                             data-prototype="{{ str_replace('recipient_country_budget[0][budget_line][0]','recipient_country_budget[__PARENT_NAME__][budget_line][__WRAPPER_NAME__]',form_row($form->recipient_country_budget->getChildren()[0]->getChild('budget_line')->getChildren()[0]->getChild('narrative')->prototype())) }}">
                         </div>
                     </div>

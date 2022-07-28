@@ -79,7 +79,6 @@ class RecipientCountryBudgetRequest extends OrganizationBaseRequest
         foreach ($formFields as $recipientCountryIndex => $recipientCountry) {
             $recipientCountryForm = sprintf('%s.recipient_country.%s', $formBase, $recipientCountryIndex);
             $rules[sprintf('%s.code', $recipientCountryForm)] = 'required';
-            dump($recipientCountry['narrative']);
             $rules = array_merge(
                 $rules,
                 $this->getRulesForNarrative($recipientCountry['narrative'], $recipientCountryForm)

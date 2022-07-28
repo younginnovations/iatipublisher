@@ -18,8 +18,8 @@ Route::name('admin.')->group(function () {
     Route::get('/organisation', [\App\Http\Controllers\Admin\Organization\OrganizationController::class, 'index'])->name('organisation.index');
     Route::get('organisation/name', [\App\Http\Controllers\Admin\Organization\NameController::class, 'edit'])->name('organisation.name.edit');
     Route::put('organisation/name', [\App\Http\Controllers\Admin\Organization\NameController::class, 'update'])->name('organisation.name.update');
-    Route::get('organisation/organisation_identifier', [\App\Http\Controllers\Admin\Organization\OrganisationIdentifierController::class, 'edit'])->name('organisation.organisation-identifier.edit');
-    Route::put('organisation/organisation_identifier', [\App\Http\Controllers\Admin\Organization\OrganisationIdentifierController::class, 'update'])->name('organisation.organisation-identifier.update');
+    Route::get('organisation/organisation_identifier', [\App\Http\Controllers\Admin\Organization\OrganizationIdentifierController::class, 'edit'])->name('organisation.identifier.edit');
+    Route::put('organisation/organisation_identifier', [\App\Http\Controllers\Admin\Organization\OrganizationIdentifierController::class, 'update'])->name('organisation.identifier.update');
     Route::get('organisation/reporting_org', [\App\Http\Controllers\Admin\Organization\ReportingOrgController::class, 'edit'])->name('organisation.reporting-org.edit');
     Route::put('organisation/reporting_org', [\App\Http\Controllers\Admin\Organization\ReportingOrgController::class, 'update'])->name('organisation.reporting-org.update');
     Route::get('organisation/total_budget', [\App\Http\Controllers\Admin\Organization\TotalBudgetController::class, 'edit'])->name('organisation.total-budget.edit');

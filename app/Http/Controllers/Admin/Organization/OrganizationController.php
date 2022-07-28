@@ -37,13 +37,14 @@ class OrganizationController extends Controller
             $toast['message'] = Session::has('error') ? Session::get('error') : (Session::get('success') ? Session::get('success') : '');
             $toast['type'] = Session::has('error') ? 'error' : 'success';
             $elements = json_decode(file_get_contents(app_path('IATI/Data/organizationElementJsonSchema.json')), true);
-            // $elements = json_decode(file_get_contents(app_path('Data/Organization/OrganisationElements.json')), true);
             $elementGroups = json_decode(file_get_contents(app_path('Data/Organization/OrganisationElementsGroup.json')), true);
+            $types = $this->getOrganizationTypes();
             $progress = 75;
             $organization = $this->organizationService->getOrganizationData(Auth::user()->organization_id);
 
-            return view('admin.organisation.index', compact('elements', 'elementGroups', 'progress', 'organization', 'toast'));
+            return view('admin.organisation.index', compact('elements', 'elementGroups', 'progress', 'organization', 'toast', 'types'));
         } catch (\Exception $e) {
+            dd($e);
         }
     }
 
@@ -111,5 +112,16 @@ class OrganizationController extends Controller
     public function destroy(Organization $organization): void
     {
         //
+    }
+
+    public function getOrganizationTypes()
+    {
+        return [
+            'budgetType' => getCodeList('BudgetType', 'Activity', false),
+            'languages' => getCodeList('Language', 'Organization', false),
+            'documentCategory'            => getCodeList('DocumentCategory', 'Activity', false),
+            'documentCategory'            => getCodeList('DocumentCategory', 'Activity', false),
+            'organizationType'            => getCodeList('OrganizationType', 'Organization', false),
+        ];
     }
 }

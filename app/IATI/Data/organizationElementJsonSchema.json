@@ -1,10 +1,11 @@
 {
-  "organization_identifier": {
+  "organisation_identifier": {
+    "name": "organisation_identifier",
     "label": "organisation-identifier",
     "criteria": "mandatory",
     "attributes": {
       "iati-activity-identifier": {
-        "name": "organization_identifier",
+        "name": "organisation_identifier",
         "label": "organisation-identifier",
         "type": "text",
         "required": true,
@@ -532,7 +533,7 @@
         "name": "recipient_region",
         "label": "Recipient Region",
         "criteria": "recommended",
-        "add_more": true,
+        "add_more": false,
         "attributes": {
           "vocabulary": {
             "name": "region_vocabulary",

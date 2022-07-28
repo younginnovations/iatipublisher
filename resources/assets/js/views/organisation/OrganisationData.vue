@@ -298,6 +298,7 @@
         </div>
         <div class="activities__content--elements -mx-3 flex flex-wrap">
           <template v-for="(post, key, index) in groupedData" :key="index">
+              <div class="ml-4">{{ key }}</div>
             <div
               class="
                 elements-title
@@ -316,6 +317,7 @@
               <!-- <div class="mr-4 shrink-0">{{ formatTitle(key) }}</div> -->
             </div>
             <template v-for="(element, name, i) in post.elements" :key="i">
+
               <OrganisationElementsDetail
                 v-if="
                   (typeof element.content === 'object'
@@ -327,15 +329,12 @@
                 :title="name.toString()"
                 :activity-id="organization.id"
                 :content="element.content"
+                :types="types"
                 :width="
-                  String(name) === 'total_budget' ||
-                  String(name) === 'recipient_org_budget' ||
-                  String(name) === 'recipient_region_budget' ||
-                  String(name) === 'recipient_country_budget' ||
-                  String(name) === 'total_expenditure' ||
-                  String(name) === 'document_link'
-                    ? 'full'
-                    : ''
+                  String(name) === 'name' ||
+                  String(name) === 'organization_identifier'
+                    ? ''
+                    : 'full'
                 "
                 tooltip="Example text"
               />
@@ -359,7 +358,7 @@ import Toast from '../../components/Toast.vue';
 import { useToggle } from '@vueuse/core';
 
 export default defineComponent({
-  name: 'organisation-elements',
+  name: 'OrganisationElements',
   components: {
     HoverText,
     RadialProgressBar,
@@ -390,17 +389,19 @@ export default defineComponent({
       type: Object,
       required: true,
     },
+    types: {
+      type: Object,
+      required: true,
+    },
   },
   setup(props) {
-    console.log('here');
     const toastData = reactive({
       visibility: false,
       message: '',
       type: true,
     });
 
-    console.log('here');
-
+    console.log('here you go', props);
     const [publishValue, publishToggle] = useToggle();
     const [unpublishValue, unpublishToggle] = useToggle();
     const [deleteValue, deleteToggle] = useToggle();
@@ -430,16 +431,19 @@ export default defineComponent({
       organizationData = groups.value,
       elementProps = elements.value;
 
-    // console.log(organizationProps, groupedData, organizationData);
+    console.log(
+      toRefs(props),
+      organizationProps,
+      groupedData,
+      organizationData
+    );
 
     // generating available elements
     Object.keys(organizationData).map((key) => {
       let flag = false;
 
-      console.log(key, organizationData, organizationData[key]);
       Object.keys(organizationData[key]['elements']).map((k) => {
         if (organizationProps[k] || typeof organizationProps[k] === 'number') {
-          console.log(organizationData[key]);
           organizationData[key]['elements'][k]['content'] =
             organizationProps[k];
           flag = true;
@@ -461,8 +465,6 @@ export default defineComponent({
         groupedData[key]['status'] = 'disabled';
       }
     });
-
-    console.log('here', groupedData);
 
     return {
       groupedData,

@@ -17,10 +17,10 @@
                         <div class="hidden parent-collection"
                             data-prototype="{{ form_row($form->total_expenditure->prototype()) }}">
                         </div>
-                        <div class="hidden collection-container" form_type="expense_line"
+                        <div class="hidden collection-container" form_type="total_expenditure_expense_line"
                             data-prototype="{{ str_replace('total_expenditure[0][expense_line][__NAME__]','total_expenditure[__PARENT_NAME__][expense_line][__WRAPPER_NAME__]',form_row($form->total_expenditure->getChildren()[0]->getChild('expense_line')->prototype())) }}">
                         </div>
-                        <div class="hidden collection-container" form_type="expense_line_narrative"
+                        <div class="hidden collection-container" form_type="total_expenditure_expense_line_narrative"
                             data-prototype="{{ str_replace('total_expenditure[0][expense_line][0]','total_expenditure[__PARENT_NAME__][expense_line][__WRAPPER_NAME__]',form_row($form->total_expenditure->getChildren()[0]->getChild('expense_line')->getChildren()[0]->getChild('narrative')->prototype())) }}">
                         </div>
                     </div>

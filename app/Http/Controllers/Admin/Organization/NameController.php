@@ -20,18 +20,18 @@ class NameController extends Controller
 {
     protected BaseFormCreator $baseFormCreator;
 
-    protected NameService $NameService;
+    protected NameService $nameService;
 
     /**
      * NameController Constructor.
      *
      * @param BaseFormCreator $baseFormCreator
-     * @param NameService    $NameService
+     * @param NameService    $nameService
      */
-    public function __construct(BaseFormCreator $baseFormCreator, NameService $NameService)
+    public function __construct(BaseFormCreator $baseFormCreator, NameService $nameService)
     {
         $this->baseFormCreator = $baseFormCreator;
-        $this->nameService = $NameService;
+        $this->nameService = $nameService;
     }
 
     /**
@@ -53,7 +53,6 @@ class NameController extends Controller
 
             return view('admin.organisation.forms.name.name', compact('form', 'organization', 'data'));
         } catch (\Exception $e) {
-            dd($e);
             logger()->error($e->getMessage());
 
             return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while opening organization name form.');
