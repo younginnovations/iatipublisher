@@ -134,4 +134,17 @@ class ResultRepository
     {
         return $this->activityResult->where('activity_id', $activityId)->get()->toArray();
     }
+
+    /**
+     * Returns all results belonging to activityId.
+     *
+     * @param int $activityId
+     * @param int $page
+     *
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public function getPaginatedResult($activityId, $page = 1): Collection | \Illuminate\Pagination\LengthAwarePaginator
+    {
+        return $this->activityResult->where('activity_id', $activityId)->orderBy('created_at', 'DESC')->paginate(10, ['*'], 'result', $page);
+    }
 }

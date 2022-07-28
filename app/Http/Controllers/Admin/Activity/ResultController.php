@@ -7,8 +7,12 @@ use App\Http\Requests\Activity\Result\ResultRequest;
 use App\IATI\Models\Activity\Result;
 use App\IATI\Services\Activity\ActivityService;
 use App\IATI\Services\Activity\ResultService;
+<<<<<<< HEAD
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
+=======
+use Illuminate\Http\JsonResponse;
+>>>>>>> f2e79fa6... api for pagination of transaction, result, indicator and period
 
 /**
  * Class ResultController.
@@ -74,7 +78,12 @@ class ResultController extends Controller
         try {
             $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
             $activity = $this->activityService->getActivity($id);
+<<<<<<< HEAD
             $form = $this->resultService->createFormGenerator($id);
+=======
+            $this->resultElementFormCreator->url = route('admin.activities.result.store', $id);
+            $form = $this->resultElementFormCreator->editForm([], $element['result']);
+>>>>>>> f2e79fa6... api for pagination of transaction, result, indicator and period
             $data = ['core' => $element['result']['criteria'] ?? false, 'status' => false, 'title' => $element['result']['label'], 'name' => 'result'];
 
             return view('admin.activity.result.edit', compact('form', 'activity', 'data'));
@@ -163,7 +172,13 @@ class ResultController extends Controller
         try {
             $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
             $activity = $this->activityService->getActivity($activityId);
+<<<<<<< HEAD
             $form = $this->resultService->editFormGenerator($resultId, $activityId);
+=======
+            $activityResult = $this->resultService->getResult($resultId, $activityId);
+            $this->resultElementFormCreator->url = route('admin.activities.result.update', [$activityId, $resultId]);
+            $form = $this->resultElementFormCreator->editForm($activityResult->result, $element['result'], 'PUT');
+>>>>>>> f2e79fa6... api for pagination of transaction, result, indicator and period
             $data = ['core' => $element['result']['criteria'] ?? false, 'status' => false, 'title' => $element['result']['label'], 'name' => 'result'];
 
             return view('admin.activity.result.edit', compact('form', 'activity', 'data'));
@@ -225,5 +240,30 @@ class ResultController extends Controller
     public function destroy(Result $result)
     {
         //
+    }
+
+    /*
+     * Get results of the corresponding activity
+     *
+     * @param $activityId
+     * @param $page
+     *
+     * @return JsonResponse
+     */
+    public function getResult($activityId, $page = 1): JsonResponse
+    {
+        try {
+            $result = $this->resultService->getPaginatedResult($activityId, $page);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Results fetched successfully',
+                'data'    => $result,
+            ]);
+        } catch (\Exception $e) {
+            logger()->error($e->getMessage());
+
+            return response()->json(['success' => false, 'message' => 'Error occurred while fetching the data']);
+        }
     }
 }

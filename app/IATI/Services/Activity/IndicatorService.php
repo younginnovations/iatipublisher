@@ -9,6 +9,7 @@ use App\IATI\Models\Activity\Indicator;
 use App\IATI\Repositories\Activity\IndicatorRepository;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Kris\LaravelFormBuilder\Form;
 
 /**
@@ -121,5 +122,18 @@ class IndicatorService
         $this->resultElementFormCreator->url = route('admin.activities.result.indicator.store', [$activityId, $resultId]);
 
         return $this->resultElementFormCreator->editForm([], $element['indicator'], 'POST', '/activities/' . $activityId);
+    }
+
+    /*
+     * Returns array of paginated indicator belonging to result of an activity.
+     *
+     * @param $resultId
+     * @param $page
+     *
+     * return LengthAwarePaginator|Collection
+     */
+    public function getPaginatedIndicator($resultId, $page): LengthAwarePaginator|Collection
+    {
+        return $this->indicatorRepository->getPaginatedIndicator($resultId, $page);
     }
 }

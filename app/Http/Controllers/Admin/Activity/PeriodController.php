@@ -12,6 +12,7 @@ use App\IATI\Services\Activity\IndicatorService;
 use App\IATI\Services\Activity\PeriodService;
 use Illuminate\Http\RedirectResponse;
 use App\IATI\Services\Activity\ResultService;
+use Illuminate\Http\JsonResponse;
 
 /**
  * PeriodController Class.
@@ -255,5 +256,32 @@ class PeriodController extends Controller
     public function destroy(Period $period)
     {
         //
+    }
+
+    /*
+     * Get period of the corresponding indicator
+     *
+     * @param $activityId
+     * @param $resultId
+     * @param $indicatorId
+     * @param $page
+     *
+     * @return JsonResponse
+     */
+    public function getPeriod($activityId, $resultId, $indicatorId, $page = 1): JsonResponse
+    {
+        try {
+            $period = $this->periodService->getPaginatedPeriod($indicatorId, $page);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Period fetched successfully',
+                'data'    => $period,
+            ]);
+        } catch (\Exception $e) {
+            logger()->error($e->getMessage());
+
+            return response()->json(['success' => false, 'message' => 'Error occurred while fetching the data']);
+        }
     }
 }
