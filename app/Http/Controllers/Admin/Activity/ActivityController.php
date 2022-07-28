@@ -133,7 +133,6 @@ class ActivityController extends Controller
             $transactions = $this->transactionService->getActivityTransactions($activity->id);
             $status = $this->activityService->activityDetailStatus($activity);
             $progress = $this->activityService->activityPublishingProgress($status);
-            dd($progress);
 
             return view(
                 'admin.activity.show',
