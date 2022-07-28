@@ -76,7 +76,7 @@ class DefaultAidTypeService
     public function getXmlData(Activity $activity): array
     {
         $activityData = [];
-        $aidTypeArray = $activity->default_aid_type;
+        $aidTypeArray = (array) $activity->default_aid_type;
 
         if (count($aidTypeArray)) {
             foreach ($aidTypeArray as $aidType) {
