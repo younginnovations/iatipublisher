@@ -24,9 +24,9 @@
                   'mb-4': i !== cou.narrative.length - 1,
                 }"
               >
-                <div class="language mb-1.5">(Language: {{ sd.language }})</div>
+                <div class="language mb-1.5">( {{ sd.language? `Language: ${sd.language}`:'Language Not Available' }})</div>
                 <div class="text-sm description">
-                  {{ sd.narrative }}
+                  {{ sd.narrative??'Narrative Not Available' }}
                 </div>
               </div>
             </td>

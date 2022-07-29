@@ -10,12 +10,9 @@ use App\IATI\Elements\Builder\BaseFormCreator;
 use App\IATI\Models\Activity\Transaction;
 use App\IATI\Services\Activity\ActivityService;
 use App\IATI\Services\Activity\TransactionService;
-<<<<<<< HEAD
 use Illuminate\Contracts\View\View;
-use Illuminate\Http\RedirectResponse;
-=======
 use Illuminate\Http\JsonResponse;
->>>>>>> f2e79fa6... api for pagination of transaction, result, indicator and period
+use Illuminate\Http\RedirectResponse;
 
 /**
  * TransactionController Class.
@@ -91,12 +88,7 @@ class TransactionController extends Controller
         try {
             $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
             $activity = $this->activityService->getActivity($activityId);
-<<<<<<< HEAD
             $form = $this->transactionService->createFormGenerator($activityId);
-=======
-            $this->transactionElementFormCreator->url = route('admin.activities.transactions.store', $activityId);
-            $form = $this->transactionElementFormCreator->editForm([], $element['transactions'], 'POST');
->>>>>>> f2e79fa6... api for pagination of transaction, result, indicator and period
             $data = ['core' => $element['transactions']['criteria'] ?? false, 'status' => false, 'title' => $element['transactions']['label'], 'name' => 'transactions'];
 
             return view('admin.activity.transaction.edit', compact('form', 'activity', 'data'));
@@ -184,13 +176,7 @@ class TransactionController extends Controller
         try {
             $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
             $activity = $this->activityService->getActivity($activityId);
-<<<<<<< HEAD
             $form = $this->transactionService->editFormGenerator($transactionId, $activityId);
-=======
-            $activityTransaction = $this->transactionService->getTransaction($transactionId, $activityId);
-            $this->transactionElementFormCreator->url = route('admin.activities.transactions.update', [$activityId, $transactionId]);
-            $form = $this->transactionElementFormCreator->editForm($activityTransaction->transaction, $element['transactions'], 'PUT');
->>>>>>> f2e79fa6... api for pagination of transaction, result, indicator and period
             $data = ['core' => $element['transactions']['criteria'] ?? false, 'status' => false, 'title' => $element['transactions']['label'], 'name' => 'transactions'];
 
             return view('admin.activity.transaction.edit', compact('form', 'activity', 'data'));

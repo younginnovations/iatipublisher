@@ -1,5 +1,5 @@
 <template>
-  <div>{{ tiedStatusType[tsData[0].tied_status_code] }}</div>
+  <div>{{ tsData[0].tied_status_code?tiedStatusType[tsData[0].tied_status_code]: 'Tied Status Code Not Available' }}</div>
 </template>
 
 <script lang="ts">

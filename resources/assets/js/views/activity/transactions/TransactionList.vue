@@ -12,6 +12,18 @@
                 </a>
                 <span class="mx-4 separator"> / </span>
                 <div class="breadcrumb__title">
+                  <span class="overflow-hidden breadcrumb__title text-n-30">
+                    <a :href="`/activities/${activityId}`">
+                      {{ getActivityTitle(activity.title, 'en') ?? 'Untitled' }}
+                    </a>
+                  </span>
+                  <span class="ellipsis__title--hover w-[calc(100%_+_35px)]">
+                    {{ getActivityTitle(activity.title, 'en') ?? 'Untitled' }}
+                  </span>
+                </div>
+                <span class="mx-4 separator"> / </span>
+
+                <div class="breadcrumb__title">
                   <span
                     class="overflow-hidden breadcrumb__title last text-n-30"
                   >
@@ -26,7 +38,7 @@
           </div>
           <div class="inline-flex items-center max-w-3xl">
             <div class="mr-3">
-              <a href="/activities/">
+              <a :href="'/activities/'+activity.id">
                 <svg-vue icon="arrow-short-left"></svg-vue>
               </a>
             </div>
@@ -121,7 +133,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="(trans, t, index) in transactionsData" :key="index">
+          <tr v-for="(trans, t, index) in transactionsData.data" :key="index">
             <td>
               <a :href="`/activities/${activityId}/transactions/${trans.id}`">
                 <span v-if="trans.transaction.reference">{{
@@ -167,18 +179,25 @@
         </tbody>
       </table>
     </div>
+    <div class="mt-6">
+      <Pagination :data="transactionsData" @fetch-activities="fetchListings" />
+    </div>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, toRefs } from 'vue';
+import { defineComponent, toRefs, reactive, onMounted } from 'vue';
 import Btn from '../../../components/ButtonComponent.vue';
 import dateFormat from '../../../composable/dateFormat';
+import Pagination from 'Components/TablePagination.vue';
+import axios from 'axios';
+import getActivityTitle from 'Composable/title';
 
 export default defineComponent({
   name: 'TransactionList',
   components: {
     Btn,
+    Pagination,
   },
   props: {
     activity: {
@@ -197,9 +216,25 @@ export default defineComponent({
   setup(props) {
     const { activity, transactions } = toRefs(props);
     const activityId = activity.value.id;
-    const transactionsData = transactions.value.reverse();
+    const transactionsData = reactive({});
 
-    return { activityId, dateFormat, transactionsData };
+    onMounted(async () => {
+      axios.get(`/activities/${activityId}/transactions/page/1`).then((res) => {
+        const response = res.data;
+        Object.assign(transactionsData, response.data);
+      });
+    });
+
+    function fetchListings(active_page: number) {
+      axios
+        .get(`/activities/${activityId}/transactions/page/` + active_page)
+        .then((res) => {
+          const response = res.data;
+          Object.assign(transactionsData, response.data);
+        });
+    }
+
+    return { activityId, dateFormat, transactionsData, getActivityTitle, fetchListings };
   },
 });
 </script>

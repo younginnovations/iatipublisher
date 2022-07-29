@@ -154,6 +154,7 @@ if (!function_exists('getResultTypes')) {
             'resultVocabulary'          => getCodeList('ResultVocabulary', 'Activity'),
             'indicatorMeasure'          => getCodeList('IndicatorMeasure', 'Activity'),
             'language'                  => getCodeList('Language', 'Activity', false),
+            'documentCategory'          => getCodeList('DocumentCategory', 'Activity'),
         ];
     }
 }
@@ -165,6 +166,23 @@ if (!function_exists('getResultTypes')) {
  */
 if (!function_exists('getIndicatorTypes')) {
     function getIndicatorTypes(): array
+    {
+        return [
+            'indicatorMeasure'          => getCodeList('IndicatorMeasure', 'Activity'),
+            'language'                  => getCodeList('Language', 'Activity', false),
+            'documentCategory'          => getCodeList('DocumentCategory', 'Activity'),
+            'fileFormat'                => getCodeList('FileFormat', 'Activity', false),
+        ];
+    }
+}
+
+/*
+ * Get activity periods data type
+ *
+ * @return array
+ */
+if (!function_exists('getPeriodTypes')) {
+    function getPeriodTypes(): array
     {
         return [
             'indicatorMeasure'          => getCodeList('IndicatorMeasure', 'Activity'),

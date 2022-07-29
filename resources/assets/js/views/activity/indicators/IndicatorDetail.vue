@@ -45,6 +45,22 @@
             </h1>
           </div>
         </div>
+
+        <div class="flex flex-col items-end justify-end actions grow">
+          <div class="flex justify-end">
+            <Status class="mr-2.5" :data="false" />
+            <Btn
+              text="Add Indicator"
+              icon="add"
+              :link="`/activities/${activity.id}/result/${indicator.result_id}/indicator/create`"
+              class="mr-2.5"
+            />
+            <Btn
+              text="Edit Indicator"
+              :link="`/activities/${activity.id}/result/${indicator.result_id}/indicator/${indicator.id}/edit`"
+            />
+          </div>
+        </div>
       </div>
     </div>
 
@@ -62,23 +78,7 @@
         </div>
       </aside>
       <div class="activities__content">
-        <div class="flex justify-end mb-11">
-          <a
-            :href="`/activities/${activity.id}/result/${indicator.result_id}/indicator/${indicator.id}/edit`"
-            class="
-              edit-button
-              mr-2.5
-              flex
-              items-center
-              text-tiny
-              font-bold
-              uppercase
-            "
-          >
-            <svg-vue class="mr-0.5 text-base" icon="edit"></svg-vue>
-            <span>Edit Indicator</span>
-          </a>
-        </div>
+        <div></div>
         <div class="px-4 py-5 bg-white">
           <div
             class="elements-detail wider"
@@ -90,7 +90,7 @@
 
             <div class="ml-4">
               <div class="indicators">
-                <table class="mb-3">
+                <table>
                   <tbody>
                     <template
                       v-if="indicatorData.title[0].narrative.length > 0"
@@ -143,46 +143,16 @@
                       />
                     </template>
 
-                    <tr v-if="!period">
+                    <tr v-if="period.length === 0">
                       <td></td>
                       <td>
-                        <div class="mt-3">
-                          <a
-                            :href="`/activities/${activity.id}/result/${indicator.result_id}/indicator/${indicator.id}/period/create`"
-                            class="
-                              add_period
-                              flex
-                              w-[442px]
-                              max-w-full
-                              rounded
-                              border border-dashed border-n-40
-                              bg-white
-                              px-2
-                              py-2.5
-                              text-xs
-                              leading-normal
-                            "
-                          >
-                            <div class="text-left grow">
-                              You haven't added any periods yet.
-                            </div>
-                            <div
-                              class="
-                                flex
-                                items-center
-                                font-bold
-                                uppercase
-                                shrink-0
-                                text-bluecoral
-                              "
-                            >
-                              <svg-vue
-                                icon="add"
-                                class="mr-1 shrink-0"
-                              ></svg-vue>
-                              <span class="text-xs grow">Add period</span>
-                            </div>
-                          </a>
+                        <div>
+                          <NotYet
+                            :link="`/activities/${activity.id}/result/${indicator.result_id}/indicator/${indicator.id}/period/create`"
+                            description="You haven't added any periods yet."
+                            btn-text="Add period"
+                            class="max-w-[442px]"
+                          />
                         </div>
                       </td>
                     </tr>
@@ -203,7 +173,9 @@
               </div>
               <div class="w-full h-px mb-4 border-b divider border-n-20"></div>
             </div>
-            <DocumentLink :data="indicatorData.document_link" :type="types" />
+            <div class="ml-4">
+              <DocumentLink :data="indicatorData.document_link" :type="types" />
+            </div>
           </div>
         </div>
       </div>
@@ -215,6 +187,10 @@
 import { defineComponent, toRefs } from 'vue';
 
 //component
+import Btn from 'Components/buttons/Link.vue';
+import Status from 'Components/status/Status.vue';
+import NotYet from 'Components/sections/HaveNotAddedYet.vue';
+
 import {
   TitleElement,
   Measure,
@@ -238,6 +214,9 @@ export default defineComponent({
     Reference,
     Baseline,
     DocumentLink,
+    Btn,
+    Status,
+    NotYet,
   },
   props: {
     activity: {
@@ -252,10 +231,10 @@ export default defineComponent({
       type: Object,
       required: true,
     },
-    // period: {
-    //   type: Object,
-    //   required: true,
-    // },
+    period: {
+      type: Array,
+      required: true,
+    },
     types: {
       type: Object,
       required: true,
@@ -274,14 +253,11 @@ export default defineComponent({
     const activityTitle = getActivityTitle(activity.value.title, 'en'),
       indicatorTitle = getActivityTitle(indicatorData.title[0].narrative, 'en');
 
-    const period = false;
-
     return {
       linkClasses,
       activityTitle,
       indicatorTitle,
       indicatorData,
-      period,
     };
   },
 });

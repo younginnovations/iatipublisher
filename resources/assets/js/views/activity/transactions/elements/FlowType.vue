@@ -1,5 +1,5 @@
 <template>
-  {{ flowType[flowData[0].flow_type] }}
+  {{ flowData[0].flow_type ? flowType[flowData[0].flow_type] : 'Flow Type Not Available' }}
 </template>
 
 <script lang="ts">

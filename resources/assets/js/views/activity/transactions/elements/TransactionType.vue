@@ -1,5 +1,5 @@
 <template>
-  {{ types[code[0].transaction_type_code] }}
+  {{ code[0].transaction_type_code?types[code[0].transaction_type_code]:'Code Not Available' }}
 </template>
 
 <script lang="ts">

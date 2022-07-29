@@ -1,6 +1,7 @@
 import { ref } from 'vue';
+import axios from 'axios';
 
-function useApi(url: RequestInfo, options?: RequestInit) {
+export function useApi(url: RequestInfo, options?: RequestInit) {
   const response = ref();
 
   const request = async () => {
@@ -12,4 +13,15 @@ function useApi(url: RequestInfo, options?: RequestInit) {
   return { response, request };
 }
 
-export default useApi;
+export function fetchListingData(end_point: string, active_page?: number) {
+  const response = ref();
+  let endPoint = end_point;
+  if (active_page) {
+    endPoint = end_point + '/' + active_page;
+  }
+  axios.get(endPoint).then((res) => {
+    response.value = res.data;
+  });
+
+  return response;
+}
