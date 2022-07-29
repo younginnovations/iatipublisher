@@ -19,6 +19,8 @@ import ResultDetail from './views/activity/results/ResultDetail.vue';
 import ResultList from './views/activity/results/ResultList.vue';
 import IndicatorDetail from './views/activity/indicators/IndicatorDetail.vue';
 import IndicatorList from './views/activity/indicators/IndicatorList.vue';
+import PeriodsDetail from './views/activity/periods/PeriodsDetail.vue';
+import PeriodsList from './views/activity/periods/PeriodsList.vue';
 import TransactionList from './views/activity/transactions/TransactionList.vue';
 import TransactionDetail from './views/activity/transactions/TransactionDetail.vue';
 import StaticDescriptionForm from './components/DescriptionForm.vue';
@@ -69,6 +71,8 @@ app
   .component('ResultList', ResultList)
   .component('IndicatorDetail', IndicatorDetail)
   .component('IndicatorList', IndicatorList)
+  .component('PeriodsDetail', PeriodsDetail)
+  .component('PeriodsList', PeriodsList)
   .component('TransactionList', TransactionList)
   .component('TransactionDetail', TransactionDetail);
 

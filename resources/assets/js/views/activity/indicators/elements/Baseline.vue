@@ -34,6 +34,7 @@
             <template v-else>Not Available</template>
           </span>
         </div>
+
         <div class="flex" :class="elementSpacing">
           <div>Location:&nbsp;</div>
           <div>

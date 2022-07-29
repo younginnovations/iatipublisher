@@ -44,8 +44,8 @@
   }
 }
 .description {
-  width: 500px;
-  max-width: 100%;
+  width: 100%;
+  max-width: 500px;
 }
 
 .elements-detail {
@@ -77,7 +77,7 @@
     vertical-align: top;
   }
 
-  table > tr:not(:last-child) td {
+  table > tbody > tr:not(:last-child) > td {
     @apply pb-3;
   }
 }

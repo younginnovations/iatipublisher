@@ -9,11 +9,8 @@ use App\IATI\Models\Activity\Period;
 use App\IATI\Repositories\Activity\PeriodRepository;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
-<<<<<<< HEAD
-use Kris\LaravelFormBuilder\Form;
-=======
 use Illuminate\Pagination\LengthAwarePaginator;
->>>>>>> f2e79fa6... api for pagination of transaction, result, indicator and period
+use Kris\LaravelFormBuilder\Form;
 
 /**
  * Class PeriodService.

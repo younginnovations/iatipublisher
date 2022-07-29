@@ -13,7 +13,6 @@
           <div class="text-sm font-bold title">{{ elementName }}</div>
         </div>
         <div class="flex items-center icons">
-          <svg-vue class="mr-1.5" icon="core"></svg-vue>
           <HoverText hover-text="example text" class="text-n-40"></HoverText>
         </div>
       </div>
@@ -22,15 +21,15 @@
         <template
           v-if="elementName === 'title' || elementName === 'description'"
         >
-          <TitleDescription :data="elementData" />
+          <TitleDescription :data="elementData" :type="types.language" />
         </template>
 
         <template v-else-if="elementName === 'aggregation_status'">
-          {{ Number(data) != 0 }}
+          <span class="text-sm capitalize">{{ Number(data) != 0 }}</span>
         </template>
 
         <template v-else-if="elementName === 'document_link'">
-          <DocumentLink :data="elementData" :type="language" />
+          <DocumentLink :data="elementData" :type="types" />
         </template>
 
         <template v-else-if="elementName === 'reference'">

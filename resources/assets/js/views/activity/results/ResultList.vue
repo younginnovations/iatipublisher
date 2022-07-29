@@ -32,8 +32,9 @@
             </div>
             <div class="">
               <h4 class="relative mr-4 font-bold ellipsis__title">
-                <span class="overflow-hidden ellipsis__title">Result List</span
-                ><span class="ellipsis__title--hover">Result List</span>
+                <span class="overflow-hidden ellipsis__title">
+                  Result List
+                </span>
               </h4>
             </div>
           </div>
@@ -50,7 +51,7 @@
     <div class="iati-list-table text-n-40">
       <table>
         <thead>
-          <tr class="bg-n-10">
+          <tr class="text-left bg-n-10">
             <th id="transaction_type" scope="col">
               <a
                 class="transition duration-500 text-n-50 hover:text-spring-50"
@@ -62,7 +63,7 @@
                 <span>Title</span>
               </a>
             </th>
-            <th id="transaction_value" scope="col">
+            <th id="transaction_value" scope="col" width="190px">
               <a
                 class="transition duration-500 text-n-50 hover:text-spring-50"
                 href="#"
@@ -73,7 +74,7 @@
                 <span>RESULT TYPE</span>
               </a>
             </th>
-            <th id="transaction_date" scope="col">
+            <th id="transaction_date" scope="col" width="208px">
               <a
                 class="transition duration-500 text-n-50 hover:text-spring-50"
                 href="#"
@@ -84,64 +85,70 @@
                 <span>AGGREGATION STATUS</span>
               </a>
             </th>
-            <th id="status" scope="col">
-              <a
-                class="transition duration-500 text-n-50 hover:text-spring-50"
-                href="#"
-              >
-                <span class="sorting-indicator descending">
-                  <svg-vue icon="descending-arrow" />
-                </span>
-                <span>Status</span>
-              </a>
+            <th id="complete-status" scope="col" width="180px">
+              <span>Status</span>
             </th>
-            <th id="action" scope="col">
-              <a
-                class="transition duration-500 text-n-50 hover:text-spring-50"
-                href="#"
-              >
-                <span class="sorting-indicator descending">
-                  <svg-vue icon="descending-arrow" />
-                </span>
-                <span>Action</span>
-              </a>
+            <th id="action" scope="col" width="177px">
+              <span>Action</span>
             </th>
           </tr>
         </thead>
         <tbody>
-          <tr v-for="(result, t, index) in resultsData" :key="index">
+          <tr v-for="(result, t, index) in resultsData.data" :key="index">
             <td>
-              <a :href="`/activities/${activityId}/result/${result.id}`">
-                {{ getActivityTitle(result.result.title[0].narrative, 'en') }}
-              </a>
+              <div class="relative ellipsis">
+                <a
+                  :href="`/activities/${activityId}/result/${result.id}`"
+                  class="overflow-hidden ellipsis text-n-50"
+                >
+                  {{ getActivityTitle(result.result.title[0].narrative, 'en') }}
+                </a>
+                <div class="w-52">
+                  <span class="ellipsis__title--hover">{{
+                    getActivityTitle(result.result.title[0].narrative, 'en')
+                  }}</span>
+                </div>
+              </div>
             </td>
             <td>{{ types.resultType[result.result.type] }}</td>
-            <td>{{ result.result.aggregation_status != 0 }}</td>
+            <td class="capitalize">
+              {{ result.result.aggregation_status != 0 }}
+            </td>
             <td><span class="text-spring-50">completed</span></td>
             <td>
-              <div class="flex text-n-40">
+              <div class="flex">
                 <a
-                  class="mr-6"
+                  class="mr-6 text-n-40"
                   :href="`/activities/${result.activity_id}/transactions/${result.id}/edit`"
                 >
                   <svg-vue icon="edit" class="text-xl"></svg-vue>
                 </a>
-                <button class="">
+                <a class="text-n-40" href="#">
                   <svg-vue icon="delete" class="text-xl"></svg-vue>
-                </button>
+                </a>
               </div>
             </td>
           </tr>
         </tbody>
       </table>
     </div>
+
+    <div class="mt-6">
+      <Pagination
+        :data="resultsData"
+        @fetch-activities="fetchListings"
+      />
+    </div>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, toRefs } from 'vue';
+import { defineComponent, ref, toRefs, onMounted, reactive } from 'vue';
+import axios from 'axios';
+
 // components
 import Btn from 'Components/ButtonComponent.vue';
+import Pagination from 'Components/TablePagination.vue';
 
 // composable
 import dateFormat from 'Composable/dateFormat';
@@ -151,6 +158,7 @@ export default defineComponent({
   name: 'ResultsList',
   components: {
     Btn,
+    Pagination,
   },
   props: {
     activity: {
@@ -169,9 +177,36 @@ export default defineComponent({
   setup(props) {
     const { activity, results } = toRefs(props);
     const activityId = activity.value.id;
-    const resultsData = results.value.reverse();
+    // const resultsData = results.value.reverse();
 
-    return { activityId, dateFormat, resultsData, getActivityTitle };
+    const resultsData = reactive({});
+    const isEmpty = ref(false);
+
+    onMounted(async () => {
+      axios.get(`/activities/${activityId}/result/page/1`).then((res) => {
+        const response = res.data;
+        Object.assign(resultsData, response.data);
+        isEmpty.value = response.data.data.length ? false : true;
+      });
+    });
+
+    function fetchListings(active_page: number) {
+      axios
+        .get(`/activities/${activityId}/result/page/` + active_page)
+        .then((res) => {
+          const response = res.data;
+          Object.assign(resultsData, response.data);
+          isEmpty.value = response.data ? false : true;
+        });
+    }
+
+    return {
+      activityId,
+      dateFormat,
+      resultsData,
+      getActivityTitle,
+      fetchListings,
+    };
   },
 });
 </script>

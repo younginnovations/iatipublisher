@@ -46,12 +46,7 @@
       <div class="w-full h-px mb-4 divider bg-n-20"></div>
       <div class="results">
         <template v-for="(result, r) in resultData" :key="r">
-          <div
-            class="item"
-            :class="{
-              'mb-4': r !== data.content.length - 1,
-            }"
-          >
+          <div class="item">
             <div class="elements-detail">
               <div>
                 <!-- title -->
@@ -77,35 +72,45 @@
                 </div>
                 <!-- content -->
                 <div class="ml-4">
-                  <table
-                    :class="{
-                      'mb-3': result.indicators.length > 0,
-                    }"
-                  >
-                    <tr>
-                      <td>Result Type</td>
-                      <td>
-                        <div class="text-sm description">
-                          {{ types.resultType[result.result.type] }}
-                        </div>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>Description</td>
-                      <td>
-                        <div class="description-content">
-                          <div class="language mb-1.5">(Language: en)</div>
-                          <div class="w-[500px] max-w-full text-sm">
-                            {{
-                              getActivityTitle(
-                                result.result.description[0].narrative,
-                                'en'
-                              )
-                            }}
+                  <table class="mb-3">
+                    <tbody>
+                      <tr>
+                        <td>Result Type</td>
+                        <td>
+                          <div class="text-sm description">
+                            {{ types.resultType[result.result.type] }}
                           </div>
-                        </div>
-                      </td>
-                    </tr>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>Description</td>
+                        <td>
+                          <div class="description-content">
+                            <div class="language mb-1.5">(Language: en)</div>
+                            <div class="w-[500px] max-w-full text-sm">
+                              {{
+                                getActivityTitle(
+                                  result.result.description[0].narrative,
+                                  'en'
+                                )
+                              }}
+                            </div>
+                          </div>
+                        </td>
+                      </tr>
+                      <tr v-if="result.indicators.length === 0">
+                        <td></td>
+                        <td>
+                          <div>
+                            <NotYet
+                              :link="`/activities/${activityId}/${title}/${result.id}/indicator/create`"
+                              description="You haven't added any indicator yet."
+                              btn-text="Add new indicator"
+                            />
+                          </div>
+                        </td>
+                      </tr>
+                    </tbody>
                   </table>
 
                   <!-- indicator -->
@@ -134,7 +139,7 @@
                         />
                       </div>
                     </div>
-                    <div class="body">
+                    <div>
                       <template
                         v-for="(indicator, i) in result.indicators"
                         :key="i"
@@ -168,74 +173,106 @@
                               </div>
                             </div>
                             <table>
-                              <tr>
-                                <td>Baseline:</td>
-                                <td>
-                                  <div
-                                    v-for="(
-                                      baseline, b
-                                    ) in indicator.indicator.baseline
-                                      .reverse()
-                                      .slice(0, 2)"
-                                    :key="b"
-                                    class=""
-                                    :class="{
-                                      'mb-1':
-                                        b !==
-                                        indicator.indicator.baseline.length - 1,
-                                    }"
-                                  >
-                                    <div class="text-xs description">
-                                      <span>
-                                        Value:
-                                        <template v-if="baseline.value">
-                                          {{ baseline.value }},
-                                        </template>
-                                        <template v-else>
-                                          Not Available,
-                                        </template>
-                                      </span>
-                                      <span>
-                                        Date:
-                                        <template v-if="baseline.date">
-                                          {{ baseline.date }}
-                                        </template>
-                                        <template v-else>
-                                          Not Available
-                                        </template>
-                                      </span>
+                              <tbody>
+                                <tr>
+                                  <td>Baseline:</td>
+                                  <td>
+                                    <div
+                                      v-for="(
+                                        baseline, b
+                                      ) in indicator.indicator.baseline
+                                        .reverse()
+                                        .slice(0, 4)"
+                                      :key="b"
+                                      class=""
+                                      :class="{
+                                        'mb-1':
+                                          b !==
+                                          indicator.indicator.baseline.length -
+                                            1,
+                                      }"
+                                    >
+                                      <div class="text-xs description">
+                                        <span>
+                                          Value:
+                                          <template v-if="baseline.value">
+                                            {{ baseline.value }},
+                                          </template>
+                                          <template v-else>
+                                            Not Available,
+                                          </template>
+                                        </span>
+                                        <span>
+                                          Date:
+                                          <template v-if="baseline.date">
+                                            {{ baseline.date }}
+                                          </template>
+                                          <template v-else>
+                                            Not Available
+                                          </template>
+                                        </span>
+                                      </div>
                                     </div>
-                                  </div>
-                                </td>
-                              </tr>
-                              <tr v-if="indicator.periods.length > 0">
-                                <td>Period:</td>
-                                <td>
-                                  <div
-                                    v-for="(period, p) in indicator.periods"
-                                    :key="p"
-                                    class=""
-                                    :class="{
-                                      'mb-1':
-                                        p !== indicator.periods.length - 1,
-                                    }"
-                                  >
-                                    <div class="text-xs description">
-                                      {{
-                                        moment(
-                                          period.period.period_start[0].date
-                                        ).format(format)
-                                      }}
-                                      -
-                                      {{
-                                        moment(
-                                          period.period.period_end[0].date
-                                        ).format(format)
-                                      }}
+                                  </td>
+                                </tr>
+                                <tr v-if="indicator.periods.length > 0">
+                                  <td>Period:</td>
+                                  <td>
+                                    <div class="inline-flex items-center gap-4">
+                                      <div>
+                                        <div
+                                          v-for="(
+                                            period, p
+                                          ) in indicator.periods
+                                            .reverse()
+                                            .slice(0, 4)"
+                                          :key="p"
+                                          class=""
+                                          :class="{
+                                            'mb-1':
+                                              p !==
+                                              indicator.periods.length - 1,
+                                          }"
+                                        >
+                                          <div class="text-xs">
+                                            {{
+                                              moment(
+                                                period.period.period_start[0]
+                                                  .date
+                                              ).format(format)
+                                            }}
+                                            -
+                                            {{
+                                              moment(
+                                                period.period.period_end[0].date
+                                              ).format(format)
+                                            }}
+                                          </div>
+                                        </div>
+                                      </div>
+                                      <div class="shrink-0">
+                                        <Btn
+                                          text="Show full period list"
+                                          icon=""
+                                          design="bgText"
+                                          :link="`/activities/${activityId}/${title}/${result.id}/indicator/${indicator.id}/period/`"
+                                        />
+                                      </div>
                                     </div>
-                                  </div>
-                                </td>
-                              </tr>
+                                  </td>
+                                </tr>
+                                <tr v-else>
+                                  <td></td>
+                                  <td>
+                                    <div>
+                                      <NotYet
+                                        :link="`/activities/${activityId}/${title}/${result.id}/indicator/${indicator.id}/period/create`"
+                                        description="You haven't added any period yet."
+                                      />
+                                    </div>
+                                  </td>
+                                </tr>
+                              </tbody>
                             </table>
                           </div>
                         </div>
@@ -246,6 +283,10 @@
               </div>
             </div>
           </div>
+          <div
+            v-if="r !== data.content.length - 1"
+            class="w-full h-px my-5 border-b divider border-n-20"
+          ></div>
         </template>
       </div>
     </div>
@@ -258,6 +299,7 @@ import moment from 'moment';
 
 //components
 import Btn from 'Components/buttons/Link.vue';
+import NotYet from 'Components/sections/HaveNotAddedYet.vue';
 
 // composable
 import getActivityTitle from 'Composable/title';
@@ -266,6 +308,7 @@ export default defineComponent({
   name: 'ActivityResult',
   components: {
     Btn,
+    NotYet,
   },
   props: {
     data: {

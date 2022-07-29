@@ -7,8 +7,8 @@
       'mb-4': i !== Object.keys(tdData[0].narrative).length - 1,
     }"
   >
-    <div class="language mb-1.5">(Language: {{ post.language }})</div>
-    <div class="text-sm description">
+    <div class="language mb-1.5">(Language: {{ type[post.language] }})</div>
+    <div class="max-w-[887px] text-sm">
       {{ post.narrative }}
     </div>
   </div>
@@ -23,6 +23,10 @@ export default defineComponent({
   props: {
     data: {
       type: [Object, String],
+      required: true,
+    },
+    type: {
+      type: Object,
       required: true,
     },
   },

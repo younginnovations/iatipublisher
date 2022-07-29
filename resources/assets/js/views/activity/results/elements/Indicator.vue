@@ -14,13 +14,19 @@
           </div>
         </div>
         <div class="flex items-center icons">
-          <a
-            :href="`/activities/${result.activity_id}/result/${result.id}/indicator/create`"
-            class="mr-2.5 flex items-center text-tiny font-bold uppercase"
-          >
-            <svg-vue class="mr-0.5 text-base" icon="add"></svg-vue>
-            <span>Add new indicator</span>
-          </a>
+          <Btn
+            text="Show full indicator list"
+            icon="add"
+            :link="`/activities/${result.activity_id}/result/${result.id}/indicator/create`"
+            class="mr-2.5"
+          />
+          <Btn
+            text="Show full indicator list"
+            icon=""
+            design="bgText"
+            :link="`/activities/${result.activity_id}/result/${result.id}/indicator`"
+            class="mr-2.5"
+          />
           <svg-vue class="mr-1.5" icon="moon"></svg-vue>
           <div class="help text-n-40">
             <button>
@@ -33,7 +39,7 @@
           </div>
         </div>
       </div>
-      <div class="w-full h-px mb-4 divider bg-n-20"></div>
+      <div class="w-full h-px mb-4 border-b divider border-n-20"></div>
       <div class="indicator">
         <template v-for="(post, ri) in indicatorData" :key="ri">
           <div class="item">
@@ -44,7 +50,9 @@
                     class="text-n-50"
                     :href="`/activities/${result.activity_id}/result/${result.id}/indicator/${post.id}`"
                   >
-                    {{ post.indicator.title[0].narrative[0].narrative }}
+                    {{
+                      getActivityTitle(post.indicator.title[0].narrative, 'en')
+                    }}
                   </a>
                 </div>
                 <div class="flex justify-between shrink-0 grow">
@@ -157,6 +165,11 @@
                             </span>
                           </div>
                         </td>
+                      </tr>
+
+                      <tr>
+                        <td>Document Link</td>
+                        <td>{{ post.indicator.document_link.length }}</td>
                       </tr>
 
                       <tr>
@@ -283,30 +296,27 @@
                                 </div>
                               </div>
                             </div>
+
+                            <div class="flex">
+                              <div>Document Link:&nbsp;</div>
+                              <div>
+                                {{ base.document_link.length }}
+                              </div>
+                            </div>
                           </div>
                         </td>
                       </tr>
+
                       <tr v-if="post.periods.length === 0">
                         <td></td>
                         <td>
                           <div class="mt-3">
-                            <a
-                              :href="`/activities/${result.activity_id}/result/${result.id}/indicator/${post.id}/period/create`"
-                              class="add_period flex w-[442px] max-w-full rounded border border-dashed border-n-40 bg-white px-2 py-2.5 text-xs leading-normal"
-                            >
-                              <div class="text-left grow">
-                                You haven't added any periods yet.
-                              </div>
-                              <div
-                                class="flex items-center font-bold uppercase shrink-0 text-bluecoral"
-                              >
-                                <svg-vue
-                                  icon="add"
-                                  class="mr-1 shrink-0"
-                                ></svg-vue>
-                                <span class="text-xs grow">Add period</span>
-                              </div>
-                            </a>
+                            <NotYet
+                              :link="`/activities/${result.activity_id}/result/${result.id}/indicator/${post.id}/period/create`"
+                              description="You haven't added any periods yet."
+                              btn-text="Add period"
+                              class="w-[442px]"
+                            />
                           </div>
                         </td>
                       </tr>
@@ -326,19 +336,24 @@
                         <td>
                           <div class="flex category">
                             <div class="mr-10">
-                              {{
-                                dateFormat(
-                                  item.period.period_start[0].date,
-                                  'MMMM DD, YYYY'
-                                )
-                              }}
-                              -
-                              {{
-                                dateFormat(
-                                  item.period.period_end[0].date,
-                                  'MMMM DD, YYYY'
-                                )
-                              }}
+                              <a
+                                class="text-n-50"
+                                :href="`/activities/${result.activity_id}/result/${result.id}/indicator/${post.id}/period/${item.id}`"
+                              >
+                                {{
+                                  dateFormat(
+                                    item.period.period_start[0].date,
+                                    'MMMM DD, YYYY'
+                                  )
+                                }}
+                                -
+                                {{
+                                  dateFormat(
+                                    item.period.period_end[0].date,
+                                    'MMMM DD, YYYY'
+                                  )
+                                }}
+                              </a>
                             </div>
                             <div class="flex justify-between shrink-0 grow">
                               <a
@@ -365,7 +380,7 @@
                             <div
                               class="item"
                               :class="{
-                                'mb-1.5': t !== item.period.target - 1,
+                                'mb-1.5': t !== item.period.target.length - 1,
                               }"
                             >
                               <div class="mb-1 language target_value">
@@ -477,7 +492,7 @@
                             <div
                               class="item"
                               :class="{
-                                'mb-1.5': t !== item.period.target - 1,
+                                'mb-1.5': t !== item.period.actual.length - 1,
                               }"
                             >
                               <div class="mb-1 language target_value">
@@ -584,6 +599,10 @@
               </div>
             </div>
           </div>
+          <div
+            v-if="ri != indicatorData.length - 1"
+            class="w-full h-px my-8 border-b divider border-n-20"
+          ></div>
         </template>
       </div>
     </div>
@@ -595,9 +614,18 @@ import { defineComponent, toRefs } from 'vue';
 
 //composable
 import dateFormat from 'Composable/dateFormat';
+import getActivityTitle from 'Composable/title';
+
+//components
+import NotYet from 'Components/sections/HaveNotAddedYet.vue';
+import Btn from 'Components/buttons/Link.vue';
 
 export default defineComponent({
   name: 'ResultIndicator',
+  components: {
+    NotYet,
+    Btn,
+  },
   props: {
     result: {
       type: Object,
@@ -617,7 +645,7 @@ export default defineComponent({
     let { result } = toRefs(props);
 
     const indicatorData = result.value.indicators.reverse();
-    return { indicatorData, dateFormat };
+    return { indicatorData, dateFormat, getActivityTitle };
   },
 });
 </script>

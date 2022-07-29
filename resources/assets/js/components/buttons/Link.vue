@@ -1,8 +1,12 @@
 <template>
-  <a :href="link" :class="classes">
+  <a v-if="link" :href="link" :class="classes">
     <svg-vue v-if="icon" class="mr-0.5 text-base" :icon="icon"></svg-vue>
     <span>{{ text }}</span>
   </a>
+  <span v-else :class="classes" class="text-bluecoral">
+    <svg-vue v-if="icon" class="mr-0.5 text-base" :icon="icon"></svg-vue>
+    <span>{{ text }}</span>
+  </span>
 </template>
 
 <script lang="ts">
@@ -18,7 +22,8 @@ export default defineComponent({
     },
     link: {
       type: String,
-      required: true,
+      required: false,
+      default: '',
     },
     icon: {
       type: String,
