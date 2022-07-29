@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin\Workflow;
 
 use App\Http\Controllers\Controller;
 use App\IATI\Services\Workflow\ActivityWorkflowService;
+use GuzzleHttp\Exception\RequestException;
 use Illuminate\Support\Arr;
 
 /**
@@ -46,6 +47,12 @@ class ActivityWorkflowController extends Controller
 
             return redirect()->route('admin.activities.show', $activityId)->with('success', 'Activity has been published successfully.');
         } catch (\Exception $e) {
+            if ($e instanceof RequestException) {
+                if ($e->getResponse()->getStatusCode() == 404) {
+                    return redirect()->route('admin.activities.show', $activityId)->with('error', 'Publisher not found.');
+                }
+            }
+
             logger()->error($e->getMessage());
 
             return redirect()->route('admin.activities.show', $activityId)->with('error', 'Error has occurred while publishing activity.');

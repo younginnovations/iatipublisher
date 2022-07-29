@@ -60,4 +60,16 @@ class ActivityPublishedRepository
 
         return $activityPublished->save();
     }
+
+    /**
+     * Returns activity published data.
+     *
+     * @param $organization_id
+     *
+     * @return Model
+     */
+    public function getActivityPublished($organization_id): Model
+    {
+        return $this->activityPublished->where('organization_id', $organization_id)->first();
+    }
 }

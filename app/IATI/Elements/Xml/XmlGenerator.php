@@ -221,8 +221,12 @@ class XmlGenerator
      * @param ArrayToXml $arrayToXml
      * @param ActivityPublishedService $activityPublishedService
      */
-    public function __construct(ActivityService $activityService, OrganizationService $organizationService, ArrayToXml $arrayToXml, ActivityPublishedService $activityPublishedService)
-    {
+    public function __construct(
+        ActivityService $activityService,
+        OrganizationService $organizationService,
+        ArrayToXml $arrayToXml,
+        ActivityPublishedService $activityPublishedService
+    ) {
         $this->activityService = $activityService;
         $this->organizationService = $organizationService;
         $this->arrayToXml = $arrayToXml;
@@ -237,27 +241,24 @@ class XmlGenerator
      * @param $result
      * @param $settings
      * @param $organization
-     * @param $unpublish
      *
      * @return void
      */
-    public function generateActivityXml($activity, $transaction, $result, $settings, $organization, $unpublish = null)
+    public function generateActivityXml($activity, $transaction, $result, $settings, $organization)
     {
         $publisherId = Arr::get($settings->publishing_info, 'publisher_id', 'Not Available');
         $filename = sprintf('%s-%s.xml', $publisherId, 'activities');
         $publishedActivity = sprintf('%s-%s.xml', $publisherId, $activity->id);
         $xml = $this->getXml($activity, $transaction, $result, $settings, $organization);
 
-        if ($unpublish) {
-            $this->getMergeXml([], $filename);
-        } else {
-            $result = Storage::disk('public')->put(sprintf('%s/%s', 'xmlFiles', $publishedActivity), $xml->saveXML());
+        $result = Storage::disk('minio')->put(
+            sprintf('%s/%s/%s', 'xml', 'activityXmlFiles', $publishedActivity),
+            $xml->saveXML()
+        );
 
-            if ($result) {
-                $publishedFiles = $this->savePublishedFiles($filename, $activity->org_id, $publishedActivity);
-
-                $this->getMergeXml($publishedFiles, $filename);
-            }
+        if ($result) {
+            $publishedFiles = $this->savePublishedFiles($filename, $activity->org_id, $publishedActivity);
+            $this->getMergeXml($publishedFiles, $filename);
         }
     }
 
@@ -277,7 +278,10 @@ class XmlGenerator
 
         if (!is_array($publishedActivity)) {
             $publishedActivities = (array) $published->published_activities;
-            (in_array($publishedActivity, $publishedActivities)) ?: array_push($publishedActivities, $publishedActivity);
+            (in_array($publishedActivity, $publishedActivities)) ?: array_push(
+                $publishedActivities,
+                $publishedActivity
+            );
         }
 
         $this->activityPublishedService->update($published, array_unique($publishedActivities));
@@ -304,7 +308,13 @@ class XmlGenerator
 
         foreach ($publishedFiles as $xml) {
             $addDom = new \DOMDocument();
-            $file = Storage::disk('public')->path(sprintf('%s/%s', 'xmlFiles', $xml));
+            $fileContent = Storage::disk('minio')->get(sprintf('%s/%s/%s', 'xml', 'activityXmlFiles', $xml));
+
+            if ($fileContent) {
+                Storage::disk('local')->put('public/xml/activityXmlFiles/' . $xml, $fileContent);
+            }
+
+            $file = Storage::disk('local')->path('public/xml/activityXmlFiles/' . $xml);
             $addDom->load($file);
 
             if ($addDom->documentElement) {
@@ -314,32 +324,32 @@ class XmlGenerator
                     );
                 }
             }
+
+            if (Storage::disk('local')->exists('public/xml/activityXmlFiles/' . $xml)) {
+                Storage::disk('local')->delete('public/xml/activityXmlFiles/' . $xml);
+            }
         }
 
-        $filePath = Storage::disk('public')->path(sprintf('%s/%s', 'mergedXml', $filename));
-
-        $this->saveXMLFile($filePath, $dom, $filename);
+        $this->saveXMLFile($dom, $filename);
     }
 
     /**
      * Saves merged xml file.
      *
-     * @param $filePath
      * @param $dom
      * @param $filename
      *
      * @return void
      */
-    protected function saveXMLFile($filePath, $dom, $filename = null)
+    protected function saveXMLFile($dom, $filename = null)
     {
-//        $exists = Storage::disk('s3')->exists(sprintf('%s%s', config('filesystems.xml'), $filename));
-//
-//        if($exists){
-//            Storage::disk('s3')->delete(sprintf('%s%s', config('filesystems.xml'), $filename));
-//        }
+        $exists = Storage::disk('minio')->exists(sprintf('%s/%s/%s', 'xml', 'mergedActivityXml', $filename));
 
-//        Storage::disk('s3')->put(sprintf('%s%s', config('filesystems.xml'), $filename), $dom->saveXML());
-        Storage::disk('public')->put(sprintf('%s/%s', 'mergedXml', $filename), $dom->saveXML());
+        if ($exists) {
+            Storage::disk('minio')->delete(sprintf('%s/%s/%s', 'xml', 'mergedActivityXml', $filename));
+        }
+
+        Storage::disk('minio')->put(sprintf('%s/%s/%s', 'xml', 'mergedActivityXml', $filename), $dom->saveXML());
     }
 
     /**
@@ -365,11 +375,11 @@ class XmlGenerator
         $xmlData['iati-activity'] = $this->getXmlData($activity, $transaction, $result, $organization);
         $xmlData['iati-activity']['@attributes'] = [
             'last-updated-datetime' => gmdate('c', time()),
-            'xml:lang' => Arr::get($activity->default_field_values, '0.default_language', null),
-            'default-currency' => Arr::get($activity->default_field_values, '0.default_currency', null),
-            'humanitarian' => Arr::get($activity->default_field_values, '0.humanitarian', false),
-            'hierarchy' => Arr::get($activity->default_field_values, '0.default_hierarchy', 1),
-            'linked-data-uri' => Arr::get($activity->default_field_values, '0.linked_data_uri', null),
+            'xml:lang'              => Arr::get($activity->default_field_values, '0.default_language', null),
+            'default-currency'      => Arr::get($activity->default_field_values, '0.default_currency', null),
+            'humanitarian'          => Arr::get($activity->default_field_values, '0.humanitarian', false),
+            'hierarchy'             => Arr::get($activity->default_field_values, '0.default_hierarchy', 1),
+            'linked-data-uri'       => Arr::get($activity->default_field_values, '0.linked_data_uri', null),
         ];
 
         return $this->arrayToXml->createXml('iati-activities', $xmlData);

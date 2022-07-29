@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace App\IATI\Services\Workflow;
 
+use App\IATI\Services\Activity\ActivityPublishedService;
 use App\IATI\Services\Activity\ActivityService;
 use App\IATI\Services\Organization\OrganizationService;
+use App\IATI\Services\Publisher\PublisherService;
 use App\IATI\Services\Xml\XmlGeneratorService;
 
 /**
@@ -29,16 +31,36 @@ class ActivityWorkflowService
     protected XmlGeneratorService $xmlGeneratorService;
 
     /**
+     * @var PublisherService
+     */
+    protected PublisherService $publisherService;
+
+    /**
+     * @var ActivityPublishedService
+     */
+    protected ActivityPublishedService $activityPublishedService;
+
+    /**
      * ActivityWorkflowService Constructor.
      *
      * @param OrganizationService $organizationService
      * @param ActivityService $activityService
+     * @param XmlGeneratorService $xmlGeneratorService
+     * @param PublisherService $publisherService
+     * @param ActivityPublishedService $activityPublishedService
      */
-    public function __construct(OrganizationService $organizationService, ActivityService $activityService, XmlGeneratorService $xmlGeneratorService)
-    {
+    public function __construct(
+        OrganizationService $organizationService,
+        ActivityService $activityService,
+        XmlGeneratorService $xmlGeneratorService,
+        PublisherService $publisherService,
+        ActivityPublishedService $activityPublishedService
+    ) {
         $this->organizationService = $organizationService;
         $this->activityService = $activityService;
         $this->xmlGeneratorService = $xmlGeneratorService;
+        $this->publisherService = $publisherService;
+        $this->activityPublishedService = $activityPublishedService;
     }
 
     /**
@@ -64,8 +86,9 @@ class ActivityWorkflowService
     {
         $organization = $activity->organization;
         $settings = $organization->settings;
-        $publishedActivities = $organization->publishedFiles;
 
-        $this->xmlGeneratorService->generateActivityXml($activity, $activity->transactions, $activity->results, $settings, $organization);
+//        $this->xmlGeneratorService->generateActivityXml($activity, $activity->transactions, $activity->results, $settings, $organization);
+        $activityPublished = $this->activityPublishedService->getActivityPublished($organization->id);
+        $this->publisherService->publishFile($settings->publishing_info, $activityPublished, $organization);
     }
 }
