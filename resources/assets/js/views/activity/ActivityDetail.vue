@@ -30,10 +30,12 @@
               </a>
             </div>
             <div>
-              <h4 class="ellipsis__title relative mr-4 text-2xl font-bold">
-                <span id="activity_title" class="ellipsis__title overflow-hidden">{{
-                  pageTitle ? pageTitle : 'Untitled'
-                }}</span>
+              <h4 class="relative mr-4 text-2xl font-bold ellipsis__title">
+                <span
+                  id="activity_title"
+                  class="overflow-hidden ellipsis__title"
+                  >{{ pageTitle ? pageTitle : 'Untitled' }}</span
+                >
                 <span class="ellipsis__title--hover">{{
                   pageTitle ? pageTitle : 'Untitled'
                 }}</span>
@@ -238,7 +240,7 @@
               />
             </div>
             <RadialProgressBar
-              class="mb-3 h-20 text-8xl"
+              class="h-20 mb-3 text-8xl"
               :is-percent="true"
             ></RadialProgressBar>
             <span>Fill core elements to get 100% score</span>
@@ -278,8 +280,8 @@
         </div>
         <Elements :activity-id="activity.id" :data="elementProps" />
       </aside>
-      <div class="activities__content overflow-hidden">
-        <div class="mb-3 inline-flex flex-wrap gap-2">
+      <div class="overflow-hidden activities__content">
+        <div class="inline-flex flex-wrap gap-2 mb-3">
           <a
             v-for="(post, key, index) in groupedData"
             :key="index"
@@ -299,10 +301,10 @@
             </button>
           </a>
         </div>
-        <div class="activities__content--elements -mx-3 flex flex-wrap">
+        <div class="flex flex-wrap -mx-3 activities__content--elements">
           <template v-for="(post, key, index) in groupedData" :key="index">
             <div
-              class="elements-title relative mx-3 mb-1 mt-3 flex w-full items-center text-sm uppercase text-n-40"
+              class="relative flex items-center w-full mx-3 mt-3 mb-1 text-sm uppercase elements-title text-n-40"
             >
               <div class="mr-4 shrink-0">{{ formatTitle(key) }}</div>
             </div>
@@ -497,8 +499,15 @@ export default defineComponent({
       elementProps[key]['has_data'] = 0;
 
       if (key in activityProps) {
-        if ((typeof activityProps[key] === 'object' || typeof activityProps[key] === 'number') && activityProps[key]) {
-          if (Object.keys(activityProps[key]).length > 0 || activityProps[key].toString.length >0) {
+        if (
+          (typeof activityProps[key] === 'object' ||
+            typeof activityProps[key] === 'number') &&
+          activityProps[key]
+        ) {
+          if (
+            Object.keys(activityProps[key]).length > 0 ||
+            activityProps[key].toString.length > 0
+          ) {
             elementProps[key]['has_data'] = 1;
           }
         }
@@ -539,7 +548,7 @@ export default defineComponent({
       toastData,
       elementProps,
       formatTitle,
-      pageTitle
+      pageTitle,
     };
   },
 });

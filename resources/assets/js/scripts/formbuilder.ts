@@ -7,7 +7,9 @@ class FormBuilder {
   public addForm(ev: Event): void {
     ev.preventDefault();
     const target = ev.target as EventTarget;
-    const container = $(target).attr('form_type') ? $(`.collection-container[form_type ='${$(target).attr('form_type')}']`) : $('.collection-container');
+    const container = $(target).attr('form_type')
+      ? $(`.collection-container[form_type ='${$(target).attr('form_type')}']`)
+      : $('.collection-container');
 
     const count = $(target).attr('child_count')
       ? parseInt($(target).attr('child_count') as string) + 1
@@ -15,12 +17,11 @@ class FormBuilder {
 
     const parent_count = $(target).attr('parent_count')
       ? parseInt($(target).attr('parent_count') as string)
-      : $(target).parent().prevAll('.multi-form').length;
+      : $(target).parent('.subelement').prevAll('.multi-form').length;
 
-    const wrapper_parent_count = $(target).attr('wrapped_parent_count') ?
-      parseInt($(target).attr('wrapped_parent_count') as string) :
-      $(target).parent('.subelement').find('.wrapped-child-body').length;
-
+    const wrapper_parent_count = $(target).attr('wrapped_parent_count')
+      ? parseInt($(target).attr('wrapped_parent_count') as string)
+      : $(target).parent('.subelement').find('.wrapped-child-body').length;
 
     let proto = container
       .data('prototype')
@@ -37,27 +38,45 @@ class FormBuilder {
 
     $(target).prev().append($(proto));
     if ($(target).attr('has_child_collection')) {
-      $(target).prev('.subelement').children('.wrapped-child-body').last().find('.add_to_collection').attr('wrapped_parent_count', count);
-      $(target).prev('.subelement').children('.wrapped-child-body').last().find('.add_to_collection').attr('parent_count', parent_count);
+      $(target)
+        .prev('.subelement')
+        .children('.wrapped-child-body')
+        .last()
+        .find('.add_to_collection')
+        .attr('wrapped_parent_count', count);
+      $(target)
+        .prev('.subelement')
+        .children('.wrapped-child-body')
+        .last()
+        .find('.add_to_collection')
+        .attr('parent_count', parent_count);
     }
 
-
-
-    $(target).prev().find('.wrapped-child-body').last().find('.add_to_collection').attr('wrapper_parent_count', wrapper_parent_count ?? 0);
+    $(target)
+      .prev()
+      .find('.wrapped-child-body')
+      .last()
+      .find('.add_to_collection')
+      .attr('wrapper_parent_count', wrapper_parent_count ?? 0);
 
     if ($(target).attr('form_type')) {
       $(target).prev().last().find('.select2').select2({
-        placeholder: 'Select an option'
+        placeholder: 'Select an option',
       });
 
-      $(this).find('.sub-attribute')
+      $(this)
+        .find('.sub-attribute')
         .wrapAll(
           $(
             '<div class="form-field-group flex flex-wrap rounded-br-lg border-y border-r border-spring-50 sub-attribute-wrapper"></div>'
           )
         );
 
-      $(target).prev('.subelement').children('.wrapped-child-body').last().find('.sub-attribute')
+      $(target)
+        .prev('.subelement')
+        .children('.wrapped-child-body')
+        .last()
+        .find('.sub-attribute')
         .wrapAll(
           $(
             '<div class="form-field-group flex flex-wrap rounded-br-lg border-y border-r border-spring-50 sub-attribute-wrapper mt-6"></div>'
@@ -74,7 +93,6 @@ class FormBuilder {
         });
     }
 
-
     $(target).attr('child_count', count);
     this.aidTypeVocabularyHideField();
     this.sectorVocabularyHideField();
@@ -84,11 +102,15 @@ class FormBuilder {
   public addParentForm(ev: Event): void {
     ev.preventDefault();
     const target = ev.target as EventTarget;
-    const container = $(target).attr('form_type') ? $(`.parent-collection[form_type ='${$(target).attr('form_type')}']`) : $('.parent-collection');
+    const container = $(target).attr('form_type')
+      ? $(`.parent-collection[form_type ='${$(target).attr('form_type')}']`)
+      : $('.parent-collection');
 
     const count = $(target).attr('parent_count')
       ? parseInt($(target).attr('parent_count') as string) + 1
-      : ($(target).prev().find('.multi-form').length ? $(target).prev().find('.multi-form').length : $(target).prev().find('.wrapped-child-body').length) + 1;
+      : ($(target).prev().find('.multi-form').length
+          ? $(target).prev().find('.multi-form').length
+          : $(target).prev().find('.wrapped-child-body').length) + 1;
 
     console.log(count);
     let proto = container.data('prototype').replace(/__PARENT_NAME__/g, count);
@@ -98,7 +120,12 @@ class FormBuilder {
     $(target).prev().find('.multi-form').last().find('.select2').select2({
       placeholder: 'Select an option',
     });
-    $(target).prev().find('.multi-form').last().find('.add_to_collection').attr('parent_count', count);
+    $(target)
+      .prev()
+      .find('.multi-form')
+      .last()
+      .find('.add_to_collection')
+      .attr('parent_count', count);
 
     this.addWrapperOnAdd(target);
 
@@ -149,27 +176,33 @@ class FormBuilder {
   //add wrapper div around the attributes
   public addWrapper(): void {
     $('.multi-form').each(function () {
-
-      $(this).find('.attribute')
+      $(this)
+        .find('.attribute')
         .wrapAll(
           $(
             '<div class="form-field-group flex flex-wrap rounded-br-lg border-y border-r border-spring-50 attribute-wrapper mb-4"></div>'
           )
         );
-    })
-
-    $('.subelement').find('.wrapped-child-body').each(function () {
-      $(this).find('.sub-attribute')
-        .wrapAll(
-          $(
-            '<div class="form-field-group flex flex-wrap rounded-br-lg border-y border-r border-spring-50 sub-attribute-wrapper mb-4"></div>'
-          )
-        );
     });
+
+    $('.subelement')
+      .find('.wrapped-child-body')
+      .each(function () {
+        $(this)
+          .find('.sub-attribute')
+          .wrapAll(
+            $(
+              '<div class="form-field-group flex flex-wrap rounded-br-lg border-y border-r border-spring-50 sub-attribute-wrapper mb-4"></div>'
+            )
+          );
+      });
   }
 
   public addWrapperOnAdd(target: EventTarget): void {
-    $(target).prev().find('.multi-form').last()
+    $(target)
+      .prev()
+      .find('.multi-form')
+      .last()
       .find('.attribute')
       .wrapAll(
         $(
@@ -177,14 +210,21 @@ class FormBuilder {
         )
       );
 
-    $(target).prev().find('.multi-form').last().find('.subelement').find('.wrapped-child-body').each(function () {
-      $(this).find('.sub-attribute')
-        .wrapAll(
-          $(
-            '<div class="form-field-group flex flex-wrap rounded-br-lg border-y border-r border-spring-50 sub-attribute-wrapper mb-4"></div>'
-          )
-        );
-    });
+    $(target)
+      .prev()
+      .find('.multi-form')
+      .last()
+      .find('.subelement')
+      .find('.wrapped-child-body')
+      .each(function () {
+        $(this)
+          .find('.sub-attribute')
+          .wrapAll(
+            $(
+              '<div class="form-field-group flex flex-wrap rounded-br-lg border-y border-r border-spring-50 sub-attribute-wrapper mb-4"></div>'
+            )
+          );
+      });
   }
 
   /**
@@ -245,7 +285,8 @@ class FormBuilder {
       index
         .closest('.form-field-group')
         .find(humanitarianScopeHideVocabularyUri)
-        .show().removeAttr('disabled')
+        .show()
+        .removeAttr('disabled')
         .closest('.form-field')
         .show();
     } else {
@@ -254,7 +295,8 @@ class FormBuilder {
         .find(humanitarianScopeHideVocabularyUri)
         .val('')
         .trigger('change')
-        .hide().attr('disabled', 'disabled')
+        .hide()
+        .attr('disabled', 'disabled')
         .closest('.form-field')
         .hide();
     }
@@ -291,18 +333,25 @@ class FormBuilder {
    */
   public hideCountryBudgetField(value: string) {
     const countryBudgetCodeInput =
-      'input[id^="budget_item"][id*="[code_text]"]',
+        'input[id^="budget_item"][id*="[code_text]"]',
       countryBudgetCodeSelect = 'select[id^="budget_item"][id*="[code]"]';
 
     if (value === '1') {
       $(countryBudgetCodeSelect)
         .val('')
-        .trigger('change').attr('disabled', 'disabled')
+        .trigger('change')
+        .attr('disabled', 'disabled')
         .closest('.form-field')
         .hide();
-      $(countryBudgetCodeInput).removeAttr('disabled').closest('.form-field').show();
+      $(countryBudgetCodeInput)
+        .removeAttr('disabled')
+        .closest('.form-field')
+        .show();
     } else {
-      $(countryBudgetCodeSelect).removeAttr('disabled').closest('.form-field').show();
+      $(countryBudgetCodeSelect)
+        .removeAttr('disabled')
+        .closest('.form-field')
+        .show();
       $(countryBudgetCodeInput)
         .val('')
         .trigger('change')
@@ -392,7 +441,8 @@ class FormBuilder {
         index
           .closest('.form-field-group')
           .find(earmarking_category)
-          .show().removeAttr('disabled')
+          .show()
+          .removeAttr('disabled')
           .closest('.form-field')
           .show();
         index
@@ -400,7 +450,8 @@ class FormBuilder {
           .find(case2)
           .val('')
           .trigger('change')
-          .hide().attr('disabled', 'disabled')
+          .hide()
+          .attr('disabled', 'disabled')
           .closest('.form-field')
           .hide();
         break;
@@ -408,7 +459,8 @@ class FormBuilder {
         index
           .closest('.form-field-group')
           .find(earmarking_modality)
-          .show().removeAttr('disabled')
+          .show()
+          .removeAttr('disabled')
           .closest('.form-field')
           .show();
         index
@@ -416,7 +468,8 @@ class FormBuilder {
           .find(case3)
           .val('')
           .trigger('change')
-          .hide().attr('disabled', 'disabled')
+          .hide()
+          .attr('disabled', 'disabled')
           .closest('.form-field')
           .hide();
         break;
@@ -425,7 +478,8 @@ class FormBuilder {
         index
           .closest('.form-field-group')
           .find(cash_and_voucher_modalities)
-          .show().removeAttr('disabled')
+          .show()
+          .removeAttr('disabled')
           .closest('.form-field')
           .show();
         index
@@ -433,7 +487,8 @@ class FormBuilder {
           .find(case4)
           .val('')
           .trigger('change')
-          .hide().attr('disabled', 'disabled')
+          .hide()
+          .attr('disabled', 'disabled')
           .closest('.form-field')
           .hide();
         break;
@@ -441,7 +496,8 @@ class FormBuilder {
         index
           .closest('.form-field-group')
           .find(default_aid_type)
-          .show().removeAttr('disabled')
+          .show()
+          .removeAttr('disabled')
           .closest('.form-field')
           .show();
         index
@@ -449,7 +505,8 @@ class FormBuilder {
           .find(case1)
           .val('')
           .trigger('change')
-          .hide().attr('disabled', 'disabled')
+          .hide()
+          .attr('disabled', 'disabled')
           .closest('.form-field')
           .hide();
     }
@@ -478,7 +535,8 @@ class FormBuilder {
         index
           .closest('.form-field-group')
           .find(earmarking_category)
-          .show().removeAttr('disabled')
+          .show()
+          .removeAttr('disabled')
           .closest('.form-field')
           .show();
         index
@@ -486,7 +544,8 @@ class FormBuilder {
           .find(case2)
           .val('')
           .trigger('change')
-          .hide().attr('disabled', 'disabled')
+          .hide()
+          .attr('disabled', 'disabled')
           .closest('.form-field')
           .hide();
         break;
@@ -494,7 +553,8 @@ class FormBuilder {
         index
           .closest('.form-field-group')
           .find(earmarking_modality)
-          .show().removeAttr('disabled')
+          .show()
+          .removeAttr('disabled')
           .closest('.form-field')
           .show();
         index
@@ -502,7 +562,8 @@ class FormBuilder {
           .find(case3)
           .val('')
           .trigger('change')
-          .hide().attr('disabled', 'disabled')
+          .hide()
+          .attr('disabled', 'disabled')
           .closest('.form-field')
           .hide();
         break;
@@ -511,7 +572,8 @@ class FormBuilder {
         index
           .closest('.form-field-group')
           .find(cash_and_voucher_modalities)
-          .show().removeAttr('disabled')
+          .show()
+          .removeAttr('disabled')
           .closest('.form-field')
           .show();
         index
@@ -519,7 +581,8 @@ class FormBuilder {
           .find(case4)
           .val('')
           .trigger('change')
-          .hide().attr('disabled', 'disabled')
+          .hide()
+          .attr('disabled', 'disabled')
           .closest('.form-field')
           .hide();
         break;
@@ -527,7 +590,8 @@ class FormBuilder {
         index
           .closest('.form-field-group')
           .find(aid_type)
-          .show().removeAttr('disabled')
+          .show()
+          .removeAttr('disabled')
           .closest('.form-field')
           .show();
         index
@@ -535,7 +599,8 @@ class FormBuilder {
           .find(case1)
           .val('')
           .trigger('change')
-          .hide().attr('disabled', 'disabled')
+          .hide()
+          .attr('disabled', 'disabled')
           .closest('.form-field')
           .hide();
     }
@@ -585,7 +650,8 @@ class FormBuilder {
         index
           .closest('.form-field-group')
           .find(case1_show)
-          .show().removeAttr('disabled')
+          .show()
+          .removeAttr('disabled')
           .closest('.form-field')
           .show();
         index
@@ -593,7 +659,8 @@ class FormBuilder {
           .find(case1)
           .val('')
           .trigger('change')
-          .hide().attr('disabled', 'disabled')
+          .hide()
+          .attr('disabled', 'disabled')
           .closest('.form-field')
           .hide();
         break;
@@ -601,7 +668,8 @@ class FormBuilder {
         index
           .closest('.form-field-group')
           .find(case2_show)
-          .show().removeAttr('disabled')
+          .show()
+          .removeAttr('disabled')
           .closest('.form-field')
           .show();
         index
@@ -609,7 +677,8 @@ class FormBuilder {
           .find(case2)
           .val('')
           .trigger('change')
-          .hide().attr('disabled', 'disabled')
+          .hide()
+          .attr('disabled', 'disabled')
           .closest('.form-field')
           .hide();
         break;
@@ -617,7 +686,8 @@ class FormBuilder {
         index
           .closest('.form-field-group')
           .find(case1_show)
-          .show().removeAttr('disabled')
+          .show()
+          .removeAttr('disabled')
           .closest('.form-field')
           .show();
         index
@@ -625,7 +695,8 @@ class FormBuilder {
           .find(case1)
           .val('')
           .trigger('change')
-          .hide().attr('disabled', 'disabled')
+          .hide()
+          .attr('disabled', 'disabled')
           .closest('.form-field')
           .hide();
     }
@@ -688,7 +759,8 @@ class FormBuilder {
         index
           .closest('.form-field-group')
           .find(case1_show)
-          .show().removeAttr('disabled')
+          .show()
+          .removeAttr('disabled')
           .closest('.form-field')
           .show();
         index
@@ -696,7 +768,8 @@ class FormBuilder {
           .find(case1)
           .val('')
           .trigger('change')
-          .hide().attr('disabled', 'disabled')
+          .hide()
+          .attr('disabled', 'disabled')
           .closest('.form-field')
           .hide();
         break;
@@ -704,7 +777,8 @@ class FormBuilder {
         index
           .closest('.form-field-group')
           .find(case2_show)
-          .show().removeAttr('disabled')
+          .show()
+          .removeAttr('disabled')
           .closest('.form-field')
           .show();
         index
@@ -712,7 +786,8 @@ class FormBuilder {
           .find(case2)
           .val('')
           .trigger('change')
-          .hide().attr('disabled', 'disabled')
+          .hide()
+          .attr('disabled', 'disabled')
           .closest('.form-field')
           .hide();
         break;
@@ -720,7 +795,8 @@ class FormBuilder {
         index
           .closest('.form-field-group')
           .find(case7_show)
-          .show().removeAttr('disabled')
+          .show()
+          .removeAttr('disabled')
           .closest('.form-field')
           .show();
         index
@@ -728,7 +804,8 @@ class FormBuilder {
           .find(case7)
           .val('')
           .trigger('change')
-          .hide().attr('disabled', 'disabled')
+          .hide()
+          .attr('disabled', 'disabled')
           .closest('.form-field')
           .hide();
         break;
@@ -736,7 +813,8 @@ class FormBuilder {
         index
           .closest('.form-field-group')
           .find(case8_show)
-          .show().removeAttr('disabled')
+          .show()
+          .removeAttr('disabled')
           .closest('.form-field')
           .show();
         index
@@ -744,7 +822,8 @@ class FormBuilder {
           .find(case8)
           .val('')
           .trigger('change')
-          .hide().attr('disabled', 'disabled')
+          .hide()
+          .attr('disabled', 'disabled')
           .closest('.form-field')
           .hide();
         break;
@@ -752,7 +831,8 @@ class FormBuilder {
         index
           .closest('.form-field-group')
           .find(case98_99_show)
-          .show().removeAttr('disabled')
+          .show()
+          .removeAttr('disabled')
           .closest('.form-field')
           .show();
         index
@@ -760,7 +840,8 @@ class FormBuilder {
           .find(case98_99)
           .val('')
           .trigger('change')
-          .hide().attr('disabled', 'disabled')
+          .hide()
+          .attr('disabled', 'disabled')
           .closest('.form-field')
           .hide();
         break;
@@ -768,7 +849,8 @@ class FormBuilder {
         index
           .closest('.form-field-group')
           .find(case98_99_show)
-          .show().removeAttr('disabled')
+          .show()
+          .removeAttr('disabled')
           .closest('.form-field')
           .show();
         index
@@ -776,7 +858,8 @@ class FormBuilder {
           .find(case98_99)
           .val('')
           .trigger('change')
-          .hide().attr('disabled', 'disabled')
+          .hide()
+          .attr('disabled', 'disabled')
           .closest('.form-field')
           .hide();
         break;
@@ -784,7 +867,8 @@ class FormBuilder {
         index
           .closest('.form-field-group')
           .find(default_show)
-          .show().removeAttr('disabled')
+          .show()
+          .removeAttr('disabled')
           .closest('.form-field')
           .show();
 
@@ -793,7 +877,8 @@ class FormBuilder {
           .find(default_hide)
           .val('')
           .trigger('change')
-          .hide().attr('disabled', 'disabled')
+          .hide()
+          .attr('disabled', 'disabled')
           .closest('.form-field')
           .hide();
     }
@@ -834,8 +919,10 @@ class FormBuilder {
   public hideRecipientRegionField(index: JQuery, value: string) {
     const case1_show = 'select[id*="[region_code]"],input[id*="[custom_code]"]',
       case2_show = 'input[id*="[custom_code]"],input[id*="[code]"]',
-      case99_show = 'input[id*="[custom_code]"],input[id*="[code]"],input[id*="[vocabulary_uri]"]',
-      case1 = 'input[id*="[custom_code]"],input[id*="[code]"],input[id*="[vocabulary_uri]"]',
+      case99_show =
+        'input[id*="[custom_code]"],input[id*="[code]"],input[id*="[vocabulary_uri]"]',
+      case1 =
+        'input[id*="[custom_code]"],input[id*="[code]"],input[id*="[vocabulary_uri]"]',
       case2 = 'select[id*="[region_code]"],input[id*="[vocabulary_uri]"]',
       case99 = 'select[id*="[region_code]"]';
 
@@ -844,7 +931,8 @@ class FormBuilder {
         index
           .closest('.form-field-group')
           .find(case1_show)
-          .show().removeAttr('disabled')
+          .show()
+          .removeAttr('disabled')
           .closest('.form-field')
           .show();
         index
@@ -852,7 +940,8 @@ class FormBuilder {
           .find(case1)
           .val('')
           .trigger('change')
-          .hide().attr('disabled', 'disabled')
+          .hide()
+          .attr('disabled', 'disabled')
           .closest('.form-field')
           .hide();
         break;
@@ -860,7 +949,8 @@ class FormBuilder {
         index
           .closest('.form-field-group')
           .find(case2_show)
-          .show().removeAttr('disabled')
+          .show()
+          .removeAttr('disabled')
           .closest('.form-field')
           .show();
         index
@@ -868,7 +958,8 @@ class FormBuilder {
           .find(case2)
           .val('')
           .trigger('change')
-          .hide().attr('disabled', 'disabled')
+          .hide()
+          .attr('disabled', 'disabled')
           .closest('.form-field')
           .hide();
         break;
@@ -876,7 +967,8 @@ class FormBuilder {
         index
           .closest('.form-field-group')
           .find(case99_show)
-          .show().removeAttr('disabled')
+          .show()
+          .removeAttr('disabled')
           .closest('.form-field')
           .show();
         index
@@ -884,7 +976,8 @@ class FormBuilder {
           .find(case99)
           .val('')
           .trigger('change')
-          .hide().attr('disabled', 'disabled')
+          .hide()
+          .attr('disabled', 'disabled')
           .closest('.form-field')
           .hide();
         break;
@@ -892,7 +985,8 @@ class FormBuilder {
         index
           .closest('.form-field-group')
           .find(case2_show)
-          .show().removeAttr('disabled')
+          .show()
+          .removeAttr('disabled')
           .closest('.form-field')
           .show();
         index
@@ -900,7 +994,8 @@ class FormBuilder {
           .find(case2)
           .val('')
           .trigger('change')
-          .hide().attr('disabled', 'disabled')
+          .hide()
+          .attr('disabled', 'disabled')
           .closest('.form-field')
           .hide();
     }
@@ -972,7 +1067,8 @@ class FormBuilder {
         index
           .closest('.form-field-group')
           .find(case1_show)
-          .show().removeAttr('disabled')
+          .show()
+          .removeAttr('disabled')
           .closest('.form-field')
           .show();
         index
@@ -980,7 +1076,8 @@ class FormBuilder {
           .find(case1)
           .val('')
           .trigger('change')
-          .hide().attr('disabled', 'disabled')
+          .hide()
+          .attr('disabled', 'disabled')
           .closest('.form-field')
           .hide();
         break;
@@ -988,7 +1085,8 @@ class FormBuilder {
         index
           .closest('.form-field-group')
           .find(case2_show)
-          .show().removeAttr('disabled')
+          .show()
+          .removeAttr('disabled')
           .closest('.form-field')
           .show();
         index
@@ -996,7 +1094,8 @@ class FormBuilder {
           .find(case2)
           .val('')
           .trigger('change')
-          .hide().attr('disabled', 'disabled')
+          .hide()
+          .attr('disabled', 'disabled')
           .closest('.form-field')
           .hide();
         break;
@@ -1004,7 +1103,8 @@ class FormBuilder {
         index
           .closest('.form-field-group')
           .find(case3_show)
-          .show().removeAttr('disabled')
+          .show()
+          .removeAttr('disabled')
           .closest('.form-field')
           .show();
         index
@@ -1012,7 +1112,8 @@ class FormBuilder {
           .find(case3)
           .val('')
           .trigger('change')
-          .hide().attr('disabled', 'disabled')
+          .hide()
+          .attr('disabled', 'disabled')
           .closest('.form-field')
           .hide();
         break;
@@ -1020,7 +1121,8 @@ class FormBuilder {
         index
           .closest('.form-field-group')
           .find(case99_show)
-          .show().removeAttr('disabled')
+          .show()
+          .removeAttr('disabled')
           .closest('.form-field')
           .show();
         index
@@ -1028,7 +1130,8 @@ class FormBuilder {
           .find(case99)
           .val('')
           .trigger('change')
-          .hide().attr('disabled', 'disabled')
+          .hide()
+          .attr('disabled', 'disabled')
           .closest('.form-field')
           .hide();
         break;
@@ -1036,7 +1139,8 @@ class FormBuilder {
         index
           .closest('.form-field-group')
           .find(case1_show)
-          .show().removeAttr('disabled')
+          .show()
+          .removeAttr('disabled')
           .closest('.form-field')
           .show();
         index
@@ -1044,7 +1148,8 @@ class FormBuilder {
           .find(case1)
           .val('')
           .trigger('change')
-          .hide().attr('disabled', 'disabled')
+          .hide()
+          .attr('disabled', 'disabled')
           .closest('.form-field')
           .hide();
     }
@@ -1065,7 +1170,7 @@ $(function () {
 
   $('.delete').on('click', () => {
     // console.log('clicked');
-  })
+  });
 
   $('body').on('click', '.add_to_collection', (event: Event) => {
     formBuilder.addForm(event);
@@ -1121,14 +1226,16 @@ $(function () {
   $('.select2').select2({
     placeholder: 'Select an option',
     allowClear: true,
-
   });
 
   $('body').on('change', 'input[id*="[document]"]', function () {
     const endpoint = $('.endpoint').attr('endpoint') ?? '';
     const file_name = ($(this).val() ?? '').toString();
-    $(this).closest('.form-field-group').find('input[id*="[url]"]').val(`${endpoint}/${(file_name?.split('\\').pop())?.replace(' ', '_')}`);
-  })
+    $(this)
+      .closest('.form-field-group')
+      .find('input[id*="[url]"]')
+      .val(`${endpoint}/${file_name?.split('\\').pop()?.replace(' ', '_')}`);
+  });
 
   /**
    * Text area height on typing
@@ -1141,12 +1248,14 @@ $(function () {
   }
 
   $('body').on('select2:open', '.select2', () => {
-    const select_search = document.querySelector('.select2-search__field') as HTMLElement;
+    const select_search = document.querySelector(
+      '.select2-search__field'
+    ) as HTMLElement;
 
     if (select_search) {
       select_search.focus();
     }
-  })
+  });
 
   /**
    * checks registration agency, country and registration number to deduce identifier
@@ -1155,46 +1264,61 @@ $(function () {
   console.log($('#organisation_identifier'));
   $('#organisation_identifier').attr('disabled', 'disabled');
 
-  function updateRegistrationAgency(country: JQuery){
+  function updateRegistrationAgency(country: JQuery) {
     console.log(country);
-    if(country.val()){
-      $.ajax({ url: '/organisation/agency/' + country.val() })
-      .then((response) => {
-        const current_val = $('#organization_registration_agency').val()??'';
-        let val = false;
+    if (country.val()) {
+      $.ajax({ url: '/organisation/agency/' + country.val() }).then(
+        (response) => {
+          const current_val =
+            $('#organization_registration_agency').val() ?? '';
+          let val = false;
 
-        for (const data in response.data) {
-          if(data===current_val){
-            val=true;
+          for (const data in response.data) {
+            if (data === current_val) {
+              val = true;
+            }
+
+            $('#organization_registration_agency')
+              .append(new Option(response.data[data], data, true, true))
+              .val('')
+              .trigger('change');
           }
 
-          $('#organization_registration_agency').append(new Option(response.data[data], data, true, true)).val('').trigger('change');
+          $('#organization_registration_agency')
+            .val(val ? current_val : '')
+            .trigger('change');
         }
-
-        $('#organization_registration_agency').val(val?current_val:'').trigger('change');
-      });
+      );
     }
   }
 
   $('body').on('select2:select', '#organization_country', function () {
     updateRegistrationAgency($(this));
-  })
+  });
 
-  $('body').on('select2:select', '#organization_registration_agency', function () {
-    const identifier = $(this).val() + '-' + $('#registration_number').val();
-    $('#organisation_identifier').val(identifier);
-  })
+  $('body').on(
+    'select2:select',
+    '#organization_registration_agency',
+    function () {
+      const identifier = $(this).val() + '-' + $('#registration_number').val();
+      $('#organisation_identifier').val(identifier);
+    }
+  );
 
-  $('body').on('select2:clear', '#organization_registration_agency', function () {
-    const identifier = '-' + $('#registration_number').val();
-    $('#organisation_identifier').val(identifier);
-  })
+  $('body').on(
+    'select2:clear',
+    '#organization_registration_agency',
+    function () {
+      const identifier = '-' + $('#registration_number').val();
+      $('#organisation_identifier').val(identifier);
+    }
+  );
 
   $('body').on('keyup', '#registration_number', function () {
-    const identifier = $('#organization_registration_agency').val() + '-' + $(this).val();
+    const identifier =
+      $('#organization_registration_agency').val() + '-' + $(this).val();
     $('#organisation_identifier').val(identifier);
-  })
+  });
 
+  $('.select2-search__field').trigger('focus');
 });
-
-

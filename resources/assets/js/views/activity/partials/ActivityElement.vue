@@ -32,36 +32,31 @@
             {{ title.toString().replace(/_/g, '-') }}
           </div>
 
-          <div
-            :class="{
-              'text-spring-50': completed === true,
-              'text-crimson-50': completed === false,
-            }"
-            class="status ml-2.5 flex text-xs leading-5"
-          >
-            <b class="mr-2 text-base leading-3">.</b>
-            <span v-if="completed">completed</span>
-            <span v-else>not completed</span>
-          </div>
+          <Status :data="completed" />
         </div>
 
         <div class="flex items-center icons">
-          <a
+          <Btn
+            v-if="title === 'transactions'"
+            text="Add Transaction"
+            icon="add"
+            :link="`/activities/${activityId}/${title}/create`"
+            class="mr-2.5"
+          />
+          <Btn
             v-if="title !== 'transactions'"
-            :href="`/activities/${activityId}/${title}`"
-            class="
-              edit-button
-              mr-2.5
-              flex
-              items-center
-              text-tiny
-              font-bold
-              uppercase
-            "
-          >
-            <svg-vue class="mr-0.5 text-base" icon="edit" />
-            <span>Edit</span>
-          </a>
+            text="Edit"
+            :link="`/activities/${activityId}/${title}`"
+            class="edit-button mr-2.5"
+          />
+          <Btn
+            v-else
+            text="Show full transaction list"
+            icon=""
+            design="bgText"
+            :link="`/activities/${activityId}/${title}`"
+            class="mr-2.5"
+          />
 
           <a
             v-else
@@ -1905,13 +1900,17 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
+//components
+import Btn from 'Components/buttons/Link.vue';
+import Status from 'Components/status/Status.vue';
 import HoverText from '../../../components/HoverText.vue';
+
 import moment from 'moment';
 import dateFormat from '../../../composable/dateFormat';
 
 export default defineComponent({
   name: 'ActivityElement',
-  components: { HoverText },
+  components: { HoverText, Btn, Status },
   props: {
     data: {
       type: Object,

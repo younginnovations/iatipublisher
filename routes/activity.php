@@ -84,4 +84,17 @@ Route::name('admin.')->group(function () {
     Route::resource('activities.result.indicator', \App\Http\Controllers\Admin\Activity\IndicatorController::class);
     Route::resource('activities.result.indicator.period', \App\Http\Controllers\Admin\Activity\PeriodController::class);
     Route::resource('activities.transactions', \App\Http\Controllers\Admin\Activity\TransactionController::class);
+    Route::get('/activities/{id}/transactions/page/{page?}', [App\Http\Controllers\Admin\Activity\TransactionController::class, 'getTransaction'])->name('transactions.paginate');
+    Route::get('/activities/{id}/result/page/{page?}', [App\Http\Controllers\Admin\Activity\ResultController::class, 'getResult'])->name('results.paginate');
+    Route::get('/activities/{id}/result/{resultId}/indicator/page/{page?}', [App\Http\Controllers\Admin\Activity\IndicatorController::class, 'getIndicator'])->name('indicator.paginate');
+    Route::get('/activities/{id}/result/{resultId}/indicator/{indicatorId}/period/page/{page?}', [App\Http\Controllers\Admin\Activity\PeriodController::class, 'getPeriod'])->name('period.paginate');
+
+    // static route for static pages
+//    Route::get('/activities/{id}/result', function () {
+//        return view('admin.activity.result.result');
+//    });
+//
+//    Route::get('/activities/{id}/result-detail', function () {
+//        return view('admin.activity.result.detail');
+//    });
 });

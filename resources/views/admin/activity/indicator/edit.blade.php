@@ -71,14 +71,15 @@
                         <div class="hidden parent-collection" form_type="baseline"
                             data-prototype="{{ form_row($form->baseline->prototype()) }}">
                         </div>
-                        <div class="hidden collection-container baseline_comment_narrative" form_type="baseline_comment_narrative"
+                        <div class="hidden collection-container baseline_comment_narrative"
+                            form_type="baseline_comment_narrative"
                             data-prototype="{{ str_replace('baseline[0]','baseline[__PARENT_NAME__]',form_row($form->baseline->getChildren()[0]->getChild('comment')->getChildren()[0]->getChild('narrative')->prototype())) }}">
                         </div>
                         <div class="hidden collection-container baseline_dimension" form_type="baseline_dimension"
                             data-prototype="{{ str_replace('baseline[0]','baseline[__PARENT_NAME__]',form_row($form->baseline->getChildren()[0]->getChild('dimension')->prototype())) }}">
                         </div>
                         <div class="hidden collection-container baseline_location" form_type="baseline_location"
-                            data-prototype="{{ str_replace('baseline[0]','baseline[__PARENT_NAME__]',form_row($form->baseline->getChildren()[0]->getChild('location')->prototype())) }}">
+                            data-prototype="{{ str_replace('baseline[0][location][__NAME__]','baseline[__PARENT_NAME__][location][__WRAPPER_NAME__]',form_row($form->baseline->getChildren()[0]->getChild('location')->prototype())) }}">
                         </div>
 
                         {{-- baseline document link --}}

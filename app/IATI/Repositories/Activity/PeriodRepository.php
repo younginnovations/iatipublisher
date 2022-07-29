@@ -7,6 +7,7 @@ namespace App\IATI\Repositories\Activity;
 use App\IATI\Models\Activity\Activity;
 use App\IATI\Models\Activity\Indicator;
 use App\IATI\Models\Activity\Period;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -125,5 +126,30 @@ class PeriodRepository
     public function getIndicatorPeriod($indicatorId, $periodId): Model
     {
         return $this->indicatorPeriod->where('id', $periodId)->where('indicator_id', $indicatorId)->first();
+    }
+
+    /**
+     * Return periods belonging to an indicator.
+     *
+     * @param $indicatorId
+     *
+     * @return Collection
+     */
+    public function getPeriodOfIndicator($indicatorId): Collection
+    {
+        return $this->indicatorPeriod->where('indicator_id', $indicatorId)->get();
+    }
+
+    /**
+     * Returns all period belonging to indicator id.
+     *
+     * @param int $indicatorId
+     * @param int $page
+     *
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public function getPaginatedPeriod($indicatorId, $page = 1): Collection | \Illuminate\Pagination\LengthAwarePaginator
+    {
+        return $this->indicatorPeriod->where('indicator_id', $indicatorId)->orderBy('created_at', 'DESC')->paginate(10, ['*'], 'indicator', $page);
     }
 }

@@ -197,7 +197,7 @@ export default defineComponent({
   setup(props) {
     const { activity, transactions } = toRefs(props);
     const activityId = activity.value.id;
-    const transactionsData = transactions.value.slice().reverse();
+    const transactionsData = transactions.value.reverse();
 
     return { activityId, dateFormat, transactionsData };
   },
