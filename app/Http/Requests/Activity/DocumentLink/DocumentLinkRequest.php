@@ -36,7 +36,8 @@ class DocumentLinkRequest extends ActivityBaseRequest
     {
         $rules = [];
         foreach ($formFields as $documentCategoryIndex => $documentCategory) {
-            $rules[sprintf('%s.category.%s.code', $formIndex, $documentCategoryIndex)] = 'required';
+            // $rules[sprintf('%s.category.%s.code', $formIndex, $documentCategoryIndex)] = 'required';
+            $rules[sprintf('%s.category.%s.code', $formIndex, $documentCategoryIndex)] = 'nullable';
         }
 
         return $rules;

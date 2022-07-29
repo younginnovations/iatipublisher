@@ -1,3 +1,4 @@
+import { identity } from '@vueuse/core';
 import $ from 'jquery';
 import 'select2';
 
@@ -87,7 +88,7 @@ class FormBuilder {
 
     const count = $(target).attr('parent_count')
       ? parseInt($(target).attr('parent_count') as string) + 1
-      : ($(target).prev().find('.multi-form').length ? $(target).prev().find('.multi-form').length : $(target).prev().find('.wrapped-child-body').length)+1;
+      : ($(target).prev().find('.multi-form').length ? $(target).prev().find('.multi-form').length : $(target).prev().find('.wrapped-child-body').length) + 1;
 
     console.log(count);
     let proto = container.data('prototype').replace(/__PARENT_NAME__/g, count);
@@ -291,7 +292,7 @@ class FormBuilder {
   public hideCountryBudgetField(value: string) {
     const countryBudgetCodeInput =
       'input[id^="budget_item"][id*="[code_text]"]',
-    countryBudgetCodeSelect = 'select[id^="budget_item"][id*="[code]"]';
+      countryBudgetCodeSelect = 'select[id^="budget_item"][id*="[code]"]';
 
     if (value === '1') {
       $(countryBudgetCodeSelect)
@@ -832,9 +833,9 @@ class FormBuilder {
    */
   public hideRecipientRegionField(index: JQuery, value: string) {
     const case1_show = 'select[id*="[region_code]"],input[id*="[custom_code]"]',
-      case2_show = 'input[id*="[custom_code]"]',
-      case99_show = 'input[id*="[custom_code]"],input[id*="[vocabulary_uri]"]',
-      case1 = 'input[id*="[custom_code]"],input[id*="[vocabulary_uri]"]',
+      case2_show = 'input[id*="[custom_code]"],input[id*="[code]"]',
+      case99_show = 'input[id*="[custom_code]"],input[id*="[code]"],input[id*="[vocabulary_uri]"]',
+      case1 = 'input[id*="[custom_code]"],input[id*="[code]"],input[id*="[vocabulary_uri]"]',
       case2 = 'select[id*="[region_code]"],input[id*="[vocabulary_uri]"]',
       case99 = 'select[id*="[region_code]"]';
 
@@ -950,7 +951,7 @@ class FormBuilder {
   }
 
   /**
-   * Hide Tag Form fields
+   * Hide Tag Form fieldscountry
    */
   public hideTagField(index: JQuery, value: string) {
     const case1_show = 'input[id*="[tag_text]"]',
@@ -1142,10 +1143,58 @@ $(function () {
   $('body').on('select2:open', '.select2', () => {
     const select_search = document.querySelector('.select2-search__field') as HTMLElement;
 
-    if(select_search){
+    if (select_search) {
       select_search.focus();
     }
   })
+
+  /**
+   * checks registration agency, country and registration number to deduce identifier
+   */
+  updateRegistrationAgency($('#organization_country'));
+  console.log($('#organisation_identifier'));
+  $('#organisation_identifier').attr('disabled', 'disabled');
+
+  function updateRegistrationAgency(country: JQuery){
+    console.log(country);
+    if(country.val()){
+      $.ajax({ url: '/organisation/agency/' + country.val() })
+      .then((response) => {
+        const current_val = $('#organization_registration_agency').val()??'';
+        let val = false;
+
+        for (const data in response.data) {
+          if(data===current_val){
+            val=true;
+          }
+
+          $('#organization_registration_agency').append(new Option(response.data[data], data, true, true)).val('').trigger('change');
+        }
+
+        $('#organization_registration_agency').val(val?current_val:'').trigger('change');
+      });
+    }
+  }
+
+  $('body').on('select2:select', '#organization_country', function () {
+    updateRegistrationAgency($(this));
+  })
+
+  $('body').on('select2:select', '#organization_registration_agency', function () {
+    const identifier = $(this).val() + '-' + $('#registration_number').val();
+    $('#organisation_identifier').val(identifier);
+  })
+
+  $('body').on('select2:clear', '#organization_registration_agency', function () {
+    const identifier = '-' + $('#registration_number').val();
+    $('#organisation_identifier').val(identifier);
+  })
+
+  $('body').on('keyup', '#registration_number', function () {
+    const identifier = $('#organization_registration_agency').val() + '-' + $(this).val();
+    $('#organisation_identifier').val(identifier);
+  })
+
 });
 
 

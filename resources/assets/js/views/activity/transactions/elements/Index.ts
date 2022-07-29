@@ -1,5 +1,5 @@
 // Proxy export all related components.
-export { default as Description } from './description.vue';
+export { default as Description } from './Description.vue';
 export { default as AidType } from './AidType.vue';
 export { default as TransactionType } from './TransactionType.vue';
 export { default as TransactionDate } from './TransactionDate.vue';

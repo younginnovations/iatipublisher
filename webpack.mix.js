@@ -4,6 +4,7 @@ require('laravel-mix-svg-vue');
 const tailwindCss = require('tailwindcss');
 
 if (mix.inProduction()) {
+  mix.version();
   mix.options({
     terser: {
       terserOptions: {
