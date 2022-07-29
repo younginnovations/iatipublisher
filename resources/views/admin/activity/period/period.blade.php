@@ -1,7 +1,6 @@
 @extends('admin.layouts.app')
 
 @section('content')
-period list
-    {{-- <indicator-list :activity="{{ json_encode($activity) }}" :indicators="{{ json_encode($indicators) }}"
-        :types="{{ json_encode($types) }}"></indicator-list> --}}
+    <periods-list :activity="{{ json_encode($activity) }}" :parent-data="{{ json_encode($parentData) }}"
+        :period="{{ json_encode($period) }}"></periods-list>
 @endsection

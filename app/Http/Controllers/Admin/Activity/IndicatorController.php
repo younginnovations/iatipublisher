@@ -72,10 +72,16 @@ class IndicatorController extends Controller
     {
         try {
             $activity = $this->activityService->getActivity($activityId);
+            $parentData = [
+                'result' => [
+                    'id'        => $resultId,
+                    'title'     => $this->resultService->getResult($resultId, $activityId)['result']['title'][0]['narrative'],
+                ],
+            ];
             $indicators = $this->indicatorService->getResultIndicators($resultId);
             $types = getIndicatorTypes();
 
-            return view('admin.activity.indicator.indicator', compact('activity', 'indicators', 'types'));
+            return view('admin.activity.indicator.indicator', compact('activity', 'parentData', 'indicators', 'types'));
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 

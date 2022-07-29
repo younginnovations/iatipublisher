@@ -75,13 +75,26 @@ class PeriodController extends Controller
     {
         try {
             $activity = $this->activityService->getActivity($activityId);
-            $resultTitle = $this->resultService->getResult($resultId, $activityId)['result']['title'];
-            $indicatorTitle = $this->indicatorService->getResultIndicator($resultId, $indicatorId)['indicator']['title'];
+            $parentData = [
+                'result' => [
+                    'id'        => $resultId,
+                    'title'     => $this->resultService->getResult($resultId, $activityId)['result']['title'][0]['narrative'],
+                ],
+                'indicator' => [
+                    'id'        => $indicatorId,
+                    'title'     => $this->indicatorService->getResultIndicator($resultId, $indicatorId)['indicator']['title'][0]['narrative'],
+                ],
+            ];
+
             $period = $this->periodService->getPeriodOfIndicator($indicatorId)->toArray();
 
-            return view('admin.activity.period.period', compact('activity', 'indicatorTitle', 'resultTitle', 'period'));
+            $types = getPeriodTypes();
+
+            return view('admin.activity.period.period', compact('activity', 'parentData', 'period', 'types'));
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
+
+            dd($e);
 
             return redirect()->route('admin.activities.show', $activityId)->with(
                 'error',
@@ -172,11 +185,20 @@ class PeriodController extends Controller
     {
         try {
             $activity = $this->activityService->getActivity($activityId);
-            $resultTitle = $this->resultService->getResult($resultId, $activityId)['result']['title'];
-            $indicatorTitle = $this->indicatorService->getResultIndicator($resultId, $indicatorId)['indicator']['title'];
+            $parentData = [
+                'result' => [
+                    'id'        => $resultId,
+                    'title'     => $this->resultService->getResult($resultId, $activityId)['result']['title'][0]['narrative'],
+                ],
+                'indicator' => [
+                    'id'        => $indicatorId,
+                    'title'     => $this->indicatorService->getResultIndicator($resultId, $indicatorId)['indicator']['title'][0]['narrative'],
+                ],
+            ];
             $period = $this->periodService->getIndicatorPeriod($indicatorId, $periodId);
+            $types = getPeriodTypes();
 
-            return view('admin.activity.period.detail', compact('activity', 'resultTitle', 'indicatorTitle', 'period'));
+            return view('admin.activity.period.detail', compact('activity', 'parentData', 'period', 'types'));
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 

@@ -35,17 +35,7 @@
             {{ title.toString().replace(/_/g, '-') }}
           </div>
 
-          <div
-            :class="{
-              'text-spring-50': completed === true,
-              'text-crimson-50': completed === false,
-            }"
-            class="status ml-2.5 flex text-xs leading-5"
-          >
-            <b class="mr-2 text-base leading-3">.</b>
-            <span v-if="completed">completed</span>
-            <span v-else>not completed</span>
-          </div>
+          <Status :data="completed" />
         </div>
 
         <div class="flex items-center icons">
@@ -1859,6 +1849,7 @@
 import { defineComponent } from 'vue';
 //components
 import Btn from 'Components/buttons/Link.vue';
+import Status from 'Components/status/Status.vue';
 import HoverText from '../../../components/HoverText.vue';
 
 import moment from 'moment';
@@ -1866,7 +1857,7 @@ import dateFormat from '../../../composable/dateFormat';
 
 export default defineComponent({
   name: 'ActivityElement',
-  components: { HoverText, Btn },
+  components: { HoverText, Btn, Status },
   props: {
     data: {
       type: Object,

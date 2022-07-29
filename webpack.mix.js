@@ -27,6 +27,7 @@ mix.webpackConfig({
         __dirname,
         './resources/assets/js/views/activity/'
       ),
+      Interfaces: path.resolve(__dirname, './resources/assets/js/interfaces/'),
     },
   },
 });

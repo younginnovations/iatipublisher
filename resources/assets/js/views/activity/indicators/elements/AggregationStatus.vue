@@ -1,7 +1,7 @@
 <template>
   <tr>
     <td>Aggregation Status</td>
-    <td>{{ Number(statusData) != 0 }}</td>
+    <td class="capitalize">{{ Number(statusData) != 0 }}</td>
   </tr>
 </template>
 
