@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Admin\Organization;
 
 use App\Http\Controllers\Controller;
-use App\Http\Controllers\Organization\Organization;
 use App\IATI\Services\Organization\OrganizationService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -41,10 +40,13 @@ class OrganizationController extends Controller
             $types = $this->getOrganizationTypes();
             $progress = 75;
             $organization = $this->organizationService->getOrganizationData(Auth::user()->organization_id);
+            $organization['organisation_identifier'] = $organization['identifier'];
 
             return view('admin.organisation.index', compact('elements', 'elementGroups', 'progress', 'organization', 'toast', 'types'));
         } catch (\Exception $e) {
-            dd($e);
+            logger()->error($e->getMessage());
+
+            return redirect()->route('admin.activities.index')->with('error', 'Error has occurred while opening organization detail page]12345.');
         }
     }
 
@@ -75,7 +77,7 @@ class OrganizationController extends Controller
      * @param  \App\IATI\Models\Organization\Organization  $organization
      * @return void
      */
-    public function show(Organization $organization): void
+    public function show($organization): void
     {
         //
     }
@@ -86,7 +88,7 @@ class OrganizationController extends Controller
      * @param  \App\IATI\Models\Organization\Organization  $organization
      * @return void
      */
-    public function edit(Organization $organization): void
+    public function edit($organization): void
     {
         //
     }
@@ -98,7 +100,7 @@ class OrganizationController extends Controller
      * @param  \App\IATI\Models\Organization\Organization  $organization
      * @return void
      */
-    public function update(Request $request, Organization $organization): void
+    public function update(Request $request, $organization): void
     {
         //
     }
@@ -109,7 +111,7 @@ class OrganizationController extends Controller
      * @param  \App\IATI\Models\Organization\Organization  $organization
      * @return void
      */
-    public function destroy(Organization $organization): void
+    public function destroy($organization): void
     {
         //
     }
@@ -117,11 +119,25 @@ class OrganizationController extends Controller
     public function getOrganizationTypes()
     {
         return [
-            'budgetType' => getCodeList('BudgetType', 'Activity', false),
-            'languages' => getCodeList('Language', 'Organization', false),
-            'documentCategory'            => getCodeList('DocumentCategory', 'Activity', false),
-            'documentCategory'            => getCodeList('DocumentCategory', 'Activity', false),
-            'organizationType'            => getCodeList('OrganizationType', 'Organization', false),
+            'budgetType'       => getCodeList('BudgetStatus', 'Activity', false),
+            'languages'        => getCodeList('Language', 'Organization', false),
+            'documentCategory' => getCodeList('DocumentCategory', 'Activity', false),
+            'documentCategory' => getCodeList('DocumentCategory', 'Activity', false),
+            'organizationType' => getCodeList('OrganizationType', 'Organization', false),
         ];
+    }
+
+    public function getRegistrationAgency($country_code)
+    {
+        $registration_agency = getCodeList('OrganizationRegistrationAgency', 'Organization');
+        $filtered_agency = [];
+
+        foreach ($registration_agency as $key => $value) {
+            if (in_array(str_split($key, 2)[0], [$country_code, 'XI', 'XR'])) {
+                $filtered_agency[$key] = $value;
+            }
+        }
+
+        return ['message' => 'Filtered Agency successfully fetched', 'data' => $filtered_agency];
     }
 }

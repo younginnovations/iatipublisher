@@ -53,7 +53,6 @@ class RecipientCountryBudgetController extends Controller
 
             return view('admin.organisation.forms.recipientCountryBudget.recipientCountryBudget', compact('form', 'organization', 'data'));
         } catch (\Exception $e) {
-            dd($e);
             logger()->error($e->getMessage());
 
             return redirect()->route('admin.organisation.index')->with('error', 'Error has occurred while opening organization reporting_org form.');
@@ -80,7 +79,6 @@ class RecipientCountryBudgetController extends Controller
 
             return redirect()->route('admin.organisation.index', $id)->with('success', 'Organization total-budget updated successfully.');
         } catch (\Exception $e) {
-            dd($e);
             logger()->error($e->getMessage());
 
             return redirect()->route('admin.organisation.index', $id)->with('error', 'Error has occurred while updating organization total-budget.');

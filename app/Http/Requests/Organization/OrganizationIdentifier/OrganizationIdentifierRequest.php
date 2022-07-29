@@ -19,7 +19,8 @@ class OrganizationIdentifierRequest extends FormRequest
     public function rules()
     {
         return [
-            'organisation_identifier' => 'required',
+            'organization_registration_agency' => 'required',
+            'registration_number' => 'required',
         ];
     }
 

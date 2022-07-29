@@ -49,9 +49,9 @@ class DocumentLinkRequest extends OrganizationBaseRequest
                 'document_link.%s',
                 $documentLinkIndex
             );
-            $rules[sprintf('document_link.%s.url', $documentLinkIndex)] = 'required|url';
-            $rules[sprintf('document_link.%s.format', $documentLinkIndex)] = 'required';
-            $rules[sprintf('document_link.%s.document_date.0.date', $documentLinkIndex)] = 'date';
+            $rules[sprintf('document_link.%s.url', $documentLinkIndex)] = 'nullable|url';
+            $rules[sprintf('document_link.%s.format', $documentLinkIndex)] = 'nullable';
+            $rules[sprintf('document_link.%s.document_date.0.date', $documentLinkIndex)] = 'nullable|date';
             $rules = array_merge(
                 $rules,
                 $this->getRulesForNarrative($documentLink['title'][0]['narrative'], sprintf('%s.title.0', $documentLinkForm), true),
@@ -104,7 +104,7 @@ class DocumentLinkRequest extends OrganizationBaseRequest
     {
         $rules = [];
         foreach ($formFields as $documentCategoryIndex => $documentCategory) {
-            $rules[sprintf('%s.category.%s.code', $formIndex, $documentCategoryIndex)] = 'required';
+            $rules[sprintf('%s.category.%s.code', $formIndex, $documentCategoryIndex)] = 'nullable';
         }
 
         return $rules;

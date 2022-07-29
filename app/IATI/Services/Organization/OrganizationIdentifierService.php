@@ -61,7 +61,10 @@ class OrganizationIdentifierService
      */
     public function update($organizationIdentifier, $organization): bool
     {
-        $organization->identifier = $organizationIdentifier['organisation_identifier'];
+        $organization->identifier = $organizationIdentifier['organization_registration_agency'] . '-' . $organizationIdentifier['registration_number'];
+        $organization->country = $organizationIdentifier['organization_country'];
+        $organization->registration_agency = $organizationIdentifier['organization_registration_agency'];
+        $organization->registration_number = $organizationIdentifier['registration_number'];
 
         return $organization->save();
     }

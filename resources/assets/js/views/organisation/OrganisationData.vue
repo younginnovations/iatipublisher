@@ -13,10 +13,10 @@
                 <span class="mx-4 separator"> / </span>
                 <div class="breadcrumb__title">
                   <span class="overflow-hidden breadcrumb__title last text-n-30"
-                    >title</span
+                    >{{ organization.name['0'].narrative??'Untitled' }}</span
                   >
                   <span class="ellipsis__title--hover w-[calc(100%_+_35px)]">
-                    title
+                    {{ organization.name['0'].narrative??'Untitled' }}
                   </span>
                 </div>
               </div>
@@ -30,7 +30,7 @@
             </div>
             <div>
               <h4 class="ellipsis__title relative mr-4 text-2xl font-bold">
-                <span class="ellipsis__title overflow-hidden"> title </span>
+                <span class="ellipsis__title overflow-hidden"> {{ organization.name['0'].narrative??'Untitled' }} </span>
               </h4>
             </div>
           </div>
@@ -298,7 +298,7 @@
         </div>
         <div class="activities__content--elements -mx-3 flex flex-wrap">
           <template v-for="(post, key, index) in groupedData" :key="index">
-              <div class="ml-4">{{ key }}</div>
+              <div class="ml-4 uppercase">{{ key }}</div>
             <div
               class="
                 elements-title
@@ -316,7 +316,6 @@
             >
             </div>
             <template v-for="(element, name, i) in post.elements" :key="i">
-
               <OrganisationElementsDetail
                 v-if="
                   (typeof element.content === 'object'
@@ -329,13 +328,12 @@
                 :activity-id="organization.id"
                 :content="element.content"
                 :types="types"
+                :tooltip="elements[name]['hover_text']"
                 :width="
-                  String(name) === 'name' ||
-                  String(name) === 'organization_identifier'
+                  String(name) === 'organisation_identifier'
                     ? ''
                     : 'full'
                 "
-                tooltip="Example text"
               />
             </template>
           </template>
@@ -429,13 +427,6 @@ export default defineComponent({
       organizationProps = organization.value,
       organizationData = groups.value,
       elementProps = elements.value;
-
-    console.log(
-      toRefs(props),
-      organizationProps,
-      groupedData,
-      organizationData
-    );
 
     // generating available elements
     Object.keys(organizationData).map((key) => {

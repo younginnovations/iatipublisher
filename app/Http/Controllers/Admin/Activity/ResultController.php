@@ -46,7 +46,6 @@ class ResultController extends Controller
      */
     public function index()
     {
-        dd($this->resultService->getActivityResult(1));
     }
 
     /**

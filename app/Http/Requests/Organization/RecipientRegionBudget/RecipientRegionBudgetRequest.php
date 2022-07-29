@@ -68,7 +68,7 @@ class RecipientRegionBudgetRequest extends OrganizationBaseRequest
         foreach ($formFields as $recipientRegionIndex => $recipientRegion) {
             $recipientRegionForm = sprintf('%s.recipient_region.%s', $formBase, $recipientRegionIndex);
             $rules[sprintf('%s.vocabulary_uri', $recipientRegionForm)] = 'nullable|url';
-            $rules[sprintf('%s.code', $recipientRegionForm)] = 'required';
+            $rules[sprintf('%s.code', $recipientRegionForm)] = 'nullable';
             $rules = array_merge(
                 $rules,
                 $this->getRulesForNarrative($recipientRegion['narrative'], $recipientRegionForm)

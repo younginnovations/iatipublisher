@@ -45,7 +45,10 @@ class OrganizationIdentifierController extends Controller
             $id = Auth::user()->organization_id;
             $element = json_decode(file_get_contents(app_path('IATI/Data/organizationElementJsonSchema.json')), true);
             $organization = $this->organizationIdentifierService->getOrganizationData($id);
-            $model['organisation_identifier'] = $this->organizationIdentifierService->getIdentifierData($id);
+            $model['organisation_identifier'] = $organization['identifier'];
+            $model['organization_country'] = $organization['country'];
+            $model['organization_registration_agency'] = $organization['registration_agency'];
+            $model['registration_number'] = $organization['registration_number'];
             $this->baseFormCreator->url = route('admin.organisation.identifier.update', [$id]);
             $form = $this->baseFormCreator->editForm($model, $element['organisation_identifier'], 'PUT', '/organisation');
             $status = $organization->name_element_completed ?? false;
@@ -53,10 +56,9 @@ class OrganizationIdentifierController extends Controller
 
             return view('admin.organisation.forms.organisationIdentifier.edit', compact('form', 'organization', 'data'));
         } catch (\Exception $e) {
-            dd($e);
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while opening organization name form.');
+            return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while opening organization identifier form.');
         }
     }
 
@@ -72,9 +74,9 @@ class OrganizationIdentifierController extends Controller
         try {
             $id = Auth::user()->organization_id;
             $organizationData = $this->organizationIdentifierService->getOrganizationData($id);
-            $organizationTitle = $request->all();
+            $organizationIdentifier = $request->all();
 
-            if (!$this->organizationIdentifierService->update($organizationTitle, $organizationData)) {
+            if (!$this->organizationIdentifierService->update($organizationIdentifier, $organizationData)) {
                 return redirect()->route('admin.organisation.index', $id)->with('error', 'Error has occurred while updating organization name.');
             }
 

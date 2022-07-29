@@ -5,6 +5,16 @@
     "criteria": "mandatory",
     "hover_text" : "",
     "attributes": {
+      "organization_country": {
+        "name": "organization_country",
+        "label": "country",
+        "type": "select",
+        "choices": "Activity/Country.json",
+        "required": true,
+        "criteria": "mandatory",
+        "hover_text": "",
+        "help_text": ""
+      },
       "organization_registration_agency": {
         "name": "organization_registration_agency",
         "label": "organisation-registration-agency",
@@ -1232,15 +1242,6 @@
         "required": true,
         "criteria": "",
         "hover_text": "An IANA code for the MIME type of the document being referenced, e.g. “application/pdf”. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/document-link/'>For more information</a>",
-        "help_text": ""
-      },
-      "document": {
-        "name": "document",
-        "label": "document",
-        "type": "file",
-        "required": false,
-        "criteria": "",
-        "hover_text": "",
         "help_text": ""
       }
     },

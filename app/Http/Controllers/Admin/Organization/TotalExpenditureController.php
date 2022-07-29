@@ -50,7 +50,7 @@ class TotalExpenditureController extends Controller
             $form = $this->parentCollectionFormCreator->editForm($model, $element['total_expenditure'], 'PUT', '/organisation');
             $status = $organization->total_expenditure_element_completed ?? false;
             $data = ['core'=> $element['total_expenditure']['criteria'] ?? false, 'status'=> $organization->total_expenditure_element_completed ?? false, 'title'=> $element['total_expenditure']['label'], 'name'=>'total-expenditure'];
-            // dd($form);
+
             return view('admin.organisation.forms.totalExpenditure.totalExpenditure', compact('form', 'organization', 'data'));
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
@@ -79,7 +79,6 @@ class TotalExpenditureController extends Controller
 
             return redirect()->route('admin.organisation.index', $id)->with('success', 'Organization total-expenditure updated successfully.');
         } catch (\Exception $e) {
-            dd($e);
             logger()->error($e->getMessage());
 
             return redirect()->route('admin.organisation.index', $id)->with('error', 'Error has occurred while updating organization total-expenditure.');

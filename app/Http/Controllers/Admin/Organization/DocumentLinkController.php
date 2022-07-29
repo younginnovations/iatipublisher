@@ -79,7 +79,6 @@ class DocumentLinkController extends Controller
 
             return redirect()->route('admin.organisation.index', $id)->with('success', 'Organization document-link updated successfully.');
         } catch (\Exception $e) {
-            dd($e);
             logger()->error($e->getMessage());
 
             return redirect()->route('admin.organisation.index', $id)->with('error', 'Error has occurred while updating organization document-link.');

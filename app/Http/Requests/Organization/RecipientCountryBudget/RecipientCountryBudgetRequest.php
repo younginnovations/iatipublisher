@@ -19,10 +19,8 @@ class RecipientCountryBudgetRequest extends OrganizationBaseRequest
     public function rules()
     {
         $rules = [];
-        // dd($this->get('recipient_country_budget'));
-        foreach ($this->get(
-            'recipient_country_budget'
-        ) as $recipientCountryBudgetIndex => $recipientCountryBudget) {
+
+        foreach ($this->get('recipient_country_budget') as $recipientCountryBudgetIndex => $recipientCountryBudget) {
             $recipientCountryBudgetForm = sprintf('recipient_country_budget.%s', $recipientCountryBudgetIndex);
             $rules = array_merge(
                 $rules,
@@ -78,7 +76,8 @@ class RecipientCountryBudgetRequest extends OrganizationBaseRequest
         $rules = [];
         foreach ($formFields as $recipientCountryIndex => $recipientCountry) {
             $recipientCountryForm = sprintf('%s.recipient_country.%s', $formBase, $recipientCountryIndex);
-            $rules[sprintf('%s.code', $recipientCountryForm)] = 'required';
+            // $rules[sprintf('%s.code', $recipientCountryForm)] = 'required';
+            $rules[sprintf('%s.code', $recipientCountryForm)] = 'nullable';
             $rules = array_merge(
                 $rules,
                 $this->getRulesForNarrative($recipientCountry['narrative'], $recipientCountryForm)
