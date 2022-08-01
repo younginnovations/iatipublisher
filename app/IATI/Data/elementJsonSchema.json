@@ -4042,7 +4042,7 @@
           "disbursement_channel_code": {
             "name": "disbursement_channel_code",
             "label": "@code",
-            "type": "text",
+            "type": "select",
             "choices": "Activity/DisbursementChannel.json",
             "required": true,
             "criteria": "",

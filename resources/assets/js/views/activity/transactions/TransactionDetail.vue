@@ -15,7 +15,7 @@
                 </span>
                 <span class="mx-4 separator"> / </span>
                 <span class="last text-n-30">{{
-                  transactionData.reference
+                  transactionData.reference??'Untitled'
                 }}</span>
               </p>
             </nav>
@@ -27,7 +27,7 @@
               </a>
             </div>
             <h4 class="mr-4 font-bold">
-              {{ transactionData.reference }} - Transaction detail
+              {{ transactionData.reference??'Untitled' }} - Transaction detail
             </h4>
           </div>
         </div>

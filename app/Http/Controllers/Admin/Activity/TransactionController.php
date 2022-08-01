@@ -117,20 +117,20 @@ class TransactionController extends Controller
                 'activity_id' => $activityId,
                 'transaction' => $transactionData,
             ])) {
-                return redirect()->route('admin.activities.show', $activityId)->with(
+                return redirect()->route('admin.activities.transactions.index', $activityId)->with(
                     'error',
                     'Error has occurred while creating activity transaction.'
                 );
             }
 
-            return redirect()->route('admin.activities.show', $activityId)->with(
+            return redirect()->route('admin.activities.transactions.index', $activityId)->with(
                 'success',
                 'Activity transaction created successfully.'
             );
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activities.show', $activityId)->with(
+            return redirect()->route('admin.activities.transactions.index', $activityId)->with(
                 'error',
                 'Error has occurred while creating activity transaction.'
             );
@@ -155,7 +155,7 @@ class TransactionController extends Controller
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activities.show', $activityId)->with(
+            return redirect()->route('admin.activities.transactions.index')->with(
                 'error',
                 'Error has occurred while rending transaction detail page.'
             );
@@ -182,7 +182,7 @@ class TransactionController extends Controller
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activities.show', $activityId)->with(
+            return redirect()->route('admin.activities.transactions.index')->with(
                 'error',
                 'Error has occurred while rendering activity transaction form.'
             );
@@ -208,20 +208,20 @@ class TransactionController extends Controller
                 'activity_id'   => $activityId,
                 'transaction'   => $transactionData,
             ], $transaction)) {
-                return redirect()->route('admin.activities.show', $activityId)->with(
+                return redirect()->route('admin.activities.transactions.index')->with(
                     'error',
                     'Error has occurred while updating activity transaction.'
                 );
             }
 
-            return redirect()->route('admin.activities.show', $activityId)->with(
+            return redirect()->route('admin.activities.transactions.index')->with(
                 'success',
                 'Activity transaction updated successfully.'
             );
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activities.show', $activityId)->with(
+            return redirect()->route('admin.activities.transactions.index')->with(
                 'error',
                 'Error has occurred while updating activity transaction.'
             );

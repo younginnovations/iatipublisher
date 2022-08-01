@@ -56,7 +56,7 @@ class BaseForm extends Form
                 ]
             );
 
-            if (isset($field['add_more']) && $field['add_more']) {
+            if (isset($field['add_more']) && $field['add_more'] || (isset($element['add_more_attributes']) && $element['add_more_attributes'])) {
                 $this->add('add_to_collection_' . $field['name'], 'button', [
                     'label' => 'Add More',
                     'attr'  => [
@@ -143,7 +143,7 @@ class BaseForm extends Form
                     }
                 }
 
-                if (Arr::get($element, 'add_more', false)) {
+                if (Arr::get($element, 'add_more', false) || Arr::get($element, 'add_more_attributes', false)) {
                     $this->add('delete_' . $element['name'], 'button', [
                         'attr' => [
                             'class' => 'delete-parent delete-item absolute right-0 top-16 -translate-y-1/2 translate-x-1/2',

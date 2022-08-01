@@ -31,9 +31,11 @@
             </div>
             <div>
               <h4 class="ellipsis__title relative mr-4 text-2xl font-bold">
-                <span id="activity_title" class="ellipsis__title overflow-hidden">{{
-                  pageTitle ? pageTitle : 'Untitled'
-                }}</span>
+                <span
+                  id="activity_title"
+                  class="ellipsis__title overflow-hidden"
+                  >{{ pageTitle ? pageTitle : 'Untitled' }}</span
+                >
                 <span class="ellipsis__title--hover">{{
                   pageTitle ? pageTitle : 'Untitled'
                 }}</span>
@@ -299,7 +301,19 @@
         <div class="activities__content--elements -mx-3 flex flex-wrap">
           <template v-for="(post, key, index) in groupedData" :key="index">
             <div
-              class="elements-title relative mx-3 mb-1 mt-3 flex w-full items-center text-sm uppercase text-n-40"
+              class="
+                elements-title
+                relative
+                mx-3
+                mb-1
+                mt-3
+                flex
+                w-full
+                items-center
+                text-sm
+                uppercase
+                text-n-40
+              "
             >
               <div class="mr-4 shrink-0">{{ formatTitle(key) }}</div>
             </div>
@@ -460,8 +474,25 @@ export default defineComponent({
     Object.keys(activities).map((key) => {
       let flag = false;
       Object.keys(activities[key]['elements']).map((k) => {
-        if (activityProps[k] || typeof activityProps[k] === 'number') {
+        console.log(
+          k,
+          activityProps[k] || typeof activityProps[k] === 'number',
+          '---',
+          typeof activityProps[k] === 'object' &&
+            activityProps[k] &&
+            Object.keys(activityProps[k]).length
+        );
+        if (
+          typeof activityProps[k] === 'number' ||
+          (typeof activityProps[k] === 'object' &&
+            activityProps[k] &&
+            Object.keys(activityProps[k]).length)
+        ) {
           activities[key]['elements'][k]['content'] = activityProps[k];
+          console.log(
+            key,
+            activityProps[k] || typeof activityProps[k] === 'number'
+          );
           flag = true;
         } else {
           delete activities[key][k];
@@ -494,8 +525,15 @@ export default defineComponent({
       elementProps[key]['has_data'] = 0;
 
       if (key in activityProps) {
-        if ((typeof activityProps[key] === 'object' || typeof activityProps[key] === 'number') && activityProps[key]) {
-          if (Object.keys(activityProps[key]).length > 0 || activityProps[key].toString.length >0) {
+        if (
+          (typeof activityProps[key] === 'object' ||
+            typeof activityProps[key] === 'number') &&
+          activityProps[key]
+        ) {
+          if (
+            Object.keys(activityProps[key]).length > 0 ||
+            activityProps[key].toString.length > 0
+          ) {
             elementProps[key]['has_data'] = 1;
           }
         }
@@ -537,7 +575,7 @@ export default defineComponent({
       elementProps,
       props,
       formatTitle,
-      pageTitle
+      pageTitle,
     };
   },
 });
