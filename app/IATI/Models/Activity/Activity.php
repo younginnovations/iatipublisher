@@ -207,6 +207,16 @@ class Activity extends Model
                 }
             }
 
+            $hasSnapshot = true;
+
+            if (($model->status == 'draft' || $model->status == 'ready_to_publish') && !$hasSnapshot) {
+                $model->publish_action = 'publish';
+            } elseif (($model->status == 'published') && $hasSnapshot) {
+                $model->publish_action = 'un_publish';
+            } elseif (($model->status == 'draft' || $model->status == 'ready_to_publish') && $hasSnapshot) {
+                $model->publish_action = 're_publish';
+            }
+
             $model->saveQuietly();
         });
     }
@@ -892,7 +902,7 @@ class Activity extends Model
      *
      * @return bool
      */
-    public function getIdentifierElementCompletedAttribute(): bool
+    public function getIatiIdentifierElementCompletedAttribute(): bool
     {
         $identifier = $this->iati_identifier;
 

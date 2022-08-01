@@ -20,6 +20,7 @@ return new class extends Migration {
             $table->json('description')->nullable();
             $table->integer('activity_status')->nullable();
             $table->enum('status', ['draft', 'ready_to_publish', 'published'])->default('draft');
+            $table->enum('publish_action', ['publish', 'un_publish', 're_publish'])->nullable()->default('publish');
             $table->json('activity_date')->nullable();
             $table->json('contact_info')->nullable();
             $table->integer('activity_scope')->nullable();
