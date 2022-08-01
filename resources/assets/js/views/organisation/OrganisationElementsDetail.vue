@@ -1034,10 +1034,12 @@ export default defineComponent({
     language: {
       type: String,
       required: false,
+      default: 'en'
     },
     width: {
       type: String,
       required: false,
+      default:''
     },
     types: {
       type: Object,

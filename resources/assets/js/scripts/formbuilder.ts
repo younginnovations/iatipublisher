@@ -1,4 +1,3 @@
-import { identity } from '@vueuse/core';
 import $ from 'jquery';
 import 'select2';
 

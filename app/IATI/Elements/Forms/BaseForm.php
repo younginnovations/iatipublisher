@@ -128,7 +128,6 @@ class BaseForm extends Form
         $element = $this->getData();
         $attributes = Arr::get($element, 'attributes', null);
         $sub_elements = Arr::get($element, 'sub_elements', null);
-        // dd($element, $sub_elements, $attributes);
 
         if ($attributes) {
             if (Arr::get($element, 'add_more', false) && !$sub_elements && Arr::get(

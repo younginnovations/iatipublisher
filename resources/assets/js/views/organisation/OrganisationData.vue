@@ -13,10 +13,10 @@
                 <span class="mx-4 separator"> / </span>
                 <div class="breadcrumb__title">
                   <span class="overflow-hidden breadcrumb__title last text-n-30"
-                    >{{ organization.name['0'].narrative??'Untitled' }}</span
+                    >{{ organization.name ? (organization.name['0'].narrative??'Untitled') :'Untitled' }}</span
                   >
                   <span class="ellipsis__title--hover w-[calc(100%_+_35px)]">
-                    {{ organization.name['0'].narrative??'Untitled' }}
+                    {{ organization.name ? (organization.name['0'].narrative??'Untitled') : 'Untitled' }}
                   </span>
                 </div>
               </div>
@@ -30,7 +30,7 @@
             </div>
             <div>
               <h4 class="ellipsis__title relative mr-4 text-2xl font-bold">
-                <span class="ellipsis__title overflow-hidden"> {{ organization.name['0'].narrative??'Untitled' }} </span>
+                <span class="ellipsis__title overflow-hidden"> {{ organization.name ? (organization.name['0'].narrative??'Untitled') : 'Untitled' }} </span>
               </h4>
             </div>
           </div>
@@ -355,7 +355,7 @@ import Toast from '../../components/Toast.vue';
 import { useToggle } from '@vueuse/core';
 
 export default defineComponent({
-  name: 'organisation-elements',
+  name: 'OrganisationData',
   components: {
     HoverText,
     RadialProgressBar,
@@ -449,7 +449,7 @@ export default defineComponent({
 
     // generating available categories of elements
     Object.keys(groupedData).map((key) => {
-      if (organizationData.hasOwnProperty(key)) {
+      if (Object.prototype.hasOwnProperty.call(organizationData,key)) {
         groupedData[key]['status'] = 'enabled';
       } else {
         groupedData[key]['status'] = 'disabled';
