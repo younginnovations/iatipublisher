@@ -8,6 +8,8 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Activity\Title\TitleRequest;
 use App\IATI\Elements\Builder\BaseFormCreator;
 use App\IATI\Services\Activity\TitleService;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
@@ -38,12 +40,12 @@ class TitleController extends Controller
      *
      * @param int $id
      *
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|void|RedirectResponse
+     * @return Factory|View|RedirectResponse|Application
      */
-    public function edit(int $id): View|RedirectResponse
+    public function edit(int $id): Factory|View|RedirectResponse|Application
     {
         try {
-            $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
+            $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true, 512, JSON_THROW_ON_ERROR);
             $activity = $this->titleService->getActivityData($id);
             $form = $this->titleService->formGenerator($id);
             $data = ['core' => $element['title']['criteria'] ?? '', 'status' => $activity->title_element_completed, 'title' => $element['title']['label'], 'name' => 'title'];

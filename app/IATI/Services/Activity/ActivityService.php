@@ -120,58 +120,13 @@ class ActivityService
     }
 
     /**
-     * Returns array containing activity detail status.
-     *
-     * @param Activity $activity
-     *
-     * @return array
-     */
-    public function activityDetailStatus(Activity $activity): array
-    {
-        return [
-            'iati_identifier'           => $activity->identifier_element_completed,
-            'title'                => $activity->title_element_completed,
-            'description'          => $activity->description_element_completed,
-            'activity_status'      => $activity->activity_status_element_completed,
-            'activity_date'        => $activity->activity_date_element_completed,
-            'activity_scope'       => $activity->activity_scope_element_completed,
-            'recipient_country'    => $activity->recipient_country_element_completed,
-            'recipient_region'     => $activity->recipient_region_element_completed,
-            'collaboration_type'   => $activity->collaboration_type_element_completed,
-            'default_flow_type'    => $activity->default_flow_type_element_completed,
-            'default_finance_type' => $activity->default_finance_type_element_completed,
-            'default_aid_type'     => $activity->default_aid_type_element_completed,
-            'default_tied_status'  => $activity->default_tied_status_element_completed,
-            'capital_spend'        => $activity->capital_spend_element_completed,
-            'related_activity'     => $activity->related_activity_element_completed,
-            'conditions'           => $activity->conditions_element_completed,
-            'sector'               => $activity->sector_element_completed,
-            'humanitarian_scope'   => $activity->humanitarian_scope_element_completed,
-            'legacy_data'          => $activity->legacy_data_element_completed,
-            'tag'                  => $activity->tag_element_completed,
-            'policy_marker'        => $activity->policy_marker_element_completed,
-            'other_identifier'     => $activity->other_identifier_element_completed,
-            'country_budget_items' => $activity->country_budget_items_element_completed,
-            'budget'               => $activity->budget_element_completed,
-            'participating_org'    => $activity->participating_org_element_completed,
-            'reporting_org'        => false,
-            'document_link'        => $activity->document_link_element_completed,
-            'contact_info'         => $activity->contact_info_element_completed,
-            'location'             => $activity->location_element_completed,
-            'planned_disbursement' => $activity->planned_disbursement_element_completed,
-            'transactions'         => $activity->transactions_element_completed,
-            'result'               => $activity->result_element_completed,
-        ];
-    }
-
-    /**
      * Return activity publishing progress in percentage.
      *
-     * @param $elements_status
+     * @param $activity
      *
      * @return float|int
      */
-    public function activityPublishingProgress($elements_status): float|int
+    public function activityPublishingProgress($activity): float|int
     {
         $core_elements = [
             'title',
@@ -192,7 +147,7 @@ class ActivityService
         $completed_core_element_count = 0;
 
         foreach ($core_elements as $core_element) {
-            if (array_key_exists($core_element, $elements_status) && $elements_status[$core_element]) {
+            if (array_key_exists($core_element, $activity->element_status) && $activity->element_status[$core_element]) {
                 $completed_core_element_count++;
             }
         }

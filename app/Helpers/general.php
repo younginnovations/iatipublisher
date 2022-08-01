@@ -2,6 +2,43 @@
 
 declare(strict_types=1);
 
+/**
+ * Checks if array key exists.
+ *
+ * @param $data
+ * @param $key
+ *
+ * @return array
+ */
+if (!function_exists('getArr')) {
+    /**
+     * Checks if array key exists.
+     *
+     * @param $data
+     * @param $key
+     *
+     * @return array
+     */
+    function getArr($data, $key): array
+    {
+        return array_key_exists($key, $data) ? $data[$key] : [];
+    }
+}
+
+if (!function_exists('getElementSchema')) {
+    /**
+     * Returns element schema.
+     *
+     * @throws JsonException
+     */
+    function getElementSchema($element): array
+    {
+        $elementJsonSchema = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true, 512, JSON_THROW_ON_ERROR);
+
+        return getArr($elementJsonSchema, $element);
+    }
+}
+
 if (!function_exists('getCodeList')) {
     /**
      * return codeList array from json codeList.
@@ -11,12 +48,13 @@ if (!function_exists('getCodeList')) {
      * @param bool $code
      *
      * @return array
+     * @throws JsonException
      */
     function getCodeList($listName, $listType, bool $code = true): array
     {
         $filePath = app_path("Data/$listType/$listName.json");
         $codeListFromFile = file_get_contents($filePath);
-        $codeLists = json_decode($codeListFromFile, true);
+        $codeLists = json_decode($codeListFromFile, true, 512, JSON_THROW_ON_ERROR);
         $codeList = $codeLists[$listName];
         $data = [];
 
@@ -56,10 +94,11 @@ if (!function_exists('getCodeList')) {
      * @param string $key
      *
      * @return bool|string|null
+     * @throws JsonException
      */
     function decryptString(string $encryptedString, string $key): bool|string|null
     {
-        $json = json_decode(base64_decode($encryptedString), true);
+        $json = json_decode(base64_decode($encryptedString), true, 512, JSON_THROW_ON_ERROR);
 
         try {
             $salt = hex2bin($json['salt']);
@@ -69,7 +108,7 @@ if (!function_exists('getCodeList')) {
         }
 
         $cipherText = base64_decode($json['ciphertext']);
-        $iterations = intval(abs($json['iterations']));
+        $iterations = (int) abs($json['iterations']);
 
         if ($iterations <= 0) {
             $iterations = 999;
@@ -87,15 +126,18 @@ if (!function_exists('getCodeList')) {
 if (!function_exists('getList')) {
     /**
      * Return codeList array from json codeList.
+     *
      * @param string $filePath
-     * @param bool $code
+     * @param bool   $code
+     *
      * @return array
+     * @throws JsonException
      */
     function getList(string $filePath, bool $code = true): array
     {
         $filePath = app_path("Data/$filePath");
         $codeListFromFile = file_get_contents($filePath);
-        $codeLists = json_decode($codeListFromFile, true);
+        $codeLists = json_decode($codeListFromFile, true, 512, JSON_THROW_ON_ERROR);
         $codeList = last($codeLists);
         $data = [];
 
