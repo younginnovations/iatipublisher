@@ -58,10 +58,11 @@ class ElementCompleteTest extends TestCase
      * @param $element
      *
      * @return mixed
+     * @throws \JsonException
      */
     public function elementSchema($element): mixed
     {
-        $elementSchema = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
+        $elementSchema = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true, 512, JSON_THROW_ON_ERROR);
 
         return $elementSchema[$element];
     }
@@ -73,6 +74,7 @@ class ElementCompleteTest extends TestCase
      * @param $actualAttributes
      *
      * @return void
+     * @throws \JsonException
      */
     protected function test_mandatory_attributes($element, $actualAttributes): void
     {
@@ -88,6 +90,7 @@ class ElementCompleteTest extends TestCase
      * @param $actualSubElement
      *
      * @return void
+     * @throws \JsonException
      */
     protected function test_mandatory_sub_elements($element, $actualSubElement): void
     {
@@ -103,6 +106,7 @@ class ElementCompleteTest extends TestCase
      * @param $actualData
      *
      * @return void
+     * @throws \JsonException
      */
     protected function test_sub_element_empty($element, $actualData): void
     {
@@ -118,6 +122,7 @@ class ElementCompleteTest extends TestCase
      * @param $actualData
      *
      * @return void
+     * @throws \JsonException
      */
     protected function test_sub_element_complete($element, $actualData): void
     {
@@ -133,6 +138,7 @@ class ElementCompleteTest extends TestCase
      * @param $actualData
      *
      * @return void
+     * @throws \JsonException
      */
     protected function test_level_one_multi_dimensional_element_incomplete($element, $actualData): void
     {
@@ -146,6 +152,7 @@ class ElementCompleteTest extends TestCase
      * @param $actualData
      *
      * @return void
+     * @throws \JsonException
      */
     protected function test_level_one_multi_dimensional_element_complete($element, $actualData): void
     {
@@ -159,6 +166,7 @@ class ElementCompleteTest extends TestCase
      * @param $actualData
      *
      * @return void
+     * @throws \JsonException
      */
     protected function test_level_two_single_dimensional_element_incomplete($element, $actualData): void
     {
@@ -172,6 +180,7 @@ class ElementCompleteTest extends TestCase
      * @param $actualData
      *
      * @return void
+     * @throws \JsonException
      */
     protected function test_level_two_single_dimensional_element_complete($element, $actualData): void
     {
@@ -185,6 +194,7 @@ class ElementCompleteTest extends TestCase
      * @param $actualData
      *
      * @return void
+     * @throws \JsonException
      */
     protected function test_level_two_multi_dimensional_element_incomplete($element, $actualData): void
     {
@@ -198,6 +208,7 @@ class ElementCompleteTest extends TestCase
      * @param $actualData
      *
      * @return void
+     * @throws \JsonException
      */
     protected function test_level_two_multi_dimensional_element_complete($element, $actualData): void
     {
@@ -211,6 +222,7 @@ class ElementCompleteTest extends TestCase
      * @param $actualData
      *
      * @return void
+     * @throws \JsonException
      */
     protected function test_level_three_single_dimensional_element_incomplete($element, $actualData): void
     {
@@ -224,6 +236,7 @@ class ElementCompleteTest extends TestCase
      * @param $actualData
      *
      * @return void
+     * @throws \JsonException
      */
     protected function test_level_three_single_dimensional_element_complete($element, $actualData): void
     {
@@ -237,6 +250,7 @@ class ElementCompleteTest extends TestCase
      * @param $actualData
      *
      * @return void
+     * @throws \JsonException
      */
     protected function test_transaction_data_complete($subElements, $actualData): void
     {
@@ -250,6 +264,7 @@ class ElementCompleteTest extends TestCase
      * @param $actualData
      *
      * @return void
+     * @throws \JsonException
      */
     protected function test_result_data_complete($element, $actualData): void
     {

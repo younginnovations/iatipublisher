@@ -3,14 +3,48 @@
 declare(strict_types=1);
 
 use Illuminate\Support\Facades\Session;
-/**
- * Checks if array key exists.
- *
- * @param $data
- * @param $key
- *
- * @return array
- */
+
+if (!function_exists('getCoreElements')) {
+    /**
+     * Returns Core Elements.
+     *
+     * @return array
+     */
+    function getCoreElements(): array
+    {
+        return [
+            'title'                => true,
+            'description'          => true,
+            'budget'               => true,
+            'transactions'         => true,
+            'sector'               => true,
+            'participating_org'    => true,
+            'activity_status'      => true,
+            'activity_date'        => true,
+            'recipient_country'    => true,
+            'recipient_region'     => true,
+            'collaboration_type'   => true,
+            'default_flow_type'    => true,
+            'default_finance_type' => true,
+            'default_aid_type'     => true,
+        ];
+    }
+}
+
+if (!function_exists('coreElementCompleted')) {
+    /**
+     * Checks if all core elements are complete.
+     *
+     * @param $elementStatus
+     *
+     * @return bool
+     */
+    function coreElementCompleted($elementStatus): bool
+    {
+        return empty(array_diff_assoc(getCoreElements(), $elementStatus));
+    }
+}
+
 if (!function_exists('getArr')) {
     /**
      * Checks if array key exists.

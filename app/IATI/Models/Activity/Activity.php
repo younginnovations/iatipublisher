@@ -167,23 +167,6 @@ class Activity extends Model
                 unset($updatedAttributes['updated_at']);
             }
 
-            $coreElements = [
-                'title'                => true,
-                'description'          => true,
-                'budget'               => true,
-                'transactions'         => true,
-                'sector'               => true,
-                'participating_org'    => true,
-                'activity_status'      => true,
-                'activity_date'        => true,
-                'recipient_country'    => true,
-                'recipient_region'     => true,
-                'collaboration_type'   => true,
-                'default_flow_type'    => true,
-                'default_finance_type' => true,
-                'default_aid_type'     => true,
-            ];
-
             foreach ($updatedAttributes as $attribute => $value) {
                 $fx = $attribute . '_element_completed';
                 $elementStatus[$attribute] = $model[$fx];
@@ -191,19 +174,11 @@ class Activity extends Model
 
             $model->element_status = $elementStatus;
 
-            if (!empty(array_intersect_key($updatedAttributes, $coreElements))) {
-                $allCompleted = empty(array_diff_assoc($coreElements, $elementStatus));
-
-                if ($model->status == 'draft') {
-                    if ($allCompleted) {
-                        $model->status = 'ready_to_publish';
-                    }
-                } elseif ($model->status == 'ready_to_publish') {
-                    if (!$allCompleted) {
-                        $model->status = 'draft';
-                    }
-                } elseif ($model->status == 'published') {
-                    $model->status = $allCompleted ? 'ready_to_publish' : 'draft';
+            if (!empty(array_intersect_key($updatedAttributes, getCoreElements()))) {
+                if ($model->status === 'draft' || $model->status === 'published') {
+                    $model->status = (coreElementCompleted($elementStatus)) ? 'ready_to_publish' : $model->status;
+                } elseif ($model->status === 'ready_to_publish') {
+                    $model->status = !(coreElementCompleted($elementStatus)) ? 'draft' : $model->status;
                 }
             }
 
