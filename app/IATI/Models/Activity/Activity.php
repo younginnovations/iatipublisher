@@ -212,34 +212,6 @@ class Activity extends Model
     }
 
     /**
-     * Checks if array key exists.
-     *
-     * @param $data
-     * @param $key
-     *
-     * @return array
-     */
-    public function extracted($data, $key): array
-    {
-        return array_key_exists($key, $data) ? $data[$key] : [];
-    }
-
-    /**
-     * Returns element schema.
-     *
-     * @param $element
-     *
-     * @return array
-     * @throws JsonException
-     */
-    public function getJsonSchema($element): array
-    {
-        $elementJsonSchema = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true, 512, JSON_THROW_ON_ERROR);
-
-        return $this->extracted($elementJsonSchema, $element);
-    }
-
-    /**
      * Returns mandatory fields.
      *
      * @param $field
@@ -350,7 +322,7 @@ class Activity extends Model
         if (empty($data)) {
             return false;
         }
-        $elementSchema = $this->getJsonSchema($this->element);
+        $elementSchema = getElementSchema($this->element);
 
         foreach ($mandatoryAttributes as $mandatoryAttribute) {
             if (array_key_exists('dependent_attributes', $elementSchema) && array_key_exists($mandatoryAttribute, $elementSchema['dependent_attributes'])) {
@@ -562,7 +534,7 @@ class Activity extends Model
      */
     public function singleDimensionAttributeCheck($element, $data): bool
     {
-        return $this->isSingleDimensionAttributeCompleted($this->getJsonSchema($element), $data);
+        return $this->isSingleDimensionAttributeCompleted(getElementSchema($element), $data);
     }
 
     /**
@@ -593,7 +565,7 @@ class Activity extends Model
      */
     public function isLevelOneMultiDimensionElementCompleted($element, $data): bool
     {
-        return $this->isLevelOneMultiDimensionDataCompleted($this->getJsonSchema($element), $data);
+        return $this->isLevelOneMultiDimensionDataCompleted(getElementSchema($element), $data);
     }
 
     /**
@@ -611,7 +583,7 @@ class Activity extends Model
             return false;
         }
 
-        $elementSchema = $this->getJsonSchema($element);
+        $elementSchema = getElementSchema($element);
 
         return $this->isSubElementCompleted($elementSchema['sub_elements'], $data);
     }
@@ -631,7 +603,7 @@ class Activity extends Model
             return false;
         }
 
-        $subElements = $this->extracted($elementSchema, 'sub_elements');
+        $subElements = getArr($elementSchema, 'sub_elements');
         $mandatorySubElementsFlag = false;
 
         foreach ($subElements as $subElement) {
@@ -675,7 +647,7 @@ class Activity extends Model
      */
     public function isLevelTwoMultiDimensionElementCompleted($element, $data): bool
     {
-        return $this->isLevelTwoMultiDimensionDataCompleted($this->getJsonSchema($element), $data);
+        return $this->isLevelTwoMultiDimensionDataCompleted(getElementSchema($element), $data);
     }
 
     /**
@@ -693,7 +665,7 @@ class Activity extends Model
             return false;
         }
 
-        $elementSchema = $this->getJsonSchema($element);
+        $elementSchema = getElementSchema($element);
         $subElements = $elementSchema['sub_elements'];
 
         foreach ($subElements as $key => $subElement) {
@@ -750,25 +722,25 @@ class Activity extends Model
             return false;
         }
 
-        $commentData = $this->extracted($data, 'comment');
+        $commentData = getArr($data, 'comment');
 
         if (!$this->isLevelOneMultiDimensionDataCompleted($elementSchema['sub_elements']['comment'], $commentData)) {
             return false;
         }
 
-        $dimensionData = $this->extracted($data, 'dimension');
+        $dimensionData = getArr($data, 'dimension');
 
         if (!$this->isLevelOneMultiDimensionDataCompleted($elementSchema['sub_elements']['dimension'], $dimensionData)) {
             return false;
         }
 
-        $locationData = $this->extracted($data, 'location');
+        $locationData = getArr($data, 'location');
 
         if (!$this->isLevelOneMultiDimensionDataCompleted($elementSchema['sub_elements']['location'], $locationData)) {
             return false;
         }
 
-        $documentLinkData = $this->extracted($data, 'document_link');
+        $documentLinkData = getArr($data, 'document_link');
 
         if (!$this->isLevelTwoMultiDimensionDataCompleted($elementSchema['sub_elements']['document_link'], $documentLinkData)) {
             return false;
@@ -788,15 +760,15 @@ class Activity extends Model
      */
     public function isPeriodElementCompleted($element, $data): bool
     {
-        $elementSchema = $this->getJsonSchema($element);
+        $elementSchema = getElementSchema($element);
         $subElements = $this->getMandatorySubElements($elementSchema);
 
         foreach ($data as $datum) {
-            if (!$this->isLevelOneMultiDimensionDataCompleted($subElements['period_start'], $this->extracted($datum, 'period_start'))) {
+            if (!$this->isLevelOneMultiDimensionDataCompleted($subElements['period_start'], getArr($datum, 'period_start'))) {
                 return false;
             }
 
-            if (!$this->isLevelOneMultiDimensionDataCompleted($subElements['period_end'], $this->extracted($datum, 'period_end'))) {
+            if (!$this->isLevelOneMultiDimensionDataCompleted($subElements['period_end'], getArr($datum, 'period_end'))) {
                 return false;
             }
 
@@ -822,7 +794,7 @@ class Activity extends Model
      */
     public function isTargetAndActualAndBaselineCompleted($data, $subElements, $key): bool
     {
-        $attributeData = $this->extracted($data, $key);
+        $attributeData = getArr($data, $key);
 
         foreach ($attributeData as $attributeDatum) {
             if (!$this->isTargetAndActualAndBaselineDataCompleted($subElements[$key], $attributeDatum)) {
@@ -848,19 +820,19 @@ class Activity extends Model
             return false;
         }
 
-        if (!$this->isLevelOneMultiDimensionDataCompleted($elementSchema['sub_elements']['title'], $this->extracted($data, 'title'))) {
+        if (!$this->isLevelOneMultiDimensionDataCompleted($elementSchema['sub_elements']['title'], getArr($data, 'title'))) {
             return false;
         }
 
-        if (!$this->isLevelOneMultiDimensionDataCompleted($elementSchema['sub_elements']['description'], $this->extracted($data, 'description'))) {
+        if (!$this->isLevelOneMultiDimensionDataCompleted($elementSchema['sub_elements']['description'], getArr($data, 'description'))) {
             return false;
         }
 
-        if (!$this->isLevelOneMultiDimensionDataCompleted($elementSchema['sub_elements']['reference'], $this->extracted($data, 'reference'))) {
+        if (!$this->isLevelOneMultiDimensionDataCompleted($elementSchema['sub_elements']['reference'], getArr($data, 'reference'))) {
             return false;
         }
 
-        if (!$this->isLevelTwoMultiDimensionDataCompleted($elementSchema['sub_elements']['document_link'], $this->extracted($data, 'document_link'))) {
+        if (!$this->isLevelTwoMultiDimensionDataCompleted($elementSchema['sub_elements']['document_link'], getArr($data, 'document_link'))) {
             return false;
         }
 
@@ -878,7 +850,7 @@ class Activity extends Model
      */
     public function isIndicatorElementCompleted($element, $data): bool
     {
-        $elementSchema = $this->getJsonSchema($element);
+        $elementSchema = getElementSchema($element);
 
         foreach ($data as $datum) {
             if (!$this->isResultAndIndicatorElementCompleted($elementSchema, $datum)) {
@@ -904,7 +876,7 @@ class Activity extends Model
      */
     public function isResultElementCompleted($element, $data): bool
     {
-        $elementSchema = $this->getJsonSchema($element);
+        $elementSchema = getElementSchema($element);
 
         foreach ($data as $datum) {
             if (!$this->isResultAndIndicatorElementCompleted($elementSchema, $datum)) {
@@ -936,7 +908,7 @@ class Activity extends Model
     public function getTitleElementCompletedAttribute(): bool
     {
         $this->element = 'title';
-        $elementSchema = $this->getJsonSchema($this->element);
+        $elementSchema = getElementSchema($this->element);
 
         return $this->isSubElementDataCompleted($this->mandatorySubElements($elementSchema['sub_elements']), ['narrative' => $this->title]);
     }
@@ -1383,7 +1355,7 @@ class Activity extends Model
 
         if (!empty($transactionData)) {
             $this->element = 'transactions';
-            $elementSchema = $this->getJsonSchema($this->element);
+            $elementSchema = getElementSchema($this->element);
 
             foreach ($transactionData as $transactionDatum) {
                 if (!$this->checkTransactionData($elementSchema['sub_elements'], $transactionDatum['transaction'])) {

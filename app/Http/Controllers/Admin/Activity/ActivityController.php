@@ -44,9 +44,9 @@ class ActivityController extends Controller
     /**
      * ActivityController Constructor.
      *
-     * @param ActivityService $activityService
-     * @param DatabaseManager $db
-     * @param ResultService $resultService
+     * @param ActivityService    $activityService
+     * @param DatabaseManager    $db
+     * @param ResultService      $resultService
      * @param TransactionService $transactionService
      */
     public function __construct(ActivityService $activityService, DatabaseManager $db, ResultService $resultService, TransactionService $transactionService)
@@ -131,8 +131,8 @@ class ActivityController extends Controller
             $results = $this->resultService->getActivityResultsWithIndicatorsAndPeriods($activity->id);
             $hasIndicatorPeriod = $this->resultService->checkResultIndicatorPeriod($results);
             $transactions = $this->transactionService->getActivityTransactions($activity->id);
-            $status = $this->activityService->activityDetailStatus($activity);
-            $progress = $this->activityService->activityPublishingProgress($status);
+            $status = $activity->element_status;
+            $progress = $this->activityService->activityPublishingProgress($activity);
 
             return view(
                 'admin.activity.show',
@@ -161,7 +161,7 @@ class ActivityController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param Request $request
+     * @param Request  $request
      * @param Activity $activity
      *
      * @return void
