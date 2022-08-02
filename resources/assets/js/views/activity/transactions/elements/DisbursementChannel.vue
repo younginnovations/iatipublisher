@@ -1,5 +1,5 @@
 <template>
-  {{ types[code[0].disbursement_channel_code] }}
+  {{ code[0].disbursement_channel_code?types[code[0].disbursement_channel_code]: 'Disbursement Channel Code Not Available' }}
 </template>
 
 <script lang="ts">

@@ -116,10 +116,24 @@
                   <!-- indicator -->
                   <div
                     v-if="result.indicators.length > 0"
-                    class="overflow-hidden border rounded-t-lg indicator border-n-20"
+                    class="
+                      overflow-hidden
+                      border
+                      rounded-t-lg
+                      indicator
+                      border-n-20
+                    "
                   >
                     <div
-                      class="flex items-center px-6 py-2 border-b head border-n-20"
+                      class="
+                        flex
+                        items-center
+                        px-6
+                        py-2
+                        border-b
+                        head
+                        border-n-20
+                      "
                     >
                       <div class="text-xs font-bold grow text-n-50">
                         Indicator
@@ -178,11 +192,8 @@
                                   <td>Baseline:</td>
                                   <td>
                                     <div
-                                      v-for="(
-                                        baseline, b
-                                      ) in indicator.indicator.baseline
-                                        .reverse()
-                                        .slice(0, 4)"
+                                      v-for="(baseline, b) in indicator
+                                        .indicator.baseline"
                                       :key="b"
                                       class=""
                                       :class="{
@@ -223,9 +234,7 @@
                                         <div
                                           v-for="(
                                             period, p
-                                          ) in indicator.periods
-                                            .reverse()
-                                            .slice(0, 4)"
+                                          ) in indicator.periods"
                                           :key="p"
                                           class=""
                                           :class="{
@@ -342,7 +351,7 @@ export default defineComponent({
 
     const { data } = toRefs(props);
 
-    let resultData = data.value.content.reverse().slice(0, 4);
+    let resultData = data.value.content;
 
     return { moment, format, resultData, getActivityTitle };
   },

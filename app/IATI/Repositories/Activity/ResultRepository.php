@@ -108,7 +108,7 @@ class ResultRepository
      */
     public function getActivityResultsWithIndicatorsAndPeriods($activityId): Collection
     {
-        return $this->activityResult->where('activity_id', $activityId)->with('indicators', 'indicators.periods')->get();
+        return $this->activityResult->where('activity_id', $activityId)->orderBy('created_at', 'DESC')->with('indicators', 'indicators.periods')->limit(4)->get();
     }
 
     /**

@@ -1,5 +1,5 @@
 <template>
-  {{ financeType[financeData[0].finance_type] }}
+  {{ financeData[0].finance_type ? financeType[financeData[0].finance_type]: 'Finance Type Not Available' }}
 </template>
 
 <script lang="ts">

@@ -7,9 +7,9 @@
       'mb-4': i !== Object.keys(tdData[0].narrative).length - 1,
     }"
   >
-    <div class="language mb-1.5">(Language: {{ post.language }})</div>
+    <div class="language mb-1.5">({{ post.language? `Language: ${post.language}`: 'Language Not Available' }})</div>
     <div class="text-sm description">
-      {{ post.narrative }}
+      {{ post.narrative??'Narrative Not Available' }}
     </div>
   </div>
 </template>
