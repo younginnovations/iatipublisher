@@ -227,11 +227,10 @@ export default defineComponent({
     },
   },
   setup(props) {
-    const { activity, indicators, parentData } = toRefs(props);
+    const { activity, parentData } = toRefs(props);
     const activityId = activity.value.id,
       resultTitle = parentData.value.result.title,
       resultId = parentData.value.result.id;
-    // const indicatorsData = indicators.value;
 
     const indicatorsData = reactive({});
     const isEmpty = ref(false);

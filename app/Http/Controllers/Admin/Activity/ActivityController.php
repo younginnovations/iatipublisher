@@ -138,7 +138,6 @@ class ActivityController extends Controller
                 compact('elements', 'elementGroups', 'progress', 'activity', 'toast', 'types', 'status', 'results', 'hasIndicatorPeriod', 'transactions')
             );
         } catch (Exception $e) {
-            dd($e);
             logger()->error($e->getMessage());
 
             return response()->json(['success' => false, 'error' => 'Error has occurred rendering activity detail page']);

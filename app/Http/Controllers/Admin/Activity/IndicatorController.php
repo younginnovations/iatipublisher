@@ -157,9 +157,10 @@ class IndicatorController extends Controller
      * Display the specified resource.
      *
      * @param  \App\IATI\Models\Activity\Indicator  $indicator
-     * @return \Illuminate\Http\Response
+     *
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Http\RedirectResponse|\Illuminate\Contracts\Foundation\Application
      */
-    public function show($activityId, $resultId, $indicatorId)
+    public function show($activityId, $resultId, $indicatorId): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Http\RedirectResponse|\Illuminate\Contracts\Foundation\Application
     {
         try {
             $activity = $this->activityService->getActivity($activityId);

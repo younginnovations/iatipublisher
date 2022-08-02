@@ -142,10 +142,7 @@
     </div>
 
     <div class="mt-6">
-      <Pagination
-        :data="periodsData"
-        @fetch-activities="fetchListings"
-      />
+      <Pagination :data="periodsData" @fetch-activities="fetchListings" />
     </div>
   </div>
 </template>
@@ -182,14 +179,12 @@ export default defineComponent({
     },
   },
   setup(props) {
-    const { activity, parentData, period } = toRefs(props);
+    const { activity, parentData } = toRefs(props);
     const activityId = activity.value.id,
       resultTitle = parentData.value.result.title,
       resultId = parentData.value.result.id,
       indicatorTitle = parentData.value.result.title,
       indicatorId = parentData.value.result.id;
-
-    // const periodsData = period.value;
 
     const periodsData = reactive({});
     const isEmpty = ref(false);

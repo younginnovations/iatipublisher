@@ -77,7 +77,7 @@
                       <tr>
                         <td>Result Type</td>
                         <td>
-                          <div class="text-sm description">
+                          <div class="text-sm">
                             {{ types.resultType[result.result.type] }}
                           </div>
                         </td>

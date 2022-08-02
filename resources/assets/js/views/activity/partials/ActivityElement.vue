@@ -120,7 +120,7 @@
                           <span v-if="i.language" class="language top"
                             >(Language: {{ types.languages[i.language] }})</span
                           >
-                          <span v-if="i.narrative" class="description">{{
+                          <span v-if="i.narrative">{{
                             i.narrative
                           }}</span>
                         </div>
@@ -142,7 +142,7 @@
             <span v-if="post.language" class="language mb-1.5">
               (Language: {{ types.languages[post.language] }})
             </span>
-            <span v-if="post.narrative" class="text-sm description">
+            <span v-if="post.narrative" class="text-sm">
               {{ post.narrative }}
             </span>
           </div>
@@ -220,7 +220,7 @@
                     <span v-if="item.language" class="language top"
                       >(Language: {{ types.languages[item.language] }})</span
                     >
-                    <span v-if="item.narrative" class="description">
+                    <span v-if="item.narrative">
                       {{ item.narrative }}
                     </span>
                   </div>
@@ -257,7 +257,7 @@
               :class="{ 'mb-0': j !== item.narrative.length - 1 }"
             >
               <div v-if="narrative.narrative" class="space-x-1 text-sm">
-                <span class="description">{{ narrative.narrative }}</span>
+                <span>{{ narrative.narrative }}</span>
                 <span v-if="narrative.language" class="italic text-n-30"
                   >(Language: {{ types.languages[narrative.language] }})</span
                 >
@@ -280,7 +280,7 @@
               :class="{ 'mb-4': j !== item.narrative.length - 1 }"
             >
               <div v-if="narrative.narrative" class="space-x-1">
-                <span class="description">{{ narrative.narrative }}</span>
+                <span>{{ narrative.narrative }}</span>
                 <span v-if="narrative.language" class="italic text-n-30"
                   >(Language: {{ types.languages[narrative.language] }})</span
                 >
@@ -308,7 +308,7 @@
                           >(Language:
                           {{ types.languages[narrative.language] }})</span
                         >
-                        <span class="description">{{
+                        <span>{{
                           narrative.narrative
                         }}</span>
                       </div>
@@ -337,7 +337,7 @@
                           >(Language:
                           {{ types.languages[narrative.language] }})</span
                         >
-                        <span class="description">{{
+                        <span>{{
                           narrative.narrative
                         }}</span>
                       </div>
@@ -407,7 +407,7 @@
                     <td>Mailing Address</td>
                     <td>
                       <div v-if="narrative.narrative">
-                        <span class="description"
+                        <span
                           >{{ narrative.narrative }}
                           <span v-if="narrative.language" class="language"
                             >(Language:
@@ -465,7 +465,7 @@
                         >(Language:
                         {{ types.languages[narrative.language] }})</span
                       >
-                      <span v-if="narrative.narrative" class="description">{{
+                      <span v-if="narrative.narrative">{{
                         narrative.narrative
                       }}</span>
                     </div>
@@ -611,7 +611,7 @@
                       >(Language:
                       {{ types.languages[narrative.language] }})</span
                     >
-                    <span v-if="narrative.narrative" class="description">{{
+                    <span v-if="narrative.narrative">{{
                       narrative.narrative
                     }}</span>
                   </div>
@@ -724,7 +724,7 @@
                           >(Language:
                           {{ types.languages[narrative.language] }})</span
                         >
-                        <span class="description">{{
+                        <span>{{
                           narrative.narrative
                         }}</span>
                       </div>
@@ -753,7 +753,7 @@
                           >(Language:
                           {{ types.languages[narrative.language] }})</span
                         >
-                        <span class="description">{{
+                        <span>{{
                           narrative.narrative
                         }}</span>
                       </div>
@@ -956,7 +956,7 @@
                       >(Language:
                       {{ types.languages[narrative.language] }})</span
                     >
-                    <span class="description">{{ narrative.narrative }}</span>
+                    <span>{{ narrative.narrative }}</span>
                   </div>
                   <span v-else class="italic">Not Available</span>
                 </td>
@@ -1045,7 +1045,7 @@
                   <span v-if="narrative.language" class="language top"
                     >(Language: {{ types.languages[narrative.language] }})</span
                   >
-                  <span class="description">{{ narrative.narrative }}</span>
+                  <span>{{ narrative.narrative }}</span>
                 </div>
                 <span v-else class="italic">Not Available</span>
               </td>
@@ -1101,7 +1101,7 @@
                   <span v-if="narrative.language" class="language top"
                     >(Language: {{ types.languages[narrative.language] }})</span
                   >
-                  <span class="description">{{ narrative.narrative }}</span>
+                  <span>{{ narrative.narrative }}</span>
                 </div>
                 <span v-else class="italic">Not Available</span>
               </td>
@@ -1236,7 +1236,7 @@
                         >(Language:
                         {{ types.languages[narrative.language] }})</span
                       >
-                      <span class="description">{{ narrative.narrative }}</span>
+                      <span>{{ narrative.narrative }}</span>
                     </div>
                     <span v-else class="italic">Not Available</span>
                   </td>
@@ -1268,7 +1268,7 @@
             :class="{ 'mb-0': i !== post.narrative.length - 1 }"
           >
             <div v-if="item.narrative" class="space-x-1">
-              <span class="description">
+              <span>
                 {{ item.narrative }}
               </span>
               <span v-if="item.language" class="italic text-n-30">
@@ -1497,7 +1497,7 @@
                           >(Language:
                           {{ types.languages[narrative.language] }})</span
                         >
-                        <span class="description">{{
+                        <span>{{
                           narrative.narrative
                         }}</span>
                       </div>
@@ -1560,7 +1560,7 @@
                           >(Language:
                           {{ types.languages[narrative.language] }})</span
                         >
-                        <span class="description">{{
+                        <span>{{
                           narrative.narrative
                         }}</span>
                       </div>
@@ -1672,7 +1672,7 @@
                           >(Language:
                           {{ types.languages[narrative.language] }})</span
                         >
-                        <span class="description">{{
+                        <span>{{
                           narrative.narrative
                         }}</span>
                       </div>
@@ -1783,7 +1783,7 @@
                       <span v-if="item.language" class="language top"
                         >(Language: {{ types.languages[item.language] }})</span
                       >
-                      <span v-if="item.narrative" class="description">{{
+                      <span v-if="item.narrative">{{
                         item.narrative
                       }}</span>
                     </div>

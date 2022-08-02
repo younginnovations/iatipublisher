@@ -1,6 +1,6 @@
 <template>
-  <div class="flex items-end">
-    <span class="text-[64px]">{{ value[0].amount }}</span>
+  <div class="flex items-end overflow-x-auto">
+    <span class="text-[64px]">{{ value[0].amount?? 'Amount Not Available' }}</span>
     <span class="mb-5">{{ value[0].currency }}</span>
   </div>
   <div>valued at {{ dateFormat(value[0].date) }}</div>
