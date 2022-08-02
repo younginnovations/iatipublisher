@@ -102,6 +102,13 @@
                       />
                     </template>
 
+                    <!-- <template v-if="indicatorData.ascending != null"> -->
+                      <Ascending
+                        id="ascending"
+                        :data="indicatorData.ascending"
+                      />
+                    <!-- </template> -->
+
                     <template v-if="indicatorData.measure">
                       <Measure
                         id="measure"
@@ -110,12 +117,12 @@
                       />
                     </template>
 
-                    <template v-if="indicatorData.aggregation_status">
+                    <!-- <template v-if="indicatorData.aggregation_status"> -->
                       <AggregationStatus
                         id="aggregation_status"
                         :data="indicatorData.aggregation_status"
                       />
-                    </template>
+                    <!-- </template> -->
 
                     <template
                       v-if="indicatorData.description[0].narrative.length > 0"
@@ -194,6 +201,7 @@ import NotYet from 'Components/sections/HaveNotAddedYet.vue';
 import {
   TitleElement,
   Measure,
+  Ascending,
   AggregationStatus,
   Description,
   Reference,
@@ -209,6 +217,7 @@ export default defineComponent({
   components: {
     TitleElement,
     Measure,
+    Ascending,
     AggregationStatus,
     Description,
     Reference,

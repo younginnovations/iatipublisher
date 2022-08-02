@@ -1,5 +1,5 @@
 <template>
-  <div class="elements-detail">
+  <div class="elements-detail wider">
     <div
       v-for="(at, i) in atData"
       :key="i"

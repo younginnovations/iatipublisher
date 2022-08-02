@@ -16,7 +16,7 @@ function getActivityTitle(
 
   // }
   title = data['0'].narrative;
-  return title;
+  return title??'Untitled';
 }
 
 export default getActivityTitle;

@@ -119,7 +119,7 @@
               <div class="flex">
                 <a
                   class="mr-6 text-n-40"
-                  :href="`/activities/${result.activity_id}/transactions/${result.id}/edit`"
+                  :href="`/activities/${result.activity_id}/result/${result.id}/edit`"
                 >
                   <svg-vue icon="edit" class="text-xl"></svg-vue>
                 </a>

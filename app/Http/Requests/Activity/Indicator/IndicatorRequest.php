@@ -19,6 +19,8 @@ class IndicatorRequest extends ActivityBaseRequest
      */
     public function rules(): array
     {
+        dump(request()->except(['_token']));
+
         return $this->getRulesForIndicator(request()->except(['_token']));
     }
 
@@ -132,6 +134,7 @@ class IndicatorRequest extends ActivityBaseRequest
             $baselineForm = sprintf('baseline.%s', $baselineIndex);
 
             $rules[sprintf('%s.year', $baselineForm)] = 'nullable|date_format:Y|digits:4';
+            $rules[sprintf('%s.value', $baselineForm)] = 'nullable|numeric|gte:0';
 
             if ((request()->get('measure') == 2) &&
                 (Arr::get($baseline, 'value', null))) {

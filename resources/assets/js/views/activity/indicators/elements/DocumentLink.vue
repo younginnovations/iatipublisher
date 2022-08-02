@@ -46,7 +46,7 @@
                       <tr>
                         <td>Document Link</td>
                         <td>
-                          <a v-if="post.url" :href="post.url">{{ post.url }}</a>
+                          <a v-if="post.url" target='_blank' :href="post.url">{{ post.url }}</a>
                           <span v-else>Not Available</span>
                         </td>
                       </tr>

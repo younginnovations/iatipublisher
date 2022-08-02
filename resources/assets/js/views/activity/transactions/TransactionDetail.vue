@@ -69,7 +69,8 @@
                 key.toString() === 'transaction_type' ||
                 key.toString() === 'transaction_date' ||
                 key.toString() === 'reference' ||
-                key.toString() === 'disbursement_channel'
+                key.toString() === 'disbursement_channel' ||
+                key.toString() === 'humanitarian'
                   ? ''
                   : 'full'
               "

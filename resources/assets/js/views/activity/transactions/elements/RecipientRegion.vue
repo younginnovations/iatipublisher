@@ -8,7 +8,6 @@
         'mb-4': c !== Object.keys(country).length - 1,
       }"
     >
-    {{cou}}
       <div class="category">
         <span>{{ regionCode[cou.region_vocabulary] }}</span>
       </div>

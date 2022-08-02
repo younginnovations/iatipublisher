@@ -27,7 +27,7 @@
               <tr v-if="post.url">
                 <td>Document Link</td>
                 <td>
-                  <a :href="post.url">{{ post.url }}</a>
+                  <a target='_blank' :href="post.url">{{ post.url }}</a>
                 </td>
               </tr>
 

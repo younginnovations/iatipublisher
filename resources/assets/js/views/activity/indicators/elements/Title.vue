@@ -9,7 +9,7 @@
             'mb-3': t !== titleData.narrative.length - 1,
           }"
         >
-          <div class="mb-1 language">
+          <div class="mb-1 language" v-if="title.language">
             (Language: {{ titleType[title.language] }})
           </div>
           <div class="text-xs">
