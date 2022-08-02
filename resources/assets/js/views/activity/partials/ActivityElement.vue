@@ -1,8 +1,8 @@
 <template>
-  <div :class="layout" class="activities__content--element p-3 text-n-50">
-    <div :id="title" class="rounded-lg bg-white p-4">
-      <div class="mb-4 flex">
-        <div class="title flex grow">
+  <div :class="layout" class="p-3 activities__content--element text-n-50">
+    <div :id="title" class="p-4 bg-white rounded-lg">
+      <div class="flex mb-4">
+        <div class="flex title grow">
           <template
             v-if="
               title === 'reporting_org' ||
@@ -28,7 +28,7 @@
             ></svg-vue>
           </template>
 
-          <div class="title text-sm font-bold">
+          <div class="text-sm font-bold title">
             {{ title.toString().replace(/_/g, '-') }}
           </div>
 
@@ -45,8 +45,9 @@
           </div>
         </div>
 
-        <div class="icons flex items-center">
+        <div class="flex items-center icons">
           <a
+            v-if="title !== 'transactions'"
             :href="`/activities/${activityId}/${title}`"
             class="
               edit-button
@@ -62,13 +63,21 @@
             <span>Edit</span>
           </a>
 
+          <a
+            v-else
+            :href="`/activities/${activityId}/${title}`"
+            class="mr-2.5 flex items-center bg-n-10 p-1 text-tiny font-bold uppercase"
+          >
+            <span>Show full transaction list</span>
+          </a>
+
           <svg-vue v-if="data.core" class="mr-1.5" icon="core"></svg-vue>
 
           <HoverText v-if="tooltip" :hover-text="tooltip" class="text-n-40" />
         </div>
       </div>
 
-      <div class="divider mb-4 h-px w-full bg-n-20"></div>
+      <div class="w-full h-px mb-4 divider bg-n-20"></div>
 
       <!--IATI Identifier -->
       <template v-if="title === 'iati_identifier'">
@@ -97,7 +106,7 @@
             <span v-else class="italic">Reference Not Available</span>
           </div>
           <div>
-            <div class="tb-content ml-5">
+            <div class="ml-5 tb-content">
               <div
                 v-for="(post, key) in data.content.owner_org"
                 :key="key"
@@ -146,7 +155,7 @@
             <span v-if="post.language" class="language mb-1.5">
               (Language: {{ types.languages[post.language] }})
             </span>
-            <span v-if="post.narrative" class="description text-sm">
+            <span v-if="post.narrative" class="text-sm description">
               {{ post.narrative }}
             </span>
           </div>
@@ -162,7 +171,7 @@
           :key="key"
           :class="{ 'mb-4': key !== data.content.length - 1 }"
         >
-          <div class="description-type mb-2 text-sm font-bold">
+          <div class="mb-2 text-sm font-bold description-type">
             <span v-if="post.type">
               {{ props.types.descriptionType[post.type] }}
             </span>
@@ -172,7 +181,7 @@
             v-for="(item, i) in post.narrative"
             :key="i"
             :class="{ 'mb-4': i !== post.narrative.length - 1 }"
-            class="description-content text-sm"
+            class="text-sm description-content"
           >
             <div v-if="item.narrative" class="flex flex-col">
               <span v-if="item.language" class="language mb-1.5">
@@ -194,12 +203,12 @@
           :key="key"
           :class="{ 'mb-4': key !== data.content.length - 1 }"
         >
-          <div class="date-type mb-1 flex flex-col space-y-2 text-sm">
+          <div class="flex flex-col mb-1 space-y-2 text-sm date-type">
             <div>
               <span v-if="post.type" class="font-bold">{{
                 props.types.activityDate[post.type]
               }}</span>
-              <span v-else class="text-sm font-bold italic"
+              <span v-else class="text-sm italic font-bold"
                 >Type Not Available</span
               >
             </div>
@@ -244,7 +253,7 @@
           class="elements-detail"
           :class="{ 'mb-4': key !== data.content.length - 1 }"
         >
-          <div class="category text-sm font-bold">
+          <div class="text-sm font-bold category">
             <span v-if="post.type">{{ types.contactType[post.type] }}</span>
             <span v-else class="italic">Type Not Available</span>
           </div>
@@ -444,7 +453,7 @@
             <span v-else class="italic">Organization Role Not Available</span>
           </div>
 
-          <div class="text-sm mb-4">
+          <div class="mb-4 text-sm">
             <span v-if="participating_org.narrative['0'].narrative">{{
               participating_org.narrative['0'].narrative
             }}</span>
@@ -527,7 +536,7 @@
           :key="key"
           :class="{ 'mb-4': key !== data.content.length - 1 }"
         >
-          <div class="recipient_country-code mb-2 text-sm">
+          <div class="mb-2 text-sm recipient_country-code">
             <div v-if="participating_org.country_code" class="space-x-1">
               <span>{{ types.country[participating_org.country_code] }}</span>
               <span
@@ -543,7 +552,7 @@
             v-for="(item, i) in participating_org.narrative"
             :key="i"
             :class="{ 'mb-4': i !== participating_org.narrative.length - 1 }"
-            class="recipient_country-content text-sm"
+            class="text-sm recipient_country-content"
           >
             <div v-if="item.narrative" class="flex max-w-[887px] flex-col">
               <span v-if="item.language" class="language mb-1.5">
@@ -584,7 +593,7 @@
               >({{ roundFloat(post.percentage) }}%)</span
             >
           </div>
-          <div class="elements-detail ml-5">
+          <div class="ml-5 elements-detail">
             <table>
               <tr>
                 <td v-if="post.region_vocabulary === '99'">Vocabulary-uri</td>
@@ -603,7 +612,7 @@
           <div
             v-for="(narrative, k) in post.narrative"
             :key="k"
-            class="item elements-detail ml-5"
+            class="ml-5 item elements-detail"
             :class="{ 'mb-4': k !== post.narrative - 1 }"
           >
             <table class="flex flex-col">
@@ -912,7 +921,7 @@
             }}</span>
             <span v-else class="italic">Vocabulary Not Available</span>
           </div>
-          <div class="mb-1 flex space-x-1 text-sm">
+          <div class="flex mb-1 space-x-1 text-sm">
             <div>
               <div v-if="post.sector_vocabulary === '1'">
                 <span v-if="post.code">{{ types.sectorCode[post.code] }}</span>
@@ -948,7 +957,7 @@
           <div
             v-for="(narrative, k) in post.narrative"
             :key="k"
-            class="country_budget_items ml-5"
+            class="ml-5 country_budget_items"
             :class="{ 'mb-0': k !== post.narrative - 1 }"
           >
             <table>
@@ -1136,7 +1145,7 @@
           :class="{ 'mb-4': key !== data.content.length - 1 }"
         >
           <div class="default_aid_type-content">
-            <div class="date-type mb-2 text-sm font-bold">
+            <div class="mb-2 text-sm font-bold date-type">
               <span v-if="post.default_aid_type_vocabulary">{{
                 types.aidTypeVocabulary[post.default_aid_type_vocabulary]
               }}</span>
@@ -1217,7 +1226,7 @@
             <div
               v-for="(narrative, k) in item.narrative"
               :key="k"
-              class="elements-detail ml-5"
+              class="ml-5 elements-detail"
               :class="{ 'mb-0': k !== item.narrative - 1 }"
             >
               <table>
@@ -1268,7 +1277,7 @@
           <div
             v-for="(item, i) in post.narrative"
             :key="i"
-            class="multiline text-sm"
+            class="text-sm multiline"
             :class="{ 'mb-0': i !== post.narrative.length - 1 }"
           >
             <div v-if="item.narrative" class="space-x-1">
@@ -1325,7 +1334,7 @@
           <div
             v-for="(item, i) in post.budget_value"
             :key="i"
-            class="elements-detail mb-1"
+            class="mb-1 elements-detail"
             :class="{ 'mb-4': i !== post.budget_value.length - 1 }"
           >
             <div class="text-sm">
@@ -1435,7 +1444,7 @@
               :key="i"
               :class="{ 'mb-0': i !== post.period_end.length - 1 }"
             >
-              <table class="mb-4 flex flex-col">
+              <table class="flex flex-col mb-4">
                 <tr>
                   <td>Period End</td>
                   <td>
@@ -1625,7 +1634,7 @@
               <div
                 v-for="(narrative, j) in item.narrative"
                 :key="j"
-                class="mb-1 flex items-center space-x-1"
+                class="flex items-center mb-1 space-x-1"
               >
                 <table>
                   <tr class="multiline">
@@ -1697,7 +1706,7 @@
           :key="key"
           :class="{ 'mb-4': key !== data.content.length - 1 }"
         >
-          <div class="related-content text-sm">
+          <div class="text-sm related-content">
             <div class="category">
               <span v-if="post.relationship_type">{{
                 props.types.relatedActivityType[post.relationship_type]
@@ -1801,9 +1810,35 @@
         </div>
       </template>
 
+      <template v-else-if="title === 'transactions'">
+        <div
+          v-for="(trans, t) in data.content"
+          :key="t"
+          class=""
+          :class="{ 'mb-4': t !== data.content.length - 1 }"
+        >
+          <div class="mb-4 text-sm font-bold">
+            {{
+              types.transactionType[
+                trans.transaction.transaction_type[0].transaction_type_code
+              ]
+            }}
+          </div>
+          <div
+            v-for="(val, v) in trans.transaction.value"
+            :key="v"
+            class="text-sm description"
+            :class="{ 'mb-4': t !== data.content.length - 1 }"
+          >
+            {{ val.amount }} {{ val.currency }} - valued at
+            {{ dateFormat(val.date, 'MMMM DD, YYYY') }}
+          </div>
+        </div>
+      </template>
+
       <template v-else>
         <!-- Activity Status -->
-        <div class="content text-sm">
+        <div class="text-sm content">
           <template v-if="title === 'activity_status'">
             <span v-if="data.content">{{
               props.types.activityStatus[data.content]
@@ -1872,6 +1907,7 @@
 import { defineComponent } from 'vue';
 import HoverText from '../../../components/HoverText.vue';
 import moment from 'moment';
+import dateFormat from '../../../composable/dateFormat';
 
 export default defineComponent({
   name: 'ActivityElement',
@@ -1923,7 +1959,7 @@ export default defineComponent({
       return parseFloat(num).toFixed(2);
     }
 
-    return { layout, status, props, formatDate, roundFloat };
+    return { layout, status, props, formatDate, roundFloat, dateFormat };
   },
 });
 </script>

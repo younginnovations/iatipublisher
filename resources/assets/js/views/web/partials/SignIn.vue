@@ -135,7 +135,6 @@ export default defineComponent({
           if (response.status) window.location.href = 'activities';
         })
         .catch((error) => {
-          console.log(error);
           const { errors } = error.response.data;
           errorData.username = errors.username ? errors.username[0] : '';
           errorData.password = errors.password ? errors.password[0] : '';

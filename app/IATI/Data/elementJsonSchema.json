@@ -378,9 +378,7 @@
         "help_text": "",
         "parent": {
           "name": "region_vocabulary",
-          "value": [
-            "1"
-          ]
+          "value": ["1"]
         }
       },
       "custom_code": {
@@ -394,10 +392,7 @@
         "help_text": "",
         "parent": {
           "name": "region_vocabulary",
-          "value": [
-            "2",
-            "99"
-          ]
+          "value": ["2", "99"]
         }
       },
       "vocabulary_uri": {
@@ -410,9 +405,7 @@
         "help_text": "",
         "parent": {
           "name": "region_vocabulary",
-          "value": [
-            "99"
-          ]
+          "value": ["99"]
         }
       },
       "percentage": {
@@ -487,10 +480,7 @@
         "help_text": "",
         "parent": {
           "name": "sector_vocabulary",
-          "value": [
-            "99",
-            "98"
-          ]
+          "value": ["99", "98"]
         }
       },
       "code": {
@@ -504,9 +494,7 @@
         "help_text": "",
         "parent": {
           "name": "sector_vocabulary",
-          "value": [
-            "1"
-          ]
+          "value": ["1"]
         }
       },
       "text": {
@@ -519,16 +507,7 @@
         "help_text": "",
         "parent": {
           "name": "sector_vocabulary",
-          "value": [
-            "3",
-            "4",
-            "5",
-            "6",
-            "9",
-            "10",
-            "99",
-            "98"
-          ]
+          "value": ["3", "4", "5", "6", "9", "10", "99", "98"]
         }
       },
       "category_code": {
@@ -542,9 +521,7 @@
         "help_text": "",
         "parent": {
           "name": "sector_vocabulary",
-          "value": [
-            "2"
-          ]
+          "value": ["2"]
         }
       },
       "sdg_goal": {
@@ -558,9 +535,7 @@
         "help_text": "",
         "parent": {
           "name": "sector_vocabulary",
-          "value": [
-            "7"
-          ]
+          "value": ["7"]
         }
       },
       "sdg_target": {
@@ -574,9 +549,7 @@
         "help_text": "",
         "parent": {
           "name": "sector_vocabulary",
-          "value": [
-            "8"
-          ]
+          "value": ["8"]
         }
       },
       "percentage": {
@@ -651,9 +624,7 @@
         "help_text": "",
         "parent": {
           "name": "region_vocabulary",
-          "value": [
-            "2"
-          ]
+          "value": ["2"]
         }
       },
       "targets_tag_code": {
@@ -668,9 +639,7 @@
         "help_text": "",
         "parent": {
           "name": "region_vocabulary",
-          "value": [
-            "3"
-          ]
+          "value": ["3"]
         }
       },
       "tag_text": {
@@ -684,10 +653,7 @@
         "help_text": "",
         "parent": {
           "name": "region_vocabulary",
-          "value": [
-            "1",
-            "99"
-          ]
+          "value": ["1", "99"]
         }
       },
       "vocabulary_uri": {
@@ -701,9 +667,7 @@
         "help_text": "",
         "parent": {
           "name": "region_vocabulary",
-          "value": [
-            "99"
-          ]
+          "value": ["99"]
         }
       }
     },
@@ -767,9 +731,7 @@
         "help_text": "",
         "parent": {
           "name": "sector_vocabulary",
-          "value": [
-            "99"
-          ]
+          "value": ["99"]
         }
       },
       "significance": {
@@ -793,9 +755,7 @@
         "help_text": "",
         "parent": {
           "name": "sector_vocabulary",
-          "value": [
-            "1"
-          ]
+          "value": ["1"]
         }
       },
       "policy_marker_text": {
@@ -809,9 +769,7 @@
         "help_text": "mandatory",
         "parent": {
           "name": "sector_vocabulary",
-          "value": [
-            "99"
-          ]
+          "value": ["99"]
         }
       }
     },
@@ -924,9 +882,7 @@
         "help_text": "",
         "parent": {
           "name": "default_aid_type_vocabulary",
-          "value": [
-            "1"
-          ]
+          "value": ["1"]
         }
       },
       "earmarking_category": {
@@ -941,9 +897,7 @@
         "help_text": "",
         "parent": {
           "name": "default_aid_type_vocabulary",
-          "value": [
-            "2"
-          ]
+          "value": ["2"]
         }
       },
       "earmarking_modality": {
@@ -958,9 +912,7 @@
         "help_text": "",
         "parent": {
           "name": "default_aid_type_vocabulary",
-          "value": [
-            "3"
-          ]
+          "value": ["3"]
         }
       },
       "cash_and_voucher_modalities": {
@@ -975,9 +927,7 @@
         "help_text": "",
         "parent": {
           "name": "default_aid_type_vocabulary",
-          "value": [
-            "4"
-          ]
+          "value": ["4"]
         }
       }
     },
@@ -1120,9 +1070,7 @@
         "help_text": "",
         "parent": {
           "name": "vocabulary",
-          "value": [
-            "99"
-          ]
+          "value": ["99"]
         }
       },
       "code": {
@@ -1135,10 +1083,7 @@
         "help_text": "",
         "parent": {
           "name": "vocabulary",
-          "value": [
-            "1-2",
-            "2-1"
-          ]
+          "value": ["1-2", "2-1"]
         }
       }
     },
@@ -1915,7 +1860,8 @@
             "name": "code",
             "label": "@code",
             "type": "select",
-            "choices": "Activity/Country.json",            "required": true,
+            "choices": "Activity/Country.json",
+            "required": true,
             "criteria": "",
             "hover_text": "The code for the administrative area being reported from the vocabulary specified. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/location/administrative/'>For more information</a>",
             "help_text": ""
@@ -4096,11 +4042,11 @@
           "disbursement_channel_code": {
             "name": "disbursement_channel_code",
             "label": "@code",
-            "type": "text",
+            "type": "select",
             "choices": "Activity/DisbursementChannel.json",
             "required": true,
             "criteria": "",
-            "hover_text": "An IATI code defining channels of disbursement",
+            "hover_text": "An IATI code defining channels of disbursement. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/transaction/disbursement-channel/'>For more information</a>",
             "help_text": ""
           }
         },
@@ -4139,10 +4085,7 @@
             "help_text": "",
             "parent": {
               "name": "sector_vocabulary",
-              "value": [
-                "99",
-                "98"
-              ]
+              "value": ["99", "98"]
             }
           },
           "code": {
@@ -4156,9 +4099,7 @@
             "help_text": "",
             "parent": {
               "name": "sector_vocabulary",
-              "value": [
-                "1"
-              ]
+              "value": ["1"]
             }
           },
           "text": {
@@ -4171,16 +4112,7 @@
             "help_text": "",
             "parent": {
               "name": "sector_vocabulary",
-              "value": [
-                "3",
-                "4",
-                "5",
-                "6",
-                "9",
-                "10",
-                "99",
-                "98"
-              ]
+              "value": ["3", "4", "5", "6", "9", "10", "99", "98"]
             }
           },
           "category_code": {
@@ -4194,9 +4126,7 @@
             "help_text": "",
             "parent": {
               "name": "sector_vocabulary",
-              "value": [
-                "2"
-              ]
+              "value": ["2"]
             }
           },
           "sdg_goal": {
@@ -4210,9 +4140,7 @@
             "help_text": "",
             "parent": {
               "name": "sector_vocabulary",
-              "value": [
-                "7"
-              ]
+              "value": ["7"]
             }
           },
           "sdg_target": {
@@ -4226,9 +4154,7 @@
             "help_text": "",
             "parent": {
               "name": "sector_vocabulary",
-              "value": [
-                "8"
-              ]
+              "value": ["8"]
             }
           }
         },
@@ -4444,9 +4370,7 @@
             "help_text": "",
             "parent": {
               "name": "aid_type_vocabulary",
-              "value": [
-                "1"
-              ]
+              "value": ["1"]
             }
           },
           "earmarking_category": {
@@ -4461,9 +4385,7 @@
             "help_text": "",
             "parent": {
               "name": "aid_type_vocabulary",
-              "value": [
-                "2"
-              ]
+              "value": ["2"]
             }
           },
           "earmarking_modality": {
@@ -4478,9 +4400,7 @@
             "help_text": "",
             "parent": {
               "name": "aid_type_vocabulary",
-              "value": [
-                "3"
-              ]
+              "value": ["3"]
             }
           },
           "cash_and_voucher_modalities": {
@@ -4495,9 +4415,7 @@
             "help_text": "",
             "parent": {
               "name": "aid_type_vocabulary",
-              "value": [
-                "4"
-              ]
+              "value": ["4"]
             }
           }
         },
@@ -4515,7 +4433,7 @@
             "choices": "Activity/TiedStatus.json",
             "required": false,
             "criteria": "",
-            "hover_text": "An IATI code interpreting the usage of Columns 36-38 of the CRS++ reporting format. (Amount tied, Amount partially untied, Amount tied)",
+            "hover_text": "An IATI code interpreting the usage of Columns 36-38 of the CRS++ reporting format. (Amount tied, Amount partially untied, Amount tied). <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/transaction/tied-status/'>For more information</a>",
             "help_text": ""
           }
         },

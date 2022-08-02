@@ -109,3 +109,29 @@ if (!function_exists('getList')) {
         return $data;
     }
 }
+
+if (!function_exists('getTransactionTypes')) {
+    function getTransactionTypes(): array
+    {
+        return [
+            'transactionType'           => getCodeList('TransactionType', 'Activity', false),
+            'organizationType'          => getCodeList('OrganizationType', 'Organization', false),
+            'disbursementChannel'       => getCodeList('DisbursementChannel', 'Activity', false),
+            'sectorVocabulary'          => getCodeList('SectorVocabulary', 'Activity', false),
+            'sectorCode'                => getCodeList('SectorCode', 'Activity', false),
+            'sectorCategory'            => getCodeList('SectorCategory', 'Activity', false),
+            'unsdgGoals'                => getCodeList('UNSDG-Goals', 'Activity', false),
+            'unsdgTargets'              => getCodeList('UNSDG-Targets', 'Activity', false),
+            'countryCode'               => getCodeList('Country', 'Activity', false),
+            'regionCode'                => getCodeList('RegionVocabulary', 'Activity', false),
+            'flowType'                  => getCodeList('FlowType', 'Activity', false),
+            'financeType'               => getCodeList('FinanceType', 'Activity', false),
+            'tiedStatusType'            => getCodeList('TiedStatus', 'Activity', false),
+            'aidTypeVocabulary'         => getCodeList('AidTypeVocabulary', 'Activity', false),
+            'aidType'                   => getCodeList('AidType', 'Activity', false),
+            'cashAndVoucherModalities'  => getCodeList('CashandVoucherModalities', 'Activity', false),
+            'earMarkingCategory'        => getCodeList('EarmarkingCategory', 'Activity', false),
+            'earMarkingModality'        => getCodeList('EarmarkingModality', 'Activity', false),
+        ];
+    }
+}

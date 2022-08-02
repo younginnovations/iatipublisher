@@ -12,10 +12,7 @@
         @show-or-hide="showOrHide"
       />
       <div v-if="!isEmpty" class="mt-6">
-        <Pagination
-          :data="activities"
-          @fetch-activities="fetchActivities"
-        />
+        <Pagination :data="activities" @fetch-activities="fetchActivities" />
       </div>
     </div>
   </div>

@@ -2,7 +2,7 @@
   <div>
     <div class="registry__info">
       <div class="mb-4 text-sm font-bold text-n-50">Registry Information</div>
-      <div class="mb-4 flex items-center text-xs text-n-50">
+      <div class="flex items-center mb-4 text-xs text-n-50">
         <button>
           <HoverText
             name="IATI Registry Information"
@@ -11,7 +11,7 @@
         </button>
       </div>
     </div>
-    <div class="register mt-6" @keyup.enter="autoVerify">
+    <div class="mt-6 register" @keyup.enter="autoVerify">
       <div class="register__container">
         <div>
           <div class="relative">
@@ -27,13 +27,13 @@
             </div>
             <input
               id="publisher-id"
-              class="register__input mb-2"
+              class="mb-2 register__input"
               :class="{
                 error__input: publishingError.publisher_id,
               }"
               type="text"
               placeholder="Type Publisher ID here"
-              :value="props.organization.publisher_id"
+              :value="organization.publisher_id"
               disabled="true"
               @input="updateStore('publisher_id')"
             />
@@ -56,7 +56,7 @@
             <input
               id="api-token"
               v-model="publishingForm.api_token"
-              class="register__input mb-2"
+              class="mb-2 register__input"
               :class="{
                 error__input: publishingError.api_token,
               }"
@@ -97,7 +97,7 @@ export default defineComponent({
   },
   props: {
     organization: {
-      type: [Object, String],
+      type: Object,
       required: true,
     },
   },
@@ -108,16 +108,15 @@ export default defineComponent({
     const store = useStore();
 
     interface ObjectType {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      [key: string]: any;
+      [key: string]: string;
     }
 
     const publishingForm = computed(() => store.state.publishingForm);
 
     const publishingInfo = computed(() => store.state.publishingInfo);
 
-    const publishingError: ObjectType = computed(
-      () => store.state.publishingError
+    const publishingError = computed(
+      () => store.state.publishingError as ObjectType
     );
 
     function submitPublishing() {
@@ -125,7 +124,6 @@ export default defineComponent({
     }
 
     function autoVerify() {
-      console.log('a');
       emit('submitPublishing');
     }
 
