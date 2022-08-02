@@ -1,77 +1,15 @@
 <template>
   <div class="relative bg-paper px-10 pt-4 pb-[71px]">
-    <!-- page title -->
-    <div class="mb-6 page-title">
-      <div class="flex items-end gap-4">
-        <div class="title grow-0">
-          <div class="pb-4 text-caption-c1 text-n-40">
-            <nav aria-label="breadcrumbs" class="rank-math-breadcrumb">
-              <div class="flex">
-                <a class="font-bold whitespace-nowrap" href="/activities">
-                  Your Activities
-                </a>
-                <span class="mx-4 separator"> / </span>
-                <div class="breadcrumb__title">
-                  <span class="overflow-hidden breadcrumb__title text-n-30">
-                    <a :href="`/activities/${activityId}`">
-                      {{ getActivityTitle(activity.title, 'en') ?? 'Untitled' }}
-                    </a>
-                  </span>
-                  <span class="ellipsis__title--hover w-[calc(100%_+_35px)]">
-                    {{ getActivityTitle(activity.title, 'en') ?? 'Untitled' }}
-                  </span>
-                </div>
-                <span class="mx-4 separator"> / </span>
-                <div class="breadcrumb__title">
-                  <span
-                    class="overflow-hidden breadcrumb__title last text-n-30"
-                  >
-                    <a :href="`/activities/${activityId}/result/${resultId}`">
-                      {{ getActivityTitle(resultTitle, 'en') ?? 'Untitled' }}
-                    </a>
-                  </span>
-                  <span class="ellipsis__title--hover w-[calc(100%_+_35px)]">
-                    {{ getActivityTitle(resultTitle, 'en') ?? 'Untitled' }}
-                  </span>
-                </div>
-                <span class="mx-4 separator"> / </span>
-                <div class="breadcrumb__title">
-                  <span
-                    class="overflow-hidden breadcrumb__title last text-n-30"
-                  >
-                    Indicator List
-                  </span>
-                  <span class="ellipsis__title--hover w-[calc(100%_+_35px)]">
-                    Indicator List
-                  </span>
-                </div>
-              </div>
-            </nav>
-          </div>
-          <div class="inline-flex items-center max-w-3xl">
-            <div class="mr-3">
-              <a :href="`/activities/${activityId}/result/${resultId}`">
-                <svg-vue icon="arrow-short-left"></svg-vue>
-              </a>
-            </div>
-            <div class="">
-              <h4 class="relative mr-4 font-bold ellipsis__title">
-                <span class="overflow-hidden ellipsis__title"
-                  >Indicator List</span
-                ><span class="ellipsis__title--hover">Indicator List</span>
-              </h4>
-            </div>
-          </div>
-        </div>
-        <div class="flex flex-col items-end justify-end actions grow">
-          <a :href="`/activities/${activityId}/result/1/indicator/create`">
-            <Btn text="Add Indicator" icon="plus" type="primary" />
-          </a>
-        </div>
-      </div>
-    </div>
+    <PageTitle
+      :breadcrumb-data="breadcrumbData"
+      title="Indicator List"
+      :back-link="`/activities/${activityId}/result/`"
+    >
+      <a :href="`/activities/${activityId}/result/1/indicator/create`">
+        <Btn text="Add Indicator" icon="plus" type="primary" />
+      </a>
+    </PageTitle>
 
-    <!-- page content -->
     <div class="iati-list-table text-n-40">
       <table>
         <thead>
@@ -182,10 +120,7 @@
     </div>
 
     <div class="mt-6">
-      <Pagination
-        :data="indicatorsData"
-        @fetch-activities="fetchListings"
-      />
+      <Pagination :data="indicatorsData" @fetch-activities="fetchListings" />
     </div>
   </div>
 </template>
@@ -197,6 +132,7 @@ import axios from 'axios';
 // components
 import Btn from 'Components/ButtonComponent.vue';
 import Pagination from 'Components/TablePagination.vue';
+import PageTitle from 'Components/sections/PageTitle.vue';
 
 // composable
 import dateFormat from 'Composable/dateFormat';
@@ -207,6 +143,7 @@ export default defineComponent({
   components: {
     Btn,
     Pagination,
+    PageTitle,
   },
   props: {
     activity: {
@@ -229,11 +166,34 @@ export default defineComponent({
   setup(props) {
     const { activity, parentData } = toRefs(props);
     const activityId = activity.value.id,
+      activityTitle = activity.value.title,
       resultTitle = parentData.value.result.title,
       resultId = parentData.value.result.id;
 
     const indicatorsData = reactive({});
     const isEmpty = ref(false);
+
+    /**
+     * Breadcrumb data
+     */
+    const breadcrumbData = [
+      {
+        title: 'Your Activities',
+        link: '/activities',
+      },
+      {
+        title: getActivityTitle(activityTitle, 'en'),
+        link: `/activities/${activityId}`,
+      },
+      {
+        title: getActivityTitle(resultTitle, 'en'),
+        link: `/activities/${activityId}/result/${resultId}`,
+      },
+      {
+        title: 'Indicator List',
+        link: '',
+      },
+    ];
 
     onMounted(async () => {
       axios
@@ -266,6 +226,7 @@ export default defineComponent({
       fetchListings,
       resultTitle,
       resultId,
+      breadcrumbData,
     };
   },
 });

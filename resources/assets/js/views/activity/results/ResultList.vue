@@ -1,51 +1,14 @@
 <template>
   <div class="relative bg-paper px-10 pt-4 pb-[71px]">
-    <!-- page title -->
-    <div class="mb-6 page-title">
-      <div class="flex items-end gap-4">
-        <div class="title grow-0">
-          <div class="max-w-sm pb-4 text-caption-c1 text-n-40">
-            <nav aria-label="breadcrumbs" class="rank-math-breadcrumb">
-              <div class="flex">
-                <a class="font-bold whitespace-nowrap" href="/activities">
-                  Your Activities
-                </a>
-                <span class="mx-4 separator"> / </span>
-                <div class="breadcrumb__title">
-                  <span
-                    class="overflow-hidden breadcrumb__title last text-n-30"
-                  >
-                    Result List
-                  </span>
-                  <span class="ellipsis__title--hover w-[calc(100%_+_35px)]">
-                    Result List
-                  </span>
-                </div>
-              </div>
-            </nav>
-          </div>
-          <div class="inline-flex items-center max-w-3xl">
-            <div class="mr-3">
-              <a :href="`/activities/${activityId}`">
-                <svg-vue icon="arrow-short-left"></svg-vue>
-              </a>
-            </div>
-            <div class="">
-              <h4 class="relative mr-4 font-bold ellipsis__title">
-                <span class="overflow-hidden ellipsis__title">
-                  Result List
-                </span>
-              </h4>
-            </div>
-          </div>
-        </div>
-        <div class="flex flex-col items-end justify-end actions grow">
-          <a :href="`/activities/${activityId}/result/create`">
-            <Btn text="Add Results" icon="plus" type="primary" />
-          </a>
-        </div>
-      </div>
-    </div>
+    <PageTitle
+      :breadcrumb-data="breadcrumbData"
+      title="Result List"
+      :back-link="activityLink"
+    >
+      <a :href="`${activityLink}/result/create`">
+        <Btn text="Add Result" icon="plus" type="primary" />
+      </a>
+    </PageTitle>
 
     <!-- page content -->
     <div class="iati-list-table text-n-40">
@@ -134,10 +97,7 @@
     </div>
 
     <div class="mt-6">
-      <Pagination
-        :data="resultsData"
-        @fetch-activities="fetchListings"
-      />
+      <Pagination :data="resultsData" @fetch-activities="fetchListings" />
     </div>
   </div>
 </template>
@@ -149,6 +109,7 @@ import axios from 'axios';
 // components
 import Btn from 'Components/ButtonComponent.vue';
 import Pagination from 'Components/TablePagination.vue';
+import PageTitle from 'Components/sections/PageTitle.vue';
 
 // composable
 import dateFormat from 'Composable/dateFormat';
@@ -159,6 +120,7 @@ export default defineComponent({
   components: {
     Btn,
     Pagination,
+    PageTitle,
   },
   props: {
     activity: {
@@ -175,12 +137,31 @@ export default defineComponent({
     },
   },
   setup(props) {
-    const { activity, results } = toRefs(props);
-    const activityId = activity.value.id;
-    // const resultsData = results.value.reverse();
+    const { activity } = toRefs(props);
+    const activityId = activity.value.id,
+      activityTitle = activity.value.title,
+      activityLink = `/activities/${activityId}`;
 
     const resultsData = reactive({});
     const isEmpty = ref(false);
+
+    /**
+     * Breadcrumb data
+     */
+    const breadcrumbData = [
+      {
+        title: 'Your Activities',
+        link: '/activities',
+      },
+      {
+        title: getActivityTitle(activityTitle, 'en'),
+        link: activityLink,
+      },
+      {
+        title: 'Result List',
+        link: '',
+      },
+    ];
 
     onMounted(async () => {
       axios.get(`/activities/${activityId}/result/page/1`).then((res) => {
@@ -201,7 +182,8 @@ export default defineComponent({
     }
 
     return {
-      activityId,
+      breadcrumbData,
+      activityLink,
       dateFormat,
       resultsData,
       getActivityTitle,

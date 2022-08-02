@@ -1,93 +1,15 @@
 <template>
   <div class="relative bg-paper px-10 pt-4 pb-[71px]">
-    <!-- page title -->
-    <div class="mb-6 page-title">
-      <div class="flex items-end gap-4">
-        <div class="title grow-0">
-          <div class="pb-4 text-caption-c1 text-n-40">
-            <nav aria-label="breadcrumbs" class="rank-math-breadcrumb">
-              <div class="flex">
-                <a class="font-bold whitespace-nowrap" href="/activities">
-                  Your Activities
-                </a>
-                <span class="mx-4 separator"> / </span>
-                <div class="breadcrumb__title">
-                  <span class="overflow-hidden breadcrumb__title text-n-30">
-                    <a :href="`/activities/${activity.id}`">
-                      {{ getActivityTitle(activity.title, 'en') ?? 'Untitled' }}
-                    </a>
-                  </span>
-                  <span class="ellipsis__title--hover w-[calc(100%_+_35px)]">
-                    {{ getActivityTitle(activity.title, 'en') ?? 'Untitled' }}
-                  </span>
-                </div>
-                <span class="mx-4 separator"> / </span>
-                <div class="breadcrumb__title">
-                  <span class="overflow-hidden breadcrumb__title text-n-30">
-                    <a
-                      :href="`/activities/${activity.id}/result/${resultId}/indicator`"
-                    >
-                      {{ getActivityTitle(resultTitle, 'en') ?? 'Untitled' }}
-                    </a>
-                  </span>
-                  <span class="ellipsis__title--hover w-[calc(100%_+_35px)]">
-                    {{ getActivityTitle(resultTitle, 'en') ?? 'Untitled' }}
-                  </span>
-                </div>
-                <span class="mx-4 separator"> / </span>
-                <div class="breadcrumb__title">
-                  <span class="overflow-hidden breadcrumb__title text-n-30">
-                    <a
-                      :href="`/activities/${activity.id}/result/${resultId}/indicator/${indicatorId}`"
-                    >
-                      {{ getActivityTitle(indicatorTitle, 'en') ?? 'Untitled' }}
-                    </a>
-                  </span>
-                  <span class="ellipsis__title--hover w-[calc(100%_+_35px)]">
-                    {{
-                      getActivityTitle(parentData.indicator.title, 'en') ??
-                      'Untitled'
-                    }}
-                  </span>
-                </div>
-                <span class="mx-4 separator"> / </span>
-                <div class="breadcrumb__title">
-                  <span
-                    class="overflow-hidden breadcrumb__title last text-n-30"
-                  >
-                    Periods List
-                  </span>
-                  <span class="ellipsis__title--hover w-[calc(100%_+_35px)]">
-                    Periods List
-                  </span>
-                </div>
-              </div>
-            </nav>
-          </div>
-          <div class="inline-flex items-center max-w-3xl">
-            <div class="mr-3">
-              <a :href="`/activities/${activityId}`">
-                <svg-vue icon="arrow-short-left"></svg-vue>
-              </a>
-            </div>
-            <div class="">
-              <h4 class="relative mr-4 font-bold ellipsis__title">
-                <span class="overflow-hidden ellipsis__title">Periods List</span
-                ><span class="ellipsis__title--hover">Periods List</span>
-              </h4>
-            </div>
-          </div>
-        </div>
+    <PageTitle
+      :breadcrumb-data="breadcrumbData"
+      title="Periods List"
+      :back-link="indicatorLink"
+    >
+      <a :href="`${indicatorLink}/period/create`">
+        <Btn text="Add Period" icon="plus" type="primary" />
+      </a>
+    </PageTitle>
 
-        <div class="flex flex-col items-end justify-end actions grow">
-          <a :href="`/activities/${activityId}/result/1/indicator/create`">
-            <Btn text="Add Results" icon="plus" type="primary" />
-          </a>
-        </div>
-      </div>
-    </div>
-
-    <!-- page content -->
     <div class="iati-list-table text-n-40">
       <table>
         <thead>
@@ -116,7 +38,7 @@
             <td>
               <a
                 class="text-sm font-bold leading-relaxed text-n-50"
-                :href="`/activities/${activity.id}/result/${resultId}/indicator/${indicatorId}/period/${pe.id}`"
+                :href="`${indicatorLink}/period/${pe.id}`"
               >
                 {{ dateFormat(pe.period.period_start[0].date) }} -
                 {{ dateFormat(pe.period.period_end[0].date) }}
@@ -127,7 +49,7 @@
               <div class="flex">
                 <a
                   class="mr-6 text-n-40"
-                  :href="`/activities/${activity.id}/result/${resultId}/indicator/${indicatorId}/period/${pe.id}`"
+                  :href="`${indicatorLink}/${indicatorId}/period/${pe.id}`"
                 >
                   <svg-vue icon="edit" class="text-xl"></svg-vue>
                 </a>
@@ -153,6 +75,7 @@ import axios from 'axios';
 // components
 import Btn from 'Components/ButtonComponent.vue';
 import Pagination from 'Components/TablePagination.vue';
+import PageTitle from 'Components/sections/PageTitle.vue';
 
 // composable
 import dateFormat from 'Composable/dateFormat';
@@ -163,6 +86,7 @@ export default defineComponent({
   components: {
     Btn,
     Pagination,
+    PageTitle,
   },
   props: {
     activity: {
@@ -181,13 +105,43 @@ export default defineComponent({
   setup(props) {
     const { activity, parentData } = toRefs(props);
     const activityId = activity.value.id,
+      activityTitle = activity.value.title,
+      activityLink = `/activities/${activityId}`,
       resultTitle = parentData.value.result.title,
       resultId = parentData.value.result.id,
-      indicatorTitle = parentData.value.result.title,
-      indicatorId = parentData.value.result.id;
+      resultLink = `${activityLink}/result/${resultId}`,
+      indicatorTitle = parentData.value.indicator.title,
+      indicatorId = parentData.value.result.id,
+      indicatorLink = `${resultLink}/indicator/${indicatorId}`;
 
     const periodsData = reactive({});
     const isEmpty = ref(false);
+
+    /**
+     * Breadcrumb data
+     */
+    const breadcrumbData = [
+      {
+        title: 'Your Activities',
+        link: '/activities',
+      },
+      {
+        title: getActivityTitle(activityTitle, 'en'),
+        link: activityLink,
+      },
+      {
+        title: getActivityTitle(resultTitle, 'en'),
+        link: resultLink,
+      },
+      {
+        title: getActivityTitle(indicatorTitle, 'en'),
+        link: indicatorLink,
+      },
+      {
+        title: 'Periods List',
+        link: '',
+      },
+    ];
 
     onMounted(async () => {
       axios
@@ -215,11 +169,8 @@ export default defineComponent({
     }
 
     return {
-      activityId,
-      resultTitle,
-      resultId,
-      indicatorTitle,
-      indicatorId,
+      breadcrumbData,
+      indicatorLink,
       dateFormat,
       periodsData,
       getActivityTitle,

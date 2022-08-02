@@ -1,68 +1,24 @@
 <template>
   <div class="bg-paper px-10 pt-4 pb-[71px]">
-    <div class="mb-6 page-title">
-      <div class="flex items-end gap-4">
-        <div class="title grow-0">
-          <div class="mb-4 text-caption-c1 text-n-40">
-            <nav aria-label="breadcrumbs" class="breadcrumb">
-              <div class="flex">
-                <a href="/activities" class="font-bold">Your Activities</a>
-                <span class="mx-4 separator"> / </span>
-                <div class="breadcrumb__title">
-                  <span class="overflow-hidden breadcrumb__title text-n-30">
-                    <a :href="`/activities/${activity.id}`">
-                      {{ activityTitle ?? 'Untitled' }}
-                    </a>
-                  </span>
-                  <span class="ellipsis__title--hover w-[calc(100%_+_35px)]">
-                    {{ activityTitle ?? 'Untitled' }}
-                  </span>
-                </div>
-                <span class="mx-4 separator"> / </span>
-                <div class="breadcrumb__title">
-                  <span
-                    class="overflow-hidden breadcrumb__title last text-n-30"
-                  >
-                    {{ indicatorTitle ?? 'Untitled' }}
-                  </span>
-                  <span class="ellipsis__title--hover w-[calc(100%_+_35px)]">
-                    {{ indicatorTitle ?? 'Untitled' }}
-                  </span>
-                </div>
-              </div>
-            </nav>
-          </div>
-          <div class="inline-flex items-center">
-            <div class="mr-3">
-              <a
-                :href="`/activities/${activity.id}/result/${indicator.result_id}`"
-              >
-                <svg-vue icon="arrow-short-left"></svg-vue>
-              </a>
-            </div>
-            <h1 class="relative mr-4 text-2xl font-bold ellipsis__title">
-              Indicator Detail
-            </h1>
-          </div>
-        </div>
-
-        <div class="flex flex-col items-end justify-end actions grow">
-          <div class="flex justify-end">
-            <Status class="mr-2.5" :data="false" />
-            <Btn
-              text="Add Indicator"
-              icon="add"
-              :link="`/activities/${activity.id}/result/${indicator.result_id}/indicator/create`"
-              class="mr-2.5"
-            />
-            <Btn
-              text="Edit Indicator"
-              :link="`/activities/${activity.id}/result/${indicator.result_id}/indicator/${indicator.id}/edit`"
-            />
-          </div>
-        </div>
+    <PageTitle
+      :breadcrumb-data="breadcrumbData"
+      title="Indicator Detail"
+      :back-link="`${activityLink}/result/`"
+    >
+      <div class="flex justify-end">
+        <Status class="mr-2.5" :data="false" />
+        <Btn
+          text="Add Indicator"
+          icon="add"
+          :link="`${resultLink}/indicator/create`"
+          class="mr-2.5"
+        />
+        <Btn
+          text="Edit Indicator"
+          :link="`${resultLink}/indicator/${indicator.id}/edit`"
+        />
       </div>
-    </div>
+    </PageTitle>
 
     <div class="activities">
       <aside class="activities__sidebar">
@@ -197,6 +153,7 @@ import { defineComponent, toRefs } from 'vue';
 import Btn from 'Components/buttons/Link.vue';
 import Status from 'Components/status/Status.vue';
 import NotYet from 'Components/sections/HaveNotAddedYet.vue';
+import PageTitle from 'Components/sections/PageTitle.vue';
 
 import {
   TitleElement,
@@ -226,6 +183,7 @@ export default defineComponent({
     Btn,
     Status,
     NotYet,
+    PageTitle,
   },
   props: {
     activity: {
@@ -253,20 +211,48 @@ export default defineComponent({
     const linkClasses =
       'flex items-center w-full bg-white rounded p-2 text-sm text-n-50 font-bold leading-normal mb-2 shadow-default';
 
-    let { indicator, activity } = toRefs(props);
+    let { indicator, activity, resultTitle } = toRefs(props);
 
     //indicator
     const indicatorData = indicator.value.indicator;
 
-    //titles
-    const activityTitle = getActivityTitle(activity.value.title, 'en'),
+    const activityId = activity.value.id,
+      activityTitle = activity.value.title,
+      activityLink = `/activities/${activityId}`,
+      resultId = indicator.value.result_id,
+      resultTitled = getActivityTitle(resultTitle.value[0].narrative, 'en'),
+      resultLink = `${activityLink}/result/${resultId}`,
       indicatorTitle = getActivityTitle(indicatorData.title[0].narrative, 'en');
+
+    /**
+     * Breadcrumb data
+     */
+    const breadcrumbData = [
+      {
+        title: 'Your Activities',
+        link: '/activities',
+      },
+      {
+        title: getActivityTitle(activityTitle, 'en'),
+        link: activityLink,
+      },
+      {
+        title: resultTitled,
+        link: resultLink,
+      },
+      {
+        title: indicatorTitle,
+        link: '',
+      },
+    ];
 
     return {
       linkClasses,
-      activityTitle,
       indicatorTitle,
       indicatorData,
+      activityLink,
+      resultLink,
+      breadcrumbData,
     };
   },
 });

@@ -1,5 +1,7 @@
 /**
  * Get current activity title
+ *
+ * @return title text
  */
 
 function getActivityTitle(
@@ -8,15 +10,17 @@ function getActivityTitle(
 ) {
   let title = '';
 
-  // for (const t of data) {
-  //   // if (t.language === language) {
-  //   //   title = t.narrative;
-  //   // }
+  // title return if language exist in data
+  for (const t of data) {
+    if (t.language && t.language === language) {
+      title = t.narrative ?? 'Untitled';
+      return title;
+    }
+  }
 
-
-  // }
-  title = data['0'].narrative;
-  return title??'Untitled';
+  // default title return if language does not exists in data
+  title = data['0'].narrative ?? 'Untitled';
+  return title;
 }
 
 export default getActivityTitle;

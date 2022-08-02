@@ -1,21 +1,55 @@
 <template>
   <div>
-    <nav aria-label="breadcrumbs" class="breadcrumb">
-      <p>
-        <a href="/" class="font-bold text-n-40">Your Activities</a>
-        <span class="separator"> / </span>
-        <span class="last">Partnership against child exploitation</span>
-      </p>
+    <nav aria-label="breadcrumbs" class="rank-math-breadcrumb">
+      <div class="flex">
+        <template v-for="(bc, d) in breadcrumbData" :key="d">
+          <template v-if="Number(d) === 0">
+            <a class="font-bold whitespace-nowrap" href="/activities">
+              {{ bc.title }}
+            </a>
+          </template>
+          <template v-else>
+            <div class="breadcrumb__title max-w-[200px]">
+              <span class="overflow-hidden breadcrumb__title text-n-30">
+                <a v-if="bc.link" :href="bc.link">
+                  {{ bc.title }}
+                </a>
+                <span v-else>{{ bc.title }}</span>
+              </span>
+              <span class="ellipsis__title--hover w-[calc(100%_+_35px)]">
+                {{ bc.title }}
+              </span>
+            </div>
+          </template>
+          <span
+            v-if="Number(d) !== breadcrumbData.length - 1"
+            class="mx-4 separator"
+          >
+            /
+          </span>
+        </template>
+      </div>
     </nav>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, toRefs } from 'vue';
+import getActivityTitle from 'Composable/title';
 
 export default defineComponent({
-  setup: () => ({
-    title: 'Breadcrumb Component',
-  }),
+  name: 'BreadCrumb',
+  components: {},
+  props: {
+    data: {
+      type: Object,
+      required: true,
+    },
+  },
+  setup(props) {
+    const { data } = toRefs(props);
+    const breadcrumbData = data.value;
+    return { getActivityTitle, breadcrumbData };
+  },
 });
 </script>
