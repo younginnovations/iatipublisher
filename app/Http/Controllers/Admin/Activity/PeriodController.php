@@ -11,6 +11,7 @@ use App\IATI\Services\Activity\ActivityService;
 use App\IATI\Services\Activity\IndicatorService;
 use App\IATI\Services\Activity\PeriodService;
 use App\IATI\Services\Activity\ResultService;
+use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 
@@ -66,9 +67,9 @@ class PeriodController extends Controller
      * @param $resultId
      * @param $indicatorId
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Contracts\View\Factory|View|RedirectResponse|\Illuminate\Contracts\Foundation\Application
      */
-    public function index($activityId, $resultId, $indicatorId)
+    public function index($activityId, $resultId, $indicatorId): \Illuminate\Contracts\View\Factory|View|RedirectResponse|\Illuminate\Contracts\Foundation\Application
     {
         try {
             $activity = $this->activityService->getActivity($activityId);
@@ -91,8 +92,6 @@ class PeriodController extends Controller
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            dd($e);
-
             return redirect()->route('admin.activities.show', $activityId)->with(
                 'error',
                 'Error has occurred while rendering activity transactions listing.'
@@ -109,7 +108,7 @@ class PeriodController extends Controller
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Http\RedirectResponse|\Illuminate\Contracts\Foundation\Application
      */
-    public function create($activityId, $resultId, $indicatorId): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|RedirectResponse|\Illuminate\Contracts\Foundation\Application
+    public function create($activityId, $resultId, $indicatorId): \Illuminate\Contracts\View\Factory|View|RedirectResponse|\Illuminate\Contracts\Foundation\Application
     {
         try {
             $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
@@ -175,9 +174,9 @@ class PeriodController extends Controller
      * @param  $indicatorId
      * @param  $periodId
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Http\RedirectResponse|\Illuminate\Contracts\Foundation\Application
      */
-    public function show($activityId, $resultId, $indicatorId, $periodId)
+    public function show($activityId, $resultId, $indicatorId, $periodId): \Illuminate\Contracts\View\Factory|View|RedirectResponse|\Illuminate\Contracts\Foundation\Application
     {
         try {
             $activity = $this->activityService->getActivity($activityId);
@@ -215,7 +214,7 @@ class PeriodController extends Controller
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Http\RedirectResponse|\Illuminate\Contracts\Foundation\Application
      */
-    public function edit($activityId, $resultId, $indicatorId, $periodId): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|RedirectResponse|\Illuminate\Contracts\Foundation\Application
+    public function edit($activityId, $resultId, $indicatorId, $periodId): \Illuminate\Contracts\View\Factory|View|RedirectResponse|\Illuminate\Contracts\Foundation\Application
     {
         try {
             $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);

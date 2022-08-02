@@ -56,7 +56,7 @@
                         (Language:
                         {{
                           com.language
-                            ? language[com.language]
+                            ? dlType.language[com.language]
                             : 'Not Available'
                         }})
                       </span>
@@ -109,8 +109,9 @@ export default defineComponent({
     let { data } = toRefs(props);
 
     // vue inject
-    const languageType = inject('types').language;
+    // const languageType = inject('types').language;
     const dlType = inject('types');
+    console.log()
 
     const elementSpacing = 'mb-1';
 
@@ -121,7 +122,7 @@ export default defineComponent({
       elementSpacing,
       location,
       getLocation,
-      languageType,
+      // languageType,
       dlType,
     };
   },

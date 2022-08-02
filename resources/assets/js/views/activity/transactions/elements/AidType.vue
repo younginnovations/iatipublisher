@@ -16,7 +16,7 @@
           <tr>
             <td>Code</td>
             <td>
-              <div class="text-sm description">
+              <div class="text-sm">
                 <span v-if="at.aid_type_code">
                   {{ aidType[at.aid_type_code] }}
                 </span>

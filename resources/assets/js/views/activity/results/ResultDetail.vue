@@ -30,7 +30,15 @@
         <div class="flex flex-col items-end justify-end actions grow">
           <a
             :href="`/activities/${result.activity_id}/result/${result.id}/edit`"
-            class="edit-button mr-2.5 flex items-center text-tiny font-bold uppercase"
+            class="
+              edit-button
+              mr-2.5
+              flex
+              items-center
+              text-tiny
+              font-bold
+              uppercase
+            "
           >
             <svg-vue class="mr-0.5 text-base" icon="edit"></svg-vue>
             <span>Edit Result</span>
@@ -98,13 +106,32 @@
         <a
           v-if="!hasIndicators"
           :href="`/activities/${result.activity_id}/result/${result.id}/indicator/create`"
-          class="flex w-full px-4 py-3 text-xs leading-normal bg-white border border-dashed rounded add_indicator border-n-40"
+          class="
+            flex
+            w-full
+            px-4
+            py-3
+            text-xs
+            leading-normal
+            bg-white
+            border border-dashed
+            rounded
+            add_indicator
+            border-n-40
+          "
         >
           <div class="italic text-left grow">
             You haven't added any indicator yet.
           </div>
           <div
-            class="flex items-center font-bold uppercase shrink-0 text-bluecoral"
+            class="
+              flex
+              items-center
+              font-bold
+              uppercase
+              shrink-0
+              text-bluecoral
+            "
           >
             <svg-vue icon="add" class="mr-1 text-base shrink-0"></svg-vue>
             <span class="grow text-[10px]">Add new indicator</span>

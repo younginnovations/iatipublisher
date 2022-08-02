@@ -149,7 +149,7 @@
                 ]
               }}
             </td>
-            <td>{{ trans.transaction.value[0].amount }}</td>
+            <td class="truncate">{{ trans.transaction.value[0].amount }}</td>
             <td>
               <span v-if="trans.transaction.transaction_date[0].date">
                 {{
@@ -214,7 +214,7 @@ export default defineComponent({
     },
   },
   setup(props) {
-    const { activity, transactions } = toRefs(props);
+    const { activity } = toRefs(props);
     const activityId = activity.value.id;
     const transactionsData = reactive({});
 

@@ -36,7 +36,7 @@
                                   : 'Not Available'
                               }})
                             </div>
-                            <div class="text-xs description">
+                            <div class="text-xs">
                               {{ na.narrative ?? 'Not Available' }}
                             </div>
                           </div>

@@ -12,7 +12,7 @@
           <div class="mb-1 language">
             (Language: {{ titleType[title.language] }})
           </div>
-          <div class="text-xs description">
+          <div class="text-xs">
             {{ title.narrative }}
           </div>
         </div>

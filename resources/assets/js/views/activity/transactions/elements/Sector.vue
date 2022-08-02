@@ -20,7 +20,7 @@
           <tr>
             <td>Code</td>
             <td>
-              <div class="text-sm description">
+              <div class="text-sm">
                 <span v-if="sec.text">
                   {{ sec.text ?? 'Not Available' }}
                 </span>
@@ -62,7 +62,7 @@
                       : 'Language Not Available'
                   }})
                 </div>
-                <div class="text-sm description">
+                <div class="text-sm">
                   {{ sd.narrative ?? 'Narrative Not Available' }}
                 </div>
               </div>

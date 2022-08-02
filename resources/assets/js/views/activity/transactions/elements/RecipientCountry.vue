@@ -32,7 +32,7 @@
                       : 'Language Not Available'
                   }})
                 </div>
-                <div class="text-sm description">
+                <div class="text-sm">
                   {{ sd.narrative ?? 'Narrative Not Available' }}
                 </div>
               </div>
