@@ -42,6 +42,10 @@
     visibility: visible;
     opacity: 1;
   }
+
+  .elements-svg {
+    @apply mr-1.5 text-xl text-bluecoral;
+  }
 }
 .description {
   width: 100%;

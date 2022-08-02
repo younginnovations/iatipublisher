@@ -1,9 +1,15 @@
 <template>
-  {{ code[0].disbursement_channel_code?types[code[0].disbursement_channel_code]: 'Disbursement Channel Code Not Available' }}
+  <div class="text-sm">
+    {{
+      code[0].disbursement_channel_code
+        ? type.disbursementChannel[code[0].disbursement_channel_code]
+        : 'Disbursement Channel Code Not Available'
+    }}
+  </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, toRefs } from 'vue';
+import { defineComponent, toRefs, inject } from 'vue';
 
 export default defineComponent({
   name: 'TransactionDisbursementChannel',
@@ -11,10 +17,6 @@ export default defineComponent({
   props: {
     data: {
       type: [Object, String],
-      required: true,
-    },
-    types: {
-      type: Object,
       required: true,
     },
   },
@@ -25,7 +27,8 @@ export default defineComponent({
       [index: number]: { disbursement_channel_code: string };
     }
     const code = data.value as ArrayObject;
-    return { code };
+    const type = inject('types');
+    return { code, type };
   },
 });
 </script>

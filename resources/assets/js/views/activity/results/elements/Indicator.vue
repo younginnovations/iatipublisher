@@ -56,20 +56,25 @@
                   </a>
                 </div>
                 <div class="flex justify-between shrink-0 grow">
-                  <a
-                    :href="`/activities/${result.activity_id}/result/${result.id}/indicator/${post.id}/edit`"
-                    class="mr-2.5 flex items-center text-tiny font-bold uppercase text-bluecoral"
-                  >
-                    <svg-vue class="mr-0.5 text-base" icon="edit"></svg-vue>
-                    <span>Edit Indicator</span>
-                  </a>
-                  <a
-                    :href="`/activities/${result.activity_id}/result/${result.id}/indicator/${post.id}/period/create`"
-                    class="mr-2.5 flex items-center text-tiny font-bold uppercase text-bluecoral"
-                  >
-                    <svg-vue class="mr-0.5 text-base" icon="add"></svg-vue>
-                    <span>Add Period</span>
-                  </a>
+                  <span class="flex">
+                    <Btn
+                      text="View Indicator"
+                      icon="eye"
+                      :link="`/activities/${result.activity_id}/result/${result.id}/indicator/${post.id}`"
+                      class="mr-2.5"
+                    />
+                    <Btn
+                      text="Edit Indicator"
+                      icon="edit"
+                      :link="`/activities/${result.activity_id}/result/${result.id}/indicator/${post.id}/edit`"
+                    />
+                  </span>
+                  <Btn
+                    text="Add Period"
+                    icon="edit"
+                    :link="`/activities/${result.activity_id}/result/${result.id}/indicator/${post.id}/period/create`"
+                    class="mr-2.5"
+                  />
                 </div>
               </div>
               <div class="ml-4">
@@ -169,7 +174,9 @@
 
                       <tr>
                         <td>Document Link</td>
-                        <td>{{ post.indicator.document_link.length }}</td>
+                        <td>
+                          {{ post.indicator.document_link.length }} documents
+                        </td>
                       </tr>
 
                       <tr>
@@ -300,7 +307,7 @@
                             <div class="flex">
                               <div>Document Link:&nbsp;</div>
                               <div>
-                                {{ base.document_link.length }}
+                                {{ base.document_link.length }} document
                               </div>
                             </div>
                           </div>
@@ -356,16 +363,17 @@
                               </a>
                             </div>
                             <div class="flex justify-between shrink-0 grow">
-                              <a
-                                :href="`/activities/${result.activity_id}/result/${result.id}/indicator/${post.id}/period/${item.id}/edit`"
-                                class="flex items-center font-bold uppercase text-tiny text-bluecoral"
-                              >
-                                <svg-vue
-                                  class="mr-0.5 text-base"
-                                  icon="edit"
-                                ></svg-vue>
-                                <span>Edit Period</span>
-                              </a>
+                              <Btn
+                                text="View Period"
+                                icon="eye"
+                                :link="`/activities/${result.activity_id}/result/${result.id}/indicator/${post.id}/period/${item.id}`"
+                                class="mr-2.5"
+                              />
+                              <Btn
+                                text="Edit Period"
+                                icon="edit"
+                                :link="`/activities/${result.activity_id}/result/${result.id}/indicator/${post.id}/period/${item.id}/edit`"
+                              />
                             </div>
                           </div>
                         </td>

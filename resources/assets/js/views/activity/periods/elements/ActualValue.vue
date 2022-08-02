@@ -93,7 +93,7 @@ import { DocumentLink } from 'Activity/indicators/elements/Index';
 import getLocation from 'Composable/utils';
 
 export default defineComponent({
-  name: 'actualValue',
+  name: 'ActualValue',
   components: { DocumentLink },
   props: {
     data: {

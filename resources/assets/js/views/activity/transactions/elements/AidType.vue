@@ -1,5 +1,5 @@
 <template>
-  <div class="elements-detail wider">
+  <div class="elements-detail">
     <div
       v-for="(at, i) in atData"
       :key="i"
@@ -9,7 +9,9 @@
       }"
     >
       <div class="category">
-        <span>{{ aidTypeVocabulary[at.aid_type_vocabulary] }}</span>
+        <span>{{
+          type.aidTypeVocabulary[at.aid_type_vocabulary] ?? 'Not Available'
+        }}</span>
       </div>
       <div clas="ml-4">
         <table class="mb-3">
@@ -18,16 +20,26 @@
             <td>
               <div class="text-sm">
                 <span v-if="at.aid_type_code">
-                  {{ aidType[at.aid_type_code] }}
+                  {{ type.aidType[at.aid_type_code] ?? 'Not Available' }}
                 </span>
                 <span v-else-if="at.cash_and_voucher_modalities">
-                  {{ cashAndVoucherModalities[at.cash_and_voucher_modalities] }}
+                  {{
+                    type.cashAndVoucherModalities[
+                      at.cash_and_voucher_modalities
+                    ] ?? 'Not Available'
+                  }}
                 </span>
                 <span v-else-if="at.earmarking_category">
-                  {{ earMarkingCategory[at.earmarking_category] }}
+                  {{
+                    type.earMarkingCategory[at.earmarking_category] ??
+                    'Not Available'
+                  }}
                 </span>
                 <span v-else-if="at.earmarking_modality">
-                  {{ earMarkingModality[at.earmarking_modality] }}
+                  {{
+                    type.earMarkingModality[at.earmarking_modality] ??
+                    'Not Available'
+                  }}
                 </span>
               </div>
             </td>
@@ -39,7 +51,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, toRefs } from 'vue';
+import { defineComponent, toRefs, inject } from 'vue';
 
 export default defineComponent({
   name: 'TransactionAidType',
@@ -49,36 +61,23 @@ export default defineComponent({
       type: [Object, String],
       required: true,
     },
-    types: {
-      type: Object,
-      required: true,
-    },
   },
   setup(props) {
-    const { data, types } = toRefs(props),
-      aidTypeVocabulary = types.value.aidTypeVocabulary,
-      aidType = types.value.aidType,
-      cashAndVoucherModalities = types.value.cashAndVoucherModalities,
-      earMarkingCategory = types.value.earMarkingCategory,
-      earMarkingModality = types.value.earMarkingModality;
+    const { data } = toRefs(props);
 
     interface ArrayObject {
-      [index: number]: {
-        aid_type_code: string;
-        aidtype_vocabulary: string;
-        cash_and_voucher_modalities: string;
-        earmarking_category: string;
-        earmarking_modality: string;
-      };
+      aid_type_code: string;
+      aid_type_vocabulary: string;
+      cash_and_voucher_modalities: string;
+      earmarking_category: string;
+      earmarking_modality: string;
     }
-    const atData = data.value as ArrayObject;
+    const atData = data.value as ArrayObject[];
+
+    const type = inject('types');
     return {
       atData,
-      aidTypeVocabulary,
-      aidType,
-      cashAndVoucherModalities,
-      earMarkingCategory,
-      earMarkingModality,
+      type,
     };
   },
 });

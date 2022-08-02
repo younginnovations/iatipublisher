@@ -1,9 +1,15 @@
 <template>
-  {{ financeData[0].finance_type ? financeType[financeData[0].finance_type]: 'Finance Type Not Available' }}
+  <div class="text-sm">
+    {{
+      financeData[0].finance_type
+        ? type.financeType[financeData[0].finance_type]
+        : 'Finance Type Not Available'
+    }}
+  </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, toRefs } from 'vue';
+import { defineComponent, toRefs, inject } from 'vue';
 
 export default defineComponent({
   name: 'TransactionFinanceType',
@@ -11,10 +17,6 @@ export default defineComponent({
   props: {
     data: {
       type: [Object, String],
-      required: true,
-    },
-    financeType: {
-      type: Object,
       required: true,
     },
   },
@@ -25,7 +27,9 @@ export default defineComponent({
       [index: number]: { finance_type: string };
     }
     const financeData = data.value as ArrayObject;
-    return { financeData };
+    const type = inject('types');
+
+    return { financeData, type };
   },
 });
 </script>

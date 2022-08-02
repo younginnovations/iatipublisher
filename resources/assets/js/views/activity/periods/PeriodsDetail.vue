@@ -29,7 +29,9 @@
 
     <div class="activities">
       <aside class="activities__sidebar">
-        <div class="px-6 py-4 rounded-lg indicator bg-eggshell text-n-50">
+        <div
+          class="sticky top-0 px-6 py-4 rounded-lg indicator bg-eggshell text-n-50"
+        >
           <ul class="text-sm font-bold leading-relaxed">
             <li>
               <a v-smooth-scroll href="#target" :class="linkClasses">

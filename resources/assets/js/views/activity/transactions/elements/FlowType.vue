@@ -1,9 +1,15 @@
 <template>
-  {{ flowData[0].flow_type ? flowType[flowData[0].flow_type] : 'Flow Type Not Available' }}
+  <div class="text-sm">
+    {{
+      flowData[0].flow_type
+        ? type.flowType[flowData[0].flow_type]
+        : 'Flow Type Not Available'
+    }}
+  </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, toRefs } from 'vue';
+import { defineComponent, toRefs, inject } from 'vue';
 
 export default defineComponent({
   name: 'TransactionFlowType',
@@ -11,10 +17,6 @@ export default defineComponent({
   props: {
     data: {
       type: [Object, String],
-      required: true,
-    },
-    flowType: {
-      type: Object,
       required: true,
     },
   },
@@ -25,7 +27,8 @@ export default defineComponent({
       [index: number]: { flow_type: string };
     }
     const flowData = data.value as ArrayObject;
-    return { flowData };
+    const type = inject('types');
+    return { flowData, type };
   },
 });
 </script>

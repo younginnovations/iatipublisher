@@ -24,11 +24,11 @@
         </template>
 
         <template v-else-if="elementName === 'aid_type'">
-          <AidType :data="elementData" :types="types" />
+          <AidType :data="elementData" />
         </template>
 
         <template v-else-if="elementName === 'transaction_type'">
-          <TransactionType :data="elementData" :types="transactionTypes" />
+          <TransactionType :data="elementData" />
         </template>
 
         <template v-else-if="elementName === 'transaction_date'">
@@ -44,51 +44,42 @@
         </template>
 
         <template v-else-if="elementName === 'provider_organization'">
-          <ProviderOrganization
-            :data="elementData"
-            :types="organizationTypes"
-          />
+          <ProviderOrganization :data="elementData" />
         </template>
 
         <template v-else-if="elementName === 'receiver_organization'">
-          <ReceiverOrganization
-            :data="elementData"
-            :types="organizationTypes"
-          />
+          <ReceiverOrganization :data="elementData" />
         </template>
 
         <template v-else-if="elementName === 'disbursement_channel'">
-          <DisbursementChannel
-            :data="elementData"
-            :types="disbursementChannel"
-          />
+          <DisbursementChannel :data="elementData" />
         </template>
 
         <template v-else-if="elementName === 'sector'">
-          <Sector :data="elementData" :types="types" />
+          <Sector :data="elementData" />
         </template>
 
         <template v-else-if="elementName === 'recipient_country'">
-          <RecipientCountry :data="elementData" :country-code="countryCode" />
+          <RecipientCountry :data="elementData" />
         </template>
 
         <template v-else-if="elementName === 'recipient_region'">
-          <RecipientRegion :data="elementData" :region-code="regionCode" />
+          <RecipientRegion :data="elementData" />
         </template>
 
         <template v-else-if="elementName === 'flow_type'">
-          <FlowType :data="elementData" :flow-type="flowType" />
+          <FlowType :data="elementData" />
         </template>
 
         <template v-else-if="elementName === 'finance_type'">
-          <FinanceType :data="elementData" :finance-type="financeType" />
+          <FinanceType :data="elementData" />
         </template>
 
         <template v-else-if="elementName === 'tied_status'">
-          <TiedStatus :data="elementData" :tied-status-type="tiedStatusType" />
+          <TiedStatus :data="elementData" />
         </template>
         <template v-else>
-          {{ data??'Not Available' }}
+          {{ data ?? 'Not Available' }}
         </template>
       </div>
     </div>
@@ -96,7 +87,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, toRefs } from 'vue';
+import { defineComponent, toRefs, provide } from 'vue';
 import HoverText from './../../../components/HoverText.vue';
 import dateFormat from './../../../composable/dateFormat';
 import {
@@ -165,16 +156,9 @@ export default defineComponent({
   },
   setup(props) {
     let { data, types } = toRefs(props),
-      elementData = data.value,
-      transactionTypes = types.value.transactionType,
-      organizationTypes = types.value.organizationType,
-      disbursementChannel = types.value.disbursementChannel,
-      sectorVocabulary = types.value.sectorVocabulary,
-      countryCode = types.value.countryCode,
-      regionCode = types.value.regionCode,
-      flowType = types.value.flowType,
-      financeType = types.value.financeType,
-      tiedStatusType = types.value.tiedStatusType;
+      elementData = data.value;
+
+    provide('types', types);
 
     /**
      * Joins data from array with a comma
@@ -192,15 +176,6 @@ export default defineComponent({
       elementData,
       getLanguages,
       dateFormat,
-      transactionTypes,
-      organizationTypes,
-      disbursementChannel,
-      sectorVocabulary,
-      countryCode,
-      regionCode,
-      flowType,
-      financeType,
-      tiedStatusType,
     };
   },
 });

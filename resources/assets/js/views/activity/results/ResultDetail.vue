@@ -18,7 +18,9 @@
     </PageTitle>
     <div class="activities">
       <aside class="activities__sidebar">
-        <div class="px-6 py-4 rounded-lg indicator bg-eggshell text-n-50">
+        <div
+          class="sticky top-0 px-6 py-4 rounded-lg indicator bg-eggshell text-n-50"
+        >
           <ul class="text-sm font-bold leading-relaxed">
             <li v-for="(rData, r, ri) in resultsData" :key="ri">
               <a v-smooth-scroll :href="`#${r}`" :class="linkClasses">
@@ -76,32 +78,13 @@
         <a
           v-if="!hasIndicators"
           :href="`/activities/${result.activity_id}/result/${result.id}/indicator/create`"
-          class="
-            flex
-            w-full
-            px-4
-            py-3
-            text-xs
-            leading-normal
-            bg-white
-            border border-dashed
-            rounded
-            add_indicator
-            border-n-40
-          "
+          class="flex w-full px-4 py-3 text-xs leading-normal bg-white border border-dashed rounded add_indicator border-n-40"
         >
           <div class="italic text-left grow">
             You haven't added any indicator yet.
           </div>
           <div
-            class="
-              flex
-              items-center
-              font-bold
-              uppercase
-              shrink-0
-              text-bluecoral
-            "
+            class="flex items-center font-bold uppercase shrink-0 text-bluecoral"
           >
             <svg-vue icon="add" class="mr-1 text-base shrink-0"></svg-vue>
             <span class="grow text-[10px]">Add new indicator</span>
@@ -212,7 +195,7 @@ export default defineComponent({
       hasIndicators,
       resultsData,
       breadcrumbData,
-      toastData
+      toastData,
     };
   },
 });

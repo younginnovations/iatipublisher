@@ -7,3 +7,4 @@ export { default as Description } from './Description.vue';
 export { default as Reference } from './Reference.vue';
 export { default as DocumentLink } from './DocumentLink.vue';
 export { default as Baseline } from './Baseline.vue';
+export { default as Period } from './Period.vue';

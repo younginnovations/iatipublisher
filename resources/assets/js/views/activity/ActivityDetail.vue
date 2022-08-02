@@ -30,10 +30,10 @@
               </a>
             </div>
             <div>
-              <h4 class="ellipsis__title relative mr-4 text-2xl font-bold">
+              <h4 class="relative mr-4 text-2xl font-bold ellipsis__title">
                 <span
                   id="activity_title"
-                  class="ellipsis__title overflow-hidden"
+                  class="overflow-hidden ellipsis__title"
                   >{{ pageTitle ? pageTitle : 'Untitled' }}</span
                 >
                 <span class="ellipsis__title--hover">{{
@@ -275,10 +275,14 @@
             </div>
           </div>
         </div>
-        <Elements :activity-id="activity.id" :data="elementProps" />
+        <Elements
+          :activity-id="activity.id"
+          :data="elementProps"
+          class="sticky top-0"
+        />
       </aside>
-      <div class="activities__content overflow-hidden">
-        <div class="mb-3 inline-flex flex-wrap gap-2">
+      <div class="overflow-hidden activities__content">
+        <div class="inline-flex flex-wrap gap-2 mb-3">
           <a
             v-for="(post, key, index) in groupedData"
             :key="index"
@@ -298,22 +302,10 @@
             </button>
           </a>
         </div>
-        <div class="activities__content--elements -mx-3 flex flex-wrap">
+        <div class="flex flex-wrap -mx-3 activities__content--elements">
           <template v-for="(post, key, index) in groupedData" :key="index">
             <div
-              class="
-                elements-title
-                relative
-                mx-3
-                mb-1
-                mt-3
-                flex
-                w-full
-                items-center
-                text-sm
-                uppercase
-                text-n-40
-              "
+              class="relative flex items-center w-full mx-3 mt-3 mb-1 text-sm uppercase elements-title text-n-40"
             >
               <div class="mr-4 shrink-0">{{ formatTitle(key) }}</div>
             </div>
@@ -347,7 +339,7 @@
                 />
               </template>
               <template v-else>
-                <Results
+                <Result
                   :id="key"
                   :data="element"
                   :types="types"
@@ -366,16 +358,19 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, reactive, toRefs } from 'vue';
+import { defineComponent, onMounted, reactive, toRefs, provide } from 'vue';
 import { useToggle } from '@vueuse/core';
+
+// components
+import { Result } from './elements/Index';
 import HoverText from 'Components/HoverText.vue';
 import ProgressBar from 'Components/ProgressBar.vue';
-import Elements from 'Activity/partials/ActivitiesElements.vue';
-import ActivityElement from 'Activity/partials/ActivityElement.vue';
-import Results from 'Activity/partials/ActivityResult.vue';
 import Modal from 'Components/PopupModal.vue';
 import BtnComponent from 'Components/ButtonComponent.vue';
 import Toast from 'Components/Toast.vue';
+
+import Elements from 'Activity/partials/ActivitiesElements.vue';
+import ActivityElement from 'Activity/partials/ActivityElement.vue';
 
 export default defineComponent({
   components: {
@@ -383,7 +378,7 @@ export default defineComponent({
     ProgressBar,
     Elements,
     ActivityElement,
-    Results,
+    Result,
     Modal,
     BtnComponent,
     Toast,
@@ -427,6 +422,10 @@ export default defineComponent({
     },
   },
   setup(props) {
+    const { types } = toRefs(props);
+    // vue provides
+    provide('types', types.value);
+
     const toastData = reactive({
       visibility: false,
       message: '',

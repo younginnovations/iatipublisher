@@ -29,7 +29,9 @@
 
     <div class="activities">
       <aside class="activities__sidebar">
-        <div class="px-6 py-4 rounded-lg indicator bg-eggshell text-n-50">
+        <div
+          class="sticky top-0 px-6 py-4 rounded-lg indicator bg-eggshell text-n-50"
+        >
           <ul class="text-sm font-bold leading-relaxed">
             <li v-for="(rData, r, ri) in indicatorData" :key="ri">
               <a v-smooth-scroll :href="`#${r}`" :class="linkClasses">
@@ -113,19 +115,7 @@
                       />
                     </template>
 
-                    <tr v-if="period.length === 0">
-                      <td></td>
-                      <td>
-                        <div>
-                          <NotYet
-                            :link="`/activities/${activity.id}/result/${indicator.result_id}/indicator/${indicator.id}/period/create`"
-                            description="You haven't added any periods yet."
-                            btn-text="Add period"
-                            class="max-w-[442px]"
-                          />
-                        </div>
-                      </td>
-                    </tr>
+                    <Period :data="periodData" />
                   </tbody>
                 </table>
               </div>
@@ -154,12 +144,11 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, toRefs, onMounted, reactive } from 'vue';
+import { defineComponent, toRefs, onMounted, reactive, provide } from 'vue';
 
 //component
 import Btn from 'Components/buttons/Link.vue';
 import Status from 'Components/status/Status.vue';
-import NotYet from 'Components/sections/HaveNotAddedYet.vue';
 import PageTitle from 'Components/sections/PageTitle.vue';
 import Toast from 'Components/Toast.vue';
 
@@ -172,6 +161,7 @@ import {
   Reference,
   Baseline,
   DocumentLink,
+  Period,
 } from './elements/Index';
 
 //composable
@@ -188,9 +178,9 @@ export default defineComponent({
     Reference,
     Baseline,
     DocumentLink,
+    Period,
     Btn,
     Status,
-    NotYet,
     PageTitle,
     Toast,
   },
@@ -229,10 +219,20 @@ export default defineComponent({
       message: '',
       type: true,
     });
+    let { indicator, activity, period, resultTitle } = toRefs(props);
 
-    let { indicator, activity, resultTitle } = toRefs(props);
     //indicator
     const indicatorData = indicator.value.indicator;
+    const periodData = period.value;
+
+    // vue provides
+    const parentData = {
+      activity: activity.value.id,
+      result: indicator.value.result_id,
+      indicator: indicator.value.id,
+    };
+
+    provide('parentData', parentData);
 
     const activityId = activity.value.id,
       activityTitle = activity.value.title,
@@ -284,6 +284,7 @@ export default defineComponent({
       resultLink,
       breadcrumbData,
       toastData,
+      periodData,
     };
   },
 });

@@ -257,7 +257,7 @@ export default defineComponent({
       fetchListings,
       resultLink,
       breadcrumbData,
-      toastData
+      toastData,
     };
   },
 });

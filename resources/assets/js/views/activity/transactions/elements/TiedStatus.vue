@@ -1,9 +1,15 @@
 <template>
-  <div>{{ tsData[0].tied_status_code?tiedStatusType[tsData[0].tied_status_code]: 'Tied Status Code Not Available' }}</div>
+  <div class="text-sm">
+    {{
+      tsData[0].tied_status_code
+        ? type.tiedStatusType[tsData[0].tied_status_code]
+        : 'Tied Status Code Not Available'
+    }}
+  </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, toRefs } from 'vue';
+import { defineComponent, toRefs, inject } from 'vue';
 
 export default defineComponent({
   name: 'TransactionTiedStatus',
@@ -11,10 +17,6 @@ export default defineComponent({
   props: {
     data: {
       type: [Object, String],
-      required: true,
-    },
-    tiedStatusType: {
-      type: Object,
       required: true,
     },
   },
@@ -25,7 +27,8 @@ export default defineComponent({
       [index: number]: { tied_status_code: string };
     }
     const tsData = data.value as ArrayObject;
-    return { tsData };
+    const type = inject('types');
+    return { tsData, type };
   },
 });
 </script>

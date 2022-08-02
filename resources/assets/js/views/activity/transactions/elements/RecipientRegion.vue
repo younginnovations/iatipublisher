@@ -9,7 +9,7 @@
       }"
     >
       <div class="category">
-        <span>{{ regionCode[cou.region_vocabulary] }}</span>
+        <span>{{ type.regionCode[cou.region_vocabulary] }}</span>
       </div>
       <div class="ml-4">
         <table class="mb-3">
@@ -18,7 +18,7 @@
             <td>
               <span v-if="cou.region_vocabulary === 1">{{
                 cou.region_code
-                  ? regionCode[cou.region_code]
+                  ? type.regionCode[cou.region_code]
                   : 'Code Not Available'
               }}</span>
               <span v-else>{{ cou.custom_code ?? 'Code Not Available' }}</span>
@@ -47,7 +47,7 @@
                   (
                   {{
                     sd.language
-                      ? `Language: ${sd.language}`
+                      ? `Language: ${type.languages[sd.language]}`
                       : 'Language Not Available'
                   }})
                 </div>
@@ -72,7 +72,7 @@
                   (
                   {{
                     sd.language
-                      ? `Language: ${sd.language}`
+                      ? `Language: ${type.languages[sd.language]}`
                       : 'Language Not Available'
                   }})
                 </div>
@@ -89,7 +89,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, toRefs } from 'vue';
+import { defineComponent, toRefs, inject } from 'vue';
 
 export default defineComponent({
   name: 'TransactionRecipientRegion',
@@ -97,10 +97,6 @@ export default defineComponent({
   props: {
     data: {
       type: [Object, String],
-      required: true,
-    },
-    regionCode: {
-      type: Object,
       required: true,
     },
   },
@@ -117,7 +113,8 @@ export default defineComponent({
       };
     }
     const country = data.value as ArrayObject;
-    return { country };
+    const type = inject('types');
+    return { country, type };
   },
 });
 </script>

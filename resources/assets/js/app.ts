@@ -6,7 +6,6 @@
 import { createApp } from 'vue';
 import VueSmoothScroll from 'vue3-smooth-scroll';
 import SvgVue from 'svg-vue3';
-import VueStickyDirective from '@renatodeleao/vue-sticky-directive';
 import WebHeader from './views/web/partials/WebHeader.vue';
 import WebFooter from './views/web/partials/WebFooter.vue';
 import WelcomeSignIn from './views/web/WelcomePage.vue';
@@ -100,8 +99,6 @@ app.component('HoverText', HoverText);
 app.use(SvgVue);
 
 app.use(VueSmoothScroll);
-
-app.use(VueStickyDirective);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to

@@ -24,7 +24,7 @@
               <div class="language mb-1.5">
                 ({{
                   po.language
-                    ? `Language: ${po.language}`
+                    ? `Language: ${type.languages[po.language]}`
                     : 'Language Not Available'
                 }})
               </div>
@@ -38,7 +38,7 @@
           <td>Provider Activity ID</td>
           <td>
             <div class="text-sm">
-              {{ PoData[0].receiver_activity_id?? 'Not Available' }}
+              {{ PoData[0].receiver_activity_id ?? 'Not Available' }}
             </div>
           </td>
         </tr>
@@ -46,7 +46,11 @@
           <td>Type</td>
           <td>
             <div class="text-sm">
-              {{ PoData[0].type ? types[PoData[0].type] : 'Not Available' }}
+              {{
+                PoData[0].type
+                  ? type.organizationType[PoData[0].type]
+                  : 'Not Available'
+              }}
             </div>
           </td>
         </tr>
@@ -56,7 +60,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, toRefs } from 'vue';
+import { defineComponent, toRefs, inject } from 'vue';
 
 export default defineComponent({
   name: 'TransactionReceiverOrganisation',
@@ -64,10 +68,6 @@ export default defineComponent({
   props: {
     data: {
       type: [Object, String],
-      required: true,
-    },
-    types: {
-      type: Object,
       required: true,
     },
   },
@@ -83,7 +83,8 @@ export default defineComponent({
       };
     }
     const PoData = data.value as ArrayObject;
-    return { PoData };
+    const type = inject('types');
+    return { PoData, type };
   },
 });
 </script>

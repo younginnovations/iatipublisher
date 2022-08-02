@@ -9,7 +9,7 @@
       }"
     >
       <div class="category">
-        <span>{{ countryCode[cou.country_code] }}</span>
+        <span>{{ type.countryCode[cou.country_code] }}</span>
       </div>
       <div class="ml-4">
         <table class="mb-3">
@@ -28,7 +28,7 @@
                   (
                   {{
                     sd.language
-                      ? `Language: ${sd.language}`
+                      ? `Language: ${type.languages[sd.language]}`
                       : 'Language Not Available'
                   }})
                 </div>
@@ -45,7 +45,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, toRefs } from 'vue';
+import { defineComponent, toRefs, inject } from 'vue';
 
 export default defineComponent({
   name: 'TransactionRecipientCountry',
@@ -53,10 +53,6 @@ export default defineComponent({
   props: {
     data: {
       type: [Object, String],
-      required: true,
-    },
-    countryCode: {
-      type: Object,
       required: true,
     },
   },
@@ -70,7 +66,9 @@ export default defineComponent({
       };
     }
     const country = data.value as ArrayObject;
-    return { country };
+
+    const type = inject('types');
+    return { country, type };
   },
 });
 </script>
