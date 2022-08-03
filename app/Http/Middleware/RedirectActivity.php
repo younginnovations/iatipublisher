@@ -30,7 +30,7 @@ class RedirectActivity
         unset($parameters['activity']);
         $data_exists = $this->checkIfDataExists($parameters);
 
-        if (!$activity && ($request->route()->uri != 'activities' && $request->route()->uri != 'activity/page/{page?}') || !$data_exists) {
+        if (!$activity && ($request->route()->uri != 'activities' && $request->route()->uri != 'activity/page/{page?}' && $request->route()->uri != 'activity/codelists') || !$data_exists) {
             return redirect(RouteServiceProvider::HOME);
         }
 
