@@ -3,11 +3,9 @@
     <PageTitle
       :breadcrumb-data="breadcrumbData"
       title="Result Detail"
-      :back-link="activityLink"
+      :back-link="`${activityLink}/result`"
     >
-      <a :href="`${activityLink}/result/create`">
-        <Btn text="Edit Result" :link="`${resultLink}/edit`" icon="edit" />
-      </a>
+      <Btn text="Edit Result" :link="`${resultLink}/edit`" icon="edit" />
     </PageTitle>
     <div class="activities">
       <aside class="activities__sidebar">

@@ -111,7 +111,7 @@ export default defineComponent({
       resultId = parentData.value.result.id,
       resultLink = `${activityLink}/result/${resultId}`,
       indicatorTitle = parentData.value.indicator.title,
-      indicatorId = parentData.value.result.id,
+      indicatorId = parentData.value.indicator.id,
       indicatorLink = `${resultLink}/indicator/${indicatorId}`;
 
     const periodsData = reactive({});
@@ -175,6 +175,7 @@ export default defineComponent({
       periodsData,
       getActivityTitle,
       fetchListings,
+      indicatorId,
     };
   },
 });

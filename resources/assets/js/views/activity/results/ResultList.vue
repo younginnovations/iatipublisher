@@ -61,7 +61,7 @@
             <td>
               <div class="relative ellipsis">
                 <a
-                  :href="`/activities/${activityId}/result/${result.id}`"
+                  :href="`${activityLink}/result/${result.id}`"
                   class="overflow-hidden ellipsis text-n-50"
                 >
                   {{ getActivityTitle(result.result.title[0].narrative, 'en') }}

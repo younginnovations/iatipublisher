@@ -3,9 +3,9 @@
     <PageTitle
       :breadcrumb-data="breadcrumbData"
       title="Indicator List"
-      :back-link="`/activities/${activityId}/result/`"
+      :back-link="`${resultLink}`"
     >
-      <a :href="`/activities/${activityId}/result/1/indicator/create`">
+      <a :href="`${resultLink}/indicator/create`">
         <Btn text="Add Indicator" icon="plus" type="primary" />
       </a>
     </PageTitle>
@@ -165,10 +165,13 @@ export default defineComponent({
   },
   setup(props) {
     const { activity, parentData } = toRefs(props);
+
     const activityId = activity.value.id,
       activityTitle = activity.value.title,
-      resultTitle = parentData.value.result.title,
-      resultId = parentData.value.result.id;
+      activityLink = `/activities/${activityId}`,
+      resultId = parentData.value.result.id,
+      resultTitle = getActivityTitle(parentData.value.result.title, 'en'),
+      resultLink = `${activityLink}/result/${resultId}`;
 
     const indicatorsData = reactive({});
     const isEmpty = ref(false);
@@ -186,7 +189,7 @@ export default defineComponent({
         link: `/activities/${activityId}`,
       },
       {
-        title: getActivityTitle(resultTitle, 'en'),
+        title: resultTitle,
         link: `/activities/${activityId}/result/${resultId}`,
       },
       {
@@ -224,8 +227,7 @@ export default defineComponent({
       indicatorsData,
       getActivityTitle,
       fetchListings,
-      resultTitle,
-      resultId,
+      resultLink,
       breadcrumbData,
     };
   },

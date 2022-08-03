@@ -16,14 +16,20 @@
           <tr>
             <td>Code</td>
             <td>
-              <span v-if="code==1">{{ cou.region_code ? regionCode[cou.region_code] : 'Code Not Available' }}</span>
-              <span v-else>{{ cou.custom_code??'Code Not Available' }}</span>
+              <span v-if="cou.region_vocabulary === 1">{{
+                cou.region_code
+                  ? regionCode[cou.region_code]
+                  : 'Code Not Available'
+              }}</span>
+              <span v-else>{{ cou.custom_code ?? 'Code Not Available' }}</span>
             </td>
           </tr>
           <tr v-if="cou.vocabulary_uri">
             <td>Vocabulary URI</td>
             <td>
-              <a target="_blank" :href="cou.vocabulary_uri">{{ cou.vocabulary_uri }}</a>
+              <a target="_blank" :href="cou.vocabulary_uri">{{
+                cou.vocabulary_uri
+              }}</a>
             </td>
           </tr>
           <tr>
@@ -103,7 +109,10 @@ export default defineComponent({
 
     interface ArrayObject {
       [index: number]: {
-        region_vocabulary: string;
+        region_vocabulary: number;
+        region_code: string;
+        custom_code: string;
+        vocabulary_uri: string;
         narrative: [{ language: string; narrative: string }];
       };
     }

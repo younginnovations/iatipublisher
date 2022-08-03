@@ -1,38 +1,16 @@
 <template>
   <div class="bg-paper px-10 pt-4 pb-[71px]">
-    <div class="mb-6 page-title">
-      <div class="flex items-end gap-4">
-        <div class="title grow-0">
-          <div class="mb-4 text-caption-c1 text-n-40">
-            <nav aria-label="breadcrumbs" class="breadcrumb">
-              <p>
-                <a href="/activities" class="font-bold"> Your Activities </a>
-                <span class="mx-4 separator"> / </span>
-                <span class="text-n-30">
-                  <a :href="`/activities/${activity.id}`">{{
-                    activityTitle
-                  }}</a>
-                </span>
-                <span class="mx-4 separator"> / </span>
-                <span class="last text-n-30">{{
-                  transactionData.reference??'Untitled'
-                }}</span>
-              </p>
-            </nav>
-          </div>
-          <div class="inline-flex items-center">
-            <div class="mr-3">
-              <a :href="`/activities/${activity.id}`">
-                <svg-vue icon="arrow-short-left"></svg-vue>
-              </a>
-            </div>
-            <h4 class="mr-4 font-bold">
-              {{ transactionData.reference??'Untitled' }} - Transaction detail
-            </h4>
-          </div>
-        </div>
-      </div>
-    </div>
+    <PageTitle
+      :breadcrumb-data="breadcrumbData"
+      :title="`${transactionData.reference ?? 'Untitled'} - Transaction detail`"
+      :back-link="`${activityLink}/transactions`"
+    >
+      <Btn
+        text="Edit Transaction"
+        :link="`${activityLink}/transactions/${transaction.id}/edit`"
+        icon="edit"
+      />
+    </PageTitle>
 
     <div class="activities">
       <aside class="activities__sidebar">
@@ -49,15 +27,7 @@
         </div>
       </aside>
       <div class="activities__content">
-        <div class="flex justify-end mb-11">
-          <a
-            :href="`/activities/${transaction.activity_id}/transactions/${transaction.id}/edit`"
-            class="edit-button mr-2.5 flex items-center text-tiny font-bold uppercase"
-          >
-            <svg-vue class="mr-0.5 text-base" icon="edit"></svg-vue>
-            <span>Edit Transaction</span>
-          </a>
-        </div>
+        <div></div>
         <div class="flex flex-wrap -mx-3 -mt-3 activities__content--elements">
           <template v-for="(post, key) in transactionData" :key="key">
             <TransactionElement
@@ -85,16 +55,22 @@
 
 <script lang="ts">
 import { defineComponent, toRefs } from 'vue';
-import dateFormat from '../../../composable/dateFormat';
-import getActivityTitle from './../../../composable/title';
-import Notes from './../partials/ElementsNote.vue';
-import TransactionElement from './../transactions/TransactionElement.vue';
+//components
+import Btn from 'Components/buttons/Link.vue';
+import PageTitle from 'Components/sections/PageTitle.vue';
+//composable
+import dateFormat from 'Composable/dateFormat';
+import getActivityTitle from 'Composable/title';
+import Notes from 'Activity/partials/ElementsNote.vue';
+import TransactionElement from './TransactionElement.vue';
 
 export default defineComponent({
   name: 'TransactionDetail',
   components: {
     Notes,
     TransactionElement,
+    Btn,
+    PageTitle,
   },
   props: {
     activity: {
@@ -116,10 +92,40 @@ export default defineComponent({
       'flex items-center w-full bg-white rounded p-2 text-sm text-n-50 font-bold leading-relaxed mb-2 shadow-default';
 
     // titles
-    const activityTitle = getActivityTitle(activity.value.title, 'en');
     const transactionData = transaction.value.transaction;
 
-    return { activityTitle, dateFormat, transactionData, linkClasses };
+    const activityId = activity.value.id,
+      activityTitle = getActivityTitle(activity.value.title, 'en'),
+      activityLink = `/activities/${activityId}`,
+      transactionLink = `${activityLink}/transaction/${transaction.value.id}`;
+
+    /**
+     * Breadcrumb data
+     */
+    const breadcrumbData = [
+      {
+        title: 'Your Activities',
+        link: '/activities',
+      },
+      {
+        title: activityTitle,
+        link: activityLink,
+      },
+      {
+        title: 'Transaction',
+        link: '',
+      },
+    ];
+
+    return {
+      activityTitle,
+      dateFormat,
+      transactionData,
+      linkClasses,
+      breadcrumbData,
+      activityLink,
+      transactionLink,
+    };
   },
 });
 </script>

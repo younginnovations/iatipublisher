@@ -1,63 +1,14 @@
 <template>
   <div class="relative bg-paper px-10 pt-4 pb-[71px]">
-    <!-- page title -->
-    <div class="mb-6 page-title">
-      <div class="flex items-end gap-4">
-        <div class="title grow-0">
-          <div class="max-w-sm pb-4 text-caption-c1 text-n-40">
-            <nav aria-label="breadcrumbs" class="rank-math-breadcrumb">
-              <div class="flex">
-                <a class="font-bold whitespace-nowrap" href="/activities">
-                  Your Activities
-                </a>
-                <span class="mx-4 separator"> / </span>
-                <div class="breadcrumb__title">
-                  <span class="overflow-hidden breadcrumb__title text-n-30">
-                    <a :href="`/activities/${activityId}`">
-                      {{ getActivityTitle(activity.title, 'en') ?? 'Untitled' }}
-                    </a>
-                  </span>
-                  <span class="ellipsis__title--hover w-[calc(100%_+_35px)]">
-                    {{ getActivityTitle(activity.title, 'en') ?? 'Untitled' }}
-                  </span>
-                </div>
-                <span class="mx-4 separator"> / </span>
-
-                <div class="breadcrumb__title">
-                  <span
-                    class="overflow-hidden breadcrumb__title last text-n-30"
-                  >
-                    Transaction List
-                  </span>
-                  <span class="ellipsis__title--hover w-[calc(100%_+_35px)]">
-                    Transaction List
-                  </span>
-                </div>
-              </div>
-            </nav>
-          </div>
-          <div class="inline-flex items-center max-w-3xl">
-            <div class="mr-3">
-              <a :href="'/activities/'+activity.id">
-                <svg-vue icon="arrow-short-left"></svg-vue>
-              </a>
-            </div>
-            <div class="">
-              <h4 class="relative mr-4 font-bold ellipsis__title">
-                <span class="overflow-hidden ellipsis__title"
-                  >Transaction List</span
-                ><span class="ellipsis__title--hover">Transaction List</span>
-              </h4>
-            </div>
-          </div>
-        </div>
-        <div class="flex flex-col items-end justify-end actions grow">
-          <a :href="`/activities/${activityId}/transactions/create`">
-            <Btn text="Add Transaction" icon="plus" type="primary" />
-          </a>
-        </div>
-      </div>
-    </div>
+    <PageTitle
+      :breadcrumb-data="breadcrumbData"
+      title="Transaction List"
+      :back-link="activityLink"
+    >
+      <a :href="`${activityLink}/transactions/create`">
+        <Btn text="Add Transaction" icon="plus" type="primary" />
+      </a>
+    </PageTitle>
 
     <!-- page content -->
     <div class="iati-list-table text-n-40">
@@ -135,7 +86,7 @@
         <tbody>
           <tr v-for="(trans, t, index) in transactionsData.data" :key="index">
             <td>
-              <a :href="`/activities/${activityId}/transactions/${trans.id}`">
+              <a :href="`${activityLink}/transactions/${trans.id}`">
                 <span v-if="trans.transaction.reference">{{
                   trans.transaction.reference
                 }}</span>
@@ -166,7 +117,7 @@
               <div class="flex text-n-40">
                 <a
                   class="mr-6"
-                  :href="`/activities/${trans.activity_id}/transactions/${trans.id}/edit`"
+                  :href="`${activityLink}/transactions/${trans.id}/edit`"
                 >
                   <svg-vue icon="edit" class="text-xl"></svg-vue>
                 </a>
@@ -187,10 +138,15 @@
 
 <script lang="ts">
 import { defineComponent, toRefs, reactive, onMounted } from 'vue';
-import Btn from '../../../components/ButtonComponent.vue';
-import dateFormat from '../../../composable/dateFormat';
-import Pagination from 'Components/TablePagination.vue';
 import axios from 'axios';
+
+//components
+import Btn from 'Components/ButtonComponent.vue';
+import Pagination from 'Components/TablePagination.vue';
+import PageTitle from 'Components/sections/PageTitle.vue';
+
+//composable
+import dateFormat from 'Composable/dateFormat';
 import getActivityTitle from 'Composable/title';
 
 export default defineComponent({
@@ -198,6 +154,7 @@ export default defineComponent({
   components: {
     Btn,
     Pagination,
+    PageTitle,
   },
   props: {
     activity: {
@@ -215,7 +172,10 @@ export default defineComponent({
   },
   setup(props) {
     const { activity } = toRefs(props);
-    const activityId = activity.value.id;
+    const activityId = activity.value.id,
+      activityTitle = getActivityTitle(activity.value.title, 'en'),
+      activityLink = `/activities/${activityId}`;
+
     const transactionsData = reactive({});
 
     onMounted(async () => {
@@ -234,7 +194,32 @@ export default defineComponent({
         });
     }
 
-    return { activityId, dateFormat, transactionsData, getActivityTitle, fetchListings };
+    /**
+     * Breadcrumb data
+     */
+    const breadcrumbData = [
+      {
+        title: 'Your Activities',
+        link: '/activities',
+      },
+      {
+        title: activityTitle,
+        link: activityLink,
+      },
+      {
+        title: 'Transaction List',
+        link: '',
+      },
+    ];
+
+    return {
+      breadcrumbData,
+      activityLink,
+      dateFormat,
+      transactionsData,
+      getActivityTitle,
+      fetchListings,
+    };
   },
 });
 </script>

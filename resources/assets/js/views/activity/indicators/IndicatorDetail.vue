@@ -3,7 +3,7 @@
     <PageTitle
       :breadcrumb-data="breadcrumbData"
       title="Indicator Detail"
-      :back-link="`${activityLink}/result/`"
+      :back-link="`${resultLink}/indicator`"
     >
       <div class="flex justify-end">
         <Status class="mr-2.5" :data="false" />
@@ -59,10 +59,7 @@
                     </template>
 
                     <!-- <template v-if="indicatorData.ascending != null"> -->
-                      <Ascending
-                        id="ascending"
-                        :data="indicatorData.ascending"
-                      />
+                    <Ascending id="ascending" :data="indicatorData.ascending" />
                     <!-- </template> -->
 
                     <template v-if="indicatorData.measure">
@@ -74,10 +71,10 @@
                     </template>
 
                     <!-- <template v-if="indicatorData.aggregation_status"> -->
-                      <AggregationStatus
-                        id="aggregation_status"
-                        :data="indicatorData.aggregation_status"
-                      />
+                    <AggregationStatus
+                      id="aggregation_status"
+                      :data="indicatorData.aggregation_status"
+                    />
                     <!-- </template> -->
 
                     <template
