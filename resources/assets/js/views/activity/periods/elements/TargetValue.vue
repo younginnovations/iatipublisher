@@ -111,7 +111,6 @@ export default defineComponent({
     // vue inject
     // const languageType = inject('types').language;
     const dlType = inject('types');
-    console.log()
 
     const elementSpacing = 'mb-1';
 

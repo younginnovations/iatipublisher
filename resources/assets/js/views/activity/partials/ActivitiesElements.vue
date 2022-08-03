@@ -78,9 +78,9 @@
           :href="
             post.has_data
               ? `#${index}`
-              : index === 'result'
+              : (index === 'result' || index == 'transactions'
               ? `/activities/${activityId}/${index}/create`
-              : `/activities/${activityId}/${index}`
+              : `/activities/${activityId}/${index}`)
           "
         >
           <div

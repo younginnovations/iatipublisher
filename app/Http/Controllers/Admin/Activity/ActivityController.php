@@ -123,7 +123,7 @@ class ActivityController extends Controller
     public function show(Activity $activity): View|JsonResponse|RedirectResponse
     {
         try {
-            $toast = $this->activityService->generateToastData();
+            $toast = generateToastData();
             $elements = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
             $elementGroups = json_decode(file_get_contents(app_path('Data/Activity/ElementGroup.json')), true);
             $types = $this->getActivityDetailDataType();

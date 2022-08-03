@@ -64,13 +64,14 @@ class ResultRepository
 
     /**
      * Return specific result.
+     *
      * @param $id
-     * @param $activityId
+     *
      * @return Model
      */
-    public function getResult($id, $activityId): Model
+    public function getResult($id): Model
     {
-        return $this->activityResult->where('id', $id)->where('activity_id', $activityId)->first();
+        return $this->activityResult->where('id', $id)->first();
     }
 
     /**

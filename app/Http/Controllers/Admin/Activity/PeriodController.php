@@ -87,12 +87,13 @@ class PeriodController extends Controller
             $period = $this->periodService->getPeriodOfIndicator($indicatorId)->toArray();
 
             $types = getPeriodTypes();
+            $toast = generateToastData();
 
-            return view('admin.activity.period.period', compact('activity', 'parentData', 'period', 'types'));
+            return view('admin.activity.period.period', compact('activity', 'parentData', 'period', 'types', 'toast'));
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activities.result.indicator.show', [$activityId, $resultId, $indicatorId])->with(
+            return redirect()->route('admin.activities.result.indicator.period.index', [$activityId, $resultId, $indicatorId])->with(
                 'error',
                 'Error has occurred while rendering activity transactions listing.'
             );
@@ -142,17 +143,12 @@ class PeriodController extends Controller
         try {
             $periodData = $request->except(['_token']);
 
-            if (!$this->periodService->create([
+            $period = $this->periodService->create([
                 'indicator_id'  => $indicatorId,
                 'period'        => $periodData,
-            ])) {
-                return redirect()->route('admin.activities.result.indicator.period.index', [$activityId, $resultId, $indicatorId])->with(
-                    'error',
-                    'Error has occurred while creating indicator period.'
-                );
-            }
+            ]);
 
-            return redirect()->route('admin.activities.result.indicator.period.index', [$activityId, $resultId, $indicatorId])->with(
+            return redirect()->route('admin.activities.result.indicator.period.show', [$activityId, $resultId, $indicatorId, $period])->with(
                 'success',
                 'Indicator period created successfully.'
             );
@@ -192,8 +188,9 @@ class PeriodController extends Controller
             ];
             $period = $this->periodService->getIndicatorPeriod($indicatorId, $periodId);
             $types = getPeriodTypes();
+            $toast = generateToastData();
 
-            return view('admin.activity.period.detail', compact('activity', 'parentData', 'period', 'types'));
+            return view('admin.activity.period.detail', compact('activity', 'parentData', 'period', 'types', 'toast'));
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
@@ -257,7 +254,7 @@ class PeriodController extends Controller
                 );
             }
 
-            return redirect()->route('admin.activities.result.indicator.period.index', [$activityId, $resultId, $indicatorId])->with(
+            return redirect()->route('admin.activities.result.indicator.period.show', [$activityId, $resultId, $indicatorId, $period['id']])->with(
                 'success',
                 'Indicator period updated successfully.'
             );

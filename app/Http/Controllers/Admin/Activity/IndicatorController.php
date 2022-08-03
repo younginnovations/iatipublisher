@@ -71,13 +71,14 @@ class IndicatorController extends Controller
             $parentData = [
                 'result' => [
                     'id'        => $resultId,
-                    'title'     => $this->resultService->getResult($resultId, $activityId)['result']['title'][0]['narrative'],
+                    'title'     => $this->resultService->getResult($resultId)['result']['title'][0]['narrative'],
                 ],
             ];
             $indicators = $this->indicatorService->getResultIndicators($resultId);
             $types = getIndicatorTypes();
+            $toast = generateToastData();
 
-            return view('admin.activity.indicator.indicator', compact('activity', 'parentData', 'indicators', 'types'));
+            return view('admin.activity.indicator.indicator', compact('activity', 'parentData', 'indicators', 'types', 'toast'));
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
@@ -128,18 +129,12 @@ class IndicatorController extends Controller
     {
         try {
             $indicatorData = $request->except(['_token']);
-
-            if (!$this->indicatorService->create([
+            $indicator = $this->indicatorService->create([
                 'result_id'     => $resultId,
                 'indicator'     => $indicatorData,
-            ])) {
-                return redirect()->route('admin.activities.result.indicator.index', [$activityId, $resultId])->with(
-                    'error',
-                    'Error has occurred while creating result indicator.'
-                );
-            }
+            ]);
 
-            return redirect()->route('admin.activities.result.indicator.index', [$activityId, $resultId])->with(
+            return redirect()->route('admin.activities.result.indicator.show', [$activityId, $resultId, $indicator['id']])->with(
                 'success',
                 'Result indicator created successfully.'
             );
@@ -168,8 +163,9 @@ class IndicatorController extends Controller
             $indicator = $this->indicatorService->getResultIndicator($resultId, $indicatorId);
             $period = $this->periodService->getPeriodOfIndicator($indicatorId)->toArray();
             $types = getIndicatorTypes();
+            $toast = generateToastData();
 
-            return view('admin.activity.indicator.detail', compact('activity', 'resultTitle', 'indicator', 'period', 'types'));
+            return view('admin.activity.indicator.detail', compact('activity', 'resultTitle', 'indicator', 'period', 'types', 'toast'));
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
@@ -234,7 +230,7 @@ class IndicatorController extends Controller
                 );
             }
 
-            return redirect()->route('admin.activities.result.indicator.index', [$activityId, $resultId])->with(
+            return redirect()->route('admin.activities.result.indicator.show', [$activityId, $resultId, $indicator['id']])->with(
                 'success',
                 'Indicator updated successfully.'
             );

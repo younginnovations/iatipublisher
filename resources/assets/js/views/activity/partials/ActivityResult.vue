@@ -229,7 +229,7 @@
                                 <tr v-if="indicator.periods.length > 0">
                                   <td>Period:</td>
                                   <td>
-                                    <div class="inline-flex items-center gap-4">
+                                    <div class="inline-flex gap-4">
                                       <div>
                                         <div
                                           v-for="(

@@ -67,13 +67,12 @@ class ResultService
      * Return specific result.
      *
      * @param $id
-     * @param $activityId
      *
      * @return Model
      */
-    public function getResult($id, $activityId): Model
+    public function getResult($id): Model
     {
-        return $this->resultRepository->getResult($id, $activityId);
+        return $this->resultRepository->getResult($id);
     }
 
     /**

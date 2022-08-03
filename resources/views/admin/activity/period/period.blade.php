@@ -2,5 +2,5 @@
 
 @section('content')
     <periods-list :activity="{{ json_encode($activity) }}" :parent-data="{{ json_encode($parentData) }}"
-        :period="{{ json_encode($period) }}"></periods-list>
+        :period="{{ json_encode($period) }}" :toast = "{{ json_encode($toast)}}"></periods-list>
 @endsection

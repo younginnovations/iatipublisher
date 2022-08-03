@@ -5,6 +5,13 @@
       title="Periods List"
       :back-link="indicatorLink"
     >
+      <div class="mb-3">
+        <Toast
+          v-if="toastData.visibility"
+          :message="toastData.message"
+          :type="toastData.type"
+        />
+      </div>
       <a :href="`${indicatorLink}/period/create`">
         <Btn text="Add Period" icon="plus" type="primary" />
       </a>
@@ -76,6 +83,7 @@ import axios from 'axios';
 import Btn from 'Components/ButtonComponent.vue';
 import Pagination from 'Components/TablePagination.vue';
 import PageTitle from 'Components/sections/PageTitle.vue';
+import Toast from 'Components/Toast.vue';
 
 // composable
 import dateFormat from 'Composable/dateFormat';
@@ -87,6 +95,7 @@ export default defineComponent({
     Btn,
     Pagination,
     PageTitle,
+    Toast,
   },
   props: {
     activity: {
@@ -99,6 +108,10 @@ export default defineComponent({
     },
     period: {
       type: Array,
+      required: true,
+    },
+    toast: {
+      type: Object,
       required: true,
     },
   },
@@ -116,6 +129,12 @@ export default defineComponent({
 
     const periodsData = reactive({});
     const isEmpty = ref(false);
+
+    const toastData = reactive({
+      visibility: false,
+      message: '',
+      type: true,
+    });
 
     /**
      * Breadcrumb data
@@ -153,6 +172,16 @@ export default defineComponent({
           Object.assign(periodsData, response.data);
           isEmpty.value = response.data.data.length ? false : true;
         });
+
+      if (props.toast.message !== '') {
+        toastData.type = props.toast.type;
+        toastData.visibility = true;
+        toastData.message = props.toast.message;
+      }
+
+      setTimeout(() => {
+        toastData.visibility = false;
+      }, 5000);
     });
 
     function fetchListings(active_page: number) {
@@ -176,6 +205,7 @@ export default defineComponent({
       getActivityTitle,
       fetchListings,
       indicatorId,
+      toastData,
     };
   },
 });

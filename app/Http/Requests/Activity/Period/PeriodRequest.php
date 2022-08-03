@@ -41,11 +41,18 @@ class PeriodRequest extends ActivityBaseRequest
     protected function getRulesForPeriod(array $formFields): array
     {
         $rules = [];
+        $diff = 0;
+        $start = $formFields['period_start'][0]['date'];
+        $end = $formFields['period_end'][0]['date'];
+
+        if ($start && $end) {
+            $diff = (strtotime($end) - strtotime($start)) / 86400;
+        }
 
         $rules = array_merge(
             $rules,
-            $this->getRulesForResultPeriodStart($formFields['period_start'], 'period_start'),
-            $this->getRulesForResultPeriodEnd($formFields['period_end'], 'period_end', $formFields['period_start']),
+            $this->getRulesForResultPeriodStart($formFields['period_start'], 'period_start', $diff),
+            $this->getRulesForResultPeriodEnd($formFields['period_end'], 'period_end', $formFields['period_start'], $diff),
             $this->getRulesForTarget($formFields['target'], 'target'),
             $this->getRulesForTarget($formFields['actual'], 'actual')
         );
@@ -83,12 +90,12 @@ class PeriodRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    protected function getRulesForResultPeriodStart($formFields, $periodType): array
+    protected function getRulesForResultPeriodStart($formFields, $periodType, $diff): array
     {
         $rules = [];
 
         foreach ($formFields as $periodStartKey => $periodStartVal) {
-            $rules[sprintf('%s.%s.date', $periodType, $periodStartKey)] = 'nullable|date|date_greater_than:1900';
+            $rules[sprintf('%s.%s.date', $periodType, $periodStartKey)] = 'nullable|date|date_greater_than:1900|period_start_end:' . $diff;
         }
 
         return $rules;
@@ -103,7 +110,7 @@ class PeriodRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    protected function getRulesForResultPeriodEnd($formFields, $periodType, $periodStart): array
+    protected function getRulesForResultPeriodEnd($formFields, $periodType, $periodStart, $diff): array
     {
         $rules = [];
 
@@ -111,7 +118,7 @@ class PeriodRequest extends ActivityBaseRequest
             $rules[sprintf('%s.%s.date', $periodType, $periodEndKey)] = 'nullable|date';
 
             if ($periodStart[$periodEndKey]['date'] > $periodEndVal['date']) {
-                $rules[sprintf('%s.%s.date', $periodType, $periodEndKey)] = sprintf('nullable|date|after:%s', 'period_start.' . $periodEndKey . '.date');
+                $rules[sprintf('%s.%s.date', $periodType, $periodEndKey)] = sprintf('nullable|date|after:%s|period_start_end:%d', 'period_start.' . $periodEndKey . '.date', strval($diff));
             }
         }
 
@@ -144,6 +151,13 @@ class PeriodRequest extends ActivityBaseRequest
                 $periodStartKey
             )]
                 = 'The @iso-date field of period end must be a date after @iso-field of period start';
+
+            $messages[sprintf(
+                '%s.%s.date.period_start_end',
+                $periodType,
+                $periodStartKey
+            )]
+                = 'The @iso-date field of period end and @iso-date of period start must not have difference of more than a year';
         }
 
         return $messages;

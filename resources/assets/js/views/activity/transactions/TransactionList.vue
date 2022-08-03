@@ -5,6 +5,13 @@
       title="Transaction List"
       :back-link="activityLink"
     >
+      <div class="mb-3">
+        <Toast
+          v-if="toastData.visibility"
+          :message="toastData.message"
+          :type="toastData.type"
+        />
+      </div>
       <a :href="`${activityLink}/transactions/create`">
         <Btn text="Add Transaction" icon="plus" type="primary" />
       </a>
@@ -144,6 +151,7 @@ import axios from 'axios';
 import Btn from 'Components/ButtonComponent.vue';
 import Pagination from 'Components/TablePagination.vue';
 import PageTitle from 'Components/sections/PageTitle.vue';
+import Toast from 'Components/Toast.vue';
 
 //composable
 import dateFormat from 'Composable/dateFormat';
@@ -155,6 +163,7 @@ export default defineComponent({
     Btn,
     Pagination,
     PageTitle,
+    Toast,
   },
   props: {
     activity: {
@@ -169,12 +178,21 @@ export default defineComponent({
       type: Object,
       required: true,
     },
+    toast: {
+      type: Object,
+      required: true,
+    },
   },
   setup(props) {
     const { activity } = toRefs(props);
     const activityId = activity.value.id,
       activityTitle = getActivityTitle(activity.value.title, 'en'),
       activityLink = `/activities/${activityId}`;
+    const toastData = reactive({
+      visibility: false,
+      message: '',
+      type: true,
+    });
 
     const transactionsData = reactive({});
 
@@ -183,6 +201,16 @@ export default defineComponent({
         const response = res.data;
         Object.assign(transactionsData, response.data);
       });
+
+      if (props.toast.message !== '') {
+        toastData.type = props.toast.type;
+        toastData.visibility = true;
+        toastData.message = props.toast.message;
+      }
+
+      setTimeout(() => {
+        toastData.visibility = false;
+      }, 5000);
     });
 
     function fetchListings(active_page: number) {
@@ -219,6 +247,7 @@ export default defineComponent({
       transactionsData,
       getActivityTitle,
       fetchListings,
+      toastData,
     };
   },
 });

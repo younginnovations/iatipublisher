@@ -5,6 +5,13 @@
       title="Period Detail"
       :back-link="`${indicatorLink}/period`"
     >
+      <div class="mb-3">
+        <Toast
+          v-if="toastData.visibility"
+          :message="toastData.message"
+          :type="toastData.type"
+        />
+      </div>
       <div class="flex justify-end">
         <Status class="mr-2.5" :data="false" />
         <Btn
@@ -58,12 +65,13 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, toRefs, provide } from 'vue';
+import { defineComponent, toRefs, provide, onMounted, reactive } from 'vue';
 
 //component
 import Btn from 'Components/buttons/Link.vue';
 import Status from 'Components/status/Status.vue';
 import PageTitle from 'Components/sections/PageTitle.vue';
+import Toast from 'Components/Toast.vue';
 
 import { TargetValue, ActualValue } from './elements/Index';
 
@@ -79,6 +87,7 @@ export default defineComponent({
     Btn,
     Status,
     PageTitle,
+    Toast,
   },
   props: {
     activity: {
@@ -97,11 +106,21 @@ export default defineComponent({
       type: Object,
       required: true,
     },
+    toast: {
+      type: Object,
+      required: true,
+    },
   },
   setup(props) {
     const linkClasses =
       'flex items-center w-full bg-white rounded p-2 text-sm text-n-50 font-bold leading-normal mb-2 shadow-default';
     let { period, activity, parentData, types } = toRefs(props);
+
+    const toastData = reactive({
+      visibility: false,
+      message: '',
+      type: true,
+    });
 
     // vue provide
     provide('types', types.value);
@@ -145,6 +164,19 @@ export default defineComponent({
         link: '',
       },
     ];
+
+    onMounted(() => {
+      if (props.toast.message !== '') {
+        toastData.type = props.toast.type;
+        toastData.visibility = true;
+        toastData.message = props.toast.message;
+      }
+
+      setTimeout(() => {
+        toastData.visibility = false;
+      }, 5000);
+    });
+
     return {
       linkClasses,
       periodData,
@@ -153,6 +185,7 @@ export default defineComponent({
       activityLink,
       resultLink,
       indicatorLink,
+      toastData,
     };
   },
 });

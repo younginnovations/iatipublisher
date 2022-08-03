@@ -193,3 +193,20 @@ if (!function_exists('getPeriodTypes')) {
         ];
     }
 }
+
+    /*
+     * Generates toast array.
+     *
+     * @return array
+     */
+if (!function_exists('generateToastData')) {
+    function generateToastData(): array
+    {
+        $toast['message'] = Session::exists('error') ? Session::get('error') : (Session::exists('success') ? Session::get('success') : '');
+        $toast['type'] = Session::exists('error') ? false : 'success';
+        Session::forget('success');
+        Session::forget('error');
+
+        return $toast;
+    }
+}

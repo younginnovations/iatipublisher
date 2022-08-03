@@ -1,7 +1,9 @@
 <template>
   <tr>
     <td>Aggregation Status</td>
-    <td class="capitalize">{{ Number(statusData) != 0 }}</td>
+    <td class="capitalize">
+      {{ parseInt(data) ? 'True' : data ? 'False' : 'Not Available' }}
+    </td>
   </tr>
 </template>
 

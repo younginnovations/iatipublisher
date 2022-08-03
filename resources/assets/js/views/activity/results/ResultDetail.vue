@@ -5,7 +5,16 @@
       title="Result Detail"
       :back-link="`${activityLink}/result`"
     >
-      <Btn text="Edit Result" :link="`${resultLink}/edit`" icon="edit" />
+      <div class="mb-3">
+        <Toast
+          v-if="toastData.visibility"
+          :message="toastData.message"
+          :type="toastData.type"
+        />
+      </div>
+      <a :href="`${activityLink}/result/create`">
+        <Btn text="Edit Result" :link="`${resultLink}/edit`" icon="edit" />
+      </a>
     </PageTitle>
     <div class="activities">
       <aside class="activities__sidebar">
@@ -67,13 +76,32 @@
         <a
           v-if="!hasIndicators"
           :href="`/activities/${result.activity_id}/result/${result.id}/indicator/create`"
-          class="flex w-full px-4 py-3 text-xs leading-normal bg-white border border-dashed rounded add_indicator border-n-40"
+          class="
+            flex
+            w-full
+            px-4
+            py-3
+            text-xs
+            leading-normal
+            bg-white
+            border border-dashed
+            rounded
+            add_indicator
+            border-n-40
+          "
         >
           <div class="italic text-left grow">
             You haven't added any indicator yet.
           </div>
           <div
-            class="flex items-center font-bold uppercase shrink-0 text-bluecoral"
+            class="
+              flex
+              items-center
+              font-bold
+              uppercase
+              shrink-0
+              text-bluecoral
+            "
           >
             <svg-vue icon="add" class="mr-1 text-base shrink-0"></svg-vue>
             <span class="grow text-[10px]">Add new indicator</span>
@@ -85,13 +113,14 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, toRefs } from 'vue';
+import { defineComponent, toRefs, onMounted, reactive } from 'vue';
 
 //component
 import ResultElement from './ResultElement.vue';
 import Indicator from 'Activity/results/elements/Indicator.vue';
 import Btn from 'Components/buttons/Link.vue';
 import PageTitle from 'Components/sections/PageTitle.vue';
+import Toast from 'Components/Toast.vue';
 
 //composable
 import dateFormat from 'Composable/dateFormat';
@@ -104,6 +133,7 @@ export default defineComponent({
     Indicator,
     Btn,
     PageTitle,
+    Toast,
   },
   props: {
     activity: {
@@ -115,6 +145,10 @@ export default defineComponent({
       required: true,
     },
     types: {
+      type: Object,
+      required: true,
+    },
+    toast: {
       type: Object,
       required: true,
     },
@@ -132,6 +166,12 @@ export default defineComponent({
       activityLink = `/activities/${activityId}`,
       resultTitle = getActivityTitle(resultsData.title[0].narrative, 'en'),
       resultLink = `${activityLink}/result/${result.value.id}`;
+
+    const toastData = reactive({
+      visibility: false,
+      message: '',
+      type: true,
+    });
 
     /**
      * Breadcrumb data
@@ -151,6 +191,18 @@ export default defineComponent({
       },
     ];
 
+    onMounted(() => {
+      if (props.toast.message !== '') {
+        toastData.type = props.toast.type;
+        toastData.visibility = true;
+        toastData.message = props.toast.message;
+      }
+
+      setTimeout(() => {
+        toastData.visibility = false;
+      }, 5000);
+    });
+
     return {
       activityLink,
       resultTitle,
@@ -160,6 +212,7 @@ export default defineComponent({
       hasIndicators,
       resultsData,
       breadcrumbData,
+      toastData
     };
   },
 });

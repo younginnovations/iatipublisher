@@ -51,12 +51,13 @@ class ResultController extends Controller
             $activity = $this->activityService->getActivity($activityId);
             $results = $this->resultService->getActivityResult($activityId);
             $types = getResultTypes();
+            $toast = generateToastData();
 
-            return view('admin.activity.result.index', compact('activity', 'results', 'types'));
+            return view('admin.activity.result.index', compact('activity', 'results', 'types', 'toast'));
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activities.show', $activityId)->with(
+            return redirect()->route('admin.activities.result.index', $activityId)->with(
                 'error',
                 'Error has occurred while rendering activity transactions listing.'
             );
@@ -82,7 +83,7 @@ class ResultController extends Controller
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activities.show', $id)->with(
+            return redirect()->route('admin.activities.result.index', $id)->with(
                 'error',
                 'Error has occurred while rendering activity result form.'
             );
@@ -100,25 +101,19 @@ class ResultController extends Controller
     {
         try {
             $resultData = $request->except(['_token']);
-
-            if (!$this->resultService->create([
+            $result = $this->resultService->create([
                 'activity_id' => $activityId,
                 'result'      => $resultData,
-            ])) {
-                return redirect()->route('admin.activities.show', $activityId)->with(
-                    'error',
-                    'Error has occurred while creating activity result.'
-                );
-            }
+            ]);
 
-            return redirect()->route('admin.activities.show', $activityId)->with(
+            return redirect()->route('admin.activities.result.show', [$activityId, $result['id']])->with(
                 'success',
                 'Activity result created successfully.'
             );
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activities.show', $activityId)->with(
+            return redirect()->route('admin.activities.result.index', $activityId)->with(
                 'error',
                 'Error has occurred while creating activity result.'
             );
@@ -136,15 +131,16 @@ class ResultController extends Controller
     public function show($activityId, $resultId): View|RedirectResponse
     {
         try {
+            $toast = generateToastData();
             $activity = $this->activityService->getActivity($activityId);
             $result = $this->resultService->getResultWithIndicatorAndPeriod($resultId, $activityId);
             $types = getResultTypes();
 
-            return view('admin.activity.result.detail', compact('activity', 'result', 'types'));
+            return view('admin.activity.result.detail', compact('activity', 'result', 'types', 'toast'));
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activities.show', $activityId)->with(
+            return redirect()->route('admin.activities.result.index', $activityId)->with(
                 'error',
                 'Error has occurred while rending result detail page.'
             );
@@ -171,7 +167,7 @@ class ResultController extends Controller
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activities.show', $activityId)->with(
+            return redirect()->route('admin.activities.result.index', $activityId)->with(
                 'error',
                 'Error has occurred while rendering activity result form.'
             );
@@ -196,20 +192,20 @@ class ResultController extends Controller
                 'activity_id' => $activityId,
                 'result'      => $resultData,
             ], $result)) {
-                return redirect()->route('admin.activities.show', $activityId)->with(
+                return redirect()->route('admin.activities.result.index', $activityId)->with(
                     'error',
                     'Error has occurred while updating activity result.'
                 );
             }
 
-            return redirect()->route('admin.activities.show', $activityId)->with(
+            return redirect()->route('admin.activities.result.show', [$activityId, $resultId])->with(
                 'success',
                 'Activity result updated successfully.'
             );
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activities.show', $activityId)->with(
+            return redirect()->route('admin.activities.result.index', $activityId)->with(
                 'error',
                 'Error has occurred while updating activity result.'
             );

@@ -47,9 +47,6 @@ mix.ts('resources/assets/js/app.ts', 'public/js').vue().version();
 
 mix.ts('resources/assets/js/scripts/script.ts', 'public/js').version();
 mix.ts('resources/assets/js/scripts/formbuilder.ts', 'public/js').version();
-mix
-  .ts('resources/assets/js/scripts/activity/aidtype.ts', 'public/js')
-  .version();
 
 mix
   .sass('resources/assets/sass/app.scss', 'public/css')

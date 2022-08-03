@@ -19,8 +19,6 @@ class IndicatorRequest extends ActivityBaseRequest
      */
     public function rules(): array
     {
-        dump(request()->except(['_token']));
-
         return $this->getRulesForIndicator(request()->except(['_token']));
     }
 

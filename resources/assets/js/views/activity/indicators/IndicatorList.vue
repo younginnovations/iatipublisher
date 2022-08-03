@@ -5,6 +5,13 @@
       title="Indicator List"
       :back-link="`${resultLink}`"
     >
+      <div class="mb-3">
+        <Toast
+          v-if="toastData.visibility"
+          :message="toastData.message"
+          :type="toastData.type"
+        />
+      </div>
       <a :href="`${resultLink}/indicator/create`">
         <Btn text="Add Indicator" icon="plus" type="primary" />
       </a>
@@ -133,6 +140,7 @@ import axios from 'axios';
 import Btn from 'Components/ButtonComponent.vue';
 import Pagination from 'Components/TablePagination.vue';
 import PageTitle from 'Components/sections/PageTitle.vue';
+import Toast from 'Components/Toast.vue';
 
 // composable
 import dateFormat from 'Composable/dateFormat';
@@ -144,6 +152,7 @@ export default defineComponent({
     Btn,
     Pagination,
     PageTitle,
+    Toast,
   },
   props: {
     activity: {
@@ -162,6 +171,10 @@ export default defineComponent({
       type: Object,
       required: true,
     },
+    toast: {
+      type: Object,
+      required: true,
+    },
   },
   setup(props) {
     const { activity, parentData } = toRefs(props);
@@ -175,6 +188,11 @@ export default defineComponent({
 
     const indicatorsData = reactive({});
     const isEmpty = ref(false);
+    const toastData = reactive({
+      visibility: false,
+      message: '',
+      type: true,
+    });
 
     /**
      * Breadcrumb data
@@ -206,6 +224,16 @@ export default defineComponent({
           Object.assign(indicatorsData, response.data);
           isEmpty.value = response.data.data.length ? false : true;
         });
+
+      if (props.toast.message !== '') {
+        toastData.type = props.toast.type;
+        toastData.visibility = true;
+        toastData.message = props.toast.message;
+      }
+
+      setTimeout(() => {
+        toastData.visibility = false;
+      }, 5000);
     });
 
     function fetchListings(active_page: number) {
@@ -229,6 +257,7 @@ export default defineComponent({
       fetchListings,
       resultLink,
       breadcrumbData,
+      toastData
     };
   },
 });

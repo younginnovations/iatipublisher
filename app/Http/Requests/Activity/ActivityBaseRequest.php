@@ -83,6 +83,13 @@ class ActivityBaseRequest extends FormRequest
                 return $this->uniqueLanguageValidator($attribute, $value);
             }
         );
+
+        Validator::extendImplicit(
+            'period_start_end',
+            function ($attribute, $value, $parameter, $validator) {
+                return $parameter[0] > 365 ? false : true;
+            }
+        );
     }
 
     /**

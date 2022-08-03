@@ -1097,12 +1097,14 @@ $(function () {
   formBuilder.addWrapper();
   formBuilder.hideShowFormFields();
   formBuilder.updateActivityIdentifier();
-  // formBuilder.addParentForm(event);
 
-  // $('.delete').on('click', () => {
-  // })
-  // });
+  $('body').on('click', '.add_to_collection', (event: Event) => {
+    formBuilder.addForm(event);
+  });
 
+  $('.add_to_parent').on('click', (event: Event) => {
+    formBuilder.addParentForm(event);
+  });
   /**
    * Delete function
    *

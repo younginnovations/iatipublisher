@@ -5,6 +5,13 @@
       title="Indicator Detail"
       :back-link="`${resultLink}/indicator`"
     >
+      <div class="mb-3">
+        <Toast
+          v-if="toastData.visibility"
+          :message="toastData.message"
+          :type="toastData.type"
+        />
+      </div>
       <div class="flex justify-end">
         <Status class="mr-2.5" :data="false" />
         <Btn
@@ -58,9 +65,12 @@
                       />
                     </template>
 
-                    <!-- <template v-if="indicatorData.ascending != null"> -->
-                    <Ascending id="ascending" :data="indicatorData.ascending" />
-                    <!-- </template> -->
+                    <template v-if="indicatorData.ascending != ''">
+                      <Ascending
+                        id="ascending"
+                        :data="indicatorData.ascending"
+                      />
+                    </template>
 
                     <template v-if="indicatorData.measure">
                       <Measure
@@ -70,12 +80,12 @@
                       />
                     </template>
 
-                    <!-- <template v-if="indicatorData.aggregation_status"> -->
-                    <AggregationStatus
-                      id="aggregation_status"
-                      :data="indicatorData.aggregation_status"
-                    />
-                    <!-- </template> -->
+                    <template v-if="indicatorData.aggregation_status != ''">
+                      <AggregationStatus
+                        id="aggregation_status"
+                        :data="indicatorData.aggregation_status"
+                      />
+                    </template>
 
                     <template
                       v-if="indicatorData.description[0].narrative.length > 0"
@@ -144,13 +154,14 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, toRefs } from 'vue';
+import { defineComponent, toRefs, onMounted, reactive } from 'vue';
 
 //component
 import Btn from 'Components/buttons/Link.vue';
 import Status from 'Components/status/Status.vue';
 import NotYet from 'Components/sections/HaveNotAddedYet.vue';
 import PageTitle from 'Components/sections/PageTitle.vue';
+import Toast from 'Components/Toast.vue';
 
 import {
   TitleElement,
@@ -181,6 +192,7 @@ export default defineComponent({
     Status,
     NotYet,
     PageTitle,
+    Toast,
   },
   props: {
     activity: {
@@ -203,13 +215,22 @@ export default defineComponent({
       type: Object,
       required: true,
     },
+    toast: {
+      type: Object,
+      required: true,
+    },
   },
   setup(props) {
     const linkClasses =
       'flex items-center w-full bg-white rounded p-2 text-sm text-n-50 font-bold leading-normal mb-2 shadow-default';
 
-    let { indicator, activity, resultTitle } = toRefs(props);
+    const toastData = reactive({
+      visibility: false,
+      message: '',
+      type: true,
+    });
 
+    let { indicator, activity, resultTitle } = toRefs(props);
     //indicator
     const indicatorData = indicator.value.indicator;
 
@@ -243,6 +264,18 @@ export default defineComponent({
       },
     ];
 
+    onMounted(() => {
+      if (props.toast.message !== '') {
+        toastData.type = props.toast.type;
+        toastData.visibility = true;
+        toastData.message = props.toast.message;
+      }
+
+      setTimeout(() => {
+        toastData.visibility = false;
+      }, 5000);
+    });
+
     return {
       linkClasses,
       indicatorTitle,
@@ -250,6 +283,7 @@ export default defineComponent({
       activityLink,
       resultLink,
       breadcrumbData,
+      toastData,
     };
   },
 });
