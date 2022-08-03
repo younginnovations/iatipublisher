@@ -56,7 +56,7 @@
               <div class="flex">
                 <a
                   class="mr-6 text-n-40"
-                  :href="`${indicatorLink}/${indicatorId}/period/${pe.id}`"
+                  :href="`${indicatorLink}/period/${pe.id}`"
                 >
                   <svg-vue icon="edit" class="text-xl"></svg-vue>
                 </a>

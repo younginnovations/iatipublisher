@@ -106,7 +106,7 @@ class FormBuilder {
 
     const count = $(target).attr('parent_count')
       ? parseInt($(target).attr('parent_count') as string) + 1
-      : ($(target).prev().find('.multi-form').length ? $(target).prev().find('.multi-form').length : $(target).prev().find('.wrapped-child-body').length)+1;
+      : ($(target).prev().find('.multi-form').length ? $(target).prev().find('.multi-form').length : $(target).prev().find('.wrapped-child-body').length) + 1;
 
     let proto = container.data('prototype').replace(/__PARENT_NAME__/g, count);
     proto = proto.replace(/__NAME__/g, 0);
@@ -133,6 +133,7 @@ class FormBuilder {
     this.policyVocabularyHideField();
     this.tagVocabularyHideField();
     this.transactionAidTypeVocabularyHideField();
+    this.indicatorReferenceHideFieldUri();
   }
 
   // deletes collection
@@ -235,6 +236,7 @@ class FormBuilder {
     this.sectorVocabularyHideField();
     this.tagVocabularyHideField();
     this.transactionAidTypeVocabularyHideField();
+    this.indicatorReferenceHideFieldUri();
   }
 
   /**
@@ -296,6 +298,64 @@ class FormBuilder {
   }
 
   /**
+ * Humanitarian Scope Form Page
+ *
+ * @Logic hide vocabulary-uri field based on '@vocabulary' field value
+ */
+  public indicatorReferenceHideFieldUri() {
+    const referenceVocabulary = $(
+      'select[id^="reference"][id*="[vocabulary]"]'
+    );
+
+    if (referenceVocabulary.length > 0) {
+      // hide fields on page load
+      $.each(referenceVocabulary, (index, scope) => {
+        const val = $(scope).val() ?? '';
+        this.indicatorReferenceHideField($(scope), val.toString());
+      });
+
+      // hide/show fields on value change
+      referenceVocabulary.on('select2:select', (e) => {
+        const val = e.params.data.id;
+        const index = e.target as HTMLElement;
+
+        this.indicatorReferenceHideField($(index), val);
+      });
+
+      // hide/show fields on value clear
+      referenceVocabulary.on('select2:clear', (e) => {
+        const index = e.target as HTMLElement;
+
+        this.indicatorReferenceHideField($(index), '');
+      });
+    }
+  }
+
+  // hide country budget based on vocabulary
+  public indicatorReferenceHideField(index: JQuery, value: string) {
+    const referenceUri =
+      'input[id^="reference"][id*="[indicator_uri]"]';
+
+    if (value === '99') {
+      index
+        .closest('.form-field-group')
+        .find(referenceUri)
+        .show().removeAttr('disabled')
+        .closest('.form-field')
+        .show();
+    } else {
+      index
+        .closest('.form-field-group')
+        .find(referenceUri)
+        .val('')
+        .trigger('change')
+        .hide().attr('disabled', 'disabled')
+        .closest('.form-field')
+        .hide();
+    }
+  }
+
+  /**
    * Country Budget Form Page
    *
    * @Logic show/hide 'code' field based on '@vocabulary' field value
@@ -326,7 +386,7 @@ class FormBuilder {
    */
   public hideCountryBudgetField(value: string) {
     const countryBudgetCodeInput =
-        'input[id^="budget_item"][id*="[code_text]"]',
+      'input[id^="budget_item"][id*="[code_text]"]',
       countryBudgetCodeSelect = 'select[id^="budget_item"][id*="[code]"]';
 
     if (value === '1') {
@@ -1175,7 +1235,7 @@ $(function () {
   $('body').on('select2:open', '.select2', () => {
     const select_search = document.querySelector('.select2-search__field') as HTMLElement;
 
-    if(select_search){
+    if (select_search) {
       select_search.focus();
     }
   })

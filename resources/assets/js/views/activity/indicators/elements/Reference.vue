@@ -12,7 +12,10 @@
         <span v-if="ref.vocabulary"> Vocabulary: {{ ref.vocabulary }}, </span>
         <span v-if="ref.code"> Code: {{ ref.code }}, </span>
         <span v-if="ref.indicator_uri">
-          Indicator URI: {{ ref.indicator_uri }}
+          Indicator URI:
+          <a target="_blank" :href="ref.indicator_uri">
+            {{ ref.indicator_uri }}
+          </a>
         </span>
       </div>
     </td>

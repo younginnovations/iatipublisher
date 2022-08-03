@@ -142,6 +142,14 @@ class PeriodController extends Controller
     {
         try {
             $periodData = $request->except(['_token']);
+            $messages = $this->validateData([
+                'measure'  => $this->indicatorService->getResultIndicator($resultId, $indicatorId)['measure'],
+                'period'   => $periodData,
+            ]);
+
+            if ($messages) {
+                return redirect()->route('admin.activities.result.indicator.period.create', [$activityId, $resultId, $indicatorId])->with('error', $messages);
+            }
 
             $period = $this->periodService->create([
                 'indicator_id'  => $indicatorId,
@@ -244,6 +252,15 @@ class PeriodController extends Controller
             $periodData = $request->except(['_method', '_token']);
             $period = $this->periodService->getIndicatorPeriod($indicatorId, $periodId);
 
+            $messages = $this->validateData([
+                'measure'  => $this->indicatorService->getResultIndicator($resultId, $indicatorId)['measure'],
+                'period'   => $periodData,
+            ]);
+
+            if ($messages) {
+                return redirect()->route('admin.activities.result.indicator.period.edit', [$activityId, $resultId, $indicatorId, $periodId])->with('error', $messages);
+            }
+
             if (!$this->periodService->update([
                 'indicator_id'  => $indicatorId,
                 'period'        => $periodData,
@@ -259,9 +276,10 @@ class PeriodController extends Controller
                 'Indicator period updated successfully.'
             );
         } catch (\Exception $e) {
+            dd($e);
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activities.result.indicator.period.index', [$activityId, $resultId, $indicatorId])->with(
+            return redirect()->route('admin.activities.result.indicator.period.show', [$activityId, $resultId, $indicatorId, $periodId])->with(
                 'error',
                 'Error has occurred while updating indicator period.'
             );
@@ -304,5 +322,34 @@ class PeriodController extends Controller
 
             return response()->json(['success' => false, 'message' => 'Error occurred while fetching the data']);
         }
+    }
+
+    /**
+     * Validate value data based on quantitative and non-quantitative measure.
+     *
+     * @param array $period
+     * @return string
+     */
+    private function validateData(array $period): string
+    {
+        $messages = '';
+        $repeated = false;
+        $measure = $period['measure'];
+
+        if ($measure != '5') {
+            foreach ($period['period']['target'] as $target) {
+                if ($target['value']) {
+                    return 'Value must be omitted when the indicator measure is qualitative.';
+                }
+            }
+
+            foreach ($period['period']['actual'] as $actual) {
+                if ($actual['value']) {
+                    return 'Value must be omitted when the indicator measure is qualitative.';
+                }
+            }
+        }
+
+        return $messages;
     }
 }
