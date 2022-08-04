@@ -28,11 +28,11 @@
         </template>
 
         <template v-else-if="elementName === 'transaction_type'">
-          <TransactionType :data="elementData" />
+          <div class="text-sm"><TransactionType :data="elementData" /></div>
         </template>
 
         <template v-else-if="elementName === 'transaction_date'">
-          <TransactionDate :data="elementData" />
+          <div class="text-sm"><TransactionDate :data="elementData" /></div>
         </template>
 
         <template v-else-if="elementName === 'value'">
@@ -40,7 +40,7 @@
         </template>
 
         <template v-else-if="elementName === 'humanitarian'">
-          {{ data != '0' }}
+          <div class="text-sm">{{ data != '0' }}</div>
         </template>
 
         <template v-else-if="elementName === 'provider_organization'">
@@ -79,7 +79,7 @@
           <TiedStatus :data="elementData" />
         </template>
         <template v-else>
-          {{ data ?? 'Not Available' }}
+          <div class="text-sm">{{ data ?? 'Not Available' }}</div>
         </template>
       </div>
     </div>

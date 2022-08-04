@@ -5,10 +5,10 @@ function dateFormat(date: Date, format = 'MMMM DD, YYYY' as string) {
 
   switch (format_date) {
     case 'fromNow':
-      format_date = moment(date).fromNow();
+      format_date = date ? moment(date).fromNow() : '';
       break;
     default:
-      format_date = moment(date).format('MMMM DD, YYYY');
+      format_date = date ? moment(date).format('MMMM DD, YYYY') : '';
   }
 
   return format_date;

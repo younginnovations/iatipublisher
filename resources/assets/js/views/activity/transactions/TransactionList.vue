@@ -94,30 +94,30 @@
           <tr v-for="(trans, t, index) in transactionsData.data" :key="index">
             <td>
               <a :href="`${activityLink}/transactions/${trans.id}`">
-                <span v-if="trans.transaction.reference">{{
-                  trans.transaction.reference
-                }}</span>
-                <span v-else>- - -</span>
+                <span>{{ trans.transaction.reference ?? '- - -' }}</span>
               </a>
             </td>
             <td>
               {{
                 types.transactionType[
                   trans.transaction.transaction_type[0].transaction_type_code
-                ]
+                ] ?? '- - -'
               }}
             </td>
-            <td class="truncate">{{ trans.transaction.value[0].amount }}</td>
+            <td class="truncate">
+              {{ trans.transaction.value[0].amount ?? '- - -' }}
+            </td>
             <td>
-              <span v-if="trans.transaction.transaction_date[0].date">
+              <span>
                 {{
-                  dateFormat(
-                    trans.transaction.transaction_date[0].date,
-                    'fromNow'
-                  )
+                  trans.transaction.transaction_date[0].date
+                    ? dateFormat(
+                        trans.transaction.transaction_date[0].date,
+                        'fromNow'
+                      )
+                    : '- - -'
                 }}
               </span>
-              <span v-else>- - -</span>
             </td>
             <td><span class="text-spring-50">completed</span></td>
             <td>

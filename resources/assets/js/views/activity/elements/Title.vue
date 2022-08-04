@@ -4,7 +4,7 @@
       <span v-if="post.language" class="language mb-1.5">
         (Language: {{ types.languages[post.language] }})
       </span>
-      <span v-if="post.narrative" class="text-sm description">
+      <span v-if="post.narrative" class="max-w-[887px] text-sm">
         {{ post.narrative }}
       </span>
     </div>

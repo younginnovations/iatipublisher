@@ -9,18 +9,22 @@
       {{
         types.transactionType[
           trans.transaction.transaction_type[0].transaction_type_code
-        ]
+        ] ?? 'Transaction type not available'
       }}
     </div>
-    <div
-      v-for="(val, v) in trans.transaction.value"
-      :key="v"
-      class="text-sm description"
-      :class="{ 'mb-4': Number(t) !== data.length - 1 }"
-    >
-      {{ val.amount }} {{ val.currency }} - valued at
-      {{ dateFormat(val.date, 'MMMM DD, YYYY') }}
-    </div>
+    <template v-for="(val, v) in trans.transaction.value" :key="v">
+      <div
+        class="text-sm description"
+        :class="{ 'mb-4': Number(t) !== trans.transaction.value.length - 1 }"
+      >
+        {{ val.amount ?? 'Value not available' }} {{ val.currency }}
+        {{
+          dateFormat(val.date, 'MMMM DD, YYYY')
+            ? '- valued at' + ' ' + dateFormat(val.date, 'MMMM DD, YYYY')
+            : ''
+        }}
+      </div>
+    </template>
   </div>
 </template>
 

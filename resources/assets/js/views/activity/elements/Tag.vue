@@ -35,31 +35,33 @@
       class="ml-5"
       :class="{ 'mb-4': k !== post.narrative.length - 1 }"
     >
-      <tr class="multiline">
-        <td>Narrative</td>
-        <td>
-          <div v-if="narrative.narrative" class="flex flex-col">
-            <span v-if="narrative.language" class="language top"
-              >(Language: {{ types.languages[narrative.language] }})</span
+      <tbody>
+        <tr class="multiline">
+          <td>Narrative</td>
+          <td>
+            <div v-if="narrative.narrative" class="flex flex-col">
+              <span v-if="narrative.language" class="language top"
+                >(Language: {{ types.languages[narrative.language] }})</span
+              >
+              <span class="description">{{ narrative.narrative }}</span>
+            </div>
+            <span v-else class="italic">Not Available</span>
+          </td>
+        </tr>
+        <tr v-if="post.tag_vocabulary === '99'">
+          <td>Vocabulary URI</td>
+          <td>
+            <a
+              v-if="post.vocabulary_uri"
+              target="_blank"
+              :href="post.vocabulary_uri"
             >
-            <span class="description">{{ narrative.narrative }}</span>
-          </div>
-          <span v-else class="italic">Not Available</span>
-        </td>
-      </tr>
-      <tr v-if="post.tag_vocabulary === '99'">
-        <td>Vocabulary URI</td>
-        <td>
-          <a
-            v-if="post.vocabulary_uri"
-            target="_blank"
-            :href="post.vocabulary_uri"
-          >
-            {{ post.vocabulary_uri }}
-          </a>
-          <span v-else class="italic">Not Available</span>
-        </td>
-      </tr>
+              {{ post.vocabulary_uri }}
+            </a>
+            <span v-else class="italic">Not Available</span>
+          </td>
+        </tr>
+      </tbody>
     </table>
   </div>
 </template>

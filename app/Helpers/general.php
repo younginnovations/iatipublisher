@@ -137,7 +137,7 @@ if (!function_exists('getTransactionTypes')) {
             'cashAndVoucherModalities'  => getCodeList('CashandVoucherModalities', 'Activity', false),
             'earMarkingCategory'        => getCodeList('EarmarkingCategory', 'Activity', false),
             'earMarkingModality'        => getCodeList('EarmarkingModality', 'Activity', false),
-            'languages'                 => getCodeList('Language', 'Activity'),
+            'languages'                 => getCodeList('Language', 'Activity', false),
         ];
     }
 }
