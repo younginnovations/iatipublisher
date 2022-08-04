@@ -68,8 +68,6 @@ class Organization extends Model
      */
     public function getReportingOrgElementCompletedAttribute(): bool
     {
-        $this->element = 'reporting_org';
-
         return $this->elementCompleteService->isLevelOneMultiDimensionElementCompleted('reporting_org', $this->reporting_org);
     }
 }
