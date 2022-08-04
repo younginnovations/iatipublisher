@@ -27,6 +27,7 @@ class ActivityDateCompleteTest extends ElementCompleteTest
      * Mandatory attribute test.
      *
      * @return void
+     * @throws \JsonException
      */
     public function test_activity_date_mandatory_attributes(): void
     {
@@ -37,6 +38,7 @@ class ActivityDateCompleteTest extends ElementCompleteTest
      * Mandatory sub element test.
      *
      * @return void
+     * @throws \JsonException
      */
     public function test_activity_date_mandatory_sub_elements(): void
     {
@@ -47,6 +49,7 @@ class ActivityDateCompleteTest extends ElementCompleteTest
      * Empty activity_date test.
      *
      * @return void
+     * @throws \JsonException
      */
     public function test_activity_date_empty_data(): void
     {
@@ -59,10 +62,11 @@ class ActivityDateCompleteTest extends ElementCompleteTest
      * Empty activity_date array test.
      *
      * @return void
+     * @throws \JsonException
      */
     public function test_activity_date_empty_array(): void
     {
-        $activity_dateData = json_decode('[]', true);
+        $activity_dateData = json_decode('[]', true, 512, JSON_THROW_ON_ERROR);
 
         $this->test_level_one_multi_dimensional_element_incomplete($this->element, $activity_dateData);
     }
@@ -71,10 +75,11 @@ class ActivityDateCompleteTest extends ElementCompleteTest
      * Empty activity_date json array test.
      *
      * @return void
+     * @throws \JsonException
      */
     public function test_activity_date_empty_json_array(): void
     {
-        $activity_dateData = json_decode('[{}]', true);
+        $activity_dateData = json_decode('[{}]', true, 512, JSON_THROW_ON_ERROR);
 
         $this->test_level_one_multi_dimensional_element_incomplete($this->element, $activity_dateData);
     }
@@ -83,10 +88,11 @@ class ActivityDateCompleteTest extends ElementCompleteTest
      * Empty all element test.
      *
      * @return void
+     * @throws \JsonException
      */
     public function test_activity_date_attribute_empty_type_and_date(): void
     {
-        $activity_dateData = json_decode('[{"type":"","date":""}]', true);
+        $activity_dateData = json_decode('[{"type":"","date":""}]', true, 512, JSON_THROW_ON_ERROR);
 
         $this->test_level_one_multi_dimensional_element_incomplete($this->element, $activity_dateData);
     }
@@ -95,10 +101,11 @@ class ActivityDateCompleteTest extends ElementCompleteTest
      * No attribute type key test.
      *
      * @return void
+     * @throws \JsonException
      */
     public function test_activity_date_attribute_no_type_key(): void
     {
-        $activity_dateData = json_decode('[{"date":"2022-02-02"}]', true);
+        $activity_dateData = json_decode('[{"date":"2022-02-02"}]', true, 512, JSON_THROW_ON_ERROR);
 
         $this->test_level_one_multi_dimensional_element_incomplete($this->element, $activity_dateData);
     }
@@ -107,10 +114,11 @@ class ActivityDateCompleteTest extends ElementCompleteTest
      * No attribute date key test.
      *
      * @return void
+     * @throws \JsonException
      */
     public function test_activity_date_attribute_no_date_key(): void
     {
-        $activity_dateData = json_decode('[{"type":"1"}]', true);
+        $activity_dateData = json_decode('[{"type":"1"}]', true, 512, JSON_THROW_ON_ERROR);
 
         $this->test_level_one_multi_dimensional_element_incomplete($this->element, $activity_dateData);
     }
@@ -119,10 +127,11 @@ class ActivityDateCompleteTest extends ElementCompleteTest
      * Empty attribute type test.
      *
      * @return void
+     * @throws \JsonException
      */
     public function test_activity_date_attribute_empty_type(): void
     {
-        $activity_dateData = json_decode('[{"type":"","date":"2020-02-02"}]', true);
+        $activity_dateData = json_decode('[{"type":"","date":"2020-02-02"}]', true, 512, JSON_THROW_ON_ERROR);
 
         $this->test_level_one_multi_dimensional_element_incomplete($this->element, $activity_dateData);
     }
@@ -131,10 +140,11 @@ class ActivityDateCompleteTest extends ElementCompleteTest
      * Empty attribute date test.
      *
      * @return void
+     * @throws \JsonException
      */
     public function test_activity_date_attribute_empty_date(): void
     {
-        $activity_dateData = json_decode('[{"type":"1","date":""}]', true);
+        $activity_dateData = json_decode('[{"type":"1","date":""}]', true, 512, JSON_THROW_ON_ERROR);
 
         $this->test_level_one_multi_dimensional_element_incomplete($this->element, $activity_dateData);
     }
@@ -143,12 +153,15 @@ class ActivityDateCompleteTest extends ElementCompleteTest
      * Complete activity_date test.
      *
      * @return void
+     * @throws \JsonException
      */
     public function test_activity_date_element_complete(): void
     {
         $activity_dateData = json_decode(
             '[{"type":"1","date":"2020-02-02","narrative":[{"narrative":"DGGF Track 3 English","language":"en"},{"narrative":"DGGF Track 3 French","language":"fr"}]}]',
-            true
+            true,
+            512,
+            JSON_THROW_ON_ERROR
         );
 
         $this->test_level_one_multi_dimensional_element_complete($this->element, $activity_dateData);

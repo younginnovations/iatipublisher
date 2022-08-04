@@ -27,6 +27,7 @@ class TitleCompleteTest extends ElementCompleteTest
      * Mandatory attribute test.
      *
      * @return void
+     * @throws \JsonException
      */
     public function test_title_mandatory_attributes(): void
     {
@@ -37,6 +38,7 @@ class TitleCompleteTest extends ElementCompleteTest
      * Mandatory sub element test.
      *
      * @return void
+     * @throws \JsonException
      */
     public function test_title_mandatory_sub_elements(): void
     {
@@ -47,6 +49,7 @@ class TitleCompleteTest extends ElementCompleteTest
      * Empty title data test.
      *
      * @return void
+     * @throws \JsonException
      */
     public function test_title_empty_data(): void
     {
@@ -57,10 +60,11 @@ class TitleCompleteTest extends ElementCompleteTest
      * Empty title array test.
      *
      * @return void
+     * @throws \JsonException
      */
     public function test_title_empty_array(): void
     {
-        $titleData = json_decode('[]', true);
+        $titleData = json_decode('[]', true, 512, JSON_THROW_ON_ERROR);
 
         $this->test_sub_element_empty($this->element, ['narrative' => $titleData]);
     }
@@ -69,10 +73,11 @@ class TitleCompleteTest extends ElementCompleteTest
      * Empty title json array test.
      *
      * @return void
+     * @throws \JsonException
      */
     public function test_title_empty_json_array(): void
     {
-        $titleData = json_decode('[{}]', true);
+        $titleData = json_decode('[{}]', true, 512, JSON_THROW_ON_ERROR);
 
         $this->test_sub_element_empty($this->element, ['narrative' => $titleData]);
     }
@@ -81,10 +86,11 @@ class TitleCompleteTest extends ElementCompleteTest
      * Empty narrative and language test.
      *
      * @return void
+     * @throws \JsonException
      */
     public function test_title_sub_element_empty_narrative_and_language(): void
     {
-        $titleData = json_decode('[{"narrative":"","language":""}]', true);
+        $titleData = json_decode('[{"narrative":"","language":""}]', true, 512, JSON_THROW_ON_ERROR);
 
         $this->test_sub_element_empty($this->element, ['narrative' => $titleData]);
     }
@@ -93,10 +99,11 @@ class TitleCompleteTest extends ElementCompleteTest
      * No narrative key test.
      *
      * @return void
+     * @throws \JsonException
      */
     public function test_title_sub_element_no_narrative_key(): void
     {
-        $titleData = json_decode('[{"language":"en"}]', true);
+        $titleData = json_decode('[{"language":"en"}]', true, 512, JSON_THROW_ON_ERROR);
 
         $this->test_sub_element_empty($this->element, ['narrative' => $titleData]);
     }
@@ -105,10 +112,11 @@ class TitleCompleteTest extends ElementCompleteTest
      * No language key test.
      *
      * @return void
+     * @throws \JsonException
      */
     public function test_title_sub_element_no_language_key(): void
     {
-        $titleData = json_decode('[{"narrative":"asdad"}]', true);
+        $titleData = json_decode('[{"narrative":"asdad"}]', true, 512, JSON_THROW_ON_ERROR);
 
         $this->test_sub_element_empty($this->element, ['narrative' => $titleData]);
     }
@@ -117,10 +125,11 @@ class TitleCompleteTest extends ElementCompleteTest
      * Empty sub element narrative test.
      *
      * @return void
+     * @throws \JsonException
      */
     public function test_title_sub_element_empty_narrative(): void
     {
-        $titleData = json_decode('[{"narrative":"", "language":""}]', true);
+        $titleData = json_decode('[{"narrative":"", "language":""}]', true, 512, JSON_THROW_ON_ERROR);
 
         $this->test_sub_element_empty($this->element, ['narrative' => $titleData]);
     }
@@ -129,10 +138,11 @@ class TitleCompleteTest extends ElementCompleteTest
      * Empty attribute language test.
      *
      * @return void
+     * @throws \JsonException
      */
     public function test_title_sub_element_empty_language(): void
     {
-        $titleData = json_decode('[{"narrative":"asdad", "language":""}]', true);
+        $titleData = json_decode('[{"narrative":"asdad", "language":""}]', true, 512, JSON_THROW_ON_ERROR);
 
         $this->test_sub_element_empty($this->element, ['narrative' => $titleData]);
     }
@@ -141,10 +151,11 @@ class TitleCompleteTest extends ElementCompleteTest
      * Complete title test.
      *
      * @return void
+     * @throws \JsonException
      */
     public function test_title_element_complete(): void
     {
-        $titleData = json_decode('[{"narrative":"asdad", "language":"en"}]', true);
+        $titleData = json_decode('[{"narrative":"asdad", "language":"en"}]', true, 512, JSON_THROW_ON_ERROR);
 
         $this->test_sub_element_complete($this->element, ['narrative' => $titleData]);
     }

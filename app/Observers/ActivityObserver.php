@@ -3,59 +3,56 @@
 namespace App\Observers;
 
 use App\IATI\Models\Activity\Activity;
+use App\IATI\Services\ElementCompleteService;
 
 class ActivityObserver
 {
+    protected ElementCompleteService $elementCompleteService;
+
     /**
-     * @param mixed $updatedAttributes
-     *
-     * @return mixed
+     * Activity observer constructor.
      */
-    public function unsetAttributes(mixed $updatedAttributes): mixed
+    public function __construct()
     {
-        if (array_key_exists('created_at', $updatedAttributes)) {
-            unset($updatedAttributes['created_at']);
-        }
-
-        if (array_key_exists('updated_at', $updatedAttributes)) {
-            unset($updatedAttributes['updated_at']);
-        }
-
-        return $updatedAttributes;
+        $this->elementCompleteService = new ElementCompleteService();
     }
 
     /**
-     * @param mixed $updatedAttributes
-     * @param       $model
-     * @param mixed $elementStatus
+     * @param $updatedAttributes
+     *
+     * @return array
+     * @throws \JsonException
+     */
+    public function getUpdatedElement($updatedAttributes): array
+    {
+        $elements = getElements();
+        $updatedElements = [];
+
+        foreach ($updatedAttributes as $element => $updatedAttribute) {
+            if (in_array($element, $elements, true)) {
+                $updatedElements[$element] = $updatedAttribute;
+            }
+        }
+
+        return $updatedElements;
+    }
+
+    /**
+     * @param $model
      *
      * @return void
+     * @throws \JsonException
      */
-    public function setElementStatus(mixed $updatedAttributes, $model, mixed $elementStatus): void
+    public function setElementStatus($model): void
     {
-        foreach ($updatedAttributes as $attribute => $value) {
-            $fx = $attribute . '_element_completed';
-            $elementStatus[$attribute] = $model[$fx];
+        $elementStatus = $model->element_status;
+        $updatedElements = $this->getUpdatedElement($model->getChanges());
+
+        foreach ($updatedElements as $attribute => $value) {
+            $elementStatus[$attribute] = call_user_func([$this->elementCompleteService, dashesToCamelCase('is_' . $attribute . '_element_completed')], $model);
         }
 
         $model->element_status = $elementStatus;
-    }
-
-    /**
-     * @param mixed $updatedAttributes
-     * @param       $model
-     *
-     * @return void
-     */
-    public function setStatus(mixed $updatedAttributes, $model): void
-    {
-        if (!empty(array_intersect_key($updatedAttributes, getCoreElements()))) {
-            if ($model->status === 'draft' || $model->status === 'published') {
-                $model->status = (coreElementCompleted($model->element_status)) ? 'ready_to_publish' : $model->status;
-            } elseif ($model->status === 'ready_to_publish') {
-                $model->status = !(coreElementCompleted($model->element_status)) ? 'draft' : $model->status;
-            }
-        }
     }
 
     /**
@@ -64,14 +61,11 @@ class ActivityObserver
      * @param Activity $activity
      *
      * @return void
+     * @throws \JsonException
      */
     public function updated(Activity $activity): void
     {
-        $elementStatus = $activity->element_status;
-        $updatedAttributes = $this->unsetAttributes($activity->getChanges());
-
-        $this->setElementStatus($updatedAttributes, $activity, $elementStatus);
-        $this->setStatus($updatedAttributes, $activity);
+        $this->setElementStatus($activity);
         $activity->saveQuietly();
     }
 }

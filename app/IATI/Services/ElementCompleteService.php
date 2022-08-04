@@ -1,0 +1,1255 @@
+<?php
+
+namespace App\IATI\Services;
+
+class ElementCompleteService
+{
+    protected $element = '';
+
+    /**
+     * Returns mandatory fields.
+     *
+     * @param $field
+     *
+     * @return bool
+     */
+    public function isFieldMandatory($field): bool
+    {
+        return array_key_exists('criteria', $field) && $field['criteria'] === 'mandatory';
+    }
+
+    /**
+     * @param       $fields
+     * @param array $mandatoryFields
+     *
+     * @return array
+     */
+    public function getMandatoryFields($fields, array $mandatoryFields): array
+    {
+        foreach ($fields as $attribute) {
+            if ($this->isFieldMandatory($attribute)) {
+                $mandatoryFields[] = $attribute['name'];
+            }
+        }
+
+        return $mandatoryFields;
+    }
+
+    /**
+     * Return mandatory attributes fields.
+     *
+     * @param $attributes
+     *
+     * @return array
+     */
+    public function mandatoryAttributes($attributes): array
+    {
+        return $this->getMandatoryFields($attributes, []);
+    }
+
+    /**
+     * Return mandatory sub element fields.
+     *
+     * @param $fields
+     *
+     * @return array
+     */
+    public function mandatorySubElements($fields): array
+    {
+        $mandatoryElements = [];
+
+        foreach ($fields as $field) {
+            $mandatoryFields = [];
+
+            if ($this->isFieldMandatory($field)) {
+                $mandatoryFields[] = $field['name'];
+            }
+
+            if (isset($field['attributes'])) {
+                $attributes = $field['attributes'];
+
+                $mandatoryFields = $this->getMandatoryFields($attributes, $mandatoryFields);
+            }
+
+            if (!empty($mandatoryFields)) {
+                $mandatoryElements[$field['name']] = $mandatoryFields;
+            }
+        }
+
+        return $mandatoryElements;
+    }
+
+    /**
+     * @param $subElement
+     *
+     * @return array
+     */
+    public function getMandatoryAttributes($subElement): array
+    {
+        return array_key_exists('attributes', $subElement) ? $this->mandatoryAttributes($subElement['attributes']) : [];
+    }
+
+    /**
+     * @param $subElement
+     *
+     * @return array
+     */
+    public function getMandatorySubElements($subElement): array
+    {
+        return array_key_exists('sub_elements', $subElement) ? $this->mandatorySubElements($subElement['sub_elements']) : [];
+    }
+
+    /**
+     * Checks if attribute is complete.
+     *
+     * @param $mandatoryAttributes
+     * @param $data
+     *
+     * @return bool
+     * @throws \JsonException
+     */
+    public function isAttributeDataCompleted($mandatoryAttributes, $data): bool
+    {
+        if (empty($mandatoryAttributes)) {
+            return true;
+        }
+
+        if (empty($data)) {
+            return false;
+        }
+        $elementSchema = getElementSchema($this->element);
+
+        foreach ($mandatoryAttributes as $mandatoryAttribute) {
+            if (array_key_exists('dependent_attributes', $elementSchema) && array_key_exists($mandatoryAttribute, $elementSchema['dependent_attributes'])) {
+                $parentLevel = $elementSchema['attributes'];
+
+                if (array_key_exists('sub_element', $elementSchema['dependent_attributes'][$mandatoryAttribute])
+                    && !empty($elementSchema['dependent_attributes'][$mandatoryAttribute]['sub_element'])) {
+                    $parentLevel = $elementSchema['sub_elements'][$elementSchema['dependent_attributes'][$mandatoryAttribute]['sub_element']]['attributes'];
+                }
+
+                $parent = $parentLevel[$mandatoryAttribute]['parent'];
+
+                /*checks if parent attribute have specific value for child attribute to be relevant*/
+                if (!in_array($data[$parent['name']], $parent['value'], true)) {
+                    continue;
+                }
+            }
+
+            if (!array_key_exists($mandatoryAttribute, $data) || (empty($data[$mandatoryAttribute]))) {
+                //dd('isAttributeDataCompleted fx called1', ' Attribute is empty', 'attribute-check:', $mandatoryAttributes, $mandatoryAttribute, $data);
+
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Checks if single dimension attribute is complete.
+     *
+     * @param $elementSchema
+     * @param $data
+     *
+     * @return bool
+     * @throws \JsonException
+     */
+    public function isSingleDimensionAttributeCompleted($elementSchema, $data): bool
+    {
+        $mandatoryAttributes = $this->getMandatoryAttributes($elementSchema);
+
+        if (!empty($mandatoryAttributes)) {
+            if (empty($data)) {
+                return false;
+            }
+
+            if (!$this->isAttributeDataCompleted($mandatoryAttributes, $data)) {
+                //dd('singleDimensionAttributeCheck fx called1', 'Level2 single dimension attribute is empty', 'attribute-check:', $mandatoryAttributes, $data);
+
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Checks if multi dimension attribute is complete.
+     *
+     * @param $elementSchema
+     * @param $data
+     *
+     * @return bool
+     * @throws \JsonException
+     */
+    public function isMultiDimensionAttributeCompleted($elementSchema, $data): bool
+    {
+        $mandatoryAttributes = $this->getMandatoryAttributes($elementSchema);
+
+        if (!empty($mandatoryAttributes)) {
+            if (empty($data)) {
+                return false;
+            }
+            foreach ($data as $datum) {
+                if (!$this->isAttributeDataCompleted($mandatoryAttributes, $datum)) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Checks if sub element is complete.
+     *
+     * @param $mandatorySubElements
+     * @param $data
+     *
+     * @return bool
+     */
+    public function isSubElementDataCompleted($mandatorySubElements, $data): bool
+    {
+        if (empty($mandatorySubElements)) {
+            return true;
+        }
+
+        if (empty($data)) {
+            return false;
+        }
+
+        foreach ($mandatorySubElements as $key => $mandatorySubElement) {
+            if (!array_key_exists($key, $data)) {
+                //dd('isSubElementDataCompleted fx called1', 'Whole Sub element has not filled yet', 'sub-element-check:', $mandatorySubElement, $data);
+
+                return false;
+            }
+            $items = $data[$key];
+
+            if (empty($items)) {
+                //dd('isSubElementDataCompleted fx called2', 'Sub element array is empty', 'sub-element-check:', $mandatorySubElement, $data, $items);
+
+                return false;
+            }
+
+            foreach ($mandatorySubElement as $mandatoryField) {
+                foreach ($items as $item) {
+                    if (!array_key_exists($mandatoryField, $item) || (empty($item[$mandatoryField]))) {
+                        //dd('isSubElementDataCompleted fx called3', 'Sub element is empty', 'sub-element-check:', $mandatoryField, $item);
+
+                        return false;
+                    }
+                }
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Checks if element's attribute and sub elements both are complete.
+     *
+     * @param $mandatoryAttributes
+     * @param $mandatorySubElements
+     * @param $data
+     *
+     * @return bool
+     * @throws \JsonException
+     */
+    public function isElementCompleted($mandatoryAttributes, $mandatorySubElements, $data): bool
+    {
+        if (!empty($mandatoryAttributes) || !empty($mandatorySubElements)) {
+            if (empty($data)) {
+                return false;
+            }
+
+            foreach ($data as $datum) {
+                if (!$this->isAttributeDataCompleted($mandatoryAttributes, $datum)) {
+                    //dd('isElementCompleted fx is called1', 'Attribute is empty', 'attribute-check:', $mandatoryAttributes, $data, $datum);
+
+                    return false;
+                }
+
+                if (!$this->isSubElementDataCompleted($mandatorySubElements, $datum)) {
+                    //dd('isElementCompleted fx is called2', 'Sub element is empty', 'sub-element-check:', $mandatorySubElements, $data, $datum);
+
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Checks if sub element with attributes is complete.
+     *
+     * @param $subElements
+     * @param $data
+     *
+     * @return bool
+     * @throws \JsonException
+     */
+    public function isSubElementCompleted($subElements, $data): bool
+    {
+        foreach ($subElements as $key => $subElement) {
+            $mandatorySubElementAttributes = $this->getMandatoryAttributes($subElement);
+            $mandatoryChildSubElements = $this->getMandatorySubElements($subElement);
+
+            if (!empty($mandatorySubElementAttributes) || !empty($mandatoryChildSubElements)) {
+                if (!array_key_exists($key, $data)) {
+                    //dd('isSubElementCompleted fx is called1', 'Sub element key not present', $mandatorySubElementAttributes, $mandatoryChildSubElements, $key, $data);
+
+                    return false;
+                }
+
+                if (empty($data[$key])) {
+                    //dd('isSubElementCompleted fx is called2', 'Sub element empty', $mandatorySubElementAttributes, $mandatoryChildSubElements, $key, $data);
+
+                    return false;
+                }
+                if (!$this->isElementCompleted($mandatorySubElementAttributes, $mandatoryChildSubElements, $data[$key])) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Checks if single dimension attribute is complete.
+     *
+     * @param $element
+     * @param $data
+     *
+     * @return bool
+     * @throws \JsonException
+     */
+    public function singleDimensionAttributeCheck($element, $data): bool
+    {
+        return $this->isSingleDimensionAttributeCompleted(getElementSchema($element), $data);
+    }
+
+    /**
+     * Checks if level one attribute and sub element is complete.
+     *
+     * @param $elementSchema
+     * @param $data
+     *
+     * @return bool
+     * @throws \JsonException
+     */
+    public function isLevelOneMultiDimensionDataCompleted($elementSchema, $data): bool
+    {
+        $mandatoryAttributes = $this->getMandatoryAttributes($elementSchema);
+        $mandatorySubElements = $this->getMandatorySubElements($elementSchema);
+
+        return $this->isElementCompleted($mandatoryAttributes, $mandatorySubElements, $data);
+    }
+
+    /**
+     * Checks if all element is complete.
+     *
+     * @param $element
+     * @param $data
+     *
+     * @return bool
+     * @throws \JsonException
+     */
+    public function isLevelOneMultiDimensionElementCompleted($element, $data): bool
+    {
+        return $this->isLevelOneMultiDimensionDataCompleted(getElementSchema($element), $data);
+    }
+
+    /**
+     * Checks if two level sub element is complete.
+     *
+     * @param $element
+     * @param $data
+     *
+     * @return bool
+     * @throws \JsonException
+     */
+    public function isLevelTwoSingleDimensionElementCompleted($element, $data): bool
+    {
+        if (!$this->singleDimensionAttributeCheck($element, $data)) {
+            return false;
+        }
+
+        $elementSchema = getElementSchema($element);
+
+        return $this->isSubElementCompleted($elementSchema['sub_elements'], $data);
+    }
+
+    /**
+     * Checks if level two attribute and sub element is complete.
+     *
+     * @param $elementSchema
+     * @param $data
+     *
+     * @return bool
+     * @throws \JsonException
+     */
+    public function isLevelTwoMultiDimensionDataCompleted($elementSchema, $data): bool
+    {
+        if (!$this->isMultiDimensionAttributeCompleted($elementSchema, $data)) {
+            return false;
+        }
+
+        $subElements = getArr($elementSchema, 'sub_elements');
+        $mandatorySubElementsFlag = false;
+
+        foreach ($subElements as $subElement) {
+            $mandatorySubElementAttributes = $this->getMandatoryAttributes($subElement);
+
+            if (!empty($mandatorySubElementAttributes)) {
+                $mandatorySubElementsFlag = true;
+                break;
+            }
+
+            $mandatoryChildSubElements = $this->getMandatorySubElements($subElement);
+
+            if (!empty($mandatoryChildSubElements)) {
+                $mandatorySubElementsFlag = true;
+                break;
+            }
+        }
+
+        if ($mandatorySubElementsFlag) {
+            if (empty($data)) {
+                return false;
+            }
+            foreach ($data as $datum) {
+                if (!$this->isSubElementCompleted($subElements, $datum)) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Checks if two level sub element is complete.
+     *
+     * @param $element
+     * @param $data
+     *
+     * @return bool
+     * @throws \JsonException
+     */
+    public function isLevelTwoMultiDimensionElementCompleted($element, $data): bool
+    {
+        return $this->isLevelTwoMultiDimensionDataCompleted(getElementSchema($element), $data);
+    }
+
+    /**
+     * Checks three level sub element is complete.
+     *
+     * @param $element
+     * @param $data
+     *
+     * @return bool
+     * @throws \JsonException
+     */
+    public function isLevelThreeSingleDimensionElementCompleted($element, $data): bool
+    {
+        if (!$this->singleDimensionAttributeCheck($element, $data)) {
+            return false;
+        }
+
+        $elementSchema = getElementSchema($element);
+        $subElements = $elementSchema['sub_elements'];
+
+        foreach ($subElements as $key => $subElement) {
+            $mandatorySubElementAttributes = $this->getMandatoryAttributes($subElement);
+
+            if (empty($mandatorySubElementAttributes)) {
+                continue;
+            }
+
+            if (!array_key_exists($key, $data)) {
+                //dd('isLevelThreeSingleDimensionElementCompleted fx called1', 'sub-element-empty', 'sub-element-check:', $mandatorySubElementAttributes, $key, $data);
+
+                return false;
+            }
+
+            if (empty($data[$key])) {
+                //dd('isLevelThreeSingleDimensionElementCompleted fx called2', 'sub-element-empty', 'sub-element-check:', $mandatorySubElementAttributes, $key, $data);
+
+                return false;
+            }
+
+            $tempData = $data[$key];
+
+            foreach ($tempData as $datum) {
+                if (!$this->isAttributeDataCompleted($mandatorySubElementAttributes, $datum)) {
+                    return false;
+                }
+            }
+
+            $tempData = $data[$key];
+
+            foreach ($tempData as $tempDatum) {
+                if (!$this->isSubElementCompleted($subElement['sub_elements'], $tempDatum)) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Returns identifier element complete status.
+     *
+     * @param $activity
+     *
+     * @return bool
+     */
+    public function isIdentifierElementCompleted($activity): bool
+    {
+        $identifier = $activity->iati_identifier;
+
+        return !(!array_key_exists('activity_identifier', $identifier) || empty($identifier['activity_identifier']));
+    }
+
+    /**
+     * Returns title element complete status.
+     *
+     * @param $activity
+     *
+     * @return bool
+     * @throws \JsonException
+     */
+    public function isTitleElementCompleted($activity): bool
+    {
+        $activity->element = 'title';
+        $this->element = $activity->element;
+        $elementSchema = getElementSchema($activity->element);
+
+        return $this->isSubElementDataCompleted($this->mandatorySubElements($elementSchema['sub_elements']), ['narrative' => $activity->title]);
+    }
+
+    /**
+     * Returns description element complete status.
+     *
+     * @param $activity
+     *
+     * @return bool
+     * @throws \JsonException
+     */
+    public function isDescriptionElementCompleted($activity): bool
+    {
+        $activity->element = 'description';
+        $this->element = $activity->element;
+
+        return $this->isLevelOneMultiDimensionElementCompleted('description', $activity->description);
+    }
+
+    /**
+     * Returns activity_date element complete status.
+     *
+     * @param $activity
+     *
+     * @return bool
+     * @throws \JsonException
+     */
+    public function isActivityDateElementCompleted($activity): bool
+    {
+        $activity->element = 'activity_date';
+        $this->element = $activity->element;
+
+        return $this->isLevelOneMultiDimensionElementCompleted('activity_date', $activity->activity_date);
+    }
+
+    /**
+     * Returns recipient_country element complete status.
+     *
+     * @param $activity
+     *
+     * @return bool
+     * @throws \JsonException
+     */
+    public function isRecipientCountryElementCompleted($activity): bool
+    {
+        $activity->element = 'recipient_country';
+        $this->element = $activity->element;
+
+        return $this->isLevelOneMultiDimensionElementCompleted('recipient_country', $activity->recipient_country);
+    }
+
+    /**
+     * Returns budget element complete status.
+     *
+     * @param $activity
+     *
+     * @return bool
+     * @throws \JsonException
+     */
+    public function isBudgetElementCompleted($activity): bool
+    {
+        $activity->element = 'budget';
+        $this->element = $activity->element;
+
+        return $this->isLevelOneMultiDimensionElementCompleted('budget', $activity->budget);
+    }
+
+    /**
+     * Returns recipient_region element complete status.
+     *
+     * @param $activity
+     *
+     * @return bool
+     * @throws \JsonException
+     */
+    public function isRecipientRegionElementCompleted($activity): bool
+    {
+        $activity->element = 'recipient_region';
+        $this->element = $activity->element;
+
+        return $this->isLevelOneMultiDimensionElementCompleted('recipient_region', $activity->recipient_region);
+    }
+
+    /**
+     * Returns default_aid_type element complete status.
+     *
+     * @param $activity
+     *
+     * @return bool
+     * @throws \JsonException
+     */
+    public function isDefaultAidTypeElementCompleted($activity): bool
+    {
+        $activity->element = 'default_aid_type';
+        $this->element = $activity->element;
+
+        return $this->isLevelOneMultiDimensionElementCompleted('default_aid_type', $activity->default_aid_type);
+    }
+
+    /**
+     * Returns related_activity element complete status.
+     *
+     * @param $activity
+     *
+     * @return bool
+     * @throws \JsonException
+     */
+    public function isRelatedActivityElementCompleted($activity): bool
+    {
+        $activity->element = 'related_activity';
+        $this->element = $activity->element;
+
+        return $this->isLevelOneMultiDimensionElementCompleted('related_activity', $activity->related_activity);
+    }
+
+    /**
+     * Returns description element complete status.
+     *
+     * @param $activity
+     *
+     * @return bool
+     * @throws \JsonException
+     */
+    public function isSectorElementCompleted($activity): bool
+    {
+        $activity->element = 'sector';
+        $this->element = $activity->element;
+
+        return $this->isLevelOneMultiDimensionElementCompleted('sector', $activity->sector);
+    }
+
+    /**
+     * Returns humanitarian_scope element complete status.
+     *
+     * @param $activity
+     *
+     * @return bool
+     * @throws \JsonException
+     */
+    public function isHumanitarianScopeElementCompleted($activity): bool
+    {
+        $activity->element = 'humanitarian_scope';
+        $this->element = $activity->element;
+
+        return $this->isLevelOneMultiDimensionElementCompleted('humanitarian_scope', $activity->humanitarian_scope);
+    }
+
+    /**
+     * Returns legacy_data element complete status.
+     *
+     * @param $activity
+     *
+     * @return bool
+     * @throws \JsonException
+     */
+    public function isLegacyDataElementCompleted($activity): bool
+    {
+        $activity->element = 'legacy_data';
+        $this->element = $activity->element;
+
+        return $this->isLevelOneMultiDimensionElementCompleted('legacy_data', $activity->legacy_data);
+    }
+
+    /**
+     * Returns tag element complete status.
+     *
+     * @param $activity
+     *
+     * @return bool
+     * @throws \JsonException
+     */
+    public function isTagElementCompleted($activity): bool
+    {
+        $activity->element = 'tag';
+        $this->element = $activity->element;
+
+        return $this->isLevelOneMultiDimensionElementCompleted('tag', $activity->tag);
+    }
+
+    /**
+     * Returns policy_marker element complete status.
+     *
+     * @param $activity
+     *
+     * @return bool
+     * @throws \JsonException
+     */
+    public function isPolicyMarkerElementCompleted($activity): bool
+    {
+        $activity->element = 'policy_marker';
+        $this->element = $activity->element;
+
+        return $this->isLevelOneMultiDimensionElementCompleted('policy_marker', $activity->policy_marker);
+    }
+
+    /**
+     * Returns participating_org_element_completed element complete status.
+     *
+     * @param $activity
+     *
+     * @return bool
+     * @throws \JsonException
+     */
+    public function isParticipatingOrgElementCompleted($activity): bool
+    {
+        $activity->element = 'participating_org';
+        $this->element = $activity->element;
+
+        return $this->isLevelOneMultiDimensionElementCompleted('participating_org', $activity->participating_org);
+    }
+
+    /**
+     * Returns activity_status element complete status.
+     *
+     * @param $activity
+     *
+     * @return bool
+     */
+    public function isActivityStatusElementCompleted($activity): bool
+    {
+        $activity->element = 'activity_status';
+        $this->element = $activity->element;
+
+        return !empty($activity->activity_status);
+    }
+
+    /**
+     * Returns activity_scope element complete status.
+     *
+     * @param $activity
+     *
+     * @return bool
+     */
+    public function isActivityScopeElementCompleted($activity): bool
+    {
+        $activity->element = 'activity_scope';
+        $this->element = $activity->element;
+
+        return !empty($activity->activity_scope);
+    }
+
+    /**
+     * Returns collaboration_type element complete status.
+     *
+     * @param $activity
+     *
+     * @return bool
+     */
+    public function isCollaborationTypeElementCompleted($activity): bool
+    {
+        $activity->element = 'collaboration_type';
+        $this->element = $activity->element;
+
+        return !empty($activity->collaboration_type);
+    }
+
+    /**
+     * Returns default_flow_type element complete status.
+     *
+     * @param $activity
+     *
+     * @return bool
+     */
+    public function isDefaultFlowTypeElementCompleted($activity): bool
+    {
+        $activity->element = 'default_flow_type';
+        $this->element = $activity->element;
+
+        return !empty($activity->default_flow_type);
+    }
+
+    /**
+     * Returns default_finance_type element complete status.
+     *
+     * @param $activity
+     *
+     * @return bool
+     */
+    public function isDefaultFinanceTypeElementCompleted($activity): bool
+    {
+        $activity->element = 'default_finance_type';
+        $this->element = $activity->element;
+
+        return !empty($activity->default_finance_type);
+    }
+
+    /**
+     * Returns default_tied_status element complete status.
+     *
+     * @param $activity
+     *
+     * @return bool
+     */
+    public function isDefaultTiedStatusElementCompleted($activity): bool
+    {
+        $activity->element = 'default_tied_status';
+        $this->element = $activity->element;
+
+        return !empty($activity->default_tied_status);
+    }
+
+    /**
+     * Returns capital_spend element complete status.
+     *
+     * @param $activity
+     *
+     * @return bool
+     */
+    public function isCapitalSpendElementCompleted($activity): bool
+    {
+        $activity->element = 'capital_spend';
+        $this->element = $activity->element;
+
+        return !empty($activity->capital_spend);
+    }
+
+    /**
+     * Returns other_identifier element complete status.
+     *
+     * @param $activity
+     *
+     * @return bool
+     * @throws \JsonException
+     */
+    public function isOtherIdentifierElementCompleted($activity): bool
+    {
+        $activity->element = 'other_identifier';
+        $this->element = $activity->element;
+
+        return $this->isLevelTwoSingleDimensionElementCompleted('other_identifier', $activity->other_identifier);
+    }
+
+    /**
+     * Returns conditions element complete status.
+     *
+     * @param $activity
+     *
+     * @return bool
+     * @throws \JsonException
+     */
+    public function isConditionsElementCompleted($activity): bool
+    {
+        $activity->element = 'conditions';
+        $this->element = $activity->element;
+
+        return $this->isLevelTwoSingleDimensionElementCompleted('conditions', $activity->conditions);
+    }
+
+    /**
+     * Returns conditions element complete status.
+     *
+     * @param $activity
+     *
+     * @return bool
+     * @throws \JsonException
+     */
+    public function isDocumentLinkElementCompleted($activity): bool
+    {
+        $activity->element = 'document_link';
+        $this->element = $activity->element;
+
+        return $this->isLevelTwoMultiDimensionElementCompleted('document_link', $activity->document_link);
+    }
+
+    /**
+     * Returns contact_info element complete status.
+     *
+     * @param $activity
+     *
+     * @return bool
+     * @throws \JsonException
+     */
+    public function isContactInfoElementCompleted($activity): bool
+    {
+        $activity->element = 'contact_info';
+        $this->element = $activity->element;
+
+        return $this->isLevelTwoMultiDimensionElementCompleted('contact_info', $activity->contact_info);
+    }
+
+    /**
+     * Returns location element complete status.
+     *
+     * @param $activity
+     *
+     * @return bool
+     * @throws \JsonException
+     */
+    public function isLocationElementCompleted($activity): bool
+    {
+        $activity->element = 'location';
+        $this->element = $activity->element;
+
+        return $this->isLevelTwoMultiDimensionElementCompleted('location', $activity->location);
+    }
+
+    /**
+     * Returns planned_disbursement element complete status.
+     *
+     * @param $activity
+     *
+     * @return bool
+     * @throws \JsonException
+     */
+    public function isPlannedDisbursementElementCompleted($activity): bool
+    {
+        $activity->element = 'planned_disbursement';
+        $this->element = $activity->element;
+
+        return $this->isLevelTwoMultiDimensionElementCompleted('planned_disbursement', $activity->planned_disbursement);
+    }
+
+    /**
+     * Returns country_budget_items element complete status.
+     *
+     * @param $activity
+     *
+     * @return bool
+     * @throws \JsonException
+     */
+    public function isCountryBudgetItemsElementCompleted($activity): bool
+    {
+        $activity->element = 'country_budget_items';
+        $this->element = $activity->element;
+
+        return $this->isLevelThreeSingleDimensionElementCompleted('country_budget_items', $activity->country_budget_items);
+    }
+
+    /**
+     * Checks if target or actual or baseline elements are completed.
+     *
+     * @param $elementSchema
+     * @param $data
+     *
+     * @return bool
+     * @throws \JsonException
+     */
+    public function isTargetAndActualAndBaselineDataCompleted($elementSchema, $data): bool
+    {
+        if (!$this->isSingleDimensionAttributeCompleted($elementSchema, $data)) {
+            return false;
+        }
+
+        if (!$this->isLevelOneMultiDimensionDataCompleted($elementSchema['sub_elements']['comment'], getArr($data, 'comment'))) {
+            return false;
+        }
+
+        if (!$this->isLevelOneMultiDimensionDataCompleted($elementSchema['sub_elements']['dimension'], getArr($data, 'dimension'))) {
+            return false;
+        }
+
+        if (!$this->isLevelOneMultiDimensionDataCompleted($elementSchema['sub_elements']['location'], getArr($data, 'location'))) {
+            return false;
+        }
+
+        if (!$this->isLevelTwoMultiDimensionDataCompleted($elementSchema['sub_elements']['document_link'], getArr($data, 'document_link'))) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Checks if period element is completed.
+     *
+     * @param $element
+     * @param $data
+     *
+     * @return bool
+     * @throws \JsonException
+     */
+    public function isPeriodElementCompleted($element, $data): bool
+    {
+        $elementSchema = getElementSchema($element);
+        $subElements = $this->getMandatorySubElements($elementSchema);
+
+        foreach ($data as $datum) {
+            if (!$this->isLevelOneMultiDimensionDataCompleted($subElements['period_start'], getArr($datum, 'period_start'))) {
+                return false;
+            }
+
+            if (!$this->isLevelOneMultiDimensionDataCompleted($subElements['period_end'], getArr($datum, 'period_end'))) {
+                return false;
+            }
+
+            if (!$this->isTargetAndActualAndBaselineCompleted($datum, $elementSchema['sub_elements'], 'target')) {
+                return false;
+            }
+
+            if (!$this->isTargetAndActualAndBaselineCompleted($datum, $elementSchema['sub_elements'], 'actual')) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * @param $data
+     * @param $subElements
+     * @param $key
+     *
+     * @return bool
+     * @throws \JsonException
+     */
+    public function isTargetAndActualAndBaselineCompleted($data, $subElements, $key): bool
+    {
+        $attributeData = getArr($data, $key);
+
+        foreach ($attributeData as $attributeDatum) {
+            if (!$this->isTargetAndActualAndBaselineDataCompleted($subElements[$key], $attributeDatum)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Checks if result or indicator element is completed.
+     *
+     * @param $elementSchema
+     * @param $data
+     *
+     * @return bool
+     * @throws \JsonException
+     */
+    public function isResultAndIndicatorElementCompleted($elementSchema, $data): bool
+    {
+        if (!$this->isSingleDimensionAttributeCompleted($elementSchema, $data)) {
+            return false;
+        }
+
+        if (!$this->isLevelOneMultiDimensionDataCompleted($elementSchema['sub_elements']['title'], getArr($data, 'title'))) {
+            return false;
+        }
+
+        if (!$this->isLevelOneMultiDimensionDataCompleted($elementSchema['sub_elements']['description'], getArr($data, 'description'))) {
+            return false;
+        }
+
+        if (!$this->isLevelOneMultiDimensionDataCompleted($elementSchema['sub_elements']['reference'], getArr($data, 'reference'))) {
+            return false;
+        }
+
+        if (!$this->isLevelTwoMultiDimensionDataCompleted($elementSchema['sub_elements']['document_link'], getArr($data, 'document_link'))) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Checks if indicator element is completed.
+     *
+     * @param $element
+     * @param $data
+     *
+     * @return bool
+     * @throws \JsonException
+     */
+    public function isIndicatorElementCompleted($element, $data): bool
+    {
+        $elementSchema = getElementSchema($element);
+
+        foreach ($data as $datum) {
+            if (!$this->isResultAndIndicatorElementCompleted($elementSchema, $datum)) {
+                return false;
+            }
+
+            if (!$this->isTargetAndActualAndBaselineCompleted($datum, $elementSchema['sub_elements'], 'baseline')) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Checks if result element is completed.
+     *
+     * @param $element
+     * @param $data
+     *
+     * @return bool
+     * @throws \JsonException
+     */
+    public function isResultElementDataCompleted($element, $data): bool
+    {
+        $elementSchema = getElementSchema($element);
+
+        foreach ($data as $datum) {
+            if (!$this->isResultAndIndicatorElementCompleted($elementSchema, $datum)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Returns period, indicator and result data.
+     *
+     * @param $activity
+     *
+     * @return array
+     */
+    public function getFormattedResults($activity): array
+    {
+        $results = $activity->results()->with('indicators.periods')->get()->toArray();
+        $resultData = [];
+        $indicatorData = [];
+        $periodData = [];
+
+        if (!empty($results)) {
+            foreach ($results as $result) {
+                $resultData[] = $result['result'];
+                $indicators = $result['indicators'];
+
+                if (!empty($indicators)) {
+                    foreach ($indicators as $indicator) {
+                        $indicatorData[] = $indicator;
+                        $periods = $indicator['periods'];
+
+                        if (!empty($periods)) {
+                            foreach ($periods as $period) {
+                                $periodData[] = $period;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        return [$resultData, $indicatorData, $periodData];
+    }
+
+    /**
+     * Returns result element complete status.
+     *
+     * @param $activity
+     *
+     * @return bool
+     * @throws \JsonException
+     */
+    public function isResultElementCompleted($activity): bool
+    {
+        [$resultData, $periodData, $indicatorData] = $this->getFormattedResults($activity);
+
+        $activity->element = 'period';
+        $this->element = $activity->element;
+
+        if (!$this->isPeriodElementCompleted('period', $periodData)) {
+            return false;
+        }
+
+        $activity->element = 'indicator';
+        $this->element = $activity->element;
+
+        if (!$this->isIndicatorElementCompleted('indicator', $indicatorData)) {
+            return false;
+        }
+
+        $activity->element = 'result';
+        $this->element = $activity->element;
+
+        if (!$this->isResultElementDataCompleted('result', $resultData)) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * @param $subElements
+     * @param $data
+     *
+     * @return bool
+     * @throws \JsonException
+     */
+    public function checkTransactionData($subElements, $data): bool
+    {
+        if (!$this->singleDimensionAttributeCheck('transactions', $data)) {
+            return false;
+        }
+
+        foreach ($subElements as $subElement) {
+            if (!$this->isLevelOneMultiDimensionDataCompleted($subElement, $data[$subElement['name']])) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * @param $activity
+     *
+     * @return bool
+     * @throws \JsonException
+     */
+    public function isTransactionsElementCompleted($activity): bool
+    {
+        $transactionData = $activity->transactions()->get()->toArray();
+
+        if (!empty($transactionData)) {
+            $activity->element = 'transactions';
+            $this->element = $activity->element;
+
+            $elementSchema = getElementSchema($activity->element);
+
+            foreach ($transactionData as $transactionDatum) {
+                if (!$this->checkTransactionData($elementSchema['sub_elements'], $transactionDatum['transaction'])) {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        return false;
+    }
+}

@@ -4,6 +4,60 @@ declare(strict_types=1);
 
 use Illuminate\Support\Facades\Session;
 
+if (!function_exists('dashesToCamelCase')) {
+    function dashesToCamelCase($string, $capitalizeFirstCharacter = false): string
+    {
+        $str = str_replace(' ', '', ucwords(str_replace('_', ' ', $string)));
+
+        if (!$capitalizeFirstCharacter) {
+            $str[0] = strtolower($str[0]);
+        }
+
+        return $str;
+    }
+}
+
+if (!function_exists('readElementJsonSchema')) {
+    /**
+     * Reads elementJsonSchema.
+     *
+     * @return array
+     * @throws JsonException
+     */
+    function readElementJsonSchema(): array
+    {
+        return json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true, 512, JSON_THROW_ON_ERROR);
+    }
+}
+
+if (!function_exists('getElementSchema')) {
+    /**
+     * Returns element schema.
+     *
+     * @throws JsonException
+     */
+    function getElementSchema($element): array
+    {
+        return getArr(readElementJsonSchema(), $element);
+    }
+}
+
+if (!function_exists('getElements')) {
+    /**
+     * Returns elements list.
+     *
+     * @return array
+     * @throws JsonException
+     */
+    function getElements(): array
+    {
+        $elementJsonSchema = readElementJsonSchema();
+        unset($elementJsonSchema['indicator'], $elementJsonSchema['period']);
+
+        return array_keys($elementJsonSchema);
+    }
+}
+
 if (!function_exists('getCoreElements')) {
     /**
      * Returns Core Elements.
@@ -13,25 +67,54 @@ if (!function_exists('getCoreElements')) {
     function getCoreElements(): array
     {
         return [
+            'iati_identifier',
+            'title',
+            'description',
+            'participating_org',
+            'activity_status',
+            'activity_date',
+            'recipient_country',
+            'recipient_region',
+            'sector',
+            'collaboration_type',
+            'default_flow_type',
+            'default_finance_type',
+            'default_aid_type',
+            'budget',
+            'transaction',
+        ];
+    }
+}
+
+if (!function_exists('getCoreElementsWithTrueValue')) {
+    /**
+     * Returns Core Elements.
+     *
+     * @return array
+     */
+    function getCoreElementsWithTrueValue(): array
+    {
+        return [
+            'iati_identifier'      => true,
             'title'                => true,
             'description'          => true,
-            'budget'               => true,
-            'transactions'         => true,
-            'sector'               => true,
             'participating_org'    => true,
             'activity_status'      => true,
             'activity_date'        => true,
             'recipient_country'    => true,
             'recipient_region'     => true,
+            'sector'               => true,
             'collaboration_type'   => true,
             'default_flow_type'    => true,
             'default_finance_type' => true,
             'default_aid_type'     => true,
+            'budget'               => true,
+            'transaction'          => true,
         ];
     }
 }
 
-if (!function_exists('coreElementCompleted')) {
+if (!function_exists('isCoreElementCompleted')) {
     /**
      * Checks if all core elements are complete.
      *
@@ -39,9 +122,9 @@ if (!function_exists('coreElementCompleted')) {
      *
      * @return bool
      */
-    function coreElementCompleted($elementStatus): bool
+    function isCoreElementCompleted($elementStatus): bool
     {
-        return empty(array_diff_assoc(getCoreElements(), $elementStatus));
+        return empty(array_diff_assoc(getCoreElementsWithTrueValue(), $elementStatus));
     }
 }
 
@@ -57,20 +140,6 @@ if (!function_exists('getArr')) {
     function getArr($data, $key): array
     {
         return array_key_exists($key, $data) ? $data[$key] : [];
-    }
-}
-
-if (!function_exists('getElementSchema')) {
-    /**
-     * Returns element schema.
-     *
-     * @throws JsonException
-     */
-    function getElementSchema($element): array
-    {
-        $elementJsonSchema = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true, 512, JSON_THROW_ON_ERROR);
-
-        return getArr($elementJsonSchema, $element);
     }
 }
 

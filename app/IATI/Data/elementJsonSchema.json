@@ -34,33 +34,70 @@
     }
   },
   "reporting_org": {
+    "name": "reporting_org",
     "label": "reporting-org",
+    "criteria": "mandatory",
+    "hover_text": "The organisation issuing the report. May be a primary source (reporting on its own activity as donor, implementing agency, etc) or a secondary source (reporting on the activities of another organisation). <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/reporting-org/'>For more information</a>",
+    "add_more": "true",
     "attributes": {
       "ref": {
         "name": "ref",
-        "type": "text",
-        "label": "ORGANISATION NAME ABBREVIATION",
-        "value": null,
-        "require": true,
-        "criteria": ""
-      },
-      "type": {},
-      "secondary_reporter": {}
-    },
-    "sub_elements": {
-      "narrative": {
+        "label": "@ref",
         "type": "text",
         "required": true,
         "criteria": "mandatory",
-        "label": "Narrative",
+        "hover_text": "Machine-readable identification string for the organisation issuing the report. Must be in the format {RegistrationAgency}-{RegistrationNumber}. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/reporting-org/'>For more information</a>",
+        "help_text": ""
+      },
+      "type": {
+        "name": "type",
+        "label": "@type",
+        "type": "select",
+        "multiSelect": false,
+        "choices": "Organization/OrganizationType.json",
+        "required": true,
+        "criteria": "mandatory",
+        "hover_text": "The type of organisation issuing the report. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/reporting-org/'>For more information</a>",
+        "help_text": ""
+      },
+      "secondary_reporter": {
+        "name": "secondary_reporter",
+        "label": "@secondary-reporter",
+        "type": "select",
+        "choices": {
+          "1": "True",
+          "0": "False"
+        },
+        "required": false,
+        "criteria": "",
+        "hover_text": "A flag indicating that the reporting organisation of this activity is acting as a secondary reporter. A secondary reporter is one that reproduces data on the activities of an organisation for which it is not directly responsible. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/reporting-org/'>For more information</a>",
+        "help_text": ""
+      }
+    },
+    "sub_elements": {
+      "narrative": {
+        "name": "narrative",
+        "label": "narrative",
+        "type": "textarea",
+        "required": false,
+        "criteria": "mandatory",
+        "add_more": true,
+        "attr": {
+          "row": 4
+        },
+        "hover_text": "The free text name or description of the item being described. This can be repeated in multiple languages. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/document-link/title/narrative/'>For more information</a>",
+        "help_text": "",
         "attributes": {
-          "language": {
+          "lang": {
             "name": "language",
+            "label": "@xml:lang",
             "type": "select",
-            "required": true,
-            "criteria": "mandatory",
-            "label": "Language",
-            "value": ["en", "fr", "sp"]
+            "multiSelect": false,
+            "choices": "Activity/Language.json",
+            "required": false,
+            "criteria": "recommended",
+            "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/document-link/title/narrative/'>For more information</a>",
+            "help_text": ""
           }
         },
         "sub_elements": {}

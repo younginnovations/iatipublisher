@@ -14,20 +14,21 @@ class CoreElementTest extends ElementCompleteTest
     public function test_core_elements(): void
     {
         $actualCoreElements = [
-            'title'                => true,
-            'description'          => true,
-            'budget'               => true,
-            'transactions'         => true,
-            'sector'               => true,
-            'participating_org'    => true,
-            'activity_status'      => true,
-            'activity_date'        => true,
-            'recipient_country'    => true,
-            'recipient_region'     => true,
-            'collaboration_type'   => true,
-            'default_flow_type'    => true,
-            'default_finance_type' => true,
-            'default_aid_type'     => true,
+            'iati_identifier',
+            'title',
+            'description',
+            'participating_org',
+            'activity_status',
+            'activity_date',
+            'recipient_country',
+            'recipient_region',
+            'sector',
+            'collaboration_type',
+            'default_flow_type',
+            'default_finance_type',
+            'default_aid_type',
+            'budget',
+            'transaction',
         ];
 
         $this->assertTrue($this->arrayStructure($actualCoreElements, getCoreElements()));
@@ -41,23 +42,24 @@ class CoreElementTest extends ElementCompleteTest
     public function test_core_element_not_completed(): void
     {
         $actualElements = [
+            'iati_identifier'      => true,
             'title'                => true,
             'description'          => true,
-            'budget'               => true,
-            'transactions'         => true,
-            'sector'               => true,
             'participating_org'    => true,
             'activity_status'      => true,
             'activity_date'        => true,
             'recipient_country'    => true,
             'recipient_region'     => true,
+            'sector'               => true,
             'collaboration_type'   => true,
             'default_flow_type'    => true,
             'default_finance_type' => true,
-            'default_aid_type'     => false,
+            'default_aid_type'     => true,
+            'budget'               => true,
+            'transaction'          => false,
         ];
 
-        $this->assertFalse(coreElementCompleted($actualElements));
+        $this->assertFalse(isCoreElementCompleted($actualElements));
     }
 
     /**
@@ -68,22 +70,23 @@ class CoreElementTest extends ElementCompleteTest
     public function test_core_element_completed(): void
     {
         $actualElements = [
+            'iati_identifier'      => true,
             'title'                => true,
             'description'          => true,
-            'budget'               => true,
-            'transactions'         => true,
-            'sector'               => true,
             'participating_org'    => true,
             'activity_status'      => true,
             'activity_date'        => true,
             'recipient_country'    => true,
             'recipient_region'     => true,
+            'sector'               => true,
             'collaboration_type'   => true,
             'default_flow_type'    => true,
             'default_finance_type' => true,
             'default_aid_type'     => true,
+            'budget'               => true,
+            'transaction'          => true,
         ];
 
-        $this->assertTrue(coreElementCompleted($actualElements));
+        $this->assertTrue(isCoreElementCompleted($actualElements));
     }
 }

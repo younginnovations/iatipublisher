@@ -27,6 +27,7 @@ class RecipientRegionCompleteTest extends ElementCompleteTest
      * Mandatory attribute test.
      *
      * @return void
+     * @throws \JsonException
      */
     public function test_recipient_region_type_mandatory_attributes(): void
     {
@@ -37,6 +38,7 @@ class RecipientRegionCompleteTest extends ElementCompleteTest
      * Mandatory sub element test.
      *
      * @return void
+     * @throws \JsonException
      */
     public function test_recipient_region_mandatory_sub_elements(): void
     {
@@ -47,12 +49,15 @@ class RecipientRegionCompleteTest extends ElementCompleteTest
      * Recipient Region element complete test.
      *
      * @return void
+     * @throws \JsonException
      */
     public function test_recipient_region_element_complete(): void
     {
         $sector_typeData = json_decode(
             '[{"region_vocabulary":"1","region_code":"88","percentage":"100","narrative":[{"narrative":null,"language":null}]},{"region_vocabulary":"2","custom_code":"vocab-2","percentage":"100","narrative":[{"narrative":null,"language":null}]},{"region_vocabulary":"99","custom_code":"vocab-99","vocabulary_uri":"https:\/\/www.google.com","percentage":"100","narrative":[{"narrative":null,"language":null}]}]',
-            true
+            true,
+            512,
+            JSON_THROW_ON_ERROR
         );
 
         $this->test_level_one_multi_dimensional_element_complete($this->element, $sector_typeData);

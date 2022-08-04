@@ -3,6 +3,7 @@
 namespace Tests\Feature\Element;
 
 use App\IATI\Models\Activity\Activity;
+use App\IATI\Services\ElementCompleteService;
 use Tests\TestCase;
 
 /**
@@ -11,6 +12,7 @@ use Tests\TestCase;
 class ElementCompleteTest extends TestCase
 {
     protected Activity $activityObj;
+    protected ElementCompleteService $elementCompleteService;
 
     /**
      * @param string|null $name
@@ -22,6 +24,7 @@ class ElementCompleteTest extends TestCase
         parent::__construct($name, $data, $dataName);
 
         $this->activityObj = new Activity();
+        $this->elementCompleteService = new ElementCompleteService();
     }
 
     /**
@@ -53,21 +56,6 @@ class ElementCompleteTest extends TestCase
     }
 
     /**
-     * Returns specific element schema.
-     *
-     * @param $element
-     *
-     * @return mixed
-     * @throws \JsonException
-     */
-    public function elementSchema($element): mixed
-    {
-        $elementSchema = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true, 512, JSON_THROW_ON_ERROR);
-
-        return $elementSchema[$element];
-    }
-
-    /**
      * Mandatory attribute test.
      *
      * @param $element
@@ -78,9 +66,9 @@ class ElementCompleteTest extends TestCase
      */
     protected function test_mandatory_attributes($element, $actualAttributes): void
     {
-        $elementSchema = $this->elementSchema($element);
+        $elementSchema = getElementSchema($element);
 
-        $this->assertTrue($this->arrayStructure($actualAttributes, $this->activityObj->mandatoryAttributes($elementSchema['attributes'])));
+        $this->assertTrue($this->arrayStructure($actualAttributes, $this->elementCompleteService->mandatoryAttributes($elementSchema['attributes'])));
     }
 
     /**
@@ -94,9 +82,9 @@ class ElementCompleteTest extends TestCase
      */
     protected function test_mandatory_sub_elements($element, $actualSubElement): void
     {
-        $elementSchema = $this->elementSchema($element);
+        $elementSchema = getElementSchema($element);
 
-        $this->assertTrue($this->arrayStructure($actualSubElement, $this->activityObj->mandatorySubElements($elementSchema['sub_elements'])));
+        $this->assertTrue($this->arrayStructure($actualSubElement, $this->elementCompleteService->mandatorySubElements($elementSchema['sub_elements'])));
     }
 
     /**
@@ -110,9 +98,9 @@ class ElementCompleteTest extends TestCase
      */
     protected function test_sub_element_empty($element, $actualData): void
     {
-        $elementSchema = $this->elementSchema($element);
+        $elementSchema = getElementSchema($element);
 
-        $this->assertFalse($this->activityObj->isSubElementDataCompleted($this->activityObj->mandatorySubElements($elementSchema['sub_elements']), $actualData));
+        $this->assertFalse($this->elementCompleteService->isSubElementDataCompleted($this->elementCompleteService->mandatorySubElements($elementSchema['sub_elements']), $actualData));
     }
 
     /**
@@ -126,9 +114,9 @@ class ElementCompleteTest extends TestCase
      */
     protected function test_sub_element_complete($element, $actualData): void
     {
-        $elementSchema = $this->elementSchema($element);
+        $elementSchema = getElementSchema($element);
 
-        $this->assertTrue($this->activityObj->isSubElementDataCompleted($this->activityObj->mandatorySubElements($elementSchema['sub_elements']), $actualData));
+        $this->assertTrue($this->elementCompleteService->isSubElementDataCompleted($this->elementCompleteService->mandatorySubElements($elementSchema['sub_elements']), $actualData));
     }
 
     /**
@@ -142,7 +130,7 @@ class ElementCompleteTest extends TestCase
      */
     protected function test_level_one_multi_dimensional_element_incomplete($element, $actualData): void
     {
-        $this->assertFalse($this->activityObj->isLevelOneMultiDimensionElementCompleted($element, $actualData));
+        $this->assertFalse($this->elementCompleteService->isLevelOneMultiDimensionElementCompleted($element, $actualData));
     }
 
     /**
@@ -156,7 +144,7 @@ class ElementCompleteTest extends TestCase
      */
     protected function test_level_one_multi_dimensional_element_complete($element, $actualData): void
     {
-        $this->assertTrue($this->activityObj->isLevelOneMultiDimensionElementCompleted($element, $actualData));
+        $this->assertTrue($this->elementCompleteService->isLevelOneMultiDimensionElementCompleted($element, $actualData));
     }
 
     /**
@@ -170,7 +158,7 @@ class ElementCompleteTest extends TestCase
      */
     protected function test_level_two_single_dimensional_element_incomplete($element, $actualData): void
     {
-        $this->assertFalse($this->activityObj->isLevelTwoSingleDimensionElementCompleted($element, $actualData));
+        $this->assertFalse($this->elementCompleteService->isLevelTwoSingleDimensionElementCompleted($element, $actualData));
     }
 
     /**
@@ -184,7 +172,7 @@ class ElementCompleteTest extends TestCase
      */
     protected function test_level_two_single_dimensional_element_complete($element, $actualData): void
     {
-        $this->assertTrue($this->activityObj->isLevelTwoSingleDimensionElementCompleted($element, $actualData));
+        $this->assertTrue($this->elementCompleteService->isLevelTwoSingleDimensionElementCompleted($element, $actualData));
     }
 
     /**
@@ -198,7 +186,7 @@ class ElementCompleteTest extends TestCase
      */
     protected function test_level_two_multi_dimensional_element_incomplete($element, $actualData): void
     {
-        $this->assertFalse($this->activityObj->isLevelTwoMultiDimensionElementCompleted($element, $actualData));
+        $this->assertFalse($this->elementCompleteService->isLevelTwoMultiDimensionElementCompleted($element, $actualData));
     }
 
     /**
@@ -212,7 +200,7 @@ class ElementCompleteTest extends TestCase
      */
     protected function test_level_two_multi_dimensional_element_complete($element, $actualData): void
     {
-        $this->assertTrue($this->activityObj->isLevelTwoMultiDimensionElementCompleted($element, $actualData));
+        $this->assertTrue($this->elementCompleteService->isLevelTwoMultiDimensionElementCompleted($element, $actualData));
     }
 
     /**
@@ -226,7 +214,7 @@ class ElementCompleteTest extends TestCase
      */
     protected function test_level_three_single_dimensional_element_incomplete($element, $actualData): void
     {
-        $this->assertFalse($this->activityObj->isLevelThreeSingleDimensionElementCompleted($element, $actualData));
+        $this->assertFalse($this->elementCompleteService->isLevelThreeSingleDimensionElementCompleted($element, $actualData));
     }
 
     /**
@@ -240,7 +228,7 @@ class ElementCompleteTest extends TestCase
      */
     protected function test_level_three_single_dimensional_element_complete($element, $actualData): void
     {
-        $this->assertTrue($this->activityObj->isLevelThreeSingleDimensionElementCompleted($element, $actualData));
+        $this->assertTrue($this->elementCompleteService->isLevelThreeSingleDimensionElementCompleted($element, $actualData));
     }
 
     /**
@@ -254,7 +242,7 @@ class ElementCompleteTest extends TestCase
      */
     protected function test_transaction_data_complete($subElements, $actualData): void
     {
-        $this->assertTrue($this->activityObj->checkTransactionData($subElements, $actualData));
+        $this->assertTrue($this->elementCompleteService->checkTransactionData($subElements, $actualData));
     }
 
     /**
@@ -269,11 +257,11 @@ class ElementCompleteTest extends TestCase
     protected function test_result_data_complete($element, $actualData): void
     {
         if ($element == 'result') {
-            $this->assertTrue($this->activityObj->isResultElementCompleted($element, $actualData));
+            $this->assertTrue($this->elementCompleteService->isResultElementCompleted($element, $actualData));
         } elseif ($element == 'indicator') {
-            $this->assertTrue($this->activityObj->isIndicatorElementCompleted($element, $actualData));
+            $this->assertTrue($this->elementCompleteService->isIndicatorElementCompleted($element, $actualData));
         } elseif ($element == 'period') {
-            $this->assertTrue($this->activityObj->isPeriodElementCompleted($element, $actualData));
+            $this->assertTrue($this->elementCompleteService->isPeriodElementCompleted($element, $actualData));
         }
     }
 }

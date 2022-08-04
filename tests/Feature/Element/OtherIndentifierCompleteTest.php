@@ -27,6 +27,7 @@ class OtherIndentifierCompleteTest extends ElementCompleteTest
      * Mandatory attribute test.
      *
      * @return void
+     * @throws \JsonException
      */
     public function test_other_identifier_mandatory_attributes(): void
     {
@@ -37,6 +38,7 @@ class OtherIndentifierCompleteTest extends ElementCompleteTest
      * Mandatory sub element test.
      *
      * @return void
+     * @throws \JsonException
      */
     public function test_other_identifier_mandatory_sub_elements(): void
     {
@@ -47,6 +49,7 @@ class OtherIndentifierCompleteTest extends ElementCompleteTest
      * Empty data test.
      *
      * @return void
+     * @throws \JsonException
      */
     public function test_other_identifier_empty_data(): void
     {
@@ -59,6 +62,7 @@ class OtherIndentifierCompleteTest extends ElementCompleteTest
      * Empty json test.
      *
      * @return void
+     * @throws \JsonException
      */
     public function test_other_identifier_empty_json(): void
     {
@@ -71,12 +75,15 @@ class OtherIndentifierCompleteTest extends ElementCompleteTest
      * Attribute reference_key no key test.
      *
      * @return void
+     * @throws \JsonException
      */
     public function test_other_identifier_attribute_no_reference_key(): void
     {
         $actualData = json_decode(
             '{"reference_type":"A1","owner_org":[{"ref":"OwnerOrg Ref-1","narrative":[{"narrative":"","language":"aa"},{"narrative":"asdsasdasd","language":"ab"}]},{"ref":"OwnerOrg Ref-2","narrative":[{"narrative":"asdasd","language":"af"}]}]}',
-            true
+            true,
+            512,
+            JSON_THROW_ON_ERROR
         );
 
         $this->test_level_two_single_dimensional_element_incomplete($this->element, $actualData);
@@ -86,12 +93,15 @@ class OtherIndentifierCompleteTest extends ElementCompleteTest
      * Attribute reference_type no key test.
      *
      * @return void
+     * @throws \JsonException
      */
     public function test_other_identifier_attribute_no_reference_type_key(): void
     {
         $actualData = json_decode(
             '{"reference":"1","owner_org":[{"ref":"OwnerOrg Ref-1","narrative":[{"narrative":"","language":"aa"},{"narrative":"asdsasdasd","language":"ab"}]},{"ref":"OwnerOrg Ref-2","narrative":[{"narrative":"asdasd","language":"af"}]}]}',
-            true
+            true,
+            512,
+            JSON_THROW_ON_ERROR
         );
 
         $this->test_level_two_single_dimensional_element_incomplete($this->element, $actualData);
@@ -101,12 +111,15 @@ class OtherIndentifierCompleteTest extends ElementCompleteTest
      * Attribute reference and reference_type empty test.
      *
      * @return void
+     * @throws \JsonException
      */
     public function test_other_identifier_attribute_empty_reference_and_reference_type(): void
     {
         $actualData = json_decode(
             '{"reference":"","reference_type":"","owner_org":[{"ref":"OwnerOrg Ref-1","narrative":[{"narrative":"","language":"aa"},{"narrative":"asdsasdasd","language":"ab"}]},{"ref":"OwnerOrg Ref-2","narrative":[{"narrative":"asdasd","language":"af"}]}]}',
-            true
+            true,
+            512,
+            JSON_THROW_ON_ERROR
         );
 
         $this->test_level_two_single_dimensional_element_incomplete($this->element, $actualData);
@@ -116,12 +129,15 @@ class OtherIndentifierCompleteTest extends ElementCompleteTest
      * Attribute reference empty test.
      *
      * @return void
+     * @throws \JsonException
      */
     public function test_other_identifier_attribute_empty_reference(): void
     {
         $actualData = json_decode(
             '{"reference":"","reference_type":"A1","owner_org":[{"ref":"OwnerOrg Ref-1","narrative":[{"narrative":"","language":"aa"},{"narrative":"asdsasdasd","language":"ab"}]},{"ref":"OwnerOrg Ref-2","narrative":[{"narrative":"asdasd","language":"af"}]}]}',
-            true
+            true,
+            512,
+            JSON_THROW_ON_ERROR
         );
 
         $this->test_level_two_single_dimensional_element_incomplete($this->element, $actualData);
@@ -131,12 +147,15 @@ class OtherIndentifierCompleteTest extends ElementCompleteTest
      * Attribute reference_type empty test.
      *
      * @return void
+     * @throws \JsonException
      */
     public function test_other_identifier_attribute_empty_reference_type(): void
     {
         $actualData = json_decode(
             '{"reference":"1","reference_type":"","owner_org":[{"ref":"OwnerOrg Ref-1","narrative":[{"narrative":"","language":"aa"},{"narrative":"asdsasdasd","language":"ab"}]},{"ref":"OwnerOrg Ref-2","narrative":[{"narrative":"asdasd","language":"af"}]}]}',
-            true
+            true,
+            512,
+            JSON_THROW_ON_ERROR
         );
 
         $this->test_level_two_single_dimensional_element_incomplete($this->element, $actualData);
@@ -146,12 +165,15 @@ class OtherIndentifierCompleteTest extends ElementCompleteTest
      * Other Identifier element complete test.
      *
      * @return void
+     * @throws \JsonException
      */
     public function test_other_identifier_element_complete(): void
     {
         $actualData = json_decode(
             '{"reference":"1","reference_type":"A1","owner_org":[{"ref":"OwnerOrg Ref-1","narrative":[{"narrative":"","language":"aa"},{"narrative":"asdsasdasd","language":"ab"}]},{"ref":"OwnerOrg Ref-2","narrative":[{"narrative":"asdasd","language":"af"}]}]}',
-            true
+            true,
+            512,
+            JSON_THROW_ON_ERROR
         );
 
         $this->test_level_two_single_dimensional_element_complete($this->element, $actualData);
