@@ -148,7 +148,7 @@ class PeriodController extends Controller
             ]);
 
             if ($messages) {
-                return redirect()->route('admin.activities.result.indicator.period.create', [$activityId, $resultId, $indicatorId])->with('error', $messages);
+                return redirect()->route('admin.activities.result.indicator.period.create', [$activityId, $resultId, $indicatorId])->with('error', $messages)->withInput();
             }
 
             $period = $this->periodService->create([
@@ -253,12 +253,12 @@ class PeriodController extends Controller
             $period = $this->periodService->getIndicatorPeriod($indicatorId, $periodId);
 
             $messages = $this->validateData([
-                'measure'  => $this->indicatorService->getResultIndicator($resultId, $indicatorId)['measure'],
+                'measure'  => $this->indicatorService->getResultIndicator($resultId, $indicatorId)['indicator']['measure'],
                 'period'   => $periodData,
             ]);
 
             if ($messages) {
-                return redirect()->route('admin.activities.result.indicator.period.edit', [$activityId, $resultId, $indicatorId, $periodId])->with('error', $messages);
+                return redirect()->route('admin.activities.result.indicator.period.edit', [$activityId, $resultId, $indicatorId, $periodId])->with('error', $messages)->withInput();
             }
 
             if (!$this->periodService->update([
@@ -335,7 +335,7 @@ class PeriodController extends Controller
         $repeated = false;
         $measure = $period['measure'];
 
-        if ($measure != '5') {
+        if ($measure == '5') {
             foreach ($period['period']['target'] as $target) {
                 if ($target['value']) {
                     return 'Value must be omitted when the indicator measure is qualitative.';

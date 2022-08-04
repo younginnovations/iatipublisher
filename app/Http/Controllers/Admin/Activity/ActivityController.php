@@ -120,10 +120,11 @@ class ActivityController extends Controller
      *
      * @return View|JsonResponse|RedirectResponse
      */
-    public function show(Activity $activity): View|JsonResponse|RedirectResponse
+    public function show($id): View|JsonResponse|RedirectResponse
     {
         try {
             $toast = generateToastData();
+            $activity = $this->activityService->getActivity($id);
             $elements = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
             $elementGroups = json_decode(file_get_contents(app_path('Data/Activity/ElementGroup.json')), true);
             $types = $this->getActivityDetailDataType();
@@ -300,7 +301,7 @@ class ActivityController extends Controller
     public function getActivityDetailStatus($activity): array
     {
         return [
-            'iati_identifier'           => $activity->identifier_element_completed,
+            'iati_identifier'      => $activity->identifier_element_completed,
             'title'                => $activity->title_element_completed,
             'description'          => $activity->description_element_completed,
             'activity_status'      => $activity->activity_status_element_completed,

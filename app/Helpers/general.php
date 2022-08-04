@@ -171,7 +171,7 @@ if (!function_exists('getIndicatorTypes')) {
     function getIndicatorTypes(): array
     {
         return [
-            'indicatorVocabulary'       => getCodeList('IndicatorVocabulary', 'Activity', false),
+            'indicatorVocabulary'       => getCodeList('IndicatorVocabulary', 'Activity'),
             'indicatorMeasure'          => getCodeList('IndicatorMeasure', 'Activity', false),
             'language'                  => getCodeList('Language', 'Activity', false),
             'documentCategory'          => getCodeList('DocumentCategory', 'Activity', false),

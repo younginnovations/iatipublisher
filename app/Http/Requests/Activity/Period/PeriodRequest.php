@@ -177,6 +177,7 @@ class PeriodRequest extends ActivityBaseRequest
 
         foreach ($formFields as $targetIndex => $target) {
             $targetForm = sprintf('%s.%s', $valueType, $targetIndex);
+            $rules[sprintf('%s.%s.value', $valueType, $targetIndex)] = 'nullable|numeric';
 
             $rules = array_merge(
                 $rules,
@@ -203,6 +204,12 @@ class PeriodRequest extends ActivityBaseRequest
         foreach ($formFields as $targetIndex => $target) {
             $targetForm = sprintf('%s.%s', $valueType, $targetIndex);
 
+            $messages[sprintf(
+                '%s.%s.value.numeric',
+                $valueType,
+                $targetIndex
+            )]
+                = 'The @value field must be numeric.';
             $messages = array_merge(
                 $messages,
                 $this->getMessagesForNarrative(
