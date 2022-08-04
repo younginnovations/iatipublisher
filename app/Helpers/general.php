@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+use Illuminate\Support\Facades\Session;
+
 if (!function_exists('getCodeList')) {
     /**
      * return codeList array from json codeList.
@@ -169,9 +171,10 @@ if (!function_exists('getIndicatorTypes')) {
     function getIndicatorTypes(): array
     {
         return [
-            'indicatorMeasure'          => getCodeList('IndicatorMeasure', 'Activity'),
+            'indicatorVocabulary'       => getCodeList('IndicatorVocabulary', 'Activity', false),
+            'indicatorMeasure'          => getCodeList('IndicatorMeasure', 'Activity', false),
             'language'                  => getCodeList('Language', 'Activity', false),
-            'documentCategory'          => getCodeList('DocumentCategory', 'Activity'),
+            'documentCategory'          => getCodeList('DocumentCategory', 'Activity', false),
             'fileFormat'                => getCodeList('FileFormat', 'Activity', false),
         ];
     }
@@ -186,9 +189,9 @@ if (!function_exists('getPeriodTypes')) {
     function getPeriodTypes(): array
     {
         return [
-            'indicatorMeasure'          => getCodeList('IndicatorMeasure', 'Activity'),
+            'indicatorMeasure'          => getCodeList('IndicatorMeasure', 'Activity', false),
             'language'                  => getCodeList('Language', 'Activity', false),
-            'documentCategory'          => getCodeList('DocumentCategory', 'Activity'),
+            'documentCategory'          => getCodeList('DocumentCategory', 'Activity', false),
             'fileFormat'                => getCodeList('FileFormat', 'Activity', false),
         ];
     }

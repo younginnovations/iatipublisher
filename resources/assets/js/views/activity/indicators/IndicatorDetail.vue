@@ -30,7 +30,16 @@
     <div class="activities">
       <aside class="activities__sidebar">
         <div
-          class="sticky top-0 px-6 py-4 rounded-lg indicator bg-eggshell text-n-50"
+          class="
+            sticky
+            top-0
+            px-6
+            py-4
+            rounded-lg
+            indicator
+            bg-eggshell
+            text-n-50
+          "
         >
           <ul class="text-sm font-bold leading-relaxed">
             <li v-for="(rData, r, ri) in indicatorData" :key="ri">
@@ -67,27 +76,18 @@
                       />
                     </template>
 
-                    <template v-if="indicatorData.ascending != ''">
-                      <Ascending
-                        id="ascending"
-                        :data="indicatorData.ascending"
-                      />
-                    </template>
+                    <Ascending id="ascending" :data="indicatorData.ascending" />
 
-                    <template v-if="indicatorData.measure">
-                      <Measure
-                        id="measure"
-                        :data="indicatorData.measure"
-                        :measure-type="types.indicatorMeasure"
-                      />
-                    </template>
+                    <Measure
+                      id="measure"
+                      :data="indicatorData.measure"
+                      :measure-type="types.indicatorMeasure"
+                    />
 
-                    <template v-if="indicatorData.aggregation_status != ''">
-                      <AggregationStatus
-                        id="aggregation_status"
-                        :data="indicatorData.aggregation_status"
-                      />
-                    </template>
+                    <AggregationStatus
+                      id="aggregation_status"
+                      :data="indicatorData.aggregation_status"
+                    />
 
                     <template
                       v-if="indicatorData.description[0].narrative.length > 0"

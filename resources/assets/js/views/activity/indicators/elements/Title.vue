@@ -13,7 +13,7 @@
             (Language: {{ titleType[title.language] }})
           </div>
           <div class="text-xs">
-            {{ title.narrative }}
+            {{ title.narrative??'Not Available' }}
           </div>
         </div>
       </template>

@@ -87,7 +87,7 @@ class ActivityBaseRequest extends FormRequest
         Validator::extendImplicit(
             'period_start_end',
             function ($attribute, $value, $parameter, $validator) {
-                return $parameter[0] > 365 ? false : true;
+                return $parameter[1] < $parameter[0] ? false : true;
             }
         );
     }

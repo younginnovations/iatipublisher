@@ -1150,6 +1150,69 @@ class FormBuilder {
     const height = target.scrollHeight;
     $(target).css('height', height);
   }
+
+  public addToCollection() {
+
+    $('body').on('click', '.add_to_collection', (event: Event) => {
+      this.addForm(event);
+    });
+
+    $('.add_to_parent').on('click', (event: Event) => {
+      this.addParentForm(event);
+    });
+  }
+
+  public deleteCollection() {
+    const deleteConfirmation = $('.delete-confirmation'),
+      cancelPopup = '.cancel-popup',
+      deleteConfirm = '.delete-confirm';
+    let deleteIndex = {},
+      childOrParent = '';
+
+    $('body').on('click', '.delete', (event: Event) => {
+      deleteConfirmation.fadeIn();
+      deleteIndex = event;
+      childOrParent = 'child';
+    });
+
+    $('body').on('click', cancelPopup, () => {
+      deleteConfirmation.fadeOut();
+      deleteIndex = {};
+      childOrParent = '';
+    });
+
+    $('body').on('click', deleteConfirm, () => {
+      if (childOrParent === 'child') {
+        this.deleteForm(deleteIndex as Event);
+      } else if (childOrParent === 'parent') {
+        this.deleteParentForm(deleteIndex as Event);
+      }
+
+      deleteConfirmation.fadeOut();
+      deleteIndex = {};
+      childOrParent = '';
+    });
+
+    $('body').on('click', '.delete-parent', (event: Event) => {
+      deleteConfirmation.fadeIn();
+      deleteIndex = event;
+      childOrParent = 'parent';
+    });
+
+    $('.select2').select2({
+      placeholder: 'Select an option',
+      allowClear: true,
+    });
+
+    $('body').on('change', 'input[id*="[document]"]', function () {
+      const endpoint = $('.endpoint').attr('endpoint') ?? '';
+      const file_name = ($(this).val() ?? '').toString();
+      $(this)
+        .closest('.form-field-group')
+        .find('input[id*="[url]"]')
+        .val(`${endpoint}/${file_name?.split('\\').pop()?.replace(' ', '_')}`);
+    });
+  }
 }
 
 $(function () {
@@ -1157,70 +1220,8 @@ $(function () {
   formBuilder.addWrapper();
   formBuilder.hideShowFormFields();
   formBuilder.updateActivityIdentifier();
-
-  $('body').on('click', '.add_to_collection', (event: Event) => {
-    formBuilder.addForm(event);
-  });
-
-  $('.add_to_parent').on('click', (event: Event) => {
-    formBuilder.addParentForm(event);
-  });
-  /**
-   * Delete function
-   *
-   */
-  const deleteConfirmation = $('.delete-confirmation'),
-    cancelPopup = '.cancel-popup',
-    deleteConfirm = '.delete-confirm';
-  let deleteIndex = {},
-    childOrParent = '';
-
-  $('body').on('click', '.delete', (event: Event) => {
-    deleteConfirmation.fadeIn();
-    deleteIndex = event;
-    childOrParent = 'child';
-  });
-
-  $('body').on('click', cancelPopup, () => {
-    deleteConfirmation.fadeOut();
-    deleteIndex = {};
-    childOrParent = '';
-  });
-
-  $('body').on('click', deleteConfirm, () => {
-    if (childOrParent === 'child') {
-      formBuilder.deleteForm(deleteIndex as Event);
-    } else if (childOrParent === 'parent') {
-      formBuilder.deleteParentForm(deleteIndex as Event);
-    }
-
-    deleteConfirmation.fadeOut();
-    deleteIndex = {};
-    childOrParent = '';
-  });
-
-  /**
-   * Delete parent element
-   */
-  $('body').on('click', '.delete-parent', (event: Event) => {
-    deleteConfirmation.fadeIn();
-    deleteIndex = event;
-    childOrParent = 'parent';
-  });
-
-  $('.select2').select2({
-    placeholder: 'Select an option',
-    allowClear: true,
-  });
-
-  $('body').on('change', 'input[id*="[document]"]', function () {
-    const endpoint = $('.endpoint').attr('endpoint') ?? '';
-    const file_name = ($(this).val() ?? '').toString();
-    $(this)
-      .closest('.form-field-group')
-      .find('input[id*="[url]"]')
-      .val(`${endpoint}/${file_name?.split('\\').pop()?.replace(' ', '_')}`);
-  });
+  formBuilder.addToCollection();
+  formBuilder.deleteCollection();
 
   /**
    * Text area height on typing

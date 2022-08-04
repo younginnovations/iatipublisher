@@ -276,7 +276,6 @@ class PeriodController extends Controller
                 'Indicator period updated successfully.'
             );
         } catch (\Exception $e) {
-            dd($e);
             logger()->error($e->getMessage());
 
             return redirect()->route('admin.activities.result.indicator.period.show', [$activityId, $resultId, $indicatorId, $periodId])->with(

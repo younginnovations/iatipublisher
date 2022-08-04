@@ -95,7 +95,7 @@ class PeriodRequest extends ActivityBaseRequest
         $rules = [];
 
         foreach ($formFields as $periodStartKey => $periodStartVal) {
-            $rules[sprintf('%s.%s.date', $periodType, $periodStartKey)] = 'nullable|date|date_greater_than:1900|period_start_end:' . $diff;
+            $rules[sprintf('%s.%s.date', $periodType, $periodStartKey)] = 'nullable|date|date_greater_than:1900';
         }
 
         return $rules;
@@ -118,7 +118,7 @@ class PeriodRequest extends ActivityBaseRequest
             $rules[sprintf('%s.%s.date', $periodType, $periodEndKey)] = 'nullable|date';
 
             if ($periodStart[$periodEndKey]['date'] > $periodEndVal['date']) {
-                $rules[sprintf('%s.%s.date', $periodType, $periodEndKey)] = sprintf('nullable|date|after:%s|period_start_end:%d', 'period_start.' . $periodEndKey . '.date', strval($diff));
+                $rules[sprintf('%s.%s.date', $periodType, $periodEndKey)] = sprintf('nullable|date|after:%s', 'period_start.' . $periodEndKey . '.date');
             }
         }
 

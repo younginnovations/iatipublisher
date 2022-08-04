@@ -44,11 +44,19 @@ class BudgetRequest extends ActivityBaseRequest
         $rules = [];
 
         foreach ($formFields as $budgetIndex => $budget) {
+            $diff = 0;
+            $start = $budget['period_start'][0]['date'];
+            $end = $budget['period_end'][0]['date'];
+
+            if ($start && $end) {
+                $diff = (strtotime($end) - strtotime($start)) / 86400;
+            }
+
             $budgetForm = sprintf('budget.%s', $budgetIndex);
             $rules = array_merge(
                 $rules,
-                $this->getRulesForPeriodStart($budget['period_start'], $budgetForm),
-                $this->getRulesForPeriodEnd($budget['period_end'], $budgetForm),
+                $this->getBudgetRulesForPeriodStart($budget['period_start'], $budgetForm, $diff),
+                $this->getBudgetRulesForPeriodEnd($budget['period_end'], $budgetForm, $diff),
                 $this->getRulesForValue($budget['budget_value'], $budgetForm)
             );
 
@@ -71,12 +79,12 @@ class BudgetRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    public function getRulesForPeriodStart($formFields, $formBase): array
+    public function getBudgetRulesForPeriodStart($formFields, $formBase, $diff): array
     {
         $rules = [];
 
         foreach ($formFields as $periodStartKey => $periodStartVal) {
-            $rules[$formBase . '.period_start.' . $periodStartKey . '.date'] = 'nullable|date|date_greater_than:1900';
+            $rules[$formBase . '.period_start.' . $periodStartKey . '.date'] = 'nullable|date|date_greater_than:1900|period_start_end:' . $diff . ',365';
         }
 
         return $rules;
@@ -87,10 +95,11 @@ class BudgetRequest extends ActivityBaseRequest
      *
      * @param $formFields
      * @param $formBase
+     * @param $diff
      *
      * @return array
      */
-    public function getRulesForPeriodEnd($formFields, $formBase): array
+    public function getBudgetRulesForPeriodEnd($formFields, $formBase, $diff): array
     {
         $rules = [];
 
@@ -102,6 +111,7 @@ class BudgetRequest extends ActivityBaseRequest
                 $formBase . '.period_start.' . $periodEndKey . '.date'
             );
             $rules[$formBase . '.period_end.' . $periodEndKey . '.date'][] = 'date_greater_than:1900';
+            $rules[$formBase . '.period_end.' . $periodEndKey . '.date'][] = 'period_start_end:' . $diff . ',365';
         }
 
         return $rules;
@@ -150,6 +160,7 @@ class BudgetRequest extends ActivityBaseRequest
             );
 
             $messages[$budgetForm . '.period_end.0.date.before'] = 'The Period End @iso-date must be within a year after Period Start @iso-date.';
+            $messages[$budgetForm . '.period_end.0.date.period_start_end'] = 'he Budget Period must not be longer than one year';
         }
 
         return $messages;
@@ -170,6 +181,7 @@ class BudgetRequest extends ActivityBaseRequest
         foreach ($formFields as $periodStartKey => $periodStartVal) {
             $messages[$formBase . '.period_start.' . $periodStartKey . '.date.date'] = 'The @iso-date field must be a valid date.';
             $messages[$formBase . '.period_start.' . $periodStartKey . '.date.date_greater_than'] = 'The @iso-date field must date after year 1900.';
+            $messages[$formBase . '.period_start.' . $periodStartKey . '.date.period_start_end'] = 'he Budget Period must not be longer than one year';
         }
 
         return $messages;
