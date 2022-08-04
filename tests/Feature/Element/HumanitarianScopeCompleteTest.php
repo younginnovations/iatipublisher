@@ -10,20 +10,6 @@ class HumanitarianScopeCompleteTest extends ElementCompleteTest
     private string $element = 'humanitarian_scope';
 
     /**
-     * Construct function.
-     *
-     * @param string|null $name
-     * @param array       $data
-     * @param string      $dataName
-     */
-    public function __construct(?string $name = null, array $data = [], string $dataName = '')
-    {
-        parent::__construct($name, $data, $dataName);
-
-        $this->activityObj->element = $this->element;
-    }
-
-    /**
      * Mandatory attribute test.
      *
      * @return void
@@ -105,7 +91,7 @@ class HumanitarianScopeCompleteTest extends ElementCompleteTest
      */
     public function test_humanitarian_scope_attribute_no_type_and_vocabulary_key(): void
     {
-        $humanitarian_scopeData = json_decode('["code":"123",{"narrative":[{"narrative":"asd","language":"aa"}]}]', true, 512, JSON_THROW_ON_ERROR);
+        $humanitarian_scopeData = json_decode('[{"code":"123","narrative":[{"narrative":"asd","language":"aa"}]}]', true, 512, JSON_THROW_ON_ERROR);
 
         $this->test_level_one_multi_dimensional_element_incomplete($this->element, $humanitarian_scopeData);
     }

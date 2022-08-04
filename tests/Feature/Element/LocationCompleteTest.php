@@ -10,20 +10,6 @@ class LocationCompleteTest extends ElementCompleteTest
     private string $element = 'location';
 
     /**
-     * Construct function.
-     *
-     * @param string|null $name
-     * @param array       $data
-     * @param string      $dataName
-     */
-    public function __construct(?string $name = null, array $data = [], string $dataName = '')
-    {
-        parent::__construct($name, $data, $dataName);
-
-        $this->activityObj->element = $this->element;
-    }
-
-    /**
      * Mandatory attribute test.
      *
      * @return void
@@ -435,7 +421,7 @@ class LocationCompleteTest extends ElementCompleteTest
     public function test_location_sub_element_description_empty(): void
     {
         $actualData = json_decode(
-            '[{"ref":"ref 1","location_reach":[{"code":"1"}],"location_id":[{"vocabulary":"A2","code":"vocab code"}],"name":[{"narrative":[{"narrative":"name 1","language":"aa"}],"description":"","activity_description":[{"narrative":[{"narrative":"activity description 1","language":"ab"}]}],"administrative":[{"vocabulary":"A2","code":"DZ","level":"1236"}],"point":[{"srs_name":"http:\/\/www.opengis.net\/def\/crs\/EPSG\/0\/4326","pos":[{"latitude":"56","longitude":"27"}]}],"exactness":[{"code":"1"}],"location_class":[{"code":"2"}],"feature_designation":[{"code":"CMPQ"}]}]',
+            '[{"ref":"ref 1","location_reach":[{"code":"1"}],"location_id":[{"vocabulary":"A2","code":"vocab code"}],"name":[{"narrative":[{"narrative":"name 1","language":"aa"}]}],"description":"","activity_description":[{"narrative":[{"narrative":"activity description 1","language":"ab"}]}],"administrative":[{"vocabulary":"A2","code":"DZ","level":"1236"}],"point":[{"srs_name":"http://www.opengis.net/def/crs/EPSG/0/4326","pos":[{"latitude":"56","longitude":"27"}]}],"exactness":[{"code":"1"}],"location_class":[{"code":"2"}],"feature_designation":[{"code":"CMPQ"}]}]',
             true,
             512,
             JSON_THROW_ON_ERROR
@@ -453,7 +439,7 @@ class LocationCompleteTest extends ElementCompleteTest
     public function test_location_sub_element_description_empty_array(): void
     {
         $actualData = json_decode(
-            '[{"ref":"ref 1","location_reach":[{"code":"1"}],"location_id":[{"vocabulary":"A2","code":"vocab code"}],"name":[{"narrative":[{"narrative":"name 1","language":"aa"}],"description":[],"activity_description":[{"narrative":[{"narrative":"activity description 1","language":"ab"}]}],"administrative":[{"vocabulary":"A2","code":"DZ","level":"1236"}],"point":[{"srs_name":"http:\/\/www.opengis.net\/def\/crs\/EPSG\/0\/4326","pos":[{"latitude":"56","longitude":"27"}]}],"exactness":[{"code":"1"}],"location_class":[{"code":"2"}],"feature_designation":[{"code":"CMPQ"}]}]',
+            '[{"ref":"ref 1","location_reach":[{"code":"1"}],"location_id":[{"vocabulary":"A2","code":"vocab code"}],"name":[{"narrative":[{"narrative":"name 1","language":"aa"}]}],"description":[],"activity_description":[{"narrative":[{"narrative":"activity description 1","language":"ab"}]}],"administrative":[{"vocabulary":"A2","code":"DZ","level":"1236"}],"point":[{"srs_name":"http://www.opengis.net/def/crs/EPSG/0/4326","pos":[{"latitude":"56","longitude":"27"}]}],"exactness":[{"code":"1"}],"location_class":[{"code":"2"}],"feature_designation":[{"code":"CMPQ"}]}]',
             true,
             512,
             JSON_THROW_ON_ERROR
@@ -471,7 +457,7 @@ class LocationCompleteTest extends ElementCompleteTest
     public function test_location_sub_element_description_empty_json_array(): void
     {
         $actualData = json_decode(
-            '[{"ref":"ref 1","location_reach":[{"code":"1"}],"location_id":[{"vocabulary":"A2","code":"vocab code"}],"name":[{"narrative":[{"narrative":"name 1","language":"aa"}],"description":[{}],"activity_description":[{"narrative":[{"narrative":"activity description 1","language":"ab"}]}],"administrative":[{"vocabulary":"A2","code":"DZ","level":"1236"}],"point":[{"srs_name":"http:\/\/www.opengis.net\/def\/crs\/EPSG\/0\/4326","pos":[{"latitude":"56","longitude":"27"}]}],"exactness":[{"code":"1"}],"location_class":[{"code":"2"}],"feature_designation":[{"code":"CMPQ"}]}]',
+            '[{"ref":"ref 1","location_reach":[{"code":"1"}],"location_id":[{"vocabulary":"A2","code":"vocab code"}],"name":[{"narrative":[{"narrative":"name 1","language":"aa"}]}],"description":[{}],"activity_description":[{"narrative":[{"narrative":"activity description 1","language":"ab"}]}],"administrative":[{"vocabulary":"A2","code":"DZ","level":"1236"}],"point":[{"srs_name":"http://www.opengis.net/def/crs/EPSG/0/4326","pos":[{"latitude":"56","longitude":"27"}]}],"exactness":[{"code":"1"}],"location_class":[{"code":"2"}],"feature_designation":[{"code":"CMPQ"}]}]',
             true,
             512,
             JSON_THROW_ON_ERROR
@@ -489,7 +475,7 @@ class LocationCompleteTest extends ElementCompleteTest
     public function test_location_sub_element_description_empty_narrative(): void
     {
         $actualData = json_decode(
-            '[{"ref":"ref 1","location_reach":[{"code":"1"}],"location_id":[{"vocabulary":"A2","code":"vocab code"}],"name":[{"narrative":[{"narrative":"name 1","language":"aa"}],"description":[{"narrative":""}],"activity_description":[{"narrative":[{"narrative":"activity description 1","language":"ab"}]}],"administrative":[{"vocabulary":"A2","code":"DZ","level":"1236"}],"point":[{"srs_name":"http:\/\/www.opengis.net\/def\/crs\/EPSG\/0\/4326","pos":[{"latitude":"56","longitude":"27"}]}],"exactness":[{"code":"1"}],"location_class":[{"code":"2"}],"feature_designation":[{"code":"CMPQ"}]}]',
+            '[{"ref":"ref 1","location_reach":[{"code":"1"}],"location_id":[{"vocabulary":"A2","code":"vocab code"}],"name":[{"narrative":[{"narrative":"name 1","language":"aa"}]}],"description":[{"narrative":""}],"activity_description":[{"narrative":[{"narrative":"activity description 1","language":"ab"}]}],"administrative":[{"vocabulary":"A2","code":"DZ","level":"1236"}],"point":[{"srs_name":"http://www.opengis.net/def/crs/EPSG/0/4326","pos":[{"latitude":"56","longitude":"27"}]}],"exactness":[{"code":"1"}],"location_class":[{"code":"2"}],"feature_designation":[{"code":"CMPQ"}]}]',
             true,
             512,
             JSON_THROW_ON_ERROR
@@ -507,7 +493,7 @@ class LocationCompleteTest extends ElementCompleteTest
     public function test_location_sub_element_description_empty_narrative_array(): void
     {
         $actualData = json_decode(
-            '[{"ref":"ref 1","location_reach":[{"code":"1"}],"location_id":[{"vocabulary":"A2","code":"vocab code"}],"name":[{"narrative":[{"narrative":"name 1","language":"aa"}],"description":[{"narrative":[]}],"activity_description":[{"narrative":[{"narrative":"activity description 1","language":"ab"}]}],"administrative":[{"vocabulary":"A2","code":"DZ","level":"1236"}],"point":[{"srs_name":"http:\/\/www.opengis.net\/def\/crs\/EPSG\/0\/4326","pos":[{"latitude":"56","longitude":"27"}]}],"exactness":[{"code":"1"}],"location_class":[{"code":"2"}],"feature_designation":[{"code":"CMPQ"}]}]',
+            '[{"ref":"ref 1","location_reach":[{"code":"1"}],"location_id":[{"vocabulary":"A2","code":"vocab code"}],"name":[{"narrative":[{"narrative":"name 1","language":"aa"}]}],"description":[{"narrative":[]}],"activity_description":[{"narrative":[{"narrative":"activity description 1","language":"ab"}]}],"administrative":[{"vocabulary":"A2","code":"DZ","level":"1236"}],"point":[{"srs_name":"http://www.opengis.net/def/crs/EPSG/0/4326","pos":[{"latitude":"56","longitude":"27"}]}],"exactness":[{"code":"1"}],"location_class":[{"code":"2"}],"feature_designation":[{"code":"CMPQ"}]}]',
             true,
             512,
             JSON_THROW_ON_ERROR
@@ -525,7 +511,7 @@ class LocationCompleteTest extends ElementCompleteTest
     public function test_location_sub_element_description_empty_narrative_json_array(): void
     {
         $actualData = json_decode(
-            '[{"ref":"ref 1","location_reach":[{"code":"1"}],"location_id":[{"vocabulary":"A2","code":"vocab code"}],"name":[{"narrative":[{"narrative":"name 1","language":"aa"}],"description":[{"narrative":[{}]}],"activity_description":[{"narrative":[{"narrative":"activity description 1","language":"ab"}]}],"administrative":[{"vocabulary":"A2","code":"DZ","level":"1236"}],"point":[{"srs_name":"http:\/\/www.opengis.net\/def\/crs\/EPSG\/0\/4326","pos":[{"latitude":"56","longitude":"27"}]}],"exactness":[{"code":"1"}],"location_class":[{"code":"2"}],"feature_designation":[{"code":"CMPQ"}]}]',
+            '[{"ref":"ref 1","location_reach":[{"code":"1"}],"location_id":[{"vocabulary":"A2","code":"vocab code"}],"name":[{"narrative":[{"narrative":"name 1","language":"aa"}]}],"description":[{"narrative":[{"narrative":"","language":"aa"}]}],"activity_description":[{"narrative":[{"narrative":"activity description 1","language":"ab"}]}],"administrative":[{"vocabulary":"A2","code":"DZ","level":"1236"}],"point":[{"srs_name":"http://www.opengis.net/def/crs/EPSG/0/4326","pos":[{"latitude":"56","longitude":"27"}]}],"exactness":[{"code":"1"}],"location_class":[{"code":"2"}],"feature_designation":[{"code":"CMPQ"}]}]',
             true,
             512,
             JSON_THROW_ON_ERROR
@@ -543,7 +529,7 @@ class LocationCompleteTest extends ElementCompleteTest
     public function test_location_sub_element_description_sub_element_narrative_empty_narrative(): void
     {
         $actualData = json_decode(
-            '[{"ref":"ref 1","location_reach":[{"code":"1"}],"location_id":[{"vocabulary":"A2","code":"vocab code"}],"name":[{"narrative":[{"narrative":"name 1","language":"aa"}],"description":[{"narrative":[{"narrative":"","language":"en"}]}],"activity_description":[{"narrative":[{"narrative":"activity description 1","language":"ab"}]}],"administrative":[{"vocabulary":"A2","code":"DZ","level":"1236"}],"point":[{"srs_name":"http:\/\/www.opengis.net\/def\/crs\/EPSG\/0\/4326","pos":[{"latitude":"56","longitude":"27"}]}],"exactness":[{"code":"1"}],"location_class":[{"code":"2"}],"feature_designation":[{"code":"CMPQ"}]}]',
+            '[{"ref":"ref 1","location_reach":[{"code":"1"}],"location_id":[{"vocabulary":"A2","code":"vocab code"}],"name":[{"narrative":[{"narrative":"name 1","language":"aa"}]}],"description":[{"narrative":[{"narrative":"","language":"en"}]}],"activity_description":[{"narrative":[{"narrative":"activity description 1","language":"ab"}]}],"administrative":[{"vocabulary":"A2","code":"DZ","level":"1236"}],"point":[{"srs_name":"http://www.opengis.net/def/crs/EPSG/0/4326","pos":[{"latitude":"56","longitude":"27"}]}],"exactness":[{"code":"1"}],"location_class":[{"code":"2"}],"feature_designation":[{"code":"CMPQ"}]}]',
             true,
             512,
             JSON_THROW_ON_ERROR
@@ -561,7 +547,7 @@ class LocationCompleteTest extends ElementCompleteTest
     public function test_location_sub_element_description_sub_element_narrative_no_narrative_key(): void
     {
         $actualData = json_decode(
-            '[{"ref":"ref 1","location_reach":[{"code":"1"}],"location_id":[{"vocabulary":"A2","code":"vocab code"}],"name":[{"narrative":[{"narrative":"name 1","language":"aa"}],"description":[{"narrative":[{"language":"en"}]}],"activity_description":[{"narrative":[{"narrative":"activity description 1","language":"ab"}]}],"administrative":[{"vocabulary":"A2","code":"DZ","level":"1236"}],"point":[{"srs_name":"http:\/\/www.opengis.net\/def\/crs\/EPSG\/0\/4326","pos":[{"latitude":"56","longitude":"27"}]}],"exactness":[{"code":"1"}],"location_class":[{"code":"2"}],"feature_designation":[{"code":"CMPQ"}]}]',
+            '[{"ref":"ref 1","location_reach":[{"code":"1"}],"location_id":[{"vocabulary":"A2","code":"vocab code"}],"name":[{"narrative":[{"narrative":"name 1","language":"aa"}]}],"description":[{"narrative":[{"language":"en"}]}],"activity_description":[{"narrative":[{"narrative":"activity description 1","language":"ab"}]}],"administrative":[{"vocabulary":"A2","code":"DZ","level":"1236"}],"point":[{"srs_name":"http://www.opengis.net/def/crs/EPSG/0/4326","pos":[{"latitude":"56","longitude":"27"}]}],"exactness":[{"code":"1"}],"location_class":[{"code":"2"}],"feature_designation":[{"code":"CMPQ"}]}]',
             true,
             512,
             JSON_THROW_ON_ERROR
@@ -579,7 +565,7 @@ class LocationCompleteTest extends ElementCompleteTest
     public function test_location_sub_element_description_sub_element_narrative_empty_attribute_language(): void
     {
         $actualData = json_decode(
-            '[{"ref":"ref 1","location_reach":[{"code":"1"}],"location_id":[{"vocabulary":"A2","code":"vocab code"}],"name":[{"narrative":[{"narrative":"name 1","language":"aa"}],"description":[{"narrative":[{"narrative":"asd","language":""}]}],"activity_description":[{"narrative":[{"narrative":"activity description 1","language":"ab"}]}],"administrative":[{"vocabulary":"A2","code":"DZ","level":"1236"}],"point":[{"srs_name":"http:\/\/www.opengis.net\/def\/crs\/EPSG\/0\/4326","pos":[{"latitude":"56","longitude":"27"}]}],"exactness":[{"code":"1"}],"location_class":[{"code":"2"}],"feature_designation":[{"code":"CMPQ"}]}]',
+            '[{"ref":"ref 1","location_reach":[{"code":"1"}],"location_id":[{"vocabulary":"A2","code":"vocab code"}],"name":[{"narrative":[{"narrative":"name 1","language":"aa"}]}],"description":[{"narrative":[{"narrative":"description 1","language":""}]}],"activity_description":[{"narrative":[{"narrative":"activity description 1","language":"ab"}]}],"administrative":[{"vocabulary":"A2","code":"DZ","level":"1236"}],"point":[{"srs_name":"http://www.opengis.net/def/crs/EPSG/0/4326","pos":[{"latitude":"56","longitude":"27"}]}],"exactness":[{"code":"1"}],"location_class":[{"code":"2"}],"feature_designation":[{"code":"CMPQ"}]}]',
             true,
             512,
             JSON_THROW_ON_ERROR
@@ -597,7 +583,7 @@ class LocationCompleteTest extends ElementCompleteTest
     public function test_location_sub_element_description_sub_element_narrative_no_attribute_language_key(): void
     {
         $actualData = json_decode(
-            '[{"ref":"ref 1","location_reach":[{"code":"1"}],"location_id":[{"vocabulary":"A2","code":"vocab code"}],"name":[{"narrative":[{"narrative":"name 1","language":"aa"}],"description":[{"narrative":[{"narrative":"asd","language":"en"}]}],"activity_description":[{"narrative":[{"narrative":"activity description 1","language":"ab"}]}],"administrative":[{"vocabulary":"A2","code":"DZ","level":"1236"}],"point":[{"srs_name":"http:\/\/www.opengis.net\/def\/crs\/EPSG\/0\/4326","pos":[{"latitude":"56","longitude":"27"}]}],"exactness":[{"code":"1"}],"location_class":[{"code":"2"}],"feature_designation":[{"code":"CMPQ"}]}]',
+            '[{"ref":"ref 1","location_reach":[{"code":"1"}],"location_id":[{"vocabulary":"A2","code":"vocab code"}],"name":[{"narrative":[{"narrative":"name 1","language":"aa"}]}],"description":[{"narrative":[{"narrative":"description 1"}]}],"activity_description":[{"narrative":[{"narrative":"activity description 1","language":"ab"}]}],"administrative":[{"vocabulary":"A2","code":"DZ","level":"1236"}],"point":[{"srs_name":"http://www.opengis.net/def/crs/EPSG/0/4326","pos":[{"latitude":"56","longitude":"27"}]}],"exactness":[{"code":"1"}],"location_class":[{"code":"2"}],"feature_designation":[{"code":"CMPQ"}]}]',
             true,
             512,
             JSON_THROW_ON_ERROR
@@ -615,7 +601,7 @@ class LocationCompleteTest extends ElementCompleteTest
     public function test_location_sub_element_no_activity_description_key(): void
     {
         $actualData = json_decode(
-            '[{"ref":"ref 1","location_reach":[{"code":"1"}],"location_id":[{"vocabulary":"A2","code":"vocab code"}],"name":[{"narrative":[{"narrative":"name 1","language":"aa"}],"description":[{"narrative":[{"narrative":"asd","language":"en"}]}],"administrative":[{"vocabulary":"A2","code":"DZ","level":"1236"}],"point":[{"srs_name":"http:\/\/www.opengis.net\/def\/crs\/EPSG\/0\/4326","pos":[{"latitude":"56","longitude":"27"}]}],"exactness":[{"code":"1"}],"location_class":[{"code":"2"}],"feature_designation":[{"code":"CMPQ"}]}]',
+            '[{"ref":"ref 1","location_reach":[{"code":"1"}],"location_id":[{"vocabulary":"A2","code":"vocab code"}],"name":[{"narrative":[{"narrative":"name 1","language":"aa"}]}],"description":[{"narrative":[{"narrative":"description 1","language":"aa"}]}],"administrative":[{"vocabulary":"A2","code":"DZ","level":"1236"}],"point":[{"srs_name":"http://www.opengis.net/def/crs/EPSG/0/4326","pos":[{"latitude":"56","longitude":"27"}]}],"exactness":[{"code":"1"}],"location_class":[{"code":"2"}],"feature_designation":[{"code":"CMPQ"}]}]',
             true,
             512,
             JSON_THROW_ON_ERROR
@@ -633,7 +619,7 @@ class LocationCompleteTest extends ElementCompleteTest
     public function test_location_sub_element_activity_description_empty(): void
     {
         $actualData = json_decode(
-            '[{"ref":"ref 1","location_reach":[{"code":"1"}],"location_id":[{"vocabulary":"A2","code":"vocab code"}],"name":[{"narrative":[{"narrative":"name 1","language":"aa"}],"description":[{"narrative":[{"narrative":"asd","language":"en"}]}],"activity_description":"","administrative":[{"vocabulary":"A2","code":"DZ","level":"1236"}],"point":[{"srs_name":"http:\/\/www.opengis.net\/def\/crs\/EPSG\/0\/4326","pos":[{"latitude":"56","longitude":"27"}]}],"exactness":[{"code":"1"}],"location_class":[{"code":"2"}],"feature_designation":[{"code":"CMPQ"}]}]',
+            '[{"ref":"ref 1","location_reach":[{"code":"1"}],"location_id":[{"vocabulary":"A2","code":"vocab code"}],"name":[{"narrative":[{"narrative":"name 1","language":"aa"}]}],"description":[{"narrative":[{"narrative":"description 1","language":"aa"}]}],"activity_description":"","administrative":[{"vocabulary":"A2","code":"DZ","level":"1236"}],"point":[{"srs_name":"http://www.opengis.net/def/crs/EPSG/0/4326","pos":[{"latitude":"56","longitude":"27"}]}],"exactness":[{"code":"1"}],"location_class":[{"code":"2"}],"feature_designation":[{"code":"CMPQ"}]}]',
             true,
             512,
             JSON_THROW_ON_ERROR
@@ -651,7 +637,7 @@ class LocationCompleteTest extends ElementCompleteTest
     public function test_location_sub_element_activity_description_empty_array(): void
     {
         $actualData = json_decode(
-            '[{"ref":"ref 1","location_reach":[{"code":"1"}],"location_id":[{"vocabulary":"A2","code":"vocab code"}],"name":[{"narrative":[{"narrative":"name 1","language":"aa"}],"description":[{"narrative":[{"narrative":"asd","language":"en"}]}],"activity_description":[],"administrative":[{"vocabulary":"A2","code":"DZ","level":"1236"}],"point":[{"srs_name":"http:\/\/www.opengis.net\/def\/crs\/EPSG\/0\/4326","pos":[{"latitude":"56","longitude":"27"}]}],"exactness":[{"code":"1"}],"location_class":[{"code":"2"}],"feature_designation":[{"code":"CMPQ"}]}]',
+            '[{"ref":"ref 1","location_reach":[{"code":"1"}],"location_id":[{"vocabulary":"A2","code":"vocab code"}],"name":[{"narrative":[{"narrative":"name 1","language":"aa"}]}],"description":[{"narrative":[{"narrative":"description 1","language":"aa"}]}],"activity_description":[],"administrative":[{"vocabulary":"A2","code":"DZ","level":"1236"}],"point":[{"srs_name":"http://www.opengis.net/def/crs/EPSG/0/4326","pos":[{"latitude":"56","longitude":"27"}]}],"exactness":[{"code":"1"}],"location_class":[{"code":"2"}],"feature_designation":[{"code":"CMPQ"}]}]',
             true,
             512,
             JSON_THROW_ON_ERROR
@@ -669,7 +655,7 @@ class LocationCompleteTest extends ElementCompleteTest
     public function test_location_sub_element_activity_description_empty_json_array(): void
     {
         $actualData = json_decode(
-            '[{"ref":"ref 1","location_reach":[{"code":"1"}],"location_id":[{"vocabulary":"A2","code":"vocab code"}],"name":[{"narrative":[{"narrative":"name 1","language":"aa"}],"description":[{"narrative":[{"narrative":"asd","language":"en"}]}],"activity_description":[{}],"administrative":[{"vocabulary":"A2","code":"DZ","level":"1236"}],"point":[{"srs_name":"http:\/\/www.opengis.net\/def\/crs\/EPSG\/0\/4326","pos":[{"latitude":"56","longitude":"27"}]}],"exactness":[{"code":"1"}],"location_class":[{"code":"2"}],"feature_designation":[{"code":"CMPQ"}]}]',
+            '[{"ref":"ref 1","location_reach":[{"code":"1"}],"location_id":[{"vocabulary":"A2","code":"vocab code"}],"name":[{"narrative":[{"narrative":"name 1","language":"aa"}]}],"description":[{"narrative":[{"narrative":"description 1","language":"aa"}]}],"activity_description":[{}],"administrative":[{"vocabulary":"A2","code":"DZ","level":"1236"}],"point":[{"srs_name":"http://www.opengis.net/def/crs/EPSG/0/4326","pos":[{"latitude":"56","longitude":"27"}]}],"exactness":[{"code":"1"}],"location_class":[{"code":"2"}],"feature_designation":[{"code":"CMPQ"}]}]',
             true,
             512,
             JSON_THROW_ON_ERROR
@@ -687,7 +673,7 @@ class LocationCompleteTest extends ElementCompleteTest
     public function test_location_sub_element_activity_description_empty_narrative(): void
     {
         $actualData = json_decode(
-            '[{"ref":"ref 1","location_reach":[{"code":"1"}],"location_id":[{"vocabulary":"A2","code":"vocab code"}],"name":[{"narrative":[{"narrative":"name 1","language":"aa"}],"description":[{"narrative":[{"narrative":"asd","language":"en"}]}],"activity_description":[{"narrative":""}],"administrative":[{"vocabulary":"A2","code":"DZ","level":"1236"}],"point":[{"srs_name":"http:\/\/www.opengis.net\/def\/crs\/EPSG\/0\/4326","pos":[{"latitude":"56","longitude":"27"}]}],"exactness":[{"code":"1"}],"location_class":[{"code":"2"}],"feature_designation":[{"code":"CMPQ"}]}]',
+            '[{"ref":"ref 1","location_reach":[{"code":"1"}],"location_id":[{"vocabulary":"A2","code":"vocab code"}],"name":[{"narrative":[{"narrative":"name 1","language":"aa"}]}],"description":[{"narrative":[{"narrative":"description 1","language":"aa"}]}],"activity_description":[{"narrative":""}],"administrative":[{"vocabulary":"A2","code":"DZ","level":"1236"}],"point":[{"srs_name":"http://www.opengis.net/def/crs/EPSG/0/4326","pos":[{"latitude":"56","longitude":"27"}]}],"exactness":[{"code":"1"}],"location_class":[{"code":"2"}],"feature_designation":[{"code":"CMPQ"}]}]',
             true,
             512,
             JSON_THROW_ON_ERROR
@@ -705,7 +691,7 @@ class LocationCompleteTest extends ElementCompleteTest
     public function test_location_sub_element_activity_description_empty_narrative_array(): void
     {
         $actualData = json_decode(
-            '[{"ref":"ref 1","location_reach":[{"code":"1"}],"location_id":[{"vocabulary":"A2","code":"vocab code"}],"name":[{"narrative":[{"narrative":"name 1","language":"aa"}],"description":[{"narrative":[{"narrative":"asd","language":"en"}]}],"activity_description":[{"narrative":[]}],"administrative":[{"vocabulary":"A2","code":"DZ","level":"1236"}],"point":[{"srs_name":"http:\/\/www.opengis.net\/def\/crs\/EPSG\/0\/4326","pos":[{"latitude":"56","longitude":"27"}]}],"exactness":[{"code":"1"}],"location_class":[{"code":"2"}],"feature_designation":[{"code":"CMPQ"}]}]',
+            '[{"ref":"ref 1","location_reach":[{"code":"1"}],"location_id":[{"vocabulary":"A2","code":"vocab code"}],"name":[{"narrative":[{"narrative":"name 1","language":"aa"}]}],"description":[{"narrative":[{"narrative":"description 1","language":"aa"}]}],"activity_description":[{"narrative":[]}],"administrative":[{"vocabulary":"A2","code":"DZ","level":"1236"}],"point":[{"srs_name":"http://www.opengis.net/def/crs/EPSG/0/4326","pos":[{"latitude":"56","longitude":"27"}]}],"exactness":[{"code":"1"}],"location_class":[{"code":"2"}],"feature_designation":[{"code":"CMPQ"}]}]',
             true,
             512,
             JSON_THROW_ON_ERROR
@@ -723,7 +709,7 @@ class LocationCompleteTest extends ElementCompleteTest
     public function test_location_sub_element_activity_description_empty_narrative_json_array(): void
     {
         $actualData = json_decode(
-            '[{"ref":"ref 1","location_reach":[{"code":"1"}],"location_id":[{"vocabulary":"A2","code":"vocab code"}],"name":[{"narrative":[{"narrative":"name 1","language":"aa"}],"description":[{"narrative":[{"narrative":"asd","language":"en"}]}],"activity_description":[{"narrative":[{}]}],"administrative":[{"vocabulary":"A2","code":"DZ","level":"1236"}],"point":[{"srs_name":"http:\/\/www.opengis.net\/def\/crs\/EPSG\/0\/4326","pos":[{"latitude":"56","longitude":"27"}]}],"exactness":[{"code":"1"}],"location_class":[{"code":"2"}],"feature_designation":[{"code":"CMPQ"}]}]',
+            '[{"ref":"ref 1","location_reach":[{"code":"1"}],"location_id":[{"vocabulary":"A2","code":"vocab code"}],"name":[{"narrative":[{"narrative":"name 1","language":"aa"}]}],"description":[{"narrative":[{"narrative":"description 1","language":"aa"}]}],"activity_description":[{"narrative":[{}]}],"administrative":[{"vocabulary":"A2","code":"DZ","level":"1236"}],"point":[{"srs_name":"http://www.opengis.net/def/crs/EPSG/0/4326","pos":[{"latitude":"56","longitude":"27"}]}],"exactness":[{"code":"1"}],"location_class":[{"code":"2"}],"feature_designation":[{"code":"CMPQ"}]}]',
             true,
             512,
             JSON_THROW_ON_ERROR
@@ -741,7 +727,7 @@ class LocationCompleteTest extends ElementCompleteTest
     public function test_location_sub_element_activity_description_sub_element_narrative_empty_narrative(): void
     {
         $actualData = json_decode(
-            '[{"ref":"ref 1","location_reach":[{"code":"1"}],"location_id":[{"vocabulary":"A2","code":"vocab code"}],"name":[{"narrative":[{"narrative":"name 1","language":"aa"}],"description":[{"narrative":[{"narrative":"asd","language":"en"}]}],"activity_description":[{"narrative":[{"narrative":"","language":"en"}]}],"administrative":[{"vocabulary":"A2","code":"DZ","level":"1236"}],"point":[{"srs_name":"http:\/\/www.opengis.net\/def\/crs\/EPSG\/0\/4326","pos":[{"latitude":"56","longitude":"27"}]}],"exactness":[{"code":"1"}],"location_class":[{"code":"2"}],"feature_designation":[{"code":"CMPQ"}]}]',
+            '[{"ref":"ref 1","location_reach":[{"code":"1"}],"location_id":[{"vocabulary":"A2","code":"vocab code"}],"name":[{"narrative":[{"narrative":"name 1","language":"aa"}]}],"description":[{"narrative":[{"narrative":"description 1","language":"aa"}]}],"activity_description":[{"narrative":[{"narrative":"","language":"ab"}]}],"administrative":[{"vocabulary":"A2","code":"DZ","level":"1236"}],"point":[{"srs_name":"http://www.opengis.net/def/crs/EPSG/0/4326","pos":[{"latitude":"56","longitude":"27"}]}],"exactness":[{"code":"1"}],"location_class":[{"code":"2"}],"feature_designation":[{"code":"CMPQ"}]}]',
             true,
             512,
             JSON_THROW_ON_ERROR
@@ -759,7 +745,7 @@ class LocationCompleteTest extends ElementCompleteTest
     public function test_location_sub_element_activity_description_sub_element_narrative_no_narrative_key(): void
     {
         $actualData = json_decode(
-            '[{"ref":"ref 1","location_reach":[{"code":"1"}],"location_id":[{"vocabulary":"A2","code":"vocab code"}],"name":[{"narrative":[{"narrative":"name 1","language":"aa"}],"description":[{"narrative":[{"narrative":"asd","language":"en"}]}],"activity_description":[{"narrative":[{"language":"en"}]}],"administrative":[{"vocabulary":"A2","code":"DZ","level":"1236"}],"point":[{"srs_name":"http:\/\/www.opengis.net\/def\/crs\/EPSG\/0\/4326","pos":[{"latitude":"56","longitude":"27"}]}],"exactness":[{"code":"1"}],"location_class":[{"code":"2"}],"feature_designation":[{"code":"CMPQ"}]}]',
+            '[{"ref":"ref 1","location_reach":[{"code":"1"}],"location_id":[{"vocabulary":"A2","code":"vocab code"}],"name":[{"narrative":[{"narrative":"name 1","language":"aa"}]}],"description":[{"narrative":[{"narrative":"description 1","language":"aa"}]}],"activity_description":[{"narrative":[{"language":"ab"}]}],"administrative":[{"vocabulary":"A2","code":"DZ","level":"1236"}],"point":[{"srs_name":"http://www.opengis.net/def/crs/EPSG/0/4326","pos":[{"latitude":"56","longitude":"27"}]}],"exactness":[{"code":"1"}],"location_class":[{"code":"2"}],"feature_designation":[{"code":"CMPQ"}]}]',
             true,
             512,
             JSON_THROW_ON_ERROR
@@ -777,7 +763,7 @@ class LocationCompleteTest extends ElementCompleteTest
     public function test_location_sub_element_activity_description_sub_element_narrative_empty_attribute_language(): void
     {
         $actualData = json_decode(
-            '[{"ref":"ref 1","location_reach":[{"code":"1"}],"location_id":[{"vocabulary":"A2","code":"vocab code"}],"name":[{"narrative":[{"narrative":"name 1","language":"aa"}],"description":[{"narrative":[{"narrative":"asd","language":"en"}]}],"activity_description":[{"narrative":[{"narrative":"asd","language":""}]}],"administrative":[{"vocabulary":"A2","code":"DZ","level":"1236"}],"point":[{"srs_name":"http:\/\/www.opengis.net\/def\/crs\/EPSG\/0\/4326","pos":[{"latitude":"56","longitude":"27"}]}],"exactness":[{"code":"1"}],"location_class":[{"code":"2"}],"feature_designation":[{"code":"CMPQ"}]}]',
+            '[{"ref":"ref 1","location_reach":[{"code":"1"}],"location_id":[{"vocabulary":"A2","code":"vocab code"}],"name":[{"narrative":[{"narrative":"name 1","language":"aa"}]}],"description":[{"narrative":[{"narrative":"description 1","language":"aa"}]}],"activity_description":[{"narrative":[{"narrative":"activity description 1","language":""}]}],"administrative":[{"vocabulary":"A2","code":"DZ","level":"1236"}],"point":[{"srs_name":"http://www.opengis.net/def/crs/EPSG/0/4326","pos":[{"latitude":"56","longitude":"27"}]}],"exactness":[{"code":"1"}],"location_class":[{"code":"2"}],"feature_designation":[{"code":"CMPQ"}]}]',
             true,
             512,
             JSON_THROW_ON_ERROR
@@ -795,7 +781,7 @@ class LocationCompleteTest extends ElementCompleteTest
     public function test_location_sub_element_activity_description_sub_element_narrative_no_attribute_language_key(): void
     {
         $actualData = json_decode(
-            '[{"ref":"ref 1","location_reach":[{"code":"1"}],"location_id":[{"vocabulary":"A2","code":"vocab code"}],"name":[{"narrative":[{"narrative":"name 1","language":"aa"}],"description":[{"narrative":[{"narrative":"asd","language":"en"}]}],"activity_description":[{"narrative":[{"narrative":"asd"}]}],"administrative":[{"vocabulary":"A2","code":"DZ","level":"1236"}],"point":[{"srs_name":"http:\/\/www.opengis.net\/def\/crs\/EPSG\/0\/4326","pos":[{"latitude":"56","longitude":"27"}]}],"exactness":[{"code":"1"}],"location_class":[{"code":"2"}],"feature_designation":[{"code":"CMPQ"}]}]',
+            '[{"ref":"ref 1","location_reach":[{"code":"1"}],"location_id":[{"vocabulary":"A2","code":"vocab code"}],"name":[{"narrative":[{"narrative":"name 1","language":"aa"}]}],"description":[{"narrative":[{"narrative":"description 1","language":"aa"}]}],"activity_description":[{"narrative":[{"narrative":"activity description 1"}]}],"administrative":[{"vocabulary":"A2","code":"DZ","level":"1236"}],"point":[{"srs_name":"http://www.opengis.net/def/crs/EPSG/0/4326","pos":[{"latitude":"56","longitude":"27"}]}],"exactness":[{"code":"1"}],"location_class":[{"code":"2"}],"feature_designation":[{"code":"CMPQ"}]}]',
             true,
             512,
             JSON_THROW_ON_ERROR
@@ -885,7 +871,7 @@ class LocationCompleteTest extends ElementCompleteTest
     public function test_location_sub_element_point_no_attribute_srs_name_key(): void
     {
         $actualData = json_decode(
-            '[{"ref":"ref 1","location_reach":[{"code":"1"}],"location_id":[{"vocabulary":"A2","code":"vocab code"}],"name":[{"narrative":[{"narrative":"name 1","language":"aa"}]}],"description":[{"narrative":[{"narrative":"description 1","language":"aa"}]}],"activity_description":[{"narrative":[{"narrative":"activity description 1","language":"ab"}]}],"administrative":[{"vocabulary":"A2","code":"DZ","level":"1236"}],"point":[{pos":[{"latitude":"56","longitude":"27"}]}],"exactness":[{"code":"1"}],"location_class":[{"code":"2"}],"feature_designation":[{"code":"CMPQ"}]}]',
+            '[{"ref":"ref 1","location_reach":[{"code":"1"}],"location_id":[{"vocabulary":"A2","code":"vocab code"}],"name":[{"narrative":[{"narrative":"name 1","language":"aa"}]}],"description":[{"narrative":[{"narrative":"description 1","language":"aa"}]}],"activity_description":[{"narrative":[{"narrative":"activity description 1","language":"ab"}]}],"administrative":[{"vocabulary":"A2","code":"DZ","level":"1236"}],"point":[{"pos":[{"latitude":"56","longitude":"27"}]}],"exactness":[{"code":"1"}],"location_class":[{"code":"2"}],"feature_designation":[{"code":"CMPQ"}]}]',
             true,
             512,
             JSON_THROW_ON_ERROR
@@ -921,7 +907,7 @@ class LocationCompleteTest extends ElementCompleteTest
     public function test_location_sub_element_point_sub_element_no_pos_key(): void
     {
         $actualData = json_decode(
-            '[{"ref":"ref 1","location_reach":[{"code":"1"}],"location_id":[{"vocabulary":"A2","code":"vocab code"}],"name":[{"narrative":[{"narrative":"name 1","language":"aa"}]}],"description":[{"narrative":[{"narrative":"description 1","language":"aa"}]}],"activity_description":[{"narrative":[{"narrative":"activity description 1","language":"ab"}]}],"administrative":[{"vocabulary":"A2","code":"DZ","level":"1236"}],"point":[{"srs_name":"http:\/\/www.opengis.net\/def\/crs\/EPSG\/0\/4326","exactness":[{"code":"1"}],"location_class":[{"code":"2"}],"feature_designation":[{"code":"CMPQ"}]}]',
+            '[{"ref":"ref 1","location_reach":[{"code":"1"}],"location_id":[{"vocabulary":"A2","code":"vocab code"}],"name":[{"narrative":[{"narrative":"name 1","language":"aa"}]}],"description":[{"narrative":[{"narrative":"description 1","language":"aa"}]}],"activity_description":[{"narrative":[{"narrative":"activity description 1","language":"ab"}]}],"administrative":[{"vocabulary":"A2","code":"DZ","level":"1236"}],"point":[{"srs_name":"http://www.opengis.net/def/crs/EPSG/0/4326"}],"exactness":[{"code":"1"}],"location_class":[{"code":"2"}],"feature_designation":[{"code":"CMPQ"}]}]',
             true,
             512,
             JSON_THROW_ON_ERROR
@@ -939,7 +925,7 @@ class LocationCompleteTest extends ElementCompleteTest
     public function test_location_sub_element_point_sub_element_pos_empty(): void
     {
         $actualData = json_decode(
-            '[{"ref":"ref 1","location_reach":[{"code":"1"}],"location_id":[{"vocabulary":"A2","code":"vocab code"}],"name":[{"narrative":[{"narrative":"name 1","language":"aa"}]}],"description":[{"narrative":[{"narrative":"description 1","language":"aa"}]}],"activity_description":[{"narrative":[{"narrative":"activity description 1","language":"ab"}]}],"administrative":[{"vocabulary":"A2","code":"DZ","level":"1236"}],"point":[{"srs_name":"http:\/\/www.opengis.net\/def\/crs\/EPSG\/0\/4326","pos":"","exactness":[{"code":"1"}],"location_class":[{"code":"2"}],"feature_designation":[{"code":"CMPQ"}]}]',
+            '[{"ref":"ref 1","location_reach":[{"code":"1"}],"location_id":[{"vocabulary":"A2","code":"vocab code"}],"name":[{"narrative":[{"narrative":"name 1","language":"aa"}]}],"description":[{"narrative":[{"narrative":"description 1","language":"aa"}]}],"activity_description":[{"narrative":[{"narrative":"activity description 1","language":"ab"}]}],"administrative":[{"vocabulary":"A2","code":"DZ","level":"1236"}],"point":[{"srs_name":"http://www.opengis.net/def/crs/EPSG/0/4326","pos":""}],"exactness":[{"code":"1"}],"location_class":[{"code":"2"}],"feature_designation":[{"code":"CMPQ"}]}]',
             true,
             512,
             JSON_THROW_ON_ERROR
@@ -957,7 +943,7 @@ class LocationCompleteTest extends ElementCompleteTest
     public function test_location_sub_element_point_sub_element_pos_empty_array(): void
     {
         $actualData = json_decode(
-            '[{"ref":"ref 1","location_reach":[{"code":"1"}],"location_id":[{"vocabulary":"A2","code":"vocab code"}],"name":[{"narrative":[{"narrative":"name 1","language":"aa"}]}],"description":[{"narrative":[{"narrative":"description 1","language":"aa"}]}],"activity_description":[{"narrative":[{"narrative":"activity description 1","language":"ab"}]}],"administrative":[{"vocabulary":"A2","code":"DZ","level":"1236"}],"point":[{"srs_name":"http:\/\/www.opengis.net\/def\/crs\/EPSG\/0\/4326","pos":[],"exactness":[{"code":"1"}],"location_class":[{"code":"2"}],"feature_designation":[{"code":"CMPQ"}]}]',
+            '[{"ref":"ref 1","location_reach":[{"code":"1"}],"location_id":[{"vocabulary":"A2","code":"vocab code"}],"name":[{"narrative":[{"narrative":"name 1","language":"aa"}]}],"description":[{"narrative":[{"narrative":"description 1","language":"aa"}]}],"activity_description":[{"narrative":[{"narrative":"activity description 1","language":"ab"}]}],"administrative":[{"vocabulary":"A2","code":"DZ","level":"1236"}],"point":[{"srs_name":"http://www.opengis.net/def/crs/EPSG/0/4326","pos":[]}],"exactness":[{"code":"1"}],"location_class":[{"code":"2"}],"feature_designation":[{"code":"CMPQ"}]}]',
             true,
             512,
             JSON_THROW_ON_ERROR
@@ -975,7 +961,7 @@ class LocationCompleteTest extends ElementCompleteTest
     public function test_location_sub_element_point_sub_element_pos_empty_json_array(): void
     {
         $actualData = json_decode(
-            '[{"ref":"ref 1","location_reach":[{"code":"1"}],"location_id":[{"vocabulary":"A2","code":"vocab code"}],"name":[{"narrative":[{"narrative":"name 1","language":"aa"}]}],"description":[{"narrative":[{"narrative":"description 1","language":"aa"}]}],"activity_description":[{"narrative":[{"narrative":"activity description 1","language":"ab"}]}],"administrative":[{"vocabulary":"A2","code":"DZ","level":"1236"}],"point":[{"srs_name":"http:\/\/www.opengis.net\/def\/crs\/EPSG\/0\/4326","pos":[{}],"exactness":[{"code":"1"}],"location_class":[{"code":"2"}],"feature_designation":[{"code":"CMPQ"}]}]',
+            '[{"ref":"ref 1","location_reach":[{"code":"1"}],"location_id":[{"vocabulary":"A2","code":"vocab code"}],"name":[{"narrative":[{"narrative":"name 1","language":"aa"}]}],"description":[{"narrative":[{"narrative":"description 1","language":"aa"}]}],"activity_description":[{"narrative":[{"narrative":"activity description 1","language":"ab"}]}],"administrative":[{"vocabulary":"A2","code":"DZ","level":"1236"}],"point":[{"srs_name":"http://www.opengis.net/def/crs/EPSG/0/4326","pos":[{}]}],"exactness":[{"code":"1"}],"location_class":[{"code":"2"}],"feature_designation":[{"code":"CMPQ"}]}]',
             true,
             512,
             JSON_THROW_ON_ERROR
@@ -993,7 +979,7 @@ class LocationCompleteTest extends ElementCompleteTest
     public function test_location_sub_element_point_sub_element_pos_attribute_no_latitude_key(): void
     {
         $actualData = json_decode(
-            '[{"ref":"ref 1","location_reach":[{"code":"1"}],"location_id":[{"vocabulary":"A2","code":"vocab code"}],"name":[{"narrative":[{"narrative":"name 1","language":"aa"}]}],"description":[{"narrative":[{"narrative":"description 1","language":"aa"}]}],"activity_description":[{"narrative":[{"narrative":"activity description 1","language":"ab"}]}],"administrative":[{"vocabulary":"A2","code":"DZ","level":"1236"}],"point":[{"srs_name":"http:\/\/www.opengis.net\/def\/crs\/EPSG\/0\/4326","pos":[{"longitude":"27"}],"exactness":[{"code":"1"}],"location_class":[{"code":"2"}],"feature_designation":[{"code":"CMPQ"}]}]',
+            '[{"ref":"ref 1","location_reach":[{"code":"1"}],"location_id":[{"vocabulary":"A2","code":"vocab code"}],"name":[{"narrative":[{"narrative":"name 1","language":"aa"}]}],"description":[{"narrative":[{"narrative":"description 1","language":"aa"}]}],"activity_description":[{"narrative":[{"narrative":"activity description 1","language":"ab"}]}],"administrative":[{"vocabulary":"A2","code":"DZ","level":"1236"}],"point":[{"srs_name":"http://www.opengis.net/def/crs/EPSG/0/4326","pos":[{"longitude":"27"}] }],"exactness":[{"code":"1"}],"location_class":[{"code":"2"}],"feature_designation":[{"code":"CMPQ"}]}]',
             true,
             512,
             JSON_THROW_ON_ERROR
@@ -1011,7 +997,7 @@ class LocationCompleteTest extends ElementCompleteTest
     public function test_location_sub_element_point_sub_element_pos_attribute_empty_latitude(): void
     {
         $actualData = json_decode(
-            '[{"ref":"ref 1","location_reach":[{"code":"1"}],"location_id":[{"vocabulary":"A2","code":"vocab code"}],"name":[{"narrative":[{"narrative":"name 1","language":"aa"}]}],"description":[{"narrative":[{"narrative":"description 1","language":"aa"}]}],"activity_description":[{"narrative":[{"narrative":"activity description 1","language":"ab"}]}],"administrative":[{"vocabulary":"A2","code":"DZ","level":"1236"}],"point":[{"srs_name":"http:\/\/www.opengis.net\/def\/crs\/EPSG\/0\/4326","pos":[{"latitude":"","longitude":"27"}],"exactness":[{"code":"1"}],"location_class":[{"code":"2"}],"feature_designation":[{"code":"CMPQ"}]}]',
+            '[{"ref":"ref 1","location_reach":[{"code":"1"}],"location_id":[{"vocabulary":"A2","code":"vocab code"}],"name":[{"narrative":[{"narrative":"name 1","language":"aa"}]}],"description":[{"narrative":[{"narrative":"description 1","language":"aa"}]}],"activity_description":[{"narrative":[{"narrative":"activity description 1","language":"ab"}]}],"administrative":[{"vocabulary":"A2","code":"DZ","level":"1236"}],"point":[{"srs_name":"http://www.opengis.net/def/crs/EPSG/0/4326","pos":[{"latitude":"","longitude":"27"}] }],"exactness":[{"code":"1"}],"location_class":[{"code":"2"}],"feature_designation":[{"code":"CMPQ"}]}]',
             true,
             512,
             JSON_THROW_ON_ERROR
@@ -1029,7 +1015,7 @@ class LocationCompleteTest extends ElementCompleteTest
     public function test_location_sub_element_location_class_empty(): void
     {
         $actualData = json_decode(
-            '[{"ref":"ref 1","location_reach":[{"code":"1"}],"location_id":[{"vocabulary":"A2","code":"vocab code"}],"name":[{"narrative":[{"narrative":"name 1","language":"aa"}]}],"description":[{"narrative":[{"narrative":"description 1","language":"aa"}]}],"activity_description":[{"narrative":[{"narrative":"activity description 1","language":"ab"}]}],"administrative":[{"vocabulary":"A2","code":"DZ","level":"1236"}],"point":[{"srs_name":"http:\/\/www.opengis.net\/def\/crs\/EPSG\/0\/4326","pos":[{"latitude":"56","longitude":"27"}]}],"exactness":[{"code":"1"}],"location_class":"","feature_designation":[{"code":"CMPQ"}]}]',
+            '[{"ref":"ref 1","location_reach":[{"code":"1"}],"location_id":[{"vocabulary":"A2","code":"vocab code"}],"name":[{"narrative":[{"narrative":"name 1","language":"aa"}]}],"description":[{"narrative":[{"narrative":"description 1","language":"aa"}]}],"activity_description":[{"narrative":[{"narrative":"activity description 1","language":"ab"}]}],"administrative":[{"vocabulary":"A2","code":"DZ","level":"1236"}],"point":[{"srs_name":"http://www.opengis.net/def/crs/EPSG/0/4326","pos":[{"latitude":"56","longitude":""}]}],"exactness":[{"code":"1"}],"location_class":"","feature_designation":[{"code":"CMPQ"}]}]',
             true,
             512,
             JSON_THROW_ON_ERROR
@@ -1047,7 +1033,7 @@ class LocationCompleteTest extends ElementCompleteTest
     public function test_location_sub_element_no_location_class_key(): void
     {
         $actualData = json_decode(
-            '[{"ref":"ref 1","location_reach":[{"code":"1"}],"location_id":[{"vocabulary":"A2","code":"vocab code"}],"name":[{"narrative":[{"narrative":"name 1","language":"aa"}]}],"description":[{"narrative":[{"narrative":"description 1","language":"aa"}]}],"activity_description":[{"narrative":[{"narrative":"activity description 1","language":"ab"}]}],"administrative":[{"vocabulary":"A2","code":"DZ","level":"1236"}],"point":[{"srs_name":"http:\/\/www.opengis.net\/def\/crs\/EPSG\/0\/4326","pos":[{"latitude":"56","longitude":"27"}]}],"exactness":[{"code":"1"}],"feature_designation":[{"code":"CMPQ"}]}]',
+            '[{"ref":"ref 1","location_reach":[{"code":"1"}],"location_id":[{"vocabulary":"A2","code":"vocab code"}],"name":[{"narrative":[{"narrative":"name 1","language":"aa"}]}],"description":[{"narrative":[{"narrative":"description 1","language":"aa"}]}],"activity_description":[{"narrative":[{"narrative":"activity description 1","language":"ab"}]}],"administrative":[{"vocabulary":"A2","code":"DZ","level":"1236"}],"point":[{"srs_name":"http://www.opengis.net/def/crs/EPSG/0/4326","pos":[{"latitude":"56","longitude":"27"}]}],"exactness":[{"code":"1"}],"feature_designation":[{"code":"CMPQ"}]}]',
             true,
             512,
             JSON_THROW_ON_ERROR
@@ -1065,7 +1051,7 @@ class LocationCompleteTest extends ElementCompleteTest
     public function test_location_sub_element_location_class_empty_array(): void
     {
         $actualData = json_decode(
-            '[{"ref":"ref 1","location_reach":[{"code":"1"}],"location_id":[{"vocabulary":"A2","code":"vocab code"}],"name":[{"narrative":[{"narrative":"name 1","language":"aa"}]}],"description":[{"narrative":[{"narrative":"description 1","language":"aa"}]}],"activity_description":[{"narrative":[{"narrative":"activity description 1","language":"ab"}]}],"administrative":[{"vocabulary":"A2","code":"DZ","level":"1236"}],"point":[{"srs_name":"http:\/\/www.opengis.net\/def\/crs\/EPSG\/0\/4326","pos":[{"latitude":"56","longitude":"27"}]}],"exactness":[{"code":"1"}],"location_class":[],"feature_designation":[{"code":"CMPQ"}]}]',
+            '[{"ref":"ref 1","location_reach":[{"code":"1"}],"location_id":[{"vocabulary":"A2","code":"vocab code"}],"name":[{"narrative":[{"narrative":"name 1","language":"aa"}]}],"description":[{"narrative":[{"narrative":"description 1","language":"aa"}]}],"activity_description":[{"narrative":[{"narrative":"activity description 1","language":"ab"}]}],"administrative":[{"vocabulary":"A2","code":"DZ","level":"1236"}],"point":[{"srs_name":"http://www.opengis.net/def/crs/EPSG/0/4326","pos":[{"latitude":"56","longitude":"27"}]}],"exactness":[{"code":"1"}],"location_class":[],"feature_designation":[{"code":"CMPQ"}]}]',
             true,
             512,
             JSON_THROW_ON_ERROR
@@ -1083,7 +1069,7 @@ class LocationCompleteTest extends ElementCompleteTest
     public function test_location_sub_element_location_class_empty_json_array(): void
     {
         $actualData = json_decode(
-            '[{"ref":"ref 1","location_reach":[{"code":"1"}],"location_id":[{"vocabulary":"A2","code":"vocab code"}],"name":[{"narrative":[{"narrative":"name 1","language":"aa"}]}],"description":[{"narrative":[{"narrative":"description 1","language":"aa"}]}],"activity_description":[{"narrative":[{"narrative":"activity description 1","language":"ab"}]}],"administrative":[{"vocabulary":"A2","code":"DZ","level":"1236"}],"point":[{"srs_name":"http:\/\/www.opengis.net\/def\/crs\/EPSG\/0\/4326","pos":[{"latitude":"56","longitude":"27"}]}],"exactness":[{"code":"1"}],"location_class":[{}],"feature_designation":[{"code":"CMPQ"}]}]',
+            '[{"ref":"ref 1","location_reach":[{"code":"1"}],"location_id":[{"vocabulary":"A2","code":"vocab code"}],"name":[{"narrative":[{"narrative":"name 1","language":"aa"}]}],"description":[{"narrative":[{"narrative":"description 1","language":"aa"}]}],"activity_description":[{"narrative":[{"narrative":"activity description 1","language":"ab"}]}],"administrative":[{"vocabulary":"A2","code":"DZ","level":"1236"}],"point":[{"srs_name":"http://www.opengis.net/def/crs/EPSG/0/4326","pos":[{"latitude":"56","longitude":"27"}]}],"exactness":[{"code":"1"}],"location_class":[{}],"feature_designation":[{"code":"CMPQ"}]}]',
             true,
             512,
             JSON_THROW_ON_ERROR
@@ -1101,7 +1087,7 @@ class LocationCompleteTest extends ElementCompleteTest
     public function test_location_sub_element_location_class_attribute_code_empty(): void
     {
         $actualData = json_decode(
-            '[{"ref":"ref 1","location_reach":[{"code":"1"}],"location_id":[{"vocabulary":"A2","code":"vocab code"}],"name":[{"narrative":[{"narrative":"name 1","language":"aa"}]}],"description":[{"narrative":[{"narrative":"description 1","language":"aa"}]}],"activity_description":[{"narrative":[{"narrative":"activity description 1","language":"ab"}]}],"administrative":[{"vocabulary":"A2","code":"DZ","level":"1236"}],"point":[{"srs_name":"http:\/\/www.opengis.net\/def\/crs\/EPSG\/0\/4326","pos":[{"latitude":"56","longitude":"27"}]}],"exactness":[{"code":"1"}],"location_class":[{"code":""}],"feature_designation":[{"code":"CMPQ"}]}]',
+            '[{"ref":"ref 1","location_reach":[{"code":"1"}],"location_id":[{"vocabulary":"A2","code":"vocab code"}],"name":[{"narrative":[{"narrative":"name 1","language":"aa"}]}],"description":[{"narrative":[{"narrative":"description 1","language":"aa"}]}],"activity_description":[{"narrative":[{"narrative":"activity description 1","language":"ab"}]}],"administrative":[{"vocabulary":"A2","code":"DZ","level":"1236"}],"point":[{"srs_name":"http://www.opengis.net/def/crs/EPSG/0/4326","pos":[{"latitude":"56","longitude":"27"}]}],"exactness":[{"code":"1"}],"location_class":[{"code":""}],"feature_designation":[{"code":"CMPQ"}]}]',
             true,
             512,
             JSON_THROW_ON_ERROR

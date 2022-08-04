@@ -4,7 +4,7 @@ namespace App\IATI\Services;
 
 class ElementCompleteService
 {
-    protected $element = '';
+    public string $element = '';
 
     /**
      * Returns mandatory fields.
@@ -343,10 +343,7 @@ class ElementCompleteService
      */
     public function isLevelOneMultiDimensionDataCompleted($elementSchema, $data): bool
     {
-        $mandatoryAttributes = $this->getMandatoryAttributes($elementSchema);
-        $mandatorySubElements = $this->getMandatorySubElements($elementSchema);
-
-        return $this->isElementCompleted($mandatoryAttributes, $mandatorySubElements, $data);
+        return $this->isElementCompleted($this->getMandatoryAttributes($elementSchema), $this->getMandatorySubElements($elementSchema), $data);
     }
 
     /**
@@ -526,8 +523,7 @@ class ElementCompleteService
      */
     public function isTitleElementCompleted($activity): bool
     {
-        $activity->element = 'title';
-        $this->element = $activity->element;
+        $this->element = 'title';
         $elementSchema = getElementSchema($activity->element);
 
         return $this->isSubElementDataCompleted($this->mandatorySubElements($elementSchema['sub_elements']), ['narrative' => $activity->title]);
@@ -543,8 +539,7 @@ class ElementCompleteService
      */
     public function isDescriptionElementCompleted($activity): bool
     {
-        $activity->element = 'description';
-        $this->element = $activity->element;
+        $this->element = 'description';
 
         return $this->isLevelOneMultiDimensionElementCompleted('description', $activity->description);
     }
@@ -559,8 +554,7 @@ class ElementCompleteService
      */
     public function isActivityDateElementCompleted($activity): bool
     {
-        $activity->element = 'activity_date';
-        $this->element = $activity->element;
+        $this->element = 'activity_date';
 
         return $this->isLevelOneMultiDimensionElementCompleted('activity_date', $activity->activity_date);
     }
@@ -575,8 +569,7 @@ class ElementCompleteService
      */
     public function isRecipientCountryElementCompleted($activity): bool
     {
-        $activity->element = 'recipient_country';
-        $this->element = $activity->element;
+        $this->element = 'recipient_country';
 
         return $this->isLevelOneMultiDimensionElementCompleted('recipient_country', $activity->recipient_country);
     }
@@ -591,8 +584,7 @@ class ElementCompleteService
      */
     public function isBudgetElementCompleted($activity): bool
     {
-        $activity->element = 'budget';
-        $this->element = $activity->element;
+        $this->element = 'budget';
 
         return $this->isLevelOneMultiDimensionElementCompleted('budget', $activity->budget);
     }
@@ -607,8 +599,7 @@ class ElementCompleteService
      */
     public function isRecipientRegionElementCompleted($activity): bool
     {
-        $activity->element = 'recipient_region';
-        $this->element = $activity->element;
+        $this->element = 'recipient_region';
 
         return $this->isLevelOneMultiDimensionElementCompleted('recipient_region', $activity->recipient_region);
     }
@@ -623,8 +614,7 @@ class ElementCompleteService
      */
     public function isDefaultAidTypeElementCompleted($activity): bool
     {
-        $activity->element = 'default_aid_type';
-        $this->element = $activity->element;
+        $this->element = 'default_aid_type';
 
         return $this->isLevelOneMultiDimensionElementCompleted('default_aid_type', $activity->default_aid_type);
     }
@@ -639,8 +629,7 @@ class ElementCompleteService
      */
     public function isRelatedActivityElementCompleted($activity): bool
     {
-        $activity->element = 'related_activity';
-        $this->element = $activity->element;
+        $this->element = 'related_activity';
 
         return $this->isLevelOneMultiDimensionElementCompleted('related_activity', $activity->related_activity);
     }
@@ -655,8 +644,7 @@ class ElementCompleteService
      */
     public function isSectorElementCompleted($activity): bool
     {
-        $activity->element = 'sector';
-        $this->element = $activity->element;
+        $this->element = 'sector';
 
         return $this->isLevelOneMultiDimensionElementCompleted('sector', $activity->sector);
     }
@@ -671,8 +659,7 @@ class ElementCompleteService
      */
     public function isHumanitarianScopeElementCompleted($activity): bool
     {
-        $activity->element = 'humanitarian_scope';
-        $this->element = $activity->element;
+        $this->element = 'humanitarian_scope';
 
         return $this->isLevelOneMultiDimensionElementCompleted('humanitarian_scope', $activity->humanitarian_scope);
     }
@@ -687,8 +674,7 @@ class ElementCompleteService
      */
     public function isLegacyDataElementCompleted($activity): bool
     {
-        $activity->element = 'legacy_data';
-        $this->element = $activity->element;
+        $this->element = 'legacy_data';
 
         return $this->isLevelOneMultiDimensionElementCompleted('legacy_data', $activity->legacy_data);
     }
@@ -703,8 +689,7 @@ class ElementCompleteService
      */
     public function isTagElementCompleted($activity): bool
     {
-        $activity->element = 'tag';
-        $this->element = $activity->element;
+        $this->element = 'tag';
 
         return $this->isLevelOneMultiDimensionElementCompleted('tag', $activity->tag);
     }
@@ -719,8 +704,7 @@ class ElementCompleteService
      */
     public function isPolicyMarkerElementCompleted($activity): bool
     {
-        $activity->element = 'policy_marker';
-        $this->element = $activity->element;
+        $this->element = 'policy_marker';
 
         return $this->isLevelOneMultiDimensionElementCompleted('policy_marker', $activity->policy_marker);
     }
@@ -735,8 +719,7 @@ class ElementCompleteService
      */
     public function isParticipatingOrgElementCompleted($activity): bool
     {
-        $activity->element = 'participating_org';
-        $this->element = $activity->element;
+        $this->element = 'participating_org';
 
         return $this->isLevelOneMultiDimensionElementCompleted('participating_org', $activity->participating_org);
     }
@@ -750,8 +733,7 @@ class ElementCompleteService
      */
     public function isActivityStatusElementCompleted($activity): bool
     {
-        $activity->element = 'activity_status';
-        $this->element = $activity->element;
+        $this->element = 'activity_status';
 
         return !empty($activity->activity_status);
     }
@@ -765,8 +747,7 @@ class ElementCompleteService
      */
     public function isActivityScopeElementCompleted($activity): bool
     {
-        $activity->element = 'activity_scope';
-        $this->element = $activity->element;
+        $this->element = 'activity_scope';
 
         return !empty($activity->activity_scope);
     }
@@ -780,8 +761,7 @@ class ElementCompleteService
      */
     public function isCollaborationTypeElementCompleted($activity): bool
     {
-        $activity->element = 'collaboration_type';
-        $this->element = $activity->element;
+        $this->element = 'collaboration_type';
 
         return !empty($activity->collaboration_type);
     }
@@ -795,8 +775,7 @@ class ElementCompleteService
      */
     public function isDefaultFlowTypeElementCompleted($activity): bool
     {
-        $activity->element = 'default_flow_type';
-        $this->element = $activity->element;
+        $this->element = 'default_flow_type';
 
         return !empty($activity->default_flow_type);
     }
@@ -810,8 +789,7 @@ class ElementCompleteService
      */
     public function isDefaultFinanceTypeElementCompleted($activity): bool
     {
-        $activity->element = 'default_finance_type';
-        $this->element = $activity->element;
+        $this->element = 'default_finance_type';
 
         return !empty($activity->default_finance_type);
     }
@@ -825,8 +803,7 @@ class ElementCompleteService
      */
     public function isDefaultTiedStatusElementCompleted($activity): bool
     {
-        $activity->element = 'default_tied_status';
-        $this->element = $activity->element;
+        $this->element = 'default_tied_status';
 
         return !empty($activity->default_tied_status);
     }
@@ -840,8 +817,7 @@ class ElementCompleteService
      */
     public function isCapitalSpendElementCompleted($activity): bool
     {
-        $activity->element = 'capital_spend';
-        $this->element = $activity->element;
+        $this->element = 'capital_spend';
 
         return !empty($activity->capital_spend);
     }
@@ -856,8 +832,7 @@ class ElementCompleteService
      */
     public function isOtherIdentifierElementCompleted($activity): bool
     {
-        $activity->element = 'other_identifier';
-        $this->element = $activity->element;
+        $this->element = 'other_identifier';
 
         return $this->isLevelTwoSingleDimensionElementCompleted('other_identifier', $activity->other_identifier);
     }
@@ -872,8 +847,7 @@ class ElementCompleteService
      */
     public function isConditionsElementCompleted($activity): bool
     {
-        $activity->element = 'conditions';
-        $this->element = $activity->element;
+        $this->element = 'conditions';
 
         return $this->isLevelTwoSingleDimensionElementCompleted('conditions', $activity->conditions);
     }
@@ -888,8 +862,7 @@ class ElementCompleteService
      */
     public function isDocumentLinkElementCompleted($activity): bool
     {
-        $activity->element = 'document_link';
-        $this->element = $activity->element;
+        $this->element = 'document_link';
 
         return $this->isLevelTwoMultiDimensionElementCompleted('document_link', $activity->document_link);
     }
@@ -904,8 +877,7 @@ class ElementCompleteService
      */
     public function isContactInfoElementCompleted($activity): bool
     {
-        $activity->element = 'contact_info';
-        $this->element = $activity->element;
+        $this->element = 'contact_info';
 
         return $this->isLevelTwoMultiDimensionElementCompleted('contact_info', $activity->contact_info);
     }
@@ -920,8 +892,7 @@ class ElementCompleteService
      */
     public function isLocationElementCompleted($activity): bool
     {
-        $activity->element = 'location';
-        $this->element = $activity->element;
+        $this->element = 'location';
 
         return $this->isLevelTwoMultiDimensionElementCompleted('location', $activity->location);
     }
@@ -936,8 +907,7 @@ class ElementCompleteService
      */
     public function isPlannedDisbursementElementCompleted($activity): bool
     {
-        $activity->element = 'planned_disbursement';
-        $this->element = $activity->element;
+        $this->element = 'planned_disbursement';
 
         return $this->isLevelTwoMultiDimensionElementCompleted('planned_disbursement', $activity->planned_disbursement);
     }
@@ -952,8 +922,7 @@ class ElementCompleteService
      */
     public function isCountryBudgetItemsElementCompleted($activity): bool
     {
-        $activity->element = 'country_budget_items';
-        $this->element = $activity->element;
+        $this->element = 'country_budget_items';
 
         return $this->isLevelThreeSingleDimensionElementCompleted('country_budget_items', $activity->country_budget_items);
     }
@@ -1179,22 +1148,19 @@ class ElementCompleteService
     {
         [$resultData, $periodData, $indicatorData] = $this->getFormattedResults($activity);
 
-        $activity->element = 'period';
-        $this->element = $activity->element;
+        $this->element = 'period';
 
         if (!$this->isPeriodElementCompleted('period', $periodData)) {
             return false;
         }
 
-        $activity->element = 'indicator';
-        $this->element = $activity->element;
+        $this->element = 'indicator';
 
         if (!$this->isIndicatorElementCompleted('indicator', $indicatorData)) {
             return false;
         }
 
-        $activity->element = 'result';
-        $this->element = $activity->element;
+        $this->element = 'result';
 
         if (!$this->isResultElementDataCompleted('result', $resultData)) {
             return false;
@@ -1236,8 +1202,7 @@ class ElementCompleteService
         $transactionData = $activity->transactions()->get()->toArray();
 
         if (!empty($transactionData)) {
-            $activity->element = 'transactions';
-            $this->element = $activity->element;
+            $this->element = 'transactions';
 
             $elementSchema = getElementSchema($activity->element);
 

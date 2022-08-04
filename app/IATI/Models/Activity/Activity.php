@@ -17,7 +17,6 @@ class Activity extends Model
 {
     use HasFactory;
 
-    public string $element = '';
     protected $appends = ['title_element_completed'];
     /**
      * Fillable property for mass assignment.

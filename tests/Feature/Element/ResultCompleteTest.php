@@ -10,20 +10,6 @@ class ResultCompleteTest extends ElementCompleteTest
     private string $element = 'result';
 
     /**
-     * Construct function.
-     *
-     * @param string|null $name
-     * @param array       $data
-     * @param string      $dataName
-     */
-    public function __construct(?string $name = null, array $data = [], string $dataName = '')
-    {
-        parent::__construct($name, $data, $dataName);
-
-        $this->activityObj->element = $this->element;
-    }
-
-    /**
      * Mandatory period attribute test.
      *
      * @return void
