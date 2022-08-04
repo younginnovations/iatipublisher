@@ -25,11 +25,13 @@ class ResultObserver
      */
     public function updateActivityElementStatus($result): void
     {
-        $elementStatus = $result->activity->element_status;
-        $elementStatus['result'] = $this->elementCompleteService->isResultElementCompleted($result->activity);
+        $activityObj = $result->activity;
+        $elementStatus = $activityObj->element_status;
+        $elementStatus['result'] = $this->elementCompleteService->isResultElementCompleted($activityObj);
 
-        $result->activity->element_status = $elementStatus;
-        $result->activity->saveQuietly();
+        $activityObj->element_status = $elementStatus;
+
+        $activityObj->saveQuietly();
     }
 
     /**

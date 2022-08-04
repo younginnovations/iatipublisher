@@ -259,6 +259,8 @@ class ElementCompleteTest extends TestCase
      */
     protected function test_transaction_data_complete($subElements, $actualData): void
     {
+        $this->elementCompleteService->element = 'transactions';
+
         $this->assertTrue($this->elementCompleteService->checkTransactionData($subElements, $actualData));
     }
 

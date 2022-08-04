@@ -25,11 +25,12 @@ class TransactionObserver
      */
     public function updateActivityElementStatus($transaction): void
     {
-        $elementStatus = $transaction->activity->element_status;
+        $activityObj = $transaction->activity;
+        $elementStatus = $activityObj->element_status;
         $elementStatus['transactions'] = $this->elementCompleteService->isTransactionsElementCompleted($transaction->activity);
 
-        $transaction->activity->element_status = $elementStatus;
-        $transaction->activity->saveQuietly();
+        $activityObj->element_status = $elementStatus;
+        $activityObj->saveQuietly();
     }
 
     /**

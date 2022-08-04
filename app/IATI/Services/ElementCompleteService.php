@@ -266,13 +266,13 @@ class ElementCompleteService
 
             foreach ($data as $datum) {
                 if (!$this->isAttributeDataCompleted($mandatoryAttributes, $datum)) {
-                    //dd('isElementCompleted fx is called1', 'Attribute is empty', 'attribute-check:', $mandatoryAttributes, $data, $datum);
+                    //dd('isElementCompleted fx is called1', 'Attribute is empty', 'mandatory-attributes:', $mandatoryAttributes, $data, $datum);
 
                     return false;
                 }
 
                 if (!$this->isSubElementDataCompleted($mandatorySubElements, $datum)) {
-                    //dd('isElementCompleted fx is called2', 'Sub element is empty', 'sub-element-check:', $mandatorySubElements, $data, $datum);
+                    //dd('isElementCompleted fx is called2', 'Sub element is empty', 'mandatory-sub-element:', $mandatorySubElements, $data, $datum);
 
                     return false;
                 }
@@ -299,13 +299,15 @@ class ElementCompleteService
 
             if (!empty($mandatorySubElementAttributes) || !empty($mandatoryChildSubElements)) {
                 if (!array_key_exists($key, $data)) {
-                    //dd('isSubElementCompleted fx is called1', 'Sub element key not present', $mandatorySubElementAttributes, $mandatoryChildSubElements, $key, $data);
+                    //dd('isSubElementCompleted fx is called1', 'Sub element key not present', 'mandatory-sub-element_attributes:', $mandatorySubElementAttributes, 'mandatory-child-sub-elements: ',
+                    //   $mandatoryChildSubElements, $key, $data);
 
                     return false;
                 }
 
                 if (empty($data[$key])) {
-                    //dd('isSubElementCompleted fx is called2', 'Sub element empty', $mandatorySubElementAttributes, $mandatoryChildSubElements, $key, $data);
+                    //dd('isSubElementCompleted fx is called2', 'Sub element empty', 'mandatory-sub-element_attributes:', $mandatorySubElementAttributes, 'mandatory-child-sub-elements: ',
+                    // $mandatoryChildSubElements, $key, $data);
 
                     return false;
                 }
@@ -1120,12 +1122,12 @@ class ElementCompleteService
 
                 if (!empty($indicators)) {
                     foreach ($indicators as $indicator) {
-                        $indicatorData[] = $indicator;
+                        $indicatorData[] = $indicator['indicator'];
                         $periods = $indicator['periods'];
 
                         if (!empty($periods)) {
                             foreach ($periods as $period) {
-                                $periodData[] = $period;
+                                $periodData[] = $period['period'];
                             }
                         }
                     }
@@ -1146,7 +1148,7 @@ class ElementCompleteService
      */
     public function isResultElementCompleted($activity): bool
     {
-        [$resultData, $periodData, $indicatorData] = $this->getFormattedResults($activity);
+        [$resultData, $indicatorData, $periodData] = $this->getFormattedResults($activity);
 
         $this->element = 'period';
 
@@ -1203,8 +1205,7 @@ class ElementCompleteService
 
         if (!empty($transactionData)) {
             $this->element = 'transactions';
-
-            $elementSchema = getElementSchema($activity->element);
+            $elementSchema = getElementSchema($this->element);
 
             foreach ($transactionData as $transactionDatum) {
                 if (!$this->checkTransactionData($elementSchema['sub_elements'], $transactionDatum['transaction'])) {
