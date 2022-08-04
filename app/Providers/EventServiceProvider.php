@@ -3,10 +3,16 @@
 namespace App\Providers;
 
 use App\IATI\Models\Activity\Activity;
+use App\IATI\Models\Activity\Indicator;
+use App\IATI\Models\Activity\Period;
+use App\IATI\Models\Activity\Result;
 use App\IATI\Models\Activity\Transaction;
 use App\IATI\Models\Organization\Organization;
 use App\Observers\ActivityObserver;
+use App\Observers\IndicatorObserver;
 use App\Observers\OrganizationObserver;
+use App\Observers\PeriodObserver;
+use App\Observers\ResultObserver;
 use App\Observers\TransactionObserver;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
@@ -38,5 +44,8 @@ class EventServiceProvider extends ServiceProvider
         Activity::observe(ActivityObserver::class);
         Organization::observe(OrganizationObserver::class);
         Transaction::observe(TransactionObserver::class);
+        Result::observe(ResultObserver::class);
+        Indicator::observe(IndicatorObserver::class);
+        Period::observe(PeriodObserver::class);
     }
 }
