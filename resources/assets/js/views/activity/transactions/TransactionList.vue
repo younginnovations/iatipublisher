@@ -1,51 +1,21 @@
 <template>
   <div class="relative bg-paper px-10 pt-4 pb-[71px]">
-    <!-- page title -->
-    <div class="mb-6 page-title">
-      <div class="flex items-end gap-4">
-        <div class="title grow-0">
-          <div class="max-w-sm pb-4 text-caption-c1 text-n-40">
-            <nav aria-label="breadcrumbs" class="rank-math-breadcrumb">
-              <div class="flex">
-                <a class="font-bold whitespace-nowrap" href="/activities">
-                  Your Activities
-                </a>
-                <span class="mx-4 separator"> / </span>
-                <div class="breadcrumb__title">
-                  <span
-                    class="overflow-hidden breadcrumb__title last text-n-30"
-                  >
-                    Transaction List
-                  </span>
-                  <span class="ellipsis__title--hover w-[calc(100%_+_35px)]">
-                    Transaction List
-                  </span>
-                </div>
-              </div>
-            </nav>
-          </div>
-          <div class="inline-flex items-center max-w-3xl">
-            <div class="mr-3">
-              <a href="/activities/">
-                <svg-vue icon="arrow-short-left"></svg-vue>
-              </a>
-            </div>
-            <div class="">
-              <h4 class="relative mr-4 font-bold ellipsis__title">
-                <span class="overflow-hidden ellipsis__title"
-                  >Transaction List</span
-                ><span class="ellipsis__title--hover">Transaction List</span>
-              </h4>
-            </div>
-          </div>
-        </div>
-        <div class="flex flex-col items-end justify-end actions grow">
-          <a :href="`/activities/${activityId}/transactions/create`">
-            <Btn text="Add Transaction" icon="plus" type="primary" />
-          </a>
-        </div>
+    <PageTitle
+      :breadcrumb-data="breadcrumbData"
+      title="Transaction List"
+      :back-link="activityLink"
+    >
+      <div class="mb-3">
+        <Toast
+          v-if="toastData.visibility"
+          :message="toastData.message"
+          :type="toastData.type"
+        />
       </div>
-    </div>
+      <a :href="`${activityLink}/transactions/create`">
+        <Btn text="Add Transaction" icon="plus" type="primary" />
+      </a>
+    </PageTitle>
 
     <!-- page content -->
     <div class="iati-list-table text-n-40">
@@ -121,40 +91,40 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="(trans, t, index) in transactionsData" :key="index">
+          <tr v-for="(trans, t, index) in transactionsData.data" :key="index">
             <td>
-              <a :href="`/activities/${activityId}/transactions/${trans.id}`">
-                <span v-if="trans.transaction.reference">{{
-                  trans.transaction.reference
-                }}</span>
-                <span v-else>- - -</span>
+              <a :href="`${activityLink}/transactions/${trans.id}`">
+                <span>{{ trans.transaction.reference ?? '- - -' }}</span>
               </a>
             </td>
             <td>
               {{
                 types.transactionType[
                   trans.transaction.transaction_type[0].transaction_type_code
-                ]
+                ] ?? '- - -'
               }}
             </td>
-            <td>{{ trans.transaction.value[0].amount }}</td>
+            <td class="truncate">
+              {{ trans.transaction.value[0].amount ?? '- - -' }}
+            </td>
             <td>
-              <span v-if="trans.transaction.transaction_date[0].date">
+              <span>
                 {{
-                  dateFormat(
-                    trans.transaction.transaction_date[0].date,
-                    'fromNow'
-                  )
+                  trans.transaction.transaction_date[0].date
+                    ? dateFormat(
+                        trans.transaction.transaction_date[0].date,
+                        'fromNow'
+                      )
+                    : '- - -'
                 }}
               </span>
-              <span v-else>- - -</span>
             </td>
             <td><span class="text-spring-50">completed</span></td>
             <td>
               <div class="flex text-n-40">
                 <a
                   class="mr-6"
-                  :href="`/activities/${trans.activity_id}/transactions/${trans.id}/edit`"
+                  :href="`${activityLink}/transactions/${trans.id}/edit`"
                 >
                   <svg-vue icon="edit" class="text-xl"></svg-vue>
                 </a>
@@ -167,18 +137,33 @@
         </tbody>
       </table>
     </div>
+    <div class="mt-6">
+      <Pagination :data="transactionsData" @fetch-activities="fetchListings" />
+    </div>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, toRefs } from 'vue';
-import Btn from '../../../components/ButtonComponent.vue';
-import dateFormat from '../../../composable/dateFormat';
+import { defineComponent, toRefs, reactive, onMounted } from 'vue';
+import axios from 'axios';
+
+//components
+import Btn from 'Components/ButtonComponent.vue';
+import Pagination from 'Components/TablePagination.vue';
+import PageTitle from 'Components/sections/PageTitle.vue';
+import Toast from 'Components/Toast.vue';
+
+//composable
+import dateFormat from 'Composable/dateFormat';
+import getActivityTitle from 'Composable/title';
 
 export default defineComponent({
   name: 'TransactionList',
   components: {
     Btn,
+    Pagination,
+    PageTitle,
+    Toast,
   },
   props: {
     activity: {
@@ -193,13 +178,77 @@ export default defineComponent({
       type: Object,
       required: true,
     },
+    toast: {
+      type: Object,
+      required: true,
+    },
   },
   setup(props) {
-    const { activity, transactions } = toRefs(props);
-    const activityId = activity.value.id;
-    const transactionsData = transactions.value.slice().reverse();
+    const { activity } = toRefs(props);
+    const activityId = activity.value.id,
+      activityTitle = getActivityTitle(activity.value.title, 'en'),
+      activityLink = `/activities/${activityId}`;
+    const toastData = reactive({
+      visibility: false,
+      message: '',
+      type: true,
+    });
 
-    return { activityId, dateFormat, transactionsData };
+    const transactionsData = reactive({});
+
+    onMounted(async () => {
+      axios.get(`/activities/${activityId}/transactions/page/1`).then((res) => {
+        const response = res.data;
+        Object.assign(transactionsData, response.data);
+      });
+
+      if (props.toast.message !== '') {
+        toastData.type = props.toast.type;
+        toastData.visibility = true;
+        toastData.message = props.toast.message;
+      }
+
+      setTimeout(() => {
+        toastData.visibility = false;
+      }, 5000);
+    });
+
+    function fetchListings(active_page: number) {
+      axios
+        .get(`/activities/${activityId}/transactions/page/` + active_page)
+        .then((res) => {
+          const response = res.data;
+          Object.assign(transactionsData, response.data);
+        });
+    }
+
+    /**
+     * Breadcrumb data
+     */
+    const breadcrumbData = [
+      {
+        title: 'Your Activities',
+        link: '/activities',
+      },
+      {
+        title: activityTitle,
+        link: activityLink,
+      },
+      {
+        title: 'Transaction List',
+        link: '',
+      },
+    ];
+
+    return {
+      breadcrumbData,
+      activityLink,
+      dateFormat,
+      transactionsData,
+      getActivityTitle,
+      fetchListings,
+      toastData,
+    };
   },
 });
 </script>

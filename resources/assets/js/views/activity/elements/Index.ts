@@ -1,0 +1,19 @@
+// Proxy export all related components.
+export { default as Result } from './Result.vue';
+export { default as IatiIdentifier } from './IatiIdentifier.vue';
+export { default as OtherIdentifier } from './OtherIdentifier.vue';
+export { default as TitleElement } from './Title.vue';
+export { default as Description } from './Description.vue';
+export { default as ActivityDate } from './ActivityDate.vue';
+export { default as ContactInfo } from './ContactInfo.vue';
+export { default as ParticipatingOrg } from './ParticipatingOrg.vue';
+export { default as RecipientCountry } from './RecipientCountry.vue';
+export { default as RecipientRegion } from './RecipientRegion.vue';
+export { default as Transactions } from './Transactions.vue';
+export { default as Location } from './Location.vue';
+export { default as Sector } from './Sector.vue';
+export { default as LegacyData } from './LegacyData.vue';
+export { default as Conditions } from './Conditions.vue';
+export { default as RelatedActivity } from './RelatedActivity.vue';
+export { default as PolicyMarker } from './PolicyMarker.vue';
+export { default as Tag } from './Tag.vue';

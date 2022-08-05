@@ -33,6 +33,10 @@
 
                         @include('admin.activity.partial.form-title')
 
+                        @if(Session::has('error'))
+                        <p class='error'>{{Session::get('error')}}</p>
+                        @endif
+
                         {!! form($form) !!}
 
                         <div class="hidden parent-collection title_narrative" form_type="target"

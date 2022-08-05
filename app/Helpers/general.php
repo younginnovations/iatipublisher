@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+use Illuminate\Support\Facades\Session;
+
 if (!function_exists('getCodeList')) {
     /**
      * return codeList array from json codeList.
@@ -110,6 +112,11 @@ if (!function_exists('getList')) {
     }
 }
 
+/*
+ * Get activity transaction data type
+ *
+ * @return array
+ */
 if (!function_exists('getTransactionTypes')) {
     function getTransactionTypes(): array
     {
@@ -132,6 +139,77 @@ if (!function_exists('getTransactionTypes')) {
             'cashAndVoucherModalities'  => getCodeList('CashandVoucherModalities', 'Activity', false),
             'earMarkingCategory'        => getCodeList('EarmarkingCategory', 'Activity', false),
             'earMarkingModality'        => getCodeList('EarmarkingModality', 'Activity', false),
+            'languages'                 => getCodeList('Language', 'Activity', false),
         ];
+    }
+}
+
+/*
+ * Get activity result data type
+ *
+ * @return array
+ */
+if (!function_exists('getResultTypes')) {
+    function getResultTypes(): array
+    {
+        return [
+            'resultType'                => getCodeList('ResultType', 'Activity', false),
+            'resultVocabulary'          => getCodeList('ResultVocabulary', 'Activity', false),
+            'indicatorMeasure'          => getCodeList('IndicatorMeasure', 'Activity', false),
+            'language'                  => getCodeList('Language', 'Activity', false),
+            'documentCategory'          => getCodeList('DocumentCategory', 'Activity', false),
+        ];
+    }
+}
+
+/*
+ * Get activity indicator data type
+ *
+ * @return array
+ */
+if (!function_exists('getIndicatorTypes')) {
+    function getIndicatorTypes(): array
+    {
+        return [
+            'indicatorVocabulary'       => getCodeList('IndicatorVocabulary', 'Activity'),
+            'indicatorMeasure'          => getCodeList('IndicatorMeasure', 'Activity', false),
+            'language'                  => getCodeList('Language', 'Activity', false),
+            'documentCategory'          => getCodeList('DocumentCategory', 'Activity', false),
+            'fileFormat'                => getCodeList('FileFormat', 'Activity', false),
+        ];
+    }
+}
+
+/*
+ * Get activity periods data type
+ *
+ * @return array
+ */
+if (!function_exists('getPeriodTypes')) {
+    function getPeriodTypes(): array
+    {
+        return [
+            'indicatorMeasure'          => getCodeList('IndicatorMeasure', 'Activity', false),
+            'language'                  => getCodeList('Language', 'Activity', false),
+            'documentCategory'          => getCodeList('DocumentCategory', 'Activity', false),
+            'fileFormat'                => getCodeList('FileFormat', 'Activity', false),
+        ];
+    }
+}
+
+    /*
+     * Generates toast array.
+     *
+     * @return array
+     */
+if (!function_exists('generateToastData')) {
+    function generateToastData(): array
+    {
+        $toast['message'] = Session::exists('error') ? Session::get('error') : (Session::exists('success') ? Session::get('success') : '');
+        $toast['type'] = Session::exists('error') ? false : 'success';
+        Session::forget('success');
+        Session::forget('error');
+
+        return $toast;
     }
 }

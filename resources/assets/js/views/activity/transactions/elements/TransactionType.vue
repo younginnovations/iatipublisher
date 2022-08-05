@@ -1,9 +1,13 @@
 <template>
-  {{ types[code[0].transaction_type_code] }}
+  {{
+    code[0].transaction_type_code
+      ? type.transactionType[code[0].transaction_type_code]
+      : 'Code Not Available'
+  }}
 </template>
 
 <script lang="ts">
-import { defineComponent, toRefs } from 'vue';
+import { defineComponent, toRefs, inject } from 'vue';
 
 export default defineComponent({
   name: 'TransactionType',
@@ -11,10 +15,6 @@ export default defineComponent({
   props: {
     data: {
       type: [Object, String],
-      required: true,
-    },
-    types: {
-      type: Object,
       required: true,
     },
   },
@@ -25,7 +25,9 @@ export default defineComponent({
       [index: number]: { transaction_type_code: string };
     }
     const code = data.value as ArrayObject;
-    return { code };
+
+    const type = inject('types');
+    return { code, type };
   },
 });
 </script>

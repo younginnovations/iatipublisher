@@ -132,6 +132,7 @@ class IndicatorRequest extends ActivityBaseRequest
             $baselineForm = sprintf('baseline.%s', $baselineIndex);
 
             $rules[sprintf('%s.year', $baselineForm)] = 'nullable|date_format:Y|digits:4';
+            $rules[sprintf('%s.value', $baselineForm)] = 'nullable|numeric|gte:0';
 
             if ((request()->get('measure') == 2) &&
                 (Arr::get($baseline, 'value', null))) {

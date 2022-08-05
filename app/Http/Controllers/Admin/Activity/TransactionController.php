@@ -11,6 +11,7 @@ use App\IATI\Models\Activity\Transaction;
 use App\IATI\Services\Activity\ActivityService;
 use App\IATI\Services\Activity\TransactionService;
 use Illuminate\Contracts\View\View;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 
 /**
@@ -63,8 +64,9 @@ class TransactionController extends Controller
             $activity = $this->activityService->getActivity($activityId);
             $transactions = $this->transactionService->getActivityTransactions($activityId);
             $types = getTransactionTypes();
+            $toast = generateToastData();
 
-            return view('admin.activity.transaction.transaction', compact('activity', 'transactions', 'types'));
+            return view('admin.activity.transaction.transaction', compact('activity', 'transactions', 'types', 'toast'));
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
@@ -112,18 +114,12 @@ class TransactionController extends Controller
     {
         try {
             $transactionData = $request->except('_token');
-
-            if (!$this->transactionService->create([
+            $transaction = $this->transactionService->create([
                 'activity_id' => $activityId,
                 'transaction' => $transactionData,
-            ])) {
-                return redirect()->route('admin.activities.transactions.index', $activityId)->with(
-                    'error',
-                    'Error has occurred while creating activity transaction.'
-                );
-            }
+            ]);
 
-            return redirect()->route('admin.activities.transactions.index', $activityId)->with(
+            return redirect()->route('admin.activities.transactions.show', [$activityId, $transaction['id']])->with(
                 'success',
                 'Activity transaction created successfully.'
             );
@@ -150,8 +146,9 @@ class TransactionController extends Controller
             $activity = $this->activityService->getActivity($activityId);
             $transaction = $this->transactionService->getTransaction($transactionId, $activityId);
             $types = getTransactionTypes();
+            $toast = generateToastData();
 
-            return view('admin.activity.transaction.detail', compact('transaction', 'activity', 'types'));
+            return view('admin.activity.transaction.detail', compact('transaction', 'activity', 'types', 'toast'));
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
@@ -214,7 +211,7 @@ class TransactionController extends Controller
                 );
             }
 
-            return redirect()->route('admin.activities.transactions.index', $activityId)->with(
+            return redirect()->route('admin.activities.transactions.show', [$activityId, $transactionId])->with(
                 'success',
                 'Activity transaction updated successfully.'
             );
@@ -237,5 +234,30 @@ class TransactionController extends Controller
     public function destroy(Transaction $transaction)
     {
         //
+    }
+
+    /*
+     * Get transaction of the corresponding activity
+     *
+     * @param $activityId
+     * @param $page
+     *
+     * @return JsonResponse
+     */
+    public function getTransaction($activityId, $page = 1): JsonResponse
+    {
+        try {
+            $transaction = $this->transactionService->getPaginatedTransaction($activityId, $page);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Transactions fetched successfully',
+                'data'    => $transaction,
+            ]);
+        } catch (\Exception $e) {
+            logger()->error($e->getMessage());
+
+            return response()->json(['success' => false, 'message' => 'Error occurred while fetching the data']);
+        }
     }
 }

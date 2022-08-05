@@ -42,7 +42,7 @@
           ref="dropdown"
           class="button__dropdown button dropdown-btn"
         >
-          <ul class="w-full bg-eggshell py-2">
+          <ul class="w-full py-2 bg-eggshell">
             <li
               class="flex py-1.5 px-3.5 hover:bg-white"
               @click="dropdownFilter('')"
@@ -68,7 +68,7 @@
         </div>
       </div>
     </div>
-    <div class="elements__listing mt-3 grid grid-cols-2 gap-2">
+    <div class="grid grid-cols-2 gap-2 mt-3 elements__listing">
       <template v-for="(post, index) in filteredElements" :key="index">
         <a
           v-if="
@@ -78,13 +78,13 @@
           :href="
             post.has_data
               ? `#${index}`
-              : index === 'result'
+              : index === 'result' || index == 'transactions'
               ? `/activities/${activityId}/${index}/create`
               : `/activities/${activityId}/${index}`
           "
         >
           <div
-            class="status_icons absolute top-0 right-0 mt-1 mr-1 inline-flex"
+            class="absolute top-0 right-0 inline-flex mt-1 mr-1 status_icons"
           >
             <svg-vue
               v-if="post.completed"
@@ -116,7 +116,7 @@
               class="text-base"
             ></svg-vue>
           </template>
-          <div class="title mt-1 text-xs">
+          <div class="mt-1 text-xs title">
             {{ index.toString().replace(/_/g, '-') }}
           </div>
         </a>
@@ -157,12 +157,19 @@ export default defineComponent({
     const asArrayData = Object.entries(props.data);
     const filteredElements = computed(() => {
       const filtered = asArrayData.filter(([key, value]) => {
-
         if (!elements.status) {
-          return key.toLowerCase().includes(elements.search.toLowerCase().replace('_','').replace('-','_'));
+          return key
+            .toLowerCase()
+            .includes(
+              elements.search.toLowerCase().replace('_', '').replace('-', '_')
+            );
         } else {
           if (value[elements.status]) {
-            return key.toLowerCase().includes(elements.search.toLowerCase().replace('_','').replace('-','_'));
+            return key
+              .toLowerCase()
+              .includes(
+                elements.search.toLowerCase().replace('_', '').replace('-', '_')
+              );
           }
         }
       });

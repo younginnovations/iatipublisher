@@ -120,10 +120,11 @@ class ActivityController extends Controller
      *
      * @return View|JsonResponse|RedirectResponse
      */
-    public function show(Activity $activity): View|JsonResponse|RedirectResponse
+    public function show($id): View|JsonResponse|RedirectResponse
     {
         try {
-            $toast = $this->activityService->generateToastData();
+            $toast = generateToastData();
+            $activity = $this->activityService->getActivity($id);
             $elements = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
             $elementGroups = json_decode(file_get_contents(app_path('Data/Activity/ElementGroup.json')), true);
             $types = $this->getActivityDetailDataType();
@@ -197,7 +198,7 @@ class ActivityController extends Controller
                 'message' => 'Activities fetched successfully',
                 'data'    => $activities,
             ]);
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
             return response()->json(['success' => false, 'message' => 'Error occurred while fetching the data']);
@@ -285,7 +286,8 @@ class ActivityController extends Controller
             'geographicExactness'         => getCodeList('GeographicExactness', 'Activity', false),
             'geographicLocationClass'     => getCodeList('GeographicLocationClass', 'Activity', false),
             'resultType'                  => getCodeList('ResultType', 'Activity', false),
-            'transactionType'             => getCodeList('TransactionType', 'Activity'),
+            'transactionType'             => getCodeList('TransactionType', 'Activity', false),
+            'crsChannelCode'              => getCodeList('CRSChannelCode', 'Activity', false),
         ];
     }
 
@@ -299,7 +301,7 @@ class ActivityController extends Controller
     public function getActivityDetailStatus($activity): array
     {
         return [
-            'iati_identifier'           => $activity->identifier_element_completed,
+            'iati_identifier'      => $activity->identifier_element_completed,
             'title'                => $activity->title_element_completed,
             'description'          => $activity->description_element_completed,
             'activity_status'      => $activity->activity_status_element_completed,

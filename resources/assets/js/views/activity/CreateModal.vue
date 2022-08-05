@@ -236,6 +236,7 @@ export default defineComponent({
     onMounted(async () => {
       axios.get('/activity/codelists').then((res) => {
         const response = res.data;
+        console.log(res.data)
         Object.assign(languages, response.data.languages);
         Object.assign(organization, response.data.organization);
       });

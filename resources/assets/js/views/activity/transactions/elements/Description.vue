@@ -7,15 +7,21 @@
       'mb-4': i !== Object.keys(tdData[0].narrative).length - 1,
     }"
   >
-    <div class="language mb-1.5">(Language: {{ post.language }})</div>
+    <div class="language mb-1.5">
+      ({{
+        post.language
+          ? `Language: ${type.languages[post.language]}`
+          : 'Language Not Available'
+      }})
+    </div>
     <div class="text-sm description">
-      {{ post.narrative }}
+      {{ post.narrative ?? 'Narrative Not Available' }}
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, toRefs } from 'vue';
+import { defineComponent, toRefs, inject } from 'vue';
 
 export default defineComponent({
   name: 'TransactionDescription',
@@ -42,7 +48,8 @@ export default defineComponent({
 
     let { data } = toRefs(props);
     const tdData = data.value as Narratives;
-    return { tdData };
+    const type = inject('types');
+    return { tdData, type };
   },
 });
 </script>

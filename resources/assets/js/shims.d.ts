@@ -5,3 +5,4 @@ declare module '*.vue' {
 }
 
 declare module 'svg-vue3';
+declare module '@renatodeleao/vue-sticky-directive';

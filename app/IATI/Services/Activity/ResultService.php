@@ -8,6 +8,7 @@ use App\IATI\Elements\Builder\ResultElementFormCreator;
 use App\IATI\Repositories\Activity\ResultRepository;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Kris\LaravelFormBuilder\Form;
 
 /**
@@ -66,13 +67,12 @@ class ResultService
      * Return specific result.
      *
      * @param $id
-     * @param $activityId
      *
      * @return Model
      */
-    public function getResult($id, $activityId): Model
+    public function getResult($id): Model
     {
-        return $this->resultRepository->getResult($id, $activityId);
+        return $this->resultRepository->getResult($id);
     }
 
     /**
@@ -161,5 +161,29 @@ class ResultService
             'indicator' => $hasIndicator,
             'period' => $hasPeriod,
         ];
+    }
+
+    /*
+     * Return specific result.
+     *
+     * @param $activityId
+     * @return array
+     */
+    public function getActivityResult($activityId): array
+    {
+        return $this->resultRepository->getActivityResult($activityId);
+    }
+
+    /**
+     * Returns array of paginated results belonging to an activity.
+     *
+     * @param $activityId
+     * @param $page
+     *
+     * return LengthAwarePaginator|Collection
+     */
+    public function getPaginatedResult($activityId, $page): LengthAwarePaginator|Collection
+    {
+        return $this->resultRepository->getPaginatedResult($activityId, $page);
     }
 }

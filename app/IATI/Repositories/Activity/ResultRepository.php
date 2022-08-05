@@ -64,13 +64,14 @@ class ResultRepository
 
     /**
      * Return specific result.
+     *
      * @param $id
-     * @param $activityId
+     *
      * @return Model
      */
-    public function getResult($id, $activityId): Model
+    public function getResult($id): Model
     {
-        return $this->activityResult->where('id', $id)->where('activity_id', $activityId)->first();
+        return $this->activityResult->where('id', $id)->first();
     }
 
     /**
@@ -108,7 +109,7 @@ class ResultRepository
      */
     public function getActivityResultsWithIndicatorsAndPeriods($activityId): Collection
     {
-        return $this->activityResult->where('activity_id', $activityId)->with('indicators', 'indicators.periods')->get();
+        return $this->activityResult->where('activity_id', $activityId)->orderBy('created_at', 'DESC')->with('indicators', 'indicators.periods')->limit(4)->get();
     }
 
     /**
@@ -122,5 +123,29 @@ class ResultRepository
     public function getResultWithIndicatorAndPeriod($resultId, $activityId): Model
     {
         return $this->activityResult->where('id', $resultId)->where('activity_id', $activityId)->with(['indicators', 'indicators.periods'])->first();
+    }
+
+    /**
+     * Return specific result.
+     *
+     * @param $activityId
+     * @return array
+     */
+    public function getActivityResult($activityId): array
+    {
+        return $this->activityResult->where('activity_id', $activityId)->get()->toArray();
+    }
+
+    /**
+     * Returns all results belonging to activityId.
+     *
+     * @param int $activityId
+     * @param int $page
+     *
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public function getPaginatedResult($activityId, $page = 1): Collection | \Illuminate\Pagination\LengthAwarePaginator
+    {
+        return $this->activityResult->where('activity_id', $activityId)->orderBy('created_at', 'DESC')->paginate(10, ['*'], 'result', $page);
     }
 }

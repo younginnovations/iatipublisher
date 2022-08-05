@@ -9,6 +9,9 @@ use App\Http\Requests\Activity\Indicator\IndicatorRequest;
 use App\IATI\Models\Activity\Indicator;
 use App\IATI\Services\Activity\ActivityService;
 use App\IATI\Services\Activity\IndicatorService;
+use App\IATI\Services\Activity\PeriodService;
+use App\IATI\Services\Activity\ResultService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 /**
@@ -17,9 +20,19 @@ use Illuminate\Http\Request;
 class IndicatorController extends Controller
 {
     /**
+     * @var ResultService
+     */
+    protected ResultService $resultService;
+
+    /**
      * @var IndicatorService
      */
     protected IndicatorService $indicatorService;
+
+    /**
+     * @var PeriodService
+     */
+    protected PeriodService $periodService;
 
     /**
      * @var ActivityService
@@ -29,14 +42,20 @@ class IndicatorController extends Controller
     /**
      * IndicatorController Constructor.
      *
+     * @param ResultService $resultService
      * @param IndicatorService $indicatorService
+     * @param PeriodService $periodService
      * @param ActivityService $activityService
      */
     public function __construct(
+        ResultService $resultService,
         IndicatorService $indicatorService,
+        PeriodService $periodService,
         ActivityService $activityService
     ) {
         $this->indicatorService = $indicatorService;
+        $this->periodService = $periodService;
+        $this->resultService = $resultService;
         $this->activityService = $activityService;
     }
 
@@ -45,9 +64,29 @@ class IndicatorController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index($activityId, $resultId): \Illuminate\Contracts\View\View|\Illuminate\Http\RedirectResponse
     {
-        //
+        try {
+            $activity = $this->activityService->getActivity($activityId);
+            $parentData = [
+                'result' => [
+                    'id'        => $resultId,
+                    'title'     => $this->resultService->getResult($resultId)['result']['title'][0]['narrative'],
+                ],
+            ];
+            $indicators = $this->indicatorService->getResultIndicators($resultId);
+            $types = getIndicatorTypes();
+            $toast = generateToastData();
+
+            return view('admin.activity.indicator.indicator', compact('activity', 'parentData', 'indicators', 'types', 'toast'));
+        } catch (\Exception $e) {
+            logger()->error($e->getMessage());
+
+            return redirect()->route('admin.activities.result.index', [$activityId, $resultId])->with(
+                'error',
+                'Error has occurred while rendering activity transactions listing.'
+            );
+        }
     }
 
     /**
@@ -70,7 +109,7 @@ class IndicatorController extends Controller
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activities.show', $activityId)->with(
+            return redirect()->route('admin.activities.result.indicator.index', [$activityId, $resultId])->with(
                 'error',
                 'Error has occurred while rendering indicator form.'
             );
@@ -90,25 +129,19 @@ class IndicatorController extends Controller
     {
         try {
             $indicatorData = $request->except(['_token']);
-
-            if (!$this->indicatorService->create([
+            $indicator = $this->indicatorService->create([
                 'result_id'     => $resultId,
                 'indicator'     => $indicatorData,
-            ])) {
-                return redirect()->route('admin.activities.show', $activityId)->with(
-                    'error',
-                    'Error has occurred while creating result indicator.'
-                );
-            }
+            ]);
 
-            return redirect()->route('admin.activities.show', $activityId)->with(
+            return redirect()->route('admin.activities.result.indicator.show', [$activityId, $resultId, $indicator['id']])->with(
                 'success',
                 'Result indicator created successfully.'
             );
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activities.show', $activityId)->with(
+            return redirect()->route('admin.activities.result.indicator.index', [$activityId, $resultId])->with(
                 'error',
                 'Error has occurred while creating result indicator.'
             );
@@ -119,11 +152,28 @@ class IndicatorController extends Controller
      * Display the specified resource.
      *
      * @param  \App\IATI\Models\Activity\Indicator  $indicator
-     * @return \Illuminate\Http\Response
+     *
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Http\RedirectResponse|\Illuminate\Contracts\Foundation\Application
      */
-    public function show(Indicator $indicator)
+    public function show($activityId, $resultId, $indicatorId): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Http\RedirectResponse|\Illuminate\Contracts\Foundation\Application
     {
-        //
+        try {
+            $activity = $this->activityService->getActivity($activityId);
+            $resultTitle = $this->resultService->getResult($resultId, $activityId)['result']['title'];
+            $indicator = $this->indicatorService->getResultIndicator($resultId, $indicatorId);
+            $period = $this->periodService->getPeriodOfIndicator($indicatorId)->toArray();
+            $types = getIndicatorTypes();
+            $toast = generateToastData();
+
+            return view('admin.activity.indicator.detail', compact('activity', 'resultTitle', 'indicator', 'period', 'types', 'toast'));
+        } catch (\Exception $e) {
+            logger()->error($e->getMessage());
+
+            return redirect()->route('admin.activities.result.indicator.index', [$activityId, $resultId])->with(
+                'error',
+                'Error has occurred while rending result detail page.'
+            );
+        }
     }
 
     /**
@@ -147,7 +197,7 @@ class IndicatorController extends Controller
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activities.show', $activityId)->with(
+            return redirect()->route('admin.activities.result.indicator.index', [$activityId, $resultId])->with(
                 'error',
                 'Error has occurred while rendering indicator form.'
             );
@@ -174,20 +224,20 @@ class IndicatorController extends Controller
                 'result_id'     => $resultId,
                 'indicator'     => $indicatorData,
             ], $indicator)) {
-                return redirect()->route('admin.activities.show', $activityId)->with(
+                return redirect()->route('admin.activities.result.indicator.index', [$activityId, $resultId])->with(
                     'error',
                     'Error has occurred while updating result indicator.'
                 );
             }
 
-            return redirect()->route('admin.activities.show', $activityId)->with(
+            return redirect()->route('admin.activities.result.indicator.show', [$activityId, $resultId, $indicator['id']])->with(
                 'success',
                 'Indicator updated successfully.'
             );
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activities.show', $activityId)->with(
+            return redirect()->route('admin.activities.result.indicator.index', [$activityId, $resultId])->with(
                 'error',
                 'Error has occurred while updating indicator.'
             );
@@ -203,5 +253,31 @@ class IndicatorController extends Controller
     public function destroy(Indicator $indicator)
     {
         //
+    }
+
+    /*
+     * Get indicator of the corresponding activity
+     *
+     * @param $activityId
+     * @param $resultId
+     * @param $page
+     *
+     * @return JsonResponse
+     */
+    public function getIndicator($activityId, $resultId, $page = 1): JsonResponse
+    {
+        try {
+            $indicator = $this->indicatorService->getPaginatedIndicator($resultId, $page);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Indicators fetched successfully',
+                'data'    => $indicator,
+            ]);
+        } catch (\Exception $e) {
+            logger()->error($e->getMessage());
+
+            return response()->json(['success' => false, 'message' => 'Error occurred while fetching the data']);
+        }
     }
 }

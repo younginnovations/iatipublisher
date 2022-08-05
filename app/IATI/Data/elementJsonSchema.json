@@ -1395,7 +1395,7 @@
             "label": "@code",
             "type": "select",
             "choices": "Activity/Language.json",
-            "required": true,
+            "required": false,
             "criteria": "mandatory",
             "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/description/narrative/'>For more information</a>",
             "help_text": ""
@@ -1412,7 +1412,7 @@
             "name": "date",
             "label": "@iso-date",
             "type": "date",
-            "required": true,
+            "required": false,
             "criteria": "mandatory",
             "hover_text": "The date of publication of the document that is being linked to. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/document-link/document-date/'>For more information</a>",
             "help_text": ""
@@ -1681,7 +1681,7 @@
         "name": "ref",
         "label": "@ref",
         "type": "text",
-        "required": true,
+        "required": false,
         "criteria": "",
         "hover_text": "An internal reference that describes the location in the reporting organisation’s own system. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/location/'>For more information</a>",
         "help_text": ""
@@ -1699,7 +1699,7 @@
             "label": "@code",
             "type": "select",
             "choices": "Activity/GeographicLocationReach.json",
-            "required": true,
+            "required": false,
             "criteria": "",
             "hover_text": "An IATI code for the geographic scope of the activity. This attribute is required. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/location/location-reach/'>For more information</a>",
             "help_text": ""
@@ -1851,7 +1851,7 @@
             "label": "@vocabulary",
             "type": "select",
             "choices": "Activity/GeographicVocabulary.json",
-            "required": false,
+            "required": true,
             "criteria": "",
             "hover_text": "An IATI code for a recognised administrative boundary repository. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/location/administrative/'>For more information</a>",
             "help_text": ""
@@ -1870,7 +1870,7 @@
             "name": "level",
             "label": "@level",
             "type": "text",
-            "required": true,
+            "required": false,
             "criteria": "",
             "hover_text": "A number defining a subdivision within a hierarchical system of administrative areas. The precise system for defining the particular meaning of each @level value is determined by the @vocabulary being used. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/location/administrative/'>For more information</a>",
             "help_text": ""
@@ -1992,7 +1992,7 @@
         "label": "@type",
         "type": "select",
         "choices": "Activity/BudgetType.json",
-        "required": true,
+        "required": false,
         "criteria": "",
         "hover_text": "The purpose of planned-disbursement is to describe any predefined payment schedule. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/planned-disbursement/'>For more information</a>",
         "help_text": ""
@@ -2042,7 +2042,7 @@
             "name": "amount",
             "label": "@amount",
             "type": "text",
-            "required": true,
+            "required": false,
             "criteria": "mandatory",
             "hover_text": "",
             "help_text": ""
@@ -2052,7 +2052,7 @@
             "label": "@currency",
             "type": "select",
             "choices": "Activity/Currency.json",
-            "required": true,
+            "required": false,
             "criteria": "mandatory",
             "hover_text": "A three letter ISO 4217 code for the original currency of the amount. This is required for all currency amounts unless the iati-organisation/@default-currency attribute is specified. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/planned-disbursement/value/'>For more information</a>",
             "help_text": ""
@@ -2078,7 +2078,7 @@
             "name": "ref",
             "label": "@ref",
             "type": "text",
-            "required": true,
+            "required": false,
             "criteria": "",
             "hover_text": "Machine-readable identification string for the organisation issuing the report. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/planned-disbursement/provider-org/'>For more information</a>",
             "help_text": ""
@@ -2087,7 +2087,7 @@
             "name": "provider_activity_id",
             "label": "@provider-activity-id",
             "type": "text",
-            "required": true,
+            "required": false,
             "criteria": "",
             "hover_text": "If incoming funds are being provided from the budget of another activity that is reported to IATI, it if STRONGLY RECOMMENDED that this should record the provider’s unique IATI activity identifier for that activity. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/planned-disbursement/provider-org/'>For more information</a>",
             "help_text": ""
@@ -2097,7 +2097,7 @@
             "label": "@type",
             "type": "select",
             "choices": "Organization/OrganizationType.json",
-            "required": true,
+            "required": false,
             "criteria": "",
             "hover_text": "The type of organisation providing the funds. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/planned-disbursement/provider-org/'>For more information</a>",
             "help_text": ""
@@ -2141,7 +2141,7 @@
             "name": "ref",
             "label": "@ref",
             "type": "text",
-            "required": true,
+            "required": false,
             "criteria": "",
             "hover_text": "Machine-readable identification string for the organisation issuing the report. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/planned-disbursement/receiver-org/'>For more information.</a>",
             "help_text": ""
@@ -2150,7 +2150,7 @@
             "name": "receiver_activity_id",
             "label": "@receiver-activity-id",
             "type": "text",
-            "required": true,
+            "required": false,
             "criteria": "",
             "hover_text": "If outgoing funds are being provided to another activity that is reported to IATI, this may, if possible, record the unique IATI activity identifier for that activity. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/planned-disbursement/receiver-org/'>For more information</a>",
             "help_text": ""
@@ -2160,7 +2160,7 @@
             "label": "@type",
             "type": "select",
             "choices": "Organization/OrganizationType.json",
-            "required": true,
+            "required": false,
             "criteria": "",
             "hover_text": "The type of organisation receiving the funds. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/planned-disbursement/receiver-org/'>For more information</a>",
             "help_text": ""
@@ -2235,7 +2235,7 @@
         "name": "identifier",
         "label": "@activity-id",
         "type": "text",
-        "required": true,
+        "required": false,
         "criteria": "recommended",
         "hover_text": "A valid activity identifier published by the participating organisation which points to the activity that it has published to IATI that describes its role in this activity.</b> This value must be of type xsd:string. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/participating-org/'>For more information</a>",
         "help_text": ""
@@ -2245,7 +2245,7 @@
         "label": "@crs-channel-code",
         "type": "select",
         "choices": "Activity/CRSChannelCode.json",
-        "required": true,
+        "required": false,
         "criteria": "",
         "hover_text": "Under CRS++ Reporting Directives this code identifies the implementing agency. Codes ending in ‘00’ are generic and are similar to the OrganisationType code.</b> This value must be of type xsd:string. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/participating-org/'>For more information</a>",
         "help_text": ""
@@ -2290,7 +2290,7 @@
         "label": "@status",
         "type": "select",
         "choices": "Activity/BudgetStatus.json",
-        "required": true,
+        "required": false,
         "criteria": "recommended",
         "hover_text": "The status explains whether the budget being reported is indicative or has been formally committed. The value should appear within the BudgetStatus codelist. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/budget/'>For more information</a>",
         "help_text": ""

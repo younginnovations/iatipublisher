@@ -1,43 +1,30 @@
 <template>
   <div class="bg-paper px-10 pt-4 pb-[71px]">
-    <div class="mb-6 page-title">
-      <div class="flex items-end gap-4">
-        <div class="title grow-0">
-          <div class="mb-4 text-caption-c1 text-n-40">
-            <nav aria-label="breadcrumbs" class="breadcrumb">
-              <p>
-                <a href="/activities" class="font-bold"> Your Activities </a>
-                <span class="mx-4 separator"> / </span>
-                <span class="text-n-30">
-                  <a :href="`/activities/${activity.id}`">{{
-                    activityTitle
-                  }}</a>
-                </span>
-                <span class="mx-4 separator"> / </span>
-                <span class="last text-n-30">{{
-                  transactionData.reference??'Untitled'
-                }}</span>
-              </p>
-            </nav>
-          </div>
-          <div class="inline-flex items-center">
-            <div class="mr-3">
-              <a :href="`/activities/${activity.id}`">
-                <svg-vue icon="arrow-short-left"></svg-vue>
-              </a>
-            </div>
-            <h4 class="mr-4 font-bold">
-              {{ transactionData.reference??'Untitled' }} - Transaction detail
-            </h4>
-          </div>
-        </div>
+    <PageTitle
+      :breadcrumb-data="breadcrumbData"
+      :title="`${transactionData.reference ?? 'Untitled'} - Transaction detail`"
+      :back-link="`${activityLink}/transactions`"
+    >
+      <div class="mb-3">
+        <Toast
+          v-if="toastData.visibility"
+          :message="toastData.message"
+          :type="toastData.type"
+        />
       </div>
-    </div>
+      <Btn
+        text="Edit Transaction"
+        :link="`${activityLink}/transactions/${transaction.id}/edit`"
+        icon="edit"
+      />
+    </PageTitle>
 
     <div class="activities">
       <aside class="activities__sidebar">
         <Notes class="mb-4" />
-        <div class="px-6 py-4 rounded-lg indicator bg-eggshell text-n-50">
+        <div
+          class="sticky top-0 px-6 py-4 rounded-lg indicator bg-eggshell text-n-50"
+        >
           <ul class="text-sm font-bold leading-relaxed">
             <li v-for="(rData, r, ri) in transactionData" :key="ri">
               <a v-smooth-scroll :href="`#${r}`" :class="linkClasses">
@@ -49,15 +36,7 @@
         </div>
       </aside>
       <div class="activities__content">
-        <div class="flex justify-end mb-11">
-          <a
-            :href="`/activities/${transaction.activity_id}/transactions/${transaction.id}/edit`"
-            class="edit-button mr-2.5 flex items-center text-tiny font-bold uppercase"
-          >
-            <svg-vue class="mr-0.5 text-base" icon="edit"></svg-vue>
-            <span>Edit Transaction</span>
-          </a>
-        </div>
+        <div></div>
         <div class="flex flex-wrap -mx-3 -mt-3 activities__content--elements">
           <template v-for="(post, key) in transactionData" :key="key">
             <TransactionElement
@@ -69,7 +48,8 @@
                 key.toString() === 'transaction_type' ||
                 key.toString() === 'transaction_date' ||
                 key.toString() === 'reference' ||
-                key.toString() === 'disbursement_channel'
+                key.toString() === 'disbursement_channel' ||
+                key.toString() === 'humanitarian'
                   ? ''
                   : 'full'
               "
@@ -83,17 +63,25 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, toRefs } from 'vue';
-import dateFormat from '../../../composable/dateFormat';
-import getActivityTitle from './../../../composable/title';
-import Notes from './../partials/ElementsNote.vue';
-import TransactionElement from './../transactions/TransactionElement.vue';
+import { defineComponent, toRefs, onMounted, reactive } from 'vue';
+//components
+import Btn from 'Components/buttons/Link.vue';
+import PageTitle from 'Components/sections/PageTitle.vue';
+import Toast from 'Components/Toast.vue';
+//composable
+import dateFormat from 'Composable/dateFormat';
+import getActivityTitle from 'Composable/title';
+import Notes from 'Activity/partials/ElementsNote.vue';
+import TransactionElement from './TransactionElement.vue';
 
 export default defineComponent({
   name: 'TransactionDetail',
   components: {
     Notes,
     TransactionElement,
+    Btn,
+    PageTitle,
+    Toast,
   },
   props: {
     activity: {
@@ -108,17 +96,70 @@ export default defineComponent({
       type: Object,
       required: true,
     },
+    toast: {
+      type: Object,
+      required: true,
+    },
   },
   setup(props) {
     const { activity, transaction } = toRefs(props);
     const linkClasses =
       'flex items-center w-full bg-white rounded p-2 text-sm text-n-50 font-bold leading-relaxed mb-2 shadow-default';
 
+    const toastData = reactive({
+      visibility: false,
+      message: '',
+      type: true,
+    });
+
     // titles
-    const activityTitle = getActivityTitle(activity.value.title, 'en');
     const transactionData = transaction.value.transaction;
 
-    return { activityTitle, dateFormat, transactionData, linkClasses };
+    const activityId = activity.value.id,
+      activityTitle = getActivityTitle(activity.value.title, 'en'),
+      activityLink = `/activities/${activityId}`,
+      transactionLink = `${activityLink}/transaction/${transaction.value.id}`;
+
+    /**
+     * Breadcrumb data
+     */
+    const breadcrumbData = [
+      {
+        title: 'Your Activities',
+        link: '/activities',
+      },
+      {
+        title: activityTitle,
+        link: activityLink,
+      },
+      {
+        title: 'Transaction',
+        link: '',
+      },
+    ];
+
+    onMounted(() => {
+      if (props.toast.message !== '') {
+        toastData.type = props.toast.type;
+        toastData.visibility = true;
+        toastData.message = props.toast.message;
+      }
+
+      setTimeout(() => {
+        toastData.visibility = false;
+      }, 5000);
+    });
+
+    return {
+      activityTitle,
+      dateFormat,
+      transactionData,
+      linkClasses,
+      breadcrumbData,
+      activityLink,
+      transactionLink,
+      toastData,
+    };
   },
 });
 </script>

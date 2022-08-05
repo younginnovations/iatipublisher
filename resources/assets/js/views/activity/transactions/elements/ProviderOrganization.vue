@@ -5,8 +5,8 @@
         <tr>
           <td>Organisation Identifier Code</td>
           <td>
-            <div class="text-sm description">
-              {{ PoData[0].organization_identifier_code }}
+            <div class="text-sm">
+              {{ PoData[0].organization_identifier_code ?? 'Not Available' }}
             </div>
           </td>
         </tr>
@@ -21,9 +21,16 @@
                 'mb-4': i !== PoData[0].narrative.length - 1,
               }"
             >
-              <div class="language mb-1.5">(Language: {{ po.language }})</div>
-              <div class="text-sm description">
-                {{ po.narrative }}
+              <div class="language mb-1.5">
+                (
+                {{
+                  po.language
+                    ? `Language: ${type.languages[po.language]}`
+                    : 'Language: Not Available'
+                }})
+              </div>
+              <div class="text-sm">
+                {{ po.narrative ?? 'Narrative Not Available' }}
               </div>
             </div>
           </td>
@@ -31,16 +38,20 @@
         <tr>
           <td>Provider Activity ID</td>
           <td>
-            <div class="text-sm description">
-              {{ PoData[0].provider_activity_id }}
+            <div class="text-sm">
+              {{ PoData[0].provider_activity_id ?? 'Not Available' }}
             </div>
           </td>
         </tr>
         <tr>
           <td>Type</td>
           <td>
-            <div class="text-sm description">
-              {{ types[PoData[0].type] }}
+            <div class="text-sm">
+              {{
+                PoData[0].type
+                  ? type.organizationType[PoData[0].type]
+                  : 'Not Available'
+              }}
             </div>
           </td>
         </tr>
@@ -50,7 +61,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, toRefs } from 'vue';
+import { defineComponent, toRefs, inject } from 'vue';
 
 export default defineComponent({
   name: 'TransactionProviderOrganisation',
@@ -58,10 +69,6 @@ export default defineComponent({
   props: {
     data: {
       type: [Object, String],
-      required: true,
-    },
-    types: {
-      type: Object,
       required: true,
     },
   },
@@ -77,7 +84,8 @@ export default defineComponent({
       };
     }
     const PoData = data.value as ArrayObject;
-    return { PoData };
+    const type = inject('types');
+    return { PoData, type };
   },
 });
 </script>

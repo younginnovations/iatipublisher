@@ -42,9 +42,14 @@
     visibility: visible;
     opacity: 1;
   }
+
+  .elements-svg {
+    @apply mr-1.5 text-xl text-bluecoral;
+  }
 }
 .description {
-  width: 775px;
+  width: 100%;
+  max-width: 500px;
 }
 
 .elements-detail {
@@ -58,7 +63,7 @@
     @apply text-n-40;
     width: 100px;
   }
-  &.wider {
+  &.wider:not(.small) {
     td:nth-child(1) {
       @apply text-n-40;
       width: 190px;
@@ -68,11 +73,16 @@
   td:nth-child(2) {
     @apply flex flex-col text-xs text-n-50;
   }
-  tr {
-    @apply mb-1 flex space-x-2;
-  }
   .multiline {
     @apply items-start;
+  }
+
+  td {
+    vertical-align: top;
+  }
+
+  table > tbody > tr:not(:last-child) > td {
+    @apply pb-3;
   }
 }
 .value {
