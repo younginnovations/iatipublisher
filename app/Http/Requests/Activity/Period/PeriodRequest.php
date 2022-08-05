@@ -115,11 +115,7 @@ class PeriodRequest extends ActivityBaseRequest
         $rules = [];
 
         foreach ($formFields as $periodEndKey => $periodEndVal) {
-            $rules[sprintf('%s.%s.date', $periodType, $periodEndKey)] = 'nullable|date';
-
-            if ($periodStart[$periodEndKey]['date'] > $periodEndVal['date']) {
-                $rules[sprintf('%s.%s.date', $periodType, $periodEndKey)] = sprintf('nullable|date|after:%s', 'period_start.' . $periodEndKey . '.date');
-            }
+            $rules[sprintf('%s.%s.date', $periodType, $periodEndKey)] = sprintf('nullable|date|after:%s', 'period_start.' . $periodEndKey . '.date');
         }
 
         return $rules;
