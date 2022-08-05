@@ -17,6 +17,34 @@ if (!function_exists('dashesToCamelCase')) {
     }
 }
 
+if (!function_exists('readJsonFile')) {
+    /**
+     * Reads JSON file.
+     *
+     * @param $filePath
+     *
+     * @return array
+     * @throws JsonException
+     */
+    function readJsonFile($filePath): array
+    {
+        return json_decode(file_get_contents(app_path($filePath)), true, 512, JSON_THROW_ON_ERROR);
+    }
+}
+
+if (!function_exists('readElementGroup')) {
+    /**
+     * Reads elementJsonSchema.
+     *
+     * @return array
+     * @throws JsonException
+     */
+    function readElementGroup(): array
+    {
+        return readJsonFile('Data/Activity/ElementGroup.json');
+    }
+}
+
 if (!function_exists('readElementJsonSchema')) {
     /**
      * Reads elementJsonSchema.
@@ -26,7 +54,7 @@ if (!function_exists('readElementJsonSchema')) {
      */
     function readElementJsonSchema(): array
     {
-        return json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true, 512, JSON_THROW_ON_ERROR);
+        return readJsonFile('IATI/Data/elementJsonSchema.json');
     }
 }
 

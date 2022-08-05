@@ -503,7 +503,7 @@ class ElementCompleteService
      *
      * @return bool
      */
-    public function isIdentifierElementCompleted($activity): bool
+    public function isIatiIdentifierElementCompleted($activity): bool
     {
         $identifier = $activity->iati_identifier;
 
@@ -521,7 +521,7 @@ class ElementCompleteService
     public function isTitleElementCompleted($activity): bool
     {
         $this->element = 'title';
-        $elementSchema = getElementSchema($activity->element);
+        $elementSchema = getElementSchema($this->element);
 
         return $this->isSubElementDataCompleted($this->mandatorySubElements($elementSchema['sub_elements']), ['narrative' => $activity->title]);
     }

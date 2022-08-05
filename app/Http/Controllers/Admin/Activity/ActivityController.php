@@ -125,8 +125,8 @@ class ActivityController extends Controller
         try {
             $toast = generateToastData();
             $activity = $this->activityService->getActivity($id);
-            $elements = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
-            $elementGroups = json_decode(file_get_contents(app_path('Data/Activity/ElementGroup.json')), true);
+            $elements = readElementJsonSchema();
+            $elementGroups = readElementGroup();
             $types = $this->getActivityDetailDataType();
             $results = $this->resultService->getActivityResultsWithIndicatorsAndPeriods($activity->id);
             $hasIndicatorPeriod = $this->resultService->checkResultIndicatorPeriod($results);
