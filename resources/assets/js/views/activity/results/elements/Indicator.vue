@@ -15,7 +15,7 @@
         </div>
         <div class="flex items-center icons">
           <Btn
-            text="Show full indicator list"
+            text="Add Indicator"
             icon="add"
             :link="`/activities/${result.activity_id}/result/${result.id}/indicator/create`"
             class="mr-2.5"

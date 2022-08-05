@@ -80,9 +80,17 @@
                 </div>
               </div>
             </td>
-            <td>{{ types.resultType[result.result.type] }}</td>
+            <td>
+              {{ types.resultType[result.result.type] ?? 'Not Available' }}
+            </td>
             <td class="capitalize">
-              {{ result.result.aggregation_status != 0 }}
+              {{
+                parseInt(result.result.aggregation_status)
+                  ? 'True'
+                  : result.result.aggregation_status
+                  ? 'False'
+                  : 'Not Available'
+              }}
             </td>
             <td><span class="text-spring-50">completed</span></td>
             <td>

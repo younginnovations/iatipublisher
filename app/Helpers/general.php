@@ -153,11 +153,11 @@ if (!function_exists('getResultTypes')) {
     function getResultTypes(): array
     {
         return [
-            'resultType'                => getCodeList('ResultType', 'Activity'),
-            'resultVocabulary'          => getCodeList('ResultVocabulary', 'Activity'),
-            'indicatorMeasure'          => getCodeList('IndicatorMeasure', 'Activity'),
+            'resultType'                => getCodeList('ResultType', 'Activity', false),
+            'resultVocabulary'          => getCodeList('ResultVocabulary', 'Activity', false),
+            'indicatorMeasure'          => getCodeList('IndicatorMeasure', 'Activity', false),
             'language'                  => getCodeList('Language', 'Activity', false),
-            'documentCategory'          => getCodeList('DocumentCategory', 'Activity'),
+            'documentCategory'          => getCodeList('DocumentCategory', 'Activity', false),
         ];
     }
 }

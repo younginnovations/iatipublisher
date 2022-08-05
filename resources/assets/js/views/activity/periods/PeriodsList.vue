@@ -47,8 +47,17 @@
                 class="text-sm font-bold leading-relaxed text-n-50"
                 :href="`${indicatorLink}/period/${pe.id}`"
               >
-                {{ dateFormat(pe.period.period_start[0].date) }} -
-                {{ dateFormat(pe.period.period_end[0].date) }}
+                {{
+                  pe.period.period_start[0].date
+                    ? dateFormat(pe.period.period_start[0].date)
+                    : 'Not Available'
+                }}
+                -
+                {{
+                  pe.period.period_end[0].date
+                    ? dateFormat(pe.period.period_end[0].date)
+                    : 'Not Available'
+                }}
               </a>
             </td>
             <td><span class="text-spring-50">completed</span></td>

@@ -240,7 +240,7 @@
                                             period, p
                                           ) in indicator.periods"
                                           :key="p"
-                                          class=""
+                                          class="flex"
                                           :class="{
                                             'mb-1':
                                               p !==
@@ -248,18 +248,31 @@
                                           }"
                                         >
                                           <div class="text-xs">
-                                            {{
-                                              moment(
-                                                period.period.period_start[0]
-                                                  .date
-                                              ).format(format)
-                                            }}
-                                            -
-                                            {{
-                                              moment(
-                                                period.period.period_end[0].date
-                                              ).format(format)
-                                            }}
+                                            <a
+                                              class="text-xs text-n-50"
+                                              :href="`/activities/${activityId}/${title}/${result.id}/indicator/${indicator.id}/period/${period.id}`"
+                                            >
+                                              {{
+                                                moment(
+                                                  period.period.period_start[0]
+                                                    .date
+                                                ).format(format)
+                                              }}
+                                              -
+                                              {{
+                                                moment(
+                                                  period.period.period_end[0]
+                                                    .date
+                                                ).format(format)
+                                              }}
+                                            </a>
+                                          </div>
+                                          <div class="ml-2">
+                                            <Btn
+                                              text="Edit"
+                                              icon="edit"
+                                              :link="`/activities/${activityId}/${title}/${result.id}/indicator/${indicator.id}/period/edit`"
+                                            />
                                           </div>
                                         </div>
                                       </div>

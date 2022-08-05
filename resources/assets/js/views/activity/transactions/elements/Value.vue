@@ -1,14 +1,17 @@
 <template>
-  <div class="flex items-end overflow-x-auto text-sm">
+  <div class="flex items-end overflow-x-auto">
     <span
       :class="{
         'text-[64px]': value[0].amount,
       }"
-      >{{ value[0].amount ?? 'Amount Not Available' }}</span
     >
+      {{ value[0].amount ?? 'Amount Not Available' }}
+    </span>
     <span class="mb-5">{{ value[0].currency }}</span>
   </div>
-  <div class="text-sm">{{ value[0].date ? `valued at ${dateFormat(value[0].date)}` : '' }}</div>
+  <div class="text-sm">
+    {{ value[0].date ? `valued at ${dateFormat(value[0].date)}` : '' }}
+  </div>
 </template>
 
 <script lang="ts">

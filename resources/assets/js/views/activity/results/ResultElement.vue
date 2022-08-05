@@ -25,7 +25,9 @@
         </template>
 
         <template v-else-if="elementName === 'aggregation_status'">
-          <span class="text-sm capitalize">{{ Number(data) != 0 }}</span>
+          <span class="text-sm capitalize">{{
+            parseInt(data) ? 'True' : data ? 'False' : 'Not Available'
+          }}</span>
         </template>
 
         <template v-else-if="elementName === 'document_link'">
