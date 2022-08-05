@@ -323,15 +323,14 @@ class ElementCompleteService
     /**
      * Checks if single dimension attribute is complete.
      *
-     * @param $element
      * @param $data
      *
      * @return bool
      * @throws \JsonException
      */
-    public function singleDimensionAttributeCheck($element, $data): bool
+    public function singleDimensionAttributeCheck($data): bool
     {
-        return $this->isSingleDimensionAttributeCompleted(getElementSchema($element), $data);
+        return $this->isSingleDimensionAttributeCompleted(getElementSchema($this->element), $data);
     }
 
     /**
@@ -351,33 +350,31 @@ class ElementCompleteService
     /**
      * Checks if all element is complete.
      *
-     * @param $element
      * @param $data
      *
      * @return bool
      * @throws \JsonException
      */
-    public function isLevelOneMultiDimensionElementCompleted($element, $data): bool
+    public function isLevelOneMultiDimensionElementCompleted($data): bool
     {
-        return $this->isLevelOneMultiDimensionDataCompleted(getElementSchema($element), $data);
+        return $this->isLevelOneMultiDimensionDataCompleted(getElementSchema($this->element), $data);
     }
 
     /**
      * Checks if two level sub element is complete.
      *
-     * @param $element
      * @param $data
      *
      * @return bool
      * @throws \JsonException
      */
-    public function isLevelTwoSingleDimensionElementCompleted($element, $data): bool
+    public function isLevelTwoSingleDimensionElementCompleted($data): bool
     {
-        if (!$this->singleDimensionAttributeCheck($element, $data)) {
+        if (!$this->singleDimensionAttributeCheck($data)) {
             return false;
         }
 
-        $elementSchema = getElementSchema($element);
+        $elementSchema = getElementSchema($this->element);
 
         return $this->isSubElementCompleted($elementSchema['sub_elements'], $data);
     }
@@ -433,33 +430,31 @@ class ElementCompleteService
     /**
      * Checks if two level sub element is complete.
      *
-     * @param $element
      * @param $data
      *
      * @return bool
      * @throws \JsonException
      */
-    public function isLevelTwoMultiDimensionElementCompleted($element, $data): bool
+    public function isLevelTwoMultiDimensionElementCompleted($data): bool
     {
-        return $this->isLevelTwoMultiDimensionDataCompleted(getElementSchema($element), $data);
+        return $this->isLevelTwoMultiDimensionDataCompleted(getElementSchema($this->element), $data);
     }
 
     /**
      * Checks three level sub element is complete.
      *
-     * @param $element
      * @param $data
      *
      * @return bool
      * @throws \JsonException
      */
-    public function isLevelThreeSingleDimensionElementCompleted($element, $data): bool
+    public function isLevelThreeSingleDimensionElementCompleted($data): bool
     {
-        if (!$this->singleDimensionAttributeCheck($element, $data)) {
+        if (!$this->singleDimensionAttributeCheck($data)) {
             return false;
         }
 
-        $elementSchema = getElementSchema($element);
+        $elementSchema = getElementSchema($this->element);
         $subElements = $elementSchema['sub_elements'];
 
         foreach ($subElements as $key => $subElement) {
@@ -543,7 +538,7 @@ class ElementCompleteService
     {
         $this->element = 'description';
 
-        return $this->isLevelOneMultiDimensionElementCompleted('description', $activity->description);
+        return $this->isLevelOneMultiDimensionElementCompleted($activity->description);
     }
 
     /**
@@ -558,7 +553,7 @@ class ElementCompleteService
     {
         $this->element = 'activity_date';
 
-        return $this->isLevelOneMultiDimensionElementCompleted('activity_date', $activity->activity_date);
+        return $this->isLevelOneMultiDimensionElementCompleted($activity->activity_date);
     }
 
     /**
@@ -573,7 +568,7 @@ class ElementCompleteService
     {
         $this->element = 'recipient_country';
 
-        return $this->isLevelOneMultiDimensionElementCompleted('recipient_country', $activity->recipient_country);
+        return $this->isLevelOneMultiDimensionElementCompleted($activity->recipient_country);
     }
 
     /**
@@ -588,7 +583,7 @@ class ElementCompleteService
     {
         $this->element = 'budget';
 
-        return $this->isLevelOneMultiDimensionElementCompleted('budget', $activity->budget);
+        return $this->isLevelOneMultiDimensionElementCompleted($activity->budget);
     }
 
     /**
@@ -603,7 +598,7 @@ class ElementCompleteService
     {
         $this->element = 'recipient_region';
 
-        return $this->isLevelOneMultiDimensionElementCompleted('recipient_region', $activity->recipient_region);
+        return $this->isLevelOneMultiDimensionElementCompleted($activity->recipient_region);
     }
 
     /**
@@ -618,7 +613,7 @@ class ElementCompleteService
     {
         $this->element = 'default_aid_type';
 
-        return $this->isLevelOneMultiDimensionElementCompleted('default_aid_type', $activity->default_aid_type);
+        return $this->isLevelOneMultiDimensionElementCompleted($activity->default_aid_type);
     }
 
     /**
@@ -633,7 +628,7 @@ class ElementCompleteService
     {
         $this->element = 'related_activity';
 
-        return $this->isLevelOneMultiDimensionElementCompleted('related_activity', $activity->related_activity);
+        return $this->isLevelOneMultiDimensionElementCompleted($activity->related_activity);
     }
 
     /**
@@ -648,7 +643,7 @@ class ElementCompleteService
     {
         $this->element = 'sector';
 
-        return $this->isLevelOneMultiDimensionElementCompleted('sector', $activity->sector);
+        return $this->isLevelOneMultiDimensionElementCompleted($activity->sector);
     }
 
     /**
@@ -663,7 +658,7 @@ class ElementCompleteService
     {
         $this->element = 'humanitarian_scope';
 
-        return $this->isLevelOneMultiDimensionElementCompleted('humanitarian_scope', $activity->humanitarian_scope);
+        return $this->isLevelOneMultiDimensionElementCompleted($activity->humanitarian_scope);
     }
 
     /**
@@ -678,7 +673,7 @@ class ElementCompleteService
     {
         $this->element = 'legacy_data';
 
-        return $this->isLevelOneMultiDimensionElementCompleted('legacy_data', $activity->legacy_data);
+        return $this->isLevelOneMultiDimensionElementCompleted($activity->legacy_data);
     }
 
     /**
@@ -693,7 +688,7 @@ class ElementCompleteService
     {
         $this->element = 'tag';
 
-        return $this->isLevelOneMultiDimensionElementCompleted('tag', $activity->tag);
+        return $this->isLevelOneMultiDimensionElementCompleted($activity->tag);
     }
 
     /**
@@ -708,7 +703,7 @@ class ElementCompleteService
     {
         $this->element = 'policy_marker';
 
-        return $this->isLevelOneMultiDimensionElementCompleted('policy_marker', $activity->policy_marker);
+        return $this->isLevelOneMultiDimensionElementCompleted($activity->policy_marker);
     }
 
     /**
@@ -723,7 +718,7 @@ class ElementCompleteService
     {
         $this->element = 'participating_org';
 
-        return $this->isLevelOneMultiDimensionElementCompleted('participating_org', $activity->participating_org);
+        return $this->isLevelOneMultiDimensionElementCompleted($activity->participating_org);
     }
 
     /**
@@ -836,7 +831,7 @@ class ElementCompleteService
     {
         $this->element = 'other_identifier';
 
-        return $this->isLevelTwoSingleDimensionElementCompleted('other_identifier', $activity->other_identifier);
+        return $this->isLevelTwoSingleDimensionElementCompleted($activity->other_identifier);
     }
 
     /**
@@ -851,7 +846,7 @@ class ElementCompleteService
     {
         $this->element = 'conditions';
 
-        return $this->isLevelTwoSingleDimensionElementCompleted('conditions', $activity->conditions);
+        return $this->isLevelTwoSingleDimensionElementCompleted($activity->conditions);
     }
 
     /**
@@ -866,7 +861,7 @@ class ElementCompleteService
     {
         $this->element = 'document_link';
 
-        return $this->isLevelTwoMultiDimensionElementCompleted('document_link', $activity->document_link);
+        return $this->isLevelTwoMultiDimensionElementCompleted($activity->document_link);
     }
 
     /**
@@ -881,7 +876,7 @@ class ElementCompleteService
     {
         $this->element = 'contact_info';
 
-        return $this->isLevelTwoMultiDimensionElementCompleted('contact_info', $activity->contact_info);
+        return $this->isLevelTwoMultiDimensionElementCompleted($activity->contact_info);
     }
 
     /**
@@ -896,7 +891,7 @@ class ElementCompleteService
     {
         $this->element = 'location';
 
-        return $this->isLevelTwoMultiDimensionElementCompleted('location', $activity->location);
+        return $this->isLevelTwoMultiDimensionElementCompleted($activity->location);
     }
 
     /**
@@ -911,7 +906,7 @@ class ElementCompleteService
     {
         $this->element = 'planned_disbursement';
 
-        return $this->isLevelTwoMultiDimensionElementCompleted('planned_disbursement', $activity->planned_disbursement);
+        return $this->isLevelTwoMultiDimensionElementCompleted($activity->planned_disbursement);
     }
 
     /**
@@ -926,7 +921,7 @@ class ElementCompleteService
     {
         $this->element = 'country_budget_items';
 
-        return $this->isLevelThreeSingleDimensionElementCompleted('country_budget_items', $activity->country_budget_items);
+        return $this->isLevelThreeSingleDimensionElementCompleted($activity->country_budget_items);
     }
 
     /**
@@ -944,20 +939,10 @@ class ElementCompleteService
             return false;
         }
 
-        if (!$this->isLevelOneMultiDimensionDataCompleted($elementSchema['sub_elements']['comment'], getArr($data, 'comment'))) {
-            return false;
-        }
-
-        if (!$this->isLevelOneMultiDimensionDataCompleted($elementSchema['sub_elements']['dimension'], getArr($data, 'dimension'))) {
-            return false;
-        }
-
-        if (!$this->isLevelOneMultiDimensionDataCompleted($elementSchema['sub_elements']['location'], getArr($data, 'location'))) {
-            return false;
-        }
-
-        if (!$this->isLevelTwoMultiDimensionDataCompleted($elementSchema['sub_elements']['document_link'], getArr($data, 'document_link'))) {
-            return false;
+        foreach (['comment', 'dimension', 'location'] as $item) {
+            if (!$this->isLevelOneMultiDimensionDataCompleted($elementSchema['sub_elements'][$item], getArr($data, $item))) {
+                return false;
+            }
         }
 
         return true;
@@ -966,32 +951,28 @@ class ElementCompleteService
     /**
      * Checks if period element is completed.
      *
-     * @param $element
      * @param $data
      *
      * @return bool
      * @throws \JsonException
      */
-    public function isPeriodElementCompleted($element, $data): bool
+    public function isPeriodElementCompleted($data): bool
     {
-        $elementSchema = getElementSchema($element);
+        $this->element = 'period';
+        $elementSchema = getElementSchema($this->element);
         $subElements = $this->getMandatorySubElements($elementSchema);
 
         foreach ($data as $datum) {
-            if (!$this->isLevelOneMultiDimensionDataCompleted($subElements['period_start'], getArr($datum, 'period_start'))) {
-                return false;
+            foreach (['period_start', 'period_end'] as $item) {
+                if (!$this->isLevelOneMultiDimensionDataCompleted($subElements[$item], getArr($datum, $item))) {
+                    return false;
+                }
             }
 
-            if (!$this->isLevelOneMultiDimensionDataCompleted($subElements['period_end'], getArr($datum, 'period_end'))) {
-                return false;
-            }
-
-            if (!$this->isTargetAndActualAndBaselineCompleted($datum, $elementSchema['sub_elements'], 'target')) {
-                return false;
-            }
-
-            if (!$this->isTargetAndActualAndBaselineCompleted($datum, $elementSchema['sub_elements'], 'actual')) {
-                return false;
+            foreach (['target', 'actual'] as $item) {
+                if (!$this->isTargetAndActualAndBaselineCompleted($datum, $elementSchema['sub_elements'], $item)) {
+                    return false;
+                }
             }
         }
 
@@ -1034,16 +1015,10 @@ class ElementCompleteService
             return false;
         }
 
-        if (!$this->isLevelOneMultiDimensionDataCompleted($elementSchema['sub_elements']['title'], getArr($data, 'title'))) {
-            return false;
-        }
-
-        if (!$this->isLevelOneMultiDimensionDataCompleted($elementSchema['sub_elements']['description'], getArr($data, 'description'))) {
-            return false;
-        }
-
-        if (!$this->isLevelOneMultiDimensionDataCompleted($elementSchema['sub_elements']['reference'], getArr($data, 'reference'))) {
-            return false;
+        foreach (['title', 'description', 'reference'] as $item) {
+            if (!$this->isLevelOneMultiDimensionDataCompleted($elementSchema['sub_elements'][$item], getArr($data, $item))) {
+                return false;
+            }
         }
 
         if (!$this->isLevelTwoMultiDimensionDataCompleted($elementSchema['sub_elements']['document_link'], getArr($data, 'document_link'))) {
@@ -1056,15 +1031,15 @@ class ElementCompleteService
     /**
      * Checks if indicator element is completed.
      *
-     * @param $element
      * @param $data
      *
      * @return bool
      * @throws \JsonException
      */
-    public function isIndicatorElementCompleted($element, $data): bool
+    public function isIndicatorElementCompleted($data): bool
     {
-        $elementSchema = getElementSchema($element);
+        $this->element = 'indicator';
+        $elementSchema = getElementSchema($this->element);
 
         foreach ($data as $datum) {
             if (!$this->isResultAndIndicatorElementCompleted($elementSchema, $datum)) {
@@ -1082,15 +1057,15 @@ class ElementCompleteService
     /**
      * Checks if result element is completed.
      *
-     * @param $element
      * @param $data
      *
      * @return bool
      * @throws \JsonException
      */
-    public function isResultElementDataCompleted($element, $data): bool
+    public function isResultElementDataCompleted($data): bool
     {
-        $elementSchema = getElementSchema($element);
+        $this->element = 'result';
+        $elementSchema = getElementSchema($this->element);
 
         foreach ($data as $datum) {
             if (!$this->isResultAndIndicatorElementCompleted($elementSchema, $datum)) {
@@ -1150,21 +1125,15 @@ class ElementCompleteService
     {
         [$resultData, $indicatorData, $periodData] = $this->getFormattedResults($activity);
 
-        $this->element = 'period';
-
-        if (!$this->isPeriodElementCompleted('period', $periodData)) {
+        if (!$this->isPeriodElementCompleted($periodData)) {
             return false;
         }
 
-        $this->element = 'indicator';
-
-        if (!$this->isIndicatorElementCompleted('indicator', $indicatorData)) {
+        if (!$this->isIndicatorElementCompleted($indicatorData)) {
             return false;
         }
 
-        $this->element = 'result';
-
-        if (!$this->isResultElementDataCompleted('result', $resultData)) {
+        if (!$this->isResultElementDataCompleted($resultData)) {
             return false;
         }
 

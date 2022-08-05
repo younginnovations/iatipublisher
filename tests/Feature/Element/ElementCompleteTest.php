@@ -133,7 +133,7 @@ class ElementCompleteTest extends TestCase
     {
         $this->elementCompleteService->element = $element;
 
-        $this->assertFalse($this->elementCompleteService->isLevelOneMultiDimensionElementCompleted($element, $actualData));
+        $this->assertFalse($this->elementCompleteService->isLevelOneMultiDimensionElementCompleted($actualData));
     }
 
     /**
@@ -149,7 +149,7 @@ class ElementCompleteTest extends TestCase
     {
         $this->elementCompleteService->element = $element;
 
-        $this->assertTrue($this->elementCompleteService->isLevelOneMultiDimensionElementCompleted($element, $actualData));
+        $this->assertTrue($this->elementCompleteService->isLevelOneMultiDimensionElementCompleted($actualData));
     }
 
     /**
@@ -165,7 +165,7 @@ class ElementCompleteTest extends TestCase
     {
         $this->elementCompleteService->element = $element;
 
-        $this->assertFalse($this->elementCompleteService->isLevelTwoSingleDimensionElementCompleted($element, $actualData));
+        $this->assertFalse($this->elementCompleteService->isLevelTwoSingleDimensionElementCompleted($actualData));
     }
 
     /**
@@ -181,7 +181,7 @@ class ElementCompleteTest extends TestCase
     {
         $this->elementCompleteService->element = $element;
 
-        $this->assertTrue($this->elementCompleteService->isLevelTwoSingleDimensionElementCompleted($element, $actualData));
+        $this->assertTrue($this->elementCompleteService->isLevelTwoSingleDimensionElementCompleted($actualData));
     }
 
     /**
@@ -197,7 +197,7 @@ class ElementCompleteTest extends TestCase
     {
         $this->elementCompleteService->element = $element;
 
-        $this->assertFalse($this->elementCompleteService->isLevelTwoMultiDimensionElementCompleted($element, $actualData));
+        $this->assertFalse($this->elementCompleteService->isLevelTwoMultiDimensionElementCompleted($actualData));
     }
 
     /**
@@ -213,7 +213,7 @@ class ElementCompleteTest extends TestCase
     {
         $this->elementCompleteService->element = $element;
 
-        $this->assertTrue($this->elementCompleteService->isLevelTwoMultiDimensionElementCompleted($element, $actualData));
+        $this->assertTrue($this->elementCompleteService->isLevelTwoMultiDimensionElementCompleted($actualData));
     }
 
     /**
@@ -229,7 +229,7 @@ class ElementCompleteTest extends TestCase
     {
         $this->elementCompleteService->element = $element;
 
-        $this->assertFalse($this->elementCompleteService->isLevelThreeSingleDimensionElementCompleted($element, $actualData));
+        $this->assertFalse($this->elementCompleteService->isLevelThreeSingleDimensionElementCompleted($actualData));
     }
 
     /**
@@ -245,7 +245,7 @@ class ElementCompleteTest extends TestCase
     {
         $this->elementCompleteService->element = $element;
 
-        $this->assertTrue($this->elementCompleteService->isLevelThreeSingleDimensionElementCompleted($element, $actualData));
+        $this->assertTrue($this->elementCompleteService->isLevelThreeSingleDimensionElementCompleted($actualData));
     }
 
     /**
@@ -278,11 +278,11 @@ class ElementCompleteTest extends TestCase
         $this->elementCompleteService->element = $element;
 
         if ($element == 'result') {
-            $this->assertTrue($this->elementCompleteService->isResultElementDataCompleted($element, $actualData));
+            $this->assertTrue($this->elementCompleteService->isResultElementDataCompleted($actualData));
         } elseif ($element == 'indicator') {
-            $this->assertTrue($this->elementCompleteService->isIndicatorElementCompleted($element, $actualData));
+            $this->assertTrue($this->elementCompleteService->isIndicatorElementCompleted($actualData));
         } elseif ($element == 'period') {
-            $this->assertTrue($this->elementCompleteService->isPeriodElementCompleted($element, $actualData));
+            $this->assertTrue($this->elementCompleteService->isPeriodElementCompleted($actualData));
         }
     }
 }
