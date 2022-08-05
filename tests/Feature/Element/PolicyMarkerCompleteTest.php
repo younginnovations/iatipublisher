@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\Feature\Element;
 
 /**
@@ -7,6 +9,11 @@ namespace Tests\Feature\Element;
  */
 class PolicyMarkerCompleteTest extends ElementCompleteTest
 {
+    /**
+     * Element policy_marker.
+     *
+     * @var string
+     */
     private string $element = 'policy_marker';
 
     /**

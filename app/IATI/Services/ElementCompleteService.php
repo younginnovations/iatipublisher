@@ -1,9 +1,19 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\IATI\Services;
 
+/**
+ * Class ElementCompleteService.
+ */
 class ElementCompleteService
 {
+    /**
+     * Public variable element.
+     *
+     * @var string
+     */
     public string $element = '';
 
     /**
@@ -80,6 +90,8 @@ class ElementCompleteService
     }
 
     /**
+     * Returns mandatory attributes.
+     *
      * @param $subElement
      *
      * @return array
@@ -90,6 +102,8 @@ class ElementCompleteService
     }
 
     /**
+     * Returns mandatory sub elements.
+     *
      * @param $subElement
      *
      * @return array
@@ -117,6 +131,7 @@ class ElementCompleteService
         if (empty($data)) {
             return false;
         }
+
         $elementSchema = getElementSchema($this->element);
 
         foreach ($mandatoryAttributes as $mandatoryAttribute) {
@@ -191,6 +206,7 @@ class ElementCompleteService
             if (empty($data)) {
                 return false;
             }
+
             foreach ($data as $datum) {
                 if (!$this->isAttributeDataCompleted($mandatoryAttributes, $datum)) {
                     return false;
@@ -417,6 +433,7 @@ class ElementCompleteService
             if (empty($data)) {
                 return false;
             }
+
             foreach ($data as $datum) {
                 if (!$this->isSubElementCompleted($subElements, $datum)) {
                     return false;

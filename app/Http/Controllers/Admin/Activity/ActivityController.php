@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers\Admin\Activity;
 
 use App\Http\Controllers\Controller;
@@ -85,12 +87,13 @@ class ActivityController extends Controller
         //
     }
 
-    /*
+    /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param ActivityCreateRequest $request
      *
      * @return JsonResponse
+     * @throws \Throwable
      */
     public function store(ActivityCreateRequest $request): JsonResponse
     {
@@ -116,7 +119,7 @@ class ActivityController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param Activity $activity
+     * @param $id
      *
      * @return View|JsonResponse|RedirectResponse
      */

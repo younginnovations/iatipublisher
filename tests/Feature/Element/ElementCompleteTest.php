@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\Feature\Element;
 
 use App\IATI\Services\ElementCompleteService;
@@ -10,6 +12,9 @@ use Tests\TestCase;
  */
 class ElementCompleteTest extends TestCase
 {
+    /**
+     * @var ElementCompleteService
+     */
     protected ElementCompleteService $elementCompleteService;
 
     /**

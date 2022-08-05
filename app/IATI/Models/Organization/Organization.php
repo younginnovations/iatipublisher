@@ -63,11 +63,15 @@ class Organization extends Model
     }
 
     /**
+     * Returns complete status of reporting_org.
+     *
      * @return bool
      * @throws \JsonException
      */
     public function getReportingOrgElementCompletedAttribute(): bool
     {
-        return $this->elementCompleteService->isLevelOneMultiDimensionElementCompleted('reporting_org', $this->reporting_org);
+        $this->elementCompleteService->element = 'reporting_org';
+
+        return $this->elementCompleteService->isLevelOneMultiDimensionElementCompleted($this->reporting_org);
     }
 }

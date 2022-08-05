@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\Feature\Element;
 
 /**
@@ -7,6 +9,11 @@ namespace Tests\Feature\Element;
  */
 class CountryBudgetItemTest extends ElementCompleteTest
 {
+    /**
+     * Element country_budget_items.
+     *
+     * @var string
+     */
     private string $element = 'country_budget_items';
 
     /**

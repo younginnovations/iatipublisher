@@ -1,12 +1,19 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Observers;
 
 use App\IATI\Models\Activity\Period;
 
+/**
+ * Class PeriodObserver.
+ */
 class PeriodObserver
 {
     /**
+     * Handle the Period "created" event.
+     *
      * @param Period $period
      *
      * @return void
@@ -20,6 +27,8 @@ class PeriodObserver
     }
 
     /**
+     * Handle the Period "updated" event.
+     *
      * @param Period $period
      *
      * @return void

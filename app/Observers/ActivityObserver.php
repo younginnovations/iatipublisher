@@ -1,10 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Observers;
 
 use App\IATI\Models\Activity\Activity;
 use App\IATI\Services\ElementCompleteService;
 
+/**
+ * Class ActivityObserver.
+ */
 class ActivityObserver
 {
     protected ElementCompleteService $elementCompleteService;
@@ -38,6 +43,8 @@ class ActivityObserver
     }
 
     /**
+     * Sets the complete status of elements.
+     *
      * @param $model
      *
      * @return void

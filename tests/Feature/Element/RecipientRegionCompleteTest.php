@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\Feature\Element;
 
 /**
@@ -7,6 +9,11 @@ namespace Tests\Feature\Element;
  */
 class RecipientRegionCompleteTest extends ElementCompleteTest
 {
+    /**
+     * Element recipient_region.
+     *
+     * @var string
+     */
     private string $element = 'recipient_region';
 
     /**

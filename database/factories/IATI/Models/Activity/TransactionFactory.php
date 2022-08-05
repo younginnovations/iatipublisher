@@ -5,8 +5,16 @@ namespace Database\Factories\IATI\Models\Activity;
 use App\IATI\Models\Activity\Transaction;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
+/**
+ * Class TransactionFactory.
+ */
 class TransactionFactory extends Factory
 {
+    /**
+     * Transaction model.
+     *
+     * @var string
+     */
     protected $model = Transaction::class;
 
     /**

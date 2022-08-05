@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\Feature\Element;
 
 /**
@@ -7,6 +9,11 @@ namespace Tests\Feature\Element;
  */
 class ContactInfoCompleteTest extends ElementCompleteTest
 {
+    /**
+     * Element contact_info.
+     *
+     * @var string
+     */
     private string $element = 'contact_info';
 
     /**

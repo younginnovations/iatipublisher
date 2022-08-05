@@ -22,8 +22,7 @@ class ActivityCreateTest extends TestCase
     {
         $org = Organization::factory()->create();
         $user = User::factory()->create();
-        Activity::factory()->create(['org_id' => $org->id]);
-
+        Activity::factory()->create(['org_id'=>$org->id]);
         $this->actingAs($user)->post('/activities', [])
              ->assertSessionHasErrors(['narrative', 'language', 'activity_identifier']);
     }
@@ -37,7 +36,7 @@ class ActivityCreateTest extends TestCase
     {
         $org = Organization::factory()->create();
         $user = User::factory()->create();
-        Activity::factory()->create(['org_id' => $org->id]);
+        Activity::factory()->create(['org_id'=>$org->id]);
 
         $this->actingAs($user)->post('/activities', ['narrative' => 'Test text', 'language' => 'en', 'activity_identifier' => 'SYRZ000041', 'iati_identifier_text' => 'CR-NP-SYRZ000041'])
              ->assertStatus(302)
@@ -57,8 +56,8 @@ class ActivityCreateTest extends TestCase
         $this->actingAs($user)->post('/activities', [
             'narrative'            => Str::random(5),
             'language'             => 'en',
-            'activity_identifier'  => '111111',
-            'iati_identifier_text' => 'CR-NP-111111',
+            'activity_identifier'  => '11111',
+            'iati_identifier_text' => 'CR-NP-11111',
             'org_id'               => $org['id'],
         ])
              ->assertStatus(200)

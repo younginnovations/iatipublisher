@@ -1,16 +1,21 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Observers;
 
 use App\IATI\Models\Activity\Transaction;
 use App\IATI\Services\ElementCompleteService;
 
+/**
+ * Class TransactionObserver.
+ */
 class TransactionObserver
 {
     protected ElementCompleteService $elementCompleteService;
 
     /**
-     * Activity observer constructor.
+     * Transaction observer constructor.
      */
     public function __construct()
     {
@@ -18,6 +23,8 @@ class TransactionObserver
     }
 
     /**
+     * Updates the transactions complete status.
+     *
      * @param $transaction
      *
      * @return void
@@ -34,6 +41,8 @@ class TransactionObserver
     }
 
     /**
+     * Handle the Transaction "created" event.
+     *
      * @param Transaction $transaction
      *
      * @return void
@@ -45,6 +54,8 @@ class TransactionObserver
     }
 
     /**
+     * Handle the Transaction "updated" event.
+     *
      * @param Transaction $transaction
      *
      * @return void

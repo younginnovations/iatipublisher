@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\Feature\Element;
 
 /**
@@ -7,6 +9,11 @@ namespace Tests\Feature\Element;
  */
 class SectorCompleteTest extends ElementCompleteTest
 {
+    /**
+     * Element sector.
+     *
+     * @var string
+     */
     private string $element = 'sector';
 
     /**

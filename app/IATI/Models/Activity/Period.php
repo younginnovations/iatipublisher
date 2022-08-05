@@ -35,7 +35,7 @@ class Period extends Model
     ];
 
     /**
-     * Result belongs to activity.
+     * Period belongs to indicator.
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */

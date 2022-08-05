@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\Feature\Element;
 
 /**
@@ -7,6 +9,11 @@ namespace Tests\Feature\Element;
  */
 class DocumentLinkCompleteTest extends ElementCompleteTest
 {
+    /**
+     * Element document_link.
+     *
+     * @var string
+     */
     private string $element = 'document_link';
 
     /**

@@ -36,7 +36,6 @@
   "reporting_org": {
     "name": "reporting_org",
     "label": "reporting-org",
-    "criteria": "mandatory",
     "hover_text": "The organisation issuing the report. May be a primary source (reporting on its own activity as donor, implementing agency, etc) or a secondary source (reporting on the activities of another organisation). <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/reporting-org/'>For more information</a>",
     "add_more": "true",
     "attributes": {

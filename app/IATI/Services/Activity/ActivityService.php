@@ -46,7 +46,7 @@ class ActivityService
      *
      * @return \Illuminate\Database\Eloquent\Collection
      */
-    public function getPaginatedActivities(int $page = 1): Collection | \Illuminate\Pagination\LengthAwarePaginator
+    public function getPaginatedActivities(int $page = 1): Collection|\Illuminate\Pagination\LengthAwarePaginator
     {
         return $this->activityRepository->getActivityForOrganization(Auth::user()->organization_id, $page);
     }
@@ -61,7 +61,7 @@ class ActivityService
     public function store($input): \Illuminate\Database\Eloquent\Model
     {
         $activity_identifier = [
-            'activity_identifier' => $input['activity_identifier'],
+            'activity_identifier'  => $input['activity_identifier'],
             'iati_identifier_text' => Auth::user()->organization->identifier . '-' . $input['activity_identifier'],
         ];
 
@@ -73,9 +73,9 @@ class ActivityService
         ];
 
         return $this->activityRepository->store([
-            'iati_identifier'    => $activity_identifier,
-            'title'         => $activity_title,
-            'org_id'        => Auth::user()->organization_id,
+            'iati_identifier' => $activity_identifier,
+            'title'           => $activity_title,
+            'org_id'          => Auth::user()->organization_id,
         ]);
     }
 

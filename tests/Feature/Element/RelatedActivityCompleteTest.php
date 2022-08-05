@@ -7,6 +7,11 @@ namespace Tests\Feature\Element;
  */
 class RelatedActivityCompleteTest extends ElementCompleteTest
 {
+    /**
+     * Element related_activity.
+     *
+     * @var string
+     */
     private string $element = 'related_activity';
 
     /**

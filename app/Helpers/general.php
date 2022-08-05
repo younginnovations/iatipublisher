@@ -5,7 +5,15 @@ declare(strict_types=1);
 use Illuminate\Support\Facades\Session;
 
 if (!function_exists('dashesToCamelCase')) {
-    function dashesToCamelCase($string, $capitalizeFirstCharacter = false): string
+    /**
+     * Changes dash case string to camelcase.
+     *
+     * @param $string
+     * @param bool $capitalizeFirstCharacter
+     *
+     * @return string
+     */
+    function dashesToCamelCase($string, bool $capitalizeFirstCharacter = false): string
     {
         $str = str_replace(' ', '', ucwords(str_replace('_', ' ', $string)));
 
@@ -34,7 +42,7 @@ if (!function_exists('readJsonFile')) {
 
 if (!function_exists('readElementGroup')) {
     /**
-     * Reads elementJsonSchema.
+     * Reads ElementGroup json file.
      *
      * @return array
      * @throws JsonException
@@ -116,7 +124,7 @@ if (!function_exists('getCoreElements')) {
 
 if (!function_exists('getCoreElementsWithTrueValue')) {
     /**
-     * Returns Core Elements.
+     * Returns Core Elements with true value.
      *
      * @return array
      */

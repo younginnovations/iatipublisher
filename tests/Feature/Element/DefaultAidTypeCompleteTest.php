@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\Feature\Element;
 
 /**
@@ -7,6 +9,11 @@ namespace Tests\Feature\Element;
  */
 class DefaultAidTypeCompleteTest extends ElementCompleteTest
 {
+    /**
+     * Element default_aid_type.
+     *
+     * @var string
+     */
     private string $element = 'default_aid_type';
 
     /**

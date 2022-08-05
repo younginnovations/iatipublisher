@@ -1,16 +1,21 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Observers;
 
 use App\IATI\Models\Activity\Result;
 use App\IATI\Services\ElementCompleteService;
 
+/**
+ * Class ResultObserver.
+ */
 class ResultObserver
 {
     protected ElementCompleteService $elementCompleteService;
 
     /**
-     * Activity observer constructor.
+     * Result observer constructor.
      */
     public function __construct()
     {
@@ -18,6 +23,8 @@ class ResultObserver
     }
 
     /**
+     * Updates the result complete status.
+     *
      * @param $result
      *
      * @return void
@@ -35,6 +42,8 @@ class ResultObserver
     }
 
     /**
+     * Handle the Result "created" event.
+     *
      * @param Result $result
      *
      * @return void
@@ -46,6 +55,8 @@ class ResultObserver
     }
 
     /**
+     * Handle the Result "updated" event.
+     *
      * @param Result $result
      *
      * @return void

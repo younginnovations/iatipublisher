@@ -1,9 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\Feature;
 
 use Tests\Feature\Element\ElementCompleteTest;
 
+/**
+ * Class TransactionObserver.
+ */
 class CoreElementTest extends ElementCompleteTest
 {
     /**
