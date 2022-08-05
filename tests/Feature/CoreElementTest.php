@@ -19,6 +19,7 @@ class CoreElementTest extends ElementCompleteTest
     public function test_core_elements(): void
     {
         $actualCoreElements = [
+            'reporting_org',
             'iati_identifier',
             'title',
             'description',
@@ -33,7 +34,7 @@ class CoreElementTest extends ElementCompleteTest
             'default_finance_type',
             'default_aid_type',
             'budget',
-            'transaction',
+            'transactions',
         ];
 
         $this->assertTrue($this->arrayStructure($actualCoreElements, getCoreElements()));
@@ -47,6 +48,7 @@ class CoreElementTest extends ElementCompleteTest
     public function test_core_element_not_completed(): void
     {
         $actualElements = [
+            'reporting_org'        => true,
             'iati_identifier'      => true,
             'title'                => true,
             'description'          => true,
@@ -61,7 +63,7 @@ class CoreElementTest extends ElementCompleteTest
             'default_finance_type' => true,
             'default_aid_type'     => true,
             'budget'               => true,
-            'transaction'          => false,
+            'transactions'         => false,
         ];
 
         $this->assertFalse(isCoreElementCompleted($actualElements));
@@ -75,6 +77,7 @@ class CoreElementTest extends ElementCompleteTest
     public function test_core_element_completed(): void
     {
         $actualElements = [
+            'reporting_org'        => true,
             'iati_identifier'      => true,
             'title'                => true,
             'description'          => true,
@@ -89,7 +92,7 @@ class CoreElementTest extends ElementCompleteTest
             'default_finance_type' => true,
             'default_aid_type'     => true,
             'budget'               => true,
-            'transaction'          => true,
+            'transactions'         => true,
         ];
 
         $this->assertTrue(isCoreElementCompleted($actualElements));

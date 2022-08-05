@@ -112,23 +112,8 @@ class ActivityService
      */
     public function activityPublishingProgress($activity): float|int
     {
-        $core_elements = [
-            'title',
-            'description',
-            'budget',
-            'transactions',
-            'sector',
-            'participating_org',
-            'activity_status',
-            'activity_date',
-            'recipient_country',
-            'recipient_region',
-            'collaboration_type',
-            'default_flow_type',
-            'default_finance_type',
-            'default_aid_type',
-        ];
-        $completed_core_element_count = 0;
+        $core_elements = getCoreElements();
+        $completed_core_element_count = $activity->organization->reporting_org_complete_status ? 1 : 0;
 
         foreach ($core_elements as $core_element) {
             if (array_key_exists($core_element, $activity->element_status) && $activity->element_status[$core_element]) {

@@ -8,7 +8,7 @@ if (!function_exists('dashesToCamelCase')) {
     /**
      * Changes dash case string to camelcase.
      *
-     * @param $string
+     * @param      $string
      * @param bool $capitalizeFirstCharacter
      *
      * @return string
@@ -103,6 +103,7 @@ if (!function_exists('getCoreElements')) {
     function getCoreElements(): array
     {
         return [
+            'reporting_org',
             'iati_identifier',
             'title',
             'description',
@@ -117,7 +118,7 @@ if (!function_exists('getCoreElements')) {
             'default_finance_type',
             'default_aid_type',
             'budget',
-            'transaction',
+            'transactions',
         ];
     }
 }
@@ -131,6 +132,7 @@ if (!function_exists('getCoreElementsWithTrueValue')) {
     function getCoreElementsWithTrueValue(): array
     {
         return [
+            'reporting_org'        => true,
             'iati_identifier'      => true,
             'title'                => true,
             'description'          => true,
@@ -145,7 +147,7 @@ if (!function_exists('getCoreElementsWithTrueValue')) {
             'default_finance_type' => true,
             'default_aid_type'     => true,
             'budget'               => true,
-            'transaction'          => true,
+            'transactions'         => true,
         ];
     }
 }
@@ -301,25 +303,25 @@ if (!function_exists('getTransactionTypes')) {
     function getTransactionTypes(): array
     {
         return [
-            'transactionType'           => getCodeList('TransactionType', 'Activity', false),
-            'organizationType'          => getCodeList('OrganizationType', 'Organization', false),
-            'disbursementChannel'       => getCodeList('DisbursementChannel', 'Activity', false),
-            'sectorVocabulary'          => getCodeList('SectorVocabulary', 'Activity', false),
-            'sectorCode'                => getCodeList('SectorCode', 'Activity', false),
-            'sectorCategory'            => getCodeList('SectorCategory', 'Activity', false),
-            'unsdgGoals'                => getCodeList('UNSDG-Goals', 'Activity', false),
-            'unsdgTargets'              => getCodeList('UNSDG-Targets', 'Activity', false),
-            'countryCode'               => getCodeList('Country', 'Activity', false),
-            'regionCode'                => getCodeList('RegionVocabulary', 'Activity', false),
-            'flowType'                  => getCodeList('FlowType', 'Activity', false),
-            'financeType'               => getCodeList('FinanceType', 'Activity', false),
-            'tiedStatusType'            => getCodeList('TiedStatus', 'Activity', false),
-            'aidTypeVocabulary'         => getCodeList('AidTypeVocabulary', 'Activity', false),
-            'aidType'                   => getCodeList('AidType', 'Activity', false),
-            'cashAndVoucherModalities'  => getCodeList('CashandVoucherModalities', 'Activity', false),
-            'earMarkingCategory'        => getCodeList('EarmarkingCategory', 'Activity', false),
-            'earMarkingModality'        => getCodeList('EarmarkingModality', 'Activity', false),
-            'languages'                 => getCodeList('Language', 'Activity', false),
+            'transactionType'          => getCodeList('TransactionType', 'Activity', false),
+            'organizationType'         => getCodeList('OrganizationType', 'Organization', false),
+            'disbursementChannel'      => getCodeList('DisbursementChannel', 'Activity', false),
+            'sectorVocabulary'         => getCodeList('SectorVocabulary', 'Activity', false),
+            'sectorCode'               => getCodeList('SectorCode', 'Activity', false),
+            'sectorCategory'           => getCodeList('SectorCategory', 'Activity', false),
+            'unsdgGoals'               => getCodeList('UNSDG-Goals', 'Activity', false),
+            'unsdgTargets'             => getCodeList('UNSDG-Targets', 'Activity', false),
+            'countryCode'              => getCodeList('Country', 'Activity', false),
+            'regionCode'               => getCodeList('RegionVocabulary', 'Activity', false),
+            'flowType'                 => getCodeList('FlowType', 'Activity', false),
+            'financeType'              => getCodeList('FinanceType', 'Activity', false),
+            'tiedStatusType'           => getCodeList('TiedStatus', 'Activity', false),
+            'aidTypeVocabulary'        => getCodeList('AidTypeVocabulary', 'Activity', false),
+            'aidType'                  => getCodeList('AidType', 'Activity', false),
+            'cashAndVoucherModalities' => getCodeList('CashandVoucherModalities', 'Activity', false),
+            'earMarkingCategory'       => getCodeList('EarmarkingCategory', 'Activity', false),
+            'earMarkingModality'       => getCodeList('EarmarkingModality', 'Activity', false),
+            'languages'                => getCodeList('Language', 'Activity', false),
         ];
     }
 }
@@ -333,11 +335,11 @@ if (!function_exists('getResultTypes')) {
     function getResultTypes(): array
     {
         return [
-            'resultType'                => getCodeList('ResultType', 'Activity', false),
-            'resultVocabulary'          => getCodeList('ResultVocabulary', 'Activity', false),
-            'indicatorMeasure'          => getCodeList('IndicatorMeasure', 'Activity', false),
-            'language'                  => getCodeList('Language', 'Activity', false),
-            'documentCategory'          => getCodeList('DocumentCategory', 'Activity', false),
+            'resultType'       => getCodeList('ResultType', 'Activity', false),
+            'resultVocabulary' => getCodeList('ResultVocabulary', 'Activity', false),
+            'indicatorMeasure' => getCodeList('IndicatorMeasure', 'Activity', false),
+            'language'         => getCodeList('Language', 'Activity', false),
+            'documentCategory' => getCodeList('DocumentCategory', 'Activity', false),
         ];
     }
 }
@@ -351,11 +353,11 @@ if (!function_exists('getIndicatorTypes')) {
     function getIndicatorTypes(): array
     {
         return [
-            'indicatorVocabulary'       => getCodeList('IndicatorVocabulary', 'Activity'),
-            'indicatorMeasure'          => getCodeList('IndicatorMeasure', 'Activity', false),
-            'language'                  => getCodeList('Language', 'Activity', false),
-            'documentCategory'          => getCodeList('DocumentCategory', 'Activity', false),
-            'fileFormat'                => getCodeList('FileFormat', 'Activity', false),
+            'indicatorVocabulary' => getCodeList('IndicatorVocabulary', 'Activity'),
+            'indicatorMeasure'    => getCodeList('IndicatorMeasure', 'Activity', false),
+            'language'            => getCodeList('Language', 'Activity', false),
+            'documentCategory'    => getCodeList('DocumentCategory', 'Activity', false),
+            'fileFormat'          => getCodeList('FileFormat', 'Activity', false),
         ];
     }
 }
@@ -369,19 +371,19 @@ if (!function_exists('getPeriodTypes')) {
     function getPeriodTypes(): array
     {
         return [
-            'indicatorMeasure'          => getCodeList('IndicatorMeasure', 'Activity', false),
-            'language'                  => getCodeList('Language', 'Activity', false),
-            'documentCategory'          => getCodeList('DocumentCategory', 'Activity', false),
-            'fileFormat'                => getCodeList('FileFormat', 'Activity', false),
+            'indicatorMeasure' => getCodeList('IndicatorMeasure', 'Activity', false),
+            'language'         => getCodeList('Language', 'Activity', false),
+            'documentCategory' => getCodeList('DocumentCategory', 'Activity', false),
+            'fileFormat'       => getCodeList('FileFormat', 'Activity', false),
         ];
     }
 }
 
-    /*
-     * Generates toast array.
-     *
-     * @return array
-     */
+/*
+ * Generates toast array.
+ *
+ * @return array
+ */
 if (!function_exists('generateToastData')) {
     function generateToastData(): array
     {
