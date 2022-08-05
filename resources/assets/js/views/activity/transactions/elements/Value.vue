@@ -7,9 +7,9 @@
     >
       {{ value[0].amount ?? 'Amount Not Available' }}
     </span>
-    <span class="mb-5">{{ value[0].currency }}</span>
+    <span v-if="value[0].amount" class="mb-5">{{ value[0].currency }}</span>
   </div>
-  <div class="text-sm">
+  <div v-if="value[0].amount" class="text-sm">
     {{ value[0].date ? `valued at ${dateFormat(value[0].date)}` : '' }}
   </div>
 </template>
