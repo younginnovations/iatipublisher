@@ -107,34 +107,34 @@ let lastScrollTop = 0,
   affixType = 'sticky-none';
 
 const stickySidebar = (el: {
-  firstChild: any;
-  offsetWidth: any;
+  firstChild: HTMLElement;
+  offsetWidth: number;
   getBoundingClientRect: () => {
-    (): any;
-    new (): any;
-    left: any;
-    top: any;
-    bottom: any;
+    (): object;
+    new (): object;
+    left: number|null;
+    top: number|null;
+    bottom: number|null;
   };
 }) => {
   console.log('-----------' + affixType + '---------');
 
   //sticky element/child data
   const stickyElement = el.firstChild,
-    stickyCurrentTop = stickyElement.getBoundingClientRect().top,
-    stickyCurrentBottom = stickyElement.getBoundingClientRect().bottom;
+  stickyCurrentTop = stickyElement?.getBoundingClientRect().top,
+  stickyCurrentBottom = stickyElement?.getBoundingClientRect().bottom;
 
   //sticky element's parent/wrapper data
   const elWidth = el.offsetWidth,
-    elScrollLeft = el.getBoundingClientRect().left,
-    elScrollTop = el.getBoundingClientRect().top,
-    elScrollBottom = el.getBoundingClientRect().bottom,
+    elScrollLeft = el.getBoundingClientRect().left??0,
+    elScrollTop = el.getBoundingClientRect().top??0,
+    elScrollBottom = el.getBoundingClientRect().bottom??0,
     viewportHeight = window.innerHeight;
 
   // window/document data
   const currentWindowsScrollPosition = window.pageYOffset,
     targetScrollPosition =
-      elScrollBottom + currentWindowsScrollPosition - viewportHeight;
+      elScrollBottom?? + currentWindowsScrollPosition - viewportHeight;
 
   const isScrollDown =
     currentWindowsScrollPosition > lastScrollTop ? true : false;
