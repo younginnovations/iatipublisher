@@ -10,8 +10,8 @@ use App\IATI\Traits\XmlBaseElement;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Pagination\LengthAwarePaginator;
-use Kris\LaravelFormBuilder\Form;
 use Illuminate\Support\Arr;
+use Kris\LaravelFormBuilder\Form;
 
 /**
  * Class ResultService.

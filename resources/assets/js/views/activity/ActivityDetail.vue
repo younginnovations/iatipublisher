@@ -180,47 +180,7 @@
             </Modal>
 
             <!-- Publish Activity -->
-            <button
-              class="relative font-bold button primary-btn"
-              @click="publishValue = true"
-            >
-              <svg-vue icon="approved-cloud" />
-              <span>Publish</span>
-            </button>
-            <Modal
-              :modal-active="publishValue"
-              width="583"
-              @close="publishToggle"
-            >
-              <div class="mb-4">
-                <div class="flex mb-6 title">
-                  <svg-vue
-                    class="mr-1 mt-0.5 text-lg text-spring-50"
-                    icon="approved-cloud"
-                  />
-                  <b>Publish activity?</b>
-                </div>
-                <div class="p-4 rounded-lg bg-mint">
-                  Are you ready to publish this activity?
-                </div>
-              </div>
-              <div class="flex justify-end">
-                <div class="inline-flex">
-                  <BtnComponent
-                    class="px-6 uppercase bg-white"
-                    text="Go Back"
-                    type=""
-                    @click="publishValue = false"
-                  />
-                  <BtnComponent
-                    class="space"
-                    text="Publish"
-                    type="primary"
-                    @click="publishValue = false"
-                  />
-                </div>
-              </div>
-            </Modal>
+            <Publish :data="publishData" />
           </div>
         </div>
       </div>
@@ -355,6 +315,7 @@
       </div>
     </div>
   </div>
+  <Errors :data="{}" />
 </template>
 
 <script lang="ts">
@@ -366,6 +327,8 @@ import { Result } from './elements/Index';
 import HoverText from 'Components/HoverText.vue';
 import ProgressBar from 'Components/ProgressBar.vue';
 import Modal from 'Components/PopupModal.vue';
+import Publish from 'Components/sections/PublishButton.vue';
+import Errors from 'Components/sections/StickyErrors.vue';
 import BtnComponent from 'Components/ButtonComponent.vue';
 import Toast from 'Components/Toast.vue';
 
@@ -382,6 +345,8 @@ export default defineComponent({
     Modal,
     BtnComponent,
     Toast,
+    Publish,
+    Errors,
   },
   props: {
     elements: {
@@ -548,6 +513,11 @@ export default defineComponent({
       return title.replace(/_/gi, ' ');
     }
 
+    //publish component data
+    const publishData = {
+      id: props.activity.id,
+    };
+
     return {
       groupedData,
       activities,
@@ -564,6 +534,7 @@ export default defineComponent({
       props,
       formatTitle,
       pageTitle,
+      publishData,
     };
   },
 });

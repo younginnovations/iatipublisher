@@ -36,6 +36,10 @@ module.exports = {
       // Primary colors
       turquoise: withOpacity('--turquoise'),
       bluecoral: withOpacity('--bluecoral'),
+
+      blue: {
+        50: withOpacity('--bluecoral-50'),
+      },
       // Secondary colors
       camel: {
         10: withOpacity('--camel-10'),
@@ -78,6 +82,7 @@ module.exports = {
         30: withOpacity('--lavender-30'),
         40: withOpacity('--lavender-40'),
         50: withOpacity('--lavender-50'),
+        60: withOpacity('--lavender-60'),
       },
       crimson: {
         10: withOpacity('--crimson-10'),
