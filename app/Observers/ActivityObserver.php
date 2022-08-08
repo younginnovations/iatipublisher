@@ -45,21 +45,36 @@ class ActivityObserver
     /**
      * Sets the complete status of elements.
      *
-     * @param $model
+     * @param      $model
+     * @param bool $isNew
      *
      * @return void
      * @throws \JsonException
      */
-    public function setElementStatus($model): void
+    public function setElementStatus($model, bool $isNew = false): void
     {
         $elementStatus = $model->element_status;
-        $updatedElements = $this->getUpdatedElement($model->getChanges());
+        $updatedElements = ($isNew) ? $this->getUpdatedElement($model->getAttributes()) : $this->getUpdatedElement($model->getChanges());
 
         foreach ($updatedElements as $attribute => $value) {
             $elementStatus[$attribute] = call_user_func([$this->elementCompleteService, dashesToCamelCase('is_' . $attribute . '_element_completed')], $model);
         }
 
         $model->element_status = $elementStatus;
+    }
+
+    /**
+     * Handle the Activity "created" event.
+     *
+     * @param Activity $activity
+     *
+     * @return void
+     * @throws \JsonException
+     */
+    public function created(Activity $activity): void
+    {
+        $this->setElementStatus($activity, true);
+        $activity->saveQuietly();
     }
 
     /**

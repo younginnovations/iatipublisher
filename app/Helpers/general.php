@@ -93,6 +93,49 @@ if (!function_exists('getElements')) {
         return array_keys($elementJsonSchema);
     }
 }
+if (!function_exists('getDefaultElementStatus')) {
+    /**
+     * Returns Default Elements Status.
+     *
+     * @return array
+     */
+    function getDefaultElementStatus(): array
+    {
+        return [
+            'iati_identifier'      => false,
+            'title'                => false,
+            'description'          => false,
+            'activity_status'      => false,
+            'activity_date'        => false,
+            'activity_scope'       => false,
+            'recipient_country'    => false,
+            'recipient_region'     => false,
+            'collaboration_type'   => false,
+            'default_flow_type'    => false,
+            'default_finance_type' => false,
+            'default_aid_type'     => false,
+            'default_tied_status'  => false,
+            'capital_spend'        => false,
+            'related_activity'     => false,
+            'conditions'           => false,
+            'sector'               => false,
+            'humanitarian_scope'   => false,
+            'legacy_data'          => false,
+            'tag'                  => false,
+            'policy_marker'        => false,
+            'other_identifier'     => false,
+            'country_budget_items' => false,
+            'budget'               => false,
+            'participating_org'    => false,
+            'document_link'        => false,
+            'contact_info'         => false,
+            'location'             => false,
+            'planned_disbursement' => false,
+            'transactions'         => false,
+            'result'               => false,
+        ];
+    }
+}
 
 if (!function_exists('getCoreElements')) {
     /**
