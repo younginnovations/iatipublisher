@@ -45,7 +45,7 @@ class CapitalSpendController extends Controller
             $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
             $activity = $this->capitalSpendService->getActivityData($id);
             $form = $this->capitalSpendService->formGenerator($id);
-            $data = ['core' => $element['capital_spend']['criteria'] ?? '', 'status' => $activity->capital_spend_element_completed, 'title' => $element['capital_spend']['label'], 'name' => 'capital_spend'];
+            $data = ['core' => $element['capital_spend']['criteria'] ?? '', 'title' => $element['capital_spend']['label'], 'name' => 'capital_spend'];
 
             return view('admin.activity.capitalSpend.edit', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {

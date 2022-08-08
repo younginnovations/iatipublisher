@@ -115,7 +115,7 @@ class PeriodController extends Controller
             $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
             $activity = $this->activityService->getActivity($activityId);
             $form = $this->periodService->createFormGenerator($activityId, $resultId, $indicatorId);
-            $data = ['core' => $element['period']['criteria'] ?? false, 'status' => false, 'title' => $element['period']['label'], 'name' => 'period'];
+            $data = ['core' => $element['period']['criteria'] ?? false, 'title' => $element['period']['label'], 'name' => 'period'];
 
             return view('admin.activity.period.edit', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {
@@ -225,7 +225,7 @@ class PeriodController extends Controller
             $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
             $activity = $this->activityService->getActivity($activityId);
             $form = $this->periodService->editFormGenerator($activityId, $resultId, $indicatorId, $periodId);
-            $data = ['core' => $element['period']['criteria'] ?? false, 'status' => false, 'title' => $element['period']['label'], 'name' => 'period'];
+            $data = ['core' => $element['period']['criteria'] ?? false, 'title' => $element['period']['label'], 'name' => 'period'];
 
             return view('admin.activity.period.edit', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {

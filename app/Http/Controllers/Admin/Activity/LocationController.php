@@ -45,7 +45,7 @@ class LocationController extends Controller
             $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
             $activity = $this->locationService->getActivityData($id);
             $form = $this->locationService->formGenerator($id);
-            $data = ['core' => $element['location']['criteria'] ?? '', 'status' => $activity->location_element_completed ?? false, 'title' => $element['location']['label'], 'name' => 'location'];
+            $data = ['core' => $element['location']['criteria'] ?? '', 'title' => $element['location']['label'], 'name' => 'location'];
 
             return view('admin.activity.location.edit', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {

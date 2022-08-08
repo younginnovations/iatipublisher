@@ -44,7 +44,7 @@ class DescriptionController extends Controller
             $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
             $activity = $this->descriptionService->getActivityData($id);
             $form = $this->descriptionService->formGenerator($id);
-            $data = ['core' => $element['description']['criteria'] ?? '', 'status' => $activity->description_element_completed, 'title' => $element['description']['label'], 'name' => 'description'];
+            $data = ['core' => $element['description']['criteria'] ?? '', 'title' => $element['description']['label'], 'name' => 'description'];
 
             return view('admin.activity.description.edit', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {

@@ -45,7 +45,7 @@ class ContactInfoController extends Controller
             $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
             $activity = $this->contactInfoService->getActivityData($id);
             $form = $this->contactInfoService->formGenerator($id);
-            $data = ['core' => $element['contact_info']['criteria'] ?? '', 'status' => false, 'title' => $element['contact_info']['label'], 'name' => 'contact_info'];
+            $data = ['core' => $element['contact_info']['criteria'] ?? '', 'title' => $element['contact_info']['label'], 'name' => 'contact_info'];
 
             return view('admin.activity.contactInfo.edit', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {

@@ -44,7 +44,7 @@ class OtherIdentifierController extends Controller
             $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
             $activity = $this->otherIdentifierService->getActivityData($id);
             $form = $this->otherIdentifierService->formGenerator($id);
-            $data = ['core' => $element['other_identifier']['criteria'] ?? '', 'status' => $activity->other_identifier_element_completed, 'title' => $element['other_identifier']['label'], 'name' => 'other_identifier'];
+            $data = ['core' => $element['other_identifier']['criteria'] ?? '', 'title' => $element['other_identifier']['label'], 'name' => 'other_identifier'];
 
             return view('admin.activity.otherIdentifier.edit', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {

@@ -44,7 +44,7 @@ class CountryBudgetItemController extends Controller
             $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
             $activity = $this->countryBudgetItemService->getActivityData($id);
             $form = $this->countryBudgetItemService->formGenerator($id);
-            $data = ['core' => $element['country_budget_items']['criteria'] ?? '', 'status' => $activity->country_budget_items_element_completed, 'title' => $element['country_budget_items']['label'], 'name' => 'country_budget_items'];
+            $data = ['core' => $element['country_budget_items']['criteria'] ?? '', 'title' => $element['country_budget_items']['label'], 'name' => 'country_budget_items'];
 
             return view('admin.activity.countryBudgetItem.edit', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {

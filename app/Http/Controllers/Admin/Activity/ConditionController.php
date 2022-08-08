@@ -44,7 +44,7 @@ class ConditionController extends Controller
             $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
             $activity = $this->conditionService->getActivityData($id);
             $form = $this->conditionService->formGenerator($id);
-            $data = ['core' => $element['conditions']['criteria'] ?? false, 'status' => $activity->conditions_element_completed, 'title' => $element['conditions']['label'], 'name' => 'conditions'];
+            $data = ['core' => $element['conditions']['criteria'] ?? false, 'title' => $element['conditions']['label'], 'name' => 'conditions'];
 
             return view('admin.activity.condition.edit', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {

@@ -90,7 +90,7 @@ class TransactionController extends Controller
             $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
             $activity = $this->activityService->getActivity($activityId);
             $form = $this->transactionService->createFormGenerator($activityId);
-            $data = ['core' => $element['transactions']['criteria'] ?? false, 'status' => false, 'title' => $element['transactions']['label'], 'name' => 'transactions'];
+            $data = ['core' => $element['transactions']['criteria'] ?? false, 'title' => $element['transactions']['label'], 'name' => 'transactions'];
 
             return view('admin.activity.transaction.edit', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {
@@ -173,7 +173,7 @@ class TransactionController extends Controller
             $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
             $activity = $this->activityService->getActivity($activityId);
             $form = $this->transactionService->editFormGenerator($transactionId, $activityId);
-            $data = ['core' => $element['transactions']['criteria'] ?? false, 'status' => false, 'title' => $element['transactions']['label'], 'name' => 'transactions'];
+            $data = ['core' => $element['transactions']['criteria'] ?? false, 'title' => $element['transactions']['label'], 'name' => 'transactions'];
 
             return view('admin.activity.transaction.edit', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {

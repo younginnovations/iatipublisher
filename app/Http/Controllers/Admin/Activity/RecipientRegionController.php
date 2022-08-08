@@ -44,7 +44,7 @@ class RecipientRegionController extends Controller
             $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
             $activity = $this->recipientRegionService->getActivityData($id);
             $form = $this->recipientRegionService->formGenerator($id);
-            $data = ['core' => $element['recipient_region']['criteria'] ?? '', 'status' => $activity->recipient_region_element_completed, 'title' => $element['recipient_region']['label'], 'name' => 'recipient_region'];
+            $data = ['core' => $element['recipient_region']['criteria'] ?? '', 'title' => $element['recipient_region']['label'], 'name' => 'recipient_region'];
 
             return view('admin.activity.recipientRegion.edit', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {

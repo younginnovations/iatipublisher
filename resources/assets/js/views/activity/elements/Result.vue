@@ -11,10 +11,10 @@
             {{ title.toString().replace(/_/g, '-') }}
           </div>
           <div
-            class="status ml-2.5 flex text-xs leading-5 text-crimson-50"
+            class="status ml-2.5 flex text-xs leading-5"
             :class="{
-              'text-spring-50': completed === true,
-              'text-crimson-50': completed === false,
+              'text-spring-50': completed,
+              'text-crimson-50': !completed,
             }"
           >
             <b class="mr-2 text-base leading-3">.</b>

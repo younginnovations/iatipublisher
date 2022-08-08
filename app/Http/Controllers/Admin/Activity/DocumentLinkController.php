@@ -60,7 +60,7 @@ class DocumentLinkController extends Controller
             $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
             $activity = $this->documentLinkService->getActivityData($id);
             $form = $this->documentLinkService->formGenerator($id);
-            $data = ['core' => false, 'status' => $activity->document_link_element_completed ?? false, 'title' => $element['document_link']['label'], 'name' => 'document_link'];
+            $data = ['core' => false, 'title' => $element['document_link']['label'], 'name' => 'document_link'];
 
             return view('admin.activity.documentLink.edit', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {

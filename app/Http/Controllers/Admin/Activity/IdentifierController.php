@@ -44,7 +44,7 @@ class IdentifierController extends Controller
             $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
             $activity = $this->identifierService->getActivityData($id);
             $form = $this->identifierService->formGenerator($id);
-            $data = ['core' => $element['iati_identifier']['criteria'] ?? '', 'status' => $activity->identifier_element_completed, 'title' => $element['iati_identifier']['label'], 'name' => 'iati_identifier'];
+            $data = ['core' => $element['iati_identifier']['criteria'] ?? '', 'title' => $element['iati_identifier']['label'], 'name' => 'iati_identifier'];
 
             return view('admin.activity.identifier.edit', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {

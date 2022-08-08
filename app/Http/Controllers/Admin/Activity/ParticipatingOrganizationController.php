@@ -45,7 +45,7 @@ class ParticipatingOrganizationController extends Controller
             $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
             $activity = $this->participatingOrganizationService->getActivityData($id);
             $form = $this->participatingOrganizationService->formGenerator($id);
-            $data = ['core' => $element['participating_org']['criteria'] ?? '', 'status' => $activity->participating_org_element_completed ?? false, 'title' => $element['participating_org']['label'], 'name' => 'participating_org'];
+            $data = ['core' => $element['participating_org']['criteria'] ?? '', 'title' => $element['participating_org']['label'], 'name' => 'participating_org'];
 
             return view('admin.activity.participatingOrganization.edit', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {

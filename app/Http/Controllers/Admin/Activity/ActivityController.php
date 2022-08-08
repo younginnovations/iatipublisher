@@ -323,6 +323,9 @@ class ActivityController extends Controller
             'other_identifier'     => $activity->other_identifier_element_completed,
             'country_budget_items' => $activity->country_budget_items_element_completed,
             'budget'               => $activity->budget_element_completed,
+            'result' => true,
+            'indicator' => true,
+            'period' => true,
         ];
     }
 }
