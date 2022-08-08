@@ -34,33 +34,69 @@
     }
   },
   "reporting_org": {
+    "name": "reporting_org",
     "label": "reporting-org",
+    "hover_text": "The organisation issuing the report. May be a primary source (reporting on its own activity as donor, implementing agency, etc) or a secondary source (reporting on the activities of another organisation). <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/reporting-org/'>For more information</a>",
+    "add_more": "true",
     "attributes": {
       "ref": {
         "name": "ref",
-        "type": "text",
-        "label": "ORGANISATION NAME ABBREVIATION",
-        "value": null,
-        "require": true,
-        "criteria": ""
-      },
-      "type": {},
-      "secondary_reporter": {}
-    },
-    "sub_elements": {
-      "narrative": {
+        "label": "@ref",
         "type": "text",
         "required": true,
         "criteria": "mandatory",
-        "label": "Narrative",
+        "hover_text": "Machine-readable identification string for the organisation issuing the report. Must be in the format {RegistrationAgency}-{RegistrationNumber}. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/reporting-org/'>For more information</a>",
+        "help_text": ""
+      },
+      "type": {
+        "name": "type",
+        "label": "@type",
+        "type": "select",
+        "multiSelect": false,
+        "choices": "Organization/OrganizationType.json",
+        "required": true,
+        "criteria": "mandatory",
+        "hover_text": "The type of organisation issuing the report. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/reporting-org/'>For more information</a>",
+        "help_text": ""
+      },
+      "secondary_reporter": {
+        "name": "secondary_reporter",
+        "label": "@secondary-reporter",
+        "type": "select",
+        "choices": {
+          "1": "True",
+          "0": "False"
+        },
+        "required": false,
+        "criteria": "",
+        "hover_text": "A flag indicating that the reporting organisation of this activity is acting as a secondary reporter. A secondary reporter is one that reproduces data on the activities of an organisation for which it is not directly responsible. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/reporting-org/'>For more information</a>",
+        "help_text": ""
+      }
+    },
+    "sub_elements": {
+      "narrative": {
+        "name": "narrative",
+        "label": "narrative",
+        "type": "textarea",
+        "required": false,
+        "criteria": "mandatory",
+        "add_more": true,
+        "attr": {
+          "row": 4
+        },
+        "hover_text": "The free text name or description of the item being described. This can be repeated in multiple languages. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/document-link/title/narrative/'>For more information</a>",
+        "help_text": "",
         "attributes": {
-          "language": {
+          "lang": {
             "name": "language",
+            "label": "@xml:lang",
             "type": "select",
-            "required": true,
-            "criteria": "mandatory",
-            "label": "Language",
-            "value": ["en", "fr", "sp"]
+            "multiSelect": false,
+            "choices": "Activity/Language.json",
+            "required": false,
+            "criteria": "recommended",
+            "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/document-link/title/narrative/'>For more information</a>",
+            "help_text": ""
           }
         },
         "sub_elements": {}
@@ -623,8 +659,10 @@
         "hover_text": "The code for the tag as defined in the specified vocabulary. This attribute is required. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/tag/'>For more information</a>",
         "help_text": "",
         "parent": {
-          "name": "region_vocabulary",
-          "value": ["2"]
+          "name": "tag_vocabulary",
+          "value": [
+            "2"
+          ]
         }
       },
       "targets_tag_code": {
@@ -638,8 +676,10 @@
         "hover_text": "The code for the tag as defined in the specified vocabulary. This attribute is required. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/tag/'>For more information</a>",
         "help_text": "",
         "parent": {
-          "name": "region_vocabulary",
-          "value": ["3"]
+          "name": "tag_vocabulary",
+          "value": [
+            "3"
+          ]
         }
       },
       "tag_text": {
@@ -652,8 +692,11 @@
         "hover_text": "The code for the tag as defined in the specified vocabulary. This attribute is required. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/tag/'>For more information</a>",
         "help_text": "",
         "parent": {
-          "name": "region_vocabulary",
-          "value": ["1", "99"]
+          "name": "tag_vocabulary",
+          "value": [
+            "1",
+            "99"
+          ]
         }
       },
       "vocabulary_uri": {
@@ -666,8 +709,10 @@
         "hover_text": "The URI where this vocabulary is defined. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/tag/'>For more information</a>",
         "help_text": "",
         "parent": {
-          "name": "region_vocabulary",
-          "value": ["99"]
+          "name": "tag_vocabulary",
+          "value": [
+            "99"
+          ]
         }
       }
     },
@@ -710,8 +755,8 @@
       "policy_marker_text": {}
     },
     "attributes": {
-      "policymarker_vocabulary": {
-        "name": "policymarker_vocabulary",
+      "policy_marker_vocabulary": {
+        "name": "policy_marker_vocabulary",
         "label": "@vocabulary",
         "type": "select",
         "choices": "Activity/PolicyMarkerVocabulary.json",
@@ -730,8 +775,10 @@
         "hover_text": "If the vocabulary is 99 (reporting organisation), the URI where this internal vocabulary is defined. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/policy-marker/'>For more information</a>",
         "help_text": "",
         "parent": {
-          "name": "sector_vocabulary",
-          "value": ["99"]
+          "name": "policy_marker_vocabulary",
+          "value": [
+            "99"
+          ]
         }
       },
       "significance": {
@@ -754,8 +801,10 @@
         "hover_text": "A policy marker code from the codelist specified in the vocabulary. This attribute is required. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/policy-marker/'>For more information</a>",
         "help_text": "",
         "parent": {
-          "name": "sector_vocabulary",
-          "value": ["1"]
+          "name": "policy_marker_vocabulary",
+          "value": [
+            "1"
+          ]
         }
       },
       "policy_marker_text": {
@@ -768,8 +817,10 @@
         "hover_text": "A policy marker code from the codelist specified in the vocabulary. This attribute is required. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/policy-marker/'>For more information</a></a>",
         "help_text": "mandatory",
         "parent": {
-          "name": "sector_vocabulary",
-          "value": ["99"]
+          "name": "policy_marker_vocabulary",
+          "value": [
+            "99"
+          ]
         }
       }
     },
@@ -1860,8 +1911,7 @@
             "name": "code",
             "label": "@code",
             "type": "select",
-            "choices": "Activity/Country.json",
-            "required": true,
+            "choices": "Activity/Country.json",            "required": true,
             "criteria": "",
             "hover_text": "The code for the administrative area being reported from the vocabulary specified. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/location/administrative/'>For more information</a>",
             "help_text": ""
@@ -3800,6 +3850,15 @@
       },
       "cash_and_voucher_modalities": {
         "sub_element": "aid_type"
+      },
+      "region_code": {
+        "sub_element": "recipient_region"
+      },
+      "custom_code": {
+        "sub_element": "recipient_region"
+      },
+      "vocabulary_uri": {
+        "sub_element": "recipient_region"
       }
     },
     "sub_elements": {
@@ -4255,7 +4314,11 @@
             "required": false,
             "criteria": "mandatory",
             "hover_text": "Either an OECD DAC or UN region code. Codelist is determined by vocabulary attribute. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/transaction/recipient-region/'>For more information</a>",
-            "help_text": ""
+            "help_text": "",
+            "parent": {
+              "name": "region_vocabulary",
+              "value": ["1"]
+            }
           },
           "custom_code": {
             "name": "custom_code",
@@ -4265,7 +4328,11 @@
             "criteria": "mandatory",
             "hover_text": "Either an OECD DAC or UN region code. Codelist is determined by vocabulary attribute. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/transaction/recipient-region/'>For more information</a>",
             "help_text": "",
-            "hidden": true
+            "hidden": true,
+            "parent": {
+              "name": "region_vocabulary",
+              "value": ["2", "99"]
+            }
           },
           "vocabulary_uri": {
             "name": "vocabulary_uri",
@@ -4274,7 +4341,11 @@
             "required": false,
             "criteria": "",
             "hover_text": "The URI where this vocabulary is defined. If the vocabulary is 99 (reporting organisation), the URI where this internal vocabulary is defined. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/transaction/recipient-region/'>For more information</a>",
-            "help_text": ""
+            "help_text": "",
+            "parent": {
+              "name": "region_vocabulary",
+              "value": ["1"]
+            }
           }
         },
         "sub_elements": {

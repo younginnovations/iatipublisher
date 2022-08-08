@@ -14,22 +14,15 @@ use Illuminate\Support\Facades\Auth;
 
 class RedirectActivity
 {
-    /**
-     * Handle an incoming request.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Closure(\Illuminate\Http\Request): (\Illuminate\Http\Response|\Illuminate\Http\RedirectResponse)  $next
-     * @return \Illuminate\Http\Response|\Illuminate\Http\RedirectResponse
-     */
     public function handle(Request $request, Closure $next)
     {
-        $activity = $request->route('id') ? $request->route('id') : ($request->route('activity') ?? null);
-        $activity = gettype($activity) == 'string' && intval($activity) && (strlen(strval(intval($activity))) === strlen($activity)) ? Activity::where('id', $activity)->first()?->toArray() : $activity;
+        $activity = $request->route('id') ?: ($request->route('activity'));
+        $activity = is_string($activity) && (int) $activity && (strlen((string) (int) $activity) === strlen($activity)) ? Activity::where('id', $activity)->first()?->toArray() : $activity;
 
         $parameters = $request->route()->parameters;
         $data_exists = $this->checkIfDataExists($parameters);
 
-        if (!$activity && ($request->route()->uri != 'activities' && $request->route()->uri != 'activity/page/{page?}' && $request->route()->uri != 'activity/codelists') || !$data_exists) {
+        if ((!$activity && ($request->route()->uri !== 'activities' && $request->route()->uri !== 'activity/page/{page?}' && $request->route()->uri !== 'activity/codelists')) || !$data_exists) {
             return abort(404);
         }
 

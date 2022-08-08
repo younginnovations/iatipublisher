@@ -22,8 +22,7 @@ class Period extends Model
     /**
      * @var array
      */
-    protected $fillable
-    = [
+    protected $fillable = [
         'indicator_id',
         'period',
     ];
@@ -31,8 +30,17 @@ class Period extends Model
     /**
      * @var array
      */
-    protected $casts
-    = [
+    protected $casts = [
         'period' => 'json',
     ];
+
+    /**
+     * Period belongs to indicator.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function indicator(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(Indicator::class, 'indicator_id', 'id');
+    }
 }
