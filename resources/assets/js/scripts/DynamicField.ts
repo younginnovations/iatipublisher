@@ -421,7 +421,7 @@ export class DynamicField {
    * @Logic hide vocabulary-uri and codes field based on '@vocabulary' field value
    */
   public policyVocabularyHideField() {
-    const policymaker_vocabulary = $('select[id*="policymarker_vocabulary"]');
+    const policymaker_vocabulary = $('select[id*="policy_marker_vocabulary"]');
 
     if (policymaker_vocabulary.length > 0) {
       $.each(policymaker_vocabulary, (index, policy_marker) => {
