@@ -1,0 +1,106 @@
+<template>
+  <div class="errors" :class="bgColor">
+    <div class="cursor-pointer errors__head" @click="accordionToggle">
+      <div class="errors__head--title">
+        <svg-vue
+          class="mr-2 text-base"
+          :class="iconColor"
+          icon="alert"
+        ></svg-vue>
+        <div class="capitalize">{{ errorType }}</div>
+      </div>
+      <svg-vue
+        class="text-xl transition-transform duration-500 text-blue-50"
+        :class="{ 'rotate-180': toggle, '': !toggle }"
+        icon="arrow-down"
+      ></svg-vue>
+    </div>
+    <div class="errors__list">
+      <ul>
+        <li v-for="(error, e) in errors" :key="e">
+          {{ error }}
+        </li>
+      </ul>
+    </div>
+  </div>
+</template>
+
+<script setup lang="ts">
+import { defineProps, toRefs, ref } from 'vue';
+
+//props
+const props = defineProps({
+  errors: { type: Object, required: true },
+  type: { type: String, default: 'error' },
+});
+
+//props destructuring
+const { type, errors } = toRefs(props);
+const errorType =
+  errors.value.length +
+  ' ' +
+  type.value.charAt(0).toUpperCase() +
+  type.value.slice(1);
+
+// colors based on type props value
+let bgColor = '',
+  iconColor = '';
+switch (type.value) {
+  case 'critical':
+    bgColor = 'bg-lavender-60 border-lavender-50';
+    iconColor = 'text-lavender-50';
+    break;
+
+  case 'warnings':
+    bgColor = 'bg-eggshell border-camel-50';
+    iconColor = 'text-camel-50';
+    break;
+
+  default:
+    bgColor = 'bg-rose border-crimson-40';
+    iconColor = 'text-crimson-40';
+    break;
+}
+
+const toggle = ref(false);
+
+const accordionToggle = (event) => {
+  const target =
+    event.currentTarget.parentElement.querySelector('.errors__list');
+
+  if (toggle.value) {
+    target.style.cssText = ``;
+    toggle.value = false;
+  } else {
+    const elHeight = target.querySelector('ul')?.clientHeight;
+    target.style.cssText = `height: ${elHeight}px;`;
+    toggle.value = true;
+  }
+};
+</script>
+
+<style lang="scss" scoped>
+.errors {
+  @apply border-l-2;
+  &__head {
+    @apply flex justify-between p-4;
+
+    &--title {
+      @apply flex grow items-center text-sm leading-relaxed;
+    }
+  }
+
+  &__list {
+    @apply h-0 overflow-hidden px-4 transition-all duration-500;
+    ul {
+      @apply px-6;
+    }
+    li {
+      @apply py-4 text-sm leading-normal;
+    }
+    li:not(:last-child) {
+      @apply border-b border-n-20;
+    }
+  }
+}
+</style>

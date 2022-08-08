@@ -222,17 +222,17 @@ class Activity extends Model
      */
     public function isAttributeDataCompleted($mandatoryAttributes, $data): bool
     {
-        if (empty($mandatoryAttributes)) {
-            return true;
-        }
+        // if (empty($mandatoryAttributes)) {
+        //     return true;
+        // }
 
-        foreach ($mandatoryAttributes as $mandatoryAttribute) {
-            foreach ($data as $datum) {
-                if (array_key_exists($mandatoryAttribute, $datum) && empty($datum[$mandatoryAttribute])) {
-                    return false;
-                }
-            }
-        }
+        // foreach ($mandatoryAttributes as $mandatoryAttribute) {
+        //     foreach ($data as $datum) {
+        //         if (array_key_exists($mandatoryAttribute, $datum) && empty($datum[$mandatoryAttribute])) {
+        //             return false;
+        //         }
+        //     }
+        // }
 
         return true;
     }
