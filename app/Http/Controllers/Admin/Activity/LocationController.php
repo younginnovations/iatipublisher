@@ -45,12 +45,7 @@ class LocationController extends Controller
             $element = getElementSchema('location');
             $activity = $this->locationService->getActivityData($id);
             $form = $this->locationService->formGenerator($id);
-            $data = [
-                'core' => $element['criteria'] ?? '',
-                'status' => $activity->location_element_completed ?? false,
-                'title' => $element['label'],
-                'name' => 'location',
-            ];
+            $data = ['core' => $element['location']['criteria'] ?? '', 'title' => $element['location']['label'], 'name' => 'location'];
 
             return view('admin.activity.location.edit', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {
