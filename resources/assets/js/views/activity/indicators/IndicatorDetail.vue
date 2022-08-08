@@ -20,6 +20,12 @@
           :link="`${resultLink}/indicator/create`"
           class="mr-2.5"
         />
+         <Btn
+          text="Add Period"
+          icon="add"
+          :link="`${resultLink}/indicator/${indicator.id}/period/create`"
+          class="mr-2.5"
+        />
         <Btn
           text="Edit Indicator"
           :link="`${resultLink}/indicator/${indicator.id}/edit`"
@@ -29,26 +35,17 @@
 
     <div class="activities">
       <aside class="activities__sidebar">
-        <div
-          class="
-            sticky
-            top-0
-            px-6
-            py-4
-            rounded-lg
-            indicator
-            bg-eggshell
-            text-n-50
-          "
-        >
-          <ul class="text-sm font-bold leading-relaxed">
-            <li v-for="(rData, r, ri) in indicatorData" :key="ri">
-              <a v-smooth-scroll :href="`#${r}`" :class="linkClasses">
-                <svg-vue icon="moon" class="mr-2 text-base"></svg-vue>
-                {{ r }}
-              </a>
-            </li>
-          </ul>
+        <div v-sticky-component>
+          <div class="px-6 py-4 rounded-lg indicator bg-eggshell text-n-50">
+            <ul class="text-sm font-bold leading-relaxed">
+              <li v-for="(rData, r, ri) in indicatorData" :key="ri">
+                <a v-smooth-scroll :href="`#${r}`" :class="linkClasses">
+                  <svg-vue icon="moon" class="mr-2 text-base"></svg-vue>
+                  {{ r }}
+                </a>
+              </li>
+            </ul>
+          </div>
         </div>
       </aside>
       <div class="activities__content">

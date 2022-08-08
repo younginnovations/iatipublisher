@@ -42,7 +42,7 @@ class RelatedActivityController extends Controller
             $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
             $activity = $this->relatedActivityService->getActivityData($id);
             $form = $this->relatedActivityService->formGenerator($id);
-            $data = ['core' => $element['related_activity']['criteria'] ?? '', 'status' => $activity->related_activity_element_completed, 'title' => $element['related_activity']['label'], 'name' => 'related_activity'];
+            $data = ['core' => $element['related_activity']['criteria'] ?? '', 'title' => $element['related_activity']['label'], 'name' => 'related_activity'];
 
             return view('admin.activity.relatedActivity.edit', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {

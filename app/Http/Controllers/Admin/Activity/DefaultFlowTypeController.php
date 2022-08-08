@@ -44,7 +44,7 @@ class DefaultFlowTypeController extends Controller
             $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
             $activity = $this->defaultFlowTypeService->getActivityData($id);
             $form = $this->defaultFlowTypeService->formGenerator($id);
-            $data = ['core' => $element['default_flow_type']['criteria'] ?? '', 'status' => $activity->default_flow_type_element_completed, 'title' => $element['default_flow_type']['label'], 'name' => 'default_flow_type'];
+            $data = ['core' => $element['default_flow_type']['criteria'] ?? '', 'title' => $element['default_flow_type']['label'], 'name' => 'default_flow_type'];
 
             return view('admin.activity.defaultFlowType.edit', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {

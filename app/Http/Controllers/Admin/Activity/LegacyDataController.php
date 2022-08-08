@@ -44,7 +44,7 @@ class LegacyDataController extends Controller
             $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
             $activity = $this->activityLegacyDataService->getActivityData($id);
             $form = $this->activityLegacyDataService->formGenerator($id);
-            $data = ['core' => $element['legacy_data']['criteria'] ?? '', 'status' => $activity->legacy_data_element_completed, 'title' => $element['legacy_data']['label'], 'name' => 'legacy_data'];
+            $data = ['core' => $element['legacy_data']['criteria'] ?? '', 'title' => $element['legacy_data']['label'], 'name' => 'legacy_data'];
 
             return view('admin.activity.legacyData.edit', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {

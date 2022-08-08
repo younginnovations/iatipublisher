@@ -18,33 +18,33 @@
     </PageTitle>
     <div class="activities">
       <aside class="activities__sidebar">
-        <div
-          class="sticky top-0 px-6 py-4 rounded-lg indicator bg-eggshell text-n-50"
-        >
-          <ul class="text-sm font-bold leading-relaxed">
-            <li v-for="(rData, r, ri) in resultsData" :key="ri">
-              <a v-smooth-scroll :href="`#${r}`" :class="linkClasses">
-                <svg-vue icon="moon" class="mr-2 text-base"></svg-vue>
-                {{ r }}
-              </a>
-            </li>
-            <li v-if="hasIndicators">
-              <a v-smooth-scroll href="#indicator" :class="linkClasses">
-                <svg-vue icon="moon" class="mr-2 text-base"></svg-vue>
-                indicator
-              </a>
-            </li>
-            <li v-if="!hasIndicators">
-              <a
-                :href="`/activities/${result.activity_id}/result/${result.id}/indicator/create`"
-                :class="linkClasses"
-                class="border border-dashed border-n-40"
-              >
-                <svg-vue icon="add" class="mr-2 text-n-40"></svg-vue>
-                add indicator
-              </a>
-            </li>
-          </ul>
+        <div v-sticky-component>
+          <div class="px-6 py-4 rounded-lg indicator bg-eggshell text-n-50">
+            <ul class="text-sm font-bold leading-relaxed">
+              <li v-for="(rData, r, ri) in resultsData" :key="ri">
+                <a v-smooth-scroll :href="`#${r}`" :class="linkClasses">
+                  <svg-vue icon="moon" class="mr-2 text-base"></svg-vue>
+                  {{ r }}
+                </a>
+              </li>
+              <li v-if="hasIndicators">
+                <a v-smooth-scroll href="#indicator" :class="linkClasses">
+                  <svg-vue icon="moon" class="mr-2 text-base"></svg-vue>
+                  indicator
+                </a>
+              </li>
+              <li v-if="!hasIndicators">
+                <a
+                  :href="`/activities/${result.activity_id}/result/${result.id}/indicator/create`"
+                  :class="linkClasses"
+                  class="border border-dashed border-n-40"
+                >
+                  <svg-vue icon="add" class="mr-2 text-n-40"></svg-vue>
+                  add indicator
+                </a>
+              </li>
+            </ul>
+          </div>
         </div>
       </aside>
       <div class="activities__content">

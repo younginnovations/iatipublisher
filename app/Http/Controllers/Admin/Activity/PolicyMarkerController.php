@@ -44,7 +44,7 @@ class PolicyMarkerController extends Controller
             $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
             $activity = $this->policyMarkerService->getActivityData($id);
             $form = $this->policyMarkerService->formGenerator($id);
-            $data = ['core' => $element['policy_marker']['criteria'] ?? '', 'status' => $activity->policy_marker_element_completed, 'title' => $element['policy_marker']['label'], 'name' => 'policy_marker'];
+            $data = ['core' => $element['policy_marker']['criteria'] ?? '', 'title' => $element['policy_marker']['label'], 'name' => 'policy_marker'];
 
             return view('admin.activity.policyMarker.edit', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {

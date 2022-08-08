@@ -44,7 +44,7 @@ class DefaultFinanceTypeController extends Controller
             $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
             $activity = $this->defaultFinanceTypeService->getActivityData($id);
             $form = $this->defaultFinanceTypeService->formGenerator($id);
-            $data = ['core' => $element['default_finance_type']['criteria'] ?? '', 'status' => $activity->default_finance_type_element_completed, 'title' => $element['default_finance_type']['label'], 'name' => 'default_finance_type'];
+            $data = ['core' => $element['default_finance_type']['criteria'] ?? '', 'title' => $element['default_finance_type']['label'], 'name' => 'default_finance_type'];
 
             return view('admin.activity.defaultFinanceType.edit', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {

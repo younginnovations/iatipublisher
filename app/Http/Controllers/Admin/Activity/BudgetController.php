@@ -44,7 +44,7 @@ class BudgetController extends Controller
             $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
             $activity = $this->budgetService->getActivityData($id);
             $form = $this->budgetService->formGenerator($id);
-            $data = ['core' => $element['budget']['criteria'] ?? false, 'status' => $activity->budget_element_completed ?? false, 'title' => $element['budget']['label'], 'name' => 'budget'];
+            $data = ['core' => $element['budget']['criteria'] ?? false, 'title' => $element['budget']['label'], 'name' => 'budget'];
 
             return view('admin.activity.budget.edit', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {

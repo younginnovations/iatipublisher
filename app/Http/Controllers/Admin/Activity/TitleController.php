@@ -48,7 +48,7 @@ class TitleController extends Controller
             $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true, 512, JSON_THROW_ON_ERROR);
             $activity = $this->titleService->getActivityData($id);
             $form = $this->titleService->formGenerator($id);
-            $data = ['core' => $element['title']['criteria'] ?? '', 'status' => $activity->title_element_completed, 'title' => $element['title']['label'], 'name' => 'title'];
+            $data = ['core' => $element['title']['criteria'] ?? '', 'title' => $element['title']['label'], 'name' => 'title'];
 
             return view('admin.activity.title.edit', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {

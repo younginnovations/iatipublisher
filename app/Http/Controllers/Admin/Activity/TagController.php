@@ -44,7 +44,7 @@ class TagController extends Controller
             $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
             $activity = $this->tagService->getActivityData($id);
             $form = $this->tagService->formGenerator($id);
-            $data = ['core' => $element['tag']['criteria'] ?? '', 'status' => $activity->tag_element_completed, 'title' => $element['tag']['label'], 'name' => 'tag'];
+            $data = ['core' => $element['tag']['criteria'] ?? '', 'title' => $element['tag']['label'], 'name' => 'tag'];
 
             return view('admin.activity.tag.edit', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {

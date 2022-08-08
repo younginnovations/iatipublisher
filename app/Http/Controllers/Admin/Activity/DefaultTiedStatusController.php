@@ -44,7 +44,7 @@ class DefaultTiedStatusController extends Controller
             $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
             $activity = $this->defaultTiedStatusService->getActivityData($id);
             $form = $this->defaultTiedStatusService->formGenerator($id);
-            $data = ['core' => $element['default_tied_status']['criteria'] ?? '', 'status' => $activity->default_tied_status_element_completed, 'title' => $element['default_tied_status']['label'], 'name' => 'default_tied_status'];
+            $data = ['core' => $element['default_tied_status']['criteria'] ?? '', 'title' => $element['default_tied_status']['label'], 'name' => 'default_tied_status'];
 
             return view('admin.activity.defaultTiedStatus.edit', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {

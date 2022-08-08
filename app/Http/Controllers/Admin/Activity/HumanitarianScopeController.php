@@ -44,7 +44,7 @@ class HumanitarianScopeController extends Controller
             $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
             $activity = $this->humanitarianScopeService->getActivityData($id);
             $form = $this->humanitarianScopeService->formGenerator($id);
-            $data = ['core' => $element['humanitarian_scope']['criteria'] ?? '', 'status' => $activity->humanitarian_scope_element_completed, 'title' => $element['humanitarian_scope']['label'], 'name' => 'humanitarian_scope'];
+            $data = ['core' => $element['humanitarian_scope']['criteria'] ?? '', 'title' => $element['humanitarian_scope']['label'], 'name' => 'humanitarian_scope'];
 
             return view('admin.activity.humanitarianScope.edit', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {

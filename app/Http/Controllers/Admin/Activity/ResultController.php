@@ -77,7 +77,7 @@ class ResultController extends Controller
             $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
             $activity = $this->activityService->getActivity($id);
             $form = $this->resultService->createFormGenerator($id);
-            $data = ['core' => $element['result']['criteria'] ?? false, 'status' => false, 'title' => $element['result']['label'], 'name' => 'result'];
+            $data = ['core' => $element['result']['criteria'] ?? false, 'title' => $element['result']['label'], 'name' => 'result'];
 
             return view('admin.activity.result.edit', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {
@@ -161,7 +161,7 @@ class ResultController extends Controller
             $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
             $activity = $this->activityService->getActivity($activityId);
             $form = $this->resultService->editFormGenerator($resultId, $activityId);
-            $data = ['core' => $element['result']['criteria'] ?? false, 'status' => false, 'title' => $element['result']['label'], 'name' => 'result'];
+            $data = ['core' => $element['result']['criteria'] ?? false, 'title' => $element['result']['label'], 'name' => 'result'];
 
             return view('admin.activity.result.edit', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {

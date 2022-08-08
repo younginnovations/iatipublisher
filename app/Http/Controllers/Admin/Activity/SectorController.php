@@ -44,7 +44,7 @@ class SectorController extends Controller
             $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
             $activity = $this->sectorService->getActivityData($id);
             $form = $this->sectorService->formGenerator($id);
-            $data = ['core'=> $element['sector']['criteria'] ?? '', 'status'=> $activity->sector_element_completed, 'title'=> $element['sector']['label'], 'name'=>'sector'];
+            $data = ['core' => $element['sector']['criteria'] ?? '', 'title' => $element['sector']['label'], 'name' => 'sector'];
 
             return view('admin.activity.sector.edit', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {

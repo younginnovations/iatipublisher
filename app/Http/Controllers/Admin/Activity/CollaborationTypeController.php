@@ -45,7 +45,7 @@ class CollaborationTypeController extends Controller
             $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
             $activity = $this->collaborationTypeService->getActivityData($id);
             $form = $this->collaborationTypeService->formGenerator($id);
-            $data = ['core' => $element['collaboration_type']['criteria'] ?? '', 'status' => $activity->collaboration_type_element_completed, 'title' => $element['collaboration_type']['label'], 'name' => 'collaboration_type'];
+            $data = ['core' => $element['collaboration_type']['criteria'] ?? '', 'title' => $element['collaboration_type']['label'], 'name' => 'collaboration_type'];
 
             return view('admin.activity.collaborationType.edit', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {

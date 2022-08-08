@@ -103,7 +103,7 @@ class IndicatorController extends Controller
             $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
             $activity = $this->activityService->getActivity($activityId);
             $form = $this->indicatorService->createFormGenerator($activityId, $resultId);
-            $data = ['core' => $element['indicator']['criteria'] ?? false, 'status' => false, 'title' => $element['indicator']['label'], 'name' => 'indicator'];
+            $data = ['core' => $element['indicator']['criteria'] ?? false, 'title' => $element['indicator']['label'], 'name' => 'indicator'];
 
             return view('admin.activity.indicator.edit', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {
@@ -191,7 +191,7 @@ class IndicatorController extends Controller
             $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
             $activity = $this->activityService->getActivity($activityId);
             $form = $this->indicatorService->editFormGenerator($activityId, $resultId, $indicatorId);
-            $data = ['core' => $element['indicator']['criteria'] ?? false, 'status' => false, 'title' => $element['indicator']['label'], 'name' => 'indicator'];
+            $data = ['core' => $element['indicator']['criteria'] ?? false, 'title' => $element['indicator']['label'], 'name' => 'indicator'];
 
             return view('admin.activity.indicator.edit', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {
