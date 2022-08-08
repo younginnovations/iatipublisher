@@ -1,21 +1,17 @@
 <template>
-  <div
-    id=""
-    class="px-3 py-3 activities__content--element basis-full text-n-50"
-  >
+  <div id="" class="px-3 py-3 activities__content--element basis-full text-n-50">
     <div :id="title" class="p-4 bg-white rounded-lg">
       <div class="flex mb-4">
         <div class="flex items-center title grow">
           <svg-vue class="mr-1.5 text-xl text-bluecoral" icon="bill"></svg-vue>
           <div class="text-sm font-bold title">
-            {{ title.toString().replace(/_/g, '-') }}
+            {{ title.toString().replace(/_/g, "-") }}
           </div>
-
-           <div
+          <div
             class="status ml-2.5 flex text-xs leading-5"
             :class="{
-              'text-spring-50': completed === true,
-              'text-crimson-50': completed === false,
+              'text-spring-50': completed,
+              'text-crimson-50': !completed,
             }"
           >
             <b class="mr-2 text-base leading-3">.</b>
@@ -38,10 +34,7 @@
             class="mr-2.5"
           />
           <svg-vue class="mr-1.5" icon="core"></svg-vue>
-          <HoverText
-            hover-text="example text"
-            class="text-sm text-n-40"
-          ></HoverText>
+          <HoverText hover-text="example text" class="text-sm text-n-40"></HoverText>
         </div>
       </div>
       <div class="w-full h-px mb-4 divider bg-n-20"></div>
@@ -53,9 +46,7 @@
                 <!-- title -->
                 <div class="flex category">
                   <div class="mr-4">
-                    {{
-                      getActivityTitle(result.result.title[0].narrative, 'en')
-                    }}
+                    {{ getActivityTitle(result.result.title[0].narrative, "en") }}
                   </div>
                   <div class="flex shrink-0">
                     <Btn
@@ -93,8 +84,8 @@
                                 getActivityTitle(
                                   result.result.description[0].narrative,
                                   currentLanguage
-                                ) === 'Untitled'
-                                  ? 'Not Available'
+                                ) === "Untitled"
+                                  ? "Not Available"
                                   : types.languages[currentLanguage]
                               }})
                             </div>
@@ -129,12 +120,8 @@
                     v-if="result.indicators.length > 0"
                     class="overflow-hidden border rounded-t-lg indicator border-n-20"
                   >
-                    <div
-                      class="flex items-center px-6 py-2 border-b head border-n-20"
-                    >
-                      <div class="text-xs font-bold grow text-n-50">
-                        Indicator
-                      </div>
+                    <div class="flex items-center px-6 py-2 border-b head border-n-20">
+                      <div class="text-xs font-bold grow text-n-50">Indicator</div>
                       <div class="inline-flex shrink-0">
                         <Btn
                           text="Add New Indicator"
@@ -151,10 +138,7 @@
                       </div>
                     </div>
                     <div>
-                      <template
-                        v-for="(indicator, i) in result.indicators"
-                        :key="i"
-                      >
+                      <template v-for="(indicator, i) in result.indicators" :key="i">
                         <div
                           class="flex px-6 py-2 indicator-content"
                           :class="{
@@ -165,10 +149,7 @@
                           <div class="elements-detail grow">
                             <div class="flex category">
                               <div class="mr-4">
-                                {{
-                                  indicator.indicator.title[0].narrative[0]
-                                    .narrative
-                                }}
+                                {{ indicator.indicator.title[0].narrative[0].narrative }}
                               </div>
                               <div class="flex justify-between shrink-0 grow">
                                 <span class="flex">
@@ -197,15 +178,13 @@
                                   <td>Baseline:</td>
                                   <td>
                                     <div
-                                      v-for="(baseline, b) in indicator
-                                        .indicator.baseline"
+                                      v-for="(baseline, b) in indicator.indicator
+                                        .baseline"
                                       :key="b"
                                       class=""
                                       :class="{
                                         'mb-1':
-                                          b !==
-                                          indicator.indicator.baseline.length -
-                                            1,
+                                          b !== indicator.indicator.baseline.length - 1,
                                       }"
                                     >
                                       <div class="text-xs description">
@@ -214,18 +193,14 @@
                                           <template v-if="baseline.value">
                                             {{ baseline.value }},
                                           </template>
-                                          <template v-else>
-                                            Not Available,
-                                          </template>
+                                          <template v-else> Not Available, </template>
                                         </span>
                                         <span>
                                           Date:
                                           <template v-if="baseline.date">
                                             {{ baseline.date }}
                                           </template>
-                                          <template v-else>
-                                            Not Available
-                                          </template>
+                                          <template v-else> Not Available </template>
                                         </span>
                                       </div>
                                     </div>
@@ -237,15 +212,11 @@
                                     <div class="inline-flex gap-4">
                                       <div>
                                         <div
-                                          v-for="(
-                                            period, p
-                                          ) in indicator.periods"
+                                          v-for="(period, p) in indicator.periods"
                                           :key="p"
                                           class="flex"
                                           :class="{
-                                            'mb-1':
-                                              p !==
-                                              indicator.periods.length - 1,
+                                            'mb-1': p !== indicator.periods.length - 1,
                                           }"
                                         >
                                           <div class="text-xs">
@@ -254,17 +225,17 @@
                                               :href="`/indicator/${indicator.id}/period/${period.id}`"
                                             >
                                               {{
-                                                moment(
-                                                  period.period.period_start[0]
-                                                    .date
-                                                ).format(format)
+                                                dateFormat(
+                                                  period.period.period_start[0].date,
+                                                  format
+                                                )
                                               }}
                                               -
                                               {{
-                                                moment(
-                                                  period.period.period_end[0]
-                                                    .date
-                                                ).format(format)
+                                                dateFormat(
+                                                  period.period.period_end[0].date,
+                                                  format
+                                                )
                                               }}
                                             </a>
                                           </div>
@@ -279,6 +250,7 @@
                                       </div>
                                       <div class="shrink-0">
                                         <Btn
+                                          class="-mt-1"
                                           text="Show full period list"
                                           icon=""
                                           design="bgText"
@@ -321,18 +293,19 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, toRefs } from 'vue';
-import moment from 'moment';
+import { defineComponent, toRefs } from "vue";
+import moment from "moment";
 
 //components
-import Btn from 'Components/buttons/Link.vue';
-import NotYet from 'Components/sections/HaveNotAddedYet.vue';
+import Btn from "Components/buttons/Link.vue";
+import NotYet from "Components/sections/HaveNotAddedYet.vue";
 
 // composable
-import getActivityTitle from 'Composable/title';
+import getActivityTitle from "Composable/title";
+import dateFormat from "Composable/dateFormat";
 
 export default defineComponent({
-  name: 'ActivityResult',
+  name: "ActivityResult",
   components: {
     Btn,
     NotYet,
@@ -353,7 +326,7 @@ export default defineComponent({
     tooltip: {
       type: String,
       required: false,
-      default: '',
+      default: "",
     },
     types: {
       type: Object,
@@ -365,15 +338,22 @@ export default defineComponent({
     },
   },
   setup(props) {
-    const format = 'MMMM DD, YYYY';
+    const format = "MMMM DD, YYYY";
 
     const { data } = toRefs(props);
 
     let resultData = data.value.content;
 
-    const currentLanguage = 'en';
+    const currentLanguage = "en";
 
-    return { moment, format, resultData, getActivityTitle, currentLanguage };
+    return {
+      moment,
+      format,
+      resultData,
+      getActivityTitle,
+      currentLanguage,
+      dateFormat,
+    };
   },
 });
 </script>

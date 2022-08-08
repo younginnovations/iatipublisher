@@ -137,11 +137,9 @@
             </div>
           </div>
         </div>
-        <Elements
-          :activity-id="activity.id"
-          :data="elementProps"
-          class="sticky top-0"
-        />
+        <div v-sticky-component>
+          <Elements :activity-id="activity.id" :data="elementProps" />
+        </div>
       </aside>
       <div class="activities__content">
         <div class="inline-flex flex-wrap gap-2 mb-3">

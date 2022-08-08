@@ -26,23 +26,23 @@
 
     <div class="activities">
       <aside class="activities__sidebar">
-        <div
-          class="sticky top-0 px-6 py-4 rounded-lg indicator bg-eggshell text-n-50"
-        >
-          <ul class="text-sm font-bold leading-relaxed">
-            <li>
-              <a v-smooth-scroll href="#target" :class="linkClasses">
-                <svg-vue icon="moon" class="mr-2 text-base"></svg-vue>
-                target
-              </a>
-            </li>
-            <li>
-              <a v-smooth-scroll href="#actual" :class="linkClasses">
-                <svg-vue icon="moon" class="mr-2 text-base"></svg-vue>
-                actual
-              </a>
-            </li>
-          </ul>
+        <div v-sticky-component>
+          <div class="px-6 py-4 rounded-lg indicator bg-eggshell text-n-50">
+            <ul class="text-sm font-bold leading-relaxed">
+              <li>
+                <a v-smooth-scroll href="#target" :class="linkClasses">
+                  <svg-vue icon="moon" class="mr-2 text-base"></svg-vue>
+                  target
+                </a>
+              </li>
+              <li>
+                <a v-smooth-scroll href="#actual" :class="linkClasses">
+                  <svg-vue icon="moon" class="mr-2 text-base"></svg-vue>
+                  actual
+                </a>
+              </li>
+            </ul>
+          </div>
         </div>
       </aside>
       <div class="activities__content">

@@ -108,7 +108,7 @@ class ResultController extends Controller
             $element = getElementSchema('result');
             $activity = $this->activityService->getActivity($id);
             $form = $this->resultService->createFormGenerator($id);
-            $data = ['core' => $element['criteria'] ?? false, 'status' => false, 'title' => $element['label'], 'name' => 'result'];
+            $data = ['core' => $element['result']['criteria'] ?? false, 'title' => $element['result']['label'], 'name' => 'result'];
 
             return view('admin.activity.result.edit', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {
@@ -192,8 +192,8 @@ class ResultController extends Controller
         try {
             $element = getElementSchema('result');
             $activity = $this->activityService->getActivity($activityId);
-            $form = $this->resultService->editFormGenerator($activityId, $resultId);
-            $data = ['core' => $element['criteria'] ?? false, 'status' => false, 'title' => $element['label'], 'name' => 'result'];
+            $form = $this->resultService->editFormGenerator($resultId, $activityId);
+            $data = ['core' => $element['result']['criteria'] ?? false, 'title' => $element['result']['label'], 'name' => 'result'];
 
             return view('admin.activity.result.edit', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {

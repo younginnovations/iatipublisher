@@ -18,9 +18,7 @@
     </PageTitle>
     <div class="activities">
       <aside class="activities__sidebar">
-        <div
-          class="sticky top-0 px-6 py-4 rounded-lg indicator bg-eggshell text-n-50"
-        >
+        <div class="sticky top-0 px-6 py-4 rounded-lg indicator bg-eggshell text-n-50">
           <ul class="text-sm font-bold leading-relaxed">
             <li v-for="(rData, r, ri) in resultsData" :key="ri">
               <a v-smooth-scroll :href="`#${String(r)}`" :class="linkClasses">
@@ -80,12 +78,8 @@
           :href="`/result/${result.id}/indicator/create`"
           class="flex w-full px-4 py-3 text-xs leading-normal bg-white border border-dashed rounded add_indicator border-n-40"
         >
-          <div class="italic text-left grow">
-            You haven't added any indicator yet.
-          </div>
-          <div
-            class="flex items-center font-bold uppercase shrink-0 text-bluecoral"
-          >
+          <div class="italic text-left grow">You haven't added any indicator yet.</div>
+          <div class="flex items-center font-bold uppercase shrink-0 text-bluecoral">
             <svg-vue icon="add" class="mr-1 text-base shrink-0"></svg-vue>
             <span class="grow text-[10px]">Add new indicator</span>
           </div>
@@ -96,21 +90,21 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, toRefs, onMounted, reactive } from 'vue';
+import { defineComponent, toRefs, onMounted, reactive } from "vue";
 
 //component
-import ResultElement from './ResultElement.vue';
-import Indicator from 'Activity/results/elements/Indicator.vue';
-import Btn from 'Components/buttons/Link.vue';
-import PageTitle from 'Components/sections/PageTitle.vue';
-import Toast from 'Components/Toast.vue';
+import ResultElement from "./ResultElement.vue";
+import Indicator from "Activity/results/elements/Indicator.vue";
+import Btn from "Components/buttons/Link.vue";
+import PageTitle from "Components/sections/PageTitle.vue";
+import Toast from "Components/Toast.vue";
 
 //composable
-import dateFormat from 'Composable/dateFormat';
-import getActivityTitle from 'Composable/title';
+import dateFormat from "Composable/dateFormat";
+import getActivityTitle from "Composable/title";
 
 export default defineComponent({
-  name: 'ResultDetail',
+  name: "ResultDetail",
   components: {
     ResultElement,
     Indicator,
@@ -138,7 +132,7 @@ export default defineComponent({
   },
   setup(props) {
     const linkClasses =
-      'flex items-center w-full bg-white rounded p-2 text-sm text-n-50 font-bold leading-normal mb-2 shadow-default';
+      "flex items-center w-full bg-white rounded p-2 text-sm text-n-50 font-bold leading-normal mb-2 shadow-default";
 
     let { result, activity } = toRefs(props);
     const hasIndicators = result.value.indicators.length > 0 ? true : false;
@@ -147,12 +141,12 @@ export default defineComponent({
     const activityId = activity.value.id,
       activityTitle = activity.value.title,
       activityLink = `/activity/${activityId}`,
-      resultTitle = getActivityTitle(resultsData.title[0].narrative, 'en'),
+      resultTitle = getActivityTitle(resultsData.title[0].narrative, "en"),
       resultLink = `${activityLink}/result/${result.value.id}`;
 
     const toastData = reactive({
       visibility: false,
-      message: '',
+      message: "",
       type: true,
     });
 
@@ -161,21 +155,21 @@ export default defineComponent({
      */
     const breadcrumbData = [
       {
-        title: 'Your Activities',
-        link: '/activities',
+        title: "Your Activities",
+        link: "/activities",
       },
       {
-        title: getActivityTitle(activityTitle, 'en'),
+        title: getActivityTitle(activityTitle, "en"),
         link: activityLink,
       },
       {
         title: resultTitle,
-        link: '',
+        link: "",
       },
     ];
 
     onMounted(() => {
-      if (props.toast.message !== '') {
+      if (props.toast.message !== "") {
         toastData.type = props.toast.type;
         toastData.visibility = true;
         toastData.message = props.toast.message;

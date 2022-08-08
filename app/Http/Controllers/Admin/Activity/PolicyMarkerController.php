@@ -44,12 +44,7 @@ class PolicyMarkerController extends Controller
             $element = getElementSchema('policy_marker');
             $activity = $this->policyMarkerService->getActivityData($id);
             $form = $this->policyMarkerService->formGenerator($id);
-            $data = [
-                'core' => $element['criteria'] ?? '',
-                'status' => $activity->policy_marker_element_completed,
-                'title' => $element['label'],
-                'name' => 'policy_marker',
-            ];
+            $data = ['core' => $element['policy_marker']['criteria'] ?? '', 'title' => $element['policy_marker']['label'], 'name' => 'policy_marker'];
 
             return view('admin.activity.policyMarker.edit', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {
