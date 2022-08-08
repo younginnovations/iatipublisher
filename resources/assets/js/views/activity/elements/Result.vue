@@ -253,17 +253,19 @@
                                               :href="`/activities/${activityId}/${title}/${result.id}/indicator/${indicator.id}/period/${period.id}`"
                                             >
                                               {{
-                                                moment(
+                                                dateFormat(
                                                   period.period.period_start[0]
-                                                    .date
-                                                ).format(format)
+                                                    .date,
+                                                  format
+                                                )
                                               }}
                                               -
                                               {{
-                                                moment(
+                                                dateFormat(
                                                   period.period.period_end[0]
-                                                    .date
-                                                ).format(format)
+                                                    .date,
+                                                  format
+                                                )
                                               }}
                                             </a>
                                           </div>
@@ -271,13 +273,14 @@
                                             <Btn
                                               text="Edit"
                                               icon="edit"
-                                              :link="`/activities/${activityId}/${title}/${result.id}/indicator/${indicator.id}/period/edit`"
+                                              :link="`/activities/${activityId}/${title}/${result.id}/indicator/${indicator.id}/period/${period.id}/edit`"
                                             />
                                           </div>
                                         </div>
                                       </div>
                                       <div class="shrink-0">
                                         <Btn
+                                          class="-mt-1"
                                           text="Show full period list"
                                           icon=""
                                           design="bgText"
@@ -329,6 +332,7 @@ import NotYet from 'Components/sections/HaveNotAddedYet.vue';
 
 // composable
 import getActivityTitle from 'Composable/title';
+import dateFormat from 'Composable/dateFormat';
 
 export default defineComponent({
   name: 'ActivityResult',
@@ -372,7 +376,14 @@ export default defineComponent({
 
     const currentLanguage = 'en';
 
-    return { moment, format, resultData, getActivityTitle, currentLanguage };
+    return {
+      moment,
+      format,
+      resultData,
+      getActivityTitle,
+      currentLanguage,
+      dateFormat,
+    };
   },
 });
 </script>

@@ -10,7 +10,9 @@
     <div class="p-4 bg-white rounded-lg">
       <div class="flex mb-4">
         <div class="flex title grow">
-          <div class="text-sm font-bold title">{{ elementName }}</div>
+          <div class="text-sm font-bold title">
+            {{ elementName.toString().replace(/_/g, '-') }}
+          </div>
         </div>
         <div class="flex items-center icons">
           <!-- <svg-vue class="mr-1.5" icon="core"></svg-vue> -->
