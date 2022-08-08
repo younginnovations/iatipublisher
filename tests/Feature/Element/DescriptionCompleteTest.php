@@ -35,7 +35,7 @@ class DescriptionCompleteTest extends ElementCompleteTest
      */
     public function test_description_mandatory_sub_elements(): void
     {
-        $this->test_mandatory_sub_elements($this->element, ['narrative' => ['narrative', 'language']]);
+        $this->test_mandatory_sub_elements($this->element, ['narrative' => ['narrative']]);
     }
 
     /**
@@ -73,19 +73,6 @@ class DescriptionCompleteTest extends ElementCompleteTest
     public function test_description_empty_json_array(): void
     {
         $descriptionData = json_decode('[{}]', true, 512, JSON_THROW_ON_ERROR);
-
-        $this->test_level_one_multi_dimensional_element_incomplete($this->element, $descriptionData);
-    }
-
-    /**
-     * Empty narrative and language test.
-     *
-     * @return void
-     * @throws \JsonException
-     */
-    public function test_description_empty_narrative_and_language(): void
-    {
-        $descriptionData = json_decode('[{"type":"123","narrative":[{"narrative":"","language":""}]}]', true, 512, JSON_THROW_ON_ERROR);
 
         $this->test_level_one_multi_dimensional_element_incomplete($this->element, $descriptionData);
     }
@@ -148,9 +135,9 @@ class DescriptionCompleteTest extends ElementCompleteTest
      * @return void
      * @throws \JsonException
      */
-    public function test_description_sub_element_narrative_empty_narrative_and_language(): void
+    public function test_description_sub_element_narrative_empty_narrative(): void
     {
-        $descriptionData = json_decode('[{"type":"1","narrative":[{"narrative":"","language":""}]}]', true, 512, JSON_THROW_ON_ERROR);
+        $descriptionData = json_decode('[{"type":"1","narrative":[{"narrative":"","language":"en"}]}]', true, 512, JSON_THROW_ON_ERROR);
 
         $this->test_level_one_multi_dimensional_element_incomplete($this->element, $descriptionData);
     }
@@ -164,45 +151,6 @@ class DescriptionCompleteTest extends ElementCompleteTest
     public function test_description_sub_element_narrative_no_narrative_key(): void
     {
         $descriptionData = json_decode('[{"type":"1", "narrative":[{"language":"en"}]}]', true, 512, JSON_THROW_ON_ERROR);
-
-        $this->test_level_one_multi_dimensional_element_incomplete($this->element, $descriptionData);
-    }
-
-    /**
-     * Sub element narrative no language key test.
-     *
-     * @return void
-     * @throws \JsonException
-     */
-    public function test_description_sub_element_narrative_no_language_key(): void
-    {
-        $descriptionData = json_decode('[{"type":"1", "narrative":[{"narrative":"test-narrative"}]}]', true, 512, JSON_THROW_ON_ERROR);
-
-        $this->test_level_one_multi_dimensional_element_incomplete($this->element, $descriptionData);
-    }
-
-    /**
-     * Sub element narrative empty narrative test.
-     *
-     * @return void
-     * @throws \JsonException
-     */
-    public function test_description_sub_element_narrative_empty_narrative(): void
-    {
-        $descriptionData = json_decode('[{"type":"1","narrative":[{"narrative":"","language":"en"}]}]', true, 512, JSON_THROW_ON_ERROR);
-
-        $this->test_level_one_multi_dimensional_element_incomplete($this->element, $descriptionData);
-    }
-
-    /**
-     * Sub element narrative empty language test.
-     *
-     * @return void
-     * @throws \JsonException
-     */
-    public function test_description_sub_element_narrative_empty_language(): void
-    {
-        $descriptionData = json_decode('[{"type":"1","narrative":[{"narrative":"asdasd","language":""}]}]', true, 512, JSON_THROW_ON_ERROR);
 
         $this->test_level_one_multi_dimensional_element_incomplete($this->element, $descriptionData);
     }

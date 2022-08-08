@@ -35,7 +35,7 @@ class TitleCompleteTest extends ElementCompleteTest
      */
     public function test_title_mandatory_sub_elements(): void
     {
-        $this->test_mandatory_sub_elements($this->element, ['narrative' => ['narrative', 'language']]);
+        $this->test_mandatory_sub_elements($this->element, ['narrative' => ['narrative']]);
     }
 
     /**
@@ -76,14 +76,14 @@ class TitleCompleteTest extends ElementCompleteTest
     }
 
     /**
-     * Empty narrative and language test.
+     * Empty narrative test.
      *
      * @return void
      * @throws \JsonException
      */
-    public function test_title_sub_element_empty_narrative_and_language(): void
+    public function test_title_sub_element_empty_narrative(): void
     {
-        $titleData = json_decode('[{"narrative":"","language":""}]', true, 512, JSON_THROW_ON_ERROR);
+        $titleData = json_decode('[{"narrative":"","language":"en"}]', true, 512, JSON_THROW_ON_ERROR);
 
         $this->test_sub_element_empty($this->element, ['narrative' => $titleData]);
     }
@@ -97,45 +97,6 @@ class TitleCompleteTest extends ElementCompleteTest
     public function test_title_sub_element_no_narrative_key(): void
     {
         $titleData = json_decode('[{"language":"en"}]', true, 512, JSON_THROW_ON_ERROR);
-
-        $this->test_sub_element_empty($this->element, ['narrative' => $titleData]);
-    }
-
-    /**
-     * No language key test.
-     *
-     * @return void
-     * @throws \JsonException
-     */
-    public function test_title_sub_element_no_language_key(): void
-    {
-        $titleData = json_decode('[{"narrative":"asdad"}]', true, 512, JSON_THROW_ON_ERROR);
-
-        $this->test_sub_element_empty($this->element, ['narrative' => $titleData]);
-    }
-
-    /**
-     * Empty sub element narrative test.
-     *
-     * @return void
-     * @throws \JsonException
-     */
-    public function test_title_sub_element_empty_narrative(): void
-    {
-        $titleData = json_decode('[{"narrative":"", "language":""}]', true, 512, JSON_THROW_ON_ERROR);
-
-        $this->test_sub_element_empty($this->element, ['narrative' => $titleData]);
-    }
-
-    /**
-     * Empty attribute language test.
-     *
-     * @return void
-     * @throws \JsonException
-     */
-    public function test_title_sub_element_empty_language(): void
-    {
-        $titleData = json_decode('[{"narrative":"asdad", "language":""}]', true, 512, JSON_THROW_ON_ERROR);
 
         $this->test_sub_element_empty($this->element, ['narrative' => $titleData]);
     }

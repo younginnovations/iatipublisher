@@ -76,6 +76,7 @@ class ActivityService
             'iati_identifier' => $activity_identifier,
             'title'           => $activity_title,
             'org_id'          => Auth::user()->organization_id,
+            'element_status'  => getDefaultElementStatus(),
         ]);
     }
 

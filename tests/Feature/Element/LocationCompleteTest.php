@@ -59,7 +59,7 @@ class LocationCompleteTest extends ElementCompleteTest
      */
     public function test_location_empty_array(): void
     {
-        $actualData = json_decode('[]', true);
+        $actualData = json_decode('[]', true, 512, JSON_THROW_ON_ERROR);
 
         $this->test_level_two_multi_dimensional_element_incomplete($this->element, $actualData);
     }
@@ -72,7 +72,7 @@ class LocationCompleteTest extends ElementCompleteTest
      */
     public function test_location_empty_json_array(): void
     {
-        $actualData = json_decode('[{}]', true);
+        $actualData = json_decode('[{}]', true, 512, JSON_THROW_ON_ERROR);
 
         $this->test_level_two_multi_dimensional_element_incomplete($this->element, $actualData);
     }
@@ -366,42 +366,6 @@ class LocationCompleteTest extends ElementCompleteTest
     }
 
     /**
-     * Sub element name sub element narrative empty language test.
-     *
-     * @return void
-     * @throws \JsonException
-     */
-    public function test_location_sub_element_name_sub_element_narrative_empty_attribute_language(): void
-    {
-        $actualData = json_decode(
-            '[{"ref":"ref 1","location_reach":[{"code":"1"}],"location_id":[{"vocabulary":"A2","code":"vocab code"}],"name":[{"narrative":[{"narrative":"name 1","language":""}]}],"description":[{"narrative":[{"narrative":"description 1","language":"aa"}]}],"activity_description":[{"narrative":[{"narrative":"activity description 1","language":"ab"}]}],"administrative":[{"vocabulary":"A2","code":"DZ","level":"1236"}],"point":[{"srs_name":"http:\/\/www.opengis.net\/def\/crs\/EPSG\/0\/4326","pos":[{"latitude":"56","longitude":"27"}]}],"exactness":[{"code":"1"}],"location_class":[{"code":"2"}],"feature_designation":[{"code":"CMPQ"}]}]',
-            true,
-            512,
-            JSON_THROW_ON_ERROR
-        );
-
-        $this->test_level_two_multi_dimensional_element_incomplete($this->element, $actualData);
-    }
-
-    /**
-     * Sub element name sub element narrative no language key test.
-     *
-     * @return void
-     * @throws \JsonException
-     */
-    public function test_location_sub_element_name_sub_element_narrative_no_attribute_language_key(): void
-    {
-        $actualData = json_decode(
-            '[{"ref":"ref 1","location_reach":[{"code":"1"}],"location_id":[{"vocabulary":"A2","code":"vocab code"}],"name":[{"narrative":[{"narrative":"name 1"}]}],"description":[{"narrative":[{"narrative":"description 1","language":"aa"}]}],"activity_description":[{"narrative":[{"narrative":"activity description 1","language":"ab"}]}],"administrative":[{"vocabulary":"A2","code":"DZ","level":"1236"}],"point":[{"srs_name":"http:\/\/www.opengis.net\/def\/crs\/EPSG\/0\/4326","pos":[{"latitude":"56","longitude":"27"}]}],"exactness":[{"code":"1"}],"location_class":[{"code":"2"}],"feature_designation":[{"code":"CMPQ"}]}]',
-            true,
-            512,
-            JSON_THROW_ON_ERROR
-        );
-
-        $this->test_level_two_multi_dimensional_element_incomplete($this->element, $actualData);
-    }
-
-    /**
      * Sub element description no key test.
      *
      * @return void
@@ -564,42 +528,6 @@ class LocationCompleteTest extends ElementCompleteTest
     }
 
     /**
-     * Sub element description sub element narrative empty language test.
-     *
-     * @return void
-     * @throws \JsonException
-     */
-    public function test_location_sub_element_description_sub_element_narrative_empty_attribute_language(): void
-    {
-        $actualData = json_decode(
-            '[{"ref":"ref 1","location_reach":[{"code":"1"}],"location_id":[{"vocabulary":"A2","code":"vocab code"}],"name":[{"narrative":[{"narrative":"name 1","language":"aa"}]}],"description":[{"narrative":[{"narrative":"description 1","language":""}]}],"activity_description":[{"narrative":[{"narrative":"activity description 1","language":"ab"}]}],"administrative":[{"vocabulary":"A2","code":"DZ","level":"1236"}],"point":[{"srs_name":"http://www.opengis.net/def/crs/EPSG/0/4326","pos":[{"latitude":"56","longitude":"27"}]}],"exactness":[{"code":"1"}],"location_class":[{"code":"2"}],"feature_designation":[{"code":"CMPQ"}]}]',
-            true,
-            512,
-            JSON_THROW_ON_ERROR
-        );
-
-        $this->test_level_two_multi_dimensional_element_incomplete($this->element, $actualData);
-    }
-
-    /**
-     * Sub element description sub element narrative no language key test.
-     *
-     * @return void
-     * @throws \JsonException
-     */
-    public function test_location_sub_element_description_sub_element_narrative_no_attribute_language_key(): void
-    {
-        $actualData = json_decode(
-            '[{"ref":"ref 1","location_reach":[{"code":"1"}],"location_id":[{"vocabulary":"A2","code":"vocab code"}],"name":[{"narrative":[{"narrative":"name 1","language":"aa"}]}],"description":[{"narrative":[{"narrative":"description 1"}]}],"activity_description":[{"narrative":[{"narrative":"activity description 1","language":"ab"}]}],"administrative":[{"vocabulary":"A2","code":"DZ","level":"1236"}],"point":[{"srs_name":"http://www.opengis.net/def/crs/EPSG/0/4326","pos":[{"latitude":"56","longitude":"27"}]}],"exactness":[{"code":"1"}],"location_class":[{"code":"2"}],"feature_designation":[{"code":"CMPQ"}]}]',
-            true,
-            512,
-            JSON_THROW_ON_ERROR
-        );
-
-        $this->test_level_two_multi_dimensional_element_incomplete($this->element, $actualData);
-    }
-
-    /**
      * Sub element description no key test.
      *
      * @return void
@@ -753,42 +681,6 @@ class LocationCompleteTest extends ElementCompleteTest
     {
         $actualData = json_decode(
             '[{"ref":"ref 1","location_reach":[{"code":"1"}],"location_id":[{"vocabulary":"A2","code":"vocab code"}],"name":[{"narrative":[{"narrative":"name 1","language":"aa"}]}],"description":[{"narrative":[{"narrative":"description 1","language":"aa"}]}],"activity_description":[{"narrative":[{"language":"ab"}]}],"administrative":[{"vocabulary":"A2","code":"DZ","level":"1236"}],"point":[{"srs_name":"http://www.opengis.net/def/crs/EPSG/0/4326","pos":[{"latitude":"56","longitude":"27"}]}],"exactness":[{"code":"1"}],"location_class":[{"code":"2"}],"feature_designation":[{"code":"CMPQ"}]}]',
-            true,
-            512,
-            JSON_THROW_ON_ERROR
-        );
-
-        $this->test_level_two_multi_dimensional_element_incomplete($this->element, $actualData);
-    }
-
-    /**
-     * Sub element activity_description sub element narrative empty language test.
-     *
-     * @return void
-     * @throws \JsonException
-     */
-    public function test_location_sub_element_activity_description_sub_element_narrative_empty_attribute_language(): void
-    {
-        $actualData = json_decode(
-            '[{"ref":"ref 1","location_reach":[{"code":"1"}],"location_id":[{"vocabulary":"A2","code":"vocab code"}],"name":[{"narrative":[{"narrative":"name 1","language":"aa"}]}],"description":[{"narrative":[{"narrative":"description 1","language":"aa"}]}],"activity_description":[{"narrative":[{"narrative":"activity description 1","language":""}]}],"administrative":[{"vocabulary":"A2","code":"DZ","level":"1236"}],"point":[{"srs_name":"http://www.opengis.net/def/crs/EPSG/0/4326","pos":[{"latitude":"56","longitude":"27"}]}],"exactness":[{"code":"1"}],"location_class":[{"code":"2"}],"feature_designation":[{"code":"CMPQ"}]}]',
-            true,
-            512,
-            JSON_THROW_ON_ERROR
-        );
-
-        $this->test_level_two_multi_dimensional_element_incomplete($this->element, $actualData);
-    }
-
-    /**
-     * Sub element activity_description sub element narrative no language key test.
-     *
-     * @return void
-     * @throws \JsonException
-     */
-    public function test_location_sub_element_activity_description_sub_element_narrative_no_attribute_language_key(): void
-    {
-        $actualData = json_decode(
-            '[{"ref":"ref 1","location_reach":[{"code":"1"}],"location_id":[{"vocabulary":"A2","code":"vocab code"}],"name":[{"narrative":[{"narrative":"name 1","language":"aa"}]}],"description":[{"narrative":[{"narrative":"description 1","language":"aa"}]}],"activity_description":[{"narrative":[{"narrative":"activity description 1"}]}],"administrative":[{"vocabulary":"A2","code":"DZ","level":"1236"}],"point":[{"srs_name":"http://www.opengis.net/def/crs/EPSG/0/4326","pos":[{"latitude":"56","longitude":"27"}]}],"exactness":[{"code":"1"}],"location_class":[{"code":"2"}],"feature_designation":[{"code":"CMPQ"}]}]',
             true,
             512,
             JSON_THROW_ON_ERROR
