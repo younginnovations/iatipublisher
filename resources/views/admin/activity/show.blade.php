@@ -12,6 +12,9 @@
         :results="{{ json_encode($results) }}"
         :has_indicator="{{ $hasIndicatorPeriod['indicator'] }}"
         :has_period="{{ $hasIndicatorPeriod['period'] }}"
-        :transactions="{{ json_encode($transactions) }}">
+        :transactions="{{ json_encode($transactions) }}"
+        :core_completed="{{ $coreCompleted }}"
+        :iati_validator_response="{{ json_encode($iatiValidatorResponse) }}"
+    >
     </activities-detail>
 @endsection

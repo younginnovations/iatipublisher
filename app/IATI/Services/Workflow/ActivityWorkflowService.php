@@ -10,6 +10,9 @@ use App\IATI\Services\Activity\ActivitySnapshotService;
 use App\IATI\Services\Organization\OrganizationService;
 use App\IATI\Services\Publisher\PublisherService;
 use App\IATI\Services\Xml\XmlGeneratorService;
+use GuzzleHttp\Client;
+use GuzzleHttp\Exception\BadResponseException;
+use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Support\Arr;
 
 /**
@@ -145,5 +148,50 @@ class ActivityWorkflowService
         $this->xmlGeneratorService->deleteUnpublishedFile($unpublishedFile);
         $newPublishedFiles = Arr::except($containedActivities, $activity->id);
         $this->activityPublishedService->updateActivityPublished($publishedFile, $newPublishedFiles);
+    }
+
+    /**
+     * Validates the activity on IATI validator and returns errors.
+     *
+     * @param $activity
+     *
+     * @return string
+     */
+    public function validateActivityOnIATIValidator($activity): string
+    {
+        $organization = $activity->organization;
+        $settings = $organization->settings;
+
+        $xmlData = $this->xmlGeneratorService->getActivityXmlData(
+            $activity,
+            $activity->transactions,
+            $activity->results,
+            $settings,
+            $organization
+        );
+
+        return $this->getResponse($xmlData);
+    }
+
+    /**
+     * Returns response of validation activity on IATI validator.
+     *
+     * @param $xmlData
+     *
+     * @return string
+     *
+     * @throws BadResponseException
+     * @throws GuzzleException
+     */
+    public function getResponse($xmlData): string
+    {
+        $client = new Client();
+        $URI = env('IATI_VALIDATOR_ENDPOINT');
+        $params['headers'] = ['Content-Type' => 'application/json', 'Ocp-Apim-Subscription-Key' => env('IATI_VALIDATOR_KEY')];
+        $params['query'] = ['group' => 'false'];
+        $params['body'] = $xmlData;
+        $response = $client->post($URI, $params);
+
+        return $response->getBody()->getContents();
     }
 }

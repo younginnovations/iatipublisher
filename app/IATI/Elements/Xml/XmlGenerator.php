@@ -256,7 +256,6 @@ class XmlGenerator
         $filename = sprintf('%s-%s.xml', $publisherId, 'activities');
         $publishedActivity = sprintf('%s-%s.xml', $publisherId, $activity->id);
         $xml = $this->getXml($activity, $transaction, $result, $settings, $organization);
-
         $result = Storage::disk('minio')->put(
             sprintf('%s/%s/%s', 'xml', 'activityXmlFiles', $publishedActivity),
             $xml->saveXML()
@@ -374,7 +373,7 @@ class XmlGenerator
         $this->setServices();
         $xmlData = [];
         $xmlData['@attributes'] = [
-            'version' => $settings->version,
+            'version' => '2.03',
             'generated-datetime' => gmdate('c'),
         ];
 
@@ -443,37 +442,37 @@ class XmlGenerator
     public function getXmlData($activity, $transaction, $result, $organization)
     {
         $xmlActivity = [];
-        $xmlActivity['title'] = $this->titleService->getXmlData($activity);
-        $xmlActivity['reporting-org'] = $this->organizationService->getReportingOrgXmlData($organization);
         $xmlActivity['iati-identifier'] = Arr::get($activity->iati_identifier, 'iati_identifier_text', 'Not Available');
-        $xmlActivity['other-identifier'] = $this->otherIdentifierService->getXmlData($activity);
+        $xmlActivity['reporting-org'] = $this->organizationService->getReportingOrgXmlData($organization);
+        $xmlActivity['title'] = $this->titleService->getXmlData($activity);
         $xmlActivity['description'] = $this->descriptionService->getXmlData($activity);
+        $xmlActivity['participating-org'] = $this->participatingOrgService->getXmlData($activity);
+        $xmlActivity['other-identifier'] = $this->otherIdentifierService->getXmlData($activity);
         $xmlActivity['activity-status'] = $this->activityStatusService->getXmlData($activity);
         $xmlActivity['activity-date'] = $this->activityDateService->getXmlData($activity);
+        $xmlActivity['contact-info'] = $this->contactInfoService->getXmlData($activity);
         $xmlActivity['activity-scope'] = $this->activityScopeService->getXmlData($activity);
         $xmlActivity['recipient-country'] = $this->recipientCountryService->getXmlData($activity);
         $xmlActivity['recipient-region'] = $this->recipientRegionService->getXmlData($activity);
+        $xmlActivity['location'] = $this->locationService->getXmlData($activity);
         $xmlActivity['sector'] = $this->sectorService->getXmlData($activity);
         $xmlActivity['tag'] = $this->tagService->getXmlData($activity);
+        $xmlActivity['country-budget-items'] = $this->countryBudgetItemService->getXmlData($activity);
+        $xmlActivity['humanitarian-scope'] = $this->humanitarianScopeService->getXmlData($activity);
         $xmlActivity['policy-marker'] = $this->policyMarkerService->getXmlData($activity);
         $xmlActivity['collaboration-type'] = $this->collaborationTypeService->getXmlData($activity);
         $xmlActivity['default-flow-type'] = $this->defaultFlowTypeService->getXmlData($activity);
         $xmlActivity['default-finance-type'] = $this->defaultFinanceTypeService->getXmlData($activity);
         $xmlActivity['default-aid-type'] = $this->defaultAidTypeService->getXmlData($activity);
         $xmlActivity['default-tied-status'] = $this->defaultTiedStatusService->getXmlData($activity);
-        $xmlActivity['country-budget-items'] = $this->countryBudgetItemService->getXmlData($activity);
-        $xmlActivity['humanitarian-scope'] = $this->humanitarianScopeService->getXmlData($activity);
-        $xmlActivity['capital-spend'] = $this->capitalSpendService->getXmlData($activity);
-        $xmlActivity['related-activity'] = $this->relatedActivityService->getXmlData($activity);
-        $xmlActivity['conditions'] = $this->conditionService->getXmlData($activity);
-        $xmlActivity['legacy-data'] = $this->legacyDataService->getXmlData($activity);
-        $xmlActivity['document-link'] = $this->documentLinkService->getXmlData($activity);
-        $xmlActivity['contact-info'] = $this->contactInfoService->getXmlData($activity);
-        $xmlActivity['location'] = $this->locationService->getXmlData($activity);
-        $xmlActivity['planned-disbursement'] = $this->plannedDisbursementService->getXmlData($activity);
-        $xmlActivity['participating-org'] = $this->participatingOrgService->getXmlData($activity);
         $xmlActivity['budget'] = $this->budgetService->getXmlData($activity);
+        $xmlActivity['planned-disbursement'] = $this->plannedDisbursementService->getXmlData($activity);
+        $xmlActivity['capital-spend'] = $this->capitalSpendService->getXmlData($activity);
         $xmlActivity['transaction'] = $this->transactionService->getXmlData($transaction);
+        $xmlActivity['document-link'] = $this->documentLinkService->getXmlData($activity);
+        $xmlActivity['related-activity'] = $this->relatedActivityService->getXmlData($activity);
+        $xmlActivity['legacy-data'] = $this->legacyDataService->getXmlData($activity);
+        $xmlActivity['conditions'] = $this->conditionService->getXmlData($activity);
         $xmlActivity['result'] = $this->resultService->getXmlData($result);
         removeEmptyValues($xmlActivity);
 
