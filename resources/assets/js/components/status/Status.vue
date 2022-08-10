@@ -1,6 +1,6 @@
 <template>
   <div class="status ml-2.5 flex text-xs leading-5" :class="color">
-    <b class="mr-2 text-base leading-3">.</b><span>{{ text }}</span>
+<!--    <b class="mr-2 text-base leading-3">.</b><span>{{ text }}</span>-->
   </div>
 </template>
 

@@ -1,32 +1,16 @@
 <template>
-  <div
-    id="indicator"
-    class="px-3 py-3 activities__content--element basis-full text-n-50"
-  >
+  <div id="indicator" class="px-3 py-3 activities__content--element basis-full text-n-50">
     <div class="p-4 bg-white rounded-lg">
       <div class="flex mb-4">
         <div class="flex items-center title grow">
           <svg-vue class="mr-1.5 text-xl text-bluecoral" icon="bill"></svg-vue>
           <div class="text-sm font-bold title">Indicator</div>
-          <div class="status ml-2.5 flex text-xs leading-5 text-crimson-50">
-            <b class="mr-2 text-base leading-3">.</b>
-            <span>not completed</span>
-          </div>
         </div>
         <div class="flex items-center icons">
-          <Btn
-            text="Add Indicator"
-            icon="add"
-            :link="`/activities/${result.activity_id}/result/${result.id}/indicator/create`"
-            class="mr-2.5"
-          />
-          <Btn
-            text="Show full indicator list"
-            icon=""
-            design="bgText"
-            :link="`/activities/${result.activity_id}/result/${result.id}/indicator`"
-            class="mr-2.5"
-          />
+          <Btn text="Add Indicator" icon="add"
+            :link="`/activities/${result.activity_id}/result/${result.id}/indicator/create`" class="mr-2.5" />
+          <Btn text="Show full indicator list" icon="" design="bgText"
+            :link="`/activities/${result.activity_id}/result/${result.id}/indicator`" class="mr-2.5" />
           <svg-vue class="mr-1.5" icon="moon"></svg-vue>
           <div class="help text-n-40">
             <button>
@@ -46,35 +30,24 @@
             <div class="elements-detail wider">
               <div class="flex category">
                 <div class="mr-4">
-                  <a
-                    class="text-n-50"
-                    :href="`/activities/${result.activity_id}/result/${result.id}/indicator/${post.id}`"
-                  >
+                  <a class="text-n-50"
+                    :href="`/activities/${result.activity_id}/result/${result.id}/indicator/${post.id}`">
                     {{
-                      getActivityTitle(post.indicator.title[0].narrative, 'en')
+                        getActivityTitle(post.indicator.title[0].narrative, 'en')
                     }}
                   </a>
                 </div>
                 <div class="flex justify-between shrink-0 grow">
                   <span class="flex">
-                    <Btn
-                      text="View Indicator"
-                      icon="eye"
+                    <Btn text="View Indicator" icon="eye"
                       :link="`/activities/${result.activity_id}/result/${result.id}/indicator/${post.id}`"
-                      class="mr-2.5"
-                    />
-                    <Btn
-                      text="Edit Indicator"
-                      icon="edit"
-                      :link="`/activities/${result.activity_id}/result/${result.id}/indicator/${post.id}/edit`"
-                    />
+                      class="mr-2.5" />
+                    <Btn text="Edit Indicator" icon="edit"
+                      :link="`/activities/${result.activity_id}/result/${result.id}/indicator/${post.id}/edit`" />
                   </span>
-                  <Btn
-                    text="Add Period"
-                    icon="edit"
+                  <Btn text="Add Period" icon="edit"
                     :link="`/activities/${result.activity_id}/result/${result.id}/indicator/${post.id}/period/create`"
-                    class="mr-2.5"
-                  />
+                    class="mr-2.5" />
                 </div>
               </div>
               <div class="ml-4">
@@ -84,19 +57,13 @@
                       <tr>
                         <td>Indicator Title</td>
                         <td>
-                          <template
-                            v-for="(title, t) in post.indicator.title[0]
-                              .narrative"
-                            :key="t"
-                          >
-                            <div
-                              class="title-content"
-                              :class="{
-                                'mb-1.5':
-                                  t !==
-                                  post.indicator.title[0].narrative.length - 1,
-                              }"
-                            >
+                          <template v-for="(title, t) in post.indicator.title[0]
+                          .narrative" :key="t">
+                            <div class="title-content" :class="{
+                              'mb-1.5':
+                                t !==
+                                post.indicator.title[0].narrative.length - 1,
+                            }">
                               <div class="mb-1 language">
                                 (Language: {{ type.language[title.language] }})
                               </div>
@@ -123,21 +90,15 @@
                       <tr>
                         <td>Description</td>
                         <td>
-                          <template
-                            v-for="(description, d) in post.indicator
-                              .description[0].narrative"
-                            :key="d"
-                          >
-                            <div
-                              class="title-content"
-                              :class="{
-                                'mb-1.5':
-                                  d !==
-                                  post.indicator.description[0].narrative
-                                    .length -
-                                    1,
-                              }"
-                            >
+                          <template v-for="(description, d) in post.indicator
+                          .description[0].narrative" :key="d">
+                            <div class="title-content" :class="{
+                              'mb-1.5':
+                                d !==
+                                post.indicator.description[0].narrative
+                                  .length -
+                                1,
+                            }">
                               <div class="mb-1 language">
                                 (Language:
                                 {{ type.language[description.language] }})
@@ -153,14 +114,10 @@
                       <tr>
                         <td>Reference</td>
                         <td>
-                          <div
-                            v-for="(ref, r) in post.indicator.reference"
-                            :key="r"
-                            :class="{
-                              'mb-1.5':
-                                r !== post.indicator.reference.length - 1,
-                            }"
-                          >
+                          <div v-for="(ref, r) in post.indicator.reference" :key="r" :class="{
+                            'mb-1.5':
+                              r !== post.indicator.reference.length - 1,
+                          }">
                             <span v-if="ref.vocabulary">
                               Vocabulary: {{ ref.vocabulary }},
                             </span>
@@ -182,14 +139,10 @@
                       <tr>
                         <td>Baseline</td>
                         <td>
-                          <div
-                            v-for="(base, b) in post.indicator.baseline"
-                            :key="b"
-                            :class="{
-                              'mb-1.5':
-                                b !== post.indicator.baseline.length - 1,
-                            }"
-                          >
+                          <div v-for="(base, b) in post.indicator.baseline" :key="b" :class="{
+                            'mb-1.5':
+                              b !== post.indicator.baseline.length - 1,
+                          }">
                             <div>
                               <span>
                                 Year:
@@ -218,14 +171,9 @@
                             <div class="flex">
                               <div>Location:&nbsp;</div>
                               <div>
-                                <div
-                                  v-for="(loc, l) in base.location"
-                                  :key="l"
-                                  class="item"
-                                  :class="{
-                                    'mb-1.5': l !== base.location.length - 1,
-                                  }"
-                                >
+                                <div v-for="(loc, l) in base.location" :key="l" class="item" :class="{
+                                  'mb-1.5': l !== base.location.length - 1,
+                                }">
                                   <template v-if="loc.reference">
                                     {{ loc.reference }}
                                   </template>
@@ -237,13 +185,9 @@
                             <div class="flex">
                               <div>Dimension:&nbsp;</div>
                               <div>
-                                <div
-                                  v-for="(dim, d) in base.dimension"
-                                  :key="d"
-                                  :class="{
-                                    'mb-1.5': d !== base.dimension.length - 1,
-                                  }"
-                                >
+                                <div v-for="(dim, d) in base.dimension" :key="d" :class="{
+                                  'mb-1.5': d !== base.dimension.length - 1,
+                                }">
                                   <div>
                                     <span>
                                       <template v-if="dim.name">
@@ -270,16 +214,11 @@
                             <div class="flex">
                               <div>Comment:&nbsp;</div>
                               <div>
-                                <div
-                                  v-for="(com, c) in base.comment[0].narrative"
-                                  :key="c"
-                                  class="item"
-                                  :class="{
-                                    'mb-1.5':
-                                      c !==
-                                      base.comment[0].narrative.length - 1,
-                                  }"
-                                >
+                                <div v-for="(com, c) in base.comment[0].narrative" :key="c" class="item" :class="{
+                                  'mb-1.5':
+                                    c !==
+                                    base.comment[0].narrative.length - 1,
+                                }">
                                   <div>
                                     <span>
                                       <template v-if="com.narrative">
@@ -320,10 +259,8 @@
                           <div class="mt-3">
                             <NotYet
                               :link="`/activities/${result.activity_id}/result/${result.id}/indicator/${post.id}/period/create`"
-                              description="You haven't added any periods yet."
-                              btn-text="Add period"
-                              class="w-[442px]"
-                            />
+                              description="You haven't added any periods yet." btn-text="Add period"
+                              class="w-[442px]" />
                           </div>
                         </td>
                       </tr>
@@ -343,37 +280,29 @@
                         <td>
                           <div class="flex category">
                             <div class="mr-10">
-                              <a
-                                class="text-n-50"
-                                :href="`/activities/${result.activity_id}/result/${result.id}/indicator/${post.id}/period/${item.id}`"
-                              >
+                              <a class="text-n-50"
+                                :href="`/activities/${result.activity_id}/result/${result.id}/indicator/${post.id}/period/${item.id}`">
                                 {{
-                                  dateFormat(
-                                    item.period.period_start[0].date,
-                                    'MMMM DD, YYYY'
-                                  )
+                                    dateFormat(
+                                      item.period.period_start[0].date,
+                                      'MMMM DD, YYYY'
+                                    )
                                 }}
                                 -
                                 {{
-                                  dateFormat(
-                                    item.period.period_end[0].date,
-                                    'MMMM DD, YYYY'
-                                  )
+                                    dateFormat(
+                                      item.period.period_end[0].date,
+                                      'MMMM DD, YYYY'
+                                    )
                                 }}
                               </a>
                             </div>
                             <div class="flex justify-between shrink-0 grow">
-                              <Btn
-                                text="View Period"
-                                icon="eye"
+                              <Btn text="View Period" icon="eye"
                                 :link="`/activities/${result.activity_id}/result/${result.id}/indicator/${post.id}/period/${item.id}`"
-                                class="mr-2.5"
-                              />
-                              <Btn
-                                text="Edit Period"
-                                icon="edit"
-                                :link="`/activities/${result.activity_id}/result/${result.id}/indicator/${post.id}/period/${item.id}/edit`"
-                              />
+                                class="mr-2.5" />
+                              <Btn text="Edit Period" icon="edit"
+                                :link="`/activities/${result.activity_id}/result/${result.id}/indicator/${post.id}/period/${item.id}/edit`" />
                             </div>
                           </div>
                         </td>
@@ -381,16 +310,10 @@
                       <tr>
                         <td>Target Value</td>
                         <td>
-                          <template
-                            v-for="(tar, t) in item.period.target"
-                            :key="t"
-                          >
-                            <div
-                              class="item"
-                              :class="{
-                                'mb-1.5': t !== item.period.target.length - 1,
-                              }"
-                            >
+                          <template v-for="(tar, t) in item.period.target" :key="t">
+                            <div class="item" :class="{
+                              'mb-1.5': t !== item.period.target.length - 1,
+                            }">
                               <div class="mb-1 language target_value">
                                 {{ tar.value }}
                               </div>
@@ -398,14 +321,9 @@
                               <div class="flex location_reference">
                                 <div>Location Reference:&nbsp;</div>
                                 <div>
-                                  <div
-                                    v-for="(loc, l) in tar.location"
-                                    :key="l"
-                                    class="item"
-                                    :class="{
-                                      'mb-1.5': l !== tar.location.length - 1,
-                                    }"
-                                  >
+                                  <div v-for="(loc, l) in tar.location" :key="l" class="item" :class="{
+                                    'mb-1.5': l !== tar.location.length - 1,
+                                  }">
                                     <div>
                                       <span>
                                         <template v-if="loc.reference">
@@ -423,14 +341,9 @@
                               <div class="flex dimension">
                                 <div>Dimension:&nbsp;</div>
                                 <div>
-                                  <div
-                                    v-for="(dim, d) in tar.dimension"
-                                    :key="d"
-                                    class="item"
-                                    :class="{
-                                      'mb-1.5': d !== tar.dimension.length - 1,
-                                    }"
-                                  >
+                                  <div v-for="(dim, d) in tar.dimension" :key="d" class="item" :class="{
+                                    'mb-1.5': d !== tar.dimension.length - 1,
+                                  }">
                                     <span>
                                       <template v-if="dim.name">
                                         {{ dim.name }}
@@ -454,14 +367,9 @@
                               <div class="flex">
                                 <div>Comment:&nbsp;</div>
                                 <div>
-                                  <div
-                                    v-for="(com, c) in tar.comment[0].narrative"
-                                    :key="c"
-                                    class="item"
-                                    :class="{
-                                      'mb-1.5': c !== tar.comment.length - 1,
-                                    }"
-                                  >
+                                  <div v-for="(com, c) in tar.comment[0].narrative" :key="c" class="item" :class="{
+                                    'mb-1.5': c !== tar.comment.length - 1,
+                                  }">
                                     <div>
                                       <span>
                                         <template v-if="com.narrative">
@@ -493,16 +401,10 @@
                       <tr>
                         <td>Actual Value</td>
                         <td>
-                          <template
-                            v-for="(tar, t) in item.period.actual"
-                            :key="t"
-                          >
-                            <div
-                              class="item"
-                              :class="{
-                                'mb-1.5': t !== item.period.actual.length - 1,
-                              }"
-                            >
+                          <template v-for="(tar, t) in item.period.actual" :key="t">
+                            <div class="item" :class="{
+                              'mb-1.5': t !== item.period.actual.length - 1,
+                            }">
                               <div class="mb-1 language target_value">
                                 {{ tar.value }}
                               </div>
@@ -510,14 +412,9 @@
                               <div class="flex location_reference">
                                 <div>Location Reference:&nbsp;</div>
                                 <div>
-                                  <div
-                                    v-for="(loc, l) in tar.location"
-                                    :key="l"
-                                    class="item"
-                                    :class="{
-                                      'mb-1.5': l !== tar.location.length - 1,
-                                    }"
-                                  >
+                                  <div v-for="(loc, l) in tar.location" :key="l" class="item" :class="{
+                                    'mb-1.5': l !== tar.location.length - 1,
+                                  }">
                                     <div>
                                       <span>
                                         <template v-if="loc.reference">
@@ -535,14 +432,9 @@
                               <div class="flex dimension">
                                 <div>Dimension:&nbsp;</div>
                                 <div>
-                                  <div
-                                    v-for="(dim, d) in tar.dimension"
-                                    :key="d"
-                                    class="item"
-                                    :class="{
-                                      'mb-1.5': d !== tar.dimension.length - 1,
-                                    }"
-                                  >
+                                  <div v-for="(dim, d) in tar.dimension" :key="d" class="item" :class="{
+                                    'mb-1.5': d !== tar.dimension.length - 1,
+                                  }">
                                     <span>
                                       <template v-if="dim.name">
                                         {{ dim.name }}
@@ -566,14 +458,9 @@
                               <div class="flex">
                                 <div>Comment:&nbsp;</div>
                                 <div>
-                                  <div
-                                    v-for="(com, c) in tar.comment[0].narrative"
-                                    :key="c"
-                                    class="item"
-                                    :class="{
-                                      'mb-1.5': c !== tar.comment.length - 1,
-                                    }"
-                                  >
+                                  <div v-for="(com, c) in tar.comment[0].narrative" :key="c" class="item" :class="{
+                                    'mb-1.5': c !== tar.comment.length - 1,
+                                  }">
                                     <div>
                                       <span>
                                         <template v-if="com.narrative">
@@ -607,10 +494,7 @@
               </div>
             </div>
           </div>
-          <div
-            v-if="ri != indicatorData.length - 1"
-            class="w-full h-px my-8 border-b divider border-n-20"
-          ></div>
+          <div v-if="ri != indicatorData.length - 1" class="w-full h-px my-8 border-b divider border-n-20"></div>
         </template>
       </div>
     </div>
