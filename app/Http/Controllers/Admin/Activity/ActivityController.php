@@ -8,6 +8,7 @@ use App\IATI\Models\Activity\Activity;
 use App\IATI\Services\Activity\ActivityService;
 use App\IATI\Services\Activity\ResultService;
 use App\IATI\Services\Activity\TransactionService;
+use App\IATI\Services\Validator\ActivityValidatorResponseService;
 use Exception;
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\DatabaseManager;
@@ -42,19 +43,31 @@ class ActivityController extends Controller
     protected TransactionService $transactionService;
 
     /**
+     * @var ActivityValidatorResponseService
+     */
+    protected ActivityValidatorResponseService $activityValidatorResponseService;
+
+    /**
      * ActivityController Constructor.
      *
      * @param ActivityService $activityService
      * @param DatabaseManager $db
      * @param ResultService $resultService
      * @param TransactionService $transactionService
+     * @param ActivityValidatorResponseService $activityValidatorResponseService
      */
-    public function __construct(ActivityService $activityService, DatabaseManager $db, ResultService $resultService, TransactionService $transactionService)
-    {
+    public function __construct(
+        ActivityService $activityService,
+        DatabaseManager $db,
+        ResultService $resultService,
+        TransactionService $transactionService,
+        ActivityValidatorResponseService $activityValidatorResponseService
+    ) {
         $this->activityService = $activityService;
         $this->db = $db;
         $this->resultService = $resultService;
         $this->transactionService = $transactionService;
+        $this->activityValidatorResponseService = $activityValidatorResponseService;
     }
 
     /**
@@ -133,10 +146,17 @@ class ActivityController extends Controller
             $hasIndicatorPeriod = $this->resultService->checkResultIndicatorPeriod($results);
             $transactions = $this->transactionService->getActivityTransactions($activity->id);
             $progress = 75;
+            $coreCompleted = false; //This will be made dynamic later
+            $iatiValidatorResponse = null;
+            $validatorResponse = $this->activityValidatorResponseService->getValidatorResponse($id);
+
+            if ($validatorResponse) {
+                $iatiValidatorResponse = $validatorResponse->response;
+            }
 
             return view(
                 'admin.activity.show',
-                compact('elements', 'elementGroups', 'progress', 'activity', 'toast', 'types', 'status', 'results', 'hasIndicatorPeriod', 'transactions')
+                compact('elements', 'elementGroups', 'progress', 'activity', 'toast', 'types', 'status', 'results', 'hasIndicatorPeriod', 'transactions', 'coreCompleted', 'iatiValidatorResponse')
             );
         } catch (Exception $e) {
             logger()->error($e->getMessage());

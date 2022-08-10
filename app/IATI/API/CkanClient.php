@@ -166,7 +166,7 @@ class CkanClient
             throw new Exception('Method ' . $method . ' is not supported');
         }
         // Set cURL URI.
-        $url = strpos($uri, '//') ? $uri : $this->api_url . $uri;
+        $url = strpos($uri, '//') ? $uri : $this->api_url . '/' . $uri;
         curl_setopt($this->curl_handler, CURLOPT_URL, $url);
 
         if ($method === 'POST' && $data) {

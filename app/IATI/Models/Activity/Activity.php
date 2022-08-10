@@ -4,9 +4,11 @@ namespace App\IATI\Models\Activity;
 
 use App\IATI\Models\Document\Document;
 use App\IATI\Models\Organization\Organization;
+use App\IATI\Models\Validator\IATIValidatorResponse;
 use Database\Factories\IATI\Models\Activity\ActivityFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 /**
  * Class Activity.
@@ -656,5 +658,15 @@ class Activity extends Model
     public function transactions(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(Transaction::class, 'activity_id', 'id');
+    }
+
+    /**
+     * Activity has one validator response.
+     *
+     * @return HasOne
+     */
+    public function validatorResponse(): HasOne
+    {
+        return $this->hasOne(IATIValidatorResponse::class, 'activity_id', 'id');
     }
 }

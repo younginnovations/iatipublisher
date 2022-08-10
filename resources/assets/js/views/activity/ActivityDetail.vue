@@ -385,6 +385,14 @@ export default defineComponent({
       type: Array,
       required: true,
     },
+    core_completed: {
+      type: Boolean,
+      required: true,
+    },
+    iati_validator_response: {
+      type: Array,
+      required: true,
+    }
   },
   setup(props) {
     const { types } = toRefs(props);

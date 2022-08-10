@@ -197,11 +197,11 @@ if (!function_exists('getPeriodTypes')) {
     }
 }
 
-    /*
-     * Generates toast array.
-     *
-     * @return array
-     */
+/*
+ * Generates toast array.
+ *
+ * @return array
+ */
 if (!function_exists('generateToastData')) {
     function generateToastData(): array
     {
