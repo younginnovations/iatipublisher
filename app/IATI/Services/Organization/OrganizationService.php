@@ -60,6 +60,22 @@ class OrganizationService
 //            ];
 //        }
 
+        $organizationData[] = [
+            '@attributes' => [
+                'type'               => '21',
+                'ref'                => 'MCfAE',
+                'secondary-reporter' => null,
+            ],
+            'narrative'   => [
+                [
+                    '@value' => 'Dummy reporting org',
+                    '@attributes' => [
+                        'xml:lang' => 'en',
+                    ],
+                ],
+            ],
+        ];
+
         return $organizationData;
     }
 }

@@ -67,9 +67,9 @@ class ParticipatingOrganizationController extends Controller
     {
         try {
             $activityData = $this->participatingOrganizationService->getActivityData($id);
-            $activityCountryBudgetItem = $request->except(['_token', '_method']);
+            $activityParticipatingOrg = $request->except(['_token', '_method']);
 
-            if (!$this->participatingOrganizationService->update($activityCountryBudgetItem, $activityData)) {
+            if (!$this->participatingOrganizationService->update($activityParticipatingOrg, $activityData)) {
                 return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while updating participating-organization.');
             }
 

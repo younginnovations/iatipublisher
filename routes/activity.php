@@ -90,10 +90,13 @@ Route::name('admin.')->group(function () {
     Route::get('/activities/{id}/result/{resultId}/indicator/{indicatorId}/period/page/{page?}', [App\Http\Controllers\Admin\Activity\PeriodController::class, 'getPeriod'])->name('period.paginate');
 
     // Publish Activity
-    Route::get('activities/{activityId}/publish', [\App\Http\Controllers\Admin\Workflow\ActivityWorkflowController::class, 'publish'])->name('activities.publish');
+    Route::get('activities/{id}/publish', [\App\Http\Controllers\Admin\Workflow\ActivityWorkflowController::class, 'publish'])->name('activities.publish');
 
     //Unpublish Activity
-    Route::get('activities/{activityId}/unpublish', [\App\Http\Controllers\Admin\Workflow\ActivityWorkflowController::class, 'unpublish'])->name('activities.unpublish');
+    Route::get('activities/{id}/unpublish', [\App\Http\Controllers\Admin\Workflow\ActivityWorkflowController::class, 'unpublish'])->name('activities.unpublish');
+
+    //Validate Activity
+    Route::get('activities/{id}/validateActivity', [\App\Http\Controllers\Admin\Workflow\ActivityWorkflowController::class, 'validateActivity'])->name('activities.validateActivity');
 
     // static route for static pages
 //    Route::get('/activities/{id}/result', function () {

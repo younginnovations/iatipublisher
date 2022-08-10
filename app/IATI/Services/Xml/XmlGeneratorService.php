@@ -75,4 +75,22 @@ class XmlGeneratorService
     {
         $this->xmlGenerator->getMergeXml($publishedFile->published_activities, $publishedFile->filename);
     }
+
+    /**
+     * Returns xml data of activity.
+     *
+     * @param $activity
+     * @param $transaction
+     * @param $result
+     * @param $settings
+     * @param $organization
+     *
+     * @return string
+     */
+    public function getActivityXmlData($activity, $transaction, $result, $settings, $organization): string
+    {
+        $xmlDom = $this->xmlGenerator->getXml($activity, $transaction, $result, $settings, $organization);
+
+        return $xmlDom->saveXML();
+    }
 }

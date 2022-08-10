@@ -4,7 +4,11 @@ namespace App\Http\Controllers\Admin\Workflow;
 
 use App\Exceptions\PublisherNotFound;
 use App\Http\Controllers\Controller;
+use App\IATI\Services\Validator\ActivityValidatorResponseService;
 use App\IATI\Services\Workflow\ActivityWorkflowService;
+use GuzzleHttp\Exception\BadResponseException;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 
@@ -19,26 +23,33 @@ class ActivityWorkflowController extends Controller
     protected ActivityWorkflowService $activityWorkflowService;
 
     /**
+     * @var ActivityValidatorResponseService
+     */
+    protected ActivityValidatorResponseService $validatorService;
+
+    /**
      * ActivityWorkflowController Constructor.
      *
      * @param ActivityWorkflowService $activityWorkflowService
+     * @param ActivityValidatorResponseService $validatorService
      */
-    public function __construct(ActivityWorkflowService $activityWorkflowService)
+    public function __construct(ActivityWorkflowService $activityWorkflowService, ActivityValidatorResponseService $validatorService)
     {
         $this->activityWorkflowService = $activityWorkflowService;
+        $this->validatorService = $validatorService;
     }
 
     /**
      * Publish an activity.
      *
-     * @param $activityId
+     * @param $id
      *
-     * @return mixed
+     * @return JsonResponse|RedirectResponse
      */
-    public function publish($activityId)
+    public function publish($id): JsonResponse|RedirectResponse
     {
         try {
-            $activity = $this->activityWorkflowService->findActivity($activityId);
+            $activity = $this->activityWorkflowService->findActivity($id);
 
             if ($this->hasNoPublisherInfo($activity->organization->settings)) {
                 return response()->json(['success' => false, 'error' => 'Please update the publishing information first.']);
@@ -48,17 +59,17 @@ class ActivityWorkflowController extends Controller
             $this->activityWorkflowService->publishActivity($activity);
             DB::commit();
 
-            return redirect()->route('admin.activities.show', $activityId)->with('success', 'Activity has been published successfully.');
+            return redirect()->route('admin.activities.show', $id)->with('success', 'Activity has been published successfully.');
         } catch (PublisherNotFound $message) {
             DB::rollBack();
             logger()->error($message->getMessage());
 
-            return redirect()->route('admin.activities.show', $activityId)->with('error', $message->getMessage());
+            return redirect()->route('admin.activities.show', $id)->with('error', $message->getMessage());
         } catch (\Exception $e) {
             DB::rollBack();
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activities.show', $activityId)->with('error', 'Error has occurred while publishing activity.');
+            return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while publishing activity.');
         }
     }
 
@@ -89,29 +100,64 @@ class ActivityWorkflowController extends Controller
     /**
      * Unpublish an activity from the IATI registry.
      *
-     * @param $activityId
+     * @param $id
      *
-     * @return \Illuminate\Http\RedirectResponse|void
+     * @return RedirectResponse
      */
-    public function unpublish($activityId)
+    public function unpublish($id): RedirectResponse
     {
         try {
             DB::beginTransaction();
-            $activity = $this->activityWorkflowService->findActivity($activityId);
+            $activity = $this->activityWorkflowService->findActivity($id);
 
             if (!$activity->already_published && $activity->status === 'draft') {
-                return redirect()->route('admin.activities.show', $activityId)->with('error', 'This activity has not been published to un-publish.');
+                return redirect()->route('admin.activities.show', $id)->with('error', 'This activity has not been published to un-publish.');
             }
 
             $this->activityWorkflowService->unpublishActivity($activity);
             DB::commit();
 
-            return redirect()->route('admin.activities.show', $activityId)->with('success', 'Activity has been un-published successfully.');
+            return redirect()->route('admin.activities.show', $id)->with('success', 'Activity has been un-published successfully.');
         } catch (\Exception $e) {
             DB::rollBack();
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activities.show', $activityId)->with('error', 'Error has occurred while un-publishing activity.');
+            return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while un-publishing activity.');
+        }
+    }
+
+    /**
+     * Validates activity on the IATI Validator.
+     *
+     * @param $id
+     *
+     * @return JsonResponse|RedirectResponse
+     */
+    public function validateActivity($id): JsonResponse|RedirectResponse
+    {
+        try {
+            $activity = $this->activityWorkflowService->findActivity($id);
+            $response = $this->activityWorkflowService->validateActivityOnIATIValidator($activity);
+
+            if ($this->validatorService->updateOrCreateResponse($id, json_decode($response, true))) {
+                return response()->json(json_decode($response, true));
+            }
+
+            return response()->json(['success' => false, 'error' => 'Error has occurred while validating activity.']);
+        } catch (BadResponseException $ex) {
+            if ($ex->getCode() == 422) {
+                $response = $ex->getResponse()->getBody()->getContents();
+
+                if ($this->validatorService->updateOrCreateResponse($id, $response)) {
+                    return response()->json(json_decode($response, true));
+                }
+            }
+
+            return response()->json(['success' => false, 'error' => 'Error has occurred while validating activity.']);
+        } catch (\Exception $e) {
+            logger()->error($e->getMessage());
+
+            return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while validating activity.');
         }
     }
 }

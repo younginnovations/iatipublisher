@@ -105,7 +105,7 @@ class ParticipatingOrganizationService
     public function getXmlData(Activity $activity): array
     {
         $activityData = [];
-        $participatingOrganizations = (array) $activity->participating_organization;
+        $participatingOrganizations = (array) $activity->participating_org;
 
         if (count($participatingOrganizations)) {
             foreach ($participatingOrganizations as $participatingOrganization) {
