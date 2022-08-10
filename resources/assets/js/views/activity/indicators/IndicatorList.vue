@@ -54,17 +54,6 @@
                 <span>Aggregation Status</span>
               </a>
             </th>
-            <th id="complete_status" scope="col" width="180px">
-              <a
-                class="transition duration-500 text-n-50 hover:text-spring-50"
-                href="#"
-              >
-                <span class="sorting-indicator descending">
-                  <svg-vue icon="descending-arrow" />
-                </span>
-                <span>Status</span>
-              </a>
-            </th>
             <th id="action" scope="col" width="190px">
               <a
                 class="transition duration-500 text-n-50 hover:text-spring-50"
@@ -107,7 +96,6 @@
             <td class="capitalize">
               {{ indicator.indicator.aggregation_status != 0 }}
             </td>
-            <td><span class="text-spring-50">completed</span></td>
             <td>
               <div class="flex text-n-40">
                 <a

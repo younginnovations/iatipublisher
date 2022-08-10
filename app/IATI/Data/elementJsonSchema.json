@@ -878,7 +878,7 @@
         "type": "select",
         "choices": "Activity/FlowType.json",
         "required": true,
-        "criteria": "",
+        "criteria": "mandatory",
         "hover_text": "A code from the OECD DAC CRS “Type of flow” codelist. This attribute is required. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/default-flow-type/'>For more information</a>",
         "help_text": ""
       }
@@ -893,7 +893,7 @@
         "label": "@code",
         "type": "select",
         "required": true,
-        "criteria": "",
+        "criteria": "mandatory",
         "choices": "Activity/FinanceType.json",
         "hover_text": "A code from the OECD DAC CRS “Type of finance” codelist. This attribute is required. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/default-finance-type/'>For more information</a>"
       }
@@ -993,7 +993,7 @@
         "type": "select",
         "choices": "Activity/TiedStatus.json",
         "required": true,
-        "criteria": "",
+        "criteria": "mandatory",
         "hover_text": "An IATI code interpreting the usage of Columns 36-38 of the CRS++ reporting format. (Amount tied, Amount partially untied, Amount tied). <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/default-tied-status/'>For more information</a>",
         "help_text": ""
       }
@@ -1134,7 +1134,7 @@
         "help_text": "",
         "parent": {
           "name": "vocabulary",
-          "value": ["1-2", "2-1"]
+          "value": ["1-2", "2-1", "99"]
         }
       }
     },
@@ -1447,7 +1447,7 @@
             "type": "select",
             "choices": "Activity/Language.json",
             "required": false,
-            "criteria": "recommended",
+            "criteria": "mandatory",
             "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/description/narrative/'>For more information</a>",
             "help_text": ""
           }
@@ -1911,7 +1911,8 @@
             "name": "code",
             "label": "@code",
             "type": "select",
-            "choices": "Activity/Country.json",            "required": true,
+            "choices": "Activity/Country.json",
+            "required": true,
             "criteria": "",
             "hover_text": "The code for the administrative area being reported from the vocabulary specified. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/location/administrative/'>For more information</a>",
             "help_text": ""
