@@ -13,7 +13,7 @@
     @close="publishToggle"
     @reset="resetPublishStep"
   >
-    <div class="mb-4">
+    <div class="mb-4 popup">
       <div class="flex mb-6 title">
         <svg-vue
           class="mr-1 mt-0.5 text-lg"
@@ -32,78 +32,140 @@
           'bg-[#FFF1F0]': !publishStateChange.alertState,
         }"
       >
-        <div v-html="publishStateChange.description"></div>
+        <div
+          class="text-sm leading-normal"
+          v-html="publishStateChange.description"
+        ></div>
       </div>
     </div>
     <div class="flex justify-end">
       <div class="inline-flex">
+        <template v-if="coreElementStatus">
+          <BtnComponent
+            v-if="publishStep == 0"
+            class="px-6 uppercase bg-white"
+            text="Go Back"
+            type=""
+            @click="stepMinusOne"
+          />
+          <BtnComponent
+            v-if="publishStep == 0"
+            class="space"
+            text="Continue"
+            type="primary"
+            @click="stepPlusOne"
+          />
+        </template>
+        <template v-else>
+          <BtnComponent
+            v-if="publishStep == 0"
+            class="px-6 uppercase bg-white"
+            text="Continue Anyway"
+            type=""
+            @click="stepPlusOne"
+          />
+          <BtnComponent
+            v-if="publishStep == 0"
+            class="space"
+            text="Add Missing Data"
+            type="primary"
+            @click="publishValue = false"
+          />
+        </template>
+
         <BtnComponent
-          v-if="publishStep == 0 || publishStep == 1 || publishStep == 2"
+          v-if="publishStep === 1 || publishStep === 2"
           class="px-6 uppercase bg-white"
           text="Go Back"
           type=""
           @click="stepMinusOne"
         />
+
+        <!-- api validator button (validatorFunction) -->
         <BtnComponent
-          v-else
-          class="px-6 uppercase bg-white"
-          text="Publish Anyway"
-          type=""
-          @click="publishFunction"
-        />
-        <BtnComponent
-          v-if="publishStep == 0"
-          class="space"
-          text="Continue"
-          type="primary"
-          @click="stepPlusOne"
-        />
-        <BtnComponent
-          v-else-if="publishStep == 1"
+          v-if="publishStep === 1"
           class="space"
           text="Continue"
           type="primary"
           @click="validatorFunction"
         />
+
+        <!-- api publishing button (publishFunction) -->
         <BtnComponent
-          v-else-if="publishStep == 2"
+          v-if="publishStep === 2"
           class="space"
           text="Publish"
           type="primary"
           @click="publishFunction"
         />
+
+        <!-- api publishing button (publishFunction) -->
         <BtnComponent
-          v-else
+          v-if="publishStep === 3 || publishStep === 4"
+          class="px-6 uppercase bg-white"
+          text="Publish Anyway"
+          type=""
+          @click="publishFunction"
+        />
+
+        <BtnComponent
+          v-if="publishStep === 3 || publishStep === 4"
           class="space"
-          text="Fix Issues"
+          text="Fix issues"
           type="primary"
-          @click="publishValue = false"
+          @click="resetPublishStep"
         />
       </div>
     </div>
   </Modal>
+  <Loader
+    v-if="loader"
+    :text="loaderText"
+    :class="{ 'animate-loader': loader }"
+  />
 </template>
 
 <script setup lang="ts">
-import { defineProps, reactive, ref, computed } from 'vue';
+import { defineProps, reactive, ref, computed, inject } from 'vue';
 import { useToggle } from '@vueuse/core';
 import axios from 'axios';
 
 //component
 import BtnComponent from 'Components/ButtonComponent.vue';
 import Modal from 'Components/PopupModal.vue';
+import Loader from 'Components/sections/ProgressLoader.vue';
 
-const props = defineProps({
-  data: { type: Object, required: true },
-});
+// const props = defineProps({
+//   data: { type: Object, required: true },
+// });
 
+//activity id
+const id = inject('activityID');
+
+// toggle state for modal popup
+let [publishValue, publishToggle] = useToggle();
+
+// state for step of the flow
 const publishStep = ref(0);
 
+// display/hide validator loader
+const loader = ref(false);
+
+// state for first step
+// determine if core element completed or not
+// true for completed and false for not completed
+const coreElementStatus = ref(true);
+
+// Dynamic text for loader
+const loaderText = ref('Please Wait');
+
+// reset step to zero after closing modal
 const resetPublishStep = () => {
   publishStep.value = 0;
+  publishValue.value = false;
 };
 
-// computed function to change content
+// computed function to change content of modal
 const publishStateChange = computed(() => {
   const publishState = reactive({
     title: '',
@@ -112,19 +174,36 @@ const publishStateChange = computed(() => {
     alertState: true,
   });
 
+  let title = '',
+    description = '',
+    icon = 'tick';
+
+  // different content for step 1 based on coreElement status
+  if (coreElementStatus.value) {
+    title = 'Core Elements Complete';
+    description =
+      'Congratulations! All the core elements are complete. Continue to Validate this activity.';
+  } else {
+    title = 'Core Elements not complete';
+    description =
+      '<p>There is missing data in some of the core elements. We highly recommend that you complete these data fields to help ensure your data is useful.</p><p>Do you want to continue anyway and run checks on (validate) this data.</p>';
+    icon = 'warning-fill';
+  }
+
   switch (publishStep.value) {
     // first step
     case 0:
-      publishState.title = `Core Elements Complete`;
-      publishState.description = `Congratulations! You’ve provided data for all core elements. Click continue to run checks on (validate) this activity.`;
-      publishState.icon = `tick`;
+      publishState.title = title;
+      publishState.description = description;
+      publishState.icon = icon;
+      publishState.alertState = coreElementStatus.value;
       break;
     //second step
     case 1:
       publishState.title = `Activity will be validated before publishing`;
       publishState.description = `This activity will be first validated before publishing the activity to the IATI Registry. `;
-      publishState.alertState = false;
       publishState.icon = `shield`;
+      publishState.alertState = false;
       break;
     // case 2 is for success validation
     case 2:
@@ -138,14 +217,14 @@ const publishStateChange = computed(() => {
       publishState.title = `IATI Validation Issue`;
       publishState.description = `<p><b>4 errors</b> and <b>2 warnings</b> were found. View information about these errors/warnings at the top of the activity page.</p><p>As your data has at least one critical error, it will not be available on the IATI Datastore and may not be available on other data portals/tools/software that use IATI data.</p><p>We highly recommend you fix these issue(s) before publishing your activity to improve the quality and usefulness of your data.</p>`;
       publishState.icon = `warning-fill`;
-      publishState.alertState = true;
+      publishState.alertState = false;
       break;
     // case 4 is for validation without critical errors
     case 4:
       publishState.title = `IATI Validation Issue`;
       publishState.description = `<p><b>4 errors</b> and <b>2 warnings</b> were found. View information about these errors/warnings at the top of the activity page.</p><p>We highly recommend you fix these issue(s) before publishing your activity to improve the quality and usefulness of your data.</p>`;
       publishState.icon = `warning-fill`;
-      publishState.alertState = true;
+      publishState.alertState = false;
       break;
   }
 
@@ -154,32 +233,39 @@ const publishStateChange = computed(() => {
 
 // increment and decrement function
 const stepPlusOne = () => {
-  if (publishStep.value >= 0 && publishStep.value < 2) {
+  if (publishStep.value >= 0 && publishStep.value < 4) {
     publishStep.value++;
   }
 };
 const stepMinusOne = () => {
-  if (publishStep.value > 0 && publishStep.value <= 2) {
+  if (publishStep.value > 0 && publishStep.value <= 4) {
     publishStep.value--;
   }
 };
 
 // call api for validation
 const validatorFunction = () => {
-  console.log('calling api for validation');
-  axios.get(`/activities/${props.data.id}/validate`).then((res) => {
-    console.log(res.data);
+  loader.value = true;
+  loaderText.value = 'Validating Activities';
+  // setTimeout(() => {
+  //   loader.value = false;
+  //   publishStep.value = 2;
+  // }, 6000);
+
+  axios.post(`/activities/${id}/validateActivity`).then((res) => {
+    const response = res.data;
+
+    console.log(response);
   });
 };
 
-// call api for validation
+// call api for publishing
 const publishFunction = () => {
-  console.log('calling api for publishing');
-  axios.get(`/activities/${props.data.id}/validate`).then((res) => {
-    // const response = res.data;
-    console.log(res.data);
-  });
+  loader.value = true;
+  loaderText.value = 'Publishing';
+  resetPublishStep();
+  setTimeout(() => {
+    loader.value = false;
+  }, 6000);
 };
-
-const [publishValue, publishToggle] = useToggle();
 </script>

@@ -392,12 +392,14 @@ export default defineComponent({
     iati_validator_response: {
       type: Array,
       required: true,
-    }
+    },
   },
   setup(props) {
     const { types } = toRefs(props);
     // vue provides
     provide('types', types.value);
+
+    provide('activityID', props.activity.id);
 
     const toastData = reactive({
       visibility: false,

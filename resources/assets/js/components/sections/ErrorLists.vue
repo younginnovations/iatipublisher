@@ -64,16 +64,25 @@ switch (type.value) {
 
 const toggle = ref(false);
 
-const accordionToggle = (event) => {
-  const target =
-    event.currentTarget.parentElement.querySelector('.errors__list');
+const accordionToggle = (e) => {
+  const target = e.currentTarget.parentElement.querySelector('.errors__list');
+  const elHeight = target.querySelector('ul')?.clientHeight;
 
   if (toggle.value) {
-    target.style.cssText = ``;
+    target.style.cssText = `height: ${elHeight}px;`;
+
+    setTimeout(function () {
+      target.style.cssText = ``;
+    }, 100);
+
     toggle.value = false;
   } else {
-    const elHeight = target.querySelector('ul')?.clientHeight;
     target.style.cssText = `height: ${elHeight}px;`;
+
+    setTimeout(function () {
+      target.style.cssText = `height: auto;`;
+    }, 600);
+
     toggle.value = true;
   }
 };
