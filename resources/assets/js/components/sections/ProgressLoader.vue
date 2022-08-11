@@ -16,14 +16,10 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, onMounted } from 'vue';
+import { defineProps } from 'vue';
 
-const props = defineProps({
+defineProps({
   text: { type: String, required: true },
-});
-
-onMounted(() => {
-  console.log('mounted');
 });
 </script>
 

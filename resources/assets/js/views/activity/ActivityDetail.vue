@@ -52,6 +52,14 @@
             />
           </div>
           <div class="inline-flex justify-end">
+            <!-- toast msg for publishing -->
+            <Toast
+              v-if="publishMessage.message"
+              class="mr-3.5"
+              :message="publishMessage.message"
+              :type="publishMessage.type"
+            />
+
             <!-- Download File -->
             <button
               class="button secondary-btn mr-3.5 font-bold"
@@ -180,7 +188,7 @@
             </Modal>
 
             <!-- Publish Activity -->
-            <Publish :data="publishData" />
+            <Publish />
           </div>
         </div>
       </div>
@@ -241,7 +249,7 @@
           class="sticky top-0"
         />
       </aside>
-      <div class="overflow-hidden activities__content">
+      <div class="activities__content">
         <div class="inline-flex flex-wrap gap-2 mb-3">
           <a
             v-for="(post, key, index) in groupedData"
@@ -315,11 +323,18 @@
       </div>
     </div>
   </div>
-  <Errors :data="{}" />
+  <Errors v-if="errorReactive" :error-data="errorData" />
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, reactive, toRefs, provide } from 'vue';
+import {
+  defineComponent,
+  onMounted,
+  reactive,
+  toRefs,
+  provide,
+  ref,
+} from 'vue';
 import { useToggle } from '@vueuse/core';
 
 // components
@@ -385,21 +400,20 @@ export default defineComponent({
       type: Array,
       required: true,
     },
-    core_completed: {
+    coreCompleted: {
       type: Boolean,
       required: true,
     },
-    iati_validator_response: {
-      type: Array,
+    iatiValidatorResponse: {
+      type: Object,
       required: true,
     },
   },
   setup(props) {
-    const { types } = toRefs(props);
+    const { types, coreCompleted } = toRefs(props);
     // vue provides
     provide('types', types.value);
-
-    provide('activityID', props.activity.id);
+    provide('coreCompleted', coreCompleted.value);
 
     const toastData = reactive({
       visibility: false,
@@ -439,6 +453,8 @@ export default defineComponent({
       elementProps = elements.value,
       statusProps = status.value,
       transactionProps = transactions.value;
+
+    provide('activityID', activity.value.id);
 
     const { results } = toRefs(props);
     activityProps.result = results.value;
@@ -523,10 +539,36 @@ export default defineComponent({
       return title.replace(/_/gi, ' ');
     }
 
-    //publish component data
-    const publishData = {
-      id: props.activity.id,
-    };
+    /**
+     * Errors component
+     *
+     */
+    let { iatiValidatorResponse } = toRefs(props);
+    const validationResult = iatiValidatorResponse.value;
+
+    const errorReactive = ref(false);
+    const errorData = ref([]);
+
+    if (validationResult && validationResult.errors.length > 0) {
+      errorReactive.value = true;
+
+      errorData.value = validationResult.errors;
+    }
+
+    /**
+     * Publish message toast after publishing
+     */
+    interface PublishMessage {
+      message: string;
+      type: boolean;
+    }
+
+    const publishMessage: PublishMessage = reactive({
+      message: '',
+      type: false,
+    });
+
+    provide('publishMessage', publishMessage);
 
     return {
       groupedData,
@@ -544,7 +586,9 @@ export default defineComponent({
       props,
       formatTitle,
       pageTitle,
-      publishData,
+      errorReactive,
+      errorData,
+      publishMessage,
     };
   },
 });

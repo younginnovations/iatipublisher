@@ -52,24 +52,24 @@ class ActivityWorkflowController extends Controller
             $activity = $this->activityWorkflowService->findActivity($id);
 
             if ($this->hasNoPublisherInfo($activity->organization->settings)) {
-                return response()->json(['success' => false, 'error' => 'Please update the publishing information first.']);
+                return response()->json(['success' => false, 'message' => 'Please update the publishing information first.']);
             }
 
             DB::beginTransaction();
             $this->activityWorkflowService->publishActivity($activity);
             DB::commit();
 
-            return redirect()->route('admin.activities.show', $id)->with('success', 'Activity has been published successfully.');
+            return response()->json(['success' => true, 'message' => 'Activity has been published successfully.']);
         } catch (PublisherNotFound $message) {
             DB::rollBack();
             logger()->error($message->getMessage());
 
-            return redirect()->route('admin.activities.show', $id)->with('error', $message->getMessage());
+            return response()->json(['success' => false, 'message' => $message->getMessage()]);
         } catch (\Exception $e) {
             DB::rollBack();
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while publishing activity.');
+            return response()->json(['success' => false, 'message' => 'Error has occurred while publishing activity.']);
         }
     }
 
@@ -111,18 +111,18 @@ class ActivityWorkflowController extends Controller
             $activity = $this->activityWorkflowService->findActivity($id);
 
             if (!$activity->already_published && $activity->status === 'draft') {
-                return redirect()->route('admin.activities.show', $id)->with('error', 'This activity has not been published to un-publish.');
+                return response()->json(['success' => false, 'message' => 'This activity has not been published to un-publish.']);
             }
 
             $this->activityWorkflowService->unpublishActivity($activity);
             DB::commit();
 
-            return redirect()->route('admin.activities.show', $id)->with('success', 'Activity has been un-published successfully.');
+            return response()->json(['success' => true, 'message' => 'Activity has been un-published successfully.']);
         } catch (\Exception $e) {
             DB::rollBack();
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while un-publishing activity.');
+            return response()->json(['success' => false, 'message' => 'Error has occurred while un-publishing activity.']);
         }
     }
 
@@ -148,7 +148,7 @@ class ActivityWorkflowController extends Controller
             if ($ex->getCode() == 422) {
                 $response = $ex->getResponse()->getBody()->getContents();
 
-                if ($this->validatorService->updateOrCreateResponse($id, $response)) {
+                if ($this->validatorService->updateOrCreateResponse($id, json_decode($response, true))) {
                     return response()->json(json_decode($response, true));
                 }
             }
