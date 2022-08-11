@@ -12,6 +12,9 @@ use App\IATI\Services\ElementCompleteService;
  */
 class ActivityObserver
 {
+    /**
+     * @var ElementCompleteService
+     */
     protected ElementCompleteService $elementCompleteService;
 
     /**

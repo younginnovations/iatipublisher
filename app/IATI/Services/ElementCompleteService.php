@@ -316,14 +316,14 @@ class ElementCompleteService
             if (!empty($mandatorySubElementAttributes) || !empty($mandatoryChildSubElements)) {
                 if (!array_key_exists($key, $data)) {
                     //dd('isSubElementCompleted fx is called1', 'Sub element key not present', 'mandatory-sub-element_attributes:', $mandatorySubElementAttributes, 'mandatory-child-sub-elements: ',
-                    //   $mandatoryChildSubElements, $key, $data);
+                    //  $mandatoryChildSubElements, $key, $data);
 
                     return false;
                 }
 
                 if (empty($data[$key])) {
                     //dd('isSubElementCompleted fx is called2', 'Sub element empty', 'mandatory-sub-element_attributes:', $mandatorySubElementAttributes, 'mandatory-child-sub-elements: ',
-                    // $mandatoryChildSubElements, $key, $data);
+                    //$mandatoryChildSubElements, $key, $data);
 
                     return false;
                 }
@@ -942,30 +942,6 @@ class ElementCompleteService
     }
 
     /**
-     * Checks if target or actual or baseline elements are completed.
-     *
-     * @param $elementSchema
-     * @param $data
-     *
-     * @return bool
-     * @throws \JsonException
-     */
-    public function isTargetAndActualAndBaselineDataCompleted($elementSchema, $data): bool
-    {
-        if (!$this->isSingleDimensionAttributeCompleted($elementSchema, $data)) {
-            return false;
-        }
-
-        foreach (['comment', 'dimension', 'location'] as $item) {
-            if (!$this->isLevelOneMultiDimensionDataCompleted($elementSchema['sub_elements'][$item], getArr($data, $item))) {
-                return false;
-            }
-        }
-
-        return true;
-    }
-
-    /**
      * Checks if period element is completed.
      *
      * @param $data
@@ -977,18 +953,24 @@ class ElementCompleteService
     {
         $this->element = 'period';
         $elementSchema = getElementSchema($this->element);
-        $subElements = $this->getMandatorySubElements($elementSchema);
 
         foreach ($data as $datum) {
             foreach (['period_start', 'period_end'] as $item) {
-                if (!$this->isLevelOneMultiDimensionDataCompleted($subElements[$item], getArr($datum, $item))) {
+                if (!$this->isLevelOneMultiDimensionDataCompleted($elementSchema['sub_elements'][$item], getArr($datum, $item))) {
                     return false;
                 }
             }
 
             foreach (['target', 'actual'] as $item) {
-                if (!$this->isTargetAndActualAndBaselineCompleted($datum, $elementSchema['sub_elements'], $item)) {
-                    return false;
+                $itemData = $datum[$item];
+                $doc_element = $elementSchema['sub_elements'][$item]['sub_elements']['document_link'];
+
+                foreach ($itemData as $itemDatum) {
+                    $docs = getArr($itemDatum, 'document_link');
+
+                    if (!$this->isLevelTwoMultiDimensionDataCompleted($doc_element, $docs)) {
+                        return false;
+                    }
                 }
             }
         }
@@ -998,18 +980,19 @@ class ElementCompleteService
 
     /**
      * @param $data
-     * @param $subElements
-     * @param $key
+     * @param $subElement
      *
      * @return bool
      * @throws \JsonException
      */
-    public function isTargetAndActualAndBaselineCompleted($data, $subElements, $key): bool
+    public function isBaselineCompleted($data, $subElement): bool
     {
-        $attributeData = getArr($data, $key);
+        foreach ($data as $baselineDatum) {
+            if (!$this->isLevelOneMultiDimensionDataCompleted($subElement['sub_elements']['comment'], getArr($baselineDatum, 'comment'))) {
+                return false;
+            }
 
-        foreach ($attributeData as $attributeDatum) {
-            if (!$this->isTargetAndActualAndBaselineDataCompleted($subElements[$key], $attributeDatum)) {
+            if (!$this->isLevelTwoMultiDimensionDataCompleted($subElement['sub_elements']['document_link'], getArr($baselineDatum, 'document_link'))) {
                 return false;
             }
         }
@@ -1063,7 +1046,7 @@ class ElementCompleteService
                 return false;
             }
 
-            if (!$this->isTargetAndActualAndBaselineCompleted($datum, $elementSchema['sub_elements'], 'baseline')) {
+            if (!$this->isBaselineCompleted($datum['baseline'], $elementSchema['sub_elements']['baseline'])) {
                 return false;
             }
         }

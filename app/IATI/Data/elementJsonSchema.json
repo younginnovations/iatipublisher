@@ -1903,7 +1903,7 @@
             "type": "select",
             "choices": "Activity/GeographicVocabulary.json",
             "required": true,
-            "criteria": "",
+            "criteria": "mandatory",
             "hover_text": "An IATI code for a recognised administrative boundary repository. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/location/administrative/'>For more information</a>",
             "help_text": ""
           },
@@ -1913,7 +1913,7 @@
             "type": "select",
             "choices": "Activity/Country.json",
             "required": true,
-            "criteria": "",
+            "criteria": "mandatory",
             "hover_text": "The code for the administrative area being reported from the vocabulary specified. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/location/administrative/'>For more information</a>",
             "help_text": ""
           },

@@ -8,6 +8,7 @@ use App\IATI\Models\Activity\Activity;
 use App\IATI\Services\ElementCompleteService;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * Class Organization.
@@ -43,8 +44,17 @@ class Organization extends Model
      * @var array
      */
     protected $casts = ['reporting_org' => 'json'];
+
+    /**
+     * @var ElementCompleteService
+     */
     protected ElementCompleteService $elementCompleteService;
 
+    /**
+     * Construct function.
+     *
+     * @param array $attributes
+     */
     public function __construct(array $attributes = [])
     {
         parent::__construct($attributes);
@@ -55,9 +65,9 @@ class Organization extends Model
     /**
      * Organisation has many activities.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
-    public function activities(): \Illuminate\Database\Eloquent\Relations\HasMany
+    public function activities(): HasMany
     {
         return $this->hasMany(Activity::class, 'org_id', 'id');
     }

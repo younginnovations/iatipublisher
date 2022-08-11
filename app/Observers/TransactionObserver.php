@@ -12,6 +12,9 @@ use App\IATI\Services\ElementCompleteService;
  */
 class TransactionObserver
 {
+    /**
+     * @var ElementCompleteService
+     */
     protected ElementCompleteService $elementCompleteService;
 
     /**

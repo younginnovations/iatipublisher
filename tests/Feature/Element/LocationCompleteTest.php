@@ -35,7 +35,15 @@ class LocationCompleteTest extends ElementCompleteTest
      */
     public function test_location_mandatory_sub_elements(): void
     {
-        $this->test_mandatory_sub_elements($this->element, ['location_reach' => ['code'], 'location_id' => ['vocabulary', 'code'], 'point' => ['srs_name'], 'exactness' => ['code'], 'location_class' => ['code'], 'feature_designation' => ['code']]);
+        $this->test_mandatory_sub_elements($this->element, [
+            'location_reach'      => ['code'],
+            'administrative'      => ['vocabulary', 'code'],
+            'location_id'         => ['vocabulary', 'code'],
+            'point'               => ['srs_name'],
+            'location_class'      => ['code'],
+            'exactness'           => ['code'],
+            'feature_designation' => ['code'],
+        ]);
     }
 
     /**
