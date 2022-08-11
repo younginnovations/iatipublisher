@@ -12,7 +12,7 @@
           class="mr-1 text-base text-crimson-50"
           icon="warning-fill"
         ></svg-vue>
-        <div class="font-bold">7 Issues found</div>
+        <div class="font-bold">{{ errorData.length }} Issues found</div>
       </div>
       <button class="validation__toggle" @click="errorToggle()">Show</button>
     </div>
@@ -26,7 +26,9 @@
   >
     <div class="flex items-center justify-between validation__heading">
       <div class="flex items-center text-sm leading-relaxed icon grow">
-        <div class="font-bold">7 Issues found in IATI Validator</div>
+        <div class="font-bold">
+          {{ errorData.length }} Issues found in IATI Validator
+        </div>
       </div>
       <button class="validation__toggle" @click="errorToggle()">Hide</button>
     </div>
@@ -36,35 +38,68 @@
         :key="e"
         :class="{ 'mb-4': Number(e) != Object.keys(tempData).length - 1 }"
       >
-        <ErrorLists :type="e" :errors="error" />
+        <ErrorLists v-if="error.length > 0" :type="e" :errors="error" />
       </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
+import { toRefs, reactive, defineProps } from 'vue';
 import { useToggle } from '@vueuse/core';
 
 // components
 import ErrorLists from 'Components/sections/ErrorLists.vue';
 
+const props = defineProps({
+  errorData: { type: Array, required: true },
+});
+
 // toggle issues
 const [errorValue, errorToggle] = useToggle();
 
-const tempData = {
-  errors: [
-    'The activity identifier must be unique for each activity.',
-    'The activity identifier must be different to the organization identifier of the reporting organization.',
-    'The actual start date of the activity must be before the actual end date.',
-    'The transaction value date must not be in the future.',
-  ],
-  warnings: [
-    'The activity identifier must be unique for each activity.',
-    'The activity identifier must be different to the organisation identifier of the reporting organisation.',
-    'The activity identifier must be unique for each activity.',
-  ],
-  critical: ['The activity identifier must be unique for each activity.'],
-};
+/**
+ * list of errors
+ **/
+interface ErrorInterface {
+  category: string;
+  context: [];
+  id: string;
+  identifier: string;
+  message: string;
+  severity: string;
+  title: string;
+}
+const { errorData } = toRefs(props);
+const errorDataProp = errorData.value as ErrorInterface[];
+
+interface TempData {
+  errors: string[];
+  critical: string[];
+  warnings: string[];
+}
+
+const tempData: TempData = reactive({
+  errors: [],
+  critical: [],
+  warnings: [],
+});
+
+for (const data of errorDataProp) {
+  const severity = data.severity;
+
+  switch (severity) {
+    case 'critical':
+      tempData.critical.push(data.message);
+      break;
+    case 'error':
+      tempData.errors.push(data.message);
+      break;
+    case 'warning':
+      tempData.warnings.push(data.message);
+      break;
+  }
+}
 </script>
 
 <style lang="scss" scoped>

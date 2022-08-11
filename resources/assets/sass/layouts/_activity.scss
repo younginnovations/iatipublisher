@@ -107,3 +107,9 @@
 .top {
   margin-top: 1px;
 }
+
+.modal {
+  p:not(:last-child) {
+    margin-bottom: 24px;
+  }
+}
