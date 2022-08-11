@@ -35,7 +35,7 @@ class LocationCompleteTest extends ElementCompleteTest
      */
     public function test_location_mandatory_sub_elements(): void
     {
-        $this->test_mandatory_sub_elements($this->element, ['location_id' => ['vocabulary', 'code'], 'point' => ['srs_name'], 'location_class' => ['code'], 'feature_designation' => ['code']]);
+        $this->test_mandatory_sub_elements($this->element, ['location_reach' => ['code'], 'location_id' => ['vocabulary', 'code'], 'point' => ['srs_name'], 'exactness' => ['code'], 'location_class' => ['code'], 'feature_designation' => ['code']]);
     }
 
     /**
@@ -218,7 +218,7 @@ class LocationCompleteTest extends ElementCompleteTest
             JSON_THROW_ON_ERROR
         );
 
-        $this->test_level_two_multi_dimensional_element_incomplete($this->element, $actualData);
+        $this->test_level_two_multi_dimensional_element_complete($this->element, $actualData);
     }
 
     /**
@@ -236,7 +236,7 @@ class LocationCompleteTest extends ElementCompleteTest
             JSON_THROW_ON_ERROR
         );
 
-        $this->test_level_two_multi_dimensional_element_incomplete($this->element, $actualData);
+        $this->test_level_two_multi_dimensional_element_complete($this->element, $actualData);
     }
 
     /**
@@ -254,7 +254,7 @@ class LocationCompleteTest extends ElementCompleteTest
             JSON_THROW_ON_ERROR
         );
 
-        $this->test_level_two_multi_dimensional_element_incomplete($this->element, $actualData);
+        $this->test_level_two_multi_dimensional_element_complete($this->element, $actualData);
     }
 
     /**
@@ -272,7 +272,7 @@ class LocationCompleteTest extends ElementCompleteTest
             JSON_THROW_ON_ERROR
         );
 
-        $this->test_level_two_multi_dimensional_element_incomplete($this->element, $actualData);
+        $this->test_level_two_multi_dimensional_element_complete($this->element, $actualData);
     }
 
     /**
@@ -290,7 +290,7 @@ class LocationCompleteTest extends ElementCompleteTest
             JSON_THROW_ON_ERROR
         );
 
-        $this->test_level_two_multi_dimensional_element_incomplete($this->element, $actualData);
+        $this->test_level_two_multi_dimensional_element_complete($this->element, $actualData);
     }
 
     /**
@@ -308,7 +308,7 @@ class LocationCompleteTest extends ElementCompleteTest
             JSON_THROW_ON_ERROR
         );
 
-        $this->test_level_two_multi_dimensional_element_incomplete($this->element, $actualData);
+        $this->test_level_two_multi_dimensional_element_complete($this->element, $actualData);
     }
 
     /**
@@ -326,7 +326,7 @@ class LocationCompleteTest extends ElementCompleteTest
             JSON_THROW_ON_ERROR
         );
 
-        $this->test_level_two_multi_dimensional_element_incomplete($this->element, $actualData);
+        $this->test_level_two_multi_dimensional_element_complete($this->element, $actualData);
     }
 
     /**
@@ -344,7 +344,7 @@ class LocationCompleteTest extends ElementCompleteTest
             JSON_THROW_ON_ERROR
         );
 
-        $this->test_level_two_multi_dimensional_element_incomplete($this->element, $actualData);
+        $this->test_level_two_multi_dimensional_element_complete($this->element, $actualData);
     }
 
     /**
@@ -362,7 +362,7 @@ class LocationCompleteTest extends ElementCompleteTest
             JSON_THROW_ON_ERROR
         );
 
-        $this->test_level_two_multi_dimensional_element_incomplete($this->element, $actualData);
+        $this->test_level_two_multi_dimensional_element_complete($this->element, $actualData);
     }
 
     /**
