@@ -114,9 +114,9 @@ class IndicatorService
     {
         $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
         $resultIndicator = $this->getResultIndicator($resultId, $indicatorId) ?? [];
-        $this->resultElementFormCreator->url = route('admin.activities.result.indicator.update', [$activityId, $resultId, $indicatorId]);
+        $this->resultElementFormCreator->url = route('admin.result.indicator.update', [$activityId, $resultId, $indicatorId]);
 
-        return $this->resultElementFormCreator->editForm($resultIndicator->indicator, $element['indicator'], 'PUT', '/activities/' . $activityId);
+        return $this->resultElementFormCreator->editForm($resultIndicator->indicator, $element['indicator'], 'PUT', '/activity/' . $activityId);
     }
 
     /**
