@@ -17,12 +17,12 @@
         <Btn
           text="Add Indicator"
           icon="add"
-          :link="`${resultLink}/indicator/create`"
+          :link="`create`"
           class="mr-2.5"
         />
         <Btn
           text="Edit Indicator"
-          :link="`${resultLink}/indicator/${indicator.id}/edit`"
+          :link="`${indicator.id}/edit`"
         />
       </div>
     </PageTitle>
@@ -285,6 +285,7 @@ export default defineComponent({
       breadcrumbData,
       toastData,
       periodData,
+      resultId,
     };
   },
 });
