@@ -3,7 +3,7 @@
     <PageTitle
       :breadcrumb-data="breadcrumbData"
       title="Period Detail"
-      :back-link="`${indicatorLink}/period`"
+      :back-link="`${periodLink}`"
     >
       <div class="mb-3">
         <Toast
@@ -17,12 +17,12 @@
         <Btn
           text="Add Period"
           icon="add"
-          :link="`${indicatorLink}/period/create`"
+          :link="`${periodLink}/create`"
           class="mr-2.5"
         />
         <Btn
           text="Edit Period"
-          :link="`${indicatorLink}/period/${period.id}/edit`"
+          :link="`${periodLink}/${period.id}/edit`"
         />
       </div>
     </PageTitle>
@@ -139,7 +139,8 @@ export default defineComponent({
       resultLink = `${activityLink}/result/${resultId}`,
       indicatorId = parentData.value.indicator.id,
       indicatorTitle = getActivityTitle(parentData.value.indicator.title, 'en'),
-      indicatorLink = `${resultLink}/indicator/${indicatorId}`;
+      indicatorLink = `/result/${resultId}/indicator/${indicatorId}`,
+      periodLink = `/indicator/${indicatorId}/period`;
 
     /**
      * Breadcrumb data
@@ -187,6 +188,7 @@ export default defineComponent({
       activityLink,
       resultLink,
       indicatorLink,
+      periodLink,
       toastData,
     };
   },

@@ -12,7 +12,7 @@
           :type="toastData.type"
         />
       </div>
-      <a :href="`${indicatorLink}/period/create`">
+      <a :href="`${periodLink}/create`">
         <Btn text="Add Period" icon="plus" type="primary" />
       </a>
     </PageTitle>
@@ -42,7 +42,7 @@
             <td>
               <a
                 class="text-sm font-bold leading-relaxed text-n-50"
-                :href="`${indicatorLink}/period/${pe.id}`"
+                :href="`${periodLink}/${pe.id}`"
               >
                 {{
                   pe.period.period_start[0].date
@@ -61,7 +61,7 @@
               <div class="flex">
                 <a
                   class="mr-6 text-n-40"
-                  :href="`${indicatorLink}/period/${pe.id}/edit`"
+                  :href="`${periodLink}/${pe.id}/edit`"
                 >
                   <svg-vue icon="edit" class="text-xl"></svg-vue>
                 </a>
@@ -130,7 +130,8 @@ export default defineComponent({
       resultLink = `${activityLink}/result/${resultId}`,
       indicatorTitle = parentData.value.indicator.title,
       indicatorId = parentData.value.indicator.id,
-      indicatorLink = `${resultLink}/indicator/${indicatorId}`;
+      indicatorLink = `/result/${resultId}/indicator/${indicatorId}`,
+      periodLink = `/indicator/${indicatorId}/period`;
 
     const periodsData = reactive({});
     const isEmpty = ref(false);
@@ -147,7 +148,7 @@ export default defineComponent({
     const breadcrumbData = [
       {
         title: 'Your Activities',
-        link: '/activities',
+        link: '/activity',
       },
       {
         title: getActivityTitle(activityTitle, 'en'),
@@ -205,6 +206,7 @@ export default defineComponent({
     return {
       breadcrumbData,
       indicatorLink,
+      periodLink,
       dateFormat,
       periodsData,
       getActivityTitle,

@@ -97,9 +97,9 @@ class ActivityService
      *
      * @param $id
      *
-     * @return Activity
+     * @return Activity|null
      */
-    public function getActivity($id): Activity
+    public function getActivity($id): ?Activity
     {
         return $this->activityRepository->find($id);
     }

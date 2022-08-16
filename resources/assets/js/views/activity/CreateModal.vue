@@ -250,7 +250,7 @@ export default defineComponent({
       loaderVisibility.value = true;
 
       axios
-        .post('/activity', formData)
+        .post('/activities', formData)
         .then((res) => {
           const response = res.data;
           loaderVisibility.value = false;

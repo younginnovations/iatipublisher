@@ -3,7 +3,7 @@
     <PageTitle
       :breadcrumb-data="breadcrumbData"
       title="Indicator Detail"
-      :back-link="`${resultLink}/indicator`"
+      :back-link="`${indicatorLink}`"
     >
       <div class="mb-3">
         <Toast
@@ -17,12 +17,12 @@
         <Btn
           text="Add Indicator"
           icon="add"
-          :link="`create`"
+          :link="`${indicatorLink}/create`"
           class="mr-2.5"
         />
         <Btn
           text="Edit Indicator"
-          :link="`${indicator.id}/edit`"
+          :link="`${indicatorLink}/${indicator.id}/edit`"
         />
       </div>
     </PageTitle>
@@ -240,6 +240,7 @@ export default defineComponent({
       resultId = indicator.value.result_id,
       resultTitled = getActivityTitle(resultTitle.value[0].narrative, 'en'),
       resultLink = `${activityLink}/result/${resultId}`,
+      indicatorLink = `/result/${resultId}/indicator`,
       indicatorTitle = getActivityTitle(indicatorData.title[0].narrative, 'en');
 
     /**
@@ -282,10 +283,10 @@ export default defineComponent({
       indicatorData,
       activityLink,
       resultLink,
+      indicatorLink,
       breadcrumbData,
       toastData,
       periodData,
-      resultId,
     };
   },
 });

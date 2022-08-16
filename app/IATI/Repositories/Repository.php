@@ -115,9 +115,9 @@ abstract class Repository implements RepositoryInterface
      * @param       $id
      * @param array $columns
      *
-     * @return object
+     * @return object|null
      */
-    public function find($id, array $columns = ['*']): object
+    public function find($id, array $columns = ['*']): ?object
     {
         return $this->model->find($id, $columns);
     }
@@ -148,5 +148,18 @@ abstract class Repository implements RepositoryInterface
     public function findAllBy($attribute, $value, array $columns = ['*']): object
     {
         return $this->model->where($attribute, '=', $value)->get($columns);
+    }
+
+    /**
+     * Checks if specific resource exists.
+     *
+     * @param       $attribute
+     * @param array $value
+     *
+     * @return bool
+     */
+    public function exists($attribute, $value): bool
+    {
+        return $this->model->where($attribute, '=', $value)->exists();
     }
 }
