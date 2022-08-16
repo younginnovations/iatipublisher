@@ -12,7 +12,7 @@
           :type="toastData.type"
         />
       </div>
-      <a :href="`${resultLink}/indicator/create`">
+      <a :href="`/result/${resultId}/indicator/create`">
         <Btn text="Add Indicator" icon="plus" type="primary" />
       </a>
     </PageTitle>
@@ -258,6 +258,7 @@ export default defineComponent({
       resultLink,
       breadcrumbData,
       toastData,
+      resultId,
     };
   },
 });
