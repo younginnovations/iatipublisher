@@ -140,6 +140,18 @@ class IndicatorRepository
     }
 
     /**
+     * Return specific indicator.
+     *
+     * @param $resultIndicatorId
+     *
+     * @return Model|null
+     */
+    public function getIndicator($resultIndicatorId): ?Model
+    {
+        return $this->resultIndicator->where('id', $resultIndicatorId)->first();
+    }
+
+    /**
      * Returns all indicator belonging to resultId.
      *
      * @param int $resultId
