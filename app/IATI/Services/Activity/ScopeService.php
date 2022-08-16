@@ -6,8 +6,7 @@ namespace App\IATI\Services\Activity;
 
 use App\IATI\Elements\Builder\BaseFormCreator;
 use App\IATI\Models\Activity\Activity;
-use App\IATI\Repositories\Activity\ScopeRepository;
-use Illuminate\Database\Eloquent\Model;
+use App\IATI\Repositories\Activity\ActivityRepository;
 use Kris\LaravelFormBuilder\Form;
 
 /**
@@ -16,9 +15,9 @@ use Kris\LaravelFormBuilder\Form;
 class ScopeService
 {
     /**
-     * @var ScopeRepository
+     * @var ActivityRepository
      */
-    protected ScopeRepository $scopeRepository;
+    protected ActivityRepository $activityRepository;
 
     /**
      * @var BaseFormCreator
@@ -28,13 +27,13 @@ class ScopeService
     /**
      * ScopeService constructor.
      *
-     * @param ScopeRepository $scopeRepository
-     * @param BaseFormCreator $baseFormCreator
+     * @param ActivityRepository $activityRepository
+     * @param BaseFormCreator    $baseFormCreator
      */
-    public function __construct(ScopeRepository $scopeRepository, BaseFormCreator $baseFormCreator)
+    public function __construct(ActivityRepository $activityRepository, BaseFormCreator $baseFormCreator)
     {
-        $this->scopeRepository = $scopeRepository;
-        $this->baseFormCreator = $baseFormCreator;
+        $this->activityRepository = $activityRepository;
+        $this->baseFormCreator    = $baseFormCreator;
     }
 
     /**
@@ -46,7 +45,7 @@ class ScopeService
      */
     public function getScopeData(int $activity_id): ?int
     {
-        return $this->scopeRepository->getScopeData($activity_id);
+        return $this->activityRepository->find($activity_id)->activity_scope;
     }
 
     /**
@@ -54,40 +53,41 @@ class ScopeService
      *
      * @param $id
      *
-     * @return Model
+     * @return object
      */
-    public function getActivityData($id): Model
+    public function getActivityData($id): object
     {
-        return $this->scopeRepository->getActivityData($id);
+        return $this->activityRepository->find($id);
     }
 
     /**
      * Updates activity scope.
      *
+     * @param $id
      * @param $activityScope
-     * @param $activity
      *
      * @return bool
      */
-    public function update($activityScope, $activity): bool
+    public function update($id, $activityScope): bool
     {
-        return $this->scopeRepository->update($activityScope, $activity);
+        return $this->activityRepository->update($id, ['activity_scope' => $activityScope]);
     }
 
     /**
      * Generates scope form.
      *
-     * @param id
+     * @param $id
      *
      * @return Form
+     * @throws \JsonException
      */
     public function formGenerator($id): Form
     {
-        $element = getElementSchema('activity_scope');
-        $model['activity_scope'] = $this->getScopeData($id);
-        $this->baseFormCreator->url = route('admin.activities.scope.update', [$id]);
+        $element                    = getElementSchema('activity_scope');
+        $model['activity_scope']    = $this->getScopeData($id);
+        $this->baseFormCreator->url = route('admin.activity.scope.update', [$id]);
 
-        return $this->baseFormCreator->editForm($model, $element, 'PUT', '/activities/' . $id);
+        return $this->baseFormCreator->editForm($model, $element, 'PUT', '/activity/'.$id);
     }
 
     /**

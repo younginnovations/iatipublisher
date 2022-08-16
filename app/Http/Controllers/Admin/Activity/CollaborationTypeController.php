@@ -36,7 +36,7 @@ class CollaborationTypeController extends Controller
      *
      * @param int $id
      *
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|void
+     * @return View|RedirectResponse
      */
     public function edit(int $id): View|RedirectResponse
     {
@@ -55,10 +55,7 @@ class CollaborationTypeController extends Controller
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activities.show', $id)->with(
-                'error',
-                'Error has occurred while rendering activity collaboration-type form.'
-            );
+            return redirect()->route('admin.activity.show', $id)->with('error', 'Error has occurred while rendering activity collaboration-type form.');
         }
     }
 
@@ -73,29 +70,17 @@ class CollaborationTypeController extends Controller
     public function update(CollaborationTypeRequest $request, $id): JsonResponse|RedirectResponse
     {
         try {
-            $activityData = $this->collaborationTypeService->getActivityData($id);
-            $activityCollaborationType = $request->get('collaboration_type') != null ? (int) $request->get(
-                'collaboration_type'
-            ) : null;
+            $activityCollaborationType = $request->get('collaboration_type') !== null ? (int) $request->get('collaboration_type') : null;
 
-            if (!$this->collaborationTypeService->update($activityCollaborationType, $activityData)) {
-                return redirect()->route('admin.activities.show', $id)->with(
-                    'error',
-                    'Error has occurred while updating activity collaboration-type.'
-                );
+            if (!$this->collaborationTypeService->update($id, $activityCollaborationType)) {
+                return redirect()->route('admin.activity.show', $id)->with('error', 'Error has occurred while updating activity collaboration-type.');
             }
 
-            return redirect()->route('admin.activities.show', $id)->with(
-                'success',
-                'Activity collaboration-type updated successfully.'
-            );
+            return redirect()->route('admin.activity.show', $id)->with('success', 'Activity collaboration-type updated successfully.');
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activities.show', $id)->with(
-                'error',
-                'Error has occurred while updating activity collaboration type.'
-            );
+            return redirect()->route('admin.activity.show', $id)->with('error', 'Error has occurred while updating activity collaboration type.');
         }
     }
 }

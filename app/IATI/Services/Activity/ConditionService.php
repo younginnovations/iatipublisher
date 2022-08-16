@@ -6,10 +6,8 @@ namespace App\IATI\Services\Activity;
 
 use App\IATI\Elements\Builder\MultilevelSubElementFormCreator;
 use App\IATI\Models\Activity\Activity;
-use App\IATI\Repositories\Activity\ConditionRepository;
+use App\IATI\Repositories\Activity\ActivityRepository;
 use App\IATI\Traits\XmlBaseElement;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Arr;
 use Kris\LaravelFormBuilder\Form;
 
 /**
@@ -20,9 +18,9 @@ class ConditionService
     use XmlBaseElement;
 
     /**
-     * @var ConditionRepository
+     * @var ActivityRepository
      */
-    protected ConditionRepository $conditionRepository;
+    protected ActivityRepository $activityRepository;
 
     /**
      * @var MultilevelSubElementFormCreator
@@ -32,12 +30,12 @@ class ConditionService
     /**
      * ConditionService constructor.
      *
-     * @param ConditionRepository $conditionRepository
+     * @param ActivityRepository              $activityRepository
      * @param MultilevelSubElementFormCreator $multilevelSubElementFormCreator
      */
-    public function __construct(ConditionRepository $conditionRepository, MultilevelSubElementFormCreator $multilevelSubElementFormCreator)
+    public function __construct(ActivityRepository $activityRepository, MultilevelSubElementFormCreator $multilevelSubElementFormCreator)
     {
-        $this->conditionRepository = $conditionRepository;
+        $this->activityRepository              = $activityRepository;
         $this->multilevelSubElementFormCreator = $multilevelSubElementFormCreator;
     }
 
@@ -50,7 +48,7 @@ class ConditionService
      */
     public function getConditionData(int $activity_id): ?array
     {
-        return $this->conditionRepository->getConditionData($activity_id);
+        return $this->activityRepository->find($activity_id)->conditions;
     }
 
     /**
@@ -58,40 +56,47 @@ class ConditionService
      *
      * @param $id
      *
-     * @return Model
+     * @return Object
      */
-    public function getActivityData($id): Model
+    public function getActivityData($id): object
     {
-        return $this->conditionRepository->getActivityData($id);
+        return $this->activityRepository->find($id);
     }
 
     /**
      * Updates activity condition.
      *
+     * @param $id
      * @param $activityCondition
-     * @param $activity
      *
      * @return bool
      */
-    public function update($activityCondition, $activity): bool
+    public function update($id, $activityCondition): bool
     {
-        return $this->conditionRepository->update($activityCondition, $activity);
+        foreach ($activityCondition['condition'] as $key => $conditions) {
+            $activityCondition['condition'][$key]['narrative'] = array_values($conditions['narrative']);
+        }
+
+        $activityCondition['condition'] = array_values($activityCondition['condition']);
+
+        return $this->activityRepository->update($id, ['conditions' => $activityCondition]);
     }
 
     /**
      * Generates budget form.
      *
-     * @param id
+     * @param $id
      *
      * @return Form
+     * @throws \JsonException
      */
     public function formGenerator($id): Form
     {
-        $element = getElementSchema('conditions');
-        $model = $this->getConditionData($id) ?: [];
-        $this->multilevelSubElementFormCreator->url = route('admin.activities.conditions.update', [$id]);
+        $element                                    = getElementSchema('conditions');
+        $model                                      = $this->getConditionData($id) ?: [];
+        $this->multilevelSubElementFormCreator->url = route('admin.activity.conditions.update', [$id]);
 
-        return $this->multilevelSubElementFormCreator->editForm($model, $element, 'PUT', '/activities/' . $id);
+        return $this->multilevelSubElementFormCreator->editForm($model, $element, 'PUT', '/activity/'.$id);
     }
 
     /**
@@ -104,16 +109,14 @@ class ConditionService
     public function getXmlData(Activity $activity): array
     {
         $activityData = [];
-        $conditions = (array) $activity->conditions;
+        $conditions   = (array)$activity->conditions;
 
         if (count($conditions)) {
             $activityData[] = [
                 '@attributes' => [
                     'attached' => Arr::get($conditions, 'condition_attached', null),
                 ],
-                'condition'   => Arr::get($conditions, 'condition_attached', null) == '1' ? $this->buildCondition(
-                    Arr::get($conditions, 'condition', [])
-                ) : [],
+                'condition'   => Arr::get($conditions, 'condition_attached', null) === '1' ? $this->buildCondition(Arr::get($conditions, 'condition', [])) : [],
             ];
         }
 
@@ -129,7 +132,9 @@ class ConditionService
      */
     private function buildCondition($conditions): array
     {
-        if (!boolval($conditions)) {
+        $conditionData = [];
+
+        if (!$conditions) {
             $conditions = [['condition_type' => null, 'narrative' => [['narrative' => '', 'language' => '']]]];
         }
 

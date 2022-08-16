@@ -13,7 +13,11 @@
         @show-or-hide="showOrHide"
       />
       <div v-if="!isEmpty" class="mt-6">
-        <Pagination :data="activities" @fetch-activities="fetchActivities" />
+        <Pagination
+          v-if="activities && activities.last_page > 1"
+          :data="activities"
+          @fetch-activities="fetchActivities"
+        />
       </div>
     </div>
   </div>
@@ -38,15 +42,23 @@ export default defineComponent({
     TableLayout,
     Loader,
   },
-  props: {
-    toast: {
-      type: Object,
-      required: true,
-    },
-  },
-  setup(props) {
-    const activities = reactive({});
+  setup() {
+    interface ActivitiesInterface {
+      last_page: number;
+    }
+    const activities = reactive({}) as ActivitiesInterface;
     const isLoading = ref(true);
+    const currentURL = window.location.href;
+    let endpoint = '';
+    let showEmptyTemplate = false;
+
+    if (currentURL.includes('?')) {
+      const queryString = window.location.search;
+      endpoint = `/activities/page${queryString}`;
+    } else {
+      endpoint = `/activities/page`;
+      showEmptyTemplate = true;
+    }
 
     //for session message
     const toastData = reactive({
@@ -74,11 +86,14 @@ export default defineComponent({
     });
 
     onMounted(async () => {
-      axios.get('/activity/page').then((res) => {
+      axios.get(endpoint).then((res) => {
         const response = res.data;
         Object.assign(activities, response.data);
-        isEmpty.value = response.data.data.length ? false : true;
         isLoading.value = false;
+
+        if (showEmptyTemplate) {
+          isEmpty.value = !response.data.data.length;
+        }
       });
     });
 
@@ -97,10 +112,10 @@ export default defineComponent({
     };
 
     function fetchActivities(active_page: number) {
-      axios.get('/activity/page/' + active_page).then((res) => {
+      axios.get('/activities/page/' + active_page).then((res) => {
         const response = res.data;
         Object.assign(activities, response.data);
-        isEmpty.value = response.data ? false : true;
+        isEmpty.value = !response.data;
       });
     }
 

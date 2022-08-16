@@ -240,7 +240,7 @@ class PlannedDisbursementRequest extends ActivityBaseRequest
         $rules = [];
 
         foreach ($formFields as $periodStartKey => $periodStartVal) {
-            $rules[$formBase . '.period_start.' . $periodStartKey . '.iso_date'] = 'date|period_start_end:' . $diff . ',120';
+            $rules[$formBase . '.period_start.' . $periodStartKey . '.iso_date'] = 'nullable|date|period_start_end:' . $diff . ',120';
         }
 
         return $rules;
@@ -282,6 +282,7 @@ class PlannedDisbursementRequest extends ActivityBaseRequest
         $rules = [];
 
         foreach ($formFields as $periodEndKey => $periodEndVal) {
+            $rules[$formBase . '.period_end.' . $periodEndKey . '.iso_date'][] = 'nullable';
             $rules[$formBase . '.period_end.' . $periodEndKey . '.iso_date'][] = 'date';
             $rules[$formBase . '.period_end.' . $periodEndKey . '.iso_date'][] = 'period_start_end:' . $diff . ',120';
             $rules[$formBase . '.period_end.' . $periodEndKey . '.iso_date'][] = sprintf(

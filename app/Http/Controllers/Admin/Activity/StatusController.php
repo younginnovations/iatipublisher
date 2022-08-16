@@ -36,7 +36,7 @@ class StatusController extends Controller
      *
      * @param int $id
      *
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|void
+     * @return View|RedirectResponse|JsonResponse
      */
     public function edit(int $id): View|RedirectResponse|JsonResponse
     {
@@ -55,10 +55,7 @@ class StatusController extends Controller
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activities.show', $id)->with(
-                'error',
-                'Error has occurred while opening activity title form.'
-            );
+            return redirect()->route('admin.activity.show', $id)->with('error', 'Error has occurred while opening activity title form.');
         }
     }
 
@@ -73,20 +70,13 @@ class StatusController extends Controller
     public function update(StatusRequest $request, $id): JsonResponse|RedirectResponse
     {
         try {
-            $activityData = $this->statusService->getActivityData($id);
-            $activityStatus = $request->get('activity_status') != null ? (int) $request->get('activity_status') : null;
+            $activityStatus = $request->get('activity_status') !== null ? (int) $request->get('activity_status') : null;
 
-            if (!$this->statusService->update($activityStatus, $activityData)) {
-                return redirect()->route('admin.activities.show', $id)->with(
-                    'error',
-                    'Error has occurred while updating activity status.'
-                );
+            if (!$this->statusService->update($id, $activityStatus)) {
+                return redirect()->route('admin.activity.show', $id)->with('error', 'Error has occurred while updating activity status.');
             }
 
-            return redirect()->route('admin.activities.show', $id)->with(
-                'success',
-                'Activity status updated successfully.'
-            );
+            return redirect()->route('admin.activity.show', $id)->with('success', 'Activity status updated successfully.');
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 

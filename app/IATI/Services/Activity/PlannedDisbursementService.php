@@ -5,11 +5,8 @@ declare(strict_types=1);
 namespace App\IATI\Services\Activity;
 
 use App\IATI\Elements\Builder\ParentCollectionFormCreator;
-use App\IATI\Models\Activity\Activity;
-use App\IATI\Repositories\Activity\PlannedDisbursementRepository;
 use App\IATI\Traits\XmlBaseElement;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Arr;
+use App\IATI\Repositories\Activity\ActivityRepository;
 use Kris\LaravelFormBuilder\Form;
 
 /**
@@ -20,9 +17,9 @@ class PlannedDisbursementService
     use XmlBaseElement;
 
     /**
-     * @var PlannedDisbursementRepository
+     * @var ActivityRepository
      */
-    protected PlannedDisbursementRepository $plannedDisbursementRepo;
+    protected ActivityRepository $activityRepository;
 
     /**
      * @var ParentCollectionFormCreator
@@ -32,12 +29,12 @@ class PlannedDisbursementService
     /**
      * PlannedDisbursementService constructor.
      *
-     * @param PlannedDisbursementRepository $plannedDisbursementRepo
+     * @param ActivityRepository $activityRepository
      * @param ParentCollectionFormCreator $parentCollectionFormCreator
      */
-    public function __construct(PlannedDisbursementRepository $plannedDisbursementRepo, ParentCollectionFormCreator $parentCollectionFormCreator)
+    public function __construct(ActivityRepository $activityRepository, ParentCollectionFormCreator $parentCollectionFormCreator)
     {
-        $this->plannedDisbursementRepository = $plannedDisbursementRepo;
+        $this->activityRepository = $activityRepository;
         $this->parentCollectionFormCreator = $parentCollectionFormCreator;
     }
 
@@ -50,7 +47,7 @@ class PlannedDisbursementService
      */
     public function getPlannedDisbursementData(int $activity_id): ?array
     {
-        return $this->plannedDisbursementRepository->getPlannedDisbursementData($activity_id);
+        return $this->activityRepository->find($activity_id)->planned_disbursement;
     }
 
     /**
@@ -58,40 +55,42 @@ class PlannedDisbursementService
      *
      * @param $id
      *
-     * @return Model
+     * @return object
      */
-    public function getActivityData($id): Model
+    public function getActivityData($id): object
     {
-        return $this->plannedDisbursementRepository->getActivityData($id);
+        return $this->activityRepository->find($id);
     }
 
     /**
      * Updates activity planned disbursement.
      *
+     * @param $id
      * @param $plannedDisbursement
-     * @param $activity
      *
      * @return bool
+     * @throws \JsonException
      */
-    public function update($plannedDisbursement, $activity): bool
+    public function update($id, $plannedDisbursement): bool
     {
-        return $this->plannedDisbursementRepository->update($plannedDisbursement, $activity);
+        return $this->activityRepository->update($id, ['planned_disbursement' => $this->sanitizePlannedDisbursementData($plannedDisbursement)]);
     }
 
     /**
      * Generates planned disbursement form.
      *
-     * @param id
+     * @param $id
      *
      * @return Form
+     * @throws \JsonException
      */
     public function formGenerator($id): Form
     {
         $element = getElementSchema('planned_disbursement');
         $model['planned_disbursement'] = $this->getPlannedDisbursementData($id) ?: [];
-        $this->parentCollectionFormCreator->url = route('admin.activities.planned-disbursement.update', [$id]);
+        $this->parentCollectionFormCreator->url = route('admin.activity.planned-disbursement.update', [$id]);
 
-        return $this->parentCollectionFormCreator->editForm($model, $element, 'PUT', '/activities/' . $id);
+        return $this->parentCollectionFormCreator->editForm($model, $element, 'PUT', '/activity/' . $id);
     }
 
     /**
@@ -148,5 +147,26 @@ class PlannedDisbursementService
         }
 
         return $activityData;
+    }
+
+    /**
+     * Sanitizes planned disbursement data.
+     *
+     * @param $plannedDisbursement
+     *
+     * @return array
+     * @throws \JsonException
+     */
+    public function sanitizePlannedDisbursementData($plannedDisbursement): array
+    {
+        $element = getElementSchema('planned_disbursement');
+
+        foreach ($plannedDisbursement['planned_disbursement'] as $key => $disbursement) {
+            foreach (array_keys($element['sub_elements']) as $subElement) {
+                $plannedDisbursement['planned_disbursement'][$key][$subElement] = array_values($disbursement[$subElement]);
+            }
+        }
+
+        return array_values($plannedDisbursement['planned_disbursement']);
     }
 }

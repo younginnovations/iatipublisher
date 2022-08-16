@@ -6,7 +6,10 @@ namespace App\IATI\Services\Activity;
 
 use App\IATI\Models\Activity\Activity;
 use App\IATI\Repositories\Activity\ActivityRepository;
+use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Auth;
 
 /**
@@ -32,7 +35,7 @@ class ActivityService
     /**
      * Returns all activities present in database.
      *
-     * @return \Illuminate\Database\Eloquent\Collection
+     * @return Collection
      */
     public function getAllActivities(): Collection
     {
@@ -42,15 +45,17 @@ class ActivityService
     /**
      * Returns all activities present in database.
      *
-     * @param int $page
+     * @param int   $page
+     * @param array $queryParams
      *
-     * @return \Illuminate\Database\Eloquent\Collection
+     * @return Collection|LengthAwarePaginator
      */
-    public function getPaginatedActivities(int $page = 1): Collection|\Illuminate\Pagination\LengthAwarePaginator
+    public function getPaginatedActivities(int $page, array $queryParams): Collection|LengthAwarePaginator
     {
-        $activities = $this->activityRepository->getActivityForOrganization(Auth::user()->organization_id, $page);
+        $activities = $this->activityRepository->getActivityForOrganization(Auth::user()->organization_id, $queryParams, $page);
 
-        foreach ($activities as $activity) {
+        foreach ($activities as $idx => $activity) {
+            $activities[$idx]['default_title_narrative'] = $activity->default_title_narrative;
             $activity->setAttribute('coreCompleted', isCoreElementCompleted(array_merge(['reporting_org' => $activity->organization->reporting_org_complete_status], $activity->element_status)));
         }
 
@@ -62,9 +67,9 @@ class ActivityService
      *
      * @param $input
      *
-     * @return \Illuminate\Database\Eloquent\Model
+     * @return Model
      */
-    public function store($input): \Illuminate\Database\Eloquent\Model
+    public function store($input): Model
     {
         $activity_identifier = [
             'activity_identifier'  => $input['activity_identifier'],
@@ -99,13 +104,25 @@ class ActivityService
     }
 
     /**
+     * Checks if specific activity exists.
+     *
+     * @param int $id
+     *
+     * @return bool
+     */
+    public function activityExists(int $id): bool
+    {
+        return $this->getActivity($id) !== null;
+    }
+
+    /**
      * Returns activity identifiers used by an organization.
      *
      * @param $id
      *
-     * @return Activity
+     * @return object|null
      */
-    public function getActivity($id): Activity
+    public function getActivity($id): ?object
     {
         return $this->activityRepository->find($id);
     }
@@ -115,7 +132,7 @@ class ActivityService
      *
      * @param $serviceName
      *
-     * @return \Illuminate\Contracts\Foundation\Application|mixed
+     * @return Application|mixed
      */
     public function getService($serviceName): mixed
     {
@@ -196,9 +213,13 @@ class ActivityService
                 $organizationSettings->default_values,
                 $organizationSettings->activity_default_values
             );
-        } elseif ($organizationSettings->default_values) {
+        }
+
+        if ($organizationSettings->default_values) {
             return $organizationSettings->default_values;
-        } elseif ($organizationSettings->activity_default_values) {
+        }
+
+        if ($organizationSettings->activity_default_values) {
             return $organizationSettings->activity_default_values;
         }
 

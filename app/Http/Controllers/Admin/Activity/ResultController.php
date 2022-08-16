@@ -6,7 +6,6 @@ namespace App\Http\Controllers\Admin\Activity;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Activity\Result\ResultRequest;
-use App\IATI\Models\Activity\Result;
 use App\IATI\Services\Activity\ActivityService;
 use App\IATI\Services\Activity\ResultService;
 use Illuminate\Contracts\Foundation\Application;
@@ -34,7 +33,7 @@ class ResultController extends Controller
     /**
      * ResultController Constructor.
      *
-     * @param ResultService $resultService
+     * @param ResultService   $resultService
      * @param ActivityService $activityService
      */
     public function __construct(
@@ -46,15 +45,17 @@ class ResultController extends Controller
     }
 
     /**
-     * Display a listing of the resource.
+     * Renders result listing page.
      *
-     * @return Response
+     * @param $activityId
+     *
+     * @return View|RedirectResponse
      */
     public function index($activityId): View|RedirectResponse
     {
         try {
             $activity = $this->activityService->getActivity($activityId);
-            $results = $this->resultService->getActivityResult($activityId);
+            $results = $this->resultService->getActivityResults($activityId);
             $types = getResultTypes();
             $toast = generateToastData();
 
@@ -62,7 +63,7 @@ class ResultController extends Controller
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activities.result.index', $activityId)->with(
+            return redirect()->route('admin.activity.result.index', $activityId)->with(
                 'error',
                 'Error has occurred while rendering activity transactions listing.'
             );
@@ -70,30 +71,50 @@ class ResultController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Returns paginated results.
+     *
+     * @param int $activityId
+     * @param int $page
+     *
+     * @return JsonResponse
+     */
+    public function getPaginatedResults(int $activityId, int $page = 1): JsonResponse
+    {
+        try {
+            $result = $this->resultService->getPaginatedResult($activityId, $page);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Results fetched successfully',
+                'data'    => $result,
+            ]);
+        } catch (\Exception $e) {
+            logger()->error($e->getMessage());
+
+            return response()->json(['success' => false, 'message' => 'Error occurred while fetching the data']);
+        }
+    }
+
+    /**
+     * Renders result create form.
      *
      * @param $id
      *
      * @return Factory|View|RedirectResponse|Application
      */
-    public function create(
-        $id
-    ): Factory|View|RedirectResponse|Application {
+    public function create($id): Factory|View|RedirectResponse|Application
+    {
         try {
             $element = getElementSchema('result');
             $activity = $this->activityService->getActivity($id);
             $form = $this->resultService->createFormGenerator($id);
-            $data = ['core'   => $element['criteria'] ?? false,
-                     'status' => false,
-                     'title'  => $element['label'],
-                     'name'   => 'result',
-            ];
+            $data = ['core' => $element['criteria'] ?? false, 'status' => false, 'title' => $element['label'], 'name' => 'result'];
 
             return view('admin.activity.result.edit', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activities.result.index', $id)->with(
+            return redirect()->route('admin.activity.result.index', $id)->with(
                 'error',
                 'Error has occurred while rendering activity result form.'
             );
@@ -101,9 +122,10 @@ class ResultController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Saves new result.
      *
      * @param ResultRequest $request
+     * @param               $activityId
      *
      * @return RedirectResponse
      */
@@ -116,14 +138,14 @@ class ResultController extends Controller
                 'result'      => $resultData,
             ]);
 
-            return redirect()->route('admin.activities.result.show', [$activityId, $result['id']])->with(
+            return redirect()->route('admin.activity.result.show', [$activityId, $result['id']])->with(
                 'success',
                 'Activity result created successfully.'
             );
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activities.result.index', $activityId)->with(
+            return redirect()->route('admin.activity.result.index', $activityId)->with(
                 'error',
                 'Error has occurred while creating activity result.'
             );
@@ -150,7 +172,7 @@ class ResultController extends Controller
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activities.result.index', $activityId)->with(
+            return redirect()->route('admin.activity.result.index', $activityId)->with(
                 'error',
                 'Error has occurred while rending result detail page.'
             );
@@ -158,7 +180,7 @@ class ResultController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Renders result edit page.
      *
      * @param $activityId
      * @param $resultId
@@ -170,18 +192,14 @@ class ResultController extends Controller
         try {
             $element = getElementSchema('result');
             $activity = $this->activityService->getActivity($activityId);
-            $form = $this->resultService->editFormGenerator($resultId, $activityId);
-            $data = ['core'   => $element['criteria'] ?? false,
-                     'status' => false,
-                     'title'  => $element['label'],
-                     'name'   => 'result',
-            ];
+            $form = $this->resultService->editFormGenerator($activityId, $resultId);
+            $data = ['core' => $element['criteria'] ?? false, 'status' => false, 'title' => $element['label'], 'name' => 'result'];
 
             return view('admin.activity.result.edit', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activities.result.index', $activityId)->with(
+            return redirect()->route('admin.activity.result.index', $activityId)->with(
                 'error',
                 'Error has occurred while rendering activity result form.'
             );
@@ -189,10 +207,11 @@ class ResultController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Updates specific result.
      *
-     * @param $activityId
-     * @param $resultId
+     * @param ResultRequest $request
+     * @param               $activityId
+     * @param               $resultId
      *
      * @return RedirectResponse
      */
@@ -200,26 +219,22 @@ class ResultController extends Controller
     {
         try {
             $resultData = $request->except(['_method', '_token']);
-            $result = $this->resultService->getResult($resultId, $activityId);
 
-            if (!$this->resultService->update([
-                'activity_id' => $activityId,
-                'result'      => $resultData,
-            ], $result)) {
-                return redirect()->route('admin.activities.result.index', $activityId)->with(
+            if (!$this->resultService->update($resultId, ['activity_id' => $activityId, 'result' => $resultData])) {
+                return redirect()->route('admin.activity.result.index', $activityId)->with(
                     'error',
                     'Error has occurred while updating activity result.'
                 );
             }
 
-            return redirect()->route('admin.activities.result.show', [$activityId, $resultId])->with(
+            return redirect()->route('admin.activity.result.show', [$activityId, $resultId])->with(
                 'success',
                 'Activity result updated successfully.'
             );
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activities.result.index', $activityId)->with(
+            return redirect()->route('admin.activity.result.index', $activityId)->with(
                 'error',
                 'Error has occurred while updating activity result.'
             );
@@ -236,30 +251,5 @@ class ResultController extends Controller
     public function destroy(Result $result)
     {
         //
-    }
-
-    /**
-     * Get results of the corresponding activity.
-     *
-     * @param $activityId
-     * @param $page
-     *
-     * @return JsonResponse
-     */
-    public function getResult($activityId, $page = 1): JsonResponse
-    {
-        try {
-            $result = $this->resultService->getPaginatedResult($activityId, $page);
-
-            return response()->json([
-                'success' => true,
-                'message' => 'Results fetched successfully',
-                'data'    => $result,
-            ]);
-        } catch (\Exception $e) {
-            logger()->error($e->getMessage());
-
-            return response()->json(['success' => false, 'message' => 'Error occurred while fetching the data']);
-        }
     }
 }

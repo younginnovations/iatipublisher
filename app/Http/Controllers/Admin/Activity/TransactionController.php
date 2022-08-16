@@ -10,6 +10,8 @@ use App\IATI\Elements\Builder\BaseFormCreator;
 use App\IATI\Models\Activity\Transaction;
 use App\IATI\Services\Activity\ActivityService;
 use App\IATI\Services\Activity\TransactionService;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
@@ -37,9 +39,9 @@ class TransactionController extends Controller
     /**
      * TransactionController Constructor.
      *
-     * @param BaseFormCreator $baseFormCreator
+     * @param BaseFormCreator    $baseFormCreator
      * @param TransactionService $transactionService
-     * @param ActivityService $activityService
+     * @param ActivityService    $activityService
      */
     public function __construct(
         BaseFormCreator $baseFormCreator,
@@ -56,9 +58,9 @@ class TransactionController extends Controller
      *
      * @param $activityId
      *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Http\RedirectResponse|\Illuminate\Contracts\Foundation\Application
+     * @return Factory|View|RedirectResponse|Application
      */
-    public function index($activityId): \Illuminate\Contracts\View\Factory|View|RedirectResponse|\Illuminate\Contracts\Foundation\Application
+    public function index($activityId): Factory|View|RedirectResponse|Application
     {
         try {
             $activity = $this->activityService->getActivity($activityId);
@@ -70,7 +72,7 @@ class TransactionController extends Controller
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activities.show', $activityId)->with(
+            return redirect()->route('admin.activity.show', $activityId)->with(
                 'error',
                 'Error has occurred while rendering activity transactions listing.'
             );
@@ -78,173 +80,14 @@ class TransactionController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Returns paginated transactions.
      *
-     * @param $activityId
-     *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Http\RedirectResponse|\Illuminate\Contracts\Foundation\Application
-     */
-    public function create($activityId): \Illuminate\Contracts\View\Factory|View|RedirectResponse|\Illuminate\Contracts\Foundation\Application
-    {
-        try {
-            $element = getElementSchema('transactions');
-            $activity = $this->activityService->getActivity($activityId);
-            $form = $this->transactionService->createFormGenerator($activityId);
-            $data = ['core' => $element['criteria'] ?? false, 'status' => false, 'title' => $element['label'], 'name' => 'transactions'];
-
-            return view('admin.activity.transaction.edit', compact('form', 'activity', 'data'));
-        } catch (\Exception $e) {
-            logger()->error($e->getMessage());
-
-            return redirect()->route('admin.activities.show', $activityId)->with(
-                'error',
-                'Error has occurred while rendering activity transaction form.'
-            );
-        }
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  TransactionRequest  $request
-     *
-     * @return \Illuminate\Http\RedirectResponse
-     */
-    public function store(TransactionRequest $request, $activityId): RedirectResponse
-    {
-        try {
-            $transactionData = $request->except('_token');
-            $transaction = $this->transactionService->create([
-                'activity_id' => $activityId,
-                'transaction' => $transactionData,
-            ]);
-
-            return redirect()->route('admin.activities.transactions.show', [$activityId, $transaction['id']])->with(
-                'success',
-                'Activity transaction created successfully.'
-            );
-        } catch (\Exception $e) {
-            logger()->error($e->getMessage());
-
-            return redirect()->route('admin.activities.transactions.index', $activityId)->with(
-                'error',
-                'Error has occurred while creating activity transaction.'
-            );
-        }
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param $activityId
-     * @param $transactionId
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Http\RedirectResponse|\Illuminate\Contracts\Foundation\Application
-     */
-    public function show($activityId, $transactionId): \Illuminate\Contracts\View\Factory|View|RedirectResponse|\Illuminate\Contracts\Foundation\Application
-    {
-        try {
-            $activity = $this->activityService->getActivity($activityId);
-            $transaction = $this->transactionService->getTransaction($transactionId, $activityId);
-            $types = getTransactionTypes();
-            $toast = generateToastData();
-
-            return view('admin.activity.transaction.detail', compact('transaction', 'activity', 'types', 'toast'));
-        } catch (\Exception $e) {
-            logger()->error($e->getMessage());
-
-            return redirect()->route('admin.activities.transactions.index', $activityId)->with(
-                'error',
-                'Error has occurred while rending transaction detail page.'
-            );
-        }
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param $activityId
-     * @param $transactionId
-     *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Http\RedirectResponse|\Illuminate\Contracts\Foundation\Application
-     */
-    public function edit($activityId, $transactionId): \Illuminate\Contracts\View\Factory|View|RedirectResponse|\Illuminate\Contracts\Foundation\Application
-    {
-        try {
-            $element = getElementSchema('transactions');
-            $activity = $this->activityService->getActivity($activityId);
-            $form = $this->transactionService->editFormGenerator($transactionId, $activityId);
-            $data = ['core' => $element['criteria'] ?? false, 'status' => false, 'title' => $element['label'], 'name' => 'transactions'];
-
-            return view('admin.activity.transaction.edit', compact('form', 'activity', 'data'));
-        } catch (\Exception $e) {
-            logger()->error($e->getMessage());
-
-            return redirect()->route('admin.activities.transactions.index', $activityId)->with(
-                'error',
-                'Error has occurred while rendering activity transaction form.'
-            );
-        }
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param TransactionRequest $request
-     * @param $activityId
-     * @param $transactionId
-     *
-     * @return \Illuminate\Http\RedirectResponse
-     */
-    public function update(TransactionRequest $request, $activityId, $transactionId): RedirectResponse
-    {
-        try {
-            $transactionData = $request->except(['_method', '_token']);
-            $transaction = $this->transactionService->getTransaction($transactionId, $activityId);
-
-            if (!$this->transactionService->update([
-                'activity_id'   => $activityId,
-                'transaction'   => $transactionData,
-            ], $transaction)) {
-                return redirect()->route('admin.activities.transactions.index', $activityId)->with(
-                    'error',
-                    'Error has occurred while updating activity transaction.'
-                );
-            }
-
-            return redirect()->route('admin.activities.transactions.show', [$activityId, $transactionId])->with(
-                'success',
-                'Activity transaction updated successfully.'
-            );
-        } catch (\Exception $e) {
-            logger()->error($e->getMessage());
-
-            return redirect()->route('admin.activities.transactions.index', $activityId)->with(
-                'error',
-                'Error has occurred while updating activity transaction.'
-            );
-        }
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\IATI\Models\Activity\Transaction  $transaction
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Transaction $transaction)
-    {
-        //
-    }
-
-    /*
-     * Get transaction of the corresponding activity
-     *
-     * @param $activityId
-     * @param $page
+     * @param int $activityId
+     * @param int $page
      *
      * @return JsonResponse
      */
-    public function getTransaction($activityId, $page = 1): JsonResponse
+    public function getPaginatedTransactions(int $activityId, int $page = 1): JsonResponse
     {
         try {
             $transaction = $this->transactionService->getPaginatedTransaction($activityId, $page);
@@ -259,5 +102,159 @@ class TransactionController extends Controller
 
             return response()->json(['success' => false, 'message' => 'Error occurred while fetching the data']);
         }
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @param $activityId
+     *
+     * @return Factory|View|RedirectResponse|Application
+     */
+    public function create($activityId): Factory|View|RedirectResponse|Application
+    {
+        try {
+            $element = getElementSchema('transactions');
+            $activity = $this->activityService->getActivity($activityId);
+            $form = $this->transactionService->createFormGenerator($activityId);
+            $data = ['core' => $element['criteria'] ?? false, 'status' => false, 'title' => $element['label'], 'name' => 'transactions'];
+
+            return view('admin.activity.transaction.edit', compact('form', 'activity', 'data'));
+        } catch (\Exception $e) {
+            logger()->error($e->getMessage());
+
+            return redirect()->route('admin.activity.show', $activityId)->with(
+                'error',
+                'Error has occurred while rendering activity transaction form.'
+            );
+        }
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param TransactionRequest $request
+     * @param                    $activityId
+     *
+     * @return RedirectResponse
+     */
+    public function store(TransactionRequest $request, $activityId): RedirectResponse
+    {
+        try {
+            $transactionData = $request->except('_token');
+            $transaction = $this->transactionService->create([
+                'activity_id' => $activityId,
+                'transaction' => $transactionData,
+            ]);
+
+            return redirect()->route('admin.activity.transaction.show', [$activityId, $transaction['id']])->with(
+                'success',
+                'Activity transaction created successfully.'
+            );
+        } catch (\Exception $e) {
+            logger()->error($e->getMessage());
+
+            return redirect()->route('admin.activity.transaction.index', $activityId)->with(
+                'error',
+                'Error has occurred while creating activity transaction.'
+            );
+        }
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param $activityId
+     * @param $transactionId
+     *
+     * @return Factory|View|RedirectResponse|Application
+     */
+    public function show($activityId, $transactionId): Factory|View|RedirectResponse|Application
+    {
+        try {
+            $activity = $this->activityService->getActivity($activityId);
+            $transaction = $this->transactionService->getTransaction($transactionId);
+            $types = getTransactionTypes();
+            $toast = generateToastData();
+
+            return view('admin.activity.transaction.detail', compact('transaction', 'activity', 'types', 'toast'));
+        } catch (\Exception $e) {
+            logger()->error($e->getMessage());
+
+            return redirect()->route('admin.activity.transaction.index', $activityId)->with(
+                'error',
+                'Error has occurred while rending transaction detail page.'
+            );
+        }
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param $activityId
+     * @param $transactionId
+     *
+     * @return Factory|View|RedirectResponse|Application
+     */
+    public function edit($activityId, $transactionId): Factory|View|RedirectResponse|Application
+    {
+        try {
+            $element = getElementSchema('transactions');
+            $activity = $this->activityService->getActivity($activityId);
+            $form = $this->transactionService->editFormGenerator($transactionId, $activityId);
+            $data = ['core' => $element['criteria'] ?? false, 'status' => false, 'title' => $element['label'], 'name' => 'transactions'];
+
+            return view('admin.activity.transaction.edit', compact('form', 'activity', 'data'));
+        } catch (\Exception $e) {
+            logger()->error($e->getMessage());
+
+            return redirect()->route('admin.activity.transaction.index', $activityId)->with(
+                'error',
+                'Error has occurred while rendering activity transaction form.'
+            );
+        }
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param TransactionRequest $request
+     * @param                    $activityId
+     * @param                    $transactionId
+     *
+     * @return RedirectResponse
+     */
+    public function update(TransactionRequest $request, $activityId, $transactionId): RedirectResponse
+    {
+        try {
+            if (!$this->transactionService->update($transactionId, $request->except(['_method', '_token']))) {
+                return redirect()->route('admin.activity.transaction.index', $activityId)->with(
+                    'error',
+                    'Error has occurred while updating activity transaction.'
+                );
+            }
+
+            return redirect()->route('admin.activity.transaction.show', [$activityId, $transactionId])->with(
+                'success',
+                'Activity transaction updated successfully.'
+            );
+        } catch (\Exception $e) {
+            logger()->error($e->getMessage());
+
+            return redirect()->route('admin.activity.transaction.index', $activityId)->with(
+                'error',
+                'Error has occurred while updating activity transaction.'
+            );
+        }
+    }
+
+    /**
+     * @param Transaction $transaction
+     *
+     * @return void
+     */
+    public function destroy(Transaction $transaction): void
+    {
+        //
     }
 }

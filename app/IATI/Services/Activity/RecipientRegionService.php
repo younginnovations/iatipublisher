@@ -6,10 +6,8 @@ namespace App\IATI\Services\Activity;
 
 use App\IATI\Elements\Builder\ParentCollectionFormCreator;
 use App\IATI\Models\Activity\Activity;
-use App\IATI\Repositories\Activity\RecipientRegionRepository;
+use App\IATI\Repositories\Activity\ActivityRepository;
 use App\IATI\Traits\XmlBaseElement;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Arr;
 use Kris\LaravelFormBuilder\Form;
 
 /**
@@ -20,9 +18,9 @@ class RecipientRegionService
     use XmlBaseElement;
 
     /**
-     * @var RecipientRegionRepository
+     * @var ActivityRepository
      */
-    protected RecipientRegionRepository $recipientRegionRepository;
+    protected ActivityRepository $activityRepository;
 
     /**
      * @var ParentCollectionFormCreator
@@ -32,12 +30,12 @@ class RecipientRegionService
     /**
      * RecipientRegionService constructor.
      *
-     * @param RecipientRegionRepository $recipientRegionRepository
+     * @param ActivityRepository          $activityRepository
      * @param ParentCollectionFormCreator $parentCollectionFormCreator
      */
-    public function __construct(RecipientRegionRepository $recipientRegionRepository, ParentCollectionFormCreator $parentCollectionFormCreator)
+    public function __construct(ActivityRepository $activityRepository, ParentCollectionFormCreator $parentCollectionFormCreator)
     {
-        $this->recipientRegionRepository = $recipientRegionRepository;
+        $this->activityRepository          = $activityRepository;
         $this->parentCollectionFormCreator = $parentCollectionFormCreator;
     }
 
@@ -50,7 +48,7 @@ class RecipientRegionService
      */
     public function getRecipientRegionData(int $activity_id): ?array
     {
-        return $this->recipientRegionRepository->getRecipientRegionData($activity_id);
+        return $this->activityRepository->find($activity_id)->recipient_region;
     }
 
     /**
@@ -58,40 +56,41 @@ class RecipientRegionService
      *
      * @param $id
      *
-     * @return Model
+     * @return object
      */
-    public function getActivityData($id): Model
+    public function getActivityData($id): object
     {
-        return $this->recipientRegionRepository->getActivityData($id);
+        return $this->activityRepository->find($id);
     }
 
     /**
      * Updates activity recipient region.
      *
+     * @param $id
      * @param $activityRecipientRegion
-     * @param $activity
      *
      * @return bool
      */
-    public function update($activityRecipientRegion, $activity): bool
+    public function update($id, $activityRecipientRegion): bool
     {
-        return $this->recipientRegionRepository->update($activityRecipientRegion, $activity);
+        return $this->activityRepository->update($id, ['recipient_region' => $this->sanitizeRecipientRegionData($activityRecipientRegion)]);
     }
 
     /**
      * Generates budget form.
      *
-     * @param id
+     * @param $id
      *
      * @return Form
+     * @throws \JsonException
      */
     public function formGenerator($id): Form
     {
-        $element = getElementSchema('recipient_region');
-        $model['recipient_region'] = $this->getRecipientRegionData($id);
-        $this->parentCollectionFormCreator->url = route('admin.activities.recipient-region.update', [$id]);
+        $element                                = getElementSchema('recipient_region');
+        $model['recipient_region']              = $this->getRecipientRegionData($id);
+        $this->parentCollectionFormCreator->url = route('admin.activity.recipient-region.update', [$id]);
 
-        return $this->parentCollectionFormCreator->editForm($model, $element, 'PUT', '/activities/' . $id);
+        return $this->parentCollectionFormCreator->editForm($model, $element, 'PUT', '/activity/'.$id);
     }
 
     /**
@@ -103,8 +102,8 @@ class RecipientRegionService
      */
     public function getXmlData(Activity $activity): array
     {
-        $activityData = [];
-        $recipientRegions = (array) $activity->recipient_region;
+        $activityData     = [];
+        $recipientRegions = (array)$activity->recipient_region;
 
         if (count($recipientRegions)) {
             foreach ($recipientRegions as $recipientRegion) {
@@ -137,5 +136,21 @@ class RecipientRegionService
         }
 
         return $activityData;
+    }
+
+    /**
+     * Sanitizes recipient region data.
+     *
+     * @param $activityRecipientRegion
+     *
+     * @return array
+     */
+    public function sanitizeRecipientRegionData($activityRecipientRegion): array
+    {
+        foreach ($activityRecipientRegion['recipient_region'] as $key => $recipient_region) {
+            $activityRecipientRegion['recipient_region'][$key]['narrative'] = array_values($recipient_region['narrative']);
+        }
+
+        return array_values($activityRecipientRegion['recipient_region']);
     }
 }

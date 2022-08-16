@@ -6,8 +6,7 @@ namespace App\IATI\Services\Activity;
 
 use App\IATI\Elements\Builder\BaseFormCreator;
 use App\IATI\Models\Activity\Activity;
-use App\IATI\Repositories\Activity\StatusRepository;
-use Illuminate\Database\Eloquent\Model;
+use App\IATI\Repositories\Activity\ActivityRepository;
 use Kris\LaravelFormBuilder\Form;
 
 /**
@@ -16,9 +15,9 @@ use Kris\LaravelFormBuilder\Form;
 class StatusService
 {
     /**
-     * @var StatusRepository
+     * @var ActivityRepository
      */
-    protected StatusRepository $statusRepository;
+    protected ActivityRepository $activityRepository;
 
     /**
      * @var BaseFormCreator
@@ -28,13 +27,13 @@ class StatusService
     /**
      * StatusService constructor.
      *
-     * @param StatusRepository $statusRepository
-     * @param BaseFormCreator $baseFormCreator
+     * @param ActivityRepository $activityRepository
+     * @param BaseFormCreator    $baseFormCreator
      */
-    public function __construct(StatusRepository $statusRepository, BaseFormCreator $baseFormCreator)
+    public function __construct(ActivityRepository $activityRepository, BaseFormCreator $baseFormCreator)
     {
-        $this->statusRepository = $statusRepository;
-        $this->baseFormCreator = $baseFormCreator;
+        $this->activityRepository = $activityRepository;
+        $this->baseFormCreator    = $baseFormCreator;
     }
 
     /**
@@ -46,7 +45,7 @@ class StatusService
      */
     public function getStatusData(int $activity_id): ?int
     {
-        return $this->statusRepository->getStatusData($activity_id);
+        return $this->activityRepository->find($activity_id)->activity_status;
     }
 
     /**
@@ -54,40 +53,41 @@ class StatusService
      *
      * @param $id
      *
-     * @return Model
+     * @return object
      */
-    public function getActivityData($id): Model
+    public function getActivityData($id): object
     {
-        return $this->statusRepository->getActivityData($id);
+        return $this->activityRepository->find($id);
     }
 
     /**
      * Updates activity status.
      *
+     * @param $id
      * @param $activityStatus
-     * @param $activity
      *
      * @return bool
      */
-    public function update($activityStatus, $activity): bool
+    public function update($id, $activityStatus): bool
     {
-        return $this->statusRepository->update($activityStatus, $activity);
+        return $this->activityRepository->update($id, ['activity_status' => $activityStatus]);
     }
 
     /**
      * Generates budget form.
      *
-     * @param id
+     * @param $id
      *
      * @return Form
+     * @throws \JsonException
      */
     public function formGenerator($id): Form
     {
-        $element = getElementSchema('activity_status');
-        $model['activity_status'] = $this->getStatusData($id);
-        $this->baseFormCreator->url = route('admin.activities.status.update', [$id]);
+        $element                    = getElementSchema('activity_status');
+        $model['activity_status']   = $this->getStatusData($id);
+        $this->baseFormCreator->url = route('admin.activity.status.update', [$id]);
 
-        return $this->baseFormCreator->editForm($model, $element, 'PUT', '/activities/' . $id);
+        return $this->baseFormCreator->editForm($model, $element, 'PUT', '/activity/'.$id);
     }
 
     /**

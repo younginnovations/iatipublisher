@@ -21,8 +21,8 @@
                 position="right"
               />
               <span class="text-2xl font-bold text-n-50">{{
-                registerForm[getCurrentStep()].title
-              }}</span>
+                  registerForm[getCurrentStep()].title
+                }}</span>
             </div>
             <div
               v-if="!publisherExists"
@@ -36,18 +36,18 @@
               <p class="ml-8 xl:mr-1">
                 Please note that if you’re an account holder in
                 <span
-                  ><a href="https://iatiregistry.org/">IATI Registry</a></span
+                ><a href="https://iatiregistry.org/">IATI Registry</a></span
                 >, make sure your
                 <span class="font-bold"
-                  >Publisher Name, Publisher ID and IATI Organisation ID</span
+                >Publisher Name, Publisher ID and IATI Organisation ID</span
                 >
                 match your IATI Registry Information. Contact
                 <span
-                  ><a
-                    class="text-bluecoral"
-                    href="mailto:support@iatistandard.org"
-                    >support@iatistandard.org</a
-                  ></span
+                ><a
+                  class="text-bluecoral"
+                  href="mailto:support@iatistandard.org"
+                >support@iatistandard.org</a
+                ></span
                 >
                 for more details.
               </p>
@@ -62,7 +62,7 @@
               >
                 <div class="mb-2 flex items-center justify-between">
                   <label :for="field.id" class="label"
-                    >{{ field['label'] }}
+                  >{{ field['label'] }}
                     <span v-if="field.required" class="text-salmon-40"> *</span>
                   </label>
                   <HoverText
@@ -114,7 +114,7 @@
                 <span
                   v-if="field.help_text && errorData[field.name] === ''"
                   class="text-xs font-normal text-n-40"
-                  >{{ field.help_text }}
+                >{{ field.help_text }}
                 </span>
 
                 <span
@@ -137,11 +137,11 @@
               Go back
             </button>
             <span v-if="checkStep(1)" class="text-sm font-normal text-n-40"
-              >Already have an account?
+            >Already have an account?
               <a
                 class="border-b-2 border-b-transparent font-bold text-bluecoral hover:border-b-2 hover:border-b-turquoise hover:text-bluecoral"
                 href="/"
-                >Sign In.</a
+              >Sign In.</a
               ></span
             >
             <button
@@ -155,11 +155,11 @@
           </div>
           <div v-if="checkStep(2)" class="mt-6 text-center">
             <span class="text-sm font-normal text-n-40"
-              >Already have an account?
+            >Already have an account?
               <a
                 class="border-b-2 border-b-transparent font-bold text-bluecoral hover:border-b-2 hover:border-b-turquoise hover:text-bluecoral"
                 href="/"
-                >Sign In.</a
+              >Sign In.</a
               ></span
             >
           </div>
@@ -167,7 +167,7 @@
 
         <aside class="register__sidebar">
           <span class="text-base font-bold"
-            >Step {{ getCurrentStep() }} out of 3</span
+          >Step {{ getCurrentStep() }} out of 3</span
           >
           <ul class="relative mt-6 text-sm text-n-40">
             <li
@@ -305,18 +305,13 @@ export default defineComponent({
 
     const isTextField = computed(() => {
       return (fieldType: string, fieldName: string) => {
-        return (fieldType === 'text' ||
-          fieldType === 'password' ||
-          fieldType === 'email') &&
-          fieldName != 'identifier'
-          ? true
-          : false;
+        return (fieldType === 'text' || fieldType === 'password' || fieldType === 'email') && fieldName != 'identifier';
       };
     });
 
     const checkStep = computed(() => {
       return (formStep: string | number) => {
-        return parseInt(formStep.toString()) === step.value ? true : false;
+        return parseInt(formStep.toString()) === step.value;
       };
     });
 
@@ -533,24 +528,24 @@ export default defineComponent({
     }
 
     function encrypt(string: string, key: string) {
-      var iv = CryptoJS.lib.WordArray.random(16);
+      let iv = CryptoJS.lib.WordArray.random(16);
 
-      var salt = CryptoJS.lib.WordArray.random(256);
-      var iterations = 999;
-      var encryptMethodLength = 256 / 4;
-      var hashKey = CryptoJS.PBKDF2(key, salt, {
+      let salt = CryptoJS.lib.WordArray.random(256);
+      let iterations = 999;
+      let encryptMethodLength = 256 / 4;
+      let hashKey = CryptoJS.PBKDF2(key, salt, {
         hasher: CryptoJS.algo.SHA512,
         keySize: encryptMethodLength / 8,
         iterations: iterations,
       });
 
-      var encrypted = CryptoJS.AES.encrypt(string, hashKey, {
+      let encrypted = CryptoJS.AES.encrypt(string, hashKey, {
         mode: CryptoJS.mode.CBC,
         iv: iv,
       });
-      var encryptedString = CryptoJS.enc.Base64.stringify(encrypted.ciphertext);
+      let encryptedString = CryptoJS.enc.Base64.stringify(encrypted.ciphertext);
 
-      var output = {
+      let output = {
         ciphertext: encryptedString,
         iv: CryptoJS.enc.Hex.stringify(iv),
         salt: CryptoJS.enc.Hex.stringify(salt),
@@ -593,8 +588,8 @@ export default defineComponent({
           errorData.password_confirmation = errors.password_confirmation
             ? errors.password_confirmation[0]
             : errors.password
-            ? errors.password[0]
-            : '';
+              ? errors.password[0]
+              : '';
           isLoaderVisible.value = false;
 
           if (response.success) {
@@ -612,8 +607,8 @@ export default defineComponent({
           errorData.password_confirmation = errors.password_confirmation
             ? errors.password_confirmation[0]
             : errors.password
-            ? errors.password[0]
-            : '';
+              ? errors.password[0]
+              : '';
         });
     }
 

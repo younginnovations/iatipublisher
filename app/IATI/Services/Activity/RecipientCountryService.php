@@ -6,10 +6,8 @@ namespace App\IATI\Services\Activity;
 
 use App\IATI\Elements\Builder\ParentCollectionFormCreator;
 use App\IATI\Models\Activity\Activity;
-use App\IATI\Repositories\Activity\RecipientCountryRepository;
+use App\IATI\Repositories\Activity\ActivityRepository;
 use App\IATI\Traits\XmlBaseElement;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Arr;
 use Kris\LaravelFormBuilder\Form;
 
 /**
@@ -20,9 +18,9 @@ class RecipientCountryService
     use XmlBaseElement;
 
     /**
-     * @var RecipientCountryRepository
+     * @var ActivityRepository
      */
-    protected RecipientCountryRepository $recipientCountryRepository;
+    protected ActivityRepository $activityRepository;
 
     /**
      * @var ParentCollectionFormCreator
@@ -32,12 +30,12 @@ class RecipientCountryService
     /**
      * RecipientCountryService constructor.
      *
-     * @param RecipientCountryRepository $recipientCountryRepository
+     * @param ActivityRepository          $activityRepository
      * @param ParentCollectionFormCreator $parentCollectionFormCreator
      */
-    public function __construct(RecipientCountryRepository $recipientCountryRepository, ParentCollectionFormCreator $parentCollectionFormCreator)
+    public function __construct(ActivityRepository $activityRepository, ParentCollectionFormCreator $parentCollectionFormCreator)
     {
-        $this->recipientCountryRepository = $recipientCountryRepository;
+        $this->activityRepository          = $activityRepository;
         $this->parentCollectionFormCreator = $parentCollectionFormCreator;
     }
 
@@ -50,7 +48,7 @@ class RecipientCountryService
      */
     public function getRecipientCountryData(int $activity_id): ?array
     {
-        return $this->recipientCountryRepository->getRecipientCountryData($activity_id);
+        return $this->activityRepository->find($activity_id)->recipient_country;
     }
 
     /**
@@ -58,24 +56,24 @@ class RecipientCountryService
      *
      * @param $id
      *
-     * @return Model
+     * @return object
      */
-    public function getActivityData($id): Model
+    public function getActivityData($id): object
     {
-        return $this->recipientCountryRepository->getActivityData($id);
+        return $this->activityRepository->find($id);
     }
 
     /**
      * Updates activity recipient country.
      *
+     * @param $id
      * @param $activityRecipientCountry
-     * @param $activity
      *
      * @return bool
      */
-    public function update($activityRecipientCountry, $activity): bool
+    public function update($id, $activityRecipientCountry): bool
     {
-        return $this->recipientCountryRepository->update($activityRecipientCountry, $activity);
+        return $this->activityRepository->update($id, ['recipient_country' => $this->sanitizeRecipientCountryData($activityRecipientCountry)]);
     }
 
     /**
@@ -84,14 +82,15 @@ class RecipientCountryService
      * @param id
      *
      * @return Form
+     * @throws \JsonException
      */
     public function formGenerator($id): Form
     {
-        $element = getElementSchema('recipient_country');
-        $model['recipient_country'] = $this->getRecipientCountryData($id);
-        $this->parentCollectionFormCreator->url = route('admin.activities.recipient-country.update', [$id]);
+        $element                                = getElementSchema('recipient_country');
+        $model['recipient_country']             = $this->getRecipientCountryData($id);
+        $this->parentCollectionFormCreator->url = route('admin.activity.recipient-country.update', [$id]);
 
-        return $this->parentCollectionFormCreator->editForm($model, $element, 'PUT', '/activities/' . $id);
+        return $this->parentCollectionFormCreator->editForm($model, $element, 'PUT', '/activity/'.$id);
     }
 
     /**
@@ -103,8 +102,8 @@ class RecipientCountryService
      */
     public function getXmlData(Activity $activity): array
     {
-        $activityData = [];
-        $recipientCountries = (array) $activity->recipient_country;
+        $activityData       = [];
+        $recipientCountries = (array)$activity->recipient_country;
 
         if (count($recipientCountries)) {
             foreach ($recipientCountries as $recipientCountry) {
@@ -119,5 +118,21 @@ class RecipientCountryService
         }
 
         return $activityData;
+    }
+
+    /**
+     * Sanitizes recipient country data.
+     *
+     * @param $activityRecipientCountry
+     *
+     * @return array
+     */
+    public function sanitizeRecipientCountryData($activityRecipientCountry): array
+    {
+        foreach ($activityRecipientCountry['recipient_country'] as $key => $recipient_country) {
+            $activityRecipientCountry['recipient_country'][$key]['narrative'] = array_values($recipient_country['narrative']);
+        }
+
+        return array_values($activityRecipientCountry['recipient_country']);
     }
 }

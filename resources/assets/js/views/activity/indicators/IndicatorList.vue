@@ -12,7 +12,7 @@
           :type="toastData.type"
         />
       </div>
-      <a :href="`${resultLink}/indicator/create`">
+      <a :href="`${indicatorLink}/create`">
         <Btn text="Add Indicator" icon="plus" type="primary" />
       </a>
     </PageTitle>
@@ -22,48 +22,16 @@
         <thead>
           <tr class="bg-n-10">
             <th id="title" scope="col">
-              <a
-                class="transition duration-500 text-n-50 hover:text-spring-50"
-                href="#"
-              >
-                <span class="sorting-indicator descending">
-                  <svg-vue icon="descending-arrow" />
-                </span>
-                <span>Title</span>
-              </a>
+              <span>Title</span>
             </th>
             <th id="measure" scope="col" width="190px">
-              <a
-                class="transition duration-500 text-n-50 hover:text-spring-50"
-                href="#"
-              >
-                <span class="sorting-indicator descending">
-                  <svg-vue icon="descending-arrow" />
-                </span>
-                <span>Measure</span>
-              </a>
+              <span>Measure</span>
             </th>
             <th id="aggregation_status" scope="col" width="208px">
-              <a
-                class="transition duration-500 text-n-50 hover:text-spring-50"
-                href="#"
-              >
-                <span class="sorting-indicator descending">
-                  <svg-vue icon="descending-arrow" />
-                </span>
-                <span>Aggregation Status</span>
-              </a>
+              <span>Aggregation Status</span>
             </th>
             <th id="action" scope="col" width="190px">
-              <a
-                class="transition duration-500 text-n-50 hover:text-spring-50"
-                href="#"
-              >
-                <span class="sorting-indicator descending">
-                  <svg-vue icon="descending-arrow" />
-                </span>
-                <span>Action</span>
-              </a>
+              <span>Action</span>
             </th>
           </tr>
         </thead>
@@ -72,7 +40,7 @@
             <td>
               <div class="relative ellipsis">
                 <a
-                  :href="`/activities/${activity.id}/result/${indicator.result_id}/indicator/${indicator.id}`"
+                  :href="`/result/${indicator.result_id}/indicator/${indicator.id}`"
                   class="overflow-hidden ellipsis text-n-50"
                 >
                   {{
@@ -94,13 +62,13 @@
             </td>
             <td>{{ types.indicatorMeasure[indicator.indicator.measure] }}</td>
             <td class="capitalize">
-              {{ indicator.indicator.aggregation_status != 0 }}
+              {{ Number(indicator.indicator.aggregation_status) != 0 }}
             </td>
             <td>
               <div class="flex text-n-40">
                 <a
                   class="mr-6"
-                  :href="`/activities/${activity.id}/result/${indicator.result_id}/indicator/${indicator.id}/edit`"
+                  :href="`/result/${indicator.result_id}/indicator/${indicator.id}/edit`"
                 >
                   <svg-vue icon="edit" class="text-xl"></svg-vue>
                 </a>
@@ -115,7 +83,11 @@
     </div>
 
     <div class="mt-6">
-      <Pagination :data="indicatorsData" @fetch-activities="fetchListings" />
+      <Pagination
+        v-if="indicatorsData && indicatorsData.last_page > 1"
+        :data="indicatorsData"
+        @fetch-activities="fetchListings"
+      />
     </div>
   </div>
 </template>
@@ -169,12 +141,28 @@ export default defineComponent({
 
     const activityId = activity.value.id,
       activityTitle = activity.value.title,
-      activityLink = `/activities/${activityId}`,
+      activityLink = `/activity/${activityId}`,
       resultId = parentData.value.result.id,
       resultTitle = getActivityTitle(parentData.value.result.title, 'en'),
-      resultLink = `${activityLink}/result/${resultId}`;
+      resultLink = `${activityLink}/result/${resultId}`,
+      indicatorLink = `/result/${resultId}/indicator`;
 
-    const indicatorsData = reactive({});
+    interface IndicatorInterface {
+      last_page: number;
+      data: {
+        result_id: number;
+        id: number;
+        indicator: {
+          title: {
+            narrative: [];
+          }[];
+          measure: string;
+          aggregation_status: string;
+        };
+        activity_id: number;
+      }[];
+    }
+    const indicatorsData = reactive({}) as IndicatorInterface;
     const isEmpty = ref(false);
     const toastData = reactive({
       visibility: false,
@@ -192,11 +180,11 @@ export default defineComponent({
       },
       {
         title: getActivityTitle(activityTitle, 'en'),
-        link: `/activities/${activityId}`,
+        link: `/activity/${activityId}`,
       },
       {
         title: resultTitle,
-        link: `/activities/${activityId}/result/${resultId}`,
+        link: `/activity/${activityId}/result/${resultId}`,
       },
       {
         title: 'Indicator List',
@@ -205,13 +193,11 @@ export default defineComponent({
     ];
 
     onMounted(async () => {
-      axios
-        .get(`/activities/${activityId}/result/${resultId}/indicator/page/1`)
-        .then((res) => {
-          const response = res.data;
-          Object.assign(indicatorsData, response.data);
-          isEmpty.value = response.data.data.length ? false : true;
-        });
+      axios.get(`/result/${resultId}/indicators/page/1`).then((res) => {
+        const response = res.data;
+        Object.assign(indicatorsData, response.data);
+        isEmpty.value = response.data.data.length ? false : true;
+      });
 
       if (props.toast.message !== '') {
         toastData.type = props.toast.type;
@@ -226,10 +212,7 @@ export default defineComponent({
 
     function fetchListings(active_page: number) {
       axios
-        .get(
-          `/activities/${activityId}/result/${resultId}/indicator/page/` +
-            active_page
-        )
+        .get(`/result/${resultId}/indicators/page/` + active_page)
         .then((res) => {
           const response = res.data;
           Object.assign(indicatorsData, response.data);
@@ -244,8 +227,10 @@ export default defineComponent({
       getActivityTitle,
       fetchListings,
       resultLink,
+      indicatorLink,
       breadcrumbData,
       toastData,
+      resultId,
     };
   },
 });

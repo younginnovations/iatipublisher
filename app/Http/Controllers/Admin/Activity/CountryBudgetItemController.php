@@ -36,29 +36,26 @@ class CountryBudgetItemController extends Controller
      *
      * @param int $id
      *
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|void
+     * @return View|RedirectResponse
      */
     public function edit(int $id): View|RedirectResponse
     {
         try {
-            $element = getElementSchema('country_budget_items');
+            $element  = getElementSchema('country_budget_items');
             $activity = $this->countryBudgetItemService->getActivityData($id);
-            $form = $this->countryBudgetItemService->formGenerator($id);
-            $data = [
-                'core' => $element['criteria'] ?? '',
+            $form     = $this->countryBudgetItemService->formGenerator($id);
+            $data     = [
+                'core'   => $element['criteria'] ?? '',
                 'status' => $activity->country_budget_items_element_completed,
-                'title' => $element['label'],
-                'name' => 'country_budget_items',
+                'title'  => $element['label'],
+                'name'   => 'country_budget_items',
             ];
 
             return view('admin.activity.countryBudgetItem.edit', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activities.show', $id)->with(
-                'error',
-                'Error has occurred while rendering country-budget-item form.'
-            );
+            return redirect()->route('admin.activity.show', $id)->with('error', 'Error has occurred while rendering country-budget-item form.');
         }
     }
 
@@ -66,34 +63,24 @@ class CountryBudgetItemController extends Controller
      * Updates country budget item data.
      *
      * @param CountryBudgetItemRequest $request
-     * @param $id
+     * @param                          $id
      *
      * @return JsonResponse|RedirectResponse
      */
     public function update(CountryBudgetItemRequest $request, $id): JsonResponse|RedirectResponse
     {
         try {
-            $activityData = $this->countryBudgetItemService->getActivityData($id);
             $activityCountryBudgetItem = $request->except(['_token', '_method']);
 
-            if (!$this->countryBudgetItemService->update($activityCountryBudgetItem, $activityData)) {
-                return redirect()->route('admin.activities.show', $id)->with(
-                    'error',
-                    'Error has occurred while updating country-budget-item.'
-                );
+            if (!$this->countryBudgetItemService->update($id, $activityCountryBudgetItem)) {
+                return redirect()->route('admin.activity.show', $id)->with('error', 'Error has occurred while updating country-budget-item.');
             }
 
-            return redirect()->route('admin.activities.show', $id)->with(
-                'success',
-                'Country-budget-item updated successfully.'
-            );
+            return redirect()->route('admin.activity.show', $id)->with('success', 'Country-budget-item updated successfully.');
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activities.show', $id)->with(
-                'error',
-                'Error has occurred while updating country-budget-item.'
-            );
+            return redirect()->route('admin.activity.show', $id)->with('error', 'Error has occurred while updating country-budget-item.');
         }
     }
 }

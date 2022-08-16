@@ -7,7 +7,7 @@ namespace App\IATI\Services\Activity;
 use App\IATI\Elements\Builder\BaseFormCreator;
 use App\IATI\Models\Activity\Activity;
 use App\IATI\Repositories\Activity\CapitalSpendRepository;
-use Illuminate\Database\Eloquent\Model;
+use App\IATI\Repositories\Activity\ActivityRepository;
 use Kris\LaravelFormBuilder\Form;
 
 /**
@@ -21,19 +21,19 @@ class CapitalSpendService
     protected BaseFormCreator $baseFormCreator;
 
     /**
-     * @var CapitalSpendRepository
+     * @var ActivityRepository
      */
-    protected CapitalSpendRepository $capitalSpendRepository;
+    protected ActivityRepository $activityRepository;
 
     /**
      * CapitalSpendService constructor.
      *
-     * @param CapitalSpendRepository $capitalSpendRepository
+     * @param ActivityRepository $activityRepository
      * @param BaseFormCreator $baseFormCreator
      */
-    public function __construct(CapitalSpendRepository $capitalSpendRepository, BaseFormCreator $baseFormCreator)
+    public function __construct(ActivityRepository $activityRepository, BaseFormCreator $baseFormCreator)
     {
-        $this->capitalSpendRepository = $capitalSpendRepository;
+        $this->activityRepository = $activityRepository;
         $this->baseFormCreator = $baseFormCreator;
     }
 
@@ -44,9 +44,9 @@ class CapitalSpendService
      *
      * @return float|null
      */
-    public function getCapitalSpendData(float $activity_id): ?float
+    public function getCapitalSpendData(int $activity_id): ?float
     {
-        return $this->capitalSpendRepository->getCapitalSpendData($activity_id);
+        return $this->activityRepository->find($activity_id)->capital_spend;
     }
 
     /**
@@ -54,40 +54,41 @@ class CapitalSpendService
      *
      * @param $id
      *
-     * @return Model
+     * @return Object
      */
-    public function getActivityData($id): Model
+    public function getActivityData($id): Object
     {
-        return $this->capitalSpendRepository->getActivityData($id);
+        return $this->activityRepository->find($id);
     }
 
     /**
      * Updates activity capital spend data.
      *
+     * @param $id
      * @param $activityCapitalSpend
-     * @param $activity
      *
      * @return bool
      */
-    public function update($activityCapitalSpend, $activity): bool
+    public function update($id, $activityCapitalSpend): bool
     {
-        return $this->capitalSpendRepository->update($activityCapitalSpend, $activity);
+        return $this->activityRepository->update($id, ['capital_spend' => $activityCapitalSpend]);
     }
 
     /**
      * Generates capital spend form.
      *
-     * @param id
+     * @param $id
      *
      * @return Form
+     * @throws \JsonException
      */
     public function formGenerator($id): Form
     {
         $element = getElementSchema('capital_spend');
         $model['capital_spend'] = $this->getCapitalSpendData($id);
-        $this->baseFormCreator->url = route('admin.activities.capital-spend.update', [$id]);
+        $this->baseFormCreator->url = route('admin.activity.capital-spend.update', [$id]);
 
-        return $this->baseFormCreator->editForm($model, $element, 'PUT', '/activities/' . $id);
+        return $this->baseFormCreator->editForm($model, $element, 'PUT', '/activity/' . $id);
     }
 
     /**

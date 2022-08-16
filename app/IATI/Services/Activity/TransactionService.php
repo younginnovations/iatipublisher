@@ -33,15 +33,64 @@ class TransactionService
     /**
      * TransactionService constructor.
      *
-     * @param TransactionRepository $transactionRepository
+     * @param TransactionRepository         $transactionRepository
      * @param TransactionElementFormCreator $transactionElementFormCreator
      */
     public function __construct(
         TransactionRepository $transactionRepository,
         TransactionElementFormCreator $transactionElementFormCreator
     ) {
-        $this->transactionRepository = $transactionRepository;
+        $this->transactionRepository         = $transactionRepository;
         $this->transactionElementFormCreator = $transactionElementFormCreator;
+    }
+
+    /**
+     * @param int $activityId
+     * @param int $page
+     *
+     * @return LengthAwarePaginator|Collection
+     */
+    public function getPaginatedTransaction(int $activityId, int $page): LengthAwarePaginator|Collection
+    {
+        return $this->transactionRepository->getPaginatedTransaction($activityId, $page);
+    }
+
+    /**
+     * Return specific transaction.
+     *
+     * @param $id
+     *
+     * @return object|null
+     */
+    public function getTransaction($id): ?object
+    {
+        return $this->transactionRepository->find($id);
+    }
+
+    /**
+     * Checks if specific transactions exists for specific activity.
+     *
+     * @param int $activityId
+     * @param int $id
+     *
+     * @return bool
+     */
+    public function activityTransactionExists(int $activityId, int $id): bool
+    {
+        return $this->getActivityTransaction($activityId, $id) !== null;
+    }
+
+    /**
+     * Returns specific transaction of specific activity.
+     *
+     * @param int $activityId
+     * @param int $id
+     *
+     * @return mixed
+     */
+    public function getActivityTransaction(int $activityId, int $id): mixed
+    {
+        return $this->transactionRepository->getActivityTransaction($activityId, $id);
     }
 
     /**
@@ -53,33 +102,20 @@ class TransactionService
      */
     public function create(array $transactionData): Model
     {
-        return $this->transactionRepository->create($transactionData);
+        return $this->transactionRepository->store($this->sanitizeTransactionData($transactionData));
     }
 
     /**
      * Update Activity Transaction.
      *
-     * @param array $transactionData
-     * @param $activityTransaction
+     * @param       $id
+     * @param       $transactionData
      *
      * @return bool
      */
-    public function update(array $transactionData, $activityTransaction): bool
+    public function update($id, $transactionData): bool
     {
-        return $this->transactionRepository->update($transactionData, $activityTransaction);
-    }
-
-    /**
-     * Return specific transaction.
-     *
-     * @param $id
-     * @param $activityId
-     *
-     * @return Model|null
-     */
-    public function getTransaction($id, $activityId): ?Model
-    {
-        return $this->transactionRepository->getTransaction($id, $activityId);
+        return $this->transactionRepository->update($id, ['transaction' => Arr::get($this->sanitizeTransactionData($transactionData), 'transaction', [])]);
     }
 
     /**
@@ -112,11 +148,11 @@ class TransactionService
      *
      * @param $activityId
      *
-     * @return Collection|null
+     * @return object|null
      */
-    public function getActivityTransactions($activityId): ?Collection
+    public function getActivityTransactions($activityId): ?object
     {
-        return $this->transactionRepository->getActivityTransactions($activityId);
+        return $this->transactionRepository->findAllBy('activity_id', $activityId);
     }
 
     /**
@@ -125,55 +161,60 @@ class TransactionService
      * @param $activityId
      *
      * @return Form
+     * @throws \JsonException
      */
     public function createFormGenerator($activityId): Form
     {
-        $element = getElementSchema('transactions');
-        $this->transactionElementFormCreator->url = route('admin.activities.transactions.store', $activityId);
+        $element                                  = getElementSchema('transactions');
+        $this->transactionElementFormCreator->url = route('admin.activity.transaction.store', $activityId);
 
-        return $this->transactionElementFormCreator->editForm(
-            [],
-            $element,
-            'POST',
-            '/activities/' . $activityId
-        );
+        return $this->transactionElementFormCreator->editForm([], $element, 'POST', '/activity/'.$activityId);
     }
 
     /**
      * Generates transaction edit form.
      *
-     * @param $id
+     * @param $transactionId
+     * @param $activityId
      *
      * @return Form
+     * @throws \JsonException
      */
     public function editFormGenerator($transactionId, $activityId): Form
     {
-        $element = getElementSchema('transactions');
-        $activityTransaction = $this->getTransaction($transactionId, $activityId);
-        $this->transactionElementFormCreator->url = route(
-            'admin.activities.transactions.update',
-            [$activityId, $transactionId]
-        );
+        $element                                  = getElementSchema('transactions');
+        $activityTransaction                      = $this->getTransaction($transactionId);
+        $this->transactionElementFormCreator->url = route('admin.activity.transaction.update', [$activityId, $transactionId]);
 
-        return $this->transactionElementFormCreator->editForm(
-            $activityTransaction->transaction,
-            $element,
-            'PUT',
-            '/activities/' . $activityId
-        );
+        return $this->transactionElementFormCreator->editForm($activityTransaction->transaction, $element, 'PUT', '/activity/'.$activityId);
     }
 
-    /*
-     * Returns array of paginated transactions belonging to an activity.
+    /**
+     * Function to sanitize transaction data.
      *
-     * @param $activityId
-     * @param $page
+     * @param array $transactionData
      *
-     * return LengthAwarePaginator|Collection
+     * @return array
      */
-    public function getPaginatedTransaction($activityId, $page): LengthAwarePaginator|Collection
+    public function sanitizeTransactionData(array $transactionData): array
     {
-        return $this->transactionRepository->getPaginatedTransaction($activityId, $page);
+        foreach ($transactionData['transaction'] as $transaction_key => $transaction) {
+            if (is_array($transaction)) {
+                $transactionData['transaction'][$transaction_key] = array_values($transaction);
+
+                foreach ($transaction as $sub_key => $sub_element) {
+                    if (is_array($sub_element)) {
+                        foreach ($sub_element as $inner_key => $inner_element) {
+                            if (is_array($inner_element)) {
+                                $transactionData['transaction'][$transaction_key][$sub_key][$inner_key] = array_values($inner_element);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        return $transactionData;
     }
 
     /**
@@ -189,11 +230,11 @@ class TransactionService
 
         foreach ($transactions as $totalTransaction) {
             $transaction = $totalTransaction->transaction;
-            $sector = [];
+            $sector      = [];
 
             foreach (Arr::get($transaction, 'sector', []) as $sectorData) {
                 if ($sectorData) {
-                    $vocabulary = Arr::get($sectorData, 'sector_vocabulary', null);
+                    $vocabulary  = Arr::get($sectorData, 'sector_vocabulary', null);
                     $sectorValue = $this->getSectorValue($vocabulary, $sectorData);
 
                     $sector[] = [
@@ -227,7 +268,7 @@ class TransactionService
                             $transaction,
                             'recipient_region.0.region_vocabulary',
                             null
-                        ) == 1 ? Arr::get(
+                        ) === 1 ? Arr::get(
                             $transaction,
                             'recipient_region.0.region_code',
                             null
@@ -244,7 +285,7 @@ class TransactionService
             if (Arr::get($transaction, 'aid_type', null)) {
                 foreach (Arr::get($transaction, 'aid_type') as $aidType) {
                     $vocabulary = Arr::get($aidType, 'aidtype_vocabulary', null);
-                    $code = $this->getAidTypeCode($vocabulary, $aidType);
+                    $code       = $this->getAidTypeCode($vocabulary, $aidType);
 
                     $aidType[] = [
                         '@attributes' => [

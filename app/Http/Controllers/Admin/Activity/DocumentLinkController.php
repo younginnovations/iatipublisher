@@ -38,8 +38,8 @@ class DocumentLinkController extends Controller
      * DocumentLinkControllerConstructor.
      *
      * @param DocumentLinkService $documentLinkService
-     * @param DocumentService $documentService
-     * @param DatabaseManager $db
+     * @param DocumentService     $documentService
+     * @param DatabaseManager     $db
      */
     public function __construct(
         DocumentLinkService $documentLinkService,
@@ -47,8 +47,8 @@ class DocumentLinkController extends Controller
         DatabaseManager $db
     ) {
         $this->documentLinkService = $documentLinkService;
-        $this->documentService = $documentService;
-        $this->db = $db;
+        $this->documentService     = $documentService;
+        $this->db                  = $db;
     }
 
     /**
@@ -56,29 +56,26 @@ class DocumentLinkController extends Controller
      *
      * @param int $id
      *
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|void
+     * @return View|RedirectResponse
      */
     public function edit(int $id): View|RedirectResponse
     {
         try {
-            $element = getElementSchema('document_link');
+            $element  = getElementSchema('document_link');
             $activity = $this->documentLinkService->getActivityData($id);
-            $form = $this->documentLinkService->formGenerator($id);
-            $data = [
-                'core' => $element['criteria'] ?? '',
+            $form     = $this->documentLinkService->formGenerator($id);
+            $data     = [
+                'core'   => $element['criteria'] ?? '',
                 'status' => $activity->document_link_element_completed ?? false,
-                'title' => $element['label'],
-                'name' => 'document_link',
+                'title'  => $element['label'],
+                'name'   => 'document_link',
             ];
 
             return view('admin.activity.documentLink.edit', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activities.show', $id)->with(
-                'error',
-                'Error has occurred while rendering document-link form.'
-            );
+            return redirect()->route('admin.activity.show', $id)->with('error', 'Error has occurred while rendering document-link form.');
         }
     }
 
@@ -86,34 +83,27 @@ class DocumentLinkController extends Controller
      * Updates country budget item data.
      *
      * @param DocumentLinkRequest $request
-     * @param $id
+     * @param                     $id
      *
      * @return JsonResponse|RedirectResponse
+     * @throws \Throwable
      */
     public function update(DocumentLinkRequest $request, $id): JsonResponse|RedirectResponse
     {
         try {
-            $activityData = $this->documentLinkService->getActivityData($id);
-            $documentLink = $request->except(['_token', '_method']);
-
             $this->db->beginTransaction();
-
-            $this->documentLinkService->update($documentLink, $activityData);
-            $this->documentService->update($documentLink, $activityData);
+            $documentLink = $request->except(['_token', '_method']);
+            $this->documentLinkService->update($id, $documentLink);
+            $this->documentService->update($documentLink, $this->documentLinkService->getActivityData($id));
 
             $this->db->commit();
 
-            return redirect()->route('admin.activities.show', $id)->with(
-                'success',
-                'Document-link updated successfully.'
-            );
+            return redirect()->route('admin.activity.show', $id)->with('success', 'Document-link updated successfully.');
         } catch (\Exception $e) {
+            $this->db->rollBack();
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activities.show', $id)->with(
-                'error',
-                'Error has occurred while updating document-link.'
-            );
+            return redirect()->route('admin.activity.show', $id)->with('error', 'Error has occurred while updating document-link.');
         }
     }
 }

@@ -5,10 +5,8 @@ declare(strict_types=1);
 namespace App\IATI\Services\Activity;
 
 use App\IATI\Elements\Builder\ParentCollectionFormCreator;
-use App\IATI\Models\Activity\Activity;
-use App\IATI\Repositories\Activity\LocationRepository;
 use App\IATI\Traits\XmlBaseElement;
-use Illuminate\Database\Eloquent\Model;
+use App\IATI\Repositories\Activity\ActivityRepository;
 use Illuminate\Support\Arr;
 use Kris\LaravelFormBuilder\Form;
 
@@ -20,9 +18,9 @@ class LocationService
     use XmlBaseElement;
 
     /**
-     * @var LocationRepository
+     * @var ActivityRepository
      */
-    protected LocationRepository $locationRepository;
+    protected ActivityRepository $activityRepository;
 
     /**
      * @var ParentCollectionFormCreator
@@ -32,12 +30,12 @@ class LocationService
     /**
      * LocationService constructor.
      *
-     * @param LocationRepository $locationRepository
+     * @param ActivityRepository $activityRepository
      * @param ParentCollectionFormCreator $parentCollectionFormCreator
      */
-    public function __construct(LocationRepository $locationRepository, ParentCollectionFormCreator $parentCollectionFormCreator)
+    public function __construct(ActivityRepository $activityRepository, ParentCollectionFormCreator $parentCollectionFormCreator)
     {
-        $this->locationRepository = $locationRepository;
+        $this->activityRepository = $activityRepository;
         $this->parentCollectionFormCreator = $parentCollectionFormCreator;
     }
 
@@ -50,7 +48,7 @@ class LocationService
      */
     public function getLocationData(int $activity_id): ?array
     {
-        return $this->locationRepository->getLocationData($activity_id);
+        return $this->activityRepository->find($activity_id)->location;
     }
 
     /**
@@ -58,40 +56,41 @@ class LocationService
      *
      * @param $id
      *
-     * @return Model
+     * @return object
      */
-    public function getActivityData($id): Model
+    public function getActivityData($id): object
     {
-        return $this->locationRepository->getActivityData($id);
+        return $this->activityRepository->find($id);
     }
 
     /**
      * Updates activity location.
      *
+     * @param $id
      * @param $location
-     * @param $activity
      *
      * @return bool
      */
-    public function update($location, $activity): bool
+    public function update($id, $location): bool
     {
-        return $this->locationRepository->update($location, $activity);
+        return $this->activityRepository->update($id, ['location' => $this->sanitizeLocationData($location)]);
     }
 
     /**
      * Generates budget form.
      *
-     * @param id
+     * @param $id
      *
      * @return Form
+     * @throws \JsonException
      */
     public function formGenerator($id): Form
     {
         $element = getElementSchema('location');
         $model['location'] = $this->getLocationData($id) ?: [];
-        $this->parentCollectionFormCreator->url = route('admin.activities.location.update', [$id]);
+        $this->parentCollectionFormCreator->url = route('admin.activity.location.update', [$id]);
 
-        return $this->parentCollectionFormCreator->editForm($model, $element, 'PUT', '/activities/' . $id);
+        return $this->parentCollectionFormCreator->editForm($model, $element, 'PUT', '/activity/' . $id);
     }
 
     /**
@@ -110,7 +109,7 @@ class LocationService
             foreach ($locations as $location) {
                 $point = [];
 
-                if ((Arr::get($location, 'point.0.pos.0.latitude', '') != '') && (Arr::get($location, 'point.0.pos.0.longitude', '') != '')) {
+                if ((Arr::get($location, 'point.0.pos.0.latitude', '') !== '') && (Arr::get($location, 'point.0.pos.0.longitude', '') !== '')) {
                     $point = [
                         '@attributes' => [
                             'srsName' => Arr::get($location, 'point.0.srs_name', null),
@@ -171,5 +170,26 @@ class LocationService
         }
 
         return $activityData;
+    }
+
+    /**
+     * Sanitizes location data.
+     *
+     * @param $location
+     *
+     * @return array
+     * @throws \JsonException
+     */
+    public function sanitizeLocationData($location): array
+    {
+        $element = getElementSchema('location');
+
+        foreach ($location['location'] as $key => $location_value) {
+            foreach (array_keys($element['sub_elements']) as $subelement) {
+                $location['location'][$key][$subelement] = array_values($location_value[$subelement]);
+            }
+        }
+
+        return array_values($location['location']);
     }
 }

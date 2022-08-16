@@ -234,7 +234,7 @@ export default defineComponent({
     const organization: ObjectType = reactive({});
 
     onMounted(async () => {
-      axios.get('/activity/codelists').then((res) => {
+      axios.get('/activities/codelists').then((res) => {
         const response = res.data;
         Object.assign(languages, response.data.languages);
         Object.assign(organization, response.data.organization);
@@ -249,7 +249,7 @@ export default defineComponent({
       loaderVisibility.value = true;
 
       axios
-        .post('/activities', formData)
+        .post('/activity', formData)
         .then((res) => {
           const response = res.data;
           loaderVisibility.value = false;
@@ -257,7 +257,7 @@ export default defineComponent({
           if (response.success) {
             emit('toast', response.message, response.success);
             emit('closeModal');
-            window.location.href = `/activities/${response.data.id}`;
+            window.location.href = `/activity/${response.data.id}`;
           }
         })
         .catch((error) => {

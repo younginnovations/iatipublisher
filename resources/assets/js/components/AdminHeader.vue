@@ -8,7 +8,7 @@
       :message="toastMessage"
       :type="toastType"
     />
-    <figure class="flex grow-0 items-center">
+    <figure class="flex items-center grow-0">
       <a href="/activities">
         <svg-vue icon="logo" class="text-4xl" />
       </a>
@@ -32,8 +32,8 @@
         </li>
       </ul>
     </nav>
-    <nav class="flex grow justify-end">
-      <ul class="-mx-4 flex flex-wrap">
+    <nav class="flex justify-end grow">
+      <ul class="flex flex-wrap -mx-4">
         <li
           v-for="(menu, index) in data.menus"
           :key="index"
@@ -48,17 +48,19 @@
         </li>
       </ul>
     </nav>
-    <div class="flex grow-0 items-center">
+    <div class="flex items-center grow-0">
       <div class="flex items-center">
         <div class="search">
           <input
+            v-model="searchValue"
             class="search__input"
             type="text"
             placeholder="Search activity..."
+            @keyup.enter="searchFunction"
           />
-          <svg-vue class="absolute left-3 top-3 text-base" icon="search" />
+          <svg-vue class="absolute text-base left-3 top-3" icon="search" />
+          <span v-if="spinner" class="spinner" />
         </div>
-        <!--        <input type="text" v-model="keyword">-->
         <button
           class="button secondary-btn mr-3.5 font-bold"
           @click="modalValue = true"
@@ -74,14 +76,14 @@
                 <div>
                   <svg-vue class="user-profile" icon="user-profile" />
                 </div>
-                <div class="flex flex-col break-all capitalize leading-4">
-                  <span class="text-n-50">{{ props.user.full_name }}</span
+                <div class="flex flex-col leading-4 capitalize break-all">
+                  <span class="text-n-50">{{ user.full_name }}</span
                   ><span class="text-tiny text-n-40">{{
-                    props.organization.publisher_name
+                    organization.publisher_name
                   }}</span>
                 </div>
               </li>
-              <li class="dropdown__list border-b border-b-n-20">
+              <li class="border-b dropdown__list border-b-n-20">
                 <svg-vue icon="user" />
                 <a href="#">Your Profile</a>
               </li>
@@ -107,136 +109,125 @@
   </header>
 </template>
 
-<script lang="ts">
-import { defineComponent, ref, reactive, onMounted } from 'vue';
+<script setup lang="ts">
+import { defineProps, ref, reactive, onMounted } from 'vue';
+import type { Ref } from 'vue';
+
 import axios from 'axios';
 import { useToggle } from '@vueuse/core';
+
 import CreateModal from '../views/activity/CreateModal.vue';
 import Toast from './Toast.vue';
 
-export default defineComponent({
-  name: 'HeaderComponent',
-  components: {
-    CreateModal,
-    Toast,
-  },
-  props: {
-    user: {
-      type: Object,
-      required: true,
+defineProps({
+  user: { type: Object, required: true },
+  organization: { type: Object, required: true },
+});
+
+const toastVisibility = ref(false);
+const toastMessage = ref('');
+const toastType = ref(false);
+
+const data = reactive({
+  languageNavLiClasses: 'flex',
+  languageNavAnchorClasses:
+    'flex text-white items-center uppercase nav__pointer-hover px-1.5',
+  menuNavLiClasses: 'flex px-4',
+  menuNavAnchorClasses:
+    'flex text-white items-center uppercase nav__pointer-hover',
+  languages: [
+    {
+      language: 'EN',
+      permalink: '#',
+      active: true,
     },
-    organization: {
-      type: Object,
-      required: true,
+    {
+      language: 'FR',
+      permalink: '#',
+      active: false,
     },
-  },
+    {
+      language: 'ES',
+      permalink: '#',
+      active: false,
+    },
+  ],
+  menus: [
+    {
+      name: 'Activity DATA',
+      permalink: '/activities',
+      active: true,
+    },
+    {
+      name: 'Organisation DATA',
+      permalink: '#',
+      active: false,
+    },
+    {
+      name: 'Settings',
+      permalink: '/setting',
+      active: false,
+    },
+  ],
+});
 
-  setup(props) {
-    const toastVisibility = ref(false);
-    const toastMessage = ref('');
-    const toastType = ref(false);
+const [modalValue, modalToggle] = useToggle();
 
-    const activeTab = ref('activities');
-    const data = reactive({
-      languageNavLiClasses: 'flex',
-      languageNavAnchorClasses:
-        'flex text-white items-center uppercase nav__pointer-hover px-1.5',
-      menuNavLiClasses: 'flex px-4',
-      menuNavAnchorClasses:
-        'flex text-white items-center uppercase nav__pointer-hover',
-      languages: [
-        {
-          language: 'EN',
-          permalink: '#',
-          active: true,
-        },
-        {
-          language: 'FR',
-          permalink: '#',
-          active: false,
-        },
-        {
-          language: 'ES',
-          permalink: '#',
-          active: false,
-        },
-      ],
-      menus: [
-        {
-          name: 'Activity DATA',
-          permalink: '/activities',
-          active: true,
-        },
-        {
-          name: 'Organisation DATA',
-          permalink: '/organisation',
-          active: false,
-        },
-        {
-          name: 'Settings',
-          permalink: '/setting',
-          active: false,
-        },
-      ],
-    });
+function toast(message: string, type: boolean) {
+  toastVisibility.value = true;
+  setTimeout(() => (toastVisibility.value = false), 5000);
+  toastMessage.value = message;
+  toastType.value = type;
+}
 
-    const [modalValue, modalToggle] = useToggle();
+function changeActiveMenu() {
+  const path = window.location.pathname;
 
-    const state = reactive({
-      isVisible: false,
-    });
+  data.menus.forEach((menu, key) => {
+    data.menus[key]['active'] = menu.permalink === path ? true : false;
+  });
+}
 
-    const toggle = () => {
-      state.isVisible = !state.isVisible;
-    };
-
-    function toast(message: string, type: boolean) {
-      toastVisibility.value = true;
-      setTimeout(() => (toastVisibility.value = false), 5000);
-      toastMessage.value = message;
-      toastType.value = type;
+async function logout() {
+  await axios.post('/logout').then((res) => {
+    if (res.status) {
+      window.location.href = '/';
     }
+  });
+}
 
-    function changeActiveMenu() {
-      const path = window.location.pathname;
+/**
+ * Search functionality
+ *
+ */
+const searchValue: Ref<string | null> = ref('');
+const currentURL = window.location.href;
 
-      data.menus.forEach((menu, key) => {
-        data.menus[key]['active'] = menu.permalink === path || path.includes(menu.permalink) ? true : false;
-      });
-    }
+if (currentURL.includes('?')) {
+  const queryString = window.location.search,
+    urlParams = new URLSearchParams(queryString),
+    search = urlParams.get('q');
 
-    async function logout() {
-      await axios.post('/logout').then((res) => {
-        if (res.status) {
-          window.location.href = '/';
-        }
-      });
-    }
+  searchValue.value = search;
+}
 
-    onMounted(async () => {
-      changeActiveMenu();
-    });
+const spinner = ref(false);
 
-    return {
-      props,
-      data,
-      modalValue,
-      toastVisibility,
-      toastMessage,
-      toastType,
-      toast,
-      toggle,
-      activeTab,
-      modalToggle,
-      logout,
-    };
-  },
+const searchFunction = () => {
+  spinner.value = true;
+  const param = searchValue.value?.replace('#', '');
+  let href = param ? `/activities?q=${param}` : '/activities/';
+  window.location.href = href;
+};
+
+onMounted(async () => {
+  changeActiveMenu();
 });
 </script>
 
 <style src="@vueform/multiselect/themes/default.css"></style>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .activity__header {
   nav {
     a:hover {
@@ -281,5 +272,12 @@ export default defineComponent({
   .dropdown__arrow {
     transform: rotate(180deg);
   }
+}
+
+.spinner {
+  @apply absolute top-3 right-3 inline-block animate-spin rounded-full border-2 border-n-10 border-opacity-5;
+  width: 15px;
+  height: 15px;
+  border-top-color: white;
 }
 </style>

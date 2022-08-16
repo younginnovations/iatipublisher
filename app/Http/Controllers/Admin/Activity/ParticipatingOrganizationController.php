@@ -37,21 +37,21 @@ class ParticipatingOrganizationController extends Controller
      *
      * @param int $id
      *
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|void
+     * @return View|RedirectResponse
      */
     public function edit(int $id): View|RedirectResponse
     {
         try {
-            $element = getElementSchema('participating_org');
+            $element  = getElementSchema('participating_org');
             $activity = $this->participatingOrganizationService->getActivityData($id);
-            $form = $this->participatingOrganizationService->formGenerator($id);
-            $data = ['core' => $element['criteria'] ?? '', 'status' => $activity->participating_org_element_completed ?? false, 'title' => $element['label'], 'name' => 'participating_org'];
+            $form     = $this->participatingOrganizationService->formGenerator($id);
+            $data     = ['core' => $element['criteria'] ?? '', 'status' => $activity->participating_org_element_completed ?? false, 'title' => $element['label'], 'name' => 'participating_org'];
 
             return view('admin.activity.participatingOrganization.edit', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while rendering participating-organization form.');
+            return redirect()->route('admin.activity.show', $id)->with('error', 'Error has occurred while rendering participating-organization form.');
         }
     }
 
@@ -59,25 +59,22 @@ class ParticipatingOrganizationController extends Controller
      * Updates participating-organization data.
      *
      * @param ParticipatingOrganizationRequest $request
-     * @param $id
+     * @param                                  $id
      *
      * @return JsonResponse|RedirectResponse
      */
     public function update(ParticipatingOrganizationRequest $request, $id): JsonResponse|RedirectResponse
     {
         try {
-            $activityData = $this->participatingOrganizationService->getActivityData($id);
-            $activityParticipatingOrg = $request->except(['_token', '_method']);
-
-            if (!$this->participatingOrganizationService->update($activityParticipatingOrg, $activityData)) {
+            if (!$this->participatingOrganizationService->update($id, $request->except(['_token', '_method']))) {
                 return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while updating participating-organization.');
             }
 
-            return redirect()->route('admin.activities.show', $id)->with('success', 'Participating-organization updated successfully.');
+            return redirect()->route('admin.activity.show', $id)->with('success', 'Participating-organization updated successfully.');
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while updating participating-organization.');
+            return redirect()->route('admin.activity.show', $id)->with('error', 'Error has occurred while updating participating-organization.');
         }
     }
 }

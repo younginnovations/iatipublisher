@@ -36,7 +36,7 @@ class DateController extends Controller
      *
      * @param int $id
      *
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|void
+     * @return View|RedirectResponse
      */
     public function edit(int $id): View|RedirectResponse
     {
@@ -55,53 +55,37 @@ class DateController extends Controller
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activities.show', $id)->with(
-                'error',
-                'Error has occurred while rendering activity-date form.'
-            );
+            return redirect()->route('admin.activity.show', $id)->with('error', 'Error has occurred while rendering activity-date form.');
         }
     }
 
     /**
      * Updates activity date data.
      *
-     * @param $request
-     * @param $id
+     * @param DateRequest $request
+     * @param             $id
      *
      * @return JsonResponse|RedirectResponse
      */
     public function update(DateRequest $request, $id): JsonResponse|RedirectResponse
     {
         try {
-            $activityData = $this->dateService->getActivityData($id);
             $activityDate = $request->all();
-            $messages = $this->validateData(array_values($request->get('activity_date')));
+            $messages     = $this->validateData(array_values($request->get('activity_date')));
 
             if ($messages) {
-                return redirect()->route('admin.activities.date.edit', $id)->with(
-                    'error',
-                    array_unique($messages)
-                )->withInput();
+                return redirect()->route('admin.activity.date.edit', $id)->with('error', array_unique($messages))->withInput();
             }
 
-            if (!$this->dateService->update($activityDate, $activityData)) {
-                return redirect()->route('admin.activities.show', $id)->with(
-                    'error',
-                    'Error has occurred while updating activity-date.'
-                );
+            if (!$this->dateService->update($id, $activityDate)) {
+                return redirect()->route('admin.activity.show', $id)->with('error', 'Error has occurred while updating activity-date.');
             }
 
-            return redirect()->route('admin.activities.show', $id)->with(
-                'success',
-                'Activity-date updated successfully.'
-            );
+            return redirect()->route('admin.activity.show', $id)->with('success', 'Activity-date updated successfully.');
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activities.show', $id)->with(
-                'error',
-                'Error has occurred while updating activity-date.'
-            );
+            return redirect()->route('admin.activity.show', $id)->with('error', 'Error has occurred while updating activity-date.');
         }
     }
 
@@ -119,18 +103,18 @@ class DateController extends Controller
             $date = $activityDate['date'];
             $type = $activityDate['type'];
 
-            if (isset($date) && isset($type)) {
-                if ($type == 2 || $type == 4) {
+            if (isset($date, $type)) {
+                if ($type === 2 || $type === 4) {
                     (strtotime($date) <= strtotime(date('Y-m-d'))) ?: $messages[] = sprintf(
                         'Actual Start Date and Actual End Date must be Today or past days. (block %s)',
                         $blockIndex
                     );
                 }
 
-                if ($type == 4) {
+                if ($type === 4) {
                     $actualStartDate = array_column(
-                        array_filter($activityDates, function ($date) {
-                            return $date['type'] == 2;
+                        array_filter($activityDates, static function ($date) {
+                            return $date['type'] === 2;
                         }),
                         'date'
                     );
@@ -145,10 +129,10 @@ class DateController extends Controller
                     }
                 }
 
-                if ($type == 3) {
+                if ($type === 3) {
                     $plannedStartDate = array_column(
                         array_filter($activityDates, function ($date) {
-                            return $date['type'] == 1;
+                            return $date['type'] === 1;
                         }),
                         'date'
                     );

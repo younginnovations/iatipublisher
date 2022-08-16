@@ -36,29 +36,26 @@ class DefaultTiedStatusController extends Controller
      *
      * @param int $id
      *
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|void
+     * @return View|RedirectResponse
      */
     public function edit(int $id): View|RedirectResponse
     {
         try {
-            $element = getElementSchema('default_tied_status');
+            $element  = getElementSchema('default_tied_status');
             $activity = $this->defaultTiedStatusService->getActivityData($id);
-            $form = $this->defaultTiedStatusService->formGenerator($id);
-            $data = [
-                'core' => $element['criteria'] ?? '',
+            $form     = $this->defaultTiedStatusService->formGenerator($id);
+            $data     = [
+                'core'   => $element['criteria'] ?? '',
                 'status' => $activity->default_tied_status_element_completed,
-                'title' => $element['label'],
-                'name' => 'default_tied_status',
+                'title'  => $element['label'],
+                'name'   => 'default_tied_status',
             ];
 
             return view('admin.activity.defaultTiedStatus.edit', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activities.show', $id)->with(
-                'error',
-                'Error has occurred while rendering default-tied-status form.'
-            );
+            return redirect()->route('admin.activity.show', $id)->with('error', 'Error has occurred while rendering default-tied-status form.');
         }
     }
 
@@ -66,36 +63,24 @@ class DefaultTiedStatusController extends Controller
      * Updates default tied status data.
      *
      * @param DefaultTiedStatusRequest $request
-     * @param $id
+     * @param                          $id
      *
      * @return JsonResponse|RedirectResponse
      */
     public function update(DefaultTiedStatusRequest $request, $id): JsonResponse|RedirectResponse
     {
         try {
-            $activityData = $this->defaultTiedStatusService->getActivityData($id);
-            $activityDefaultTiedStatus = $request->get('default_tied_status') ? (int) $request->get(
-                'default_tied_status'
-            ) : null;
+            $activityDefaultTiedStatus = $request->get('default_tied_status') !== null ? (int)$request->get('default_tied_status') : null;
 
-            if (!$this->defaultTiedStatusService->update($activityDefaultTiedStatus, $activityData)) {
-                return redirect()->route('admin.activities.show', $id)->with(
-                    'error',
-                    'Error has occurred while updating default-tied-status.'
-                );
+            if (!$this->defaultTiedStatusService->update($id, $activityDefaultTiedStatus)) {
+                return redirect()->route('admin.activity.show', $id)->with('error', 'Error has occurred while updating default-tied-status.');
             }
 
-            return redirect()->route('admin.activities.show', $id)->with(
-                'success',
-                'Default-tied-status updated successfully.'
-            );
+            return redirect()->route('admin.activity.show', $id)->with('success', 'Default-tied-status updated successfully.');
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activities.show', $id)->with(
-                'error',
-                'Error has occurred while updating default-tied-status.'
-            );
+            return redirect()->route('admin.activity.show', $id)->with('error', 'Error has occurred while updating default-tied-status.');
         }
     }
 }

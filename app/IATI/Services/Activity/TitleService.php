@@ -6,9 +6,8 @@ namespace App\IATI\Services\Activity;
 
 use App\IATI\Elements\Builder\BaseFormCreator;
 use App\IATI\Models\Activity\Activity;
-use App\IATI\Repositories\Activity\TitleRepository;
+use App\IATI\Repositories\Activity\ActivityRepository;
 use App\IATI\Traits\XmlBaseElement;
-use Illuminate\Database\Eloquent\Model;
 use Kris\LaravelFormBuilder\Form;
 
 /**
@@ -19,9 +18,9 @@ class TitleService
     use XmlBaseElement;
 
     /**
-     * @var TitleRepository
+     * @var ActivityRepository
      */
-    protected TitleRepository $titleRepository;
+    protected ActivityRepository $activityRepository;
 
     /**
      * @var BaseFormCreator
@@ -31,12 +30,12 @@ class TitleService
     /**
      * TitleService constructor.
      *
-     * @param TitleRepository $titleRepository
+     * @param ActivityRepository $activityRepository
      */
-    public function __construct(TitleRepository $titleRepository, BaseFormCreator $baseFormCreator)
+    public function __construct(ActivityRepository $activityRepository, BaseFormCreator $baseFormCreator)
     {
-        $this->titleRepository = $titleRepository;
-        $this->baseFormCreator = $baseFormCreator;
+        $this->activityRepository = $activityRepository;
+        $this->baseFormCreator    = $baseFormCreator;
     }
 
     /**
@@ -48,7 +47,7 @@ class TitleService
      */
     public function getTitleData(int $activity_id): ?array
     {
-        return $this->titleRepository->getTitleData($activity_id);
+        return $this->activityRepository->find($activity_id)->title;
     }
 
     /**
@@ -56,26 +55,24 @@ class TitleService
      *
      * @param $id
      *
-     * @return Model
+     * @return object
      */
-    public function getActivityData($id): Model
+    public function getActivityData($id): object
     {
-        return $this->titleRepository->getActivityData($id);
+        return $this->activityRepository->find($id);
     }
 
     /**
      * Updates activity title.
      *
+     * @param $id
      * @param $activityTitle
-     * @param $activity
      *
      * @return bool
      */
-    public function update($activityTitle, $activity): bool
+    public function update($id, $activityTitle): bool
     {
-        $activity->title = array_values($activityTitle['narrative']);
-
-        return $activity->save();
+        return $this->activityRepository->update($id, ['title' => array_values($activityTitle['narrative'])]);
     }
 
     /**
@@ -84,14 +81,15 @@ class TitleService
      * @param $id
      *
      * @return Form
+     * @throws \JsonException
      */
     public function formGenerator($id): Form
     {
-        $element = getElementSchema('title');
-        $model['narrative'] = $this->getTitleData($id);
-        $this->baseFormCreator->url = route('admin.activities.title.update', [$id]);
+        $element                    = getElementSchema('title');
+        $model['narrative']         = $this->getTitleData($id);
+        $this->baseFormCreator->url = route('admin.activity.title.update', [$id]);
 
-        return $this->baseFormCreator->editForm($model, $element, 'PUT', '/activities/' . $id);
+        return $this->baseFormCreator->editForm($model, $element, 'PUT', '/activity/'.$id);
     }
 
     /**
@@ -103,7 +101,7 @@ class TitleService
      */
     public function getXmlData(Activity $activity): array
     {
-        $titles = (array) $activity->title;
+        $titles       = (array)$activity->title;
         $activityData = [];
 
         if (count($titles)) {

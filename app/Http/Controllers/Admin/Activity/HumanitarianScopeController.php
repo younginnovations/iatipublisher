@@ -36,29 +36,26 @@ class HumanitarianScopeController extends Controller
      *
      * @param int $id
      *
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|void
+     * @return View|RedirectResponse
      */
     public function edit(int $id): View|RedirectResponse
     {
         try {
-            $element = getElementSchema('humanitarian_scope');
+            $element  = getElementSchema('humanitarian_scope');
             $activity = $this->humanitarianScopeService->getActivityData($id);
-            $form = $this->humanitarianScopeService->formGenerator($id);
-            $data = [
-                'core' => $element['criteria'] ?? '',
+            $form     = $this->humanitarianScopeService->formGenerator($id);
+            $data     = [
+                'core'   => $element['criteria'] ?? '',
                 'status' => $activity->humanitarian_scope_element_completed,
-                'title' => $element['label'],
-                'name' => 'humanitarian_scope',
+                'title'  => $element['label'],
+                'name'   => 'humanitarian_scope',
             ];
 
             return view('admin.activity.humanitarianScope.edit', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activities.show', $id)->with(
-                'error',
-                'Error has occurred while rendering humanitarian-scope form.'
-            );
+            return redirect()->route('admin.activity.show', $id)->with('error', 'Error has occurred while rendering humanitarian-scope form.');
         }
     }
 
@@ -66,34 +63,22 @@ class HumanitarianScopeController extends Controller
      * Updates humanitarian scope form.
      *
      * @param HumanitarianScopeRequest $request
-     * @param $id
+     * @param                          $id
      *
      * @return JsonResponse|RedirectResponse
      */
     public function update(HumanitarianScopeRequest $request, $id): JsonResponse|RedirectResponse
     {
         try {
-            $activityData = $this->humanitarianScopeService->getActivityData($id);
-            $activityHumanitarianScope = $request->all();
-
-            if (!$this->humanitarianScopeService->update($activityHumanitarianScope, $activityData)) {
-                return redirect()->route('admin.activities.show', $id)->with(
-                    'error',
-                    'Error has occurred while updating humanitarian-scope.'
-                );
+            if (!$this->humanitarianScopeService->update($id, $request->all())) {
+                return redirect()->route('admin.activity.show', $id)->with('success', 'Humanitarian-scope updated successfully.');
             }
 
-            return redirect()->route('admin.activities.show', $id)->with(
-                'success',
-                'Humanitarian-scope updated successfully.'
-            );
+            return redirect()->route('admin.activity.show', $id)->with('error', 'Error has occurred while updating humanitarian-scope.');
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activities.show', $id)->with(
-                'error',
-                'Error has occurred while updating humanitarian-scope.'
-            );
+            return redirect()->route('admin.activity.show', $id)->with('error', 'Error has occurred while updating humanitarian-scope.');
         }
     }
 }

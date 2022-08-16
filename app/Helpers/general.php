@@ -460,10 +460,11 @@ if (!function_exists('getList')) {
 }
 
 if (!function_exists('getTransactionTypes')) {
-    /*
-     * Get activity transaction data type
+    /**
+     * Get activity transaction data type.
      *
      * @return array
+     * @throws JsonException
      */
     function getTransactionTypes(): array
     {
@@ -492,10 +493,11 @@ if (!function_exists('getTransactionTypes')) {
 }
 
 if (!function_exists('getResultTypes')) {
-    /*
-     * Get activity result data type
+    /**
+     * Get activity result data type.
      *
      * @return array
+     * @throws JsonException
      */
     function getResultTypes(): array
     {
@@ -510,10 +512,11 @@ if (!function_exists('getResultTypes')) {
 }
 
 if (!function_exists('getIndicatorTypes')) {
-    /*
-     * Get activity indicator data type
+    /**
+     * Get activity indicator data type.
      *
      * @return array
+     * @throws JsonException
      */
     function getIndicatorTypes(): array
     {
@@ -528,10 +531,11 @@ if (!function_exists('getIndicatorTypes')) {
 }
 
 if (!function_exists('getPeriodTypes')) {
-    /*
-     * Get activity periods data type
+    /**
+     * Get activity periods data type.
      *
      * @return array
+     * @throws JsonException
      */
     function getPeriodTypes(): array
     {
@@ -545,7 +549,7 @@ if (!function_exists('getPeriodTypes')) {
 }
 
 if (!function_exists('generateToastData')) {
-    /*
+    /**
      * Generates toast array.
      *
      * @return array
@@ -562,14 +566,42 @@ if (!function_exists('generateToastData')) {
 }
 
 if (!function_exists('isCoreElement')) {
-    /*
-     * Checks if an activity element is a core element
+    /**
+     * Checks if an activity element is a core element.
+     *
+     * @param $element
      *
      * @return bool
      */
     function isCoreElement($element): bool
     {
-        return in_array($element, getCoreElements());
+        return in_array($element, getCoreElements(), true);
+    }
+}
+if (!function_exists('getTableConfig')) {
+    /**
+     * Gets the table config of activity.
+     *
+     * @param $module
+     *
+     * @return string[][]
+     */
+    function getTableConfig($module): array
+    {
+        $tableConfig = ['activity' => ['orderBy' => ['updated_at'], 'direction' => ['asc', 'desc']]];
+
+        return $tableConfig[$module];
+    }
+}
+
+if (!function_exists('getDefaultLanguage')) {
+    function getDefaultLanguage($defaultValues): string
+    {
+        if (!empty($defaultValues) && array_key_exists('default_language', $defaultValues) && !empty($defaultValues['default_language'])) {
+            return $defaultValues['default_language'];
+        }
+
+        return '';
     }
 }
 

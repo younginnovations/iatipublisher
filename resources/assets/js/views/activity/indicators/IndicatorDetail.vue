@@ -3,7 +3,7 @@
     <PageTitle
       :breadcrumb-data="breadcrumbData"
       title="Indicator Detail"
-      :back-link="`${resultLink}/indicator`"
+      :back-link="`${indicatorLink}`"
     >
       <div class="mb-3">
         <Toast
@@ -13,16 +13,16 @@
         />
       </div>
       <div class="flex justify-end">
-        <Status class="mr-2.5" :data="false" />
+        <!-- <Status class="mr-2.5" :data="false" /> -->
         <Btn
           text="Add Indicator"
           icon="add"
-          :link="`${resultLink}/indicator/create`"
+          :link="`${indicatorLink}/create`"
           class="mr-2.5"
         />
         <Btn
           text="Edit Indicator"
-          :link="`${resultLink}/indicator/${indicator.id}/edit`"
+          :link="`${indicatorLink}/${indicator.id}/edit`"
         />
       </div>
     </PageTitle>
@@ -74,56 +74,56 @@
               <div class="indicators">
                 <table>
                   <tbody>
-                    <template
-                      v-if="indicatorData.title[0].narrative.length > 0"
-                    >
-                      <TitleElement
-                        id="title"
-                        :data="indicatorData.title[0]"
-                        :title-type="types.language"
-                      />
-                    </template>
-
-                    <Ascending id="ascending" :data="indicatorData.ascending" />
-
-                    <Measure
-                      id="measure"
-                      :data="indicatorData.measure"
-                      :measure-type="types.indicatorMeasure"
+                  <template
+                    v-if="indicatorData.title[0].narrative.length > 0"
+                  >
+                    <TitleElement
+                      id="title"
+                      :data="indicatorData.title[0]"
+                      :title-type="types.language"
                     />
+                  </template>
 
-                    <AggregationStatus
-                      id="aggregation_status"
-                      :data="indicatorData.aggregation_status"
+                  <Ascending id="ascending" :data="indicatorData.ascending" />
+
+                  <Measure
+                    id="measure"
+                    :data="indicatorData.measure"
+                    :measure-type="types.indicatorMeasure"
+                  />
+
+                  <AggregationStatus
+                    id="aggregation_status"
+                    :data="indicatorData.aggregation_status"
+                  />
+
+                  <template
+                    v-if="indicatorData.description[0].narrative.length > 0"
+                  >
+                    <Description
+                      id="description"
+                      :data="indicatorData.description[0]"
+                      :desc-type="types.language"
                     />
+                  </template>
 
-                    <template
-                      v-if="indicatorData.description[0].narrative.length > 0"
-                    >
-                      <Description
-                        id="description"
-                        :data="indicatorData.description[0]"
-                        :desc-type="types.language"
-                      />
-                    </template>
+                  <template v-if="indicatorData.reference.length > 0">
+                    <Reference
+                      id="reference"
+                      :data="indicatorData.reference"
+                      :ref-type="types"
+                    />
+                  </template>
 
-                    <template v-if="indicatorData.reference.length > 0">
-                      <Reference
-                        id="reference"
-                        :data="indicatorData.reference"
-                        :ref-type="types"
-                      />
-                    </template>
+                  <template v-if="indicatorData.baseline.length > 0">
+                    <Baseline
+                      id="baseline"
+                      :data="indicatorData.baseline"
+                      :base-type="types"
+                    />
+                  </template>
 
-                    <template v-if="indicatorData.baseline.length > 0">
-                      <Baseline
-                        id="baseline"
-                        :data="indicatorData.baseline"
-                        :base-type="types"
-                      />
-                    </template>
-
-                    <Period id="period" :data="periodData" />
+                  <Period id="period" :data="periodData" />
                   </tbody>
                 </table>
               </div>
@@ -156,7 +156,6 @@ import { defineComponent, toRefs, onMounted, reactive, provide } from 'vue';
 
 //component
 import Btn from 'Components/buttons/Link.vue';
-import Status from 'Components/status/ElementStatus.vue';
 import PageTitle from 'Components/sections/PageTitle.vue';
 import Toast from 'Components/Toast.vue';
 
@@ -188,7 +187,6 @@ export default defineComponent({
     DocumentLink,
     Period,
     Btn,
-    Status,
     PageTitle,
     Toast,
   },
@@ -244,10 +242,11 @@ export default defineComponent({
 
     const activityId = activity.value.id,
       activityTitle = activity.value.title,
-      activityLink = `/activities/${activityId}`,
+      activityLink = `/activity/${activityId}`,
       resultId = indicator.value.result_id,
       resultTitled = getActivityTitle(resultTitle.value[0].narrative, 'en'),
       resultLink = `${activityLink}/result/${resultId}`,
+      indicatorLink = `/result/${resultId}/indicator`,
       indicatorTitle = getActivityTitle(indicatorData.title[0].narrative, 'en');
 
     /**
@@ -290,6 +289,7 @@ export default defineComponent({
       indicatorData,
       activityLink,
       resultLink,
+      indicatorLink,
       breadcrumbData,
       toastData,
       periodData,

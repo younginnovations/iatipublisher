@@ -36,29 +36,21 @@ class IdentifierController extends Controller
      *
      * @param int $id
      *
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|void
+     * @return View|RedirectResponse
      */
     public function edit(int $id): View|RedirectResponse
     {
         try {
-            $element = getElementSchema('iati_identifier');
+            $element  = getElementSchema('iati_identifier');
             $activity = $this->identifierService->getActivityData($id);
-            $form = $this->identifierService->formGenerator($id);
-            $data = [
-                'core' => $element['criteria'] ?? '',
-                'status' => $activity->identifier_element_completed,
-                'title' => $element['label'],
-                'name' => 'iati_identifier',
-            ];
+            $form     = $this->identifierService->formGenerator($id);
+            $data     = ['core' => $element['criteria'] ?? '', 'status' => $activity->identifier_element_completed, 'title' => $element['label'], 'name' => 'iati_identifier'];
 
             return view('admin.activity.identifier.edit', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activities.show', $id)->with(
-                'error',
-                'Error has occurred while opening activity title form.'
-            );
+            return redirect()->route('admin.activity.show', $id)->with('error', 'Error has occurred while opening activity title form.');
         }
     }
 
@@ -66,27 +58,18 @@ class IdentifierController extends Controller
      * Updates identifier data.
      *
      * @param IdentifierRequest $request
-     * @param $id
+     * @param                   $id
      *
      * @return JsonResponse|RedirectResponse
      */
     public function update(IdentifierRequest $request, $id): JsonResponse|RedirectResponse
     {
         try {
-            $activityData = $this->identifierService->getActivityData($id);
-            $activityIdentifier = $request->except(['_method', '_token']);
-
-            if (!$this->identifierService->update($activityIdentifier, $activityData)) {
-                return redirect()->route('admin.activities.show', $id)->with(
-                    'error',
-                    'Error has occurred while updating iati-identifier.'
-                );
+            if (!$this->identifierService->update($id, $request->except(['_method', '_token']))) {
+                return redirect()->route('admin.activity.show', $id)->with('error', 'Error has occurred while updating iati-identifier.');
             }
 
-            return redirect()->route('admin.activities.show', $id)->with(
-                'success',
-                'Iati-identifier updated successfully.'
-            );
+            return redirect()->route('admin.activity.show', $id)->with('success', 'Iati-identifier updated successfully.');
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 

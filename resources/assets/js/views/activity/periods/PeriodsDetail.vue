@@ -3,7 +3,7 @@
     <PageTitle
       :breadcrumb-data="breadcrumbData"
       title="Period Detail"
-      :back-link="`${indicatorLink}/period`"
+      :back-link="`${periodLink}`"
     >
       <div class="mb-3">
         <Toast
@@ -13,17 +13,14 @@
         />
       </div>
       <div class="flex justify-end">
-        <Status class="mr-2.5" :data="false" />
+        <!-- <Status class="mr-2.5" :data="false" /> -->
         <Btn
           text="Add Period"
           icon="add"
-          :link="`${indicatorLink}/period/create`"
+          :link="`${periodLink}/create`"
           class="mr-2.5"
         />
-        <Btn
-          text="Edit Period"
-          :link="`${indicatorLink}/period/${period.id}/edit`"
-        />
+        <Btn text="Edit Period" :link="`${periodLink}/${period.id}/edit`" />
       </div>
     </PageTitle>
 
@@ -71,7 +68,6 @@ import { defineComponent, toRefs, provide, onMounted, reactive } from 'vue';
 
 //component
 import Btn from 'Components/buttons/Link.vue';
-import Status from 'Components/status/ElementStatus.vue';
 import PageTitle from 'Components/sections/PageTitle.vue';
 import Toast from 'Components/Toast.vue';
 
@@ -87,7 +83,6 @@ export default defineComponent({
     TargetValue,
     ActualValue,
     Btn,
-    Status,
     PageTitle,
     Toast,
   },
@@ -133,13 +128,14 @@ export default defineComponent({
     //titles
     const activityId = activity.value.id,
       activityTitle = getActivityTitle(activity.value.title, 'en'),
-      activityLink = `/activities/${activityId}`,
+      activityLink = `/activity/${activityId}`,
       resultId = parentData.value.result.id,
       resultTitle = getActivityTitle(parentData.value.result.title, 'en'),
       resultLink = `${activityLink}/result/${resultId}`,
       indicatorId = parentData.value.indicator.id,
       indicatorTitle = getActivityTitle(parentData.value.indicator.title, 'en'),
-      indicatorLink = `${resultLink}/indicator/${indicatorId}`;
+      indicatorLink = `/result/${resultId}/indicator/${indicatorId}`,
+      periodLink = `/indicator/${indicatorId}/period`;
 
     /**
      * Breadcrumb data
@@ -187,6 +183,7 @@ export default defineComponent({
       activityLink,
       resultLink,
       indicatorLink,
+      periodLink,
       toastData,
     };
   },

@@ -6,8 +6,7 @@ namespace App\IATI\Services\Activity;
 
 use App\IATI\Elements\Builder\BaseFormCreator;
 use App\IATI\Models\Activity\Activity;
-use App\IATI\Repositories\Activity\DefaultTiedStatusRepository;
-use Illuminate\Database\Eloquent\Model;
+use App\IATI\Repositories\Activity\ActivityRepository;
 use Kris\LaravelFormBuilder\Form;
 
 /**
@@ -16,9 +15,9 @@ use Kris\LaravelFormBuilder\Form;
 class DefaultTiedStatusService
 {
     /**
-     * @var DefaultTiedStatusRepository
+     * @var ActivityRepository
      */
-    protected DefaultTiedStatusRepository $defaultTiedStatusRepository;
+    protected ActivityRepository $activityRepository;
 
     /**
      * @var BaseFormCreator
@@ -28,13 +27,13 @@ class DefaultTiedStatusService
     /**
      * DefaultTiedStatusService constructor.
      *
-     * @param DefaultTiedStatusRepository $defaultTiedStatusRepository
-     * @param BaseFormCreator $baseFormCreator
+     * @param ActivityRepository $activityRepository
+     * @param BaseFormCreator    $baseFormCreator
      */
-    public function __construct(DefaultTiedStatusRepository $defaultTiedStatusRepository, BaseFormCreator $baseFormCreator)
+    public function __construct(ActivityRepository $activityRepository, BaseFormCreator $baseFormCreator)
     {
-        $this->defaultTiedStatusRepository = $defaultTiedStatusRepository;
-        $this->baseFormCreator = $baseFormCreator;
+        $this->activityRepository = $activityRepository;
+        $this->baseFormCreator    = $baseFormCreator;
     }
 
     /**
@@ -46,7 +45,7 @@ class DefaultTiedStatusService
      */
     public function getDefaultTiedStatusData(int $activity_id): ?int
     {
-        return $this->defaultTiedStatusRepository->getDefaultTiedStatusData($activity_id);
+        return $this->activityRepository->find($activity_id)->default_tied_status;
     }
 
     /**
@@ -54,40 +53,41 @@ class DefaultTiedStatusService
      *
      * @param $id
      *
-     * @return Model
+     * @return Object
      */
-    public function getActivityData($id): Model
+    public function getActivityData($id): object
     {
-        return $this->defaultTiedStatusRepository->getActivityData($id);
+        return $this->activityRepository->find($id);
     }
 
     /**
      * Updates activity default tied status data.
      *
+     * @param $id
      * @param $activityDefaultTiedStatus
-     * @param $activity
      *
      * @return bool
      */
-    public function update($activityDefaultTiedStatus, $activity): bool
+    public function update($id, $activityDefaultTiedStatus): bool
     {
-        return $this->defaultTiedStatusRepository->update($activityDefaultTiedStatus, $activity);
+        return $this->activityRepository->update($id, ['default_tied_status' => $activityDefaultTiedStatus]);
     }
 
     /**
      * Generates default tied status form.
      *
-     * @param id
+     * @param $id
      *
      * @return Form
+     * @throws \JsonException
      */
     public function formGenerator($id): Form
     {
-        $element = getElementSchema('default_tied_status');
+        $element                      = getElementSchema('default_tied_status');
         $model['default_tied_status'] = $this->getDefaultTiedStatusData($id);
-        $this->baseFormCreator->url = route('admin.activities.default-tied-status.update', [$id]);
+        $this->baseFormCreator->url   = route('admin.activity.default-tied-status.update', [$id]);
 
-        return $this->baseFormCreator->editForm($model, $element, 'PUT', '/activities/' . $id);
+        return $this->baseFormCreator->editForm($model, $element, 'PUT', '/activity/'.$id);
     }
 
     /**

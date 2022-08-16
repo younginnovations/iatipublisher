@@ -6,8 +6,7 @@ namespace App\IATI\Services\Activity;
 
 use App\IATI\Elements\Builder\BaseFormCreator;
 use App\IATI\Models\Activity\Activity;
-use App\IATI\Repositories\Activity\DefaultFlowTypeRepository;
-use Illuminate\Database\Eloquent\Model;
+use App\IATI\Repositories\Activity\ActivityRepository;
 use Kris\LaravelFormBuilder\Form;
 
 /**
@@ -16,9 +15,9 @@ use Kris\LaravelFormBuilder\Form;
 class DefaultFlowTypeService
 {
     /**
-     * @var DefaultFlowTypeRepository
+     * @var ActivityRepository
      */
-    protected DefaultFlowTypeRepository $defaultFlowTypeRepository;
+    protected ActivityRepository $activityRepository;
 
     /**
      * @var BaseFormCreator
@@ -28,13 +27,13 @@ class DefaultFlowTypeService
     /**
      * DefaultFlowTypeService constructor.
      *
-     * @param DefaultFlowTypeRepository $defaultFlowTypeRepository
-     * @param BaseFormCreator $baseFormCreator
+     * @param ActivityRepository $activityRepository
+     * @param BaseFormCreator    $baseFormCreator
      */
-    public function __construct(DefaultFlowTypeRepository $defaultFlowTypeRepository, BaseFormCreator $baseFormCreator)
+    public function __construct(ActivityRepository $activityRepository, BaseFormCreator $baseFormCreator)
     {
-        $this->defaultFlowTypeRepository = $defaultFlowTypeRepository;
-        $this->baseFormCreator = $baseFormCreator;
+        $this->activityRepository = $activityRepository;
+        $this->baseFormCreator    = $baseFormCreator;
     }
 
     /**
@@ -46,7 +45,7 @@ class DefaultFlowTypeService
      */
     public function getDefaultFlowTypeData(int $activity_id): ?int
     {
-        return $this->defaultFlowTypeRepository->getDefaultFlowTypeData($activity_id);
+        return $this->activityRepository->find($activity_id)->default_flow_type;
     }
 
     /**
@@ -54,24 +53,24 @@ class DefaultFlowTypeService
      *
      * @param $id
      *
-     * @return Model
+     * @return Object
      */
-    public function getActivityData($id): Model
+    public function getActivityData($id): object
     {
-        return $this->defaultFlowTypeRepository->getActivityData($id);
+        return $this->activityRepository->find($id);
     }
 
     /**
      * Updates activity default flow type data.
      *
+     * @param $id
      * @param $activityDefaultFlowType
-     * @param $activity
      *
      * @return bool
      */
-    public function update($activityDefaultFlowType, $activity): bool
+    public function update($id, $activityDefaultFlowType): bool
     {
-        return $this->defaultFlowTypeRepository->update($activityDefaultFlowType, $activity);
+        return $this->activityRepository->update($id, ['default_flow_type' => $activityDefaultFlowType]);
     }
 
     /**
@@ -80,14 +79,15 @@ class DefaultFlowTypeService
      * @param id
      *
      * @return Form
+     * @throws \JsonException
      */
     public function formGenerator($id): Form
     {
-        $element = getElementSchema('default_flow_type');
+        $element                    = getElementSchema('default_flow_type');
         $model['default_flow_type'] = $this->getDefaultFlowTypeData($id);
-        $this->baseFormCreator->url = route('admin.activities.default-flow-type.update', [$id]);
+        $this->baseFormCreator->url = route('admin.activity.default-flow-type.update', [$id]);
 
-        return $this->baseFormCreator->editForm($model, $element, 'PUT', '/activities/' . $id);
+        return $this->baseFormCreator->editForm($model, $element, 'PUT', '/activity/'.$id);
     }
 
     /**

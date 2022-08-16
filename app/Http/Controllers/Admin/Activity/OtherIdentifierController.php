@@ -50,7 +50,7 @@ class OtherIdentifierController extends Controller
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while opening other-identifier edit form.');
+            return redirect()->route('admin.activity.show', $id)->with('error', 'Error has occurred while opening other-identifier edit form.');
         }
     }
 
@@ -65,18 +65,15 @@ class OtherIdentifierController extends Controller
     public function update(OtherIdentifierRequest $request, $id): JsonResponse|RedirectResponse
     {
         try {
-            $activityData = $this->otherIdentifierService->getActivityData($id);
-            $activityCondition = $request->get('other_identifier');
-
-            if (!$this->otherIdentifierService->update($activityCondition, $activityData)) {
-                return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while updating other-identifier.');
+            if (!$this->otherIdentifierService->update($id, $request->get('other_identifier'))) {
+                return redirect()->route('admin.activity.show', $id)->with('error', 'Error has occurred while updating other-identifier.');
             }
 
-            return redirect()->route('admin.activities.show', $id)->with('success', 'Other-identifier updated successfully.');
+            return redirect()->route('admin.activity.show', $id)->with('success', 'Other-identifier updated successfully.');
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while updating other-identifier.');
+            return redirect()->route('admin.activity.show', $id)->with('error', 'Error has occurred while updating other-identifier.');
         }
     }
 }

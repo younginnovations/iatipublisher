@@ -5,8 +5,7 @@ declare(strict_types=1);
 namespace App\IATI\Services\Activity;
 
 use App\IATI\Elements\Builder\BaseFormCreator;
-use App\IATI\Repositories\Activity\ActivityIdentifierRepository;
-use Illuminate\Database\Eloquent\Model;
+use App\IATI\Repositories\Activity\ActivityRepository;
 use Kris\LaravelFormBuilder\Form;
 
 /**
@@ -15,9 +14,9 @@ use Kris\LaravelFormBuilder\Form;
 class ActivityIdentifierService
 {
     /**
-     * @var ActivityIdentifierRepository
+     * @var ActivityRepository
      */
-    protected ActivityIdentifierRepository $activityIdentifierRepository;
+    protected activityRepository $activityRepository;
 
     /**
      * @var BaseFormCreator
@@ -27,13 +26,13 @@ class ActivityIdentifierService
     /**
      * ActivityIdentifierService constructor.
      *
-     * @param ActivityIdentifierRepository $activityIdentifierRepository
-     * @param BaseFormCreator $baseFormCreator
+     * @param ActivityRepository $activityRepository
+     * @param BaseFormCreator    $baseFormCreator
      */
-    public function __construct(ActivityIdentifierRepository $activityIdentifierRepository, BaseFormCreator $baseFormCreator)
+    public function __construct(activityRepository $activityRepository, BaseFormCreator $baseFormCreator)
     {
-        $this->activityIdentifierRepository = $activityIdentifierRepository;
-        $this->baseFormCreator = $baseFormCreator;
+        $this->activityRepository = $activityRepository;
+        $this->baseFormCreator    = $baseFormCreator;
     }
 
     /**
@@ -45,12 +44,7 @@ class ActivityIdentifierService
      */
     public function getActivityIdentifierData(int $activity_id): ?array
     {
-        $activity = $this->getActivityData($activity_id);
-
-        return [
-            'activity_identifier' => $activity->iati_identifier['activity_identifier'],
-            'iati_identifier_text' => $activity->organization->identifier . '-' . $activity->iati_identifier['activity_identifier'],
-        ];
+        return $this->activityRepository->find($activity_id)->iati_identifier;
     }
 
     /**
@@ -58,39 +52,40 @@ class ActivityIdentifierService
      *
      * @param $id
      *
-     * @return Model
+     * @return Object
      */
-    public function getActivityData($id): Model
+    public function getActivityData($id): object
     {
-        return $this->activityIdentifierRepository->getActivityData($id);
+        return $this->activityRepository->find($id);
     }
 
     /**
      * Updates activity identifier.
      *
+     * @param $id
      * @param $activityIdentifier
-     * @param $activity
      *
      * @return bool
      */
-    public function update($activityIdentifier, $activity): bool
+    public function update($id, $activityIdentifier): bool
     {
-        return $this->activityIdentifierRepository->update($activityIdentifier, $activity);
+        return $this->activityRepository->update($id, ['iati_identifier' => $activityIdentifier]);
     }
 
     /**
      * Generates budget form.
      *
-     * @param id
+     * @param $id
      *
      * @return Form
+     * @throws \JsonException
      */
     public function formGenerator($id): Form
     {
-        $element = getElementSchema('activity_identifier');
+        $element                      = getElementSchema('activity_identifier');
         $model['activity_identifier'] = $this->getActivityIdentifierData($id);
-        $this->baseFormCreator->url = route('admin.activities.identifier.update', [$id]);
+        $this->baseFormCreator->url   = route('admin.activity.identifier.update', [$id]);
 
-        return $this->baseFormCreator->editForm($model['activity_identifier'], $element, 'PUT', '/activities/' . $id);
+        return $this->baseFormCreator->editForm($model['activity_identifier'], $element, 'PUT', '/activities/'.$id);
     }
 }
