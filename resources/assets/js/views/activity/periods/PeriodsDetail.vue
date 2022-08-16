@@ -133,7 +133,7 @@ export default defineComponent({
     //titles
     const activityId = activity.value.id,
       activityTitle = getActivityTitle(activity.value.title, 'en'),
-      activityLink = `/activities/${activityId}`,
+      activityLink = `/activity/${activityId}`,
       resultId = parentData.value.result.id,
       resultTitle = getActivityTitle(parentData.value.result.title, 'en'),
       resultLink = `${activityLink}/result/${resultId}`,

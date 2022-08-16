@@ -110,9 +110,9 @@ class ResultService
     public function createFormGenerator($activityId): Form
     {
         $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
-        $this->resultElementFormCreator->url = route('admin.activities.result.store', $activityId);
+        $this->resultElementFormCreator->url = route('admin.activity.result.store', $activityId);
 
-        return $this->resultElementFormCreator->editForm([], $element['result'], 'POST', '/activities/' . $activityId);
+        return $this->resultElementFormCreator->editForm([], $element['result'], 'POST', '/activity/' . $activityId);
     }
 
     /**
@@ -127,9 +127,9 @@ class ResultService
     {
         $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
         $activityResult = $this->getResult($resultId, $activityId);
-        $this->resultElementFormCreator->url = route('admin.activities.result.update', [$activityId, $resultId]);
+        $this->resultElementFormCreator->url = route('admin.activity.result.update', [$activityId, $resultId]);
 
-        return $this->resultElementFormCreator->editForm($activityResult->result, $element['result'], 'PUT', '/activities/' . $activityId);
+        return $this->resultElementFormCreator->editForm($activityResult->result, $element['result'], 'PUT', '/activity/' . $activityId);
     }
 
     /**

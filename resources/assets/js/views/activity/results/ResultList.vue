@@ -97,7 +97,7 @@
               <div class="flex">
                 <a
                   class="mr-6 text-n-40"
-                  :href="`/activities/${result.activity_id}/result/${result.id}/edit`"
+                  :href="`/activity/${result.activity_id}/result/${result.id}/edit`"
                 >
                   <svg-vue icon="edit" class="text-xl"></svg-vue>
                 </a>
@@ -161,7 +161,7 @@ export default defineComponent({
     const { activity } = toRefs(props);
     const activityId = activity.value.id,
       activityTitle = activity.value.title,
-      activityLink = `/activities/${activityId}`;
+      activityLink = `/activity/${activityId}`;
     const toastData = reactive({
       visibility: false,
       message: '',
@@ -190,7 +190,7 @@ export default defineComponent({
     ];
 
     onMounted(async () => {
-      axios.get(`/activities/${activityId}/result/page/1`).then((res) => {
+      axios.get(`/activity/${activityId}/result/page/1`).then((res) => {
         const response = res.data;
         Object.assign(resultsData, response.data);
         isEmpty.value = response.data.data.length ? false : true;
@@ -209,7 +209,7 @@ export default defineComponent({
 
     function fetchListings(active_page: number) {
       axios
-        .get(`/activities/${activityId}/result/page/` + active_page)
+        .get(`/activity/${activityId}/result/page/` + active_page)
         .then((res) => {
           const response = res.data;
           Object.assign(resultsData, response.data);

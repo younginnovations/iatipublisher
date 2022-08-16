@@ -50,7 +50,7 @@ class RecipientRegionController extends Controller
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while opening recipient-region form.');
+            return redirect()->route('admin.activity.show', $id)->with('error', 'Error has occurred while opening recipient-region form.');
         }
     }
 

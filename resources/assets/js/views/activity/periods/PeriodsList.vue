@@ -128,7 +128,7 @@ export default defineComponent({
     const { activity, parentData } = toRefs(props);
     const activityId = activity.value.id,
       activityTitle = activity.value.title,
-      activityLink = `/activities/${activityId}`,
+      activityLink = `/activity/${activityId}`,
       resultTitle = parentData.value.result.title,
       resultId = parentData.value.result.id,
       resultLink = `${activityLink}/result/${resultId}`,
@@ -174,7 +174,7 @@ export default defineComponent({
     onMounted(async () => {
       axios
         .get(
-          `/activities/${activityId}/result/${resultId}/indicator/${indicatorId}/period/page/1`
+          `/indicator/${indicatorId}/period/page/1`
         )
         .then((res) => {
           const response = res.data;
@@ -196,7 +196,7 @@ export default defineComponent({
     function fetchListings(active_page: number) {
       axios
         .get(
-          `/activities/${activityId}/result/${resultId}/indicator/${indicatorId}/period/page/` +
+          `/indicator/${indicatorId}/period/page/` +
             active_page
         )
         .then((res) => {

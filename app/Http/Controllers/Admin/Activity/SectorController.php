@@ -50,7 +50,7 @@ class SectorController extends Controller
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while opening activity sector form.');
+            return redirect()->route('admin.activity.show', $id)->with('error', 'Error has occurred while opening activity sector form.');
         }
     }
 
@@ -69,14 +69,14 @@ class SectorController extends Controller
             $activityDescription = $request->all();
 
             if (!$this->sectorService->update($activityDescription, $activityData)) {
-                return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while updating activity sector.');
+                return redirect()->route('admin.activity.show', $id)->with('error', 'Error has occurred while updating activity sector.');
             }
 
-            return redirect()->route('admin.activities.show', $id)->with('success', 'Activity sector updated successfully.');
+            return redirect()->route('admin.activity.show', $id)->with('success', 'Activity sector updated successfully.');
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while updating activity sector.');
+            return redirect()->route('admin.activity.show', $id)->with('error', 'Error has occurred while updating activity sector.');
         }
     }
 }

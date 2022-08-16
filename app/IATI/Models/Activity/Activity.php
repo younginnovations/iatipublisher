@@ -7,6 +7,7 @@ use App\IATI\Models\Organization\Organization;
 use Database\Factories\IATI\Models\Activity\ActivityFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 
 /**
  * Class Activity.
@@ -133,6 +134,16 @@ class Activity extends Model
     public function organization(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(Organization::class, 'org_id');
+    }
+
+    /**
+     * Checks if activity belongs to organization.
+     *
+     * @return bool
+     */
+    public function isActivityOfOrg(): bool
+    {
+        return $this->org_id === Auth::user()->organization_id;
     }
 
     /**

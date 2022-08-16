@@ -84,8 +84,8 @@ class PolicyMarkerService
     {
         $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
         $model['policy_marker'] = $this->getPolicyMarkerData($id);
-        $this->parentCollectionFormCreator->url = route('admin.activities.policy-marker.update', [$id]);
+        $this->parentCollectionFormCreator->url = route('admin.activity.policy-marker.update', [$id]);
 
-        return $this->parentCollectionFormCreator->editForm($model, $element['policy_marker'], 'PUT', '/activities/' . $id);
+        return $this->parentCollectionFormCreator->editForm($model, $element['policy_marker'], 'PUT', '/activity/' . $id);
     }
 }

@@ -50,7 +50,7 @@
               ></svg-vue>
               <div class="ellipsis relative">
                 <a
-                  :href="'/activities/' + datum['id']"
+                  :href="'/activity/' + datum['id']"
                   class="ellipsis overflow-hidden text-n-50"
                   >{{ datum['title'][0]['narrative'] ?? 'Untitled' }}</a
                 >
@@ -139,7 +139,7 @@ export default defineComponent({
     }
 
     function goToDetail(id: number) {
-      window.location.href = '/activities/' + id;
+      window.location.href = '/activity/' + id;
     }
 
     return {

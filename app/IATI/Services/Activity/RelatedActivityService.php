@@ -84,8 +84,8 @@ class RelatedActivityService
     {
         $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
         $model['related_activity'] = $this->getRelatedActivityData($id);
-        $this->baseFormCreator->url = route('admin.activities.related-activity.update', [$id]);
+        $this->baseFormCreator->url = route('admin.activity.related-activity.update', [$id]);
 
-        return $this->baseFormCreator->editForm($model, $element['related_activity'], 'PUT', '/activities/' . $id);
+        return $this->baseFormCreator->editForm($model, $element['related_activity'], 'PUT', '/activity/' . $id);
     }
 }

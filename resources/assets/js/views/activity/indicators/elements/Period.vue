@@ -4,7 +4,7 @@
     <td>
       <div>
         <NotYet
-          :link="`/activities/${id.activity}/result/${id.result}/indicator/${id.indicator}/period/create`"
+          :link="`/indicator/${id.indicator}/period/create`"
           description="You haven't added any periods yet."
           btn-text="Add period"
           class="max-w-[442px]"
@@ -29,7 +29,7 @@
             <div>
               <a
                 class="text-xs text-n-50"
-                :href="`/activities/${id.activity}/result/${id.result}/indicator/${id.indicator}/period/${item.id}`"
+                :href="`/indicator/${id.indicator}/period/${item.id}`"
               >
                 {{
                   dateFormat(item.period.period_start[0].date, 'MMMM DD, YYYY')
@@ -44,7 +44,7 @@
               <Btn
                 text="Edit"
                 icon="edit"
-                :link="`/activities/${id.activity}/result/${id.result}/indicator/${id.indicator}/period/${item.id}/edit`"
+                :link="`/indicator/${id.indicator}/period/${item.id}/edit`"
               />
             </div>
           </div>
@@ -54,7 +54,7 @@
             text="Show full period list"
             icon=""
             design="bgText"
-            :link="`/activities/${id.activity}/result/${id.result}/indicator/${id.indicator}/period/`"
+            :link="`/indicator/${id.indicator}/period/`"
             class="mr-2.5"
           />
         </div>

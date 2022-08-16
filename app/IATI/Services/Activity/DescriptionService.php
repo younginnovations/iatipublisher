@@ -84,8 +84,8 @@ class DescriptionService
     {
         $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
         $model['description'] = $this->getDescriptionData($id);
-        $this->parentCollectionFormCreator->url = route('admin.activities.description.update', [$id]);
+        $this->parentCollectionFormCreator->url = route('admin.activity.description.update', [$id]);
 
-        return $this->parentCollectionFormCreator->editForm($model, $element['description'], 'PUT', '/activities/' . $id);
+        return $this->parentCollectionFormCreator->editForm($model, $element['description'], 'PUT', '/activity/' . $id);
     }
 }

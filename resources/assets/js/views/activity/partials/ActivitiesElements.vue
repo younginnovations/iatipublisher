@@ -79,8 +79,8 @@
             post.has_data
               ? `#${index}`
               : index === 'result' || index == 'transactions'
-              ? `/activities/${activityId}/${index}/create`
-              : `/activities/${activityId}/${index}`
+              ? `/activity/${activityId}/${index}/create`
+              : `/activity/${activityId}/${index}`
           "
         >
           <div

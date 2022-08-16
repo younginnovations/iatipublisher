@@ -39,7 +39,7 @@ export default defineComponent({
     const activities = reactive({});
 
     onMounted(async () => {
-      axios.get('/activity/page').then((res) => {
+      axios.get('/activities/page').then((res) => {
         const response = res.data;
         Object.assign(activities, response.data);
         isEmpty.value = response.data.data.length ? false : true;
@@ -61,7 +61,7 @@ export default defineComponent({
     };
 
     function fetchActivities(active_page: number) {
-      axios.get('/activity/page/' + active_page).then((res) => {
+      axios.get('/activities/page/' + active_page).then((res) => {
         const response = res.data;
         Object.assign(activities, response.data);
         isEmpty.value = response.data ? false : true;

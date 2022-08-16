@@ -8,7 +8,6 @@ use App\IATI\Services\Activity\ResultService;
 use App\Providers\RouteServiceProvider;
 use Closure;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
 class RedirectActivity
 {
@@ -26,13 +25,24 @@ class RedirectActivity
     /**
      * Handle an incoming request.
      *
-     * @param \Illuminate\Http\Request                                                                          $request
-     * @param \Closure(\Illuminate\Http\Request): (\Illuminate\Http\Response|\Illuminate\Http\RedirectResponse) $next
+     * @param Request $request
+     * @param Closure $next
      *
-     * @return \Illuminate\Http\Response|\Illuminate\Http\RedirectResponse
+     * @return mixed
      */
-    public function handle(Request $request, Closure $next)
+    public function handle(Request $request, Closure $next): mixed
     {
+        $byPassRoutes = [
+            'admin.activities.index',
+            'admin.activities.paginate',
+            'admin.activities.codelist',
+            'admin.activity.store',
+        ];
+
+        if (in_array($request->route()->getName(), $byPassRoutes, true)) {
+            return $next($request);
+        }
+
         $id = (int) $request->route('id');
 
         if (strlen($id) === strlen($request->route('id'))) {
@@ -44,13 +54,15 @@ class RedirectActivity
             } elseif ($module === 'result') {
                 $result = $this->resultService->getResult($id);
                 $activity = $result->activity;
-                dd($activity);
             } elseif ($module === 'indicator') {
                 $indicator = $this->indicatorService->getIndicator($id);
-                $activity = $indicator->result->activity;
+
+                if (isset($indicator)) {
+                    $activity = $indicator->result->activity;
+                }
             }
 
-            if ($activity && $activity['org_id'] !== Auth::user()->organization_id) {
+            if ($activity && !$activity->isActivityOfOrg()) {
                 return redirect(RouteServiceProvider::HOME);
             }
 

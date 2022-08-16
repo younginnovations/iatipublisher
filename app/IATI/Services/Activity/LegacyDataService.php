@@ -84,8 +84,8 @@ class LegacyDataService
     {
         $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
         $model['legacy_data'] = $this->getActivityLegacyData($id);
-        $this->baseFormCreator->url = route('admin.activities.legacy-data.update', [$id]);
+        $this->baseFormCreator->url = route('admin.activity.legacy-data.update', [$id]);
 
-        return $this->baseFormCreator->editForm($model, $element['legacy_data'], 'PUT', '/activities/' . $id);
+        return $this->baseFormCreator->editForm($model, $element['legacy_data'], 'PUT', '/activity/' . $id);
     }
 }

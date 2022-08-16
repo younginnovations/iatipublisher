@@ -36,7 +36,7 @@
             </li>
             <li v-if="!hasIndicators">
               <a
-                :href="`/activities/${result.activity_id}/result/${result.id}/indicator/create`"
+                :href="`/result/${result.id}/indicator/create`"
                 :class="linkClasses"
                 class="border border-dashed border-n-40"
               >
@@ -55,7 +55,7 @@
             <ResultElement
               :data="post"
               :element-name="key.toString()"
-              :edit-url="`/activities/${result.activity_id}/result/${result.id}`"
+              :edit-url="`/activity/${result.activity_id}/result/${result.id}`"
               :width="
                 key.toString() === 'title' ||
                 key.toString() === 'description' ||
@@ -77,7 +77,7 @@
         <!-- indicator button -->
         <a
           v-if="!hasIndicators"
-          :href="`/activities/${result.activity_id}/result/${result.id}/indicator/create`"
+          :href="`/result/${result.id}/indicator/create`"
           class="flex w-full px-4 py-3 text-xs leading-normal bg-white border border-dashed rounded add_indicator border-n-40"
         >
           <div class="italic text-left grow">
@@ -146,7 +146,7 @@ export default defineComponent({
 
     const activityId = activity.value.id,
       activityTitle = activity.value.title,
-      activityLink = `/activities/${activityId}`,
+      activityLink = `/activity/${activityId}`,
       resultTitle = getActivityTitle(resultsData.title[0].narrative, 'en'),
       resultLink = `${activityLink}/result/${result.value.id}`;
 
