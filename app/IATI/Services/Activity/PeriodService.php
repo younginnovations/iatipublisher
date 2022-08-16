@@ -108,7 +108,7 @@ class PeriodService
     public function createFormGenerator($activityId, $resultId, $indicatorId): Form
     {
         $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
-        $this->resultElementFormCreator->url = route('admin.activity.result.indicator.period.store', [$activityId, $resultId, $indicatorId]);
+        $this->resultElementFormCreator->url = route('admin.indicator.period.store', [$activityId, $resultId, $indicatorId]);
 
         return $this->resultElementFormCreator->editForm([], $element['period'], 'POST', '/activity/' . $activityId);
     }

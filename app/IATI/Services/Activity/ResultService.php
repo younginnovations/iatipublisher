@@ -93,9 +93,9 @@ class ResultService
      * @param $resultId
      * @param $activityId
      *
-     * @return Model
+     * @return Model|null
      */
-    public function getResultWithIndicatorAndPeriod($resultId, $activityId): Model
+    public function getResultWithIndicatorAndPeriod($resultId, $activityId): ?Model
     {
         return $this->resultRepository->getResultWithIndicatorAndPeriod($resultId, $activityId);
     }

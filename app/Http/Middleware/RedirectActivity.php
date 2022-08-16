@@ -38,6 +38,7 @@ class RedirectActivity
             'admin.activities.codelist',
             'admin.activity.store',
         ];
+        // dd($request->route()->getName());
 
         if (in_array($request->route()->getName(), $byPassRoutes, true)) {
             return $next($request);

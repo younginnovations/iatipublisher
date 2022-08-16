@@ -12,7 +12,7 @@
           :type="toastData.type"
         />
       </div>
-      <a :href="`/result/${resultId}/indicator/create`">
+      <a :href="`${indicatorLink}/create`">
         <Btn text="Add Indicator" icon="plus" type="primary" />
       </a>
     </PageTitle>
@@ -184,7 +184,8 @@ export default defineComponent({
       activityLink = `/activity/${activityId}`,
       resultId = parentData.value.result.id,
       resultTitle = getActivityTitle(parentData.value.result.title, 'en'),
-      resultLink = `${activityLink}/result/${resultId}`;
+      resultLink = `${activityLink}/result/${resultId}`,
+      indicatorLink = `/result/${resultId}/indicator`;
 
     const indicatorsData = reactive({});
     const isEmpty = ref(false);
@@ -256,6 +257,7 @@ export default defineComponent({
       getActivityTitle,
       fetchListings,
       resultLink,
+      indicatorLink,
       breadcrumbData,
       toastData,
       resultId,

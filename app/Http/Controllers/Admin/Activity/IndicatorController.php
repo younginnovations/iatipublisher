@@ -90,7 +90,7 @@ class IndicatorController extends Controller
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activity.result.index', [$resultId])->with(
+            return redirect()->route('admin.activity.result.index', $resultId)->with(
                 'error',
                 'Error has occurred while rendering activity transactions listing.'
             );
@@ -162,7 +162,7 @@ class IndicatorController extends Controller
      *
      * @return Factory|View|RedirectResponse|Application
      */
-    public function show($indicatorId): Factory|View|RedirectResponse|Application
+    public function show($resultId, $indicatorId): Factory|View|RedirectResponse|Application
     {
         try {
             $indicator = $this->indicatorService->getIndicator($indicatorId);
@@ -177,7 +177,7 @@ class IndicatorController extends Controller
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.result.indicator.index', [$result->id])->with(
+            return redirect()->route('admin.result.indicator.index', [$resultId])->with(
                 'error',
                 'Error has occurred while rending result detail page.'
             );
@@ -191,22 +191,22 @@ class IndicatorController extends Controller
      *
      * @return Factory|View|RedirectResponse|Application
      */
-    public function edit($indicatorId): Factory|View|RedirectResponse|Application
-    {
+    public function edit(
+        $resultId,
+        $indicatorId
+    ): Factory|View|RedirectResponse|Application {
         try {
+            $result = $this->resultService->getResult($resultId);
             $element = json_decode(json: file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), associative: true, depth: 512, flags: JSON_THROW_ON_ERROR);
-            $indicator = $this->indicatorService->getIndicator($indicatorId);
-            $result = $indicator->result;
-            $activity = $result->activity;
-            $form = $this->indicatorService->editFormGenerator($activity->id, $result->id, $indicatorId);
+            $activity = $this->activityService->getActivity($result->activity->id);
+            $form = $this->indicatorService->editFormGenerator($result->activity->id, $resultId, $indicatorId);
             $data = ['core' => $element['indicator']['criteria'] ?? false, 'status' => false, 'title' => $element['indicator']['label'], 'name' => 'indicator'];
 
             return view('admin.activity.indicator.edit', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {
-            dd($e->getMessage());
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.result.indicator.index', [$result->id])->with(
+            return redirect()->route('admin.result.indicator.index', [$resultId])->with(
                 'error',
                 'Error has occurred while rendering indicator form.'
             );
@@ -221,7 +221,7 @@ class IndicatorController extends Controller
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function update(IndicatorRequest $request, $indicatorId): RedirectResponse
+    public function update(IndicatorRequest $request, $resultId, $indicatorId): RedirectResponse
     {
         try {
             $indicatorData = $request->except(['_method', '_token']);
@@ -232,20 +232,20 @@ class IndicatorController extends Controller
                 'result_id' => $result->id,
                 'indicator' => $indicatorData,
             ], $indicator)) {
-                return redirect()->route('admin.result.indicator.index', [$result->id])->with(
+                return redirect()->route('admin.result.indicator.index', [$result->activity->id, $resultId])->with(
                     'error',
                     'Error has occurred while updating result indicator.'
                 );
             }
 
-            return redirect()->route('admin.result.indicator.show', [$result->id, $indicator['id']])->with(
+            return redirect()->route('admin.result.indicator.show', [$result->activity->id, $resultId, $indicator['id']])->with(
                 'success',
                 'Indicator updated successfully.'
             );
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.result.indicator.index', [$result->id])->with(
+            return redirect()->route('admin.result.indicator.index', [$resultId])->with(
                 'error',
                 'Error has occurred while updating indicator.'
             );

@@ -113,7 +113,7 @@
                         <td>
                           <div>
                             <NotYet
-                              :link="`result/${result.id}/indicator/create`"
+                              :link="`/${title}/${result.id}/indicator/create`"
                               description="You haven't added any indicator yet."
                               btn-text="Add new indicator"
                             />
@@ -138,14 +138,14 @@
                         <Btn
                           text="Add New Indicator"
                           icon="add"
-                          :link="`/result/${result.id}/indicator/create`"
+                          :link="`/${title}/${result.id}/indicator/create`"
                           class="mr-2.5"
                         />
                         <Btn
                           text="Show full indicator list"
                           icon=""
                           design="bgText"
-                          :link="`/result/${result.id}/indicator`"
+                          :link="`/${title}/${result.id}/indicator`"
                         />
                       </div>
                     </div>
@@ -174,12 +174,12 @@
                                   <Btn
                                     text="View Indicator"
                                     icon="eye"
-                                    :link="`/result/${result.id}/indicator/${indicator.id}`"
+                                    :link="`/${title}/${result.id}/indicator/${indicator.id}`"
                                     class="mr-2.5"
                                   />
                                   <Btn
                                     text="Edit Indicator"
-                                    :link="`/result/${result.id}/indicator/${indicator.id}/edit`"
+                                    :link="`/${title}/${result.id}/indicator/${indicator.id}/edit`"
                                     class="mr-2.5"
                                   />
                                 </span>
