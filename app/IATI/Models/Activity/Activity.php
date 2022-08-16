@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Facades\Auth;
 
 /**
  * Class Activity.
@@ -119,7 +120,7 @@ class Activity extends Model
     }
 
     /**
-     * Activity hasmany results.
+     * Activity hasmany transactions.
      *
      * @return HasMany
      */
@@ -148,5 +149,15 @@ class Activity extends Model
     public function organization(): BelongsTo
     {
         return $this->belongsTo(Organization::class, 'org_id');
+    }
+
+    /**
+     * Checks if activity belongs to organization.
+     *
+     * @return bool
+     */
+    public function isActivityOfOrg(): bool
+    {
+        return $this->org_id === Auth::user()->organization_id;
     }
 }

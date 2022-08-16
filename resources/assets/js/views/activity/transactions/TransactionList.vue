@@ -187,7 +187,7 @@ export default defineComponent({
     const { activity } = toRefs(props);
     const activityId = activity.value.id,
       activityTitle = getActivityTitle(activity.value.title, 'en'),
-      activityLink = `/activities/${activityId}`;
+      activityLink = `/activity/${activityId}`;
     const toastData = reactive({
       visibility: false,
       message: '',
@@ -197,7 +197,7 @@ export default defineComponent({
     const transactionsData = reactive({});
 
     onMounted(async () => {
-      axios.get(`/activities/${activityId}/transactions/page/1`).then((res) => {
+      axios.get(`/activity/${activityId}/transactions/page/1`).then((res) => {
         const response = res.data;
         Object.assign(transactionsData, response.data);
       });
@@ -215,7 +215,7 @@ export default defineComponent({
 
     function fetchListings(active_page: number) {
       axios
-        .get(`/activities/${activityId}/transactions/page/` + active_page)
+        .get(`/activity/${activityId}/transactions/page/` + active_page)
         .then((res) => {
           const response = res.data;
           Object.assign(transactionsData, response.data);

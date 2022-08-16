@@ -50,7 +50,7 @@ class OtherIdentifierController extends Controller
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while opening other-identifier edit form.');
+            return redirect()->route('admin.activity.show', $id)->with('error', 'Error has occurred while opening other-identifier edit form.');
         }
     }
 
@@ -69,14 +69,14 @@ class OtherIdentifierController extends Controller
             $activityCondition = $request->except(['_token', '_method']);
 
             if (!$this->otherIdentifierService->update($activityCondition, $activityData)) {
-                return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while updating other-identifier.');
+                return redirect()->route('admin.activity.show', $id)->with('error', 'Error has occurred while updating other-identifier.');
             }
 
-            return redirect()->route('admin.activities.show', $id)->with('success', 'Other-identifier updated successfully.');
+            return redirect()->route('admin.activity.show', $id)->with('success', 'Other-identifier updated successfully.');
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while updating other-identifier.');
+            return redirect()->route('admin.activity.show', $id)->with('error', 'Error has occurred while updating other-identifier.');
         }
     }
 }

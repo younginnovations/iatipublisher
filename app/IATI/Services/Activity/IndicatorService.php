@@ -131,9 +131,9 @@ class IndicatorService
     public function createFormGenerator($activityId, $resultId): Form
     {
         $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
-        $this->resultElementFormCreator->url = route('admin.activities.result.indicator.store', [$activityId, $resultId]);
+        $this->resultElementFormCreator->url = route('admin.result.indicator.store', [$activityId, $resultId]);
 
-        return $this->resultElementFormCreator->editForm([], $element['indicator'], 'POST', '/activities/' . $activityId);
+        return $this->resultElementFormCreator->editForm([], $element['indicator'], 'POST', '/activity/' . $activityId);
     }
 
     /*

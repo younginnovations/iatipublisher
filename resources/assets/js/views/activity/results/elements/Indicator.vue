@@ -51,7 +51,7 @@
                     :href="`/activities/${result.activity_id}/result/${result.id}/indicator/${post.id}`"
                   >
                     {{
-                    getActivityTitle(post.indicator.title[0].narrative, 'en')
+                      getActivityTitle(post.indicator.title[0].narrative, 'en')
                     }}
                   </a>
                 </div>
@@ -348,17 +348,17 @@
                               :href="`/activities/${result.activity_id}/result/${result.id}/indicator/${post.id}/period/${item.id}`"
                             >
                               {{
-                              dateFormat(
-                              item.period.period_start[0].date,
-                              'MMMM DD, YYYY'
-                              )
+                                dateFormat(
+                                  item.period.period_start[0].date,
+                                  'MMMM DD, YYYY'
+                                )
                               }}
                               -
                               {{
-                              dateFormat(
-                              item.period.period_end[0].date,
-                              'MMMM DD, YYYY'
-                              )
+                                dateFormat(
+                                  item.period.period_end[0].date,
+                                  'MMMM DD, YYYY'
+                                )
                               }}
                             </a>
                           </div>

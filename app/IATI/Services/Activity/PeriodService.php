@@ -91,9 +91,9 @@ class PeriodService
     {
         $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
         $indicatorPeriod = $this->getIndicatorPeriod($indicatorId, $periodId);
-        $this->resultElementFormCreator->url = route('admin.activities.result.indicator.period.update', [$activityId, $resultId, $indicatorId, $periodId]);
+        $this->resultElementFormCreator->url = route('admin.indicator.period.update', [$activityId, $resultId, $indicatorId, $periodId]);
 
-        return $this->resultElementFormCreator->editForm($indicatorPeriod->period, $element['period'], 'PUT', '/activities/' . $activityId);
+        return $this->resultElementFormCreator->editForm($indicatorPeriod->period, $element['period'], 'PUT', '/activity/' . $activityId);
     }
 
     /**
@@ -108,9 +108,9 @@ class PeriodService
     public function createFormGenerator($activityId, $resultId, $indicatorId): Form
     {
         $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
-        $this->resultElementFormCreator->url = route('admin.activities.result.indicator.period.store', [$activityId, $resultId, $indicatorId]);
+        $this->resultElementFormCreator->url = route('admin.activity.result.indicator.period.store', [$activityId, $resultId, $indicatorId]);
 
-        return $this->resultElementFormCreator->editForm([], $element['period'], 'POST', '/activities/' . $activityId);
+        return $this->resultElementFormCreator->editForm([], $element['period'], 'POST', '/activity/' . $activityId);
     }
 
     /*

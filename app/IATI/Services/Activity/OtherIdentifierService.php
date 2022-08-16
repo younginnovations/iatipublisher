@@ -84,8 +84,8 @@ class OtherIdentifierService
     {
         $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
         $model = $this->getOtherIdentifierData($id) ?: [];
-        $this->multilevelSubElementFormCreator->url = route('admin.activities.other-identifier.update', [$id]);
+        $this->multilevelSubElementFormCreator->url = route('admin.activity.other-identifier.update', [$id]);
 
-        return $this->multilevelSubElementFormCreator->editForm($model, $element['other_identifier'], 'PUT', '/activities/' . $id);
+        return $this->multilevelSubElementFormCreator->editForm($model, $element['other_identifier'], 'PUT', '/activity/' . $id);
     }
 }

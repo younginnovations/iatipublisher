@@ -48,7 +48,7 @@ class RelatedActivityController extends Controller
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while opening related-activity form.');
+            return redirect()->route('admin.activity.show', $id)->with('error', 'Error has occurred while opening related-activity form.');
         }
     }
 
@@ -66,14 +66,14 @@ class RelatedActivityController extends Controller
             $activityRelatedActivity = $request->all();
 
             if (!$this->relatedActivityService->update($activityRelatedActivity, $activityData)) {
-                return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while updating related-activity.');
+                return redirect()->route('admin.activity.show', $id)->with('error', 'Error has occurred while updating related-activity.');
             }
 
-            return redirect()->route('admin.activities.show', $id)->with('success', 'Related-activity updated successfully.');
+            return redirect()->route('admin.activity.show', $id)->with('success', 'Related-activity updated successfully.');
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while updating related-activity.');
+            return redirect()->route('admin.activity.show', $id)->with('error', 'Error has occurred while updating related-activity.');
         }
     }
 }

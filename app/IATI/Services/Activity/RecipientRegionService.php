@@ -84,8 +84,8 @@ class RecipientRegionService
     {
         $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
         $model['recipient_region'] = $this->getRecipientRegionData($id);
-        $this->parentCollectionFormCreator->url = route('admin.activities.recipient-region.update', [$id]);
+        $this->parentCollectionFormCreator->url = route('admin.activity.recipient-region.update', [$id]);
 
-        return $this->parentCollectionFormCreator->editForm($model, $element['recipient_region'], 'PUT', '/activities/' . $id);
+        return $this->parentCollectionFormCreator->editForm($model, $element['recipient_region'], 'PUT', '/activity/' . $id);
     }
 }

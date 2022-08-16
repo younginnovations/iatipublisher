@@ -49,9 +49,9 @@ use Illuminate\Support\Facades\Route;
 Route::name('admin.')->group(function () {
     // Route::get('activity/{id}', [\App\Http\Controllers\Admin\Activity\ActivityController::class, 'show'])->name('activity.show');
     Route::resource('/activity', ActivityController::class)->except('index')->parameters(['activity' => 'id']);
-    Route::get('/activities', [ActivityController::class, 'index'])->name('activity.index');
-    Route::get('/activity/page/{page?}', [App\Http\Controllers\Admin\Activity\ActivityController::class, 'getActivities'])->name('paginate');
-    Route::get('/activity/codelists', [App\Http\Controllers\Admin\Activity\ActivityController::class, 'getLanguagesOrganization'])->name('codelist');
+    Route::get('/activities', [ActivityController::class, 'index'])->name('activities.index');
+    Route::get('/activities/page/{page?}', [App\Http\Controllers\Admin\Activity\ActivityController::class, 'getActivities'])->name('activities.paginate');
+    Route::get('/activities/codelists', [App\Http\Controllers\Admin\Activity\ActivityController::class, 'getLanguagesOrganization'])->name('activities.codelist');
     Route::get('activity/{id}/title', [TitleController::class, 'edit'])->name('activity.title.edit');
     Route::put('activity/{id}/title', [TitleController::class, 'update'])->name('activity.title.update');
     Route::get('activity/{id}/activity_status', [StatusController::class, 'edit'])->name('activity.status.edit');

@@ -85,8 +85,8 @@ class ParticipatingOrganizationService
     {
         $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
         $model['participating_org'] = $this->getParticipatingOrganizationData($id) ?: [];
-        $this->parentCollectionFormCreator->url = route('admin.activities.participating-org.update', [$id]);
+        $this->parentCollectionFormCreator->url = route('admin.activity.participating-org.update', [$id]);
 
-        return $this->parentCollectionFormCreator->editForm($model, $element['participating_org'], 'PUT', '/activities/' . $id);
+        return $this->parentCollectionFormCreator->editForm($model, $element['participating_org'], 'PUT', '/activity/' . $id);
     }
 }

@@ -84,8 +84,8 @@ class BudgetService
     {
         $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
         $model['budget'] = $this->getBudgetData($id);
-        $this->parentCollectionFormCreator->url = route('admin.activities.budget.update', [$id]);
+        $this->parentCollectionFormCreator->url = route('admin.activity.budget.update', [$id]);
 
-        return $this->parentCollectionFormCreator->editForm($model, $element['budget'], 'PUT', '/activities/' . $id);
+        return $this->parentCollectionFormCreator->editForm($model, $element['budget'], 'PUT', '/activity/' . $id);
     }
 }

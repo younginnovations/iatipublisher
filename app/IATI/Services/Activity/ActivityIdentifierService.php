@@ -84,7 +84,7 @@ class ActivityIdentifierService
     {
         $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
         $model['activity_identifier'] = $this->getActivityIdentifierData($id);
-        $this->baseFormCreator->url = route('admin.activities.identifier.update', [$id]);
+        $this->baseFormCreator->url = route('admin.activity.identifier.update', [$id]);
 
         return $this->baseFormCreator->editForm($model['activity_identifier'], $element['iati_identifier'], 'PUT', '/activities/' . $id);
     }

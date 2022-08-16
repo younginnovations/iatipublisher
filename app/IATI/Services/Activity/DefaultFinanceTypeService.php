@@ -84,8 +84,8 @@ class DefaultFinanceTypeService
     {
         $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
         $model['default_finance_type'] = $this->getDefaultFinanceTypeData($id);
-        $this->baseFormCreator->url = route('admin.activities.default-finance-type.update', [$id]);
+        $this->baseFormCreator->url = route('admin.activity.default-finance-type.update', [$id]);
 
-        return $this->baseFormCreator->editForm($model, $element['default_finance_type'], 'PUT', '/activities/' . $id);
+        return $this->baseFormCreator->editForm($model, $element['default_finance_type'], 'PUT', '/activity/' . $id);
     }
 }

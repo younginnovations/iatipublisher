@@ -236,7 +236,7 @@ export default defineComponent({
 
     const activityId = activity.value.id,
       activityTitle = activity.value.title,
-      activityLink = `/activities/${activityId}`,
+      activityLink = `/activity/${activityId}`,
       resultId = indicator.value.result_id,
       resultTitled = getActivityTitle(resultTitle.value[0].narrative, 'en'),
       resultLink = `${activityLink}/result/${resultId}`,

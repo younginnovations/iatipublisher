@@ -85,8 +85,8 @@ class TitleService
     {
         $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
         $model['narrative'] = $this->getTitleData($id);
-        $this->baseFormCreator->url = route('admin.activities.title.update', [$id]);
+        $this->baseFormCreator->url = route('admin.activity.title.update', [$id]);
 
-        return $this->baseFormCreator->editForm($model, $element['title'], 'PUT', '/activities/' . $id);
+        return $this->baseFormCreator->editForm($model, $element['title'], 'PUT', '/activity/' . $id);
     }
 }

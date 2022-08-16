@@ -57,7 +57,7 @@ class ResultController extends Controller
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activities.result.index', $activityId)->with(
+            return redirect()->route('admin.activity.result.index', $activityId)->with(
                 'error',
                 'Error has occurred while rendering activity transactions listing.'
             );
@@ -83,7 +83,7 @@ class ResultController extends Controller
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activities.result.index', $id)->with(
+            return redirect()->route('admin.activity.result.index', $id)->with(
                 'error',
                 'Error has occurred while rendering activity result form.'
             );
@@ -113,7 +113,7 @@ class ResultController extends Controller
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activities.result.index', $activityId)->with(
+            return redirect()->route('admin.activity.result.index', $activityId)->with(
                 'error',
                 'Error has occurred while creating activity result.'
             );
@@ -140,7 +140,7 @@ class ResultController extends Controller
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activities.result.index', $activityId)->with(
+            return redirect()->route('admin.activity.result.index', $activityId)->with(
                 'error',
                 'Error has occurred while rending result detail page.'
             );
@@ -167,7 +167,7 @@ class ResultController extends Controller
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activities.result.index', $activityId)->with(
+            return redirect()->route('admin.activity.result.index', $activityId)->with(
                 'error',
                 'Error has occurred while rendering activity result form.'
             );
@@ -192,20 +192,20 @@ class ResultController extends Controller
                 'activity_id' => $activityId,
                 'result'      => $resultData,
             ], $result)) {
-                return redirect()->route('admin.activities.result.index', $activityId)->with(
+                return redirect()->route('admin.activity.result.index', $activityId)->with(
                     'error',
                     'Error has occurred while updating activity result.'
                 );
             }
 
-            return redirect()->route('admin.activities.result.show', [$activityId, $resultId])->with(
+            return redirect()->route('admin.activity.result.show', [$activityId, $resultId])->with(
                 'success',
                 'Activity result updated successfully.'
             );
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activities.result.index', $activityId)->with(
+            return redirect()->route('admin.activity.result.index', $activityId)->with(
                 'error',
                 'Error has occurred while updating activity result.'
             );

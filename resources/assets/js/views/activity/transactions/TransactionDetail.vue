@@ -42,7 +42,7 @@
             <TransactionElement
               :data="post"
               :element-name="key.toString()"
-              :edit-url="`/activities/${transaction.activity_id}/result/${transaction.id}`"
+              :edit-url="`/activity/${transaction.activity_id}/result/${transaction.id}`"
               :width="
                 key.toString() === 'value' ||
                 key.toString() === 'transaction_type' ||
@@ -117,7 +117,7 @@ export default defineComponent({
 
     const activityId = activity.value.id,
       activityTitle = getActivityTitle(activity.value.title, 'en'),
-      activityLink = `/activities/${activityId}`,
+      activityLink = `/activity/${activityId}`,
       transactionLink = `${activityLink}/transaction/${transaction.value.id}`;
 
     /**

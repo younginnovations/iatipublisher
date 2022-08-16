@@ -84,8 +84,8 @@ class ConditionService
     {
         $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
         $model = $this->getConditionData($id) ?: [];
-        $this->multilevelSubElementFormCreator->url = route('admin.activities.conditions.update', [$id]);
+        $this->multilevelSubElementFormCreator->url = route('admin.activity.conditions.update', [$id]);
 
-        return $this->multilevelSubElementFormCreator->editForm($model, $element['conditions'], 'PUT', '/activities/' . $id);
+        return $this->multilevelSubElementFormCreator->editForm($model, $element['conditions'], 'PUT', '/activity/' . $id);
     }
 }

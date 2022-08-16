@@ -84,8 +84,8 @@ class ScopeService
     {
         $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
         $model['activity_scope'] = $this->getScopeData($id);
-        $this->baseFormCreator->url = route('admin.activities.scope.update', [$id]);
+        $this->baseFormCreator->url = route('admin.activity.scope.update', [$id]);
 
-        return $this->baseFormCreator->editForm($model, $element['activity_scope'], 'PUT', '/activities/' . $id);
+        return $this->baseFormCreator->editForm($model, $element['activity_scope'], 'PUT', '/activity/' . $id);
     }
 }
