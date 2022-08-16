@@ -55,6 +55,7 @@ class ResultObserver
     public function created(Result $result): void
     {
         $this->updateActivityElementStatus($result);
+        $this->resetActivityStatus($result);
     }
 
     /**
@@ -68,5 +69,20 @@ class ResultObserver
     public function updated(Result $result): void
     {
         $this->updateActivityElementStatus($result);
+        $this->resetActivityStatus($result);
+    }
+
+    /**
+     * Resets activity status to draft.
+     *
+     * @param $result
+     *
+     * @return void
+     */
+    public function resetActivityStatus($result)
+    {
+        $activityObject = $result->activity;
+        $activityObject->status = 'draft';
+        $activityObject->saveQuietly();
     }
 }

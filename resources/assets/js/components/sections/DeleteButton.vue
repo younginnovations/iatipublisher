@@ -79,14 +79,14 @@ const toastMessage = inject('toastMessage') as ToastMessageTypeface;
 
 const deleteFunction = () => {
   loader.value = true;
-  loader.text = 'Unpublishing';
+  loader.text = 'Deleting';
 
   axios.delete(`/activities/${id}`).then((res) => {
     const response = res.data;
     toastMessage.message = response.message;
     toastMessage.type = response.success;
 
-    if (response.sucess) {
+    if (response.success) {
       window.location.replace('/activities');
     }
   });

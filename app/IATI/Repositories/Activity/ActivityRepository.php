@@ -89,4 +89,16 @@ class ActivityRepository extends Repository
     {
         return $activity->delete();
     }
+
+    /**
+     * Sets activity status to draft.
+     *
+     * @param $activity_id
+     *
+     * @return null
+     */
+    public function resetActivityWorkflow($activity_id)
+    {
+        $this->model->whereId($activity_id)->update(['status' => 'draft']);
+    }
 }

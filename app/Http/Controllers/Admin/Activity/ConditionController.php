@@ -44,13 +44,21 @@ class ConditionController extends Controller
             $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
             $activity = $this->conditionService->getActivityData($id);
             $form = $this->conditionService->formGenerator($id);
-            $data = ['core' => $element['conditions']['criteria'] ?? false, 'status' => $activity->conditions_element_completed, 'title' => $element['conditions']['label'], 'name' => 'conditions'];
+            $data = [
+                'core' => $element['conditions']['criteria'] ?? false,
+                'status' => $activity->conditions_element_completed,
+                'title' => $element['conditions']['label'],
+                'name' => 'conditions',
+            ];
 
             return view('admin.activity.condition.edit', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while rendering activity condition form.');
+            return redirect()->route('admin.activities.show', $id)->with(
+                'error',
+                'Error has occurred while rendering activity condition form.'
+            );
         }
     }
 
@@ -69,14 +77,23 @@ class ConditionController extends Controller
             $activityCondition = $request->except(['_token', '_method']);
 
             if (!$this->conditionService->update($activityCondition, $activityData)) {
-                return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while updating activity condition.');
+                return redirect()->route('admin.activities.show', $id)->with(
+                    'error',
+                    'Error has occurred while updating activity condition.'
+                );
             }
 
-            return redirect()->route('admin.activities.show', $id)->with('success', 'Activity condition updated successfully.');
+            return redirect()->route('admin.activities.show', $id)->with(
+                'success',
+                'Activity condition updated successfully.'
+            );
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while updating activity condition.');
+            return redirect()->route('admin.activities.show', $id)->with(
+                'error',
+                'Error has occurred while updating activity condition.'
+            );
         }
     }
 }

@@ -44,13 +44,21 @@ class RecipientCountryController extends Controller
             $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
             $activity = $this->recipientCountryService->getActivityData($id);
             $form = $this->recipientCountryService->formGenerator($id);
-            $data = ['core' => $element['recipient_country']['criteria'] ?? '', 'status' => $activity->recipient_country_element_completed, 'title' => $element['recipient_country']['label'], 'name' => 'recipient_country'];
+            $data = [
+                'core' => $element['recipient_country']['criteria'] ?? '',
+                'status' => $activity->recipient_country_element_completed,
+                'title' => $element['recipient_country']['label'],
+                'name' => 'recipient_country',
+            ];
 
             return view('admin.activity.recipientCountry.edit', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while opening recipient-country form.');
+            return redirect()->route('admin.activities.show', $id)->with(
+                'error',
+                'Error has occurred while opening recipient-country form.'
+            );
         }
     }
 
@@ -69,14 +77,23 @@ class RecipientCountryController extends Controller
             $activityRecipientCountry = $request->all();
 
             if (!$this->recipientCountryService->update($activityRecipientCountry, $activityData)) {
-                return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while updating recipient-country.');
+                return redirect()->route('admin.activities.show', $id)->with(
+                    'error',
+                    'Error has occurred while updating recipient-country.'
+                );
             }
 
-            return redirect()->route('admin.activities.show', $id)->with('success', 'Recipient-country updated successfully.');
+            return redirect()->route('admin.activities.show', $id)->with(
+                'success',
+                'Recipient-country updated successfully.'
+            );
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while updating recipient-country.');
+            return redirect()->route('admin.activities.show', $id)->with(
+                'error',
+                'Error has occurred while updating recipient-country.'
+            );
         }
     }
 }

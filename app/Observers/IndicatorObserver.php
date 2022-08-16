@@ -24,6 +24,7 @@ class IndicatorObserver
         $resultObserver = new ResultObserver();
 
         $resultObserver->updateActivityElementStatus($indicator->result);
+        $resultObserver->resetActivityStatus($indicator->result);
     }
 
     /**
@@ -39,5 +40,6 @@ class IndicatorObserver
         $resultObserver = new ResultObserver();
 
         $resultObserver->updateActivityElementStatus($indicator->result);
+        $resultObserver->resetActivityStatus($indicator->result);
     }
 }

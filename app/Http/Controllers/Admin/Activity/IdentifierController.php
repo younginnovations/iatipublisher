@@ -44,13 +44,21 @@ class IdentifierController extends Controller
             $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
             $activity = $this->identifierService->getActivityData($id);
             $form = $this->identifierService->formGenerator($id);
-            $data = ['core' => $element['iati_identifier']['criteria'] ?? '', 'status' => $activity->identifier_element_completed, 'title' => $element['iati_identifier']['label'], 'name' => 'iati_identifier'];
+            $data = [
+                'core' => $element['iati_identifier']['criteria'] ?? '',
+                'status' => $activity->identifier_element_completed,
+                'title' => $element['iati_identifier']['label'],
+                'name' => 'iati_identifier',
+            ];
 
             return view('admin.activity.identifier.edit', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while opening activity title form.');
+            return redirect()->route('admin.activities.show', $id)->with(
+                'error',
+                'Error has occurred while opening activity title form.'
+            );
         }
     }
 
@@ -69,14 +77,22 @@ class IdentifierController extends Controller
             $activityIdentifier = $request->except(['_method', '_token']);
 
             if (!$this->identifierService->update($activityIdentifier, $activityData)) {
-                return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while updating iati-identifier.');
+                return redirect()->route('admin.activities.show', $id)->with(
+                    'error',
+                    'Error has occurred while updating iati-identifier.'
+                );
             }
 
-            return redirect()->route('admin.activities.show', $id)->with('success', 'Iati-identifier updated successfully.');
+            return redirect()->route('admin.activities.show', $id)->with(
+                'success',
+                'Iati-identifier updated successfully.'
+            );
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return response()->json(['success' => false, 'error' => 'Error has occurred while updating iati-identifier.']);
+            return response()->json(
+                ['success' => false, 'error' => 'Error has occurred while updating iati-identifier.']
+            );
         }
     }
 }

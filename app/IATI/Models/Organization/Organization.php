@@ -4,11 +4,10 @@ declare(strict_types=1);
 
 namespace App\IATI\Models\Organization;
 
-use App\IATI\Models\Activity\Activity;
-use App\IATI\Services\ElementCompleteService;
 use App\IATI\Models\Activity\ActivityPublished;
 use App\IATI\Models\Setting\Setting;
 use App\IATI\Models\User\User;
+use App\IATI\Services\ElementCompleteService;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -113,7 +112,7 @@ class Organization extends Model
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function publishedFiles(): \Illuminate\Database\Eloquent\Relations\HasMany
+    public function publishedFiles(): HasMany
     {
         return $this->hasMany(ActivityPublished::class, 'organization_id', 'id');
     }

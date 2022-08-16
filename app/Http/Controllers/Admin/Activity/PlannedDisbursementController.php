@@ -45,13 +45,21 @@ class PlannedDisbursementController extends Controller
             $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
             $activity = $this->plannedDisbursementService->getActivityData($id);
             $form = $this->plannedDisbursementService->formGenerator($id);
-            $data = ['core' => $element['planned_disbursement']['criteria'] ?? 'core', 'status' => true, 'title' => $element['planned_disbursement']['label'], 'name' => 'title'];
+            $data = [
+                'core' => $element['planned_disbursement']['criteria'] ?? 'core',
+                'status' => true,
+                'title' => $element['planned_disbursement']['label'],
+                'name' => 'title',
+            ];
 
             return view('admin.activity.plannedDisbursement.edit', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while rendering planned-disbursement form.');
+            return redirect()->route('admin.activities.show', $id)->with(
+                'error',
+                'Error has occurred while rendering planned-disbursement form.'
+            );
         }
     }
 
@@ -70,14 +78,23 @@ class PlannedDisbursementController extends Controller
             $activityCountryBudgetItem = $request->except(['_token', '_method']);
 
             if (!$this->plannedDisbursementService->update($activityCountryBudgetItem, $activityData)) {
-                return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while updating planned-disbursement.');
+                return redirect()->route('admin.activities.show', $id)->with(
+                    'error',
+                    'Error has occurred while updating planned-disbursement.'
+                );
             }
 
-            return redirect()->route('admin.activities.show', $id)->with('success', 'Planned-disbursement updated successfully.');
+            return redirect()->route('admin.activities.show', $id)->with(
+                'success',
+                'Planned-disbursement updated successfully.'
+            );
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while updating planned-disbursement.');
+            return redirect()->route('admin.activities.show', $id)->with(
+                'error',
+                'Error has occurred while updating planned-disbursement.'
+            );
         }
     }
 }

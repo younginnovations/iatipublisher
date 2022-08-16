@@ -24,7 +24,6 @@ class CapitalSpendController extends Controller
     /**
      * CapitalSpendController Constructor.
      *
-     * @param BaseFormCreator $baseFormCreator
      * @param CapitalSpendService $capitalSpendService
      */
     public function __construct(CapitalSpendService $capitalSpendService)
@@ -45,13 +44,21 @@ class CapitalSpendController extends Controller
             $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
             $activity = $this->capitalSpendService->getActivityData($id);
             $form = $this->capitalSpendService->formGenerator($id);
-            $data = ['core' => $element['capital_spend']['criteria'] ?? '', 'status' => $activity->capital_spend_element_completed, 'title' => $element['capital_spend']['label'], 'name' => 'capital_spend'];
+            $data = [
+                'core' => $element['capital_spend']['criteria'] ?? '',
+                'status' => $activity->capital_spend_element_completed,
+                'title' => $element['capital_spend']['label'],
+                'name' => 'capital_spend',
+            ];
 
             return view('admin.activity.capitalSpend.edit', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while rendering activity capital-spend form.');
+            return redirect()->route('admin.activities.show', $id)->with(
+                'error',
+                'Error has occurred while rendering activity capital-spend form.'
+            );
         }
     }
 
@@ -67,17 +74,28 @@ class CapitalSpendController extends Controller
     {
         try {
             $activityData = $this->capitalSpendService->getActivityData($id);
-            $activityCapitalSpend = $request->get('capital_spend') != null ? (float) $request->get('capital_spend') : null;
+            $activityCapitalSpend = $request->get('capital_spend') != null ? (float) $request->get(
+                'capital_spend'
+            ) : null;
 
             if (!$this->capitalSpendService->update($activityCapitalSpend, $activityData)) {
-                return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while updating activity capital-spend.');
+                return redirect()->route('admin.activities.show', $id)->with(
+                    'error',
+                    'Error has occurred while updating activity capital-spend.'
+                );
             }
 
-            return redirect()->route('admin.activities.show', $id)->with('success', 'Activity capital-spend updated successfully.');
+            return redirect()->route('admin.activities.show', $id)->with(
+                'success',
+                'Activity capital-spend updated successfully.'
+            );
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while updating activity capital-spend.');
+            return redirect()->route('admin.activities.show', $id)->with(
+                'error',
+                'Error has occurred while updating activity capital-spend.'
+            );
         }
     }
 }

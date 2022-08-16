@@ -6,7 +6,6 @@ namespace App\Http\Controllers\Admin\Activity;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Activity\Title\TitleRequest;
-use App\IATI\Elements\Builder\BaseFormCreator;
 use App\IATI\Services\Activity\TitleService;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
@@ -19,19 +18,18 @@ use Illuminate\Http\RedirectResponse;
  */
 class TitleController extends Controller
 {
-    protected BaseFormCreator $baseFormCreator;
-
+    /**
+     * @var TitleService
+     */
     protected TitleService $titleService;
 
     /**
      * TitleController Constructor.
      *
-     * @param BaseFormCreator $baseFormCreator
-     * @param TitleService    $titleService
+     * @param TitleService $titleService
      */
-    public function __construct(BaseFormCreator $baseFormCreator, TitleService $titleService)
+    public function __construct(TitleService $titleService)
     {
-        $this->baseFormCreator = $baseFormCreator;
         $this->titleService = $titleService;
     }
 
@@ -45,16 +43,29 @@ class TitleController extends Controller
     public function edit(int $id): Factory|View|RedirectResponse|Application
     {
         try {
-            $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true, 512, JSON_THROW_ON_ERROR);
+            $element = json_decode(
+                file_get_contents(app_path('IATI/Data/elementJsonSchema.json')),
+                true,
+                512,
+                JSON_THROW_ON_ERROR
+            );
             $activity = $this->titleService->getActivityData($id);
             $form = $this->titleService->formGenerator($id);
-            $data = ['core' => $element['title']['criteria'] ?? '', 'status' => $activity->title_element_completed, 'title' => $element['title']['label'], 'name' => 'title'];
+            $data = [
+                'core' => $element['title']['criteria'] ?? '',
+                'status' => $activity->title_element_completed,
+                'title' => $element['title']['label'],
+                'name' => 'title',
+            ];
 
             return view('admin.activity.title.edit', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while opening activity title form.');
+            return redirect()->route('admin.activities.show', $id)->with(
+                'error',
+                'Error has occurred while opening activity title form.'
+            );
         }
     }
 
@@ -66,21 +77,30 @@ class TitleController extends Controller
      *
      * @return JsonResponse|RedirectResponse
      */
-    public function update(TitleRequest $request, $id): JsonResponse| RedirectResponse
+    public function update(TitleRequest $request, $id): JsonResponse|RedirectResponse
     {
         try {
             $activityData = $this->titleService->getActivityData($id);
             $activityTitle = $request->all();
 
             if (!$this->titleService->update($activityTitle, $activityData)) {
-                return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while updating activity title.');
+                return redirect()->route('admin.activities.show', $id)->with(
+                    'error',
+                    'Error has occurred while updating activity title.'
+                );
             }
 
-            return redirect()->route('admin.activities.show', $id)->with('success', 'Activity title updated successfully.');
+            return redirect()->route('admin.activities.show', $id)->with(
+                'success',
+                'Activity title updated successfully.'
+            );
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while updating activity title.');
+            return redirect()->route('admin.activities.show', $id)->with(
+                'error',
+                'Error has occurred while updating activity title.'
+            );
         }
     }
 }
