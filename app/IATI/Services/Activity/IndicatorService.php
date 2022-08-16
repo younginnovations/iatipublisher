@@ -90,6 +90,18 @@ class IndicatorService
     }
 
     /**
+     * Return specific result indicator.
+     *
+     * @param $id
+     *
+     * @return Model|null
+     */
+    public function getIndicator($id): ?Model
+    {
+        return $this->indicatorRepository->getIndicator($id);
+    }
+
+    /**
      * Generates indicator form.
      *
      * @param $activityId

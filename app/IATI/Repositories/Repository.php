@@ -112,10 +112,10 @@ abstract class Repository implements RepositoryInterface
     /**
      * Find specific resource.
      *
-     * @param          $id
-     * @param string[] $columns
+     * @param       $id
+     * @param array $columns
      *
-     * @return Builder|Builder[]|Collection|Model|object|null
+     * @return object
      */
     public function find($id, array $columns = ['*']): object
     {

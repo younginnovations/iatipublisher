@@ -2,83 +2,78 @@
 
 namespace App\Http\Middleware;
 
-use App\IATI\Models\Activity\Activity;
-use App\IATI\Models\Activity\Indicator;
-use App\IATI\Models\Activity\Period;
-use App\IATI\Models\Activity\Result;
-use App\IATI\Models\Activity\Transaction;
+use App\IATI\Services\Activity\ActivityService;
+use App\IATI\Services\Activity\IndicatorService;
+use App\IATI\Services\Activity\ResultService;
 use App\Providers\RouteServiceProvider;
 use Closure;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 
 /**
- * Class Indicator.
+ * Class RedirectActivity.
  */
 class RedirectActivity
 {
-    public function handle(Request $request, Closure $next)
+
+    /**
+     * @var ActivityService
+     */
+    protected ActivityService $activityService;
+
+    /**
+     * @var ResultService
+     */
+    protected ResultService $resultService;
+
+    /**
+     * @var IndicatorService
+     */
+    protected IndicatorService $indicatorService;
+
+    public function __construct(ActivityService $activityService, ResultService $resultService, IndicatorService $indicatorService)
     {
-        $activity = $request->route('id') ?: ($request->route('activity'));
-        $activity = is_string($activity) && (int) $activity && (strlen((string) (int) $activity) === strlen($activity)) ? Activity::where('id', $activity)->first()?->toArray() : $activity;
-
-        $parameters = $request->route()->parameters;
-        $data_exists = $this->checkIfDataExists($parameters);
-
-        if ((!$activity && ($request->route()->uri !== 'activities' && $request->route()->uri !== 'activity/page/{page?}' && $request->route()->uri !== 'activity/codelists')) || !$data_exists) {
-            return abort(404);
-        }
-
-        if ($activity && $activity['org_id'] !== Auth::user()->organization_id) {
-            return redirect(RouteServiceProvider::HOME);
-        }
-
-        return $next($request);
+        $this->activityService = $activityService;
+        $this->resultService = $resultService;
+        $this->indicatorService = $indicatorService;
     }
 
     /**
-     * Checks if data with id exists.
+     * Handle an incoming request.
      *
-     * @param $routeParams
+     * @param Request                                        $request
+     * @param \Closure(Request): (Response|RedirectResponse) $next
      *
-     * @return bool
+     * @return Response|RedirectResponse
      */
-    public function checkIfDataExists($routeParams): bool
+    public function handle(Request $request, Closure $next): Response|RedirectResponse
     {
-        foreach ($routeParams as $type => $id) {
-            $exists = false;
+        $id = (int) $request->route('id');
 
-            if (intval($id) && (strlen(strval(intval($id))) === strlen($id))) {
-                switch ($type) {
-                    case 'activity':
-                        $exists = true;
-                        break;
+        if (strlen($id) === strlen($request->route('id'))) {
+            $module = explode('.', $request->route()->getName())[1];
+            $activity = [];
 
-                    case 'result':
-                        $exists = (bool) Result::where('id', $id)->first();
-                        break;
-
-                    case 'indicator':
-                        $exists = (bool) Indicator::where('id', $id)->first();
-                        break;
-
-                    case 'period':
-                        $exists = (bool) Period::where('id', $id)->first();
-                        break;
-
-                    case 'transaction':
-                        $exists = (bool) Transaction::where('id', $id)->first();
-                        break;
-                    default:
-                        $exists = true;
-                }
+            if ($module === 'activity') {
+                $activity = $this->activityService->getActivity($id);
+            } elseif ($module === 'result') {
+                $result = $this->resultService->getResult($id);
+                $activity = $result->activity;
+                dd($activity);
+            } elseif ($module === 'indicator') {
+                $indicator = $this->indicatorService->getIndicator($id);
+                $activity = $indicator->result->activity;
             }
 
-            if (!$exists) {
-                return false;
+            if ($activity && $activity['org_id'] !== Auth::user()->organization_id) {
+                return redirect(RouteServiceProvider::HOME);
             }
+
+            return $next($request);
         }
 
-        return true;
+        return abort(404);
     }
 }
