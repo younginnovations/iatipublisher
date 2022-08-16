@@ -12,12 +12,11 @@
                 >
                 <span class="mx-4 separator"> / </span>
                 <div class="breadcrumb__title">
-                  <span
-                    class="overflow-hidden breadcrumb__title last text-n-30"
-                    >{{ pageTitle ?? 'Untitled' }}</span
-                  >
+                  <span class="overflow-hidden breadcrumb__title last text-n-30">{{
+                    pageTitle ?? "Untitled"
+                  }}</span>
                   <span class="ellipsis__title--hover w-[calc(100%_+_35px)]">{{
-                    pageTitle ? pageTitle : 'Untitled'
+                    pageTitle ? pageTitle : "Untitled"
                   }}</span>
                 </div>
               </div>
@@ -31,13 +30,11 @@
             </div>
             <div>
               <h4 class="relative mr-4 text-2xl font-bold ellipsis__title">
-                <span
-                  id="activity_title"
-                  class="overflow-hidden ellipsis__title"
-                  >{{ pageTitle ? pageTitle : 'Untitled' }}</span
-                >
+                <span id="activity_title" class="overflow-hidden ellipsis__title">{{
+                  pageTitle ? pageTitle : "Untitled"
+                }}</span>
                 <span class="ellipsis__title--hover">{{
-                  pageTitle ? pageTitle : 'Untitled'
+                  pageTitle ? pageTitle : "Untitled"
                 }}</span>
               </h4>
             </div>
@@ -59,11 +56,7 @@
             >
               <svg-vue icon="download-file" />
             </button>
-            <Modal
-              :modal-active="downloadValue"
-              width="583"
-              @close="downloadToggle"
-            >
+            <Modal :modal-active="downloadValue" width="583" @close="downloadToggle">
               <div class="mb-4">
                 <div class="flex mb-6 title">
                   <svg-vue
@@ -101,17 +94,10 @@
             >
               <svg-vue icon="delete" />
             </button>
-            <Modal
-              :modal-active="deleteValue"
-              width="583"
-              @close="deleteToggle"
-            >
+            <Modal :modal-active="deleteValue" width="583" @close="deleteToggle">
               <div class="mb-4">
                 <div class="flex mb-6 title">
-                  <svg-vue
-                    class="mr-1 mt-0.5 text-lg text-crimson-40"
-                    icon="delete"
-                  />
+                  <svg-vue class="mr-1 mt-0.5 text-lg text-crimson-40" icon="delete" />
                   <b>Delete activity</b>
                 </div>
                 <div class="p-4 rounded-lg bg-rose">
@@ -144,11 +130,7 @@
               <svg-vue icon="cancel-cloud" />
               <span>Unpublish</span>
             </button>
-            <Modal
-              :modal-active="unpublishValue"
-              width="583"
-              @close="unpublishToggle"
-            >
+            <Modal :modal-active="unpublishValue" width="583" @close="unpublishToggle">
               <div class="mb-4">
                 <div class="flex mb-6 title">
                   <svg-vue
@@ -187,11 +169,7 @@
               <svg-vue icon="approved-cloud" />
               <span>Publish</span>
             </button>
-            <Modal
-              :modal-active="publishValue"
-              width="583"
-              @close="publishToggle"
-            >
+            <Modal :modal-active="publishValue" width="583" @close="publishToggle">
               <div class="mb-4">
                 <div class="flex mb-6 title">
                   <svg-vue
@@ -275,11 +253,7 @@
             </div>
           </div>
         </div>
-        <Elements
-          :activity-id="activity.id"
-          :data="elementProps"
-          class="sticky top-0"
-        />
+        <Elements :activity-id="activity.id" :data="elementProps" class="sticky top-0" />
       </aside>
       <div class="overflow-hidden activities__content">
         <div class="inline-flex flex-wrap gap-2 mb-3">
@@ -358,19 +332,19 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, reactive, toRefs, provide } from 'vue';
-import { useToggle } from '@vueuse/core';
+import { defineComponent, onMounted, reactive, toRefs, provide } from "vue";
+import { useToggle } from "@vueuse/core";
 
 // components
-import { Result } from './elements/Index';
-import HoverText from 'Components/HoverText.vue';
-import ProgressBar from 'Components/ProgressBar.vue';
-import Modal from 'Components/PopupModal.vue';
-import BtnComponent from 'Components/ButtonComponent.vue';
-import Toast from 'Components/Toast.vue';
+import { Result } from "./elements/Index";
+import HoverText from "Components/HoverText.vue";
+import ProgressBar from "Components/ProgressBar.vue";
+import Modal from "Components/PopupModal.vue";
+import BtnComponent from "Components/ButtonComponent.vue";
+import Toast from "Components/Toast.vue";
 
-import Elements from 'Activity/partials/ActivitiesElements.vue';
-import ActivityElement from 'Activity/partials/ActivityElement.vue';
+import Elements from "Activity/partials/ActivitiesElements.vue";
+import ActivityElement from "Activity/partials/ActivityElement.vue";
 
 export default defineComponent({
   components: {
@@ -424,11 +398,11 @@ export default defineComponent({
   setup(props) {
     const { types } = toRefs(props);
     // vue provides
-    provide('types', types.value);
+    provide("types", types.value);
 
     const toastData = reactive({
       visibility: false,
-      message: '',
+      message: "",
       type: true,
     });
 
@@ -441,7 +415,7 @@ export default defineComponent({
     const [downloadValue, downloadToggle] = useToggle();
 
     onMounted(() => {
-      if (props.toast.message !== '') {
+      if (props.toast.message !== "") {
         toastData.type = props.toast.type;
         toastData.visibility = true;
         toastData.message = props.toast.message;
@@ -473,14 +447,14 @@ export default defineComponent({
     Object.keys(activities).map((key) => {
       let flag = false;
 
-      Object.keys(activities[key]['elements']).map((k) => {
+      Object.keys(activities[key]["elements"]).map((k) => {
         if (
-          typeof activityProps[k] === 'number' ||
-          (typeof activityProps[k] === 'object' &&
+          typeof activityProps[k] === "number" ||
+          (typeof activityProps[k] === "object" &&
             activityProps[k] &&
             Object.keys(activityProps[k]).length)
         ) {
-          activities[key]['elements'][k]['content'] = activityProps[k];
+          activities[key]["elements"][k]["content"] = activityProps[k];
           flag = true;
         } else {
           delete activities[key][k];
@@ -495,9 +469,9 @@ export default defineComponent({
     // generating available categories of elements
     Object.keys(groupedData).map((key) => {
       if (Object.prototype.hasOwnProperty.call(activities, key)) {
-        groupedData[key]['status'] = 'enabled';
+        groupedData[key]["status"] = "enabled";
       } else {
-        groupedData[key]['status'] = 'disabled';
+        groupedData[key]["status"] = "disabled";
       }
     });
 
@@ -509,20 +483,20 @@ export default defineComponent({
      * @returns object
      */
     Object.keys(elementProps).map((key) => {
-      elementProps[key]['completed'] = statusProps[key] ?? false;
-      elementProps[key]['has_data'] = 0;
+      elementProps[key]["completed"] = statusProps[key] ?? false;
+      elementProps[key]["has_data"] = 0;
 
       if (key in activityProps) {
         if (
-          (typeof activityProps[key] === 'object' ||
-            typeof activityProps[key] === 'number') &&
+          (typeof activityProps[key] === "object" ||
+            typeof activityProps[key] === "number") &&
           activityProps[key]
         ) {
           if (
             Object.keys(activityProps[key]).length > 0 ||
             activityProps[key].toString.length > 0
           ) {
-            elementProps[key]['has_data'] = 1;
+            elementProps[key]["has_data"] = 1;
           }
         }
       }
@@ -531,9 +505,9 @@ export default defineComponent({
     /**
      * Finding current language - activity title
      */
-    let pageTitle = '';
+    let pageTitle = "";
     const found = activityProps.title.find((e: { language: string }) => {
-      const currentLanguage = 'en';
+      const currentLanguage = "en";
       return e.language === currentLanguage;
     });
 
@@ -545,7 +519,7 @@ export default defineComponent({
     }
 
     function formatTitle(title: string) {
-      return title.replace(/_/gi, ' ');
+      return title.replace(/_/gi, " ");
     }
 
     return {

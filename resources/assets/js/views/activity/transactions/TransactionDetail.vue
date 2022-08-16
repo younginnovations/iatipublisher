@@ -42,7 +42,7 @@
             <TransactionElement
               :data="post"
               :element-name="key.toString()"
-              :edit-url="`/activity/${transaction.activity_id}/result/${transaction.id}`"
+              :edit-url="`/activity/${transaction.activity_id}/transactions/${transaction.id}`"
               :width="
                 key.toString() === 'value' ||
                 key.toString() === 'transaction_type' ||
@@ -126,7 +126,7 @@ export default defineComponent({
     const breadcrumbData = [
       {
         title: 'Your Activities',
-        link: '/activities',
+        link: '/activity',
       },
       {
         title: activityTitle,

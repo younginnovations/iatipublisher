@@ -76,18 +76,17 @@ class PeriodController extends Controller
             $result = $indicator->result;
             $activity = $result->activity;
             $parentData = [
-                'result' => [
-                    'id'        => $result->id,
-                    'title'     => $result['result']['title'][0]['narrative'],
-                ],
                 'indicator' => [
                     'id'        => $indicatorId,
-                    'title'     =>$indicator['indicator']['title'][0]['narrative'],
+                    'title'     => $this->indicatorService->getIndicator($indicatorId)['indicator']['title'][0]['narrative'],
+                ],
+                'result' => [
+                    'id'        => $result['id'],
+                    'title'     => $result['result']['title'][0]['narrative'],
                 ],
             ];
 
             $period = $this->periodService->getPeriodOfIndicator($indicatorId)->toArray();
-
             $types = getPeriodTypes();
             $toast = generateToastData();
 
@@ -95,7 +94,7 @@ class PeriodController extends Controller
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.indicator.period.index', [$indicatorId])->with(
+            return redirect()->route('admin.indicator.period.index', $indicatorId)->with(
                 'error',
                 'Error has occurred while rendering activity transactions listing.'
             );
@@ -115,7 +114,7 @@ class PeriodController extends Controller
             $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
             $indicator = $this->indicatorService->getIndicator($indicatorId);
             $activity = $indicator->result->activity;
-            $form = $this->periodService->createFormGenerator($activity->id, $indicator->result->id, $indicatorId);
+            $form = $this->periodService->createFormGenerator($activity['id'], $indicator['result_id'], $indicatorId);
             $data = ['core' => $element['period']['criteria'] ?? false, 'status' => false, 'title' => $element['period']['label'], 'name' => 'period'];
 
             return view('admin.activity.period.edit', compact('form', 'activity', 'data'));
@@ -142,14 +141,13 @@ class PeriodController extends Controller
         try {
             $periodData = $request->except(['_token']);
             $indicator = $this->indicatorService->getIndicator($indicatorId);
-            $activity = $indicator->result->activity;
             $messages = $this->validateData([
-                'measure'  => $this->indicatorService->getResultIndicator($indicator->result->id, $indicatorId)['measure'],
+                'measure'  => $indicator['measure'],
                 'period'   => $periodData,
             ]);
 
             if ($messages) {
-                return redirect()->route('admin.indicator.period.create', [$activity->id, $indicator->result->id, $indicatorId])->with('error', $messages)->withInput();
+                return redirect()->route('admin.indicator.period.create', $indicatorId)->with('error', $messages)->withInput();
             }
 
             $period = $this->periodService->create([
@@ -157,14 +155,14 @@ class PeriodController extends Controller
                 'period'        => $periodData,
             ]);
 
-            return redirect()->route('admin.indicator.period.show', [$indicatorId, $period])->with(
+            return redirect()->route('admin.indicator.period.show', [$indicatorId, $period['id']])->with(
                 'success',
                 'Indicator period created successfully.'
             );
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.indicator.period.index', [$indicatorId])->with(
+            return redirect()->route('admin.indicator.period.index', $indicatorId)->with(
                 'error',
                 'Error has occurred while creating indicator period.'
             );
@@ -178,30 +176,32 @@ class PeriodController extends Controller
      *
      * @return Factory|View|RedirectResponse|Application
      */
-    public function show($periodId): Factory|View|RedirectResponse|Application
+    public function show($indicatorId, $periodId): Factory|View|RedirectResponse|Application
     {
         try {
             $indicator = $this->indicatorService->getIndicator($indicatorId);
-            $activity = $indicator->result->activity;
+            $result = $indicator->result;
+            $activity = $result->activity;
+
             $parentData = [
                 'result' => [
-                    'id'        => $resultId,
-                    'title'     => $this->resultService->getResult($resultId, $activityId)['result']['title'][0]['narrative'],
+                    'id'        => $result['id'],
+                    'title'     => $result['result']['title'][0]['narrative'],
                 ],
                 'indicator' => [
                     'id'        => $indicatorId,
-                    'title'     => $this->indicatorService->getResultIndicator($resultId, $indicatorId)['indicator']['title'][0]['narrative'],
+                    'title'     => $indicator['indicator']['title'][0]['narrative'],
                 ],
             ];
             $period = $this->periodService->getIndicatorPeriod($indicatorId, $periodId);
             $types = getPeriodTypes();
             $toast = generateToastData();
 
-            return view('admin.indicator.period.detail', compact('activity', 'parentData', 'period', 'types', 'toast'));
+            return view('admin.activity.period.detail', compact('activity', 'parentData', 'period', 'types', 'toast'));
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.indicator.period.index', [$activityId, $resultId, $indicatorId])->with(
+            return redirect()->route('admin.indicator.period.index', [$indicatorId])->with(
                 'error',
                 'Error has occurred while rending result detail page.'
             );
@@ -211,26 +211,25 @@ class PeriodController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param $activityId
-     * @param $resultId
      * @param $indicatorId
      * @param $periodId
      *
      * @return Factory|View|RedirectResponse|Application
      */
-    public function edit($activityId, $resultId, $indicatorId, $periodId): Factory|View|RedirectResponse|Application
+    public function edit($indicatorId, $periodId): Factory|View|RedirectResponse|Application
     {
         try {
             $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
-            $activity = $this->activityService->getActivity($activityId);
-            $form = $this->periodService->editFormGenerator($activityId, $resultId, $indicatorId, $periodId);
+            $indicator = $this->indicatorService->getIndicator($indicatorId);
+            $activity = $indicator->result->activity;
+            $form = $this->periodService->editFormGenerator($activity['id'], $indicator['result_id'], $indicatorId, $periodId);
             $data = ['core' => $element['period']['criteria'] ?? false, 'status' => false, 'title' => $element['period']['label'], 'name' => 'period'];
 
-            return view('admin.indicator.period.edit', compact('form', 'activity', 'data'));
+            return view('admin.activity.period.edit', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.indicator.period.index', [$activityId, $resultId, $indicatorId])->with('error', 'Error has occurred while rendering period form.');
+            return redirect()->route('admin.indicator.period.index', $indicatorId)->with('error', 'Error has occurred while rendering period form.');
         }
     }
 
@@ -238,46 +237,44 @@ class PeriodController extends Controller
      * Update the specified resource in storage.
      *
      * @param  PeriodRequest  $request
-     * @param $activityId
-     * @param $resultId
      * @param $indicatorId
      * @param $periodId
      *
      * @return
      */
-    public function update(PeriodRequest $request, $activityId, $resultId, $indicatorId, $periodId): RedirectResponse
+    public function update(PeriodRequest $request, $indicatorId, $periodId): RedirectResponse
     {
         try {
             $periodData = $request->except(['_method', '_token']);
             $period = $this->periodService->getIndicatorPeriod($indicatorId, $periodId);
 
             $messages = $this->validateData([
-                'measure'  => $this->indicatorService->getResultIndicator($resultId, $indicatorId)['indicator']['measure'],
+                'measure'  => $this->indicatorService->getIndicator($indicatorId)['indicator']['measure'],
                 'period'   => $periodData,
             ]);
 
             if ($messages) {
-                return redirect()->route('admin.indicator.period.edit', [$activityId, $resultId, $indicatorId, $periodId])->with('error', $messages)->withInput();
+                return redirect()->route('admin.indicator.period.edit', [$indicatorId, $periodId])->with('error', $messages)->withInput();
             }
 
             if (!$this->periodService->update([
                 'indicator_id'  => $indicatorId,
                 'period'        => $periodData,
             ], $period)) {
-                return redirect()->route('admin.indicator.period.index', [$activityId, $resultId, $indicatorId])->with(
+                return redirect()->route('admin.indicator.period.index', [$indicatorId])->with(
                     'error',
                     'Error has occurred while updating indicator period.'
                 );
             }
 
-            return redirect()->route('admin.indicator.period.show', [$activityId, $resultId, $indicatorId, $period['id']])->with(
+            return redirect()->route('admin.indicator.period.show', [$indicatorId, $period['id']])->with(
                 'success',
                 'Indicator period updated successfully.'
             );
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.indicator.period.show', [$activityId, $resultId, $indicatorId, $periodId])->with(
+            return redirect()->route('admin.indicator.period.show', [$indicatorId, $periodId])->with(
                 'error',
                 'Error has occurred while updating indicator period.'
             );
@@ -298,14 +295,12 @@ class PeriodController extends Controller
     /*
      * Get period of the corresponding indicator
      *
-     * @param $activityId
-     * @param $resultId
      * @param $indicatorId
      * @param $page
      *
      * @return JsonResponse
      */
-    public function getPeriod($activityId, $resultId, $indicatorId, $page = 1): JsonResponse
+    public function getPeriod($indicatorId, $page = 1): JsonResponse
     {
         try {
             $period = $this->periodService->getPaginatedPeriod($indicatorId, $page);

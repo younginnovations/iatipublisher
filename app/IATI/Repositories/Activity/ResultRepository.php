@@ -118,9 +118,9 @@ class ResultRepository
      * @param $resultId
      * @param $activityId
      *
-     * @return Model
+     * @return Model|null
      */
-    public function getResultWithIndicatorAndPeriod($resultId, $activityId): Model
+    public function getResultWithIndicatorAndPeriod($resultId, $activityId): ?Model
     {
         return $this->activityResult->where('id', $resultId)->where('activity_id', $activityId)->with(['indicators', 'indicators.periods'])->first();
     }

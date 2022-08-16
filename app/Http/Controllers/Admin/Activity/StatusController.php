@@ -69,10 +69,10 @@ class StatusController extends Controller
             $activityStatus = $request->get('activity_status') != null ? (int) $request->get('activity_status') : null;
 
             if (!$this->statusService->update($activityStatus, $activityData)) {
-                return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while updating activity status.');
+                return redirect()->route('admin.activity.show', $id)->with('error', 'Error has occurred while updating activity status.');
             }
 
-            return redirect()->route('admin.activities.show', $id)->with('success', 'Activity status updated successfully.');
+            return redirect()->route('admin.activity.show', $id)->with('success', 'Activity status updated successfully.');
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 

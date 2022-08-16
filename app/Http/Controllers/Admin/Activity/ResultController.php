@@ -106,7 +106,7 @@ class ResultController extends Controller
                 'result'      => $resultData,
             ]);
 
-            return redirect()->route('admin.activities.result.show', [$activityId, $result['id']])->with(
+            return redirect()->route('admin.activity.result.show', [$activityId, $result['id']])->with(
                 'success',
                 'Activity result created successfully.'
             );
