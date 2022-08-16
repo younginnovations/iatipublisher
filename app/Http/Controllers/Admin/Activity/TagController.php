@@ -50,7 +50,7 @@ class TagController extends Controller
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while opening tag form.');
+            return redirect()->route('admin.activity.show', $id)->with('error', 'Error has occurred while opening tag form.');
         }
     }
 
@@ -69,14 +69,14 @@ class TagController extends Controller
             $activityTag = $request->all();
 
             if (!$this->tagService->update($activityTag, $activityData)) {
-                return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while updating tag.');
+                return redirect()->route('admin.activity.show', $id)->with('error', 'Error has occurred while updating tag.');
             }
 
-            return redirect()->route('admin.activities.show', $id)->with('success', 'Tag updated successfully.');
+            return redirect()->route('admin.activity.show', $id)->with('success', 'Tag updated successfully.');
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while updating tag.');
+            return redirect()->route('admin.activity.show', $id)->with('error', 'Error has occurred while updating tag.');
         }
     }
 }

@@ -84,8 +84,8 @@ class SectorService
     {
         $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
         $model['sector'] = $this->getSectorData($id);
-        $this->parentCollectionFormCreator->url = route('admin.activities.sector.update', [$id]);
+        $this->parentCollectionFormCreator->url = route('admin.activity.sector.update', [$id]);
 
-        return $this->parentCollectionFormCreator->editForm($model, $element['sector'], 'PUT', '/activities/' . $id);
+        return $this->parentCollectionFormCreator->editForm($model, $element['sector'], 'PUT', '/activity/' . $id);
     }
 }

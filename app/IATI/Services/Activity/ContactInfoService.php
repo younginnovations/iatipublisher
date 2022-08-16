@@ -79,8 +79,8 @@ class ContactInfoService
     {
         $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
         $model['contact_info'] = $this->getContactInfoData($id) ?: [];
-        $this->parentCollectionFormCreator->url = route('admin.activities.contact-info.update', [$id]);
+        $this->parentCollectionFormCreator->url = route('admin.activity.contact-info.update', [$id]);
 
-        return $this->parentCollectionFormCreator->editForm($model, $element['contact_info'], 'PUT', '/activities/' . $id);
+        return $this->parentCollectionFormCreator->editForm($model, $element['contact_info'], 'PUT', '/activity/' . $id);
     }
 }

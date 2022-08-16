@@ -84,8 +84,8 @@ class DefaultTiedStatusService
     {
         $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
         $model['default_tied_status'] = $this->getDefaultTiedStatusData($id);
-        $this->baseFormCreator->url = route('admin.activities.default-tied-status.update', [$id]);
+        $this->baseFormCreator->url = route('admin.activity.default-tied-status.update', [$id]);
 
-        return $this->baseFormCreator->editForm($model, $element['default_tied_status'], 'PUT', '/activities/' . $id);
+        return $this->baseFormCreator->editForm($model, $element['default_tied_status'], 'PUT', '/activity/' . $id);
     }
 }

@@ -105,8 +105,8 @@ class DocumentLinkService
             }
         }
 
-        $this->parentCollectionFormCreator->url = route('admin.activities.document-link.update', [$id]);
+        $this->parentCollectionFormCreator->url = route('admin.activity.document-link.update', [$id]);
 
-        return $this->parentCollectionFormCreator->editForm($model, $element['document_link'], 'PUT', '/activities/' . $id);
+        return $this->parentCollectionFormCreator->editForm($model, $element['document_link'], 'PUT', '/activity/' . $id);
     }
 }

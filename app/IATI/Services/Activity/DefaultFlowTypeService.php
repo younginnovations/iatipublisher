@@ -84,8 +84,8 @@ class DefaultFlowTypeService
     {
         $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
         $model['default_flow_type'] = $this->getDefaultFlowTypeData($id);
-        $this->baseFormCreator->url = route('admin.activities.default-flow-type.update', [$id]);
+        $this->baseFormCreator->url = route('admin.activity.default-flow-type.update', [$id]);
 
-        return $this->baseFormCreator->editForm($model, $element['default_flow_type'], 'PUT', '/activities/' . $id);
+        return $this->baseFormCreator->editForm($model, $element['default_flow_type'], 'PUT', '/activity/' . $id);
     }
 }

@@ -72,7 +72,7 @@
             <td>
               <div class="relative ellipsis">
                 <a
-                  :href="`/activities/${activity.id}/result/${indicator.result_id}/indicator/${indicator.id}`"
+                  :href="`/result/${indicator.result_id}/indicator/${indicator.id}`"
                   class="overflow-hidden ellipsis text-n-50"
                 >
                   {{
@@ -100,7 +100,7 @@
               <div class="flex text-n-40">
                 <a
                   class="mr-6"
-                  :href="`/activities/${activity.id}/result/${indicator.result_id}/indicator/${indicator.id}/edit`"
+                  :href="`/result/${indicator.result_id}/indicator/${indicator.id}/edit`"
                 >
                   <svg-vue icon="edit" class="text-xl"></svg-vue>
                 </a>
@@ -169,7 +169,7 @@ export default defineComponent({
 
     const activityId = activity.value.id,
       activityTitle = activity.value.title,
-      activityLink = `/activities/${activityId}`,
+      activityLink = `/activity/${activityId}`,
       resultId = parentData.value.result.id,
       resultTitle = getActivityTitle(parentData.value.result.title, 'en'),
       resultLink = `${activityLink}/result/${resultId}`;
@@ -192,11 +192,11 @@ export default defineComponent({
       },
       {
         title: getActivityTitle(activityTitle, 'en'),
-        link: `/activities/${activityId}`,
+        link: `/activity/${activityId}`,
       },
       {
         title: resultTitle,
-        link: `/activities/${activityId}/result/${resultId}`,
+        link: `/activity/${activityId}/result/${resultId}`,
       },
       {
         title: 'Indicator List',
@@ -206,7 +206,7 @@ export default defineComponent({
 
     onMounted(async () => {
       axios
-        .get(`/activities/${activityId}/result/${resultId}/indicator/page/1`)
+        .get(`/result/${resultId}/indicator/page/1`)
         .then((res) => {
           const response = res.data;
           Object.assign(indicatorsData, response.data);
@@ -227,7 +227,7 @@ export default defineComponent({
     function fetchListings(active_page: number) {
       axios
         .get(
-          `/activities/${activityId}/result/${resultId}/indicator/page/` +
+          `/result/${resultId}/indicator/page/` +
             active_page
         )
         .then((res) => {

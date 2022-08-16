@@ -50,7 +50,7 @@ class BudgetController extends Controller
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while opening budget form.');
+            return redirect()->route('admin.activity.show', $id)->with('error', 'Error has occurred while opening budget form.');
         }
     }
 
@@ -68,14 +68,14 @@ class BudgetController extends Controller
             $activityBudget = $request->all();
 
             if (!$this->budgetService->update($activityBudget, $activityData)) {
-                return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while updating budget.');
+                return redirect()->route('admin.activity.show', $id)->with('error', 'Error has occurred while updating budget.');
             }
 
-            return redirect()->route('admin.activities.show', $id)->with('success', 'Budget updated successfully.');
+            return redirect()->route('admin.activity.show', $id)->with('success', 'Budget updated successfully.');
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while updating budget.');
+            return redirect()->route('admin.activity.show', $id)->with('error', 'Error has occurred while updating budget.');
         }
     }
 }

@@ -84,8 +84,8 @@ class LocationService
     {
         $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
         $model['location'] = $this->getLocationData($id) ?: [];
-        $this->parentCollectionFormCreator->url = route('admin.activities.location.update', [$id]);
+        $this->parentCollectionFormCreator->url = route('admin.activity.location.update', [$id]);
 
-        return $this->parentCollectionFormCreator->editForm($model, $element['location'], 'PUT', '/activities/' . $id);
+        return $this->parentCollectionFormCreator->editForm($model, $element['location'], 'PUT', '/activity/' . $id);
     }
 }
