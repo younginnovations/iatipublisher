@@ -36,7 +36,7 @@ class RecipientRegionController extends Controller
      *
      * @param int $id
      *
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|void
+     * @return View|RedirectResponse
      */
     public function edit(int $id): View|RedirectResponse
     {
@@ -55,10 +55,7 @@ class RecipientRegionController extends Controller
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activities.show', $id)->with(
-                'error',
-                'Error has occurred while opening recipient-region form.'
-            );
+            return redirect()->route('admin.activity.show', $id)->with('error', 'Error has occurred while opening recipient-region form.');
         }
     }
 
@@ -73,27 +70,15 @@ class RecipientRegionController extends Controller
     public function update(RecipientRegionRequest $request, $id): JsonResponse|RedirectResponse
     {
         try {
-            $activityData = $this->recipientRegionService->getActivityData($id);
-            $activityRecipientRegion = $request->all();
-
-            if (!$this->recipientRegionService->update($activityRecipientRegion, $activityData)) {
-                return redirect()->route('admin.activities.show', $id)->with(
-                    'error',
-                    'Error has occurred while updating recipient-region.'
-                );
+            if (!$this->recipientRegionService->update($id, $request->all())) {
+                return redirect()->route('admin.activity.show', $id)->with('error', 'Error has occurred while updating recipient-region.');
             }
 
-            return redirect()->route('admin.activities.show', $id)->with(
-                'success',
-                'Recipient-Region updated successfully.'
-            );
+            return redirect()->route('admin.activity.show', $id)->with('success', 'Recipient-Region updated successfully.');
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activities.show', $id)->with(
-                'error',
-                'Error has occurred while updating recipient-region.'
-            );
+            return redirect()->route('admin.activity.show', $id)->with('error', 'Error has occurred while updating recipient-region.');
         }
     }
 }

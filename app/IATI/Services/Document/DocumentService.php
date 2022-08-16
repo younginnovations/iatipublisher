@@ -15,7 +15,7 @@ class DocumentService
     /**
      * @var DocumentRepository
      */
-    private $documentRepo;
+    private DocumentRepository $documentRepo;
 
     /**
      * Sett constructor.
@@ -34,6 +34,7 @@ class DocumentService
      * @param $activity
      *
      * @return bool
+     * @throws \JsonException
      */
     public function update($documentLink, $activity): bool
     {
@@ -49,9 +50,10 @@ class DocumentService
                     $fileLink = (array) $savedLink['document_link'];
                     unset($fileLink['document']);
 
-                    if (json_encode($temp_document) == json_encode($fileLink) || $temp_document['url'] === env('AWS_ENDPOINT') . '/' . env('AWS_BUCKET') . '/document_link/' . $activity['id'] . '/' . $savedLink['filename']) {
+                    if (json_encode($temp_document, JSON_THROW_ON_ERROR) === json_encode($fileLink, JSON_THROW_ON_ERROR)
+                        || $temp_document['url'] === env('AWS_ENDPOINT') . '/' . env('AWS_BUCKET') . '/document_link/' . $activity['id'] . '/' . $savedLink['filename']) {
                         unset($savedDocumentLinks[$id]);
-                        $data = ['document_link' => json_encode($document)];
+                        $data = ['document_link' => json_encode($document, JSON_THROW_ON_ERROR)];
                         $this->documentRepo->updateOrCreateDocument($savedLink['filename'], $activity['id'], $data);
                         $file_exists = true;
                     }
@@ -63,7 +65,7 @@ class DocumentService
                     Storage::disk('minio')->putFileAs('/document_link/' . $activity['id'], $file, $data['filename']);
                     $data['activity_id'] = $activity['id'];
                     $data['extension'] = pathinfo($file->getClientOriginalName(), PATHINFO_EXTENSION);
-                    $data['document_link'] = json_encode($document);
+                    $data['document_link'] = json_encode($document, JSON_THROW_ON_ERROR);
                     $this->documentRepo->store($data);
                 }
             }

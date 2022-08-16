@@ -27,14 +27,14 @@
           <Btn
             text="Add New Result"
             icon="add"
-            :link="`/activities/${activityId}/${title}/create`"
+            :link="`/activity/${activityId}/${title}/create`"
             class="mr-2.5"
           />
           <Btn
             text="Show full result list"
             icon=""
             design="bgText"
-            :link="`/activities/${activityId}/${title}`"
+            :link="`/activity/${activityId}/${title}`"
             class="mr-2.5"
           />
           <svg-vue class="mr-1.5" icon="core"></svg-vue>
@@ -61,13 +61,13 @@
                     <Btn
                       text="View Result"
                       icon="eye"
-                      :link="`/activities/${activityId}/${title}/${result.id}`"
+                      :link="`/activity/${activityId}/${title}/${result.id}`"
                       class="mr-2.5"
                     />
                     <Btn
                       text="Edit Result"
                       icon="edit"
-                      :link="`/activities/${activityId}/${title}/${result.id}/edit`"
+                      :link="`/activity/${activityId}/${title}/${result.id}/edit`"
                     />
                   </div>
                 </div>
@@ -114,7 +114,7 @@
                         <td>
                           <div>
                             <NotYet
-                              :link="`/activities/${activityId}/${title}/${result.id}/indicator/create`"
+                              :link="`/${title}/${result.id}/indicator/create`"
                               description="You haven't added any indicator yet."
                               btn-text="Add new indicator"
                             />
@@ -139,14 +139,14 @@
                         <Btn
                           text="Add New Indicator"
                           icon="add"
-                          :link="`/activities/${activityId}/${title}/${result.id}/indicator/create`"
+                          :link="`/${title}/${result.id}/indicator/create`"
                           class="mr-2.5"
                         />
                         <Btn
                           text="Show full indicator list"
                           icon=""
                           design="bgText"
-                          :link="`/activities/${activityId}/${title}/${result.id}/indicator`"
+                          :link="`/${title}/${result.id}/indicator`"
                         />
                       </div>
                     </div>
@@ -175,19 +175,19 @@
                                   <Btn
                                     text="View Indicator"
                                     icon="eye"
-                                    :link="`/activities/${activityId}/${title}/${result.id}/indicator/${indicator.id}`"
+                                    :link="`/${title}/${result.id}/indicator/${indicator.id}`"
                                     class="mr-2.5"
                                   />
                                   <Btn
                                     text="Edit Indicator"
-                                    :link="`/activities/${activityId}/${title}/${result.id}/indicator/${indicator.id}/edit`"
+                                    :link="`/${title}/${result.id}/indicator/${indicator.id}/edit`"
                                     class="mr-2.5"
                                   />
                                 </span>
                                 <Btn
                                   text="Add Period"
                                   icon="add"
-                                  :link="`/activities/${activityId}/${title}/${result.id}/indicator/${indicator.id}/period/create`"
+                                  :link="`/indicator/${indicator.id}/period/create`"
                                 />
                               </div>
                             </div>
@@ -251,7 +251,7 @@
                                           <div class="text-xs">
                                             <a
                                               class="text-xs text-n-50"
-                                              :href="`/activities/${activityId}/${title}/${result.id}/indicator/${indicator.id}/period/${period.id}`"
+                                              :href="`/indicator/${indicator.id}/period/${period.id}`"
                                             >
                                               {{
                                                 moment(
@@ -272,7 +272,7 @@
                                             <Btn
                                               text="Edit"
                                               icon="edit"
-                                              :link="`/activities/${activityId}/${title}/${result.id}/indicator/${indicator.id}/period/edit`"
+                                              :link="`/indicator/${indicator.id}/period/${period.id}/edit`"
                                             />
                                           </div>
                                         </div>
@@ -282,7 +282,7 @@
                                           text="Show full period list"
                                           icon=""
                                           design="bgText"
-                                          :link="`/activities/${activityId}/${title}/${result.id}/indicator/${indicator.id}/period/`"
+                                          :link="`/indicator/${indicator.id}/period/`"
                                         />
                                       </div>
                                     </div>
@@ -293,7 +293,7 @@
                                   <td>
                                     <div>
                                       <NotYet
-                                        :link="`/activities/${activityId}/${title}/${result.id}/indicator/${indicator.id}/period/create`"
+                                        :link="`/indicator/${indicator.id}/period/create`"
                                         description="You haven't added any period yet."
                                       />
                                     </div>

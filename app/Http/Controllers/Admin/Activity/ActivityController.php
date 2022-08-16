@@ -118,6 +118,7 @@ class ActivityController extends Controller
             $this->db->beginTransaction();
             $activity = $this->activityService->store($input);
             $this->db->commit();
+            Session::put('success', 'Activity has been created successfully.');
 
             return response()->json([
                 'success' => true,
@@ -210,6 +211,8 @@ class ActivityController extends Controller
             $activity = $this->activityService->getActivity($activityId);
 
             if ($activity->linked_to_iati) {
+                Session::put('error', 'Activity must be un-published before deleting.');
+
                 return response()->json(['success' => false, 'message' => 'Activity must be un-published before deleting.']);
             }
 
@@ -227,15 +230,36 @@ class ActivityController extends Controller
         }
     }
 
-    /*
-     * Get activities of the corresponding organization
+    public function sanitizeRequest($request): array
+    {
+        $tableConfig = getTableConfig('activity');
+        $queryParams = [];
+
+        if (!empty($request->get('q')) || $request->get('q') === '0') {
+            $queryParams['query'] = $request->get('q');
+        }
+
+        if (in_array($request->get('orderBy'), $tableConfig['orderBy'], true)) {
+            $queryParams['orderBy'] = $request->get('orderBy');
+
+            if (in_array($request->get('direction'), $tableConfig['direction'], true)) {
+                $queryParams['direction'] = $request->get('direction');
+            }
+        }
+
+        return $queryParams;
+    }
+
+    /**
+     * @param Request $request
+     * @param int     $page
      *
      * @return JsonResponse
      */
-    public function getActivities($page = 1): JsonResponse
+    public function getPaginatedActivities(Request $request, int $page = 1): JsonResponse
     {
         try {
-            $activities = $this->activityService->getPaginatedActivities($page);
+            $activities = $this->activityService->getPaginatedActivities($page, $this->sanitizeRequest($request));
 
             return response()->json([
                 'success' => true,

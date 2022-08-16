@@ -6,9 +6,8 @@ namespace App\IATI\Services\Activity;
 
 use App\IATI\Elements\Builder\ParentCollectionFormCreator;
 use App\IATI\Models\Activity\Activity;
-use App\IATI\Repositories\Activity\OtherIdentifierRepository;
+use App\IATI\Repositories\Activity\ActivityRepository;
 use App\IATI\Traits\XmlBaseElement;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
 use Kris\LaravelFormBuilder\Form;
 
@@ -20,9 +19,9 @@ class OtherIdentifierService
     use XmlBaseElement;
 
     /**
-     * @var otherIdentifierRepository
+     * @var ActivityRepository
      */
-    protected OtherIdentifierRepository $otherIdentifierRepository;
+    protected ActivityRepository $activityRepository;
 
     /**
      * @var ParentCollectionFormCreator
@@ -32,12 +31,12 @@ class OtherIdentifierService
     /**
      * OtherIdentifierService constructor.
      *
-     * @param OtherIdentifierRepository $otherIdentifierRepository
+     * @param ActivityRepository              $activityRepository
      * @param ParentCollectionFormCreator $parentCollectionFormCreator
      */
-    public function __construct(OtherIdentifierRepository $otherIdentifierRepository, ParentCollectionFormCreator $parentCollectionFormCreator)
+    public function __construct(ActivityRepository $activityRepository, ParentCollectionFormCreator $parentCollectionFormCreator)
     {
-        $this->otherIdentifierRepository = $otherIdentifierRepository;
+        $this->activityRepository = $activityRepository;
         $this->parentCollectionFormCreator = $parentCollectionFormCreator;
     }
 
@@ -50,7 +49,7 @@ class OtherIdentifierService
      */
     public function getOtherIdentifierData(int $activity_id): ?array
     {
-        return $this->otherIdentifierRepository->getOtherIdentifierData($activity_id);
+        return $this->activityRepository->find($activity_id)->other_identifier;
     }
 
     /**
@@ -58,40 +57,41 @@ class OtherIdentifierService
      *
      * @param $id
      *
-     * @return Model
+     * @return object
      */
-    public function getActivityData($id): Model
+    public function getActivityData($id): object
     {
-        return $this->otherIdentifierRepository->getActivityData($id);
+        return $this->activityRepository->find($id);
     }
 
     /**
      * Updates activity identifier.
      *
+     * @param $id
      * @param $activityIdentifier
-     * @param $activity
      *
      * @return bool
      */
-    public function update($activityIdentifier, $activity): bool
+    public function update($id, $activityIdentifier): bool
     {
-        return $this->otherIdentifierRepository->update($activityIdentifier, $activity);
+        return $this->activityRepository->update($id, ['other_identifier' => $this->sanitizeOtherIdentifierData($activityIdentifier)]);
     }
 
     /**
      * Generates other identifier form.
      *
-     * @param id
+     * @param $id
      *
      * @return Form
+     * @throws \JsonException
      */
     public function formGenerator($id): Form
     {
         $element = getElementSchema('other_identifier');
-        $model = $this->getOtherIdentifierData($id) ?: [];
-        $this->parentCollectionFormCreator->url = route('admin.activities.other-identifier.update', [$id]);
+        $model['other_identifier'] = $this->getOtherIdentifierData($id) ?: [];
+        $this->parentCollectionFormCreator->url = route('admin.activity.other-identifier.update', [$id]);
 
-        return $this->parentCollectionFormCreator->editForm($model, $element, 'PUT', '/activities/' . $id);
+        return $this->parentCollectionFormCreator->editForm($model, $element, 'PUT', '/activity/' . $id);
     }
 
     /**
@@ -124,5 +124,25 @@ class OtherIdentifierService
         }
 
         return $activityData;
+    }
+
+    /**
+     * Sanitizes other identifier data.
+     *
+     * @param $activityIdentifier
+     *
+     * @return array
+     */
+    public function sanitizeOtherIdentifierData($activityIdentifier): array
+    {
+        foreach ($activityIdentifier as $index => $other_identifier) {
+            $activityIdentifier[$index]['owner_org'] = array_values($other_identifier['owner_org']);
+
+            foreach ($other_identifier['owner_org'] as $owner_index => $owner_value) {
+                $activityIdentifier[$index]['owner_org'][$owner_index]['narrative'] = array_values($owner_value['narrative']);
+            }
+        }
+
+        return array_values($activityIdentifier);
     }
 }

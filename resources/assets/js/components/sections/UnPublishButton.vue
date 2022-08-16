@@ -95,7 +95,7 @@ const unPublishFunction = () => {
   loader.value = true;
   loader.text = 'Unpublishing';
 
-  axios.post(`/activities/${id}/unpublish`).then((res) => {
+  axios.post(`/activity/${id}/unpublish`).then((res) => {
     const response = res.data;
     toastMessage.message = response.message;
     toastMessage.type = response.success;

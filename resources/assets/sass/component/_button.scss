@@ -76,6 +76,15 @@ svg {
   height: 1em;
 }
 
+.vrp__wrapper {
+  p {
+    @apply text-sm leading-normal;
+  }
+  svg {
+    height: auto;
+  }
+}
+
 .button,
 button {
   @apply flex cursor-pointer items-center text-xs leading-normal tracking-tight;

@@ -36,27 +36,28 @@
         </div>
 
         <div class="flex items-center icons">
-          <Btn
-            v-if="title === 'transactions'"
-            text="Add Transaction"
-            icon="add"
-            :link="`/activities/${activityId}/${title}/create`"
-            class="mr-2.5"
-          />
-          <Btn
-            v-if="title !== 'transactions'"
-            text="Edit"
-            :link="`/activities/${activityId}/${title}`"
-            class="edit-button mr-2.5"
-          />
-          <Btn
-            v-else
-            text="Show full transaction list"
-            icon=""
-            design="bgText"
-            :link="`/activities/${activityId}/${title}`"
-            class="mr-2.5"
-          />
+          <template v-if="title == 'transactions'">
+            <Btn
+              text="Add Transaction"
+              icon="add"
+              :link="`/activity/${activityId}/transaction/create`"
+              class="mr-2.5"
+            />
+            <Btn
+              text="Show full transaction list"
+              icon=""
+              design="bgText"
+              :link="`/activity/${activityId}/transaction`"
+              class="mr-2.5"
+            />
+          </template>
+          <div v-else>
+            <Btn
+              text="Edit"
+              :link="`/activity/${activityId}/${title}`"
+              class="edit-button mr-2.5"
+            />
+          </div>
           <svg-vue v-if="data.core" class="mr-1.5" icon="core"></svg-vue>
           <HoverText v-if="tooltip" :hover-text="tooltip" class="text-n-40" />
         </div>
@@ -240,58 +241,7 @@
 
       <!-- Humanitarian Scope -->
       <template v-else-if="title === 'humanitarian_scope'">
-        <div
-          v-for="(post, key) in data.content"
-          :key="key"
-          class="elements-detail"
-          :class="{ 'mb-4': key !== data.content.length - 1 }"
-        >
-          <div class="category">
-            <span v-if="post.type">{{
-              types.humanitarianScopeType[post.type]
-            }}</span>
-            <span v-else class="italic">Type Not Available</span>
-          </div>
-          <div
-            v-for="(item, i) in post.narrative"
-            :key="i"
-            class="text-sm multiline"
-            :class="{ 'mb-0': i !== post.narrative.length - 1 }"
-          >
-            <div v-if="item.narrative" class="space-x-1">
-              <span>
-                {{ item.narrative }}
-              </span>
-              <span v-if="item.language" class="italic text-n-30">
-                (Language: {{ types.languages[item.language] }})
-              </span>
-            </div>
-            <span v-else class="italic">Narrative Not Available</span>
-          </div>
-          <table class="ml-5">
-            <tr>
-              <td>Vocabulary</td>
-              <td v-if="post.vocabulary">
-                {{ types.humanitarianScopeVocabulary[post.vocabulary] }}
-              </td>
-              <td v-else class="italic">Not Available</td>
-            </tr>
-            <tr>
-              <td>Vocabulary URI</td>
-              <td v-if="post.vocabulary_uri">
-                <a target="_blank" :href="post.vocabulary_uri">{{
-                  post.vocabulary_uri
-                }}</a>
-              </td>
-              <td v-else class="italic">Not Available</td>
-            </tr>
-            <tr>
-              <td>Code</td>
-              <td v-if="post.code">{{ post.code }}</td>
-              <td v-else class="italic">Not Available</td>
-            </tr>
-          </table>
-        </div>
+        <HumanitarianScope :data="data.content" />
       </template>
 
       <!-- Budget -->
@@ -370,195 +320,7 @@
 
       <!-- Planned Disbursement -->
       <template v-else-if="title === 'planned_disbursement'">
-        <div
-          v-for="(post, key) in data.content"
-          :key="key"
-          class="elements-detail"
-          :class="{ 'mb-4': key !== data.content.length - 1 }"
-        >
-          <div class="category">
-            <span v-if="post.planned_disbursement_type">{{
-              types.budgetType[post.planned_disbursement_type]
-            }}</span>
-            <span v-else class="italic">Type Not Available</span>
-          </div>
-
-          <div
-            v-for="(item, i) in post.value"
-            :key="i"
-            :class="{ 'mb-0': i !== post.value.length - 1 }"
-          >
-            <div class="text-sm">
-              <div v-if="item.amount" class="value">
-                <span>{{ item.amount }}</span>
-                <span>{{ types.currency[item.currency] }}</span>
-                <span v-if="item.value_date"
-                  >({{ formatDate(item.value_date) }})</span
-                >
-              </div>
-              <span v-else class="italic">Value Not Available</span>
-            </div>
-          </div>
-          <div class="ml-5">
-            <div
-              v-for="(item, i) in post.period_start"
-              :key="i"
-              :class="{ 'mb-0': i !== post.period_start.length - 1 }"
-            >
-              <table class="flex flex-col">
-                <tr>
-                  <td>Period Start</td>
-                  <td>
-                    <span v-if="item.iso_date">{{
-                      formatDate(item.iso_date)
-                    }}</span>
-                    <span v-else class="italic">Date Not Available</span>
-                  </td>
-                </tr>
-              </table>
-            </div>
-            <div
-              v-for="(item, i) in post.period_end"
-              :key="i"
-              :class="{ 'mb-0': i !== post.period_end.length - 1 }"
-            >
-              <table class="flex flex-col mb-4">
-                <tr>
-                  <td>Period End</td>
-                  <td>
-                    <span v-if="item.iso_date">{{
-                      formatDate(item.iso_date)
-                    }}</span>
-                    <span v-else class="italic">Date Not Available</span>
-                  </td>
-                </tr>
-              </table>
-            </div>
-          </div>
-          <div
-            v-for="(item, i) in post.provider_org"
-            :key="i"
-            class="mb-3"
-            :class="{ 'mb-0': i !== post.provider_org.length - 1 }"
-          >
-            <div class="category">
-              <span v-if="item.type">{{
-                types.organizationType[item.type]
-              }}</span>
-              <span v-else class="italic">Type Not Available</span>
-            </div>
-            <div class="ml-5">
-              <table>
-                <tr>
-                  <td>Provider Org</td>
-                  <td>
-                    <div class="value">
-                      <div>
-                        <span v-if="item.provider_activity_id"
-                          >Provider Activity Id -
-                          {{ item.provider_activity_id }}</span
-                        >
-                        <span v-else class="italic"
-                          >Provider Activity Id Not Available</span
-                        >
-                      </div>
-                      <div>
-                        <span v-if="item.ref"
-                          >(Reference - {{ item.ref }})</span
-                        >
-                        <span v-else class="italic"
-                          >(Reference Not Available)</span
-                        >
-                      </div>
-                    </div>
-                  </td>
-                </tr>
-              </table>
-              <div
-                v-for="(narrative, j) in item.narrative"
-                :key="j"
-                :class="{ 'mb-0': j !== item.narrative.length - 1 }"
-              >
-                <table class="flex flex-col">
-                  <tr class="multiline">
-                    <td>Narrative</td>
-                    <td>
-                      <div v-if="narrative.narrative" class="flex flex-col">
-                        <span v-if="narrative.language" class="language"
-                          >(Language:
-                          {{ types.languages[narrative.language] }})</span
-                        >
-                        <span>{{ narrative.narrative }}</span>
-                      </div>
-                      <span v-else class="italic">Not Available</span>
-                    </td>
-                  </tr>
-                </table>
-              </div>
-            </div>
-          </div>
-          <div
-            v-for="(item, i) in post.receiver_org"
-            :key="i"
-            :class="{ 'mb-0': i !== post.receiver_org.length - 1 }"
-          >
-            <div class="category">
-              <span v-if="item.type">{{
-                types.organizationType[item.type]
-              }}</span>
-              <span v-else class="italic">Type Not Available</span>
-            </div>
-            <div class="ml-5">
-              <table>
-                <tr>
-                  <td>Receiver Org</td>
-                  <td>
-                    <div class="value">
-                      <div>
-                        <span v-if="item.receiver_activity_id"
-                          >Receiver Activity Id -
-                          {{ item.receiver_activity_id }}</span
-                        >
-                        <span v-else class="italic"
-                          >Receiver Activity Id Not Available</span
-                        >
-                      </div>
-                      <div>
-                        <span v-if="item.ref"
-                          >(Reference - {{ item.ref }})</span
-                        >
-                        <span v-else class="italic"
-                          >(Reference Not Available)</span
-                        >
-                      </div>
-                    </div>
-                  </td>
-                </tr>
-              </table>
-              <div
-                v-for="(narrative, j) in item.narrative"
-                :key="j"
-                :class="{ 'mb-0': j !== item.narrative.length - 1 }"
-              >
-                <table>
-                  <tr class="multiline">
-                    <td>Narrative</td>
-                    <td>
-                      <div v-if="narrative.narrative" class="flex flex-col">
-                        <span v-if="narrative.language" class="language"
-                          >(Language:
-                          {{ types.languages[narrative.language] }})</span
-                        >
-                        <span>{{ narrative.narrative }}</span>
-                      </div>
-                      <span v-else class="italic">Not Available</span>
-                    </td>
-                  </tr>
-                </table>
-              </div>
-            </div>
-          </div>
-        </div>
+        <PlannedDisbursement :data="data.content" />
       </template>
 
       <!-- Document Link -->
@@ -775,6 +537,8 @@ import {
   RelatedActivity,
   PolicyMarker,
   Tag,
+  HumanitarianScope,
+  PlannedDisbursement,
 } from 'Activity/elements/Index';
 import Btn from 'Components/buttons/Link.vue';
 import Status from 'Components/status/ElementStatus.vue';
@@ -806,6 +570,8 @@ export default defineComponent({
     RelatedActivity,
     PolicyMarker,
     Tag,
+    HumanitarianScope,
+    PlannedDisbursement,
   },
   props: {
     data: {

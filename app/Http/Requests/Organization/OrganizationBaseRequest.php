@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Requests\Organization;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
 /**
@@ -136,7 +137,7 @@ class OrganizationBaseRequest extends FormRequest
     public function uniqueDefaultLangValidator($attribute, $value, $parameters, $validator): bool
     {
         $languages = [];
-        $defaultLanguage = 'en';
+        $defaultLanguage = Auth::user()->organization->settings->default_values['default_language'] ?? null;
 
         $validator->addReplacer(
             'unique_default_lang',
@@ -147,13 +148,15 @@ class OrganizationBaseRequest extends FormRequest
 
         $check = true;
 
-        foreach ($value as $narrative) {
-            $languages[] = $narrative['language'];
-        }
+        if ($defaultLanguage) {
+            foreach ($value as $narrative) {
+                $languages[] = $narrative['language'];
+            }
 
-        if (count($languages) === count(array_unique($languages))) {
-            if (in_array('', $languages) && in_array($defaultLanguage, $languages)) {
-                $check = false;
+            if (count($languages) === count(array_unique($languages))) {
+                if (in_array('', $languages) && in_array($defaultLanguage, $languages)) {
+                    $check = false;
+                }
             }
         }
 

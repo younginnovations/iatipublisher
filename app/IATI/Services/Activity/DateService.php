@@ -6,9 +6,8 @@ namespace App\IATI\Services\Activity;
 
 use App\IATI\Elements\Builder\ParentCollectionFormCreator;
 use App\IATI\Models\Activity\Activity;
-use App\IATI\Repositories\Activity\DateRepository;
+use App\IATI\Repositories\Activity\ActivityRepository;
 use App\IATI\Traits\XmlBaseElement;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
 use Kris\LaravelFormBuilder\Form;
 
@@ -18,10 +17,11 @@ use Kris\LaravelFormBuilder\Form;
 class DateService
 {
     use XmlBaseElement;
+
     /**
-     * @var DateRepository
+     * @var ActivityRepository
      */
-    protected DateRepository $dateRepository;
+    protected ActivityRepository $activityRepository;
 
     /**
      * @var ParentCollectionFormCreator
@@ -31,12 +31,12 @@ class DateService
     /**
      * DateService constructor.
      *
-     * @param DateRepository $dateRepository
+     * @param ActivityRepository          $activityRepository
      * @param ParentCollectionFormCreator $parentCollectionFormCreator
      */
-    public function __construct(DateRepository $dateRepository, ParentCollectionFormCreator $parentCollectionFormCreator)
+    public function __construct(ActivityRepository $activityRepository, ParentCollectionFormCreator $parentCollectionFormCreator)
     {
-        $this->dateRepository = $dateRepository;
+        $this->activityRepository = $activityRepository;
         $this->parentCollectionFormCreator = $parentCollectionFormCreator;
     }
 
@@ -49,7 +49,7 @@ class DateService
      */
     public function getDateData(int $activity_id): ?array
     {
-        return $this->dateRepository->getDateData($activity_id);
+        return $this->activityRepository->find($activity_id)->activity_date;
     }
 
     /**
@@ -57,24 +57,28 @@ class DateService
      *
      * @param $id
      *
-     * @return Model
+     * @return object
      */
-    public function getActivityData($id): Model
+    public function getActivityData($id): object
     {
-        return $this->dateRepository->getActivityData($id);
+        return $this->activityRepository->find($id);
     }
 
     /**
      * Updates activity date.
      *
+     * @param $id
      * @param $activityDate
-     * @param $activity
      *
      * @return bool
      */
-    public function update($activityDate, $activity): bool
+    public function update($id, $activityDate): bool
     {
-        return $this->dateRepository->update($activityDate, $activity);
+        foreach ($activityDate['activity_date'] as $key => $activity_date) {
+            $activityDate['activity_date'][$key]['narrative'] = array_values($activity_date['narrative']);
+        }
+
+        return $this->activityRepository->update($id, ['activity_date' => array_values($activityDate['activity_date'])]);
     }
 
     /**
@@ -83,14 +87,15 @@ class DateService
      * @param id
      *
      * @return Form
+     * @throws \JsonException
      */
     public function formGenerator($id): Form
     {
         $element = getElementSchema('activity_date');
         $model['activity_date'] = $this->getDateData($id);
-        $this->parentCollectionFormCreator->url = route('admin.activities.date.update', [$id]);
+        $this->parentCollectionFormCreator->url = route('admin.activity.date.update', [$id]);
 
-        return $this->parentCollectionFormCreator->editForm($model, $element, 'PUT', '/activities/' . $id);
+        return $this->parentCollectionFormCreator->editForm($model, $element, 'PUT', '/activity/' . $id);
     }
 
     /**

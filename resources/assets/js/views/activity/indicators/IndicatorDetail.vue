@@ -3,7 +3,7 @@
     <PageTitle
       :breadcrumb-data="breadcrumbData"
       title="Indicator Detail"
-      :back-link="`${resultLink}/indicator`"
+      :back-link="`${indicatorLink}`"
     >
       <div class="mb-3">
         <Toast
@@ -13,16 +13,16 @@
         />
       </div>
       <div class="flex justify-end">
-        <Status class="mr-2.5" :data="false" />
+        <!-- <Status class="mr-2.5" :data="false" /> -->
         <Btn
           text="Add Indicator"
           icon="add"
-          :link="`${resultLink}/indicator/create`"
+          :link="`${indicatorLink}/create`"
           class="mr-2.5"
         />
         <Btn
           text="Edit Indicator"
-          :link="`${resultLink}/indicator/${indicator.id}/edit`"
+          :link="`${indicatorLink}/${indicator.id}/edit`"
         />
       </div>
     </PageTitle>
@@ -34,7 +34,7 @@
         >
           <ul class="text-sm font-bold leading-relaxed">
             <li v-for="(rData, r, ri) in indicatorData" :key="ri">
-              <a v-smooth-scroll :href="`#${r}`" :class="linkClasses">
+              <a v-smooth-scroll :href="`#${String(r)}`" :class="linkClasses">
                 <svg-vue icon="moon" class="mr-2 text-base"></svg-vue>
                 {{ r }}
               </a>
@@ -42,7 +42,7 @@
 
             <li v-if="periodData.length === 0">
               <a
-                :href="`${resultLink}/indicator/${indicator.id}/period/create`"
+                :href="`/indicator/${indicator.id}/period/create`"
                 :class="linkClasses"
                 class="border border-dashed border-n-40"
               >
@@ -156,7 +156,6 @@ import { defineComponent, toRefs, onMounted, reactive, provide } from 'vue';
 
 //component
 import Btn from 'Components/buttons/Link.vue';
-import Status from 'Components/status/ElementStatus.vue';
 import PageTitle from 'Components/sections/PageTitle.vue';
 import Toast from 'Components/Toast.vue';
 
@@ -188,7 +187,6 @@ export default defineComponent({
     DocumentLink,
     Period,
     Btn,
-    Status,
     PageTitle,
     Toast,
   },
@@ -244,10 +242,11 @@ export default defineComponent({
 
     const activityId = activity.value.id,
       activityTitle = activity.value.title,
-      activityLink = `/activities/${activityId}`,
+      activityLink = `/activity/${activityId}`,
       resultId = indicator.value.result_id,
       resultTitled = getActivityTitle(resultTitle.value[0].narrative, 'en'),
       resultLink = `${activityLink}/result/${resultId}`,
+      indicatorLink = `/result/${resultId}/indicator`,
       indicatorTitle = getActivityTitle(indicatorData.title[0].narrative, 'en');
 
     /**
@@ -290,6 +289,7 @@ export default defineComponent({
       indicatorData,
       activityLink,
       resultLink,
+      indicatorLink,
       breadcrumbData,
       toastData,
       periodData,

@@ -6,10 +6,8 @@ namespace App\IATI\Services\Activity;
 
 use App\IATI\Elements\Builder\ParentCollectionFormCreator;
 use App\IATI\Models\Activity\Activity;
-use App\IATI\Repositories\Activity\DocumentLinkRepository;
-use App\IATI\Repositories\Document\DocumentRepository;
+use App\IATI\Repositories\Activity\ActivityRepository;
 use App\IATI\Traits\XmlBaseElement;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
 use Kris\LaravelFormBuilder\Form;
 
@@ -21,14 +19,9 @@ class DocumentLinkService
     use XmlBaseElement;
 
     /**
-     * @var DocumentLinkRepository
+     * @var ActivityRepository
      */
-    protected DocumentLinkRepository $documentLinkRepository;
-
-    /**
-     * @var DocumentRepository
-     */
-    protected DocumentRepository $documentRepo;
+    protected ActivityRepository $activityRepository;
 
     /**
      * @var ParentCollectionFormCreator
@@ -38,12 +31,12 @@ class DocumentLinkService
     /**
      * DocumentLinkService constructor.
      *
-     * @param DocumentLinkRepository $documentLinkRepository
-     * @param ParentCollectionFormCreator $parenCollectionFormCreator
+     * @param ActivityRepository          $activityRepository
+     * @param ParentCollectionFormCreator $parentCollectionFormCreator
      */
-    public function __construct(DocumentLinkRepository $documentLinkRepository, ParentCollectionFormCreator $parentCollectionFormCreator)
+    public function __construct(ActivityRepository $activityRepository, ParentCollectionFormCreator $parentCollectionFormCreator)
     {
-        $this->documentLinkRepository = $documentLinkRepository;
+        $this->activityRepository = $activityRepository;
         $this->parentCollectionFormCreator = $parentCollectionFormCreator;
     }
 
@@ -56,7 +49,7 @@ class DocumentLinkService
      */
     public function getDocumentLinkData(int $activity_id): ?array
     {
-        return $this->documentLinkRepository->getDocumentLinkData($activity_id);
+        return $this->activityRepository->find($activity_id)->document_link;
     }
 
     /**
@@ -64,32 +57,34 @@ class DocumentLinkService
      *
      * @param $id
      *
-     * @return Model
+     * @return object
      */
-    public function getActivityData($id): Model
+    public function getActivityData($id): object
     {
-        return $this->documentLinkRepository->getActivityData($id);
+        return $this->activityRepository->find($id);
     }
 
     /**
      * Updates activity country budget item.
      *
+     * @param $id
      * @param $documentLink
-     * @param $activity
      *
      * @return bool
+     * @throws \JsonException
      */
-    public function update($documentLink, $activity): bool
+    public function update($id, $documentLink): bool
     {
-        return $this->documentLinkRepository->update($documentLink, $activity);
+        return $this->activityRepository->update($id, ['document_link' => $this->sanitizeDocumentLinkData($documentLink)]);
     }
 
     /**
      * Generates document link form.
      *
-     * @param id
+     * @param $id
      *
      * @return Form
+     * @throws \JsonException
      */
     public function formGenerator($id): Form
     {
@@ -101,18 +96,18 @@ class DocumentLinkService
         foreach ($model['document_link'] as $key => $document) {
             foreach ($documentLinks as $findIndex => $file) {
                 unset($document['document']);
-                $document_link = (array) json_decode($file['document_link']);
+                $document_link = json_decode($file['document_link'], true, 512, JSON_THROW_ON_ERROR);
                 unset($document_link['document']);
 
-                if (json_encode($document) == json_encode($document_link)) {
+                if (json_encode($document, JSON_THROW_ON_ERROR) === json_encode($document_link, JSON_THROW_ON_ERROR)) {
                     $model['document_link'][$key]['document'] = '';
                 }
             }
         }
 
-        $this->parentCollectionFormCreator->url = route('admin.activities.document-link.update', [$id]);
+        $this->parentCollectionFormCreator->url = route('admin.activity.document-link.update', [$id]);
 
-        return $this->parentCollectionFormCreator->editForm($model, $element, 'PUT', '/activities/' . $id);
+        return $this->parentCollectionFormCreator->editForm($model, $element, 'PUT', '/activity/' . $id);
     }
 
     /**
@@ -146,17 +141,17 @@ class DocumentLinkService
                 }
 
                 $activityData[] = [
-                    '@attributes'   => [
+                    '@attributes' => [
                         'url'    => Arr::get($documentLink, 'url', null),
                         'format' => Arr::get($documentLink, 'format', null),
                     ],
-                    'title'         => [
+                    'title'       => [
                         'narrative' => $this->buildNarrative(Arr::get($documentLink, 'title.0.narrative', [])),
                     ],
-                    'description'   => [
+                    'description' => [
                         'narrative' => $this->buildNarrative(Arr::get($documentLink, 'description.0.narrative', [])),
                     ],
-                    'category'      => $categories,
+                    'category'    => $categories,
 
                     'language'      => $languages,
                     'document-date' => [
@@ -169,5 +164,26 @@ class DocumentLinkService
         }
 
         return $activityData;
+    }
+
+    /**
+     * Sanitizes document link data.
+     *
+     * @param $documentLink
+     *
+     * @return array
+     * @throws \JsonException
+     */
+    public function sanitizeDocumentLinkData($documentLink): array
+    {
+        $element = getElementSchema('document_link');
+
+        foreach ($documentLink['document_link'] as $key => $document) {
+            foreach (array_keys($element['sub_elements']) as $subElement) {
+                $documentLink['document_link'][$key][$subElement] = array_values($document[$subElement]);
+            }
+        }
+
+        return array_values($documentLink['document_link']);
     }
 }

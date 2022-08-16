@@ -95,7 +95,7 @@ class ActivityObserver
         $key = array_key_first($activity->getDirty());
         $data = Arr::get($activity->getDirty(), $key);
 
-        if (!in_array($key, getNonArrayElements()) && !Arr::has($activity->getDirty(), 'linked_to_iati')) {
+        if (!in_array($key, getNonArrayElements(), true) && !Arr::has($activity->getDirty(), 'linked_to_iati')) {
             $updatedData = $this->elementCompleteService->setDefaultValues($data, $activity);
             $activity->$key = $updatedData;
         }

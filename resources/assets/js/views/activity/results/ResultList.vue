@@ -23,37 +23,13 @@
         <thead>
           <tr class="text-left bg-n-10">
             <th id="transaction_type" scope="col">
-              <a
-                class="transition duration-500 text-n-50 hover:text-spring-50"
-                href="#"
-              >
-                <span class="sorting-indicator descending">
-                  <svg-vue icon="descending-arrow" />
-                </span>
-                <span>Title</span>
-              </a>
+              <span>Title</span>
             </th>
             <th id="transaction_value" scope="col" width="190px">
-              <a
-                class="transition duration-500 text-n-50 hover:text-spring-50"
-                href="#"
-              >
-                <span class="sorting-indicator descending">
-                  <svg-vue icon="descending-arrow" />
-                </span>
-                <span>RESULT TYPE</span>
-              </a>
+              <span>RESULT TYPE</span>
             </th>
             <th id="transaction_date" scope="col" width="208px">
-              <a
-                class="transition duration-500 text-n-50 hover:text-spring-50"
-                href="#"
-              >
-                <span class="sorting-indicator descending">
-                  <svg-vue icon="descending-arrow" />
-                </span>
-                <span>AGGREGATION STATUS</span>
-              </a>
+              <span>AGGREGATION STATUS</span>
             </th>
             <th id="action" scope="col" width="177px">
               <span>Action</span>
@@ -93,7 +69,7 @@
               <div class="flex">
                 <a
                   class="mr-6 text-n-40"
-                  :href="`/activities/${result.activity_id}/result/${result.id}/edit`"
+                  :href="`/activity/${result.activity_id}/result/${result.id}/edit`"
                 >
                   <svg-vue icon="edit" class="text-xl"></svg-vue>
                 </a>
@@ -108,7 +84,11 @@
     </div>
 
     <div class="mt-6">
-      <Pagination :data="resultsData" @fetch-activities="fetchListings" />
+      <Pagination
+        v-if="resultsData && resultsData.last_page > 1"
+        :data="resultsData"
+        @fetch-activities="fetchListings"
+      />
     </div>
   </div>
 </template>
@@ -157,14 +137,29 @@ export default defineComponent({
     const { activity } = toRefs(props);
     const activityId = activity.value.id,
       activityTitle = activity.value.title,
-      activityLink = `/activities/${activityId}`;
+      activityLink = `/activity/${activityId}`;
     const toastData = reactive({
       visibility: false,
       message: '',
       type: true,
     });
 
-    const resultsData = reactive({});
+    interface ResultsInterface {
+      last_page: number;
+      data: {
+        id: number;
+        result: {
+          title: {
+            narrative: [];
+          }[];
+          type: string;
+          aggregation_status: string;
+        };
+        activity_id: number;
+      }[];
+    }
+
+    const resultsData = reactive({}) as ResultsInterface;
     const isEmpty = ref(false);
 
     /**
@@ -186,7 +181,7 @@ export default defineComponent({
     ];
 
     onMounted(async () => {
-      axios.get(`/activities/${activityId}/result/page/1`).then((res) => {
+      axios.get(`/activity/${activityId}/results/page/1`).then((res) => {
         const response = res.data;
         Object.assign(resultsData, response.data);
         isEmpty.value = response.data.data.length ? false : true;
@@ -205,7 +200,7 @@ export default defineComponent({
 
     function fetchListings(active_page: number) {
       axios
-        .get(`/activities/${activityId}/result/page/` + active_page)
+        .get(`/activity/${activityId}/results/page/` + active_page)
         .then((res) => {
           const response = res.data;
           Object.assign(resultsData, response.data);

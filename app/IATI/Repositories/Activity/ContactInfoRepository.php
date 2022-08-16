@@ -58,14 +58,15 @@ class ContactInfoRepository
      * @param $activity
      *
      * @return bool
+     * @throws \JsonException
      */
     public function update($contactInfo, $activity): bool
     {
         $element = getElementSchema('contact_info');
 
         foreach ($contactInfo['contact_info'] as $key => $contact) {
-            foreach (array_keys($element['sub_elements']) as $subelement) {
-                $contactInfo['contact_info'][$key][$subelement] = array_values($contact[$subelement]);
+            foreach (array_keys($element['sub_elements']) as $subElement) {
+                $contactInfo['contact_info'][$key][$subElement] = array_values($contact[$subElement]);
             }
         }
 

@@ -6,64 +6,64 @@
     :class="{ 'mb-4': Number(key) !== data.length - 1 }"
   >
     <div class="category">
-      <span v-if="post.policymarker_vocabulary">{{
-        types.policyMarkerVocabulary[post.policymarker_vocabulary]
+      <span v-if="post.policy_marker_vocabulary">{{
+        types.policyMarkerVocabulary[post.policy_marker_vocabulary]
       }}</span>
       <span v-else class="italic">Vocabulary Not Available</span>
     </div>
     <div class="text-sm">
-      <div v-if="post.policymarker_vocabulary === '1'">
+      <div v-if="post.policy_marker_vocabulary === '1'">
         <span v-if="post.policy_marker">
           {{ types.policyMarker[post.policy_marker] }}
         </span>
         <span v-else class="italic">Not Available</span>
       </div>
       <div v-else>
-        <span v-if="post.policy_marker_text">{{
-          post.policy_marker_text
-        }}</span>
+        <span v-if="post.policy_marker">{{ post.policy_marker }}</span>
         <span v-else class="italic">Not Available</span>
       </div>
     </div>
     <table class="ml-5">
-      <tr v-if="post.policymarker_vocabulary === '99'">
-        <td>Vocabulary URI</td>
-        <td>
-          <a
-            v-if="post.vocabulary_uri"
-            target="_blank"
-            :href="post.vocabulary_uri"
-            >{{ post.vocabulary_uri }}</a
-          >
-          <span v-else class="italic">Not Available</span>
-        </td>
-      </tr>
-      <tr>
-        <td>Significance</td>
-        <td>
-          <span v-if="post.significance">{{
-            types.policySignificance[post.significance]
-          }}</span>
-          <span v-else class="italic">Not Available</span>
-        </td>
-      </tr>
-      <tr
-        v-for="(narrative, k) in post.narrative"
-        :key="k"
-        class="multiline"
-        :class="{ 'mb-4': k !== post.narrative.length - 1 }"
-      >
-        <td>Narrative</td>
-        <td>
-          <div v-if="narrative.narrative" class="flex flex-col">
-            <span v-if="narrative.language" class="language top"
-              >(Language: {{ types.languages[narrative.language] }})</span
+      <tbody>
+        <tr v-if="post.policy_marker_vocabulary === '99'">
+          <td>Vocabulary URI</td>
+          <td>
+            <a
+              v-if="post.vocabulary_uri"
+              target="_blank"
+              :href="post.vocabulary_uri"
+              >{{ post.vocabulary_uri }}</a
             >
-            <span class="description">{{ narrative.narrative }}</span>
-          </div>
-          <span v-else class="italic">Not Available</span>
-        </td>
-      </tr>
+            <span v-else class="italic">Not Available</span>
+          </td>
+        </tr>
+        <tr>
+          <td>Significance</td>
+          <td>
+            <span v-if="post.significance">{{
+              types.policySignificance[post.significance]
+            }}</span>
+            <span v-else class="italic">Not Available</span>
+          </td>
+        </tr>
+        <tr
+          v-for="(narrative, k) in post.narrative"
+          :key="k"
+          class="multiline"
+          :class="{ 'mb-4': k !== post.narrative.length - 1 }"
+        >
+          <td>Narrative</td>
+          <td>
+            <div v-if="narrative.narrative" class="flex flex-col">
+              <span v-if="narrative.language" class="language top"
+                >(Language: {{ types.languages[narrative.language] }})</span
+              >
+              <span class="description">{{ narrative.narrative }}</span>
+            </div>
+            <span v-else class="italic">Not Available</span>
+          </td>
+        </tr>
+      </tbody>
     </table>
   </div>
 </template>

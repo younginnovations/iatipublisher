@@ -6,7 +6,6 @@ namespace App\Observers;
 
 use App\IATI\Models\Activity\Transaction;
 use App\IATI\Services\ElementCompleteService;
-use Illuminate\Support\Arr;
 
 /**
  * Class TransactionObserver.
@@ -56,6 +55,7 @@ class TransactionObserver
     {
         $this->updateActivityElementStatus($transaction);
         $this->resetActivityStatus($transaction);
+        $this->setTransactionDefaultValues($transaction);
     }
 
     /**
@@ -70,6 +70,7 @@ class TransactionObserver
     {
         $this->updateActivityElementStatus($transaction);
         $this->resetActivityStatus($transaction);
+        $this->setTransactionDefaultValues($transaction);
     }
 
     /**
@@ -81,17 +82,23 @@ class TransactionObserver
      */
     public function resetActivityStatus($transaction): void
     {
-        $key = array_key_first($transaction->getDirty());
-        $data = Arr::get($transaction->getDirty(), $key);
-
-        if (!in_array($key, getNonArrayElements())) {
-            $updatedData = $this->elementCompleteService->setDefaultValues($data, $transaction->activity);
-            $transaction->$key = $updatedData;
-            $transaction->saveQuietly();
-        }
-
         $activityObject = $transaction->activity;
         $activityObject->status = 'draft';
         $activityObject->saveQuietly();
+    }
+
+    /**
+     * Sets default values for language and currency for transaction.
+     *
+     * @param $transaction
+     *
+     * @return void
+     */
+    public function setTransactionDefaultValues($transaction): void
+    {
+        $transactionData = $transaction->transaction;
+        $updatedData = $this->elementCompleteService->setDefaultValues($transactionData, $transaction->activity);
+        $transaction->transaction = $updatedData;
+        $transaction->saveQuietly();
     }
 }

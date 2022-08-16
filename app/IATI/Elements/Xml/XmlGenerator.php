@@ -445,7 +445,7 @@ class XmlGenerator
     public function getXmlData($activity, $transaction, $result, $organization)
     {
         $xmlActivity = [];
-        $xmlActivity['iati-identifier'] = Arr::get($activity->iati_identifier, 'iati_identifier_text', 'Not Available');
+        $xmlActivity['iati-identifier'] = ($organization->identifier ?: 'Not Available') . '-' . Arr::get($activity->iati_identifier, 'activity_identifier', 'Not Available');
         $xmlActivity['reporting-org'] = $this->organizationService->getReportingOrgXmlData($organization);
         $xmlActivity['title'] = $this->titleService->getXmlData($activity);
         $xmlActivity['description'] = $this->descriptionService->getXmlData($activity);

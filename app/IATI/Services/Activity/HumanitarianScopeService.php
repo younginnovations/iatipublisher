@@ -6,9 +6,8 @@ namespace App\IATI\Services\Activity;
 
 use App\IATI\Elements\Builder\ParentCollectionFormCreator;
 use App\IATI\Models\Activity\Activity;
-use App\IATI\Repositories\Activity\HumanitarianScopeRepository;
+use App\IATI\Repositories\Activity\ActivityRepository;
 use App\IATI\Traits\XmlBaseElement;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
 use Kris\LaravelFormBuilder\Form;
 
@@ -20,9 +19,9 @@ class HumanitarianScopeService
     use XmlBaseElement;
 
     /**
-     * @var HumanitarianScopeRepository
+     * @var ActivityRepository
      */
-    protected HumanitarianScopeRepository $humanitarianScopeRepository;
+    protected ActivityRepository $activityRepository;
 
     /**
      * @var ParentCollectionFormCreator
@@ -32,12 +31,12 @@ class HumanitarianScopeService
     /**
      * HumanitarianScopeService constructor.
      *
-     * @param HumanitarianScopeRepository $humanitarianScopeRepository
+     * @param ActivityRepository          $activityRepository
      * @param ParentCollectionFormCreator $parentCollectionFormCreator
      */
-    public function __construct(HumanitarianScopeRepository $humanitarianScopeRepository, ParentCollectionFormCreator $parentCollectionFormCreator)
+    public function __construct(ActivityRepository $activityRepository, ParentCollectionFormCreator $parentCollectionFormCreator)
     {
-        $this->humanitarianScopeRepository = $humanitarianScopeRepository;
+        $this->activityRepository = $activityRepository;
         $this->parentCollectionFormCreator = $parentCollectionFormCreator;
     }
 
@@ -50,7 +49,7 @@ class HumanitarianScopeService
      */
     public function getHumanitarianScopeData(int $activity_id): ?array
     {
-        return $this->humanitarianScopeRepository->getHumanitarianScopeData($activity_id);
+        return $this->activityRepository->find($activity_id)->humanitarian_scope;
     }
 
     /**
@@ -58,40 +57,41 @@ class HumanitarianScopeService
      *
      * @param $id
      *
-     * @return Model
+     * @return object
      */
-    public function getActivityData($id): Model
+    public function getActivityData($id): object
     {
-        return $this->humanitarianScopeRepository->getActivityData($id);
+        return $this->activityRepository->find($id);
     }
 
     /**
      * Updates activity humanitarian scope.
      *
+     * @param $id
      * @param $activityHumanitarianScope
-     * @param $activity
      *
      * @return bool
      */
-    public function update($activityHumanitarianScope, $activity): bool
+    public function update($id, $activityHumanitarianScope): bool
     {
-        return $this->humanitarianScopeRepository->update($activityHumanitarianScope, $activity);
+        return $this->activityRepository->update($id, ['humanitarian_scope' => $this->sanitizeHumanitarianScopeData($activityHumanitarianScope)]);
     }
 
     /**
      * Generates humanitarian scope form.
      *
-     * @param id
+     * @param $id
      *
      * @return Form
+     * @throws \JsonException
      */
     public function formGenerator($id): Form
     {
         $element = getElementSchema('humanitarian_scope');
         $model['humanitarian_scope'] = $this->getHumanitarianScopeData($id);
-        $this->parentCollectionFormCreator->url = route('admin.activities.humanitarian-scope.update', [$id]);
+        $this->parentCollectionFormCreator->url = route('admin.activity.humanitarian-scope.update', [$id]);
 
-        return $this->parentCollectionFormCreator->editForm($model, $element, 'PUT', '/activities/' . $id);
+        return $this->parentCollectionFormCreator->editForm($model, $element, 'PUT', '/activity/' . $id);
     }
 
     /**
@@ -119,5 +119,21 @@ class HumanitarianScopeService
         }
 
         return $activityHumanitarianScope;
+    }
+
+    /**
+     * Sanitizes humanitarian scope data.
+     *
+     * @param $activityHumanitarianScope
+     *
+     * @return array
+     */
+    public function sanitizeHumanitarianScopeData($activityHumanitarianScope): array
+    {
+        foreach ($activityHumanitarianScope['humanitarian_scope'] as $key => $humanitarian_scope) {
+            $activityHumanitarianScope['humanitarian_scope'][$key]['narrative'] = array_values($humanitarian_scope['narrative']);
+        }
+
+        return array_values($activityHumanitarianScope['humanitarian_scope']);
     }
 }

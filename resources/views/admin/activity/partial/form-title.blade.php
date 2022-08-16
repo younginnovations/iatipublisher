@@ -39,16 +39,6 @@
             </span>
             <div class="text-sm font-bold title"> {{ str_replace(' ', '-', strtolower($data['title'])) }}</div>
 
-            @if (isset($activity['element_status'][$data['name']]) && $activity['element_status'][$data['name']])
-                <div class="status ml-2.5 flex text-xs leading-5 text-spring-50">
-                    <b class="mr-2 text-base leading-3">.</b><span>completed</span>
-                </div>
-            @else
-                <div class="status ml-2.5 flex text-xs leading-5 text-crimson-50">
-                    <b class="mr-2 text-base leading-3">.</b><span>not completed</span>
-                </div>
-            @endif
-
             @if (isCoreElement($data['name']))
                 <svg-vue icon="core" class="ml-2"></svg-vue>
             @endif

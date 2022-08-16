@@ -54,9 +54,9 @@ interface RepositoryInterface
      * @param       $id
      * @param array $columns
      *
-     * @return object
+     * @return object|null
      */
-    public function find($id, array $columns = ['*']): object;
+    public function find($id, array $columns = ['*']): ?object;
 
     /**
      * Find specific resource by given attribute.

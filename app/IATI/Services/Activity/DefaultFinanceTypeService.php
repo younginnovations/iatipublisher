@@ -6,8 +6,7 @@ namespace App\IATI\Services\Activity;
 
 use App\IATI\Elements\Builder\BaseFormCreator;
 use App\IATI\Models\Activity\Activity;
-use App\IATI\Repositories\Activity\DefaultFinanceTypeRepository;
-use Illuminate\Database\Eloquent\Model;
+use App\IATI\Repositories\Activity\ActivityRepository;
 use Kris\LaravelFormBuilder\Form;
 
 /**
@@ -16,9 +15,9 @@ use Kris\LaravelFormBuilder\Form;
 class DefaultFinanceTypeService
 {
     /**
-     * @var DefaultFinanceTypeRepository
+     * @var ActivityRepository
      */
-    protected DefaultFinanceTypeRepository $defaultFinanceTypeRepository;
+    protected ActivityRepository $activityRepository;
 
     /**
      * @var BaseFormCreator
@@ -28,12 +27,12 @@ class DefaultFinanceTypeService
     /**
      * DefaultFinanceTypeService constructor.
      *
-     * @param DefaultFinanceTypeRepository $defaultFinanceTypeRepository
-     * @param BaseFormCreator $baseFormCreator
+     * @param ActivityRepository $activityRepository
+     * @param BaseFormCreator    $baseFormCreator
      */
-    public function __construct(DefaultFinanceTypeRepository $defaultFinanceTypeRepository, BaseFormCreator $baseFormCreator)
+    public function __construct(ActivityRepository $activityRepository, BaseFormCreator $baseFormCreator)
     {
-        $this->defaultFinanceTypeRepository = $defaultFinanceTypeRepository;
+        $this->activityRepository = $activityRepository;
         $this->baseFormCreator = $baseFormCreator;
     }
 
@@ -46,7 +45,7 @@ class DefaultFinanceTypeService
      */
     public function getDefaultFinanceTypeData(int $activity_id): ?int
     {
-        return $this->defaultFinanceTypeRepository->getDefaultFinanceTypeData($activity_id);
+        return $this->activityRepository->find($activity_id)->default_finance_type;
     }
 
     /**
@@ -54,24 +53,24 @@ class DefaultFinanceTypeService
      *
      * @param $id
      *
-     * @return Model
+     * @return object
      */
-    public function getActivityData($id): Model
+    public function getActivityData($id): object
     {
-        return $this->defaultFinanceTypeRepository->getActivityData($id);
+        return $this->activityRepository->find($id);
     }
 
     /**
      * Updates activity default finance type data.
      *
+     * @param $id
      * @param $activityDefaultFinanceType
-     * @param $activity
      *
      * @return bool
      */
-    public function update($activityDefaultFinanceType, $activity): bool
+    public function update($id, $activityDefaultFinanceType): bool
     {
-        return $this->defaultFinanceTypeRepository->update($activityDefaultFinanceType, $activity);
+        return $this->activityRepository->update($id, ['default_finance_type' => $activityDefaultFinanceType]);
     }
 
     /**
@@ -80,14 +79,15 @@ class DefaultFinanceTypeService
      * @param id
      *
      * @return Form
+     * @throws \JsonException
      */
     public function formGenerator($id): Form
     {
         $element = getElementSchema('default_finance_type');
         $model['default_finance_type'] = $this->getDefaultFinanceTypeData($id);
-        $this->baseFormCreator->url = route('admin.activities.default-finance-type.update', [$id]);
+        $this->baseFormCreator->url = route('admin.activity.default-finance-type.update', [$id]);
 
-        return $this->baseFormCreator->editForm($model, $element, 'PUT', '/activities/' . $id);
+        return $this->baseFormCreator->editForm($model, $element, 'PUT', '/activity/' . $id);
     }
 
     /**

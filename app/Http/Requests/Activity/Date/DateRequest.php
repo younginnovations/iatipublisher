@@ -46,10 +46,7 @@ class DateRequest extends ActivityBaseRequest
             $activityDateForm = sprintf('activity_date.%s', $activityDateIndex);
             $rules[sprintf('%s.date', $activityDateForm)] = 'nullable|date';
             $rules[sprintf('%s.type', $activityDateForm)] = 'nullable';
-            $rules = array_merge(
-                $rules,
-                $this->getRulesForNarrative($activityDate['narrative'], $activityDateForm)
-            );
+            $rules[sprintf('%s.narrative', $activityDateForm)] = $this->getRulesForNarrative($activityDate['narrative'], $activityDateForm)[sprintf('%s.narrative', $activityDateForm)];
         }
 
         return $rules;
@@ -69,10 +66,7 @@ class DateRequest extends ActivityBaseRequest
         foreach ($formFields as $activityDateIndex => $activityDate) {
             $activityDateForm = sprintf('activity_date.%s', $activityDateIndex);
             $messages[sprintf('%s.date.date', $activityDateForm)] = 'Date is invalid.';
-            $messages = array_merge(
-                $messages,
-                $this->getMessagesForNarrative($activityDate['narrative'], $activityDateForm)
-            );
+            $messages = $messages + $this->getMessagesForNarrative($activityDate['narrative'], $activityDateForm);
         }
 
         return $messages;

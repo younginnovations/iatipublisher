@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace App\Http\Requests\Activity;
 
+use App\IATI\Services\Activity\ActivityService;
+use App\IATI\Services\Activity\IndicatorService;
+use App\IATI\Services\Activity\ResultService;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
 /**
@@ -16,10 +18,34 @@ use Illuminate\Support\Facades\Validator;
 class ActivityBaseRequest extends FormRequest
 {
     /**
-     * ActivityBaseRequest constructor.
+     * @var IndicatorService
      */
-    public function __construct()
+    protected IndicatorService $indicatorService;
+
+    /**
+     * @var ResultService
+     */
+    protected ResultService $resultService;
+
+    /**
+     * @var ActivityService
+     */
+    protected ActivityService $activityService;
+
+    /**
+     * ActivityBaseRequest constructor.
+     *
+     * @param IndicatorService $indicatorService
+     * @param ResultService    $resultService
+     * @param ActivityService  $activityService
+     */
+    public function __construct(IndicatorService $indicatorService, ResultService $resultService, ActivityService $activityService)
     {
+        parent::__construct();
+        $this->indicatorService = $indicatorService;
+        $this->resultService = $resultService;
+        $this->activityService = $activityService;
+
         Validator::extendImplicit(
             'unique_lang',
             function ($attribute, $value) {
@@ -131,7 +157,7 @@ class ActivityBaseRequest extends FormRequest
         foreach ($value as $language) {
             $code = isset($language['code']) ? $language['code'] : ($language['language'] ?? '');
 
-            if (in_array($code, $languageCodes)) {
+            if (in_array($code, $languageCodes, true)) {
                 return false;
             }
 
@@ -156,7 +182,7 @@ class ActivityBaseRequest extends FormRequest
         foreach ($value as $category) {
             $code = $category['code'];
 
-            if (in_array($code, $categoryCodes)) {
+            if (in_array($code, $categoryCodes, true)) {
                 return false;
             }
 
@@ -167,11 +193,32 @@ class ActivityBaseRequest extends FormRequest
     }
 
     /**
+     * Returns default values related to an activity.
+     */
+    public function getActivityDefaultValues()
+    {
+        $parameters = $this->route()->parameters();
+        $route = $this->getRequestUri();
+
+        if (str_starts_with($route, 'indicator')) {
+            $indicator = $this->indicatorService->getIndicator($parameters['id']);
+            $activity = $indicator->result->activity;
+        } elseif (str_starts_with($route, 'result')) {
+            $result = $this->resultService->getResult($parameters['id']);
+            $activity = $result->activity;
+        } else {
+            $activity = $this->activityService->getActivity($parameters['id']);
+        }
+
+        return $activity->default_field_values;
+    }
+
+    /**
      * Validator for unique lang.
      *
      * @param      $attribute
      * @param      $value
-     * @param      $parameter
+     * @param      $parameters
      * @param      $validator
      *
      * @return bool
@@ -179,30 +226,36 @@ class ActivityBaseRequest extends FormRequest
     public function uniqueDefaultLangValidator($attribute, $value, $parameters, $validator): bool
     {
         $languages = [];
-        $defaultLanguage = Auth::user()->organization->settings->default_values['default_language'] ?? null;
+        $defaultValues = $this->getActivityDefaultValues();
 
-        $validator->addReplacer(
-            'unique_default_lang',
-            function ($message) use ($validator, $defaultLanguage) {
-                return str_replace(':language', getCodeListArray('Languages', 'ActivityArray')[$defaultLanguage], $message);
-            }
-        );
+        if (!empty($defaultValues)) {
+            $defaultLanguage = $defaultValues['default_language'];
 
-        $check = true;
+            $validator->addReplacer(
+                'unique_default_lang',
+                function ($message) use ($validator, $defaultLanguage) {
+                    return str_replace(':language', getCodeListArray('Languages', 'ActivityArray')[$defaultLanguage], $message);
+                }
+            );
 
-        if ($defaultLanguage) {
-            foreach ($value as $narrative) {
-                $languages[] = $narrative['language'];
-            }
+            $check = true;
 
-            if (count($languages) === count(array_unique($languages))) {
-                if ((in_array('', $languages) || in_array(null, $languages)) && in_array($defaultLanguage, $languages)) {
-                    $check = false;
+            if ($defaultLanguage) {
+                foreach ($value as $narrative) {
+                    $languages[] = $narrative['language'];
+                }
+
+                if (count($languages) === count(array_unique($languages))) {
+                    if ((in_array('', $languages, true) || in_array(null, $languages, true)) && in_array($defaultLanguage, $languages, true)) {
+                        $check = false;
+                    }
                 }
             }
+
+            return $check;
         }
 
-        return $check;
+        return true;
     }
 
     /**
@@ -267,6 +320,7 @@ class ActivityBaseRequest extends FormRequest
     {
         $messages = [];
         $messages[sprintf('%s.narrative.unique_lang', $formBase)] = 'The @xml:lang field must be unique.';
+        $messages[sprintf('%s.narrative.unique_default_lang', $formBase)] = 'The @xml:lang field must be unique.';
 
         foreach ($formFields as $narrativeIndex => $narrative) {
             $messages[sprintf(

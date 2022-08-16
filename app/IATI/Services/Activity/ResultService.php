@@ -33,13 +33,81 @@ class ResultService
     /**
      * ResultService constructor.
      *
-     * @param ResultRepository $resultRepository
+     * @param ResultRepository         $resultRepository
      * @param ResultElementFormCreator $resultElementFormCreator
      */
     public function __construct(ResultRepository $resultRepository, ResultElementFormCreator $resultElementFormCreator)
     {
         $this->resultRepository = $resultRepository;
         $this->resultElementFormCreator = $resultElementFormCreator;
+    }
+
+    /**
+     * Returns paginated results.
+     *
+     * @param int $activityId
+     * @param int $page
+     *
+     * @return LengthAwarePaginator|Collection
+     */
+    public function getPaginatedResult(int $activityId, int $page): LengthAwarePaginator|Collection
+    {
+        $results = $this->resultRepository->getPaginatedResult($activityId, $page);
+
+        foreach ($results as $idx => $result) {
+            $results[$idx]['default_title_narrative'] = $result->default_title_narrative;
+        }
+
+        return $results;
+    }
+
+    /*
+     * Return results of specific activity
+     *
+     * @param $activityId
+     * @return array
+     */
+    public function getActivityResults($activityId): array
+    {
+        return $this->resultRepository->getActivityResults($activityId);
+    }
+
+    /**
+     * Checks if specific result exists for specific activity.
+     *
+     * @param int $activityId
+     * @param int $id
+     *
+     * @return bool
+     */
+    public function activityResultExists(int $activityId, int $id): bool
+    {
+        return $this->getActivityResult($activityId, $id) !== null;
+    }
+
+    /**
+     * Returns specific result of specific activity.
+     *
+     * @param int $activityId
+     * @param int $id
+     *
+     * @return mixed
+     */
+    public function getActivityResult(int $activityId, int $id): mixed
+    {
+        return $this->resultRepository->getActivityResult($activityId, $id);
+    }
+
+    /**
+     * Returns specific result.
+     *
+     * @param $id
+     *
+     * @return object|null
+     */
+    public function getResult($id): ?object
+    {
+        return $this->resultRepository->find($id);
     }
 
     /**
@@ -51,32 +119,48 @@ class ResultService
      */
     public function create(array $resultData): Model
     {
-        return $this->resultRepository->create($resultData);
+        return $this->resultRepository->create($this->sanitizeResultData($resultData));
     }
 
     /**
      * Update Activity Result.
      *
-     * @param array          $resultData
-     * @param $activityResult
+     * @param       $resultId
+     * @param array $resultData
      *
      * @return bool
      */
-    public function update(array $resultData, $activityResult): bool
+    public function update($resultId, array $resultData): bool
     {
-        return $this->resultRepository->update($resultData, $activityResult);
+        return $this->resultRepository->update($resultId, $this->sanitizeResultData($resultData));
     }
 
     /**
-     * Return specific result.
+     * Function to sanitize result data.
      *
-     * @param $id
+     * @param array $resultData
      *
-     * @return Model
+     * @return array
      */
-    public function getResult($id): Model
+    public function sanitizeResultData(array $resultData): array
     {
-        return $this->resultRepository->getResult($id);
+        foreach ($resultData['result'] as $result_key => $result) {
+            if (is_array($result)) {
+                $resultData['result'][$result_key] = array_values($result);
+
+                foreach ($result as $sub_key => $sub_element) {
+                    if (is_array($sub_element)) {
+                        foreach ($sub_element as $inner_key => $inner_element) {
+                            if (is_array($inner_element)) {
+                                $resultData['result'][$result_key][$sub_key][$inner_key] = array_values($inner_element);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        return $resultData;
     }
 
     /**
@@ -97,49 +181,53 @@ class ResultService
      * @param $resultId
      * @param $activityId
      *
-     * @return Model
+     * @return Model|null
      */
-    public function getResultWithIndicatorAndPeriod($resultId, $activityId): Model
+    public function getResultWithIndicatorAndPeriod($resultId, $activityId): ?Model
     {
         return $this->resultRepository->getResultWithIndicatorAndPeriod($resultId, $activityId);
     }
 
     /**
-     * Generates transaction create form.
+     * Returns result create form.
      *
      * @param $activityId
      *
      * @return Form
+     * @throws \JsonException
      */
     public function createFormGenerator($activityId): Form
     {
         $element = getElementSchema('result');
-        $this->resultElementFormCreator->url = route('admin.activities.result.store', $activityId);
+        $this->resultElementFormCreator->url = route('admin.activity.result.store', $activityId);
 
-        return $this->resultElementFormCreator->editForm([], $element, 'POST', '/activities/' . $activityId);
+        return $this->resultElementFormCreator->editForm([], $element, 'POST', '/activity/' . $activityId);
     }
 
     /**
-     * Generates transaction edit form.
+     * Generates result edit form.
      *
-     * @param $resultId
      * @param $activityId
+     * @param $resultId
      *
      * @return Form
+     * @throws \JsonException
      */
-    public function editFormGenerator($resultId, $activityId): Form
+    public function editFormGenerator($activityId, $resultId): Form
     {
         $element = getElementSchema('result');
-        $activityResult = $this->getResult($resultId, $activityId);
-        $this->resultElementFormCreator->url = route('admin.activities.result.update', [$activityId, $resultId]);
+        $activityResult = $this->getResult($resultId);
+        $this->resultElementFormCreator->url = route('admin.activity.result.update', [$activityId, $resultId]);
 
-        return $this->resultElementFormCreator->editForm($activityResult->result, $element, 'PUT', '/activities/' . $activityId);
+        return $this->resultElementFormCreator->editForm($activityResult->result, $element, 'PUT', '/activity/' . $activityId);
     }
 
     /**
      * Checks if result has indicator and periods.
      *
-     * @param $result
+     * @param $results
+     *
+     * @return int[]
      */
     public function checkResultIndicatorPeriod($results): array
     {
@@ -163,21 +251,8 @@ class ResultService
 
         return [
             'indicator' => $hasIndicator,
-            'period' => $hasPeriod,
+            'period'    => $hasPeriod,
         ];
-    }
-
-    /**
-     * Returns array of paginated results belonging to an activity.
-     *
-     * @param $activityId
-     * @param $page
-     *
-     * return LengthAwarePaginator|Collection
-     */
-    public function getPaginatedResult($activityId, $page): LengthAwarePaginator|Collection
-    {
-        return $this->resultRepository->getPaginatedResult($activityId, $page);
     }
 
     /**
@@ -270,7 +345,7 @@ class ResultService
             foreach ($baselines as $baseline) {
                 $baselineValue = null;
 
-                if ($measure != 5) {
+                if ($measure !== 5) {
                     $baselineValue = Arr::get($baseline, 'value', null);
                 }
 

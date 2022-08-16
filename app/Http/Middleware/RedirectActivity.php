@@ -2,83 +2,188 @@
 
 namespace App\Http\Middleware;
 
-use App\IATI\Models\Activity\Activity;
-use App\IATI\Models\Activity\Indicator;
-use App\IATI\Models\Activity\Period;
-use App\IATI\Models\Activity\Result;
-use App\IATI\Models\Activity\Transaction;
+use App\IATI\Services\Activity\ActivityService;
+use App\IATI\Services\Activity\IndicatorService;
+use App\IATI\Services\Activity\PeriodService;
+use App\IATI\Services\Activity\ResultService;
+use App\IATI\Services\Activity\TransactionService;
 use App\Providers\RouteServiceProvider;
 use Closure;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
 /**
- * Class Indicator.
+ * Class RedirectActivity.
  */
 class RedirectActivity
 {
-    public function handle(Request $request, Closure $next)
-    {
-        $activity = $request->route('id') ?: ($request->route('activity'));
-        $activity = is_string($activity) && (int) $activity && (strlen((string) (int) $activity) === strlen($activity)) ? Activity::where('id', $activity)->first()?->toArray() : $activity;
+    /**
+     * @var ActivityService
+     */
+    protected ActivityService $activityService;
 
-        $parameters = $request->route()->parameters;
-        $data_exists = $this->checkIfDataExists($parameters);
+    /**
+     * @var ResultService
+     */
+    protected ResultService $resultService;
 
-        if ((!$activity && ($request->route()->uri !== 'activities' && $request->route()->uri !== 'activity/page/{page?}' && $request->route()->uri !== 'activity/codelists')) || !$data_exists) {
-            return abort(404);
-        }
+    /**
+     * @var IndicatorService
+     */
+    protected IndicatorService $indicatorService;
 
-        if ($activity && $activity['org_id'] !== Auth::user()->organization_id) {
-            return redirect(RouteServiceProvider::HOME);
-        }
+    /**
+     * @var PeriodService
+     */
+    private PeriodService $periodService;
 
-        return $next($request);
+    /**
+     * @var TransactionService
+     */
+    private TransactionService $transactionService;
+
+    /**
+     * @param ActivityService    $activityService
+     * @param ResultService      $resultService
+     * @param IndicatorService   $indicatorService
+     * @param PeriodService      $periodService
+     * @param TransactionService $transactionService
+     */
+    public function __construct(
+        ActivityService $activityService,
+        ResultService $resultService,
+        IndicatorService $indicatorService,
+        PeriodService $periodService,
+        TransactionService $transactionService
+    ) {
+        $this->activityService = $activityService;
+        $this->resultService = $resultService;
+        $this->indicatorService = $indicatorService;
+        $this->periodService = $periodService;
+        $this->transactionService = $transactionService;
     }
 
     /**
-     * Checks if data with id exists.
+     * Handle an incoming request.
      *
-     * @param $routeParams
+     * @param Request $request
+     * @param Closure $next
      *
-     * @return bool
+     * @return mixed
      */
-    public function checkIfDataExists($routeParams): bool
+    public function handle(Request $request, Closure $next): mixed
     {
-        foreach ($routeParams as $type => $id) {
-            $exists = false;
+        $byPassActivityRoutes = [
+            'admin.activities.index',
+            'admin.activities.paginate',
+            'admin.activities.codelist',
+            'admin.activity.store',
+//            'admin.activities.validateActivity'
+        ];
 
-            if (intval($id) && (strlen(strval(intval($id))) === strlen($id))) {
-                switch ($type) {
-                    case 'activity':
-                        $exists = true;
-                        break;
-
-                    case 'result':
-                        $exists = (bool) Result::where('id', $id)->first();
-                        break;
-
-                    case 'indicator':
-                        $exists = (bool) Indicator::where('id', $id)->first();
-                        break;
-
-                    case 'period':
-                        $exists = (bool) Period::where('id', $id)->first();
-                        break;
-
-                    case 'transaction':
-                        $exists = (bool) Transaction::where('id', $id)->first();
-                        break;
-                    default:
-                        $exists = true;
-                }
-            }
-
-            if (!$exists) {
-                return false;
-            }
+        if (in_array($request->route()->getName(), $byPassActivityRoutes, true)) {
+            return $next($request);
         }
 
-        return true;
+        $id = (int) $request->route('id');
+
+        if (strlen($id) === strlen($request->route('id'))) {
+            $activity = [];
+
+            [$module, $subModule] = $this->getRouteParams($request->route()->getName());
+
+            if ($module === 'activity') {
+                $activity = $this->activityService->getActivity($id);
+
+                if ($activity === null || !$activity->isActivityOfOrg()) {
+                    return redirect(RouteServiceProvider::HOME)->with('error', 'Activity does not exist');
+                }
+
+                $byPassResultRoutes = ['admin.activity.result.index', 'admin.activity.results.paginate', 'admin.activity.result.create', 'admin.activity.result.store'];
+
+                if (in_array($subModule, ['result', 'results']) && !in_array($request->route()->getName(), $byPassResultRoutes, true)) {
+                    $resultId = (int) $request->route('resultId');
+
+                    if (!$this->resultService->activityResultExists($id, $resultId)) {
+                        return redirect(RouteServiceProvider::HOME)->with('error', 'Result does not exist');
+                    }
+                }
+
+                $byPassTransactionRoutes = ['admin.activity.transaction.index', 'admin.activity.transactions.paginate', 'admin.activity.transaction.create', 'admin.activity.transaction.store'];
+
+                if (in_array($subModule, ['transaction', 'transactions']) && !in_array($request->route()->getName(), $byPassTransactionRoutes, true)) {
+                    $transactionId = (int) $request->route('transactionId');
+
+                    if (!$this->transactionService->activityTransactionExists($id, $transactionId)) {
+                        return redirect(RouteServiceProvider::HOME)->with('error', 'Transaction does not exist');
+                    }
+                }
+            } elseif ($module === 'result') {
+                $result = $this->resultService->getResult($id);
+
+                if ($result === null) {
+                    return redirect(RouteServiceProvider::HOME)->with('error', 'Result does not exist');
+                }
+
+                if ($result->activity === null || !$result->activity->isActivityOfOrg()) {
+                    return redirect(RouteServiceProvider::HOME)->with('error', 'Activity does not exist');
+                }
+
+                $byPassIndicatorRoutes = ['admin.result.indicator.index', 'admin.result.indicators.paginate', 'admin.result.indicator.create', 'admin.result.indicator.store'];
+
+                if (in_array($subModule, ['indicator', 'indicators']) && !in_array($request->route()->getName(), $byPassIndicatorRoutes, true)) {
+                    $indicatorId = (int) $request->route('indicatorId');
+
+                    if (!$this->indicatorService->resultIndicatorExists($id, $indicatorId)) {
+                        return redirect(RouteServiceProvider::HOME)->with('error', 'Indicator does not exist');
+                    }
+                }
+
+                $activity = $result->activity;
+            } elseif ($module === 'indicator') {
+                $indicator = $this->indicatorService->getIndicator($id);
+
+                if ($indicator === null) {
+                    return redirect(RouteServiceProvider::HOME)->with('error', 'Indicator does not exist');
+                }
+
+                if ($indicator->result === null) {
+                    return redirect(RouteServiceProvider::HOME)->with('error', 'Result does not exist');
+                }
+
+                if ($indicator->result->activity === null || !$indicator->result->activity->isActivityOfOrg()) {
+                    return redirect(RouteServiceProvider::HOME)->with('error', 'Activity does not exist');
+                }
+
+                $byPassPeriodRoutes = ['admin.indicator.period.index', 'admin.indicator.periods.paginate', 'admin.indicator.period.create', 'admin.indicator.period.store'];
+
+                if (in_array($subModule, ['period', 'periods']) && !in_array($request->route()->getName(), $byPassPeriodRoutes, true)) {
+                    $periodId = (int) $request->route('periodId');
+
+                    if (!$this->periodService->indicatorPeriodExist($id, $periodId)) {
+                        return redirect(RouteServiceProvider::HOME)->with('error', 'Period does not exist');
+                    }
+                }
+                $activity = $indicator->result->activity;
+            }
+
+            if ($activity && $activity->isActivityOfOrg()) {
+                return $next($request);
+            }
+
+            return redirect(RouteServiceProvider::HOME)->with('error', 'Activity does not exist');
+        }
+
+        return abort(404);
+    }
+
+    public function getRouteParams($params): array
+    {
+        $routeParams = explode('.', $params);
+
+        if (empty($routeParams)) {
+            return abort(404);
+        }
+
+        return [$routeParams[1], $routeParams[2]];
     }
 }

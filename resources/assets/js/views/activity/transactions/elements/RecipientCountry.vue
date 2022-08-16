@@ -13,31 +13,33 @@
       </div>
       <div class="ml-4">
         <table class="mb-3">
-          <tr>
-            <td>Description</td>
-            <td>
-              <div
-                v-for="(sd, i) in cou.narrative"
-                :key="i"
-                class="mb-4 title-content"
-                :class="{
-                  'mb-4': i !== cou.narrative.length - 1,
-                }"
-              >
-                <div class="language mb-1.5">
-                  (
-                  {{
-                    sd.language
-                      ? `Language: ${type.languages[sd.language]}`
-                      : 'Language Not Available'
-                  }})
+          <tbody>
+            <tr>
+              <td>Description</td>
+              <td>
+                <div
+                  v-for="(sd, i) in cou.narrative"
+                  :key="i"
+                  class="mb-4 title-content"
+                  :class="{
+                    'mb-4': i !== cou.narrative.length - 1,
+                  }"
+                >
+                  <div class="language mb-1.5">
+                    (
+                    {{
+                      sd.language
+                        ? `Language: ${type.languages[sd.language]}`
+                        : 'Language Not Available'
+                    }})
+                  </div>
+                  <div class="text-sm">
+                    {{ sd.narrative ?? 'Narrative Not Available' }}
+                  </div>
                 </div>
-                <div class="text-sm">
-                  {{ sd.narrative ?? 'Narrative Not Available' }}
-                </div>
-              </div>
-            </td>
-          </tr>
+              </td>
+            </tr>
+          </tbody>
         </table>
       </div>
     </div>
@@ -67,7 +69,12 @@ export default defineComponent({
     }
     const country = data.value as ArrayObject;
 
-    const type = inject('types');
+    interface TypesInterface {
+      countryCode: [];
+      languages: [];
+    }
+
+    const type = inject('types') as TypesInterface;
     return { country, type };
   },
 });

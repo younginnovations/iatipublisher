@@ -20,27 +20,22 @@
             <td>
               <div class="text-sm">
                 <span v-if="at.aid_type_code">
-                  {{ type.aidType[at.aid_type_code] ?? 'Not Available' }}
+                  {{ type.aidType[at.aid_type_code] }}
                 </span>
                 <span v-else-if="at.cash_and_voucher_modalities">
                   {{
                     type.cashAndVoucherModalities[
                       at.cash_and_voucher_modalities
-                    ] ?? 'Not Available'
+                    ]
                   }}
                 </span>
                 <span v-else-if="at.earmarking_category">
-                  {{
-                    type.earMarkingCategory[at.earmarking_category] ??
-                    'Not Available'
-                  }}
+                  {{ type.earMarkingCategory[at.earmarking_category] }}
                 </span>
                 <span v-else-if="at.earmarking_modality">
-                  {{
-                    type.earMarkingModality[at.earmarking_modality] ??
-                    'Not Available'
-                  }}
+                  {{ type.earMarkingModality[at.earmarking_modality] }}
                 </span>
+                <span v-else> Not Available </span>
               </div>
             </td>
           </tr>
@@ -74,7 +69,15 @@ export default defineComponent({
     }
     const atData = data.value as ArrayObject[];
 
-    const type = inject('types');
+    interface TypesInterface {
+      aidType: [];
+      aidTypeVocabulary: [];
+      cashAndVoucherModalities: [];
+      earMarkingCategory: [];
+      earMarkingModality: [];
+    }
+
+    const type = inject('types') as TypesInterface;
     return {
       atData,
       type,

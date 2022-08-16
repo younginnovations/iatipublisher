@@ -2,59 +2,61 @@
   <div class="elements-detail wider">
     <div class="ml-4">
       <table class="mb-3">
-        <tr>
-          <td>Organisation Identifier Code</td>
-          <td>
-            <div class="text-sm">
-              {{ PoData[0].organization_identifier_code ?? 'Not Available' }}
-            </div>
-          </td>
-        </tr>
-        <tr>
-          <td>Description</td>
-          <td>
-            <div
-              v-for="(po, i) in PoData[0].narrative"
-              :key="i"
-              class="mb-4 title-content"
-              :class="{
-                'mb-4': i !== PoData[0].narrative.length - 1,
-              }"
-            >
-              <div class="language mb-1.5">
-                (
-                {{
-                  po.language
-                    ? `Language: ${type.languages[po.language]}`
-                    : 'Language: Not Available'
-                }})
-              </div>
+        <tbody>
+          <tr>
+            <td>Organisation Identifier Code</td>
+            <td>
               <div class="text-sm">
-                {{ po.narrative ?? 'Narrative Not Available' }}
+                {{ PoData[0].organization_identifier_code ?? 'Not Available' }}
               </div>
-            </div>
-          </td>
-        </tr>
-        <tr>
-          <td>Provider Activity ID</td>
-          <td>
-            <div class="text-sm">
-              {{ PoData[0].provider_activity_id ?? 'Not Available' }}
-            </div>
-          </td>
-        </tr>
-        <tr>
-          <td>Type</td>
-          <td>
-            <div class="text-sm">
-              {{
-                PoData[0].type
-                  ? type.organizationType[PoData[0].type]
-                  : 'Not Available'
-              }}
-            </div>
-          </td>
-        </tr>
+            </td>
+          </tr>
+          <tr>
+            <td>Description</td>
+            <td>
+              <div
+                v-for="(po, i) in PoData[0].narrative"
+                :key="i"
+                class="mb-4 title-content"
+                :class="{
+                  'mb-4': i !== PoData[0].narrative.length - 1,
+                }"
+              >
+                <div class="language mb-1.5">
+                  (
+                  {{
+                    po.language
+                      ? `Language: ${type.languages[po.language]}`
+                      : 'Language: Not Available'
+                  }})
+                </div>
+                <div class="text-sm">
+                  {{ po.narrative ?? 'Narrative Not Available' }}
+                </div>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td>Provider Activity ID</td>
+            <td>
+              <div class="text-sm">
+                {{ PoData[0].provider_activity_id ?? 'Not Available' }}
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td>Type</td>
+            <td>
+              <div class="text-sm">
+                {{
+                  PoData[0].type
+                    ? type.organizationType[PoData[0].type]
+                    : 'Not Available'
+                }}
+              </div>
+            </td>
+          </tr>
+        </tbody>
       </table>
     </div>
   </div>
@@ -84,7 +86,12 @@ export default defineComponent({
       };
     }
     const PoData = data.value as ArrayObject;
-    const type = inject('types');
+
+    interface TypesInterface {
+      organizationType: [];
+      languages: [];
+    }
+    const type = inject('types') as TypesInterface;
     return { PoData, type };
   },
 });

@@ -17,14 +17,14 @@
           <Btn
             text="Add Indicator"
             icon="add"
-            :link="`/activities/${result.activity_id}/result/${result.id}/indicator/create`"
+            :link="`/result/${result.id}/indicator/create`"
             class="mr-2.5"
           />
           <Btn
             text="Show full indicator list"
             icon=""
             design="bgText"
-            :link="`/activities/${result.activity_id}/result/${result.id}/indicator`"
+            :link="`/result/${result.id}/indicator`"
             class="mr-2.5"
           />
           <svg-vue class="mr-1.5" icon="moon"></svg-vue>
@@ -48,10 +48,10 @@
                 <div class="mr-4">
                   <a
                     class="text-n-50"
-                    :href="`/activities/${result.activity_id}/result/${result.id}/indicator/${post.id}`"
+                    :href="`/result/${result.id}/indicator/${post.id}`"
                   >
                     {{
-                    getActivityTitle(post.indicator.title[0].narrative, 'en')
+                      getActivityTitle(post.indicator.title[0].narrative, 'en')
                     }}
                   </a>
                 </div>
@@ -60,19 +60,19 @@
                     <Btn
                       text="View Indicator"
                       icon="eye"
-                      :link="`/activities/${result.activity_id}/result/${result.id}/indicator/${post.id}`"
+                      :link="`/result/${result.id}/indicator/${post.id}`"
                       class="mr-2.5"
                     />
                     <Btn
                       text="Edit Indicator"
                       icon="edit"
-                      :link="`/activities/${result.activity_id}/result/${result.id}/indicator/${post.id}/edit`"
+                      :link="`/result/${result.id}/indicator/${post.id}/edit`"
                     />
                   </span>
                   <Btn
                     text="Add Period"
                     icon="edit"
-                    :link="`/activities/${result.activity_id}/result/${result.id}/indicator/${post.id}/period/create`"
+                    :link="`/indicator/${post.id}/period/create`"
                     class="mr-2.5"
                   />
                 </div>
@@ -319,7 +319,7 @@
                       <td>
                         <div class="mt-3">
                           <NotYet
-                            :link="`/activities/${result.activity_id}/result/${result.id}/indicator/${post.id}/period/create`"
+                            :link="`/indicator/${post.id}/period/create`"
                             description="You haven't added any periods yet."
                             btn-text="Add period"
                             class="w-[442px]"
@@ -345,20 +345,20 @@
                           <div class="mr-10">
                             <a
                               class="text-n-50"
-                              :href="`/activities/${result.activity_id}/result/${result.id}/indicator/${post.id}/period/${item.id}`"
+                              :href="`/indicator/${post.id}/period/${item.id}`"
                             >
                               {{
-                              dateFormat(
-                              item.period.period_start[0].date,
-                              'MMMM DD, YYYY'
-                              )
+                                dateFormat(
+                                  item.period.period_start[0].date,
+                                  'MMMM DD, YYYY'
+                                )
                               }}
                               -
                               {{
-                              dateFormat(
-                              item.period.period_end[0].date,
-                              'MMMM DD, YYYY'
-                              )
+                                dateFormat(
+                                  item.period.period_end[0].date,
+                                  'MMMM DD, YYYY'
+                                )
                               }}
                             </a>
                           </div>
@@ -366,13 +366,13 @@
                             <Btn
                               text="View Period"
                               icon="eye"
-                              :link="`/activities/${result.activity_id}/result/${result.id}/indicator/${post.id}/period/${item.id}`"
+                              :link="`/indicator/${post.id}/period/${item.id}`"
                               class="mr-2.5"
                             />
                             <Btn
                               text="Edit Period"
                               icon="edit"
-                              :link="`/activities/${result.activity_id}/result/${result.id}/indicator/${post.id}/period/${item.id}/edit`"
+                              :link="`/indicator/${post.id}/period/${item.id}/edit`"
                             />
                           </div>
                         </div>

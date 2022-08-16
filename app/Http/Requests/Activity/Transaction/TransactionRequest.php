@@ -5,6 +5,9 @@ declare(strict_types=1);
 namespace App\Http\Requests\Activity\Transaction;
 
 use App\Http\Requests\Activity\ActivityBaseRequest;
+use App\IATI\Services\Activity\ActivityService;
+use App\IATI\Services\Activity\IndicatorService;
+use App\IATI\Services\Activity\ResultService;
 use App\IATI\Services\Activity\TransactionService;
 use Illuminate\Support\Arr;
 
@@ -20,11 +23,15 @@ class TransactionRequest extends ActivityBaseRequest
 
     /**
      * Transaction constructor.
+     *
+     * @param IndicatorService   $indicatorService
+     * @param ResultService      $resultService
+     * @param ActivityService    $activityService
      * @param TransactionService $transactionService
      */
-    public function __construct(TransactionService $transactionService)
+    public function __construct(IndicatorService $indicatorService, ResultService $resultService, ActivityService $activityService, TransactionService $transactionService)
     {
-        parent::__construct();
+        parent::__construct($indicatorService, $resultService, $activityService);
 
         $this->transactionService = $transactionService;
     }
@@ -73,7 +80,7 @@ class TransactionRequest extends ActivityBaseRequest
             $rules['reference'] = 'not_in:' . $transactionReference;
         }
 
-        $rules = array_merge(
+        return array_merge(
             $rules,
             $this->getTransactionDateRules($formFields['transaction_date']),
             $this->getValueRules($formFields['value']),
@@ -84,8 +91,6 @@ class TransactionRequest extends ActivityBaseRequest
             $this->getRulesForRecipientRegion($formFields['recipient_region']),
             $this->getRulesForRecipientCountry($formFields['recipient_country'])
         );
-
-        return $rules;
     }
 
     /**
@@ -102,7 +107,7 @@ class TransactionRequest extends ActivityBaseRequest
         $messages['reference.not_in']
                 = 'The @ref field must be unique for an activity.';
 
-        $messages = array_merge(
+        return array_merge(
             $messages,
             $this->getTransactionDateMessages($formFields['transaction_date']),
             $this->getValueMessages($formFields['value']),
@@ -113,8 +118,6 @@ class TransactionRequest extends ActivityBaseRequest
             $this->getMessagesForRecipientRegion($formFields['recipient_region']),
             $this->getMessagesForRecipientCountry($formFields['recipient_country'])
         );
-
-        return $messages;
     }
 
     /**

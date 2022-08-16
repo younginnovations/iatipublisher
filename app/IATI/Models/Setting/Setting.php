@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace App\IATI\Models\Setting;
 
+use App\IATI\Models\Organization\Organization;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * Class Setting.
@@ -30,16 +32,18 @@ class Setting extends Model
      * @var array
      */
     protected $casts = [
-        'publishing_info' => 'json',
-        'default_values' => 'json',
+        'publishing_info'         => 'json',
+        'default_values'          => 'json',
         'activity_default_values' => 'json',
     ];
 
     /**
      * Setting belongs to organization.
+     *
+     * @return BelongsTo
      */
-    protected function organization()
+    protected function organization(): BelongsTo
     {
-        return $this->belongsTo('App\IATI\Models\Organization\Organization', 'organization_id');
+        return $this->belongsTo(Organization::class, 'organization_id');
     }
 }
