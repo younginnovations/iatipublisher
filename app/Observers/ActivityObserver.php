@@ -77,6 +77,7 @@ class ActivityObserver
     public function created(Activity $activity): void
     {
         $this->setElementStatus($activity, true);
+        $this->resetActivityStatus($activity);
         $activity->saveQuietly();
     }
 
@@ -91,6 +92,19 @@ class ActivityObserver
     public function updated(Activity $activity): void
     {
         $this->setElementStatus($activity);
+        $this->resetActivityStatus($activity);
         $activity->saveQuietly();
+    }
+
+    /**
+     * Resets activity status to draft.
+     *
+     * @param $model
+     *
+     * @return void
+     */
+    public function resetActivityStatus($model)
+    {
+        $model->status = 'draft';
     }
 }

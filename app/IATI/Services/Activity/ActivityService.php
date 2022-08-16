@@ -160,6 +160,18 @@ class ActivityService
     }
 
     /**
+     * Sets activity status to draft.
+     *
+     * @param $activity_id
+     *
+     * @return null
+     */
+    public function resetActivityWorkflow($activity_id)
+    {
+        $this->activityRepository->resetActivityWorkflow($activity_id);
+    }
+
+    /**
      * Return activity publishing progress in percentage.
      *
      * @param $activity

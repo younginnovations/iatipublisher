@@ -44,13 +44,21 @@ class TagController extends Controller
             $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
             $activity = $this->tagService->getActivityData($id);
             $form = $this->tagService->formGenerator($id);
-            $data = ['core' => $element['tag']['criteria'] ?? '', 'status' => $activity->tag_element_completed, 'title' => $element['tag']['label'], 'name' => 'tag'];
+            $data = [
+                'core' => $element['tag']['criteria'] ?? '',
+                'status' => $activity->tag_element_completed,
+                'title' => $element['tag']['label'],
+                'name' => 'tag',
+            ];
 
             return view('admin.activity.tag.edit', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while opening tag form.');
+            return redirect()->route('admin.activities.show', $id)->with(
+                'error',
+                'Error has occurred while opening tag form.'
+            );
         }
     }
 
@@ -69,14 +77,20 @@ class TagController extends Controller
             $activityTag = $request->all();
 
             if (!$this->tagService->update($activityTag, $activityData)) {
-                return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while updating tag.');
+                return redirect()->route('admin.activities.show', $id)->with(
+                    'error',
+                    'Error has occurred while updating tag.'
+                );
             }
 
             return redirect()->route('admin.activities.show', $id)->with('success', 'Tag updated successfully.');
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while updating tag.');
+            return redirect()->route('admin.activities.show', $id)->with(
+                'error',
+                'Error has occurred while updating tag.'
+            );
         }
     }
 }

@@ -44,13 +44,21 @@ class DefaultFinanceTypeController extends Controller
             $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
             $activity = $this->defaultFinanceTypeService->getActivityData($id);
             $form = $this->defaultFinanceTypeService->formGenerator($id);
-            $data = ['core' => $element['default_finance_type']['criteria'] ?? '', 'status' => $activity->default_finance_type_element_completed, 'title' => $element['default_finance_type']['label'], 'name' => 'default_finance_type'];
+            $data = [
+                'core' => $element['default_finance_type']['criteria'] ?? '',
+                'status' => $activity->default_finance_type_element_completed,
+                'title' => $element['default_finance_type']['label'],
+                'name' => 'default_finance_type',
+            ];
 
             return view('admin.activity.defaultFinanceType.edit', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while rendering default-finance-type form.');
+            return redirect()->route('admin.activities.show', $id)->with(
+                'error',
+                'Error has occurred while rendering default-finance-type form.'
+            );
         }
     }
 
@@ -66,17 +74,28 @@ class DefaultFinanceTypeController extends Controller
     {
         try {
             $activityData = $this->defaultFinanceTypeService->getActivityData($id);
-            $activityDefaultFinanceType = $request->get('default_finance_type') != null ? (int) $request->get('default_finance_type') : null;
+            $activityDefaultFinanceType = $request->get('default_finance_type') != null ? (int) $request->get(
+                'default_finance_type'
+            ) : null;
 
             if (!$this->defaultFinanceTypeService->update($activityDefaultFinanceType, $activityData)) {
-                return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while updating default-finance-type.');
+                return redirect()->route('admin.activities.show', $id)->with(
+                    'error',
+                    'Error has occurred while updating default-finance-type.'
+                );
             }
 
-            return redirect()->route('admin.activities.show', $id)->with('success', 'Default-finance-type updated successfully.');
+            return redirect()->route('admin.activities.show', $id)->with(
+                'success',
+                'Default-finance-type updated successfully.'
+            );
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while updating default-finance-type.');
+            return redirect()->route('admin.activities.show', $id)->with(
+                'error',
+                'Error has occurred while updating default-finance-type.'
+            );
         }
     }
 }

@@ -2,6 +2,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     "/js/app.js": "/js/app.js?id=6e65cc6ab01eddfbe4b7d82e8ac6a6cb",
     "/js/script.js": "/js/script.js?id=c590f4aa7dc841813b5f40324de65278",
     "/js/formbuilder.js": "/js/formbuilder.js?id=e96956795d0cd57de89fe65578f480f1",
@@ -24,4 +25,10 @@
     "/js/formbuilder.js": "/js/formbuilder.js?id=e9d9764b95a1296de3d999eee21164c6",
     "/css/app.css": "/css/app.css?id=f1433b373e659f6565de4f04d7fd25cf"
 >>>>>>> e53a2881 (Publish Activity:)
+=======
+    "/js/app.js": "/js/app.js?id=203df298258f4846957d01ff588f2cf4",
+    "/js/script.js": "/js/script.js?id=babb8325c2c48764aff6d12ff3b66fb6",
+    "/js/formbuilder.js": "/js/formbuilder.js?id=b622ec8ffbd10381fee531d1f49240f5",
+    "/css/app.css": "/css/app.css?id=2de84e6232a96c0cc6ddf504675d2e5b"
+>>>>>>> b6801c26 (315-activity-publish-backend-new)
 }

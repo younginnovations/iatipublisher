@@ -44,13 +44,21 @@ class DefaultFlowTypeController extends Controller
             $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
             $activity = $this->defaultFlowTypeService->getActivityData($id);
             $form = $this->defaultFlowTypeService->formGenerator($id);
-            $data = ['core' => $element['default_flow_type']['criteria'] ?? '', 'status' => $activity->default_flow_type_element_completed, 'title' => $element['default_flow_type']['label'], 'name' => 'default_flow_type'];
+            $data = [
+                'core' => $element['default_flow_type']['criteria'] ?? '',
+                'status' => $activity->default_flow_type_element_completed,
+                'title' => $element['default_flow_type']['label'],
+                'name' => 'default_flow_type',
+            ];
 
             return view('admin.activity.defaultFlowType.edit', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while rendering default-flow-type form.');
+            return redirect()->route('admin.activities.show', $id)->with(
+                'error',
+                'Error has occurred while rendering default-flow-type form.'
+            );
         }
     }
 
@@ -66,17 +74,28 @@ class DefaultFlowTypeController extends Controller
     {
         try {
             $activityData = $this->defaultFlowTypeService->getActivityData($id);
-            $activityDefaultFlowType = $request->get('default_flow_type') != null ? (int) $request->get('default_flow_type') : null;
+            $activityDefaultFlowType = $request->get('default_flow_type') != null ? (int) $request->get(
+                'default_flow_type'
+            ) : null;
 
             if (!$this->defaultFlowTypeService->update($activityDefaultFlowType, $activityData)) {
-                return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while updating default-flow-type.');
+                return redirect()->route('admin.activities.show', $id)->with(
+                    'error',
+                    'Error has occurred while updating default-flow-type.'
+                );
             }
 
-            return redirect()->route('admin.activities.show', $id)->with('success', 'Default-flow-type updated successfully.');
+            return redirect()->route('admin.activities.show', $id)->with(
+                'success',
+                'Default-flow-type updated successfully.'
+            );
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while updating default-flow-type.');
+            return redirect()->route('admin.activities.show', $id)->with(
+                'error',
+                'Error has occurred while updating default-flow-type.'
+            );
         }
     }
 }

@@ -6,6 +6,17 @@
     <div id="activity">
       <Loader v-if="isLoading"></Loader>
       <PageTitle :show-buttons="state.showButtons" />
+      <Toast
+        v-if="toastData.visibility"
+        :message="toastData.message"
+        :type="toastData.type"
+      />
+      <Toast
+        v-if="toastMessage.message"
+        class="mr-3.5"
+        :message="toastMessage.message"
+        :type="toastMessage.type"
+      />
       <EmptyActivity v-if="isEmpty" />
       <TableLayout
         v-if="!isEmpty"
@@ -20,7 +31,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, reactive, ref } from 'vue';
+import {defineComponent, onMounted, provide, reactive, ref} from 'vue';
 import axios from 'axios';
 
 import EmptyActivity from './partials/EmptyActivity.vue';
@@ -28,6 +39,7 @@ import TableLayout from './partials/TableLayout.vue';
 import Pagination from 'Components/TablePagination.vue';
 import PageTitle from './partials/PageTitle.vue';
 import Loader from 'Components/Loader.vue';
+import Toast from 'Components/Toast.vue';
 
 export default defineComponent({
   name: 'ActivityComponent',
@@ -37,10 +49,40 @@ export default defineComponent({
     Pagination,
     TableLayout,
     Loader,
+    Toast,
   },
-  setup() {
+  props: {
+    toast: {
+      type: Object,
+      required: true,
+    },
+  },
+  setup(props) {
     const activities = reactive({});
     const isLoading = ref(true);
+
+    const toastData = reactive({
+      visibility: false,
+      message: '',
+      type: true,
+    });
+
+    onMounted(() => {
+      if (props.toast.message !== '') {
+        toastData.type = props.toast.type;
+        toastData.visibility = true;
+        toastData.message = props.toast.message;
+      }
+
+      setTimeout(() => {
+        toastData.visibility = false;
+      }, 5000);
+    });
+
+    const toastMessage = reactive({
+      message: '',
+      type: false,
+    });
 
     onMounted(async () => {
       axios.get('/activity/page').then((res) => {
@@ -73,13 +115,15 @@ export default defineComponent({
       });
     }
 
+    provide('toastMessage', toastMessage);
+
     return {
       activities,
       state,
       isEmpty,
       isLoading,
       showOrHide,
-      fetchActivities,
+      fetchActivities, toastData,toastMessage,,
     };
   },
 });

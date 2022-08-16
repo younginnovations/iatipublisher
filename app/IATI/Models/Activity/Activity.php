@@ -6,13 +6,11 @@ namespace App\IATI\Models\Activity;
 
 use App\IATI\Models\Document\Document;
 use App\IATI\Models\Organization\Organization;
-use App\IATI\Models\Validator\IATIValidatorResponse;
 use Database\Factories\IATI\Models\Activity\ActivityFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\HasOne;
 
 /**
  * Class Activity.

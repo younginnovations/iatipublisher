@@ -44,13 +44,21 @@ class LegacyDataController extends Controller
             $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
             $activity = $this->activityLegacyDataService->getActivityData($id);
             $form = $this->activityLegacyDataService->formGenerator($id);
-            $data = ['core' => $element['legacy_data']['criteria'] ?? '', 'status' => $activity->legacy_data_element_completed, 'title' => $element['legacy_data']['label'], 'name' => 'legacy_data'];
+            $data = [
+                'core' => $element['legacy_data']['criteria'] ?? '',
+                'status' => $activity->legacy_data_element_completed,
+                'title' => $element['legacy_data']['label'],
+                'name' => 'legacy_data',
+            ];
 
             return view('admin.activity.legacyData.edit', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while rendering legacy-data form.');
+            return redirect()->route('admin.activities.show', $id)->with(
+                'error',
+                'Error has occurred while rendering legacy-data form.'
+            );
         }
     }
 
@@ -69,14 +77,23 @@ class LegacyDataController extends Controller
             $activityLegacyData = $request->all();
 
             if (!$this->activityLegacyDataService->update($activityLegacyData, $activityData)) {
-                return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while updating legacy-data.');
+                return redirect()->route('admin.activities.show', $id)->with(
+                    'error',
+                    'Error has occurred while updating legacy-data.'
+                );
             }
 
-            return redirect()->route('admin.activities.show', $id)->with('success', 'Legacy-data updated successfully.');
+            return redirect()->route('admin.activities.show', $id)->with(
+                'success',
+                'Legacy-data updated successfully.'
+            );
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while updating legacy-data.');
+            return redirect()->route('admin.activities.show', $id)->with(
+                'error',
+                'Error has occurred while updating legacy-data.'
+            );
         }
     }
 }

@@ -54,6 +54,7 @@ class TransactionObserver
     public function created(Transaction $transaction): void
     {
         $this->updateActivityElementStatus($transaction);
+        $this->resetActivityStatus($transaction);
     }
 
     /**
@@ -67,5 +68,20 @@ class TransactionObserver
     public function updated(Transaction $transaction): void
     {
         $this->updateActivityElementStatus($transaction);
+        $this->resetActivityStatus($transaction);
+    }
+
+    /**
+     * Resets activity status to draft.
+     *
+     * @param $transaction
+     *
+     * @return void
+     */
+    public function resetActivityStatus($transaction)
+    {
+        $activityObject = $transaction->activity;
+        $activityObject->status = 'draft';
+        $activityObject->saveQuietly();
     }
 }

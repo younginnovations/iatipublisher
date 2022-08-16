@@ -18,6 +18,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
 
 /**
  * Class ActivityController.
@@ -81,8 +82,9 @@ class ActivityController extends Controller
     {
         try {
             $languages = getCodeListArray('Languages', 'ActivityArray');
+            $toast = generateToastData();
 
-            return view('admin.activity.index', compact('languages'));
+            return view('admin.activity.index', compact('languages', 'toast'));
         } catch (Exception $e) {
             logger()->error($e->getMessage());
 
@@ -149,7 +151,7 @@ class ActivityController extends Controller
             $transactions = $this->transactionService->getActivityTransactions($activity->id);
             $status = $activity->element_status;
             $progress = $this->activityService->activityPublishingProgress($activity);
-            $coreCompleted = false; //This will be made dynamic later
+            $coreCompleted = isCoreElementCompleted(getCoreElements());
             $iatiValidatorResponse = null;
             $validatorResponse = $this->activityValidatorResponseService->getValidatorResponse($id);
 
@@ -199,26 +201,33 @@ class ActivityController extends Controller
      *
      * @param $activityId
      *
-     * @return RedirectResponse
+     * @return JsonResponse
      */
-    public function destroy($activityId): RedirectResponse
+    public function destroy($activityId): JsonResponse
     {
         try {
             $activity = $this->activityService->getActivity($activityId);
 
             if ($activity->linked_to_iati) {
-                return redirect()->route('admin.activities.show', $activityId)->with('error', 'You need to un-publish this activity before publishing.');
+                Session::put('error', 'Activity must be un-published before deleting.');
+
+                return response()->json(['success' => false, 'message' => 'Activity must be un-published before deleting.']);
             }
 
             if ($this->activityService->deleteActivity($activity)) {
-                return redirect()->route('admin.activities.show', $activityId)->with('error', 'Activity has been deleted successfully.');
+                Session::put('success', 'Activity has been deleted successfully.');
+
+                return response()->json(['success' => true, 'message' => 'Activity has been deleted successfully.']);
             }
 
-            return redirect()->route('admin.activities.show', $activityId)->with('error', 'Error has occurred while deleting activity.');
+            Session::put('error', 'Activity delete failed.');
+
+            return response()->json(['success' => false, 'message' => 'Activity delete failed.']);
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
+            Session::put('error', $e->getMessage());
 
-            return redirect()->route('admin.activities.show', $activityId)->with('error', 'Error has occurred while deleting activity.');
+            return response()->json(['success' => false, 'message' => $e->getMessage()]);
         }
     }
 
