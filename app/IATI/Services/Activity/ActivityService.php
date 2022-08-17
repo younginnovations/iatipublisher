@@ -46,7 +46,7 @@ class ActivityService
      *
      * @return \Illuminate\Database\Eloquent\Collection
      */
-    public function getPaginatedActivities(int $page = 1): Collection | \Illuminate\Pagination\LengthAwarePaginator
+    public function getPaginatedActivities(int $page = 1): Collection|\Illuminate\Pagination\LengthAwarePaginator
     {
         return $this->activityRepository->getActivityForOrganization(Auth::user()->organization_id, $page);
     }
@@ -61,7 +61,7 @@ class ActivityService
     public function store($input): \Illuminate\Database\Eloquent\Model
     {
         $activity_identifier = [
-            'activity_identifier' => $input['activity_identifier'],
+            'activity_identifier'  => $input['activity_identifier'],
             'iati_identifier_text' => Auth::user()->organization->identifier . '-' . $input['activity_identifier'],
         ];
 
@@ -73,9 +73,10 @@ class ActivityService
         ];
 
         return $this->activityRepository->store([
-            'iati_identifier'    => $activity_identifier,
-            'title'         => $activity_title,
-            'org_id'        => Auth::user()->organization_id,
+            'iati_identifier' => $activity_identifier,
+            'title'           => $activity_title,
+            'org_id'          => Auth::user()->organization_id,
+            'element_status'  => getDefaultElementStatus(),
         ]);
     }
 
@@ -101,5 +102,26 @@ class ActivityService
     public function getActivity($id): Activity
     {
         return $this->activityRepository->find($id);
+    }
+
+    /**
+     * Return activity publishing progress in percentage.
+     *
+     * @param $activity
+     *
+     * @return float|int
+     */
+    public function activityPublishingProgress($activity): float|int
+    {
+        $core_elements = getCoreElements();
+        $completed_core_element_count = $activity->organization->reporting_org_complete_status ? 1 : 0;
+
+        foreach ($core_elements as $core_element) {
+            if (array_key_exists($core_element, $activity->element_status) && $activity->element_status[$core_element]) {
+                $completed_core_element_count++;
+            }
+        }
+
+        return ($completed_core_element_count / count($core_elements)) * 100;
     }
 }

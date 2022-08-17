@@ -263,6 +263,16 @@ spec:
             secretKeyRef:
               name: iati-secret
               key: MIX_ENCRYPTION_KEY
+        - name: IATI_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: iati-secret
+              key: IATI_USERNAME
+        - name: IATI_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: iati-secret
+              key: IATI_PASSWORD
         resources:
           limits:
             memory: "500Mi"

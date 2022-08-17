@@ -23,6 +23,7 @@ return new class extends Migration {
             $table->string('address')->nullable();
             $table->string('telephone')->nullable();
             $table->json('reporting_org')->nullable();
+            $table->boolean('reporting_org_complete_status')->nullable()->default(false);
             $table->string('country')->nullable();
             $table->string('logo_url')->nullable();
             $table->string('organization_url')->nullable();

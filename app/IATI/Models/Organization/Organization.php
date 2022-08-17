@@ -5,8 +5,10 @@ declare(strict_types=1);
 namespace App\IATI\Models\Organization;
 
 use App\IATI\Models\Activity\Activity;
+use App\IATI\Services\ElementCompleteService;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * Class Organization.
@@ -14,6 +16,7 @@ use Illuminate\Database\Eloquent\Model;
 class Organization extends Model
 {
     use HasFactory;
+
     /**
      * The attributes that are mass assignable.
      *
@@ -43,12 +46,42 @@ class Organization extends Model
     protected $casts = ['reporting_org' => 'json'];
 
     /**
+     * @var ElementCompleteService
+     */
+    protected ElementCompleteService $elementCompleteService;
+
+    /**
+     * Construct function.
+     *
+     * @param array $attributes
+     */
+    public function __construct(array $attributes = [])
+    {
+        parent::__construct($attributes);
+
+        $this->elementCompleteService = new ElementCompleteService();
+    }
+
+    /**
      * Organisation has many activities.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
-    public function activities(): \Illuminate\Database\Eloquent\Relations\HasMany
+    public function activities(): HasMany
     {
         return $this->hasMany(Activity::class, 'org_id', 'id');
+    }
+
+    /**
+     * Returns complete status of reporting_org.
+     *
+     * @return bool
+     * @throws \JsonException
+     */
+    public function getReportingOrgElementCompletedAttribute(): bool
+    {
+        $this->elementCompleteService->element = 'reporting_org';
+
+        return $this->elementCompleteService->isLevelOneMultiDimensionElementCompleted($this->reporting_org);
     }
 }

@@ -15,9 +15,9 @@ class ActivityFactory extends Factory
     /**
      * Define the model's default state.
      *
-     * @return array<string, mixed>
+     * @return array|mixed[]
      */
-    public function definition()
+    public function definition(): array
     {
         return [
             'iati_identifier' => [
@@ -27,10 +27,9 @@ class ActivityFactory extends Factory
             'title' => [
               [
                   'narrative'           => 'DGGF Track 3',
-                  'en'                  => 'en',
+                  'language'                  => 'en',
               ],
             ],
-            'org_id'    => 1,
         ];
     }
 }

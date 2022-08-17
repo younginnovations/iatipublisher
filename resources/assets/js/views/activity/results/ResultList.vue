@@ -55,9 +55,6 @@
                 <span>AGGREGATION STATUS</span>
               </a>
             </th>
-            <th id="complete-status" scope="col" width="180px">
-              <span>Status</span>
-            </th>
             <th id="action" scope="col" width="177px">
               <span>Action</span>
             </th>
@@ -92,7 +89,6 @@
                   : 'Not Available'
               }}
             </td>
-            <td><span class="text-spring-50">completed</span></td>
             <td>
               <div class="flex">
                 <a

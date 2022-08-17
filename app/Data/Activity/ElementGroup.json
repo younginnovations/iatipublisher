@@ -105,9 +105,6 @@
         "core": false,
         "label": "Default Tied Status"
       },
-      "default_aid_type": {
-        "label": "Default Aid Type"
-      },
       "country_budget_items": {
         "core": false,
         "label": "Country Budget Items"
