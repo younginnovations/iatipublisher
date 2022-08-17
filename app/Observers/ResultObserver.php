@@ -12,6 +12,9 @@ use App\IATI\Services\ElementCompleteService;
  */
 class ResultObserver
 {
+    /**
+     * @var ElementCompleteService
+     */
     protected ElementCompleteService $elementCompleteService;
 
     /**

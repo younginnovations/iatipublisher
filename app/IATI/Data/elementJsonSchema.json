@@ -878,7 +878,7 @@
         "type": "select",
         "choices": "Activity/FlowType.json",
         "required": true,
-        "criteria": "",
+        "criteria": "mandatory",
         "hover_text": "A code from the OECD DAC CRS “Type of flow” codelist. This attribute is required. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/default-flow-type/'>For more information</a>",
         "help_text": ""
       }
@@ -893,7 +893,7 @@
         "label": "@code",
         "type": "select",
         "required": true,
-        "criteria": "",
+        "criteria": "mandatory",
         "choices": "Activity/FinanceType.json",
         "hover_text": "A code from the OECD DAC CRS “Type of finance” codelist. This attribute is required. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/default-finance-type/'>For more information</a>"
       }
@@ -917,7 +917,7 @@
         "label": "@vocabulary",
         "type": "select",
         "choices": "Activity/AidTypeVocabulary.json",
-        "required": true,
+        "required": false,
         "criteria": "",
         "hover_text": "A code for the vocabulary aid-type classifications. If omitted the AidType (OECD DAC) codelist is assumed. The code must be a valid value in the AidTypeVocabulary codelist. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/default-aid-type/'>For more information</a>",
         "help_text": ""
@@ -993,7 +993,7 @@
         "type": "select",
         "choices": "Activity/TiedStatus.json",
         "required": true,
-        "criteria": "",
+        "criteria": "mandatory",
         "hover_text": "An IATI code interpreting the usage of Columns 36-38 of the CRS++ reporting format. (Amount tied, Amount partially untied, Amount tied). <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/default-tied-status/'>For more information</a>",
         "help_text": ""
       }
@@ -1134,7 +1134,7 @@
         "help_text": "",
         "parent": {
           "name": "vocabulary",
-          "value": ["1-2", "2-1"]
+          "value": ["1-2", "2-1", "99"]
         }
       }
     },
@@ -1446,8 +1446,8 @@
             "label": "@code",
             "type": "select",
             "choices": "Activity/Language.json",
-            "required": false,
-            "criteria": "recommended",
+            "required": true,
+            "criteria": "mandatory",
             "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/description/narrative/'>For more information</a>",
             "help_text": ""
           }
@@ -1463,7 +1463,7 @@
             "name": "date",
             "label": "@iso-date",
             "type": "date",
-            "required": false,
+            "required": true,
             "criteria": "mandatory",
             "hover_text": "The date of publication of the document that is being linked to. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/document-link/document-date/'>For more information</a>",
             "help_text": ""
@@ -1750,8 +1750,8 @@
             "label": "@code",
             "type": "select",
             "choices": "Activity/GeographicLocationReach.json",
-            "required": false,
-            "criteria": "",
+            "required": true,
+            "criteria": "mandatory",
             "hover_text": "An IATI code for the geographic scope of the activity. This attribute is required. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/location/location-reach/'>For more information</a>",
             "help_text": ""
           }
@@ -1770,7 +1770,7 @@
             "label": "@vocabulary",
             "type": "select",
             "choices": "Activity/GeographicVocabulary.json",
-            "required": false,
+            "required": true,
             "criteria": "mandatory",
             "hover_text": "An IATI code for a recognised gazetteer or administrative boundary repository. This attribute is required. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/location/location-id/'>For more information</a>",
             "help_text": ""
@@ -1779,7 +1779,7 @@
             "name": "code",
             "label": "@code",
             "type": "text",
-            "required": false,
+            "required": true,
             "criteria": "mandatory",
             "hover_text": "A code from the gazetteer or administrative boundary repository specified by the vocabulary. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/location/location-id/'>For more information</a>",
             "help_text": ""
@@ -1798,8 +1798,8 @@
             "name": "narrative",
             "label": "narrative",
             "type": "textarea",
-            "required": true,
-            "criteria": "mandatory",
+            "required": false,
+            "criteria": "",
             "add_more": true,
             "attr": {
               "row": 4
@@ -1903,7 +1903,7 @@
             "type": "select",
             "choices": "Activity/GeographicVocabulary.json",
             "required": true,
-            "criteria": "",
+            "criteria": "mandatory",
             "hover_text": "An IATI code for a recognised administrative boundary repository. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/location/administrative/'>For more information</a>",
             "help_text": ""
           },
@@ -1911,8 +1911,9 @@
             "name": "code",
             "label": "@code",
             "type": "select",
-            "choices": "Activity/Country.json",            "required": true,
-            "criteria": "",
+            "choices": "Activity/Country.json",
+            "required": true,
+            "criteria": "mandatory",
             "hover_text": "The code for the administrative area being reported from the vocabulary specified. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/location/administrative/'>For more information</a>",
             "help_text": ""
           },
@@ -1938,7 +1939,7 @@
             "name": "srs_name",
             "label": "@srsName",
             "type": "text",
-            "required": false,
+            "required": true,
             "criteria": "mandatory",
             "hover_text": "The name of the spatial reference system used by the coordinates. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/location/point/'>For more information</a>",
             "help_text": ""
@@ -1984,8 +1985,8 @@
             "label": "@code",
             "type": "select",
             "choices": "Activity/GeographicExactness.json",
-            "required": false,
-            "criteria": "",
+            "required": true,
+            "criteria": "mandatory",
             "hover_text": "A code from the Geographic Exactness Codelist. This attribute is required. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/location/exactness/'>For more information</a>",
             "help_text": ""
           }
@@ -2003,7 +2004,7 @@
             "label": "@code",
             "type": "select",
             "choices": "Activity/GeographicLocationClass.json",
-            "required": false,
+            "required": true,
             "criteria": "mandatory",
             "hover_text": "A code from the Location Class codelist. This attribute is required. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/location/location-class/'>For more information</a>",
             "help_text": ""
@@ -2022,7 +2023,7 @@
             "label": "@code",
             "type": "select",
             "choices": "Activity/LocationType.json",
-            "required": false,
+            "required": true,
             "criteria": "mandatory",
             "hover_text": "A feature designation code form the authorised list (maintained by the US National Geospatial-Intelligence Agency). <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/location/feature-designation/'>For more information</a>",
             "help_text": ""
@@ -2266,7 +2267,7 @@
         "name": "ref",
         "label": "@ref",
         "type": "text",
-        "required": true,
+        "required": false,
         "criteria": "recommended",
         "hover_text": "Machine-readable identification string for the organisation issuing the report. Must be in the format {RegistrationAgency}-{RegistrationNumber} where {RegistrationAgency} is a valid code in the Organisation Registration Agency code list and {RegistrationNumber} is a valid identifier issued by the {RegistrationAgency}. If this is not present then the narrative MUST contain the name of the organisation. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/participating-org/'>For more information</a>",
         "help_text": ""
@@ -2276,7 +2277,7 @@
         "label": "@type",
         "type": "select",
         "choices": "Organization/OrganizationType.json",
-        "required": true,
+        "required": false,
         "criteria": "recommended",
         "hover_text": "The type of organisation issuing the report. See IATI codelist for values.</b> This value must be of type xsd:string. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/participating-org/'>For more information</a>",
         "help_text": ""
@@ -2536,7 +2537,7 @@
             "name": "url",
             "label": "@url",
             "type": "text",
-            "required": false,
+            "required": true,
             "criteria": "mandatory",
             "hover_text": "The target URL of the external document, e.g. http://www.example.org/doc.odt.<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/document-link/'>For more information.</a>",
             "help_text": ""
@@ -2546,7 +2547,7 @@
             "label": "@format",
             "type": "select",
             "choices": "Activity/FileFormat.json",
-            "required": false,
+            "required": true,
             "criteria": "mandatory",
             "hover_text": "An IANA code for the MIME type of the document being referenced, e.g. “application/pdf”. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/document-link/'>For more information</a>",
             "help_text": ""
@@ -2563,7 +2564,7 @@
                 "label": "narrative",
                 "type": "textarea",
                 "required": false,
-                "criteria": "mandatory",
+                "criteria": "",
                 "add_more": true,
                 "attr": {
                   "row": 4
@@ -2630,7 +2631,7 @@
                 "label": "@code",
                 "type": "select",
                 "choices": "Activity/DocumentCategory.json",
-                "required": false,
+                "required": true,
                 "criteria": "mandatory",
                 "hover_text": "An IATI code defining the category of the document. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/document-link/category/'>For more information</a>",
                 "help_text": ""
@@ -2649,7 +2650,7 @@
                 "label": "@code",
                 "type": "select",
                 "choices": "Activity/Language.json",
-                "required": false,
+                "required": true,
                 "criteria": "recommended",
                 "hover_text": "ISO 639-1 language code. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/document-link/language/'>For more information</a>",
                 "help_text": ""
@@ -2666,7 +2667,7 @@
                 "name": "date",
                 "label": "@iso-date",
                 "type": "date",
-                "required": false,
+                "required": true,
                 "criteria": "mandatory",
                 "hover_text": "The date of publication of the document that is being linked to. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/document-link/document-date/'>For more information</a>",
                 "help_text": ""
@@ -2687,7 +2688,7 @@
             "label": "@vocabulary",
             "type": "select",
             "choices": "Activity/ResultVocabulary.json",
-            "required": false,
+            "required": true,
             "criteria": "mandatory",
             "hover_text": "A code for the results framework vocabulary. The code must be a valid value in the ResultVocabulary codelist. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/reference/'>For more information</a>",
             "help_text": ""
@@ -2696,7 +2697,7 @@
             "name": "code",
             "label": "@code",
             "type": "text",
-            "required": false,
+            "required": true,
             "criteria": "mandatory",
             "hover_text": "A code from the codelist idenfitified in vocabulary that identifies a results framework. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/reference/'>For more information</a>",
             "help_text": ""
@@ -2835,7 +2836,7 @@
             "name": "url",
             "label": "@url",
             "type": "text",
-            "required": false,
+            "required": true,
             "criteria": "mandatory",
             "hover_text": "The target URL of the external document, e.g. http://www.example.org/doc.odt. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/indicator/document-link/'>For more information.</a>",
             "help_text": ""
@@ -2845,7 +2846,7 @@
             "label": "@format",
             "type": "select",
             "choices": "Activity/FileFormat.json",
-            "required": false,
+            "required": true,
             "criteria": "mandatory",
             "hover_text": "An IANA code for the MIME type of the document being referenced, e.g. “application/pdf”. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/indicator/document-link/'>For more information</a>",
             "help_text": ""
@@ -2948,7 +2949,7 @@
                 "label": "@code",
                 "type": "select",
                 "choices": "Activity/Language.json",
-                "required": false,
+                "required": true,
                 "criteria": "recommended",
                 "hover_text": "ISO 639-1 language code. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/indicator/document-link/language/'>For more information</a>",
                 "help_text": ""
@@ -2965,7 +2966,7 @@
                 "name": "date",
                 "label": "@iso-date",
                 "type": "date",
-                "required": false,
+                "required": true,
                 "criteria": "mandatory",
                 "hover_text": "The date of publication of the document that is being linked to. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/indicator/document-link/document-date/'>For more information</a>",
                 "help_text": ""
@@ -3230,7 +3231,7 @@
                     "label": "@code",
                     "type": "select",
                     "choices": "Activity/Language.json",
-                    "required": false,
+                    "required": true,
                     "criteria": "recommended",
                     "hover_text": "ISO 639-1 language code. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/indicator/baseline/document-link/language/'>For more information</a>",
                     "help_text": ""
@@ -3247,7 +3248,7 @@
                     "name": "date",
                     "label": "@iso-date",
                     "type": "date",
-                    "required": false,
+                    "required": true,
                     "criteria": "mandatory",
                     "hover_text": "The date of publication of the document that is being linked to. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/indicator/baseline/document-link/document-date/'>For more information</a>",
                     "help_text": ""
@@ -3266,7 +3267,7 @@
                 "name": "reference",
                 "label": "@ref",
                 "type": "text",
-                "required": false,
+                "required": true,
                 "criteria": "",
                 "hover_text": "A cross-reference to the internal reference assigned to a defined location: iati-activity/location/@ref. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/indicator/baseline/location/'>For more information</a>",
                 "help_text": ""
@@ -3516,7 +3517,7 @@
                     "label": "@code",
                     "type": "select",
                     "choices": "Activity/Language.json",
-                    "required": false,
+                    "required": true,
                     "criteria": "recommended",
                     "hover_text": "ISO 639-1 language code. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/indicator/period/target/document-link/language/'>For more information</a>",
                     "help_text": ""
@@ -3533,7 +3534,7 @@
                     "name": "date",
                     "label": "@iso-date",
                     "type": "date",
-                    "required": false,
+                    "required": true,
                     "criteria": "mandatory",
                     "hover_text": "The date of publication of the document that is being linked to. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/indicator/period/target/document-link/document-date/'>For more information</a>",
                     "help_text": ""
@@ -3761,7 +3762,7 @@
                     "label": "@code",
                     "type": "select",
                     "choices": "Activity/Language.json",
-                    "required": false,
+                    "required": true,
                     "criteria": "recommended",
                     "hover_text": "ISO 639-1 language code. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/indicator/period/actual/document-link/language/'>For more information</a>",
                     "help_text": ""
@@ -3778,7 +3779,7 @@
                     "name": "date",
                     "label": "@iso-date",
                     "type": "date",
-                    "required": false,
+                    "required": true,
                     "criteria": "mandatory",
                     "hover_text": "The date of publication of the document that is being linked to. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/indicator/period/actual/document-link/document-date/'>For more information</a>",
                     "help_text": ""

@@ -12,6 +12,9 @@ use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
+/**
+ * Class Indicator.
+ */
 class RedirectActivity
 {
     public function handle(Request $request, Closure $next)
