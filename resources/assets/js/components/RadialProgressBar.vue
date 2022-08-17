@@ -23,8 +23,15 @@ export default defineComponent({
   components: {
     RadialProgressBar,
   },
-  setup() {
-    const completedPercent = ref(75);
+  props:{
+    percent : {
+      type: Number,
+      required: false,
+      default:0
+    }
+  },
+  setup(props) {
+    const completedPercent = ref(props.percent);
     const totalPercent = ref(100);
 
     return {

@@ -137,6 +137,7 @@
             <RadialProgressBar
               class="mb-3 h-20 text-8xl"
               :is-percent="true"
+              :percent = "progress"
             ></RadialProgressBar>
             <span>Fill core elements to get 100% score</span>
           </div>
@@ -270,7 +271,7 @@ import { useToggle } from '@vueuse/core';
 // components
 import { Result } from './elements/Index';
 import HoverText from 'Components/HoverText.vue';
-import RadialProgressBar from 'Components/RadialProgressBar.vue';
+import RadialProgressBar from '../../components/RadialProgressBar.vue';
 import Modal from 'Components/PopupModal.vue';
 import Publish from 'Components/sections/PublishButton.vue';
 import UnPublish from 'Components/sections/UnPublishButton.vue';
@@ -295,6 +296,7 @@ export default defineComponent({
     Errors,
     UnPublish,
     DeleteButton,
+    RadialProgressBar
   },
   props: {
     elements: {
