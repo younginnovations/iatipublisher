@@ -12,11 +12,20 @@
                 >
                 <span class="mx-4 separator"> / </span>
                 <div class="breadcrumb__title">
-                  <span class="overflow-hidden breadcrumb__title last text-n-30"
-                    >{{ organization.name ? (organization.name['0'].narrative??'Untitled') :'Untitled' }}</span
+                  <span
+                    class="overflow-hidden breadcrumb__title last text-n-30"
+                    >{{
+                      organization.name
+                        ? organization.name['0'].narrative ?? 'Untitled'
+                        : 'Untitled'
+                    }}</span
                   >
                   <span class="ellipsis__title--hover w-[calc(100%_+_35px)]">
-                    {{ organization.name ? (organization.name['0'].narrative??'Untitled') : 'Untitled' }}
+                    {{
+                      organization.name
+                        ? organization.name['0'].narrative ?? 'Untitled'
+                        : 'Untitled'
+                    }}
                   </span>
                 </div>
               </div>
@@ -29,8 +38,14 @@
               </a>
             </div>
             <div>
-              <h4 class="ellipsis__title relative mr-4 text-2xl font-bold">
-                <span class="ellipsis__title overflow-hidden"> {{ organization.name ? (organization.name['0'].narrative??'Untitled') : 'Untitled' }} </span>
+              <h4 class="relative mr-4 text-2xl font-bold ellipsis__title">
+                <span class="overflow-hidden ellipsis__title">
+                  {{
+                    organization.name
+                      ? organization.name['0'].narrative ?? 'Untitled'
+                      : 'Untitled'
+                  }}
+                </span>
               </h4>
             </div>
           </div>
@@ -232,7 +247,7 @@
               />
             </div>
             <RadialProgressBar
-              class="mb-3 h-20 text-8xl"
+              class="h-20 mb-3 text-8xl"
               :is-percent="true"
             ></RadialProgressBar>
             <span>Fill core elements to get 100% score</span>
@@ -275,8 +290,8 @@
           :data="elementProps"
         />
       </aside>
-      <div class="activities__content overflow-hidden">
-        <div class="mb-3 inline-flex flex-wrap gap-2">
+      <div class="overflow-hidden activities__content">
+        <div class="inline-flex flex-wrap gap-2 mb-3">
           <a
             v-for="(post, key, index) in groupedData"
             :key="index"
@@ -296,24 +311,13 @@
             </button>
           </a>
         </div>
-        <div class="activities__content--elements -mx-3 flex flex-wrap">
+        <div class="flex flex-wrap -mx-3 activities__content--elements">
           <template v-for="(post, key, index) in groupedData" :key="index">
+            <div class="pt-3 text-sm">
               <div :id="key" class="ml-4 uppercase">{{ key }}</div>
-            <div
-              class="
-                elements-title
-                relative
-                mx-3
-                mb-1
-                mt-3
-                flex
-                w-full
-                items-center
-                text-sm
-                uppercase
-                text-n-40
-              "
-            >
+              <div
+                class="relative flex items-center w-full mx-3 mt-3 mb-1 text-sm uppercase elements-title text-n-40"
+              ></div>
             </div>
             <template v-for="(element, name, i) in post.elements" :key="i">
               <OrganisationElementsDetail
@@ -330,9 +334,7 @@
                 :types="types"
                 :tooltip="elements[name]['hover_text']"
                 :width="
-                  String(name) === 'organisation_identifier'
-                    ? ''
-                    : 'full'
+                  String(name) === 'organisation_identifier' ? '' : 'full'
                 "
               />
             </template>
@@ -398,14 +400,12 @@ export default defineComponent({
       type: true,
     });
 
-    console.log('here you go', props);
     const [publishValue, publishToggle] = useToggle();
     const [unpublishValue, unpublishToggle] = useToggle();
     const [deleteValue, deleteToggle] = useToggle();
     const [downloadValue, downloadToggle] = useToggle();
 
     onMounted(() => {
-      console.log('on mounted');
       if (props.toast.message !== '') {
         toastData.type = props.toast.type;
         toastData.visibility = true;
@@ -453,7 +453,7 @@ export default defineComponent({
 
     // generating available categories of elements
     Object.keys(groupedData).map((key) => {
-      if (Object.prototype.hasOwnProperty.call(organizationData,key)) {
+      if (Object.prototype.hasOwnProperty.call(organizationData, key)) {
         groupedData[key]['status'] = 'enabled';
       } else {
         groupedData[key]['status'] = 'disabled';

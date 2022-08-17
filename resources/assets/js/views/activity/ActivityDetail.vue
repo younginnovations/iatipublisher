@@ -11,12 +11,11 @@
               </a>
               <span class="mx-4 separator"> / </span>
               <div class="breadcrumb__title">
-                <span
-                  class="overflow-hidden breadcrumb__title last text-n-30"
-                  >{{ pageTitle ?? 'Untitled' }}</span
-                >
+                <span class="overflow-hidden breadcrumb__title last text-n-30">{{
+                  pageTitle ?? "Untitled"
+                }}</span>
                 <span class="ellipsis__title--hover w-[calc(100%_+_35px)]">{{
-                  pageTitle ? pageTitle : 'Untitled'
+                  pageTitle ? pageTitle : "Untitled"
                 }}</span>
               </div>
             </div>
@@ -35,10 +34,10 @@
             <div class="inline-flex flex-wrap grow">
               <h4 class="relative text-2xl font-bold ellipsis__title">
                 <span class="overflow-hidden ellipsis__title">
-                  {{ pageTitle ? pageTitle : 'Untitled' }}
+                  {{ pageTitle ? pageTitle : "Untitled" }}
                 </span>
                 <span class="ellipsis__title--hover">
-                  {{ pageTitle ? pageTitle : 'Untitled' }}
+                  {{ pageTitle ? pageTitle : "Untitled" }}
                 </span>
               </h4>
             </div>
@@ -59,10 +58,7 @@
               <DeleteButton />
 
               <!-- Unpublish Activity -->
-              <UnPublish
-                v-if="store.state.unPublished"
-                :activity-id="activityProps.id"
-              />
+              <UnPublish v-if="store.state.unPublished" :activity-id="activityProps.id" />
 
               <!-- Publish Activity -->
               <Publish
@@ -101,10 +97,7 @@
                 position="right"
               />
             </div>
-            <RadialProgressBar
-              class="mb-3 h-20 text-8xl"
-              :is-percent="true"
-            ></RadialProgressBar>
+            <ProgressBar :percent="progress" class="mb-3" />
             <span>Fill core elements to get 100% score</span>
           </div>
           <div class="activities__card elements">
@@ -129,7 +122,7 @@
             </div>
             <div class="flex justify-between">
               <div class="flex items-center space-x-1">
-                <svg-vue icon="double-tick" class="text-spring-50"></svg-vue>
+                <svg-vue icon="double-tick" />
                 <span>Completed</span>
               </div>
               <HoverText
@@ -140,11 +133,7 @@
             </div>
           </div>
         </div>
-        <Elements
-          :activity-id="activity.id"
-          :data="elementProps"
-          class="sticky top-0"
-        />
+        <Elements :activity-id="activity.id" :data="elementProps" class="sticky top-0" />
       </aside>
       <div class="activities__content">
         <div class="inline-flex flex-wrap gap-2 mb-3">
@@ -223,30 +212,31 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, reactive, toRefs, provide } from 'vue';
-import { useToggle } from '@vueuse/core';
+import { defineComponent, onMounted, reactive, toRefs, provide } from "vue";
+import { useToggle } from "@vueuse/core";
 
 // components
-import { Result } from './elements/Index';
-import HoverText from 'Components/HoverText.vue';
-import RadialProgressBar from 'Components/RadialProgressBar.vue';
-import Publish from 'Components/sections/PublishButton.vue';
-import UnPublish from 'Components/sections/UnPublishButton.vue';
-import DeleteButton from 'Components/sections/DeleteButton.vue';
-import Errors from 'Components/sections/StickyErrors.vue';
-import Toast from 'Components/Toast.vue';
+import { Result } from "./elements/Index";
+import HoverText from "Components/HoverText.vue";
+import ProgressBar from "Components/RadialProgressBar.vue";
+import Publish from "Components/sections/PublishButton.vue";
+import UnPublish from "Components/sections/UnPublishButton.vue";
+import DeleteButton from "Components/sections/DeleteButton.vue";
+import Errors from "Components/sections/StickyErrors.vue";
+import Toast from "Components/Toast.vue";
 
 // Activity Components
-import Elements from 'Activity/partials/ActivitiesElements.vue';
-import ActivityElement from 'Activity/partials/ActivityElement.vue';
-import PreviouslyPublished from 'Components/status/PreviouslyPublished.vue';
+import Elements from "Activity/partials/ActivitiesElements.vue";
+import ActivityElement from "Activity/partials/ActivityElement.vue";
+import PreviouslyPublished from "Components/status/PreviouslyPublished.vue";
 
 // Vuex Store
-import { useStore } from 'Store/activities/show';
+import { useStore } from "Store/activities/show";
 
 export default defineComponent({
   components: {
     HoverText,
+    ProgressBar,
     Elements,
     ActivityElement,
     Result,
@@ -310,7 +300,7 @@ export default defineComponent({
 
     const toastData = reactive({
       visibility: false,
-      message: '',
+      message: "",
       type: true,
     });
 
@@ -321,7 +311,7 @@ export default defineComponent({
     const [downloadValue, downloadToggle] = useToggle();
 
     onMounted(() => {
-      if (props.toast.message !== '') {
+      if (props.toast.message !== "") {
         toastData.type = props.toast.type;
         toastData.visibility = true;
         toastData.message = props.toast.message;
@@ -336,6 +326,7 @@ export default defineComponent({
      *
      * this data is created using props.element_group and props.activity
      */
+
     const { groups, activity, elements, status, transactions } = toRefs(props),
       groupedData = groups.value,
       activityProps = activity.value,
@@ -352,14 +343,14 @@ export default defineComponent({
     Object.keys(activities).map((key) => {
       let flag = false;
 
-      Object.keys(activities[key]['elements']).map((k) => {
+      Object.keys(activities[key]["elements"]).map((k) => {
         if (
-          typeof activityProps[k] === 'number' ||
-          (typeof activityProps[k] === 'object' &&
+          typeof activityProps[k] === "number" ||
+          (typeof activityProps[k] === "object" &&
             activityProps[k] &&
             Object.keys(activityProps[k]).length)
         ) {
-          activities[key]['elements'][k]['content'] = activityProps[k];
+          activities[key]["elements"][k]["content"] = activityProps[k];
           flag = true;
         } else {
           delete activities[key][k];
@@ -374,9 +365,9 @@ export default defineComponent({
     // generating available categories of elements
     Object.keys(groupedData).map((key) => {
       if (Object.prototype.hasOwnProperty.call(activities, key)) {
-        groupedData[key]['status'] = 'enabled';
+        groupedData[key]["status"] = "enabled";
       } else {
-        groupedData[key]['status'] = 'disabled';
+        groupedData[key]["status"] = "disabled";
       }
     });
 
@@ -388,20 +379,20 @@ export default defineComponent({
      * @returns object
      */
     Object.keys(elementProps).map((key) => {
-      elementProps[key]['completed'] = statusProps[key] ?? false;
-      elementProps[key]['has_data'] = 0;
+      elementProps[key]["completed"] = statusProps[key] ?? false;
+      elementProps[key]["has_data"] = 0;
 
       if (key in activityProps) {
         if (
-          (typeof activityProps[key] === 'object' ||
-            typeof activityProps[key] === 'number') &&
+          (typeof activityProps[key] === "object" ||
+            typeof activityProps[key] === "number") &&
           activityProps[key]
         ) {
           if (
             Object.keys(activityProps[key]).length > 0 ||
             activityProps[key].toString.length > 0
           ) {
-            elementProps[key]['has_data'] = 1;
+            elementProps[key]["has_data"] = 1;
           }
         }
       }
@@ -410,9 +401,9 @@ export default defineComponent({
     /**
      * Finding current language - activity title
      */
-    let pageTitle = '';
+    let pageTitle = "";
     const found = activityProps.title.find((e: { language: string }) => {
-      const currentLanguage = 'en';
+      const currentLanguage = "en";
       return e.language === currentLanguage;
     });
 
@@ -424,11 +415,11 @@ export default defineComponent({
     }
 
     function formatTitle(title: string) {
-      return title.replace(/_/gi, ' ');
+      return title.replace(/_/gi, " ");
     }
 
     const toastMessage = reactive({
-      message: '',
+      message: "",
       type: false,
     });
 
@@ -445,22 +436,22 @@ export default defineComponent({
     });
 
     // vue provides
-    provide('types', types.value);
-    provide('coreCompleted', coreCompleted.value);
-    provide('activityID', activity.value.id);
-    provide('toastMessage', toastMessage);
+    provide("types", types.value);
+    provide("coreCompleted", coreCompleted.value);
+    provide("activityID", activity.value.id);
+    provide("toastMessage", toastMessage);
 
     /**
      * Breadcrumb data
      */
     const breadcrumbData = [
       {
-        title: 'Your Activities',
-        link: '/activities',
+        title: "Your Activities",
+        link: "/activities",
       },
       {
         title: pageTitle,
-        link: '',
+        link: "",
       },
     ];
 
@@ -471,21 +462,19 @@ export default defineComponent({
     const validationResult = iatiValidatorResponse.value;
 
     if (validationResult && validationResult.errors.length > 0) {
-      store.dispatch('updatePublishErrors', validationResult.errors);
+      store.dispatch("updatePublishErrors", validationResult.errors);
     }
 
     if (publishStatus.linked_to_iati) {
-      store.dispatch('updateUnPublished', true);
+      store.dispatch("updateUnPublished", true);
     } else {
-      store.dispatch('updateUnPublished', false);
+      store.dispatch("updateUnPublished", false);
     }
 
-    if (
-      !(publishStatus.linked_to_iati && publishStatus.status === 'published')
-    ) {
-      store.dispatch('updateShowPublished', true);
+    if (!(publishStatus.linked_to_iati && publishStatus.status === "published")) {
+      store.dispatch("updateShowPublished", true);
     } else {
-      store.dispatch('updateShowPublished', false);
+      store.dispatch("updateShowPublished", false);
     }
 
     return {
@@ -497,6 +486,7 @@ export default defineComponent({
       downloadToggle,
       toastData,
       elementProps,
+      props,
       formatTitle,
       pageTitle,
       toastMessage,
