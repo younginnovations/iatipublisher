@@ -116,8 +116,12 @@ Route::name('admin.')->group(function () {
 
     Route::resource('activity.transactions', TransactionController::class)->parameters(['activity' => 'id']);
     Route::get('/activity/{id}/transactions/page/{page?}', [App\Http\Controllers\Admin\Activity\TransactionController::class, 'getTransaction'])->name('transactions.paginate');
-    Route::resource('activity.result', ResultController::class)->parameters(['activity' => 'id']);
-    Route::get('/activity/{id}/result/page/{page?}', [ResultController::class, 'getResult'])->name('results.paginate');
+
+    Route::group(['middleware' => 'RedirectResult'], function () {
+        Route::resource('activity.result', ResultController::class)->parameters(['activity' => 'id']);
+        Route::get('/activity/{id}/result/page/{page?}', [ResultController::class, 'getResult'])->name('results.paginate');
+    });
+
     Route::resource('result.indicator', IndicatorController::class)->parameters(['result' => 'id']);
     Route::get('/result/{id}/indicator/page/{page?}', [IndicatorController::class, 'getIndicator'])->name('indicator.paginate');
     Route::resource('indicator.period', PeriodController::class)->parameters(['indicator' => 'id']);
