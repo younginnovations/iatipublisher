@@ -12,7 +12,7 @@
           :type="toastData.type"
         />
       </div>
-      <a :href="`${activityLink}/transactions/create`">
+      <a :href="`${activityLink}/transaction/create`">
         <Btn text="Add Transaction" icon="plus" type="primary" />
       </a>
     </PageTitle>
@@ -66,17 +66,17 @@
                 <span>Transaction Date</span>
               </a>
             </th>
-            <th id="status" scope="col">
-              <a
-                class="transition duration-500 text-n-50 hover:text-spring-50"
-                href="#"
-              >
-                <span class="sorting-indicator descending">
-                  <svg-vue icon="descending-arrow" />
-                </span>
-                <span>Status</span>
-              </a>
-            </th>
+<!--            <th id="status" scope="col">-->
+<!--              <a-->
+<!--                class="transition duration-500 text-n-50 hover:text-spring-50"-->
+<!--                href="#"-->
+<!--              >-->
+<!--                <span class="sorting-indicator descending">-->
+<!--                  <svg-vue icon="descending-arrow" />-->
+<!--                </span>-->
+<!--                <span>Status</span>-->
+<!--              </a>-->
+<!--            </th>-->
             <th id="action" scope="col">
               <a
                 class="transition duration-500 text-n-50 hover:text-spring-50"
@@ -93,7 +93,7 @@
         <tbody>
           <tr v-for="(trans, t, index) in transactionsData.data" :key="index">
             <td>
-              <a :href="`${activityLink}/transactions/${trans.id}`">
+              <a :href="`${activityLink}/transaction/${trans.id}`">
                 <span>{{ trans.transaction.reference ?? '- - -' }}</span>
               </a>
             </td>
@@ -119,12 +119,12 @@
                 }}
               </span>
             </td>
-            <td><span class="text-spring-50">completed</span></td>
+<!--            <td><span class="text-spring-50">completed</span></td>-->
             <td>
               <div class="flex text-n-40">
                 <a
                   class="mr-6"
-                  :href="`${activityLink}/transactions/${trans.id}/edit`"
+                  :href="`${activityLink}/transaction/${trans.id}/edit`"
                 >
                   <svg-vue icon="edit" class="text-xl"></svg-vue>
                 </a>

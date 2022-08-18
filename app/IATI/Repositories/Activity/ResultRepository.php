@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\IATI\Repositories\Activity;
 
-use App\IATI\Models\Activity\Activity;
 use App\IATI\Models\Activity\Result;
 use App\IATI\Repositories\Repository;
 use Illuminate\Database\Eloquent\Collection;
@@ -28,6 +27,7 @@ class ResultRepository extends Repository
      * Returns results of specific activity.
      *
      * @param $activityId
+     *
      * @return array
      */
     public function getActivityResults($activityId): array
@@ -38,12 +38,12 @@ class ResultRepository extends Repository
     /**
      * Returns paginated results.
      *
-     * @param $activityId
+     * @param int $activityId
      * @param int $page
      *
      * @return Collection|LengthAwarePaginator
      */
-    public function getPaginatedResult($activityId, int $page = 1): Collection | LengthAwarePaginator
+    public function getPaginatedResult(int $activityId, int $page = 1): Collection|LengthAwarePaginator
     {
         return $this->model->where('activity_id', $activityId)->orderBy('created_at', 'DESC')->paginate(10, ['*'], 'result', $page);
     }
@@ -52,6 +52,7 @@ class ResultRepository extends Repository
      * Create a new ActivityResult.
      *
      * @param array $resultData
+     *
      * @return Model
      */
     public function create(array $resultData): Model

@@ -70,12 +70,12 @@ class ResultController extends Controller
     /**
      * Returns paginated results.
      *
-     * @param     $activityId
+     * @param int $activityId
      * @param int $page
      *
      * @return JsonResponse
      */
-    public function getPaginatedResults($activityId, int $page = 1): JsonResponse
+    public function getPaginatedResults(int $activityId, int $page = 1): JsonResponse
     {
         try {
             $result = $this->resultService->getPaginatedResult($activityId, $page);

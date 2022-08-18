@@ -41,12 +41,12 @@ class ResultService
     /**
      * Returns paginated results.
      *
-     * @param $activityId
-     * @param $page
+     * @param int $activityId
+     * @param int $page
      *
      * @return LengthAwarePaginator|Collection
      */
-    public function getPaginatedResult($activityId, $page): LengthAwarePaginator|Collection
+    public function getPaginatedResult(int $activityId, int $page): LengthAwarePaginator|Collection
     {
         return $this->resultRepository->getPaginatedResult($activityId, $page);
     }

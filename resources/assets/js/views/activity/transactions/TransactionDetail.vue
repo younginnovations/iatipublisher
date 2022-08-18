@@ -14,7 +14,7 @@
       </div>
       <Btn
         text="Edit Transaction"
-        :link="`${activityLink}/transactions/${transaction.id}/edit`"
+        :link="`${activityLink}/transaction/${transaction.id}/edit`"
         icon="edit"
       />
     </PageTitle>
@@ -42,7 +42,7 @@
             <TransactionElement
               :data="post"
               :element-name="key.toString()"
-              :edit-url="`/activity/${transaction.activity_id}/transactions/${transaction.id}`"
+              :edit-url="`/activity/${transaction.activity_id}/transaction/${transaction.id}`"
               :width="
                 key.toString() === 'value' ||
                 key.toString() === 'transaction_type' ||

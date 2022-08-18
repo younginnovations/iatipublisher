@@ -6,6 +6,7 @@ use App\IATI\Services\Activity\ActivityService;
 use App\IATI\Services\Activity\IndicatorService;
 use App\IATI\Services\Activity\PeriodService;
 use App\IATI\Services\Activity\ResultService;
+use App\IATI\Services\Activity\TransactionService;
 use App\Providers\RouteServiceProvider;
 use Closure;
 use Illuminate\Http\Request;
@@ -36,17 +37,29 @@ class RedirectActivity
     private PeriodService $periodService;
 
     /**
-     * @param ActivityService  $activityService
-     * @param ResultService    $resultService
-     * @param IndicatorService $indicatorService
-     * @param PeriodService    $periodService
+     * @var TransactionService
      */
-    public function __construct(ActivityService $activityService, ResultService $resultService, IndicatorService $indicatorService, PeriodService $periodService)
-    {
+    private TransactionService $transactionService;
+
+    /**
+     * @param ActivityService    $activityService
+     * @param ResultService      $resultService
+     * @param IndicatorService   $indicatorService
+     * @param PeriodService      $periodService
+     * @param TransactionService $transactionService
+     */
+    public function __construct(
+        ActivityService $activityService,
+        ResultService $resultService,
+        IndicatorService $indicatorService,
+        PeriodService $periodService,
+        TransactionService $transactionService
+    ) {
         $this->activityService = $activityService;
         $this->resultService = $resultService;
         $this->indicatorService = $indicatorService;
         $this->periodService = $periodService;
+        $this->transactionService = $transactionService;
     }
 
     /**
@@ -93,6 +106,17 @@ class RedirectActivity
 
                         if ($result === null) {
                             return redirect(RouteServiceProvider::HOME)->with('error', 'Result does not exist');
+                        }
+                    }
+                } elseif ($subModule === 'transaction') {
+                    $byPassTransactionRoutes = ['admin.activity.transaction.index', 'admin.activity.transactions.paginate', 'admin.activity.transaction.create', 'admin.activity.transaction.store'];
+
+                    if (!in_array($request->route()->getName(), $byPassTransactionRoutes, true)) {
+                        $id = (int) $request->route('transactionId');
+                        $transaction = $this->transactionService->getTransaction($id);
+
+                        if ($transaction === null) {
+                            return redirect(RouteServiceProvider::HOME)->with('error', 'Transaction does not exist');
                         }
                     }
                 }
