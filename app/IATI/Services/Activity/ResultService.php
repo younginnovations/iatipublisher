@@ -29,13 +29,37 @@ class ResultService
     /**
      * ResultService constructor.
      *
-     * @param ResultRepository $resultRepository
+     * @param ResultRepository         $resultRepository
      * @param ResultElementFormCreator $resultElementFormCreator
      */
     public function __construct(ResultRepository $resultRepository, ResultElementFormCreator $resultElementFormCreator)
     {
         $this->resultRepository = $resultRepository;
         $this->resultElementFormCreator = $resultElementFormCreator;
+    }
+
+    /**
+     * Returns paginated results.
+     *
+     * @param $activityId
+     * @param $page
+     *
+     * @return LengthAwarePaginator|Collection
+     */
+    public function getPaginatedResult($activityId, $page): LengthAwarePaginator|Collection
+    {
+        return $this->resultRepository->getPaginatedResult($activityId, $page);
+    }
+
+    /*
+     * Return results of specific activity
+     *
+     * @param $activityId
+     * @return array
+     */
+    public function getActivityResults($activityId): array
+    {
+        return $this->resultRepository->getActivityResults($activityId);
     }
 
     /**
@@ -47,32 +71,60 @@ class ResultService
      */
     public function create(array $resultData): Model
     {
-        return $this->resultRepository->create($resultData);
+        return $this->resultRepository->create($this->sanitizeResultData($resultData));
     }
 
     /**
      * Update Activity Result.
      *
-     * @param array          $resultData
-     * @param $activityResult
+     * @param array $resultData
+     * @param       $resultId
      *
      * @return bool
      */
-    public function update(array $resultData, $activityResult): bool
+    public function update(array $resultData, $resultId): bool
     {
-        return $this->resultRepository->update($resultData, $activityResult);
+        return $this->resultRepository->update($this->sanitizeResultData($resultData), $resultId);
     }
 
     /**
-     * Return specific result.
+     * Returns specific result.
      *
      * @param $id
      *
-     * @return Model
+     * @return object|null
      */
-    public function getResult($id): Model
+    public function getResult($id): ?object
     {
-        return $this->resultRepository->getResult($id);
+        return $this->resultRepository->find($id);
+    }
+
+    /**
+     * Function to sanitize result data.
+     *
+     * @param array $resultData
+     *
+     * @return array
+     */
+    public function sanitizeResultData(array $resultData): array
+    {
+        foreach ($resultData['result'] as $result_key => $result) {
+            if (is_array($result)) {
+                $resultData['result'][$result_key] = array_values($result);
+
+                foreach ($result as $sub_key => $sub_element) {
+                    if (is_array($sub_element)) {
+                        foreach ($sub_element as $inner_key => $inner_element) {
+                            if (is_array($inner_element)) {
+                                $resultData['result'][$result_key][$sub_key][$inner_key] = array_values($inner_element);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        return $resultData;
     }
 
     /**
@@ -101,32 +153,34 @@ class ResultService
     }
 
     /**
-     * Generates transaction create form.
+     * Returns result create form.
      *
      * @param $activityId
      *
      * @return Form
+     * @throws \JsonException
      */
     public function createFormGenerator($activityId): Form
     {
-        $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
+        $element = getElements();
         $this->resultElementFormCreator->url = route('admin.activity.result.store', $activityId);
 
         return $this->resultElementFormCreator->editForm([], $element['result'], 'POST', '/activity/' . $activityId);
     }
 
     /**
-     * Generates transaction edit form.
+     * Generates result edit form.
      *
-     * @param $resultId
      * @param $activityId
+     * @param $resultId
      *
      * @return Form
+     * @throws \JsonException
      */
-    public function editFormGenerator($resultId, $activityId): Form
+    public function editFormGenerator($activityId, $resultId): Form
     {
-        $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
-        $activityResult = $this->getResult($resultId, $activityId);
+        $element = getElements();
+        $activityResult = $this->getResult($resultId);
         $this->resultElementFormCreator->url = route('admin.activity.result.update', [$activityId, $resultId]);
 
         return $this->resultElementFormCreator->editForm($activityResult->result, $element['result'], 'PUT', '/activity/' . $activityId);
@@ -135,7 +189,9 @@ class ResultService
     /**
      * Checks if result has indicator and periods.
      *
-     * @param $result
+     * @param $results
+     *
+     * @return int[]
      */
     public function checkResultIndicatorPeriod($results): array
     {
@@ -159,31 +215,7 @@ class ResultService
 
         return [
             'indicator' => $hasIndicator,
-            'period' => $hasPeriod,
+            'period'    => $hasPeriod,
         ];
-    }
-
-    /*
-     * Return specific result.
-     *
-     * @param $activityId
-     * @return array
-     */
-    public function getActivityResult($activityId): array
-    {
-        return $this->resultRepository->getActivityResult($activityId);
-    }
-
-    /**
-     * Returns array of paginated results belonging to an activity.
-     *
-     * @param $activityId
-     * @param $page
-     *
-     * return LengthAwarePaginator|Collection
-     */
-    public function getPaginatedResult($activityId, $page): LengthAwarePaginator|Collection
-    {
-        return $this->resultRepository->getPaginatedResult($activityId, $page);
     }
 }

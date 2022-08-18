@@ -94,11 +94,11 @@ class IndicatorService
      *
      * @param $id
      *
-     * @return Model|null
+     * @return Indicator|null
      */
-    public function getIndicator($id): ?Model
+    public function getIndicator($id): ?Indicator
     {
-        return $this->indicatorRepository->getIndicator($id);
+        return $this->indicatorRepository->find($id);
     }
 
     /**

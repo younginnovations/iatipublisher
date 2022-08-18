@@ -152,4 +152,16 @@ class PeriodRepository
     {
         return $this->indicatorPeriod->where('indicator_id', $indicatorId)->orderBy('created_at', 'DESC')->paginate(10, ['*'], 'indicator', $page);
     }
+
+    /**
+     * Returns specific period.
+     *
+     * @param $id
+     *
+     * @return Model
+     */
+    public function getPeriod($id): Model
+    {
+        return $this->indicatorPeriod->where('id', $id)->first();
+    }
 }

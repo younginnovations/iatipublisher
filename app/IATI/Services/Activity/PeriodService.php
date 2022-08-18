@@ -126,6 +126,18 @@ class PeriodService
     }
 
     /**
+     * Returns specific period.
+     *
+     * @param $periodId
+     *
+     * @return Period|null
+     */
+    public function getPeriod($periodId): ?Period
+    {
+        return $this->periodRepository->find($periodId);
+    }
+
+    /**
      * Returns array of paginated period belonging to indicator of an result.
      *
      * @param $indicatorId
