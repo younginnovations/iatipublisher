@@ -134,7 +134,7 @@ class IndicatorController extends Controller
             $element = getElementSchema('indicator');
             $result = $this->resultService->getResult($resultId);
             $activity = $result->activity;
-            $form = $this->indicatorService->createFormGenerator($activity->id, $resultId);
+            $form = $this->indicatorService->createFormGenerator($resultId);
             $data = ['core' => $element['criteria'] ?? false, 'status' => false, 'title' => $element['label'], 'name' => 'indicator'];
 
             return view('admin.activity.indicator.edit', compact('form', 'activity', 'data'));
@@ -172,7 +172,7 @@ class IndicatorController extends Controller
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.result.indicator.index', [$resultId])->with(
+            return redirect()->route('admin.result.indicator.index', $resultId)->with(
                 'error',
                 'Error has occurred while creating result indicator.'
             );
@@ -202,7 +202,7 @@ class IndicatorController extends Controller
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.result.indicator.index', [$resultId])->with(
+            return redirect()->route('admin.result.indicator.index', $resultId)->with(
                 'error',
                 'Error has occurred while rending result detail page.'
             );
@@ -222,14 +222,14 @@ class IndicatorController extends Controller
             $result = $this->resultService->getResult($resultId);
             $element = getElementSchema('indicator');
             $activity = $this->activityService->getActivity($result->activity->id);
-            $form = $this->indicatorService->editFormGenerator($result->activity->id, $resultId, $indicatorId);
+            $form = $this->indicatorService->editFormGenerator($resultId, $indicatorId);
             $data = ['core' => $element['criteria'] ?? false, 'status' => false, 'title' => $element['label'], 'name' => 'indicator'];
 
             return view('admin.activity.indicator.edit', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.result.indicator.index', [$resultId])->with(
+            return redirect()->route('admin.result.indicator.index', $resultId)->with(
                 'error',
                 'Error has occurred while rendering indicator form.'
             );
@@ -252,20 +252,20 @@ class IndicatorController extends Controller
             $result = $indicator->result;
 
             if (!$this->indicatorService->update($indicatorId, ['result_id' => $result->id, 'indicator' => $indicatorData])) {
-                return redirect()->route('admin.result.indicator.index', [$result->activity->id, $resultId])->with(
+                return redirect()->route('admin.result.indicator.index', $resultId)->with(
                     'error',
                     'Error has occurred while updating result indicator.'
                 );
             }
 
-            return redirect()->route('admin.result.indicator.show', [$result->activity->id, $resultId, $indicatorId])->with(
+            return redirect()->route('admin.result.indicator.show', [$resultId, $indicatorId])->with(
                 'success',
                 'Indicator updated successfully.'
             );
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.result.indicator.index', [$resultId])->with(
+            return redirect()->route('admin.result.indicator.index', $resultId)->with(
                 'error',
                 'Error has occurred while updating indicator.'
             );

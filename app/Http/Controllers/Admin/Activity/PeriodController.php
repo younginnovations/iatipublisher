@@ -139,14 +139,14 @@ class PeriodController extends Controller
             $element = getElementSchema('period');
             $indicator = $this->indicatorService->getIndicator($indicatorId);
             $activity = $indicator->result->activity;
-            $form = $this->periodService->createFormGenerator($activity['id'], $indicator['result_id'], $indicatorId);
+            $form = $this->periodService->createFormGenerator($indicatorId);
             $data = ['core' => $element['criteria'] ?? false, 'status' => false, 'title' => $element['label'], 'name' => 'period'];
 
             return view('admin.activity.period.edit', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.indicator.period.index', [$indicatorId])->with(
+            return redirect()->route('admin.indicator.period.index', $indicatorId)->with(
                 'error',
                 'Error has occurred while rendering indicator period form.'
             );
@@ -248,7 +248,7 @@ class PeriodController extends Controller
             $element = getElementSchema('period');
             $indicator = $this->indicatorService->getIndicator($indicatorId);
             $activity = $indicator->result->activity;
-            $form = $this->periodService->editFormGenerator($activity['id'], $indicator['result_id'], $indicatorId, $periodId);
+            $form = $this->periodService->editFormGenerator($indicatorId, $periodId);
             $data = ['core' => $element['criteria'] ?? false, 'status' => false, 'title' => $element['label'], 'name' => 'period'];
 
             return view('admin.activity.period.edit', compact('form', 'activity', 'data'));
