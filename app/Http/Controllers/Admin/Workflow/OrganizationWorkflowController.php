@@ -50,17 +50,17 @@ class OrganizationWorkflowController extends Controller
             $this->organizationWorkflowService->publishOrganization($organization);
             DB::commit();
 
-            return redirect()->route('admin.activities.index')->with('success', 'Organization has been published successfully.');
+            return response()->json(['success' => true, 'message' => 'Organization has been published successfully.']);
         } catch (PublisherNotFound $message) {
             DB::rollBack();
             logger()->error($message->getMessage());
 
-            return redirect()->route('admin.activities.index')->with('error', $message->getMessage());
+            return response()->json(['success' => false, 'message' => $message->getMessage()]);
         } catch (\Exception $e) {
             DB::rollBack();
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activities.index')->with('error', 'Error has occurred while publishing organization.');
+            return response()->json(['success' => false, 'message' => 'Error has occurred while publishing activity.']);
         }
     }
 
@@ -108,12 +108,12 @@ class OrganizationWorkflowController extends Controller
             $this->organizationWorkflowService->unpublishOrganization($organization);
             DB::commit();
 
-            return redirect()->route('admin.activities.index')->with('success', 'Organization has been un-published successfully.');
+            return response()->json(['success' => true, 'message' => 'Organization has been un-published successfully.']);
         } catch (\Exception $e) {
             DB::rollBack();
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activities.index')->with('error', 'Error has occurred while un-publishing organization.');
+            return response()->json(['success' => false, 'message' => 'Error has occurred while un-publishing organization.']);
         }
     }
 }

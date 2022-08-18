@@ -40,9 +40,10 @@ class OrganizationController extends Controller
             $types = $this->getOrganizationTypes();
             $progress = 75;
             $organization = $this->organizationService->getOrganizationData(Auth::user()->organization_id);
+            $mandatoryCompleted = false;
             $organization['organisation_identifier'] = $organization['identifier'];
 
-            return view('admin.organisation.index', compact('elements', 'elementGroups', 'progress', 'organization', 'toast', 'types'));
+            return view('admin.organisation.index', compact('elements', 'elementGroups', 'progress', 'organization', 'toast', 'types', 'mandatoryCompleted'));
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 

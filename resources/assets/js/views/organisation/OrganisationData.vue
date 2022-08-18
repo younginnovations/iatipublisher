@@ -7,24 +7,19 @@
           <div class="max-w-sm pb-4 text-caption-c1 text-n-40">
             <nav aria-label="breadcrumbs" class="rank-math-breadcrumb">
               <div class="flex">
-                <a class="font-bold whitespace-nowrap" href="/activities"
-                  >Your Organisation</a
-                >
+                <a class="font-bold whitespace-nowrap" href="/activities">Your Organisation</a>
                 <span class="mx-4 separator"> / </span>
                 <div class="breadcrumb__title">
-                  <span
-                    class="overflow-hidden breadcrumb__title last text-n-30"
-                    >{{
+                  <span class="overflow-hidden breadcrumb__title last text-n-30">{{
                       organization.name
                         ? organization.name['0'].narrative ?? 'Untitled'
                         : 'Untitled'
-                    }}</span
-                  >
+                  }}</span>
                   <span class="ellipsis__title--hover w-[calc(100%_+_35px)]">
                     {{
-                      organization.name
-                        ? organization.name['0'].narrative ?? 'Untitled'
-                        : 'Untitled'
+                        organization.name
+                          ? organization.name['0'].narrative ?? 'Untitled'
+                          : 'Untitled'
                     }}
                   </span>
                 </div>
@@ -41,9 +36,9 @@
               <h4 class="relative mr-4 text-2xl font-bold ellipsis__title">
                 <span class="overflow-hidden ellipsis__title">
                   {{
-                    organization.name
-                      ? organization.name['0'].narrative ?? 'Untitled'
-                      : 'Untitled'
+                      organization.name
+                        ? organization.name['0'].narrative ?? 'Untitled'
+                        : 'Untitled'
                   }}
                 </span>
               </h4>
@@ -52,31 +47,24 @@
         </div>
         <div class="flex flex-col items-end justify-end actions grow">
           <div class="mb-3">
-            <Toast
-              v-if="toastData.visibility"
-              :message="toastData.message"
-              :type="toastData.type"
-            />
+            <Toast v-if="toastData.visibility" :message="toastData.message" :type="toastData.type" />
           </div>
           <div class="inline-flex justify-end">
+            <Toast
+              v-if="toastMessage.message"
+              class="mr-3.5"
+              :message="toastMessage.message"
+              :type="toastMessage.type"
+            />
+
             <!-- Download File -->
-            <button
-              class="button secondary-btn mr-3.5 font-bold"
-              @click="downloadValue = true"
-            >
+            <button class="button secondary-btn mr-3.5 font-bold" @click="downloadValue = true">
               <svg-vue icon="download-file" />
             </button>
-            <Modal
-              :modal-active="downloadValue"
-              width="583"
-              @close="downloadToggle"
-            >
+            <Modal :modal-active="downloadValue" width="583" @close="downloadToggle">
               <div class="mb-4">
                 <div class="flex mb-6 title">
-                  <svg-vue
-                    class="mr-1 mt-0.5 text-lg text-spring-50"
-                    icon="download-file"
-                  />
+                  <svg-vue class="mr-1 mt-0.5 text-lg text-spring-50" icon="download-file" />
                   <b>Download file.</b>
                 </div>
                 <div class="p-4 rounded-lg bg-mint">
@@ -85,40 +73,20 @@
               </div>
               <div class="flex justify-end">
                 <div class="inline-flex">
-                  <BtnComponent
-                    class="px-6 uppercase bg-white"
-                    text="Go Back"
-                    type=""
-                    @click="downloadValue = false"
-                  />
-                  <BtnComponent
-                    class="space"
-                    text="Download"
-                    type="primary"
-                    @click="downloadValue = false"
-                  />
+                  <BtnComponent class="px-6 uppercase bg-white" text="Go Back" type="" @click="downloadValue = false" />
+                  <BtnComponent class="space" text="Download" type="primary" @click="downloadValue = false" />
                 </div>
               </div>
             </Modal>
 
             <!-- Delete Activity -->
-            <button
-              class="button secondary-btn mr-3.5 font-bold"
-              @click="deleteValue = true"
-            >
+            <button class="button secondary-btn mr-3.5 font-bold" @click="deleteValue = true">
               <svg-vue icon="delete" />
             </button>
-            <Modal
-              :modal-active="deleteValue"
-              width="583"
-              @close="deleteToggle"
-            >
+            <Modal :modal-active="deleteValue" width="583" @close="deleteToggle">
               <div class="mb-4">
                 <div class="flex mb-6 title">
-                  <svg-vue
-                    class="mr-1 mt-0.5 text-lg text-crimson-40"
-                    icon="delete"
-                  />
+                  <svg-vue class="mr-1 mt-0.5 text-lg text-crimson-40" icon="delete" />
                   <b>Delete organisation</b>
                 </div>
                 <div class="p-4 rounded-lg bg-rose">
@@ -127,41 +95,21 @@
               </div>
               <div class="flex justify-end">
                 <div class="inline-flex">
-                  <BtnComponent
-                    class="px-6 uppercase bg-white"
-                    text="Go Back"
-                    type=""
-                    @click="deleteValue = false"
-                  />
-                  <BtnComponent
-                    class="space"
-                    text="Delete"
-                    type="primary"
-                    @click="deleteValue = false"
-                  />
+                  <BtnComponent class="px-6 uppercase bg-white" text="Go Back" type="" @click="deleteValue = false" />
+                  <BtnComponent class="space" text="Delete" type="primary" @click="deleteValue = false" />
                 </div>
               </div>
             </Modal>
 
             <!-- Unpublish Activity -->
-            <button
-              class="button secondary-btn mr-3.5 font-bold"
-              @click="unpublishValue = true"
-            >
+            <button class="button secondary-btn mr-3.5 font-bold" @click="unpublishValue = true">
               <svg-vue icon="cancel-cloud" />
               <span>Unpublish</span>
             </button>
-            <Modal
-              :modal-active="unpublishValue"
-              width="583"
-              @close="unpublishToggle"
-            >
+            <Modal :modal-active="unpublishValue" width="583" @close="unpublishToggle">
               <div class="mb-4">
                 <div class="flex mb-6 title">
-                  <svg-vue
-                    class="mr-1 mt-0.5 text-lg text-crimson-40"
-                    icon="cancel-cloud"
-                  />
+                  <svg-vue class="mr-1 mt-0.5 text-lg text-crimson-40" icon="cancel-cloud" />
                   <b>Unpublish organisation</b>
                 </div>
                 <div class="p-4 rounded-lg bg-rose">
@@ -170,64 +118,15 @@
               </div>
               <div class="flex justify-end">
                 <div class="inline-flex">
-                  <BtnComponent
-                    class="px-6 uppercase bg-white"
-                    text="Go Back"
-                    type=""
-                    @click="unpublishValue = false"
-                  />
-                  <BtnComponent
-                    class="space"
-                    text="Unpublish"
-                    type="primary"
-                    @click="unpublishValue = false"
-                  />
+                  <BtnComponent class="px-6 uppercase bg-white" text="Go Back" type=""
+                    @click="unpublishValue = false" />
+                  <BtnComponent class="space" text="Unpublish" type="primary" @click="unpublishValue = false" />
                 </div>
               </div>
             </Modal>
 
             <!-- Publish Activity -->
-            <button
-              class="relative font-bold button primary-btn"
-              @click="publishValue = true"
-            >
-              <svg-vue icon="approved-cloud" />
-              <span>Publish</span>
-            </button>
-            <Modal
-              :modal-active="publishValue"
-              width="583"
-              @close="publishToggle"
-            >
-              <div class="mb-4">
-                <div class="flex mb-6 title">
-                  <svg-vue
-                    class="mr-1 mt-0.5 text-lg text-spring-50"
-                    icon="approved-cloud"
-                  />
-                  <b>Publish organisation?</b>
-                </div>
-                <div class="p-4 rounded-lg bg-mint">
-                  Are you ready to publish this organisation?
-                </div>
-              </div>
-              <div class="flex justify-end">
-                <div class="inline-flex">
-                  <BtnComponent
-                    class="px-6 uppercase bg-white"
-                    text="Go Back"
-                    type=""
-                    @click="publishValue = false"
-                  />
-                  <BtnComponent
-                    class="space"
-                    text="Publish"
-                    type="primary"
-                    @click="publishValue = false"
-                  />
-                </div>
-              </div>
-            </Modal>
+            <Publish />
           </div>
         </div>
       </div>
@@ -239,74 +138,48 @@
           <div class="mr-1 activities__card progress">
             <div class="flex items-center justify-between mb-2">
               <span class="mr-2">Publishing Progress</span>
-              <HoverText
-                hover-text="You cannot publish an activity until all the mandatory fields have been filled."
-                name=""
-                class="hover-text"
-                position="right"
-              />
+              <HoverText hover-text="You cannot publish an activity until all the mandatory fields have been filled."
+                name="" class="hover-text" position="right" />
             </div>
-            <RadialProgressBar
-              class="h-20 mb-3 text-8xl"
-              :is-percent="true"
-            ></RadialProgressBar>
+            <RadialProgressBar class="h-20 mb-3 text-8xl" :is-percent="true"></RadialProgressBar>
             <span>Fill core elements to get 100% score</span>
           </div>
           <div class="activities__card elements">
             <div class="flex items-center justify-between mb-7">
               <span>Elements</span>
-              <HoverText
-                hover-text="You cannot publish an activity until all the mandatory fields have been filled."
-                name=""
-                class="hover-text"
-              />
+              <HoverText hover-text="You cannot publish an activity until all the mandatory fields have been filled."
+                name="" class="hover-text" />
             </div>
             <div class="flex justify-between mb-3">
               <div class="flex items-center space-x-1">
-                <svg-vue icon="core" />
-                <span>Core</span>
+                <svg-vue icon="star" />
+                <span>Mandatory</span>
               </div>
-              <HoverText
-                hover-text="You cannot publish an activity until all the mandatory fields have been filled."
-                name=""
-                class="hover-text"
-              />
+              <HoverText hover-text="You cannot publish an activity until all the mandatory fields have been filled."
+                name="" class="hover-text" />
             </div>
             <div class="flex justify-between">
               <div class="flex items-center space-x-1">
                 <svg-vue icon="double-tick" class="text-spring-50"></svg-vue>
                 <span>Completed</span>
               </div>
-              <HoverText
-                hover-text="You cannot publish an activity until all the mandatory fields have been filled."
-                name=""
-                class="hover-text"
-              />
+              <HoverText hover-text="You cannot publish an activity until all the mandatory fields have been filled."
+                name="" class="hover-text" />
             </div>
           </div>
         </div>
-        <OrganisationElements
-          :activity-id="organization.id"
-          :data="elementProps"
-        />
+        <OrganisationElements :activity-id="organization.id" :data="elementProps" />
       </aside>
       <div class="overflow-hidden activities__content">
         <div class="inline-flex flex-wrap gap-2 mb-3">
-          <a
-            v-for="(post, key, index) in groupedData"
-            :key="index"
-            v-smooth-scroll
-            :href="`#${key}`"
-            class="tab-btn-anchor"
-          >
+          <a v-for="(post, key, index) in groupedData" :key="index" v-smooth-scroll :href="`#${key}`"
+            class="tab-btn-anchor">
             <button :disabled="post.status == 'disabled'" class="tab-btn">
               <span>{{ post.label }}</span>
               <span class="hover__text">
-                <HoverText
-                  :name="post.label"
+                <HoverText :name="post.label"
                   hover-text="You cannot publish an activity until all the mandatory fields have been filled."
-                  icon_size="text-tiny"
-                />
+                  icon_size="text-tiny" />
               </span>
             </button>
           </a>
@@ -315,28 +188,18 @@
           <template v-for="(post, key, index) in groupedData" :key="index">
             <div class="pt-3 text-sm">
               <div :id="key" class="ml-4 uppercase">{{ key }}</div>
-              <div
-                class="relative flex items-center w-full mx-3 mt-3 mb-1 text-sm uppercase elements-title text-n-40"
-              ></div>
+              <div class="relative flex items-center w-full mx-3 mt-3 mb-1 text-sm uppercase elements-title text-n-40">
+              </div>
             </div>
             <template v-for="(element, name, i) in post.elements" :key="i">
-              <OrganisationElementsDetail
-                v-if="
-                  (typeof element.content === 'object'
-                    ? Object.keys(element.content).length > 0
-                    : element.content) || typeof element.content === 'number'
-                "
-                :id="key"
-                :data="element"
-                :title="name.toString()"
-                :activity-id="organization.id"
-                :content="element.content"
-                :types="types"
-                :tooltip="elements[name]['hover_text']"
-                :width="
+              <OrganisationElementsDetail v-if="
+                (typeof element.content === 'object'
+                  ? Object.keys(element.content).length > 0
+                  : element.content) || typeof element.content === 'number'
+              " :id="key" :data="element" :title="name.toString()" :activity-id="organization.id"
+                :content="element.content" :types="types" :tooltip="elements[name]['hover_text']" :width="
                   String(name) === 'organisation_identifier' ? '' : 'full'
-                "
-              />
+                " />
             </template>
           </template>
         </div>
@@ -346,7 +209,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, ref, onMounted, toRefs } from 'vue';
+import { defineComponent, reactive, ref, onMounted, toRefs, provide } from 'vue';
 import HoverText from '../../components/HoverText.vue';
 import RadialProgressBar from '../../components/RadialProgressBar.vue';
 import OrganisationElements from './OrganisationElements.vue';
@@ -354,6 +217,7 @@ import OrganisationElementsDetail from './OrganisationElementsDetail.vue';
 import Modal from '../../components/PopupModal.vue';
 import BtnComponent from '../../components/ButtonComponent.vue';
 import Toast from '../../components/Toast.vue';
+import Publish from 'Components/sections/PublishButtonDynamic.vue';
 import { useToggle } from '@vueuse/core';
 
 export default defineComponent({
@@ -366,6 +230,7 @@ export default defineComponent({
     Modal,
     Toast,
     BtnComponent,
+    Publish
   },
   props: {
     elements: {
@@ -392,6 +257,10 @@ export default defineComponent({
       type: Object,
       required: true,
     },
+    mandatoryCompleted: {
+      type: Boolean,
+      required: true
+    }
   },
   setup(props) {
     const toastData = reactive({
@@ -460,6 +329,57 @@ export default defineComponent({
       }
     });
 
+    /**
+  * Errors component
+  *
+*/
+    // const validationResult = null;
+
+    // const errorReactive = ref(false);
+    // const errorData = ref([]);
+
+    // if (validationResult && validationResult.errors.length > 0) {
+    //   errorReactive.value = true;
+
+    //   errorData.value = validationResult.errors;
+    // }
+
+    /**
+     * Publish message toast after publishing
+     */
+    interface PublishMessage {
+      message: string;
+      type: boolean;
+    }
+
+    const publishMessage: PublishMessage = reactive({
+      message: '',
+      type: false,
+    });
+
+    interface PublishStatusTypeface {
+      already_published: boolean;
+      linked_to_iati: boolean;
+      status: string;
+    }
+
+
+    const publishStatus: PublishStatusTypeface = reactive({
+      already_published: props.organization.already_published,
+      linked_to_iati: props.organization.linked_to_iati,
+      status: props.organization.status,
+    });
+
+  const toastMessage = reactive({
+      message: '',
+      type: false,
+    });
+
+    provide('publishMessage', publishMessage);
+    provide('coreCompleted', props.mandatoryCompleted);
+    provide('toastMessage', toastMessage);
+    provide('publishStatus', publishStatus);
+
     return {
       groupedData,
       organizationData,
@@ -473,6 +393,7 @@ export default defineComponent({
       downloadToggle,
       elementProps,
       toastData,
+      toastMessage
       // elementsDetail,
     };
   },
@@ -486,6 +407,7 @@ export default defineComponent({
   height: 140px;
   @apply absolute top-1 -right-6 bg-n-20;
 }
+
 .element {
   @apply mb-3 ml-2;
 
@@ -497,6 +419,7 @@ export default defineComponent({
     @apply h-4 w-8 rounded-sm border;
   }
 }
+
 .element__search {
   @apply my-4 h-10 w-full rounded border border-n-30 bg-white py-3 pr-3 pl-10 text-n-40 outline-none duration-300;
 
@@ -504,10 +427,12 @@ export default defineComponent({
     @apply text-sm text-n-30 duration-300;
     letter-spacing: -0.02em;
   }
+
   &:focus::placeholder {
     @apply text-n-40;
   }
 }
+
 .tab__links {
   @apply relative cursor-pointer px-2 pb-6;
 
@@ -515,21 +440,26 @@ export default defineComponent({
     content: '';
     @apply absolute bottom-0 left-0 h-1 w-full scale-0 bg-bluecoral duration-300;
   }
+
   &:hover::after {
     content: '';
     @apply visible scale-100;
   }
+
   &--active {
     @apply font-bold text-bluecoral;
   }
 }
+
 .tab__links--active::after {
   content: '';
   @apply absolute bottom-0 left-0 h-1 w-full bg-bluecoral duration-300;
 }
+
 .separator {
   @apply mx-4;
 }
+
 .last {
   @apply text-n-30;
 }

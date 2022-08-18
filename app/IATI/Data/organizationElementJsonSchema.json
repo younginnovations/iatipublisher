@@ -3,15 +3,15 @@
     "name": "organisation_identifier",
     "label": "organisation-identifier",
     "criteria": "mandatory",
-    "hover_text" : "",
+    "hover_text": "",
     "attributes": {
       "organization_country": {
         "name": "organization_country",
         "label": "country",
         "type": "select",
         "choices": "Activity/Country.json",
-        "required": true,
-        "criteria": "mandatory",
+        "required": false,
+        "criteria": "",
         "hover_text": "",
         "help_text": ""
       },
@@ -49,7 +49,7 @@
   "name": {
     "label": "name",
     "multiple": false,
-    "hover_text" : "The human-readable name of the organisation. This element must occur once and only once (within each parent element). <a target='_blank' href=''>For more information</a>",
+    "hover_text": "The human-readable name of the organisation. This element must occur once and only once (within each parent element). <a target='_blank' href=''>For more information</a>",
     "attributes": {},
     "sub_elements": {
       "narrative": {
@@ -71,7 +71,7 @@
             "type": "select",
             "multiSelect": false,
             "choices": "Activity/Language.json",
-            "required": true,
+            "required": false,
             "criteria": "recommended",
             "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/title/narrative/' target='_blank'>For more information</a>",
             "help_text": ""
@@ -84,7 +84,6 @@
   "reporting_org": {
     "name": "reporting_org",
     "label": "reporting-org",
-    "criteria": "mandatory",
     "hover_text": "The organisation issuing the report. May be a primary source (reporting on its own activity as donor, implementing agency, etc) or a secondary source (reporting on the activities of another organisation). <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/reporting-org/'>For more information</a>",
     "add_more": false,
     "attributes": {
@@ -127,7 +126,7 @@
         "name": "narrative",
         "label": "narrative",
         "type": "textarea",
-        "required": false,
+        "required": true,
         "criteria": "mandatory",
         "add_more": true,
         "attr": {
@@ -175,7 +174,7 @@
         "name": "period_start",
         "label": "period-start",
         "add_more": false,
-        "hover_text":"The start of the budget period. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/total-budget/period-start/'>For more information</a>",
+        "hover_text": "The start of the budget period. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/total-budget/period-start/'>For more information</a>",
         "attributes": {
           "date": {
             "name": "date",
@@ -211,7 +210,7 @@
         "name": "value",
         "label": "value",
         "add_more": false,
-        "hover_text":"The total value of the organisation’s aid budget for this period. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/total-budget/value/'>For more information</a>",
+        "hover_text": "The total value of the organisation’s aid budget for this period. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/total-budget/value/'>For more information</a>",
         "attributes": {
           "amount": {
             "name": "amount",
@@ -342,7 +341,7 @@
         "type": "select",
         "multiselect": false,
         "choices": "Activity/BudgetStatus.json",
-        "required": true,
+        "required": false,
         "criteria": "",
         "hover_text": "The status explains whether the budget being reported is indicative or has been formally committed. The value should appear within the BudgetStatus codelist. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/recipient-org-budget/'>For more information</a>",
         "help_text": ""
@@ -353,13 +352,13 @@
         "name": "recipient_org",
         "label": "recipient-org",
         "add_more": false,
-        "hover_text" : "The organisation that will receive the funds. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/recipient-org-budget/recipient-org/'>For more information</a>",
+        "hover_text": "The organisation that will receive the funds. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/recipient-org-budget/recipient-org/'>For more information</a>",
         "attributes": {
           "ref": {
             "name": "ref",
             "label": "@ref",
             "type": "text",
-            "required": true,
+            "required": false,
             "criteria": "",
             "hover_text": "Machine-readable identification string for the organisation issuing the report. Must be in the format {RegistrationAgency}-{RegistrationNumber} <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/recipient-org-budget/recipient-org/'>For more information</a>",
             "help_text": ""
@@ -399,7 +398,7 @@
         "name": "period_start",
         "label": "period-start",
         "add_more": false,
-        "hover_text":"This element must occur once and only once (within each parent element). <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/recipient-org-budget/period-start/'>For more information</a>",
+        "hover_text": "This element must occur once and only once (within each parent element). <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/recipient-org-budget/period-start/'>For more information</a>",
         "attributes": {
           "date": {
             "name": "date",
@@ -479,7 +478,7 @@
             "name": "ref",
             "label": "@ref",
             "type": "text",
-            "required": true,
+            "required": false,
             "criteria": "",
             "hover_text": "An internal reference for this budget line taken from the reporting organisation’s own system. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/total-budget/budget-line/'>For more information</a>",
             "help_text": ""
@@ -490,7 +489,7 @@
             "name": "value",
             "label": "value",
             "add_more": false,
-            "hover_text":"The budget sub-total. The definition of the sub-division is determined by iati-organisation/total-budget/budget-line/narrative <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/recipient-org-budget/budget-line/value/'>For more information</a>",
+            "hover_text": "The budget sub-total. The definition of the sub-division is determined by iati-organisation/total-budget/budget-line/narrative <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/recipient-org-budget/budget-line/value/'>For more information</a>",
             "attributes": {
               "amount": {
                 "name": "amount",
@@ -579,7 +578,7 @@
         "label": "Recipient Region",
         "criteria": "mandatory",
         "add_more": false,
-        "hover_text" : "The supranational geographic region where funds have been allocated. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/recipient-region-budget/recipient-region/'>For more information</a>",
+        "hover_text": "The supranational geographic region where funds have been allocated. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/recipient-region-budget/recipient-region/'>For more information</a>",
         "attributes": {
           "vocabulary": {
             "name": "region_vocabulary",
@@ -587,7 +586,7 @@
             "type": "select",
             "multiselect": false,
             "choices": "Activity/RegionVocabulary.json",
-            "required": true,
+            "required": false,
             "criteria": "",
             "hover_text": "An IATI code for the vocabulary from which the region code is drawn. If it is not present, code 1 (‘OECD DAC’) is assumed. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/recipient-region-budget/recipient-region/'>For more information</a>",
             "help_text": ""
@@ -598,7 +597,7 @@
             "type": "select",
             "multiselect": false,
             "choices": "Activity/Region.json",
-            "required": true,
+            "required": false,
             "criteria": "",
             "hover_text": "Either an OECD DAC or UN region code. Codelist is determined by vocabulary attribute. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/recipient-region-budget/recipient-region/'>For more information</a>",
             "help_text": ""
@@ -607,7 +606,7 @@
             "name": "code",
             "label": "@code",
             "type": "text",
-            "required": true,
+            "required": false,
             "criteria": "",
             "hidden": true,
             "hover_text": "Either an OECD DAC or UN region code. Codelist is determined by vocabulary attribute. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/recipient-region-budget/recipient-region/'>For more information</a>",
@@ -737,7 +736,7 @@
             "name": "ref",
             "label": "@ref",
             "type": "text",
-            "required": true,
+            "required": false,
             "criteria": "",
             "hover_text": "An internal reference for this budget line taken from the reporting organisation’s own system. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/recipient-region-budget/budget-line/'>For more information</a>",
             "help_text": ""
@@ -837,7 +836,7 @@
         "label": "recipient-country",
         "criteria": "",
         "add_more": true,
-        "hover_text":"The recipient country. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/recipient-country-budget/recipient-country/'>For more information</a>",
+        "hover_text": "The recipient country. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/recipient-country-budget/recipient-country/'>For more information</a>",
         "attributes": {
           "code": {
             "name": "code",
@@ -903,7 +902,7 @@
         "name": "period_end",
         "label": "period-end",
         "add_more": false,
-        "hover_text":"The end of the period (which must not be greater than one year). <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/recipient-country-budget/period-end/'>For more information</a>",
+        "hover_text": "The end of the period (which must not be greater than one year). <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/recipient-country-budget/period-end/'>For more information</a>",
         "attributes": {
           "date": {
             "name": "date",
@@ -959,13 +958,13 @@
         "name": "budget_line",
         "label": "budget-line",
         "add_more": true,
-        "hover_text":"A breakdown of the total budget into sub-totals. The breakdown is determined by the reporting organisation and described in the narrative. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/recipient-country-budget/budget-line/'>For more information</a>",
+        "hover_text": "A breakdown of the total budget into sub-totals. The breakdown is determined by the reporting organisation and described in the narrative. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/recipient-country-budget/budget-line/'>For more information</a>",
         "attributes": {
           "ref": {
             "name": "ref",
             "label": "@ref",
             "type": "text",
-            "required": true,
+            "required": false,
             "criteria": "",
             "hover_text": "An internal reference for this budget line taken from the reporting organisation’s own system. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/recipient-country-budget/budget-line/'>For more information</a>",
             "help_text": ""
@@ -1070,7 +1069,7 @@
         "name": "period_end",
         "label": "period-end",
         "add_more": false,
-        "hover_text":"The end of the period (which must not be greater than one year) <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/total-expenditure/period-end/'>For more information</a>",
+        "hover_text": "The end of the period (which must not be greater than one year) <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/total-expenditure/period-end/'>For more information</a>",
         "attributes": {
           "date": {
             "name": "date",
@@ -1229,7 +1228,7 @@
         "type": "select",
         "multiselect": false,
         "choices": "Activity/FileFormat.json",
-        "required": true,
+        "required": false,
         "criteria": "",
         "hover_text": "An IANA code for the MIME type of the document being referenced, e.g. “application/pdf”. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/document-link/'>For more information</a>",
         "help_text": ""
@@ -1321,7 +1320,7 @@
             "type": "select",
             "multiSelect": false,
             "choices": "Activity/DocumentCategory.json",
-            "required": true,
+            "required": false,
             "criteria": "",
             "hover_text": "An IATI code defining the category of the document. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/document-link/category/'>For more information</a>",
             "help_text": ""

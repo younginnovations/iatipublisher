@@ -38,8 +38,8 @@ Route::name('admin.')->group(function () {
     Route::get('organisation/document_link', [\App\Http\Controllers\Admin\Organization\DocumentLinkController::class, 'edit'])->name('organisation.document-link.edit');
     Route::put('organisation/document_link', [\App\Http\Controllers\Admin\Organization\DocumentLinkController::class, 'update'])->name('organisation.document-link.update');
 
-    Route::get('organisation/publish', [\App\Http\Controllers\Admin\Workflow\OrganizationWorkflowController::class, 'publish'])->name('organisation.publish');
+    Route::post('organisation/publish', [\App\Http\Controllers\Admin\Workflow\OrganizationWorkflowController::class, 'publish'])->name('organisation.publish');
 
     //Unpublish Activity
-    Route::get('organisation/unpublish', [\App\Http\Controllers\Admin\Workflow\OrganizationWorkflowController::class, 'unpublish'])->name('organisation.unpublish');
+    Route::post('organisation/unpublish', [\App\Http\Controllers\Admin\Workflow\OrganizationWorkflowController::class, 'unpublish'])->name('organisation.unpublish');
 });
