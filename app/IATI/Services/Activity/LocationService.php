@@ -5,8 +5,7 @@ declare(strict_types=1);
 namespace App\IATI\Services\Activity;
 
 use App\IATI\Elements\Builder\ParentCollectionFormCreator;
-use App\IATI\Repositories\Activity\LocationRepository;
-use Illuminate\Database\Eloquent\Model;
+use App\IATI\Repositories\Activity\ActivityRepository;
 use Kris\LaravelFormBuilder\Form;
 
 /**
@@ -15,9 +14,9 @@ use Kris\LaravelFormBuilder\Form;
 class LocationService
 {
     /**
-     * @var LocationRepository
+     * @var ActivityRepository
      */
-    protected LocationRepository $locationRepository;
+    protected ActivityRepository $activityRepository;
 
     /**
      * @var ParentCollectionFormCreator
@@ -27,12 +26,12 @@ class LocationService
     /**
      * LocationService constructor.
      *
-     * @param LocationRepository $locationRepository
+     * @param ActivityRepository $activityRepository
      * @param ParentCollectionFormCreator $parentCollectionFormCreator
      */
-    public function __construct(LocationRepository $locationRepository, ParentCollectionFormCreator $parentCollectionFormCreator)
+    public function __construct(ActivityRepository $activityRepository, ParentCollectionFormCreator $parentCollectionFormCreator)
     {
-        $this->locationRepository = $locationRepository;
+        $this->activityRepository = $activityRepository;
         $this->parentCollectionFormCreator = $parentCollectionFormCreator;
     }
 
@@ -45,7 +44,7 @@ class LocationService
      */
     public function getLocationData(int $activity_id): ?array
     {
-        return $this->locationRepository->getLocationData($activity_id);
+        return $this->activityRepository->find($activity_id)->location;
     }
 
     /**
@@ -53,11 +52,11 @@ class LocationService
      *
      * @param $id
      *
-     * @return Model
+     * @return object
      */
-    public function getActivityData($id): Model
+    public function getActivityData($id): object
     {
-        return $this->locationRepository->getActivityData($id);
+        return $this->activityRepository->find($id);
     }
 
     /**
@@ -70,7 +69,7 @@ class LocationService
      */
     public function update($location, $activity): bool
     {
-        return $this->locationRepository->update($location, $activity);
+        return $this->activityRepository->update($activity->id, ['location' => $this->sanitizeLocationData($location)]);
     }
 
     /**
@@ -87,5 +86,25 @@ class LocationService
         $this->parentCollectionFormCreator->url = route('admin.activity.location.update', [$id]);
 
         return $this->parentCollectionFormCreator->editForm($model, $element['location'], 'PUT', '/activity/' . $id);
+    }
+
+    /**
+     * Sanitizes location data.
+     *
+     * @param $location
+     *
+     * @return array
+     */
+    public function sanitizeLocationData($location): array
+    {
+        $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true)['location'];
+
+        foreach ($location['location'] as $key => $location_value) {
+            foreach (array_keys($element['sub_elements']) as $subelement) {
+                $location['location'][$key][$subelement] = array_values($location_value[$subelement]);
+            }
+        }
+
+        return array_values($location['location']);
     }
 }

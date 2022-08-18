@@ -162,7 +162,8 @@ class ResultService
      */
     public function createFormGenerator($activityId): Form
     {
-        $element = getElements();
+//        $element = getElements();
+        $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
         $this->resultElementFormCreator->url = route('admin.activity.result.store', $activityId);
 
         return $this->resultElementFormCreator->editForm([], $element['result'], 'POST', '/activity/' . $activityId);

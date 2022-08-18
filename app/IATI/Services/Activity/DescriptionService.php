@@ -5,8 +5,7 @@ declare(strict_types=1);
 namespace App\IATI\Services\Activity;
 
 use App\IATI\Elements\Builder\ParentCollectionFormCreator;
-use App\IATI\Repositories\Activity\DescriptionRepository;
-use Illuminate\Database\Eloquent\Model;
+use App\IATI\Repositories\Activity\ActivityRepository;
 use Kris\LaravelFormBuilder\Form;
 
 /**
@@ -15,9 +14,9 @@ use Kris\LaravelFormBuilder\Form;
 class DescriptionService
 {
     /**
-     * @var DescriptionRepository
+     * @var ActivityRepository
      */
-    protected DescriptionRepository $descriptionRepository;
+    protected ActivityRepository $activityRepository;
 
     /**
      * @var ParentCollectionFormCreator
@@ -27,25 +26,25 @@ class DescriptionService
     /**
      * DescriptionService constructor.
      *
-     * @param DescriptionRepository $descriptionRepository
+     * @param ActivityRepository $activityRepository
      * @param ParentCollectionFormCreator $parentCollectionFormCreator
      */
-    public function __construct(DescriptionRepository $descriptionRepository, ParentCollectionFormCreator $parentCollectionFormCreator)
+    public function __construct(ActivityRepository $activityRepository, ParentCollectionFormCreator $parentCollectionFormCreator)
     {
-        $this->descriptionRepository = $descriptionRepository;
+        $this->activityRepository = $activityRepository;
         $this->parentCollectionFormCreator = $parentCollectionFormCreator;
     }
 
     /**
      * Returns description data of an activity.
-     *s.
+     *
      * @param int $activity_id
      *
      * @return array|null
      */
     public function getDescriptionData(int $activity_id): ?array
     {
-        return $this->descriptionRepository->getDescriptionData($activity_id);
+        return $this->activityRepository->find($activity_id)->description;
     }
 
     /**
@@ -53,11 +52,11 @@ class DescriptionService
      *
      * @param $id
      *
-     * @return Model
+     * @return object
      */
-    public function getActivityData($id): Model
+    public function getActivityData($id): object
     {
-        return $this->descriptionRepository->getActivityData($id);
+        return $this->activityRepository->find($id);
     }
 
     /**
@@ -70,7 +69,7 @@ class DescriptionService
      */
     public function update($descriptionActivity, $activity): bool
     {
-        return $this->descriptionRepository->update($descriptionActivity, $activity);
+        return $this->activityRepository->update($activity->id, ['description' => $this->sanitizeDescriptionData($descriptionActivity)]);
     }
 
     /**
@@ -87,5 +86,21 @@ class DescriptionService
         $this->parentCollectionFormCreator->url = route('admin.activity.description.update', [$id]);
 
         return $this->parentCollectionFormCreator->editForm($model, $element['description'], 'PUT', '/activity/' . $id);
+    }
+
+    /**
+     * Sanitizes description data.
+     *
+     * @param $activityDescription
+     *
+     * @return array
+     */
+    public function sanitizeDescriptionData($activityDescription): array
+    {
+        foreach ($activityDescription['description'] as $key => $description) {
+            $activityDescription['description'][$key]['narrative'] = array_values($description['narrative']);
+        }
+
+        return array_values($activityDescription['description']);
     }
 }

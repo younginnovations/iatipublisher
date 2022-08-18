@@ -5,8 +5,7 @@ declare(strict_types=1);
 namespace App\IATI\Services\Activity;
 
 use App\IATI\Elements\Builder\ParentCollectionFormCreator;
-use App\IATI\Repositories\Activity\PlannedDisbursementRepository;
-use Illuminate\Database\Eloquent\Model;
+use App\IATI\Repositories\Activity\ActivityRepository;
 use Kris\LaravelFormBuilder\Form;
 
 /**
@@ -15,9 +14,9 @@ use Kris\LaravelFormBuilder\Form;
 class PlannedDisbursementService
 {
     /**
-     * @var PlannedDisbursementRepository
+     * @var ActivityRepository
      */
-    protected PlannedDisbursementRepository $plannedDisbursementRepo;
+    protected ActivityRepository $activityRepository;
 
     /**
      * @var ParentCollectionFormCreator
@@ -27,12 +26,12 @@ class PlannedDisbursementService
     /**
      * PlannedDisbursementService constructor.
      *
-     * @param PlannedDisbursementRepository $plannedDisbursementRepo
+     * @param ActivityRepository $activityRepository
      * @param ParentCollectionFormCreator $parentCollectionFormCreator
      */
-    public function __construct(PlannedDisbursementRepository $plannedDisbursementRepo, ParentCollectionFormCreator $parentCollectionFormCreator)
+    public function __construct(ActivityRepository $activityRepository, ParentCollectionFormCreator $parentCollectionFormCreator)
     {
-        $this->plannedDisbursementRepository = $plannedDisbursementRepo;
+        $this->activityRepository = $activityRepository;
         $this->parentCollectionFormCreator = $parentCollectionFormCreator;
     }
 
@@ -45,7 +44,7 @@ class PlannedDisbursementService
      */
     public function getPlannedDisbursementData(int $activity_id): ?array
     {
-        return $this->plannedDisbursementRepository->getPlannedDisbursementData($activity_id);
+        return $this->activityRepository->find($activity_id)->planned_disbursement;
     }
 
     /**
@@ -53,11 +52,11 @@ class PlannedDisbursementService
      *
      * @param $id
      *
-     * @return Model
+     * @return object
      */
-    public function getActivityData($id): Model
+    public function getActivityData($id): object
     {
-        return $this->plannedDisbursementRepository->getActivityData($id);
+        return $this->activityRepository->find($id);
     }
 
     /**
@@ -70,7 +69,7 @@ class PlannedDisbursementService
      */
     public function update($plannedDisbursement, $activity): bool
     {
-        return $this->plannedDisbursementRepository->update($plannedDisbursement, $activity);
+        return $this->activityRepository->update($activity->id, ['planned_disbursement' => $this->sanitizePlannedDisbursementData($plannedDisbursement)]);
     }
 
     /**
@@ -87,5 +86,25 @@ class PlannedDisbursementService
         $this->parentCollectionFormCreator->url = route('admin.activity.planned-disbursement.update', [$id]);
 
         return $this->parentCollectionFormCreator->editForm($model, $element['planned_disbursement'], 'PUT', '/activity/' . $id);
+    }
+
+    /**
+     * Sanitizes planned disbursement data.
+     *
+     * @param $plannedDisbursement
+     *
+     * @return array
+     */
+    public function sanitizePlannedDisbursementData($plannedDisbursement): array
+    {
+        $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true)['planned_disbursement'];
+
+        foreach ($plannedDisbursement['planned_disbursement'] as $key => $disbursement) {
+            foreach (array_keys($element['sub_elements']) as $subelement) {
+                $plannedDisbursement['planned_disbursement'][$key][$subelement] = array_values($disbursement[$subelement]);
+            }
+        }
+
+        return array_values($plannedDisbursement['planned_disbursement']);
     }
 }

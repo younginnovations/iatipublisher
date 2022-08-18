@@ -5,8 +5,7 @@ declare(strict_types=1);
 namespace App\IATI\Services\Activity;
 
 use App\IATI\Elements\Builder\MultilevelSubElementFormCreator;
-use App\IATI\Repositories\Activity\OtherIdentifierRepository;
-use Illuminate\Database\Eloquent\Model;
+use App\IATI\Repositories\Activity\ActivityRepository;
 use Kris\LaravelFormBuilder\Form;
 
 /**
@@ -15,9 +14,9 @@ use Kris\LaravelFormBuilder\Form;
 class OtherIdentifierService
 {
     /**
-     * @var otherIdentifierRepository
+     * @var ActivityRepository
      */
-    protected OtherIdentifierRepository $otherIdentifierRepository;
+    protected ActivityRepository $activityRepository;
 
     /**
      * @var MultilevelSubElementFormCreator
@@ -27,12 +26,12 @@ class OtherIdentifierService
     /**
      * OtherIdentifierService constructor.
      *
-     * @param OtherIdentifierRepository $otherIdentifierRepository
+     * @param ActivityRepository $activityRepository
      * @param MultilevelSubElementFormCreator $multilevelSubElementFormCreator
      */
-    public function __construct(OtherIdentifierRepository $otherIdentifierRepository, MultilevelSubElementFormCreator $multilevelSubElementFormCreator)
+    public function __construct(ActivityRepository $activityRepository, MultilevelSubElementFormCreator $multilevelSubElementFormCreator)
     {
-        $this->otherIdentifierRepository = $otherIdentifierRepository;
+        $this->activityRepository = $activityRepository;
         $this->multilevelSubElementFormCreator = $multilevelSubElementFormCreator;
     }
 
@@ -45,7 +44,7 @@ class OtherIdentifierService
      */
     public function getOtherIdentifierData(int $activity_id): ?array
     {
-        return $this->otherIdentifierRepository->getOtherIdentifierData($activity_id);
+        return $this->activityRepository->find($activity_id)->other_identifier;
     }
 
     /**
@@ -53,11 +52,11 @@ class OtherIdentifierService
      *
      * @param $id
      *
-     * @return Model
+     * @return object
      */
-    public function getActivityData($id): Model
+    public function getActivityData($id): object
     {
-        return $this->otherIdentifierRepository->getActivityData($id);
+        return $this->activityRepository->find($id);
     }
 
     /**
@@ -70,7 +69,7 @@ class OtherIdentifierService
      */
     public function update($activityIdentifier, $activity): bool
     {
-        return $this->otherIdentifierRepository->update($activityIdentifier, $activity);
+        return $this->activityRepository->update($activity->id, ['other_identifier' => $this->sanitizeOtherIdentifierData($activityIdentifier)]);
     }
 
     /**
@@ -87,5 +86,23 @@ class OtherIdentifierService
         $this->multilevelSubElementFormCreator->url = route('admin.activity.other-identifier.update', [$id]);
 
         return $this->multilevelSubElementFormCreator->editForm($model, $element['other_identifier'], 'PUT', '/activity/' . $id);
+    }
+
+    /**
+     * Sanitizes other identifier data.
+     *
+     * @param $activityIdentifier
+     *
+     * @return array
+     */
+    public function sanitizeOtherIdentifierData($activityIdentifier): array
+    {
+        $activityIdentifier['owner_org'] = array_values($activityIdentifier['owner_org']);
+
+        foreach ($activityIdentifier['owner_org'] as $owner_index => $owner_value) {
+            $activityIdentifier['owner_org'][$owner_index]['narrative'] = array_values($owner_value['narrative']);
+        }
+
+        return $activityIdentifier;
     }
 }

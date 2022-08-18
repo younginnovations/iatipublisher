@@ -5,8 +5,7 @@ declare(strict_types=1);
 namespace App\IATI\Services\Activity;
 
 use App\IATI\Elements\Builder\ParentCollectionFormCreator;
-use App\IATI\Repositories\Activity\PolicyMarkerRepository;
-use Illuminate\Database\Eloquent\Model;
+use App\IATI\Repositories\Activity\ActivityRepository;
 use Kris\LaravelFormBuilder\Form;
 
 /**
@@ -15,9 +14,9 @@ use Kris\LaravelFormBuilder\Form;
 class PolicyMarkerService
 {
     /**
-     * @var PolicyMarkerRepository
+     * @var ActivityRepository
      */
-    protected PolicyMarkerRepository $policyMarkerRepository;
+    protected ActivityRepository $activityRepository;
 
     /**
      * @var ParentCollectionFormCreator
@@ -27,12 +26,12 @@ class PolicyMarkerService
     /**
      * PolicyMarkerService constructor.
      *
-     * @param PolicyMarkerRepository $policyMarkerRepository
+     * @param ActivityRepository $activityRepository
      * @param ParentCollectionFormCreator $parentCollectionFormCreator
      */
-    public function __construct(PolicyMarkerRepository $policyMarkerRepository, ParentCollectionFormCreator $parentCollectionFormCreator)
+    public function __construct(ActivityRepository $activityRepository, ParentCollectionFormCreator $parentCollectionFormCreator)
     {
-        $this->policyMarkerRepository = $policyMarkerRepository;
+        $this->activityRepository = $activityRepository;
         $this->parentCollectionFormCreator = $parentCollectionFormCreator;
     }
 
@@ -45,7 +44,7 @@ class PolicyMarkerService
      */
     public function getPolicyMarkerData(int $activity_id): ?array
     {
-        return $this->policyMarkerRepository->getPolicyMarkerData($activity_id);
+        return $this->activityRepository->find($activity_id)->policy_marker;
     }
 
     /**
@@ -53,11 +52,11 @@ class PolicyMarkerService
      *
      * @param $id
      *
-     * @return Model
+     * @return object
      */
-    public function getActivityData($id): Model
+    public function getActivityData($id): object
     {
-        return $this->policyMarkerRepository->getActivityData($id);
+        return $this->activityRepository->find($id);
     }
 
     /**
@@ -70,7 +69,7 @@ class PolicyMarkerService
      */
     public function update($activityPolicyMarker, $activity): bool
     {
-        return $this->policyMarkerRepository->update($activityPolicyMarker, $activity);
+        return $this->activityRepository->update($activity->id, ['policy_marker' => $this->sanitizePolicyMarkerData($activityPolicyMarker)]);
     }
 
     /**
@@ -87,5 +86,21 @@ class PolicyMarkerService
         $this->parentCollectionFormCreator->url = route('admin.activity.policy-marker.update', [$id]);
 
         return $this->parentCollectionFormCreator->editForm($model, $element['policy_marker'], 'PUT', '/activity/' . $id);
+    }
+
+    /**
+     * Sanitizes policy marker data.
+     *
+     * @param $activityPolicyMarker
+     *
+     * @return array
+     */
+    public function sanitizePolicyMarkerData($activityPolicyMarker): array
+    {
+        foreach ($activityPolicyMarker['policy_marker'] as $key => $policy_marker) {
+            $activityPolicyMarker['policy_marker'][$key]['narrative'] = array_values($policy_marker['narrative']);
+        }
+
+        return array_values($activityPolicyMarker['policy_marker']);
     }
 }

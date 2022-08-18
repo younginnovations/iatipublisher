@@ -5,8 +5,7 @@ declare(strict_types=1);
 namespace App\IATI\Services\Activity;
 
 use App\IATI\Elements\Builder\BaseFormCreator;
-use App\IATI\Repositories\Activity\TitleRepository;
-use Illuminate\Database\Eloquent\Model;
+use App\IATI\Repositories\Activity\ActivityRepository;
 use Kris\LaravelFormBuilder\Form;
 
 /**
@@ -15,9 +14,9 @@ use Kris\LaravelFormBuilder\Form;
 class TitleService
 {
     /**
-     * @var TitleRepository
+     * @var ActivityRepository
      */
-    protected TitleRepository $titleRepository;
+    protected ActivityRepository $activityRepository;
 
     /**
      * @var BaseFormCreator
@@ -27,11 +26,11 @@ class TitleService
     /**
      * TitleService constructor.
      *
-     * @param TitleRepository $titleRepository
+     * @param ActivityRepository $activityRepository
      */
-    public function __construct(TitleRepository $titleRepository, BaseFormCreator $baseFormCreator)
+    public function __construct(ActivityRepository $activityRepository, BaseFormCreator $baseFormCreator)
     {
-        $this->titleRepository = $titleRepository;
+        $this->activityRepository = $activityRepository;
         $this->baseFormCreator = $baseFormCreator;
     }
 
@@ -44,7 +43,7 @@ class TitleService
      */
     public function getTitleData(int $activity_id): array
     {
-        return $this->titleRepository->getTitleData($activity_id);
+        return $this->activityRepository->find($activity_id)->title;
     }
 
     /**
@@ -52,11 +51,11 @@ class TitleService
      *
      * @param $id
      *
-     * @return Model
+     * @return object
      */
-    public function getActivityData($id): Model
+    public function getActivityData($id): object
     {
-        return $this->titleRepository->getActivityData($id);
+        return $this->activityRepository->find($id);
     }
 
     /**
@@ -69,9 +68,7 @@ class TitleService
      */
     public function update($activityTitle, $activity): bool
     {
-        $activity->title = array_values($activityTitle['narrative']);
-
-        return $activity->save();
+        return $this->activityRepository->update($activity->id, ['title' => array_values($activityTitle['narrative'])]);
     }
 
     /**

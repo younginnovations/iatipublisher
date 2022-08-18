@@ -5,8 +5,7 @@ declare(strict_types=1);
 namespace App\IATI\Services\Activity;
 
 use App\IATI\Elements\Builder\ParentCollectionFormCreator;
-use App\IATI\Repositories\Activity\SectorRepository;
-use Illuminate\Database\Eloquent\Model;
+use App\IATI\Repositories\Activity\ActivityRepository;
 use Kris\LaravelFormBuilder\Form;
 
 /**
@@ -15,9 +14,9 @@ use Kris\LaravelFormBuilder\Form;
 class SectorService
 {
     /**
-     * @var SectorRepository
+     * @var ActivityRepository
      */
-    protected SectorRepository $sectorRepository;
+    protected ActivityRepository $activityRepository;
 
     /**
      * @var ParentCollectionFormCreator
@@ -27,12 +26,12 @@ class SectorService
     /**
      * SectorService constructor.
      *
-     * @param SectorRepository $sectorRepository
+     * @param ActivityRepository $activityRepository
      * @param ParentCollectionFormCreator $parentCollectionFormCreator
      */
-    public function __construct(SectorRepository $sectorRepository, ParentCollectionFormCreator $parentCollectionFormCreator)
+    public function __construct(ActivityRepository $activityRepository, ParentCollectionFormCreator $parentCollectionFormCreator)
     {
-        $this->sectorRepository = $sectorRepository;
+        $this->activityRepository = $activityRepository;
         $this->parentCollectionFormCreator = $parentCollectionFormCreator;
     }
 
@@ -45,7 +44,7 @@ class SectorService
      */
     public function getSectorData(int $activity_id): ?array
     {
-        return $this->sectorRepository->getSectorData($activity_id);
+        return $this->activityRepository->find($activity_id)->sector;
     }
 
     /**
@@ -53,11 +52,11 @@ class SectorService
      *
      * @param $id
      *
-     * @return Model
+     * @return object
      */
-    public function getActivityData($id): Model
+    public function getActivityData($id): object
     {
-        return $this->sectorRepository->getActivityData($id);
+        return $this->activityRepository->find($id);
     }
 
     /**
@@ -70,7 +69,7 @@ class SectorService
      */
     public function update($sectorActivity, $activity): bool
     {
-        return $this->sectorRepository->update($sectorActivity, $activity);
+        return $this->activityRepository->update($activity->id, ['sector' => $this->sanitizeSectorData($sectorActivity)]);
     }
 
     /**
@@ -87,5 +86,21 @@ class SectorService
         $this->parentCollectionFormCreator->url = route('admin.activity.sector.update', [$id]);
 
         return $this->parentCollectionFormCreator->editForm($model, $element['sector'], 'PUT', '/activity/' . $id);
+    }
+
+    /**
+     * Sanitizes sector data.
+     *
+     * @param $activitySector
+     *
+     * @return array
+     */
+    public function sanitizeSectorData($activitySector): array
+    {
+        foreach ($activitySector['sector'] as $key => $sector) {
+            $activitySector['sector'][$key]['narrative'] = array_values($sector['narrative']);
+        }
+
+        return array_values($activitySector['sector']);
     }
 }

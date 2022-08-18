@@ -10,6 +10,7 @@ use App\IATI\Repositories\Activity\PeriodRepository;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Arr;
 use Kris\LaravelFormBuilder\Form;
 
 /**
@@ -48,7 +49,7 @@ class PeriodService
      */
     public function create(array $periodData): Model
     {
-        return $this->periodRepository->create($periodData);
+        return $this->periodRepository->store($this->sanitizePeriodData($periodData));
     }
 
     /**
@@ -61,7 +62,7 @@ class PeriodService
      */
     public function update(array $periodData, Period $resultIndicatorPeriod): bool
     {
-        return $this->periodRepository->update($periodData, $resultIndicatorPeriod);
+        return $this->periodRepository->update($resultIndicatorPeriod->id, ['period' => Arr::get($this->sanitizePeriodData($periodData), 'period', [])]);
     }
 
     /**
@@ -113,16 +114,16 @@ class PeriodService
         return $this->resultElementFormCreator->editForm([], $element['period'], 'POST', '/activity/' . $activityId);
     }
 
-    /*
+    /**
      * Return specific result indicator period.
      *
      * @param $indicatorId
      *
-     * @return Collection
+     * @return object
      */
-    public function getPeriodOfIndicator($indicatorId): Collection
+    public function getPeriodOfIndicator($indicatorId): object
     {
-        return $this->periodRepository->getPeriodOfIndicator($indicatorId);
+        return $this->periodRepository->findAllBy('indicator_id', $indicatorId);
     }
 
     /**
@@ -130,9 +131,9 @@ class PeriodService
      *
      * @param $periodId
      *
-     * @return Period|null
+     * @return object|null
      */
-    public function getPeriod($periodId): ?Period
+    public function getPeriod($periodId): ?object
     {
         return $this->periodRepository->find($periodId);
     }
@@ -148,5 +149,53 @@ class PeriodService
     public function getPaginatedPeriod($indicatorId, $page): LengthAwarePaginator|Collection
     {
         return $this->periodRepository->getPaginatedPeriod($indicatorId, $page);
+    }
+
+    /**
+     * Function to sanitize indicator data.
+     *
+     * @param array $periodData
+     *
+     * @return array
+     */
+    public function sanitizePeriodData(array $periodData): array
+    {
+        foreach ($periodData['period'] as $period_key => $period) {
+            if (is_array($period)) {
+                $periodData['period'][$period_key] = array_values($period);
+
+                foreach ($periodData['period'][$period_key] as $sub_key => $sub_element) {
+                    if (is_array($sub_element)) {
+                        foreach ($periodData['period'][$period_key][$sub_key] as $inner_key => $inner_element) {
+                            if (is_array($inner_element)) {
+                                $periodData['period'][$period_key][$sub_key][$inner_key] = array_values($inner_element);
+
+                                foreach ($periodData['period'][$period_key][$sub_key][$inner_key] as $deep_key => $deep_element) {
+                                    if (is_array($deep_element)) {
+                                        foreach ($periodData['period'][$period_key][$sub_key][$inner_key][$deep_key] as $inner_deep_key => $inner_deep_element) {
+                                            if (is_array($inner_deep_element)) {
+                                                $periodData['period'][$period_key][$sub_key][$inner_key][$deep_key][$inner_deep_key] = array_values($inner_deep_element);
+
+                                                foreach ($periodData['period'][$period_key][$sub_key][$inner_key][$deep_key][$inner_deep_key] as $deeperKey => $deeperValue) {
+                                                    if (is_array($deeperValue)) {
+                                                        foreach ($periodData['period'][$period_key][$sub_key][$inner_key][$deep_key][$inner_deep_key][$deeperKey] as $innerDeeperKey => $innerDeeperValue) {
+                                                            if (is_array($innerDeeperValue)) {
+                                                                $periodData['period'][$period_key][$sub_key][$inner_key][$deep_key][$inner_deep_key][$deeperKey][$innerDeeperKey] = array_values($innerDeeperValue);
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        return $periodData;
     }
 }

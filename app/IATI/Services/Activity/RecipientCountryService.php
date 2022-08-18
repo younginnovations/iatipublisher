@@ -5,8 +5,7 @@ declare(strict_types=1);
 namespace App\IATI\Services\Activity;
 
 use App\IATI\Elements\Builder\ParentCollectionFormCreator;
-use App\IATI\Repositories\Activity\RecipientCountryRepository;
-use Illuminate\Database\Eloquent\Model;
+use App\IATI\Repositories\Activity\ActivityRepository;
 use Kris\LaravelFormBuilder\Form;
 
 /**
@@ -15,9 +14,9 @@ use Kris\LaravelFormBuilder\Form;
 class RecipientCountryService
 {
     /**
-     * @var RecipientCountryRepository
+     * @var ActivityRepository
      */
-    protected RecipientCountryRepository $recipientCountryRepository;
+    protected ActivityRepository $activityRepository;
 
     /**
      * @var ParentCollectionFormCreator
@@ -27,12 +26,12 @@ class RecipientCountryService
     /**
      * RecipientCountryService constructor.
      *
-     * @param RecipientCountryRepository $recipientCountryRepository
+     * @param ActivityRepository $activityRepository
      * @param ParentCollectionFormCreator $parentCollectionFormCreator
      */
-    public function __construct(RecipientCountryRepository $recipientCountryRepository, ParentCollectionFormCreator $parentCollectionFormCreator)
+    public function __construct(ActivityRepository $activityRepository, ParentCollectionFormCreator $parentCollectionFormCreator)
     {
-        $this->recipientCountryRepository = $recipientCountryRepository;
+        $this->activityRepository = $activityRepository;
         $this->parentCollectionFormCreator = $parentCollectionFormCreator;
     }
 
@@ -45,7 +44,7 @@ class RecipientCountryService
      */
     public function getRecipientCountryData(int $activity_id): ?array
     {
-        return $this->recipientCountryRepository->getRecipientCountryData($activity_id);
+        return $this->activityRepository->find($activity_id)->recipient_country;
     }
 
     /**
@@ -53,11 +52,11 @@ class RecipientCountryService
      *
      * @param $id
      *
-     * @return Model
+     * @return object
      */
-    public function getActivityData($id): Model
+    public function getActivityData($id): object
     {
-        return $this->recipientCountryRepository->getActivityData($id);
+        return $this->activityRepository->find($id);
     }
 
     /**
@@ -70,7 +69,7 @@ class RecipientCountryService
      */
     public function update($activityRecipientCountry, $activity): bool
     {
-        return $this->recipientCountryRepository->update($activityRecipientCountry, $activity);
+        return $this->activityRepository->update($activity->id, ['recipient_country' => $this->sanitizeRecipientCountryData($activityRecipientCountry)]);
     }
 
     /**
@@ -87,5 +86,21 @@ class RecipientCountryService
         $this->parentCollectionFormCreator->url = route('admin.activity.recipient-country.update', [$id]);
 
         return $this->parentCollectionFormCreator->editForm($model, $element['recipient_country'], 'PUT', '/activity/' . $id);
+    }
+
+    /**
+     * Sanitizes recipient country data.
+     *
+     * @param $activityRecipientCountry
+     *
+     * @return array
+     */
+    public function sanitizeRecipientCountryData($activityRecipientCountry): array
+    {
+        foreach ($activityRecipientCountry['recipient_country'] as $key => $recipient_country) {
+            $activityRecipientCountry['recipient_country'][$key]['narrative'] = array_values($recipient_country['narrative']);
+        }
+
+        return array_values($activityRecipientCountry['recipient_country']);
     }
 }

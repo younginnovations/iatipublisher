@@ -9,6 +9,7 @@ use App\IATI\Repositories\Activity\TransactionRepository;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Arr;
 use Kris\LaravelFormBuilder\Form;
 
 /**
@@ -47,7 +48,7 @@ class TransactionService
      */
     public function create(array $transactionData): Model
     {
-        return $this->transactionRepository->create($transactionData);
+        return $this->transactionRepository->store($this->sanitizeTransactionData($transactionData));
     }
 
     /**
@@ -60,7 +61,7 @@ class TransactionService
      */
     public function update(array $transactionData, $activityTransaction): bool
     {
-        return $this->transactionRepository->update($transactionData, $activityTransaction);
+        return $this->transactionRepository->update($activityTransaction->id, ['transaction' => Arr::get($this->sanitizeTransactionData($transactionData), 'transaction', [])]);
     }
 
     /**
@@ -106,11 +107,11 @@ class TransactionService
      *
      * @param $activityId
      *
-     * @return Collection|null
+     * @return object|null
      */
-    public function getActivityTransactions($activityId): ?Collection
+    public function getActivityTransactions($activityId): ?object
     {
-        return $this->transactionRepository->getActivityTransactions($activityId);
+        return $this->transactionRepository->findAllBy('activity_id', $activityId);
     }
 
     /**
@@ -144,7 +145,7 @@ class TransactionService
         return $this->transactionElementFormCreator->editForm($activityTransaction->transaction, $element['transactions'], 'PUT', '/activity/' . $activityId);
     }
 
-    /*
+    /**
      * Returns array of paginated transactions belonging to an activity.
      *
      * @param $activityId
@@ -155,5 +156,33 @@ class TransactionService
     public function getPaginatedTransaction($activityId, $page): LengthAwarePaginator|Collection
     {
         return $this->transactionRepository->getPaginatedTransaction($activityId, $page);
+    }
+
+    /**
+     * Function to sanitize transaction data.
+     *
+     * @param array $transactionData
+     *
+     * @return array
+     */
+    public function sanitizeTransactionData(array $transactionData): array
+    {
+        foreach ($transactionData['transaction'] as $transaction_key => $transaction) {
+            if (is_array($transaction)) {
+                $transactionData['transaction'][$transaction_key] = array_values($transaction);
+
+                foreach ($transaction as $sub_key => $sub_element) {
+                    if (is_array($sub_element)) {
+                        foreach ($sub_element as $inner_key => $inner_element) {
+                            if (is_array($inner_element)) {
+                                $transactionData['transaction'][$transaction_key][$sub_key][$inner_key] = array_values($inner_element);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        return $transactionData;
     }
 }

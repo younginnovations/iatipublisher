@@ -5,8 +5,7 @@ declare(strict_types=1);
 namespace App\IATI\Services\Activity;
 
 use App\IATI\Elements\Builder\ParentCollectionFormCreator;
-use App\IATI\Repositories\Activity\TagRepository;
-use Illuminate\Database\Eloquent\Model;
+use App\IATI\Repositories\Activity\ActivityRepository;
 use Kris\LaravelFormBuilder\Form;
 
 /**
@@ -15,9 +14,9 @@ use Kris\LaravelFormBuilder\Form;
 class TagService
 {
     /**
-     * @var TagRepository
+     * @var ActivityRepository
      */
-    protected TagRepository $tagRepository;
+    protected ActivityRepository $activityRepository;
 
     /**
      * @var ParentCollectionFormCreator
@@ -27,12 +26,12 @@ class TagService
     /**
      * TagService constructor.
      *
-     * @param TagRepository $tagRepository
+     * @param ActivityRepository $activityRepository
      * @param ParentCollectionFormCreator $parentCollectionFormCreator
      */
-    public function __construct(TagRepository $tagRepository, ParentCollectionFormCreator $parentCollectionFormCreator)
+    public function __construct(ActivityRepository $activityRepository, ParentCollectionFormCreator $parentCollectionFormCreator)
     {
-        $this->tagRepository = $tagRepository;
+        $this->activityRepository = $activityRepository;
         $this->parentCollectionFormCreator = $parentCollectionFormCreator;
     }
 
@@ -45,7 +44,7 @@ class TagService
      */
     public function getTagData(int $activity_id): ?array
     {
-        return $this->tagRepository->getTagData($activity_id);
+        return $this->activityRepository->find($activity_id)->tag;
     }
 
     /**
@@ -53,11 +52,11 @@ class TagService
      *
      * @param $id
      *
-     * @return Model
+     * @return object
      */
-    public function getActivityData($id): Model
+    public function getActivityData($id): object
     {
-        return $this->tagRepository->getActivityData($id);
+        return $this->activityRepository->find($id);
     }
 
     /**
@@ -70,7 +69,7 @@ class TagService
      */
     public function update($activityTag, $activity): bool
     {
-        return $this->tagRepository->update($activityTag, $activity);
+        return $this->activityRepository->update($activity->id, ['tag' => $this->sanitizeTagData($activityTag)]);
     }
 
     /**
@@ -87,5 +86,21 @@ class TagService
         $this->parentCollectionFormCreator->url = route('admin.activity.tag.update', [$id]);
 
         return $this->parentCollectionFormCreator->editForm($model, $element['tag'], 'PUT', '/activity/' . $id);
+    }
+
+    /**
+     * Sanitizes tag data.
+     *
+     * @param $activityTag
+     *
+     * @return array
+     */
+    public function sanitizeTagData($activityTag): array
+    {
+        foreach ($activityTag['tag'] as $key => $tag) {
+            $activityTag['tag'][$key]['narrative'] = array_values($tag['narrative']);
+        }
+
+        return array_values($activityTag['tag']);
     }
 }
