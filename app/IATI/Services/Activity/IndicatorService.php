@@ -110,12 +110,12 @@ class IndicatorService
      * @return Form
      * @throws \JsonException
      */
-    public function createFormGenerator($activityId, $resultId): Form
+    public function createFormGenerator($resultId): Form
     {
         $element = getElementSchema('indicator');
-        $this->resultElementFormCreator->url = route('admin.result.indicator.store', [$activityId, $resultId]);
+        $this->resultElementFormCreator->url = route('admin.result.indicator.store', [$resultId]);
 
-        return $this->resultElementFormCreator->editForm([], $element, 'POST', '/activity/' . $activityId);
+        return $this->resultElementFormCreator->editForm([], $element, 'POST', route('admin.result.indicator.index', $resultId));
     }
 
     /**
@@ -128,13 +128,13 @@ class IndicatorService
      * @return Form
      * @throws \JsonException
      */
-    public function editFormGenerator($activityId, $resultId, $indicatorId): Form
+    public function editFormGenerator($resultId, $indicatorId): Form
     {
         $element = getElementSchema('indicator');
         $resultIndicator = $this->getIndicator($indicatorId);
-        $this->resultElementFormCreator->url = route('admin.result.indicator.update', [$activityId, $resultId, $indicatorId]);
+        $this->resultElementFormCreator->url = route('admin.result.indicator.update', [$resultId, $indicatorId]);
 
-        return $this->resultElementFormCreator->editForm($resultIndicator->indicator, $element, 'PUT', '/activity/' . $activityId);
+        return $this->resultElementFormCreator->editForm($resultIndicator->indicator, $element, 'PUT', route('admin.result.indicator.index', $resultId));
     }
 
     /**

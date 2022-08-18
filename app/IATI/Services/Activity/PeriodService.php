@@ -104,39 +104,35 @@ class PeriodService
     /**
      * Generates create period form.
      *
-     * @param $activityId
-     * @param $resultId
      * @param $indicatorId
      *
      * @return Form
      * @throws \JsonException
      */
-    public function createFormGenerator($activityId, $resultId, $indicatorId): Form
+    public function createFormGenerator($indicatorId): Form
     {
         $element = getElementSchema('period');
-        $this->resultElementFormCreator->url = route('admin.indicator.period.store', [$activityId, $resultId, $indicatorId]);
+        $this->resultElementFormCreator->url = route('admin.indicator.period.store', $indicatorId);
 
-        return $this->resultElementFormCreator->editForm([], $element, 'POST', '/activity/' . $activityId);
+        return $this->resultElementFormCreator->editForm([], $element, 'POST', route('admin.indicator.period.index', $indicatorId));
     }
 
     /**
      * Generates create period form.
      *
-     * @param $activityId
-     * @param $resultId
      * @param $indicatorId
      * @param $periodId
      *
      * @return Form
      * @throws \JsonException
      */
-    public function editFormGenerator($activityId, $resultId, $indicatorId, $periodId): Form
+    public function editFormGenerator($indicatorId, $periodId): Form
     {
         $element = getElementSchema('period');
         $indicatorPeriod = $this->getPeriod($periodId);
-        $this->resultElementFormCreator->url = route('admin.indicator.period.update', [$activityId, $resultId, $indicatorId, $periodId]);
+        $this->resultElementFormCreator->url = route('admin.indicator.period.update', [$indicatorId, $periodId]);
 
-        return $this->resultElementFormCreator->editForm($indicatorPeriod->period, $element, 'PUT', '/activity/' . $activityId);
+        return $this->resultElementFormCreator->editForm($indicatorPeriod->period, $element, 'PUT', route('admin.indicator.period.index', $indicatorId));
     }
 
     /**
