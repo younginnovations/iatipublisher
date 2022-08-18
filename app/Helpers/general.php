@@ -66,6 +66,19 @@ if (!function_exists('readElementJsonSchema')) {
     }
 }
 
+if (!function_exists('readOrganizationElementJsonSchema')) {
+    /**
+     * Reads elementJsonSchema.
+     *
+     * @return array
+     * @throws JsonException
+     */
+    function readOrganizationElementJsonSchema(): array
+    {
+        return readJsonFile('IATI/Data/organizationElementJsonSchema.json');
+    }
+}
+
 if (!function_exists('getElementSchema')) {
     /**
      * Returns element schema.
@@ -73,6 +86,18 @@ if (!function_exists('getElementSchema')) {
      * @throws JsonException
      */
     function getElementSchema($element): array
+    {
+        return getArr(readElementJsonSchema(), $element);
+    }
+}
+
+if (!function_exists('getOrganizationElementSchema')) {
+    /**
+     * Returns organization element schema.
+     *
+     * @throws JsonException
+     */
+    function getOrganizationElementSchema($element): array
     {
         return getArr(readElementJsonSchema(), $element);
     }
@@ -133,6 +158,28 @@ if (!function_exists('getDefaultElementStatus')) {
             'planned_disbursement' => false,
             'transactions'         => false,
             'result'               => false,
+        ];
+    }
+}
+
+if (!function_exists('getDefaultOrganizationElementStatus')) {
+    /**
+     * Returns Default Elements Status.
+     *
+     * @return array
+     */
+    function getDefaultOrganizationElementStatus(): array
+    {
+        return [
+            'identifier'                => false,
+            'name'                      => false,
+            'recipient_org'             => false,
+            'total_budget'              => false,
+            'total_expenditure'         => false,
+            'recipient_org_budget'      => false,
+            'recipient_country_budget'  => false,
+            'recipient_region_budget'   => false,
+            'document_link'             => false,
         ];
     }
 }
