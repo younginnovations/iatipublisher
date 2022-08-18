@@ -46,7 +46,7 @@
             class="px-6 uppercase bg-white"
             text="Go Back"
             type=""
-            @click="stepMinusOne"
+            @click="publishValue = false"
           />
           <BtnComponent
             v-if="publishStep == 0"

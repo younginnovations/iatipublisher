@@ -6,15 +6,9 @@
     <div id="activity">
       <PageTitle :show-buttons="state.showButtons" />
       <Toast
-          v-if="toastData.visibility"
-          :message="toastData.message"
-          :type="toastData.type"
-      />
-      <Toast
-          v-if="toastMessage.message"
-          class="mr-3.5"
-          :message="toastMessage.message"
-          :type="toastMessage.type"
+        v-if="toastData.visibility"
+        :message="toastData.message"
+        :type="toastData.type"
       />
       <EmptyActivity v-if="isEmpty" />
       <TableLayout
@@ -30,7 +24,7 @@
 </template>
 
 <script lang="ts">
-import {defineComponent, onMounted, provide, reactive, ref} from 'vue';
+import { defineComponent, onMounted, provide, reactive, ref } from 'vue';
 import axios from 'axios';
 
 import EmptyActivity from './partials/EmptyActivity.vue';
@@ -112,7 +106,15 @@ export default defineComponent({
 
     provide('toastMessage', toastMessage);
 
-    return { activities, state, isEmpty, showOrHide, fetchActivities, toastData,toastMessage, };
+    return {
+      activities,
+      state,
+      isEmpty,
+      showOrHide,
+      fetchActivities,
+      toastData,
+      toastMessage,
+    };
   },
 });
 </script>
