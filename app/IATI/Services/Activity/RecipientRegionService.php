@@ -5,8 +5,7 @@ declare(strict_types=1);
 namespace App\IATI\Services\Activity;
 
 use App\IATI\Elements\Builder\ParentCollectionFormCreator;
-use App\IATI\Repositories\Activity\RecipientRegionRepository;
-use Illuminate\Database\Eloquent\Model;
+use App\IATI\Repositories\Activity\ActivityRepository;
 use Kris\LaravelFormBuilder\Form;
 
 /**
@@ -15,9 +14,9 @@ use Kris\LaravelFormBuilder\Form;
 class RecipientRegionService
 {
     /**
-     * @var RecipientRegionRepository
+     * @var ActivityRepository
      */
-    protected RecipientRegionRepository $recipientRegionRepository;
+    protected ActivityRepository $activityRepository;
 
     /**
      * @var ParentCollectionFormCreator
@@ -27,12 +26,12 @@ class RecipientRegionService
     /**
      * RecipientRegionService constructor.
      *
-     * @param RecipientRegionRepository $recipientRegionRepository
+     * @param ActivityRepository $activityRepository
      * @param ParentCollectionFormCreator $parentCollectionFormCreator
      */
-    public function __construct(RecipientRegionRepository $recipientRegionRepository, ParentCollectionFormCreator $parentCollectionFormCreator)
+    public function __construct(ActivityRepository $activityRepository, ParentCollectionFormCreator $parentCollectionFormCreator)
     {
-        $this->recipientRegionRepository = $recipientRegionRepository;
+        $this->activityRepository = $activityRepository;
         $this->parentCollectionFormCreator = $parentCollectionFormCreator;
     }
 
@@ -45,7 +44,7 @@ class RecipientRegionService
      */
     public function getRecipientRegionData(int $activity_id): ?array
     {
-        return $this->recipientRegionRepository->getRecipientRegionData($activity_id);
+        return $this->activityRepository->find($activity_id)->recipient_region;
     }
 
     /**
@@ -53,11 +52,11 @@ class RecipientRegionService
      *
      * @param $id
      *
-     * @return Model
+     * @return object
      */
-    public function getActivityData($id): Model
+    public function getActivityData($id): object
     {
-        return $this->recipientRegionRepository->getActivityData($id);
+        return $this->activityRepository->find($id);
     }
 
     /**
@@ -70,7 +69,7 @@ class RecipientRegionService
      */
     public function update($activityRecipientRegion, $activity): bool
     {
-        return $this->recipientRegionRepository->update($activityRecipientRegion, $activity);
+        return $this->activityRepository->update($activity->id, ['recipient_region' => $this->sanitizeRecipientRegionData($activityRecipientRegion)]);
     }
 
     /**
@@ -87,5 +86,21 @@ class RecipientRegionService
         $this->parentCollectionFormCreator->url = route('admin.activity.recipient-region.update', [$id]);
 
         return $this->parentCollectionFormCreator->editForm($model, $element['recipient_region'], 'PUT', '/activity/' . $id);
+    }
+
+    /**
+     * Sanitizes recipient region data.
+     *
+     * @param $activityRecipientRegion
+     *
+     * @return array
+     */
+    public function sanitizeRecipientRegionData($activityRecipientRegion): array
+    {
+        foreach ($activityRecipientRegion['recipient_region'] as $key => $recipient_region) {
+            $activityRecipientRegion['recipient_region'][$key]['narrative'] = array_values($recipient_region['narrative']);
+        }
+
+        return array_values($activityRecipientRegion['recipient_region']);
     }
 }

@@ -5,20 +5,18 @@ declare(strict_types=1);
 namespace App\IATI\Services\Activity;
 
 use App\IATI\Elements\Builder\ParentCollectionFormCreator;
-use App\IATI\Repositories\Activity\ParticipatingOrganizationRepository;
-use Illuminate\Database\Eloquent\Model;
+use App\IATI\Repositories\Activity\ActivityRepository;
 use Kris\LaravelFormBuilder\Form;
 
 /**
- * Class participatingOrganization
- *Service.
+ * Class ParticipatingOrganizationService.
  */
 class ParticipatingOrganizationService
 {
     /**
-     * @var ParticipatingOrganizationRepository
+     * @var ActivityRepository
      */
-    protected ParticipatingOrganizationRepository $participatingOrganizationRepository;
+    protected ActivityRepository $activityRepository;
 
     /**
      * @var ParentCollectionFormCreator
@@ -28,12 +26,12 @@ class ParticipatingOrganizationService
     /**
      * ParticipatingOrganizationService constructor.
      *
-     * @param ParticipatingOrganizationRepository $participatingOrganizationRepository
+     * @param ActivityRepository $activityRepository
      * @param ParentCollectionFormCreator $parentCollectionFormCreator
      */
-    public function __construct(ParticipatingOrganizationRepository $participatingOrganizationRepository, ParentCollectionFormCreator $parentCollectionFormCreator)
+    public function __construct(ActivityRepository $activityRepository, ParentCollectionFormCreator $parentCollectionFormCreator)
     {
-        $this->participatingOrganizationRepo = $participatingOrganizationRepository;
+        $this->activityRepository = $activityRepository;
         $this->parentCollectionFormCreator = $parentCollectionFormCreator;
     }
 
@@ -46,7 +44,7 @@ class ParticipatingOrganizationService
      */
     public function getParticipatingOrganizationData(int $activity_id): ?array
     {
-        return $this->participatingOrganizationRepo->getParticipatingOrganizationData($activity_id);
+        return $this->activityRepository->find($activity_id)->participating_org;
     }
 
     /**
@@ -54,11 +52,11 @@ class ParticipatingOrganizationService
      *
      * @param $id
      *
-     * @return Model
+     * @return object
      */
-    public function getActivityData($id): Model
+    public function getActivityData($id): object
     {
-        return $this->participatingOrganizationRepo->getActivityData($id);
+        return $this->activityRepository->find($id);
     }
 
     /**
@@ -71,7 +69,7 @@ class ParticipatingOrganizationService
      */
     public function update($participatingOrganization, $activity): bool
     {
-        return $this->participatingOrganizationRepo->update($participatingOrganization, $activity);
+        return $this->activityRepository->update($activity->id, ['participating_org' => $this->sanitizeParticipatingOrgData($participatingOrganization)]);
     }
 
     /**
@@ -88,5 +86,21 @@ class ParticipatingOrganizationService
         $this->parentCollectionFormCreator->url = route('admin.activity.participating-org.update', [$id]);
 
         return $this->parentCollectionFormCreator->editForm($model, $element['participating_org'], 'PUT', '/activity/' . $id);
+    }
+
+    /**
+     * Sanitizes participating org data.
+     *
+     * @param $participatingOrganization
+     *
+     * @return array
+     */
+    public function sanitizeParticipatingOrgData($participatingOrganization): array
+    {
+        foreach ($participatingOrganization['participating_org'] as $key => $participating_org) {
+            $participatingOrganization['participating_org'][$key]['narrative'] = array_values($participating_org['narrative']);
+        }
+
+        return array_values($participatingOrganization['participating_org']);
     }
 }

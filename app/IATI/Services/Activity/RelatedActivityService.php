@@ -5,8 +5,7 @@ declare(strict_types=1);
 namespace App\IATI\Services\Activity;
 
 use App\IATI\Elements\Builder\BaseFormCreator;
-use App\IATI\Repositories\Activity\RelatedActivityRepository;
-use Illuminate\Database\Eloquent\Model;
+use App\IATI\Repositories\Activity\ActivityRepository;
 use Kris\LaravelFormBuilder\Form;
 
 /**
@@ -15,9 +14,9 @@ use Kris\LaravelFormBuilder\Form;
 class RelatedActivityService
 {
     /**
-     * @var RelatedActivityRepository
+     * @var ActivityRepository
      */
-    protected RelatedActivityRepository $relatedActivityRepository;
+    protected ActivityRepository $activityRepository;
 
     /**
      * @var BaseFormCreator
@@ -27,12 +26,12 @@ class RelatedActivityService
     /**
      * RelatedActivityService constructor.
      *
-     * @param RelatedActivityRepository $relatedActivityRepository
+     * @param ActivityRepository $activityRepository
      * @param BaseFormCreator $baseFormCreator
      */
-    public function __construct(RelatedActivityRepository $relatedActivityRepository, BaseFormCreator $baseFormCreator)
+    public function __construct(ActivityRepository $activityRepository, BaseFormCreator $baseFormCreator)
     {
-        $this->relatedActivityRepository = $relatedActivityRepository;
+        $this->activityRepository = $activityRepository;
         $this->baseFormCreator = $baseFormCreator;
     }
 
@@ -45,7 +44,7 @@ class RelatedActivityService
      */
     public function getRelatedActivityData(int $activity_id): ?array
     {
-        return $this->relatedActivityRepository->getRelatedActivityData($activity_id);
+        return $this->activityRepository->find($activity_id)->related_activity;
     }
 
     /**
@@ -53,11 +52,11 @@ class RelatedActivityService
      *
      * @param $id
      *
-     * @return Model
+     * @return object
      */
-    public function getActivityData($id): Model
+    public function getActivityData($id): object
     {
-        return $this->relatedActivityRepository->getActivityData($id);
+        return $this->activityRepository->find($id);
     }
 
     /**
@@ -70,7 +69,7 @@ class RelatedActivityService
      */
     public function update($activityRelatedActivity, $activity): bool
     {
-        return $this->relatedActivityRepository->update($activityRelatedActivity, $activity);
+        return $this->activityRepository->update($activity->id, ['related_activity' => array_values($activityRelatedActivity['related_activity'])]);
     }
 
     /**

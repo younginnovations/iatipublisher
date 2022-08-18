@@ -5,9 +5,8 @@ declare(strict_types=1);
 namespace App\IATI\Services\Activity;
 
 use App\IATI\Elements\Builder\ParentCollectionFormCreator;
-use App\IATI\Repositories\Activity\DocumentLinkRepository;
+use App\IATI\Repositories\Activity\ActivityRepository;
 use App\IATI\Repositories\Document\DocumentRepository;
-use Illuminate\Database\Eloquent\Model;
 use Kris\LaravelFormBuilder\Form;
 
 /**
@@ -16,9 +15,9 @@ use Kris\LaravelFormBuilder\Form;
 class DocumentLinkService
 {
     /**
-     * @var DocumentLinkRepository
+     * @var ActivityRepository
      */
-    protected DocumentLinkRepository $documentLinkRepository;
+    protected ActivityRepository $activityRepository;
 
     /**
      * @var DocumentRepository
@@ -33,12 +32,12 @@ class DocumentLinkService
     /**
      * DocumentLinkService constructor.
      *
-     * @param DocumentLinkRepository $documentLinkRepository
-     * @param ParentCollectionFormCreator $parenCollectionFormCreator
+     * @param ActivityRepository $activityRepository
+     * @param ParentCollectionFormCreator $parentCollectionFormCreator
      */
-    public function __construct(DocumentLinkRepository $documentLinkRepository, ParentCollectionFormCreator $parentCollectionFormCreator)
+    public function __construct(ActivityRepository $activityRepository, ParentCollectionFormCreator $parentCollectionFormCreator)
     {
-        $this->documentLinkRepository = $documentLinkRepository;
+        $this->activityRepository = $activityRepository;
         $this->parentCollectionFormCreator = $parentCollectionFormCreator;
     }
 
@@ -51,7 +50,7 @@ class DocumentLinkService
      */
     public function getDocumentLinkData(int $activity_id): ?array
     {
-        return $this->documentLinkRepository->getDocumentLinkData($activity_id);
+        return $this->activityRepository->find($activity_id)->document_link;
     }
 
     /**
@@ -59,11 +58,11 @@ class DocumentLinkService
      *
      * @param $id
      *
-     * @return Model
+     * @return object
      */
-    public function getActivityData($id): Model
+    public function getActivityData($id): object
     {
-        return $this->documentLinkRepository->getActivityData($id);
+        return $this->activityRepository->find($id);
     }
 
     /**
@@ -76,7 +75,7 @@ class DocumentLinkService
      */
     public function update($documentLink, $activity): bool
     {
-        return $this->documentLinkRepository->update($documentLink, $activity);
+        return $this->activityRepository->update($activity->id, ['document_link' => $this->sanitizeDocumentLinkData($documentLink)]);
     }
 
     /**
@@ -108,5 +107,25 @@ class DocumentLinkService
         $this->parentCollectionFormCreator->url = route('admin.activity.document-link.update', [$id]);
 
         return $this->parentCollectionFormCreator->editForm($model, $element['document_link'], 'PUT', '/activity/' . $id);
+    }
+
+    /**
+     * Sanitizes document link data.
+     *
+     * @param $documentLink
+     *
+     * @return array
+     */
+    public function sanitizeDocumentLinkData($documentLink): array
+    {
+        $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true)['document_link'];
+
+        foreach ($documentLink['document_link'] as $key => $document) {
+            foreach (array_keys($element['sub_elements']) as $subelement) {
+                $documentLink['document_link'][$key][$subelement] = array_values($document[$subelement]);
+            }
+        }
+
+        return array_values($documentLink['document_link']);
     }
 }

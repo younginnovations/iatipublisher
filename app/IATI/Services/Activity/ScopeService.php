@@ -5,8 +5,7 @@ declare(strict_types=1);
 namespace App\IATI\Services\Activity;
 
 use App\IATI\Elements\Builder\BaseFormCreator;
-use App\IATI\Repositories\Activity\ScopeRepository;
-use Illuminate\Database\Eloquent\Model;
+use App\IATI\Repositories\Activity\ActivityRepository;
 use Kris\LaravelFormBuilder\Form;
 
 /**
@@ -15,9 +14,9 @@ use Kris\LaravelFormBuilder\Form;
 class ScopeService
 {
     /**
-     * @var ScopeRepository
+     * @var ActivityRepository
      */
-    protected ScopeRepository $scopeRepository;
+    protected ActivityRepository $activityRepository;
 
     /**
      * @var BaseFormCreator
@@ -27,12 +26,12 @@ class ScopeService
     /**
      * ScopeService constructor.
      *
-     * @param ScopeRepository $scopeRepository
+     * @param ActivityRepository $activityRepository
      * @param BaseFormCreator $baseFormCreator
      */
-    public function __construct(ScopeRepository $scopeRepository, BaseFormCreator $baseFormCreator)
+    public function __construct(ActivityRepository $activityRepository, BaseFormCreator $baseFormCreator)
     {
-        $this->scopeRepository = $scopeRepository;
+        $this->activityRepository = $activityRepository;
         $this->baseFormCreator = $baseFormCreator;
     }
 
@@ -45,7 +44,7 @@ class ScopeService
      */
     public function getScopeData(int $activity_id): ?int
     {
-        return $this->scopeRepository->getScopeData($activity_id);
+        return $this->activityRepository->find($activity_id)->activity_scope;
     }
 
     /**
@@ -53,11 +52,11 @@ class ScopeService
      *
      * @param $id
      *
-     * @return Model
+     * @return object
      */
-    public function getActivityData($id): Model
+    public function getActivityData($id): object
     {
-        return $this->scopeRepository->getActivityData($id);
+        return $this->activityRepository->find($id);
     }
 
     /**
@@ -70,7 +69,7 @@ class ScopeService
      */
     public function update($activityScope, $activity): bool
     {
-        return $this->scopeRepository->update($activityScope, $activity);
+        return $this->activityRepository->update($activity->id, ['activity_scope' => $activityScope]);
     }
 
     /**

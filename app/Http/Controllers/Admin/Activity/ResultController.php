@@ -77,7 +77,8 @@ class ResultController extends Controller
     public function create($id): Factory|View|RedirectResponse|Application
     {
         try {
-            $element = getElements();
+//            $element = getElements();
+            $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true, 512, JSON_THROW_ON_ERROR);
             $activity = $this->activityService->getActivity($id);
             $form = $this->resultService->createFormGenerator($id);
             $data = ['core' => $element['result']['criteria'] ?? false, 'status' => false, 'title' => $element['result']['label'], 'name' => 'result'];

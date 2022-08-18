@@ -10,6 +10,7 @@ use App\IATI\Repositories\Activity\IndicatorRepository;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Arr;
 use Kris\LaravelFormBuilder\Form;
 
 /**
@@ -44,11 +45,11 @@ class IndicatorService
      *
      * @param array $indicatorData
      *
-     * @return Model
+     * @return object
      */
-    public function create(array $indicatorData): Model
+    public function create(array $indicatorData): object
     {
-        return $this->indicatorRepository->create($indicatorData);
+        return $this->indicatorRepository->store($this->sanitizeIndicatorData($indicatorData));
     }
 
     /**
@@ -61,7 +62,7 @@ class IndicatorService
      */
     public function update(array $indicatorData, Indicator $activityResultIndicator): bool
     {
-        return $this->indicatorRepository->update($indicatorData, $activityResultIndicator);
+        return $this->indicatorRepository->update($activityResultIndicator->id, ['indicator' => Arr::get($this->sanitizeIndicatorData($indicatorData), 'indicator', [])]);
     }
 
     /**
@@ -94,9 +95,9 @@ class IndicatorService
      *
      * @param $id
      *
-     * @return Indicator|null
+     * @return object|null
      */
-    public function getIndicator($id): ?Indicator
+    public function getIndicator($id): ?object
     {
         return $this->indicatorRepository->find($id);
     }
@@ -136,7 +137,7 @@ class IndicatorService
         return $this->resultElementFormCreator->editForm([], $element['indicator'], 'POST', '/activity/' . $activityId);
     }
 
-    /*
+    /**
      * Returns array of paginated indicator belonging to result of an activity.
      *
      * @param $resultId
@@ -147,5 +148,53 @@ class IndicatorService
     public function getPaginatedIndicator($resultId, $page): LengthAwarePaginator|Collection
     {
         return $this->indicatorRepository->getPaginatedIndicator($resultId, $page);
+    }
+
+    /**
+     * Function to sanitize indicator data.
+     *
+     * @param array $indicatorData
+     *
+     * @return array
+     */
+    public function sanitizeIndicatorData(array $indicatorData): array
+    {
+        foreach ($indicatorData['indicator'] as $indicator_key => $indicator) {
+            if (is_array($indicator)) {
+                $indicatorData['indicator'][$indicator_key] = array_values($indicator);
+
+                foreach ($indicatorData['indicator'][$indicator_key] as $sub_key => $sub_element) {
+                    if (is_array($sub_element)) {
+                        foreach ($indicatorData['indicator'][$indicator_key][$sub_key] as $inner_key => $inner_element) {
+                            if (is_array($inner_element)) {
+                                $indicatorData['indicator'][$indicator_key][$sub_key][$inner_key] = array_values($inner_element);
+
+                                foreach ($indicatorData['indicator'][$indicator_key][$sub_key][$inner_key] as $deep_key => $deep_element) {
+                                    if (is_array($deep_element)) {
+                                        foreach ($indicatorData['indicator'][$indicator_key][$sub_key][$inner_key][$deep_key] as $inner_deep_key => $inner_deep_element) {
+                                            if (is_array($inner_deep_element)) {
+                                                $indicatorData['indicator'][$indicator_key][$sub_key][$inner_key][$deep_key][$inner_deep_key] = array_values($inner_deep_element);
+
+                                                foreach ($indicatorData['indicator'][$indicator_key][$sub_key][$inner_key][$deep_key][$inner_deep_key] as $deeperKey => $deeperValue) {
+                                                    if (is_array($deeperValue)) {
+                                                        foreach ($indicatorData['indicator'][$indicator_key][$sub_key][$inner_key][$deep_key][$inner_deep_key][$deeperKey] as $innerDeeperKey => $innerDeeperValue) {
+                                                            if (is_array($innerDeeperValue)) {
+                                                                $indicatorData['indicator'][$indicator_key][$sub_key][$inner_key][$deep_key][$inner_deep_key][$deeperKey][$innerDeeperKey] = array_values($innerDeeperValue);
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        return $indicatorData;
     }
 }
