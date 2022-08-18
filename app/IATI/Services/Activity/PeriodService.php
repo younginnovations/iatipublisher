@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\IATI\Services\Activity;
 
 use App\IATI\Elements\Builder\ResultElementFormCreator;
-use App\IATI\Models\Activity\Period;
 use App\IATI\Repositories\Activity\PeriodRepository;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
@@ -31,13 +30,50 @@ class PeriodService
     /**
      * PeriodService constructor.
      *
-     * @param PeriodRepository $periodRepository
+     * @param PeriodRepository         $periodRepository
      * @param ResultElementFormCreator $resultElementFormCreator
      */
     public function __construct(PeriodRepository $periodRepository, ResultElementFormCreator $resultElementFormCreator)
     {
         $this->periodRepository = $periodRepository;
         $this->resultElementFormCreator = $resultElementFormCreator;
+    }
+
+    /**
+     * Return specific result indicator period.
+     *
+     * @param $indicatorId
+     *
+     * @return object
+     */
+    public function getPeriods($indicatorId): object
+    {
+        return $this->periodRepository->findAllBy('indicator_id', $indicatorId);
+    }
+
+    /**
+     * Return specific result indicator period.
+     *
+     * @param $id
+     *
+     * @return object|null
+     */
+    public function getPeriod($id): ?object
+    {
+        return $this->periodRepository->find($id);
+    }
+
+    /**
+     * Returns array of paginated period belonging to indicator of an result.
+     *
+     * @param int $indicatorId
+     * @param int $page
+     *
+     * @return LengthAwarePaginator|Collection
+     */
+    public function getPaginatedPeriod(int $indicatorId, int $page): LengthAwarePaginator|Collection
+    {
+        return $this->periodRepository->getPaginatedPeriod($indicatorId, $page);
     }
 
     /**
@@ -55,46 +91,14 @@ class PeriodService
     /**
      * Update Indicator Period.
      *
-     * @param array $periodData
-     * @param Period $resultIndicatorPeriod
+     * @param int $id
+     * @param     $periodData
      *
      * @return bool
      */
-    public function update(array $periodData, Period $resultIndicatorPeriod): bool
+    public function update(int $id, $periodData): bool
     {
-        return $this->periodRepository->update($resultIndicatorPeriod->id, ['period' => Arr::get($this->sanitizePeriodData($periodData), 'period', [])]);
-    }
-
-    /**
-     * Return specific result indicator period.
-     *
-     * @param $indicatorId
-     * @param $indicatorPeriodId
-     *
-     * @return Model
-     */
-    public function getIndicatorPeriod($indicatorId, $indicatorPeriodId): Model
-    {
-        return $this->periodRepository->getIndicatorPeriod($indicatorId, $indicatorPeriodId);
-    }
-
-    /**
-     * Generates create period form.
-     *
-     * @param $activityId
-     * @param $resultId
-     * @param $indicatorId
-     * @param $periodId
-     *
-     * @return Form
-     */
-    public function editFormGenerator($activityId, $resultId, $indicatorId, $periodId): Form
-    {
-        $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
-        $indicatorPeriod = $this->getIndicatorPeriod($indicatorId, $periodId);
-        $this->resultElementFormCreator->url = route('admin.indicator.period.update', [$activityId, $resultId, $indicatorId, $periodId]);
-
-        return $this->resultElementFormCreator->editForm($indicatorPeriod->period, $element['period'], 'PUT', '/activity/' . $activityId);
+        return $this->periodRepository->update($id, ['period' => Arr::get($this->sanitizePeriodData($periodData), 'period', [])]);
     }
 
     /**
@@ -105,50 +109,34 @@ class PeriodService
      * @param $indicatorId
      *
      * @return Form
+     * @throws \JsonException
      */
     public function createFormGenerator($activityId, $resultId, $indicatorId): Form
     {
-        $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
+        $element = getElementSchema('period');
         $this->resultElementFormCreator->url = route('admin.indicator.period.store', [$activityId, $resultId, $indicatorId]);
 
-        return $this->resultElementFormCreator->editForm([], $element['period'], 'POST', '/activity/' . $activityId);
+        return $this->resultElementFormCreator->editForm([], $element, 'POST', '/activity/' . $activityId);
     }
 
     /**
-     * Return specific result indicator period.
+     * Generates create period form.
      *
+     * @param $activityId
+     * @param $resultId
      * @param $indicatorId
-     *
-     * @return object
-     */
-    public function getPeriodOfIndicator($indicatorId): object
-    {
-        return $this->periodRepository->findAllBy('indicator_id', $indicatorId);
-    }
-
-    /**
-     * Returns specific period.
-     *
      * @param $periodId
      *
-     * @return object|null
+     * @return Form
+     * @throws \JsonException
      */
-    public function getPeriod($periodId): ?object
+    public function editFormGenerator($activityId, $resultId, $indicatorId, $periodId): Form
     {
-        return $this->periodRepository->find($periodId);
-    }
+        $element = getElementSchema('period');
+        $indicatorPeriod = $this->getPeriod($periodId);
+        $this->resultElementFormCreator->url = route('admin.indicator.period.update', [$activityId, $resultId, $indicatorId, $periodId]);
 
-    /**
-     * Returns array of paginated period belonging to indicator of an result.
-     *
-     * @param $indicatorId
-     * @param $page
-     *
-     * return LengthAwarePaginator|Collection
-     */
-    public function getPaginatedPeriod($indicatorId, $page): LengthAwarePaginator|Collection
-    {
-        return $this->periodRepository->getPaginatedPeriod($indicatorId, $page);
+        return $this->resultElementFormCreator->editForm($indicatorPeriod->period, $element, 'PUT', '/activity/' . $activityId);
     }
 
     /**

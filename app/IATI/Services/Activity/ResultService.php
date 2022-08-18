@@ -77,14 +77,14 @@ class ResultService
     /**
      * Update Activity Result.
      *
-     * @param array $resultData
      * @param       $resultId
+     * @param array $resultData
      *
      * @return bool
      */
-    public function update(array $resultData, $resultId): bool
+    public function update($resultId, array $resultData): bool
     {
-        return $this->resultRepository->update($this->sanitizeResultData($resultData), $resultId);
+        return $this->resultRepository->update($resultId, $this->sanitizeResultData($resultData));
     }
 
     /**
@@ -162,11 +162,10 @@ class ResultService
      */
     public function createFormGenerator($activityId): Form
     {
-//        $element = getElements();
-        $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
+        $element = getElementSchema('result');
         $this->resultElementFormCreator->url = route('admin.activity.result.store', $activityId);
 
-        return $this->resultElementFormCreator->editForm([], $element['result'], 'POST', '/activity/' . $activityId);
+        return $this->resultElementFormCreator->editForm([], $element, 'POST', '/activity/' . $activityId);
     }
 
     /**
@@ -180,11 +179,11 @@ class ResultService
      */
     public function editFormGenerator($activityId, $resultId): Form
     {
-        $element = getElements();
+        $element = getElementSchema('result');
         $activityResult = $this->getResult($resultId);
         $this->resultElementFormCreator->url = route('admin.activity.result.update', [$activityId, $resultId]);
 
-        return $this->resultElementFormCreator->editForm($activityResult->result, $element['result'], 'PUT', '/activity/' . $activityId);
+        return $this->resultElementFormCreator->editForm($activityResult->result, $element, 'PUT', '/activity/' . $activityId);
     }
 
     /**

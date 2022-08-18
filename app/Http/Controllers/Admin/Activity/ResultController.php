@@ -68,6 +68,31 @@ class ResultController extends Controller
     }
 
     /**
+     * Returns paginated results.
+     *
+     * @param     $activityId
+     * @param int $page
+     *
+     * @return JsonResponse
+     */
+    public function getPaginatedResults($activityId, int $page = 1): JsonResponse
+    {
+        try {
+            $result = $this->resultService->getPaginatedResult($activityId, $page);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Results fetched successfully',
+                'data'    => $result,
+            ]);
+        } catch (\Exception $e) {
+            logger()->error($e->getMessage());
+
+            return response()->json(['success' => false, 'message' => 'Error occurred while fetching the data']);
+        }
+    }
+
+    /**
      * Renders result create form.
      *
      * @param $id
@@ -77,15 +102,13 @@ class ResultController extends Controller
     public function create($id): Factory|View|RedirectResponse|Application
     {
         try {
-//            $element = getElements();
-            $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true, 512, JSON_THROW_ON_ERROR);
+            $element = getElementSchema('result');
             $activity = $this->activityService->getActivity($id);
             $form = $this->resultService->createFormGenerator($id);
-            $data = ['core' => $element['result']['criteria'] ?? false, 'status' => false, 'title' => $element['result']['label'], 'name' => 'result'];
+            $data = ['core' => $element['criteria'] ?? false, 'status' => false, 'title' => $element['label'], 'name' => 'result'];
 
             return view('admin.activity.result.edit', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {
-            dd($e->getMessage());
             logger()->error($e->getMessage());
 
             return redirect()->route('admin.activity.result.index', $id)->with(
@@ -164,10 +187,10 @@ class ResultController extends Controller
     public function edit($activityId, $resultId): View|RedirectResponse
     {
         try {
-            $element = getElements();
+            $element = getElementSchema('result');
             $activity = $this->activityService->getActivity($activityId);
             $form = $this->resultService->editFormGenerator($activityId, $resultId);
-            $data = ['core' => $element['result']['criteria'] ?? false, 'status' => false, 'title' => $element['result']['label'], 'name' => 'result'];
+            $data = ['core' => $element['criteria'] ?? false, 'status' => false, 'title' => $element['label'], 'name' => 'result'];
 
             return view('admin.activity.result.edit', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {
@@ -194,10 +217,7 @@ class ResultController extends Controller
         try {
             $resultData = $request->except(['_method', '_token']);
 
-            if (!$this->resultService->update([
-                'activity_id' => $activityId,
-                'result'      => $resultData,
-            ], $resultId)) {
+            if (!$this->resultService->update($resultId, ['activity_id' => $activityId, 'result' => $resultData])) {
                 return redirect()->route('admin.activity.result.index', $activityId)->with(
                     'error',
                     'Error has occurred while updating activity result.'
@@ -215,31 +235,6 @@ class ResultController extends Controller
                 'error',
                 'Error has occurred while updating activity result.'
             );
-        }
-    }
-
-    /*
-     * Get results of the corresponding activity
-     *
-     * @param $activityId
-     * @param $page
-     *
-     * @return JsonResponse
-     */
-    public function getResult($activityId, $page = 1): JsonResponse
-    {
-        try {
-            $result = $this->resultService->getPaginatedResult($activityId, $page);
-
-            return response()->json([
-                'success' => true,
-                'message' => 'Results fetched successfully',
-                'data'    => $result,
-            ]);
-        } catch (\Exception $e) {
-            logger()->error($e->getMessage());
-
-            return response()->json(['success' => false, 'message' => 'Error occurred while fetching the data']);
         }
     }
 }

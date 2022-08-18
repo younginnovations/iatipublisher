@@ -17,16 +17,35 @@ use Illuminate\Pagination\LengthAwarePaginator;
 class ResultRepository extends Repository
 {
     /**
-     * @var Activity
-     */
-    protected Activity $activity;
-
-    /**
      * @return string
      */
     public function getModel(): string
     {
         return Result::class;
+    }
+
+    /**
+     * Returns results of specific activity.
+     *
+     * @param $activityId
+     * @return array
+     */
+    public function getActivityResults($activityId): array
+    {
+        return $this->model->where('activity_id', $activityId)->get()->toArray();
+    }
+
+    /**
+     * Returns paginated results.
+     *
+     * @param $activityId
+     * @param int $page
+     *
+     * @return Collection|LengthAwarePaginator
+     */
+    public function getPaginatedResult($activityId, int $page = 1): Collection | LengthAwarePaginator
+    {
+        return $this->model->where('activity_id', $activityId)->orderBy('created_at', 'DESC')->paginate(10, ['*'], 'result', $page);
     }
 
     /**
@@ -75,29 +94,5 @@ class ResultRepository extends Repository
     public function getResultWithIndicatorAndPeriod($resultId, $activityId): ?Model
     {
         return $this->model->where('id', $resultId)->where('activity_id', $activityId)->with(['indicators', 'indicators.periods'])->first();
-    }
-
-    /**
-     * Returns results of specific activity.
-     *
-     * @param $activityId
-     * @return array
-     */
-    public function getActivityResults($activityId): array
-    {
-        return $this->model->where('activity_id', $activityId)->get()->toArray();
-    }
-
-    /**
-     * Returns paginated results.
-     *
-     * @param $activityId
-     * @param int $page
-     *
-     * @return Collection|LengthAwarePaginator
-     */
-    public function getPaginatedResult($activityId, int $page = 1): Collection | LengthAwarePaginator
-    {
-        return $this->model->where('activity_id', $activityId)->orderBy('created_at', 'DESC')->paginate(10, ['*'], 'result', $page);
     }
 }
