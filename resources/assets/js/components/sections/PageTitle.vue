@@ -4,7 +4,7 @@
       <Breadcrumb :data="breadcrumbData" />
     </div>
     <div class="flex items-end gap-4">
-      <div class="title grow-0">
+      <div class="title max-w-[50%] basis-6/12">
         <div class="inline-flex items-center">
           <div class="mr-3">
             <a :href="backLink">

@@ -4,25 +4,15 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, toRefs } from 'vue';
+<script setup lang="ts">
+import { defineProps, toRefs } from 'vue';
 
-export default defineComponent({
-  name: 'CompletedStatus',
-  components: {},
-  props: {
-    data: {
-      type: Boolean,
-      required: true,
-    },
-  },
-  setup(props) {
-    const { data } = toRefs(props);
-
-    let color = data.value ? 'text-spring-50' : 'text-crimson-50',
-      text = data.value ? 'completed' : 'not completed';
-
-    return { color, text };
-  },
+const props = defineProps({
+  data: { type: Boolean, required: true },
 });
+
+const { data } = toRefs(props);
+
+let color = data.value ? 'text-spring-50' : 'text-crimson-50',
+  text = data.value ? 'completed' : 'not completed';
 </script>

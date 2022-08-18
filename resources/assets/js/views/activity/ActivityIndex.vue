@@ -10,6 +10,8 @@
         v-if="toastData.visibility"
         :message="toastData.message"
         :type="toastData.type"
+        <<<<<<<
+        HEAD
       />
       <Toast
         v-if="toastMessage.message"
@@ -31,7 +33,7 @@
 </template>
 
 <script lang="ts">
-import {defineComponent, onMounted, provide, reactive, ref} from 'vue';
+import { defineComponent, onMounted, provide, reactive, ref } from 'vue';
 import axios from 'axios';
 
 import EmptyActivity from './partials/EmptyActivity.vue';
@@ -123,7 +125,9 @@ export default defineComponent({
       isEmpty,
       isLoading,
       showOrHide,
-      fetchActivities, toastData,toastMessage,,
+      fetchActivities,
+      toastData,
+      toastMessage,
     };
   },
 });

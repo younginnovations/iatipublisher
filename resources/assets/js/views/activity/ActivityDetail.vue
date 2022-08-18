@@ -2,43 +2,44 @@
   <div class="relative bg-paper px-10 pt-4 pb-[71px]">
     <!-- title section -->
     <div class="mb-6 page-title">
-      <div class="flex items-end gap-4">
-        <div class="title grow-0">
-          <div class="max-w-sm pb-4 text-caption-c1 text-n-40">
-            <nav aria-label="breadcrumbs" class="rank-math-breadcrumb">
-              <div class="flex">
-                <a class="font-bold whitespace-nowrap" href="/activities"
-                  >Your Activities</a
+      <div class="pb-4 text-caption-c1 text-n-40">
+        <div>
+          <nav aria-label="breadcrumbs" class="rank-math-breadcrumb">
+            <div class="flex">
+              <a class="font-bold whitespace-nowrap" href="/activities">
+                Your Activities
+              </a>
+              <span class="mx-4 separator"> / </span>
+              <div class="breadcrumb__title">
+                <span
+                  class="overflow-hidden breadcrumb__title last text-n-30"
+                  >{{ pageTitle ?? 'Untitled' }}</span
                 >
-                <span class="mx-4 separator"> / </span>
-                <div class="breadcrumb__title">
-                  <span
-                    class="overflow-hidden breadcrumb__title last text-n-30"
-                    >{{ pageTitle ?? 'Untitled' }}</span
-                  >
-                  <span class="ellipsis__title--hover w-[calc(100%_+_35px)]">{{
-                    pageTitle ? pageTitle : 'Untitled'
-                  }}</span>
-                </div>
+                <span class="ellipsis__title--hover w-[calc(100%_+_35px)]">{{
+                  pageTitle ? pageTitle : 'Untitled'
+                }}</span>
               </div>
-            </nav>
-          </div>
-          <div class="inline-flex items-center max-w-3xl">
+            </div>
+          </nav>
+        </div>
+      </div>
+
+      <div class="flex items-end gap-4">
+        <div class="title max-w-[50%] basis-6/12">
+          <div class="inline-flex items-center w-full">
             <div class="mr-3">
               <a href="/activities">
                 <svg-vue icon="arrow-short-left" />
               </a>
             </div>
-            <div>
-              <h4 class="relative mr-4 text-2xl font-bold ellipsis__title">
-                <span
-                  id="activity_title"
-                  class="overflow-hidden ellipsis__title"
-                  >{{ pageTitle ? pageTitle : 'Untitled' }}</span
-                >
-                <span class="ellipsis__title--hover">{{
-                  pageTitle ? pageTitle : 'Untitled'
-                }}</span>
+            <div class="inline-flex flex-wrap grow">
+              <h4 class="relative text-2xl font-bold ellipsis__title">
+                <span class="overflow-hidden ellipsis__title">
+                  {{ pageTitle ? pageTitle : 'Untitled' }}
+                </span>
+                <span class="ellipsis__title--hover">
+                  {{ pageTitle ? pageTitle : 'Untitled' }}
+                </span>
               </h4>
             </div>
           </div>
@@ -63,8 +64,8 @@
             <!-- Download File -->
             <button
               class="button secondary-btn mr-3.5 font-bold"
-              @click="downloadValue = true"
               style="display: none"
+              @click="downloadValue = true"
             >
               <svg-vue icon="download-file" />
             </button>
@@ -104,7 +105,7 @@
             </Modal>
 
             <!-- Delete Activity -->
-            <DeleteButton class="hello mr-3.5" />
+            <DeleteButton class="mr-3.5" />
 
             <!-- Unpublish Activity -->
             <UnPublish
@@ -123,6 +124,9 @@
     <!-- title section ends -->
     <div class="activities">
       <aside class="activities__sidebar">
+        <div v-if="publishStatus.already_published" class="mb-2">
+          <PreviouslyPublished />
+        </div>
         <div class="flex mb-1">
           <div class="mr-1 activities__card progress">
             <div class="flex items-center justify-between mb-2">
@@ -275,9 +279,11 @@ import DeleteButton from 'Components/sections/DeleteButton.vue';
 import Errors from 'Components/sections/StickyErrors.vue';
 import BtnComponent from 'Components/ButtonComponent.vue';
 import Toast from 'Components/Toast.vue';
+import PageTitle from 'Components/sections/PageTitle.vue';
 
 import Elements from 'Activity/partials/ActivitiesElements.vue';
 import ActivityElement from 'Activity/partials/ActivityElement.vue';
+import PreviouslyPublished from 'Components/status/PreviouslyPublished.vue';
 
 export default defineComponent({
   components: {
@@ -293,6 +299,7 @@ export default defineComponent({
     Errors,
     UnPublish,
     DeleteButton,
+    PreviouslyPublished,
   },
   props: {
     elements: {
@@ -503,6 +510,20 @@ export default defineComponent({
     provide('toastMessage', toastMessage);
     provide('publishStatus', publishStatus);
 
+    /**
+     * Breadcrumb data
+     */
+    const breadcrumbData = [
+      {
+        title: 'Your Activities',
+        link: '/activities',
+      },
+      {
+        title: pageTitle,
+        link: '',
+      },
+    ];
+
     return {
       groupedData,
       activities,
@@ -519,6 +540,7 @@ export default defineComponent({
       errorData,
       toastMessage,
       publishStatus,
+      breadcrumbData,
     };
   },
 });
