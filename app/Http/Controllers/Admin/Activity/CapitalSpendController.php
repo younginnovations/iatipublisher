@@ -58,18 +58,17 @@ class CapitalSpendController extends Controller
     /**
      * Updates capitals spend data.
      *
-     * @param CapitalSpendRequest $request
      * @param $id
+     * @param CapitalSpendRequest $request
      *
      * @return JsonResponse|RedirectResponse
      */
-    public function update(CapitalSpendRequest $request, $id): JsonResponse|RedirectResponse
+    public function update($id, CapitalSpendRequest $request): JsonResponse|RedirectResponse
     {
         try {
-            $activityData = $this->capitalSpendService->getActivityData($id);
             $activityCapitalSpend = $request->get('capital_spend') != null ? (float) $request->get('capital_spend') : null;
 
-            if (!$this->capitalSpendService->update($activityCapitalSpend, $activityData)) {
+            if (!$this->capitalSpendService->update($id, $activityCapitalSpend)) {
                 return redirect()->route('admin.activity.show', $id)->with('error', 'Error has occurred while updating activity capital-spend.');
             }
 

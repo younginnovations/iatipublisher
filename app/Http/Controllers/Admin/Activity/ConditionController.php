@@ -65,10 +65,9 @@ class ConditionController extends Controller
     public function update(ConditionRequest $request, $id): JsonResponse|RedirectResponse
     {
         try {
-            $activityData = $this->conditionService->getActivityData($id);
             $activityCondition = $request->except(['_token', '_method']);
 
-            if (!$this->conditionService->update($activityCondition, $activityData)) {
+            if (!$this->conditionService->update($id, $activityCondition)) {
                 return redirect()->route('admin.activity.show', $id)->with('error', 'Error has occurred while updating activity condition.');
             }
 

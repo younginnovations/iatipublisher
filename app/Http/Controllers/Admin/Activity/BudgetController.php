@@ -6,6 +6,7 @@ namespace App\Http\Controllers\Admin\Activity;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Activity\Budget\BudgetRequest;
+use App\IATI\Services\Activity\ActivityService;
 use App\IATI\Services\Activity\BudgetService;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
@@ -26,9 +27,10 @@ class BudgetController extends Controller
      *
      * @param BudgetService $budgetService
      */
-    public function __construct(BudgetService $budgetService)
+    public function __construct(BudgetService $budgetService, ActivityService $activityService)
     {
         $this->budgetService = $budgetService;
+        $this->activityService = $activityService;
     }
 
     /**
@@ -41,8 +43,8 @@ class BudgetController extends Controller
     public function edit(int $id): View|RedirectResponse
     {
         try {
+            $activity = $this->activityService->getActivity($id);
             $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
-            $activity = $this->budgetService->getActivityData($id);
             $form = $this->budgetService->formGenerator($id);
             $data = ['core' => $element['budget']['criteria'] ?? false, 'status' => $activity->element_status['budget'], 'title' => $element['budget']['label'], 'name' => 'budget'];
 
@@ -56,6 +58,7 @@ class BudgetController extends Controller
 
     /**
      * Updates budget data.
+     *
      * @param BudgetRequest $request
      * @param $id
      *
@@ -64,10 +67,9 @@ class BudgetController extends Controller
     public function update(BudgetRequest $request, $id): JsonResponse|RedirectResponse
     {
         try {
-            $activityData = $this->budgetService->getActivityData($id);
             $activityBudget = $request->all();
 
-            if (!$this->budgetService->update($activityBudget, $activityData)) {
+            if (!$this->budgetService->update($id, $activityBudget)) {
                 return redirect()->route('admin.activity.show', $id)->with('error', 'Error has occurred while updating budget.');
             }
 

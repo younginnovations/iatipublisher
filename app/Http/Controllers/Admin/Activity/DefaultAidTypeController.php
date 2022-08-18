@@ -67,7 +67,7 @@ class DefaultAidTypeController extends Controller
             $activityData = $this->defaultAidTypeService->getActivityData($id);
             $activityDefaultAidType = $request->all();
 
-            if (!$this->defaultAidTypeService->update($activityDefaultAidType, $activityData)) {
+            if (!$this->defaultAidTypeService->update($id, $activityDefaultAidType)) {
                 return redirect()->route('admin.activity.show', $id)->with('error', 'Error has occurred while updating default-aid-type.');
             }
 

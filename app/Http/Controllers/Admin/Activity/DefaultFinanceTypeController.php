@@ -65,10 +65,9 @@ class DefaultFinanceTypeController extends Controller
     public function update(DefaultFinanceTypeRequest $request, $id): JsonResponse|RedirectResponse
     {
         try {
-            $activityData = $this->defaultFinanceTypeService->getActivityData($id);
             $activityDefaultFinanceType = $request->get('default_finance_type') != null ? (int) $request->get('default_finance_type') : null;
 
-            if (!$this->defaultFinanceTypeService->update($activityDefaultFinanceType, $activityData)) {
+            if (!$this->defaultFinanceTypeService->update($id, $activityDefaultFinanceType)) {
                 return redirect()->route('admin.activity.show', $id)->with('error', 'Error has occurred while updating default-finance-type.');
             }
 

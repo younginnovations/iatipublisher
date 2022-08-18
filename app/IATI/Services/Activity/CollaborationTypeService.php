@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\IATI\Services\Activity;
 
 use App\IATI\Elements\Builder\BaseFormCreator;
-use App\IATI\Repositories\Activity\CollaborationTypeRepository;
+use App\IATI\Repositories\Activity\ActivityRepository;
 use Illuminate\Database\Eloquent\Model;
 use Kris\LaravelFormBuilder\Form;
 
@@ -15,9 +15,9 @@ use Kris\LaravelFormBuilder\Form;
 class CollaborationTypeService
 {
     /**
-     * @var CollaborationTypeRepository
+     * @var ActivityRepository
      */
-    protected CollaborationTypeRepository $collaborationTypeRepository;
+    protected ActivityRepository $activityRepository;
 
     /**
      * @var BaseFormCreator
@@ -27,11 +27,11 @@ class CollaborationTypeService
     /**
      * CollaborationTypeService constructor.
      *
-     * @param CollaborationTypeRepository $collaborationTypeRepository
+     * @param ActivityRepository $activityRepository
      */
-    public function __construct(CollaborationTypeRepository $collaborationTypeRepository, BaseFormCreator $baseFormCreator)
+    public function __construct(ActivityRepository $activityRepository, BaseFormCreator $baseFormCreator)
     {
-        $this->collaborationTypeRepository = $collaborationTypeRepository;
+        $this->activityRepository = $activityRepository;
         $this->baseFormCreator = $baseFormCreator;
     }
 
@@ -44,7 +44,7 @@ class CollaborationTypeService
      */
     public function getCollaborationTypeData(int $activity_id): ?int
     {
-        return $this->collaborationTypeRepository->getCollaborationTypeData($activity_id);
+        return $this->activityRepository->find($activity_id)->collaboration_type;
     }
 
     /**
@@ -56,20 +56,20 @@ class CollaborationTypeService
      */
     public function getActivityData($id): Model
     {
-        return $this->collaborationTypeRepository->getActivityData($id);
+        return $this->activityRepository->find($id);
     }
 
     /**
      * Updates activity collaboration type data.
      *
+     * @param $id
      * @param $activityCollaborationType
-     * @param $activity
      *
      * @return bool
      */
-    public function update($activityCollaborationType, $activity): bool
+    public function update($id, $activityCollaborationType): bool
     {
-        return $this->collaborationTypeRepository->update($activityCollaborationType, $activity);
+        return $this->activityRepository->update($id, ['collaboration_type' => $activityCollaborationType]);
     }
 
     /**
