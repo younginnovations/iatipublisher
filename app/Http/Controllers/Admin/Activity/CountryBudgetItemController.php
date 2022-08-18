@@ -65,10 +65,9 @@ class CountryBudgetItemController extends Controller
     public function update(CountryBudgetItemRequest $request, $id): JsonResponse|RedirectResponse
     {
         try {
-            $activityData = $this->countryBudgetItemService->getActivityData($id);
             $activityCountryBudgetItem = $request->except(['_token', '_method']);
 
-            if (!$this->countryBudgetItemService->update($activityCountryBudgetItem, $activityData)) {
+            if (!$this->countryBudgetItemService->update($id, $activityCountryBudgetItem)) {
                 return redirect()->route('admin.activity.show', $id)->with('error', 'Error has occurred while updating country-budget-item.');
             }
 

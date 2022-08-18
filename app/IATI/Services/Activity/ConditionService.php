@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\IATI\Services\Activity;
 
 use App\IATI\Elements\Builder\MultilevelSubElementFormCreator;
-use App\IATI\Repositories\Activity\ConditionRepository;
+use App\IATI\Repositories\Activity\ActivityRepository;
 use Illuminate\Database\Eloquent\Model;
 use Kris\LaravelFormBuilder\Form;
 
@@ -15,9 +15,9 @@ use Kris\LaravelFormBuilder\Form;
 class ConditionService
 {
     /**
-     * @var ConditionRepository
+     * @var ActivityRepository
      */
-    protected ConditionRepository $conditionRepository;
+    protected ActivityRepository $activityRepository;
 
     /**
      * @var MultilevelSubElementFormCreator
@@ -27,12 +27,12 @@ class ConditionService
     /**
      * ConditionService constructor.
      *
-     * @param ConditionRepository $conditionRepository
+     * @param ActivityRepository $activityRepository
      * @param MultilevelSubElementFormCreator $multilevelSubElementFormCreator
      */
-    public function __construct(ConditionRepository $conditionRepository, MultilevelSubElementFormCreator $multilevelSubElementFormCreator)
+    public function __construct(ActivityRepository $activityRepository, MultilevelSubElementFormCreator $multilevelSubElementFormCreator)
     {
-        $this->conditionRepository = $conditionRepository;
+        $this->activityRepository = $activityRepository;
         $this->multilevelSubElementFormCreator = $multilevelSubElementFormCreator;
     }
 
@@ -45,7 +45,7 @@ class ConditionService
      */
     public function getConditionData(int $activity_id): ?array
     {
-        return $this->conditionRepository->getConditionData($activity_id);
+        return $this->activityRepository->find($activity_id)->conditions;
     }
 
     /**
@@ -57,20 +57,26 @@ class ConditionService
      */
     public function getActivityData($id): Model
     {
-        return $this->conditionRepository->getActivityData($id);
+        return $this->activityRepository->find($id);
     }
 
     /**
      * Updates activity condition.
      *
+     * @param $id
      * @param $activityCondition
-     * @param $activity
      *
      * @return bool
      */
-    public function update($activityCondition, $activity): bool
+    public function update($id, $activityCondition): bool
     {
-        return $this->conditionRepository->update($activityCondition, $activity);
+        foreach ($activityCondition['condition'] as $key => $conditions) {
+            $activityCondition['condition'][$key]['narrative'] = array_values($conditions['narrative']);
+        }
+
+        $activityCondition['condition'] = array_values($activityCondition['condition']);
+
+        return $this->activityRepository->update($id, ['conditions' => $activityCondition]);
     }
 
     /**

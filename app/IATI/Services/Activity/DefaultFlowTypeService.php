@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\IATI\Services\Activity;
 
 use App\IATI\Elements\Builder\BaseFormCreator;
-use App\IATI\Repositories\Activity\DefaultFlowTypeRepository;
+use App\IATI\Repositories\Activity\ActivityRepository;
 use Illuminate\Database\Eloquent\Model;
 use Kris\LaravelFormBuilder\Form;
 
@@ -15,9 +15,9 @@ use Kris\LaravelFormBuilder\Form;
 class DefaultFlowTypeService
 {
     /**
-     * @var DefaultFlowTypeRepository
+     * @var ActivityRepository
      */
-    protected DefaultFlowTypeRepository $defaultFlowTypeRepository;
+    protected ActivityRepository $activityRepository;
 
     /**
      * @var BaseFormCreator
@@ -27,12 +27,12 @@ class DefaultFlowTypeService
     /**
      * DefaultFlowTypeService constructor.
      *
-     * @param DefaultFlowTypeRepository $defaultFlowTypeRepository
+     * @param ActivityRepository $activityRepository
      * @param BaseFormCreator $baseFormCreator
      */
-    public function __construct(DefaultFlowTypeRepository $defaultFlowTypeRepository, BaseFormCreator $baseFormCreator)
+    public function __construct(ActivityRepository $activityRepository, BaseFormCreator $baseFormCreator)
     {
-        $this->defaultFlowTypeRepository = $defaultFlowTypeRepository;
+        $this->activityRepository = $activityRepository;
         $this->baseFormCreator = $baseFormCreator;
     }
 
@@ -45,7 +45,7 @@ class DefaultFlowTypeService
      */
     public function getDefaultFlowTypeData(int $activity_id): ?int
     {
-        return $this->defaultFlowTypeRepository->getDefaultFlowTypeData($activity_id);
+        return $this->activityRepository->find($activity_id)->default_flow_type;
     }
 
     /**
@@ -57,20 +57,20 @@ class DefaultFlowTypeService
      */
     public function getActivityData($id): Model
     {
-        return $this->defaultFlowTypeRepository->getActivityData($id);
+        return $this->activityRepository->find($id);
     }
 
     /**
      * Updates activity default flow type data.
      *
+     * @param $id
      * @param $activityDefaultFlowType
-     * @param $activity
      *
      * @return bool
      */
-    public function update($activityDefaultFlowType, $activity): bool
+    public function update($id, $activityDefaultFlowType): bool
     {
-        return $this->defaultFlowTypeRepository->update($activityDefaultFlowType, $activity);
+        return $this->activityRepository->update($id, ['default_flow_type' => $activityDefaultFlowType]);
     }
 
     /**

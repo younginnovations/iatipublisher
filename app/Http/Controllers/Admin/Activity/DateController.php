@@ -65,7 +65,6 @@ class DateController extends Controller
     public function update(DateRequest $request, $id): JsonResponse|RedirectResponse
     {
         try {
-            $activityData = $this->dateService->getActivityData($id);
             $activityDate = $request->all();
             $messages = $this->validateData(array_values($request->get('activity_date')));
 
@@ -73,7 +72,7 @@ class DateController extends Controller
                 return redirect()->route('admin.activity.date.edit', $id)->with('error', array_unique($messages))->withInput();
             }
 
-            if (!$this->dateService->update($activityDate, $activityData)) {
+            if (!$this->dateService->update($id, $activityDate)) {
                 return redirect()->route('admin.activity.show', $id)->with('error', 'Error has occurred while updating activity-date.');
             }
 

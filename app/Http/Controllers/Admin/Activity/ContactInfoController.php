@@ -66,10 +66,9 @@ class ContactInfoController extends Controller
     public function update(ContactInfoRequest $request, $id): JsonResponse|RedirectResponse
     {
         try {
-            $activityData = $this->contactInfoService->getActivityData($id);
             $activityCountryBudgetItem = $request->except(['_token', '_method']);
 
-            if (!$this->contactInfoService->update($activityCountryBudgetItem, $activityData)) {
+            if (!$this->contactInfoService->update($id, $activityCountryBudgetItem)) {
                 return redirect()->route('admin.activity.show', $id)->with('error', 'Error has occurred while updating contact-info.');
             }
 

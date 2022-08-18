@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\IATI\Services\Activity;
 
 use App\IATI\Elements\Builder\BaseFormCreator;
-use App\IATI\Repositories\Activity\ActivityIdentifierRepository;
+use App\IATI\Repositories\Activity\ActivityRepository;
 use Illuminate\Database\Eloquent\Model;
 use Kris\LaravelFormBuilder\Form;
 
@@ -15,9 +15,9 @@ use Kris\LaravelFormBuilder\Form;
 class ActivityIdentifierService
 {
     /**
-     * @var ActivityIdentifierRepository
+     * @var ActivityRepository
      */
-    protected ActivityIdentifierRepository $activityIdentifierRepository;
+    protected activityRepository $activityRepository;
 
     /**
      * @var BaseFormCreator
@@ -27,12 +27,12 @@ class ActivityIdentifierService
     /**
      * ActivityIdentifierService constructor.
      *
-     * @param ActivityIdentifierRepository $activityIdentifierRepository
+     * @param ActivityRepository $activityRepository
      * @param BaseFormCreator $baseFormCreator
      */
-    public function __construct(ActivityIdentifierRepository $activityIdentifierRepository, BaseFormCreator $baseFormCreator)
+    public function __construct(activityRepository $activityRepository, BaseFormCreator $baseFormCreator)
     {
-        $this->activityIdentifierRepository = $activityIdentifierRepository;
+        $this->activityRepository = $activityRepository;
         $this->baseFormCreator = $baseFormCreator;
     }
 
@@ -45,7 +45,7 @@ class ActivityIdentifierService
      */
     public function getActivityIdentifierData(int $activity_id): ?array
     {
-        return $this->activityIdentifierRepository->getActivityIdentifierData($activity_id);
+        return $this->activityRepository->find($activity_id)->iati_identifier;
     }
 
     /**
@@ -57,20 +57,20 @@ class ActivityIdentifierService
      */
     public function getActivityData($id): Model
     {
-        return $this->activityIdentifierRepository->getActivityData($id);
+        return $this->activityRepository->find($id);
     }
 
     /**
      * Updates activity identifier.
      *
+     * @param $id
      * @param $activityIdentifier
-     * @param $activity
      *
      * @return bool
      */
-    public function update($activityIdentifier, $activity): bool
+    public function update($id, $activityIdentifier): bool
     {
-        return $this->activityIdentifierRepository->update($activityIdentifier, $activity);
+        return $this->activityRepository->update($id, ['iati_identifier' => $activityIdentifier]);
     }
 
     /**

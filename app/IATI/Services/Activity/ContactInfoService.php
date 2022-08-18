@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\IATI\Services\Activity;
 
 use App\IATI\Elements\Builder\ParentCollectionFormCreator;
-use App\IATI\Repositories\Activity\ContactInfoRepository;
+use App\IATI\Repositories\Activity\ActivityRepository;
 use Illuminate\Database\Eloquent\Model;
 use Kris\LaravelFormBuilder\Form;
 
@@ -15,19 +15,19 @@ use Kris\LaravelFormBuilder\Form;
 class ContactInfoService
 {
     /**
-     * @var ContactInfoRepository
+     * @var ActivityRepository
      */
-    protected ContactInfoRepository $contactInfoRepository;
+    protected ActivityRepository $activityRepository;
 
     /**
      * ContactInfoService constructor.
      *
-     * @param ContactInfoRepository $contactInfoRepository
+     * @param ActivityRepository $activityRepository
      * @param ParentCollectionFormCreator $parentCollectionFormCreator
      */
-    public function __construct(ContactInfoRepository $contactInfoRepository, ParentCollectionFormCreator $parentCollectionFormCreator)
+    public function __construct(ActivityRepository $activityRepository, ParentCollectionFormCreator $parentCollectionFormCreator)
     {
-        $this->contactInfoRepository = $contactInfoRepository;
+        $this->activityRepository = $activityRepository;
         $this->parentCollectionFormCreator = $parentCollectionFormCreator;
     }
 
@@ -40,7 +40,7 @@ class ContactInfoService
      */
     public function getContactInfoData(int $activity_id): ?array
     {
-        return $this->contactInfoRepository->getContactInfoData($activity_id);
+        return $this->activityRepository->find($activity_id)->contact_info;
     }
 
     /**
@@ -52,20 +52,28 @@ class ContactInfoService
      */
     public function getActivityData($id): Model
     {
-        return $this->contactInfoRepository->getActivityData($id);
+        return $this->activityRepository->find($id);
     }
 
     /**
      * Updates activity contact info.
      *
+     * @param $id
      * @param $contactInfo
-     * @param $activity
      *
      * @return bool
      */
-    public function update($contactInfo, $activity): bool
+    public function update($id, $contactInfo): bool
     {
-        return $this->contactInfoRepository->update($contactInfo, $activity);
+        $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true)['contact_info'];
+
+        foreach ($contactInfo['contact_info'] as $key => $contact) {
+            foreach (array_keys($element['sub_elements']) as $subelement) {
+                $contactInfo['contact_info'][$key][$subelement] = array_values($contact[$subelement]);
+            }
+        }
+
+        return $this->activityRepository->update($id, ['contact_info' => $contactInfo['contact_info']]);
     }
 
     /**

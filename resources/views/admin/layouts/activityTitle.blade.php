@@ -27,6 +27,7 @@
                             class="overflow-hidden ellipsis__title">{{ $activity['title'][0]['narrative'] ?? 'Untitled' }}</span>
                         <span
                             class="ellipsis__title--hover">{{ $activity['title'][0]['narrative'] ?? 'Untitled' }}</span>
+                            sdlkl
                     </h4>
                 </div>
             </div>

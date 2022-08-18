@@ -66,10 +66,9 @@ class CollaborationTypeController extends Controller
     public function update(CollaborationTypeRequest $request, $id): JsonResponse|RedirectResponse
     {
         try {
-            $activityData = $this->collaborationTypeService->getActivityData($id);
             $activityCollaborationType = $request->get('collaboration_type') != null ? (int) $request->get('collaboration_type') : null;
 
-            if (!$this->collaborationTypeService->update($activityCollaborationType, $activityData)) {
+            if (!$this->collaborationTypeService->update($id, $activityCollaborationType)) {
                 return redirect()->route('admin.activity.show', $id)->with('error', 'Error has occurred while updating activity collaboration-type.');
             }
 

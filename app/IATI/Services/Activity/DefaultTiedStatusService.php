@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\IATI\Services\Activity;
 
 use App\IATI\Elements\Builder\BaseFormCreator;
-use App\IATI\Repositories\Activity\DefaultTiedStatusRepository;
+use App\IATI\Repositories\Activity\ActivityRepository;
 use Illuminate\Database\Eloquent\Model;
 use Kris\LaravelFormBuilder\Form;
 
@@ -15,9 +15,9 @@ use Kris\LaravelFormBuilder\Form;
 class DefaultTiedStatusService
 {
     /**
-     * @var DefaultTiedStatusRepository
+     * @var ActivityRepository
      */
-    protected DefaultTiedStatusRepository $defaultTiedStatusRepository;
+    protected ActivityRepository $activityRepository;
 
     /**
      * @var BaseFormCreator
@@ -27,12 +27,12 @@ class DefaultTiedStatusService
     /**
      * DefaultTiedStatusService constructor.
      *
-     * @param DefaultTiedStatusRepository $defaultTiedStatusRepository
+     * @param ActivityRepository $activityRepository
      * @param BaseFormCreator $baseFormCreator
      */
-    public function __construct(DefaultTiedStatusRepository $defaultTiedStatusRepository, BaseFormCreator $baseFormCreator)
+    public function __construct(ActivityRepository $activityRepository, BaseFormCreator $baseFormCreator)
     {
-        $this->defaultTiedStatusRepository = $defaultTiedStatusRepository;
+        $this->activityRepository = $activityRepository;
         $this->baseFormCreator = $baseFormCreator;
     }
 
@@ -45,7 +45,7 @@ class DefaultTiedStatusService
      */
     public function getDefaultTiedStatusData(int $activity_id): ?int
     {
-        return $this->defaultTiedStatusRepository->getDefaultTiedStatusData($activity_id);
+        return $this->activityRepository->find($activity_id)->default_tied_status;
     }
 
     /**
@@ -57,20 +57,20 @@ class DefaultTiedStatusService
      */
     public function getActivityData($id): Model
     {
-        return $this->defaultTiedStatusRepository->getActivityData($id);
+        return $this->activityRepository->find($id);
     }
 
     /**
      * Updates activity default tied status data.
      *
+     * @param $id
      * @param $activityDefaultTiedStatus
-     * @param $activity
      *
      * @return bool
      */
-    public function update($activityDefaultTiedStatus, $activity): bool
+    public function update($id, $activityDefaultTiedStatus): bool
     {
-        return $this->defaultTiedStatusRepository->update($activityDefaultTiedStatus, $activity);
+        return $this->activityRepository->update($id, ['default_tied_status' => $activityDefaultTiedStatus]);
     }
 
     /**

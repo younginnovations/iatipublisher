@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\IATI\Services\Activity;
 
 use App\IATI\Elements\Builder\MultilevelSubElementFormCreator;
-use App\IATI\Repositories\Activity\CountryBudgetItemRepository;
+use App\IATI\Repositories\Activity\ActivityRepository;
 use Illuminate\Database\Eloquent\Model;
 use Kris\LaravelFormBuilder\Form;
 
@@ -15,9 +15,9 @@ use Kris\LaravelFormBuilder\Form;
 class CountryBudgetItemService
 {
     /**
-     * @var CountryBudgetItemRepository
+     * @var ActivityRepository
      */
-    protected CountryBudgetItemRepository $countryBudgetItemRepository;
+    protected ActivityRepository $activityRepository;
 
     /**
      * @var MultilevelSubElementFormCreator
@@ -27,12 +27,12 @@ class CountryBudgetItemService
     /**
      * CountryBudgetItemService constructor.
      *
-     * @param CountryBudgetItemRepository $countryBudgetItemRepository
+     * @param ActivityRepository $activityRepository
      * @param MultilevelSubElementFormCreator $multilevelSubElementFormCreator
      */
-    public function __construct(CountryBudgetItemRepository $countryBudgetItemRepository, MultilevelSubElementFormCreator $multilevelSubElementFormCreator)
+    public function __construct(ActivityRepository $activityRepository, MultilevelSubElementFormCreator $multilevelSubElementFormCreator)
     {
-        $this->countryBudgetItemRepository = $countryBudgetItemRepository;
+        $this->activityRepository = $activityRepository;
         $this->multilevelSubElementFormCreator = $multilevelSubElementFormCreator;
     }
 
@@ -45,7 +45,7 @@ class CountryBudgetItemService
      */
     public function getCountryBudgetItemData(int $activity_id): ?array
     {
-        return $this->countryBudgetItemRepository->getCountryBudgetItemData($activity_id);
+        return $this->activityRepository->find($activity_id)->country_budget_items;
     }
 
     /**
@@ -57,20 +57,26 @@ class CountryBudgetItemService
      */
     public function getActivityData($id): Model
     {
-        return $this->countryBudgetItemRepository->getActivityData($id);
+        return $this->activityRepository->find($id);
     }
 
     /**
      * Updates activity country budget item.
      *
+     * @param $id
      * @param $activityCountryBudgetItem
-     * @param $activity
      *
      * @return bool
      */
-    public function update($activityCountryBudgetItem, $activity): bool
+    public function update($id, $activityCountryBudgetItem): bool
     {
-        return $this->countryBudgetItemRepository->update($activityCountryBudgetItem, $activity);
+        foreach ($activityCountryBudgetItem['budget_item'] as $key => $budget_item) {
+            $activityCountryBudgetItem['budget_item'][$key]['description'][0]['narrative'] = array_values($budget_item['description'][0]['narrative']);
+        }
+
+        $activityCountryBudgetItem['budget_item'] = array_values($activityCountryBudgetItem['budget_item']);
+
+        return $this->activityRepository->update($id, ['country_budget_items' => $activityCountryBudgetItem]);
     }
 
     /**

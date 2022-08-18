@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\IATI\Services\Activity;
 
 use App\IATI\Elements\Builder\BaseFormCreator;
-use App\IATI\Repositories\Activity\CapitalSpendRepository;
+use App\IATI\Repositories\Activity\ActivityRepository;
 use Illuminate\Database\Eloquent\Model;
 use Kris\LaravelFormBuilder\Form;
 
@@ -20,19 +20,19 @@ class CapitalSpendService
     protected BaseFormCreator $baseFormCreator;
 
     /**
-     * @var CapitalSpendRepository
+     * @var ActivityRepository
      */
-    protected CapitalSpendRepository $capitalSpendRepository;
+    protected ActivityRepository $activityRepository;
 
     /**
      * CapitalSpendService constructor.
      *
-     * @param CapitalSpendRepository $capitalSpendRepository
+     * @param ActivityRepository $activityRepository
      * @param BaseFormCreator $baseFormCreator
      */
-    public function __construct(CapitalSpendRepository $capitalSpendRepository, BaseFormCreator $baseFormCreator)
+    public function __construct(ActivityRepository $activityRepository, BaseFormCreator $baseFormCreator)
     {
-        $this->capitalSpendRepository = $capitalSpendRepository;
+        $this->activityRepository = $activityRepository;
         $this->baseFormCreator = $baseFormCreator;
     }
 
@@ -45,7 +45,7 @@ class CapitalSpendService
      */
     public function getCapitalSpendData(float $activity_id): ?float
     {
-        return $this->capitalSpendRepository->getCapitalSpendData($activity_id);
+        return $this->activityRepository->find($activity_id)->capital_spend;
     }
 
     /**
@@ -57,20 +57,20 @@ class CapitalSpendService
      */
     public function getActivityData($id): Model
     {
-        return $this->capitalSpendRepository->getActivityData($id);
+        return $this->activityRepository->find($id);
     }
 
     /**
      * Updates activity capital spend data.
      *
-     * @param $activityCapitalSpend
+     * @param $id
      * @param $activity
      *
      * @return bool
      */
-    public function update($activityCapitalSpend, $activity): bool
+    public function update($id, $activityCapitalSpend): bool
     {
-        return $this->capitalSpendRepository->update($activityCapitalSpend, $activity);
+        return $this->activityRepository->update($id, ['capital_spend' => $activityCapitalSpend]);
     }
 
     /**
