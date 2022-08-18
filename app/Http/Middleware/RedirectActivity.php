@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use App\IATI\Services\Activity\ActivityService;
 use App\IATI\Services\Activity\IndicatorService;
+use App\IATI\Services\Activity\PeriodService;
 use App\IATI\Services\Activity\ResultService;
 use App\Providers\RouteServiceProvider;
 use Closure;
@@ -14,7 +15,6 @@ use Illuminate\Http\Request;
  */
 class RedirectActivity
 {
-
     /**
      * @var ActivityService
      */
@@ -30,11 +30,23 @@ class RedirectActivity
      */
     protected IndicatorService $indicatorService;
 
-    public function __construct(ActivityService $activityService, ResultService $resultService, IndicatorService $indicatorService)
+    /**
+     * @var PeriodService
+     */
+    private PeriodService $periodService;
+
+    /**
+     * @param ActivityService  $activityService
+     * @param ResultService    $resultService
+     * @param IndicatorService $indicatorService
+     * @param PeriodService    $periodService
+     */
+    public function __construct(ActivityService $activityService, ResultService $resultService, IndicatorService $indicatorService, PeriodService $periodService)
     {
         $this->activityService = $activityService;
         $this->resultService = $resultService;
         $this->indicatorService = $indicatorService;
+        $this->periodService = $periodService;
     }
 
     /**
@@ -53,7 +65,8 @@ class RedirectActivity
             'admin.activities.codelist',
             'admin.activity.store',
         ];
-        // dd($request->route()->getName());
+
+        [$prefix, $module, $subModule] = explode('.', $request->route()->getName());
 
         if (in_array($request->route()->getName(), $byPassRoutes, true)) {
             return $next($request);
@@ -62,20 +75,55 @@ class RedirectActivity
         $id = (int) $request->route('id');
 
         if (strlen($id) === strlen($request->route('id'))) {
-            $module = explode('.', $request->route()->getName())[1];
             $activity = [];
 
             if ($module === 'activity') {
                 $activity = $this->activityService->getActivity($id);
+
+                if ($activity === null) {
+                    return redirect(RouteServiceProvider::HOME);
+                }
+
+                if ($subModule === 'result') {
+                    $id = (int) $request->route($subModule);
+                    $result = $this->resultService->getResult($id);
+
+                    if ($result === null) {
+                        //return redirect(RouteServiceProvider::HOME);
+                    }
+                }
             } elseif ($module === 'result') {
                 $result = $this->resultService->getResult($id);
+
+                if ($result === null) {
+                    return redirect(RouteServiceProvider::HOME);
+                }
+
+                if ($subModule === 'indicator') {
+                    $id = (int) $request->route($subModule);
+
+                    if (empty($this->indicatorService->getIndicator($id))) {
+                        return redirect(RouteServiceProvider::HOME);
+                    }
+                }
                 $activity = $result->activity;
             } elseif ($module === 'indicator') {
                 $indicator = $this->indicatorService->getIndicator($id);
 
-                if (isset($indicator)) {
-                    $activity = $indicator->result->activity;
+                if ($indicator === null) {
+                    return redirect(RouteServiceProvider::HOME);
                 }
+
+                if ($subModule === 'period') {
+                    $id = (int) $request->route($subModule);
+                    $period = $this->periodService->getPeriod($id);
+
+                    if ($period === null) {
+                        return redirect(RouteServiceProvider::HOME);
+                    }
+                }
+
+                $activity = $indicator->result->activity;
             }
 
             if ($activity && !$activity->isActivityOfOrg()) {
