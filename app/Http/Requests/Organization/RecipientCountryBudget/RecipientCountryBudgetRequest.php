@@ -16,7 +16,7 @@ class RecipientCountryBudgetRequest extends OrganizationBaseRequest
      *
      * @return array
      */
-    public function rules()
+    public function rules(): array
     {
         $rules = [];
 
@@ -51,9 +51,10 @@ class RecipientCountryBudgetRequest extends OrganizationBaseRequest
      *
      * @return array
      */
-    public function messages()
+    public function messages(): array
     {
         $messages = [];
+
         foreach ($this->get(
             'recipient_country_budget'
         ) as $recipientCountryBudgetIndex => $recipientCountryBudget) {
@@ -75,16 +76,19 @@ class RecipientCountryBudgetRequest extends OrganizationBaseRequest
     }
 
     /**
+     * Rules for recipient country budget.
+     *
      * @param array $formFields
      * @param       $formBase
+     *
      * @return array
      */
-    public function getRecipientCountryBudgetRules(array $formFields, $formBase)
+    public function getRecipientCountryBudgetRules(array $formFields, $formBase): array
     {
         $rules = [];
+
         foreach ($formFields as $recipientCountryIndex => $recipientCountry) {
             $recipientCountryForm = sprintf('%s.recipient_country.%s', $formBase, $recipientCountryIndex);
-            // $rules[sprintf('%s.code', $recipientCountryForm)] = 'required';
             $rules[sprintf('%s.code', $recipientCountryForm)] = 'nullable';
             $rules = array_merge(
                 $rules,
@@ -96,13 +100,17 @@ class RecipientCountryBudgetRequest extends OrganizationBaseRequest
     }
 
     /**
+     * Custom messages for recipient country budget form.
+     *
      * @param array $formFields
      * @param       $formBase
+     *
      * @return array
      */
-    public function getRecipientCountryBudgetMessages(array $formFields, $formBase)
+    public function getRecipientCountryBudgetMessages(array $formFields, $formBase): array
     {
         $messages = [];
+
         foreach ($formFields as $recipientCountryIndex => $recipientCountry) {
             $recipientCountryForm = sprintf('%s.recipient_country.%s', $formBase, $recipientCountryIndex);
             $messages[sprintf('%s.code.required', $recipientCountryForm)] = trans('validation.required', ['attribute' => trans('elementForm.code')]);

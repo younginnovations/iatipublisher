@@ -16,9 +16,10 @@ class RecipientOrgBudgetRequest extends OrganizationBaseRequest
      *
      * @return array
      */
-    public function rules()
+    public function rules(): array
     {
         $rules = [];
+
         foreach ($this->get('recipient_org_budget') as $recipientOrganizationBudgetIndex => $recipientOrganizationBudget) {
             $diff = 0;
             $start = $recipientOrganizationBudget['period_start'][0]['date'];
@@ -29,9 +30,6 @@ class RecipientOrgBudgetRequest extends OrganizationBaseRequest
             }
 
             $recipientOrganizationBudgetForm = sprintf('recipient_org_budget.%s', $recipientOrganizationBudgetIndex);
-            $narrativeField = sprintf('%s.recipient_org.0.narrative.0.narrative', $recipientOrganizationBudgetForm);
-            $narrativeRuleWithoutRef = sprintf('required_without:%s.recipient_org.0.ref', $recipientOrganizationBudgetForm);
-            $rules[$narrativeField][] = $narrativeRuleWithoutRef;
             $rules = array_merge_recursive(
                 $rules,
                 $this->getRulesForPeriodStart($recipientOrganizationBudget['period_start'], $recipientOrganizationBudgetForm, $diff, 365),
@@ -50,9 +48,10 @@ class RecipientOrgBudgetRequest extends OrganizationBaseRequest
      *
      * @return array
      */
-    public function messages()
+    public function messages(): array
     {
         $messages = [];
+
         foreach ($this->get('recipient_org_budget') as $recipientOrganizationBudgetIndex => $recipientOrganizationBudget) {
             $recipientOrganizationBudgetForm = sprintf('recipient_org_budget.%s', $recipientOrganizationBudgetIndex);
             $narrativeField = sprintf('%s.recipient_org.0.narrative.0.narrative.required_without', $recipientOrganizationBudgetForm);

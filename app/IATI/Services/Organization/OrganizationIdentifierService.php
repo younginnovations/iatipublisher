@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace App\IATI\Services\Organization;
 
+use App\IATI\Elements\Builder\BaseFormCreator;
 use App\IATI\Models\Organization\Organization;
-use App\IATI\Repositories\Organization\OrganizationIdentifierRepository;
+use App\IATI\Repositories\Organization\OrganizationRepository;
 use Illuminate\Database\Eloquent\Model;
+use Kris\LaravelFormBuilder\Form;
 
 /**
  * Class OrganizationIdentifierService.
@@ -14,18 +16,25 @@ use Illuminate\Database\Eloquent\Model;
 class OrganizationIdentifierService
 {
     /**
-     * @var OrganizationIdentifierRepository
+     * @var OrganizationRepository
      */
-    protected OrganizationIdentifierRepository $organizationIdentifierRepository;
+    protected OrganizationRepository $organizationRepository;
+
+    /**
+     * @var BaseFormCreator
+     */
+    protected BaseFormCreator $baseFormCreator;
 
     /**
      * OrganizationIdentifierService constructor.
      *
-     * @param OrganizationIdentifierRepository $organizationIdentifierRepository
+     * @param OrganizationRepository $organizationRepository
+     * @param BaseFormCreator $baseFormCreator
      */
-    public function __construct(OrganizationIdentifierRepository $organizationIdentifierRepository)
+    public function __construct(OrganizationRepository $organizationRepository, BaseFormCreator $baseFormCreator)
     {
-        $this->organizationIdentifierRepository = $organizationIdentifierRepository;
+        $this->organizationRepository = $organizationRepository;
+        $this->baseFormCreator = $baseFormCreator;
     }
 
     /**
@@ -37,7 +46,7 @@ class OrganizationIdentifierService
      */
     public function getIdentifierData(int $organization_id): string
     {
-        return $this->organizationIdentifierRepository->getIdentifierData($organization_id);
+        return $this->organizationRepository->find($organization_id)->identifier;
     }
 
     /**
@@ -49,25 +58,47 @@ class OrganizationIdentifierService
      */
     public function getOrganizationData($id): Model
     {
-        return $this->organizationIdentifierRepository->getOrganizationData($id);
+        return $this->organizationRepository->getOrganizationData($id);
     }
 
     /**
      * Updates Organization identifier.
      *
+     * @param $id
      * @param $organizationIdentifier
-     * @param $organization
      *
      * @return bool
      */
-    public function update($organizationIdentifier, $organization): bool
+    public function update($id, $organizationIdentifier): bool
     {
-        $organization->identifier = $organizationIdentifier['organization_registration_agency'] . '-' . $organizationIdentifier['registration_number'];
-        $organization->country = $organizationIdentifier['organization_country'];
-        $organization->registration_agency = $organizationIdentifier['organization_registration_agency'];
-        $organization->registration_number = $organizationIdentifier['registration_number'];
+        $organizationIdentifier = [
+            'identifier' => $organizationIdentifier['organization_registration_agency'] . '-' . $organizationIdentifier['registration_number'],
+            'country' => $organizationIdentifier['organization_country'],
+            'registration_agency' => $organizationIdentifier['organization_registration_agency'],
+            'registration_number' => $organizationIdentifier['registration_number'],
+        ];
 
-        return $organization->save();
+        return $this->organizationRepository->update($id, $organizationIdentifier);
+    }
+
+    /**
+     * Generates name form.
+     *
+     * @param $id
+     *
+     * @return Form
+     */
+    public function formGenerator($id): Form
+    {
+        $element = json_decode(file_get_contents(app_path('IATI/Data/organizationElementJsonSchema.json')), true);
+        $organization = $this->getOrganizationData($id);
+        $model['organisation_identifier'] = $organization['identifier'];
+        $model['organization_country'] = $organization['country'];
+        $model['organization_registration_agency'] = $organization['registration_agency'];
+        $model['registration_number'] = $organization['registration_number'];
+        $this->baseFormCreator->url = route('admin.organisation.identifier.update', [$id]);
+
+        return $this->baseFormCreator->editForm($model, $element['organisation_identifier'], 'PUT', '/organisation');
     }
 
     /**

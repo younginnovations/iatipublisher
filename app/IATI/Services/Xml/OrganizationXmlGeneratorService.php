@@ -63,16 +63,4 @@ class OrganizationXmlGeneratorService
     {
         $this->organizationXmlGenerator->deleteUnpublishedFile($filename);
     }
-
-    /**
-     * Generates new xml file after unpublishing.
-     *
-     * @param $publishedFile
-     *
-     * @return void
-     */
-    public function generateNewXmlFile($publishedFile)
-    {
-        $this->organizationXmlGenerator->getMergeXml($publishedFile->published_activities, $publishedFile->filename);
-    }
 }

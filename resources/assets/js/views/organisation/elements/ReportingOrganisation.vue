@@ -26,7 +26,13 @@
           <tr>
             <td>Secondary Reporter</td>
             <td>
-              {{ reporting_org.secondary_reporter ? 'True' : 'False' }}
+              {{
+                parseInt(reporting_org.secondary_reporter)
+                  ? 'True'
+                  : reporting_org.secondary_reporter
+                  ? 'False'
+                  : 'Not Available'
+              }}
             </td>
           </tr>
           <tr>
@@ -47,7 +53,7 @@
                       : 'Language : Not Available'
                   }})
                 </div>
-                <div class="w-[500px] max-w-full text-sm">
+                <div class="w-[500px] max-w-full">
                   {{ narrative.narrative ?? 'Narrative Not Available' }}
                 </div>
               </div>

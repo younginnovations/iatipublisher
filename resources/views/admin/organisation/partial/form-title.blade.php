@@ -31,11 +31,11 @@
                     <svg-vue icon="organisation-elements/{{ str_replace('-','_',$data['name']) }}"></svg-vue>
             </span>
             <div class="text-sm font-bold title"> {{ str_replace(' ', '-', strtolower($data['title'])) }}</div>
-            <div
+            {{-- <div
                 class="{{ $data['status'] ? 'text-spring-50' : 'text-crimson-50' }} flex status text-xs leading-5 ml-2.5 mr-2.5">
                 <b class="mr-2 text-base leading-3">.</b>
                 <span>{{ $data['status'] ? 'completed' : 'not completed' }}</span>
-            </div>
+            </div> --}}
             @if ($data['core'])
                 <svg-vue icon="core"></svg-vue>
             @endif

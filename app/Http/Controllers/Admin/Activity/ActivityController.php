@@ -153,11 +153,16 @@ class ActivityController extends Controller
             $progress = $this->activityService->activityPublishingProgress($activity);
             $coreCompleted = isCoreElementCompleted(array_merge(['reporting_org' => $activity->organization->reporting_org_complete_status], $activity->element_status));
             $validatorResponse = $this->activityValidatorResponseService->getValidatorResponse($id);
+            $organization_identifier = $activity->organization->identifier;
+            $activity->iati_identifier = [
+                'activity_identifier' => $activity->iati_identifier['activity_identifier'],
+                'iati_identifier_text' => $activity->organization->identifier . '-' . $activity->iati_identifier['activity_identifier'],
+            ];
             $iatiValidatorResponse = $validatorResponse->response ?? null;
 
             return view(
                 'admin.activity.show',
-                compact('elements', 'elementGroups', 'progress', 'activity', 'toast', 'types', 'status', 'results', 'hasIndicatorPeriod', 'transactions', 'coreCompleted', 'iatiValidatorResponse')
+                compact('elements', 'elementGroups', 'progress', 'activity', 'toast', 'types', 'status', 'results', 'hasIndicatorPeriod', 'transactions', 'coreCompleted', 'iatiValidatorResponse', 'organization_identifier')
             );
         } catch (Exception $e) {
             logger()->error($e->getMessage());

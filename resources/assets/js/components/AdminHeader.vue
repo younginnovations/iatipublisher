@@ -201,7 +201,7 @@ export default defineComponent({
       const path = window.location.pathname;
 
       data.menus.forEach((menu, key) => {
-        data.menus[key]['active'] = menu.permalink === path ? true : false;
+        data.menus[key]['active'] = menu.permalink === path || path.includes(menu.permalink) ? true : false;
       });
     }
 

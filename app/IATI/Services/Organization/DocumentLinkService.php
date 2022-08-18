@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace App\IATI\Services\Organization;
 
+use App\IATI\Elements\Builder\ParentCollectionFormCreator;
 use App\IATI\Models\Organization\Organization;
-use App\IATI\Repositories\Organization\DocumentLinkRepository;
+use App\IATI\Repositories\Organization\OrganizationRepository;
 use App\IATI\Traits\OrganizationXmlBaseElements;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
+use Kris\LaravelFormBuilder\Form;
 
 /**
  * Class DocumentLinkService.
@@ -18,18 +20,25 @@ class DocumentLinkService
     use OrganizationXmlBaseElements;
 
     /**
-     * @var DocumentLinkRepository
+     * @var ParentCollectionFormCreator
      */
-    protected DocumentLinkRepository $documentLinkRepository;
+    protected ParentCollectionFormCreator $parentCollectionFormCreator;
+
+    /**
+     * @var OrganizationRepository
+     */
+    protected OrganizationRepository $organizationRepository;
 
     /**
      * DocumentLinkService constructor.
      *
-     * @param DocumentLinkRepository $documentLinkRepository
+     * @param OrganizationRepository $organizationRepository
+     * @param ParentCollectionFormCreator $parentCollectionFormCreator
      */
-    public function __construct(DocumentLinkRepository $documentLinkRepository)
+    public function __construct(OrganizationRepository $organizationRepository, ParentCollectionFormCreator $parentCollectionFormCreator)
     {
-        $this->documentLinkRepository = $documentLinkRepository;
+        $this->organizationRepository = $organizationRepository;
+        $this->parentCollectionFormCreator = $parentCollectionFormCreator;
     }
 
     /**
@@ -41,7 +50,7 @@ class DocumentLinkService
      */
     public function getDocumentLinkData(int $organization_id): ?array
     {
-        return $this->documentLinkRepository->getDocumentLinkData($organization_id);
+        return $this->organizationRepository->find($organization_id)->document_link;
     }
 
     /**
@@ -53,20 +62,44 @@ class DocumentLinkService
      */
     public function getOrganizationData($id): Model
     {
-        return $this->documentLinkRepository->getOrganizationData($id);
+        return $this->organizationRepository->getOrganizationData($id);
     }
 
     /**
      * Updates Organization document link.
      *
+     * @param $id
      * @param $documentLink
-     * @param $organization
      *
      * @return bool
      */
-    public function update($documentLink, $organization): bool
+    public function update($id, $documentLink): bool
     {
-        return $this->documentLinkRepository->update($documentLink, $organization);
+        $element = json_decode(file_get_contents(app_path('IATI/Data/organizationElementJsonSchema.json')), true)['document_link'];
+
+        foreach ($documentLink['document_link'] as $key => $document) {
+            foreach (array_keys($element['sub_elements']) as $subelement) {
+                $documentLink['document_link'][$key][$subelement] = array_values($document[$subelement]);
+            }
+        }
+
+        return $this->organizationRepository->update($id, ['document_link' => $documentLink['document_link']]);
+    }
+
+    /**
+     * Forms document link form.
+     *
+     * @param $id
+     *
+     * @return Form
+     */
+    public function formGenerator($id): Form
+    {
+        $element = json_decode(file_get_contents(app_path('IATI/Data/organizationElementJsonSchema.json')), true);
+        $model['document_link'] = $this->getDocumentLinkData($id) ?? [];
+        $this->parentCollectionFormCreator->url = route('admin.organisation.document-link.update', [$id]);
+
+        return $this->parentCollectionFormCreator->editForm($model, $element['document_link'], 'PUT', '/organisation');
     }
 
     /**

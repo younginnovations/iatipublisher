@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin\Workflow;
 use App\Exceptions\PublisherNotFound;
 use App\Http\Controllers\Controller;
 use App\IATI\Services\Workflow\OrganizationWorkflowService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -34,33 +35,32 @@ class OrganizationWorkflowController extends Controller
      *
      * @param $organizationId
      *
-     * @return mixed
+     * @return JsonResponse
      */
-    public function publish()
+    public function publish(): JsonResponse
     {
         try {
-            $organizationId = Auth::user()->organization_id;
-            $organization = $this->organizationWorkflowService->findOrganization($organizationId);
+            $organization = Auth::user()->organization;
 
             if ($this->hasNoPublisherInfo($organization->settings)) {
-                return response()->json(['success' => false, 'error' => 'Please update the publishing information first.']);
+                return response()->json(['success' => false, 'message' => 'Please update the publishing information first.']);
             }
 
             DB::beginTransaction();
             $this->organizationWorkflowService->publishOrganization($organization);
             DB::commit();
 
-            return redirect()->route('admin.activities.index')->with('success', 'Organization has been published successfully.');
+            return response()->json(['success' => true, 'message' => 'Organization has been published successfully.']);
         } catch (PublisherNotFound $message) {
             DB::rollBack();
             logger()->error($message->getMessage());
 
-            return redirect()->route('admin.activities.index')->with('error', $message->getMessage());
+            return response()->json(['success' => false, 'message' => $message->getMessage()]);
         } catch (\Exception $e) {
             DB::rollBack();
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activities.index')->with('error', 'Error has occurred while publishing organization.');
+            return response()->json(['success' => false, 'message' => 'Error has occurred while publishing organization.']);
         }
     }
 
@@ -73,15 +73,20 @@ class OrganizationWorkflowController extends Controller
      */
     protected function hasNoPublisherInfo($settings): bool
     {
-        if (!$settings || !($registryInfo = $settings->publishing_info)) {
+        if (!$settings) {
+            return true;
+        }
+
+        $registryInfo = $settings->publishing_info;
+
+        if (!$registryInfo) {
             return true;
         }
 
         if (empty(Arr::get($registryInfo, 'publisher_id', null) ||
             empty(Arr::get($registryInfo, 'api_token', null)) ||
             Arr::get($registryInfo, 'publisher_verification', false) ||
-            Arr::get($registryInfo, 'token_verification', false)
-        )) {
+            Arr::get($registryInfo, 'token_verification', false))) {
             return true;
         }
 
@@ -91,29 +96,27 @@ class OrganizationWorkflowController extends Controller
     /**
      * Unpublish an organization from the IATI registry.
      *
-     * @param $organizationId
-     *
-     * @return \Illuminate\Http\RedirectResponse|void
+     * @return JsonResponse
      */
-    public function unpublish($organizationId)
+    public function unpublish(): JsonResponse
     {
         try {
             DB::beginTransaction();
-            $organization = $this->organizationWorkflowService->findOrganization($organizationId);
+            $organization = Auth::user()->organization;
 
-            if (!$organization->already_published && $organization->status === 'draft') {
+            if (!$organization->is_published && $organization->status === 'draft') {
                 return redirect()->route('admin.activities.index')->with('error', 'This organization has not been published to un-publish.');
             }
 
             $this->organizationWorkflowService->unpublishOrganization($organization);
             DB::commit();
 
-            return redirect()->route('admin.activities.index')->with('success', 'Organization has been un-published successfully.');
+            return response()->json(['success' => true, 'message' => 'Organization has been un-published successfully.']);
         } catch (\Exception $e) {
             DB::rollBack();
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activities.index')->with('error', 'Error has occurred while un-publishing organization.');
+            return response()->json(['success' => false, 'message' => 'Error has occurred while un-publishing organization.']);
         }
     }
 }

@@ -6,10 +6,8 @@ namespace App\Http\Controllers\Admin\Organization;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Organization\RecipientCountryBudget\RecipientCountryBudgetRequest;
-use App\IATI\Elements\Builder\ParentCollectionFormCreator;
 use App\IATI\Services\Organization\RecipientCountryBudgetService;
 use Illuminate\Contracts\View\View;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
 
@@ -18,19 +16,15 @@ use Illuminate\Support\Facades\Auth;
  */
 class RecipientCountryBudgetController extends Controller
 {
-    protected ParentCollectionFormCreator $parentCollectionFormCreator;
-
     protected RecipientCountryBudgetService $recipientCountryBudgetService;
 
     /**
      * RecipientCountryBudgetController Constructor.
      *
-     * @param ParentCollectionFormCreator $parentCollectionFormCreator
      * @param recipientCountryBudgetService    $recipientCountryBudgetService
      */
-    public function __construct(ParentCollectionFormCreator $parentCollectionFormCreator, RecipientCountryBudgetService $recipientCountryBudgetService)
+    public function __construct(RecipientCountryBudgetService $recipientCountryBudgetService)
     {
-        $this->parentCollectionFormCreator = $parentCollectionFormCreator;
         $this->recipientCountryBudgetService = $recipientCountryBudgetService;
     }
 
@@ -45,17 +39,14 @@ class RecipientCountryBudgetController extends Controller
             $id = Auth::user()->organization_id;
             $element = json_decode(file_get_contents(app_path('IATI/Data/organizationElementJsonSchema.json')), true);
             $organization = $this->recipientCountryBudgetService->getOrganizationData($id);
-            $model['recipient_country_budget'] = $this->recipientCountryBudgetService->getRecipientCountryBudgetData($id) ?? [];
-            $this->parentCollectionFormCreator->url = route('admin.organisation.recipient-country-budget.update', [$id]);
-            $form = $this->parentCollectionFormCreator->editForm($model, $element['recipient_country_budget'], 'PUT', '/organisation');
-            $status = $organization->recipient_country_budget_element_completed ?? false;
-            $data = ['core'=> $element['recipient_country_budget']['criteria'] ?? false, 'status'=> $organization->recipient_country_budget_element_completed ?? false, 'title'=> $element['recipient_country_budget']['label'], 'name'=>'recipient_country_budget'];
+            $form = $this->recipientCountryBudgetService->formGenerator($id);
+            $data = ['core' => $element['recipient_country_budget']['criteria'] ?? false, 'status' => $organization->recipient_country_budget_element_completed ?? false, 'title' => $element['recipient_country_budget']['label'], 'name' => 'recipient_country_budget'];
 
             return view('admin.organisation.forms.recipientCountryBudget.recipientCountryBudget', compact('form', 'organization', 'data'));
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.organisation.index')->with('error', 'Error has occurred while opening organization reporting_org form.');
+            return redirect()->route('admin.organisation.index')->with('error', 'Error has occurred while opening organization recipient-country-budget form.');
         }
     }
 
@@ -64,24 +55,23 @@ class RecipientCountryBudgetController extends Controller
      *
      * @param RecipientCountryBudgetRequest $request
      *
-     * @return JsonResponse|RedirectResponse
+     * @return RedirectResponse
      */
-    public function update(RecipientCountryBudgetRequest $request): JsonResponse| RedirectResponse
+    public function update(RecipientCountryBudgetRequest $request): RedirectResponse
     {
         try {
             $id = Auth::user()->organization_id;
-            $organizationData = $this->recipientCountryBudgetService->getOrganizationData($id);
-            $organizationTitle = $request->all();
+            $recipientCountryBudget = $request->all();
 
-            if (!$this->recipientCountryBudgetService->update($organizationTitle, $organizationData)) {
-                return redirect()->route('admin.organisation.index', $id)->with('error', 'Error has occurred while updating organization total-budget.');
+            if (!$this->recipientCountryBudgetService->update($id, $recipientCountryBudget)) {
+                return redirect()->route('admin.organisation.index', $id)->with('error', 'Error has occurred while updating organization recipient-country-budget.');
             }
 
-            return redirect()->route('admin.organisation.index', $id)->with('success', 'Organization total-budget updated successfully.');
+            return redirect()->route('admin.organisation.index', $id)->with('success', 'Organization recipient-country-budget updated successfully.');
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.organisation.index', $id)->with('error', 'Error has occurred while updating organization total-budget.');
+            return redirect()->route('admin.organisation.index', $id)->with('error', 'Error has occurred while updating organization recipient-country-budget.');
         }
     }
 }

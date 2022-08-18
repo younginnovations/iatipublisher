@@ -6,31 +6,24 @@
       'mb-4 border-b border-n-20 pb-4': Number(index) != content.length - 1,
     }"
   >
-    <div class="mb-4 elements-detail">
-      <div class="flex category">Recipient Country Budget</div>
+    <div class="elements-detail mb-4">
+      <div class="category flex">
+        {{
+          recipient_country_budget.status
+            ? types?.budgetType[recipient_country_budget.status]
+            : 'Status Not Available'
+        }}
+      </div>
+      <div class="flex text-sm">
+        <span v-if="recipient_country_budget.value[0].amount">
+          {{ recipient_country_budget.value['0'].amount }}
+          {{ recipient_country_budget.value['0'].currency }}
+        </span>
+        <span v-else> Budget Amount Not Available</span>
+      </div>
       <div class="ml-4">
         <table>
           <tbody>
-            <tr>
-              <td>Status</td>
-              <td>
-                {{
-                  recipient_country_budget.status
-                    ? types?.budgetType[recipient_country_budget.status]
-                    : 'Status Not Available'
-                }}
-              </td>
-            </tr>
-            <tr>
-              <td>Value Amount</td>
-              <td>
-                {{
-                  recipient_country_budget.value['0'].amount ??
-                  'Budget Not Available'
-                }}
-                {{ recipient_country_budget.value['0'].currency }}
-              </td>
-            </tr>
             <tr>
               <td>Value date</td>
               <td>
@@ -50,7 +43,7 @@
               </td>
             </tr>
             <tr>
-              <td>Description</td>
+              <td>Narrative</td>
               <td>
                 <div
                   v-for="(narrative, i) in recipient_country_budget
@@ -75,7 +68,7 @@
                       }}
                       )
                     </div>
-                    <div class="w-[500px] max-w-full text-sm">
+                    <div class="w-[500px] max-w-full">
                       {{ narrative.narrative ?? 'Narrative Not Available' }}
                     </div>
                   </div>
@@ -97,8 +90,8 @@
       </div>
     </div>
 
-    <div class="overflow-hidden border rounded-t-lg indicator border-n-20">
-      <div class="flex items-center px-6 py-2 border-b head border-n-20">
+    <div class="indicator overflow-hidden rounded-t-lg border border-n-20">
+      <div class="head flex items-center border-b border-n-20 px-6 py-2">
         <span class="text-xs font-bold text-n-50">Budget line</span>
       </div>
       <div
@@ -110,11 +103,15 @@
             j !== recipient_country_budget.budget_line.length - 1,
         }"
       >
-        <div class="flex px-6 py-2 indicator-content">
+        <div class="indicator-content flex px-6 py-2">
           <div class="elements-detail grow">
-            <div class="flex category">
-              <span>
-                {{ budget_line.value['0'].amount ?? 'Budget Not Available' }}
+            <div class="category flex">
+              <span v-if="budget_line.value['0'].amount">
+                {{ budget_line.value['0'].amount }}
+                {{ budget_line.value['0'].currency }}
+              </span>
+              <span v-else>
+                Budget Amount Not Available
               </span>
             </div>
             <div class="ml-4">
@@ -124,6 +121,12 @@
                     <td class="pr-20 text-n-40">Reference</td>
                     <td>
                       {{ budget_line.ref ?? 'Reference Not Available' }}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Value date</td>
+                    <td>
+                      {{ formatDate(budget_line.value['0'].value_date) }}
                     </td>
                   </tr>
                   <tr>
@@ -146,7 +149,7 @@
                               : 'Language : Not Available'
                           }})
                         </div>
-                        <div class="w-[500px] max-w-full text-sm">
+                        <div class="w-[500px] max-w-full">
                           {{ narrative.narrative ?? 'Narrative Not Available' }}
                         </div>
                       </div>

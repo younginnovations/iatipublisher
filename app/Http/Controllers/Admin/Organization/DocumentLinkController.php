@@ -6,10 +6,8 @@ namespace App\Http\Controllers\Admin\Organization;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Organization\DocumentLink\DocumentLinkRequest;
-use App\IATI\Elements\Builder\ParentCollectionFormCreator;
 use App\IATI\Services\Organization\DocumentLinkService;
 use Illuminate\Contracts\View\View;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
 
@@ -18,19 +16,18 @@ use Illuminate\Support\Facades\Auth;
  */
 class DocumentLinkController extends Controller
 {
-    protected ParentCollectionFormCreator $parentCollectionFormCreator;
-
+    /**
+     * var DocumentLinkService.
+     */
     protected DocumentLinkService $documentLinkService;
 
     /**
      * DocumentLinkController Constructor.
      *
-     * @param ParentCollectionFormCreator $parentCollectionFormCreator
      * @param documentLinkService    $documentLinkService
      */
-    public function __construct(ParentCollectionFormCreator $parentCollectionFormCreator, documentLinkService $documentLinkService)
+    public function __construct(documentLinkService $documentLinkService)
     {
-        $this->parentCollectionFormCreator = $parentCollectionFormCreator;
         $this->documentLinkService = $documentLinkService;
     }
 
@@ -45,9 +42,7 @@ class DocumentLinkController extends Controller
             $id = Auth::user()->organization_id;
             $element = json_decode(file_get_contents(app_path('IATI/Data/organizationElementJsonSchema.json')), true);
             $organization = $this->documentLinkService->getOrganizationData($id);
-            $model['document_link'] = $this->documentLinkService->getDocumentLinkData($id) ?? [];
-            $this->parentCollectionFormCreator->url = route('admin.organisation.document-link.update', [$id]);
-            $form = $this->parentCollectionFormCreator->editForm($model, $element['document_link'], 'PUT', '/organisation');
+            $form = $this->documentLinkService->formGenerator($id);
             $status = $organization->document_link_element_completed ?? false;
             $data = ['core'=> $element['document_link']['criteria'] ?? false, 'status'=> $organization->document_link_element_completed ?? false, 'title'=> $element['document_link']['label'], 'name'=>'document-link'];
 
@@ -60,20 +55,19 @@ class DocumentLinkController extends Controller
     }
 
     /**
-     * Updates organization total expenditure data.
+     * Updates organization document link data.
      *
      * @param DocumentLinkRequest $request
      *
-     * @return JsonResponse|RedirectResponse
+     * @return RedirectResponse
      */
-    public function update(DocumentLinkRequest $request): JsonResponse| RedirectResponse
+    public function update(DocumentLinkRequest $request): RedirectResponse
     {
         try {
             $id = Auth::user()->organization_id;
-            $organizationData = $this->documentLinkService->getOrganizationData($id);
-            $organizationTitle = $request->all();
+            $documentLink = $request->all();
 
-            if (!$this->documentLinkService->update($organizationTitle, $organizationData)) {
+            if (!$this->documentLinkService->update($id, $documentLink)) {
                 return redirect()->route('admin.organisation.index', $id)->with('error', 'Error has occurred while updating organization document-link.');
             }
 

@@ -1,8 +1,8 @@
 <template>
-  <div class="px-3 py-3 activities__content--element" :class="layout">
-    <div class="p-4 bg-white rounded-lg">
-      <div class="flex mb-4">
-        <div :id="title" class="flex title grow text-n-50">
+  <div class="activities__content--element px-3 py-3" :class="layout">
+    <div class="rounded-lg bg-white p-4">
+      <div class="mb-4 flex">
+        <div :id="title" class="title flex grow text-n-50">
           <template v-if="title === 'name'">
             <svg-vue
               class="mr-1.5 text-xl text-bluecoral"
@@ -27,21 +27,20 @@
               class="mr-1.5 text-xl text-bluecoral"
             ></svg-vue>
           </template>
-          <div class="text-sm font-bold title">{{ title }}</div>
+          <div class="title text-sm font-bold">{{ title.replaceAll("_", "-") }}</div>
           <div
-            v-if="'completed' in data"
             class="status ml-2.5 flex text-xs leading-5"
             :class="{
-              'text-spring-50': data.completed === true,
-              'text-crimson-50': data.completed === false,
+              'text-spring-50': status,
+              'text-crimson-50': !status,
             }"
           >
             <b class="mr-2 text-base leading-3">.</b>
-            <span v-if="data.completed">completed</span>
+            <span v-if="status">completed</span>
             <span v-else>not completed</span>
           </div>
         </div>
-        <div class="flex icons">
+        <div class="icons flex">
           <a
             class="edit-button mr-2.5 flex items-center text-xs font-bold uppercase"
             :href="'/organisation/' + title"
@@ -55,14 +54,10 @@
           <template v-if="'moon' in data">
             <svg-vue v-if="data.moon" class="mr-1.5" icon="moon"></svg-vue>
           </template>
-          <HoverText
-            v-if="tooltip"
-            :hover-text="tooltip"
-            class="text-n-40"
-          ></HoverText>
+          <HoverText v-if="tooltip" :hover-text="tooltip" class="text-n-40"></HoverText>
         </div>
       </div>
-      <div class="w-full h-px mb-4 divider bg-n-20"></div>
+      <div class="divider mb-4 h-px w-full bg-n-20"></div>
       <div class="text-sm text-n-50">
         <!-- iati_organizational_identifier -->
         <div v-if="title == 'organisation_identifier'">
@@ -111,7 +106,7 @@
         </div>
 
         <!-- document link -->
-        <div v-if="title == 'document_link'" class="text-xs document-link">
+        <div v-if="title == 'document_link'" class="document-link text-xs">
           <DocumentLink :content="content" />
         </div>
         <!-- document link ends -->
@@ -121,9 +116,8 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, provide } from 'vue';
-import HoverText from 'Components/HoverText.vue';
-import moment from 'moment';
+import { defineProps, provide } from "vue";
+import HoverText from "Components/HoverText.vue";
 
 import {
   ReportingOrganisation,
@@ -133,7 +127,7 @@ import {
   RecipientCountryBudget,
   TotalExpenditure,
   DocumentLink,
-} from 'Organisation/elements/Index';
+} from "Organisation/elements/Index";
 
 const props = defineProps({
   data: {
@@ -155,29 +149,29 @@ const props = defineProps({
   language: {
     type: String,
     required: false,
-    default: 'en',
+    default: "en",
   },
   width: {
     type: String,
     required: false,
-    default: '',
+    default: "",
   },
   types: {
     type: Object,
     required: true,
   },
+  status: {
+    type: Boolean,
+    required: true,
+  },
 });
 
-const status = '';
+// const status = '';
 
-let layout = 'basis-6/12';
-if (props.width === 'full') {
-  layout = 'basis-full';
+let layout = "basis-6/12";
+if (props.width === "full") {
+  layout = "basis-full";
 }
 
-function formatDate(date: Date) {
-  return date ? moment(date).format('LL') : 'Date Not Available';
-}
-
-provide('orgTypes', props.types);
+provide("orgTypes", props.types);
 </script>

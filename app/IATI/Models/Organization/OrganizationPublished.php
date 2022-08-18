@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\IATI\Models\Organization;
 
-use App\IATI\Models\Activity\Activity;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -40,6 +39,6 @@ class OrganizationPublished extends Model
      */
     public function organization(): BelongsTo
     {
-        return $this->belongsTo(Activity::class, 'org_id', 'id');
+        return $this->belongsTo(Organization::class, 'organization_id', 'id');
     }
 }

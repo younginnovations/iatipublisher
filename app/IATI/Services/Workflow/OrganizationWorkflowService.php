@@ -8,7 +8,6 @@ use App\IATI\Services\Organization\OrganizationPublishedService;
 use App\IATI\Services\Organization\OrganizationService;
 use App\IATI\Services\Publisher\PublisherService;
 use App\IATI\Services\Xml\OrganizationXmlGeneratorService;
-use Illuminate\Support\Arr;
 
 /**
  * Class OrganizationWorkflowService.
@@ -74,7 +73,7 @@ class OrganizationWorkflowService
      *
      * @return void
      */
-    public function publishOrganization($organization)
+    public function publishOrganization($organization): void
     {
         $settings = $organization->settings;
         $this->xmlGeneratorService->generateOrganizationXml(
@@ -89,7 +88,7 @@ class OrganizationWorkflowService
         }
 
         $this->publisherService->publishOrganizationFile($publishingInfo, $organizationPublished, $organization);
-        $this->organizationService->updatePublishedStatus($organization, 'published', true, true);
+        $this->organizationService->updatePublishedStatus($organization, 'published', true);
     }
 
     /**
@@ -99,28 +98,14 @@ class OrganizationWorkflowService
      *
      * @return void
      */
-    public function unpublishOrganization($organization)
+    public function unpublishOrganization($organization): void
     {
-        $publishedFile = $this->organizationPublishedService->getOrganizationPublished($organization->org_id);
-        $this->removeOrganizationFromPublishedArray($publishedFile, $organization);
-        // $this->organizationService->updatePublishedStatus($organization, 'draft', true, false);
-        $this->xmlGeneratorService->generateNewXmlFile($publishedFile);
-    }
-
-    /**
-     * Removes activity file name from activity published row.
-     *
-     * @param $publishedFile
-     * @param $organization
-     *
-     * @return void
-     */
-    public function removeOrganizationFromPublishedArray($publishedFile, $organization)
-    {
-        $containedActivities = $publishedFile->extractActivities();
-        $unpublishedFile = Arr::get($containedActivities, $organization->id);
-        $this->xmlGeneratorService->deleteUnpublishedFile($unpublishedFile);
-        $newPublishedFiles = Arr::except($containedActivities, $organization->id);
-        $this->organizationPublishedService->updateOrganizationPublished($publishedFile, $newPublishedFiles);
+        $publishedFile = $this->organizationPublishedService->getOrganizationPublished($organization->id);
+        $settings = $organization->settings;
+        $organizationPublished = $this->organizationPublishedService->getOrganizationPublished($organization->id);
+        $publishingInfo = $settings->publishing_info;
+        $this->publisherService->unpublishOrganizationFile($publishingInfo, $organizationPublished);
+        $this->organizationService->updatePublishedStatus($organization, 'draft', false);
+        $this->xmlGeneratorService->deleteUnpublishedFile($publishedFile['filename']);
     }
 }

@@ -7,99 +7,63 @@
       'mb-4 border-b border-n-20 pb-4': Number(index) != content.length - 1,
     }"
   >
-    <div class="mb-4 elements-detail">
-      <div class="flex category">Recipient Org Budget</div>
-      <div class="ml-4">
-        <table>
-          <tbody>
-            <tr>
-              <td>Status</td>
-              <td>
-                {{
-                  recipient_org_budget.status
-                    ? types?.budgetType[recipient_org_budget.status]
-                    : 'Status Not Available'
-                }}
-              </td>
-            </tr>
-          </tbody>
-        </table>
+    <div class="elements-detail mb-4">
+      <div class="category flex">
+        {{
+          recipient_org_budget.status
+            ? types?.budgetType[recipient_org_budget.status]
+            : "Status Not Available"
+        }}
+      </div>
+      <div class="flex text-sm">
+        <span v-if="recipient_org_budget.value[0].amount">
+          {{ recipient_org_budget.value["0"].amount }}
+          {{ recipient_org_budget.value["0"].currency }}
+        </span>
+        <span v-else> Budget Amount Not Available</span>
       </div>
     </div>
-    <div class="mb-4 elements-detail">
+    <div class="elements-detail mb-4">
       <div
-        v-for="(
-          recipient_org, recipient_org_index
-        ) in recipient_org_budget.recipient_org"
+        v-for="(recipient_org, recipient_org_index) in recipient_org_budget.recipient_org"
         :key="recipient_org_index"
         class="item"
         :class="{
-          'mb-4':
-            recipient_org_index !=
-            recipient_org_budget.recipient_org.length - 1,
+          'mb-4': recipient_org_index != recipient_org_budget.recipient_org.length - 1,
         }"
       >
-        <div class="flex category">Recipient Organisation</div>
-        <div class="ml-4">
-          <table>
-            <tbody>
-              <tr>
-                <td>Reference</td>
-                <td>
-                  {{
-                    recipient_org.ref
-                      ? `${recipient_org.ref}`
-                      : 'Reference Not Available'
-                  }}
-                </td>
-              </tr>
-              <tr>
-                <td>Narrative</td>
-                <td>
-                  <div
-                    v-for="(
-                      narrative, narrative_index
-                    ) in recipient_org.narrative"
-                    :key="narrative_index"
-                    class="item"
-                    :class="{
-                      'mb-4':
-                        narrative_index != recipient_org.narrative.length - 1,
-                    }"
-                  >
-                    <div class="description-content">
-                      <div class="language mb-1.5">
-                        (
-                        {{
-                          narrative.language
-                            ? `Language: ${
-                                types?.languages[narrative.language]
-                              }`
-                            : 'Language : Not Available'
-                        }}
-                        )
-                      </div>
-                      <div class="w-[500px] max-w-full text-sm">
-                        {{ narrative.narrative }}
-                      </div>
-                    </div>
-                  </div>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-    <div class="mb-4 elements-detail">
-      <div class="flex category">Value</div>
-      <div class="ml-4">
         <table>
           <tr>
-            <td>Value Amount</td>
+            <td>Recipient Org</td>
             <td>
-              {{ recipient_org_budget.value['0'].amount }}
-              {{ recipient_org_budget.value['0'].currency }}
+              {{
+                recipient_org.ref
+                  ? `Reference - ${recipient_org.ref}`
+                  : "Reference Not Available"
+              }}
+              <div
+                v-for="(narrative, narrative_index) in recipient_org.narrative"
+                :key="narrative_index"
+                class="item"
+                :class="{
+                  'mb-4': narrative_index != recipient_org.narrative.length - 1,
+                }"
+              >
+                <div class="description-content">
+                  <div class="language mb-1.5">
+                    (
+                    {{
+                      narrative.language
+                        ? `Language: ${types?.languages[narrative.language]}`
+                        : "Language : Not Available"
+                    }}
+                    )
+                  </div>
+                  <div class="w-[500px] max-w-full">
+                    {{ narrative.narrative ?? "Narrative Not Available" }}
+                  </div>
+                </div>
+              </div>
             </td>
           </tr>
           <tr>
@@ -107,8 +71,7 @@
             <td>
               {{
                 formatDate(
-                  recipient_org_budget.value['0'].value_date ??
-                    'Value Date Not Available'
+                  recipient_org_budget.value["0"].value_date ?? "Value Date Not Available"
                 )
               }}
             </td>
@@ -118,15 +81,14 @@
             <td>
               {{
                 formatDate(
-                  recipient_org_budget.period_start['0'].date ??
-                    'Period Start Not Available'
+                  recipient_org_budget.period_start["0"].date ??
+                    "Period Start Not Available"
                 )
               }}
               -
               {{
                 formatDate(
-                  recipient_org_budget.period_start['0'].date ??
-                    'Period End Not Available'
+                  recipient_org_budget.period_end["0"].date ?? "Period End Not Available"
                 )
               }}
             </td>
@@ -134,24 +96,23 @@
         </table>
       </div>
     </div>
-    <div class="overflow-hidden border rounded-t-lg indicator border-n-20">
-      <div class="flex items-center px-6 py-2 border-b head border-n-20">
+    <div class="indicator overflow-hidden rounded-t-lg border border-n-20">
+      <div class="head flex items-center border-b border-n-20 px-6 py-2">
         <span class="text-xs font-bold text-n-50">budget line</span>
       </div>
       <div
         v-for="(budget_line, j) in recipient_org_budget.budget_line"
         :key="j"
         :class="{
-          'mb-2 border-b border-n-20':
-            j !== recipient_org_budget.budget_line.length - 1,
+          'mb-2 border-b border-n-20': j !== recipient_org_budget.budget_line.length - 1,
         }"
       >
-        <div class="flex px-6 py-2 indicator-content">
+        <div class="indicator-content flex px-6 py-2">
           <div class="elements-detail grow">
-            <div class="flex category">
+            <div class="category flex">
               <span>
-                {{ budget_line.value['0'].amount ?? 'Budget Not Available' }}
-                {{ budget_line.value['0'].currency }}
+                {{ budget_line.value["0"].amount ?? "Budget Not Available" }}
+                {{ budget_line.value["0"].currency }}
               </span>
             </div>
             <div class="ml-4">
@@ -160,15 +121,15 @@
                   <tr>
                     <td>Reference</td>
                     <td>
-                      {{ budget_line.ref ?? 'Reference Not Available' }}
+                      {{ budget_line.ref ?? "Reference Not Available" }}
                     </td>
                   </tr>
                   <tr>
                     <td>Value date</td>
                     <td>
                       {{
-                        formatDate(budget_line.value['0'].value_date) ??
-                        'Value Date Not Available'
+                        formatDate(budget_line.value["0"].value_date) ??
+                        "Value Date Not Available"
                       }}
                     </td>
                   </tr>
@@ -186,14 +147,12 @@
                         <div class="language mb-1.5">
                           ({{
                             narrative.language
-                              ? `Language: ${
-                                  types?.languages[narrative.language]
-                                }`
-                              : 'Language : Not Available'
+                              ? `Language: ${types?.languages[narrative.language]}`
+                              : "Language : Not Available"
                           }})
                         </div>
-                        <div class="w-[500px] max-w-full text-sm">
-                          {{ narrative.narrative ?? 'Narrative Not Available' }}
+                        <div class="w-[500px] max-w-full">
+                          {{ narrative.narrative ?? "Narrative Not Available" }}
                         </div>
                       </div>
                     </td>
@@ -209,8 +168,8 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, inject } from 'vue';
-import moment from 'moment';
+import { defineProps, inject } from "vue";
+import moment from "moment";
 
 defineProps({
   content: { type: Object, required: true },
@@ -222,9 +181,9 @@ interface TypesInterface {
   budgetType: [];
 }
 
-const types = inject('orgTypes') as TypesInterface;
+const types = inject("orgTypes") as TypesInterface;
 
 function formatDate(date: Date) {
-  return date ? moment(date).format('LL') : 'Date Not Available';
+  return date ? moment(date).format("LL") : "Date Not Available";
 }
 </script>

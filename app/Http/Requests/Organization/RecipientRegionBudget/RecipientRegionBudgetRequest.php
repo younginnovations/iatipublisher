@@ -13,11 +13,13 @@ class RecipientRegionBudgetRequest extends OrganizationBaseRequest
 {
     /**
      * Get the validation rules that apply to the request.
+     *
      * @return array
      */
-    public function rules()
+    public function rules(): array
     {
         $rules = [];
+
         foreach ($this->get('recipient_region_budget') as $recipientRegionBudgetIndex => $recipientRegionBudget) {
             $diff = 0;
             $start = $recipientRegionBudget['period_start'][0]['date'];
@@ -43,11 +45,13 @@ class RecipientRegionBudgetRequest extends OrganizationBaseRequest
 
     /**
      * Get the validation messages for the rules.
+     *
      * @return array
      */
     public function messages()
     {
         $messages = [];
+
         foreach ($this->get(
             'recipient_region_budget'
         ) as $recipientRegionBudgetIndex => $recipientRegionBudget) {
@@ -66,13 +70,17 @@ class RecipientRegionBudgetRequest extends OrganizationBaseRequest
     }
 
     /**
+     * Rules for recipient region budget form.
+     *
      * @param array $formFields
      * @param       $formBase
+     *
      * @return array
      */
-    public function getRecipientRegionBudgetRules(array $formFields, $formBase)
+    public function getRecipientRegionBudgetRules(array $formFields, $formBase): array
     {
         $rules = [];
+
         foreach ($formFields as $recipientRegionIndex => $recipientRegion) {
             $recipientRegionForm = sprintf('%s.recipient_region.%s', $formBase, $recipientRegionIndex);
             $rules[sprintf('%s.vocabulary_uri', $recipientRegionForm)] = 'nullable|url';
@@ -87,13 +95,17 @@ class RecipientRegionBudgetRequest extends OrganizationBaseRequest
     }
 
     /**
+     * Custom rules for recipient region budget.
+     *
      * @param array $formFields
      * @param       $formBase
+     *
      * @return array
      */
-    public function getRecipientRegionBudgetMessages(array $formFields, $formBase)
+    public function getRecipientRegionBudgetMessages(array $formFields, $formBase): array
     {
         $messages = [];
+
         foreach ($formFields as $recipientRegionIndex => $recipientRegion) {
             $recipientRegionForm = sprintf('%s.recipient_region.%s', $formBase, $recipientRegionIndex);
             $messages[sprintf('%s.recipient_region.%s.vocabulary_uri.url', $formBase, $recipientRegionIndex)] = trans('validation.url');

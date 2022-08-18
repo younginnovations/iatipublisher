@@ -37,25 +37,44 @@ class PublisherService extends RegistryApiHandler
     {
         $this->setFile($activityPublished);
         $this->init(env('IATI_API_ENDPOINT'), Arr::get($registryInfo, 'api_token', ''))
-             ->setPublisher(Arr::get($registryInfo, 'publisher_id', ''));
+            ->setPublisher(Arr::get($registryInfo, 'publisher_id', ''));
         $this->searchForPublisher($this->publisherId);
         $this->publishToRegistry($organization, $activityPublished->filename);
     }
 
     /**
-     * Publishes the activity xml file to the IATI registry.
+     * Publishes the organization xml file to the IATI registry.
      *
      * @param $registryInfo
      * @param $organizationPublished
      * @param $organization
+     *
+     * @return void
      */
-    public function publishOrganizationFile($registryInfo, $organizationPublished, $organization)
+    public function publishOrganizationFile($registryInfo, $organizationPublished, $organization): void
     {
         $this->organizationPublished = $organizationPublished;
         $this->init(env('IATI_API_ENDPOINT'), Arr::get($registryInfo, 'api_token', ''))
-             ->setPublisher(Arr::get($registryInfo, 'publisher_id', ''));
+            ->setPublisher(Arr::get($registryInfo, 'publisher_id', ''));
         $this->searchForPublisher($this->publisherId);
         $this->publishOrganizationToRegistry($organization, $organizationPublished->filename);
+    }
+
+    /**
+     * Publishes the organization xml file to the IATI registry.
+     *
+     * @param $registryInfo
+     * @param $organizationPublished
+     *
+     * @return void
+     */
+    public function unpublishOrganizationFile($registryInfo, $organizationPublished): void
+    {
+        $this->organizationPublished = $organizationPublished;
+        $this->init(env('IATI_API_ENDPOINT'), Arr::get($registryInfo, 'api_token', ''))
+            ->setPublisher(Arr::get($registryInfo, 'publisher_id', ''));
+        $this->searchForPublisher($this->publisherId);
+        $this->unpublishOrganizationFromRegistry($organizationPublished->filename);
     }
 
     /**
@@ -78,6 +97,25 @@ class PublisherService extends RegistryApiHandler
      *
      * @return void
      */
+    protected function publishOrganizationToRegistry($organization, $filename): void
+    {
+        $data = $this->generateOrganizationPayload($organization, $filename);
+        $packageId = $this->extractPackage($filename);
+
+        if ($this->isPackageAvailable($packageId, $this->apiKey)) {
+            $this->client->package_update($data);
+        } else {
+            $this->client->package_create($data);
+        }
+
+        $this->updateOrganizationStatus();
+    }
+
+    /**
+     * Publish File to the IATI Registry.
+     *
+     * @return void
+     */
     protected function publishToRegistry($organization, $filename): void
     {
         $data = $this->generatePayload($organization, $filename);
@@ -89,6 +127,25 @@ class PublisherService extends RegistryApiHandler
         }
 
         $this->activityPublishedService->updateStatus($this->activityPublished);
+    }
+
+    /**
+     * Publish File to the IATI Registry.
+     *
+     * @param $organization
+     * @param $filename
+     *
+     * @return void
+     */
+    protected function unpublishOrganizationFromRegistry($filename): void
+    {
+        $packageId = $this->extractPackage($filename);
+
+        if ($this->isPackageAvailable($packageId, $this->apiKey)) {
+            $this->client->package_delete($packageId);
+        }
+
+        $this->updateOrganizationStatus(false);
     }
 
     /**
@@ -162,6 +219,8 @@ class PublisherService extends RegistryApiHandler
     }
 
     /**
+     * Returns the type of file.
+     *
      * @param $code
      *
      * @return mixed|string
@@ -228,20 +287,16 @@ class PublisherService extends RegistryApiHandler
                 [
                     'format'   => 'IATI-XML',
                     'mimetype' => 'application/xml',
-                    'url'      => Storage::disk('minio')->url('iati/organizationXmlFiles/' . $filename . '.xml'),
+                    'url'      => Storage::disk('minio')->url('/organizationXmlFiles/' . $filename . '.xml'),
                 ],
             ],
-            'filetype'     => ($code != 'organisation') ? 'activity' : $code,
+            'filetype'     => 'organisation',
             $key           => ($code == 'activities' || $code == 'organisation') ? '' : $code,
             'data_updated' => $publishedFile->updated_at->toDateTimeString(),
             'language'     => 'en',
             'verified'     => 'no',
             'state'        => 'active',
         ];
-
-        // if ($code != 'organisation') {
-        //     $data['activity_count'] = count($publishedFile->published_activities);
-        // }
 
         return json_encode($data);
     }
@@ -324,8 +379,10 @@ class PublisherService extends RegistryApiHandler
 
     /**
      * Updates activity published table.
+     *
+     * @return void
      */
-    protected function updateStatus()
+    protected function updateStatus(): void
     {
         $this->activityPublished->published_to_registry = 1;
         $this->activityPublished->save();
@@ -333,10 +390,12 @@ class PublisherService extends RegistryApiHandler
 
     /**
      * Updates activity published table.
+     *
+     * @return void
      */
-    protected function updateOrganizationStatus()
+    protected function updateOrganizationStatus($published = true): void
     {
-        $this->organizationPublished->published_to_registry = 1;
+        $this->organizationPublished->published_to_registry = $published ? 1 : 0;
         $this->organizationPublished->save();
     }
 }

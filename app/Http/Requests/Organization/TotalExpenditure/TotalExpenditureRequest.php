@@ -13,30 +13,35 @@ class TotalExpenditureRequest extends OrganizationBaseRequest
 {
     /**
      * rules for total expenditure.
+     *
      * @return array
      */
-    public function rules()
+    public function rules(): array
     {
         return $this->getRulesForTotalExpenditure($this->get('total_expenditure'));
     }
 
     /**
      * prepare messages for total expenditure.
+     *
      * @return array
      */
-    public function messages()
+    public function messages(): array
     {
         return $this->getMessagesForTotalExpenditure($this->get('total_expenditure'));
     }
 
     /**
-     *  rules for organization total expenditure.
+     * rules for organization total expenditure.
+     *
      * @param $formFields
+     *
      * @return array
      */
-    public function getRulesForTotalExpenditure($formFields)
+    public function getRulesForTotalExpenditure($formFields): array
     {
         $rules = [];
+
         foreach ($formFields as $totalExpenditureIndex => $totalExpenditure) {
             $diff = 0;
             $start = $totalExpenditure['period_start'][0]['date'];
@@ -60,13 +65,16 @@ class TotalExpenditureRequest extends OrganizationBaseRequest
     }
 
     /**
-     *  messages for organization total expenditure.
+     * messages for organization total expenditure.
+     *
      * @param $formFields
+     *
      * @return array
      */
-    public function getMessagesForTotalExpenditure($formFields)
+    public function getMessagesForTotalExpenditure($formFields): array
     {
         $messages = [];
+
         foreach ($formFields as $totalExpenditureIndex => $totalExpenditure) {
             $totalExpenditureForm = sprintf('total_expenditure.%s', $totalExpenditureIndex);
             $messages = array_merge(
@@ -82,14 +90,17 @@ class TotalExpenditureRequest extends OrganizationBaseRequest
     }
 
     /**
-     *  rules for expense line.
+     * rules for expense line.
+     *
      * @param $formFields
      * @param $formBase
+     *
      * @return array
      */
-    public function getRulesForExpenseLine($formFields, $formBase)
+    public function getRulesForExpenseLine($formFields, $formBase): array
     {
         $rules = [];
+
         foreach ($formFields as $expenseLineIndex => $expenseLine) {
             $expenseLineForm = sprintf('%s.expense_line.%s', $formBase, $expenseLineIndex);
             $rules = array_merge(
@@ -104,13 +115,16 @@ class TotalExpenditureRequest extends OrganizationBaseRequest
 
     /**
      * messages for expense line.
+     *
      * @param $formFields
      * @param $formBase
+     *
      * @return array
      */
-    public function getMessagesForExpenseLine($formFields, $formBase)
+    public function getMessagesForExpenseLine($formFields, $formBase): array
     {
         $messages = [];
+
         foreach ($formFields as $expenseLineIndex => $expenseLine) {
             $expenseLineForm = sprintf('%s.expense_line.%s', $formBase, $expenseLineIndex);
             $messages[sprintf('%s.expense_line.%s.reference.required', $formBase, $expenseLineIndex)] = trans('validation.required', ['attribute' => trans('elementForm.reference')]);
