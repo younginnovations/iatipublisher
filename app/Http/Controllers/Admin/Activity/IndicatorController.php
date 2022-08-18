@@ -81,7 +81,7 @@ class IndicatorController extends Controller
                     'title' => $result['result']['title'][0]['narrative'],
                 ],
             ];
-            $indicators = $this->indicatorService->getResultIndicators($resultId);
+            $indicators = $this->indicatorService->getIndicators($resultId);
             $types = getIndicatorTypes();
             $toast = generateToastData();
 
@@ -97,6 +97,31 @@ class IndicatorController extends Controller
     }
 
     /**
+     * Returns paginated indicator.
+     *
+     * @param int $resultId
+     * @param int $page
+     *
+     * @return JsonResponse
+     */
+    public function getPaginatedIndicators(int $resultId, int $page = 1): JsonResponse
+    {
+        try {
+            $indicator = $this->indicatorService->getPaginatedIndicator($resultId, $page);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Indicators fetched successfully',
+                'data'    => $indicator,
+            ]);
+        } catch (\Exception $e) {
+            logger()->error($e->getMessage());
+
+            return response()->json(['success' => false, 'message' => 'Error occurred while fetching the data']);
+        }
+    }
+
+    /**
      * Renders indicator create page.
      *
      * @param $resultId
@@ -106,11 +131,11 @@ class IndicatorController extends Controller
     public function create($resultId): Factory|View|RedirectResponse|Application
     {
         try {
-            $element = json_decode(json: file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), associative: true, depth: 512, flags: JSON_THROW_ON_ERROR);
+            $element = getElementSchema('indicator');
             $result = $this->resultService->getResult($resultId);
             $activity = $result->activity;
             $form = $this->indicatorService->createFormGenerator($activity->id, $resultId);
-            $data = ['core' => $element['indicator']['criteria'] ?? false, 'status' => false, 'title' => $element['indicator']['label'], 'name' => 'indicator'];
+            $data = ['core' => $element['criteria'] ?? false, 'status' => false, 'title' => $element['label'], 'name' => 'indicator'];
 
             return view('admin.activity.indicator.edit', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {
@@ -157,6 +182,7 @@ class IndicatorController extends Controller
     /**
      * Renders indicator detail page.
      *
+     * @param $resultId
      * @param $indicatorId
      *
      * @return Factory|View|RedirectResponse|Application
@@ -168,7 +194,7 @@ class IndicatorController extends Controller
             $result = $indicator->result;
             $resultTitle = $result['result']['title'];
             $activity = $result->activity;
-            $period = $this->periodService->getPeriodOfIndicator($indicatorId)->toArray();
+            $period = $this->periodService->getPeriods($indicatorId)->toArray();
             $types = getIndicatorTypes();
             $toast = generateToastData();
 
@@ -190,16 +216,14 @@ class IndicatorController extends Controller
      *
      * @return Factory|View|RedirectResponse|Application
      */
-    public function edit(
-        $resultId,
-        $indicatorId
-    ): Factory|View|RedirectResponse|Application {
+    public function edit($resultId, $indicatorId): Factory|View|RedirectResponse|Application
+    {
         try {
             $result = $this->resultService->getResult($resultId);
-            $element = json_decode(json: file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), associative: true, depth: 512, flags: JSON_THROW_ON_ERROR);
+            $element = getElementSchema('indicator');
             $activity = $this->activityService->getActivity($result->activity->id);
             $form = $this->indicatorService->editFormGenerator($result->activity->id, $resultId, $indicatorId);
-            $data = ['core' => $element['indicator']['criteria'] ?? false, 'status' => false, 'title' => $element['indicator']['label'], 'name' => 'indicator'];
+            $data = ['core' => $element['criteria'] ?? false, 'status' => false, 'title' => $element['label'], 'name' => 'indicator'];
 
             return view('admin.activity.indicator.edit', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {
@@ -227,17 +251,14 @@ class IndicatorController extends Controller
             $indicator = $this->indicatorService->getIndicator($indicatorId);
             $result = $indicator->result;
 
-            if (!$this->indicatorService->update([
-                'result_id' => $result->id,
-                'indicator' => $indicatorData,
-            ], $indicator)) {
+            if (!$this->indicatorService->update($indicatorId, ['result_id' => $result->id, 'indicator' => $indicatorData])) {
                 return redirect()->route('admin.result.indicator.index', [$result->activity->id, $resultId])->with(
                     'error',
                     'Error has occurred while updating result indicator.'
                 );
             }
 
-            return redirect()->route('admin.result.indicator.show', [$result->activity->id, $resultId, $indicator['id']])->with(
+            return redirect()->route('admin.result.indicator.show', [$result->activity->id, $resultId, $indicatorId])->with(
                 'success',
                 'Indicator updated successfully.'
             );
@@ -261,30 +282,5 @@ class IndicatorController extends Controller
     public function destroy(Indicator $indicator): void
     {
         //
-    }
-
-    /*
-     * Get indicator of the corresponding activity
-     *
-     * @param $resultId
-     * @param $page
-     *
-     * @return JsonResponse
-     */
-    public function getIndicator($resultId, $page = 1): JsonResponse
-    {
-        try {
-            $indicator = $this->indicatorService->getPaginatedIndicator($resultId, $page);
-
-            return response()->json([
-                'success' => true,
-                'message' => 'Indicators fetched successfully',
-                'data'    => $indicator,
-            ]);
-        } catch (\Exception $e) {
-            logger()->error($e->getMessage());
-
-            return response()->json(['success' => false, 'message' => 'Error occurred while fetching the data']);
-        }
     }
 }

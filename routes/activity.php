@@ -118,10 +118,11 @@ Route::name('admin.')->group(function () {
     Route::get('/activity/{id}/transactions/page/{page?}', [App\Http\Controllers\Admin\Activity\TransactionController::class, 'getTransaction'])->name('transactions.paginate');
 
     Route::resource('activity.result', ResultController::class)->parameters(['activity' => 'id', 'result'=>'resultId']);
-    Route::get('/activity/{id}/result/page/{page?}', [ResultController::class, 'getResult'])->name('results.paginate');
+    Route::get('/activity/{id}/result/page/{page?}', [ResultController::class, 'getPaginatedResults'])->name('activity.results.paginate');
 
     Route::resource('result.indicator', IndicatorController::class)->parameters(['result' => 'id']);
-    Route::get('/result/{id}/indicator/page/{page?}', [IndicatorController::class, 'getIndicator'])->name('indicator.paginate');
+    Route::get('/result/{id}/indicator/page/{page?}', [IndicatorController::class, 'getPaginatedIndicators'])->name('indicator.paginate');
+
     Route::resource('indicator.period', PeriodController::class)->parameters(['indicator' => 'id']);
-    Route::get('/indicator/{id}/period/page/{page?}', [PeriodController::class, 'getPeriod'])->name('period.paginate');
+    Route::get('/indicator/{id}/period/page/{page?}', [PeriodController::class, 'getPaginatedPeriods'])->name('period.paginate');
 });

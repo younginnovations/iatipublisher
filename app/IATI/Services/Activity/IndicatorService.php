@@ -8,7 +8,6 @@ use App\IATI\Elements\Builder\ResultElementFormCreator;
 use App\IATI\Models\Activity\Indicator;
 use App\IATI\Repositories\Activity\IndicatorRepository;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Arr;
 use Kris\LaravelFormBuilder\Form;
@@ -41,28 +40,16 @@ class IndicatorService
     }
 
     /**
-     * Create a new ResultIndicator.
+     * Returns array of paginated indicator belonging to result of an activity.
      *
-     * @param array $indicatorData
+     * @param int $resultId
+     * @param int $page
      *
-     * @return object
+     * @return LengthAwarePaginator|Collection
      */
-    public function create(array $indicatorData): object
+    public function getPaginatedIndicator(int $resultId, int $page): LengthAwarePaginator|Collection
     {
-        return $this->indicatorRepository->store($this->sanitizeIndicatorData($indicatorData));
-    }
-
-    /**
-     * Update Activity Result Indicator.
-     *
-     * @param array $indicatorData
-     * @param Indicator $activityResultIndicator
-     *
-     * @return bool
-     */
-    public function update(array $indicatorData, Indicator $activityResultIndicator): bool
-    {
-        return $this->indicatorRepository->update($activityResultIndicator->id, ['indicator' => Arr::get($this->sanitizeIndicatorData($indicatorData), 'indicator', [])]);
+        return $this->indicatorRepository->getPaginatedIndicator($resultId, $page);
     }
 
     /**
@@ -72,22 +59,9 @@ class IndicatorService
      *
      * @return Collection
      */
-    public function getResultIndicators($resultId): Collection
+    public function getIndicators($resultId): Collection
     {
         return $this->indicatorRepository->getResultIndicators($resultId);
-    }
-
-    /**
-     * Return specific result indicator.
-     *
-     * @param $resultId
-     * @param $resultIndicatorId
-     *
-     * @return Model|null
-     */
-    public function getResultIndicator($resultId, $resultIndicatorId): ?Model
-    {
-        return $this->indicatorRepository->getResultIndicator($resultId, $resultIndicatorId);
     }
 
     /**
@@ -103,21 +77,28 @@ class IndicatorService
     }
 
     /**
-     * Generates indicator form.
+     * Create a new ResultIndicator.
      *
-     * @param $activityId
-     * @param $resultId
-     * @param $indicatorId
+     * @param array $indicatorData
      *
-     * @return Form
+     * @return object
      */
-    public function editFormGenerator($activityId, $resultId, $indicatorId): Form
+    public function create(array $indicatorData): object
     {
-        $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
-        $resultIndicator = $this->getResultIndicator($resultId, $indicatorId) ?? [];
-        $this->resultElementFormCreator->url = route('admin.result.indicator.update', [$activityId, $resultId, $indicatorId]);
+        return $this->indicatorRepository->store($this->sanitizeIndicatorData($indicatorData));
+    }
 
-        return $this->resultElementFormCreator->editForm($resultIndicator->indicator, $element['indicator'], 'PUT', '/activity/' . $activityId);
+    /**
+     * Update Activity Result Indicator.
+     *
+     * @param       $id
+     * @param array $indicatorData
+     *
+     * @return bool
+     */
+    public function update($id, array $indicatorData): bool
+    {
+        return $this->indicatorRepository->update($id, ['indicator' => Arr::get($this->sanitizeIndicatorData($indicatorData), 'indicator', [])]);
     }
 
     /**
@@ -125,29 +106,35 @@ class IndicatorService
      *
      * @param $activityId
      * @param $resultId
-     * @param $indicatorId
      *
      * @return Form
+     * @throws \JsonException
      */
     public function createFormGenerator($activityId, $resultId): Form
     {
-        $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
+        $element = getElementSchema('indicator');
         $this->resultElementFormCreator->url = route('admin.result.indicator.store', [$activityId, $resultId]);
 
-        return $this->resultElementFormCreator->editForm([], $element['indicator'], 'POST', '/activity/' . $activityId);
+        return $this->resultElementFormCreator->editForm([], $element, 'POST', '/activity/' . $activityId);
     }
 
     /**
-     * Returns array of paginated indicator belonging to result of an activity.
+     * Generates indicator form.
      *
+     * @param $activityId
      * @param $resultId
-     * @param $page
+     * @param $indicatorId
      *
-     * return LengthAwarePaginator|Collection
+     * @return Form
+     * @throws \JsonException
      */
-    public function getPaginatedIndicator($resultId, $page): LengthAwarePaginator|Collection
+    public function editFormGenerator($activityId, $resultId, $indicatorId): Form
     {
-        return $this->indicatorRepository->getPaginatedIndicator($resultId, $page);
+        $element = getElementSchema('indicator');
+        $resultIndicator = $this->getIndicator($indicatorId);
+        $this->resultElementFormCreator->url = route('admin.result.indicator.update', [$activityId, $resultId, $indicatorId]);
+
+        return $this->resultElementFormCreator->editForm($resultIndicator->indicator, $element, 'PUT', '/activity/' . $activityId);
     }
 
     /**
