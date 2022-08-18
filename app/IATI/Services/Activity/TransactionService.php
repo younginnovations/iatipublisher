@@ -40,6 +40,29 @@ class TransactionService
     }
 
     /**
+     * @param int $activityId
+     * @param int $page
+     *
+     * @return LengthAwarePaginator|Collection
+     */
+    public function getPaginatedTransaction(int $activityId, int $page): LengthAwarePaginator|Collection
+    {
+        return $this->transactionRepository->getPaginatedTransaction($activityId, $page);
+    }
+
+    /**
+     * Return specific transaction.
+     *
+     * @param $id
+     *
+     * @return Model|null
+     */
+    public function getTransaction($id): ?Model
+    {
+        return $this->transactionRepository->find($id);
+    }
+
+    /**
      * Create a new Transaction.
      *
      * @param array $transactionData
@@ -62,19 +85,6 @@ class TransactionService
     public function update(array $transactionData, $activityTransaction): bool
     {
         return $this->transactionRepository->update($activityTransaction->id, ['transaction' => Arr::get($this->sanitizeTransactionData($transactionData), 'transaction', [])]);
-    }
-
-    /**
-     * Return specific transaction.
-     *
-     * @param $id
-     * @param $activityId
-     *
-     * @return Model|null
-     */
-    public function getTransaction($id, $activityId): ?Model
-    {
-        return $this->transactionRepository->getTransaction($id, $activityId);
     }
 
     /**
@@ -120,42 +130,32 @@ class TransactionService
      * @param $activityId
      *
      * @return Form
+     * @throws \JsonException
      */
     public function createFormGenerator($activityId): Form
     {
-        $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
-        $this->transactionElementFormCreator->url = route('admin.activity.transactions.store', $activityId);
+        $element = getElementSchema('transactions');
+        $this->transactionElementFormCreator->url = route('admin.activity.transaction.store', $activityId);
 
-        return $this->transactionElementFormCreator->editForm([], $element['transactions'], 'POST', '/activity/' . $activityId);
+        return $this->transactionElementFormCreator->editForm([], $element, 'POST', '/activity/' . $activityId);
     }
 
     /**
      * Generates transaction edit form.
      *
-     * @param $id
+     * @param $transactionId
+     * @param $activityId
      *
      * @return Form
+     * @throws \JsonException
      */
     public function editFormGenerator($transactionId, $activityId): Form
     {
-        $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
+        $element = getElementSchema('transactions');
         $activityTransaction = $this->getTransaction($transactionId, $activityId);
-        $this->transactionElementFormCreator->url = route('admin.activity.transactions.update', [$activityId, $transactionId]);
+        $this->transactionElementFormCreator->url = route('admin.activity.transaction.update', [$activityId, $transactionId]);
 
-        return $this->transactionElementFormCreator->editForm($activityTransaction->transaction, $element['transactions'], 'PUT', '/activity/' . $activityId);
-    }
-
-    /**
-     * Returns array of paginated transactions belonging to an activity.
-     *
-     * @param $activityId
-     * @param $page
-     *
-     * return LengthAwarePaginator|Collection
-     */
-    public function getPaginatedTransaction($activityId, $page): LengthAwarePaginator|Collection
-    {
-        return $this->transactionRepository->getPaginatedTransaction($activityId, $page);
+        return $this->transactionElementFormCreator->editForm($activityTransaction->transaction, $element, 'PUT', '/activity/' . $activityId);
     }
 
     /**

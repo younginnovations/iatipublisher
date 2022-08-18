@@ -6,8 +6,7 @@ namespace App\IATI\Repositories\Activity;
 
 use App\IATI\Models\Activity\Transaction;
 use App\IATI\Repositories\Repository;
-use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 /**
  * Class TransactionRepository.
@@ -23,16 +22,16 @@ class TransactionRepository extends Repository
     }
 
     /**
-     * Return specific transaction.
+     * Returns paginated transactions.
      *
-     * @param $id
-     * @param $activityId
+     * @param int $activityId
+     * @param int $page
      *
-     * @return Model
+     * @return LengthAwarePaginator
      */
-    public function getTransaction($id, $activityId): Model
+    public function getPaginatedTransaction(int $activityId, int $page = 1): LengthAwarePaginator
     {
-        return $this->model->where('id', $id)->where('activity_id', $activityId)->first();
+        return $this->model->where('activity_id', $activityId)->orderBy('created_at', 'DESC')->paginate(10, ['*'], 'transaction', $page);
     }
 
     /**
@@ -77,18 +76,5 @@ class TransactionRepository extends Repository
         }
 
         return $references;
-    }
-
-    /**
-     * Returns all transactions belonging to activityId.
-     *
-     * @param int $activityId
-     * @param int $page
-     *
-     * @return \Illuminate\Database\Eloquent\Collection
-     */
-    public function getPaginatedTransaction($activityId, $page = 1): Collection | \Illuminate\Pagination\LengthAwarePaginator
-    {
-        return $this->model->where('activity_id', $activityId)->orderBy('created_at', 'DESC')->paginate(10, ['*'], 'transaction', $page);
     }
 }
