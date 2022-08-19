@@ -102,9 +102,9 @@ class ActivityWorkflowController extends Controller
      *
      * @param $id
      *
-     * @return RedirectResponse
+     * @return JsonResponse
      */
-    public function unpublish($id): RedirectResponse
+    public function unpublish($id): JsonResponse
     {
         try {
             DB::beginTransaction();
@@ -157,7 +157,7 @@ class ActivityWorkflowController extends Controller
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while validating activity.');
+            return response()->json(['success' => false, 'error' => 'Error has occurred while validating activity.']);
         }
     }
 }

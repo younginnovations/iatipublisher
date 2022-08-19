@@ -4,6 +4,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     "/js/app.js": "/js/app.js?id=6e65cc6ab01eddfbe4b7d82e8ac6a6cb",
     "/js/script.js": "/js/script.js?id=c590f4aa7dc841813b5f40324de65278",
     "/js/formbuilder.js": "/js/formbuilder.js?id=e96956795d0cd57de89fe65578f480f1",
@@ -38,4 +39,10 @@
     "/js/formbuilder.js": "/js/formbuilder.js?id=53c103ecfd381dff741b49a18751d1b7",
     "/css/app.css": "/css/app.css?id=1ce1d85925ca169e6ad4778c6b0d5a73"
 >>>>>>> a1a9a911 (Activities detail:)
+=======
+    "/js/app.js": "/js/app.js?id=af08a53cf858a9127028d71e4b65ec59",
+    "/js/script.js": "/js/script.js?id=babb8325c2c48764aff6d12ff3b66fb6",
+    "/js/formbuilder.js": "/js/formbuilder.js?id=b622ec8ffbd10381fee531d1f49240f5",
+    "/css/app.css": "/css/app.css?id=be28f8414cb174242487ff13bdea50a4"
+>>>>>>> d6e8ab52 (Minor fix)
 }
