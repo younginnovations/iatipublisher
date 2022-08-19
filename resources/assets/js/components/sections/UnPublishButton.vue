@@ -86,6 +86,7 @@ const unPublishFunction = () => {
     const response = res.data;
     toastMessage.message = response.message;
     toastMessage.type = response.success;
+    unpublishToggle();
     setTimeout(() => {
       loader.value = false;
     }, 2000);

@@ -30,22 +30,30 @@
     <div class="activities">
       <aside class="activities__sidebar">
         <div
-          class="
-            sticky
-            top-0
-            px-6
-            py-4
-            rounded-lg
-            indicator
-            bg-eggshell
-            text-n-50
-          "
+          class="sticky top-0 px-6 py-4 rounded-lg indicator bg-eggshell text-n-50"
         >
           <ul class="text-sm font-bold leading-relaxed">
             <li v-for="(rData, r, ri) in indicatorData" :key="ri">
               <a v-smooth-scroll :href="`#${r}`" :class="linkClasses">
                 <svg-vue icon="moon" class="mr-2 text-base"></svg-vue>
                 {{ r }}
+              </a>
+            </li>
+
+            <li v-if="periodData.length === 0">
+              <a
+                :href="`${resultLink}/indicator/${indicator.id}/period/create`"
+                :class="linkClasses"
+                class="border border-dashed border-n-40"
+              >
+                <svg-vue icon="add" class="mr-2 text-n-40"></svg-vue>
+                add period
+              </a>
+            </li>
+            <li v-else>
+              <a v-smooth-scroll href="#period" :class="linkClasses">
+                <svg-vue icon="moon" class="mr-2 text-base"></svg-vue>
+                period
               </a>
             </li>
           </ul>
@@ -115,7 +123,7 @@
                       />
                     </template>
 
-                    <Period :data="periodData" />
+                    <Period id="period" :data="periodData" />
                   </tbody>
                 </table>
               </div>
