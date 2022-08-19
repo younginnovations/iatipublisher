@@ -13,7 +13,7 @@
         />
       </div>
       <div class="flex justify-end">
-        <Status class="mr-2.5" :data="false" />
+        <!-- <Status class="mr-2.5" :data="false" /> -->
         <Btn
           text="Add Indicator"
           icon="add"
@@ -180,7 +180,7 @@ export default defineComponent({
     DocumentLink,
     Period,
     Btn,
-    Status,
+    // Status,
     PageTitle,
     Toast,
   },
