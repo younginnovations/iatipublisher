@@ -1,11 +1,11 @@
 <template>
   <a v-if="link" :href="link" :class="classes">
     <svg-vue v-if="icon" class="mr-0.5 text-base" :icon="icon"></svg-vue>
-    <span>{{ text }}</span>
+    <span class="whitespace-nowrap">{{ text }}</span>
   </a>
   <span v-else :class="classes" class="text-bluecoral">
     <svg-vue v-if="icon" class="mr-0.5 text-base" :icon="icon"></svg-vue>
-    <span>{{ text }}</span>
+    <span class="whitespace-nowrap">{{ text }}</span>
   </span>
 </template>
 

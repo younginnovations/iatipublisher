@@ -2,7 +2,7 @@
 
 @section('content')
     <section class="section min-h-[calc(100vh_-_60px)]">
-
+        @include('web.components.loader')
         <div class="px-10 pt-4 pb-[71px]">
             @include('admin.layouts.activityTitle')
             <div class="activities">

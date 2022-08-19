@@ -46,6 +46,7 @@ import ResetPassword from './views/reset/ResetPassword.vue';
  */
 import HoverText from './components/HoverText.vue';
 import PageTitle from './components/sections/PageTitle.vue';
+import LoadingState from './components/Loader.vue';
 
 const app = createApp({});
 
@@ -94,6 +95,7 @@ app
  */
 app.component('HoverText', HoverText);
 app.component('PageTitle', PageTitle);
+app.component('LoadingState', LoadingState);
 
 /**
  * Extension to inline SVG files with Vue.js and optimize them automatically with SVGO

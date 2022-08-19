@@ -35,8 +35,18 @@
                 @endif
             </span>
             <div class="text-sm font-bold title"> {{ str_replace(' ', '-', strtolower($data['title'])) }}</div>
+            <!-- "text-spring-50" is a dynamic class according to status as
+                completed = "text-spring-50"
+                not-completed="text-crimson-50"
+                Also the text "completed" should be dynamic.
+            -->
+            <div class="status ml-2.5 flex text-xs leading-5 text-spring-50">
+                <b class="mr-2 text-base leading-3">.</b><span>completed</span>
+            </div>
             @if ($data['core'])
-                <svg-vue icon="core"></svg-vue>
+                <!--Icon values: "core", "star", "moon".
+                Remove comment after task completion  -->
+                <svg-vue icon="core" class="ml-2"></svg-vue>
             @endif
         </div>
         <div class="flex icons">
