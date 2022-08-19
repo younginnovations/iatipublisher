@@ -61,15 +61,16 @@ class ResultRepository extends Repository
     }
 
     /**
-     * Return specific result.
+     * Returns specific result of specific activity.
      *
-     * @param $id
+     * @param int $activityId
+     * @param int $id
      *
-     * @return Model
+     * @return mixed
      */
-    public function getResult($id): Model
+    public function getActivityResult(int $activityId, int $id): mixed
     {
-        return $this->model->find($id);
+        return $this->model->where(['activity_id'=>$activityId, 'id'=>$id])->first();
     }
 
     /**

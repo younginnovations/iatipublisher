@@ -52,6 +52,32 @@ class PeriodService
     }
 
     /**
+     * Checks if specific indicator exists for specific result.
+     *
+     * @param int $indicatorId
+     * @param int $id
+     *
+     * @return bool
+     */
+    public function indicatorPeriodExist(int $indicatorId, int $id): bool
+    {
+        return $this->getIndicatorPeriod($indicatorId, $id) !== null;
+    }
+
+    /**
+     * Returns specific result of specific activity.
+     *
+     * @param int $indicatorId
+     * @param int $id
+     *
+     * @return mixed
+     */
+    public function getIndicatorPeriod(int $indicatorId, int $id): mixed
+    {
+        return $this->periodRepository->getIndicatorPeriod($indicatorId, $id);
+    }
+
+    /**
      * Return specific result indicator period.
      *
      * @param $id

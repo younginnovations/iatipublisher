@@ -40,13 +40,13 @@
             v-if="title === 'transactions'"
             text="Add Transaction"
             icon="add"
-            :link="`/activity/${activityId}/${title}/create`"
+            :link="`/activity/${activityId}/transaction/create`"
             class="mr-2.5"
           />
           <Btn
             v-if="title !== 'transactions'"
             text="Edit"
-            :link="`/activity/${activityId}/${title}`"
+            :link="`/activity/${activityId}/transaction`"
             class="edit-button mr-2.5"
           />
           <Btn
@@ -54,7 +54,7 @@
             text="Show full transaction list"
             icon=""
             design="bgText"
-            :link="`/activity/${activityId}/${title}`"
+            :link="`/activity/${activityId}/transaction`"
             class="mr-2.5"
           />
           <svg-vue v-if="data.core" class="mr-1.5" icon="core"></svg-vue>

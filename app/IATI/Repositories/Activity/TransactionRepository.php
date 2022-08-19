@@ -35,6 +35,19 @@ class TransactionRepository extends Repository
     }
 
     /**
+     * Returns specific transaction of specific activity.
+     *
+     * @param int $activityId
+     * @param int $id
+     *
+     * @return mixed
+     */
+    public function getActivityTransaction(int $activityId, int $id): mixed
+    {
+        return $this->model->where(['activity_id'=>$activityId, 'id'=>$id])->first();
+    }
+
+    /**
      * get the references of all transactions.
      *
      * @param $activityId

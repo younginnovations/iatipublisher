@@ -272,7 +272,7 @@
                                             <Btn
                                               text="Edit"
                                               icon="edit"
-                                              :link="`/indicator/${indicator.id}/period/edit`"
+                                              :link="`/indicator/${indicator.id}/period/${period.id}/edit`"
                                             />
                                           </div>
                                         </div>

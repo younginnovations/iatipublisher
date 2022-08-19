@@ -65,6 +65,32 @@ class IndicatorService
     }
 
     /**
+     * Checks if specific indicator exists for specific result.
+     *
+     * @param int $resultId
+     * @param int $id
+     *
+     * @return bool
+     */
+    public function resultIndicatorExists(int $resultId, int $id): bool
+    {
+        return $this->getResultIndicator($resultId, $id) !== null;
+    }
+
+    /**
+     * Returns specific result of specific activity.
+     *
+     * @param int $resultId
+     * @param int $id
+     *
+     * @return mixed
+     */
+    public function getResultIndicator(int $resultId, int $id): mixed
+    {
+        return $this->indicatorRepository->getResultIndicator($resultId, $id);
+    }
+
+    /**
      * Return specific result indicator.
      *
      * @param $id
@@ -104,7 +130,6 @@ class IndicatorService
     /**
      * Generates create indicator form.
      *
-     * @param $activityId
      * @param $resultId
      *
      * @return Form
@@ -121,7 +146,6 @@ class IndicatorService
     /**
      * Generates indicator form.
      *
-     * @param $activityId
      * @param $resultId
      * @param $indicatorId
      *

@@ -63,6 +63,56 @@ class ResultService
     }
 
     /**
+     * Checks if specific result exists for specific activity.
+     *
+     * @param int $activityId
+     * @param int $id
+     *
+     * @return bool
+     */
+    public function activityResultExists(int $activityId, int $id): bool
+    {
+        return $this->getActivityResult($activityId, $id) !== null;
+    }
+
+    /**
+     * Returns specific result of specific activity.
+     *
+     * @param int $activityId
+     * @param int $id
+     *
+     * @return mixed
+     */
+    public function getActivityResult(int $activityId, int $id): mixed
+    {
+        return $this->resultRepository->getActivityResult($activityId, $id);
+    }
+
+    /**
+     * Checks if specific result exists for specific activity.
+     *
+     * @param int $id
+     *
+     * @return bool
+     */
+    public function resultExists(int $id): bool
+    {
+        return $this->getResult($id) !== null;
+    }
+
+    /**
+     * Returns specific result.
+     *
+     * @param $id
+     *
+     * @return object|null
+     */
+    public function getResult($id): ?object
+    {
+        return $this->resultRepository->find($id);
+    }
+
+    /**
      * Create a new ActivityResult.
      *
      * @param array $resultData
@@ -85,18 +135,6 @@ class ResultService
     public function update($resultId, array $resultData): bool
     {
         return $this->resultRepository->update($resultId, $this->sanitizeResultData($resultData));
-    }
-
-    /**
-     * Returns specific result.
-     *
-     * @param $id
-     *
-     * @return object|null
-     */
-    public function getResult($id): ?object
-    {
-        return $this->resultRepository->find($id);
     }
 
     /**
