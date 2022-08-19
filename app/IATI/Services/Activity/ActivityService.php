@@ -93,6 +93,18 @@ class ActivityService
     }
 
     /**
+     * Checks if specific activity exists.
+     *
+     * @param int $id
+     *
+     * @return bool
+     */
+    public function activityExists(int $id): bool
+    {
+        return $this->getActivity($id) !== null;
+    }
+
+    /**
      * Returns activity identifiers used by an organization.
      *
      * @param $id

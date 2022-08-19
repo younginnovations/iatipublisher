@@ -55,11 +55,37 @@ class TransactionService
      *
      * @param $id
      *
-     * @return Model|null
+     * @return object|null
      */
-    public function getTransaction($id): ?Model
+    public function getTransaction($id): ?object
     {
         return $this->transactionRepository->find($id);
+    }
+
+    /**
+     * Checks if specific transactions exists for specific activity.
+     *
+     * @param int $activityId
+     * @param int $id
+     *
+     * @return bool
+     */
+    public function activityTransactionExists(int $activityId, int $id): bool
+    {
+        return $this->getActivityTransaction($activityId, $id) !== null;
+    }
+
+    /**
+     * Returns specific transaction of specific activity.
+     *
+     * @param int $activityId
+     * @param int $id
+     *
+     * @return mixed
+     */
+    public function getActivityTransaction(int $activityId, int $id): mixed
+    {
+        return $this->transactionRepository->getActivityTransaction($activityId, $id);
     }
 
     /**

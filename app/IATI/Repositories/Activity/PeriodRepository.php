@@ -34,4 +34,17 @@ class PeriodRepository extends Repository
     {
         return $this->model->where('indicator_id', $indicatorId)->orderBy('created_at', 'DESC')->paginate(10, ['*'], 'indicator', $page);
     }
+
+    /**
+     * Returns specific period for specific indicator.
+     *
+     * @param int $indicatorId
+     * @param int $id
+     *
+     * @return mixed
+     */
+    public function getIndicatorPeriod(int $indicatorId, int $id): mixed
+    {
+        return $this->model->where(['indicator_id'=>$indicatorId, 'id'=>$id])->first();
+    }
 }

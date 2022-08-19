@@ -46,4 +46,17 @@ class IndicatorRepository extends Repository
     {
         return $this->model->where('result_id', $resultId)->get()->sortByDesc('updated_at');
     }
+
+    /**
+     * Returns specific indicator for specific result.
+     *
+     * @param int $resultId
+     * @param int $id
+     *
+     * @return mixed
+     */
+    public function getResultIndicator(int $resultId, int $id): mixed
+    {
+        return $this->model->where(['result_id'=>$resultId, 'id'=>$id])->first();
+    }
 }

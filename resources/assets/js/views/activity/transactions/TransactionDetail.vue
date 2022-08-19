@@ -3,7 +3,7 @@
     <PageTitle
       :breadcrumb-data="breadcrumbData"
       :title="`${transactionData.reference ?? 'Untitled'} - Transaction detail`"
-      :back-link="`${activityLink}/transactions`"
+      :back-link="`${activityLink}/transaction`"
     >
       <div class="mb-3">
         <Toast
