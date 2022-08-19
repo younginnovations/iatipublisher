@@ -61,62 +61,19 @@
               :type="toastMessage.type"
             />
 
-            <!-- Download File -->
-            <button
-              class="button secondary-btn mr-3.5 font-bold"
-              style="display: none"
-              @click="downloadValue = true"
-            >
-              <svg-vue icon="download-file" />
-            </button>
-            <Modal
-              :modal-active="downloadValue"
-              width="583"
-              @close="downloadToggle"
-            >
-              <div class="mb-4">
-                <div class="flex mb-6 title">
-                  <svg-vue
-                    class="mr-1 mt-0.5 text-lg text-spring-50"
-                    icon="download-file"
-                  />
-                  <b>Download file.</b>
-                </div>
-                <div class="p-4 rounded-lg bg-mint">
-                  Click the download button to save the file.
-                </div>
-              </div>
-              <div class="flex justify-end">
-                <div class="inline-flex">
-                  <BtnComponent
-                    class="px-6 uppercase bg-white"
-                    text="Go Back"
-                    type=""
-                    @click="downloadValue = false"
-                  />
-                  <BtnComponent
-                    class="space"
-                    text="Download"
-                    type="primary"
-                    @click="downloadValue = false"
-                  />
-                </div>
-              </div>
-            </Modal>
+            <div class="inline-flex justify-end gap-3">
+              <!-- Download File -->
+              <DownloadFile style="display: none" />
 
-            <!-- Delete Activity -->
-            <DeleteButton class="mr-3.5" />
+              <!-- Delete Activity -->
+              <DeleteButton />
 
-            <!-- Unpublish Activity -->
-            <UnPublish
-              v-if="
-                publishStatus.linked_to_iati &&
-                publishStatus.status === 'published'
-              "
-            />
+              <!-- Unpublish Activity -->
+              <UnPublish v-if="store.state.published" />
 
-            <!-- Publish Activity -->
-            <Publish v-else />
+              <!-- Publish Activity -->
+              <Publish v-else />
+            </div>
           </div>
         </div>
       </div>
@@ -254,36 +211,34 @@
       </div>
     </div>
   </div>
-  <Errors v-if="errorReactive" :error-data="errorData" />
+  <Errors
+    v-if="store.state.publishErrors.length > 0"
+    :error-data="store.state.publishErrors"
+  />
 </template>
 
 <script lang="ts">
-import {
-  defineComponent,
-  onMounted,
-  reactive,
-  toRefs,
-  provide,
-  ref,
-} from 'vue';
+import { defineComponent, onMounted, reactive, toRefs, provide } from 'vue';
 import { useToggle } from '@vueuse/core';
 
 // components
 import { Result } from './elements/Index';
 import HoverText from 'Components/HoverText.vue';
 import ProgressBar from 'Components/ProgressBar.vue';
-import Modal from 'Components/PopupModal.vue';
 import Publish from 'Components/sections/PublishButton.vue';
 import UnPublish from 'Components/sections/UnPublishButton.vue';
 import DeleteButton from 'Components/sections/DeleteButton.vue';
+import DownloadFile from 'Components/sections/DownloadFile.vue';
 import Errors from 'Components/sections/StickyErrors.vue';
-import BtnComponent from 'Components/ButtonComponent.vue';
 import Toast from 'Components/Toast.vue';
-import PageTitle from 'Components/sections/PageTitle.vue';
 
+// Activity Components
 import Elements from 'Activity/partials/ActivitiesElements.vue';
 import ActivityElement from 'Activity/partials/ActivityElement.vue';
 import PreviouslyPublished from 'Components/status/PreviouslyPublished.vue';
+
+// Vuex Store
+import { useStore } from 'Store/activities/show';
 
 export default defineComponent({
   components: {
@@ -292,14 +247,13 @@ export default defineComponent({
     Elements,
     ActivityElement,
     Result,
-    Modal,
-    BtnComponent,
     Toast,
     Publish,
     Errors,
     UnPublish,
     DeleteButton,
     PreviouslyPublished,
+    DownloadFile,
   },
   props: {
     elements: {
@@ -349,6 +303,8 @@ export default defineComponent({
   },
   setup(props) {
     const { types, coreCompleted } = toRefs(props);
+
+    const store = useStore();
 
     const toastData = reactive({
       visibility: false,
@@ -477,13 +433,8 @@ export default defineComponent({
     let { iatiValidatorResponse } = toRefs(props);
     const validationResult = iatiValidatorResponse.value;
 
-    const errorReactive = ref(false);
-    const errorData = ref([]);
-
     if (validationResult && validationResult.errors.length > 0) {
-      errorReactive.value = true;
-
-      errorData.value = validationResult.errors;
+      store.dispatch('updatePublishedState', validationResult.errors);
     }
 
     const toastMessage = reactive({
@@ -498,9 +449,9 @@ export default defineComponent({
     }
 
     const publishStatus: PublishStatusTypeface = reactive({
-      already_published: props.activity.already_published,
-      linked_to_iati: props.activity.linked_to_iati,
-      status: props.activity.status,
+      already_published: activityProps.already_published,
+      linked_to_iati: activityProps.linked_to_iati,
+      status: activityProps.status,
     });
 
     // vue provides
@@ -524,6 +475,16 @@ export default defineComponent({
       },
     ];
 
+    /**
+     *  Global State
+     */
+
+    if (publishStatus.linked_to_iati && publishStatus.status === 'published') {
+      store.dispatch('updatePublishedState', true);
+    } else {
+      store.dispatch('updatePublishedState', false);
+    }
+
     return {
       groupedData,
       activities,
@@ -536,11 +497,10 @@ export default defineComponent({
       props,
       formatTitle,
       pageTitle,
-      errorReactive,
-      errorData,
       toastMessage,
       publishStatus,
       breadcrumbData,
+      store,
     };
   },
 });

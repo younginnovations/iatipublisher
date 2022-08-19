@@ -1,45 +1,43 @@
 <template>
-  <div>
-    <BtnComponent
-      class=""
-      text=""
-      type="secondary"
-      icon="delete"
-      @click="deleteValue = true"
-    />
-    <Modal :modal-active="deleteValue" width="583" @close="deleteToggle">
-      <div class="mb-4">
-        <div class="flex mb-6 title">
-          <svg-vue class="mr-1 mt-0.5 text-lg text-crimson-40" icon="delete" />
-          <b>Delete activity</b>
-        </div>
-        <div class="p-4 rounded-lg bg-rose">
-          Are you sure you want to delete this activity?
-        </div>
+  <BtnComponent
+    class=""
+    text=""
+    type="secondary"
+    icon="delete"
+    @click="deleteValue = true"
+  />
+  <Modal :modal-active="deleteValue" width="583" @close="deleteToggle">
+    <div class="mb-4">
+      <div class="flex mb-6 title">
+        <svg-vue class="mr-1 mt-0.5 text-lg text-crimson-40" icon="delete" />
+        <b>Delete activity</b>
       </div>
-      <div class="flex justify-end">
-        <div class="inline-flex">
-          <BtnComponent
-            class="px-6 uppercase bg-white"
-            text="Go Back"
-            type=""
-            @click="deleteValue = false"
-          />
-          <BtnComponent
-            class="space"
-            text="Delete"
-            type="primary"
-            @click="deleteFunction"
-          />
-        </div>
+      <div class="p-4 rounded-lg bg-rose">
+        Are you sure you want to delete this activity?
       </div>
-    </Modal>
-    <Loader
-      v-if="loader.value"
-      :text="loader.text"
-      :class="{ 'animate-loader': loader }"
-    />
-  </div>
+    </div>
+    <div class="flex justify-end">
+      <div class="inline-flex">
+        <BtnComponent
+          class="px-6 uppercase bg-white"
+          text="Go Back"
+          type=""
+          @click="deleteValue = false"
+        />
+        <BtnComponent
+          class="space"
+          text="Delete"
+          type="primary"
+          @click="deleteFunction"
+        />
+      </div>
+    </div>
+  </Modal>
+  <Loader
+    v-if="loader.value"
+    :text="loader.text"
+    :class="{ 'animate-loader': loader }"
+  />
 </template>
 
 <script setup lang="ts">

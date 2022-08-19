@@ -135,6 +135,14 @@ import BtnComponent from 'Components/ButtonComponent.vue';
 import Modal from 'Components/PopupModal.vue';
 import Loader from 'Components/sections/ProgressLoader.vue';
 
+// Vuex Store
+import { useStore } from 'Store/activities/show';
+
+/**
+ *  Global State
+ */
+const store = useStore();
+
 //activity id
 const id = inject('activityID');
 
@@ -260,6 +268,7 @@ const validatorFunction = () => {
   axios.post(`/activities/${id}/validateActivity`).then((res) => {
     const response = res.data;
     const errors = response.errors;
+    store.dispatch('updatePublishErrors', errors);
 
     if (errors.length > 0) {
       const crit = response.summary.critical;
@@ -300,6 +309,7 @@ const publishFunction = () => {
     toastMessage.type = response.success;
     setTimeout(() => {
       loader.value = false;
+      store.dispatch('updatePublishedState', response.success);
     }, 2000);
   });
 };

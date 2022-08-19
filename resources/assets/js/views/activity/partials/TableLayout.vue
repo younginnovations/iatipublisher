@@ -5,7 +5,7 @@
         <tr class="bg-n-10">
           <th id="title" scope="col">
             <a
-              class="text-n-50 transition duration-500 hover:text-spring-50"
+              class="transition duration-500 text-n-50 hover:text-spring-50"
               href="#"
             >
               <span class="sorting-indicator descending">
@@ -16,7 +16,7 @@
           </th>
           <th id="date" scope="col">
             <a
-              class="text-n-50 transition duration-500 hover:text-spring-50"
+              class="transition duration-500 text-n-50 hover:text-spring-50"
               href="#"
             >
               <span class="sorting-indicator ascending">
@@ -32,26 +32,29 @@
             <span class="hidden">Status</span>
           </th>
           <th id="cb" scope="col">
-            <span class="">
+            <span
+              class="cursor-pointer"
+              @click="toggleSelectAll(data.data, selectAllValue)"
+            >
               <svg-vue icon="checkbox" />
             </span>
           </th>
         </tr>
       </thead>
       <tbody>
-        <tr v-for="datum in props.data.data" :key="datum['id']">
+        <tr v-for="datum in data.data" :key="datum['id']">
           <td class="title">
             <div
               class="inline-flex items-start transition duration-500 hover:text-spring-50"
             >
               <svg-vue
-                class="mr-3 mt-1 shrink-0 text-base text-spring-50"
+                class="mt-1 mr-3 text-base shrink-0 text-spring-50"
                 icon="approved-cloud"
               ></svg-vue>
-              <div class="ellipsis relative">
+              <div class="relative ellipsis">
                 <a
                   :href="'/activities/' + datum['id']"
-                  class="ellipsis overflow-hidden text-n-50"
+                  class="overflow-hidden ellipsis text-n-50"
                   >{{ datum['title'][0]['narrative'] ?? 'Untitled' }}</a
                 >
                 <div class="w-52">
@@ -69,7 +72,7 @@
 
           <td>
             <button
-              class="inline-flex items-center text-n-40 transition duration-500 hover:text-spring-50"
+              class="inline-flex items-center transition duration-500 text-n-40 hover:text-spring-50"
             >
               <span class="mr-1 text-base">
                 <svg-vue icon="document-write" />
@@ -83,7 +86,7 @@
               v-if="
                 datum['status'] !== 'draft' && datum['status'] !== 'published'
               "
-              class="button primary-outline-btn w-20"
+              class="w-20 button primary-outline-btn"
             >
               {{
                 datum['status'] === 'ready_to_publish' ? 'Publish' : 'RePublish'
@@ -97,7 +100,7 @@
             </label>
             <label class="checkbox">
               <input
-                v-model="state.selected"
+                v-model="store.state.selectedActivities"
                 :value="datum.id"
                 type="checkbox"
                 @change="emitShowOrHide"
@@ -111,44 +114,45 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, reactive } from 'vue';
+<script setup lang="ts">
+import { defineProps, defineEmits } from 'vue';
 import moment from 'moment';
+import { useToggle } from '@vueuse/core';
 
-export default defineComponent({
-  name: 'TableLayout',
-  components: {},
-  props: {
-    data: {
-      type: [Object],
-      required: true,
-    },
-  },
-  emits: ['showOrHide'],
-  setup(props, { emit }) {
-    const state = reactive({
-      selected: [],
-    });
+// Vuex Store
+import { useStore } from 'Store/activities/index';
 
-    const emitShowOrHide = () => {
-      emit('showOrHide', state.selected);
-    };
+const [selectAllValue, selectAllToggle] = useToggle();
 
-    function formatDate(date: Date) {
-      return moment(date).fromNow();
-    }
-
-    function goToDetail(id: number) {
-      window.location.href = '/activities/' + id;
-    }
-
-    return {
-      state,
-      emitShowOrHide,
-      props,
-      formatDate,
-      goToDetail,
-    };
-  },
+defineProps({
+  data: { type: Object, required: true },
 });
+
+const emit = defineEmits(['showOrHide']);
+
+const store = useStore();
+
+const emitShowOrHide = () => {
+  emit('showOrHide', store.state.selectedActivities);
+};
+
+function formatDate(date: Date) {
+  return moment(date).fromNow();
+}
+
+function toggleSelectAll(
+  activities: { [x: string]: { id: number } },
+  selectAllValue: boolean
+) {
+  if (!selectAllValue) {
+    let ids = [];
+    for (const datum in activities) {
+      ids.push(activities[datum].id);
+    }
+    store.dispatch('updateSelectedActivities', ids);
+  } else {
+    store.dispatch('updateSelectedActivities', []);
+  }
+  selectAllToggle();
+}
 </script>
