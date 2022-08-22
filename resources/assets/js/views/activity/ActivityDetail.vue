@@ -44,7 +44,7 @@
             </div>
           </div>
         </div>
-        <div class="flex flex-col items-end justify-end actions grow">
+        <div class="relative flex flex-col items-end justify-end actions grow">
           <div class="mb-3">
             <Toast
               v-if="toastData.visibility"
@@ -61,7 +61,7 @@
               :type="toastMessage.type"
             />
 
-            <div class="inline-flex justify-end gap-3">
+            <div class="inline-flex items-center justify-end gap-3">
               <!-- Download File -->
               <DownloadFile style="display: none" />
 
@@ -75,6 +75,13 @@
               <Publish v-else />
             </div>
           </div>
+
+          <Errors
+            v-if="store.state.publishErrors.length > 0"
+            :error-data="store.state.publishErrors"
+            :open="openError.toggle"
+            class="absolute right-0 -mr-10 bottom-full"
+          />
         </div>
       </div>
     </div>
@@ -211,10 +218,6 @@
       </div>
     </div>
   </div>
-  <Errors
-    v-if="store.state.publishErrors.length > 0"
-    :error-data="store.state.publishErrors"
-  />
 </template>
 
 <script lang="ts">
@@ -426,17 +429,6 @@ export default defineComponent({
       return title.replace(/_/gi, ' ');
     }
 
-    /**
-     * Errors component
-     *
-     */
-    let { iatiValidatorResponse } = toRefs(props);
-    const validationResult = iatiValidatorResponse.value;
-
-    if (validationResult && validationResult.errors.length > 0) {
-      store.dispatch('updatePublishedState', validationResult.errors);
-    }
-
     const toastMessage = reactive({
       message: '',
       type: false,
@@ -454,12 +446,19 @@ export default defineComponent({
       status: activityProps.status,
     });
 
+    // open error or not
+
+    let openError = reactive({
+      toggle: false,
+    });
+
     // vue provides
     provide('types', types.value);
     provide('coreCompleted', coreCompleted.value);
     provide('activityID', activity.value.id);
     provide('toastMessage', toastMessage);
     provide('publishStatus', publishStatus);
+    provide('openError', openError);
 
     /**
      * Breadcrumb data
@@ -478,6 +477,12 @@ export default defineComponent({
     /**
      *  Global State
      */
+    let { iatiValidatorResponse } = toRefs(props);
+    const validationResult = iatiValidatorResponse.value;
+
+    if (validationResult && validationResult.errors.length > 0) {
+      store.dispatch('updatePublishErrors', validationResult.errors);
+    }
 
     if (publishStatus.linked_to_iati && publishStatus.status === 'published') {
       store.dispatch('updatePublishedState', true);
@@ -501,6 +506,7 @@ export default defineComponent({
       publishStatus,
       breadcrumbData,
       store,
+      openError,
     };
   },
 });

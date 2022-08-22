@@ -86,6 +86,11 @@ const deleteFunction = () => {
 
     if (response.success) {
       window.location.replace('/activities');
+    } else {
+      setTimeout(() => {
+        loader.value = false;
+        deleteValue.value = false;
+      }, 1000);
     }
   });
 };

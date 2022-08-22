@@ -16,10 +16,18 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps } from 'vue';
+import { defineProps, onMounted, onUnmounted } from 'vue';
 
 defineProps({
   text: { type: String, required: true },
+});
+
+onMounted(() => {
+  document.body.classList.add('overflow-y-hidden');
+});
+
+onUnmounted(() => {
+  document.body.classList.remove('overflow-y-hidden');
 });
 </script>
 
