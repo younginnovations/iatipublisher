@@ -29,8 +29,10 @@ class PublisherService extends RegistryApiHandler
      * @param $registryInfo
      * @param $activityPublished
      * @param $organization
+     *
+     * @return void
      */
-    public function publishFile($registryInfo, $activityPublished, $organization)
+    public function publishFile($registryInfo, $activityPublished, $organization): void
     {
         $this->setFile($activityPublished);
         $this->init(env('IATI_API_ENDPOINT'), Arr::get($registryInfo, 'api_token', ''))
@@ -41,6 +43,7 @@ class PublisherService extends RegistryApiHandler
 
     /**
      * Set the file attribute.
+     *
      * @param $activityPublished
      */
     protected function setFile($activityPublished)
@@ -53,8 +56,10 @@ class PublisherService extends RegistryApiHandler
      *
      * @param $organization
      * @param $filename
+     *
+     * @return void
      */
-    protected function publishToRegistry($organization, $filename)
+    protected function publishToRegistry($organization, $filename): void
     {
         $data = $this->generatePayload($organization, $filename);
         $packageId = $this->extractPackage($filename);
@@ -243,8 +248,10 @@ class PublisherService extends RegistryApiHandler
 
     /**
      * Updates activity published table.
+     *
+     * @return void
      */
-    protected function updateStatus()
+    protected function updateStatus(): void
     {
         $this->activityPublished->published_to_registry = 1;
         $this->activityPublished->save();

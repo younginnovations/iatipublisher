@@ -95,7 +95,7 @@ class ActivityRepository extends Repository
      *
      * @param $activity_id
      *
-     * @return null
+     * @return void
      */
     public function resetActivityWorkflow($activity_id)
     {

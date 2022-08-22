@@ -78,7 +78,7 @@ class TransactionObserver
      *
      * @return void
      */
-    public function resetActivityStatus($transaction)
+    public function resetActivityStatus($transaction): void
     {
         $activityObject = $transaction->activity;
         $activityObject->status = 'draft';

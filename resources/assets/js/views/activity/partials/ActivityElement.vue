@@ -777,7 +777,7 @@ import {
   Tag,
 } from 'Activity/elements/Index';
 import Btn from 'Components/buttons/Link.vue';
-import Status from 'Components/status/Status.vue';
+import Status from 'Components/status/ElementStatus.vue';
 import HoverText from 'Components/HoverText.vue';
 
 import moment from 'moment';

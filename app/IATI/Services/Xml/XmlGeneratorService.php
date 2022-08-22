@@ -47,7 +47,7 @@ class XmlGeneratorService
      *
      * @return void
      */
-    public function generateActivityXml($activity, $transaction, $result, $settings, $organization)
+    public function generateActivityXml($activity, $transaction, $result, $settings, $organization): void
     {
         $this->xmlGenerator->generateActivityXml($activity, $transaction, $result, $settings, $organization);
     }
@@ -59,7 +59,7 @@ class XmlGeneratorService
      *
      * @return void
      */
-    public function deleteUnpublishedFile($filename)
+    public function deleteUnpublishedFile($filename): void
     {
         $this->xmlGenerator->deleteUnpublishedFile($filename);
     }
@@ -71,7 +71,7 @@ class XmlGeneratorService
      *
      * @return void
      */
-    public function generateNewXmlFile($publishedFile)
+    public function generateNewXmlFile($publishedFile): void
     {
         $this->xmlGenerator->getMergeXml($publishedFile->published_activities, $publishedFile->filename);
     }

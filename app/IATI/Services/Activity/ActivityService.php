@@ -127,7 +127,7 @@ class ActivityService
      *
      * @return \Illuminate\Contracts\Foundation\Application|mixed
      */
-    public function getService($serviceName)
+    public function getService($serviceName): mixed
     {
         return app(sprintf("App\IATI\Services\Activity\%s", $serviceName));
     }
@@ -164,7 +164,7 @@ class ActivityService
      *
      * @param $activity_id
      *
-     * @return null
+     * @return void
      */
     public function resetActivityWorkflow($activity_id)
     {

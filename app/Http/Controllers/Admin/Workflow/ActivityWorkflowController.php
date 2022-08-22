@@ -8,7 +8,6 @@ use App\IATI\Services\Validator\ActivityValidatorResponseService;
 use App\IATI\Services\Workflow\ActivityWorkflowService;
 use GuzzleHttp\Exception\BadResponseException;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 
@@ -44,9 +43,9 @@ class ActivityWorkflowController extends Controller
      *
      * @param $id
      *
-     * @return JsonResponse|RedirectResponse
+     * @return JsonResponse
      */
-    public function publish($id): JsonResponse|RedirectResponse
+    public function publish($id): JsonResponse
     {
         try {
             $activity = $this->activityWorkflowService->findActivity($id);
@@ -82,7 +81,9 @@ class ActivityWorkflowController extends Controller
      */
     protected function hasNoPublisherInfo($settings): bool
     {
-        if (!$settings || !($registryInfo = $settings->publishing_info)) {
+        $registryInfo = $settings->publishing_info;
+
+        if (!$settings || !$registryInfo) {
             return true;
         }
 
@@ -131,9 +132,9 @@ class ActivityWorkflowController extends Controller
      *
      * @param $id
      *
-     * @return JsonResponse|RedirectResponse
+     * @return JsonResponse
      */
-    public function validateActivity($id): JsonResponse|RedirectResponse
+    public function validateActivity($id): JsonResponse
     {
         try {
             $activity = $this->activityWorkflowService->findActivity($id);

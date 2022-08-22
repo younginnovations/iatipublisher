@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\IATI\Services\Workflow;
 
+use App\IATI\Models\Activity\Activity;
 use App\IATI\Services\Activity\ActivityPublishedService;
 use App\IATI\Services\Activity\ActivityService;
 use App\IATI\Services\Activity\ActivitySnapshotService;
@@ -81,9 +82,9 @@ class ActivityWorkflowService
      *
      * @param $activityId
      *
-     * @return \App\IATI\Models\Activity\Activity
+     * @return Activity
      */
-    public function findActivity($activityId): \App\IATI\Models\Activity\Activity
+    public function findActivity($activityId): Activity
     {
         return $this->activityService->getActivity($activityId);
     }
@@ -95,7 +96,7 @@ class ActivityWorkflowService
      *
      * @return void
      */
-    public function publishActivity($activity)
+    public function publishActivity($activity): void
     {
         $organization = $activity->organization;
         $settings = $organization->settings;
@@ -125,7 +126,7 @@ class ActivityWorkflowService
      *
      * @return void
      */
-    public function unpublishActivity($activity)
+    public function unpublishActivity($activity): void
     {
         $publishedFile = $this->activityPublishedService->getActivityPublished($activity->org_id);
         $this->removeActivityFromPublishedArray($publishedFile, $activity);
@@ -141,7 +142,7 @@ class ActivityWorkflowService
      *
      * @return void
      */
-    public function removeActivityFromPublishedArray($publishedFile, $activity)
+    public function removeActivityFromPublishedArray($publishedFile, $activity): void
     {
         $containedActivities = $publishedFile->extractActivities();
         $unpublishedFile = Arr::get($containedActivities, $activity->id);

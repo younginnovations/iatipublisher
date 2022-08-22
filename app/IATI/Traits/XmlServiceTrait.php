@@ -14,7 +14,7 @@ trait XmlServiceTrait
      *
      * @return string
      */
-    protected function libxml_display_error($error)
+    protected function libxml_display_error($error): string
     {
         $return = '';
 
@@ -41,7 +41,7 @@ trait XmlServiceTrait
      *
      * @return array
      */
-    protected function libxml_fetch_errors()
+    protected function libxml_fetch_errors(): array
     {
         $errors = libxml_get_errors();
 
@@ -53,7 +53,7 @@ trait XmlServiceTrait
      *
      * @return array
      */
-    protected function libxml_display_errors()
+    protected function libxml_display_errors(): array
     {
         $errors = libxml_get_errors();
         $messages = [];

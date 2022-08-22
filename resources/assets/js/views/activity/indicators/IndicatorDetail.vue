@@ -156,7 +156,7 @@ import { defineComponent, toRefs, onMounted, reactive, provide } from 'vue';
 
 //component
 import Btn from 'Components/buttons/Link.vue';
-import Status from 'Components/status/Status.vue';
+import Status from 'Components/status/ElementStatus.vue';
 import PageTitle from 'Components/sections/PageTitle.vue';
 import Toast from 'Components/Toast.vue';
 

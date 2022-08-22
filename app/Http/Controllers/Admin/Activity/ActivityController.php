@@ -209,8 +209,6 @@ class ActivityController extends Controller
             $activity = $this->activityService->getActivity($activityId);
 
             if ($activity->linked_to_iati) {
-                Session::put('error', 'Activity must be un-published before deleting.');
-
                 return response()->json(['success' => false, 'message' => 'Activity must be un-published before deleting.']);
             }
 
@@ -220,12 +218,9 @@ class ActivityController extends Controller
                 return response()->json(['success' => true, 'message' => 'Activity has been deleted successfully.']);
             }
 
-            Session::put('error', 'Activity delete failed.');
-
             return response()->json(['success' => false, 'message' => 'Activity delete failed.']);
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
-            Session::put('error', $e->getMessage());
 
             return response()->json(['success' => false, 'message' => $e->getMessage()]);
         }

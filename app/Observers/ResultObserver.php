@@ -79,7 +79,7 @@ class ResultObserver
      *
      * @return void
      */
-    public function resetActivityStatus($result)
+    public function resetActivityStatus($result): void
     {
         $activityObject = $result->activity;
         $activityObject->status = 'draft';

@@ -219,7 +219,6 @@ class CkanClient
             switch ($info['http_code']) {
                 case 404:
                     throw new NotFoundHttpException($data);
-                    break;
                 default:
                     logger('debug', [$data . $url]);
                     throw new Exception(
