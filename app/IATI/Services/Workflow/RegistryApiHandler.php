@@ -32,7 +32,7 @@ abstract class RegistryApiHandler
      *
      * @return RegistryApiHandler
      */
-    public function init($url, $key)
+    public function init($url, $key): static
     {
         $this->client = new CkanClient($url, $key);
         $this->apiKey = $key;
@@ -41,9 +41,13 @@ abstract class RegistryApiHandler
     }
 
     /**
+     * Sets publisher value for class.
+     *
      * @param $publisherId
+     *
+     * @return void
      */
-    public function setPublisher($publisherId)
+    public function setPublisher($publisherId): void
     {
         $this->publisherId = $publisherId;
     }

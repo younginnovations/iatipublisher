@@ -74,7 +74,7 @@ class DefaultFlowTypeController extends Controller
     {
         try {
             $activityData = $this->defaultFlowTypeService->getActivityData($id);
-            $activityDefaultFlowType = $request->get('default_flow_type') != null ? (int) $request->get(
+            $activityDefaultFlowType = $request->get('default_flow_type') ? (int) $request->get(
                 'default_flow_type'
             ) : null;
 

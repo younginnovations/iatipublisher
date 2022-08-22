@@ -101,7 +101,7 @@ class ConditionService
      *
      * @return array
      */
-    public function getXmlData(Activity $activity)
+    public function getXmlData(Activity $activity): array
     {
         $activityData = [];
         $conditions = (array) $activity->conditions;

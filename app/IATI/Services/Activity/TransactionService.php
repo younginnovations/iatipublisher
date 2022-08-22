@@ -36,8 +36,10 @@ class TransactionService
      * @param TransactionRepository $transactionRepository
      * @param TransactionElementFormCreator $transactionElementFormCreator
      */
-    public function __construct(TransactionRepository $transactionRepository, TransactionElementFormCreator $transactionElementFormCreator)
-    {
+    public function __construct(
+        TransactionRepository $transactionRepository,
+        TransactionElementFormCreator $transactionElementFormCreator
+    ) {
         $this->transactionRepository = $transactionRepository;
         $this->transactionElementFormCreator = $transactionElementFormCreator;
     }
@@ -129,7 +131,12 @@ class TransactionService
         $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
         $this->transactionElementFormCreator->url = route('admin.activities.transactions.store', $activityId);
 
-        return $this->transactionElementFormCreator->editForm([], $element['transactions'], 'POST', '/activities/' . $activityId);
+        return $this->transactionElementFormCreator->editForm(
+            [],
+            $element['transactions'],
+            'POST',
+            '/activities/' . $activityId
+        );
     }
 
     /**
@@ -143,9 +150,17 @@ class TransactionService
     {
         $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
         $activityTransaction = $this->getTransaction($transactionId, $activityId);
-        $this->transactionElementFormCreator->url = route('admin.activities.transactions.update', [$activityId, $transactionId]);
+        $this->transactionElementFormCreator->url = route(
+            'admin.activities.transactions.update',
+            [$activityId, $transactionId]
+        );
 
-        return $this->transactionElementFormCreator->editForm($activityTransaction->transaction, $element['transactions'], 'PUT', '/activities/' . $activityId);
+        return $this->transactionElementFormCreator->editForm(
+            $activityTransaction->transaction,
+            $element['transactions'],
+            'PUT',
+            '/activities/' . $activityId
+        );
     }
 
     /*
@@ -179,24 +194,7 @@ class TransactionService
             foreach (Arr::get($transaction, 'sector', []) as $sectorData) {
                 if ($sectorData) {
                     $vocabulary = Arr::get($sectorData, 'sector_vocabulary', null);
-
-                    switch ($vocabulary) {
-                        case '1':
-                            $sectorValue = Arr::get($sectorData, 'code', null);
-                            break;
-                        case '2':
-                            $sectorValue = Arr::get($sectorData, 'category_code', null);
-                            break;
-                        case '7':
-                            $sectorValue = Arr::get($sectorData, 'sdg_goal', null);
-                            break;
-                        case '8':
-                            $sectorValue = Arr::get($sectorData, 'sdg_target', null);
-                            break;
-                        default:
-                            $sectorValue = Arr::get($sectorData, 'text', null);
-                            break;
-                    }
+                    $sectorValue = $this->getSectorValue($vocabulary, $sectorData);
 
                     $sector[] = [
                         '@attributes' => [
@@ -246,23 +244,7 @@ class TransactionService
             if (Arr::get($transaction, 'aid_type', null)) {
                 foreach (Arr::get($transaction, 'aid_type') as $aidType) {
                     $vocabulary = Arr::get($aidType, 'aidtype_vocabulary', null);
-
-                    switch ($vocabulary) {
-                        case '1':
-                            $code = Arr::get($aidType, 'aid_type_code', null);
-                            break;
-                        case '2':
-                            $code = Arr::get($aidType, 'earmarking_category', null);
-                            break;
-                        case '3':
-                            $code = Arr::get($aidType, 'earmarking_modality', null);
-                            break;
-                        case '4':
-                            $code = Arr::get($aidType, 'cash_and_voucher_modalities', null);
-                            break;
-                        default:
-                            $code = Arr::get($aidType, 'aid_type_code', null);
-                    }
+                    $code = $this->getAidTypeCode($vocabulary, $aidType);
 
                     $aidType[] = [
                         '@attributes' => [
@@ -273,94 +255,156 @@ class TransactionService
                 }
             }
 
-            $transactionData[] = [
-                '@attributes'          => [
-                    'ref'          => Arr::get($transaction, 'reference', null),
-                    'humanitarian' => Arr::get($transaction, 'humanitarian', null),
-                ],
-                'transaction-type'     => [
-                    '@attributes' => [
-                        'code' => Arr::get($transaction, 'transaction_type.0.transaction_type_code', null),
-                    ],
-                ],
-                'transaction-date'     => [
-                    '@attributes' => [
-                        'iso-date' => Arr::get($transaction, 'transaction_date.0.date', null),
-                    ],
-                ],
-                'value'                => [
-                    '@attributes' => [
-                        'currency'   => Arr::get($transaction, 'value.0.currency', null),
-                        'value-date' => Arr::get($transaction, 'value.0.date', null),
-                    ],
-                    '@value'      => Arr::get($transaction, 'value.0.amount', null),
-                ],
-                'description'          => [
-                    'narrative' => $this->buildNarrative(Arr::get($transaction, 'description.0.narrative', [])),
-                ],
-                'provider-org'         => [
-                    '@attributes' => [
-                        'ref'                  => Arr::get(
-                            $transaction,
-                            'provider_organization.0.organization_identifier_code',
-                            null
-                        ),
-                        'provider-activity-id' => Arr::get(
-                            $transaction,
-                            'provider_organization.0.provider_activity_id',
-                            null
-                        ),
-                        'type'                 => Arr::get($transaction, 'provider_organization.0.type', null),
-                    ],
-                    'narrative'   => $this->buildNarrative(
-                        Arr::get($transaction, 'provider_organization.0.narrative', [])
-                    ),
-                ],
-                'receiver-org'         => [
-                    '@attributes' => [
-                        'ref'                  => Arr::get(
-                            $transaction,
-                            'receiver_organization.0.organization_identifier_code',
-                            null
-                        ),
-                        'receiver-activity-id' => Arr::get(
-                            $transaction,
-                            'receiver_organization.0.receiver_activity_id',
-                            null
-                        ),
-                        'type'                 => Arr::get($transaction, 'receiver_organization.0.type', null),
-                    ],
-                    'narrative'   => $this->buildNarrative(
-                        Arr::get($transaction, 'receiver_organization.0.narrative', [])
-                    ),
-                ],
-                'disbursement-channel' => [
-                    '@attributes' => [
-                        'code' => Arr::get($transaction, 'disbursement_channel.0.disbursement_channel_code', null),
-                    ],
-                ],
-                'sector'               => $sector,
-                'recipient-country'    => $recipientCountry,
-                'recipient-region'     => $recipientRegion,
-                'flow-type'            => [
-                    '@attributes' => [
-                        'code' => Arr::get($transaction, 'flow_type.0.flow_type', null),
-                    ],
-                ],
-                'finance-type'         => [
-                    '@attributes' => [
-                        'code' => Arr::get($transaction, 'finance_type.0.finance_type', null),
-                    ],
-                ],
-                'aid-type'             => $aidType,
-                'tied-status'          => [
-                    '@attributes' => [
-                        'code' => Arr::get($transaction, 'tied_status.0.tied_status_code', null),
-                    ],
-                ],
-            ];
+            $transactionData[] = $this->getTransactionData($transaction, $sector, $recipientCountry, $recipientRegion, $aidType);
         }
 
         return $transactionData;
+    }
+
+    /**
+     * Returns sector value based on vocabulary.
+     *
+     * @param $vocabulary
+     * @param $sectorData
+     *
+     * @return string|null
+     */
+    public function getSectorValue($vocabulary, $sectorData): ?string
+    {
+        switch ($vocabulary) {
+            case '1':
+                return Arr::get($sectorData, 'code', null);
+            case '2':
+                return Arr::get($sectorData, 'category_code', null);
+            case '7':
+                return Arr::get($sectorData, 'sdg_goal', null);
+            case '8':
+                return Arr::get($sectorData, 'sdg_target', null);
+            default:
+                return Arr::get($sectorData, 'text', null);
+        }
+    }
+
+    /**
+     * Returns aid type code according to vocabulary.
+     *
+     * @param $vocabulary
+     * @param $aidType
+     *
+     * @return string|null
+     */
+    public function getAidTypeCode($vocabulary, $aidType): ?string
+    {
+        switch ($vocabulary) {
+            case '2':
+                return Arr::get($aidType, 'earmarking_category', null);
+            case '3':
+                return Arr::get($aidType, 'earmarking_modality', null);
+            case '4':
+                return Arr::get($aidType, 'cash_and_voucher_modalities', null);
+            default:
+                return Arr::get($aidType, 'aid_type_code', null);
+        }
+    }
+
+    /**
+     * Returns array required for creating xml.
+     *
+     * @param $transaction
+     * @param $sector
+     * @param $recipientCountry
+     * @param $recipientRegion
+     * @param $aidType
+     *
+     * @return array
+     */
+    public function getTransactionData($transaction, $sector, $recipientCountry, $recipientRegion, $aidType): array
+    {
+        return [
+            '@attributes'          => [
+                'ref'          => Arr::get($transaction, 'reference', null),
+                'humanitarian' => Arr::get($transaction, 'humanitarian', null),
+            ],
+            'transaction-type'     => [
+                '@attributes' => [
+                    'code' => Arr::get($transaction, 'transaction_type.0.transaction_type_code', null),
+                ],
+            ],
+            'transaction-date'     => [
+                '@attributes' => [
+                    'iso-date' => Arr::get($transaction, 'transaction_date.0.date', null),
+                ],
+            ],
+            'value'                => [
+                '@attributes' => [
+                    'currency'   => Arr::get($transaction, 'value.0.currency', null),
+                    'value-date' => Arr::get($transaction, 'value.0.date', null),
+                ],
+                '@value'      => Arr::get($transaction, 'value.0.amount', null),
+            ],
+            'description'          => [
+                'narrative' => $this->buildNarrative(Arr::get($transaction, 'description.0.narrative', [])),
+            ],
+            'provider-org'         => [
+                '@attributes' => [
+                    'ref'                  => Arr::get(
+                        $transaction,
+                        'provider_organization.0.organization_identifier_code',
+                        null
+                    ),
+                    'provider-activity-id' => Arr::get(
+                        $transaction,
+                        'provider_organization.0.provider_activity_id',
+                        null
+                    ),
+                    'type'                 => Arr::get($transaction, 'provider_organization.0.type', null),
+                ],
+                'narrative'   => $this->buildNarrative(
+                    Arr::get($transaction, 'provider_organization.0.narrative', [])
+                ),
+            ],
+            'receiver-org'         => [
+                '@attributes' => [
+                    'ref'                  => Arr::get(
+                        $transaction,
+                        'receiver_organization.0.organization_identifier_code',
+                        null
+                    ),
+                    'receiver-activity-id' => Arr::get(
+                        $transaction,
+                        'receiver_organization.0.receiver_activity_id',
+                        null
+                    ),
+                    'type'                 => Arr::get($transaction, 'receiver_organization.0.type', null),
+                ],
+                'narrative'   => $this->buildNarrative(
+                    Arr::get($transaction, 'receiver_organization.0.narrative', [])
+                ),
+            ],
+            'disbursement-channel' => [
+                '@attributes' => [
+                    'code' => Arr::get($transaction, 'disbursement_channel.0.disbursement_channel_code', null),
+                ],
+            ],
+            'sector'               => $sector,
+            'recipient-country'    => $recipientCountry,
+            'recipient-region'     => $recipientRegion,
+            'flow-type'            => [
+                '@attributes' => [
+                    'code' => Arr::get($transaction, 'flow_type.0.flow_type', null),
+                ],
+            ],
+            'finance-type'         => [
+                '@attributes' => [
+                    'code' => Arr::get($transaction, 'finance_type.0.finance_type', null),
+                ],
+            ],
+            'aid-type'             => $aidType,
+            'tied-status'          => [
+                '@attributes' => [
+                    'code' => Arr::get($transaction, 'tied_status.0.tied_status_code', null),
+                ],
+            ],
+        ];
     }
 }

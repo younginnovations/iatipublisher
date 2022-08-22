@@ -27,7 +27,7 @@ class XmlSchemaErrorParser
      *
      * @return mixed|string
      */
-    public function getModifiedError($error, $validateXml)
+    public function getModifiedError($error, $validateXml): mixed
     {
         $errorLine = $error->line;
         $xmlLines = explode("\n", $validateXml);
@@ -47,7 +47,7 @@ class XmlSchemaErrorParser
      *
      * @return mixed
      */
-    protected function removeSpace($xmlLines)
+    protected function removeSpace($xmlLines): mixed
     {
         array_walk_recursive(
             $xmlLines,
@@ -67,7 +67,7 @@ class XmlSchemaErrorParser
      *
      * @return mixed
      */
-    protected function getErrorElementName($xmlLines, $errorLine)
+    protected function getErrorElementName($xmlLines, $errorLine): mixed
     {
         $errorCode = substr($xmlLines[$errorLine - 1], 1);
         $errorCode = preg_split('/( |>|<)/', $errorCode);
@@ -82,7 +82,7 @@ class XmlSchemaErrorParser
      *
      * @return array
      */
-    protected function getElementsFromXml($validateXml)
+    protected function getElementsFromXml($validateXml): array
     {
         $parsedXml = new SimpleXMLIterator($validateXml);
         $elements = [];
@@ -106,7 +106,7 @@ class XmlSchemaErrorParser
      *
      * @return mixed
      */
-    protected function getMainElement($errorCodeElement, $elementsInXml, $xmlLines, $errorLine)
+    protected function getMainElement($errorCodeElement, $elementsInXml, $xmlLines, $errorLine): mixed
     {
         if (in_array($errorCodeElement, $elementsInXml)) {
             return $errorCodeElement;
@@ -125,9 +125,9 @@ class XmlSchemaErrorParser
      * @param $mainElement
      * @param $error
      *
-     * @return mixed|string
+     * @return array|string
      */
-    protected function getProperMessage($errorCodeElement, $mainElement, $error)
+    protected function getProperMessage($errorCodeElement, $mainElement, $error): array|string
     {
         $mappings = (array_key_exists($error->code, $this->mappings)) ? $this->mappings[$error->code] : $this->mappings['default'];
 
@@ -137,6 +137,7 @@ class XmlSchemaErrorParser
             preg_match("/\( ([a-z\-].+) \)/", $error->message, $matches);
             $missingElem = str_replace('-', ' ', Str::title(!empty($matches) ? $matches[1] : null));
             $message = str_replace(':element', ucfirst($mainElement), $mappings);
+
             if ($mainElement == 'result' && (strpos($missingElem, 'Indicator') == true)) {
                 $message = str_replace(':sub-element', "'Result Indicator'", $message);
             } else {

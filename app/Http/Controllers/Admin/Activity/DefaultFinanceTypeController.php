@@ -74,7 +74,7 @@ class DefaultFinanceTypeController extends Controller
     {
         try {
             $activityData = $this->defaultFinanceTypeService->getActivityData($id);
-            $activityDefaultFinanceType = $request->get('default_finance_type') != null ? (int) $request->get(
+            $activityDefaultFinanceType = $request->get('default_finance_type') ? (int) $request->get(
                 'default_finance_type'
             ) : null;
 

@@ -20,7 +20,7 @@ trait RegistryApiInvoker
      *
      * @return mixed
      */
-    protected function request($action, $requestParameter = null, $apiKey = null)
+    protected function request($action, $requestParameter = null, $apiKey = null): mixed
     {
         $clientConfig = ['base_uri' => env('IATI_API_ENDPOINT')];
         $requestConfig = [
@@ -51,7 +51,7 @@ trait RegistryApiInvoker
      *
      * @throws \Exception
      */
-    public function searchForPublisher($publisherId)
+    public function searchForPublisher($publisherId): string
     {
         try {
             return $this->request('organization_show', $publisherId);
@@ -63,6 +63,8 @@ trait RegistryApiInvoker
             }
 
             logger()->error($e->getMessage());
+
+            return redirect()->back()->with('error', 'Something went wrong.');
         }
     }
 }

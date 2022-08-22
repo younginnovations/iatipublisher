@@ -74,7 +74,7 @@ class DefaultTiedStatusController extends Controller
     {
         try {
             $activityData = $this->defaultTiedStatusService->getActivityData($id);
-            $activityDefaultTiedStatus = $request->get('default_tied_status') != null ? (int) $request->get(
+            $activityDefaultTiedStatus = $request->get('default_tied_status') ? (int) $request->get(
                 'default_tied_status'
             ) : null;
 

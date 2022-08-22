@@ -103,7 +103,7 @@ class ActivityObserver
      *
      * @return void
      */
-    public function resetActivityStatus($model)
+    public function resetActivityStatus($model): void
     {
         $model->status = 'draft';
     }
