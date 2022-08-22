@@ -438,3 +438,12 @@ if (!function_exists('generateToastData')) {
         return $toast;
     }
 }
+
+if (!function_exists('getTableConfig')) {
+    function getTableConfig($module): array
+    {
+        $tableConfig = ['activity' => ['orderBy'=>['updated_at'], 'direction' => ['asc', 'desc']]];
+
+        return $tableConfig[$module];
+    }
+}

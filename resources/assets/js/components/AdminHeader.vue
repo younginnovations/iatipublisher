@@ -55,6 +55,7 @@
             class="search__input"
             type="text"
             placeholder="Search activity..."
+            @submit='activities'
           />
           <svg-vue class="absolute left-3 top-3 text-base" icon="search" />
         </div>
