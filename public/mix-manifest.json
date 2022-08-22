@@ -6,6 +6,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     "/js/app.js": "/js/app.js?id=6e65cc6ab01eddfbe4b7d82e8ac6a6cb",
     "/js/script.js": "/js/script.js?id=c590f4aa7dc841813b5f40324de65278",
     "/js/formbuilder.js": "/js/formbuilder.js?id=e96956795d0cd57de89fe65578f480f1",
@@ -52,4 +53,10 @@
     "/js/formbuilder.js": "/js/formbuilder.js?id=53c103ecfd381dff741b49a18751d1b7",
     "/css/app.css": "/css/app.css?id=b6abf8b50c7a0b94d5a89f73f9ff9863"
 >>>>>>> 76091f46 (Issues fix:)
+=======
+    "/js/app.js": "/js/app.js?id=03c22ce69acde26eb4f3e1a444a788ae",
+    "/js/script.js": "/js/script.js?id=e955d552439ae70429f1463e1925119a",
+    "/js/formbuilder.js": "/js/formbuilder.js?id=53c103ecfd381dff741b49a18751d1b7",
+    "/css/app.css": "/css/app.css?id=df7c93df53dd924f2e9f3278b5d15374"
+>>>>>>> 27c1f528 (Bug fixes #416:)
 }

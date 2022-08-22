@@ -1,7 +1,7 @@
 <template>
-  <button class="button relative font-bold text-n-40" :class="btnType">
+  <button class="relative font-bold button text-n-40" :class="btnType">
     <svg-vue v-if="icon" :icon="icon" />
-    <span>{{ text }}</span>
+    <span v-if="text">{{ text }}</span>
   </button>
 </template>
 

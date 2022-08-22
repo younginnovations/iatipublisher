@@ -107,7 +107,7 @@ class LegacyDataService
             foreach ($legacyDatas as $legacyData) {
                 $activityData[] = [
                     '@attributes' => [
-                        'name'            => Arr::get($legacyData, 'name', null),
+                        'name'            => Arr::get($legacyData, 'legacy_name', null),
                         'value'           => Arr::get($legacyData, 'value', null),
                         'iati-equivalent' => Arr::get($legacyData, 'iati_equivalent', null),
                     ],

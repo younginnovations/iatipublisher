@@ -48,6 +48,7 @@
               class="inline-flex items-start transition duration-500 hover:text-spring-50"
             >
               <svg-vue
+                v-if="datum['already_published']"
                 class="mt-1 mr-3 text-base shrink-0 text-spring-50"
                 icon="approved-cloud"
               ></svg-vue>
@@ -72,10 +73,18 @@
 
           <td>
             <button
-              class="inline-flex items-center transition duration-500 text-n-40 hover:text-spring-50"
+              class="inline-flex items-center transition duration-500 hover:text-spring-50"
+              :class="{
+                'text-n-40': datum['status'] === 'draft',
+                'text-spring-50': datum['status'] === 'published',
+              }"
             >
               <span class="mr-1 text-base">
-                <svg-vue icon="document-write" />
+                <svg-vue
+                  :icon="
+                    datum['status'] === 'draft' ? 'document-write' : 'tick'
+                  "
+                />
               </span>
               <span class="text-sm leading-relaxed">{{ datum['status'] }}</span>
             </button>
@@ -154,5 +163,6 @@ function toggleSelectAll(
     store.dispatch('updateSelectedActivities', []);
   }
   selectAllToggle();
+  emitShowOrHide();
 }
 </script>

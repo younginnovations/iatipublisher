@@ -261,6 +261,11 @@ let err: Err = reactive({
 });
 
 // call api for validation
+interface OpenErrorInterface {
+  toggle: boolean;
+}
+let openError = inject('openError') as OpenErrorInterface;
+
 const validatorFunction = () => {
   loader.value = true;
   loaderText.value = 'Validating Activities';
@@ -268,9 +273,12 @@ const validatorFunction = () => {
   axios.post(`/activities/${id}/validateActivity`).then((res) => {
     const response = res.data;
     const errors = response.errors;
-    store.dispatch('updatePublishErrors', errors);
 
     if (errors.length > 0) {
+      store.dispatch('updatePublishErrors', errors);
+      openError.toggle = true;
+
+      //identify error types
       const crit = response.summary.critical;
       (err.criticalNumber = crit),
         (err.errorNumber = response.summary.error),
