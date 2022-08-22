@@ -29,15 +29,14 @@
           </template>
           <div class="text-sm font-bold title">{{ title }}</div>
           <div
-            v-if="'completed' in data"
             class="status ml-2.5 flex text-xs leading-5"
             :class="{
-              'text-spring-50': data.completed === true,
-              'text-crimson-50': data.completed === false,
+              'text-spring-50': status,
+              'text-crimson-50': !status,
             }"
           >
             <b class="mr-2 text-base leading-3">.</b>
-            <span v-if="data.completed">completed</span>
+            <span v-if="status">completed</span>
             <span v-else>not completed</span>
           </div>
         </div>
@@ -166,9 +165,13 @@ const props = defineProps({
     type: Object,
     required: true,
   },
+  status: {
+    type: Boolean,
+    required: true
+  }
 });
 
-const status = '';
+// const status = '';
 
 let layout = 'basis-6/12';
 if (props.width === 'full') {

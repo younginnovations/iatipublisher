@@ -37,6 +37,10 @@ class OrganizationObserver
         // dd($updatedAttributes, $elements);
         $updatedElements = [];
 
+        // unset($elements['organization_identifier']);
+        $elements[] = 'identifier';
+        // dd($elements);
+
         foreach ($updatedAttributes as $element => $updatedAttribute) {
             if (in_array($element, $elements, true)) {
                 $updatedElements[$element] = $updatedAttribute;
@@ -58,16 +62,12 @@ class OrganizationObserver
     public function setElementStatus($model, bool $isNew = false): void
     {
         $elementStatus = $model->element_status;
-        // dump($elementStatus);
         $updatedElements = ($isNew) ? $this->getUpdatedElement($model->getAttributes()) : $this->getUpdatedElement($model->getChanges());
 
         foreach ($updatedElements as $attribute => $value) {
             // dd($elementStatus, $attribute, call_user_func([$this->organizationElementCompleteService, dashesToCamelCase('is_' . $attribute . '_element_completed')], $model));
-            // dd($updatedElements, 'is_' . $attribute . '_element_completed', $model, dashesToCamelCase('is_' . $attribute . '_element_completed'));
             $elementStatus[$attribute] = call_user_func([$this->organizationElementCompleteService, dashesToCamelCase('is_' . $attribute . '_element_completed')], $model);
         }
-
-        // dd($elementStatus);
 
         $model->element_status = $elementStatus;
     }
@@ -98,7 +98,7 @@ class OrganizationObserver
     public function updated(Organization $organization): void
     {
         $this->setElementStatus($organization);
-        // $this->resetOrganizationStatus($organization);
+        $this->resetOrganizationStatus($organization);
         $organization->saveQuietly();
     }
 

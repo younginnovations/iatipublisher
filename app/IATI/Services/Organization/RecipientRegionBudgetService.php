@@ -68,67 +68,6 @@ class RecipientRegionBudgetService
         return $this->recipientRegionBudgetRepository->update($recipientRegionBudget, $organization);
     }
 
-    // /**
-    //  * Returns recipient region for xml generation.
-    //  *
-    //  * @param Organization $organization
-    //  *
-    //  * @return array
-    //  */
-    // public function getXMLData(Organization $organization): array
-    // {
-    //     $recipient_regions = (array)$organization->recipient_region_budget;
-    //     $organizationData = [];
-
-    //     if (count($recipient_regions)) {
-    //         foreach ($recipient_regions as $key => $recipient_region) {
-    //             $regions = [];
-    //             $budget = [];
-
-    //             foreach ($recipient_region['recipient_region'] as $index => $region) {
-    //                 $regions[] = [
-    //                     '@attributes' => [
-    //                         'code' => $region[$index]['code'],
-    //                     ],
-    //                     'sub-elements' => [
-    //                         'narrative' => $this->buildNarrative($region[$index]['narrative']),
-    //                     ],
-    //                 ];
-    //             }
-
-    //             $period_start['@attributes']['iso_date'] = $recipient_region[$key]['period_start'][0]['iso_date'];
-    //             $period_end['@attributes']['iso_date'] = $recipient_region[$key]['period_end'][0]['iso_date'];
-
-    //             foreach ($recipient_region['budget_line'] as $index => $budget_line) {
-    //                 $budget[] = [
-    //                     '@attributes' => [
-    //                         'ref' => $budget_line[$index]['ref'],
-    //                     ],
-    //                     'value' => [
-    //                         '@attributes' => $this->buildValue($budget_line[$index]['value']),
-    //                     ],
-    //                     'sub-elements' => [
-    //                         'narrative' => $this->buildValue($budget_line[$index]['narrative']),
-    //                     ],
-    //                 ];
-    //             }
-
-    //             $organizationData[] = [
-    //                 '@attributes' => [
-    //                     'status' => $recipient_region[$key]['status'],
-    //                 ],
-    //                 'recipient-country' => $regions,
-    //                 'period-start' => $period_start,
-    //                 'period-end' => $period_end,
-    //                 'value' => $this->buildValue($recipient_region['value']),
-    //                 'budget-line' => $budget,
-    //             ];
-    //         }
-    //     }
-
-    //     return $organizationData;
-    // }
-
     /**
      * return recipient region budget xml data.
      * @param OrganizationData $organizationData

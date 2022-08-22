@@ -189,7 +189,7 @@ if (!function_exists('getDefaultOrganizationElementStatus')) {
         return [
             'identifier'                => false,
             'name'                      => false,
-            'recipient_org'             => false,
+            'reporting_org'             => false,
             'total_budget'              => false,
             'total_expenditure'         => false,
             'recipient_org_budget'      => false,
@@ -228,6 +228,27 @@ if (!function_exists('getCoreElements')) {
         ];
     }
 }
+if (!function_exists('getMandatoryElements')) {
+    /**
+     * Returns Core Elements.
+     *
+     * @return array
+     */
+    function getMandatoryElements(): array
+    {
+        return [
+            'identifier',
+            'name',
+            'reporting_org',
+            'total_budget',
+            'total_expenditure',
+            'recipient_org_budget',
+            'recipient_country_budget',
+            'recipient_region_budget',
+            'document_link',
+        ];
+    }
+}
 
 if (!function_exists('getCoreElementsWithTrueValue')) {
     /**
@@ -258,6 +279,28 @@ if (!function_exists('getCoreElementsWithTrueValue')) {
     }
 }
 
+if (!function_exists('getMandatoryElementsWithTrueValue')) {
+    /**
+     * Returns Core Elements with true value.
+     *
+     * @return array
+     */
+    function getMandatoryElementsWithTrueValue(): array
+    {
+        return [
+            'identifier'                => true,
+            'name'                      => true,
+            'reporting_org'             => true,
+            'total_budget'              => true,
+            'total_expenditure'         => true,
+            'recipient_org_budget'      => true,
+            'recipient_country_budget'  => true,
+            'recipient_region_budget'   => true,
+            'document_link'             => true,
+        ];
+    }
+}
+
 if (!function_exists('isCoreElementCompleted')) {
     /**
      * Checks if all core elements are complete.
@@ -282,7 +325,7 @@ if (!function_exists('isMandatoryElementCompleted')) {
      */
     function isMandatoryElementCompleted($elementStatus): bool
     {
-        return empty(array_diff_assoc(getCoreElementsWithTrueValue(), $elementStatus));
+        return empty(array_diff_assoc(getMandatoryElementsWithTrueValue(), $elementStatus));
     }
 }
 

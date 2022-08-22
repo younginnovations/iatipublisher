@@ -69,67 +69,6 @@ class RecipientCountryBudgetService
     }
 
     /**
-     * Returns recipient country for xml generation.
-     *
-     * @param Organization $organization
-     *
-     * @return array
-     */
-    // public function getXMLData(Organization $organization): array
-    // {
-    //     $recipient_countries = (array) $organization->recipient_country_budget;
-    //     $organizationData = [];
-
-    //     if (count($recipient_countries)) {
-    //         foreach ($recipient_countries as $key => $recipient_country) {
-    //             $countries = [];
-    //             $budget = [];
-
-    //             foreach ($recipient_country['recipient_country'] as $index => $country) {
-    //                 $countries[] = [
-    //                     '@attributes' => [
-    //                         'code' => $country[$index]['code'],
-    //                     ],
-    //                     'sub-elements' => [
-    //                         'narrative' => $this->buildNarrative($country[$index]['narrative']),
-    //                     ],
-    //                 ];
-    //             }
-
-    //             $period_start['@attributes']['iso_date'] = $recipient_country[$key]['period_start'][0]['iso_date'];
-    //             $period_end['@attributes']['iso_date'] = $recipient_country[$key]['period_end'][0]['iso_date'];
-
-    //             foreach ($recipient_country['budget_line'] as $index => $budget_line) {
-    //                 $budget[] = [
-    //                     '@attributes' => [
-    //                         'ref' => $budget_line[$index]['ref'],
-    //                     ],
-    //                     'value' => [
-    //                         '@attributes' => $this->buildValue($budget_line[$index]['value']),
-    //                     ],
-    //                     'sub-elements' => [
-    //                         'narrative' => $this->buildValue($budget_line[$index]['narrative']),
-    //                     ],
-    //                 ];
-    //             }
-
-    //             $organizationData[] = [
-    //                 '@attributes' => [
-    //                     'status' => $recipient_country[$key]['status'],
-    //                 ],
-    //                 'recipient-country' => $countries,
-    //                 'period-start' => $period_start,
-    //                 'period-end' => $period_end,
-    //                 'value' => $this->buildValue($recipient_country['value']),
-    //                 'budget-line' => $budget,
-    //             ];
-    //         }
-    //     }
-
-    //     return $organizationData;
-    // }
-
-    /**
      * @param OrganizationData $organizationData
      * @return array
      */
@@ -147,12 +86,12 @@ class RecipientCountryBudgetService
                 ],
                 'period-start' => [
                     '@attributes' => [
-                        'iso-date' => $orgRecipientCountry['period_start'][0]['iso_date'],
+                        'iso-date' => $orgRecipientCountry['period_start'][0]['date'],
                     ],
                 ],
                 'period-end' => [
                     '@attributes' => [
-                        'iso-date' => $orgRecipientCountry['period_end'][0]['iso_date'],
+                        'iso-date' => $orgRecipientCountry['period_end'][0]['date'],
                     ],
                 ],
                 'value' => [

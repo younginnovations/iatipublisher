@@ -82,12 +82,12 @@ class TotalExpenditureService
                 ],
                 'period-start' => [
                     '@attributes' => [
-                        'iso-date' => $orgTotalExpense['period_start'][0]['iso_date'],
+                        'iso-date' => $orgTotalExpense['period_start'][0]['date'],
                     ],
                 ],
                 'period-end'   => [
                     '@attributes' => [
-                        'iso-date' => $orgTotalExpense['period_end'][0]['iso_date'],
+                        'iso-date' => $orgTotalExpense['period_end'][0]['date'],
                     ],
                 ],
                 'value'        => [

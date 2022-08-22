@@ -64,11 +64,13 @@
       >
         <div class="status_icons absolute right-0 top-0 mt-1 mr-1 inline-flex">
           <svg-vue
-            v-if="post.completed"
+            v-if=" String(index) === 'organisation_identifier'
+                    ? status['identifier']
+                    : status[index]"
             class="text-base text-teal-50"
             icon="double-tick"
           ></svg-vue>
-          <svg-vue v-if="post.core" class="text-base text-camel-50" icon="core"></svg-vue>
+          <!-- <svg-vue v-if="post.core" class="text-base text-camel-50" icon="core"></svg-vue> -->
         </div>
         <template v-if="index === 'name'">
           <svg-vue class="text-base" icon="organisation-elements/building"></svg-vue>
@@ -96,6 +98,10 @@ export default defineComponent({
       type: Object,
       required: true,
     },
+    status: {
+      type: Object,
+      required:true
+    }
   },
   setup(props) {
     const [searchBtnValue, searchBtnToggle] = useToggle();

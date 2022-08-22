@@ -43,7 +43,7 @@ return new class extends Migration {
             $table->boolean('is_published')->default(false);
             $table->string('registration_agency')->nullable();
             $table->string('registration_number')->nullable();
-            $table->json('element_status')->nullable()->default('{"identifier":false, "name":false, "recipient_org":false, "total_budget":false, "total_expenditure":false, "recipient_org_budget":false, "recipient_country_budget":false, "recipient_region_budget":false, "document_link":false}');
+            $table->json('element_status')->nullable()->default('{"identifier":false, "name":false, "reporting_org":false, "total_budget":false, "total_expenditure":false, "recipient_org_budget":false, "recipient_country_budget":false, "recipient_region_budget":false, "document_link":false}');
             $table->timestamps();
         });
     }

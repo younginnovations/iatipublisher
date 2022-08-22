@@ -181,7 +181,7 @@ class ActivityService
     public function activityPublishingProgress($activity): float|int
     {
         $core_elements = getCoreElements();
-        $completed_core_element_count = $activity->organization->reporting_org_complete_status ? 1 : 0;
+        $completed_core_element_count = $activity->organization->element_status['reporting_org'] ? 1 : 0;
 
         foreach ($core_elements as $core_element) {
             if (array_key_exists($core_element, $activity->element_status) && $activity->element_status[$core_element]) {

@@ -118,4 +118,25 @@ class OrganizationService
     {
         return $this->organizationRepo->updatePublishedStatus($organization, $status, $alreadyPublished, $linkedToIati);
     }
+
+    /**
+     * Return organization mandatory elements progress in percentage.
+     *
+     * @param $organization
+     *
+     * @return float|int
+     */
+    public function organizationMandatoryCompletePercentage($organization): float|int
+    {
+        $mandatory_elements = getMandatoryElements();
+        $completed_mandatory_element_count = 0;
+
+        foreach ($mandatory_elements as $mandatory_element) {
+            if (array_key_exists($mandatory_element, $organization->element_status) && $organization->element_status[$mandatory_element]) {
+                $completed_mandatory_element_count++;
+            }
+        }
+
+        return round(($completed_mandatory_element_count / count($mandatory_elements)) * 100, 2);
+    }
 }

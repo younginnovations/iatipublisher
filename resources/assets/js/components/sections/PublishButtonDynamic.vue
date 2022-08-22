@@ -32,15 +32,11 @@
           'bg-[#FFF1F0]': !publishStateChange.alertState,
         }"
       >
-        <div
-          class="text-sm leading-normal"
-          v-html="publishStateChange.description"
-        ></div>
+        <div class="text-sm leading-normal" v-html="publishStateChange.description"></div>
       </div>
     </div>
     <div class="flex justify-end">
       <div class="inline-flex">
-        <template v-if="mandatoryElementStatus">
           <BtnComponent
             v-if="publishStep == 0"
             class="px-6 uppercase bg-white"
@@ -55,8 +51,6 @@
             type="primary"
             @click="publishFunction"
           />
-        </template>
-        <template v-else>
           <BtnComponent
             v-if="publishStep == 0"
             class="px-6 uppercase bg-white"
@@ -64,28 +58,22 @@
             type=""
             @click="publishFunction"
           />
-        </template>
       </div>
     </div>
   </Modal>
-  <Loader
-    v-if="loader"
-    :text="loaderText"
-    :class="{ 'animate-loader': loader }"
-  />
+  <Loader v-if="loader" :text="loaderText" :class="{ 'animate-loader': loader }" />
 </template>
 
 <script setup lang="ts">
-import { reactive, ref, computed, inject } from 'vue';
-import { useToggle } from '@vueuse/core';
-import axios from 'axios';
+import { reactive, ref, computed, inject } from "vue";
+import { useToggle } from "@vueuse/core";
+import axios from "axios";
 
 //component
-import BtnComponent from 'Components/ButtonComponent.vue';
-import Modal from 'Components/PopupModal.vue';
-import Loader from 'Components/sections/ProgressLoader.vue';
-import ToastMessageVue from 'Components/ToastMessage.vue';
-
+import BtnComponent from "Components/ButtonComponent.vue";
+import Modal from "Components/PopupModal.vue";
+import Loader from "Components/sections/ProgressLoader.vue";
+import ToastMessageVue from "Components/ToastMessage.vue";
 
 // toggle state for modal popup
 let [publishValue, publishToggle] = useToggle();
@@ -100,10 +88,10 @@ const loader = ref(false);
 // determine if core element completed or not
 // true for completed and false for not completed
 
-const mandatoryElementStatus = inject('mandatoryCompleted') as boolean;
+const mandatoryElementStatus = inject("mandatoryCompleted") as boolean;
 
 // Dynamic text for loader
-const loaderText = ref('Please Wait');
+const loaderText = ref("Please Wait");
 
 // reset step to zero after closing modal
 const resetPublishStep = () => {
@@ -114,26 +102,26 @@ const resetPublishStep = () => {
 // computed function to change content of modal
 const publishStateChange = computed(() => {
   const publishState = reactive({
-    title: '',
-    description: '',
-    icon: '',
+    title: "",
+    description: "",
+    icon: "",
     alertState: true,
   });
 
-  let title = '',
-    description = '',
-    icon = 'tick';
+  let title = "",
+    description = "",
+    icon = "tick";
 
   // different content for step 1 based on coreElement status
   if (mandatoryElementStatus) {
-    title = 'Mandatory Elements Complete';
+    title = "Mandatory Elements Complete";
     description =
-      'Congratulations! All the mandatory elements are complete. Continue to Validate this activity.';
+      "Congratulations! All the mandatory elements are complete. Continue to publish this organization.";
   } else {
-    title = 'Mandatory Elements not complete';
+    title = "Mandatory Elements not complete";
     description =
-      '<p>There is missing data in some of the mandatory elements. We highly recommend that you complete these data fields to help ensure your data is useful.</p>';
-    icon = 'warning-fill';
+      "<p>There is missing data in some of the mandatory elements. We highly recommend that you complete these data fields to help ensure your data is useful.</p>";
+    icon = "warning-fill";
   }
 
   switch (publishStep.value) {
@@ -194,30 +182,28 @@ const stepMinusOne = () => {
 //   warningNumber: 0,
 // });
 
-
 // call api for publishing
 interface ToastMessageTypeface {
   message: string;
   type: boolean;
 }
 
-const toastMessage = inject('toastMessage') as ToastMessageTypeface;
+const toastMessage = inject("toastMessage") as ToastMessageTypeface;
 
 const publishFunction = () => {
   loader.value = true;
-  loaderText.value = 'Publishing';
+  loaderText.value = "Publishing";
   resetPublishStep();
 
   axios.post(`/organisation/publish`).then((res) => {
     const response = res.data;
     console.log(res.data);
-    loader.value=false;
+    loader.value = false;
     toastMessage.message = response.success ? response.success : response.error;
     toastMessage.type = response.success;
     setTimeout(() => {
       loader.value = false;
     }, 2000);
-
   });
 };
 
@@ -228,13 +214,13 @@ interface PublishStatusTypeface {
 }
 
 // publish-republish
-const publishStatus = inject('publishStatus') as PublishStatusTypeface;
+const publishStatus = inject("publishStatus") as PublishStatusTypeface;
 
 const btnText = computed(() => {
-  if (publishStatus.linked_to_iati && publishStatus.status === 'draft') {
-    return 'Republish';
+  if (publishStatus.linked_to_iati && publishStatus.status === "draft") {
+    return "Republish";
   } else {
-    return 'Publish';
+    return "Publish";
   }
 });
 </script>

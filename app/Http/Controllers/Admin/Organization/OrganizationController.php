@@ -38,12 +38,13 @@ class OrganizationController extends Controller
             $elements = json_decode(file_get_contents(app_path('IATI/Data/organizationElementJsonSchema.json')), true);
             $elementGroups = json_decode(file_get_contents(app_path('Data/Organization/OrganisationElementsGroup.json')), true);
             $types = $this->getOrganizationTypes();
-            $progress = 75;
             $organization = $this->organizationService->getOrganizationData(Auth::user()->organization_id);
-            $mandatoryCompleted = false;
+            $progress = $this->organizationService->organizationMandatoryCompletePercentage($organization);
+            $mandatoryCompleted = isMandatoryElementCompleted(getMandatoryElements());
+            $status = $organization->element_status;
             $organization['organisation_identifier'] = $organization['identifier'];
 
-            return view('admin.organisation.index', compact('elements', 'elementGroups', 'progress', 'organization', 'toast', 'types', 'mandatoryCompleted'));
+            return view('admin.organisation.index', compact('elements', 'elementGroups', 'progress', 'organization', 'toast', 'types', 'mandatoryCompleted', 'status', ));
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 

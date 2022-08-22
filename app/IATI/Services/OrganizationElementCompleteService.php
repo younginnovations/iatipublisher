@@ -238,7 +238,6 @@ class OrganizationElementCompleteService
         if (empty($data)) {
             return false;
         }
-        // dd($mandatorySubElements, $data);
 
         foreach ($mandatorySubElements as $key => $mandatorySubElement) {
             if (!array_key_exists($key, $data)) {
@@ -288,7 +287,6 @@ class OrganizationElementCompleteService
             foreach ($data as $datum) {
                 if (!$this->isAttributeDataCompleted($mandatoryAttributes, $datum)) {
                     //dd('isElementCompleted fx is called1', 'Attribute is empty', 'mandatory-attributes:', $mandatoryAttributes, $data, $datum);
-
                     return false;
                 }
 
@@ -440,6 +438,7 @@ class OrganizationElementCompleteService
             }
 
             foreach ($data as $datum) {
+                // dd($this->isSubElementCompleted($subElements, $datum));
                 if (!$this->isSubElementCompleted($subElements, $datum)) {
                     return false;
                 }
@@ -525,11 +524,13 @@ class OrganizationElementCompleteService
      *
      * @return bool
      */
-    public function isOrganizationIdentifierElementCompleted($organization): bool
+    public function isIdentifierElementCompleted($organization): bool
     {
         $identifier = $organization->identifier;
+        $registration_agency = $organization->registration_agency;
+        $registration_number = $organization->registration_number;
 
-        return !(!array_key_exists('identifier', $identifier) || empty($identifier));
+        return !(empty($identifier) || empty($registration_agency) || empty($registration_number));
     }
 
     /**

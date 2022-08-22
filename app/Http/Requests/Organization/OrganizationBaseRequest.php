@@ -107,7 +107,6 @@ class OrganizationBaseRequest extends FormRequest
     public function uniqueCategoryValidator($attribute, $value): bool
     {
         $categoryCodes = [];
-        // dd($attribute, $value);
 
         foreach ($value as $category) {
             $code = $category['code'];
