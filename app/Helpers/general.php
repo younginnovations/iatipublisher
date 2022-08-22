@@ -99,7 +99,7 @@ if (!function_exists('getOrganizationElementSchema')) {
      */
     function getOrganizationElementSchema($element): array
     {
-        return getArr(readElementJsonSchema(), $element);
+        return getArr(readOrganizationElementJsonSchema(), $element);
     }
 }
 
@@ -118,6 +118,22 @@ if (!function_exists('getElements')) {
         return array_keys($elementJsonSchema);
     }
 }
+
+if (!function_exists('getOrganizationElements')) {
+    /**
+     * Returns elements list.
+     *
+     * @return array
+     * @throws JsonException
+     */
+    function getOrganizationElements(): array
+    {
+        $elementJsonSchema = readOrganizationElementJsonSchema();
+
+        return array_keys($elementJsonSchema);
+    }
+}
+
 if (!function_exists('getDefaultElementStatus')) {
     /**
      * Returns Default Elements Status.
@@ -251,6 +267,20 @@ if (!function_exists('isCoreElementCompleted')) {
      * @return bool
      */
     function isCoreElementCompleted($elementStatus): bool
+    {
+        return empty(array_diff_assoc(getCoreElementsWithTrueValue(), $elementStatus));
+    }
+}
+
+if (!function_exists('isMandatoryElementCompleted')) {
+    /**
+     * Checks if all core elements are complete.
+     *
+     * @param $elementStatus
+     *
+     * @return bool
+     */
+    function isMandatoryElementCompleted($elementStatus): bool
     {
         return empty(array_diff_assoc(getCoreElementsWithTrueValue(), $elementStatus));
     }

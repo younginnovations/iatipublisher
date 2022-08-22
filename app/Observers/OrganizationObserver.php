@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Observers;
 
 use App\IATI\Models\Organization\Organization;
-use App\IATI\Services\ElementCompleteService;
+use App\IATI\Services\OrganizationElementCompleteService;
 
 /**
  * Class OrganizationObserver.
@@ -13,16 +13,16 @@ use App\IATI\Services\ElementCompleteService;
 class OrganizationObserver
 {
     /**
-     * @var ElementCompleteService
+     * @var OrganizationElementCompleteService
      */
-    protected ElementCompleteService $elementCompleteService;
+    protected OrganizationElementCompleteService $organizationElementCompleteService;
 
     /**
      * Organization observer constructor.
      */
     public function __construct()
     {
-        $this->elementCompleteService = new ElementCompleteService();
+        $this->organizationElementCompleteService = new OrganizationElementCompleteService();
     }
 
     /**
@@ -33,7 +33,8 @@ class OrganizationObserver
      */
     public function getUpdatedElement($updatedAttributes): array
     {
-        $elements = getElements();
+        $elements = getOrganizationElements();
+        // dd($updatedAttributes, $elements);
         $updatedElements = [];
 
         foreach ($updatedAttributes as $element => $updatedAttribute) {
@@ -57,11 +58,16 @@ class OrganizationObserver
     public function setElementStatus($model, bool $isNew = false): void
     {
         $elementStatus = $model->element_status;
+        // dump($elementStatus);
         $updatedElements = ($isNew) ? $this->getUpdatedElement($model->getAttributes()) : $this->getUpdatedElement($model->getChanges());
 
         foreach ($updatedElements as $attribute => $value) {
-            $elementStatus[$attribute] = call_user_func([$this->elementCompleteService, dashesToCamelCase('is_' . $attribute . '_element_completed')], $model);
+            // dd($elementStatus, $attribute, call_user_func([$this->organizationElementCompleteService, dashesToCamelCase('is_' . $attribute . '_element_completed')], $model));
+            // dd($updatedElements, 'is_' . $attribute . '_element_completed', $model, dashesToCamelCase('is_' . $attribute . '_element_completed'));
+            $elementStatus[$attribute] = call_user_func([$this->organizationElementCompleteService, dashesToCamelCase('is_' . $attribute . '_element_completed')], $model);
         }
+
+        // dd($elementStatus);
 
         $model->element_status = $elementStatus;
     }
@@ -92,7 +98,7 @@ class OrganizationObserver
     public function updated(Organization $organization): void
     {
         $this->setElementStatus($organization);
-        $this->resetOrganizationStatus($organization);
+        // $this->resetOrganizationStatus($organization);
         $organization->saveQuietly();
     }
 

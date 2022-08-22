@@ -212,11 +212,11 @@ const publishFunction = () => {
     const response = res.data;
     console.log(res.data);
     loader.value=false;
+    toastMessage.message = response.success ? response.success : response.error;
+    toastMessage.type = response.success;
     setTimeout(() => {
       loader.value = false;
     }, 2000);
-    toastMessage.message = response.success ? response.success : response.error;
-    toastMessage.type = response.success;
 
   });
 };

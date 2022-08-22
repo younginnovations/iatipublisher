@@ -49,6 +49,7 @@ class Organization extends Model
         'total_expenditure',
         'organisation_identifier',
         'name',
+        'element_status',
     ];
 
     /**
@@ -64,6 +65,7 @@ class Organization extends Model
         'total_expenditure' => 'json',
         'organisation_identifier' => 'json',
         'name' => 'json',
+        'element_status' => 'json',
     ];
 
     /**
@@ -94,7 +96,7 @@ class Organization extends Model
     }
 
     /**
-     * Organization hasone user.
+     * Organization has one user.
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasOne
      */

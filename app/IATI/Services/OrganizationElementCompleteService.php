@@ -86,6 +86,8 @@ class OrganizationElementCompleteService
             }
         }
 
+        // dd($mandatoryElements);
+
         return $mandatoryElements;
     }
 
@@ -132,7 +134,7 @@ class OrganizationElementCompleteService
             return false;
         }
 
-        $elementSchema = getElementSchema($this->element);
+        $elementSchema = getOrganizationElementSchema($this->element);
 
         foreach ($mandatoryAttributes as $mandatoryAttribute) {
             if (array_key_exists('dependent_attributes', $elementSchema) && array_key_exists($mandatoryAttribute, $elementSchema['dependent_attributes'])) {
@@ -236,17 +238,18 @@ class OrganizationElementCompleteService
         if (empty($data)) {
             return false;
         }
+        // dd($mandatorySubElements, $data);
 
         foreach ($mandatorySubElements as $key => $mandatorySubElement) {
             if (!array_key_exists($key, $data)) {
-                //dd('isSubElementDataCompleted fx called1', 'Whole Sub element has not filled yet', 'sub-element-check:', $mandatorySubElement, $data);
+                // dd('isSubElementDataCompleted fx called1', 'Whole Sub element has not filled yet', 'sub-element-check:', $mandatorySubElement, $data);
 
                 return false;
             }
             $items = $data[$key];
 
             if (empty($items)) {
-                //dd('isSubElementDataCompleted fx called2', 'Sub element array is empty', 'sub-element-check:', $mandatorySubElement, $data, $items);
+                // dd('isSubElementDataCompleted fx called2', 'Sub element array is empty', 'sub-element-check:', $mandatorySubElement, $data, $items);
 
                 return false;
             }
@@ -254,7 +257,7 @@ class OrganizationElementCompleteService
             foreach ($mandatorySubElement as $mandatoryField) {
                 foreach ($items as $item) {
                     if (!array_key_exists($mandatoryField, $item) || (empty($item[$mandatoryField]))) {
-                        //dd('isSubElementDataCompleted fx called3', 'Sub element is empty', 'sub-element-check:', $mandatoryField, $item);
+                        // dd('isSubElementDataCompleted fx called3', 'Sub element is empty', 'sub-element-check:', $mandatoryField, $item);
 
                         return false;
                     }
@@ -348,7 +351,7 @@ class OrganizationElementCompleteService
      */
     public function singleDimensionAttributeCheck($data): bool
     {
-        return $this->isSingleDimensionAttributeCompleted(getElementSchema($this->element), $data);
+        return $this->isSingleDimensionAttributeCompleted(getOrganizationElementSchema($this->element), $data);
     }
 
     /**
@@ -375,7 +378,7 @@ class OrganizationElementCompleteService
      */
     public function isLevelOneMultiDimensionElementCompleted($data): bool
     {
-        return $this->isLevelOneMultiDimensionDataCompleted(getElementSchema($this->element), $data);
+        return $this->isLevelOneMultiDimensionDataCompleted(getOrganizationElementSchema($this->element), $data);
     }
 
     /**
@@ -392,7 +395,7 @@ class OrganizationElementCompleteService
             return false;
         }
 
-        $elementSchema = getElementSchema($this->element);
+        $elementSchema = getOrganizationElementSchema($this->element);
 
         return $this->isSubElementCompleted($elementSchema['sub_elements'], $data);
     }
@@ -456,7 +459,63 @@ class OrganizationElementCompleteService
      */
     public function isLevelTwoMultiDimensionElementCompleted($data): bool
     {
-        return $this->isLevelTwoMultiDimensionDataCompleted(getElementSchema($this->element), $data);
+        return $this->isLevelTwoMultiDimensionDataCompleted(getOrganizationElementSchema($this->element), $data);
+    }
+
+    /**
+     * Checks three level sub element is complete.
+     *
+     * @param $data
+     *
+     * @return bool
+     * @throws \JsonException
+     */
+    public function isLevelThreeSingleDimensionElementCompleted($data): bool
+    {
+        if (!$this->singleDimensionAttributeCheck($data)) {
+            return false;
+        }
+
+        $elementSchema = getOrganizationElementSchema($this->element);
+        $subElements = $elementSchema['sub_elements'];
+
+        foreach ($subElements as $key => $subElement) {
+            $mandatorySubElementAttributes = $this->getMandatoryAttributes($subElement);
+
+            if (empty($mandatorySubElementAttributes)) {
+                continue;
+            }
+
+            if (!array_key_exists($key, $data)) {
+                //dd('isLevelThreeSingleDimensionElementCompleted fx called1', 'sub-element-empty', 'sub-element-check:', $mandatorySubElementAttributes, $key, $data);
+
+                return false;
+            }
+
+            if (empty($data[$key])) {
+                //dd('isLevelThreeSingleDimensionElementCompleted fx called2', 'sub-element-empty', 'sub-element-check:', $mandatorySubElementAttributes, $key, $data);
+
+                return false;
+            }
+
+            $tempData = $data[$key];
+
+            foreach ($tempData as $datum) {
+                if (!$this->isAttributeDataCompleted($mandatorySubElementAttributes, $datum)) {
+                    return false;
+                }
+            }
+
+            $tempData = $data[$key];
+
+            foreach ($tempData as $tempDatum) {
+                if (!$this->isSubElementCompleted($subElement['sub_elements'], $tempDatum)) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
     }
 
     /**
@@ -486,7 +545,7 @@ class OrganizationElementCompleteService
         $this->element = 'name';
         $elementSchema = getOrganizationElementSchema($this->element);
 
-        return $this->isSubElementDataCompleted($this->mandatorySubElements($elementSchema['sub_elements']), ['narrative' => $activity->title]);
+        return $this->isSubElementDataCompleted($this->mandatorySubElements($elementSchema['sub_elements']), ['narrative' => $organization->name]);
     }
 
     /**
@@ -527,11 +586,11 @@ class OrganizationElementCompleteService
      * @return bool
      * @throws \JsonException
      */
-    public function isTotalExpenseElementCompleted($organization): bool
+    public function isTotalExpenditureElementCompleted($organization): bool
     {
-        $this->element = 'total_expense';
+        $this->element = 'total_expenditure';
 
-        return $this->isLevelTwoMultiDimensionElementCompleted($organization->total_expense);
+        return $this->isLevelTwoMultiDimensionElementCompleted($organization->total_expenditure);
     }
 
     /**
@@ -557,7 +616,7 @@ class OrganizationElementCompleteService
      * @return bool
      * @throws \JsonException
      */
-    public function isRecipientOrgBudgeElementCompleted($organization): bool
+    public function isRecipientOrgBudgetElementCompleted($organization): bool
     {
         $this->element = 'recipient_org_budget';
 

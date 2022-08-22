@@ -30,7 +30,7 @@ class ReportingOrgRequest extends OrganizationBaseRequest
         $rules = [];
         foreach ($formFields as $reportingOrganizationIndex => $reportingOrganization) {
             $reportingOrganizationForm = sprintf('reporting_org.%s', $reportingOrganizationIndex);
-            $rules[$reportingOrganizationForm . '.ref'] = 'not_regex:/(&|!|\/|\||\?)/';
+            $rules[$reportingOrganizationForm . '.ref'] = ['nullable', 'not_regex:/(&|!|\/|\||\?)/'];
 
             $rules = array_merge(
                 $rules,

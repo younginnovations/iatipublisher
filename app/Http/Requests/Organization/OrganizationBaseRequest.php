@@ -140,7 +140,7 @@ class OrganizationBaseRequest extends FormRequest
         $validator->addReplacer(
             'unique_default_lang',
             function ($message) use ($validator, $defaultLanguage) {
-                return str_replace(':language', getCodeListArray('Languages', 'ActivityArray')[$defaultLanguage], $message);
+                return 'The @xml:lang must be unique';
             }
         );
 
@@ -189,7 +189,7 @@ class OrganizationBaseRequest extends FormRequest
     public function getMessagesForNarrative($formFields, $formBase)
     {
         $messages = [];
-        $messages[sprintf('%s.narrative.unique_lang', $formBase)] = trans('validation.unique', ['attribute' => trans('elementForm.languages')]);
+        $messages[sprintf('%s.narrative.unique_lang', $formBase)] = 'The @xml:lang field must be unique.';
         foreach ($formFields as $narrativeIndex => $narrative) {
             $messages[sprintf('%s.narrative.%s.narrative.required', $formBase, $narrativeIndex)] = 'The narrative field is required.';
             $messages[sprintf(
