@@ -49,7 +49,7 @@ use Illuminate\Support\Facades\Route;
 Route::name('admin.')->group(function () {
     // Route::get('activity/{id}', [\App\Http\Controllers\Admin\Activity\ActivityController::class, 'show'])->name('activity.show');
     Route::get('/activities', [ActivityController::class, 'index'])->name('activities.index');
-    Route::get('/activities/page/{page?}', [App\Http\Controllers\Admin\Activity\ActivityController::class, 'getActivities'])->name('activities.paginate');
+    Route::get('/activities/page/{page?}', [App\Http\Controllers\Admin\Activity\ActivityController::class, 'getPaginatedActivities'])->name('activities.paginate');
     Route::get('/activities/codelists', [App\Http\Controllers\Admin\Activity\ActivityController::class, 'getLanguagesOrganization'])->name('activities.codelist');
     Route::resource('/activity', ActivityController::class)->except('index')->parameters(['activity' => 'id']);
     Route::get('activity/{id}/title', [TitleController::class, 'edit'])->name('activity.title.edit');
