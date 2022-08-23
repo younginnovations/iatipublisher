@@ -22,15 +22,7 @@
         <thead>
           <tr class="text-left bg-n-10">
             <th id="transaction_type" scope="col">
-              <a
-                class="transition duration-500 text-n-50 hover:text-spring-50"
-                href="#"
-              >
-                <span class="sorting-indicator descending">
-                  <svg-vue icon="descending-arrow" />
-                </span>
-                <span>Start Date - End Date</span>
-              </a>
+              <span>Start Date - End Date</span>
             </th>
             <th id="action" scope="col" width="177px">
               <span>Action</span>
@@ -59,10 +51,7 @@
             </td>
             <td>
               <div class="flex">
-                <a
-                  class="mr-6 text-n-40"
-                  :href="`${periodLink}/${pe.id}/edit`"
-                >
+                <a class="mr-6 text-n-40" :href="`${periodLink}/${pe.id}/edit`">
                   <svg-vue icon="edit" class="text-xl"></svg-vue>
                 </a>
                 <a class="text-n-40" href="#">
@@ -169,15 +158,11 @@ export default defineComponent({
     ];
 
     onMounted(async () => {
-      axios
-        .get(
-          `/indicator/${indicatorId}/period/page/1`
-        )
-        .then((res) => {
-          const response = res.data;
-          Object.assign(periodsData, response.data);
-          isEmpty.value = response.data.data.length ? false : true;
-        });
+      axios.get(`/indicator/${indicatorId}/period/page/1`).then((res) => {
+        const response = res.data;
+        Object.assign(periodsData, response.data);
+        isEmpty.value = response.data.data.length ? false : true;
+      });
 
       if (props.toast.message !== '') {
         toastData.type = props.toast.type;
@@ -192,10 +177,7 @@ export default defineComponent({
 
     function fetchListings(active_page: number) {
       axios
-        .get(
-          `/indicator/${indicatorId}/period/page/` +
-            active_page
-        )
+        .get(`/indicator/${indicatorId}/period/page/` + active_page)
         .then((res) => {
           const response = res.data;
           Object.assign(periodsData, response.data);

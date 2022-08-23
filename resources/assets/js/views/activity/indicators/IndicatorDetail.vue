@@ -30,16 +30,7 @@
     <div class="activities">
       <aside class="activities__sidebar">
         <div
-          class="
-            sticky
-            top-0
-            px-6
-            py-4
-            rounded-lg
-            indicator
-            bg-eggshell
-            text-n-50
-          "
+          class="sticky top-0 px-6 py-4 rounded-lg indicator bg-eggshell text-n-50"
         >
           <ul class="text-sm font-bold leading-relaxed">
             <li v-for="(rData, r, ri) in indicatorData" :key="ri">
@@ -148,7 +139,6 @@ import { defineComponent, toRefs, onMounted, reactive, provide } from 'vue';
 
 //component
 import Btn from 'Components/buttons/Link.vue';
-import Status from 'Components/status/Status.vue';
 import PageTitle from 'Components/sections/PageTitle.vue';
 import Toast from 'Components/Toast.vue';
 
@@ -180,7 +170,6 @@ export default defineComponent({
     DocumentLink,
     Period,
     Btn,
-    // Status,
     PageTitle,
     Toast,
   },
