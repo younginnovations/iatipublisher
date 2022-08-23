@@ -160,4 +160,24 @@ class Activity extends Model
     {
         return $this->org_id === Auth::user()->organization_id;
     }
+
+    /**
+     * @throws \JsonException
+     */
+    public function getDefaultTitleNarrativeAttribute()
+    {
+        $titles = $this->title;
+
+        if (!empty($titles)) {
+            foreach ($titles as $title) {
+                if (array_key_exists('language', $title) && !empty($title['language']) && $title['language'] === getOrgDefaultLanguage()) {
+                    return  $title['narrative'];
+                }
+            }
+
+            return $titles[0]['narrative'];
+        }
+
+        return '';
+    }
 }
