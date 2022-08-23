@@ -42,16 +42,19 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="datum in data.data" :key="datum['id']">
+        <tr
+          v-for="datum in data.data"
+          :key="datum['id']"
+          :class="{ already_published: datum['already_published'] }"
+        >
           <td class="title">
             <div
               class="inline-flex items-start transition duration-500 hover:text-spring-50"
             >
-              <svg-vue
+              <PreviouslyPublished
                 v-if="datum['already_published']"
-                class="mt-1 mr-3 text-base shrink-0 text-spring-50"
-                icon="approved-cloud"
-              ></svg-vue>
+                class="absolute top-0 left-0"
+              />
               <div class="relative ellipsis">
                 <a
                   :href="'/activities/' + datum['id']"
@@ -130,6 +133,8 @@ import { useToggle } from '@vueuse/core';
 
 // Vuex Store
 import { useStore } from 'Store/activities/index';
+
+import PreviouslyPublished from 'Components/status/PreviouslyPublished.vue';
 
 const [selectAllValue, selectAllToggle] = useToggle();
 

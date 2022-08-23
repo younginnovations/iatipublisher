@@ -56,13 +56,6 @@
               v-if="showButtons"
               class="mr-3.5"
               type="secondary"
-              text="Download Selected"
-              icon="download-file"
-            />
-            <BtnComponent
-              v-if="showButtons"
-              class="mr-3.5"
-              type="secondary"
               text="Publish Selected"
               icon="approved-cloud"
               @click="modalValue = true"
@@ -73,12 +66,6 @@
               type="secondary"
               text="Delete Selected"
               icon="delete"
-            />
-            <BtnComponent
-              class="mr-3.5"
-              type="secondary"
-              text="Download All"
-              icon="download-file"
             />
             <BtnComponent
               class="mr-3.5"
