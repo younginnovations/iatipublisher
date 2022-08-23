@@ -438,3 +438,15 @@ if (!function_exists('generateToastData')) {
         return $toast;
     }
 }
+
+/*
+ * Checks if an activity element is a core element
+ *
+ * @return bool
+ */
+if (!function_exists('isCoreElement')) {
+    function isCoreElement($element): bool
+    {
+        return in_array($element, getCoreElements());
+    }
+}

@@ -28,7 +28,10 @@
     <div class="flex mb-4">
         <div class="flex title grow">
             <span class="text-bluecoral text-xl mr-1.5">
-                @if ($data['name'] === 'reporting_org' || $data['name'] === 'default_tied_status' || $data['name'] === 'crs_add' || $data['name'] === 'fss')
+                @if ($data['name'] === 'reporting_org' ||
+                    $data['name'] === 'default_tied_status' ||
+                    $data['name'] === 'crs_add' ||
+                    $data['name'] === 'fss')
                     <svg-vue icon="activity-elements/building"></svg-vue>
                 @else
                     <svg-vue icon="activity-elements/{{ $data['name'] }}"></svg-vue>
@@ -40,10 +43,17 @@
                 not-completed="text-crimson-50"
                 Also the text "completed" should be dynamic.
             -->
-            <div class="status ml-2.5 flex text-xs leading-5 text-spring-50">
-                <b class="mr-2 text-base leading-3">.</b><span>completed</span>
-            </div>
-            @if ($data['core'])
+            @if (isset($activity['element_status'][$data['name']]) && $activity['element_status'][$data['name']])
+                <div class="status ml-2.5 flex text-xs leading-5 text-spring-50">
+                    <b class="mr-2 text-base leading-3">.</b><span>completed</span>
+                </div>
+            @else
+                <div class="status ml-2.5 flex text-xs leading-5 text-crimson-50">
+                    <b class="mr-2 text-base leading-3">.</b><span>not completed</span>
+                </div>
+            @endif
+
+            @if (isCoreElement($data['name']))
                 <!--Icon values: "core", "star", "moon".
                 Remove comment after task completion  -->
                 <svg-vue icon="core" class="ml-2"></svg-vue>
