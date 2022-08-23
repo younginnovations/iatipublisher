@@ -51,4 +51,16 @@ class ActivityValidatorResponseService
     {
         return $this->activityValidatorResponseRepository->getValidatorResponse($activityId);
     }
+
+    /**
+     * Deletes the validator response of the unpublished activity.
+     *
+     * @param $activityId
+     *
+     * @return bool
+     */
+    public function deleteValidatorResponse($activityId): bool
+    {
+        return $this->activityValidatorResponseRepository->deleteValidatorResponse($activityId);
+    }
 }

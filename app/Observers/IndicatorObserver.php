@@ -5,12 +5,26 @@ declare(strict_types=1);
 namespace App\Observers;
 
 use App\IATI\Models\Activity\Indicator;
+use App\IATI\Services\ElementCompleteService;
 
 /**
  * Class IndicatorObserver.
  */
 class IndicatorObserver
 {
+    /**
+     * @var ElementCompleteService
+     */
+    protected ElementCompleteService $elementCompleteService;
+
+    /**
+     * Indicator observer constructor.
+     */
+    public function __construct()
+    {
+        $this->elementCompleteService = new ElementCompleteService();
+    }
+
     /**
      * Handle the Indicator "created" event.
      *
@@ -22,9 +36,9 @@ class IndicatorObserver
     public function created(Indicator $indicator): void
     {
         $resultObserver = new ResultObserver();
-
         $resultObserver->updateActivityElementStatus($indicator->result);
         $resultObserver->resetActivityStatus($indicator->result);
+        $this->setIndicatorDefaultValues($indicator);
     }
 
     /**
@@ -41,5 +55,21 @@ class IndicatorObserver
 
         $resultObserver->updateActivityElementStatus($indicator->result);
         $resultObserver->resetActivityStatus($indicator->result);
+        $this->setIndicatorDefaultValues($indicator);
+    }
+
+    /**
+     * Sets default values for language and currency for indicator.
+     *
+     * @param $indicator
+     *
+     * @return void
+     */
+    public function setIndicatorDefaultValues($indicator): void
+    {
+        $indicatorData = $indicator->indicator;
+        $updatedData = $this->elementCompleteService->setDefaultValues($indicatorData, $indicator->result->activity);
+        $indicator->indicator = $updatedData;
+        $indicator->saveQuietly();
     }
 }

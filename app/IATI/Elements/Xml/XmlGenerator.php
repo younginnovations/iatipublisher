@@ -256,15 +256,15 @@ class XmlGenerator
         $filename = sprintf('%s-%s.xml', $publisherId, 'activities');
         $publishedActivity = sprintf('%s-%s.xml', $publisherId, $activity->id);
         $xml = $this->getXml($activity, $transaction, $result, $settings, $organization);
-        $result = Storage::disk('minio')->put(
-            sprintf('%s/%s/%s', 'xml', 'activityXmlFiles', $publishedActivity),
-            $xml->saveXML()
-        );
-
-        if ($result) {
-            $publishedFiles = $this->savePublishedFiles($filename, $activity->org_id, $publishedActivity);
-            $this->getMergeXml($publishedFiles, $filename);
-        }
+//        $result = Storage::disk('minio')->put(
+//            sprintf('%s/%s/%s', 'xml', 'activityXmlFiles', $publishedActivity),
+//            $xml->saveXML()
+//        );
+//
+//        if ($result) {
+//            $publishedFiles = $this->savePublishedFiles($filename, $activity->org_id, $publishedActivity);
+//            $this->getMergeXml($publishedFiles, $filename);
+//        }
     }
 
     /**
@@ -370,6 +370,12 @@ class XmlGenerator
      */
     public function getXml($activity, $transaction, $result, $settings, $organization): ?\DomDocument
     {
+        $defaultValues = $activity->default_field_values;
+
+        if (is_string($activity->default_field_values)) {
+            $defaultValues = json_decode($activity->default_field_values, true);
+        }
+
         $this->setServices();
         $xmlData = [];
         $xmlData['@attributes'] = [
@@ -380,11 +386,11 @@ class XmlGenerator
         $xmlData['iati-activity'] = $this->getXmlData($activity, $transaction, $result, $organization);
         $xmlData['iati-activity']['@attributes'] = [
             'last-updated-datetime' => gmdate('c', time()),
-            'xml:lang'              => Arr::get($activity->default_field_values, '0.default_language', null),
-            'default-currency'      => Arr::get($activity->default_field_values, '0.default_currency', null),
-            'humanitarian'          => Arr::get($activity->default_field_values, '0.humanitarian', false),
-            'hierarchy'             => Arr::get($activity->default_field_values, '0.default_hierarchy', 1),
-            'linked-data-uri'       => Arr::get($activity->default_field_values, '0.linked_data_uri', null),
+            'xml:lang'              => Arr::get($defaultValues, 'default_language', null),
+            'default-currency'      => Arr::get($defaultValues, 'default_currency', null),
+            'humanitarian'          => Arr::get($defaultValues, 'humanitarian', false),
+            'hierarchy'             => Arr::get($defaultValues, 'default_hierarchy', 1),
+            'linked-data-uri'       => Arr::get($defaultValues, 'linked_data_uri', null),
         ];
 
         return $this->arrayToXml->createXml('iati-activities', $xmlData);

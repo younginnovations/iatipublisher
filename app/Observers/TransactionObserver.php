@@ -6,6 +6,7 @@ namespace App\Observers;
 
 use App\IATI\Models\Activity\Transaction;
 use App\IATI\Services\ElementCompleteService;
+use Illuminate\Support\Arr;
 
 /**
  * Class TransactionObserver.
@@ -80,6 +81,15 @@ class TransactionObserver
      */
     public function resetActivityStatus($transaction): void
     {
+        $key = array_key_first($transaction->getDirty());
+        $data = Arr::get($transaction->getDirty(), $key);
+
+        if (!in_array($key, getNonArrayElements())) {
+            $updatedData = $this->elementCompleteService->setDefaultValues($data, $transaction->activity);
+            $transaction->$key = $updatedData;
+            $transaction->saveQuietly();
+        }
+
         $activityObject = $transaction->activity;
         $activityObject->status = 'draft';
         $activityObject->saveQuietly();

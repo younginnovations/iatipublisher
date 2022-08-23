@@ -16,104 +16,102 @@ class ActivityTableSeeder extends Seeder
     {
         Activity::create(
             [
-                'iati_identifier' => [
-                    'activity_identifier' => 'SYRZ000041',
+                'iati_identifier'      => [
+                    'activity_identifier'  => 'SYRZ000041',
                     'iati_identifier_text' => 'CZ-ICO-25755277-SYRZ000041',
                 ],
-                'title' => [
+                'title'                => [
                     [
                         'narrative' => 'DGGF Track 3',
-                        'language' => 'en',
+                        'language'  => 'en',
                     ],
                 ],
-                'description' => [
+                'description'          => [
                     [
-                        'type' => 1,
+                        'type'      => 1,
                         'narrative' => [
                             [
                                 'narrative' => 'Education and psychosocial support to children in Aleppo Governorate',
-                                'language' => '',
+                                'language'  => '',
                             ],
                         ],
                     ],
                 ],
-                'activity_date' => [
+                'activity_date'        => [
                     [
-                        'date' => '2016-10-18',
-                        'type' => '2',
+                        'date'      => '2016-10-18',
+                        'type'      => '2',
                         'narrative' => [
                             [
                                 'narrative' => '',
-                                'language' => '',
+                                'language'  => '',
                             ],
                         ],
                     ],
                     [
-                        'date' => '2016-12-02',
-                        'type' => '4',
+                        'date'      => '2016-12-02',
+                        'type'      => '4',
                         'narrative' => [
                             [
                                 'narrative' => '',
-                                'language' => '',
+                                'language'  => '',
                             ],
                         ],
                     ],
                 ],
-                'status' => 'draft',
-                'sector' => [
+                'status'               => 'draft',
+                'sector'               => [
                     [
-                        'sector_vocabulary' => 1,
-                        'vocabulary_uri' => '',
-                        'sector_code' => '72050',
+                        'sector_vocabulary'    => 1,
+                        'vocabulary_uri'       => '',
+                        'sector_code'          => '72050',
                         'sector_category_code' => '',
-                        'sector_text' => '',
-                        'percentage' => '',
-                        'narrative' => [
+                        'sector_text'          => '',
+                        'percentage'           => '',
+                        'narrative'            => [
                             [
                                 'narrative' => '',
-                                'language' => '',
+                                'language'  => '',
                             ],
                         ],
                     ],
                 ],
-                'budget' => [
+                'budget'               => [
                     [
-                        'budget_type' => '1',
-                        'status' => '2',
+                        'budget_type'  => '1',
+                        'status'       => '2',
                         'period_start' => [
                             [
                                 'date' => '2016-10-18',
                             ],
                         ],
-                        'period_end' => [
+                        'period_end'   => [
                             [
                                 'date' => '2016-12-02',
                             ],
                         ],
-                        'value' => [
+                        'value'        => [
                             [
-                                'amount' => '35754',
-                                'currency' => 'GBP',
+                                'amount'     => '35754',
+                                'currency'   => 'GBP',
                                 'value_date' => '2016-11-18',
                             ],
                         ],
                     ],
                 ],
                 'default_field_values' => [
-                    [
-                        'linked_data_uri' => '',
-                        'default_language' => 'en',
-                        'default_currency' => 'GBP',
-                        'default_hierarchy' => '1',
-                        'default_collaboration_type' => '',
-                        'default_flow_type' => '',
-                        'default_finance_type' => '',
-                        'default_aid_type' => '',
-                        'default_tied_status' => '',
-                        'humanitarian' => '1',
-                    ],
+                    'linked_data_uri'            => '',
+                    'default_language'           => 'en',
+                    'default_currency'           => 'GBP',
+                    'default_hierarchy'          => '1',
+                    'default_collaboration_type' => '',
+                    'default_flow_type'          => '',
+                    'default_finance_type'       => '',
+                    'default_aid_type'           => '',
+                    'default_tied_status'        => '',
+                    'humanitarian'               => '1',
                 ],
-                'org_id' => 1,
+                'org_id'               => 1,
             ]
         );
     }

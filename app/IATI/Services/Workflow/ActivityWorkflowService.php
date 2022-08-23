@@ -10,6 +10,7 @@ use App\IATI\Services\Activity\ActivityService;
 use App\IATI\Services\Activity\ActivitySnapshotService;
 use App\IATI\Services\Organization\OrganizationService;
 use App\IATI\Services\Publisher\PublisherService;
+use App\IATI\Services\Validator\ActivityValidatorResponseService;
 use App\IATI\Services\Xml\XmlGeneratorService;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\BadResponseException;
@@ -52,6 +53,11 @@ class ActivityWorkflowService
     protected ActivitySnapshotService $activitySnapshotService;
 
     /**
+     * @var ActivityValidatorResponseService
+     */
+    protected ActivityValidatorResponseService $validatorService;
+
+    /**
      * ActivityWorkflowService Constructor.
      *
      * @param OrganizationService $organizationService
@@ -60,6 +66,7 @@ class ActivityWorkflowService
      * @param PublisherService $publisherService
      * @param ActivityPublishedService $activityPublishedService
      * @param ActivitySnapshotService $activitySnapshotService
+     * @param ActivityValidatorResponseService $validatorService
      */
     public function __construct(
         OrganizationService $organizationService,
@@ -67,7 +74,8 @@ class ActivityWorkflowService
         XmlGeneratorService $xmlGeneratorService,
         PublisherService $publisherService,
         ActivityPublishedService $activityPublishedService,
-        ActivitySnapshotService $activitySnapshotService
+        ActivitySnapshotService $activitySnapshotService,
+        ActivityValidatorResponseService $validatorService
     ) {
         $this->organizationService = $organizationService;
         $this->activityService = $activityService;
@@ -75,6 +83,7 @@ class ActivityWorkflowService
         $this->publisherService = $publisherService;
         $this->activityPublishedService = $activityPublishedService;
         $this->activitySnapshotService = $activitySnapshotService;
+        $this->validatorService = $validatorService;
     }
 
     /**
@@ -131,6 +140,7 @@ class ActivityWorkflowService
         $publishedFile = $this->activityPublishedService->getActivityPublished($activity->org_id);
         $this->removeActivityFromPublishedArray($publishedFile, $activity);
         $this->activityService->updatePublishedStatus($activity, 'draft', true, false);
+        $this->validatorService->deleteValidatorResponse($activity->id);
         $this->xmlGeneratorService->generateNewXmlFile($publishedFile);
     }
 

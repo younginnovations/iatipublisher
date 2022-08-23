@@ -5,26 +5,22 @@ declare(strict_types=1);
 namespace App\IATI\Repositories\Validator;
 
 use App\IATI\Models\Validator\IATIValidatorResponse;
+use App\IATI\Repositories\Repository;
 use Illuminate\Database\Eloquent\Model;
 
 /**
  * Class ActivityValidatorRepository.
  */
-class ActivityValidatorResponseRepository
+class ActivityValidatorResponseRepository extends Repository
 {
     /**
-     * @var IATIValidatorResponse
-     */
-    protected IATIValidatorResponse $activityValidatorResponse;
-
-    /**
-     * ActivityValidatorRepository Constructor.
+     * Returns activity model.
      *
-     * @param IATIValidatorResponse $activityValidatorResponse
+     * @return string
      */
-    public function __construct(IATIValidatorResponse $activityValidatorResponse)
+    public function getModel(): string
     {
-        $this->activityValidatorResponse = $activityValidatorResponse;
+        return IATIValidatorResponse::class;
     }
 
     /**
@@ -37,7 +33,7 @@ class ActivityValidatorResponseRepository
      */
     public function updateOrCreateResponse($activity_id, $response): Model|bool
     {
-        return $this->activityValidatorResponse->updateOrCreate(
+        return $this->model->updateOrCreate(
             ['activity_id' => $activity_id],
             ['response' => $response]
         );
@@ -52,6 +48,24 @@ class ActivityValidatorResponseRepository
      */
     public function getValidatorResponse($activityId): ?Model
     {
-        return $this->activityValidatorResponse->where('activity_id', $activityId)->first();
+        return $this->model->where('activity_id', $activityId)->first();
+    }
+
+    /**
+     * Deletes the validator response of the unpublished activity.
+     *
+     * @param $activityId
+     *
+     * @return bool
+     */
+    public function deleteValidatorResponse($activityId): bool
+    {
+        $validatorResponse = $this->model->where('activity_id', $activityId)->first();
+
+        if ($validatorResponse) {
+            return $validatorResponse->delete();
+        }
+
+        return false;
     }
 }

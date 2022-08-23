@@ -49,7 +49,13 @@ class ActivityService
      */
     public function getPaginatedActivities(int $page = 1): Collection|\Illuminate\Pagination\LengthAwarePaginator
     {
-        return $this->activityRepository->getActivityForOrganization(Auth::user()->organization_id, $page);
+        $activities = $this->activityRepository->getActivityForOrganization(Auth::user()->organization_id, $page);
+
+        foreach ($activities as $activity) {
+            $activity->setAttribute('coreCompleted', isCoreElementCompleted(array_merge(['reporting_org' => $activity->organization->reporting_org_complete_status], $activity->element_status)));
+        }
+
+        return $activities;
     }
 
     /**
@@ -78,6 +84,7 @@ class ActivityService
             'title'           => $activity_title,
             'org_id'          => Auth::user()->organization_id,
             'element_status'  => getDefaultElementStatus(),
+            'default_field_values' => $this->getDefaultValues(),
         ]);
     }
 
@@ -190,5 +197,28 @@ class ActivityService
         }
 
         return ($completed_core_element_count / count($core_elements)) * 100;
+    }
+
+    /**
+     * Returns default values for activity.
+     *
+     * @return array|null
+     */
+    public function getDefaultValues(): ?array
+    {
+        $organizationSettings = Auth::user()->organization->settings;
+
+        if ($organizationSettings->default_values && $organizationSettings->activity_default_values) {
+            return array_merge(
+                json_decode($organizationSettings->default_values, true),
+                json_decode($organizationSettings->activity_default_values, true)
+            );
+        } elseif ($organizationSettings->default_values) {
+            return json_decode($organizationSettings->default_values, true);
+        } elseif ($organizationSettings->activity_default_values) {
+            return json_decode($organizationSettings->activity_default_values, true);
+        }
+
+        return null;
     }
 }

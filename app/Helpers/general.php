@@ -475,3 +475,13 @@ function removeEmptyValues(&$data)
         }
     );
 }
+
+/**
+ * Returns array of elements which do not store data as array.
+ *
+ * @return array
+ */
+function getNonArrayElements(): array
+{
+    return ['activity_status', 'activity_scope', 'default_flow_type', 'default_finance_type', 'default_tied_status', 'capital_spend'];
+}

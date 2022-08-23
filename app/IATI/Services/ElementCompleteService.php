@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\IATI\Services;
 
+use Illuminate\Support\Arr;
+
 /**
  * Class ElementCompleteService.
  */
@@ -15,6 +17,16 @@ class ElementCompleteService
      * @var string
      */
     public string $element = '';
+
+    /**
+     * @var string
+     */
+    public $tempNarrative = '';
+
+    /**
+     * @var string
+     */
+    public $tempAmount = '';
 
     /**
      * Returns mandatory fields.
@@ -1186,5 +1198,44 @@ class ElementCompleteService
         }
 
         return false;
+    }
+
+    /**
+     * Sets default values of language and currency where required.
+     *
+     * @param $data
+     * @param $activity
+     *
+     * @return mixed
+     */
+    public function setDefaultValues(&$data, $activity): mixed
+    {
+        if (is_string($data)) {
+            $data = json_decode($data, true);
+        }
+
+        foreach ($data as $key => &$datum) {
+            if (is_array($datum)) {
+                $this->setDefaultValues($datum, $activity);
+            }
+
+            if ($key == 'narrative') {
+                $this->tempNarrative = $datum;
+            }
+
+            if ($key == 'amount') {
+                $this->tempAmount = $datum;
+            }
+
+            if ($key == 'language' && empty($datum) && !empty($this->tempNarrative)) {
+                $data['language'] = Arr::get($activity->default_field_values, 'default_language', null);
+            }
+
+            if ($key == 'currency' && empty($datum) && !empty($this->tempAmount)) {
+                $data['currency'] = Arr::get($activity->default_field_values, 'default_currency', null);
+            }
+        }
+
+        return $data;
     }
 }

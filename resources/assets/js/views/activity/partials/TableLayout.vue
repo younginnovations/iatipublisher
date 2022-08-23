@@ -99,7 +99,8 @@
               :already-published="datum.already_published"
               :linked-to-iati="datum.linked_to_iati"
               :status="datum.status"
-              :core-completed="false"
+              :core-completed="datum.coreCompleted"
+              type="outline"
             />
           </td>
 

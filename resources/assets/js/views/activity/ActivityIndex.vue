@@ -10,8 +10,6 @@
         v-if="toastData.visibility"
         :message="toastData.message"
         :type="toastData.type"
-        <<<<<<<
-        HEAD
       />
       <Toast
         v-if="toastMessage.message"

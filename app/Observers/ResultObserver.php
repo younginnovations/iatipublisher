@@ -56,6 +56,7 @@ class ResultObserver
     {
         $this->updateActivityElementStatus($result);
         $this->resetActivityStatus($result);
+        $this->setResultDefaultValues($result);
     }
 
     /**
@@ -70,6 +71,7 @@ class ResultObserver
     {
         $this->updateActivityElementStatus($result);
         $this->resetActivityStatus($result);
+        $this->setResultDefaultValues($result);
     }
 
     /**
@@ -84,5 +86,20 @@ class ResultObserver
         $activityObject = $result->activity;
         $activityObject->status = 'draft';
         $activityObject->saveQuietly();
+    }
+
+    /**
+     * Sets default values for language and currency for result.
+     *
+     * @param $result
+     *
+     * @return void
+     */
+    public function setResultDefaultValues($result): void
+    {
+        $resultData = $result->result;
+        $updatedData = $this->elementCompleteService->setDefaultValues($resultData, $result->activity);
+        $result->result = $updatedData;
+        $result->saveQuietly();
     }
 }

@@ -111,7 +111,7 @@ class ActivityWorkflowController extends Controller
             DB::beginTransaction();
             $activity = $this->activityWorkflowService->findActivity($id);
 
-            if (!$activity->already_published && $activity->status === 'draft') {
+            if (!$activity->linked_to_iati) {
                 return response()->json(['success' => false, 'message' => 'This activity has not been published to un-publish.']);
             }
 
