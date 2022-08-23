@@ -49,6 +49,13 @@
     @apply relative py-4 px-6 align-top text-sm leading-relaxed;
   }
 
+  tr.already_published {
+    td,
+    th.check-column {
+      @apply pt-11;
+    }
+  }
+
   .has-status {
     td {
       @apply px-6 pt-11 pb-7;

@@ -1,9 +1,9 @@
 <!-- eslint-disable vue/no-v-html -->
 <template>
   <BtnComponent
-    class=""
+    v-if="btnText"
     :text="btnText"
-    type="primary"
+    :type="type"
     icon="approved-cloud"
     @click="publishValue = true"
   />
@@ -126,7 +126,7 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, ref, computed, inject } from 'vue';
+import { defineProps, reactive, ref, toRefs, computed, inject } from 'vue';
 import { useToggle } from '@vueuse/core';
 import axios from 'axios';
 
@@ -137,6 +137,16 @@ import Loader from 'Components/sections/ProgressLoader.vue';
 
 // Vuex Store
 import { useStore } from 'Store/activities/show';
+
+const props = defineProps({
+  type: { type: String, default: 'primary' },
+  alreadyPublished: { type: Boolean, required: true },
+  linkedToIati: { type: Boolean, required: true },
+  status: { type: String, required: true },
+  coreCompleted: { type: Boolean, required: true },
+});
+
+const { alreadyPublished, linkedToIati, status, coreCompleted } = toRefs(props);
 
 /**
  *  Global State
@@ -159,7 +169,7 @@ const loader = ref(false);
 // determine if core element completed or not
 // true for completed and false for not completed
 
-const coreElementStatus = inject('coreCompleted') as boolean;
+const coreElementStatus = coreCompleted.value;
 
 // Dynamic text for loader
 const loaderText = ref('Please Wait');
@@ -322,20 +332,24 @@ const publishFunction = () => {
   });
 };
 
-interface PublishStatusTypeface {
-  already_published: boolean;
-  linked_to_iati: boolean;
-  status: string;
-}
-
 // publish-republish
-const publishStatus = inject('publishStatus') as PublishStatusTypeface;
+
+const publishStatus = reactive({
+  already_published: alreadyPublished.value,
+  linked_to_iati: linkedToIati.value,
+  status: status.value,
+});
 
 const btnText = computed(() => {
   if (publishStatus.linked_to_iati && publishStatus.status === 'draft') {
     return 'Republish';
-  } else {
+  } else if (
+    !publishStatus.linked_to_iati &&
+    publishStatus.status === 'draft'
+  ) {
     return 'Publish';
+  } else {
+    return '';
   }
 });
 </script>

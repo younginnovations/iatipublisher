@@ -151,7 +151,7 @@ class ActivityController extends Controller
             $transactions = $this->transactionService->getActivityTransactions($activity->id);
             $status = $activity->element_status;
             $progress = $this->activityService->activityPublishingProgress($activity);
-            $coreCompleted = isCoreElementCompleted(getCoreElements());
+            $coreCompleted = isCoreElementCompleted(array_merge(['reporting_org' => $activity->organization->reporting_org_complete_status], $activity->element_status));
             $iatiValidatorResponse = null;
             $validatorResponse = $this->activityValidatorResponseService->getValidatorResponse($id);
 

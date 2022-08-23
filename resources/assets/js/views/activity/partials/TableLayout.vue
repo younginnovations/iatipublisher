@@ -42,16 +42,19 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="datum in data.data" :key="datum['id']">
+        <tr
+          v-for="datum in data.data"
+          :key="datum['id']"
+          :class="{ already_published: datum['already_published'] }"
+        >
           <td class="title">
             <div
               class="inline-flex items-start transition duration-500 hover:text-spring-50"
             >
-              <svg-vue
+              <PreviouslyPublished
                 v-if="datum['already_published']"
-                class="mt-1 mr-3 text-base shrink-0 text-spring-50"
-                icon="approved-cloud"
-              ></svg-vue>
+                class="absolute top-0 left-0"
+              />
               <div class="relative ellipsis">
                 <a
                   :href="'/activities/' + datum['id']"
@@ -91,16 +94,13 @@
           </td>
 
           <td>
-            <button
-              v-if="
-                datum['status'] !== 'draft' && datum['status'] !== 'published'
-              "
-              class="w-20 button primary-outline-btn"
-            >
-              {{
-                datum['status'] === 'ready_to_publish' ? 'Publish' : 'RePublish'
-              }}
-            </button>
+            <Publish
+              v-if="datum['status'] !== 'published'"
+              :already-published="datum.already_published"
+              :linked-to-iati="datum.linked_to_iati"
+              :status="datum.status"
+              :core-completed="false"
+            />
           </td>
 
           <th class="check-column" @click="(e) => e.stopPropagation()">
@@ -130,6 +130,9 @@ import { useToggle } from '@vueuse/core';
 
 // Vuex Store
 import { useStore } from 'Store/activities/index';
+
+import PreviouslyPublished from 'Components/status/PreviouslyPublished.vue';
+import Publish from 'Components/sections/PublishButton.vue';
 
 const [selectAllValue, selectAllToggle] = useToggle();
 

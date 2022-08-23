@@ -72,7 +72,18 @@
               <UnPublish v-if="store.state.published" />
 
               <!-- Publish Activity -->
-              <Publish v-else />
+              <Publish
+                v-if="
+                  !(
+                    publishStatus.linked_to_iati &&
+                    publishStatus.status === 'published'
+                  )
+                "
+                :already-published="activityProps.already_published"
+                :linked-to-iati="activityProps.linked_to_iati"
+                :status="activityProps.status"
+                :core-completed="coreCompleted"
+              />
             </div>
           </div>
 
@@ -457,7 +468,6 @@ export default defineComponent({
     provide('coreCompleted', coreCompleted.value);
     provide('activityID', activity.value.id);
     provide('toastMessage', toastMessage);
-    provide('publishStatus', publishStatus);
     provide('openError', openError);
 
     /**
@@ -484,7 +494,7 @@ export default defineComponent({
       store.dispatch('updatePublishErrors', validationResult.errors);
     }
 
-    if (publishStatus.linked_to_iati && publishStatus.status === 'published') {
+    if (publishStatus.linked_to_iati) {
       store.dispatch('updatePublishedState', true);
     } else {
       store.dispatch('updatePublishedState', false);
@@ -507,6 +517,7 @@ export default defineComponent({
       breadcrumbData,
       store,
       openError,
+      activityProps,
     };
   },
 });

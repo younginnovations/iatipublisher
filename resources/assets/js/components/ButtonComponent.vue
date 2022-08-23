@@ -1,5 +1,5 @@
 <template>
-  <button class="relative font-bold button text-n-40" :class="btnType">
+  <button class="relative button text-n-40" :class="btnType">
     <svg-vue v-if="icon" :icon="icon" />
     <span v-if="text">{{ text }}</span>
   </button>
@@ -29,11 +29,11 @@ export default defineComponent({
   setup(props) {
     let btnType = '';
     if (props.type === 'secondary') {
-      btnType = 'secondary-btn';
+      btnType = 'secondary-btn font-bold';
     } else if (props.type === 'outline') {
       btnType = 'primary-outline-btn';
     } else if (props.type === 'primary') {
-      btnType = 'primary-btn';
+      btnType = 'primary-btn font-bold';
     }
     return { btnType };
   },
