@@ -4,19 +4,11 @@
       <thead>
         <tr class="bg-n-10">
           <th id="title" scope="col">
-            <a
-              class="text-n-50 transition duration-500 hover:text-spring-50"
-              href="#"
-            >
-              <span class="sorting-indicator descending">
-                <svg-vue icon="descending-arrow" />
-              </span>
-              <span>Activity Title</span>
-            </a>
+            <span>Activity Title</span>
           </th>
           <th id="date" scope="col">
             <a
-              class="text-n-50 transition duration-500 hover:text-spring-50"
+              class="transition duration-500 text-n-50 hover:text-spring-50"
               href="#"
             >
               <span class="sorting-indicator ascending">
@@ -29,7 +21,7 @@
             <span class="hidden">Status</span>
           </th>
           <th id="publish" scope="col">
-            <span class="hidden">Status</span>
+            <span class="hidden">Publish</span>
           </th>
           <th id="cb" scope="col">
             <span class="">
@@ -38,20 +30,20 @@
           </th>
         </tr>
       </thead>
-      <tbody>
+      <tbody v-if="data.total > 0">
         <tr v-for="datum in props.data.data" :key="datum['id']">
           <td class="title">
             <div
               class="inline-flex items-start transition duration-500 hover:text-spring-50"
             >
               <svg-vue
-                class="mr-3 mt-1 shrink-0 text-base text-spring-50"
+                class="mt-1 mr-3 text-base shrink-0 text-spring-50"
                 icon="approved-cloud"
               ></svg-vue>
-              <div class="ellipsis relative">
+              <div class="relative ellipsis">
                 <a
                   :href="'/activity/' + datum['id']"
-                  class="ellipsis overflow-hidden text-n-50"
+                  class="overflow-hidden ellipsis text-n-50"
                   >{{ datum['title'][0]['narrative'] ?? 'Untitled' }}</a
                 >
                 <div class="w-52">
@@ -69,7 +61,7 @@
 
           <td>
             <button
-              class="inline-flex items-center text-n-40 transition duration-500 hover:text-spring-50"
+              class="inline-flex items-center transition duration-500 text-n-40 hover:text-spring-50"
             >
               <span class="mr-1 text-base">
                 <svg-vue icon="document-write" />
@@ -83,7 +75,7 @@
               v-if="
                 datum['status'] !== 'draft' && datum['status'] !== 'published'
               "
-              class="button primary-outline-btn w-20"
+              class="w-20 button primary-outline-btn"
             >
               {{
                 datum['status'] === 'ready_to_publish' ? 'Publish' : 'RePublish'
@@ -106,6 +98,9 @@
             </label>
           </th>
         </tr>
+      </tbody>
+      <tbody v-else>
+        <td colspan="5" class="text-center">Activities not found</td>
       </tbody>
     </table>
   </div>

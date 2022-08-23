@@ -23,15 +23,7 @@
         <thead>
           <tr class="text-left bg-n-10">
             <th id="transaction_type" scope="col">
-              <a
-                class="transition duration-500 text-n-50 hover:text-spring-50"
-                href="#"
-              >
-                <span class="sorting-indicator descending">
-                  <svg-vue icon="descending-arrow" />
-                </span>
-                <span>Title</span>
-              </a>
+              <span>Title</span>
             </th>
             <th id="transaction_value" scope="col" width="190px">
               <a

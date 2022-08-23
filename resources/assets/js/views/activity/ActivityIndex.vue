@@ -24,8 +24,9 @@ import axios from 'axios';
 
 import EmptyActivity from './partials/EmptyActivity.vue';
 import TableLayout from './partials/TableLayout.vue';
-import Pagination from 'Components/TablePagination.vue';
 import PageTitle from './partials/PageTitle.vue';
+
+import Pagination from 'Components/TablePagination.vue';
 
 export default defineComponent({
   name: 'ActivityComponent',
@@ -39,10 +40,24 @@ export default defineComponent({
     const activities = reactive({});
 
     onMounted(async () => {
-      axios.get('/activities/page').then((res) => {
+      const currentURL = window.location.href;
+      let endpoint = '';
+      let showEmptyTemplate = false;
+
+      if (currentURL.includes('?')) {
+        const queryString = window.location.search;
+        endpoint = `/activities/page/${queryString}`;
+      } else {
+        endpoint = `/activities/page`;
+        showEmptyTemplate = true;
+      }
+
+      axios.get(endpoint).then((res) => {
         const response = res.data;
         Object.assign(activities, response.data);
-        isEmpty.value = response.data.data.length ? false : true;
+        if (showEmptyTemplate) {
+          isEmpty.value = response.data.data.length ? false : true;
+        }
       });
     });
 

@@ -5,7 +5,7 @@
   <Modal :modal-active="props.modalValue">
     <Loader v-if="loaderVisibility" />
 
-    <h5 class="title mb-5 flex text-2xl font-bold text-bluecoral">
+    <h5 class="flex mb-5 text-2xl font-bold title text-bluecoral">
       Add a title and identifier for the activity
     </h5>
     <div class="overflow-hidden">
@@ -20,7 +20,7 @@
             <p class="form-group-title">title</p>
           </div>
           <div class="form-group">
-            <div class="form__content gap-6">
+            <div class="gap-6 form__content">
               <div>
                 <div class="label-field">
                   <label class="label" for="narrative"
@@ -165,10 +165,10 @@
             </div>
           </div>
         </div>
-        <div class="mt-8 flex justify-end">
+        <div class="flex justify-end mt-8">
           <div class="inline-flex">
             <BtnComponent
-              class="mx-3 bg-white px-3 uppercase"
+              class="px-3 mx-3 uppercase bg-white"
               type=""
               text="Cancel"
               @click="closeModal"
@@ -236,7 +236,6 @@ export default defineComponent({
     onMounted(async () => {
       axios.get('/activities/codelists').then((res) => {
         const response = res.data;
-        console.log(res.data)
         Object.assign(languages, response.data.languages);
         Object.assign(organization, response.data.organization);
       });
