@@ -40,7 +40,7 @@ class OrganizationController extends Controller
             $types = $this->getOrganizationTypes();
             $organization = $this->organizationService->getOrganizationData(Auth::user()->organization_id);
             $progress = $this->organizationService->organizationMandatoryCompletePercentage($organization);
-            $mandatoryCompleted = isMandatoryElementCompleted(getMandatoryElements());
+            $mandatoryCompleted = isMandatoryElementCompleted($organization->element_status);
             $status = $organization->element_status;
             $organization['organisation_identifier'] = $organization['identifier'];
 

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin\Workflow;
 use App\Exceptions\PublisherNotFound;
 use App\Http\Controllers\Controller;
 use App\IATI\Services\Workflow\OrganizationWorkflowService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -34,9 +35,9 @@ class OrganizationWorkflowController extends Controller
      *
      * @param $organizationId
      *
-     * @return mixed
+     * @return JsonResponse
      */
-    public function publish()
+    public function publish():JsonResponse
     {
         try {
             $organizationId = Auth::user()->organization_id;

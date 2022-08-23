@@ -1,6 +1,7 @@
 <!-- eslint-disable vue/no-v-html -->
 <template>
   <BtnComponent
+    v-if="!publishStatus.is_published || publishStatus.status === 'draft'"
     class=""
     :text="btnText"
     type="primary"
@@ -37,27 +38,19 @@
     </div>
     <div class="flex justify-end">
       <div class="inline-flex">
-          <BtnComponent
-            v-if="publishStep == 0"
-            class="px-6 uppercase bg-white"
-            text="Go Back"
-            type=""
-            @click="stepMinusOne"
-          />
-          <BtnComponent
-            v-if="publishStep == 0"
-            class="space"
-            text="Continue"
-            type="primary"
-            @click="publishFunction"
-          />
-          <BtnComponent
-            v-if="publishStep == 0"
-            class="px-6 uppercase bg-white"
-            text="Continue"
-            type=""
-            @click="publishFunction"
-          />
+        <BtnComponent
+          v-if="!mandatoryElementStatus"
+          class="px-6 uppercase bg-white"
+          text="Add Missing Data"
+          type=""
+          @click="publishValue = false"
+        />
+        <BtnComponent
+          class="space"
+          text="Continue"
+          type="primary"
+          @click="publishFunction"
+        />
       </div>
     </div>
   </Modal>
@@ -132,55 +125,10 @@ const publishStateChange = computed(() => {
       publishState.icon = icon;
       publishState.alertState = mandatoryElementStatus;
       break;
-    //second step
-    // case 1:
-    //   publishState.title = ` will be validated before publishing`;
-    //   publishState.description = `This activity will be first validated before publishing the activity to the IATI Registry. `;
-    //   publishState.icon = `shield`;
-    //   publishState.alertState = false;
-    //   break;
-    // // case 2 is for success validation
-    // case 2:
-    //   publishState.title = `IATI Validation`;
-    //   publishState.description = `<p>Congratulations! No errors were found. Publish your data now.</p><p>This data will be available on the IATI Datastore and other data portals/tools/software that use IATI data.</p>`;
-    //   publishState.icon = `tick`;
-    //   publishState.alertState = true;
-    //   break;
-    // //case 3 is for validation with critical errors
-    // case 3:
-    //   publishState.title = `IATI Validation Issue`;
-    //   publishState.description = `<p><b></b>critical errors</b>, <b>errors</b> and <b>warnings</b> were found. View information about these errors/warnings at the top of the activity page.</p><p>As your data has at least one critical error, it will not be available on the IATI Datastore and may not be available on other data portals/tools/software that use IATI data.</p><p>We highly recommend you fix these issue(s) before publishing your activity to improve the quality and usefulness of your data.</p>`;
-    //   publishState.icon = `warning-fill`;
-    //   publishState.alertState = false;
-    //   break;
   }
 
   return publishState;
 });
-
-// increment and decrement function
-const stepPlusOne = () => {
-  if (publishStep.value >= 0 && publishStep.value < 1) {
-    publishStep.value++;
-  }
-};
-const stepMinusOne = () => {
-  if (publishStep.value > 0 && publishStep.value <= 1) {
-    publishStep.value--;
-  }
-};
-
-// reactive variable for errors number
-// interface Err {
-//   criticalNumber: number;
-//   errorNumber: number;
-//   warningNumber: number;
-// }
-// let err: Err = reactive({
-//   criticalNumber: 0,
-//   errorNumber: 0,
-//   warningNumber: 0,
-// });
 
 // call api for publishing
 interface ToastMessageTypeface {
@@ -197,19 +145,22 @@ const publishFunction = () => {
 
   axios.post(`/organisation/publish`).then((res) => {
     const response = res.data;
-    console.log(res.data);
     loader.value = false;
-    toastMessage.message = response.success ? response.success : response.error;
+    toastMessage.message = response.message;
     toastMessage.type = response.success;
     setTimeout(() => {
       loader.value = false;
     }, 2000);
+
+    if(response.success) {
+      publishStatus.is_published = true;
+      publishStatus.status = 'published';
+    }
   });
 };
 
 interface PublishStatusTypeface {
-  already_published: boolean;
-  linked_to_iati: boolean;
+  is_published: boolean;
   status: string;
 }
 
@@ -217,7 +168,7 @@ interface PublishStatusTypeface {
 const publishStatus = inject("publishStatus") as PublishStatusTypeface;
 
 const btnText = computed(() => {
-  if (publishStatus.linked_to_iati && publishStatus.status === "draft") {
+  if (publishStatus.is_published && publishStatus.status === "draft") {
     return "Republish";
   } else {
     return "Publish";
