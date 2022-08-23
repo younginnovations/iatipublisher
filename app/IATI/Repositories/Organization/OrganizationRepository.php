@@ -53,11 +53,10 @@ class OrganizationRepository extends Repository
      * @param $organization
      * @param $status
      * @param $alreadyPublished
-     * @param $linkedToIati
      *
      * @return bool
      */
-    public function updatePublishedStatus($organization, $status, $alreadyPublished, $linkedToIati): bool
+    public function updatePublishedStatus($organization, $status, $alreadyPublished): bool
     {
         $organization->status = $status;
         $organization->is_published = $alreadyPublished;

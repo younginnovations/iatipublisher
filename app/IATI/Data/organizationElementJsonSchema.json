@@ -254,7 +254,7 @@
             "name": "ref",
             "label": "@ref",
             "type": "text",
-            "required": true,
+            "required": false,
             "criteria": "",
             "hover_text": "An internal reference for this budget line taken from the reporting organisation’s own system. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/total-budget/budget-line/'>For more information</a>",
             "help_text": ""
@@ -736,8 +736,8 @@
             "name": "ref",
             "label": "@ref",
             "type": "text",
-            "required": false,
-            "criteria": "",
+            "required": true,
+            "criteria": "mandatory",
             "hover_text": "An internal reference for this budget line taken from the reporting organisation’s own system. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/recipient-region-budget/budget-line/'>For more information</a>",
             "help_text": ""
           }
@@ -1246,8 +1246,8 @@
             "name": "narrative",
             "label": "narrative",
             "type": "textarea",
-            "required": false,
-            "criteria": "",
+            "required": true,
+            "criteria": "mandatory",
             "add_more": true,
             "attr": {
               "row": 4
@@ -1282,8 +1282,8 @@
             "name": "narrative",
             "label": "narrative",
             "type": "textarea",
-            "required": false,
-            "criteria": "",
+            "required": true,
+            "criteria": "mandatory",
             "add_more": true,
             "attr": {
               "row": 4
@@ -1391,7 +1391,7 @@
             "name": "narrative",
             "label": "narrative",
             "type": "textarea",
-            "required": false,
+            "required": true,
             "criteria": "mandatory",
             "add_more": true,
             "attr": {

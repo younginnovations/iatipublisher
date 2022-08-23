@@ -8,7 +8,7 @@
     }"
   >
     <div class="elements-detail">
-      <div class="flex category">
+      <div class="category flex">
         <a v-if="document_link.url" :href="document_link.url" target="_blank">
           {{ document_link.url }}
         </a>
@@ -17,39 +17,6 @@
       <div class="ml-4">
         <table>
           <tbody>
-            <tr>
-              <td>Language</td>
-              <td>
-                <div
-                  v-for="(language, i) in document_link.language"
-                  :key="i"
-                  class="item"
-                  :class="{ 'mb-1.5': i != document_link.language.length - 1 }"
-                >
-                  <span v-if="language.code">
-                    ({{
-                      language.code
-                        ? `Language: ${types?.languages[language.code]}`
-                        : 'Language : Not Available'
-                    }})
-                  </span>
-                </div>
-              </td>
-            </tr>
-            <tr>
-              <td>Date</td>
-              <td>
-                <div
-                  v-for="(document_date, i) in document_link.document_date"
-                  :key="i"
-                >
-                  <span v-if="document_date.date">
-                    {{ formatDate(document_date.date) }}
-                  </span>
-                  <span v-else class="italic">Not Available</span>
-                </div>
-              </td>
-            </tr>
             <tr>
               <td>Title</td>
               <td>
@@ -78,6 +45,61 @@
               </td>
             </tr>
             <tr>
+              <td>Description</td>
+              <td>
+                <div
+                  v-for="(narrative, j) in document_link.description['0']
+                    .narrative"
+                  :key="j"
+                  class="description-content"
+                  :class="{
+                    'mb-4': j != document_link.description['0'].length - 1,
+                  }"
+                >
+                  <div class="language mb-1.5">
+                    ({{
+                      narrative.language
+                        ? `Language: ${types?.languages[narrative.language]}`
+                        : 'Language : Not Available'
+                    }})
+                  </div>
+                  <div class="w-[500px] max-w-full text-sm">
+                    {{ narrative.narrative ?? 'Narrative Not Available' }}
+                  </div>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td>Language</td>
+              <td>
+                <div
+                  class="item"
+                  :class="{ 'mb-1.5': i != document_link.language.length - 1 }"
+                >
+                  <span v-if="document_link.language.length">
+                    {{
+                      document_link.language
+                        .map((entry) => types.languages[entry.code])
+                        .join(', ')
+                    }}
+                    <!-- ({{
+                      language.code
+                        ? `${types?.languages[language.code]}`
+                        : 'Language : Not Available'
+                    }}) -->
+                  </span>
+                  <span v-else> Not Available </span>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td>Format</td>
+              <td v-if="document_link.format">
+                {{ document_link.format }}
+              </td>
+              <td v-else class="italic">Not Available</td>
+            </tr>
+            <tr>
               <td>Category</td>
               <td>
                 <div
@@ -100,34 +122,16 @@
               </td>
             </tr>
             <tr>
-              <td>Format</td>
-              <td v-if="document_link.format">
-                {{ document_link.format }}
-              </td>
-              <td v-else class="italic">Not Available</td>
-            </tr>
-            <tr>
-              <td>Narrative</td>
+              <td>Document Date</td>
               <td>
                 <div
-                  v-for="(narrative, j) in document_link.description['0']
-                    .narrative"
-                  :key="j"
-                  class="description-content"
-                  :class="{
-                    'mb-4': j != document_link.description['0'].length - 1,
-                  }"
+                  v-for="(document_date, i) in document_link.document_date"
+                  :key="i"
                 >
-                  <div class="language mb-1.5">
-                    ({{
-                      narrative.language
-                        ? `Language: ${types?.languages[narrative.language]}`
-                        : 'Language : Not Available'
-                    }})
-                  </div>
-                  <div class="w-[500px] max-w-full text-sm">
-                    {{ narrative.narrative ?? 'Narrative Not Available' }}
-                  </div>
+                  <span v-if="document_date.date">
+                    {{ formatDate(document_date.date) }}
+                  </span>
+                  <span v-else class="italic">Not Available</span>
                 </div>
               </td>
             </tr>

@@ -26,13 +26,10 @@ return new class extends Migration {
             $table->json('total_budget')->nullable();
             $table->json('recipient_org_budget')->nullable();
             $table->json('default_field_values')->nullable();
-            $table->boolean('already_published')->default(0);
-            $table->boolean('linked_to_iati')->default(0);
             $table->json('recipient_region_budget')->nullable();
             $table->json('recipient_country_budget')->nullable();
             $table->json('document_link')->nullable();
             $table->json('total_expenditure')->nullable();
-            $table->json('organisation_identifier')->nullable();
             $table->json('name')->nullable();
             $table->boolean('reporting_org_complete_status')->nullable()->default(false);
             $table->string('country')->nullable();

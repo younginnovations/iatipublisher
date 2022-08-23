@@ -53,13 +53,11 @@ class OrganizationWorkflowController extends Controller
 
             return response()->json(['success' => true, 'message' => 'Organization has been published successfully.']);
         } catch (PublisherNotFound $message) {
-            dd($message);
             DB::rollBack();
             logger()->error($message->getMessage());
 
             return response()->json(['success' => false, 'message' => $message->getMessage()]);
         } catch (\Exception $e) {
-            dd($e);
             DB::rollBack();
             logger()->error($e->getMessage());
 
@@ -96,9 +94,9 @@ class OrganizationWorkflowController extends Controller
      *
      * @param $organizationId
      *
-     * @return \Illuminate\Http\RedirectResponse|void
+     * @return JsonResponse
      */
-    public function unpublish($organizationId)
+    public function unpublish($organizationId): JsonResponse
     {
         try {
             DB::beginTransaction();

@@ -26,7 +26,13 @@
           <tr>
             <td>Secondary Reporter</td>
             <td>
-              {{ reporting_org.secondary_reporter ? 'True' : 'False' }}
+              {{
+                parseInt(reporting_org.secondary_reporter)
+                  ? 'True'
+                  : reporting_org.secondary_reporter
+                  ? 'False'
+                  : 'Not Available'
+              }}
             </td>
           </tr>
           <tr>

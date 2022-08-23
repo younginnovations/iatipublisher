@@ -63,7 +63,6 @@ class ActivityService
     {
         $activity_identifier = [
             'activity_identifier'  => $input['activity_identifier'],
-            'iati_identifier_text' => Auth::user()->organization->identifier . '-' . $input['activity_identifier'],
         ];
 
         $activity_title = [

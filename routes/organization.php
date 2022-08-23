@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::name('admin.')->group(function () {
     // Route::resource('/organisation', \App\Http\Controllers\Admin\Organization\OrganizationController::class);
-    Route::get('/organisation', [\App\Http\Controllers\Admin\Organization\OrganizationController::class, 'index'])->name('organisation.index');
+    Route::get('/organisation', [\App\Http\Controllers\Admin\Organization\OrganizationController::class, 'show'])->name('organisation.index');
 
     Route::get('/organisation/agency/{country}', [\App\Http\Controllers\Admin\Organization\OrganizationController::class, 'getRegistrationAgency'])->name('organisation.get.agency');
     Route::get('organisation/name', [\App\Http\Controllers\Admin\Organization\NameController::class, 'edit'])->name('organisation.name.edit');

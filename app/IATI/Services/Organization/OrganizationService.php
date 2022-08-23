@@ -110,13 +110,12 @@ class OrganizationService
      * @param $organization
      * @param $status
      * @param $alreadyPublished
-     * @param $linkedToIati
      *
      * @return bool
      */
-    public function updatePublishedStatus($organization, $status, $alreadyPublished, $linkedToIati): bool
+    public function updatePublishedStatus($organization, $status, $alreadyPublished): bool
     {
-        return $this->organizationRepo->updatePublishedStatus($organization, $status, $alreadyPublished, $linkedToIati);
+        return $this->organizationRepo->updatePublishedStatus($organization, $status, $alreadyPublished);
     }
 
     /**

@@ -39,7 +39,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="datum in props.data.data" :key="datum['id']">
+        <tr v-for="datum in data.data" :key="datum['id']">
           <td class="title">
             <div
               class="inline-flex items-start transition duration-500 hover:text-spring-50"
@@ -112,7 +112,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive } from 'vue';
+import { defineComponent, reactive, toRefs } from 'vue';
 import moment from 'moment';
 
 export default defineComponent({

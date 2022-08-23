@@ -154,6 +154,11 @@ class ActivityController extends Controller
             $coreCompleted = isCoreElementCompleted(getCoreElements());
             $iatiValidatorResponse = null;
             $validatorResponse = $this->activityValidatorResponseService->getValidatorResponse($id);
+            $organization_identifier = $activity->organization->identifier;
+            $activity->iati_identifier = [
+                'activity_identifier' => $activity->iati_identifier['activity_identifier'],
+                'iati_identifier_text' => $activity->organization->identifier . '-' . $activity->iati_identifier['activity_identifier'],
+            ];
 
             if ($validatorResponse) {
                 $iatiValidatorResponse = $validatorResponse->response;
@@ -161,9 +166,10 @@ class ActivityController extends Controller
 
             return view(
                 'admin.activity.show',
-                compact('elements', 'elementGroups', 'progress', 'activity', 'toast', 'types', 'status', 'results', 'hasIndicatorPeriod', 'transactions', 'coreCompleted', 'iatiValidatorResponse')
+                compact('elements', 'elementGroups', 'progress', 'activity', 'toast', 'types', 'status', 'results', 'hasIndicatorPeriod', 'transactions', 'coreCompleted', 'iatiValidatorResponse', 'organization_identifier')
             );
         } catch (Exception $e) {
+            dd($e);
             logger()->error($e->getMessage());
 
             return response()->json(['success' => false, 'error' => 'Error has occurred rendering activity detail page']);

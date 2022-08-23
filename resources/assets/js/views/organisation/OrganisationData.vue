@@ -43,6 +43,13 @@
                       : "Untitled"
                   }}
                 </span>
+                 <span class="ellipsis__title--hover w-[calc(100%_+_35px)]">
+                    {{
+                      organization.name
+                        ? organization.name["0"].narrative ?? "Untitled"
+                        : "Untitled"
+                    }}
+                  </span>
               </h4>
             </div>
           </div>
