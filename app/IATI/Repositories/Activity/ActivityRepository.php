@@ -8,7 +8,6 @@ use App\IATI\Models\Activity\Activity;
 use App\IATI\Repositories\Repository;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\Support\Facades\DB;
 
 /**
  * Class ActivityRepository.
@@ -89,10 +88,8 @@ class ActivityRepository extends Repository
             }
         }
 
-        return DB::table('activities')
-                 ->selectRaw('*')
-                 ->whereRaw($whereSql, $bindParams)
-                 ->orderBy($orderBy, $direction)
-                 ->paginate(1, ['*'], 'activity', $page);
+        return $this->model->whereRaw($whereSql, $bindParams)
+                    ->orderBy($orderBy, $direction)
+                    ->paginate(1, ['*'], 'activity', $page);
     }
 }

@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 
 if (!function_exists('dashesToCamelCase')) {
@@ -473,5 +474,31 @@ if (!function_exists('getTableConfig')) {
         $tableConfig = ['activity' => ['orderBy' => ['updated_at'], 'direction' => ['asc', 'desc']]];
 
         return $tableConfig[$module];
+    }
+}
+
+if (!function_exists('getOrgDefaultConfig')) {
+    /**
+     * @throws JsonException
+     */
+    function getOrgDefaultConfig($module = ''): array|string
+    {
+        $default = json_decode(Auth::user()->organization->settings->default_values, true, 512, JSON_THROW_ON_ERROR);
+
+        if (!empty($module) && array_key_exists($module, $default) && !empty($default[$module])) {
+            return $default[$module];
+        }
+
+        return $default;
+    }
+}
+
+if (!function_exists('getOrgDefaultLanguage')) {
+    /**
+     * @throws JsonException
+     */
+    function getOrgDefaultLanguage(): string
+    {
+        return getOrgDefaultConfig('default_language');
     }
 }
