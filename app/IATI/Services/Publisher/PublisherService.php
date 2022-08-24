@@ -35,13 +35,13 @@ class PublisherService extends RegistryApiHandler
     {
         $this->setFile($activityPublished);
         $this->init(env('IATI_API_ENDPOINT'), Arr::get($registryInfo, 'api_token', ''))
-             ->setPublisher(Arr::get($registryInfo, 'publisher_id', ''));
+            ->setPublisher(Arr::get($registryInfo, 'publisher_id', ''));
         $this->searchForPublisher($this->publisherId);
         $this->publishToRegistry($organization, $activityPublished->filename);
     }
 
     /**
-     * Publishes the activity xml file to the IATI registry.
+     * Publishes the organization xml file to the IATI registry.
      *
      * @param $registryInfo
      * @param $organizationPublished
@@ -51,9 +51,25 @@ class PublisherService extends RegistryApiHandler
     {
         $this->organizationPublished = $organizationPublished;
         $this->init(env('IATI_API_ENDPOINT'), Arr::get($registryInfo, 'api_token', ''))
-             ->setPublisher(Arr::get($registryInfo, 'publisher_id', ''));
+            ->setPublisher(Arr::get($registryInfo, 'publisher_id', ''));
         $this->searchForPublisher($this->publisherId);
         $this->publishOrganizationToRegistry($organization, $organizationPublished->filename);
+    }
+
+    /**
+     * Publishes the organization xml file to the IATI registry.
+     *
+     * @param $registryInfo
+     * @param $organizationPublished
+     * @param $organization
+     */
+    public function unpublishOrganizationFile($registryInfo, $organizationPublished, $organization)
+    {
+        $this->organizationPublished = $organizationPublished;
+        $this->init(env('IATI_API_ENDPOINT'), Arr::get($registryInfo, 'api_token', ''))
+            ->setPublisher(Arr::get($registryInfo, 'publisher_id', ''));
+        $this->searchForPublisher($this->publisherId);
+        $this->unpublishOrganizationFromRegistry($organization, $organizationPublished->filename);
     }
 
     /**
@@ -103,6 +119,21 @@ class PublisherService extends RegistryApiHandler
         }
 
         $this->updateStatus();
+    }
+
+    /**
+     * Publish File to the IATI Registry.
+     *
+     * @param $organization
+     * @param $filename
+     */
+    protected function unpublishOrganizationFromRegistry($organization, $filename)
+    {
+        $packageId = $this->extractPackage($filename);
+
+        if ($this->isPackageAvailable($packageId, $this->apiKey)) {
+            $this->client->package_delete($packageId);
+        }
     }
 
     /**

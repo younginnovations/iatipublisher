@@ -34,12 +34,9 @@ class OrganizationObserver
     public function getUpdatedElement($updatedAttributes): array
     {
         $elements = getOrganizationElements();
-        // dd($updatedAttributes, $elements);
         $updatedElements = [];
 
-        // unset($elements['organization_identifier']);
         $elements[] = 'identifier';
-        // dd($elements);
 
         foreach ($updatedAttributes as $element => $updatedAttribute) {
             if (in_array($element, $elements, true)) {
@@ -65,7 +62,6 @@ class OrganizationObserver
         $updatedElements = ($isNew) ? $this->getUpdatedElement($model->getAttributes()) : $this->getUpdatedElement($model->getChanges());
 
         foreach ($updatedElements as $attribute => $value) {
-            // dd($elementStatus, $attribute, call_user_func([$this->organizationElementCompleteService, dashesToCamelCase('is_' . $attribute . '_element_completed')], $model));
             $elementStatus[$attribute] = call_user_func([$this->organizationElementCompleteService, dashesToCamelCase('is_' . $attribute . '_element_completed')], $model);
         }
 

@@ -101,6 +101,10 @@ class OrganizationWorkflowService
     public function unpublishOrganization($organization): void
     {
         $publishedFile = $this->organizationPublishedService->getOrganizationPublished($organization->org_id);
+        $settings = $organization->settings;
+        $organizationPublished = $this->organizationPublishedService->getOrganizationPublished($organization->id);
+        $publishingInfo = $settings->publishing_info;
+        $this->publisherService->unpublishOrganizationFile($publishingInfo, $organizationPublished, $organization);
         $this->organizationService->updatePublishedStatus($organization, 'draft', false);
     }
 }

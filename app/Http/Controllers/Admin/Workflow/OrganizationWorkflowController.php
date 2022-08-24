@@ -92,17 +92,16 @@ class OrganizationWorkflowController extends Controller
     /**
      * Unpublish an organization from the IATI registry.
      *
-     * @param $organizationId
-     *
      * @return JsonResponse
      */
-    public function unpublish($organizationId): JsonResponse
+    public function unpublish(): JsonResponse
     {
         try {
             DB::beginTransaction();
+            $organizationId = Auth::user()->organization_id;
             $organization = $this->organizationWorkflowService->findOrganization($organizationId);
 
-            if (!$organization->already_published && $organization->status === 'draft') {
+            if (!$organization->is_published && $organization->status === 'draft') {
                 return redirect()->route('admin.activities.index')->with('error', 'This organization has not been published to un-publish.');
             }
 

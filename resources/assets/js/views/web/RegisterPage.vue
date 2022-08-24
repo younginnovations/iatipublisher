@@ -2,14 +2,14 @@
   <section class="section mb-7 sm:mx-10 sm:mb-10 md:mb-14 xl:mx-24 xl:px-1">
     <Loader v-if="isLoaderVisible" />
     <div class="section__container">
-      <div class="leading-10 text-center section__title mt-7 sm:mt-14">
+      <div class="section__title mt-7 text-center leading-10 sm:mt-14">
         <h2>Create IATI Publisher Account</h2>
         <p>
           Register your organisation to start your IATI publishing journey by
           creating an account in IATI publisher.
         </p>
       </div>
-      <div class="flex section__wrapper">
+      <div class="section__wrapper flex">
         <EmailVerification v-if="checkStep('3')" :email="formData['email']" />
         <div v-else class="form input__field" @keyup.enter="goToNextForm">
           <div class="form__container">
@@ -26,9 +26,9 @@
             </div>
             <div
               v-if="!publisherExists"
-              class="h-32 p-4 mt-6 text-sm border-l-2 feedback border-crimson-50 bg-crimson-10 text-n-50"
+              class="feedback mt-6 h-32 border-l-2 border-crimson-50 bg-crimson-10 p-4 text-sm text-n-50"
             >
-              <p class="flex mb-2 font-bold">
+              <p class="mb-2 flex font-bold">
                 <svg-vue class="mr-2 text-xl" icon="warning" />
                 Sorry, the information you provided doesn’t match your IATI
                 Registry information.
@@ -60,7 +60,7 @@
                 :key="key"
                 :class="field.class"
               >
-                <div class="flex items-center justify-between mb-2">
+                <div class="mb-2 flex items-center justify-between">
                   <label :for="field.id" class="label"
                     >{{ field['label'] }}
                     <span v-if="field.required" class="text-salmon-40"> *</span>
@@ -139,14 +139,14 @@
             <span v-if="checkStep(1)" class="text-sm font-normal text-n-40"
               >Already have an account?
               <a
-                class="font-bold border-b-2 border-b-transparent text-bluecoral hover:border-b-2 hover:border-b-turquoise hover:text-bluecoral"
+                class="border-b-2 border-b-transparent font-bold text-bluecoral hover:border-b-2 hover:border-b-turquoise hover:text-bluecoral"
                 href="/"
                 >Sign In.</a
               ></span
             >
             <button
               v-if="!checkStep(3)"
-              class="w-40 btn btn-next"
+              class="btn btn-next w-40"
               @click="goToNextForm()"
             >
               Next Step
@@ -157,7 +157,7 @@
             <span class="text-sm font-normal text-n-40"
               >Already have an account?
               <a
-                class="font-bold border-b-2 border-b-transparent text-bluecoral hover:border-b-2 hover:border-b-turquoise hover:text-bluecoral"
+                class="border-b-2 border-b-transparent font-bold text-bluecoral hover:border-b-2 hover:border-b-turquoise hover:text-bluecoral"
                 href="/"
                 >Sign In.</a
               ></span
@@ -199,7 +199,7 @@
               </div>
               <p
                 v-if="checkStep(key)"
-                class="mt-2 mb-6 font-normal detail xl:pr-2"
+                class="detail mt-2 mb-6 font-normal xl:pr-2"
               >
                 {{ form['description'] }}
               </p>
