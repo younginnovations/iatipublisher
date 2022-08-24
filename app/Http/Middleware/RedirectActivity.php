@@ -91,7 +91,9 @@ class RedirectActivity
             $activity = [];
 
             if ($module === 'activity') {
-                if (!$this->activityService->activityExists($id)) {
+                $activity = $this->activityService->getActivity($id);
+
+                if ($activity === null) {
                     return redirect(RouteServiceProvider::HOME)->with('error', 'Activity does not exist');
                 }
 
@@ -120,7 +122,7 @@ class RedirectActivity
                 $result = $this->resultService->getResult($id);
 
                 if ($result === null) {
-                    return redirect(RouteServiceProvider::HOME);
+                    return redirect(RouteServiceProvider::HOME)->with('error', 'Result does not exist');
                 }
 
                 if (in_array($subModule, ['indicator', 'indicators'])) {
@@ -158,11 +160,11 @@ class RedirectActivity
                 $activity = $indicator->result->activity;
             }
 
-            if ($activity && !$activity->isActivityOfOrg()) {
-                return redirect(RouteServiceProvider::HOME)->with('error', 'Activity does not exist');
+            if ($activity && $activity->isActivityOfOrg()) {
+                return $next($request);
             }
 
-            return $next($request);
+            return redirect(RouteServiceProvider::HOME)->with('error', 'Activity does not exist');
         }
 
         return abort(404);
