@@ -68,7 +68,7 @@
                       }}
                       )
                     </div>
-                    <div class="w-[500px] max-w-full text-sm">
+                    <div class="w-[500px] max-w-full">
                       {{ narrative.narrative ?? 'Narrative Not Available' }}
                     </div>
                   </div>
@@ -139,7 +139,7 @@
                               : 'Language : Not Available'
                           }})
                         </div>
-                        <div class="w-[500px] max-w-full text-sm">
+                        <div class="w-[500px] max-w-full">
                           {{ narrative.narrative ?? 'Narrative Not Available' }}
                         </div>
                       </div>

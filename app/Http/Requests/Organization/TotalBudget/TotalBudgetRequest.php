@@ -16,24 +16,32 @@ class TotalBudgetRequest extends OrganizationBaseRequest
      *
      * @return array
      */
-    public function rules()
+    public function rules(): array
     {
         return $this->getRulesForTotalBudget($this->get('total_budget'));
     }
 
-    public function messages()
+    /**
+     * Get the validation message that apply to the request.
+     *
+     * @return array
+     */
+    public function messages(): array
     {
         return $this->getMessagesForTotalBudget($this->get('total_budget'));
     }
 
     /**
      * returns rules for total budget form.
+     *
      * @param $formFields
+     *
      * @return array
      */
-    public function getRulesForTotalBudget($formFields)
+    public function getRulesForTotalBudget($formFields): array
     {
         $rules = [];
+
         foreach ($formFields as $totalBudgetIndex => $totalBudget) {
             $diff = 0;
             $start = $totalBudget['period_start'][0]['date'];
@@ -58,12 +66,15 @@ class TotalBudgetRequest extends OrganizationBaseRequest
 
     /**
      * returns messages for total budget form rules.
+     *
      * @param $formFields
+     *
      * @return array
      */
-    public function getMessagesForTotalBudget($formFields)
+    public function getMessagesForTotalBudget($formFields): array
     {
         $messages = [];
+
         foreach ($formFields as $totalBudgetIndex => $totalBudget) {
             $totalBudgetForm = sprintf('total_budget.%s', $totalBudgetIndex);
             $messages = array_merge(

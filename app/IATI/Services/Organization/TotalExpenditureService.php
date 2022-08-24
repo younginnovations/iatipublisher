@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace App\IATI\Services\Organization;
 
-use App\IATI\Repositories\Organization\TotalExpenditureRepository;
+use App\IATI\Elements\Builder\ParentCollectionFormCreator;
+use App\IATI\Repositories\Organization\OrganizationRepository;
 use App\IATI\Traits\OrganizationXmlBaseElements;
 use Illuminate\Database\Eloquent\Model;
+use Kris\LaravelFormBuilder\Form;
 
 /**
  * Class TotalExpenditureService.
@@ -16,18 +18,25 @@ class TotalExpenditureService
     use OrganizationXmlBaseElements;
 
     /**
-     * @var TotalExpenditureRepository
+     * @var OrganizationRepository
      */
-    protected TotalExpenditureRepository $totalExpenditureRepository;
+    protected OrganizationRepository $organizationRepository;
+
+    /**
+     * @var ParentCollectionFormCreator
+     */
+    protected ParentCollectionFormCreator $parentCollectionFormCreator;
 
     /**
      * TotalExpenditureService constructor.
      *
-     * @param TotalExpenditureRepository $totalExpenditureRepository
+     * @param OrganizationRepository $organizationRepository
+     * @param ParentCollectionFormCreator $parentCollectionFormCreator
      */
-    public function __construct(TotalExpenditureRepository $totalExpenditureRepository)
+    public function __construct(OrganizationRepository $organizationRepository, ParentCollectionFormCreator $parentCollectionFormCreator)
     {
-        $this->totalExpenditureRepository = $totalExpenditureRepository;
+        $this->organizationRepository = $organizationRepository;
+        $this->parentCollectionFormCreator = $parentCollectionFormCreator;
     }
 
     /**
@@ -39,7 +48,7 @@ class TotalExpenditureService
      */
     public function getTotalExpenditureData(int $organization_id): ?array
     {
-        return $this->totalExpenditureRepository->getTotalExpenditureData($organization_id);
+        return $this->organizationRepository->find($organization_id)->total_expenditure;
     }
 
     /**
@@ -51,34 +60,63 @@ class TotalExpenditureService
      */
     public function getOrganizationData($id): Model
     {
-        return $this->totalExpenditureRepository->getOrganizationData($id);
+        return $this->organizationRepository->find($id);
     }
 
     /**
      * Updates Organization total expenditure.
      *
+     * @param $id
      * @param $totalExpenditure
-     * @param $organization
      *
      * @return bool
      */
-    public function update($totalExpenditure, $organization): bool
+    public function update($id, $totalExpenditure): bool
     {
-        return $this->totalExpenditureRepository->update($totalExpenditure, $organization);
+        $totalExpenditure['total_expenditure'] = array_values($totalExpenditure['total_expenditure']);
+
+        foreach ($totalExpenditure['total_expenditure'] as $key => $budget) {
+            foreach ($budget['expense_line'] as $sub_index => $sub_element) {
+                $totalExpenditure['total_expenditure'][$key]['expense_line'][$sub_index]['narrative'] = array_values($sub_element['narrative']);
+            }
+
+            $totalExpenditure['total_expenditure'][$key]['expense_line'] = array_values($totalExpenditure['total_expenditure'][$key]['expense_line']);
+        }
+
+        $totalExpenditure = $totalExpenditure['total_expenditure'];
+
+        return $this->organizationRepository->update($id, ['total_expenditure' => $totalExpenditure]);
     }
 
     /**
+     * Generates total expenditure form.
+     *
+     * @param $id
+     */
+    public function formGenerator($id): Form
+    {
+        $element = json_decode(file_get_contents(app_path('IATI/Data/organizationElementJsonSchema.json')), true);
+        $model['total_expenditure'] = $this->getTotalExpenditureData($id) ?? [];
+        $this->parentCollectionFormCreator->url = route('admin.organisation.total-expenditure.update', [$id]);
+
+        return $this->parentCollectionFormCreator->editForm($model, $element['total_expenditure'], 'PUT', '/organisation');
+    }
+
+    /**
+     * Generates total_expenditure xml data.
+     *
      * @param $orgData
+     *
      * @return array
      */
-    public function getXmlData($orgData)
+    public function getXmlData($orgData): array
     {
         $orgTotalExpenseData = [];
         $totalBudget = (array) $orgData->total_expenditure;
+
         foreach ($totalBudget as $orgTotalExpense) {
             $orgTotalExpenseData[] = [
                 '@attributes'  => [
-                    // 'status' => $orgTotalExpense['total_expenditure_status'],
                 ],
                 'period-start' => [
                     '@attributes' => [

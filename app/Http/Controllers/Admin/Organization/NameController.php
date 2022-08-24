@@ -6,10 +6,8 @@ namespace App\Http\Controllers\Admin\Organization;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Organization\Name\NameRequest;
-use App\IATI\Elements\Builder\BaseFormCreator;
 use App\IATI\Services\Organization\NameService;
 use Illuminate\Contracts\View\View;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
 
@@ -18,19 +16,18 @@ use Illuminate\Support\Facades\Auth;
  */
 class NameController extends Controller
 {
-    protected BaseFormCreator $baseFormCreator;
-
+    /**
+     * @var NameService
+     */
     protected NameService $nameService;
 
     /**
      * NameController Constructor.
      *
-     * @param BaseFormCreator $baseFormCreator
      * @param NameService    $nameService
      */
-    public function __construct(BaseFormCreator $baseFormCreator, NameService $nameService)
+    public function __construct(NameService $nameService)
     {
-        $this->baseFormCreator = $baseFormCreator;
         $this->nameService = $nameService;
     }
 
@@ -45,14 +42,13 @@ class NameController extends Controller
             $id = Auth::user()->organization_id;
             $element = json_decode(file_get_contents(app_path('IATI/Data/organizationElementJsonSchema.json')), true);
             $organization = $this->nameService->getOrganizationData($id);
-            $model['narrative'] = $this->nameService->getNameData($id);
-            $this->baseFormCreator->url = route('admin.organisation.name.update', [$id]);
-            $form = $this->baseFormCreator->editForm($model, $element['name'], 'PUT', '/organisation');
+            $form = $this->nameService->formGenerator($id);
             $status = $organization->name_element_completed ?? false;
             $data = ['core'=> $element['name']['criteria'] ?? false, 'status'=> $organization->name_element_completed ?? false, 'title'=> $element['name']['label'], 'name'=>'name'];
 
             return view('admin.organisation.forms.name.name', compact('form', 'organization', 'data'));
         } catch (\Exception $e) {
+            dd($e);
             logger()->error($e->getMessage());
 
             return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while opening organization name form.');
@@ -64,16 +60,15 @@ class NameController extends Controller
      *
      * @param NameRequest $request
      *
-     * @return JsonResponse|RedirectResponse
+     * @return RedirectResponse
      */
-    public function update(NameRequest $request): JsonResponse| RedirectResponse
+    public function update(NameRequest $request): RedirectResponse
     {
         try {
             $id = Auth::user()->organization_id;
-            $organizationData = $this->nameService->getOrganizationData($id);
-            $organizationTitle = $request->all();
+            $organizationName = $request->all();
 
-            if (!$this->nameService->update($organizationTitle, $organizationData)) {
+            if (!$this->nameService->update($id, $organizationName)) {
                 return redirect()->route('admin.organisation.index', $id)->with('error', 'Error has occurred while updating organization name.');
             }
 

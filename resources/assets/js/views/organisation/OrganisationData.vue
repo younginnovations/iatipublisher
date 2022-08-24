@@ -157,15 +157,9 @@
               </div>
             </Modal>
 
-            <!-- Unpublish Activity -->
-            <UnPublish
-              v-if="
-                publishStatus.is_published &&
-                publishStatus.status === 'published'
-              "
-            />
-            <!-- Publish Activity -->
-            <Publish />
+
+            <!-- Unpublish /Publish Activity -->
+            <PublishUnpublish />
           </div>
         </div>
       </div>
@@ -299,10 +293,7 @@ import OrganisationElementsDetail from './OrganisationElementsDetail.vue';
 import Modal from '../../components/PopupModal.vue';
 import BtnComponent from '../../components/ButtonComponent.vue';
 import Toast from '../../components/Toast.vue';
-import Publish from 'Components/sections/PublishButtonDynamic.vue';
-import UnPublish from 'Components/sections/OrganizationUnPublishButton.vue';
-
-import axios from "axios";
+import PublishUnpublish from 'Components/sections/OrganizationPublishUnpublishButton.vue';
 import { useToggle } from '@vueuse/core';
 
 export default defineComponent({
@@ -315,8 +306,7 @@ export default defineComponent({
     Modal,
     Toast,
     BtnComponent,
-    Publish,
-    UnPublish
+    PublishUnpublish,
   },
   props: {
     elements: {

@@ -22,28 +22,36 @@ class DocumentLinkRequest extends OrganizationBaseRequest
     }
 
     /**
+     * Rules for document link.
+     *
      * @return array
      */
-    public function rules()
+    public function rules(): array
     {
         return $this->getRulesForDocumentLink($this->get('document_link'));
     }
 
     /**
+     * Custom message for rules.
+     *
      * @return array
      */
-    public function messages()
+    public function messages(): array
     {
         return $this->getMessagesForDocumentLink($this->get('document_link'));
     }
 
     /**
+     * Rules for fields of document link form.
+     *
      * @param array $formFields
+     *
      * @return array
      */
-    public function getRulesForDocumentLink(array $formFields)
+    public function getRulesForDocumentLink(array $formFields): array
     {
         $rules = [];
+
         foreach ($formFields as $documentLinkIndex => $documentLink) {
             $documentLinkForm = sprintf(
                 'document_link.%s',
@@ -57,6 +65,7 @@ class DocumentLinkRequest extends OrganizationBaseRequest
                 $this->getRulesForNarrative($documentLink['title'][0]['narrative'], sprintf('%s.title.0', $documentLinkForm), true),
                 $this->getRulesForNarrative($documentLink['description'][0]['narrative'], sprintf('%s.description.0', $documentLinkForm)),
                 $this->getRulesForDocumentCategory($documentLink['category'], $documentLinkForm),
+                $this->getRulesForDocumentLanguage($documentLink['language'], $documentLinkForm),
                 $this->getRulesForRecipientCountry($documentLink['recipient_country'], $documentLinkForm)
             );
         }
@@ -65,12 +74,16 @@ class DocumentLinkRequest extends OrganizationBaseRequest
     }
 
     /**
+     * Custom message for document link.
+     *
      * @param array $formFields
+     *
      * @return array
      */
-    public function getMessagesForDocumentLink(array $formFields)
+    public function getMessagesForDocumentLink(array $formFields): array
     {
         $messages = [];
+
         foreach ($formFields as $documentLinkIndex => $documentLink) {
             $documentLinkForm = sprintf(
                 'document_link.%s',
@@ -88,6 +101,7 @@ class DocumentLinkRequest extends OrganizationBaseRequest
                 $this->getMessagesForNarrative($documentLink['title'][0]['narrative'], sprintf('%s.title.0', $documentLinkForm)),
                 $this->getMessagesForNarrative($documentLink['description'][0]['narrative'], sprintf('%s.description.0', $documentLinkForm)),
                 $this->getMessagesForDocumentCategory($documentLink['category'], $documentLinkForm),
+                $this->getMessagesForDocumentLanguage($documentLink['language'], $documentLinkForm),
                 $this->getMessagesForRecipientCountry($documentLink['recipient_country'], $documentLinkForm)
             );
         }
@@ -96,11 +110,14 @@ class DocumentLinkRequest extends OrganizationBaseRequest
     }
 
     /**
+     * Rules for document link category field.
+     *
      * @param $formFields
      * @param $formIndex
+     *
      * @return array
      */
-    public function getRulesForDocumentCategory($formFields, $formIndex)
+    public function getRulesForDocumentCategory($formFields, $formIndex): array
     {
         $rules = [];
         $rules[sprintf('%s.category', $formIndex)] = 'unique_category';
@@ -113,11 +130,14 @@ class DocumentLinkRequest extends OrganizationBaseRequest
     }
 
     /**
+     * Custom message for document link category.
+     *
      * @param $formFields
      * @param $formIndex
+     *
      * @return array
      */
-    public function getMessagesForDocumentCategory($formFields, $formIndex)
+    public function getMessagesForDocumentCategory($formFields, $formIndex): array
     {
         $messages = [];
         $messages[sprintf(
@@ -137,13 +157,64 @@ class DocumentLinkRequest extends OrganizationBaseRequest
     }
 
     /**
+     * Rules for document language code field.
+     *
      * @param $formFields
      * @param $formIndex
+     *
      * @return array
      */
-    public function getRulesForRecipientCountry($formFields, $formIndex)
+    public function getRulesForDocumentLanguage($formFields, $formIndex): array
     {
         $rules = [];
+        $rules[sprintf('%s.language', $formIndex)] = 'unique_category';
+
+        foreach ($formFields as $documentCategoryIndex => $documentCategory) {
+            $rules[sprintf('%s.language.%s.code', $formIndex, $documentCategoryIndex)] = 'nullable';
+        }
+
+        return $rules;
+    }
+
+    /**
+     * Custom message for document language.
+     *
+     * @param $formFields
+     * @param $formIndex
+     *
+     * @return array
+     */
+    public function getMessagesForDocumentLanguage($formFields, $formIndex): array
+    {
+        $messages = [];
+        $messages[sprintf(
+            '%s.language.unique_category',
+            $formIndex
+        )] = 'The language @code field must be unique.';
+
+        foreach ($formFields as $documentCategoryIndex => $documentCategory) {
+            $messages[sprintf(
+                '%s.language.%s.code.required',
+                $formIndex,
+                $documentCategoryIndex
+            )] = 'The @code field is required.';
+        }
+
+        return $messages;
+    }
+
+    /**
+     * Rules for recipient country of document link.
+     *
+     * @param $formFields
+     * @param $formIndex
+     *
+     * @return array
+     */
+    public function getRulesForRecipientCountry($formFields, $formIndex): array
+    {
+        $rules = [];
+
         foreach ($formFields as $recipientCountryIndex => $recipientCountryVal) {
             $budgetItemForm = sprintf('%s.recipient_country.%s', $formIndex, $recipientCountryIndex);
             $rules = array_merge(
@@ -156,13 +227,17 @@ class DocumentLinkRequest extends OrganizationBaseRequest
     }
 
     /**
+     * Custom rules for recipient country of document link.
+     *
      * @param $formFields
      * @param $formIndex
+     *
      * @return array
      */
-    public function getMessagesForRecipientCountry($formFields, $formIndex)
+    public function getMessagesForRecipientCountry($formFields, $formIndex): array
     {
         $messages = [];
+
         foreach ($formFields as $recipientCountryIndex => $recipientCountryVal) {
             $budgetItemForm = sprintf('%s.recipient_country.%s', $formIndex, $recipientCountryIndex);
             $messages = array_merge(

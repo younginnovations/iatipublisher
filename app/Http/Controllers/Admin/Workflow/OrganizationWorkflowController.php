@@ -37,7 +37,7 @@ class OrganizationWorkflowController extends Controller
      *
      * @return JsonResponse
      */
-    public function publish():JsonResponse
+    public function publish(): JsonResponse
     {
         try {
             $organizationId = Auth::user()->organization_id;
@@ -53,11 +53,13 @@ class OrganizationWorkflowController extends Controller
 
             return response()->json(['success' => true, 'message' => 'Organization has been published successfully.']);
         } catch (PublisherNotFound $message) {
+            dd($message);
             DB::rollBack();
             logger()->error($message->getMessage());
 
             return response()->json(['success' => false, 'message' => $message->getMessage()]);
         } catch (\Exception $e) {
+            dd($e);
             DB::rollBack();
             logger()->error($e->getMessage());
 
@@ -74,15 +76,20 @@ class OrganizationWorkflowController extends Controller
      */
     protected function hasNoPublisherInfo($settings): bool
     {
-        if (!$settings || !($registryInfo = $settings->publishing_info)) {
+        if (!$settings) {
+            return true;
+        }
+
+        $registryInfo = $settings->publishing_info;
+
+        if (!$registryInfo) {
             return true;
         }
 
         if (empty(Arr::get($registryInfo, 'publisher_id', null) ||
             empty(Arr::get($registryInfo, 'api_token', null)) ||
             Arr::get($registryInfo, 'publisher_verification', false) ||
-            Arr::get($registryInfo, 'token_verification', false)
-        )) {
+            Arr::get($registryInfo, 'token_verification', false))) {
             return true;
         }
 

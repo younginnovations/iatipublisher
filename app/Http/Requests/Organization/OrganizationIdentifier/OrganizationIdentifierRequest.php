@@ -7,7 +7,7 @@ namespace App\Http\Requests\Organization\OrganizationIdentifier;
 use Illuminate\Foundation\Http\FormRequest;
 
 /**
- * Class TotalBudgetRequest.
+ * Class OrganizationIdentifierRequest.
  */
 class OrganizationIdentifierRequest extends FormRequest
 {
@@ -16,7 +16,7 @@ class OrganizationIdentifierRequest extends FormRequest
      *
      * @return array
      */
-    public function rules()
+    public function rules(): array
     {
         return [
             'organization_registration_agency' => 'required',
@@ -26,9 +26,10 @@ class OrganizationIdentifierRequest extends FormRequest
 
     /**
      * Get the Validation Error message.
+     *
      * @return array
      */
-    public function messages()
+    public function messages(): array
     {
         return [
             'registration_number.not_regex' => 'The registration_number format is invalid.',

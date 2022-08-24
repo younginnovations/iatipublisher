@@ -160,35 +160,34 @@ class OrganizationBaseRequest extends FormRequest
 
     /**
      * returns rules for narrative form.
+     *
      * @param $formFields
      * @param $formBase
+     *
      * @return array
      */
-    public function getRulesForNarrative($formFields, $formBase, $required = null)
+    public function getRulesForNarrative($formFields, $formBase, $required = null): array
     {
         $rules = [];
         $rules[sprintf('%s.narrative', $formBase)][] = 'unique_lang';
         $rules[sprintf('%s.narrative', $formBase)][] = 'unique_default_lang';
-        // foreach ($formFields as $narrativeIndex => $narrative) {
-        //     $rules[sprintf('%s.narrative.%s.narrative', $formBase, $narrativeIndex)][] = 'required_with_language';
-        //     if ($required) {
-        //         $rules[sprintf('%s.narrative.%s.narrative', $formBase, $narrativeIndex)][] = 'required';
-        //     }
-        // }
 
         return $rules;
     }
 
     /**
      * returns messages for narrative form.
+     *
      * @param $formFields
      * @param $formBase
+     *
      * @return array
      */
-    public function getMessagesForNarrative($formFields, $formBase)
+    public function getMessagesForNarrative($formFields, $formBase): array
     {
         $messages = [];
         $messages[sprintf('%s.narrative.unique_lang', $formBase)] = 'The @xml:lang field must be unique.';
+
         foreach ($formFields as $narrativeIndex => $narrative) {
             $messages[sprintf('%s.narrative.%s.narrative.required', $formBase, $narrativeIndex)] = 'The narrative field is required.';
             $messages[sprintf(
@@ -203,17 +202,18 @@ class OrganizationBaseRequest extends FormRequest
 
     /**
      * returns rules for value form.
+     *
      * @param $formFields
      * @param $formBase
+     *
      * @return array
      */
-    public function getRulesForValue($formFields, $formBase)
+    public function getRulesForValue($formFields, $formBase): array
     {
         $rules = [];
+
         foreach ($formFields as $valueKey => $valueVal) {
             $valueForm = $formBase . '.value.' . $valueKey;
-            // $rules[$valueForm . '.amount'] = sprintf('required|numeric');
-            // $rules[$valueForm . '.value_date'] = sprintf('required|date');
             $rules[$valueForm . '.amount'] = sprintf('nullable|numeric');
             $rules[$valueForm . '.value_date'] = sprintf('nullable|date');
         }
@@ -223,13 +223,16 @@ class OrganizationBaseRequest extends FormRequest
 
     /**
      * returns messages for value form.
+     *
      * @param $formFields
      * @param $formBase
+     *
      * @return array
      */
-    public function getMessagesForValue($formFields, $formBase)
+    public function getMessagesForValue($formFields, $formBase): array
     {
         $messages = [];
+
         foreach ($formFields as $valueKey => $valueVal) {
             $valueForm = $formBase . '.value.' . $valueKey;
             $messages[$valueForm . '.amount.required'] = 'The amount field is required.';
@@ -243,13 +246,16 @@ class OrganizationBaseRequest extends FormRequest
 
     /**
      * returns rules for budget line form.
+     *
      * @param $formFields
      * @param $formBase
+     *
      * @return array
      */
-    public function getRulesForBudgetLine($formFields, $formBase)
+    public function getRulesForBudgetLine($formFields, $formBase): array
     {
         $rules = [];
+
         foreach ($formFields as $budgetLineKey => $budgetLineVal) {
             $budgetLineForm = $formBase . '.budget_line.' . $budgetLineKey;
             $rules = array_merge(
@@ -264,13 +270,16 @@ class OrganizationBaseRequest extends FormRequest
 
     /**
      * returns messages for budget line form.
+     *
      * @param $formFields
      * @param $formBase
+     *
      * @return array
      */
-    public function getMessagesBudgetLine($formFields, $formBase)
+    public function getMessagesBudgetLine($formFields, $formBase): array
     {
         $messages = [];
+
         foreach ($formFields as $budgetLineKey => $budgetLineVal) {
             $budgetLineForm = $formBase . '.budget_line.' . $budgetLineKey;
             $messages = array_merge(
@@ -285,16 +294,17 @@ class OrganizationBaseRequest extends FormRequest
 
     /**
      * returns rules for period start form.
+     *
      * @param $formFields
      * @param $formBase
+     *
      * @return array
      */
-    public function getRulesForPeriodStart($formFields, $formBase, $diff, $time_period = null)
+    public function getRulesForPeriodStart($formFields, $formBase, $diff, $time_period = null): array
     {
         $rules = [];
         foreach ($formFields as $periodStartKey => $periodStartVal) {
             $rules[$formBase . '.period_start.' . $periodStartKey . '.date'] = 'nullable|date|period_start_end:' . $diff . ',' . $time_period;
-            // $rules[$formBase . '.period_start.' . $periodStartKey . '.date'] = 'required|date';
         }
 
         return $rules;
@@ -302,13 +312,16 @@ class OrganizationBaseRequest extends FormRequest
 
     /**
      * returns messages for period start form.
+     *
      * @param $formFields
      * @param $formBase
+     *
      * @return array
      */
-    public function getMessagesForPeriodStart($formFields, $formBase)
+    public function getMessagesForPeriodStart($formFields, $formBase): array
     {
         $messages = [];
+
         foreach ($formFields as $periodStartKey => $periodStartVal) {
             $messages[$formBase . '.period_start.' . $periodStartKey . '.date.required'] = 'The @iso-date field is required.';
             $messages[$formBase . '.period_end.' . $periodStartKey . '.date.date'] = 'The @iso-date field must be a date.';
@@ -320,15 +333,17 @@ class OrganizationBaseRequest extends FormRequest
 
     /**
      * returns rules for period end form.
+     *
      * @param $formFields
      * @param $formBase
+     *
      * @return array
      */
-    public function getRulesForPeriodEnd($formFields, $formBase, $diff, $time_period = null)
+    public function getRulesForPeriodEnd($formFields, $formBase, $diff, $time_period = null): array
     {
         $rules = [];
+
         foreach ($formFields as $periodEndKey => $periodEndVal) {
-            // $rules[$formBase . '.period_end.' . $periodEndKey . '.date'] = sprintf('required|date|after:%s', $formBase . '.period_start.' . $periodEndKey . '.date');
             $rules[$formBase . '.period_end.' . $periodEndKey . '.date'] = sprintf('nullable|date|after:%s', $formBase . '.period_start.' . $periodEndKey . '.date|period_start_end:' . $diff . ',' . $time_period);
         }
 
@@ -337,13 +352,16 @@ class OrganizationBaseRequest extends FormRequest
 
     /**
      * returns messages for period end form.
+     *
      * @param $formFields
      * @param $formBase
+     *
      * @return array
      */
-    public function getMessagesForPeriodEnd($formFields, $formBase)
+    public function getMessagesForPeriodEnd($formFields, $formBase): array
     {
         $messages = [];
+
         foreach ($formFields as $periodEndKey => $periodEndVal) {
             $messages[$formBase . '.period_end.' . $periodEndKey . '.date.required'] = 'The @iso-date field is required.';
             $messages[$formBase . '.period_end.' . $periodEndKey . '.date.date'] = 'The @iso-date field must be a date.';
@@ -355,28 +373,16 @@ class OrganizationBaseRequest extends FormRequest
     }
 
     /** returns rules for budget line value or expense line value.
+     *
      * @param $formField
      * @param $formBase
-     * @return mixed
+     *
+     * @return array
      */
-    public function getRulesForBudgetOrExpenseLineValue($formField, $formBase)
+    public function getRulesForBudgetOrExpenseLineValue($formField, $formBase): array
     {
         $rules = [];
 
-        // foreach ($formField as $budgetLineIndex => $budgetLine) {
-        // $rules[$formBase . '.value.' . $budgetLineIndex . '.amount'] = sprintf(
-        //     'required_with:%s,%s,%s|nullable|numeric',
-        //     $formBase . '.value.' . $budgetLineIndex . '.value_date',
-        //     $formBase . '.reference',
-        //     $formBase . '.narrative.0.narrative'
-        // );
-        // $rules[$formBase . '.value.' . $budgetLineIndex . '.value_date'] = sprintf(
-        //     'required_with:%s,%s,%s|nullable|date',
-        //     $formBase . '.value.' . $budgetLineIndex . '.amount',
-        //     $formBase . '.reference',
-        //     $formBase . '.narrative.0.narrative'
-        // );
-        // }
         foreach ($formField as $budgetLineIndex => $budgetLine) {
             $rules[$formBase . '.value.' . $budgetLineIndex . '.amount'] = 'nullable|numeric';
             $rules[$formBase . '.value.' . $budgetLineIndex . '.value_date'] = 'nullable|date';
@@ -386,52 +392,52 @@ class OrganizationBaseRequest extends FormRequest
     }
 
     /** returns messages for budget line value or expense line value .
+     *
      * @param        $formField
      * @param        $formBase
      * @param string $type
+     *
      * @return mixed
      */
-    public function getMessagesForBudgetOrExpenseLineValue($formField, $formBase, $type = 'Budget line')
+    public function getMessagesForBudgetOrExpenseLineValue($formField, $formBase, $type = 'Budget line'): array
     {
+        $messages = [];
+
         foreach ($formField as $budgetLineIndex => $budgetLine) {
-            $messages[$formBase . '.value.' . $budgetLineIndex . '.amount' . '.required_with'] = 'The amount field is required with value.';
-            $messages[$formBase . '.value.' . $budgetLineIndex . '.amount' . '.numeric'] = 'The amount field must be a number.';
-            $messages[$formBase . '.value.' . $budgetLineIndex . '.value_date' . '.date'] = 'The @value-date must be a date.';
-            $messages[$formBase . '.value.' . $budgetLineIndex . '.value_date' . '.required_with'] = 'The @value-date is required with value,.';
+            $messages[sprintf('%s.value.%s.amount.required_with', $formBase, $budgetLineIndex)] = 'The amount field is required with value.';
+            $messages[sprintf('%s.value.%s.amount.numeric', $formBase, $budgetLineIndex)] = 'The amount field must be a number.';
+            $messages[sprintf('%s.value.%s.value_date.date', $formBase, $budgetLineIndex)] = 'The @value-date must be a date.';
+            $messages[sprintf('%s.value.%s.value_date.required_with', $formBase, $budgetLineIndex)] = 'The @value-date is required with value,.';
         }
 
         return $messages;
     }
 
     /** returns rules for narrative form.
+     *
      * @param $formFields
      * @param $formBase
+     *
      * @return array
      */
-    public function getRulesForBudgetOrExpenseLineNarrative($formFields, $formBase)
+    public function getRulesForBudgetOrExpenseLineNarrative($formFields, $formBase): array
     {
         $rules = [];
         $rules[sprintf('%s.narrative', $formBase)] = 'unique_lang';
-        // foreach ($formFields as $narrativeIndex => $narrative) {
-        //     $rules[sprintf('%s.narrative.%s.narrative', $formBase, $narrativeIndex)] = sprintf(
-        //         'required_with:%s,%s,%s',
-        //         $formBase . '.value.0' . '.amount',
-        //         $formBase . '.value.0' . '.value_date',
-        //         $formBase . '.reference'
-        //     );
-        // }
 
         return $rules;
     }
 
     /**
      * returns messages for narrative form.
+     *
      * @param        $formFields
      * @param        $formBase
      * @param string $type
+     *
      * @return array
      */
-    public function getMessagesForBudgetOrExpenseLineNarrative($formFields, $formBase, $type = 'Budget line')
+    public function getMessagesForBudgetOrExpenseLineNarrative($formFields, $formBase, $type = 'Budget line'): array
     {
         $messages = [];
         $messages[sprintf('%s.narrative.unique_lang', $formBase)] = trans('validation.unique', ['attribute' => trans('elementForm.languages')]);

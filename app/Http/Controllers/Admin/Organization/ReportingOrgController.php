@@ -6,10 +6,8 @@ namespace App\Http\Controllers\Admin\Organization;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Organization\ReportingOrg\ReportingOrgRequest;
-use App\IATI\Elements\Builder\ParentCollectionFormCreator;
 use App\IATI\Services\Organization\ReportingOrgService;
 use Illuminate\Contracts\View\View;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
 
@@ -18,19 +16,18 @@ use Illuminate\Support\Facades\Auth;
  */
 class ReportingOrgController extends Controller
 {
-    protected ParentCollectionFormCreator $parentCollectionFormCreator;
-
+    /**
+     * @var
+     */
     protected reportingOrgService $reportingOrgService;
 
     /**
      * ReportingOrgController Constructor.
      *
-     * @param ParentCollectionFormCreator $parentCollectionFormCreator
      * @param reportingOrgService    $reportingOrgService
      */
-    public function __construct(ParentCollectionFormCreator $parentCollectionFormCreator, reportingOrgService $reportingOrgService)
+    public function __construct(reportingOrgService $reportingOrgService)
     {
-        $this->parentCollectionFormCreator = $parentCollectionFormCreator;
         $this->reportingOrgService = $reportingOrgService;
     }
 
@@ -45,14 +42,12 @@ class ReportingOrgController extends Controller
             $id = Auth::user()->organization_id;
             $element = json_decode(file_get_contents(app_path('IATI/Data/organizationElementJsonSchema.json')), true);
             $organization = $this->reportingOrgService->getOrganizationData($id);
-            $model['reporting_org'] = $this->reportingOrgService->getReportingOrgData($id) ?? [];
-            $this->parentCollectionFormCreator->url = route('admin.organisation.reporting-org.update', [$id]);
-            $form = $this->parentCollectionFormCreator->editForm($model, $element['reporting_org'], 'PUT', '/organisation');
-            $status = $organization->reporting_org_element_completed ?? false;
+            $form = $this->reportingOrgService->formGenerator($id);
             $data = ['core'=> $element['reporting_org']['criteria'] ?? false, 'status'=> $organization->reporting_org_element_completed ?? false, 'title'=> $element['reporting_org']['label'], 'name'=>'reporting-org'];
 
             return view('admin.organisation.forms.reportingOrg.reportingOrg', compact('form', 'organization', 'data'));
         } catch (\Exception $e) {
+            dd($e);
             logger()->error($e->getMessage());
 
             return redirect()->route('admin.organisation.index')->with('error', 'Error has occurred while opening organization reporting_org form.');
@@ -64,16 +59,15 @@ class ReportingOrgController extends Controller
      *
      * @param ReportingOrgRequest $request
      *
-     * @return JsonResponse|RedirectResponse
+     * @return RedirectResponse
      */
-    public function update(ReportingOrgRequest $request): JsonResponse| RedirectResponse
+    public function update(ReportingOrgRequest $request): RedirectResponse
     {
         try {
             $id = Auth::user()->organization_id;
-            $organizationData = $this->reportingOrgService->getOrganizationData($id);
-            $organizationTitle = $request->all();
+            $reportingOrg = $request->all();
 
-            if (!$this->reportingOrgService->update($organizationTitle, $organizationData)) {
+            if (!$this->reportingOrgService->update($id, $reportingOrg)) {
                 return redirect()->route('admin.organisation.index', $id)->with('error', 'Error has occurred while updating organization reporting_org.');
             }
 

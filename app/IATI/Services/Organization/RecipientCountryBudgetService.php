@@ -4,10 +4,11 @@ declare(strict_types=1);
 
 namespace App\IATI\Services\Organization;
 
-use App\IATI\Models\Organization\Organization;
-use App\IATI\Repositories\Organization\RecipientCountryBudgetRepository;
+use App\IATI\Elements\Builder\ParentCollectionFormCreator;
+use App\IATI\Repositories\Organization\OrganizationRepository;
 use App\IATI\Traits\OrganizationXmlBaseElements;
 use Illuminate\Database\Eloquent\Model;
+use Kris\LaravelFormBuilder\Form;
 
 /**
  * Class RecipientCountryBudgetService.
@@ -17,18 +18,25 @@ class RecipientCountryBudgetService
     use OrganizationXmlBaseElements;
 
     /**
-     * @var RecipientCountryBudgetRepository
+     * @var OrganizationRepository
      */
-    protected RecipientCountryBudgetRepository $recipientCountryBudgetRepository;
+    protected OrganizationRepository $organizationRepository;
+
+    /**
+     * @var ParentCollectionFormCreator
+     */
+    protected ParentCollectionFormCreator $parentCollectionFormCreator;
 
     /**
      * RecipientCountryBudgetService constructor.
      *
-     * @param RecipientCountryBudgetRepository $recipientCountryBudgetRepository
+     * @param OrganizationRepository $organizationRepository
+     * @param ParentCollectionFormCreator $parentCollectionFormCreator
      */
-    public function __construct(RecipientCountryBudgetRepository $recipientCountryBudgetRepository)
+    public function __construct(OrganizationRepository $organizationRepository, ParentCollectionFormCreator $parentCollectionFormCreator)
     {
-        $this->recipientCountryBudgetRepository = $recipientCountryBudgetRepository;
+        $this->organizationRepository = $organizationRepository;
+        $this->parentCollectionFormCreator = $parentCollectionFormCreator;
     }
 
     /**
@@ -40,7 +48,7 @@ class RecipientCountryBudgetService
      */
     public function getRecipientCountryBudgetData(int $organization_id): ?array
     {
-        return $this->recipientCountryBudgetRepository->getRecipientCountryBudgetData($organization_id);
+        return $this->organizationRepository->find($organization_id)->recipient_country_budget;
     }
 
     /**
@@ -52,27 +60,63 @@ class RecipientCountryBudgetService
      */
     public function getOrganizationData($id): Model
     {
-        return $this->recipientCountryBudgetRepository->getOrganizationData($id);
+        return $this->organizationRepository->find($id);
     }
 
     /**
-     * Updates recipient org budget.
+     * Updates recipient country budget.
      *
+     * @param $id
      * @param $recipientCountryBudget
-     * @param $organization
      *
      * @return bool
      */
-    public function update($recipientCountryBudget, $organization): bool
+    public function update($id, $recipientCountryBudget): bool
     {
-        return $this->recipientCountryBudgetRepository->update($recipientCountryBudget, $organization);
+        $recipientCountryBudget['recipient_country_budget'] = array_values($recipientCountryBudget['recipient_country_budget']);
+
+        foreach ($recipientCountryBudget['recipient_country_budget'] as $key => $budget) {
+            foreach ($budget['recipient_country'] as $sub_index => $sub_element) {
+                $recipientCountryBudget['recipient_country_budget'][$key]['recipient_country'][$sub_index]['narrative'] = array_values($sub_element['narrative']);
+            }
+
+            foreach ($budget['budget_line'] as $sub_index => $sub_element) {
+                $recipientCountryBudget['recipient_country_budget'][$key]['budget_line'][$sub_index]['narrative'] = array_values($sub_element['narrative']);
+            }
+
+            $recipientCountryBudget['recipient_country_budget'][$key]['budget_line'] = array_values($recipientCountryBudget['recipient_country_budget'][$key]['budget_line']);
+            $recipientCountryBudget['recipient_country_budget'][$key]['recipient_country'] = array_values($recipientCountryBudget['recipient_country_budget'][$key]['recipient_country']);
+        }
+
+        $recipientCountryBudget = $recipientCountryBudget['recipient_country_budget'];
+
+        return $this->organizationRepository->update($id, ['recipient_country_budget' => $recipientCountryBudget]);
     }
 
     /**
+     * Generates name form.
+     *
+     * @param $id
+     *
+     * @return Form
+     */
+    public function formGenerator($id): Form
+    {
+        $element = json_decode(file_get_contents(app_path('IATI/Data/organizationElementJsonSchema.json')), true);
+        $model['recipient_country_budget'] = $this->getRecipientCountryBudgetData($id) ?? [];
+        $this->parentCollectionFormCreator->url = route('admin.organisation.recipient-country-budget.update', [$id]);
+
+        return $this->parentCollectionFormCreator->editForm($model, $element['recipient_country_budget'], 'PUT', '/organisation');
+    }
+
+    /**
+     * Generates xml data for recipient_country_budget.
+     *
      * @param OrganizationData $organizationData
+     *
      * @return array
      */
-    public function getXmlData($organizationData)
+    public function getXmlData($organizationData): array
     {
         $orgRecipientCountryData = [];
         $recipientCountryBudget = (array) $organizationData->recipient_country_budget;

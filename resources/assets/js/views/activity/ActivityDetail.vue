@@ -63,8 +63,8 @@
             <!-- Download File -->
             <button
               class="button secondary-btn mr-3.5 font-bold"
-              @click="downloadValue = true"
               style="display: none"
+              @click="downloadValue = true"
             >
               <svg-vue icon="download-file" />
             </button>

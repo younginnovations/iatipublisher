@@ -104,7 +104,7 @@ class OrganizationWorkflowService
         $settings = $organization->settings;
         $organizationPublished = $this->organizationPublishedService->getOrganizationPublished($organization->id);
         $publishingInfo = $settings->publishing_info;
-        $this->publisherService->unpublishOrganizationFile($publishingInfo, $organizationPublished, $organization);
+        $this->publisherService->unpublishOrganizationFile($publishingInfo, $organizationPublished);
         $this->organizationService->updatePublishedStatus($organization, 'draft', false);
     }
 }

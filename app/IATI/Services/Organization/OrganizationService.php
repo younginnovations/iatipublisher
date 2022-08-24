@@ -48,18 +48,18 @@ class OrganizationService
     public function getReportingOrgXmlData(Organization $organization)
     {
         $organizationData = [];
-        //        $orgReportingOrg = (array) $organization->reporting_org;
-        //
-        //        foreach ($orgReportingOrg as $OrgReportingOrg) {
-        //            $organizationData[] = [
-        //                '@attributes' => [
-        //                    'type'               => $OrgReportingOrg['reporting_organization_type'],
-        //                    'ref'                => $OrgReportingOrg['reporting_organization_identifier'],
-        //                    'secondary-reporter' => $organization->secondary_reporter
-        //                ],
-        //                'narrative'   => $this->buildNarrative($OrgReportingOrg['narrative']),
-        //            ];
-        //        }
+        //    $orgReportingOrg = (array) $organization->reporting_org;
+
+        //    foreach ($orgReportingOrg as $OrgReportingOrg) {
+        //        $organizationData[] = [
+        //            '@attributes' => [
+        //                'type'               => $OrgReportingOrg['reporting_organization_type'],
+        //                'ref'                => $OrgReportingOrg['reporting_organization_identifier'],
+        //                'secondary-reporter' => $organization->secondary_reporter
+        //            ],
+        //            'narrative'   => $this->buildNarrative($OrgReportingOrg['narrative']),
+        //        ];
+        //    }
 
         $organizationData[] = [
             '@attributes' => [

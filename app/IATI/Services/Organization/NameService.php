@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace App\IATI\Services\Organization;
 
+use App\IATI\Elements\Builder\BaseFormCreator;
 use App\IATI\Models\Organization\Organization;
-use App\IATI\Repositories\Organization\NameRepository;
+use App\IATI\Repositories\Organization\OrganizationRepository;
 use App\IATI\Traits\OrganizationXmlBaseElements;
 use Illuminate\Database\Eloquent\Model;
+use Kris\LaravelFormBuilder\Form;
 
 /**
  * Class NameService.
@@ -17,18 +19,25 @@ class NameService
     use OrganizationXmlBaseElements;
 
     /**
-     * @var NameRepository
+     * @var OrganizationRepository
      */
-    protected NameRepository $nameRepository;
+    protected OrganizationRepository $organizationRepository;
+
+    /**
+     * @var BaseFormCreator
+     */
+    protected BaseFormCreator $baseFormCreator;
 
     /**
      * NameService constructor.
      *
-     * @param NameRepository $nameRepository
+     * @param OrganizationRepository $organizationRepository
+     * @param BaseFormCreator $baseFormCreator
      */
-    public function __construct(NameRepository $nameRepository)
+    public function __construct(OrganizationRepository $organizationRepository, BaseFormCreator $baseFormCreator)
     {
-        $this->nameRepository = $nameRepository;
+        $this->organizationRepository = $organizationRepository;
+        $this->baseFormCreator = $baseFormCreator;
     }
 
     /**
@@ -40,7 +49,7 @@ class NameService
      */
     public function getNameData(int $organization_id): ?array
     {
-        return $this->nameRepository->getNameData($organization_id);
+        return $this->organizationRepository->find($organization_id)->name;
     }
 
     /**
@@ -52,22 +61,38 @@ class NameService
      */
     public function getOrganizationData($id): Model
     {
-        return $this->nameRepository->getOrganizationData($id);
+        return $this->organizationRepository->getOrganizationData($id);
     }
 
     /**
      * Updates Organization name.
      *
+     * @param $id
      * @param $organizationName
-     * @param $organization
      *
      * @return bool
      */
-    public function update($organizationName, $organization): bool
+    public function update($id, $organizationName): bool
     {
-        $organization->name = array_values($organizationName['narrative']);
+        $organizationName = array_values($organizationName['narrative']);
 
-        return $organization->save();
+        return $this->organizationRepository->update($id, ['name' => $organizationName]);
+    }
+
+    /**
+     * Generates name form.
+     *
+     * @param $id
+     *
+     * @return Form
+     */
+    public function formGenerator($id): Form
+    {
+        $element = json_decode(file_get_contents(app_path('IATI/Data/organizationElementJsonSchema.json')), true);
+        $model['narrative'] = $this->getNameData($id);
+        $this->baseFormCreator->url = route('admin.organisation.name.update', [$id]);
+
+        return $this->baseFormCreator->editForm($model, $element['name'], 'PUT', '/organisation');
     }
 
     /**

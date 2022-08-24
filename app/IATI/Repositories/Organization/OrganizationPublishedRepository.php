@@ -5,25 +5,22 @@ declare(strict_types=1);
 namespace App\IATI\Repositories\Organization;
 
 use App\IATI\Models\Organization\OrganizationPublished;
+use App\IATI\Repositories\Repository;
 use Illuminate\Database\Eloquent\Model;
 
 /**
  * Class OrganizationPublishedRepository.
  */
-class OrganizationPublishedRepository
+class OrganizationPublishedRepository extends Repository
 {
     /**
-     * @var OrganizationPublished
+     * Return Organization model.
+     *
+     * @return string
      */
-    protected OrganizationPublished $organizationPublished;
-
-    /**
-     * OrganizationPublishedRepository Constructor.
-     * @param OrganizationPublished $organizationPublished
-     */
-    public function __construct(OrganizationPublished $organizationPublished)
+    public function getModel(): string
     {
-        $this->organizationPublished = $organizationPublished;
+        return OrganizationPublished::class;
     }
 
     /**
@@ -36,7 +33,7 @@ class OrganizationPublishedRepository
      */
     public function findOrCreate($filename, $organizationId): Model
     {
-        $published = $this->organizationPublished->firstOrNew([
+        $published = $this->model->firstOrNew([
             'filename' => $filename,
             'organization_id' => $organizationId,
             'published_to_registry' => true,
@@ -71,7 +68,7 @@ class OrganizationPublishedRepository
      */
     public function getOrganizationPublished($organization_id): ?Model
     {
-        return $this->organizationPublished->where('organization_id', $organization_id)->first();
+        return $this->model->where('organization_id', $organization_id)->first();
     }
 
     /**

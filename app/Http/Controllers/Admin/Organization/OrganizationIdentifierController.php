@@ -6,10 +6,9 @@ namespace App\Http\Controllers\Admin\Organization;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Organization\OrganizationIdentifier\OrganizationIdentifierRequest;
-use App\IATI\Elements\Builder\BaseFormCreator;
 use App\IATI\Services\Organization\OrganizationIdentifierService;
+use GuzzleHttp\Client;
 use Illuminate\Contracts\View\View;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
 
@@ -18,19 +17,18 @@ use Illuminate\Support\Facades\Auth;
  */
 class OrganizationIdentifierController extends Controller
 {
-    protected BaseFormCreator $baseFormCreator;
-
+    /**
+     * @var OrganizationIdentifierService
+     */
     protected OrganizationIdentifierService $organizationIdentifierService;
 
     /**
      * OrganizationIdentifierController Constructor.
      *
-     * @param BaseFormCreator $baseFormCreator
      * @param OrganizationIdentifierService    $organizationIdentifierService
      */
-    public function __construct(BaseFormCreator $baseFormCreator, OrganizationIdentifierService $organizationIdentifierService)
+    public function __construct(OrganizationIdentifierService $organizationIdentifierService)
     {
-        $this->baseFormCreator = $baseFormCreator;
         $this->organizationIdentifierService = $organizationIdentifierService;
     }
 
@@ -45,17 +43,12 @@ class OrganizationIdentifierController extends Controller
             $id = Auth::user()->organization_id;
             $element = json_decode(file_get_contents(app_path('IATI/Data/organizationElementJsonSchema.json')), true);
             $organization = $this->organizationIdentifierService->getOrganizationData($id);
-            $model['organisation_identifier'] = $organization['identifier'];
-            $model['organization_country'] = $organization['country'];
-            $model['organization_registration_agency'] = $organization['registration_agency'];
-            $model['registration_number'] = $organization['registration_number'];
-            $this->baseFormCreator->url = route('admin.organisation.identifier.update', [$id]);
-            $form = $this->baseFormCreator->editForm($model, $element['organisation_identifier'], 'PUT', '/organisation');
-            $status = $organization->name_element_completed ?? false;
-            $data = ['core'=> $element['organisation_identifier']['criteria'] ?? false, 'status'=> $organization->identifier_element_completed ?? false, 'title'=> $element['organisation_identifier']['label'], 'name'=>'organisation-identifier'];
+            $form = $this->organizationIdentifierService->formGenerator($id);
+            $data = ['core' => $element['organisation_identifier']['criteria'] ?? false, 'status' => $organization->identifier_element_completed ?? false, 'title' => $element['organisation_identifier']['label'], 'name' => 'organisation-identifier'];
 
             return view('admin.organisation.forms.organisationIdentifier.edit', compact('form', 'organization', 'data'));
         } catch (\Exception $e) {
+            dd($e);
             logger()->error($e->getMessage());
 
             return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while opening organization identifier form.');
@@ -63,28 +56,73 @@ class OrganizationIdentifierController extends Controller
     }
 
     /**
-     * Updates organization title data.
+     * Updates organization identifier data.
      *
      * @param OrganizationIdentifierRequest $request
      *
-     * @return JsonResponse|RedirectResponse
+     * @return RedirectResponse
      */
-    public function update(OrganizationIdentifierRequest $request): JsonResponse| RedirectResponse
+    public function update(OrganizationIdentifierRequest $request): RedirectResponse
     {
         try {
             $id = Auth::user()->organization_id;
-            $organizationData = $this->organizationIdentifierService->getOrganizationData($id);
             $organizationIdentifier = $request->all();
 
-            if (!$this->organizationIdentifierService->update($organizationIdentifier, $organizationData)) {
-                return redirect()->route('admin.organisation.index', $id)->with('error', 'Error has occurred while updating organization name.');
+            if (!$this->verifyPublisher($organizationIdentifier)) {
+                return redirect()->route('admin.organisation.index', $id)->with('error', 'Error has occurred while updating organization identifier. Please enter correct identifier as present in IATI Registry.');
             }
 
-            return redirect()->route('admin.organisation.index', $id)->with('success', 'Organization name updated successfully.');
+            if (!$this->organizationIdentifierService->update($id, $organizationIdentifier)) {
+                return redirect()->route('admin.organisation.index', $id)->with('error', 'Error has occurred while updating organization identifier.');
+            }
+
+            return redirect()->route('admin.organisation.index', $id)->with('success', 'Organization identifier updated successfully.');
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.organisation.index', $id)->with('error', 'Error has occurred while updating organization name.');
+            return redirect()->route('admin.organisation.index', $id)->with('error', 'Error has occurred while updating organization identifier.');
+        }
+    }
+
+    /**
+     * Verify publisher.
+     *
+     * @param array $data
+     *
+     * @return bool
+     */
+    public function verifyPublisher(array $data): bool
+    {
+        try {
+            $organization = Auth::user()->organization;
+            $identifier = $data['organization_registration_agency'] . '-' . $data['registration_number'];
+
+            $client = new Client(
+                [
+                    'base_uri' => env('IATI_API_ENDPOINT'),
+                    'headers'  => [
+                        'X-CKAN-API-Key' => env('IATI_API_KEY'),
+                    ],
+                ]
+            );
+
+            $res = $client->request('GET', env('IATI_API_ENDPOINT') . '/action/organization_show', [
+                'auth'            => [env('IATI_USERNAME'), env('IATI_PASSWORD')],
+                'query'           => ['id' => $organization['publisher_id']],
+                'connect_timeout' => 500,
+            ]);
+
+            $response = json_decode($res->getBody()->getContents())->result;
+
+            if ($response->publisher_iati_id === $identifier) {
+                return true;
+            }
+
+            return false;
+        } catch (\Exception $e) {
+            logger()->error($e->getMessage());
+
+            return false;
         }
     }
 }

@@ -6,10 +6,8 @@ namespace App\Http\Controllers\Admin\Organization;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Organization\TotalExpenditure\TotalExpenditureRequest;
-use App\IATI\Elements\Builder\ParentCollectionFormCreator;
 use App\IATI\Services\Organization\TotalExpenditureService;
 use Illuminate\Contracts\View\View;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
 
@@ -18,19 +16,15 @@ use Illuminate\Support\Facades\Auth;
  */
 class TotalExpenditureController extends Controller
 {
-    protected ParentCollectionFormCreator $parentCollectionFormCreator;
-
     protected TotalExpenditureService $totalExpenditureService;
 
     /**
      * TotalExpenditureController Constructor.
      *
-     * @param ParentCollectionFormCreator $parentCollectionFormCreator
-     * @param totalExpenditureService    $totalExpenditureService
+     * @param TotalExpenditureService    $totalExpenditureService
      */
-    public function __construct(ParentCollectionFormCreator $parentCollectionFormCreator, totalExpenditureService $totalExpenditureService)
+    public function __construct(TotalExpenditureService $totalExpenditureService)
     {
-        $this->parentCollectionFormCreator = $parentCollectionFormCreator;
         $this->totalExpenditureService = $totalExpenditureService;
     }
 
@@ -45,9 +39,7 @@ class TotalExpenditureController extends Controller
             $id = Auth::user()->organization_id;
             $element = json_decode(file_get_contents(app_path('IATI/Data/organizationElementJsonSchema.json')), true);
             $organization = $this->totalExpenditureService->getOrganizationData($id);
-            $model['total_expenditure'] = $this->totalExpenditureService->getTotalExpenditureData($id) ?? [];
-            $this->parentCollectionFormCreator->url = route('admin.organisation.total-expenditure.update', [$id]);
-            $form = $this->parentCollectionFormCreator->editForm($model, $element['total_expenditure'], 'PUT', '/organisation');
+            $form = $this->totalExpenditureService->formGenerator($id);
             $status = $organization->total_expenditure_element_completed ?? false;
             $data = ['core'=> $element['total_expenditure']['criteria'] ?? false, 'status'=> $organization->total_expenditure_element_completed ?? false, 'title'=> $element['total_expenditure']['label'], 'name'=>'total-expenditure'];
 
@@ -64,16 +56,15 @@ class TotalExpenditureController extends Controller
      *
      * @param TotalExpenditureRequest $request
      *
-     * @return JsonResponse|RedirectResponse
+     * @return RedirectResponse
      */
-    public function update(TotalExpenditureRequest $request): JsonResponse| RedirectResponse
+    public function update(TotalExpenditureRequest $request): RedirectResponse
     {
         try {
             $id = Auth::user()->organization_id;
-            $organizationData = $this->totalExpenditureService->getOrganizationData($id);
             $organizationTitle = $request->all();
 
-            if (!$this->totalExpenditureService->update($organizationTitle, $organizationData)) {
+            if (!$this->totalExpenditureService->update($id, $organizationTitle)) {
                 return redirect()->route('admin.organisation.index', $id)->with('error', 'Error has occurred while updating organization total-expenditure.');
             }
 

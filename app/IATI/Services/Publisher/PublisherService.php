@@ -30,8 +30,10 @@ class PublisherService extends RegistryApiHandler
      * @param $registryInfo
      * @param $activityPublished
      * @param $organization
+     *
+     * @return void
      */
-    public function publishFile($registryInfo, $activityPublished, $organization)
+    public function publishFile($registryInfo, $activityPublished, $organization): void
     {
         $this->setFile($activityPublished);
         $this->init(env('IATI_API_ENDPOINT'), Arr::get($registryInfo, 'api_token', ''))
@@ -46,8 +48,10 @@ class PublisherService extends RegistryApiHandler
      * @param $registryInfo
      * @param $organizationPublished
      * @param $organization
+     *
+     * @return void
      */
-    public function publishOrganizationFile($registryInfo, $organizationPublished, $organization)
+    public function publishOrganizationFile($registryInfo, $organizationPublished, $organization): void
     {
         $this->organizationPublished = $organizationPublished;
         $this->init(env('IATI_API_ENDPOINT'), Arr::get($registryInfo, 'api_token', ''))
@@ -61,22 +65,26 @@ class PublisherService extends RegistryApiHandler
      *
      * @param $registryInfo
      * @param $organizationPublished
-     * @param $organization
+     *
+     * @return void
      */
-    public function unpublishOrganizationFile($registryInfo, $organizationPublished, $organization)
+    public function unpublishOrganizationFile($registryInfo, $organizationPublished): void
     {
         $this->organizationPublished = $organizationPublished;
         $this->init(env('IATI_API_ENDPOINT'), Arr::get($registryInfo, 'api_token', ''))
             ->setPublisher(Arr::get($registryInfo, 'publisher_id', ''));
         $this->searchForPublisher($this->publisherId);
-        $this->unpublishOrganizationFromRegistry($organization, $organizationPublished->filename);
+        $this->unpublishOrganizationFromRegistry($organizationPublished->filename);
     }
 
     /**
      * Set the file attribute.
+     *
      * @param $activityPublished
+     *
+     * @return void
      */
-    protected function setFile($activityPublished)
+    protected function setFile($activityPublished): void
     {
         $this->activityPublished = $activityPublished;
     }
@@ -86,8 +94,10 @@ class PublisherService extends RegistryApiHandler
      *
      * @param $organization
      * @param $filename
+     *
+     * @return void
      */
-    protected function publishOrganizationToRegistry($organization, $filename)
+    protected function publishOrganizationToRegistry($organization, $filename): void
     {
         $data = $this->generateOrganizationPayload($organization, $filename);
         $packageId = $this->extractPackage($filename);
@@ -106,8 +116,10 @@ class PublisherService extends RegistryApiHandler
      *
      * @param $organization
      * @param $filename
+     *
+     * @return void
      */
-    protected function publishToRegistry($organization, $filename)
+    protected function publishToRegistry($organization, $filename): void
     {
         $data = $this->generatePayload($organization, $filename);
         $packageId = $this->extractPackage($filename);
@@ -126,8 +138,10 @@ class PublisherService extends RegistryApiHandler
      *
      * @param $organization
      * @param $filename
+     *
+     * @return void
      */
-    protected function unpublishOrganizationFromRegistry($organization, $filename)
+    protected function unpublishOrganizationFromRegistry($filename): void
     {
         $packageId = $this->extractPackage($filename);
 
@@ -209,6 +223,8 @@ class PublisherService extends RegistryApiHandler
     }
 
     /**
+     * Returns the type of file.
+     *
      * @param $code
      *
      * @return mixed|string
@@ -280,17 +296,13 @@ class PublisherService extends RegistryApiHandler
                     'url'      => Storage::disk('minio')->url('iati/organizationXmlFiles/' . $filename . '.xml'),
                 ],
             ],
-            'filetype'     => ($code != 'organisation') ? 'activity' : $code,
+            'filetype'     => 'organisation',
             $key           => ($code == 'activities' || $code == 'organisation') ? '' : $code,
             'data_updated' => $publishedFile->updated_at->toDateTimeString(),
             'language'     => 'en',
             'verified'     => 'no',
             'state'        => 'active',
         ];
-
-        // if ($code != 'organisation') {
-        //     $data['activity_count'] = count($publishedFile->published_activities);
-        // }
 
         return json_encode($data);
     }
@@ -373,8 +385,10 @@ class PublisherService extends RegistryApiHandler
 
     /**
      * Updates activity published table.
+     *
+     * @return void
      */
-    protected function updateStatus()
+    protected function updateStatus(): void
     {
         $this->activityPublished->published_to_registry = 1;
         $this->activityPublished->save();
@@ -382,8 +396,10 @@ class PublisherService extends RegistryApiHandler
 
     /**
      * Updates activity published table.
+     *
+     * @return void
      */
-    protected function updateOrganizationStatus()
+    protected function updateOrganizationStatus(): void
     {
         $this->organizationPublished->published_to_registry = 1;
         $this->organizationPublished->save();

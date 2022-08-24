@@ -16,18 +16,32 @@ class ReportingOrgRequest extends OrganizationBaseRequest
      *
      * @return array
      */
-    public function rules()
+    public function rules(): array
     {
         return $this->getRulesForReportingOrganization($this->get('reporting_org'));
     }
 
     /**
-     * @param array $formFields
+     * Get the Validation Error message.
+     *
      * @return array
      */
-    public function getRulesForReportingOrganization(array $formFields)
+    public function messages(): array
+    {
+        return $this->getMessagesForReportingOrganization($this->get('reporting_org'));
+    }
+
+    /**
+     * Rules for reporting organization form.
+     *
+     * @param array $formFields
+     *
+     * @return array
+     */
+    public function getRulesForReportingOrganization(array $formFields): array
     {
         $rules = [];
+
         foreach ($formFields as $reportingOrganizationIndex => $reportingOrganization) {
             $reportingOrganizationForm = sprintf('reporting_org.%s', $reportingOrganizationIndex);
             $rules[$reportingOrganizationForm . '.ref'] = ['nullable', 'not_regex:/(&|!|\/|\||\?)/'];
@@ -42,17 +56,16 @@ class ReportingOrgRequest extends OrganizationBaseRequest
     }
 
     /**
-     * Get the Validation Error message.
+     * Custom message for reporting organization form.
+     *
+     * @param array $formFields
+     *
      * @return array
      */
-    public function messages()
-    {
-        return $this->getMessagesForReportingOrganization($this->get('reporting_org'));
-    }
-
-    public function getMessagesForReportingOrganization(array $formFields)
+    public function getMessagesForReportingOrganization(array $formFields): array
     {
         $messages = [];
+
         foreach ($formFields as $reportingOrganizationIndex => $reportingOrganization) {
             $reportingOrganizationForm = sprintf('reporting_org.%s', $reportingOrganizationIndex);
 
