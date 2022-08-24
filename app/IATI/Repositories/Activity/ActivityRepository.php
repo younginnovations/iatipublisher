@@ -90,6 +90,6 @@ class ActivityRepository extends Repository
 
         return $this->model->whereRaw($whereSql, $bindParams)
                     ->orderBy($orderBy, $direction)
-                    ->paginate(1, ['*'], 'activity', $page);
+                    ->paginate(10, ['*'], 'activity', $page);
     }
 }

@@ -51,7 +51,13 @@ class ActivityService
      */
     public function getPaginatedActivities(int $page, array $queryParams): Collection|LengthAwarePaginator
     {
-        return $this->activityRepository->getActivityForOrganization(Auth::user()->organization_id, $queryParams, $page);
+        $activities = $this->activityRepository->getActivityForOrganization(Auth::user()->organization_id, $queryParams, $page);
+
+        foreach ($activities as $idx => $activity) {
+            $activities[$idx]['default_title_narrative'] = $activity->default_title_narrative;
+        }
+
+        return $activities;
     }
 
     /**
