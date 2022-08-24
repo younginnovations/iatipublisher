@@ -36,19 +36,18 @@ class IdentifierController extends Controller
      *
      * @param int $id
      *
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|void
+     * @return View|RedirectResponse
      */
     public function edit(int $id): View|RedirectResponse
     {
         try {
-            $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
+            $element = getElementSchema('iati_identifier');
             $activity = $this->identifierService->getActivityData($id);
             $form = $this->identifierService->formGenerator($id);
-            $data = ['core' => $element['iati_identifier']['criteria'] ?? '', 'status' => $activity->identifier_element_completed, 'title' => $element['iati_identifier']['label'], 'name' => 'iati_identifier'];
+            $data = ['core' => $element['criteria'] ?? '', 'status' => $activity->identifier_element_completed, 'title' => $element['label'], 'name' => 'iati_identifier'];
 
             return view('admin.activity.identifier.edit', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {
-            dd($e);
             logger()->error($e->getMessage());
 
             return redirect()->route('admin.activity.show', $id)->with('error', 'Error has occurred while opening activity title form.');
@@ -66,10 +65,9 @@ class IdentifierController extends Controller
     public function update(IdentifierRequest $request, $id): JsonResponse|RedirectResponse
     {
         try {
-            $activityData = $this->identifierService->getActivityData($id);
             $activityIdentifier = $request->except(['_method', '_token']);
 
-            if (!$this->identifierService->update($activityIdentifier, $activityData)) {
+            if (!$this->identifierService->update($id, $activityIdentifier)) {
                 return redirect()->route('admin.activity.show', $id)->with('error', 'Error has occurred while updating iati-identifier.');
             }
 

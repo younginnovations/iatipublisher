@@ -49,6 +49,14 @@
             :link="`/activity/${activityId}/${title}`"
             class="edit-button mr-2.5"
           />
+          <Btn
+            v-else
+            text="Show full transaction list"
+            icon=""
+            design="bgText"
+            :link="`/activities/${activityId}/${title}`"
+            class="mr-2.5"
+          />
           <svg-vue v-if="data.core" class="mr-1.5" icon="core"></svg-vue>
           <HoverText v-if="tooltip" :hover-text="tooltip" class="text-n-40" />
         </div>
