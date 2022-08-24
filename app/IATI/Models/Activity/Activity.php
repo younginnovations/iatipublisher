@@ -19,6 +19,7 @@ use Illuminate\Support\Facades\Auth;
 class Activity extends Model
 {
     use HasFactory;
+    public $udpatedElement = '';
 
     /**
      * Fillable property for mass assignment.
@@ -162,20 +163,22 @@ class Activity extends Model
     }
 
     /**
+     * Returns default title.
+     *
      * @throws \JsonException
      */
-    public function getDefaultTitleNarrativeAttribute()
+    public function getDefaultTitleNarrativeAttribute(): string
     {
         $titles = $this->title;
 
         if (!empty($titles)) {
             foreach ($titles as $title) {
-                if (array_key_exists('language', $title) && !empty($title['language']) && $title['language'] === getOrgDefaultLanguage()) {
-                    return  $title['narrative'];
+                if (array_key_exists('language', $title) && !empty($title['language']) && $title['language'] === getOrgDefaultLanguage($this->default_field_values)) {
+                    return $title['narrative'];
                 }
             }
 
-            return $titles[0]['narrative'];
+            return array_key_exists('narrative', $titles[0]) ? $titles[0]['narrative'] : '';
         }
 
         return '';

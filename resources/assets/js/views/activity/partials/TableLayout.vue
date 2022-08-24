@@ -44,11 +44,11 @@
                 <a
                   :href="'/activity/' + datum['id']"
                   class="overflow-hidden ellipsis text-n-50"
-                  >{{ datum['title'][0]['narrative'] ?? 'Untitled' }}</a
+                  >{{ datum['default_title_narrative'] ?? 'Untitled' }}</a
                 >
                 <div class="w-52">
                   <span class="ellipsis__title--hover">{{
-                    datum['title'][0]['narrative'] ?? 'Untitled'
+                    datum['default_title_narrative'] ?? 'Untitled'
                   }}</span>
                 </div>
               </div>
@@ -56,7 +56,7 @@
           </td>
 
           <td class="text-n-40">
-            {{ formatDate(datum.created_at) }}
+            {{ formatDate(datum.updated_at) }}
           </td>
 
           <td>
@@ -85,7 +85,7 @@
 
           <th class="check-column" @click="(e) => e.stopPropagation()">
             <label class="sr-only" for="">
-              Select "{{ datum['title'][0]['narrative'] }}"
+              Select "{{ datum['default_title_narrative'] }}"
             </label>
             <label class="checkbox">
               <input

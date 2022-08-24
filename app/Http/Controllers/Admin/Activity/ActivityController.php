@@ -223,7 +223,6 @@ class ActivityController extends Controller
                 'data'    => $activities,
             ]);
         } catch (\Exception $e) {
-            dd($e->getMessage());
             logger()->error($e->getMessage());
 
             return response()->json(['success' => false, 'message' => 'Error occurred while fetching the data']);

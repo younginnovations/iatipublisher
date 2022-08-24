@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 
 if (!function_exists('dashesToCamelCase')) {
@@ -449,28 +448,13 @@ if (!function_exists('getTableConfig')) {
     }
 }
 
-if (!function_exists('getOrgDefaultConfig')) {
-    /**
-     * @throws JsonException
-     */
-    function getOrgDefaultConfig($module = ''): array|string
+if (!function_exists('getOrgDefaultLanguage')) {
+    function getOrgDefaultLanguage($defaultValues): string
     {
-        $default = json_decode(Auth::user()->organization->settings->default_values, true, 512, JSON_THROW_ON_ERROR);
-
-        if (!empty($module) && array_key_exists($module, $default) && !empty($default[$module])) {
-            return $default[$module];
+        if (!empty($defaultValues) && array_key_exists('default_language', $defaultValues) && !empty($defaultValues['default_language'])) {
+            return $defaultValues['default_language'];
         }
 
-        return $default;
-    }
-}
-
-if (!function_exists('getOrgDefaultLanguage')) {
-    /**
-     * @throws JsonException
-     */
-    function getOrgDefaultLanguage(): string
-    {
-        return getOrgDefaultConfig('default_language');
+        return '';
     }
 }
