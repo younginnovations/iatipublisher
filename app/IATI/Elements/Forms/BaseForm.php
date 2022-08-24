@@ -38,6 +38,7 @@ class BaseForm extends Form
                         'class'           => 'App\IATI\Elements\Forms\WrapperCollectionForm',
                         'data'            => $field,
                         'label'           => false,
+                        'element_criteria'=> Arr::get($field, 'element_criteria', ''),
                         'wrapper'         => [
                             'class' => 'wrapped-child-body',
                         ],
@@ -80,6 +81,7 @@ class BaseForm extends Form
                         'class'           => 'App\IATI\Elements\Forms\SubElementForm',
                         'data'            => $field,
                         'label'           => false,
+                        'element_criteria'=> $field['element_criteria'] ?? '',
                         'wrapper'         => [
                             'class' => ((Arr::get($element, 'attributes', null) && isset($field['name']) && strtolower(
                                 $field['name']

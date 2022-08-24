@@ -45,6 +45,7 @@ class WrapperCollection extends Form
                         'property'       => 'name',
                         'prototype'      => true,
                         'prototype_name' => '__NAME__',
+                        'element_criteria' => Arr::get($field, 'element_criteria', ''),
                         'options'        => [
                             'class'           => 'App\IATI\Elements\Forms\SubElementForm',
                             'data'            => $field,
@@ -169,6 +170,7 @@ class WrapperCollection extends Form
                     'class'           => 'App\IATI\Elements\Forms\WrapperCollectionForm',
                     'data'            => $field,
                     'label'           => false,
+                    'element_criteria' => Arr::get($field, 'element_criteria', ''),
                     'wrapper'         => [
                         'class' => 'wrapped-child-body',
                     ],

@@ -47,6 +47,7 @@ class MultilevelSubElementForm extends BaseForm
                             'class' => 'App\IATI\Elements\Forms\BaseForm',
                             'data'  => $this->getData(sprintf('sub_elements.%s', $name)),
                             'label' => false,
+                            'element_criteria' => $this->getData(sprintf('sub_elements.%s.element_criteria', $name)),
                             'wrapper' => [
                                 'class' => 'multi-form relative',
                             ],
