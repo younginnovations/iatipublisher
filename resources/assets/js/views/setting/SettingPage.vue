@@ -142,13 +142,13 @@ export default defineComponent({
 
       if (settingData) {
         const defaultValues = settingData.default_values
-          ? JSON.parse(settingData.default_values)
+          ? settingData.default_values
           : {};
         const publisherInfo = settingData.publishing_info
-          ? JSON.parse(settingData.publishing_info)
+          ? settingData.publishing_info
           : {};
         const activityValues = settingData.activity_default_values
-          ? JSON.parse(settingData.activity_default_values)
+          ? settingData.activity_default_values
           : {};
 
         if (publisherInfo) {

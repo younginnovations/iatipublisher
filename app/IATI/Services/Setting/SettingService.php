@@ -51,12 +51,12 @@ class SettingService
     {
         return $this->settingRepo->updateSetting(Auth::user()->organization_id, [
             'organization_id' => Auth::user()->organization_id,
-            'publishing_info' => json_encode([
+            'publishing_info' => [
                 'publisher_id' => Auth::user()->organization->publisher_id,
                 'api_token' => $data['api_token'],
                 'publisher_verification' => $data['publisher_verification'],
                 'token_verification' => $data['token_verification'],
-            ]),
+            ],
         ]);
     }
 
@@ -71,14 +71,15 @@ class SettingService
     {
         return $this->settingRepo->updateSetting(Auth::user()->organization_id, [
             'organization_id'         => Auth::user()->organization_id,
-            'default_values'          => json_encode([
+            'default_values'          => [
                 'default_currency' => isset($data['default_currency']) ? $data['default_currency'] : '',
                 'default_language' => $data['default_language'],
-            ]),
-            'activity_default_values' => json_encode([
+            ],
+            'activity_default_values' => [
                 'hierarchy' => isset($data['hierarchy']) ? $data['hierarchy'] : 1,
                 'humanitarian' => isset($data['humanitarian']) ? $data['humanitarian'] : 'yes',
-            ]),
+                'linked_data_url' => isset($data['linked_data_url']) ? $data['linked_data_url'] : '',
+            ],
         ]);
     }
 }

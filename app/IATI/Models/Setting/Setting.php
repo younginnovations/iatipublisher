@@ -31,6 +31,8 @@ class Setting extends Model
      */
     protected $casts = [
         'publishing_info' => 'json',
+        'default_values' => 'json',
+        'activity_default_values' => 'json',
     ];
 
     /**
