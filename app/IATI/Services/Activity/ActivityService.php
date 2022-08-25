@@ -210,13 +210,13 @@ class ActivityService
 
         if ($organizationSettings->default_values && $organizationSettings->activity_default_values) {
             return array_merge(
-                json_decode($organizationSettings->default_values, true),
-                json_decode($organizationSettings->activity_default_values, true)
+                $organizationSettings->default_values,
+                $organizationSettings->activity_default_values
             );
         } elseif ($organizationSettings->default_values) {
-            return json_decode($organizationSettings->default_values, true);
+            return $organizationSettings->default_values;
         } elseif ($organizationSettings->activity_default_values) {
-            return json_decode($organizationSettings->activity_default_values, true);
+            return $organizationSettings->activity_default_values;
         }
 
         return null;

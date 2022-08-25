@@ -249,7 +249,7 @@ class XmlGenerator
         $publishingInfo = $settings->publishing_info;
 
         if (is_string($publishingInfo)) {
-            $publishingInfo = json_decode($publishingInfo, true);
+            $publishingInfo = $publishingInfo;
         }
 
         $publisherId = Arr::get($publishingInfo, 'publisher_id', 'Not Available');

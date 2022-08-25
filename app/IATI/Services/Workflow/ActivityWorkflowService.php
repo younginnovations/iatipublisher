@@ -120,7 +120,7 @@ class ActivityWorkflowService
         $publishingInfo = $settings->publishing_info;
 
         if (is_string($publishingInfo)) {
-            $publishingInfo = json_decode($publishingInfo, true);
+            $publishingInfo = $publishingInfo;
         }
 
         $this->publisherService->publishFile($publishingInfo, $activityPublished, $organization);
