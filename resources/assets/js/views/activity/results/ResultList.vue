@@ -162,7 +162,7 @@ export default defineComponent({
     ];
 
     onMounted(async () => {
-      axios.get(`/activity/${activityId}/result/page/1`).then((res) => {
+      axios.get(`/activity/${activityId}/results/page/1`).then((res) => {
         const response = res.data;
         Object.assign(resultsData, response.data);
         isEmpty.value = response.data.data.length ? false : true;
@@ -181,7 +181,7 @@ export default defineComponent({
 
     function fetchListings(active_page: number) {
       axios
-        .get(`/activity/${activityId}/result/page/` + active_page)
+        .get(`/activity/${activityId}/results/page/` + active_page)
         .then((res) => {
           const response = res.data;
           Object.assign(resultsData, response.data);

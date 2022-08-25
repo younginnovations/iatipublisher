@@ -6,6 +6,7 @@ namespace App\IATI\Models\Activity;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * Class Transaction.
@@ -39,9 +40,9 @@ class Transaction extends Model
     /**
      * Transaction belongs to an activity.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return BelongsTo
      */
-    public function activity(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    public function activity(): BelongsTo
     {
         return $this->belongsTo(Activity::class, 'activity_id', 'id');
     }

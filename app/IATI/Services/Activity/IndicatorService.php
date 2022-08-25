@@ -49,7 +49,13 @@ class IndicatorService
      */
     public function getPaginatedIndicator(int $resultId, int $page): LengthAwarePaginator|Collection
     {
-        return $this->indicatorRepository->getPaginatedIndicator($resultId, $page);
+        $indicators = $this->indicatorRepository->getPaginatedIndicator($resultId, $page);
+
+        foreach ($indicators as $idx => $indicator) {
+            $indicators[$idx]['default_title_narrative'] = $indicator->default_title_narrative;
+        }
+
+        return $indicators;
     }
 
     /**

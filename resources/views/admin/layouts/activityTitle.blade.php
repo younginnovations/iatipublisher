@@ -8,9 +8,9 @@
                         <span class="mx-4 separator"> / </span>
                         <div class="breadcrumb__title">
                             <span class="overflow-hidden breadcrumb__title last text-n-30"><a
-                                    href="/activities/{{ $activity['id'] }}">{{ $activity['title'][0]['narrative'] ?? 'Untitled' }}</a></span>
+                                    href="/activity/{{ $activity['id'] }}">{{ $activity->default_title_narrative ?? 'Untitled' }}</a></span>
                             <span
-                                class="ellipsis__title--hover w-[calc(100%_+_35px)]">{{ $activity['title'][0]['narrative'] ?? 'Untitled' }}</span>
+                                class="ellipsis__title--hover w-[calc(100%_+_35px)]">{{ $activity->default_title_narrative ?? 'Untitled' }}</span>
                         </div>
                     </div>
                 </nav>
@@ -24,9 +24,9 @@
                 <div>
                     <h4 class="relative mr-4 text-2xl font-bold ellipsis__title">
                         <span
-                            class="overflow-hidden ellipsis__title">{{ $activity['title'][0]['narrative'] ?? 'Untitled' }}</span>
+                            class="overflow-hidden ellipsis__title">{{ $activity->default_title_narrative ?? 'Untitled' }}</span>
                         <span
-                            class="ellipsis__title--hover">{{ $activity['title'][0]['narrative'] ?? 'Untitled' }}</span>
+                            class="ellipsis__title--hover">{{ $activity->default_title_narrative?? 'Untitled' }}</span>
                     </h4>
                 </div>
             </div>

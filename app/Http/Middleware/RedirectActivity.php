@@ -97,8 +97,8 @@ class RedirectActivity
                     return redirect(RouteServiceProvider::HOME)->with('error', 'Activity does not exist');
                 }
 
-                if ($subModule == 'result') {
-                    $byPassResultRoutes = ['admin.activity.result.index', 'admin.activity.result.paginate', 'admin.activity.result.create', 'admin.activity.result.store'];
+                if (in_array($subModule, ['result', 'results'])) {
+                    $byPassResultRoutes = ['admin.activity.result.index', 'admin.activity.results.paginate', 'admin.activity.result.create', 'admin.activity.result.store'];
 
                     if (!in_array($request->route()->getName(), $byPassResultRoutes, true)) {
                         $resultId = (int) $request->route('resultId');
@@ -107,8 +107,8 @@ class RedirectActivity
                             return redirect(RouteServiceProvider::HOME)->with('error', 'Result does not exist');
                         }
                     }
-                } elseif ($subModule === 'transaction') {
-                    $byPassTransactionRoutes = ['admin.activity.transaction.index', 'admin.activity.transaction.paginate', 'admin.activity.transaction.create', 'admin.activity.transaction.store'];
+                } elseif (in_array($subModule, ['transaction', 'transactions'])) {
+                    $byPassTransactionRoutes = ['admin.activity.transaction.index', 'admin.activity.transactions.paginate', 'admin.activity.transaction.create', 'admin.activity.transaction.store'];
 
                     if (!in_array($request->route()->getName(), $byPassTransactionRoutes, true)) {
                         $transactionId = (int) $request->route('transactionId');
@@ -126,7 +126,7 @@ class RedirectActivity
                 }
 
                 if (in_array($subModule, ['indicator', 'indicators'])) {
-                    $byPassIndicatorRoutes = ['admin.result.indicator.index', 'admin.result.indicator.paginate', 'admin.result.indicator.create', 'admin.result.indicator.store'];
+                    $byPassIndicatorRoutes = ['admin.result.indicator.index', 'admin.result.indicators.paginate', 'admin.result.indicator.create', 'admin.result.indicator.store'];
 
                     if (!in_array($request->route()->getName(), $byPassIndicatorRoutes, true)) {
                         $indicatorId = (int) $request->route('indicatorId');
@@ -146,7 +146,7 @@ class RedirectActivity
                 }
 
                 if (in_array($subModule, ['period', 'periods'])) {
-                    $byPassPeriodRoutes = ['admin.indicator.period.index', 'admin.indicator.period.paginate', 'admin.indicator.period.create', 'admin.indicator.period.store'];
+                    $byPassPeriodRoutes = ['admin.indicator.period.index', 'admin.indicator.periods.paginate', 'admin.indicator.period.create', 'admin.indicator.period.store'];
 
                     if (!in_array($request->route()->getName(), $byPassPeriodRoutes, true)) {
                         $periodId = (int) $request->route('periodId');

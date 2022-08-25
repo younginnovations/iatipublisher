@@ -57,4 +57,33 @@ class Indicator extends Model
     {
         return $this->belongsTo(Result::class, 'result_id', 'id');
     }
+
+    /**
+     * Returns default title narrative.
+     *
+     * @return string|null
+     */
+    public function getDefaultTitleNarrativeAttribute(): string|null
+    {
+        $indicator = $this->indicator;
+        $titles = $indicator['title'];
+
+        if (!empty($titles)) {
+            foreach ($titles as $title) {
+                if (array_key_exists('narrative', $title)) {
+                    $narratives = $title['narrative'];
+
+                    foreach ($narratives as $narrative) {
+                        if (array_key_exists('language', $narrative) && !empty($narrative['language']) && $narrative['language'] === getDefaultLanguage($this->result->activity->default_field_values)) {
+                            return $narrative['narrative'];
+                        }
+                    }
+
+                    return array_key_exists('narrative', $narratives[0]) ? $narratives[0]['narrative'] : '';
+                }
+            }
+        }
+
+        return '';
+    }
 }
