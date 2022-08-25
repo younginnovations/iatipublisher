@@ -65,7 +65,11 @@
     </div>
 
     <div class="mt-6">
-      <Pagination :data="periodsData" @fetch-activities="fetchListings" />
+      <Pagination
+        v-if="periodsData && periodsData.last_page > 1"
+        :data="periodsData"
+        @fetch-activities="fetchListings"
+      />
     </div>
   </div>
 </template>
@@ -122,7 +126,24 @@ export default defineComponent({
       indicatorLink = `/result/${resultId}/indicator/${indicatorId}`,
       periodLink = `/indicator/${indicatorId}/period`;
 
-    const periodsData = reactive({});
+    interface PeriodInterface {
+      last_page: number;
+      data: {
+        result_id: number;
+        id: number;
+        period: {
+          period_start: {
+            date: Date;
+          }[];
+          period_end: {
+            date: Date;
+          }[];
+        };
+        activity_id: number;
+      }[];
+    }
+
+    const periodsData = reactive({}) as PeriodInterface;
     const isEmpty = ref(false);
 
     const toastData = reactive({

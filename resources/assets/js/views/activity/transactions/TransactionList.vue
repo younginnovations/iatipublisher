@@ -98,7 +98,11 @@
       </table>
     </div>
     <div class="mt-6">
-      <Pagination :data="transactionsData" @fetch-activities="fetchListings" />
+      <Pagination
+        v-if="transactionsData && transactionsData.last_page > 1"
+        :data="transactionsData"
+        @fetch-activities="fetchListings"
+      />
     </div>
   </div>
 </template>
@@ -154,7 +158,27 @@ export default defineComponent({
       type: true,
     });
 
-    const transactionsData = reactive({});
+    interface TransactionInterface {
+      last_page: number;
+      data: {
+        id: number;
+        transaction: {
+          reference: string;
+          transaction_type: {
+            transaction_type_code: string;
+          }[];
+          value: {
+            amount: string;
+          }[];
+          transaction_date: {
+            date: Date;
+          }[];
+        };
+        activity_id: number;
+      }[];
+    }
+
+    const transactionsData = reactive({}) as TransactionInterface;
 
     onMounted(async () => {
       axios.get(`/activity/${activityId}/transactions/page/1`).then((res) => {

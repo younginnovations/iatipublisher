@@ -84,7 +84,11 @@
     </div>
 
     <div class="mt-6">
-      <Pagination :data="resultsData" @fetch-activities="fetchListings" />
+      <Pagination
+        v-if="resultsData && resultsData.last_page > 1"
+        :data="resultsData"
+        @fetch-activities="fetchListings"
+      />
     </div>
   </div>
 </template>
@@ -140,7 +144,22 @@ export default defineComponent({
       type: true,
     });
 
-    const resultsData = reactive({});
+    interface ResultsInterface {
+      last_page: number;
+      data: {
+        id: number;
+        result: {
+          title: {
+            narrative: [];
+          }[];
+          type: string;
+          aggregation_status: string;
+        };
+        activity_id: number;
+      }[];
+    }
+
+    const resultsData = reactive({}) as ResultsInterface;
     const isEmpty = ref(false);
 
     /**

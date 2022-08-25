@@ -56,7 +56,7 @@
             class="search__input"
             type="text"
             placeholder="Search activity..."
-            @keyup="searchFunction"
+            @keyup.enter="searchFunction"
           />
           <svg-vue class="absolute text-base left-3 top-3" icon="search" />
           <span v-if="spinner" class="spinner" />
@@ -213,22 +213,17 @@ if (currentURL.includes('?')) {
 
 const spinner = ref(false);
 
-let timer: number;
-
 const searchFunction = () => {
   spinner.value = false;
-  clearInterval(timer ?? 0);
-  timer = window.setTimeout(function () {
-    if (searchValue.value) {
-      spinner.value = true;
-      const href = '/activities/?q=' + searchValue.value;
-      window.location.replace(href);
-    } else {
-      spinner.value = true;
-      const href = '/activities/';
-      window.location.replace(href);
-    }
-  }, 1000);
+  if (searchValue.value) {
+    spinner.value = true;
+    const href = '/activities/?q=' + searchValue.value;
+    window.location.replace(href);
+  } else {
+    spinner.value = true;
+    const href = '/activities/';
+    window.location.replace(href);
+  }
 };
 
 onMounted(async () => {

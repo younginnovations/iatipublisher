@@ -62,7 +62,7 @@
             </td>
             <td>{{ types.indicatorMeasure[indicator.indicator.measure] }}</td>
             <td class="capitalize">
-              {{ indicator.indicator.aggregation_status != 0 }}
+              {{ Number(indicator.indicator.aggregation_status) != 0 }}
             </td>
             <td>
               <div class="flex text-n-40">
@@ -83,7 +83,11 @@
     </div>
 
     <div class="mt-6">
-      <Pagination :data="indicatorsData" @fetch-activities="fetchListings" />
+      <Pagination
+        v-if="indicatorsData && indicatorsData.last_page > 1"
+        :data="indicatorsData"
+        @fetch-activities="fetchListings"
+      />
     </div>
   </div>
 </template>
@@ -143,7 +147,22 @@ export default defineComponent({
       resultLink = `${activityLink}/result/${resultId}`,
       indicatorLink = `/result/${resultId}/indicator`;
 
-    const indicatorsData = reactive({});
+    interface IndicatorInterface {
+      last_page: number;
+      data: {
+        result_id: number;
+        id: number;
+        indicator: {
+          title: {
+            narrative: [];
+          }[];
+          measure: string;
+          aggregation_status: string;
+        };
+        activity_id: number;
+      }[];
+    }
+    const indicatorsData = reactive({}) as IndicatorInterface;
     const isEmpty = ref(false);
     const toastData = reactive({
       visibility: false,
