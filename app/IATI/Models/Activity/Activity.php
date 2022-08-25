@@ -19,7 +19,6 @@ use Illuminate\Support\Facades\Auth;
 class Activity extends Model
 {
     use HasFactory;
-    public $udpatedElement = '';
 
     /**
      * Fillable property for mass assignment.
@@ -173,7 +172,7 @@ class Activity extends Model
 
         if (!empty($titles)) {
             foreach ($titles as $title) {
-                if (array_key_exists('language', $title) && !empty($title['language']) && $title['language'] === getOrgDefaultLanguage($this->default_field_values)) {
+                if (array_key_exists('language', $title) && !empty($title['language']) && $title['language'] === getDefaultLanguage($this->default_field_values)) {
                     return $title['narrative'];
                 }
             }

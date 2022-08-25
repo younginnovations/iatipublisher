@@ -36,27 +36,28 @@
         </div>
 
         <div class="flex items-center icons">
-          <Btn
-            v-if="title == 'transactions'"
-            text="Add Transaction"
-            icon="add"
-            :link="`/activity/${activityId}/transaction/create`"
-            class="mr-2.5"
-          />
-          <Btn
-            v-if="title !== 'transactions'"
-            text="Edit"
-            :link="`/activity/${activityId}/${title}`"
-            class="edit-button mr-2.5"
-          />
-          <Btn
-            v-else
-            text="Show full transaction list"
-            icon=""
-            design="bgText"
-            :link="`/activities/${activityId}/${title}`"
-            class="mr-2.5"
-          />
+          <div v-if="title == 'transactions'">
+            <Btn
+              text="Add Transaction"
+              icon="add"
+              :link="`/activity/${activityId}/transaction/create`"
+              class="mr-2.5"
+            />
+            <Btn
+              text="Show full transaction list"
+              icon=""
+              design="bgText"
+              :link="`/activity/${activityId}/transaction`"
+              class="mr-2.5"
+            />
+          </div>
+          <div v-else>
+            <Btn
+              text="Edit"
+              :link="`/activity/${activityId}/${title}`"
+              class="edit-button mr-2.5"
+            />
+          </div>
           <svg-vue v-if="data.core" class="mr-1.5" icon="core"></svg-vue>
           <HoverText v-if="tooltip" :hover-text="tooltip" class="text-n-40" />
         </div>

@@ -448,8 +448,8 @@ if (!function_exists('getTableConfig')) {
     }
 }
 
-if (!function_exists('getOrgDefaultLanguage')) {
-    function getOrgDefaultLanguage($defaultValues): string
+if (!function_exists('getDefaultLanguage')) {
+    function getDefaultLanguage($defaultValues): string
     {
         if (!empty($defaultValues) && array_key_exists('default_language', $defaultValues) && !empty($defaultValues['default_language'])) {
             return $defaultValues['default_language'];

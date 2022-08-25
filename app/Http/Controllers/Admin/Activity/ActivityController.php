@@ -191,7 +191,7 @@ class ActivityController extends Controller
         $tableConfig = getTableConfig('activity');
         $queryParams = [];
 
-        if (!empty($request->get('q'))) {
+        if (!empty($request->get('q')) || $request->get('q') === '0') {
             $queryParams['query'] = $request->get('q');
         }
 

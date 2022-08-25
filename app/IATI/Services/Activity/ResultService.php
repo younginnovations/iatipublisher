@@ -48,7 +48,13 @@ class ResultService
      */
     public function getPaginatedResult(int $activityId, int $page): LengthAwarePaginator|Collection
     {
-        return $this->resultRepository->getPaginatedResult($activityId, $page);
+        $results = $this->resultRepository->getPaginatedResult($activityId, $page);
+
+        foreach ($results as $idx => $result) {
+            $results[$idx]['default_title_narrative'] = $result->default_title_narrative;
+        }
+
+        return $results;
     }
 
     /*
