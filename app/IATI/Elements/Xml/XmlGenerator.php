@@ -247,24 +247,19 @@ class XmlGenerator
     public function generateActivityXml($activity, $transaction, $result, $settings, $organization)
     {
         $publishingInfo = $settings->publishing_info;
-
-        if (is_string($publishingInfo)) {
-            $publishingInfo = $publishingInfo;
-        }
-
         $publisherId = Arr::get($publishingInfo, 'publisher_id', 'Not Available');
         $filename = sprintf('%s-%s.xml', $publisherId, 'activities');
         $publishedActivity = sprintf('%s-%s.xml', $publisherId, $activity->id);
         $xml = $this->getXml($activity, $transaction, $result, $settings, $organization);
-//        $result = Storage::disk('minio')->put(
-//            sprintf('%s/%s/%s', 'xml', 'activityXmlFiles', $publishedActivity),
-//            $xml->saveXML()
-//        );
-//
-//        if ($result) {
-//            $publishedFiles = $this->savePublishedFiles($filename, $activity->org_id, $publishedActivity);
-//            $this->getMergeXml($publishedFiles, $filename);
-//        }
+        $result = Storage::disk('minio')->put(
+            sprintf('%s/%s/%s', 'xml', 'activityXmlFiles', $publishedActivity),
+            $xml->saveXML()
+        );
+
+        if ($result) {
+            $publishedFiles = $this->savePublishedFiles($filename, $activity->org_id, $publishedActivity);
+            $this->getMergeXml($publishedFiles, $filename);
+        }
     }
 
     /**

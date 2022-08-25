@@ -118,11 +118,6 @@ class ActivityWorkflowService
         );
         $activityPublished = $this->activityPublishedService->getActivityPublished($organization->id);
         $publishingInfo = $settings->publishing_info;
-
-        if (is_string($publishingInfo)) {
-            $publishingInfo = $publishingInfo;
-        }
-
         $this->publisherService->publishFile($publishingInfo, $activityPublished, $organization);
         $this->activityService->updatePublishedStatus($activity, 'published', true, true);
         $this->activitySnapshotService->createOrUpdateActivitySnapshot($activity);
