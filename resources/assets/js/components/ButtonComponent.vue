@@ -34,6 +34,8 @@ export default defineComponent({
       btnType = 'primary-outline-btn';
     } else if (props.type === 'primary') {
       btnType = 'primary-btn font-bold';
+    } else {
+      btnType = 'font-bold';
     }
     return { btnType };
   },

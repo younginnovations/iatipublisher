@@ -55,17 +55,10 @@ import ErrorLists from 'Components/sections/ErrorLists.vue';
 
 const props = defineProps({
   errorData: { type: Array, required: true },
-  open: { type: Boolean, required: true },
 });
 
 // toggle issues
 const [errorValue, errorToggle] = useToggle();
-
-onUpdated(() => {
-  if (props.open) {
-    errorToggle();
-  }
-});
 
 /**
  * list of errors

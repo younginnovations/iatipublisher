@@ -94,14 +94,23 @@
           </td>
 
           <td>
-            <Publish
-              v-if="datum['status'] !== 'published'"
-              :already-published="datum.already_published"
-              :linked-to-iati="datum.linked_to_iati"
-              :status="datum.status"
-              :core-completed="datum.coreCompleted"
-              type="outline"
-            />
+            <div class="flex flex-wrap gap-2">
+              <UnPublish
+                v-if="datum.linked_to_iati"
+                type="outline"
+                :activity-id="datum['id']"
+              />
+
+              <Publish
+                v-if="datum['status'] !== 'published'"
+                :already-published="datum.already_published"
+                :linked-to-iati="datum.linked_to_iati"
+                :status="datum.status"
+                :core-completed="datum.coreCompleted"
+                type="outline"
+                :activity-id="datum['id']"
+              />
+            </div>
           </td>
 
           <th class="check-column" @click="(e) => e.stopPropagation()">
@@ -134,6 +143,7 @@ import { useStore } from 'Store/activities/index';
 
 import PreviouslyPublished from 'Components/status/PreviouslyPublished.vue';
 import Publish from 'Components/sections/PublishButton.vue';
+import UnPublish from 'Components/sections/UnPublishButton.vue';
 
 const [selectAllValue, selectAllToggle] = useToggle();
 

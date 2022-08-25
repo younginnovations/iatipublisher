@@ -144,9 +144,11 @@ const props = defineProps({
   linkedToIati: { type: Boolean, required: true },
   status: { type: String, required: true },
   coreCompleted: { type: Boolean, required: true },
+  activityId: { type: Number, required: true },
 });
 
-const { alreadyPublished, linkedToIati, status, coreCompleted } = toRefs(props);
+const { alreadyPublished, linkedToIati, status, coreCompleted, activityId } =
+  toRefs(props);
 
 /**
  *  Global State
@@ -154,7 +156,7 @@ const { alreadyPublished, linkedToIati, status, coreCompleted } = toRefs(props);
 const store = useStore();
 
 //activity id
-const id = inject('activityID');
+const id = activityId.value;
 
 // toggle state for modal popup
 let [publishValue, publishToggle] = useToggle();
@@ -271,10 +273,6 @@ let err: Err = reactive({
 });
 
 // call api for validation
-interface OpenErrorInterface {
-  toggle: boolean;
-}
-let openError = inject('openError') as OpenErrorInterface;
 
 const validatorFunction = () => {
   loader.value = true;
@@ -286,7 +284,6 @@ const validatorFunction = () => {
 
     if (errors.length > 0) {
       store.dispatch('updatePublishErrors', errors);
-      openError.toggle = true;
 
       //identify error types
       const crit = response.summary.critical;

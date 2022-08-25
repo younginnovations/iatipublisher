@@ -62,14 +62,15 @@
             />
 
             <div class="inline-flex items-center justify-end gap-3">
-              <!-- Download File -->
-              <DownloadFile style="display: none" />
-
               <!-- Delete Activity -->
               <DeleteButton />
 
               <!-- Unpublish Activity -->
-              <UnPublish v-if="store.state.published" />
+              <UnPublish
+                v-if="store.state.published"
+                type="outline"
+                :activity-id="activityProps.id"
+              />
 
               <!-- Publish Activity -->
               <Publish
@@ -83,6 +84,7 @@
                 :linked-to-iati="activityProps.linked_to_iati"
                 :status="activityProps.status"
                 :core-completed="coreCompleted"
+                :activity-id="activityProps.id"
               />
             </div>
           </div>
@@ -90,7 +92,6 @@
           <Errors
             v-if="store.state.publishErrors.length > 0"
             :error-data="store.state.publishErrors"
-            :open="openError.toggle"
             class="absolute right-0 -mr-10 bottom-full"
           />
         </div>
@@ -242,7 +243,6 @@ import ProgressBar from 'Components/ProgressBar.vue';
 import Publish from 'Components/sections/PublishButton.vue';
 import UnPublish from 'Components/sections/UnPublishButton.vue';
 import DeleteButton from 'Components/sections/DeleteButton.vue';
-import DownloadFile from 'Components/sections/DownloadFile.vue';
 import Errors from 'Components/sections/StickyErrors.vue';
 import Toast from 'Components/Toast.vue';
 
@@ -267,7 +267,6 @@ export default defineComponent({
     UnPublish,
     DeleteButton,
     PreviouslyPublished,
-    DownloadFile,
   },
   props: {
     elements: {
@@ -457,18 +456,11 @@ export default defineComponent({
       status: activityProps.status,
     });
 
-    // open error or not
-
-    let openError = reactive({
-      toggle: false,
-    });
-
     // vue provides
     provide('types', types.value);
     provide('coreCompleted', coreCompleted.value);
     provide('activityID', activity.value.id);
     provide('toastMessage', toastMessage);
-    provide('openError', openError);
 
     /**
      * Breadcrumb data
@@ -516,7 +508,6 @@ export default defineComponent({
       publishStatus,
       breadcrumbData,
       store,
-      openError,
       activityProps,
     };
   },

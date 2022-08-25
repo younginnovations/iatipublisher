@@ -2,7 +2,7 @@
   <BtnComponent
     class=""
     text="Unpublish"
-    type="secondary"
+    :type="type"
     icon="cancel-cloud"
     @click="unpublishValue = true"
   />
@@ -44,7 +44,7 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, inject } from 'vue';
+import { defineProps, reactive, inject, toRefs } from 'vue';
 import { useToggle } from '@vueuse/core';
 import axios from 'axios';
 
@@ -53,11 +53,24 @@ import BtnComponent from 'Components/ButtonComponent.vue';
 import Modal from 'Components/PopupModal.vue';
 import Loader from 'Components/sections/ProgressLoader.vue';
 
+// Vuex Store
+import { useStore } from 'Store/activities/show';
+
+const props = defineProps({
+  type: { type: String, default: 'primary' },
+  activityId: { type: Number, required: true },
+});
+
+const { activityId } = toRefs(props);
+
 // toggle state for modal popup
 let [unpublishValue, unpublishToggle] = useToggle();
 
+//Global State
+const store = useStore();
+
 //activity id
-const id = inject('activityID');
+const id = activityId.value;
 
 // display/hide validator loader
 interface LoaderTypeface {
@@ -89,6 +102,9 @@ const unPublishFunction = () => {
     unpublishToggle();
     setTimeout(() => {
       loader.value = false;
+      if (response.success === true) {
+        store.dispatch('updatePublishedState', false);
+      }
     }, 2000);
   });
 };
