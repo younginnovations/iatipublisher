@@ -26,26 +26,10 @@
               <span>Title</span>
             </th>
             <th id="transaction_value" scope="col" width="190px">
-              <a
-                class="transition duration-500 text-n-50 hover:text-spring-50"
-                href="#"
-              >
-                <span class="sorting-indicator descending">
-                  <svg-vue icon="descending-arrow" />
-                </span>
-                <span>RESULT TYPE</span>
-              </a>
+              <span>RESULT TYPE</span>
             </th>
             <th id="transaction_date" scope="col" width="208px">
-              <a
-                class="transition duration-500 text-n-50 hover:text-spring-50"
-                href="#"
-              >
-                <span class="sorting-indicator descending">
-                  <svg-vue icon="descending-arrow" />
-                </span>
-                <span>AGGREGATION STATUS</span>
-              </a>
+              <span>AGGREGATION STATUS</span>
             </th>
             <th id="action" scope="col" width="177px">
               <span>Action</span>

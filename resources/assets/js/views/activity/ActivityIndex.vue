@@ -38,20 +38,19 @@ export default defineComponent({
   },
   setup() {
     const activities = reactive({});
+    const currentURL = window.location.href;
+    let endpoint = '';
+    let showEmptyTemplate = false;
+
+    if (currentURL.includes('?')) {
+      const queryString = window.location.search;
+      endpoint = `/activities/page/${queryString}`;
+    } else {
+      endpoint = `/activities/page`;
+      showEmptyTemplate = true;
+    }
 
     onMounted(async () => {
-      const currentURL = window.location.href;
-      let endpoint = '';
-      let showEmptyTemplate = false;
-
-      if (currentURL.includes('?')) {
-        const queryString = window.location.search;
-        endpoint = `/activities/page/${queryString}`;
-      } else {
-        endpoint = `/activities/page`;
-        showEmptyTemplate = true;
-      }
-
       axios.get(endpoint).then((res) => {
         const response = res.data;
         Object.assign(activities, response.data);
