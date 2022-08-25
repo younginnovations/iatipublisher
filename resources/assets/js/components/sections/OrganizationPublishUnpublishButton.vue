@@ -142,30 +142,17 @@ const publishStateChange = computed(() => {
     alertState: mandatoryElementStatus,
   });
 
-  let title = '',
-    description = '',
-    icon = 'tick';
-
   // different content for step 1 based on coreElement status
   if (mandatoryElementStatus) {
     publishState.title = 'Mandatory Elements Complete';
     publishState.description =
       'Congratulations! All the mandatory elements are complete. Continue to publish this organization.';
+    publishState.icon = 'tick'
   } else {
     publishState.title = 'Mandatory Elements not complete';
     publishState.description =
       '<p>There is missing data in some of the mandatory elements. We highly recommend that you complete these data fields to help ensure your data is useful.</p>';
     publishState.icon = 'warning-fill';
-  }
-
-  switch (publishStep.value) {
-    // first step
-    case 0:
-      publishState.title = title;
-      publishState.description = description;
-      publishState.icon = icon;
-      publishState.alertState = mandatoryElementStatus;
-      break;
   }
 
   return publishState;

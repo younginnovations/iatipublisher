@@ -44,7 +44,7 @@ class OrganizationWorkflowController extends Controller
             $organization = $this->organizationWorkflowService->findOrganization($organizationId);
 
             if ($this->hasNoPublisherInfo($organization->settings)) {
-                return response()->json(['success' => false, 'error' => 'Please update the publishing information first.']);
+                return response()->json(['success' => false, 'message' => 'Please update the publishing information first.']);
             }
 
             DB::beginTransaction();
@@ -53,13 +53,11 @@ class OrganizationWorkflowController extends Controller
 
             return response()->json(['success' => true, 'message' => 'Organization has been published successfully.']);
         } catch (PublisherNotFound $message) {
-            dd($message);
             DB::rollBack();
             logger()->error($message->getMessage());
 
             return response()->json(['success' => false, 'message' => $message->getMessage()]);
         } catch (\Exception $e) {
-            dd($e);
             DB::rollBack();
             logger()->error($e->getMessage());
 
