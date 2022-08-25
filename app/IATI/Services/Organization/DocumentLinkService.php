@@ -83,7 +83,7 @@ class DocumentLinkService
             }
         }
 
-        return $this->organizationRepository->update($id, ['documentLink' => $documentLink['document_link']]);
+        return $this->organizationRepository->update($id, ['document_link' => $documentLink['document_link']]);
     }
 
     /**
