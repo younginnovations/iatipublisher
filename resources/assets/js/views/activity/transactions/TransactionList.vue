@@ -23,70 +23,30 @@
         <thead>
           <tr class="bg-n-10">
             <th id="internal_ref" scope="col">
-              <a
-                class="transition duration-500 text-n-50 hover:text-spring-50"
-                href="#"
-              >
-                <span class="sorting-indicator descending">
-                  <svg-vue icon="ascending-arrow" />
-                </span>
-                <span>Internal Ref</span>
-              </a>
+              <span>Internal Ref</span>
             </th>
             <th id="transaction_type" scope="col">
-              <a
-                class="transition duration-500 text-n-50 hover:text-spring-50"
-                href="#"
-              >
-                <span class="sorting-indicator descending">
-                  <svg-vue icon="descending-arrow" />
-                </span>
-                <span>Transaction Type</span>
-              </a>
+              <span>Transaction Type</span>
             </th>
             <th id="transaction_value" scope="col">
-              <a
-                class="transition duration-500 text-n-50 hover:text-spring-50"
-                href="#"
-              >
-                <span class="sorting-indicator descending">
-                  <svg-vue icon="descending-arrow" />
-                </span>
-                <span>Transaction Value</span>
-              </a>
+              <span>Transaction Value</span>
             </th>
             <th id="transaction_date" scope="col">
-              <a
-                class="transition duration-500 text-n-50 hover:text-spring-50"
-                href="#"
-              >
-                <span class="sorting-indicator descending">
-                  <svg-vue icon="descending-arrow" />
-                </span>
-                <span>Transaction Date</span>
-              </a>
+              <span>Transaction Date</span>
             </th>
-<!--            <th id="status" scope="col">-->
-<!--              <a-->
-<!--                class="transition duration-500 text-n-50 hover:text-spring-50"-->
-<!--                href="#"-->
-<!--              >-->
-<!--                <span class="sorting-indicator descending">-->
-<!--                  <svg-vue icon="descending-arrow" />-->
-<!--                </span>-->
-<!--                <span>Status</span>-->
-<!--              </a>-->
-<!--            </th>-->
+            <!--            <th id="status" scope="col">-->
+            <!--              <a-->
+            <!--                class="transition duration-500 text-n-50 hover:text-spring-50"-->
+            <!--                href="#"-->
+            <!--              >-->
+            <!--                <span class="sorting-indicator descending">-->
+            <!--                  <svg-vue icon="descending-arrow" />-->
+            <!--                </span>-->
+            <!--                <span>Status</span>-->
+            <!--              </a>-->
+            <!--            </th>-->
             <th id="action" scope="col">
-              <a
-                class="transition duration-500 text-n-50 hover:text-spring-50"
-                href="#"
-              >
-                <span class="sorting-indicator descending">
-                  <svg-vue icon="descending-arrow" />
-                </span>
-                <span>Action</span>
-              </a>
+              <span>Action</span>
             </th>
           </tr>
         </thead>
@@ -119,7 +79,7 @@
                 }}
               </span>
             </td>
-<!--            <td><span class="text-spring-50">completed</span></td>-->
+            <!--            <td><span class="text-spring-50">completed</span></td>-->
             <td>
               <div class="flex text-n-40">
                 <a

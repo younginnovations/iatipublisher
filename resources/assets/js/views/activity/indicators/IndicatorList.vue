@@ -25,37 +25,13 @@
               <span>Title</span>
             </th>
             <th id="measure" scope="col" width="190px">
-              <a
-                class="transition duration-500 text-n-50 hover:text-spring-50"
-                href="#"
-              >
-                <span class="sorting-indicator descending">
-                  <svg-vue icon="descending-arrow" />
-                </span>
-                <span>Measure</span>
-              </a>
+              <span>Measure</span>
             </th>
             <th id="aggregation_status" scope="col" width="208px">
-              <a
-                class="transition duration-500 text-n-50 hover:text-spring-50"
-                href="#"
-              >
-                <span class="sorting-indicator descending">
-                  <svg-vue icon="descending-arrow" />
-                </span>
-                <span>Aggregation Status</span>
-              </a>
+              <span>Aggregation Status</span>
             </th>
             <th id="action" scope="col" width="190px">
-              <a
-                class="transition duration-500 text-n-50 hover:text-spring-50"
-                href="#"
-              >
-                <span class="sorting-indicator descending">
-                  <svg-vue icon="descending-arrow" />
-                </span>
-                <span>Action</span>
-              </a>
+              <span>Action</span>
             </th>
           </tr>
         </thead>
