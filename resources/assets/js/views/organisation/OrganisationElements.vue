@@ -14,7 +14,10 @@
         />
       </div>
       <div class="relative grid justify-items-end">
-        <button class="button panel-btn dropdown-btn" @click="searchBtnToggle()">
+        <button
+          class="button panel-btn dropdown-btn"
+          @click="searchBtnToggle()"
+        >
           <svg-vue
             :icon="
               elements.status
@@ -36,13 +39,12 @@
           class="button__dropdown button dropdown-btn absolute right-0 top-full z-10 w-[118px] bg-white text-left shadow-dropdown"
         >
           <ul class="w-full bg-eggshell py-2">
-            <li class="flex py-1.5 px-3.5 hover:bg-white" @click="dropdownFilter('')">
+            <li
+              class="flex py-1.5 px-3.5 hover:bg-white"
+              @click="dropdownFilter('')"
+            >
               <svg-vue class="mr-1 text-lg" icon="box"></svg-vue>
               <span>All Elements</span>
-            </li>
-            <li class="flex py-1.5 px-3.5 hover:bg-white" @click="dropdownFilter('core')">
-              <svg-vue class="mr-1 text-lg" icon="core"></svg-vue>
-              <span>Core</span>
             </li>
             <li
               class="flex py-1.5 px-3.5 hover:bg-white"
@@ -64,22 +66,30 @@
       >
         <div class="status_icons absolute right-0 top-0 mt-1 mr-1 inline-flex">
           <svg-vue
-            v-if=" String(index) === 'organisation_identifier'
-                    ? status['identifier']
-                    : status[index]"
+            v-if="
+              String(index) === 'organisation_identifier'
+                ? status['identifier']
+                : status[index]
+            "
             class="text-base text-teal-50"
             icon="double-tick"
           ></svg-vue>
           <!-- <svg-vue v-if="post.core" class="text-base text-camel-50" icon="core"></svg-vue> -->
         </div>
         <template v-if="index === 'name'">
-          <svg-vue class="text-base" icon="organisation-elements/building"></svg-vue>
+          <svg-vue
+            class="text-base"
+            icon="organisation-elements/building"
+          ></svg-vue>
         </template>
         <template v-else>
-          <svg-vue :icon="'organisation-elements/' + index" class="text-base"></svg-vue>
+          <svg-vue
+            :icon="'organisation-elements/' + index"
+            class="text-base"
+          ></svg-vue>
         </template>
         <div class="title mt-1 break-all text-xs">
-          {{ index.toString().replace(/_/g, "-") }}
+          {{ index.toString().replace(/_/g, '-') }}
         </div>
       </a>
     </div>
@@ -87,11 +97,11 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, reactive } from "vue";
-import { useToggle } from "@vueuse/core";
+import { computed, defineComponent, reactive } from 'vue';
+import { useToggle } from '@vueuse/core';
 
 export default defineComponent({
-  name: "OrganisationElements",
+  name: 'OrganisationElements',
   components: {},
   props: {
     data: {
@@ -100,8 +110,12 @@ export default defineComponent({
     },
     status: {
       type: Object,
-      required:true
-    }
+      required: true,
+    },
+    completed: {
+      type: Object,
+      required: true,
+    },
   },
   setup(props) {
     const [searchBtnValue, searchBtnToggle] = useToggle();
@@ -109,8 +123,8 @@ export default defineComponent({
      * Search functionality
      */
     const elements = reactive({
-      search: "",
-      status: "",
+      search: '',
+      status: '',
     });
 
     const asArrayData = Object.entries(props.data);
@@ -119,12 +133,16 @@ export default defineComponent({
         if (!elements.status) {
           return key
             .toLowerCase()
-            .includes(elements.search.toLowerCase().replace("_", "").replace("-", "_"));
+            .includes(
+              elements.search.toLowerCase().replace('_', '').replace('-', '_')
+            );
         } else {
           if (value[elements.status]) {
             return key
               .toLowerCase()
-              .includes(elements.search.toLowerCase().replace("_", "").replace("-", "_"));
+              .includes(
+                elements.search.toLowerCase().replace('_', '').replace('-', '_')
+              );
           }
         }
       });

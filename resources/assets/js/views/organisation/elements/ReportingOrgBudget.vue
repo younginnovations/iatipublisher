@@ -93,7 +93,7 @@
               -
               {{
                 formatDate(
-                  recipient_org_budget.period_start['0'].date ??
+                  recipient_org_budget.period_end['0'].date ??
                     'Period End Not Available'
                 )
               }}

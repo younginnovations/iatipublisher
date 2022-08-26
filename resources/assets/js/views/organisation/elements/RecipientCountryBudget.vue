@@ -43,7 +43,7 @@
               </td>
             </tr>
             <tr>
-              <td>Description</td>
+              <td>Narrative</td>
               <td>
                 <div
                   v-for="(narrative, i) in recipient_country_budget

@@ -238,7 +238,7 @@
             "type": "date",
             "required": true,
             "criteria": "mandatory",
-            "hover_text": "The date to be used for determining the exchange rate for currency conversions. This attribute is required. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/total-budget/value/'>For more information",
+            "hover_text": "The date to be used for determining the exchange rate for currency conversions. This attribute is required. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/total-budget/value/'>For more information</a>",
             "help_text": ""
           }
         },

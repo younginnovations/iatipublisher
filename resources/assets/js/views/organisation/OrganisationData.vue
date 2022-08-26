@@ -222,6 +222,7 @@
           :activity-id="organization.id"
           :data="elementProps"
           :status="status"
+          :completed = "co"
         />
       </aside>
       <div class="activities__content overflow-hidden">
@@ -393,6 +394,7 @@ export default defineComponent({
         }
 
         elementProps[k]['core'] = organizationData[key]['elements'][k]['core'];
+        elementProps[k]['completed'] = organizationProps['element_status'][k];
       });
 
       if (flag === false) {

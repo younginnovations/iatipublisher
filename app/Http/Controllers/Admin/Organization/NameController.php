@@ -48,7 +48,6 @@ class NameController extends Controller
 
             return view('admin.organisation.forms.name.name', compact('form', 'organization', 'data'));
         } catch (\Exception $e) {
-            dd($e);
             logger()->error($e->getMessage());
 
             return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while opening organization name form.');

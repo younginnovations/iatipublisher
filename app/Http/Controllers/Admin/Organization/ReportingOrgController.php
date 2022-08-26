@@ -47,7 +47,6 @@ class ReportingOrgController extends Controller
 
             return view('admin.organisation.forms.reportingOrg.reportingOrg', compact('form', 'organization', 'data'));
         } catch (\Exception $e) {
-            dd($e);
             logger()->error($e->getMessage());
 
             return redirect()->route('admin.organisation.index')->with('error', 'Error has occurred while opening organization reporting_org form.');

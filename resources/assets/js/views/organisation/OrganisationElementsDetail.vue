@@ -27,7 +27,7 @@
               class="mr-1.5 text-xl text-bluecoral"
             ></svg-vue>
           </template>
-          <div class="title text-sm font-bold">{{ title }}</div>
+          <div class="title text-sm font-bold">{{ title.replaceAll("_", "-") }}</div>
           <div
             class="status ml-2.5 flex text-xs leading-5"
             :class="{
@@ -54,11 +54,7 @@
           <template v-if="'moon' in data">
             <svg-vue v-if="data.moon" class="mr-1.5" icon="moon"></svg-vue>
           </template>
-          <HoverText
-            v-if="tooltip"
-            :hover-text="tooltip"
-            class="text-n-40"
-          ></HoverText>
+          <HoverText v-if="tooltip" :hover-text="tooltip" class="text-n-40"></HoverText>
         </div>
       </div>
       <div class="divider mb-4 h-px w-full bg-n-20"></div>
@@ -120,8 +116,8 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, provide } from 'vue';
-import HoverText from 'Components/HoverText.vue';
+import { defineProps, provide } from "vue";
+import HoverText from "Components/HoverText.vue";
 
 import {
   ReportingOrganisation,
@@ -131,7 +127,7 @@ import {
   RecipientCountryBudget,
   TotalExpenditure,
   DocumentLink,
-} from 'Organisation/elements/Index';
+} from "Organisation/elements/Index";
 
 const props = defineProps({
   data: {
@@ -153,12 +149,12 @@ const props = defineProps({
   language: {
     type: String,
     required: false,
-    default: 'en',
+    default: "en",
   },
   width: {
     type: String,
     required: false,
-    default: '',
+    default: "",
   },
   types: {
     type: Object,
@@ -172,10 +168,10 @@ const props = defineProps({
 
 // const status = '';
 
-let layout = 'basis-6/12';
-if (props.width === 'full') {
-  layout = 'basis-full';
+let layout = "basis-6/12";
+if (props.width === "full") {
+  layout = "basis-full";
 }
 
-provide('orgTypes', props.types);
+provide("orgTypes", props.types);
 </script>
