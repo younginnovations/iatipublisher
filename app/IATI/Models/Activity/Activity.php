@@ -172,11 +172,11 @@ class Activity extends Model
         if (!empty($titles)) {
             foreach ($titles as $title) {
                 if (array_key_exists('language', $title) && !empty($title['language']) && $title['language'] === getDefaultLanguage($this->default_field_values)) {
-                    return $title['narrative'];
+                    return (string) $title['narrative'];
                 }
             }
 
-            return array_key_exists('narrative', $titles[0]) ? $titles[0]['narrative'] : '';
+            return array_key_exists('narrative', $titles[0]) ? (string) $titles[0]['narrative'] : '';
         }
 
         return '';

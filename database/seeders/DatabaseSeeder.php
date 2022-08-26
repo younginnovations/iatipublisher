@@ -67,9 +67,9 @@ class DatabaseSeeder extends Seeder
                     [
                         'sector_vocabulary'    => 1,
                         'vocabulary_uri'       => '',
-                        'sector_code'          => '72050',
-                        'sector_category_code' => '',
-                        'sector_text'          => '',
+                        'code'          => '72050',
+                        'category_code' => '',
+                        'text'          => '',
                         'percentage'           => '',
                         'narrative'            => [
                             [

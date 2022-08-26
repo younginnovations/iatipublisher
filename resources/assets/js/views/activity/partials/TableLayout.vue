@@ -8,7 +8,7 @@
           </th>
           <th id="date" scope="col">
             <a
-              class="transition duration-500 text-n-50 hover:text-spring-50"
+              class="text-n-50 transition duration-500 hover:text-spring-50"
               :href="sortByDateUrl()"
             >
               <span class="sorting-indicator" :class="sortingDirection()">
@@ -47,15 +47,23 @@
                 v-if="datum['already_published']"
                 class="absolute top-0 left-0"
               />
-              <div class="relative ellipsis">
+              <div class="ellipsis relative">
                 <a
                   :href="'/activity/' + datum['id']"
                   class="overflow-hidden ellipsis text-n-50"
-                  >{{ datum['default_title_narrative'] ?? 'Untitled' }}</a
+                  >{{
+                    datum["default_title_narrative"] &&
+                    datum["default_title_narrative"] !== ""
+                      ? datum["default_title_narrative"]
+                      : "Untitled"
+                  }}</a
                 >
                 <div class="w-52">
                   <span class="ellipsis__title--hover">{{
-                    datum['default_title_narrative'] ?? 'Untitled'
+                    datum["default_title_narrative"] &&
+                    datum["default_title_narrative"] !== ""
+                      ? datum["default_title_narrative"]
+                      : "Untitled"
                   }}</span>
                 </div>
               </div>
@@ -76,12 +84,10 @@
             >
               <span class="mr-1 text-base">
                 <svg-vue
-                  :icon="
-                    datum['status'] === 'draft' ? 'document-write' : 'tick'
-                  "
+                  :icon="datum['status'] === 'draft' ? 'document-write' : 'tick'"
                 />
               </span>
-              <span class="text-sm leading-relaxed">{{ datum['status'] }}</span>
+              <span class="text-sm leading-relaxed">{{ datum["status"] }}</span>
             </button>
           </td>
 
@@ -105,12 +111,9 @@
             </div>
           </td>
 
-          <th
-            class="check-column"
-            @click="(event: Event) => event.stopPropagation()"
-          >
+          <th class="check-column" @click="(event: Event) => event.stopPropagation()">
             <label class="sr-only" for="">
-              Select "{{ datum['default_title_narrative'] }}"
+              Select "{{ datum["default_title_narrative"] }}"
             </label>
             <label class="checkbox">
               <input
@@ -131,16 +134,17 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps } from 'vue';
-import moment from 'moment';
-import { useToggle } from '@vueuse/core';
+import { defineProps } from "vue";
+import moment from "moment";
+import { useToggle } from "@vueuse/core";
 
 // Vuex Store
-import { useStore } from 'Store/activities/index';
+import { useStore } from "Store/activities/index";
 
-import PreviouslyPublished from 'Components/status/PreviouslyPublished.vue';
-import Publish from 'Components/buttons/PublishButton.vue';
-import UnPublish from 'Components/buttons/UnPublishButton.vue';
+import PreviouslyPublished from "Components/status/PreviouslyPublished.vue";
+import Publish from "Components/buttons/PublishButton.vue";
+import UnPublish from "Components/buttons/UnPublishButton.vue";
+// import Shimmer from "Components/ShimmerLoading.vue";
 
 const [selectAllValue, selectAllToggle] = useToggle();
 
@@ -163,28 +167,28 @@ function toggleSelectAll(
     for (const datum in activities) {
       ids.push(activities[datum].id);
     }
-    store.dispatch('updateSelectedActivities', ids);
+    store.dispatch("updateSelectedActivities", ids);
   } else {
-    store.dispatch('updateSelectedActivities', []);
+    store.dispatch("updateSelectedActivities", []);
   }
   selectAllToggle();
 }
 
 //Sorting by update_at
 const currentURL = window.location.href;
-let query = '',
-  direction = 'asc';
+let query = "",
+  direction = "asc";
 
 const sortingDirection = () => {
-  return direction === 'asc' ? 'descending' : 'ascending';
+  return direction === "asc" ? "descending" : "ascending";
 };
 
 const sortByDateUrl = () => {
-  if (currentURL.includes('?')) {
+  if (currentURL.includes("?")) {
     const queryString = window.location.search,
       urlParams = new URLSearchParams(queryString);
-    query = urlParams.get('q') ?? '';
-    direction = urlParams.get('direction') === 'desc' ? 'asc' : 'desc';
+    query = urlParams.get("q") ?? "";
+    direction = urlParams.get("direction") === "desc" ? "asc" : "desc";
   }
 
   return `?q=${query}&orderBy=updated_at&direction=${direction}`;
