@@ -165,15 +165,17 @@ class OrganizationXmlGenerator
             'version' => '2.03',
             'generated-datetime' => gmdate('c'),
         ];
+        $default_values = json_decode($settings->default_values);
+        $activity_default_values = json_decode($settings->activity_default_values);
 
         $xmlData['iati-organisation'] = $this->getXmlData($organization);
         $xmlData['iati-organisation']['@attributes'] = [
             'last-updated-datetime' => gmdate('c', time()),
-            'xml:lang'              => Arr::get($settings->default_field_values, '0.default_language', null),
-            'default-currency'      => Arr::get($settings->default_field_values, '0.default_currency', null),
+            'xml:lang'              => $default_values->default_language ?? null,
+            'default-currency'      => $default_values->default_currency ?? null,
             // 'humanitarian'          => Arr::get($settings->default_field_values, '0.humanitarian', false),
-            'hierarchy'             => Arr::get($settings->default_field_values, '0.default_hierarchy', 1),
-            'linked-data-uri'       => Arr::get($settings->default_field_values, '0.linked_data_uri', null),
+            'hierarchy'             => $activity_default_values->default_hierarchy ?? 1,
+            'linked-data-uri'       => $activity_default_values->linked_data_uri ?? null,
         ];
 
         return $this->arrayToXml->createXml('iati-organisations', $xmlData);
@@ -233,8 +235,8 @@ class OrganizationXmlGenerator
      */
     public function deleteUnpublishedFile($filename)
     {
-        if (Storage::disk('minio')->exists(sprintf('%s/%s/%s', 'xml', 'organizationXmlFiles', $filename))) {
-            Storage::disk('minio')->delete(sprintf('%s/%s/%s', 'xml', 'organizationXmlFiles', $filename));
+        if (Storage::disk('minio')->exists(sprintf('%s/%s', 'organizationXmlFiles', $filename))) {
+            Storage::disk('minio')->delete(sprintf('%s/%s', 'organizationXmlFiles', $filename));
         }
     }
 }

@@ -45,32 +45,24 @@
                 recipient_region_budget.recipient_region['0'].region_vocabulary === '99'
               "
             >
-              <td>Vocabulary_URI</td>
-              <td
-                v-if="recipient_region_budget.recipient_region['0'].vocabulary_uri"
-              >
+              <td>Vocabulary URI</td>
+              <td v-if="recipient_region_budget.recipient_region['0'].vocabulary_uri">
                 <a
                   target="_blank"
-                  :href="recipient_region_budget.recipient_region['0']
-                    .vocabulary_uri"
-                  >{{
-                    recipient_region_budget.recipient_region["0"].vocabulary_uri
-                  }}</a
+                  :href="recipient_region_budget.recipient_region['0'].vocabulary_uri"
+                  >{{ recipient_region_budget.recipient_region["0"].vocabulary_uri }}</a
                 >
               </td>
               <td v-else>Vocabulary URI not available</td>
             </tr>
-            <tr
-              v-if="
-                recipient_region_budget.recipient_region['0'].region_vocabulary != '99'
-              "
-            >
+            <tr>
               <td>Code</td>
               <td>
                 {{
                   recipient_region_budget.recipient_region["0"].region_vocabulary === "1"
-                    ? types.region[recipient_region_budget.recipient_region["0"].region_code] ??
-                      "Code Not Available"
+                    ? types.region[
+                        recipient_region_budget.recipient_region["0"].region_code
+                      ] ?? "Code Not Available"
                     : recipient_region_budget.recipient_region["0"].code ??
                       "Code Not Available"
                 }}
