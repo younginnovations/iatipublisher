@@ -160,4 +160,88 @@ return [
 
     'attributes' => [],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Custom Validation Language Lines
+    |--------------------------------------------------------------------------
+    |
+    | Here you may specify custom validation messages for attributes using the
+    | convention "attribute.rule" to name the lines. This makes it quick to
+    | specify a specific custom language line for a given attribute rule.
+    |
+    */
+    'sum'                                       => 'The sum of percentage within a vocabulary must add up to 100.',
+    'overall_sum'                               => 'The sum of percentage must not be more than 100.',
+    'required_custom'                           => ':attribute is required when there are multiple codes.',
+    'total'                                     => ':attribute should be 100 when there is only one :values.',
+    'csv_required'                              => 'At row :number :attribute is required',
+    'csv_unique'                                => 'At row :number :attribute should be unique',
+    'csv_invalid'                               => 'At row :number :attribute is invalid',
+    'csv_numeric'                               => 'At row :number :attribute should be numeric',
+    'csv_unique_validation'                     => 'At row :number :attribute is invalid and must be unique.',
+    'csv_among'                                 => 'At row :number at least one :type among :attribute is required.',
+    'csv_only_one'                              => 'At row :number only one among :attribute is required.',
+    'year_value_narrative_validation'           => ':year and :value is required if :narrative is not empty.',
+    'year_narrative_validation'                 => ':year is required if :narrative is not empty.',
+    'org_required'                              => 'At least one organisation name is required',
+    'custom_unique'                             => ':attribute has already been taken.',
+    'user_identifier_taken'                     => 'Sorry! this User Identifier is already taken',
+    'enter_valid'                               => 'Please enter valid :attribute',
+    'sector_validation'                         => 'Sector must be present either at Activity or in all Transactions level.',
+    'sector_narrative'                          => '<a href=\'%s\' >Sector Narrative</a> is required when vocabulay is 98 or 99.',
+    'transaction_sector_narrative'              => '<a href=\'%s\' >Transaction Sector Narrative</a> is required when vocabulay is 98 or 99.',
+    'transaction_sector_validation'             => 'All Transactions must contain Sector element.',
+    'sector_in_activity_and_transaction_remove' => 'You can only mention Sector either at Activity or in Transaction level(should be included in all transactions) but not both. <br/>Please click the link to remove Sector From: <a href=\'%s\' class=\'delete_data\'>Transaction Level</a> OR <a href=\'%s\' class=\'delete_data\'>Activity Level</a>',
+    'sector_in_activity_and_transaction'        => 'You can only mention Recipient Country or Region either in Activity Level or in Transaction level. You can\'t have Country/Region in both Activity level and Transaction level.',
+    'recipient_country_or_region_required'      => 'Either Recipient Country or Recipient Region is required in Activity Level or Transaction Level.',
+    'transaction_recipient_country_or_region_required' => 'All Transactions must contain Recipient Region or Recipient Country',
+    'sum_of_percentage'                         => 'The sum of percentage in :attribute must be 100.',
+    'validation_before_completed'               => 'Please make sure you enter the following fields before changing to completed state.',
+    'reporting_org_identifier_unique'           => 'This reporting organization identifier is being used by :orgName. This identifier has to be unique. Please contact us at support@aidstream.org',
+    'code_list'                                 => ':attribute is not valid.',
+    'string'                                    => ':attribute should be string',
+    'negative'                                  => ':attribute cannot be negative',
+    'actual_date'                               => 'Actual Start Date And Actual End Date must not exceed present date',
+    'multiple_activity_date'                    => 'Multiple Activity dates are not allowed.',
+    'start_end_date'                            => 'Actual Start Date or Planned Start Date should be before Actual End Date or Planned End Date.',
+    'csv_date'                                  => ':attribute must be of format Y-m-d.',
+    'multiple_values'                           => 'Multiple :attribute are not allowed.',
+    'csv_size'                                  => 'At least one :attribute is required',
+    'multiple_narratives'                       => 'Multiple narratives for :attribute with the same type is not allowed.',
+    'required_only_one_among'                   => 'Either :attribute or :values is required.',
+    'recipient_country_region_percentage_sum'   => 'Sum of percentage of Recipient Country and Recipient Region must be equal to 100.',
+    'invalid_in_transaction'                    => 'Entered :attribute is incorrect in Transaction.',
+    'required_if_in_transaction'                => ':attribute is required if :values is not present in Transaction.',
+    'sector_vocabulary_required'                => 'Sector Vocabulary is required in Transaction if not present in Activity Level.',
+    'required_in_transaction'                   => ':attribute is required in Transaction.',
+    'invalid_language'                          => 'Invalid :attribute language',
+    'unique_lang'                               => 'Repeated :attribute in the same language is not allowed.',
+    'indicator_ascending'                       => 'Indicator Ascending should be true/false, 0/1 or Yes/No.',
+    'indicator_size'                            => 'Indicator Baseline Year or Value should occur once and no more than once within an Indicator.',
+    'narrative_required'                        => ':attribute Narrative is required.',
+    'no_more_than_once'                         => ':attribute should occur once and no more than once within :values.',
+    'budget_period_end_date'                    => 'Budget Period End Date',
+    'spaces_not_allowed'                        => 'You cannot enter spaces in organization name abbreviation.',
+    'custom'                                    => [
+        'attribute-name' => [
+            'rule-name' => 'custom-message',
+        ],
+    ],
+    /*
+    |--------------------------------------------------------------------------
+    | Custom Validation Attributes
+    |--------------------------------------------------------------------------
+    |
+    | The following language lines are used to swap attribute place-holders
+    | with something more reader friendly such as E-Mail Address instead
+    | of "email". This simply helps us make messages a little cleaner.
+    |
+    */
+
+    'attributes'    => [],
+    'within_a_year' => "The :attribute must be within a year after :date.",
+    'required_if_any' => "The :field is required if any of the fields of :element are filled.",
+    'amount' => 'Please enter amount in the format xx.xx',
+    'greater' => 'The :attribute must be greater than or equal to :value'
+
 ];

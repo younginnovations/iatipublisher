@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\CsvImporter\Events\ActivityCsvWasUploaded;
+use App\CsvImporter\Listeners\ActivityCsvUpload;
 use App\IATI\Models\Activity\Activity;
 use App\IATI\Models\Activity\Indicator;
 use App\IATI\Models\Activity\Period;
@@ -14,6 +16,8 @@ use App\Observers\OrganizationObserver;
 use App\Observers\PeriodObserver;
 use App\Observers\ResultObserver;
 use App\Observers\TransactionObserver;
+use App\XmlImporter\Events\XmlWasUploaded;
+use App\XmlImporter\Listeners\XmlUpload;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
@@ -32,6 +36,11 @@ class EventServiceProvider extends ServiceProvider
         Registered::class                 => [
             SendEmailVerificationNotification::class,
         ],
+        'Illuminate\Auth\Events\Verified' => [
+            'App\Listerners\LogVerifieduser',
+        ],
+        ActivityCsvWasUploaded::class => [ActivityCsvUpload::class],
+        XmlWasUploaded::class => [XmlUpload::class],
     ];
 
     /**

@@ -181,6 +181,7 @@ interface PublishStatusTypeface {
 }
 // publish-republish
 const publishStatus = inject("publishStatus") as PublishStatusTypeface;
+
 const btnText = computed(() => {
   if (publishStatus.is_published && publishStatus.status === "draft") {
     return "Republish";
