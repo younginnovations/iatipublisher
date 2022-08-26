@@ -142,8 +142,12 @@ spec:
           value: log
         - name: CACHE_DRIVER
           value: redis
+        - name: QUEUE_DRIVER
+          value: redis
         - name: QUEUE_CONNECTION
           value: redis
+        - name: REDIS_CLIENT
+          value: predis
         - name: SESSION_DRIVER
           value: redis
         - name: SESSION_LIFETIME
@@ -285,6 +289,8 @@ spec:
             secretKeyRef:
               name: iati-secret
               key: IATI_VALIDATOR_KEY
+        - name: AWS_USE_PATH_STYLE_ENDPOINT
+          value: false
         resources:
           limits:
             memory: "2Gi"

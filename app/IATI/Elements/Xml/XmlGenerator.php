@@ -385,8 +385,8 @@ class XmlGenerator
             'last-updated-datetime' => gmdate('c', time()),
             'xml:lang'              => Arr::get($defaultValues, 'default_language', null),
             'default-currency'      => Arr::get($defaultValues, 'default_currency', null),
-            'humanitarian'          => Arr::get($defaultValues, 'humanitarian', false),
-            'hierarchy'             => Arr::get($defaultValues, 'default_hierarchy', 1),
+            'humanitarian'          => Arr::get($defaultValues, 'humanitarian', 1),
+            'hierarchy'             => Arr::get($defaultValues, 'hierarchy', 1),
         ];
 
         return $this->arrayToXml->createXml('iati-activities', $xmlData);

@@ -140,7 +140,7 @@ class PlannedDisbursementService
                 'receiver-org' => [
                     '@attributes' => [
                         'ref'                  => Arr::get($plannedDisbursement, 'receiver_org.0.ref', null),
-                        'receiver-activity-id' => Arr::get($plannedDisbursement, 'receiver_org.0.provider_activity_id', null),
+                        'receiver-activity-id' => Arr::get($plannedDisbursement, 'receiver_org.0.receiver_activity_id', null),
                         'type'                 => Arr::get($plannedDisbursement, 'receiver_org.0.type', null),
                     ],
                     'narrative'   => $this->buildNarrative(Arr::get($plannedDisbursement, 'receiver_org.0.narrative', [])),

@@ -1,0 +1,219 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Http\Controllers\Admin\Workflow;
+
+use App\Http\Controllers\Controller;
+use App\IATI\Services\Activity\ActivityService;
+use App\IATI\Services\Activity\BulkPublishingStatusService;
+use App\IATI\Services\Workflow\ActivityWorkflowService;
+use App\IATI\Services\Workflow\BulkPublishingService;
+use App\Jobs\BulkPublishActivities;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\DB;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
+
+/**
+ * Class BulkPublishingController.
+ */
+class BulkPublishingController extends Controller
+{
+    /**
+     * @var BulkPublishingService
+     */
+    protected BulkPublishingService $bulkPublishingService;
+
+    /**
+     * @var ActivityService
+     */
+    protected ActivityService $activityService;
+
+    /**
+     * @var ActivityWorkflowService
+     */
+    protected ActivityWorkflowService $activityWorkflowService;
+
+    /**
+     * @var BulkPublishingStatusService
+     */
+    protected BulkPublishingStatusService $publishingStatusService;
+
+    /**
+     * BulkPublishingController Constructor.
+     *
+     * @param BulkPublishingService $bulkPublishingService
+     * @param ActivityService $activityService
+     * @param ActivityWorkflowService $activityWorkflowService
+     * @param BulkPublishingStatusService $publishingStatusService
+     */
+    public function __construct(
+        BulkPublishingService $bulkPublishingService,
+        ActivityService $activityService,
+        ActivityWorkflowService $activityWorkflowService,
+        BulkPublishingStatusService $publishingStatusService
+    ) {
+        $this->bulkPublishingService = $bulkPublishingService;
+        $this->activityService = $activityService;
+        $this->activityWorkflowService = $activityWorkflowService;
+        $this->publishingStatusService = $publishingStatusService;
+    }
+
+    /**
+     * Checks if core elements are completed or not.
+     *
+     * @param Request $request
+     *
+     * @return JsonResponse
+     *
+     * @throws \Exception
+     */
+    public function checkCoreElementsCompleted(Request $request): JsonResponse
+    {
+        try {
+            if ($this->publishingStatusService->ongoingBulkPublishing(auth()->user()->organization->id)) {
+                return response()->json(['success' => false, 'message' => 'Another bulk publishing is already in progress.']);
+            }
+
+            $activityIds = json_decode($request->get('activities'), true, 512, JSON_THROW_ON_ERROR);
+
+            if (!empty($activityIds)) {
+                return response()->json(['success' => true, 'message' => 'Retrieved data successfully.', 'data' => $this->bulkPublishingService->getCoreElementsCompletedArray($activityIds)]);
+            }
+
+            return response()->json(['success' => false, 'message' => 'No activities selected.']);
+        } catch (\Exception $e) {
+            logger()->error($e->getMessage());
+
+            return response()->json(['success' => false, 'message' => 'Error has occurred while checking core elements completed.']);
+        }
+    }
+
+    /**
+     * Validates activities on IATI validator.
+     *
+     * @param Request $request
+     *
+     * @return JsonResponse
+     *
+     * @throws \Exception
+     */
+    public function validateActivities(Request $request): JsonResponse
+    {
+        try {
+            DB::beginTransaction();
+
+            if ($this->activityWorkflowService->hasNoPublisherInfo(auth()->user()->organization->settings)) {
+                return response()->json(['success' => false, 'message' => 'Please update the publishing information first.']);
+            }
+
+            $activityIds = json_decode($request->get('activities'), true, 512, JSON_THROW_ON_ERROR);
+
+            if (!empty($activityIds)) {
+                $validationResponse = $this->bulkPublishingService->validateActivitiesOnIATI($activityIds);
+                DB::commit();
+
+                if (!Arr::get($validationResponse, 'success', true)) {
+                    return response()->json(['success' => false, 'message' => 'Activities validation failed.']);
+                }
+
+                return response()->json(['success' => true, 'message' => 'Activities validated successfully.', 'data' => $validationResponse]);
+            }
+
+            return response()->json(['success' => false, 'message' => 'No activities selected.']);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            logger()->error($e->getMessage());
+
+            return response()->json(['success' => false, 'message' => 'Error has occurred while validating activities.']);
+        }
+    }
+
+    /**
+     * Starts bulk publishing job and sends initial response.
+     *
+     * @param Request $request
+     *
+     * @return JsonResponse
+     *
+     * @throws \Exception
+     */
+    public function startBulkPublish(Request $request): JsonResponse
+    {
+        try {
+            DB::beginTransaction();
+
+            if ($this->activityWorkflowService->hasNoPublisherInfo(auth()->user()->organization->settings)) {
+                return response()->json(['success' => false, 'message' => 'Please update the publishing information first.']);
+            }
+
+            if ($this->publishingStatusService->ongoingBulkPublishing(auth()->user()->organization->id)) {
+                return response()->json(['success' => false, 'message' => 'Another bulk publishing is already in progress.']);
+            }
+
+            $activityIds = json_decode($request->get('activities'), false, 512, JSON_THROW_ON_ERROR);
+
+            if (!empty($activityIds)) {
+                $activities = $this->activityService->getActivitiesHavingIds($activityIds);
+
+                if (!count($activities)) {
+                    return response()->json(['success' => false, 'message' => 'No activities selected.']);
+                }
+
+                $response = $this->bulkPublishingService->generateInitialBulkPublishingResponse($activities);
+                $this->publishingStatusService->storeProcessingActivities($activities, $response['organization_id'], $response['job_batch_uuid']);
+                dispatch(new BulkPublishActivities($activities, $response['organization_id'], $response['job_batch_uuid']));
+                DB::commit();
+
+                return response()->json(['success' => true, 'message' => 'Bulk publishing started', 'data' => $response]);
+            }
+
+            return response()->json(['success' => false, 'message' => 'No activities selected.']);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            logger()->error($e->getMessage());
+
+            return response()->json(['success' => false, 'message' => 'Bulk publishing failed.']);
+        }
+    }
+
+    /**
+     * Get status of bulk publishing.
+     *
+     * @return JsonResponse
+     *
+     * @throws \Exception
+     */
+    public function getBulkPublishStatus(): JsonResponse
+    {
+        try {
+            $organizationId = request()->get('organization_id');
+            $uuid = request()->get('uuid');
+
+            if ($organizationId && $uuid) {
+                $publishStatus = $this->publishingStatusService->getActivityPublishingStatus($organizationId, $uuid);
+
+                if (count($publishStatus)) {
+                    $response = $this->bulkPublishingService->getPublishingResponse($publishStatus);
+
+                    return response()->json(['success' => true, 'message' => $response['message'], 'data' => $response]);
+                }
+
+                return response()->json(['success' => true, 'message' => 'No bulk publishing in process.']);
+            }
+
+            return response()->json(['success' => false, 'message' => 'Insufficient data.']);
+        } catch (\Exception $e) {
+            logger()->error($e->getMessage());
+
+            return response()->json(['success' => false, 'message' => 'Status generation failed.']);
+        } catch (NotFoundExceptionInterface|ContainerExceptionInterface $e) {
+            logger()->error($e->getMessage());
+
+            return response()->json(['success' => false, 'message' => 'Request error']);
+        }
+    }
+}

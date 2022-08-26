@@ -1,0 +1,281 @@
+<template>
+  <div id="publishing_activities" class="z-50 w-[366px]">
+    <div class="flex items-center justify-between p-4 bulk-head bg-eggshell">
+      <div class="text-sm font-bold leading-normal grow">
+        Publishing {{ Object.keys(activities).length }} activities
+      </div>
+      <div class="flex shrink-0">
+        <div
+          v-if="hasFailedActivities.ids.length > 0"
+          class="flex items-center cursor-pointer retry text-crimson-50"
+          @click="retryPublishing"
+        >
+          <svg-vue class="mr-1" icon="redo" />
+          <span class="text-xs uppercase">Retry</span>
+        </div>
+        <div v-else class="cursor-pointer minus" @click="toggleWindow"></div>
+        <div
+          v-if="completed === 'completed'"
+          class="cursor-pointer cross"
+          @click="closeWindow"
+        ></div>
+      </div>
+    </div>
+    <div
+      class="bulk-activities max-h-[240px] overflow-y-auto overflow-x-hidden bg-white transition-all duration-500"
+    >
+      <div>
+        <div
+          v-for="(value, name, index) in activities"
+          :key="index"
+          class="flex px-4 py-3 item"
+        >
+          <div class="pr-2 text-sm leading-normal activity-title grow">
+            {{ value['activity_title'] }}
+          </div>
+          <div class="text-xl shrink-0">
+            <svg-vue
+              v-if="value['status'] === 'completed'"
+              class="text-spring-50"
+              icon="tick"
+            />
+            <svg-vue
+              v-else-if="value['status'] === 'failed'"
+              class="text-crimson-50"
+              icon="times-circle"
+            />
+            <span v-else class="rolling"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+<script setup lang="ts">
+import { onMounted, ref, reactive, watch, inject } from 'vue';
+import axios from 'axios';
+
+interface paInterface {
+  value: {
+    publishingActivities: paElements;
+  };
+}
+
+interface paElements {
+  activities: actElements;
+  organization_id: number;
+  job_batch_uuid: string;
+  status: string;
+  message: string;
+}
+
+interface actElements {
+  activity_id: number;
+  activity_title: string;
+  status: string;
+}
+
+//inject
+let paStorage = inject('paStorage') as paInterface;
+
+let activities = ref(paStorage.value.publishingActivities.activities),
+  completed = ref('processing');
+
+let hasFailedActivities = reactive({
+  data: {} as actElements,
+  ids: [] as number[],
+  status: false,
+});
+
+let intervalID;
+
+/**
+ *   Component lifecycle - onMounted
+ */
+onMounted(() => {
+  completed.value = paStorage.value.publishingActivities.status ?? 'processing';
+  bulkPublishStatus();
+});
+
+// watching change in value of completed
+watch(completed, async (newValue) => {
+  if (newValue === 'completed') {
+    clearInterval(intervalID);
+
+    // resetting local storage
+    // paStorage.value.publishingActivities = {} as paElements;
+
+    // check for failed publish
+    failedActivities(paStorage.value.publishingActivities.activities);
+  }
+});
+
+/**
+ * Bulk Publish Function
+ */
+const bulkPublishStatus = () => {
+  intervalID = setInterval(() => {
+    axios
+      .get(
+        `activities/bulk-publish-status?organization_id=${paStorage.value.publishingActivities.organization_id}&&uuid=${paStorage.value.publishingActivities.job_batch_uuid}`
+      )
+      .then((res) => {
+        const response = res.data;
+        if ('data' in response) {
+          activities.value = response.data.activities;
+          completed.value = response.data.status;
+
+          // saving in local storage
+          paStorage.value.publishingActivities.activities =
+            response.data.activities;
+          paStorage.value.publishingActivities.status = response.data.status;
+          paStorage.value.publishingActivities.message = response.data.message;
+        } else {
+          completed.value = 'completed';
+        }
+      });
+  }, 2000);
+};
+
+/**
+ * Minimize or maximize window
+ */
+const open = ref(true);
+const toggleWindow = (e: Event) => {
+  const currentTarget = e.currentTarget as HTMLElement;
+  const target = (
+    currentTarget.closest('#publishing_activities') as HTMLElement
+  ).querySelector<HTMLElement>('.bulk-activities');
+  const elHeight = target?.querySelector('div')?.clientHeight;
+
+  if (open.value) {
+    if (target != null) {
+      target.style.cssText = `height: ${elHeight}px;`;
+      setTimeout(function () {
+        target.style.cssText = `height: 0px; overflow: hidden;`;
+      }, 100);
+      open.value = false;
+    }
+  } else {
+    if (target != null) {
+      target.style.cssText = `height: ${elHeight}px; overflow:hidden;`;
+
+      setTimeout(function () {
+        target.style.cssText = `height: auto;`;
+      }, 600);
+
+      open.value = true;
+    }
+  }
+};
+
+/**
+ * Closing window
+ */
+const closeWindow = () => {
+  paStorage.value.publishingActivities = {} as paElements;
+};
+
+/**
+ * Function to collect failed activities
+ */
+
+const failedActivities = (nestedObject: actElements) => {
+  const failedActivitiesID = [] as number[];
+  const asArrayData = Object.entries(nestedObject);
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const filtered = asArrayData.filter(([key, value]) => {
+    if (Object.values(value).indexOf('failed') > -1) {
+      failedActivitiesID.push(value.activity_id);
+      return key;
+    }
+  });
+
+  const failedActivitiesData = Object.fromEntries(filtered);
+
+  if (failedActivitiesID.length > 0) {
+    hasFailedActivities.status = true;
+    hasFailedActivities.ids = failedActivitiesID;
+    hasFailedActivities.data = failedActivitiesData as actElements;
+  } else {
+    hasFailedActivities.status = false;
+    hasFailedActivities.ids = [];
+    hasFailedActivities.data = {} as actElements;
+  }
+};
+
+/**
+ * Retry publishing failed activities
+ */
+const retryPublishing = () => {
+  //reset required states
+  completed.value = 'processing';
+
+  for (const key in hasFailedActivities.data) {
+    hasFailedActivities.data[key].status = 'processing';
+  }
+
+  activities.value = hasFailedActivities.data;
+
+  // api endpoint call
+  const endpoint = `activities/start-bulk-publish?activities=[${hasFailedActivities.ids}]`;
+
+  axios.get(endpoint).then((res) => {
+    const response = res.data;
+
+    console.log(response);
+
+    if (response.success) {
+      paStorage.value.publishingActivities = response.data;
+      bulkPublishStatus();
+    }
+  });
+};
+</script>
+
+<style lang="scss" scoped>
+.minus {
+  @apply flex h-3 w-3 items-center;
+  &:before {
+    content: '';
+    @apply block h-0.5 w-3 rounded-xl bg-blue-50;
+  }
+}
+
+#publishing_activities {
+  @apply fixed bottom-0 right-0;
+  filter: drop-shadow(0px 4px 40px rgba(0, 0, 0, 0.1));
+}
+
+.rolling {
+  @apply inline-block animate-spin rounded-full border-2 border-n-20;
+  width: 20px;
+  height: 20px;
+  border-top-color: white;
+}
+
+.cross {
+  @apply relative ml-5 h-3 w-3 overflow-hidden;
+
+  &:before,
+  &:after {
+    content: '';
+    @apply absolute left-1/2 top-0 block h-3 w-0.5 -translate-x-1/2 rounded-xl bg-blue-50;
+  }
+
+  &:before {
+    @apply rotate-45;
+  }
+
+  &:after {
+    @apply -rotate-45;
+  }
+}
+
+.activity-title {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+</style>

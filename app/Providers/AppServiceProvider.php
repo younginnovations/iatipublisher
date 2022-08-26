@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use Laravel\Horizon\Horizon;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -11,7 +12,7 @@ class AppServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    public function register()
+    public function register(): void
     {
         //
     }
@@ -21,10 +22,17 @@ class AppServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    public function boot()
+    public function boot(): void
     {
         if (config('app.env') === 'production' || config('app.env') === 'staging') {
             \URL::forceScheme('https');
         }
+
+        Horizon::auth(function ($request) {
+            // Always show admin if local development
+            if (env('APP_ENV') === 'local') {
+                return true;
+            }
+        });
     }
 }
