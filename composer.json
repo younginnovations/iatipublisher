@@ -16,6 +16,7 @@
         "laravel/tinker": "^2.7",
         "laravel/ui": "^3.4",
         "league/flysystem-aws-s3-v3": "^3.0",
+        "maatwebsite/excel": "^3.1",
         "predis/predis": "^2.0",
         "symfony/psr-http-message-bridge": "^2.1",
         "ext-openssl": "*"
