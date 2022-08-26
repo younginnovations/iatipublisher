@@ -15,21 +15,15 @@
           </template>
 
           <template v-else-if="title === 'iati_identifier'">
-            <svg-vue
-              class="elements-svg"
-              icon="activity-elements/iati_identifier"
-            />
+            <svg-vue class="elements-svg" icon="activity-elements/iati_identifier" />
           </template>
 
           <template v-else>
-            <svg-vue
-              :icon="'activity-elements/' + title"
-              class="elements-svg"
-            ></svg-vue>
+            <svg-vue :icon="'activity-elements/' + title" class="elements-svg"></svg-vue>
           </template>
 
           <div class="text-sm font-bold title">
-            {{ title.toString().replace(/_/g, '-') }}
+            {{ title.toString().replace(/_/g, "-") }}
           </div>
 
           <Status :data="completed" />
@@ -58,7 +52,11 @@
               class="edit-button mr-2.5"
             />
           </div>
-          <svg-vue v-if="activityCoreElements().includes(title)" class="mr-1.5" icon="core"></svg-vue>
+          <svg-vue
+            v-if="activityCoreElements().includes(title)"
+            class="mr-1.5"
+            icon="core"
+          ></svg-vue>
           <HoverText v-if="tooltip" :hover-text="tooltip" class="text-n-40" />
         </div>
       </div>
@@ -133,30 +131,21 @@
               <span v-else class="italic">Vocabulary Not Available</span>
             </div>
 
-            <div
-              v-if="post.default_aid_type_vocabulary === '2'"
-              class="text-sm"
-            >
+            <div v-if="post.default_aid_type_vocabulary === '2'" class="text-sm">
               <span v-if="post.earmarking_category">{{
                 types.earmarkingCategory[post.earmarking_category]
               }}</span>
               <span v-else class="italic">Code Not Available</span>
             </div>
 
-            <div
-              v-else-if="post.default_aid_type_vocabulary === '3'"
-              class="text-sm"
-            >
+            <div v-else-if="post.default_aid_type_vocabulary === '3'" class="text-sm">
               <span v-if="post.earmarking_modality">{{
                 types.earmarkingModality[post.earmarking_modality]
               }}</span>
               <span v-else class="italic">Code Not Available</span>
             </div>
 
-            <div
-              v-else-if="post.default_aid_type_vocabulary === '4'"
-              class="text-sm"
-            >
+            <div v-else-if="post.default_aid_type_vocabulary === '4'" class="text-sm">
               <span v-if="post.cash_and_voucher_modalities">{{
                 types.cashandVoucherModalities[post.cash_and_voucher_modalities]
               }}</span>
@@ -181,10 +170,7 @@
           class="elements-detail"
           :class="{ 'mb-4': key !== data.content.budget_item.length - 1 }"
         >
-          <div
-            v-if="data.content.country_budget_vocabulary === '1'"
-            class="text-sm"
-          >
+          <div v-if="data.content.country_budget_vocabulary === '1'" class="text-sm">
             <div v-if="post.code" class="flex space-x-1">
               <span>
                 {{ types.budgetIdentifier[post.code] }}
@@ -194,9 +180,7 @@
             <span v-else class="italic">Not Available</span>
           </div>
           <div v-else class="text-sm">
-            <span v-if="post.code">{{
-              types.budgetIdentifier[post.code]
-            }}</span>
+            <span v-if="post.code">{{ types.budgetIdentifier[post.code] }}</span>
             <span v-else class="italic">Not Available</span>
             <span v-if="post.code"> ({{ roundFloat(post.percentage) }} %)</span>
             <span v-else class="italic">Not Available</span>
@@ -225,8 +209,7 @@
                   <td>
                     <div v-if="narrative.narrative" class="flex flex-col">
                       <span v-if="narrative.language" class="language top"
-                        >(Language:
-                        {{ types.languages[narrative.language] }})</span
+                        >(Language: {{ types.languages[narrative.language] }})</span
                       >
                       <span>{{ narrative.narrative }}</span>
                     </div>
@@ -253,9 +236,7 @@
           :class="{ 'mb-4': key !== data.content.length - 1 }"
         >
           <div class="category">
-            <span v-if="post.budget_type">{{
-              types.budgetType[post.budget_type]
-            }}</span>
+            <span v-if="post.budget_type">{{ types.budgetType[post.budget_type] }}</span>
             <span v-else class="italic">Type Not Available</span>
           </div>
 
@@ -418,8 +399,7 @@
                     <td>
                       <div v-if="narrative.narrative" class="flex flex-col">
                         <span v-if="narrative.language" class="language"
-                          >(Language:
-                          {{ types.languages[narrative.language] }})</span
+                          >(Language: {{ types.languages[narrative.language] }})</span
                         >
                         <span>{{ narrative.narrative }}</span>
                       </div>
@@ -461,9 +441,7 @@
 
           <!-- Activity Scope -->
           <template v-else-if="title === 'activity_scope'">
-            <span v-if="data.content">{{
-              props.types.activityScope[data.content]
-            }}</span>
+            <span v-if="data.content">{{ props.types.activityScope[data.content] }}</span>
             <span v-else class="italic">Not Available</span>
           </template>
 
@@ -477,33 +455,25 @@
 
           <!-- Default Flow Type -->
           <template v-else-if="title === 'default_flow_type'">
-            <span v-if="data.content">{{
-              props.types.flowType[data.content]
-            }}</span>
+            <span v-if="data.content">{{ props.types.flowType[data.content] }}</span>
             <span v-else class="italic">Not Available</span>
           </template>
 
           <!-- Default Tied Status -->
           <template v-else-if="title === 'default_tied_status'">
-            <span v-if="data.content">{{
-              props.types.tiedStatus[data.content]
-            }}</span>
+            <span v-if="data.content">{{ props.types.tiedStatus[data.content] }}</span>
             <span v-else class="italic">Not Available</span>
           </template>
 
           <!-- Capital Spend -->
           <template v-else-if="title === 'capital_spend'">
-            <span v-if="data.content.toString()"
-              >{{ data.content.toString() }}%</span
-            >
+            <span v-if="data.content.toString()">{{ data.content.toString() }}%</span>
             <span v-else class="italic">Not Available</span>
           </template>
 
           <!-- Default Finance Type -->
           <template v-else-if="title === 'default_finance_type'">
-            <span v-if="data.content">
-              {{ props.types.financeType[data.content] }}</span
-            >
+            <span v-if="data.content"> {{ props.types.financeType[data.content] }}</span>
             <span v-else class="italic">Not Available</span>
           </template>
 
@@ -517,10 +487,10 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps } from 'vue';
-import moment from 'moment';
+import { defineProps } from "vue";
+import moment from "moment";
 
-import {activityCoreElements} from 'Composable/coreElements';
+import { activityCoreElements } from "Composable/coreElements";
 
 //components
 import {
@@ -543,11 +513,11 @@ import {
   Tag,
   HumanitarianScope,
   PlannedDisbursement,
-} from 'Activity/elements/Index';
+} from "Activity/elements/Index";
 
-import Btn from 'Components/buttons/Link.vue';
-import Status from 'Components/status/ElementStatus.vue';
-import HoverText from 'Components/HoverText.vue';
+import Btn from "Components/buttons/Link.vue";
+import Status from "Components/status/ElementStatus.vue";
+import HoverText from "Components/HoverText.vue";
 
 const props = defineProps({
   data: {
@@ -565,12 +535,12 @@ const props = defineProps({
   tooltip: {
     type: String,
     required: false,
-    default: '',
+    default: "",
   },
   width: {
     type: String,
     required: false,
-    default: '',
+    default: "",
   },
   types: {
     type: Object,
@@ -582,13 +552,13 @@ const props = defineProps({
   },
 });
 
-let layout = 'basis-6/12';
-if (props.width === 'full') {
-  layout = 'basis-full';
+let layout = "basis-6/12";
+if (props.width === "full") {
+  layout = "basis-full";
 }
 
 function formatDate(date: Date) {
-  return moment(date).format('LL');
+  return moment(date).format("LL");
 }
 
 function roundFloat(num: string) {

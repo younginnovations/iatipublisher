@@ -27,6 +27,8 @@ import ElementsNote from './views/activity/partials/ElementsNote.vue';
 import Activity from './views/activity/ActivityIndex.vue';
 import LoggedInHeader from './components/AdminHeader.vue';
 import ActivitiesDetail from './views/activity/ActivityDetail.vue';
+import ActivityUpload from './views/import/ActivityUpload.vue';
+import ImportList from './views/import/ImportList.vue';
 
 /**
  * Setting page
@@ -81,6 +83,12 @@ app
   .component('PeriodsList', PeriodsList)
   .component('TransactionList', TransactionList)
   .component('TransactionDetail', TransactionDetail);
+
+/*
+* Import page
+*/
+app.component('ActivityUpload', ActivityUpload)
+  .component('ImportList', ImportList);
 
 /*
  * Setting page

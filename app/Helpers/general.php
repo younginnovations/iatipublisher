@@ -665,3 +665,79 @@ if (!function_exists('getNonArrayElements')) {
         return ['activity_status', 'activity_scope', 'default_flow_type', 'default_finance_type', 'default_tied_status', 'capital_spend', 'collaboration_type'];
     }
 }
+
+///test
+
+/**
+ * Returns encoding type of the file.
+ * Returns UTF-8 if any exception or charset is not found.
+ *
+ * @param $file
+ * @return string
+ */
+function getEncodingType($file)
+{
+    try {
+        $response = exec('file -i ' . $file->getPathname());
+        $charset = strripos($response, 'charset=');
+
+        if ($charset) {
+            return strtoupper(substr($response, $charset + strlen('charset=')));
+        }
+
+        return 'UTF-8';
+    } catch (\Exception $exception) {
+        return 'UTF-8';
+    }
+}
+
+/**
+ * Get csv header count by type from config.
+ *
+ * @param string $version
+ * @param string $type
+ * @return string
+ */
+function getCsvHeaderCount()
+{
+    // Activity   => [
+    //     'basic'                     => '27',
+    //     'transaction'               => '47',
+    //     'other_fields'              => '49',
+    //     'other_fields_transaction'  => '69',
+    //   ],
+
+    return 69;
+}
+
+/**
+ * trim an input.
+ * @param $input
+ * @return string
+ */
+function trimInput($input)
+{
+    return trim(preg_replace('/\s+/', ' ', $input));
+}
+
+/**
+ * Returns formatted date.
+ *
+ * @param $format
+ * @param $date
+ * @return false|string
+ */
+function dateFormat($format, $date)
+{
+    if ($date != '') {
+        if ((str_contains($date, '/'))) {
+            $formattedDate = str_replace('/', '-', $date);
+
+            return date($format, strtotime($formattedDate));
+        }
+
+        return date($format, strtotime($date));
+    }
+
+    return '';
+}
