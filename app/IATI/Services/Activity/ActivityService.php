@@ -205,4 +205,16 @@ class ActivityService
 
         return null;
     }
+
+    /**
+     * Returns activities having given ids.
+     *
+     * @param $activityIds
+     *
+     * @return object
+     */
+    public function getActivitiesHavingIds($activityIds): object
+    {
+        return $this->activityRepository->getActivitiesHavingIds($activityIds);
+    }
 }

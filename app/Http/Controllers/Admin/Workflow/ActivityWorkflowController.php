@@ -10,7 +10,6 @@ use App\IATI\Services\Validator\ActivityValidatorResponseService;
 use App\IATI\Services\Workflow\ActivityWorkflowService;
 use GuzzleHttp\Exception\BadResponseException;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 
@@ -53,7 +52,7 @@ class ActivityWorkflowController extends Controller
         try {
             $activity = $this->activityWorkflowService->findActivity($id);
 
-            if ($this->hasNoPublisherInfo($activity->organization->settings)) {
+            if ($this->activityWorkflowService->hasNoPublisherInfo($activity->organization->settings)) {
                 Session::put('error', 'Please update the publishing information first.');
 
                 return response()->json(['success' => false, 'message' => 'Please update the publishing information first.']);
@@ -78,36 +77,6 @@ class ActivityWorkflowController extends Controller
 
             return response()->json(['success' => false, 'message' => 'Error has occurred while publishing activity.']);
         }
-    }
-
-    /**
-     * Check if the Organization's publisher_id and api_token has been filled out and are correct.
-     *
-     * @param $settings
-     *
-     * @return bool
-     */
-    protected function hasNoPublisherInfo($settings): bool
-    {
-        if (!$settings) {
-            return true;
-        }
-
-        $registryInfo = $settings->publishing_info;
-
-        if (!$registryInfo) {
-            return true;
-        }
-
-        if (empty(Arr::get($registryInfo, 'publisher_id', null)) ||
-            empty(Arr::get($registryInfo, 'api_token', null)) ||
-            !Arr::get($registryInfo, 'publisher_verification', false) ||
-            !Arr::get($registryInfo, 'token_verification', false)
-        ) {
-            return true;
-        }
-
-        return false;
     }
 
     /**
