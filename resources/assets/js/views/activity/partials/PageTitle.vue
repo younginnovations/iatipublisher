@@ -45,13 +45,14 @@
       </div>
       <div class="flex justify-end actions grow">
         <div class="inline-flex justify-center">
-          <BtnComponent
+          <!-- Hidden for now -->
+          <!-- <BtnComponent
             v-if="showButtons"
             class="mr-3.5"
             type="secondary"
             text="Download Selected"
             icon="download-file"
-          />
+          /> -->
           <BtnComponent
             v-if="showButtons"
             class="mr-3.5"
@@ -60,19 +61,13 @@
             icon="approved-cloud"
             @click="modalValue = true"
           />
-          <BtnComponent
-            v-if="showButtons"
-            class="mr-3.5"
-            type="secondary"
-            text="Delete Selected"
-            icon="delete"
-          />
-          <BtnComponent
+          <!-- Hidden for now -->
+          <!-- <BtnComponent
             class="mr-3.5"
             type="secondary"
             text="Download All"
             icon="download-file"
-          />
+          /> -->
           <BtnComponent
             class="mr-3.5"
             type="secondary"
@@ -84,12 +79,6 @@
         </div>
       </div>
     </div>
-
-    <!-- ==============================
-          Toast Message that shows
-          publishable status
-        ===============================-->
-    <ToastMessage />
 
     <!-- =====================
           Toggle modal
@@ -165,7 +154,6 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import { useToggle } from '@vueuse/core';
-import ToastMessage from '../../../components/ToastMessage.vue';
 import AddActivityButton from './AddActivityButton.vue';
 import Modal from '../../../components/PopupModal.vue';
 import BtnComponent from '../../../components/ButtonComponent.vue';
@@ -176,7 +164,6 @@ export default defineComponent({
     AddActivityButton,
     Modal,
     BtnComponent,
-    ToastMessage,
   },
   props: {
     showButtons: Boolean,

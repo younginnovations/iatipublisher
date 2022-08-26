@@ -30,6 +30,7 @@ class ParentCollectionForm extends BaseForm
                     'class' => 'App\IATI\Elements\Forms\BaseForm',
                     'data' => $this->data,
                     'label' => false,
+                    'element_criteria' => $field['element_criteria'] ?? '',
                     'wrapper' => [
                         'class' => 'multi-form relative',
                     ],

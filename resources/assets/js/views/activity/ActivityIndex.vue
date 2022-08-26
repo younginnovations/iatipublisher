@@ -4,6 +4,7 @@
     class="listing__page bg-paper px-10 pt-4 pb-[71px]"
   >
     <div id="activity">
+      <Loader v-if="isLoading"></Loader>
       <PageTitle :show-buttons="state.showButtons" />
       <EmptyActivity v-if="isEmpty" />
       <TableLayout
@@ -26,6 +27,7 @@ import EmptyActivity from './partials/EmptyActivity.vue';
 import TableLayout from './partials/TableLayout.vue';
 import Pagination from 'Components/TablePagination.vue';
 import PageTitle from './partials/PageTitle.vue';
+import Loader from 'Components/Loader.vue';
 
 export default defineComponent({
   name: 'ActivityComponent',
@@ -34,15 +36,18 @@ export default defineComponent({
     PageTitle,
     Pagination,
     TableLayout,
+    Loader,
   },
   setup() {
     const activities = reactive({});
+    const isLoading = ref(true);
 
     onMounted(async () => {
       axios.get('/activity/page').then((res) => {
         const response = res.data;
         Object.assign(activities, response.data);
         isEmpty.value = response.data.data.length ? false : true;
+        isLoading.value = false;
       });
     });
 
@@ -68,7 +73,14 @@ export default defineComponent({
       });
     }
 
-    return { activities, state, isEmpty, showOrHide, fetchActivities };
+    return {
+      activities,
+      state,
+      isEmpty,
+      isLoading,
+      showOrHide,
+      fetchActivities,
+    };
   },
 });
 </script>

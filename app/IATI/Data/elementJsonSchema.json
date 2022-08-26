@@ -78,7 +78,7 @@
         "name": "narrative",
         "label": "narrative",
         "type": "textarea",
-        "required": false,
+        "required": true,
         "criteria": "mandatory",
         "add_more": true,
         "attr": {
@@ -660,9 +660,7 @@
         "help_text": "",
         "parent": {
           "name": "tag_vocabulary",
-          "value": [
-            "2"
-          ]
+          "value": ["2"]
         }
       },
       "targets_tag_code": {
@@ -677,9 +675,7 @@
         "help_text": "",
         "parent": {
           "name": "tag_vocabulary",
-          "value": [
-            "3"
-          ]
+          "value": ["3"]
         }
       },
       "tag_text": {
@@ -693,10 +689,7 @@
         "help_text": "",
         "parent": {
           "name": "tag_vocabulary",
-          "value": [
-            "1",
-            "99"
-          ]
+          "value": ["1", "99"]
         }
       },
       "vocabulary_uri": {
@@ -710,9 +703,7 @@
         "help_text": "",
         "parent": {
           "name": "tag_vocabulary",
-          "value": [
-            "99"
-          ]
+          "value": ["99"]
         }
       }
     },
@@ -776,9 +767,7 @@
         "help_text": "",
         "parent": {
           "name": "policy_marker_vocabulary",
-          "value": [
-            "99"
-          ]
+          "value": ["99"]
         }
       },
       "significance": {
@@ -802,9 +791,7 @@
         "help_text": "",
         "parent": {
           "name": "policy_marker_vocabulary",
-          "value": [
-            "1"
-          ]
+          "value": ["1"]
         }
       },
       "policy_marker_text": {
@@ -818,9 +805,7 @@
         "help_text": "mandatory",
         "parent": {
           "name": "policy_marker_vocabulary",
-          "value": [
-            "99"
-          ]
+          "value": ["99"]
         }
       }
     },
@@ -1020,6 +1005,7 @@
       "budget_item": {
         "name": "budget_item",
         "label": "budget-item",
+        "element_criteria": "mandatory",
         "add_more": true,
         "attributes": {
           "code": {
@@ -1053,7 +1039,7 @@
                 "name": "narrative",
                 "label": "narrative",
                 "type": "textarea",
-                "required": false,
+                "required": true,
                 "criteria": "mandatory",
                 "add_more": true,
                 "attr": {
@@ -1351,6 +1337,7 @@
       "title": {
         "name": "title",
         "label": "Title",
+        "element_criteria": "mandatory",
         "add_more": false,
         "attributes": {},
         "sub_elements": {
@@ -1419,6 +1406,7 @@
       "category": {
         "name": "category",
         "label": "category",
+        "element_criteria": "mandatory",
         "add_more": true,
         "wrapper_collection": false,
         "attributes": {
@@ -1798,8 +1786,8 @@
             "name": "narrative",
             "label": "narrative",
             "type": "textarea",
-            "required": false,
-            "criteria": "",
+            "required": true,
+            "criteria": "mandatory",
             "add_more": true,
             "attr": {
               "row": 4
@@ -1812,8 +1800,8 @@
                 "label": "@xml:lang",
                 "type": "select",
                 "choices": "Activity/Language.json",
-                "required": false,
-                "criteria": "recommended",
+                "required": true,
+                "criteria": "mandatory",
                 "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/description/narrative/'>For more information</a>",
                 "help_text": ""
               }
@@ -1867,7 +1855,7 @@
             "name": "narrative",
             "label": "narrative",
             "type": "textarea",
-            "required": false,
+            "required": true,
             "criteria": "mandatory",
             "add_more": true,
             "attr": {
@@ -1881,8 +1869,8 @@
                 "label": "@xml:lang",
                 "type": "select",
                 "choices": "Activity/Language.json",
-                "required": false,
-                "criteria": "recommended",
+                "required": true,
+                "criteria": "mandatory",
                 "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/description/narrative/'>For more information</a>",
                 "help_text": ""
               }
@@ -1948,6 +1936,7 @@
         "sub_elements": {
           "pos": {
             "name": "pos",
+            "element_criteria": "mandatory",
             "hover_text": "The latitude and longitude coordinates in the format “lat lng”. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/location/point/pos/'>For more information</a>",
             "help_text": "",
             "attributes": {
@@ -2087,6 +2076,7 @@
       "value": {
         "name": "value",
         "label": "value",
+        "element_criteria": "mandatory",
         "add_more": false,
         "attributes": {
           "amount": {
@@ -2361,6 +2351,7 @@
       "period_start": {
         "name": "period_start",
         "label": "period-start",
+        "element_criteria": "mandatory",
         "add_more": false,
         "attributes": {
           "date": {
@@ -2378,6 +2369,7 @@
       "period_end": {
         "name": "period_end",
         "label": "period-end",
+        "element_criteria": "mandatory",
         "add_more": false,
         "attributes": {
           "date": {
@@ -2395,6 +2387,7 @@
       "budget_value": {
         "name": "budget_value",
         "label": "value",
+        "element_criteria": "mandatory",
         "add_more": false,
         "attributes": {
           "amount": {
@@ -2463,6 +2456,7 @@
       "title": {
         "name": "title",
         "label": "title",
+        "element_criteria": "mandatory",
         "add_more": false,
         "attributes": {},
         "sub_elements": {
@@ -2557,14 +2551,15 @@
           "title": {
             "name": "title",
             "label": "title",
+            "element_criteria": "mandatory",
             "attributes": {},
             "sub_elements": {
               "narrative": {
                 "name": "narrative",
                 "label": "narrative",
                 "type": "textarea",
-                "required": false,
-                "criteria": "",
+                "required": true,
+                "criteria": "mandatory",
                 "add_more": true,
                 "attr": {
                   "row": 4
@@ -2577,8 +2572,8 @@
                     "label": "@xml:lang",
                     "type": "select",
                     "choices": "Activity/Language.json",
-                    "required": false,
-                    "criteria": "recommended",
+                    "required": true,
+                    "criteria": "mandatory",
                     "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/document-link/title/narrative/'>For more inforamtion</a>",
                     "help_text": ""
                   }
@@ -2596,7 +2591,7 @@
                 "name": "narrative",
                 "label": "narrative",
                 "type": "textarea",
-                "required": false,
+                "required": true,
                 "criteria": "mandatory",
                 "add_more": true,
                 "attr": {
@@ -2610,8 +2605,8 @@
                     "label": "@xml:lang",
                     "type": "select",
                     "choices": "Activity/Language.json",
-                    "required": false,
-                    "criteria": "recommended",
+                    "required": true,
+                    "criteria": "mandatory",
                     "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/document-link/description/narrative/'>For more information</a>",
                     "help_text": ""
                   }
@@ -2623,6 +2618,7 @@
           "category": {
             "name": "category",
             "label": "category",
+            "element_criteria": "mandatory",
             "add_more": true,
             "wrapper_collection": false,
             "attributes": {
@@ -2762,6 +2758,7 @@
       "title": {
         "name": "title",
         "label": "title",
+        "element_criteria":"mandatory",
         "add_more": false,
         "attributes": {},
         "sub_elements": {
@@ -2803,7 +2800,7 @@
             "name": "narrative",
             "label": "narrative",
             "type": "textarea",
-            "required": false,
+            "required": true,
             "criteria": "mandatory",
             "add_more": true,
             "attr": {
@@ -2856,6 +2853,7 @@
           "title": {
             "name": "title",
             "label": "title",
+            "element_criteria":"mandatory",
             "attributes": {},
             "sub_elements": {
               "narrative": {
@@ -2922,6 +2920,7 @@
           "category": {
             "name": "category",
             "label": "category",
+            "element_criteria":"mandatory",
             "add_more": true,
             "wrapper_collection": false,
             "attributes": {
@@ -3136,6 +3135,7 @@
               "title": {
                 "name": "title",
                 "label": "title",
+                "element_criteria":"mandatory",
                 "add_more": false,
                 "attributes": {},
                 "sub_elements": {
@@ -3204,6 +3204,7 @@
               "category": {
                 "name": "category",
                 "label": "category",
+                "element_criteria":"mandatory",
                 "add_more": true,
                 "wrapper_collection": false,
                 "attributes": {
@@ -3288,6 +3289,7 @@
       "period_start": {
         "name": "period_start",
         "label": "period-start",
+        "element_criteria":"mandatory",
         "add_more": false,
         "attributes": {
           "date": {
@@ -3305,6 +3307,7 @@
       "period_end": {
         "name": "period_end",
         "label": "period-end",
+        "element_criteria":"mandatory",
         "add_more": false,
         "attributes": {
           "date": {
@@ -3424,6 +3427,7 @@
               "title": {
                 "name": "title",
                 "label": "title",
+                "element_criteria":"mandatory",
                 "attributes": {},
                 "sub_elements": {
                   "narrative": {
@@ -3491,6 +3495,7 @@
                 "name": "category",
                 "label": "category",
                 "add_more": true,
+                "element_criteria":"mandatory",
                 "wrapper_collection": false,
                 "attributes": {
                   "code": {
@@ -3669,6 +3674,7 @@
               "title": {
                 "name": "title",
                 "label": "title",
+                "element_criteria":"mandatory",
                 "attributes": {},
                 "sub_elements": {
                   "narrative": {
@@ -3736,6 +3742,7 @@
                 "name": "category",
                 "label": "category",
                 "add_more": true,
+                "element_criteria":"mandatory",
                 "wrapper_collection": false,
                 "attributes": {
                   "code": {
@@ -3743,7 +3750,7 @@
                     "label": "@code",
                     "type": "select",
                     "choices": "Activity/DocumentCategory.json",
-                    "required": false,
+                    "required": true,
                     "criteria": "mandatory",
                     "hover_text": "An IATI code defining the category of the document. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/indicator/period/actual/document-link/category/'>For more information</a>",
                     "help_text": ""
@@ -3866,6 +3873,7 @@
       "transaction_type": {
         "name": "transaction_type",
         "label": "transaction-type",
+        "element_criteria": "mandatory",
         "add_more": false,
         "attributes": {
           "transaction_type_code": {
@@ -3884,6 +3892,7 @@
       "transaction_date": {
         "name": "transaction_date",
         "label": "transaction-date",
+        "element_criteria": "mandatory",
         "add_more": false,
         "attributes": {
           "date": {
@@ -3901,6 +3910,7 @@
       "value": {
         "name": "value",
         "label": "transaction-value",
+        "element_criteria": "mandatory",
         "add_more": false,
         "attributes": {
           "amount": {
@@ -3971,6 +3981,7 @@
       "provider_organization": {
         "name": "provider_organization",
         "label": "provider-organisation",
+        "element_criteria": "recommended",
         "add_more": false,
         "attributes": {
           "organization_identifer_code": {
@@ -4034,6 +4045,7 @@
       "receiver_organization": {
         "name": "receiver_organization",
         "label": "receiver-organisation",
+        "element_criteria": "recommended",
         "add_more": false,
         "attributes": {
           "organization_identifier_code": {

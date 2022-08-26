@@ -32,7 +32,7 @@
         "label": "Activity Status"
       },
       "activity_scope": {
-        "core": true,
+        "core": false,
         "label": "Activity Scope"
       },
       "activity_date": {
@@ -49,7 +49,7 @@
     "label": "Participating Organizations",
     "elements": {
       "participating_org": {
-        "core": false,
+        "core": true,
         "label": "Participating Organizations"
       }
     }
@@ -58,11 +58,11 @@
     "label": "Geopolitical Information",
     "elements": {
       "recipient_country": {
-        "core": false,
+        "core": true,
         "label": "Recipient Country"
       },
       "recipient_region": {
-        "core": false,
+        "core": true,
         "label": "Recipient Region"
       },
       "location": {
@@ -90,15 +90,15 @@
         "label": "Collaboration Type"
       },
       "default_flow_type": {
-        "core": false,
+        "core": true,
         "label": "Default Flow Type"
       },
       "default_finance_type": {
-        "core": false,
+        "core": true,
         "label": "Default Finance Type"
       },
       "default_aid_type": {
-        "core": false,
+        "core": true,
         "label": "Default Aid Type"
       },
       "default_tied_status": {
@@ -124,7 +124,7 @@
     "label": "Financial",
     "elements": {
       "budget": {
-        "core": false,
+        "core": true,
         "label": "Budget"
       },
       "transactions": {

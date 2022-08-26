@@ -68,19 +68,19 @@
     "completed": false
   },
   "default_flow_type": {
-    "core": false,
+    "core": true,
     "completed": false
   },
   "default_finance_type": {
-    "core": false,
+    "core": true,
     "completed": false
   },
   "default_aid_type": {
-    "core": false,
+    "core": true,
     "completed": false
   },
   "default_tied_status": {
-    "core": false,
+    "core": true,
     "completed": false
   },
   "country_budget_items": {

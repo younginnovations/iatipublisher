@@ -47,6 +47,7 @@ class TransactionElementForm extends BaseForm
                         'options' => [
                             'class' => 'App\IATI\Elements\Forms\BaseForm',
                             'data'  => $this->getData(sprintf('sub_elements.%s', $name)),
+                            'element_criteria'  => $this->getData(sprintf('sub_elements.%s.element_criteria', $name)),
                             'label' => false,
                             'wrapper' => [
                                 'class' => 'multi-form relative',

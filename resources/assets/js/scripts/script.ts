@@ -17,3 +17,9 @@ $(document).ready(() => {
     }
   });
 });
+
+// remove overlay page loader after loading completes
+$(window).on('load', function () {
+  const overlay = $('.overlay');
+  overlay.addClass('hidden');
+});

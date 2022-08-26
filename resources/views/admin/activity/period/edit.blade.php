@@ -2,10 +2,13 @@
 
 @section('content')
     <section class="section min-h-[calc(100vh_-_60px)]">
-
-        <div class="px-10 pt-4 pb-[71px] max-w-[1000px] mx-auto">
+        @include('web.components.loader')
+        <div class="px-10 pt-4 pb-[71px]">
             @include('admin.layouts.activityTitle')
             <div class="activities">
+                <aside class="activities__sidebar">
+                    <elements-note></elements-note>
+                </aside>
                 <div class="activities__content">
                     <div class="inline-flex flex-wrap gap-2 mb-8">
                         <a href='#period_start' class="tab-btn-anchor" v-smooth-scroll>

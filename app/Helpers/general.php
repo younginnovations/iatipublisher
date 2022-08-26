@@ -249,7 +249,9 @@ if (!function_exists('getCodeList')) {
 
         return $data;
     }
+}
 
+if (!function_exists('getCodeListArray')) {
     /**
      * return codeList array from codeList.
      *
@@ -271,7 +273,9 @@ if (!function_exists('getCodeList')) {
 
         return $data;
     }
+}
 
+if (!function_exists('decryptString')) {
     /**
      * Decrypt encrypted base64 string.
      *
@@ -337,12 +341,12 @@ if (!function_exists('getList')) {
     }
 }
 
-/*
- * Get activity transaction data type
- *
- * @return array
- */
 if (!function_exists('getTransactionTypes')) {
+    /*
+     * Get activity transaction data type
+     *
+     * @return array
+     */
     function getTransactionTypes(): array
     {
         return [
@@ -369,12 +373,12 @@ if (!function_exists('getTransactionTypes')) {
     }
 }
 
-/*
- * Get activity result data type
- *
- * @return array
- */
 if (!function_exists('getResultTypes')) {
+    /*
+     * Get activity result data type
+     *
+     * @return array
+     */
     function getResultTypes(): array
     {
         return [
@@ -387,12 +391,12 @@ if (!function_exists('getResultTypes')) {
     }
 }
 
-/*
- * Get activity indicator data type
- *
- * @return array
- */
 if (!function_exists('getIndicatorTypes')) {
+    /*
+     * Get activity indicator data type
+     *
+     * @return array
+     */
     function getIndicatorTypes(): array
     {
         return [
@@ -405,12 +409,12 @@ if (!function_exists('getIndicatorTypes')) {
     }
 }
 
-/*
- * Get activity periods data type
- *
- * @return array
- */
 if (!function_exists('getPeriodTypes')) {
+    /*
+     * Get activity periods data type
+     *
+     * @return array
+     */
     function getPeriodTypes(): array
     {
         return [
@@ -422,12 +426,12 @@ if (!function_exists('getPeriodTypes')) {
     }
 }
 
-/*
- * Generates toast array.
- *
- * @return array
- */
 if (!function_exists('generateToastData')) {
+    /*
+     * Generates toast array.
+     *
+     * @return array
+     */
     function generateToastData(): array
     {
         $toast['message'] = Session::exists('error') ? Session::get('error') : (Session::exists('success') ? Session::get('success') : '');
@@ -436,5 +440,17 @@ if (!function_exists('generateToastData')) {
         Session::forget('error');
 
         return $toast;
+    }
+}
+
+if (!function_exists('isCoreElement')) {
+    /*
+     * Checks if an activity element is a core element
+     *
+     * @return bool
+     */
+    function isCoreElement($element): bool
+    {
+        return in_array($element, getCoreElements());
     }
 }
