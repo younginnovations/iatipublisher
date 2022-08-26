@@ -47,14 +47,14 @@
             >
               <td>Vocabulary_URI</td>
               <td
-                v-if="recipient_region_budget.recipient_region['0'].region_vocabulary_URI"
+                v-if="recipient_region_budget.recipient_region['0'].vocabulary_uri"
               >
                 <a
                   target="_blank"
-                  href="recipient_region_budget.recipient_region['0']
-                    .region_vocabulary_URI"
+                  :href="recipient_region_budget.recipient_region['0']
+                    .vocabulary_uri"
                   >{{
-                    recipient_region_budget.recipient_region["0"].region_vocabulary_URI
+                    recipient_region_budget.recipient_region["0"].vocabulary_uri
                   }}</a
                 >
               </td>

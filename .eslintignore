@@ -2,3 +2,4 @@ tailwind.config.js
 postcss.config.js
 webpack.mix.js
 resources/assets/js/bootstrap.js
+vendor

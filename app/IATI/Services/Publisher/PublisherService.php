@@ -148,6 +148,8 @@ class PublisherService extends RegistryApiHandler
         if ($this->isPackageAvailable($packageId, $this->apiKey)) {
             $this->client->package_delete($packageId);
         }
+
+        $this->updateOrganizationStatus(false);
     }
 
     /**
@@ -293,7 +295,7 @@ class PublisherService extends RegistryApiHandler
                 [
                     'format'   => 'IATI-XML',
                     'mimetype' => 'application/xml',
-                    'url'      => Storage::disk('minio')->url('iati/organizationXmlFiles/' . $filename . '.xml'),
+                    'url'      => Storage::disk('minio')->url('/organizationXmlFiles/' . $filename . '.xml'),
                 ],
             ],
             'filetype'     => 'organisation',
@@ -399,9 +401,9 @@ class PublisherService extends RegistryApiHandler
      *
      * @return void
      */
-    protected function updateOrganizationStatus(): void
+    protected function updateOrganizationStatus($published = true): void
     {
-        $this->organizationPublished->published_to_registry = 1;
+        $this->organizationPublished->published_to_registry = $published ? 1 : 0;
         $this->organizationPublished->save();
     }
 }

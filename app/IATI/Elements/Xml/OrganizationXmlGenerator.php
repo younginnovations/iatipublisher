@@ -212,7 +212,7 @@ class OrganizationXmlGenerator
         $xmlOrganization = [];
         $xmlOrganization['organisation-identifier'] = $this->organizationIdentifierService->getXmlData($organization);
         $xmlOrganization['document-link'] = $this->documentLinkService->getXmlData($organization);
-        $xmlOrganization['recipient-org'] = $this->reportingOrgService->getXmlData($organization);
+        $xmlOrganization['reporting-org'] = $this->reportingOrgService->getXmlData($organization);
         $xmlOrganization['recipient-org-budget'] = $this->recipientOrgBudgetService->getXmlData($organization);
         $xmlOrganization['recipient-country-budget'] = $this->recipientCountryBudgetService->getXmlData($organization);
         $xmlOrganization['recipient-region-budget'] = $this->recipientRegionBudgetService->getXmlData($organization);

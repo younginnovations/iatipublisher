@@ -106,8 +106,12 @@
         <div class="indicator-content flex px-6 py-2">
           <div class="elements-detail grow">
             <div class="category flex">
-              <span>
-                {{ budget_line.value['0'].amount ?? 'Budget Not Available' }}
+              <span v-if="budget_line.value['0'].amount">
+                {{ budget_line.value['0'].amount }}
+                {{ budget_line.value['0'].currency }}
+              </span>
+              <span v-else>
+                Budget Amount Not Available
               </span>
             </div>
             <div class="ml-4">
@@ -117,6 +121,12 @@
                     <td class="pr-20 text-n-40">Reference</td>
                     <td>
                       {{ budget_line.ref ?? 'Reference Not Available' }}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Value date</td>
+                    <td>
+                      {{ formatDate(budget_line.value['0'].value_date) }}
                     </td>
                   </tr>
                   <tr>

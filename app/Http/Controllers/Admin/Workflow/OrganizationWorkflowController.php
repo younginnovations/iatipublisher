@@ -40,8 +40,7 @@ class OrganizationWorkflowController extends Controller
     public function publish(): JsonResponse
     {
         try {
-            $organizationId = Auth::user()->organization_id;
-            $organization = $this->organizationWorkflowService->findOrganization($organizationId);
+            $organization = Auth::user()->organization;
 
             if ($this->hasNoPublisherInfo($organization->settings)) {
                 return response()->json(['success' => false, 'message' => 'Please update the publishing information first.']);
@@ -103,8 +102,7 @@ class OrganizationWorkflowController extends Controller
     {
         try {
             DB::beginTransaction();
-            $organizationId = Auth::user()->organization_id;
-            $organization = $this->organizationWorkflowService->findOrganization($organizationId);
+            $organization = Auth::user()->organization;
 
             if (!$organization->is_published && $organization->status === 'draft') {
                 return redirect()->route('admin.activities.index')->with('error', 'This organization has not been published to un-publish.');
