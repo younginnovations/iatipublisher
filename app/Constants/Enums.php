@@ -21,4 +21,12 @@ abstract class Enums
             'ready_to_publish',
             'published',
         ];
+
+    const BULK_PUBLISHING_STATUS
+        = [
+            'created',
+            'processing',
+            'completed',
+            'failed',
+        ];
 }

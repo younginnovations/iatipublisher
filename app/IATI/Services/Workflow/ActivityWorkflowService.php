@@ -102,10 +102,11 @@ class ActivityWorkflowService
      * Publish an activity to the IATI registry.
      *
      * @param $activity
+     * @param $publishFile
      *
      * @return void
      */
-    public function publishActivity($activity): void
+    public function publishActivity($activity, $publishFile = true): void
     {
         $organization = $activity->organization;
         $settings = $organization->settings;
@@ -116,9 +117,13 @@ class ActivityWorkflowService
             $settings,
             $organization
         );
-        $activityPublished = $this->activityPublishedService->getActivityPublished($organization->id);
-        $publishingInfo = $settings->publishing_info;
-        $this->publisherService->publishFile($publishingInfo, $activityPublished, $organization);
+
+        if ($publishFile) {
+            $activityPublished = $this->activityPublishedService->getActivityPublished($organization->id);
+            $publishingInfo = $settings->publishing_info;
+            $this->publisherService->publishFile($publishingInfo, $activityPublished, $organization);
+        }
+
         $this->activityService->updatePublishedStatus($activity, 'published', true, true);
         $this->activitySnapshotService->createOrUpdateActivitySnapshot($activity);
     }
@@ -199,5 +204,35 @@ class ActivityWorkflowService
         $response = $client->post($URI, $params);
 
         return $response->getBody()->getContents();
+    }
+
+    /**
+     * Check if the Organization's publisher_id and api_token has been filled out and are correct.
+     *
+     * @param $settings
+     *
+     * @return bool
+     */
+    public function hasNoPublisherInfo($settings): bool
+    {
+        if (!$settings) {
+            return true;
+        }
+
+        $registryInfo = $settings->publishing_info;
+
+        if (!$registryInfo) {
+            return true;
+        }
+
+        if (empty(Arr::get($registryInfo, 'publisher_id', null)) ||
+            empty(Arr::get($registryInfo, 'api_token', null)) ||
+            !Arr::get($registryInfo, 'publisher_verification', false) ||
+            !Arr::get($registryInfo, 'token_verification', false)
+        ) {
+            return true;
+        }
+
+        return false;
     }
 }
