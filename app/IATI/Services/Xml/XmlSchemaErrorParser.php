@@ -110,12 +110,12 @@ class XmlSchemaErrorParser
     {
         if (in_array($errorCodeElement, $elementsInXml)) {
             return $errorCodeElement;
-        } else {
-            $errorLine = $errorLine - 1;
-            $errorCodeElement = $this->getErrorElementName($xmlLines, $errorLine);
-
-            return $this->getMainElement($errorCodeElement, $elementsInXml, $xmlLines, $errorLine);
         }
+
+        $errorLine = $errorLine - 1;
+        $errorCodeElement = $this->getErrorElementName($xmlLines, $errorLine);
+
+        return $this->getMainElement($errorCodeElement, $elementsInXml, $xmlLines, $errorLine);
     }
 
     /**

@@ -84,11 +84,11 @@ class RelatedActivityService
      */
     public function formGenerator($id): Form
     {
-        $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
+        $element = getElementSchema('related_activity');
         $model['related_activity'] = $this->getRelatedActivityData($id);
         $this->baseFormCreator->url = route('admin.activities.related-activity.update', [$id]);
 
-        return $this->baseFormCreator->editForm($model, $element['related_activity'], 'PUT', '/activities/' . $id);
+        return $this->baseFormCreator->editForm($model, $element, 'PUT', '/activities/' . $id);
     }
 
     /**

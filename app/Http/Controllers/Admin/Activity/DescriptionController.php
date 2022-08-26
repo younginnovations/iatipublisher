@@ -41,13 +41,13 @@ class DescriptionController extends Controller
     public function edit(int $id): View|RedirectResponse
     {
         try {
-            $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
+            $element = getElementSchema('description');
             $activity = $this->descriptionService->getActivityData($id);
             $form = $this->descriptionService->formGenerator($id);
             $data = [
-                'core'   => $element['description']['criteria'] ?? '',
+                'core'   => $element['criteria'] ?? '',
                 'status' => $activity->description_element_completed,
-                'title'  => $element['description']['label'],
+                'title'  => $element['label'],
                 'name'   => 'description',
             ];
 

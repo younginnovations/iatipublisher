@@ -41,13 +41,13 @@ class CapitalSpendController extends Controller
     public function edit(int $id): View|RedirectResponse
     {
         try {
-            $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
+            $element = getElementSchema('capital_spend');
             $activity = $this->capitalSpendService->getActivityData($id);
             $form = $this->capitalSpendService->formGenerator($id);
             $data = [
-                'core' => $element['capital_spend']['criteria'] ?? '',
+                'core' => $element['criteria'] ?? '',
                 'status' => $activity->capital_spend_element_completed,
-                'title' => $element['capital_spend']['label'],
+                'title' => $element['label'],
                 'name' => 'capital_spend',
             ];
 

@@ -5,25 +5,21 @@ declare(strict_types=1);
 namespace App\IATI\Repositories\Activity;
 
 use App\IATI\Models\Activity\ActivitySnapshot;
+use App\IATI\Repositories\Repository;
 
 /**
  * Class ActivitySnapshotRepository.
  */
-class ActivitySnapshotRepository
+class ActivitySnapshotRepository extends Repository
 {
     /**
-     * @var ActivitySnapshot
-     */
-    protected ActivitySnapshot $activitySnapshot;
-
-    /**
-     * ActivitySnapshotRepository Constructor.
+     * Returns activity snapshot model.
      *
-     * @param ActivitySnapshot $activitySnapshot
+     * @return string
      */
-    public function __construct(ActivitySnapshot $activitySnapshot)
+    public function getModel(): string
     {
-        $this->activitySnapshot = $activitySnapshot;
+        return ActivitySnapshot::class;
     }
 
     /**
@@ -38,7 +34,7 @@ class ActivitySnapshotRepository
      */
     public function createOrUpdateActivitySnapshot($organization_id, $activity, $published_data, $filename): mixed
     {
-        return $this->activitySnapshot->updateOrCreate(
+        return $this->model->updateOrCreate(
             ['org_id' => $organization_id, 'activity_id' => $activity->id],
             [
                 'org_id'         => $organization_id,

@@ -5,25 +5,22 @@ declare(strict_types=1);
 namespace App\IATI\Repositories\Activity;
 
 use App\IATI\Models\Activity\ActivityPublished;
+use App\IATI\Repositories\Repository;
 use Illuminate\Database\Eloquent\Model;
 
 /**
  * Class ActivityPublishedRepository.
  */
-class ActivityPublishedRepository
+class ActivityPublishedRepository extends Repository
 {
     /**
-     * @var ActivityPublished
+     * Returns activity published model.
+     *
+     * @return string
      */
-    protected ActivityPublished $activityPublished;
-
-    /**
-     * ActivityPublishedRepository Constructor.
-     * @param ActivityPublished $activityPublished
-     */
-    public function __construct(ActivityPublished $activityPublished)
+    public function getModel(): string
     {
-        $this->activityPublished = $activityPublished;
+        return ActivityPublished::class;
     }
 
     /**
@@ -36,7 +33,7 @@ class ActivityPublishedRepository
      */
     public function findOrCreate($filename, $organizationId): Model
     {
-        $published = $this->activityPublished->firstOrNew([
+        $published = $this->model->firstOrNew([
             'filename' => $filename,
             'organization_id' => $organizationId,
         ]);
@@ -62,18 +59,6 @@ class ActivityPublishedRepository
     }
 
     /**
-     * Returns activity published data.
-     *
-     * @param $organization_id
-     *
-     * @return Model
-     */
-    public function getActivityPublished($organization_id): Model
-    {
-        return $this->activityPublished->where('organization_id', $organization_id)->first();
-    }
-
-    /**
      * Updates activity published data.
      *
      * @param $publishedFile
@@ -86,5 +71,16 @@ class ActivityPublishedRepository
         $publishedFile->published_activities = array_values($newPublishedFiles);
 
         return $publishedFile->save();
+    }
+
+    /**
+     * Updates activity published table.
+     *
+     * @return void
+     */
+    public function updateStatus($activityPublished): void
+    {
+        $activityPublished->published_to_registry = 1;
+        $activityPublished->save();
     }
 }

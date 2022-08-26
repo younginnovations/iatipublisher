@@ -42,13 +42,13 @@ class ContactInfoController extends Controller
     public function edit(int $id): View|RedirectResponse
     {
         try {
-            $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
+            $element = getElementSchema('contact_info');
             $activity = $this->contactInfoService->getActivityData($id);
             $form = $this->contactInfoService->formGenerator($id);
             $data = [
-                'core' => $element['contact_info']['criteria'] ?? '',
+                'core' => $element['criteria'] ?? '',
                 'status' => false,
-                'title' => $element['contact_info']['label'],
+                'title' => $element['label'],
                 'name' => 'contact_info',
             ];
 

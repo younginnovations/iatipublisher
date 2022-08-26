@@ -87,11 +87,11 @@ class TagService
      */
     public function formGenerator($id): Form
     {
-        $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
+        $element = getElementSchema('tag');
         $model['tag'] = $this->getTagData($id);
         $this->parentCollectionFormCreator->url = route('admin.activities.tag.update', [$id]);
 
-        return $this->parentCollectionFormCreator->editForm($model, $element['tag'], 'PUT', '/activities/' . $id);
+        return $this->parentCollectionFormCreator->editForm($model, $element, 'PUT', '/activities/' . $id);
     }
 
     /**

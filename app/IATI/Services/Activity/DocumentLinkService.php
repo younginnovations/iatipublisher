@@ -93,7 +93,7 @@ class DocumentLinkService
      */
     public function formGenerator($id): Form
     {
-        $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
+        $element = getElementSchema('document_link');
         $activity = $this->getActivityData($id);
         $model['document_link'] = $this->getDocumentLinkData($id) ?: [];
         $documentLinks = $activity->documentLinks()->orderBy('updated_at', 'desc')->get()->toArray();
@@ -112,7 +112,7 @@ class DocumentLinkService
 
         $this->parentCollectionFormCreator->url = route('admin.activities.document-link.update', [$id]);
 
-        return $this->parentCollectionFormCreator->editForm($model, $element['document_link'], 'PUT', '/activities/' . $id);
+        return $this->parentCollectionFormCreator->editForm($model, $element, 'PUT', '/activities/' . $id);
     }
 
     /**

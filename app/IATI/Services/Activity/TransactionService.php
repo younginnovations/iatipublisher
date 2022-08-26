@@ -128,12 +128,12 @@ class TransactionService
      */
     public function createFormGenerator($activityId): Form
     {
-        $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
+        $element = getElementSchema('transactions');
         $this->transactionElementFormCreator->url = route('admin.activities.transactions.store', $activityId);
 
         return $this->transactionElementFormCreator->editForm(
             [],
-            $element['transactions'],
+            $element,
             'POST',
             '/activities/' . $activityId
         );
@@ -148,7 +148,7 @@ class TransactionService
      */
     public function editFormGenerator($transactionId, $activityId): Form
     {
-        $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
+        $element = getElementSchema('transactions');
         $activityTransaction = $this->getTransaction($transactionId, $activityId);
         $this->transactionElementFormCreator->url = route(
             'admin.activities.transactions.update',
@@ -157,7 +157,7 @@ class TransactionService
 
         return $this->transactionElementFormCreator->editForm(
             $activityTransaction->transaction,
-            $element['transactions'],
+            $element,
             'PUT',
             '/activities/' . $activityId
         );

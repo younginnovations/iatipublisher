@@ -85,7 +85,7 @@ class OtherIdentifierRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    public function getRulesForOwnerOrg($formFields, $formBase)
+    public function getRulesForOwnerOrg($formFields, $formBase): array
     {
         $rules = [];
 

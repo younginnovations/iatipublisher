@@ -83,11 +83,11 @@ class StatusService
      */
     public function formGenerator($id): Form
     {
-        $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
+        $element = getElementSchema('activity_status');
         $model['activity_status'] = $this->getStatusData($id);
         $this->baseFormCreator->url = route('admin.activities.status.update', [$id]);
 
-        return $this->baseFormCreator->editForm($model, $element['activity_status'], 'PUT', '/activities/' . $id);
+        return $this->baseFormCreator->editForm($model, $element, 'PUT', '/activities/' . $id);
     }
 
     /**

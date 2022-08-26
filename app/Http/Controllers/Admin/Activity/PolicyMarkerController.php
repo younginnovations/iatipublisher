@@ -41,13 +41,13 @@ class PolicyMarkerController extends Controller
     public function edit(int $id): View|RedirectResponse
     {
         try {
-            $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
+            $element = getElementSchema('policy_marker');
             $activity = $this->policyMarkerService->getActivityData($id);
             $form = $this->policyMarkerService->formGenerator($id);
             $data = [
-                'core' => $element['policy_marker']['criteria'] ?? '',
+                'core' => $element['criteria'] ?? '',
                 'status' => $activity->policy_marker_element_completed,
-                'title' => $element['policy_marker']['label'],
+                'title' => $element['label'],
                 'name' => 'policy_marker',
             ];
 

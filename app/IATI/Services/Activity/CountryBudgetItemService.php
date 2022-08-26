@@ -87,11 +87,11 @@ class CountryBudgetItemService
      */
     public function formGenerator($id): Form
     {
-        $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
+        $element = getElementSchema('country_budget_items');
         $model = $this->getCountryBudgetItemData($id) ?: [];
         $this->multilevelSubElementFormCreator->url = route('admin.activities.country-budget-items.update', [$id]);
 
-        return $this->multilevelSubElementFormCreator->editForm($model, $element['country_budget_items'], 'PUT', '/activities/' . $id);
+        return $this->multilevelSubElementFormCreator->editForm($model, $element, 'PUT', '/activities/' . $id);
     }
 
     /**

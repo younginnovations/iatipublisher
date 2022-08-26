@@ -41,13 +41,13 @@ class LegacyDataController extends Controller
     public function edit(int $id): View|RedirectResponse
     {
         try {
-            $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
+            $element = getElementSchema('legacy_data');
             $activity = $this->activityLegacyDataService->getActivityData($id);
             $form = $this->activityLegacyDataService->formGenerator($id);
             $data = [
-                'core' => $element['legacy_data']['criteria'] ?? '',
+                'core' => $element['criteria'] ?? '',
                 'status' => $activity->legacy_data_element_completed,
-                'title' => $element['legacy_data']['label'],
+                'title' => $element['label'],
                 'name' => 'legacy_data',
             ];
 

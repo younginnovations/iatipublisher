@@ -58,11 +58,11 @@ class ActivityPublishedService
      *
      * @param $organization_id
      *
-     * @return Model
+     * @return object
      */
-    public function getActivityPublished($organization_id): Model
+    public function getActivityPublished($organization_id): object
     {
-        return $this->activityPublishedRepository->getActivityPublished($organization_id);
+        return $this->activityPublishedRepository->findBy('organization_id', $organization_id);
     }
 
     /**
@@ -76,5 +76,15 @@ class ActivityPublishedService
     public function updateActivityPublished($publishedFile, $newPublishedFiles): bool
     {
         return $this->activityPublishedRepository->updateActivityPublished($publishedFile, $newPublishedFiles);
+    }
+
+    /**
+     * Updates activity published table.
+     *
+     * @return void
+     */
+    public function updateStatus($activityPublished): void
+    {
+        $this->activityPublishedRepository->updateStatus($activityPublished);
     }
 }

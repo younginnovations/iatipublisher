@@ -87,11 +87,11 @@ class DescriptionService
      */
     public function formGenerator($id): Form
     {
-        $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
+        $element = getElementSchema('description');
         $model['description'] = $this->getDescriptionData($id);
         $this->parentCollectionFormCreator->url = route('admin.activities.description.update', [$id]);
 
-        return $this->parentCollectionFormCreator->editForm($model, $element['description'], 'PUT', '/activities/' . $id);
+        return $this->parentCollectionFormCreator->editForm($model, $element, 'PUT', '/activities/' . $id);
     }
 
     /**

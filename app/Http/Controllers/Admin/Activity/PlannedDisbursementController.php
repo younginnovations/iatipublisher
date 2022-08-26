@@ -42,13 +42,13 @@ class PlannedDisbursementController extends Controller
     public function edit(int $id): View|RedirectResponse
     {
         try {
-            $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
+            $element = getElementSchema('planned_disbursement');
             $activity = $this->plannedDisbursementService->getActivityData($id);
             $form = $this->plannedDisbursementService->formGenerator($id);
             $data = [
-                'core' => $element['planned_disbursement']['criteria'] ?? 'core',
+                'core' => $element['criteria'] ?? 'core',
                 'status' => true,
-                'title' => $element['planned_disbursement']['label'],
+                'title' => $element['label'],
                 'name' => 'title',
             ];
 

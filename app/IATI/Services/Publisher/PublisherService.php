@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\IATI\Services\Publisher;
 
+use App\IATI\Services\Activity\ActivityPublishedService;
 use App\IATI\Services\Workflow\RegistryApiHandler;
 use App\IATI\Traits\RegistryApiInvoker;
 use GuzzleHttp\Exception\ClientException;
@@ -22,6 +23,21 @@ class PublisherService extends RegistryApiHandler
      * @var Model|null
      */
     protected $activityPublished = null;
+
+    /**
+     * @var ActivityPublishedService
+     */
+    protected ActivityPublishedService $activityPublishedService;
+
+    /**
+     * PublisherService constructor.
+     *
+     * @param ActivityPublishedService $activityPublishedService
+     */
+    public function __construct(ActivityPublishedService $activityPublishedService)
+    {
+        $this->activityPublishedService = $activityPublishedService;
+    }
 
     /**
      * Publishes the activity xml file to the IATI registry.
@@ -45,8 +61,10 @@ class PublisherService extends RegistryApiHandler
      * Set the file attribute.
      *
      * @param $activityPublished
+     *
+     * @return void
      */
-    protected function setFile($activityPublished)
+    protected function setFile($activityPublished): void
     {
         $this->activityPublished = $activityPublished;
     }
@@ -62,15 +80,14 @@ class PublisherService extends RegistryApiHandler
     protected function publishToRegistry($organization, $filename): void
     {
         $data = $this->generatePayload($organization, $filename);
-        $packageId = $this->extractPackage($filename);
 
-        if ($this->isPackageAvailable($packageId, $this->apiKey)) {
+        if ($this->isPackageAvailable($this->extractPackage($filename), $this->apiKey)) {
             $this->client->package_update($data);
         } else {
             $this->client->package_create($data);
         }
 
-        $this->updateStatus();
+        $this->activityPublishedService->updateStatus($this->activityPublished);
     }
 
     /**
@@ -102,9 +119,7 @@ class PublisherService extends RegistryApiHandler
      */
     protected function getCode($filename): string
     {
-        $filename = str_replace('.xml', '', $filename);
-
-        return substr($filename, strlen($this->publisherId) + 1);
+        return substr(str_replace('.xml', '', $filename), strlen($this->publisherId) + 1);
     }
 
     /**
@@ -149,7 +164,7 @@ class PublisherService extends RegistryApiHandler
      */
     protected function extractTitle($organization, $fileType): string
     {
-        if ($fileType == 'organisation') {
+        if ($fileType === 'organisation') {
             return $organization->publisher_name . ' Organisation File';
         }
 
@@ -165,9 +180,7 @@ class PublisherService extends RegistryApiHandler
      */
     protected function extractPackage($filename): string
     {
-        $array = explode('.', $filename);
-
-        return Arr::get($array, 0, '');
+        return Arr::get(explode('.', $filename), 0, '');
     }
 
     /**
@@ -244,16 +257,5 @@ class PublisherService extends RegistryApiHandler
 
             throw  $exception;
         }
-    }
-
-    /**
-     * Updates activity published table.
-     *
-     * @return void
-     */
-    protected function updateStatus(): void
-    {
-        $this->activityPublished->published_to_registry = 1;
-        $this->activityPublished->save();
     }
 }

@@ -84,7 +84,7 @@ class BudgetService
      */
     public function formGenerator($id): Form
     {
-        $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
+        $element = getElementSchema('budget');
         $model['budget'] = $this->getBudgetData($id);
         $this->parentCollectionFormCreator->url = route('admin.activities.budget.update', [$id]);
 

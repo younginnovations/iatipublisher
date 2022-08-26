@@ -41,13 +41,13 @@ class CountryBudgetItemController extends Controller
     public function edit(int $id): View|RedirectResponse
     {
         try {
-            $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
+            $element = getElementSchema('country_budget_items');
             $activity = $this->countryBudgetItemService->getActivityData($id);
             $form = $this->countryBudgetItemService->formGenerator($id);
             $data = [
-                'core' => $element['country_budget_items']['criteria'] ?? '',
+                'core' => $element['criteria'] ?? '',
                 'status' => $activity->country_budget_items_element_completed,
-                'title' => $element['country_budget_items']['label'],
+                'title' => $element['label'],
                 'name' => 'country_budget_items',
             ];
 

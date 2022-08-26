@@ -41,13 +41,13 @@ class HumanitarianScopeController extends Controller
     public function edit(int $id): View|RedirectResponse
     {
         try {
-            $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
+            $element = getElementSchema('humanitarian_scope');
             $activity = $this->humanitarianScopeService->getActivityData($id);
             $form = $this->humanitarianScopeService->formGenerator($id);
             $data = [
-                'core' => $element['humanitarian_scope']['criteria'] ?? '',
+                'core' => $element['criteria'] ?? '',
                 'status' => $activity->humanitarian_scope_element_completed,
-                'title' => $element['humanitarian_scope']['label'],
+                'title' => $element['label'],
                 'name' => 'humanitarian_scope',
             ];
 

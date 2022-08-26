@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Requests\Activity\DefaultFinanceType;
 
 use App\Http\Requests\Activity\ActivityBaseRequest;

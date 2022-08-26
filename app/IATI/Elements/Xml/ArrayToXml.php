@@ -25,7 +25,7 @@ class ArrayToXml
      * @param $encoding
      * @param $format_output
      */
-    public static function init($version = '1.0', $encoding = 'UTF-8', $format_output = true)
+    public static function init($version = '1.0', $encoding = 'UTF-8', $format_output = true): void
     {
         self::$xml = new \DomDocument($version, $encoding);
         self::$xml->formatOutput = $format_output;
@@ -40,7 +40,7 @@ class ArrayToXml
      *
      * @return \DomDocument
      */
-    public static function &createXML($node_name, $arr = [])
+    public static function &createXML($node_name, $arr = []): ?\DomDocument
     {
         $xml = self::getXMLRoot();
         $xml->appendChild(self::convert($node_name, $arr));

@@ -12,6 +12,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     "/js/app.js": "/js/app.js?id=6e65cc6ab01eddfbe4b7d82e8ac6a6cb",
     "/js/script.js": "/js/script.js?id=c590f4aa7dc841813b5f40324de65278",
     "/js/formbuilder.js": "/js/formbuilder.js?id=e96956795d0cd57de89fe65578f480f1",
@@ -94,4 +95,10 @@
     "/js/formbuilder.js": "/js/formbuilder.js?id=53c103ecfd381dff741b49a18751d1b7",
     "/css/app.css": "/css/app.css?id=faf47e9f2fcb8f410213b378d84e21e6"
 >>>>>>> 06d7d7f2 (Publish/Unpublish buttons:)
+=======
+    "/js/app.js": "/js/app.js?id=4614654ec525ebca5a426473d9bc49b1",
+    "/js/script.js": "/js/script.js?id=babb8325c2c48764aff6d12ff3b66fb6",
+    "/js/formbuilder.js": "/js/formbuilder.js?id=b622ec8ffbd10381fee531d1f49240f5",
+    "/css/app.css": "/css/app.css?id=e385116671dab845131f2e6aa68a6c66"
+>>>>>>> c93b786a (315-activity-publish-backend-new)
 }

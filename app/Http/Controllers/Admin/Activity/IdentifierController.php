@@ -41,13 +41,13 @@ class IdentifierController extends Controller
     public function edit(int $id): View|RedirectResponse
     {
         try {
-            $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
+            $element = getElementSchema('iati_identifier');
             $activity = $this->identifierService->getActivityData($id);
             $form = $this->identifierService->formGenerator($id);
             $data = [
-                'core' => $element['iati_identifier']['criteria'] ?? '',
+                'core' => $element['criteria'] ?? '',
                 'status' => $activity->identifier_element_completed,
-                'title' => $element['iati_identifier']['label'],
+                'title' => $element['label'],
                 'name' => 'iati_identifier',
             ];
 

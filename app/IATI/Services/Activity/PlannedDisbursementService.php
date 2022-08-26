@@ -87,11 +87,11 @@ class PlannedDisbursementService
      */
     public function formGenerator($id): Form
     {
-        $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
+        $element = getElementSchema('planned_disbursement');
         $model['planned_disbursement'] = $this->getPlannedDisbursementData($id) ?: [];
         $this->parentCollectionFormCreator->url = route('admin.activities.planned-disbursement.update', [$id]);
 
-        return $this->parentCollectionFormCreator->editForm($model, $element['planned_disbursement'], 'PUT', '/activities/' . $id);
+        return $this->parentCollectionFormCreator->editForm($model, $element, 'PUT', '/activities/' . $id);
     }
 
     /**

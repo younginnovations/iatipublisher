@@ -82,10 +82,10 @@ class ActivityIdentifierService
      */
     public function formGenerator($id): Form
     {
-        $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
+        $element = getElementSchema('activity_identifier');
         $model['activity_identifier'] = $this->getActivityIdentifierData($id);
         $this->baseFormCreator->url = route('admin.activities.identifier.update', [$id]);
 
-        return $this->baseFormCreator->editForm($model['activity_identifier'], $element['iati_identifier'], 'PUT', '/activities/' . $id);
+        return $this->baseFormCreator->editForm($model['activity_identifier'], $element, 'PUT', '/activities/' . $id);
     }
 }

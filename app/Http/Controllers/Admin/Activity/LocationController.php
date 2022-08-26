@@ -42,13 +42,13 @@ class LocationController extends Controller
     public function edit(int $id): View|RedirectResponse
     {
         try {
-            $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
+            $element = getElementSchema('location');
             $activity = $this->locationService->getActivityData($id);
             $form = $this->locationService->formGenerator($id);
             $data = [
-                'core' => $element['location']['criteria'] ?? '',
+                'core' => $element['criteria'] ?? '',
                 'status' => $activity->location_element_completed ?? false,
-                'title' => $element['location']['label'],
+                'title' => $element['label'],
                 'name' => 'location',
             ];
 

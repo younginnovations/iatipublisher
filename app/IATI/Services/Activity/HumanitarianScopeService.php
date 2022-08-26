@@ -87,11 +87,11 @@ class HumanitarianScopeService
      */
     public function formGenerator($id): Form
     {
-        $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
+        $element = getElementSchema('humanitarian_scope');
         $model['humanitarian_scope'] = $this->getHumanitarianScopeData($id);
         $this->parentCollectionFormCreator->url = route('admin.activities.humanitarian-scope.update', [$id]);
 
-        return $this->parentCollectionFormCreator->editForm($model, $element['humanitarian_scope'], 'PUT', '/activities/' . $id);
+        return $this->parentCollectionFormCreator->editForm($model, $element, 'PUT', '/activities/' . $id);
     }
 
     /**

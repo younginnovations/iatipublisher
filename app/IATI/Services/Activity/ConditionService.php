@@ -87,11 +87,11 @@ class ConditionService
      */
     public function formGenerator($id): Form
     {
-        $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
+        $element = getElementSchema('conditions');
         $model = $this->getConditionData($id) ?: [];
         $this->multilevelSubElementFormCreator->url = route('admin.activities.conditions.update', [$id]);
 
-        return $this->multilevelSubElementFormCreator->editForm($model, $element['conditions'], 'PUT', '/activities/' . $id);
+        return $this->multilevelSubElementFormCreator->editForm($model, $element, 'PUT', '/activities/' . $id);
     }
 
     /**

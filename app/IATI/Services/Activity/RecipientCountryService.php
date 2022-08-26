@@ -87,11 +87,11 @@ class RecipientCountryService
      */
     public function formGenerator($id): Form
     {
-        $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
+        $element = getElementSchema('recipient_country');
         $model['recipient_country'] = $this->getRecipientCountryData($id);
         $this->parentCollectionFormCreator->url = route('admin.activities.recipient-country.update', [$id]);
 
-        return $this->parentCollectionFormCreator->editForm($model, $element['recipient_country'], 'PUT', '/activities/' . $id);
+        return $this->parentCollectionFormCreator->editForm($model, $element, 'PUT', '/activities/' . $id);
     }
 
     /**

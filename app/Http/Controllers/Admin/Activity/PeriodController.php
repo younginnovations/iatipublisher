@@ -127,13 +127,13 @@ class PeriodController extends Controller
         $indicatorId
     ): \Illuminate\Contracts\View\Factory|View|RedirectResponse|\Illuminate\Contracts\Foundation\Application {
         try {
-            $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
+            $element = getElementSchema('period');
             $activity = $this->activityService->getActivity($activityId);
             $form = $this->periodService->createFormGenerator($activityId, $resultId, $indicatorId);
             $data = [
-                'core'   => $element['period']['criteria'] ?? false,
+                'core'   => $element['criteria'] ?? false,
                 'status' => false,
-                'title'  => $element['period']['label'],
+                'title'  => $element['label'],
                 'name'   => 'period',
             ];
 
@@ -271,13 +271,13 @@ class PeriodController extends Controller
         $periodId
     ): \Illuminate\Contracts\View\Factory|View|RedirectResponse|\Illuminate\Contracts\Foundation\Application {
         try {
-            $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
+            $element = getElementSchema('period');
             $activity = $this->activityService->getActivity($activityId);
             $form = $this->periodService->editFormGenerator($activityId, $resultId, $indicatorId, $periodId);
             $data = [
-                'core'   => $element['period']['criteria'] ?? false,
+                'core'   => $element['criteria'] ?? false,
                 'status' => false,
-                'title'  => $element['period']['label'],
+                'title'  => $element['label'],
                 'name'   => 'period',
             ];
 
@@ -408,13 +408,13 @@ class PeriodController extends Controller
         $measure = $period['measure'];
 
         if ($measure == '5') {
-            foreach ($period['period']['target'] as $target) {
+            foreach ($period['target'] as $target) {
                 if ($target['value']) {
                     return 'Value must be omitted when the indicator measure is qualitative.';
                 }
             }
 
-            foreach ($period['period']['actual'] as $actual) {
+            foreach ($period['actual'] as $actual) {
                 if ($actual['value']) {
                     return 'Value must be omitted when the indicator measure is qualitative.';
                 }

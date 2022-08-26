@@ -84,11 +84,11 @@ class DefaultAidTypeService
      */
     public function formGenerator($id): Form
     {
-        $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
+        $element = getElementSchema('default_aid_type');
         $model['default_aid_type'] = $this->getDefaultAidTypeData($id);
         $this->baseFormCreator->url = route('admin.activities.default-aid-type.update', [$id]);
 
-        return $this->baseFormCreator->editForm($model, $element['default_aid_type'], 'PUT', '/activities/' . $id);
+        return $this->baseFormCreator->editForm($model, $element, 'PUT', '/activities/' . $id);
     }
 
     /**

@@ -41,13 +41,13 @@ class DateController extends Controller
     public function edit(int $id): View|RedirectResponse
     {
         try {
-            $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
+            $element = getElementSchema('activity_date');
             $activity = $this->dateService->getActivityData($id);
             $form = $this->dateService->formGenerator($id);
             $data = [
-                'core' => $element['activity_date']['criteria'] ?? '',
+                'core' => $element['criteria'] ?? '',
                 'status' => $activity->activity_date_element_completed,
-                'title' => $element['activity_date']['label'],
+                'title' => $element['label'],
                 'name' => 'activity_date',
             ];
 

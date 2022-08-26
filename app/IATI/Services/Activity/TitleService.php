@@ -87,11 +87,11 @@ class TitleService
      */
     public function formGenerator($id): Form
     {
-        $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
+        $element = getElementSchema('title');
         $model['narrative'] = $this->getTitleData($id);
         $this->baseFormCreator->url = route('admin.activities.title.update', [$id]);
 
-        return $this->baseFormCreator->editForm($model, $element['title'], 'PUT', '/activities/' . $id);
+        return $this->baseFormCreator->editForm($model, $element, 'PUT', '/activities/' . $id);
     }
 
     /**

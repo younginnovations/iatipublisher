@@ -41,13 +41,13 @@ class StatusController extends Controller
     public function edit(int $id): View|RedirectResponse|JsonResponse
     {
         try {
-            $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
+            $element = getElementSchema('activity_status');
             $activity = $this->statusService->getActivityData($id);
             $form = $this->statusService->formGenerator($id);
             $data = [
-                'core' => $element['activity_status']['criteria'] ?? false,
+                'core' => $element['criteria'] ?? false,
                 'status' => $activity->activity_status_element_completed ?? false,
-                'title' => $element['activity_status']['label'],
+                'title' => $element['label'],
                 'name' => 'activity_status',
             ];
 

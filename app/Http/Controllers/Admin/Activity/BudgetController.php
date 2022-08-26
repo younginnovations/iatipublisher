@@ -41,13 +41,13 @@ class BudgetController extends Controller
     public function edit(int $id): View|RedirectResponse
     {
         try {
-            $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
+            $element = getElementSchema('budget');
             $activity = $this->budgetService->getActivityData($id);
             $form = $this->budgetService->formGenerator($id);
             $data = [
-                'core' => $element['budget']['criteria'] ?? false,
+                'core' => $element['criteria'] ?? false,
                 'status' => $activity->budget_element_completed ?? false,
-                'title' => $element['budget']['label'],
+                'title' => $element['label'],
                 'name' => 'budget',
             ];
 

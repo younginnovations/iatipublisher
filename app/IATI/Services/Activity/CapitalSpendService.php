@@ -83,11 +83,11 @@ class CapitalSpendService
      */
     public function formGenerator($id): Form
     {
-        $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
+        $element = getElementSchema('capital_spend');
         $model['capital_spend'] = $this->getCapitalSpendData($id);
         $this->baseFormCreator->url = route('admin.activities.capital-spend.update', [$id]);
 
-        return $this->baseFormCreator->editForm($model, $element['capital_spend'], 'PUT', '/activities/' . $id);
+        return $this->baseFormCreator->editForm($model, $element, 'PUT', '/activities/' . $id);
     }
 
     /**

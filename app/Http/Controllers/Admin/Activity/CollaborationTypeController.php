@@ -41,13 +41,13 @@ class CollaborationTypeController extends Controller
     public function edit(int $id): View|RedirectResponse
     {
         try {
-            $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
+            $element = getElementSchema('collaboration_type');
             $activity = $this->collaborationTypeService->getActivityData($id);
             $form = $this->collaborationTypeService->formGenerator($id);
             $data = [
-                'core' => $element['collaboration_type']['criteria'] ?? '',
+                'core' => $element['criteria'] ?? '',
                 'status' => $activity->collaboration_type_element_completed,
-                'title' => $element['collaboration_type']['label'],
+                'title' => $element['label'],
                 'name' => 'collaboration_type',
             ];
 

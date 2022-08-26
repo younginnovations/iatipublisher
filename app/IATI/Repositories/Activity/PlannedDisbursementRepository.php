@@ -61,7 +61,7 @@ class PlannedDisbursementRepository
      */
     public function update($plannedDisbursement, $activity): bool
     {
-        $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true)['planned_disbursement'];
+        $element = getElementSchema('planned_disbursement');
 
         foreach ($plannedDisbursement['planned_disbursement'] as $key => $disbursement) {
             foreach (array_keys($element['sub_elements']) as $subelement) {

@@ -41,13 +41,13 @@ class SectorController extends Controller
     public function edit(int $id): View|RedirectResponse
     {
         try {
-            $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
+            $element = getElementSchema('sector');
             $activity = $this->sectorService->getActivityData($id);
             $form = $this->sectorService->formGenerator($id);
             $data = [
-                'core' => $element['sector']['criteria'] ?? '',
+                'core' => $element['criteria'] ?? '',
                 'status' => $activity->sector_element_completed,
-                'title' => $element['sector']['label'],
+                'title' => $element['label'],
                 'name' => 'sector',
             ];
 

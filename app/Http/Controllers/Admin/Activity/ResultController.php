@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers\Admin\Activity;
 
 use App\Http\Controllers\Controller;
@@ -7,9 +9,12 @@ use App\Http\Requests\Activity\Result\ResultRequest;
 use App\IATI\Models\Activity\Result;
 use App\IATI\Services\Activity\ActivityService;
 use App\IATI\Services\Activity\ResultService;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Response;
 
 /**
  * Class ResultController.
@@ -43,7 +48,7 @@ class ResultController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function index($activityId): View|RedirectResponse
     {
@@ -69,18 +74,18 @@ class ResultController extends Controller
      *
      * @param $id
      *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Http\RedirectResponse|\Illuminate\Contracts\Foundation\Application
+     * @return Factory|View|RedirectResponse|Application
      */
     public function create(
         $id
-    ): \Illuminate\Contracts\View\Factory|View|RedirectResponse|\Illuminate\Contracts\Foundation\Application {
+    ): Factory|View|RedirectResponse|Application {
         try {
-            $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
+            $element = getElementSchema('result');
             $activity = $this->activityService->getActivity($id);
             $form = $this->resultService->createFormGenerator($id);
-            $data = ['core'   => $element['result']['criteria'] ?? false,
+            $data = ['core'   => $element['criteria'] ?? false,
                      'status' => false,
-                     'title'  => $element['result']['label'],
+                     'title'  => $element['label'],
                      'name'   => 'result',
             ];
 
@@ -100,7 +105,7 @@ class ResultController extends Controller
      *
      * @param ResultRequest $request
      *
-     * @return \Illuminate\Http\RedirectResponse
+     * @return RedirectResponse
      */
     public function store(ResultRequest $request, $activityId): RedirectResponse
     {
@@ -158,17 +163,17 @@ class ResultController extends Controller
      * @param $activityId
      * @param $resultId
      *
-     * @return \Illuminate\Contracts\View\View|\Illuminate\Http\RedirectResponse
+     * @return View|RedirectResponse
      */
     public function edit($activityId, $resultId): View|RedirectResponse
     {
         try {
-            $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
+            $element = getElementSchema('result');
             $activity = $this->activityService->getActivity($activityId);
             $form = $this->resultService->editFormGenerator($resultId, $activityId);
-            $data = ['core'   => $element['result']['criteria'] ?? false,
+            $data = ['core'   => $element['criteria'] ?? false,
                      'status' => false,
-                     'title'  => $element['result']['label'],
+                     'title'  => $element['label'],
                      'name'   => 'result',
             ];
 
@@ -189,7 +194,7 @@ class ResultController extends Controller
      * @param $activityId
      * @param $resultId
      *
-     * @return \Illuminate\Http\RedirectResponse
+     * @return RedirectResponse
      */
     public function update(ResultRequest $request, $activityId, $resultId): RedirectResponse
     {
@@ -224,17 +229,17 @@ class ResultController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param \App\IATI\Models\Activity\Result $result
+     * @param Result $result
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function destroy(Result $result)
     {
         //
     }
 
-    /*
-     * Get results of the corresponding activity
+    /**
+     * Get results of the corresponding activity.
      *
      * @param $activityId
      * @param $page

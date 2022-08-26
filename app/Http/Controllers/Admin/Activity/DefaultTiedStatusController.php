@@ -41,13 +41,13 @@ class DefaultTiedStatusController extends Controller
     public function edit(int $id): View|RedirectResponse
     {
         try {
-            $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
+            $element = getElementSchema('default_tied_status');
             $activity = $this->defaultTiedStatusService->getActivityData($id);
             $form = $this->defaultTiedStatusService->formGenerator($id);
             $data = [
-                'core' => $element['default_tied_status']['criteria'] ?? '',
+                'core' => $element['criteria'] ?? '',
                 'status' => $activity->default_tied_status_element_completed,
-                'title' => $element['default_tied_status']['label'],
+                'title' => $element['label'],
                 'name' => 'default_tied_status',
             ];
 

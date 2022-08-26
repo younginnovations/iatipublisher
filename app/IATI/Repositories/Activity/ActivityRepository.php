@@ -71,11 +71,11 @@ class ActivityRepository extends Repository
      */
     public function updatePublishedStatus($activity, $status, $alreadyPublished, $linkedToIati): bool
     {
-        $activity->status = $status;
-        $activity->already_published = $alreadyPublished;
-        $activity->linked_to_iati = $linkedToIati;
-
-        return $activity->save();
+        return (bool) $this->model->where('id', $activity->id)->update([
+            'status'            => $status,
+            'already_published' => $alreadyPublished,
+            'linked_to_iati'    => $linkedToIati,
+        ]);
     }
 
     /**

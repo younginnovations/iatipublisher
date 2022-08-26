@@ -41,13 +41,13 @@ class RecipientCountryController extends Controller
     public function edit(int $id): View|RedirectResponse
     {
         try {
-            $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
+            $element = getElementSchema('recipient_country');
             $activity = $this->recipientCountryService->getActivityData($id);
             $form = $this->recipientCountryService->formGenerator($id);
             $data = [
-                'core' => $element['recipient_country']['criteria'] ?? '',
+                'core' => $element['criteria'] ?? '',
                 'status' => $activity->recipient_country_element_completed,
-                'title' => $element['recipient_country']['label'],
+                'title' => $element['label'],
                 'name' => 'recipient_country',
             ];
 

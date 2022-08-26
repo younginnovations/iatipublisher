@@ -87,11 +87,11 @@ class OtherIdentifierService
      */
     public function formGenerator($id): Form
     {
-        $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
+        $element = getElementSchema('other_identifier');
         $model = $this->getOtherIdentifierData($id) ?: [];
         $this->parentCollectionFormCreator->url = route('admin.activities.other-identifier.update', [$id]);
 
-        return $this->parentCollectionFormCreator->editForm($model, $element['other_identifier'], 'PUT', '/activities/' . $id);
+        return $this->parentCollectionFormCreator->editForm($model, $element, 'PUT', '/activities/' . $id);
     }
 
     /**

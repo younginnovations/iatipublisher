@@ -41,13 +41,13 @@ class ConditionController extends Controller
     public function edit(int $id): View|RedirectResponse
     {
         try {
-            $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
+            $element = getElementSchema('conditions');
             $activity = $this->conditionService->getActivityData($id);
             $form = $this->conditionService->formGenerator($id);
             $data = [
-                'core' => $element['conditions']['criteria'] ?? false,
+                'core' => $element['criteria'] ?? false,
                 'status' => $activity->conditions_element_completed,
-                'title' => $element['conditions']['label'],
+                'title' => $element['label'],
                 'name' => 'conditions',
             ];
 

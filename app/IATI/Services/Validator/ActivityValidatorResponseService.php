@@ -8,7 +8,7 @@ use App\IATI\Repositories\Validator\ActivityValidatorResponseRepository;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * Class ActivityValidatorService.
+ * Class ActivityValidatorResponseService.
  */
 class ActivityValidatorResponseService
 {

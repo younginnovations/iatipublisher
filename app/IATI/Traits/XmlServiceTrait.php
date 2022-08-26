@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\IATI\Traits;
 
 /**
@@ -43,9 +45,7 @@ trait XmlServiceTrait
      */
     protected function libxml_fetch_errors(): array
     {
-        $errors = libxml_get_errors();
-
-        return $errors;
+        return libxml_get_errors();
     }
 
     /**

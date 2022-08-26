@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers\Admin\Workflow;
 
 use App\Exceptions\PublisherNotFound;
@@ -81,17 +83,21 @@ class ActivityWorkflowController extends Controller
      */
     protected function hasNoPublisherInfo($settings): bool
     {
-        $registryInfo = $settings->publishing_info;
-
-        if (!$settings || !$registryInfo) {
+        if (!$settings) {
             return true;
         }
 
-        if (empty(Arr::get($registryInfo, 'publisher_id', null) ||
+        $registryInfo = $settings->publishing_info;
+
+        if (!$registryInfo) {
+            return true;
+        }
+
+        if (empty(Arr::get($registryInfo, 'publisher_id', null)) ||
             empty(Arr::get($registryInfo, 'api_token', null)) ||
-            Arr::get($registryInfo, 'publisher_verification', false) ||
-            Arr::get($registryInfo, 'token_verification', false)
-        )) {
+            !Arr::get($registryInfo, 'publisher_verification', false) ||
+            !Arr::get($registryInfo, 'token_verification', false)
+        ) {
             return true;
         }
 

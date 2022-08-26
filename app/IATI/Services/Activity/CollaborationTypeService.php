@@ -82,11 +82,11 @@ class CollaborationTypeService
      */
     public function formGenerator($id): Form
     {
-        $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
+        $element = getElementSchema('collaboration_type');
         $model['collaboration_type'] = $this->getCollaborationTypeData($id);
         $this->baseFormCreator->url = route('admin.activities.collaboration-type.update', [$id]);
 
-        return $this->baseFormCreator->editForm($model, $element['collaboration_type'], 'PUT', '/activities/' . $id);
+        return $this->baseFormCreator->editForm($model, $element, 'PUT', '/activities/' . $id);
     }
 
     /**

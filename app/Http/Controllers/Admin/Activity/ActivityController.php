@@ -152,12 +152,8 @@ class ActivityController extends Controller
             $status = $activity->element_status;
             $progress = $this->activityService->activityPublishingProgress($activity);
             $coreCompleted = isCoreElementCompleted(array_merge(['reporting_org' => $activity->organization->reporting_org_complete_status], $activity->element_status));
-            $iatiValidatorResponse = null;
             $validatorResponse = $this->activityValidatorResponseService->getValidatorResponse($id);
-
-            if ($validatorResponse) {
-                $iatiValidatorResponse = $validatorResponse->response;
-            }
+            $iatiValidatorResponse = $validatorResponse->response ?? null;
 
             return view(
                 'admin.activity.show',

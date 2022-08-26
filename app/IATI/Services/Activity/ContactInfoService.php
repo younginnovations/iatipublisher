@@ -82,11 +82,11 @@ class ContactInfoService
      */
     public function formGenerator($id): Form
     {
-        $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
+        $element = getElementSchema('contact_info');
         $model['contact_info'] = $this->getContactInfoData($id) ?: [];
         $this->parentCollectionFormCreator->url = route('admin.activities.contact-info.update', [$id]);
 
-        return $this->parentCollectionFormCreator->editForm($model, $element['contact_info'], 'PUT', '/activities/' . $id);
+        return $this->parentCollectionFormCreator->editForm($model, $element, 'PUT', '/activities/' . $id);
     }
 
     /**

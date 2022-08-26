@@ -61,13 +61,13 @@ class DocumentLinkController extends Controller
     public function edit(int $id): View|RedirectResponse
     {
         try {
-            $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
+            $element = getElementSchema('document_link');
             $activity = $this->documentLinkService->getActivityData($id);
             $form = $this->documentLinkService->formGenerator($id);
             $data = [
-                'core' => false,
+                'core' => $element['criteria'] ?? '',
                 'status' => $activity->document_link_element_completed ?? false,
-                'title' => $element['document_link']['label'],
+                'title' => $element['label'],
                 'name' => 'document_link',
             ];
 
