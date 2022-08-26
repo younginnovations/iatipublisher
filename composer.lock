@@ -1571,6 +1571,7 @@
         },
         {
             "name": "laravel/horizon",
+<<<<<<< HEAD
             "version": "v5.10.1",
             "source": {
                 "type": "git",
@@ -1581,6 +1582,18 @@
                 "type": "zip",
                 "url": "https://api.github.com/repos/laravel/horizon/zipball/1570c8a4612484a37392eca986f06d01b771cb96",
                 "reference": "1570c8a4612484a37392eca986f06d01b771cb96",
+=======
+            "version": "v5.10.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/laravel/horizon.git",
+                "reference": "8cbdf156dbbc146be5527d0c5fae185a3d31fff0"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/laravel/horizon/zipball/8cbdf156dbbc146be5527d0c5fae185a3d31fff0",
+                "reference": "8cbdf156dbbc146be5527d0c5fae185a3d31fff0",
+>>>>>>> 418-bulk-publishing-feature
                 "shasum": ""
             },
             "require": {
@@ -1642,9 +1655,15 @@
             ],
             "support": {
                 "issues": "https://github.com/laravel/horizon/issues",
+<<<<<<< HEAD
                 "source": "https://github.com/laravel/horizon/tree/v5.10.1"
             },
             "time": "2022-09-05T16:33:43+00:00"
+=======
+                "source": "https://github.com/laravel/horizon/tree/v5.10.0"
+            },
+            "time": "2022-08-11T17:05:00+00:00"
+>>>>>>> 418-bulk-publishing-feature
         },
         {
             "name": "laravel/sanctum",
@@ -3008,6 +3027,7 @@
         },
         {
             "name": "predis/predis",
+<<<<<<< HEAD
             "version": "v2.0.2",
             "source": {
                 "type": "git",
@@ -3018,6 +3038,18 @@
                 "type": "zip",
                 "url": "https://api.github.com/repos/predis/predis/zipball/8b5fa928560b48a054fb1fd485fc65f2d8aa9e5c",
                 "reference": "8b5fa928560b48a054fb1fd485fc65f2d8aa9e5c",
+=======
+            "version": "v2.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/predis/predis.git",
+                "reference": "99c253733dee9447d26257dc669d33d5ac84713d"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/predis/predis/zipball/99c253733dee9447d26257dc669d33d5ac84713d",
+                "reference": "99c253733dee9447d26257dc669d33d5ac84713d",
+>>>>>>> 418-bulk-publishing-feature
                 "shasum": ""
             },
             "require": {
@@ -3067,7 +3099,11 @@
             ],
             "support": {
                 "issues": "https://github.com/predis/predis/issues",
+<<<<<<< HEAD
                 "source": "https://github.com/predis/predis/tree/v2.0.2"
+=======
+                "source": "https://github.com/predis/predis/tree/v2.0.0"
+>>>>>>> 418-bulk-publishing-feature
             },
             "funding": [
                 {
@@ -3075,7 +3111,11 @@
                     "type": "github"
                 }
             ],
+<<<<<<< HEAD
             "time": "2022-09-06T14:34:14+00:00"
+=======
+            "time": "2022-06-08T13:14:56+00:00"
+>>>>>>> 418-bulk-publishing-feature
         },
         {
             "name": "psr/container",

@@ -119,7 +119,7 @@ abstract class Repository implements RepositoryInterface
      */
     public function find($id, array $columns = ['*']): ?object
     {
-        return $this->model->find($id, $columns);
+        return $this->model->findOrFail($id, $columns);
     }
 
     /**
