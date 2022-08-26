@@ -217,7 +217,7 @@ const searchFunction = () => {
   spinner.value = false;
   if (searchValue.value) {
     spinner.value = true;
-    const href = '/activities/?q=' + searchValue.value;
+    const href = '/activities?q=' + searchValue.value;
     window.location.replace(href);
   } else {
     spinner.value = true;

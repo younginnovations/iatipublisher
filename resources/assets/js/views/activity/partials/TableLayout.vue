@@ -9,10 +9,10 @@
           <th id="date" scope="col">
             <a
               class="transition duration-500 text-n-50 hover:text-spring-50"
-              href="#"
+              :href="sortByDateUrl()"
             >
-              <span class="sorting-indicator ascending">
-                <svg-vue icon="ascending-arrow" />
+              <span class="sorting-indicator" :class="sortingDirection()">
+                <svg-vue :icon="`${sortingDirection()}-arrow`" />
               </span>
               <span>Updated On</span>
             </a>
@@ -31,7 +31,7 @@
         </tr>
       </thead>
       <tbody v-if="data.total > 0">
-        <tr v-for="datum in props.data.data" :key="datum['id']">
+        <tr v-for="datum in data.data" :key="datum['id']">
           <td class="title">
             <div
               class="inline-flex items-start transition duration-500 hover:text-spring-50"
@@ -106,44 +106,45 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, reactive } from 'vue';
+<script setup lang="ts">
+import { defineProps, defineEmits, reactive } from 'vue';
 import moment from 'moment';
 
-export default defineComponent({
-  name: 'TableLayout',
-  components: {},
-  props: {
-    data: {
-      type: [Object],
-      required: true,
-    },
-  },
-  emits: ['showOrHide'],
-  setup(props, { emit }) {
-    const state = reactive({
-      selected: [],
-    });
-
-    const emitShowOrHide = () => {
-      emit('showOrHide', state.selected);
-    };
-
-    function formatDate(date: Date) {
-      return moment(date).fromNow();
-    }
-
-    function goToDetail(id: number) {
-      window.location.href = '/activity/' + id;
-    }
-
-    return {
-      state,
-      emitShowOrHide,
-      props,
-      formatDate,
-      goToDetail,
-    };
-  },
+defineProps({
+  data: { type: Object, required: true },
 });
+
+const emit = defineEmits(['showOrHide']);
+
+const state = reactive({
+  selected: [],
+});
+
+const emitShowOrHide = () => {
+  emit('showOrHide', state.selected);
+};
+
+function formatDate(date: Date) {
+  return moment(date).fromNow();
+}
+
+//Sorting by update_at
+const currentURL = window.location.href;
+let query = '',
+  direction = 'asc';
+
+const sortingDirection = () => {
+  return direction === 'asc' ? 'descending' : 'ascending';
+};
+
+const sortByDateUrl = () => {
+  if (currentURL.includes('?')) {
+    const queryString = window.location.search,
+      urlParams = new URLSearchParams(queryString);
+    query = urlParams.get('q') ?? '';
+    direction = urlParams.get('direction') === 'desc' ? 'asc' : 'desc';
+  }
+
+  return `?q=${query}&orderBy=updated_at&direction=${direction}`;
+};
 </script>

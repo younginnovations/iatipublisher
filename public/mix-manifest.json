@@ -1,13 +1,6 @@
 {
-<<<<<<< HEAD
-    "/js/app.js": "/js/app.js?id=654f18a7214e7a5dd7790949b4c97d62",
+    "/js/app.js": "/js/app.js?id=8b4743f9d44b575cb90d55191d546e8a",
     "/js/script.js": "/js/script.js?id=c896604ef5a2464ef1515eb5047ba232",
     "/js/formbuilder.js": "/js/formbuilder.js?id=b622ec8ffbd10381fee531d1f49240f5",
-    "/css/app.css": "/css/app.css?id=4374f97d9bb2d42ef97bc6c890703746"
-=======
-    "/js/app.js": "/js/app.js?id=4b50d034095e017be7c8fa00752d71bd",
-    "/js/script.js": "/js/script.js?id=e955d552439ae70429f1463e1925119a",
-    "/js/formbuilder.js": "/js/formbuilder.js?id=53c103ecfd381dff741b49a18751d1b7",
-    "/css/app.css": "/css/app.css?id=5ef1625ef897f36d7e2d718543add6d2"
->>>>>>> Tasks/Fixes:
+    "/css/app.css": "/css/app.css?id=1982acff99f7d8be109da0c3414a8bb9"
 }
