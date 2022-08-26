@@ -46,7 +46,7 @@
       <div class="flex justify-end actions grow">
         <div class="inline-flex items-center">
           <Toast
-            v-if="toastMessage.message"
+            v-if="toastMessage.visibility"
             class="mr-3.5"
             :message="toastMessage.message"
             :type="toastMessage.type"
@@ -161,11 +161,12 @@ defineProps({
 });
 
 interface ToastInterface {
+  visibility: boolean;
   message: string;
   type: boolean;
 }
 
-const toastMessage = inject('toastMessage') as ToastInterface;
+const toastMessage = inject('toastData') as ToastInterface;
 
 const [modalValue, modalToggle] = useToggle();
 </script>

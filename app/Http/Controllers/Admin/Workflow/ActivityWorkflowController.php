@@ -12,6 +12,7 @@ use GuzzleHttp\Exception\BadResponseException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Session;
 
 /**
  * Class ActivityWorkflowController.
@@ -59,16 +60,19 @@ class ActivityWorkflowController extends Controller
             DB::beginTransaction();
             $this->activityWorkflowService->publishActivity($activity);
             DB::commit();
+            Session::put('success', 'Activity has been published successfully.');
 
             return response()->json(['success' => true, 'message' => 'Activity has been published successfully.']);
         } catch (PublisherNotFound $message) {
             DB::rollBack();
             logger()->error($message->getMessage());
+            Session::put('error', $message->getMessage());
 
             return response()->json(['success' => false, 'message' => $message->getMessage()]);
         } catch (\Exception $e) {
             DB::rollBack();
             logger()->error($e->getMessage());
+            Session::put('error', 'Error has occurred while publishing activity.');
 
             return response()->json(['success' => false, 'message' => 'Error has occurred while publishing activity.']);
         }
@@ -123,11 +127,13 @@ class ActivityWorkflowController extends Controller
 
             $this->activityWorkflowService->unpublishActivity($activity);
             DB::commit();
+            Session::put('success', 'Activity has been un-published successfully.');
 
             return response()->json(['success' => true, 'message' => 'Activity has been un-published successfully.']);
         } catch (\Exception $e) {
             DB::rollBack();
             logger()->error($e->getMessage());
+            Session::put('error', 'Error has occurred while un-publishing activity.');
 
             return response()->json(['success' => false, 'message' => 'Error has occurred while un-publishing activity.']);
         }

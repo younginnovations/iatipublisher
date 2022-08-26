@@ -101,11 +101,13 @@ const unPublishFunction = () => {
     toastMessage.type = response.success;
     unpublishToggle();
     setTimeout(() => {
-      loader.value = false;
       if (response.success === true) {
-        store.dispatch('updatePublishedState', false);
+        store.dispatch('updateUnPublished', false);
+        store.dispatch('updateShowPublished', true);
+        store.dispatch('updatePublishErrors', []);
       }
-    }, 2000);
+      location.reload();
+    }, 1000);
   });
 };
 </script>

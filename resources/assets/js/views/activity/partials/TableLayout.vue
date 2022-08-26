@@ -113,7 +113,10 @@
             </div>
           </td>
 
-          <th class="check-column" @click="(e) => e.stopPropagation()">
+          <th
+            class="check-column"
+            @click="(event: Event) => event.stopPropagation()"
+          >
             <label class="sr-only" for="">
               Select "{{ datum['title'][0]['narrative'] }}"
             </label>
@@ -168,7 +171,7 @@ function toggleSelectAll(
   selectAllValue: boolean
 ) {
   if (!selectAllValue) {
-    let ids = [];
+    let ids = [] as number[];
     for (const datum in activities) {
       ids.push(activities[datum].id);
     }

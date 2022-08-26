@@ -47,7 +47,7 @@
 </template>
 
 <script setup lang="ts">
-import { toRefs, reactive, defineProps, onUpdated } from 'vue';
+import { toRefs, reactive, defineProps } from 'vue';
 import { useToggle } from '@vueuse/core';
 
 // components

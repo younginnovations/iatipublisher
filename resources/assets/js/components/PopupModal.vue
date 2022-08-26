@@ -25,19 +25,29 @@
   </Teleport>
 </template>
 
-<script setup lang="ts">
-import { defineEmits, defineProps } from 'vue';
-
-const emit = defineEmits(['close', 'reset']);
-
-const close = () => {
-  emit('close');
-  emit('reset');
-};
-
-defineProps({
-  modalActive: { type: Boolean, required: true },
-  width: { type: String, default: '809' },
+<script lang="ts">
+import { defineComponent } from 'vue';
+export default defineComponent({
+  name: 'PopupModal',
+  props: {
+    modalActive: {
+      type: Boolean,
+      required: true,
+    },
+    width: {
+      type: String,
+      required: false,
+      default: '809',
+    },
+  },
+  emits: ['close', 'reset'],
+  setup(props, { emit }) {
+    const close = () => {
+      emit('close');
+      emit('reset');
+    };
+    return { close };
+  },
 });
 </script>
 

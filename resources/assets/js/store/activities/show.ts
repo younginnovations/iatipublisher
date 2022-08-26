@@ -1,15 +1,19 @@
 import { createStore, Commit } from 'vuex';
 
 const state = {
-  published: false,
+  unPublished: false,
+  showPublished: false,
   publishErrors: [],
 };
 
 type State = typeof state;
 
 const mutations = {
-  mutatePublishedState: function (state: State, payload: boolean) {
-    state.published = payload;
+  mutateUnPublished: function (state: State, payload: boolean) {
+    state.unPublished = payload;
+  },
+  mutateShowPublished: function (state: State, payload: boolean) {
+    state.showPublished = payload;
   },
   mutatePublishErrors: function (state: State, payload: []) {
     state.publishErrors = payload;
@@ -21,11 +25,11 @@ interface CommitFunction {
 }
 
 const actions = {
-  updatePublishedState: function (
-    { commit }: CommitFunction,
-    payload: boolean
-  ) {
-    commit('mutatePublishedState', payload);
+  updateUnPublished: function ({ commit }: CommitFunction, payload: boolean) {
+    commit('mutateUnPublished', payload);
+  },
+  updateShowPublished: function ({ commit }: CommitFunction, payload: boolean) {
+    commit('mutateShowPublished', payload);
   },
   updatePublishErrors: function ({ commit }: CommitFunction, payload: []) {
     commit('mutatePublishErrors', payload);

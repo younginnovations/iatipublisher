@@ -323,9 +323,10 @@ const publishFunction = () => {
     toastMessage.message = response.message;
     toastMessage.type = response.success;
     setTimeout(() => {
-      loader.value = false;
-      store.dispatch('updatePublishedState', response.success);
-    }, 2000);
+      store.dispatch('updateUnPublished', response.success);
+      store.dispatch('updateShowPublished', !response.success);
+      location.reload();
+    }, 1000);
   });
 };
 

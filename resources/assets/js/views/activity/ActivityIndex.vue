@@ -6,17 +6,6 @@
     <div id="activity">
       <Loader v-if="isLoading"></Loader>
       <PageTitle :show-buttons="state.showButtons" />
-      <Toast
-        v-if="toastData.visibility"
-        :message="toastData.message"
-        :type="toastData.type"
-      />
-      <Toast
-        v-if="toastMessage.message"
-        class="mr-3.5"
-        :message="toastMessage.message"
-        :type="toastMessage.type"
-      />
       <EmptyActivity v-if="isEmpty" />
       <TableLayout
         v-if="!isEmpty"
@@ -39,7 +28,6 @@ import TableLayout from './partials/TableLayout.vue';
 import Pagination from 'Components/TablePagination.vue';
 import PageTitle from './partials/PageTitle.vue';
 import Loader from 'Components/Loader.vue';
-import Toast from 'Components/Toast.vue';
 
 export default defineComponent({
   name: 'ActivityComponent',
@@ -49,7 +37,6 @@ export default defineComponent({
     Pagination,
     TableLayout,
     Loader,
-    Toast,
   },
   props: {
     toast: {
@@ -61,10 +48,17 @@ export default defineComponent({
     const activities = reactive({});
     const isLoading = ref(true);
 
+    //for session message
     const toastData = reactive({
       visibility: false,
       message: '',
       type: true,
+    });
+
+    // for publish button
+    const toastMessage = reactive({
+      message: '',
+      type: false,
     });
 
     onMounted(() => {
@@ -77,11 +71,6 @@ export default defineComponent({
       setTimeout(() => {
         toastData.visibility = false;
       }, 5000);
-    });
-
-    const toastMessage = reactive({
-      message: '',
-      type: false,
     });
 
     onMounted(async () => {
@@ -116,6 +105,7 @@ export default defineComponent({
     }
 
     provide('toastMessage', toastMessage);
+    provide('toastData', toastData);
 
     return {
       activities,

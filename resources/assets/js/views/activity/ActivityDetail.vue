@@ -45,20 +45,13 @@
           </div>
         </div>
         <div class="relative flex flex-col items-end justify-end actions grow">
-          <div class="mb-3">
+          <div class="inline-flex justify-end">
+            <!-- toast msg for publishing -->
             <Toast
               v-if="toastData.visibility"
               :message="toastData.message"
               :type="toastData.type"
-            />
-          </div>
-          <div class="inline-flex justify-end">
-            <!-- toast msg for publishing -->
-            <Toast
-              v-if="toastMessage.message"
-              class="mr-3.5"
-              :message="toastMessage.message"
-              :type="toastMessage.type"
+              class="mr-3"
             />
 
             <div class="inline-flex items-center justify-end gap-3">
@@ -67,19 +60,13 @@
 
               <!-- Unpublish Activity -->
               <UnPublish
-                v-if="store.state.published"
-                type="outline"
+                v-if="store.state.unPublished"
                 :activity-id="activityProps.id"
               />
 
               <!-- Publish Activity -->
               <Publish
-                v-if="
-                  !(
-                    publishStatus.linked_to_iati &&
-                    publishStatus.status === 'published'
-                  )
-                "
+                v-if="store.state.showPublished"
                 :already-published="activityProps.already_published"
                 :linked-to-iati="activityProps.linked_to_iati"
                 :status="activityProps.status"
@@ -487,9 +474,17 @@ export default defineComponent({
     }
 
     if (publishStatus.linked_to_iati) {
-      store.dispatch('updatePublishedState', true);
+      store.dispatch('updateUnPublished', true);
     } else {
-      store.dispatch('updatePublishedState', false);
+      store.dispatch('updateUnPublished', false);
+    }
+
+    if (
+      !(publishStatus.linked_to_iati && publishStatus.status === 'published')
+    ) {
+      store.dispatch('updateShowPublished', true);
+    } else {
+      store.dispatch('updateShowPublished', false);
     }
 
     return {
