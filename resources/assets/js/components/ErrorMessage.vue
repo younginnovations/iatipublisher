@@ -1,5 +1,12 @@
 <template>
   <div
+    v-if="
+      !(
+        errorData.account_verified &&
+        errorData.default_setting &&
+        errorData.publisher_setting
+      )
+    "
     class="relative h-full bg-white duration-300"
     :class="{
       'mb-5': !isEmpty || !show,
@@ -7,6 +14,7 @@
       'mb-10': !show,
     }"
   >
+    <Loader v-if="isLoaderVisible" />
     <div
       :show="!show"
       :class="
@@ -41,6 +49,7 @@
             >
           </div>
           <div
+            v-if="!errorData.publisher_setting || !errorData.default_setting"
             :class="
               show &&
               (!errorData.publisher_setting || !errorData.default_setting)
@@ -93,7 +102,7 @@
                 account,
                 <span
                   ><a
-                    class="border-b-2 border-b-bluecoral font-bold text-bluecoral hover:border-b-spring-50"
+                    class="cursor-pointer border-b-2 border-b-bluecoral font-bold text-bluecoral hover:border-b-spring-50"
                     @click="resendVerificationEmail()"
                     >resend verification email</a
                   ></span
@@ -161,11 +170,13 @@
 <script lang="ts">
 import { defineComponent, ref, reactive, onMounted, inject } from 'vue';
 import { TransitionRoot } from '@headlessui/vue';
+import Loader from '../components/Loader.vue';
 import axios from 'axios';
 
 export default defineComponent({
   components: {
     TransitionRoot,
+    Loader,
   },
   props: {
     isEmpty: {
@@ -174,38 +185,43 @@ export default defineComponent({
       default: true,
     },
   },
-  setup(props) {
+  setup() {
     const show = ref(false);
     interface ToastInterface {
       visibility: boolean;
       message: string;
       type: boolean;
     }
-    const toastMessage = inject('toastMessage') as ToastInterface;
+    const toastData = inject('toastData') as ToastInterface;
     const errorData = reactive({
       account_verified: false,
       default_setting: false,
       publisher_setting: false,
     });
+    const isLoaderVisible = ref(false);
 
     function resendVerificationEmail() {
+      isLoaderVisible.value = true;
+
       axios
         .post('/user/verification/email')
         .then((res) => {
-          toastMessage.visibility = true;
-          toastMessage.message = res.data.message;
-          toastMessage.type = res.data.success;
+          toastData.visibility = true;
+          toastData.message = res.data.message;
+          toastData.type = res.data.success;
+          isLoaderVisible.value = false;
         })
         .catch((error) => {
-          toastMessage.visibility = true;
-          toastMessage.message = error.data.message;
-          toastMessage.type = false;
+          toastData.visibility = true;
+          toastData.message = error.data.message;
+          toastData.type = false;
+          isLoaderVisible.value = false;
         });
 
       setTimeout(() => {
-        toastMessage.visibility = false;
-        toastMessage.message = '';
-        toastMessage.type = false;
+        toastData.visibility = false;
+        toastData.message = '';
+        toastData.type = false;
       }, 2000);
     }
 
@@ -218,7 +234,9 @@ export default defineComponent({
           errorData.publisher_setting = response.data.publisher_status;
         })
         .catch((error) => {
-          console.log(error);
+          toastData.visibility = true;
+          toastData.message = error.data.message;
+          toastData.type = error.data.success;
         });
 
       axios
@@ -228,14 +246,23 @@ export default defineComponent({
           errorData.account_verified = response.data.account_verified;
         })
         .catch((error) => {
-          console.log(error);
+          toastData.visibility = true;
+          toastData.message = error.data.message;
+          toastData.type = error.data.success;
         });
+
+      setTimeout(() => {
+        toastData.visibility = false;
+        toastData.message = '';
+        toastData.type = false;
+      }, 2000);
     });
 
     return {
       show,
       errorData,
       resendVerificationEmail,
+      isLoaderVisible,
     };
   },
 });
