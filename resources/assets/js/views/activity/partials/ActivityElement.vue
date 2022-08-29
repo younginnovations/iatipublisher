@@ -28,7 +28,9 @@
             ></svg-vue>
           </template>
 
-          <div class="title text-sm font-bold">{{ title }}</div>
+          <div class="text-sm font-bold title">
+            {{ title.toString().replace(/_/g, '-') }}
+          </div>
 
           <Status :data="completed" />
         </div>
@@ -335,37 +337,96 @@
             </div>
             <span v-else class="italic">URL Not Available</span>
           </div>
-        </div>
-      </template>
-
-      <template v-else-if="title === 'conditions'">
-        <div class="date-type mb-4 flex gap-1 text-sm font-bold">
-          <span>Attached:</span>
-          <span class="text-sm font-normal italic text-n-30">
-            <span v-if="data.content.condition_attached === '0'">No</span>
-            <span v-else-if="data.content.condition_attached === '1'">Yes</span>
-          </span>
-        </div>
-        <div class="condition-contents">
-          <div
-            v-for="(post, key, i) in data.content.condition"
-            :key="key"
-            :class="{ 'mb-4': key !== data.content.condition.length - 1 }"
-          >
-            <div class="mb-4 text-sm font-bold">
-              {{ props.types.conditionType[post.condition_type] }}
-            </div>
-            <div
-              v-for="(item, i) in post.narrative"
-              :key="i"
-              :class="{ 'mb-4': i !== post.narrative.length - 1 }"
-              class="description-content"
-            >
-              <div class="language mb-1.5 text-sm italic text-n-30">
-                (Language: {{ item.language }})
+          <div class="ml-5">
+            <div>
+              <div v-for="(language, i) in post.language" :key="i">
+                <table>
+                  <tr>
+                    <td>Language</td>
+                    <td>
+                      <span v-if="language.code">{{
+                        types.languages[language.code]
+                      }}</span>
+                      <span v-else class="italic">Not Available</span>
+                    </td>
+                  </tr>
+                </table>
               </div>
-              <div v-if="item.narrative" class="text-sm">
-                {{ item.narrative }}
+              <div v-for="(document_date, i) in post.document_date" :key="i">
+                <table>
+                  <tr>
+                    <td>Date</td>
+                    <td>
+                      <span v-if="document_date.date">{{
+                        formatDate(document_date.date)
+                      }}</span>
+                      <span v-else class="italic">Not Available</span>
+                    </td>
+                  </tr>
+                </table>
+              </div>
+            </div>
+            <div v-for="(item, i) in post.title" :key="i">
+              <div
+                v-for="(narrative, j) in item.narrative"
+                :key="j"
+                class="flex items-center mb-1 space-x-1"
+              >
+                <table>
+                  <tr class="multiline">
+                    <td>Title</td>
+                    <td>
+                      <span v-if="narrative.language" class="language">
+                        ({{ types.languages[narrative.language] }})
+                      </span>
+                      <div v-if="narrative.narrative" class="flex flex-col">
+                        <span>
+                          {{ narrative.narrative }}
+                        </span>
+                      </div>
+                      <span v-else class="italic">Not Available</span>
+                    </td>
+                  </tr>
+                </table>
+              </div>
+            </div>
+            <div v-for="(category, i) in post.category" :key="i">
+              <table>
+                <tr>
+                  <td>Category</td>
+                  <td>
+                    <span v-if="category.code">{{
+                      types.documentCategory[category.code]
+                    }}</span>
+                    <span v-else class="italic">Not Available</span>
+                  </td>
+                </tr>
+              </table>
+            </div>
+            <table>
+              <tr>
+                <td>Format</td>
+                <td v-if="post.format">{{ post.format }}</td>
+                <td v-else class="italic">Not Available</td>
+              </tr>
+            </table>
+            <div v-for="(description, i) in post.description" :key="i">
+              <div v-for="(narrative, j) in description.narrative" :key="j">
+                <table>
+                  <tr class="multiline">
+                    <td>Description</td>
+                    <td>
+                      <div v-if="narrative.narrative" class="flex flex-col">
+                        <span v-if="narrative.language" class="language"
+                          >(Language:
+                          {{ types.languages[narrative.language] }})</span
+                        >
+                        <span>{{ narrative.narrative }}</span>
+                      </div>
+                      <span v-else class="italic">Not Available</span>
+                    </td>
+                  </tr>
+                </table>
               </div>
             </div>
           </div>

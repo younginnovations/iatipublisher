@@ -16,19 +16,26 @@ use Illuminate\Support\Facades\Log;
  */
 class UserController extends Controller
 {
-    protected UserService $UserService;
+    /**
+     * @var UserService
+     */
+    protected UserService $userService;
+
+    /**
+     * @var DatabaseManager
+     */
     protected DatabaseManager $db;
 
     /**
      * Create a new controller instance.
      *
-     * @param UserService      $UserService
+     * @param UserService      $userService
      * @param Log                 $logger
      * @param DatabaseManager     $db
      */
-    public function __construct(UserService $UserService, Log $logger, DatabaseManager $db)
+    public function __construct(UserService $userService, Log $logger, DatabaseManager $db)
     {
-        $this->UserService = $UserService;
+        $this->userService = $userService;
         $this->db = $db;
         $this->logger = $logger;
     }
@@ -43,7 +50,7 @@ class UserController extends Controller
     public function getUserVerificationStatus(): JsonResponse
     {
         try {
-            $status = $this->UserService->getStatus();
+            $status = $this->userService->getStatus();
 
             return response()->json([
                 'success' => true,
@@ -70,14 +77,13 @@ class UserController extends Controller
     public function resendVerificationEmail(): JsonResponse
     {
         try {
-            $this->UserService->resendVerificationEmail();
+            $this->userService->resendVerificationEmail();
 
             return response()->json([
                 'success' => true,
                 'message' => 'Verification email successfully sent.',
             ]);
         } catch (\Exception $e) {
-            dd($e);
             logger()->error($e->getMessage());
 
             return response()->json([
