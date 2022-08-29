@@ -66,6 +66,19 @@ if (!function_exists('readElementJsonSchema')) {
     }
 }
 
+if (!function_exists('readOrganizationElementJsonSchema')) {
+    /**
+     * Reads elementJsonSchema.
+     *
+     * @return array
+     * @throws JsonException
+     */
+    function readOrganizationElementJsonSchema(): array
+    {
+        return readJsonFile('IATI/Data/organizationElementJsonSchema.json');
+    }
+}
+
 if (!function_exists('getElementSchema')) {
     /**
      * Returns element schema.
@@ -75,6 +88,18 @@ if (!function_exists('getElementSchema')) {
     function getElementSchema($element): array
     {
         return getArr(readElementJsonSchema(), $element);
+    }
+}
+
+if (!function_exists('getOrganizationElementSchema')) {
+    /**
+     * Returns organization element schema.
+     *
+     * @throws JsonException
+     */
+    function getOrganizationElementSchema($element): array
+    {
+        return getArr(readOrganizationElementJsonSchema(), $element);
     }
 }
 
@@ -93,6 +118,20 @@ if (!function_exists('getElements')) {
         return array_keys($elementJsonSchema);
     }
 }
+
+if (!function_exists('getOrganizationElements')) {
+    /**
+     * Returns elements list.
+     *
+     * @return array
+     * @throws JsonException
+     */
+    function getOrganizationElements(): array
+    {
+        return array_keys(readOrganizationElementJsonSchema());
+    }
+}
+
 if (!function_exists('getDefaultElementStatus')) {
     /**
      * Returns Default Elements Status.
@@ -137,6 +176,28 @@ if (!function_exists('getDefaultElementStatus')) {
     }
 }
 
+if (!function_exists('getDefaultOrganizationElementStatus')) {
+    /**
+     * Returns Default Elements Status.
+     *
+     * @return array
+     */
+    function getDefaultOrganizationElementStatus(): array
+    {
+        return [
+            'identifier'                => false,
+            'name'                      => false,
+            'reporting_org'             => false,
+            'total_budget'              => false,
+            'total_expenditure'         => false,
+            'recipient_org_budget'      => false,
+            'recipient_country_budget'  => false,
+            'recipient_region_budget'   => false,
+            'document_link'             => false,
+        ];
+    }
+}
+
 if (!function_exists('getCoreElements')) {
     /**
      * Returns Core Elements.
@@ -162,6 +223,27 @@ if (!function_exists('getCoreElements')) {
             'default_aid_type',
             'budget',
             'transactions',
+        ];
+    }
+}
+if (!function_exists('getMandatoryElements')) {
+    /**
+     * Returns Core Elements.
+     *
+     * @return array
+     */
+    function getMandatoryElements(): array
+    {
+        return [
+            'identifier',
+            'name',
+            'reporting_org',
+            'total_budget',
+            'total_expenditure',
+            'recipient_org_budget',
+            'recipient_country_budget',
+            'recipient_region_budget',
+            'document_link',
         ];
     }
 }
@@ -195,6 +277,28 @@ if (!function_exists('getCoreElementsWithTrueValue')) {
     }
 }
 
+if (!function_exists('getMandatoryElementsWithTrueValue')) {
+    /**
+     * Returns Core Elements with true value.
+     *
+     * @return array
+     */
+    function getMandatoryElementsWithTrueValue(): array
+    {
+        return [
+            'identifier'                => true,
+            'name'                      => true,
+            'reporting_org'             => true,
+            'total_budget'              => true,
+            'total_expenditure'         => true,
+            'recipient_org_budget'      => true,
+            'recipient_country_budget'  => true,
+            'recipient_region_budget'   => true,
+            'document_link'             => true,
+        ];
+    }
+}
+
 if (!function_exists('isCoreElementCompleted')) {
     /**
      * Checks if all core elements are complete.
@@ -206,6 +310,20 @@ if (!function_exists('isCoreElementCompleted')) {
     function isCoreElementCompleted($elementStatus): bool
     {
         return empty(array_diff_assoc(getCoreElementsWithTrueValue(), $elementStatus));
+    }
+}
+
+if (!function_exists('isMandatoryElementCompleted')) {
+    /**
+     * Checks if all core elements are complete.
+     *
+     * @param $elementStatus
+     *
+     * @return bool
+     */
+    function isMandatoryElementCompleted($elementStatus): bool
+    {
+        return empty(array_diff_assoc(getMandatoryElementsWithTrueValue(), $elementStatus));
     }
 }
 

@@ -5,6 +5,7 @@ require('laravel-mix-svg-vue');
 const tailwindCss = require('tailwindcss');
 
 if (mix.inProduction()) {
+  mix.version();
   mix.options({
     terser: {
       terserOptions: {
@@ -23,6 +24,10 @@ mix.webpackConfig({
     alias: {
       Components: path.resolve(__dirname, './resources/assets/js/components/'),
       Composable: path.resolve(__dirname, './resources/assets/js/composable/'),
+      Organisation: path.resolve(
+        __dirname,
+        './resources/assets/js/views/organisation'
+      ),
       Activity: path.resolve(
         __dirname,
         './resources/assets/js/views/activity/'

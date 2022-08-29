@@ -76,7 +76,9 @@ class ResultRepository
 
     /**
      * Function to sanitize result data.
+     *
      * @param array $resultData
+     *
      * @return array
      */
     public function sanitizeResultData(array $resultData): array

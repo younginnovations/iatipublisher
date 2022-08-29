@@ -167,17 +167,6 @@ class ResultService
         ];
     }
 
-    /*
-     * Return specific result.
-     *
-     * @param $activityId
-     * @return array
-     */
-    public function getActivityResult($activityId): array
-    {
-        return $this->resultRepository->getActivityResult($activityId);
-    }
-
     /**
      * Returns array of paginated results belonging to an activity.
      *

@@ -23,6 +23,14 @@ return new class extends Migration {
             $table->string('address')->nullable();
             $table->string('telephone')->nullable();
             $table->json('reporting_org')->nullable();
+            $table->json('total_budget')->nullable();
+            $table->json('recipient_org_budget')->nullable();
+            $table->json('default_field_values')->nullable();
+            $table->json('recipient_region_budget')->nullable();
+            $table->json('recipient_country_budget')->nullable();
+            $table->json('document_link')->nullable();
+            $table->json('total_expenditure')->nullable();
+            $table->json('name')->nullable();
             $table->boolean('reporting_org_complete_status')->nullable()->default(false);
             $table->string('country')->nullable();
             $table->string('logo_url')->nullable();
@@ -32,6 +40,7 @@ return new class extends Migration {
             $table->boolean('is_published')->default(false);
             $table->string('registration_agency')->nullable();
             $table->string('registration_number')->nullable();
+            $table->json('element_status')->nullable()->default('{"identifier":false, "name":false, "reporting_org":false, "total_budget":false, "total_expenditure":false, "recipient_org_budget":false, "recipient_country_budget":false, "recipient_region_budget":false, "document_link":false}');
             $table->timestamps();
         });
     }

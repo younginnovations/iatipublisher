@@ -45,7 +45,12 @@ class ActivityIdentifierService
      */
     public function getActivityIdentifierData(int $activity_id): ?array
     {
-        return $this->activityIdentifierRepository->getActivityIdentifierData($activity_id);
+        $activity = $this->getActivityData($activity_id);
+
+        return [
+            'activity_identifier' => $activity->iati_identifier['activity_identifier'],
+            'iati_identifier_text' => $activity->organization->identifier . '-' . $activity->iati_identifier['activity_identifier'],
+        ];
     }
 
     /**
