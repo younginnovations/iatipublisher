@@ -5,7 +5,7 @@
       <h2>Reset Password</h2>
       <p class="mb-4">Please enter your new password</p>
       <div class="text-center">
-        <span class="error" role="alert" v-if="errorData.email != ''">
+        <span v-if="errorData.email != ''" class="error" role="alert">
           {{ errorData.email }}
         </span>
       </div>

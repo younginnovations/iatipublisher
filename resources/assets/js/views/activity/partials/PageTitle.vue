@@ -83,7 +83,7 @@
     <!-- =====================
           Toggle modal
     ==========================-->
-    <Modal @close="modalToggle" :modalActive="modalValue">
+    <Modal :modal-active="modalValue" @close="modalToggle">
       <div class="max-w-[809px]">
         <div class="eligible-activities mb-6 text-sm leading-relaxed">
           <div class="title mb-6 flex">
@@ -144,14 +144,14 @@
           <div class="inline-flex">
             <BtnComponent
               class="bg-white px-6 uppercase"
-              @click="modalValue = false"
               text="Cancel"
+              @click="modalValue = false"
             />
             <BtnComponent
               class="space"
               type="primary"
-              @click="modalValue = false"
               text="Publish"
+              @click="modalValue = false"
             />
           </div>
         </div>

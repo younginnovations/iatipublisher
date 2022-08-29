@@ -640,7 +640,6 @@ export default defineComponent({
       getCurrentStep,
       checkStep,
       isTextField,
-      props,
     };
   },
 });

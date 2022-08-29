@@ -5,22 +5,31 @@
   >
     <div id="activity">
       <Loader v-if="isLoading"></Loader>
-      <PageTitle :show-buttons="state.showButtons" />
-      <EmptyActivity v-if="isEmpty" />
-      <TableLayout
-        v-if="!isEmpty"
-        :data="activities"
-        @show-or-hide="showOrHide"
+      <Toast
+        v-if="toastMessage.visibility"
+        :message="toastMessage.message"
+        :type="toastMessage.type"
+        class="right-0 mb-3"
       />
-      <div v-if="!isEmpty" class="mt-6">
-        <Pagination :data="activities" @fetch-activities="fetchActivities" />
+      <PageTitle :show-buttons="state.showButtons" />
+      <div class="overflow-hidden" :class="{ 'bg-white': isEmpty }">
+        <ErrorMessage :is-empty="isEmpty"></ErrorMessage>
+        <EmptyActivity v-if="isEmpty" />
+        <TableLayout
+          v-if="!isEmpty"
+          :data="activities"
+          @show-or-hide="showOrHide"
+        />
+        <div v-if="!isEmpty" class="mt-6">
+          <Pagination :data="activities" @fetch-activities="fetchActivities" />
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, reactive, ref } from 'vue';
+import { defineComponent, onMounted, reactive, ref, provide } from 'vue';
 import axios from 'axios';
 
 import EmptyActivity from './partials/EmptyActivity.vue';
@@ -28,6 +37,8 @@ import TableLayout from './partials/TableLayout.vue';
 import Pagination from 'Components/TablePagination.vue';
 import PageTitle from './partials/PageTitle.vue';
 import Loader from 'Components/Loader.vue';
+import ErrorMessage from 'Components/ErrorMessage.vue';
+import Toast from 'Components/Toast.vue';
 
 export default defineComponent({
   name: 'ActivityComponent',
@@ -37,6 +48,8 @@ export default defineComponent({
     Pagination,
     TableLayout,
     Loader,
+    ErrorMessage,
+    Toast,
   },
   setup() {
     const activities = reactive({});
@@ -73,6 +86,14 @@ export default defineComponent({
       });
     }
 
+    const toastMessage = reactive({
+      visibility: false,
+      message: '',
+      type: false,
+    });
+
+    provide('toastMessage', toastMessage);
+
     return {
       activities,
       state,
@@ -80,6 +101,7 @@ export default defineComponent({
       isLoading,
       showOrHide,
       fetchActivities,
+      toastMessage,
     };
   },
 });

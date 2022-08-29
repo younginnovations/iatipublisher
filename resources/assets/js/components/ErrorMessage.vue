@@ -1,10 +1,11 @@
 <template>
   <div
-    :class="
-      show
-        ? 'relative mb-10 h-full duration-300'
-        : 'relative mb-32 h-full duration-300'
-    "
+    class="relative h-full bg-white duration-300"
+    :class="{
+      'mb-5': !isEmpty || !show,
+      'mb-10': show,
+      'mb-10': !show,
+    }"
   >
     <div
       :show="!show"
@@ -31,8 +32,8 @@
             </span>
           </div>
           <div
-            :class="show ? 'text-show' : 'text-hide'"
             v-if="!errorData.account_verified"
+            :class="show ? 'text-show' : 'text-hide'"
           >
             <svg-vue icon="red-dot" class="text-[6px]"></svg-vue>
             <span class="text-sm font-bold text-n-50"
@@ -68,7 +69,7 @@
       :class="show ? 'border-show duration-300' : 'border-hide duration-300'"
     ></div>
 
-    <div class="ml-4 mr-6" v-if="!errorData.account_verified">
+    <div v-if="!errorData.account_verified" class="ml-4 mr-6">
       <TransitionRoot
         :show="show"
         as="template"
@@ -112,8 +113,8 @@
     </div>
 
     <div
-      class="ml-4 mr-6"
       v-if="!errorData.publisher_setting || !errorData.default_setting"
+      class="ml-4 mr-6"
     >
       <TransitionRoot
         :show="show"
@@ -141,11 +142,11 @@
                 >
                 in order to enable complete features of IATI publisher tool.
               </p>
-              <div class="alert__message" v-if="!errorData.publisher_setting">
+              <div v-if="!errorData.publisher_setting" class="alert__message">
                 <svg-vue icon="red-cross" class="text-[7px]"></svg-vue>
                 <p>Update registry information - API Key & Publisher ID</p>
               </div>
-              <div class="alert__message" v-if="!errorData.default_setting">
+              <div v-if="!errorData.default_setting" class="alert__message">
                 <svg-vue icon="red-cross" class="text-[7px]"></svg-vue>
                 <p>Update default values</p>
               </div>
@@ -158,7 +159,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, reactive, onMounted } from 'vue';
+import { defineComponent, ref, reactive, onMounted, inject } from 'vue';
 import { TransitionRoot } from '@headlessui/vue';
 import axios from 'axios';
 
@@ -166,10 +167,21 @@ export default defineComponent({
   components: {
     TransitionRoot,
   },
-
+  props: {
+    isEmpty: {
+      type: Boolean,
+      required: false,
+      default: true,
+    },
+  },
   setup(props) {
     const show = ref(false);
-
+    interface ToastInterface {
+      visibility: boolean;
+      message: string;
+      type: boolean;
+    }
+    const toastMessage = inject('toastMessage') as ToastInterface;
     const errorData = reactive({
       account_verified: false,
       default_setting: false,
@@ -180,11 +192,21 @@ export default defineComponent({
       axios
         .post('/user/verification/email')
         .then((res) => {
-          console.log(res);
+          toastMessage.visibility = true;
+          toastMessage.message = res.data.message;
+          toastMessage.type = res.data.success;
         })
         .catch((error) => {
-          console.log(error);
+          toastMessage.visibility = true;
+          toastMessage.message = error.data.message;
+          toastMessage.type = false;
         });
+
+      setTimeout(() => {
+        toastMessage.visibility = false;
+        toastMessage.message = '';
+        toastMessage.type = false;
+      }, 2000);
     }
 
     onMounted(async () => {
@@ -210,7 +232,11 @@ export default defineComponent({
         });
     });
 
-    return { show, errorData, resendVerificationEmail };
+    return {
+      show,
+      errorData,
+      resendVerificationEmail,
+    };
   },
 });
 </script>

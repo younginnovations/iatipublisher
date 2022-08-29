@@ -118,6 +118,7 @@ export default defineComponent({
   name: 'HeaderComponent',
   components: {
     CreateModal,
+    Toast,
   },
   props: {
     user: {
@@ -189,6 +190,13 @@ export default defineComponent({
       state.isVisible = !state.isVisible;
     };
 
+    function toast(message: string, type: boolean) {
+      toastVisibility.value = true;
+      setTimeout(() => (toastVisibility.value = false), 5000);
+      toastMessage.value = message;
+      toastType.value = type;
+    }
+
     function changeActiveMenu() {
       const path = window.location.pathname;
 
@@ -213,6 +221,10 @@ export default defineComponent({
       props,
       data,
       modalValue,
+      toastVisibility,
+      toastMessage,
+      toastType,
+      toast,
       toggle,
       activeTab,
       modalToggle,

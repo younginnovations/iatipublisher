@@ -1,6 +1,8 @@
 <template>
-  <div class="min-h-[647px] overflow-hidden bg-white">
-    <ErrorMessage></ErrorMessage>
+  <div
+    id="empty-state"
+    class="relative flex min-h-[647px] flex-col items-center justify-center bg-white p-10"
+  >
     <div
       class="mb-6 flex h-[150px] w-[150px] items-center justify-center rounded-full"
       style="background: linear-gradient(180deg, #e3ecfa 0%, #dae7ff 100%)"
@@ -16,16 +18,15 @@
     <ActivityButton />
   </div>
 </template>
+
 <script lang="ts">
 import { defineComponent, reactive } from 'vue';
 import ActivityButton from './AddActivityButton.vue';
-import ErrorMessage from '../../../components/ErrorMessage.vue';
 
 export default defineComponent({
   name: 'EmptyActivity',
   components: {
     ActivityButton,
-    ErrorMessage,
   },
   setup() {
     const state = reactive({
