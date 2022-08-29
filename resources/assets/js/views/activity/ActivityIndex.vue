@@ -6,18 +6,21 @@
     <div id="activity">
       <Loader v-if="isLoading"></Loader>
       <PageTitle :show-buttons="state.showButtons" />
-      <EmptyActivity v-if="isEmpty" />
-      <TableLayout
-        v-if="!isEmpty"
-        :data="activities"
-        @show-or-hide="showOrHide"
-      />
-      <div v-if="!isEmpty" class="mt-6">
-        <Pagination
-          v-if="activities && activities.last_page > 1"
+      <div class="overflow-hidden" :class="{ 'bg-white': isEmpty }">
+        <ErrorMessage :is-empty="isEmpty"></ErrorMessage>
+        <EmptyActivity v-if="isEmpty" />
+        <TableLayout
+          v-if="!isEmpty"
           :data="activities"
-          @fetch-activities="fetchActivities"
+          @show-or-hide="showOrHide"
         />
+        <div v-if="!isEmpty" class="mt-6">
+          <Pagination
+            v-if="activities && activities.last_page > 1"
+            :data="activities"
+            @fetch-activities="fetchActivities"
+          />
+        </div>
       </div>
     </div>
   </div>
@@ -32,6 +35,7 @@ import TableLayout from './partials/TableLayout.vue';
 import Pagination from 'Components/TablePagination.vue';
 import PageTitle from './partials/PageTitle.vue';
 import Loader from 'Components/Loader.vue';
+import ErrorMessage from 'Components/ErrorMessage.vue';
 
 export default defineComponent({
   name: 'ActivityComponent',
@@ -41,6 +45,7 @@ export default defineComponent({
     Pagination,
     TableLayout,
     Loader,
+    ErrorMessage,
   },
   props: {
     toast: {
@@ -80,6 +85,8 @@ export default defineComponent({
     });
 
     onMounted(() => {
+
+      console.log(props.toast.message);
       if (props.toast.message !== '') {
         toastData.type = props.toast.type;
         toastData.visibility = true;

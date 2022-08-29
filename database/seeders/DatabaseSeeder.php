@@ -17,7 +17,7 @@ class DatabaseSeeder extends Seeder
             $this->call([
                 OrganizationSeeder::class,
                 UserSeeder::class,
-                ActivityTableSeeder::class,
+                // ActivityTableSeeder::class,
             ]);
         }
     }
