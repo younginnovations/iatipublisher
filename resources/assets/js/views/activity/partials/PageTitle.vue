@@ -1,11 +1,11 @@
 <template>
-  <div class="page-title mb-4">
+  <div class="mb-4 page-title">
     <div class="flex items-end gap-4">
       <div class="title grow-0">
         <div class="mb-4 text-caption-c1 text-n-40">
           <nav aria-label="breadcrumbs" class="breadcrumb">
             <p>
-              <span class="last font-bold">Your Activities</span>
+              <span class="font-bold last">Your Activities</span>
             </p>
           </nav>
         </div>
@@ -43,7 +43,7 @@
           </div>
         </div>
       </div>
-      <div class="actions flex grow justify-end">
+      <div class="flex justify-end actions grow">
         <div class="inline-flex items-center">
           <Toast
             v-if="toastMessage.visibility"
@@ -79,20 +79,21 @@
         </div>
       </div>
     </div>
+
     <Modal :modal-active="modalValue" @close="modalToggle">
-      <div class="eligible-activities mb-6 text-sm leading-relaxed">
-        <div class="title mb-6 flex">
+      <div class="mb-6 text-sm leading-relaxed eligible-activities">
+        <div class="flex mb-6 title">
           <svg-vue icon="tick" class="mr-1 mt-0.5 text-lg text-spring-50" />
           <b>The following activities are eligible for publishing</b>
         </div>
-        <div class="eligible-list rounded-lg bg-mint px-6">
-          <div class="list border-b border-n-20 py-6">
+        <div class="px-6 rounded-lg eligible-list bg-mint">
+          <div class="py-6 border-b list border-n-20">
             <a href="#" class=""> EU-Angola Dialogue Facility </a>
           </div>
-          <div class="list border-b border-n-20 py-6">
+          <div class="py-6 border-b list border-n-20">
             <a href="#" class=""> Programme in support of Higher Education </a>
           </div>
-          <div class="list py-6">
+          <div class="py-6 list">
             <a href="#" class="">
               AGO.S1 Leadership, advocacy and communication to fast track the
               AIDS response
@@ -101,22 +102,22 @@
         </div>
       </div>
 
-      <div class="non-eligible-activities mb-6 text-sm leading-relaxed">
-        <div class="title mb-6 flex">
+      <div class="mb-6 text-sm leading-relaxed non-eligible-activities">
+        <div class="flex mb-6 title">
           <svg-vue
             icon="warning-fill"
             class="mr-1 mt-0.5 text-lg text-crimson-40"
-          ></svg-vue>
+          />
           <b>The following activities are eligible for publishing</b>
         </div>
-        <div class="eligible-list rounded-lg bg-rose px-6">
-          <div class="list border-b border-n-20 py-6">
+        <div class="px-6 rounded-lg eligible-list bg-rose">
+          <div class="py-6 border-b list border-n-20">
             <a href="#" class=""> EU-Angola Dialogue Facility </a>
           </div>
-          <div class="list border-b border-n-20 py-6">
+          <div class="py-6 border-b list border-n-20">
             <a href="#" class=""> Programme in support of Higher Education </a>
           </div>
-          <div class="list py-6">
+          <div class="py-6 list">
             <a href="#" class="">
               UNFPA Angola Improved national population data systems to map and
               address inequalities; to advance achievement of the Sustainable
@@ -130,15 +131,16 @@
       <div class="flex justify-end">
         <div class="inline-flex">
           <BtnComponent
-            class="bg-white px-6 uppercase"
-            @click="modalValue = false"
+            class="px-6 uppercase bg-white"
+            type=""
             text="Cancel"
+            @click="modalValue = false"
           />
           <BtnComponent
             class="space"
             type="primary"
-            @click="modalValue = false"
             text="Publish"
+            @click="modalValue = false"
           />
         </div>
       </div>
@@ -146,46 +148,25 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, ref } from 'vue';
+<script setup lang="ts">
+import { defineProps, inject } from 'vue';
 import { useToggle } from '@vueuse/core';
 import AddActivityButton from './AddActivityButton.vue';
-import Modal from '../../../components/PopupModal.vue';
-import BtnComponent from '../../../components/ButtonComponent.vue';
-import Toast from '../../../components/Toast.vue';
+import Modal from 'Components/PopupModal.vue';
+import BtnComponent from 'Components/ButtonComponent.vue';
+import Toast from 'Components/Toast.vue';
 
-export default defineComponent({
-  name: 'PageTitle',
-  components: {
-    AddActivityButton,
-    Modal,
-    BtnComponent,
-  },
-  props: {
-    showButtons: Boolean,
-  },
-  setup() {
-    const [modalValue, modalToggle] = useToggle();
-
-    const toastVisibility = ref(false);
-    const toastMessage = ref('');
-    const toastType = ref(false);
-
-    function toast(message: string, type: boolean) {
-      toastVisibility.value = true;
-      setTimeout(() => (toastVisibility.value = false), 5000);
-      toastMessage.value = message;
-      toastType.value = type;
-    }
-
-    return {
-      modalValue,
-      modalToggle,
-      toastVisibility,
-      toastMessage,
-      toastType,
-      toast,
-    };
-  },
+defineProps({
+  showButtons: { type: Boolean, required: true },
 });
+
+interface ToastInterface {
+  visibility: boolean;
+  message: string;
+  type: boolean;
+}
+
+const toastMessage = inject('toastData') as ToastInterface;
+
+const [modalValue, modalToggle] = useToggle();
 </script>

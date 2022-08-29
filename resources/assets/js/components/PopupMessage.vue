@@ -1,5 +1,5 @@
 <template>
-  <Modal modalActive="true">
+  <Modal modal-active="true">
     <div class="modal-inner">
       <div class="mb-4 flex items-center space-x-1">
         <svg-vue icon="alert" class="text-crimson-40"></svg-vue>
