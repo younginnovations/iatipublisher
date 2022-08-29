@@ -24,7 +24,6 @@ class CollaborationTypeController extends Controller
     /**
      * CollaborationTypeController Constructor.
      *
-     * @param BaseFormCreator $baseFormCreator
      * @param CollaborationTypeService $collaborationTypeService
      */
     public function __construct(CollaborationTypeService $collaborationTypeService)
@@ -42,16 +41,24 @@ class CollaborationTypeController extends Controller
     public function edit(int $id): View|RedirectResponse
     {
         try {
-            $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
+            $element = getElementSchema('collaboration_type');
             $activity = $this->collaborationTypeService->getActivityData($id);
             $form = $this->collaborationTypeService->formGenerator($id);
-            $data = ['core' => $element['collaboration_type']['criteria'] ?? '', 'status' => $activity->collaboration_type_element_completed, 'title' => $element['collaboration_type']['label'], 'name' => 'collaboration_type'];
+            $data = [
+                'core' => $element['criteria'] ?? '',
+                'status' => $activity->collaboration_type_element_completed,
+                'title' => $element['label'],
+                'name' => 'collaboration_type',
+            ];
 
             return view('admin.activity.collaborationType.edit', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while rendering activity collaboration-type form.');
+            return redirect()->route('admin.activities.show', $id)->with(
+                'error',
+                'Error has occurred while rendering activity collaboration-type form.'
+            );
         }
     }
 
@@ -67,17 +74,28 @@ class CollaborationTypeController extends Controller
     {
         try {
             $activityData = $this->collaborationTypeService->getActivityData($id);
-            $activityCollaborationType = $request->get('collaboration_type') != null ? (int) $request->get('collaboration_type') : null;
+            $activityCollaborationType = $request->get('collaboration_type') != null ? (int) $request->get(
+                'collaboration_type'
+            ) : null;
 
             if (!$this->collaborationTypeService->update($activityCollaborationType, $activityData)) {
-                return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while updating activity collaboration-type.');
+                return redirect()->route('admin.activities.show', $id)->with(
+                    'error',
+                    'Error has occurred while updating activity collaboration-type.'
+                );
             }
 
-            return redirect()->route('admin.activities.show', $id)->with('success', 'Activity collaboration-type updated successfully.');
+            return redirect()->route('admin.activities.show', $id)->with(
+                'success',
+                'Activity collaboration-type updated successfully.'
+            );
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while updating activity collaboration type.');
+            return redirect()->route('admin.activities.show', $id)->with(
+                'error',
+                'Error has occurred while updating activity collaboration type.'
+            );
         }
     }
 }

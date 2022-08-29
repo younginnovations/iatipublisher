@@ -42,10 +42,10 @@ class ParticipatingOrganizationController extends Controller
     public function edit(int $id): View|RedirectResponse
     {
         try {
-            $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
+            $element = getElementSchema('participating_org');
             $activity = $this->participatingOrganizationService->getActivityData($id);
             $form = $this->participatingOrganizationService->formGenerator($id);
-            $data = ['core' => $element['participating_org']['criteria'] ?? '', 'status' => $activity->participating_org_element_completed ?? false, 'title' => $element['participating_org']['label'], 'name' => 'participating_org'];
+            $data = ['core' => $element['criteria'] ?? '', 'status' => $activity->participating_org_element_completed ?? false, 'title' => $element['label'], 'name' => 'participating_org'];
 
             return view('admin.activity.participatingOrganization.edit', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {
@@ -67,9 +67,9 @@ class ParticipatingOrganizationController extends Controller
     {
         try {
             $activityData = $this->participatingOrganizationService->getActivityData($id);
-            $activityCountryBudgetItem = $request->except(['_token', '_method']);
+            $activityParticipatingOrg = $request->except(['_token', '_method']);
 
-            if (!$this->participatingOrganizationService->update($activityCountryBudgetItem, $activityData)) {
+            if (!$this->participatingOrganizationService->update($activityParticipatingOrg, $activityData)) {
                 return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while updating participating-organization.');
             }
 

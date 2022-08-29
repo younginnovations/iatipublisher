@@ -27,6 +27,15 @@ class Setting extends Model
     ];
 
     /**
+     * @var array
+     */
+    protected $casts = [
+        'publishing_info' => 'json',
+        'default_values' => 'json',
+        'activity_default_values' => 'json',
+    ];
+
+    /**
      * Setting belongs to organization.
      */
     protected function organization()

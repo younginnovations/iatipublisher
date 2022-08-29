@@ -111,6 +111,22 @@
         </div>
         <div>
           <div class="flex justify-between">
+            <label for="linked-data-uri">Linked Data URI</label>
+          </div>
+          <input
+            id="linked-data-url"
+            v-model="defaultForm.linked_data_url"
+            class="register__input mb-2"
+            type="text"
+            placeholder="Type linked data URL here"
+            @input="updateStore('linked_data_url')"
+          />
+          <span v-if="defaultError.linked_data_url" class="error" role="alert">
+            {{ defaultError.linked_data_url }}
+          </span>
+        </div>
+        <div>
+          <div class="flex justify-between">
             <label for="humanitarian">Humanitarian</label>
 
             <button>

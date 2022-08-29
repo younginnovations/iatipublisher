@@ -24,7 +24,7 @@
 
     /* Strict Type-Checking Options */
     "strict": true /* Enable all strict type-checking options. */,
-    // "noImplicitAny": true,                 /* Raise error on expressions and declarations with an implied 'any' type. */
+    "noImplicitAny": false /* Raise error on expressions and declarations with an implied 'any' type. */,
     // "strictNullChecks": true,              /* Enable strict null checks. */
     // "strictFunctionTypes": true,           /* Enable strict checking of function types. */
     // "strictBindCallApply": true,           /* Enable strict 'bind', 'call', and 'apply' methods on functions. */
@@ -45,7 +45,8 @@
       "Components/*": ["resources/assets/js/components/*"],
       "Composable/*": ["resources/assets/js/composable/*"],
       "Activity/*": ["resources/assets/js/views/activity/*"],
-      "Interfaces/*": ["resources/assets/js/interfaces/*"]
+      "Interfaces/*": ["resources/assets/js/interfaces/*"],
+      "Store/*": ["resources/assets/js/store/*"]
     } /* A series of entries which re-map imports to lookup locations relative to the 'baseUrl'. */,
     // "rootDirs": [],                        /* List of root folders whose combined content represents the structure of the project at runtime. */
     // "typeRoots": [],                       /* List of folders to include type definitions from. */

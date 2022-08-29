@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\IATI\Services\Activity;
 
 use App\IATI\Elements\Builder\BaseFormCreator;
+use App\IATI\Models\Activity\Activity;
 use App\IATI\Repositories\Activity\StatusRepository;
 use Illuminate\Database\Eloquent\Model;
 use Kris\LaravelFormBuilder\Form;
@@ -82,10 +83,32 @@ class StatusService
      */
     public function formGenerator($id): Form
     {
-        $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
+        $element = getElementSchema('activity_status');
         $model['activity_status'] = $this->getStatusData($id);
         $this->baseFormCreator->url = route('admin.activities.status.update', [$id]);
 
-        return $this->baseFormCreator->editForm($model, $element['activity_status'], 'PUT', '/activities/' . $id);
+        return $this->baseFormCreator->editForm($model, $element, 'PUT', '/activities/' . $id);
+    }
+
+    /**
+     * Returns data in required xml array format.
+     *
+     * @param Activity $activity
+     *
+     * @return array
+     */
+    public function getXmlData(Activity $activity): array
+    {
+        $activityData = [];
+
+        if ($activity->activity_status) {
+            $activityData = [
+                '@attributes' => [
+                    'code' => $activity->activity_status,
+                ],
+            ];
+        }
+
+        return $activityData;
     }
 }

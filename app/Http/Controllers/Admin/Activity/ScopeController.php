@@ -41,16 +41,24 @@ class ScopeController extends Controller
     public function edit(int $id): View|RedirectResponse
     {
         try {
-            $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
+            $element = getElementSchema('activity_scope');
             $activity = $this->scopeService->getActivityData($id);
             $form = $this->scopeService->formGenerator($id);
-            $data = ['core' => $element['activity_scope']['criteria'] ?? '', 'status' => $activity->activity_scope_element_completed, 'title' => $element['activity_scope']['label'], 'name' => 'activity_scope'];
+            $data = [
+                'core' => $element['criteria'] ?? '',
+                'status' => $activity->activity_scope_element_completed,
+                'title' => $element['label'],
+                'name' => 'activity_scope',
+            ];
 
             return view('admin.activity.scope.edit', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while opening activity-scope form.');
+            return redirect()->route('admin.activities.show', $id)->with(
+                'error',
+                'Error has occurred while opening activity-scope form.'
+            );
         }
     }
 
@@ -69,14 +77,23 @@ class ScopeController extends Controller
             $activityScope = $request->get('activity_scope') != null ? (int) $request->get('activity_scope') : null;
 
             if (!$this->scopeService->update($activityScope, $activityData)) {
-                return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while updating activity-scope.');
+                return redirect()->route('admin.activities.show', $id)->with(
+                    'error',
+                    'Error has occurred while updating activity-scope.'
+                );
             }
 
-            return redirect()->route('admin.activities.show', $id)->with('success', 'Activity-scope updated successfully.');
+            return redirect()->route('admin.activities.show', $id)->with(
+                'success',
+                'Activity-scope updated successfully.'
+            );
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while updating activity-scope.');
+            return redirect()->route('admin.activities.show', $id)->with(
+                'error',
+                'Error has occurred while updating activity-scope.'
+            );
         }
     }
 }

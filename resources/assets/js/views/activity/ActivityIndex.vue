@@ -20,7 +20,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, reactive, ref } from 'vue';
+import { defineComponent, onMounted, provide, reactive, ref } from 'vue';
 import axios from 'axios';
 
 import EmptyActivity from './partials/EmptyActivity.vue';
@@ -38,9 +38,40 @@ export default defineComponent({
     TableLayout,
     Loader,
   },
-  setup() {
+  props: {
+    toast: {
+      type: Object,
+      required: true,
+    },
+  },
+  setup(props) {
     const activities = reactive({});
     const isLoading = ref(true);
+
+    //for session message
+    const toastData = reactive({
+      visibility: false,
+      message: '',
+      type: true,
+    });
+
+    // for publish button
+    const toastMessage = reactive({
+      message: '',
+      type: false,
+    });
+
+    onMounted(() => {
+      if (props.toast.message !== '') {
+        toastData.type = props.toast.type;
+        toastData.visibility = true;
+        toastData.message = props.toast.message;
+      }
+
+      setTimeout(() => {
+        toastData.visibility = false;
+      }, 5000);
+    });
 
     onMounted(async () => {
       axios.get('/activity/page').then((res) => {
@@ -73,6 +104,9 @@ export default defineComponent({
       });
     }
 
+    provide('toastMessage', toastMessage);
+    provide('toastData', toastData);
+
     return {
       activities,
       state,
@@ -80,6 +114,8 @@ export default defineComponent({
       isLoading,
       showOrHide,
       fetchActivities,
+      toastData,
+      toastMessage,
     };
   },
 });

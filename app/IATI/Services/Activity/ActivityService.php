@@ -48,7 +48,13 @@ class ActivityService
      */
     public function getPaginatedActivities(int $page = 1): Collection|\Illuminate\Pagination\LengthAwarePaginator
     {
-        return $this->activityRepository->getActivityForOrganization(Auth::user()->organization_id, $page);
+        $activities = $this->activityRepository->getActivityForOrganization(Auth::user()->organization_id, $page);
+
+        foreach ($activities as $activity) {
+            $activity->setAttribute('coreCompleted', isCoreElementCompleted(array_merge(['reporting_org' => $activity->organization->reporting_org_complete_status], $activity->element_status)));
+        }
+
+        return $activities;
     }
 
     /**
@@ -77,6 +83,7 @@ class ActivityService
             'title'           => $activity_title,
             'org_id'          => Auth::user()->organization_id,
             'element_status'  => getDefaultElementStatus(),
+            'default_field_values' => $this->getDefaultValues(),
         ]);
     }
 
@@ -105,6 +112,57 @@ class ActivityService
     }
 
     /**
+     * Returns required service file.
+     *
+     * @param $serviceName
+     *
+     * @return \Illuminate\Contracts\Foundation\Application|mixed
+     */
+    public function getService($serviceName): mixed
+    {
+        return app(sprintf("App\IATI\Services\Activity\%s", $serviceName));
+    }
+
+    /**
+     * Updates status column of activity row.
+     *
+     * @param $activity
+     * @param $status
+     * @param $alreadyPublished
+     * @param $linkedToIati
+     *
+     * @return bool
+     */
+    public function updatePublishedStatus($activity, $status, $alreadyPublished, $linkedToIati): bool
+    {
+        return $this->activityRepository->updatePublishedStatus($activity, $status, $alreadyPublished, $linkedToIati);
+    }
+
+    /**
+     * Deletes desired activity.
+     *
+     * @param Activity $activity
+     *
+     * @return bool
+     */
+    public function deleteActivity(Activity $activity): bool
+    {
+        return $this->activityRepository->deleteActivity($activity);
+    }
+
+    /**
+     * Sets activity status to draft.
+     *
+     * @param $activity_id
+     *
+     * @return void
+     */
+    public function resetActivityWorkflow($activity_id)
+    {
+        $this->activityRepository->resetActivityWorkflow($activity_id);
+    }
+
+    /**
      * Return activity publishing progress in percentage.
      *
      * @param $activity
@@ -123,5 +181,28 @@ class ActivityService
         }
 
         return ($completed_core_element_count / count($core_elements)) * 100;
+    }
+
+    /**
+     * Returns default values for activity.
+     *
+     * @return array|null
+     */
+    public function getDefaultValues(): ?array
+    {
+        $organizationSettings = Auth::user()->organization->settings;
+
+        if ($organizationSettings->default_values && $organizationSettings->activity_default_values) {
+            return array_merge(
+                $organizationSettings->default_values,
+                $organizationSettings->activity_default_values
+            );
+        } elseif ($organizationSettings->default_values) {
+            return $organizationSettings->default_values;
+        } elseif ($organizationSettings->activity_default_values) {
+            return $organizationSettings->activity_default_values;
+        }
+
+        return null;
     }
 }

@@ -44,45 +44,42 @@
         </div>
       </div>
       <div class="flex justify-end actions grow">
-        <div class="inline-flex justify-center">
-          <!-- Hidden for now -->
-          <!-- <BtnComponent
-            v-if="showButtons"
+        <div class="inline-flex items-center">
+          <Toast
+            v-if="toastMessage.visibility"
             class="mr-3.5"
-            type="secondary"
-            text="Download Selected"
-            icon="download-file"
-          /> -->
-          <BtnComponent
-            v-if="showButtons"
-            class="mr-3.5"
-            type="secondary"
-            text="Publish Selected"
-            icon="approved-cloud"
-            @click="modalValue = true"
+            :message="toastMessage.message"
+            :type="toastMessage.type"
           />
-          <!-- Hidden for now -->
-          <!-- <BtnComponent
-            class="mr-3.5"
-            type="secondary"
-            text="Download All"
-            icon="download-file"
-          /> -->
-          <BtnComponent
-            class="mr-3.5"
-            type="secondary"
-            text="Publish"
-            icon="publish"
-            @click="modalValue = true"
-          />
+          <div class="inline-flex items-center">
+            <BtnComponent
+              v-if="showButtons"
+              class="mr-3.5"
+              type="secondary"
+              text="Publish Selected"
+              icon="approved-cloud"
+              @click="modalValue = true"
+            />
+            <BtnComponent
+              v-if="showButtons"
+              class="mr-3.5"
+              type="secondary"
+              text="Delete Selected"
+              icon="delete"
+            />
+            <BtnComponent
+              class="mr-3.5"
+              type="secondary"
+              text="Publish"
+              icon="publish"
+              @click="modalValue = true"
+            />
+          </div>
           <AddActivityButton />
         </div>
       </div>
     </div>
 
-    <!-- =====================
-          Toggle modal
-    ==========================-->
     <Modal :modal-active="modalValue" @close="modalToggle">
       <div class="mb-6 text-sm leading-relaxed eligible-activities">
         <div class="flex mb-6 title">
@@ -151,30 +148,25 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue';
+<script setup lang="ts">
+import { defineProps, inject } from 'vue';
 import { useToggle } from '@vueuse/core';
 import AddActivityButton from './AddActivityButton.vue';
-import Modal from '../../../components/PopupModal.vue';
-import BtnComponent from '../../../components/ButtonComponent.vue';
+import Modal from 'Components/PopupModal.vue';
+import BtnComponent from 'Components/ButtonComponent.vue';
+import Toast from 'Components/Toast.vue';
 
-export default defineComponent({
-  name: 'PageTitle',
-  components: {
-    AddActivityButton,
-    Modal,
-    BtnComponent,
-  },
-  props: {
-    showButtons: Boolean,
-  },
-  setup() {
-    const [modalValue, modalToggle] = useToggle();
-
-    return {
-      modalValue,
-      modalToggle,
-    };
-  },
+defineProps({
+  showButtons: { type: Boolean, required: true },
 });
+
+interface ToastInterface {
+  visibility: boolean;
+  message: string;
+  type: boolean;
+}
+
+const toastMessage = inject('toastData') as ToastInterface;
+
+const [modalValue, modalToggle] = useToggle();
 </script>

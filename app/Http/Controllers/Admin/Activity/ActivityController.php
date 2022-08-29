@@ -10,6 +10,7 @@ use App\IATI\Models\Activity\Activity;
 use App\IATI\Services\Activity\ActivityService;
 use App\IATI\Services\Activity\ResultService;
 use App\IATI\Services\Activity\TransactionService;
+use App\IATI\Services\Validator\ActivityValidatorResponseService;
 use Exception;
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\DatabaseManager;
@@ -17,6 +18,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
 
 /**
  * Class ActivityController.
@@ -44,19 +46,31 @@ class ActivityController extends Controller
     protected TransactionService $transactionService;
 
     /**
+     * @var ActivityValidatorResponseService
+     */
+    protected ActivityValidatorResponseService $activityValidatorResponseService;
+
+    /**
      * ActivityController Constructor.
      *
      * @param ActivityService    $activityService
      * @param DatabaseManager    $db
      * @param ResultService      $resultService
      * @param TransactionService $transactionService
+     * @param ActivityValidatorResponseService $activityValidatorResponseService
      */
-    public function __construct(ActivityService $activityService, DatabaseManager $db, ResultService $resultService, TransactionService $transactionService)
-    {
+    public function __construct(
+        ActivityService $activityService,
+        DatabaseManager $db,
+        ResultService $resultService,
+        TransactionService $transactionService,
+        ActivityValidatorResponseService $activityValidatorResponseService
+    ) {
         $this->activityService = $activityService;
         $this->db = $db;
         $this->resultService = $resultService;
         $this->transactionService = $transactionService;
+        $this->activityValidatorResponseService = $activityValidatorResponseService;
     }
 
     /**
@@ -68,8 +82,9 @@ class ActivityController extends Controller
     {
         try {
             $languages = getCodeListArray('Languages', 'ActivityArray');
+            $toast = generateToastData();
 
-            return view('admin.activity.index', compact('languages'));
+            return view('admin.activity.index', compact('languages', 'toast'));
         } catch (Exception $e) {
             logger()->error($e->getMessage());
 
@@ -112,7 +127,7 @@ class ActivityController extends Controller
         } catch (Exception $e) {
             logger()->error($e->getMessage());
 
-            return response()->json(['success' => false, 'error' => 'Error has occurred while saving activity.']);
+            return response()->json(['success' => false, 'message' => 'Error has occurred while saving activity.', 'data' => []]);
         }
     }
 
@@ -136,10 +151,13 @@ class ActivityController extends Controller
             $transactions = $this->transactionService->getActivityTransactions($activity->id);
             $status = $activity->element_status;
             $progress = $this->activityService->activityPublishingProgress($activity);
+            $coreCompleted = isCoreElementCompleted(array_merge(['reporting_org' => $activity->organization->reporting_org_complete_status], $activity->element_status));
+            $validatorResponse = $this->activityValidatorResponseService->getValidatorResponse($id);
+            $iatiValidatorResponse = $validatorResponse->response ?? null;
 
             return view(
                 'admin.activity.show',
-                compact('elements', 'elementGroups', 'progress', 'activity', 'toast', 'types', 'status', 'results', 'hasIndicatorPeriod', 'transactions')
+                compact('elements', 'elementGroups', 'progress', 'activity', 'toast', 'types', 'status', 'results', 'hasIndicatorPeriod', 'transactions', 'coreCompleted', 'iatiValidatorResponse')
             );
         } catch (Exception $e) {
             logger()->error($e->getMessage());
@@ -177,13 +195,31 @@ class ActivityController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param Activity $activity
+     * @param $activityId
      *
-     * @return void
+     * @return JsonResponse
      */
-    public function destroy(Activity $activity): void
+    public function destroy($activityId): JsonResponse
     {
-        //
+        try {
+            $activity = $this->activityService->getActivity($activityId);
+
+            if ($activity->linked_to_iati) {
+                return response()->json(['success' => false, 'message' => 'Activity must be un-published before deleting.']);
+            }
+
+            if ($this->activityService->deleteActivity($activity)) {
+                Session::put('success', 'Activity has been deleted successfully.');
+
+                return response()->json(['success' => true, 'message' => 'Activity has been deleted successfully.']);
+            }
+
+            return response()->json(['success' => false, 'message' => 'Activity delete failed.']);
+        } catch (\Exception $e) {
+            logger()->error($e->getMessage());
+
+            return response()->json(['success' => false, 'message' => $e->getMessage()]);
+        }
     }
 
     /*

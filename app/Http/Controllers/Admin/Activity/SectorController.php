@@ -41,16 +41,24 @@ class SectorController extends Controller
     public function edit(int $id): View|RedirectResponse
     {
         try {
-            $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
+            $element = getElementSchema('sector');
             $activity = $this->sectorService->getActivityData($id);
             $form = $this->sectorService->formGenerator($id);
-            $data = ['core'=> $element['sector']['criteria'] ?? '', 'status'=> $activity->sector_element_completed, 'title'=> $element['sector']['label'], 'name'=>'sector'];
+            $data = [
+                'core' => $element['criteria'] ?? '',
+                'status' => $activity->sector_element_completed,
+                'title' => $element['label'],
+                'name' => 'sector',
+            ];
 
             return view('admin.activity.sector.edit', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while opening activity sector form.');
+            return redirect()->route('admin.activities.show', $id)->with(
+                'error',
+                'Error has occurred while opening activity sector form.'
+            );
         }
     }
 
@@ -69,14 +77,23 @@ class SectorController extends Controller
             $activityDescription = $request->all();
 
             if (!$this->sectorService->update($activityDescription, $activityData)) {
-                return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while updating activity sector.');
+                return redirect()->route('admin.activities.show', $id)->with(
+                    'error',
+                    'Error has occurred while updating activity sector.'
+                );
             }
 
-            return redirect()->route('admin.activities.show', $id)->with('success', 'Activity sector updated successfully.');
+            return redirect()->route('admin.activities.show', $id)->with(
+                'success',
+                'Activity sector updated successfully.'
+            );
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while updating activity sector.');
+            return redirect()->route('admin.activities.show', $id)->with(
+                'error',
+                'Error has occurred while updating activity sector.'
+            );
         }
     }
 }

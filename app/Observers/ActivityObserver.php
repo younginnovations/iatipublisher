@@ -6,6 +6,7 @@ namespace App\Observers;
 
 use App\IATI\Models\Activity\Activity;
 use App\IATI\Services\ElementCompleteService;
+use Illuminate\Support\Arr;
 
 /**
  * Class ActivityObserver.
@@ -77,6 +78,7 @@ class ActivityObserver
     public function created(Activity $activity): void
     {
         $this->setElementStatus($activity, true);
+        $this->resetActivityStatus($activity);
         $activity->saveQuietly();
     }
 
@@ -90,7 +92,28 @@ class ActivityObserver
      */
     public function updated(Activity $activity): void
     {
+        $key = array_key_first($activity->getDirty());
+        $data = Arr::get($activity->getDirty(), $key);
+
+        if (!in_array($key, getNonArrayElements()) && !Arr::has($activity->getDirty(), 'linked_to_iati')) {
+            $updatedData = $this->elementCompleteService->setDefaultValues($data, $activity);
+            $activity->$key = $updatedData;
+        }
+
         $this->setElementStatus($activity);
+        $this->resetActivityStatus($activity);
         $activity->saveQuietly();
+    }
+
+    /**
+     * Resets activity status to draft.
+     *
+     * @param $model
+     *
+     * @return void
+     */
+    public function resetActivityStatus($model): void
+    {
+        $model->status = 'draft';
     }
 }

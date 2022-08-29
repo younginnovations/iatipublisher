@@ -2,232 +2,94 @@
   <div class="relative bg-paper px-10 pt-4 pb-[71px]">
     <!-- title section -->
     <div class="mb-6 page-title">
-      <div class="flex items-end gap-4">
-        <div class="title grow-0">
-          <div class="max-w-sm pb-4 text-caption-c1 text-n-40">
-            <nav aria-label="breadcrumbs" class="rank-math-breadcrumb">
-              <div class="flex">
-                <a class="font-bold whitespace-nowrap" href="/activities"
-                  >Your Activities</a
+      <div class="pb-4 text-caption-c1 text-n-40">
+        <div>
+          <nav aria-label="breadcrumbs" class="rank-math-breadcrumb">
+            <div class="flex">
+              <a class="font-bold whitespace-nowrap" href="/activities">
+                Your Activities
+              </a>
+              <span class="mx-4 separator"> / </span>
+              <div class="breadcrumb__title">
+                <span
+                  class="overflow-hidden breadcrumb__title last text-n-30"
+                  >{{ pageTitle ?? 'Untitled' }}</span
                 >
-                <span class="mx-4 separator"> / </span>
-                <div class="breadcrumb__title">
-                  <span
-                    class="overflow-hidden breadcrumb__title last text-n-30"
-                    >{{ pageTitle ?? 'Untitled' }}</span
-                  >
-                  <span class="ellipsis__title--hover w-[calc(100%_+_35px)]">{{
-                    pageTitle ? pageTitle : 'Untitled'
-                  }}</span>
-                </div>
+                <span class="ellipsis__title--hover w-[calc(100%_+_35px)]">{{
+                  pageTitle ? pageTitle : 'Untitled'
+                }}</span>
               </div>
-            </nav>
-          </div>
-          <div class="inline-flex items-center max-w-3xl">
+            </div>
+          </nav>
+        </div>
+      </div>
+
+      <div class="flex items-end gap-4">
+        <div class="title max-w-[50%] basis-6/12">
+          <div class="inline-flex items-center w-full">
             <div class="mr-3">
               <a href="/activities">
                 <svg-vue icon="arrow-short-left" />
               </a>
             </div>
-            <div>
-              <h4 class="relative mr-4 text-2xl font-bold ellipsis__title">
-                <span
-                  id="activity_title"
-                  class="overflow-hidden ellipsis__title"
-                  >{{ pageTitle ? pageTitle : 'Untitled' }}</span
-                >
-                <span class="ellipsis__title--hover">{{
-                  pageTitle ? pageTitle : 'Untitled'
-                }}</span>
+            <div class="inline-flex flex-wrap grow">
+              <h4 class="relative text-2xl font-bold ellipsis__title">
+                <span class="overflow-hidden ellipsis__title">
+                  {{ pageTitle ? pageTitle : 'Untitled' }}
+                </span>
+                <span class="ellipsis__title--hover">
+                  {{ pageTitle ? pageTitle : 'Untitled' }}
+                </span>
               </h4>
             </div>
           </div>
         </div>
-        <div class="flex flex-col items-end justify-end actions grow">
-          <div class="mb-3">
+        <div class="relative flex flex-col items-end justify-end actions grow">
+          <div class="inline-flex justify-end">
+            <!-- toast msg for publishing -->
             <Toast
               v-if="toastData.visibility"
               :message="toastData.message"
               :type="toastData.type"
+              class="mr-3"
             />
+
+            <div class="inline-flex items-center justify-end gap-3">
+              <!-- Delete Activity -->
+              <DeleteButton />
+
+              <!-- Unpublish Activity -->
+              <UnPublish
+                v-if="store.state.unPublished"
+                :activity-id="activityProps.id"
+              />
+
+              <!-- Publish Activity -->
+              <Publish
+                v-if="store.state.showPublished"
+                :already-published="activityProps.already_published"
+                :linked-to-iati="activityProps.linked_to_iati"
+                :status="activityProps.status"
+                :core-completed="coreCompleted"
+                :activity-id="activityProps.id"
+              />
+            </div>
           </div>
-          <div class="inline-flex justify-end">
-            <!-- Download File -->
-            <button
-              class="button secondary-btn mr-3.5 font-bold"
-              @click="downloadValue = true"
-            >
-              <svg-vue icon="download-file" />
-            </button>
-            <Modal
-              :modal-active="downloadValue"
-              width="583"
-              @close="downloadToggle"
-            >
-              <div class="mb-4">
-                <div class="flex mb-6 title">
-                  <svg-vue
-                    class="mr-1 mt-0.5 text-lg text-spring-50"
-                    icon="download-file"
-                  />
-                  <b>Download file.</b>
-                </div>
-                <div class="p-4 rounded-lg bg-mint">
-                  Click the download button to save the file.
-                </div>
-              </div>
-              <div class="flex justify-end">
-                <div class="inline-flex">
-                  <BtnComponent
-                    class="px-6 uppercase bg-white"
-                    text="Go Back"
-                    type=""
-                    @click="downloadValue = false"
-                  />
-                  <BtnComponent
-                    class="space"
-                    text="Download"
-                    type="primary"
-                    @click="downloadValue = false"
-                  />
-                </div>
-              </div>
-            </Modal>
 
-            <!-- Delete Activity -->
-            <button
-              class="button secondary-btn mr-3.5 font-bold"
-              @click="deleteValue = true"
-            >
-              <svg-vue icon="delete" />
-            </button>
-            <Modal
-              :modal-active="deleteValue"
-              width="583"
-              @close="deleteToggle"
-            >
-              <div class="mb-4">
-                <div class="flex mb-6 title">
-                  <svg-vue
-                    class="mr-1 mt-0.5 text-lg text-crimson-40"
-                    icon="delete"
-                  />
-                  <b>Delete activity</b>
-                </div>
-                <div class="p-4 rounded-lg bg-rose">
-                  Are you sure you want to delete this activity?
-                </div>
-              </div>
-              <div class="flex justify-end">
-                <div class="inline-flex">
-                  <BtnComponent
-                    class="px-6 uppercase bg-white"
-                    text="Go Back"
-                    type=""
-                    @click="deleteValue = false"
-                  />
-                  <BtnComponent
-                    class="space"
-                    text="Delete"
-                    type="primary"
-                    @click="deleteValue = false"
-                  />
-                </div>
-              </div>
-            </Modal>
-
-            <!-- Unpublish Activity -->
-            <button
-              class="button secondary-btn mr-3.5 font-bold"
-              @click="unpublishValue = true"
-            >
-              <svg-vue icon="cancel-cloud" />
-              <span>Unpublish</span>
-            </button>
-            <Modal
-              :modal-active="unpublishValue"
-              width="583"
-              @close="unpublishToggle"
-            >
-              <div class="mb-4">
-                <div class="flex mb-6 title">
-                  <svg-vue
-                    class="mr-1 mt-0.5 text-lg text-crimson-40"
-                    icon="cancel-cloud"
-                  />
-                  <b>Unpublish activity</b>
-                </div>
-                <div class="p-4 rounded-lg bg-rose">
-                  Are you sure you want to unpublish this activity?
-                </div>
-              </div>
-              <div class="flex justify-end">
-                <div class="inline-flex">
-                  <BtnComponent
-                    class="px-6 uppercase bg-white"
-                    text="Go Back"
-                    type=""
-                    @click="unpublishValue = false"
-                  />
-                  <BtnComponent
-                    class="space"
-                    text="Unpublish"
-                    type="primary"
-                    @click="unpublishValue = false"
-                  />
-                </div>
-              </div>
-            </Modal>
-
-            <!-- Publish Activity -->
-            <button
-              class="relative font-bold button primary-btn"
-              @click="publishValue = true"
-            >
-              <svg-vue icon="approved-cloud" />
-              <span>Publish</span>
-            </button>
-            <Modal
-              :modal-active="publishValue"
-              width="583"
-              @close="publishToggle"
-            >
-              <div class="mb-4">
-                <div class="flex mb-6 title">
-                  <svg-vue
-                    class="mr-1 mt-0.5 text-lg text-spring-50"
-                    icon="approved-cloud"
-                  />
-                  <b>Publish activity?</b>
-                </div>
-                <div class="p-4 rounded-lg bg-mint">
-                  Are you ready to publish this activity?
-                </div>
-              </div>
-              <div class="flex justify-end">
-                <div class="inline-flex">
-                  <BtnComponent
-                    class="px-6 uppercase bg-white"
-                    text="Go Back"
-                    type=""
-                    @click="publishValue = false"
-                  />
-                  <BtnComponent
-                    class="space"
-                    text="Publish"
-                    type="primary"
-                    @click="publishValue = false"
-                  />
-                </div>
-              </div>
-            </Modal>
-          </div>
+          <Errors
+            v-if="store.state.publishErrors.length > 0"
+            :error-data="store.state.publishErrors"
+            class="absolute right-0 -mr-10 bottom-full"
+          />
         </div>
       </div>
     </div>
     <!-- title section ends -->
     <div class="activities">
       <aside class="activities__sidebar">
+        <div v-if="publishStatus.already_published" class="mb-2">
+          <PreviouslyPublished />
+        </div>
         <div class="flex mb-1">
           <div class="mr-1 activities__card progress">
             <div class="flex items-center justify-between mb-2">
@@ -281,7 +143,7 @@
           class="sticky top-0"
         />
       </aside>
-      <div class="overflow-hidden activities__content">
+      <div class="activities__content">
         <div class="inline-flex flex-wrap gap-2 mb-3">
           <a
             v-for="(post, key, index) in groupedData"
@@ -365,12 +227,19 @@ import { useToggle } from '@vueuse/core';
 import { Result } from './elements/Index';
 import HoverText from 'Components/HoverText.vue';
 import ProgressBar from 'Components/ProgressBar.vue';
-import Modal from 'Components/PopupModal.vue';
-import BtnComponent from 'Components/ButtonComponent.vue';
+import Publish from 'Components/sections/PublishButton.vue';
+import UnPublish from 'Components/sections/UnPublishButton.vue';
+import DeleteButton from 'Components/sections/DeleteButton.vue';
+import Errors from 'Components/sections/StickyErrors.vue';
 import Toast from 'Components/Toast.vue';
 
+// Activity Components
 import Elements from 'Activity/partials/ActivitiesElements.vue';
 import ActivityElement from 'Activity/partials/ActivityElement.vue';
+import PreviouslyPublished from 'Components/status/PreviouslyPublished.vue';
+
+// Vuex Store
+import { useStore } from 'Store/activities/show';
 
 export default defineComponent({
   components: {
@@ -379,9 +248,12 @@ export default defineComponent({
     Elements,
     ActivityElement,
     Result,
-    Modal,
-    BtnComponent,
     Toast,
+    Publish,
+    Errors,
+    UnPublish,
+    DeleteButton,
+    PreviouslyPublished,
   },
   props: {
     elements: {
@@ -420,11 +292,19 @@ export default defineComponent({
       type: Array,
       required: true,
     },
+    coreCompleted: {
+      type: Boolean,
+      required: true,
+    },
+    iatiValidatorResponse: {
+      type: Object,
+      required: true,
+    },
   },
   setup(props) {
-    const { types } = toRefs(props);
-    // vue provides
-    provide('types', types.value);
+    const { types, coreCompleted } = toRefs(props);
+
+    const store = useStore();
 
     const toastData = reactive({
       visibility: false,
@@ -435,8 +315,6 @@ export default defineComponent({
     /**
      * For modal popup
      */
-    const [publishValue, publishToggle] = useToggle();
-    const [unpublishValue, unpublishToggle] = useToggle();
     const [deleteValue, deleteToggle] = useToggle();
     const [downloadValue, downloadToggle] = useToggle();
 
@@ -548,13 +426,70 @@ export default defineComponent({
       return title.replace(/_/gi, ' ');
     }
 
+    const toastMessage = reactive({
+      message: '',
+      type: false,
+    });
+
+    interface PublishStatusTypeface {
+      already_published: boolean;
+      linked_to_iati: boolean;
+      status: string;
+    }
+
+    const publishStatus: PublishStatusTypeface = reactive({
+      already_published: activityProps.already_published,
+      linked_to_iati: activityProps.linked_to_iati,
+      status: activityProps.status,
+    });
+
+    // vue provides
+    provide('types', types.value);
+    provide('coreCompleted', coreCompleted.value);
+    provide('activityID', activity.value.id);
+    provide('toastMessage', toastMessage);
+
+    /**
+     * Breadcrumb data
+     */
+    const breadcrumbData = [
+      {
+        title: 'Your Activities',
+        link: '/activities',
+      },
+      {
+        title: pageTitle,
+        link: '',
+      },
+    ];
+
+    /**
+     *  Global State
+     */
+    let { iatiValidatorResponse } = toRefs(props);
+    const validationResult = iatiValidatorResponse.value;
+
+    if (validationResult && validationResult.errors.length > 0) {
+      store.dispatch('updatePublishErrors', validationResult.errors);
+    }
+
+    if (publishStatus.linked_to_iati) {
+      store.dispatch('updateUnPublished', true);
+    } else {
+      store.dispatch('updateUnPublished', false);
+    }
+
+    if (
+      !(publishStatus.linked_to_iati && publishStatus.status === 'published')
+    ) {
+      store.dispatch('updateShowPublished', true);
+    } else {
+      store.dispatch('updateShowPublished', false);
+    }
+
     return {
       groupedData,
       activities,
-      publishValue,
-      publishToggle,
-      unpublishValue,
-      unpublishToggle,
       deleteValue,
       deleteToggle,
       downloadValue,
@@ -564,6 +499,11 @@ export default defineComponent({
       props,
       formatTitle,
       pageTitle,
+      toastMessage,
+      publishStatus,
+      breadcrumbData,
+      store,
+      activityProps,
     };
   },
 });

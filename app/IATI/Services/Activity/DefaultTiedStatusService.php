@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\IATI\Services\Activity;
 
 use App\IATI\Elements\Builder\BaseFormCreator;
+use App\IATI\Models\Activity\Activity;
 use App\IATI\Repositories\Activity\DefaultTiedStatusRepository;
 use Illuminate\Database\Eloquent\Model;
 use Kris\LaravelFormBuilder\Form;
@@ -82,10 +83,32 @@ class DefaultTiedStatusService
      */
     public function formGenerator($id): Form
     {
-        $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
+        $element = getElementSchema('default_tied_status');
         $model['default_tied_status'] = $this->getDefaultTiedStatusData($id);
         $this->baseFormCreator->url = route('admin.activities.default-tied-status.update', [$id]);
 
-        return $this->baseFormCreator->editForm($model, $element['default_tied_status'], 'PUT', '/activities/' . $id);
+        return $this->baseFormCreator->editForm($model, $element, 'PUT', '/activities/' . $id);
+    }
+
+    /**
+     * Returns data in required xml array format.
+     *
+     * @param Activity $activity
+     *
+     * @return array
+     */
+    public function getXmlData(Activity $activity): array
+    {
+        $activityData = [];
+
+        if ($activity->default_tied_status) {
+            $activityData = [
+                '@attributes' => [
+                    'code' => $activity->default_tied_status,
+                ],
+            ];
+        }
+
+        return $activityData;
     }
 }

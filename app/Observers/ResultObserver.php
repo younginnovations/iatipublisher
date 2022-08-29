@@ -55,6 +55,8 @@ class ResultObserver
     public function created(Result $result): void
     {
         $this->updateActivityElementStatus($result);
+        $this->resetActivityStatus($result);
+        $this->setResultDefaultValues($result);
     }
 
     /**
@@ -68,5 +70,36 @@ class ResultObserver
     public function updated(Result $result): void
     {
         $this->updateActivityElementStatus($result);
+        $this->resetActivityStatus($result);
+        $this->setResultDefaultValues($result);
+    }
+
+    /**
+     * Resets activity status to draft.
+     *
+     * @param $result
+     *
+     * @return void
+     */
+    public function resetActivityStatus($result): void
+    {
+        $activityObject = $result->activity;
+        $activityObject->status = 'draft';
+        $activityObject->saveQuietly();
+    }
+
+    /**
+     * Sets default values for language and currency for result.
+     *
+     * @param $result
+     *
+     * @return void
+     */
+    public function setResultDefaultValues($result): void
+    {
+        $resultData = $result->result;
+        $updatedData = $this->elementCompleteService->setDefaultValues($resultData, $result->activity);
+        $result->result = $updatedData;
+        $result->saveQuietly();
     }
 }

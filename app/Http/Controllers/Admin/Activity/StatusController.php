@@ -41,16 +41,24 @@ class StatusController extends Controller
     public function edit(int $id): View|RedirectResponse|JsonResponse
     {
         try {
-            $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
+            $element = getElementSchema('activity_status');
             $activity = $this->statusService->getActivityData($id);
             $form = $this->statusService->formGenerator($id);
-            $data = ['core' => $element['activity_status']['criteria'] ?? false, 'status' => $activity->activity_status_element_completed ?? false, 'title' => $element['activity_status']['label'], 'name' => 'activity_status'];
+            $data = [
+                'core' => $element['criteria'] ?? false,
+                'status' => $activity->activity_status_element_completed ?? false,
+                'title' => $element['label'],
+                'name' => 'activity_status',
+            ];
 
             return view('admin.activity.status.edit', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while opening activity title form.');
+            return redirect()->route('admin.activities.show', $id)->with(
+                'error',
+                'Error has occurred while opening activity title form.'
+            );
         }
     }
 
@@ -69,14 +77,22 @@ class StatusController extends Controller
             $activityStatus = $request->get('activity_status') != null ? (int) $request->get('activity_status') : null;
 
             if (!$this->statusService->update($activityStatus, $activityData)) {
-                return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while updating activity status.');
+                return redirect()->route('admin.activities.show', $id)->with(
+                    'error',
+                    'Error has occurred while updating activity status.'
+                );
             }
 
-            return redirect()->route('admin.activities.show', $id)->with('success', 'Activity status updated successfully.');
+            return redirect()->route('admin.activities.show', $id)->with(
+                'success',
+                'Activity status updated successfully.'
+            );
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return response()->json(['success' => false, 'error' => 'Error has occurred while updating activity status.']);
+            return response()->json(
+                ['success' => false, 'error' => 'Error has occurred while updating activity status.']
+            );
         }
     }
 }

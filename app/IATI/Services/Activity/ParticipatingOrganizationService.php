@@ -5,8 +5,11 @@ declare(strict_types=1);
 namespace App\IATI\Services\Activity;
 
 use App\IATI\Elements\Builder\ParentCollectionFormCreator;
+use App\IATI\Models\Activity\Activity;
 use App\IATI\Repositories\Activity\ParticipatingOrganizationRepository;
+use App\IATI\Traits\XmlBaseElement;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Arr;
 use Kris\LaravelFormBuilder\Form;
 
 /**
@@ -15,6 +18,8 @@ use Kris\LaravelFormBuilder\Form;
  */
 class ParticipatingOrganizationService
 {
+    use XmlBaseElement;
+
     /**
      * @var ParticipatingOrganizationRepository
      */
@@ -83,10 +88,40 @@ class ParticipatingOrganizationService
      */
     public function formGenerator($id): Form
     {
-        $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
+        $element = getElementSchema('participating_org');
         $model['participating_org'] = $this->getParticipatingOrganizationData($id) ?: [];
         $this->parentCollectionFormCreator->url = route('admin.activities.participating-org.update', [$id]);
 
-        return $this->parentCollectionFormCreator->editForm($model, $element['participating_org'], 'PUT', '/activities/' . $id);
+        return $this->parentCollectionFormCreator->editForm($model, $element, 'PUT', '/activities/' . $id);
+    }
+
+    /**
+     * Returns data in required xml array format.
+     *
+     * @param Activity $activity
+     *
+     * @return array
+     */
+    public function getXmlData(Activity $activity): array
+    {
+        $activityData = [];
+        $participatingOrganizations = (array) $activity->participating_org;
+
+        if (count($participatingOrganizations)) {
+            foreach ($participatingOrganizations as $participatingOrganization) {
+                $activityData[] = [
+                    '@attributes' => [
+                        'ref'         => Arr::get($participatingOrganization, 'ref', null),
+                        'type'        => Arr::get($participatingOrganization, 'type', null),
+                        'role'        => Arr::get($participatingOrganization, 'organization_role', null),
+                        'activity-id' => Arr::get($participatingOrganization, 'identifier', null),
+                        'crs-channel-code' => Arr::get($participatingOrganization, 'crs_channel_code', null),
+                    ],
+                    'narrative'   => $this->buildNarrative(Arr::get($participatingOrganization, 'narrative', [])),
+                ];
+            }
+        }
+
+        return $activityData;
     }
 }

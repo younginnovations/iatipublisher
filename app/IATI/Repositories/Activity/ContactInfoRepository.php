@@ -61,7 +61,7 @@ class ContactInfoRepository
      */
     public function update($contactInfo, $activity): bool
     {
-        $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true)['contact_info'];
+        $element = getElementSchema('contact_info');
 
         foreach ($contactInfo['contact_info'] as $key => $contact) {
             foreach (array_keys($element['sub_elements']) as $subelement) {

@@ -41,16 +41,24 @@ class BudgetController extends Controller
     public function edit(int $id): View|RedirectResponse
     {
         try {
-            $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
+            $element = getElementSchema('budget');
             $activity = $this->budgetService->getActivityData($id);
             $form = $this->budgetService->formGenerator($id);
-            $data = ['core' => $element['budget']['criteria'] ?? false, 'status' => $activity->element_status['budget'], 'title' => $element['budget']['label'], 'name' => 'budget'];
+            $data = [
+                'core' => $element['criteria'] ?? false,
+                'status' => $activity->budget_element_completed ?? false,
+                'title' => $element['label'],
+                'name' => 'budget',
+            ];
 
             return view('admin.activity.budget.edit', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while opening budget form.');
+            return redirect()->route('admin.activities.show', $id)->with(
+                'error',
+                'Error has occurred while opening budget form.'
+            );
         }
     }
 
@@ -68,14 +76,20 @@ class BudgetController extends Controller
             $activityBudget = $request->all();
 
             if (!$this->budgetService->update($activityBudget, $activityData)) {
-                return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while updating budget.');
+                return redirect()->route('admin.activities.show', $id)->with(
+                    'error',
+                    'Error has occurred while updating budget.'
+                );
             }
 
             return redirect()->route('admin.activities.show', $id)->with('success', 'Budget updated successfully.');
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while updating budget.');
+            return redirect()->route('admin.activities.show', $id)->with(
+                'error',
+                'Error has occurred while updating budget.'
+            );
         }
     }
 }

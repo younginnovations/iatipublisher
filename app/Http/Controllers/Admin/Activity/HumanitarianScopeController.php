@@ -41,16 +41,24 @@ class HumanitarianScopeController extends Controller
     public function edit(int $id): View|RedirectResponse
     {
         try {
-            $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
+            $element = getElementSchema('humanitarian_scope');
             $activity = $this->humanitarianScopeService->getActivityData($id);
             $form = $this->humanitarianScopeService->formGenerator($id);
-            $data = ['core' => $element['humanitarian_scope']['criteria'] ?? '', 'status' => $activity->humanitarian_scope_element_completed, 'title' => $element['humanitarian_scope']['label'], 'name' => 'humanitarian_scope'];
+            $data = [
+                'core' => $element['criteria'] ?? '',
+                'status' => $activity->humanitarian_scope_element_completed,
+                'title' => $element['label'],
+                'name' => 'humanitarian_scope',
+            ];
 
             return view('admin.activity.humanitarianScope.edit', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while rendering humanitarian-scope form.');
+            return redirect()->route('admin.activities.show', $id)->with(
+                'error',
+                'Error has occurred while rendering humanitarian-scope form.'
+            );
         }
     }
 
@@ -69,14 +77,23 @@ class HumanitarianScopeController extends Controller
             $activityHumanitarianScope = $request->all();
 
             if (!$this->humanitarianScopeService->update($activityHumanitarianScope, $activityData)) {
-                return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while updating humanitarian-scope.');
+                return redirect()->route('admin.activities.show', $id)->with(
+                    'error',
+                    'Error has occurred while updating humanitarian-scope.'
+                );
             }
 
-            return redirect()->route('admin.activities.show', $id)->with('success', 'Humanitarian-scope updated successfully.');
+            return redirect()->route('admin.activities.show', $id)->with(
+                'success',
+                'Humanitarian-scope updated successfully.'
+            );
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while updating humanitarian-scope.');
+            return redirect()->route('admin.activities.show', $id)->with(
+                'error',
+                'Error has occurred while updating humanitarian-scope.'
+            );
         }
     }
 }

@@ -61,7 +61,7 @@ class LocationRepository
      */
     public function update($location, $activity): bool
     {
-        $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true)['location'];
+        $element = getElementSchema('location');
 
         foreach ($location['location'] as $key => $location_value) {
             foreach (array_keys($element['sub_elements']) as $subelement) {

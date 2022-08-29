@@ -3,18 +3,18 @@
     <Transition name="modal-animation">
       <div
         v-if="modalActive"
-        class="modal fixed top-0 left-0 z-50 flex h-screen w-screen items-center justify-center p-8"
+        class="fixed top-0 left-0 z-50 flex items-center justify-center w-screen h-screen p-8 modal"
       >
         <Transition name="modal-animation-inner">
-          <div class="flex h-full w-full items-center justify-center">
+          <div class="flex items-center justify-center w-full h-full">
             <div
-              class="modal-backdrop absolute left-0 top-0 h-full w-full bg-n-50 opacity-50"
+              class="absolute top-0 left-0 w-full h-full opacity-50 modal-backdrop bg-n-50"
               @click="close"
             />
             <div
               v-if="modalActive"
               :style="`max-width:${width}px;`"
-              class="modal-inner relative max-h-full w-full overflow-x-hidden rounded-lg bg-white p-8"
+              class="relative w-full max-h-full p-8 overflow-x-hidden bg-white rounded-lg modal-inner"
             >
               <slot />
             </div>
@@ -27,7 +27,6 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-
 export default defineComponent({
   name: 'PopupModal',
   props: {
@@ -41,10 +40,11 @@ export default defineComponent({
       default: '809',
     },
   },
-  emits: ['close'],
+  emits: ['close', 'reset'],
   setup(props, { emit }) {
     const close = () => {
       emit('close');
+      emit('reset');
     };
     return { close };
   },

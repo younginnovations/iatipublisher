@@ -41,10 +41,10 @@ class OtherIdentifierController extends Controller
     public function edit(int $id): View|RedirectResponse
     {
         try {
-            $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
+            $element = getElementSchema('other_identifier');
             $activity = $this->otherIdentifierService->getActivityData($id);
             $form = $this->otherIdentifierService->formGenerator($id);
-            $data = ['core' => $element['other_identifier']['criteria'] ?? '', 'status' => $activity->other_identifier_element_completed, 'title' => $element['other_identifier']['label'], 'name' => 'other_identifier'];
+            $data = ['core' => $element['criteria'] ?? false, 'status' => $activity->other_identifier_element_completed, 'title' => $element['label'], 'name' => 'other_identifier'];
 
             return view('admin.activity.otherIdentifier.edit', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {
@@ -66,7 +66,7 @@ class OtherIdentifierController extends Controller
     {
         try {
             $activityData = $this->otherIdentifierService->getActivityData($id);
-            $activityCondition = $request->except(['_token', '_method']);
+            $activityCondition = $request->get('other_identifier');
 
             if (!$this->otherIdentifierService->update($activityCondition, $activityData)) {
                 return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while updating other-identifier.');

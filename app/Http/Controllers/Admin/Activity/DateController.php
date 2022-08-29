@@ -41,16 +41,24 @@ class DateController extends Controller
     public function edit(int $id): View|RedirectResponse
     {
         try {
-            $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
+            $element = getElementSchema('activity_date');
             $activity = $this->dateService->getActivityData($id);
             $form = $this->dateService->formGenerator($id);
-            $data = ['core' => $element['activity_date']['criteria'] ?? '', 'status' => $activity->activity_date_element_completed, 'title' => $element['activity_date']['label'], 'name' => 'activity_date'];
+            $data = [
+                'core' => $element['criteria'] ?? '',
+                'status' => $activity->activity_date_element_completed,
+                'title' => $element['label'],
+                'name' => 'activity_date',
+            ];
 
             return view('admin.activity.date.edit', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while rendering activity-date form.');
+            return redirect()->route('admin.activities.show', $id)->with(
+                'error',
+                'Error has occurred while rendering activity-date form.'
+            );
         }
     }
 
@@ -70,18 +78,30 @@ class DateController extends Controller
             $messages = $this->validateData(array_values($request->get('activity_date')));
 
             if ($messages) {
-                return redirect()->route('admin.activities.date.edit', $id)->with('error', array_unique($messages))->withInput();
+                return redirect()->route('admin.activities.date.edit', $id)->with(
+                    'error',
+                    array_unique($messages)
+                )->withInput();
             }
 
             if (!$this->dateService->update($activityDate, $activityData)) {
-                return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while updating activity-date.');
+                return redirect()->route('admin.activities.show', $id)->with(
+                    'error',
+                    'Error has occurred while updating activity-date.'
+                );
             }
 
-            return redirect()->route('admin.activities.show', $id)->with('success', 'Activity-date updated successfully.');
+            return redirect()->route('admin.activities.show', $id)->with(
+                'success',
+                'Activity-date updated successfully.'
+            );
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while updating activity-date.');
+            return redirect()->route('admin.activities.show', $id)->with(
+                'error',
+                'Error has occurred while updating activity-date.'
+            );
         }
     }
 
@@ -101,29 +121,44 @@ class DateController extends Controller
 
             if (isset($date) && isset($type)) {
                 if ($type == 2 || $type == 4) {
-                    (strtotime($date) <= strtotime(date('Y-m-d'))) ?: $messages[] = sprintf('Actual Start Date and Actual End Date must be Today or past days. (block %s)', $blockIndex);
+                    (strtotime($date) <= strtotime(date('Y-m-d'))) ?: $messages[] = sprintf(
+                        'Actual Start Date and Actual End Date must be Today or past days. (block %s)',
+                        $blockIndex
+                    );
                 }
 
                 if ($type == 4) {
-                    $actualStartDate = array_column(array_filter($activityDates, function ($date) {
-                        return $date['type'] == 2;
-                    }), 'date');
+                    $actualStartDate = array_column(
+                        array_filter($activityDates, function ($date) {
+                            return $date['type'] == 2;
+                        }),
+                        'date'
+                    );
 
                     if (count($actualStartDate)) {
                         foreach ($actualStartDate as $startDate) {
-                            strtotime($date) > strtotime($startDate) ?: $messages[] = sprintf('End date must be later than the start date. (Block %s)', $blockIndex);
+                            strtotime($date) > strtotime($startDate) ?: $messages[] = sprintf(
+                                'End date must be later than the start date. (Block %s)',
+                                $blockIndex
+                            );
                         }
                     }
                 }
 
                 if ($type == 3) {
-                    $plannedStartDate = array_column(array_filter($activityDates, function ($date) {
-                        return $date['type'] == 1;
-                    }), 'date');
+                    $plannedStartDate = array_column(
+                        array_filter($activityDates, function ($date) {
+                            return $date['type'] == 1;
+                        }),
+                        'date'
+                    );
 
                     if (count($plannedStartDate)) {
                         foreach ($plannedStartDate as $startDate) {
-                            strtotime($date) > strtotime($startDate) ?: $messages[] = sprintf('End date must be later than the start date. (Block %s)', $blockIndex);
+                            strtotime($date) > strtotime($startDate) ?: $messages[] = sprintf(
+                                'End date must be later than the start date. (Block %s)',
+                                $blockIndex
+                            );
                         }
                     }
                 }

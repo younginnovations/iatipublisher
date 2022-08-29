@@ -41,16 +41,24 @@ class DescriptionController extends Controller
     public function edit(int $id): View|RedirectResponse
     {
         try {
-            $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
+            $element = getElementSchema('description');
             $activity = $this->descriptionService->getActivityData($id);
             $form = $this->descriptionService->formGenerator($id);
-            $data = ['core' => $element['description']['criteria'] ?? '', 'status' => $activity->description_element_completed, 'title' => $element['description']['label'], 'name' => 'description'];
+            $data = [
+                'core'   => $element['criteria'] ?? '',
+                'status' => $activity->description_element_completed,
+                'title'  => $element['label'],
+                'name'   => 'description',
+            ];
 
             return view('admin.activity.description.edit', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while rendering activity description form.');
+            return redirect()->route('admin.activities.show', $id)->with(
+                'error',
+                'Error has occurred while rendering activity description form.'
+            );
         }
     }
 
@@ -69,14 +77,23 @@ class DescriptionController extends Controller
             $activityDescription = $request->all();
 
             if (!$this->descriptionService->update($activityDescription, $activityData)) {
-                return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while updating description.');
+                return redirect()->route('admin.activities.show', $id)->with(
+                    'error',
+                    'Error has occurred while updating description.'
+                );
             }
 
-            return redirect()->route('admin.activities.show', $id)->with('success', 'Description updated successfully.');
+            return redirect()->route('admin.activities.show', $id)->with(
+                'success',
+                'Description updated successfully.'
+            );
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while updating description.');
+            return redirect()->route('admin.activities.show', $id)->with(
+                'error',
+                'Error has occurred while updating description.'
+            );
         }
     }
 }

@@ -5,8 +5,11 @@ declare(strict_types=1);
 namespace App\IATI\Services\Activity;
 
 use App\IATI\Elements\Builder\ParentCollectionFormCreator;
+use App\IATI\Models\Activity\Activity;
 use App\IATI\Repositories\Activity\SectorRepository;
+use App\IATI\Traits\XmlBaseElement;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Arr;
 use Kris\LaravelFormBuilder\Form;
 
 /**
@@ -14,6 +17,8 @@ use Kris\LaravelFormBuilder\Form;
  */
 class SectorService
 {
+    use XmlBaseElement;
+
     /**
      * @var SectorRepository
      */
@@ -82,10 +87,59 @@ class SectorService
      */
     public function formGenerator($id): Form
     {
-        $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
+        $element = getElementSchema('sector');
         $model['sector'] = $this->getSectorData($id);
         $this->parentCollectionFormCreator->url = route('admin.activities.sector.update', [$id]);
 
-        return $this->parentCollectionFormCreator->editForm($model, $element['sector'], 'PUT', '/activities/' . $id);
+        return $this->parentCollectionFormCreator->editForm($model, $element, 'PUT', '/activities/' . $id);
+    }
+
+    /**
+     * Returns data in required xml array format.
+     *
+     * @param Activity $activity
+     *
+     * @return array
+     */
+    public function getXmlData(Activity $activity)
+    {
+        $activityData = [];
+        $sectors = (array) $activity->sector;
+
+        if (count($sectors)) {
+            foreach ($sectors as $sector) {
+                $vocabulary = Arr::get($sector, 'sector_vocabulary', null);
+
+                switch ($vocabulary) {
+                    case '1':
+                        $sectorValue = Arr::get($sector, 'code', null);
+                        break;
+                    case '2':
+                        $sectorValue = Arr::get($sector, 'category_code', null);
+                        break;
+                    case '7':
+                        $sectorValue = Arr::get($sector, 'sdg_goal', null);
+                        break;
+                    case '8':
+                        $sectorValue = Arr::get($sector, 'sdg_target', null);
+                        break;
+                    default:
+                        $sectorValue = Arr::get($sector, 'text', null);
+                        break;
+                }
+
+                $activityData[] = [
+                    '@attributes' => [
+                        'code'           => $sectorValue,
+                        'percentage'     => Arr::get($sector, 'percentage', null),
+                        'vocabulary'     => $vocabulary,
+                        'vocabulary-uri' => Arr::get($sector, 'vocabulary_uri', null),
+                    ],
+                    'narrative'   => $this->buildNarrative(Arr::get($sector, 'narrative', null)),
+                ];
+            }
+        }
+
+        return $activityData;
     }
 }

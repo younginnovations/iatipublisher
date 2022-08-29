@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\IATI\Services\Activity;
 
 use App\IATI\Elements\Builder\BaseFormCreator;
+use App\IATI\Models\Activity\Activity;
 use App\IATI\Repositories\Activity\DefaultFinanceTypeRepository;
 use Illuminate\Database\Eloquent\Model;
 use Kris\LaravelFormBuilder\Form;
@@ -82,10 +83,32 @@ class DefaultFinanceTypeService
      */
     public function formGenerator($id): Form
     {
-        $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
+        $element = getElementSchema('default_finance_type');
         $model['default_finance_type'] = $this->getDefaultFinanceTypeData($id);
         $this->baseFormCreator->url = route('admin.activities.default-finance-type.update', [$id]);
 
-        return $this->baseFormCreator->editForm($model, $element['default_finance_type'], 'PUT', '/activities/' . $id);
+        return $this->baseFormCreator->editForm($model, $element, 'PUT', '/activities/' . $id);
+    }
+
+    /**
+     * Returns data in required xml array format.
+     *
+     * @param Activity $activity
+     *
+     * @return array
+     */
+    public function getXmlData(Activity $activity): array
+    {
+        $activityData = [];
+
+        if ($activity->default_finance_type) {
+            $activityData = [
+                '@attributes' => [
+                    'code' => $activity->default_finance_type,
+                ],
+            ];
+        }
+
+        return $activityData;
     }
 }

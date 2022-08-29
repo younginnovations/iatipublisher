@@ -5,8 +5,10 @@ declare(strict_types=1);
 namespace App\IATI\Services\Activity;
 
 use App\IATI\Elements\Builder\BaseFormCreator;
+use App\IATI\Models\Activity\Activity;
 use App\IATI\Repositories\Activity\LegacyDataRepository;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Arr;
 use Kris\LaravelFormBuilder\Form;
 
 /**
@@ -82,10 +84,37 @@ class LegacyDataService
      */
     public function formGenerator($id): Form
     {
-        $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
+        $element = getElementSchema('legacy_data');
         $model['legacy_data'] = $this->getActivityLegacyData($id);
         $this->baseFormCreator->url = route('admin.activities.legacy-data.update', [$id]);
 
-        return $this->baseFormCreator->editForm($model, $element['legacy_data'], 'PUT', '/activities/' . $id);
+        return $this->baseFormCreator->editForm($model, $element, 'PUT', '/activities/' . $id);
+    }
+
+    /**
+     * Returns data in required xml array format.
+     *
+     * @param Activity $activity
+     *
+     * @return array
+     */
+    public function getXmlData(Activity $activity): array
+    {
+        $activityData = [];
+        $legacyDatas = (array) $activity->legacy_data;
+
+        if (count($legacyDatas)) {
+            foreach ($legacyDatas as $legacyData) {
+                $activityData[] = [
+                    '@attributes' => [
+                        'name'            => Arr::get($legacyData, 'legacy_name', null),
+                        'value'           => Arr::get($legacyData, 'value', null),
+                        'iati-equivalent' => Arr::get($legacyData, 'iati_equivalent', null),
+                    ],
+                ];
+            }
+        }
+
+        return $activityData;
     }
 }

@@ -13,6 +13,7 @@ export const state = {
     default_language: '',
     hierarchy: '',
     humanitarian: '',
+    linked_data_url: ''
   },
   publishingError: {
     api_token: '',
@@ -22,6 +23,7 @@ export const state = {
     default_language: '',
     hierarchy: '',
     humanitarian: '',
+    linked_data_url: ''
   },
 };
 

@@ -61,7 +61,7 @@ class DocumentLinkRepository
      */
     public function update($documentLink, $activity): bool
     {
-        $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true)['document_link'];
+        $element = getElementSchema('document_link');
 
         foreach ($documentLink['document_link'] as $key => $document) {
             foreach (array_keys($element['sub_elements']) as $subelement) {

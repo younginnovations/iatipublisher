@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace App\IATI\Models\Organization;
 
-use App\IATI\Models\Activity\Activity;
+use App\IATI\Models\Activity\ActivityPublished;
+use App\IATI\Models\Setting\Setting;
+use App\IATI\Models\User\User;
 use App\IATI\Services\ElementCompleteService;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -69,7 +71,17 @@ class Organization extends Model
      */
     public function activities(): HasMany
     {
-        return $this->hasMany(Activity::class, 'org_id', 'id');
+        return $this->hasMany(ActivityPublished::class, 'organization_id', 'id');
+    }
+
+    /**
+     * Organization hasone user.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function user(): \Illuminate\Database\Eloquent\Relations\HasOne
+    {
+        return $this->hasOne(User::class, 'organization_id', 'id');
     }
 
     /**
@@ -83,5 +95,25 @@ class Organization extends Model
         $this->elementCompleteService->element = 'reporting_org';
 
         return $this->elementCompleteService->isLevelOneMultiDimensionElementCompleted($this->reporting_org);
+    }
+
+    /**
+     * Organization has one setting.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function settings(): \Illuminate\Database\Eloquent\Relations\HasOne
+    {
+        return $this->hasOne(Setting::class, 'organization_id', 'id');
+    }
+
+    /**
+     * An Organization can have many Activities published.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function publishedFiles(): HasMany
+    {
+        return $this->hasMany(ActivityPublished::class, 'organization_id', 'id');
     }
 }

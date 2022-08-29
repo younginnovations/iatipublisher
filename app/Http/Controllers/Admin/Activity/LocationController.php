@@ -42,16 +42,24 @@ class LocationController extends Controller
     public function edit(int $id): View|RedirectResponse
     {
         try {
-            $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
+            $element = getElementSchema('location');
             $activity = $this->locationService->getActivityData($id);
             $form = $this->locationService->formGenerator($id);
-            $data = ['core' => $element['location']['criteria'] ?? '', 'status' => $activity->location_element_completed ?? false, 'title' => $element['location']['label'], 'name' => 'location'];
+            $data = [
+                'core' => $element['criteria'] ?? '',
+                'status' => $activity->location_element_completed ?? false,
+                'title' => $element['label'],
+                'name' => 'location',
+            ];
 
             return view('admin.activity.location.edit', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while rendering location form.');
+            return redirect()->route('admin.activities.show', $id)->with(
+                'error',
+                'Error has occurred while rendering location form.'
+            );
         }
     }
 
@@ -70,14 +78,20 @@ class LocationController extends Controller
             $activityCountryBudgetItem = $request->except(['_token', '_method']);
 
             if (!$this->locationService->update($activityCountryBudgetItem, $activityData)) {
-                return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while updating location.');
+                return redirect()->route('admin.activities.show', $id)->with(
+                    'error',
+                    'Error has occurred while updating location.'
+                );
             }
 
             return redirect()->route('admin.activities.show', $id)->with('success', 'Location updated successfully.');
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while updating location.');
+            return redirect()->route('admin.activities.show', $id)->with(
+                'error',
+                'Error has occurred while updating location.'
+            );
         }
     }
 }

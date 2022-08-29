@@ -1,0 +1,70 @@
+<?php
+
+namespace App\IATI\Traits;
+
+use App\Exceptions\PublisherNotFound;
+use GuzzleHttp\Client;
+use GuzzleHttp\Exception\RequestException;
+
+/**
+ * Class RegistryApiInvoker.
+ */
+trait RegistryApiInvoker
+{
+    /**
+     * Make an api request to the given action.
+     *
+     * @param        $action
+     * @param        $requestParameter
+     * @param null $apiKey
+     *
+     * @return mixed
+     */
+    protected function request($action, $requestParameter = null, $apiKey = null): mixed
+    {
+        $clientConfig = ['base_uri' => env('IATI_API_ENDPOINT')];
+        $requestConfig = [
+            'http_errors' => false,
+            'query'       => ['id' => $requestParameter ?? ''],
+        ];
+
+        if (env('APP_ENV') != 'production') {
+            $clientConfig['headers']['X-CKAN-API-Key'] = env('IATI_API_KEY');
+            $requestConfig['auth'] = [env('IATI_USERNAME'), env('IATI_PASSWORD')];
+        }
+
+        if ($apiKey) {
+            $clientConfig['headers']['authorization'] = $apiKey;
+        }
+
+        $client = new Client($clientConfig);
+
+        return $client->get(sprintf('%s/action/%s', env('IATI_API_ENDPOINT'), $action), $requestConfig)->getBody()->getContents();
+    }
+
+    /**
+     * Search for a publisher with a specific publisherId.
+     *
+     * @param $publisherId
+     *
+     * @return string
+     *
+     * @throws \Exception
+     */
+    public function searchForPublisher($publisherId): string
+    {
+        try {
+            return $this->request('organization_show', $publisherId);
+        } catch (\Exception $e) {
+            if ($e instanceof RequestException) {
+                if ($e->getResponse()->getStatusCode() == 404) {
+                    throw new PublisherNotFound('Publisher not found');
+                }
+            }
+
+            logger()->error($e->getMessage());
+
+            return redirect()->back()->with('error', 'Something went wrong.');
+        }
+    }
+}
