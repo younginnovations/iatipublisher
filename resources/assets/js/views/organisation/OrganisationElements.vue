@@ -134,14 +134,14 @@ export default defineComponent({
           return key
             .toLowerCase()
             .includes(
-              elements.search.toLowerCase().replace('_', '').replace('-', '_')
+              elements.search.toLowerCase().replace(/_/g, ' ').replace(/-/g, '_')
             );
         } else {
           if (value[elements.status]) {
             return key
               .toLowerCase()
               .includes(
-                elements.search.toLowerCase().replace('_', '').replace('-', '_')
+                elements.search.toLowerCase().replace(/_/g, ' ').replace(/-/g, '_')
               );
           }
         }

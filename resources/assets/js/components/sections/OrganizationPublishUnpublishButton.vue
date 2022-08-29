@@ -12,7 +12,6 @@
     :modal-active="publishValue"
     width="583"
     @close="publishToggle"
-    @reset="resetPublishStep"
   >
     <div class="popup mb-4">
       <div class="title mb-6 flex">
@@ -117,9 +116,6 @@ import Loader from 'Components/sections/ProgressLoader.vue';
 // toggle state for modal popup
 let [publishValue, publishToggle] = useToggle();
 let [unpublishValue, unpublishToggle] = useToggle();
-
-// state for step of the flow
-const publishStep = ref(0);
 
 // display/hide validator loader
 const loader = ref(false);

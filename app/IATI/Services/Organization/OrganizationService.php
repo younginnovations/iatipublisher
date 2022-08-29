@@ -138,4 +138,22 @@ class OrganizationService
 
         return round(($completed_mandatory_element_count / count($mandatory_elements)) * 100, 2);
     }
+
+    /**
+     * Returns array of dropdown elements in organization.
+     *
+     * @return array
+     */
+    public function getOrganizationTypes(): array
+    {
+        return [
+            'budgetType'       => getCodeList('BudgetStatus', 'Activity', false),
+            'languages'        => getCodeList('Language', 'Organization', false),
+            'documentCategory' => getCodeList('DocumentCategory', 'Activity', false),
+            'organizationType' => getCodeList('OrganizationType', 'Organization', false),
+            'country'          => getCodeList('Country', 'Organization', false),
+            'regionVocabulary' => getCodeList('RegionVocabulary', 'Activity'),
+            'region' => getCodeList('Region', 'Activity'),
+        ];
+    }
 }

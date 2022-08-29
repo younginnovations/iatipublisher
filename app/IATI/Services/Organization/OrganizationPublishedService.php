@@ -41,19 +41,6 @@ class OrganizationPublishedService
     }
 
     /**
-     * Updates existing record in activity published table.
-     *
-     * @param $activityPublished
-     * @param $publishedActivities
-     *
-     * @return bool
-     */
-    public function update($activityPublished, $publishedActivities): bool
-    {
-        return $this->organizationPublishedRepository->update($activityPublished, $publishedActivities);
-    }
-
-    /**
      * Returns activity published data.
      *
      * @param $organization_id
@@ -76,5 +63,17 @@ class OrganizationPublishedService
     public function updateOrganizationPublished($publishedFile, $newPublishedFiles): bool
     {
         return $this->organizationPublishedRepository->updateOrganizationPublished($publishedFile, $newPublishedFiles);
+    }
+
+    /**
+     * Updates organization published table.
+     *
+     * @return void
+     */
+    public function updateStatus($organization_id, $status): void
+    {
+        $this->organizationPublishedRepository->update($organization_id, [
+            'published_to_registry' => $status ? 1 : 0,
+        ]);
     }
 }

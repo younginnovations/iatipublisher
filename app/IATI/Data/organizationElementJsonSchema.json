@@ -71,8 +71,8 @@
             "type": "select",
             "multiSelect": false,
             "choices": "Activity/Language.json",
-            "required": false,
-            "criteria": "recommended",
+            "required": true,
+            "criteria": "mandatory",
             "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/title/narrative/' target='_blank'>For more information</a>",
             "help_text": ""
           }
@@ -141,8 +141,8 @@
             "type": "select",
             "multiSelect": false,
             "choices": "Activity/Language.json",
-            "required": false,
-            "criteria": "recommended",
+            "required": true,
+            "criteria": "mandatory",
             "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/document-link/title/narrative/'>For more information</a>",
             "help_text": ""
           }
@@ -317,8 +317,8 @@
                 "type": "select",
                 "multiSelect": false,
                 "choices": "Activity/Language.json",
-                "required": false,
-                "criteria": "recommended",
+                "required": true,
+                "criteria": "mandatory",
                 "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/recipient-region-budget/budget-line/narrative/'>For more information</a>",
                 "help_text": ""
               }
@@ -384,8 +384,8 @@
                 "type": "select",
                 "multiSelect": false,
                 "choices": "Activity/Language.json",
-                "required": false,
-                "criteria": "recommended",
+                "required": true,
+                "criteria": "mandatory",
                 "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/recipient-region-budget/budget-line/narrative/'>For more information</a>",
                 "help_text": ""
               }
@@ -542,8 +542,8 @@
                 "type": "select",
                 "multiSelect": false,
                 "choices": "Activity/Language.json",
-                "required": false,
-                "criteria": "recommended",
+                "required": true,
+                "criteria": "mandatory",
                 "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/recipient-region-budget/budget-line/narrative/'>For more information</a>",
                 "help_text": ""
               }
@@ -736,8 +736,8 @@
             "name": "ref",
             "label": "@ref",
             "type": "text",
-            "required": true,
-            "criteria": "mandatory",
+            "required": false,
+            "criteria": "",
             "hover_text": "An internal reference for this budget line taken from the reporting organisation’s own system. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/recipient-region-budget/budget-line/'>For more information</a>",
             "help_text": ""
           }
@@ -800,8 +800,8 @@
                 "type": "select",
                 "multiSelect": false,
                 "choices": "Activity/Language.json",
-                "required": false,
-                "criteria": "recommended",
+                "required": true,
+                "criteria": "mandatory",
                 "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/recipient-region-budget/budget-line/narrative/'>For more information</a>",
                 "help_text": ""
               }
@@ -871,7 +871,7 @@
                 "multiSelect": false,
                 "choices": "Activity/Language.json",
                 "required": false,
-                "criteria": "recommended",
+                "criteria": "",
                 "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/document-link/title/narrative/'>For more information</a>",
                 "help_text": ""
               }
@@ -1028,8 +1028,8 @@
                 "type": "select",
                 "multiSelect": false,
                 "choices": "Activity/Language.json",
-                "required": false,
-                "criteria": "recommended",
+                "required": true,
+                "criteria": "mandatory",
                 "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/recipient-region-budget/budget-line/narrative/'>For more information</a>",
                 "help_text": ""
               }
@@ -1320,8 +1320,8 @@
             "type": "select",
             "multiSelect": false,
             "choices": "Activity/DocumentCategory.json",
-            "required": false,
-            "criteria": "",
+            "required": true,
+            "criteria": "mandatory",
             "hover_text": "An IATI code defining the category of the document. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/document-link/category/'>For more information</a>",
             "help_text": ""
           }
@@ -1406,8 +1406,8 @@
                 "type": "select",
                 "multiSelect": false,
                 "choices": "Activity/Language.json",
-                "required": false,
-                "criteria": "",
+                "required": true,
+                "criteria": "mandatory",
                 "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/document-link/title/narrative/'>For more information</a>",
                 "help_text": ""
               }

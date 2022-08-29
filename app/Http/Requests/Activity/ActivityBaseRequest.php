@@ -179,7 +179,7 @@ class ActivityBaseRequest extends FormRequest
     public function uniqueDefaultLangValidator($attribute, $value, $parameters, $validator): bool
     {
         $languages = [];
-        $defaultLanguage = Auth::user()->organization->settings->default_values['default_language'];
+        $defaultLanguage = Auth::user()->organization->settings->default_values['default_language'] ?? null;
 
         $validator->addReplacer(
             'unique_default_lang',
@@ -190,13 +190,15 @@ class ActivityBaseRequest extends FormRequest
 
         $check = true;
 
-        foreach ($value as $narrative) {
-            $languages[] = $narrative['language'];
-        }
+        if ($defaultLanguage) {
+            foreach ($value as $narrative) {
+                $languages[] = $narrative['language'];
+            }
 
-        if (count($languages) === count(array_unique($languages))) {
-            if ((in_array('', $languages) || in_array(null, $languages)) && in_array($defaultLanguage, $languages)) {
-                $check = false;
+            if (count($languages) === count(array_unique($languages))) {
+                if ((in_array('', $languages) || in_array(null, $languages)) && in_array($defaultLanguage, $languages)) {
+                    $check = false;
+                }
             }
         }
 

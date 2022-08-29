@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Requests\Organization;
 
 use Illuminate\Foundation\Http\FormRequest;
@@ -303,6 +305,7 @@ class OrganizationBaseRequest extends FormRequest
     public function getRulesForPeriodStart($formFields, $formBase, $diff, $time_period = null): array
     {
         $rules = [];
+
         foreach ($formFields as $periodStartKey => $periodStartVal) {
             $rules[$formBase . '.period_start.' . $periodStartKey . '.date'] = 'nullable|date|period_start_end:' . $diff . ',' . $time_period;
         }

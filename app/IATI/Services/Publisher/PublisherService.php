@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\IATI\Services\Publisher;
 
+use App\IATI\Services\Activity\ActivityPublishedService;
+use App\IATI\Services\Organization\OrganizationPublishedService;
 use App\IATI\Services\Workflow\RegistryApiHandler;
 use App\IATI\Traits\RegistryApiInvoker;
 use GuzzleHttp\Exception\ClientException;
@@ -23,6 +25,18 @@ class PublisherService extends RegistryApiHandler
      */
     protected $activityPublished = null;
     protected $organizationPublished = null;
+
+    /**
+     * PublisherService constructor.
+     *
+     * @param ActivityPublishedService $activityPublishedService
+     * @param OrganizationPublishedService $organizationPublishedService
+     */
+    public function __construct(ActivityPublishedService $activityPublishedService, OrganizationPublishedService $organizationPublishedService)
+    {
+        $this->activityPublishedService = $activityPublishedService;
+        $this->organizationPublishedService = $organizationPublishedService;
+    }
 
     /**
      * Publishes the activity xml file to the IATI registry.
@@ -100,15 +114,14 @@ class PublisherService extends RegistryApiHandler
     protected function publishOrganizationToRegistry($organization, $filename): void
     {
         $data = $this->generateOrganizationPayload($organization, $filename);
-        $packageId = $this->extractPackage($filename);
 
-        if ($this->isPackageAvailable($packageId, $this->apiKey)) {
+        if ($this->isPackageAvailable($this->extractPackage($filename), $this->apiKey)) {
             $this->client->package_update($data);
         } else {
             $this->client->package_create($data);
         }
 
-        $this->updateOrganizationStatus();
+        $this->organizationPublishedService->updateStatus($this->organizationPublished->id, true);
     }
 
     /**
@@ -145,7 +158,7 @@ class PublisherService extends RegistryApiHandler
             $this->client->package_delete($packageId);
         }
 
-        $this->updateOrganizationStatus(false);
+        $this->organizationPublishedService->updateStatus($this->organizationPublished->id, false);
     }
 
     /**
@@ -375,27 +388,5 @@ class PublisherService extends RegistryApiHandler
 
             throw  $exception;
         }
-    }
-
-    /**
-     * Updates activity published table.
-     *
-     * @return void
-     */
-    protected function updateStatus(): void
-    {
-        $this->activityPublished->published_to_registry = 1;
-        $this->activityPublished->save();
-    }
-
-    /**
-     * Updates activity published table.
-     *
-     * @return void
-     */
-    protected function updateOrganizationStatus($published = true): void
-    {
-        $this->organizationPublished->published_to_registry = $published ? 1 : 0;
-        $this->organizationPublished->save();
     }
 }

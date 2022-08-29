@@ -7,25 +7,22 @@
       'mb-4 border-b border-n-20 pb-4': Number(index) != content.length - 1,
     }"
   >
-    <div class="mb-3 elements-detail">
+    <div class="elements-detail mb-4">
+        <div class="category flex">
+          {{
+            types?.budgetType[total_budget.total_budget_status] ??
+            'Budget Status Not Available'
+          }}
+        </div>
+        <div class="flex text-sm">
+          <span v-if="total_budget.value[0].amount">
+            {{ total_budget.value['0'].amount }}
+            {{ total_budget.value['0'].currency }}
+          </span>
+          <span v-else> Budget Amount Not Available</span>
+        </div>
       <table>
         <tbody>
-          <tr>
-            <td>Status</td>
-            <td>
-              {{
-                types?.budgetType[total_budget.total_budget_status] ??
-                'Budget Status Not Available'
-              }}
-            </td>
-          </tr>
-          <tr>
-            <td>Value Amount</td>
-            <td>
-              {{ total_budget.value['0'].amount }}
-              {{ total_budget.value['0'].currency }}
-            </td>
-          </tr>
           <tr>
             <td>Period</td>
             <td>
@@ -52,8 +49,8 @@
         </tbody>
       </table>
     </div>
-    <div class="overflow-hidden border rounded-t-lg indicator border-n-20">
-      <div class="flex items-center px-6 py-2 border-b head border-n-20">
+    <div class="indicator overflow-hidden rounded-t-lg border border-n-20">
+      <div class="head flex items-center border-b border-n-20 px-6 py-2">
         <span class="text-xs font-bold text-n-50">Budget line</span>
       </div>
       <div
@@ -64,9 +61,9 @@
             j !== total_budget.budget_line.length - 1,
         }"
       >
-        <div class="flex px-6 py-2 indicator-content">
+        <div class="indicator-content flex px-6 py-2">
           <div class="elements-detail grow">
-            <div class="flex category">
+            <div class="category flex">
               <span>
                 {{ budget_line.value['0'].amount }}
                 {{ budget_line.value['0'].currency }}

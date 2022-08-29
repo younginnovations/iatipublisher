@@ -45,21 +45,6 @@ class OrganizationPublishedRepository extends Repository
     }
 
     /**
-     * Updates existing record in activity published table.
-     *
-     * @param $organizationPublished
-     * @param $publishedActivities
-     *
-     * @return bool
-     */
-    public function update($organizationPublished, $publishedActivities): bool
-    {
-        $organizationPublished->published_activities = $publishedActivities;
-
-        return $organizationPublished->save();
-    }
-
-    /**
      * Returns activity published data.
      *
      * @param $organization_id

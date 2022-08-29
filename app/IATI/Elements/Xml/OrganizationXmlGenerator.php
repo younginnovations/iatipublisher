@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\IATI\Elements\Xml;
 
 use App\IATI\Services\Organization\DocumentLinkService;
@@ -110,10 +112,6 @@ class OrganizationXmlGenerator
     {
         $publishingInfo = $settings->publishing_info;
 
-        if (is_string($publishingInfo)) {
-            $publishingInfo = json_decode($publishingInfo, true);
-        }
-
         $publisherId = Arr::get($publishingInfo, 'publisher_id', 'Not Available');
         $filename = sprintf('%s-%s.xml', $publisherId, 'organisation');
         $publishedOrganization = sprintf('%s-%s.xml', $publisherId, $organization->id);
@@ -165,15 +163,14 @@ class OrganizationXmlGenerator
             'version' => '2.03',
             'generated-datetime' => gmdate('c'),
         ];
-        $default_values = json_decode($settings->default_values);
-        $activity_default_values = json_decode($settings->activity_default_values);
+        $default_values = $settings->default_values;
+        $activity_default_values = $settings->activity_default_values;
 
         $xmlData['iati-organisation'] = $this->getXmlData($organization);
         $xmlData['iati-organisation']['@attributes'] = [
             'last-updated-datetime' => gmdate('c', time()),
             'xml:lang'              => $default_values->default_language ?? null,
             'default-currency'      => $default_values->default_currency ?? null,
-            // 'humanitarian'          => Arr::get($settings->default_field_values, '0.humanitarian', false),
             'hierarchy'             => $activity_default_values->default_hierarchy ?? 1,
             'linked-data-uri'       => $activity_default_values->linked_data_uri ?? null,
         ];

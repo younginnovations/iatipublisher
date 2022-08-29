@@ -128,9 +128,7 @@ if (!function_exists('getOrganizationElements')) {
      */
     function getOrganizationElements(): array
     {
-        $elementJsonSchema = readOrganizationElementJsonSchema();
-
-        return array_keys($elementJsonSchema);
+        return array_keys(readOrganizationElementJsonSchema());
     }
 }
 

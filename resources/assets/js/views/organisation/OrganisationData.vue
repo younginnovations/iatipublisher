@@ -157,7 +157,6 @@
               </div>
             </Modal>
 
-
             <!-- Unpublish /Publish Activity -->
             <PublishUnpublish />
           </div>
@@ -222,7 +221,7 @@
           :activity-id="organization.id"
           :data="elementProps"
           :status="status"
-          :completed = "co"
+          :completed="co"
         />
       </aside>
       <div class="activities__content overflow-hidden">
@@ -248,11 +247,10 @@
         </div>
         <div class="activities__content--elements -mx-3 flex flex-wrap">
           <template v-for="(post, key, index) in groupedData" :key="index">
-            <div class="pt-3 text-sm">
-              <div :id="key" class="ml-4 uppercase">{{ key }}</div>
-              <div
-                class="elements-title relative mx-3 mt-3 mb-1 flex w-full items-center text-sm uppercase text-n-40"
-              ></div>
+            <div
+              class="elements-title relative mx-3 mt-3 mb-1 flex w-full items-center text-sm uppercase text-n-40"
+            >
+              <div class="mr-4 shrink-0">{{ key }}</div>
             </div>
             <template v-for="(element, name, i) in post.elements" :key="i">
               <OrganisationElementsDetail
@@ -458,7 +456,7 @@ export default defineComponent({
       elementProps,
       toastData,
       toastMessage,
-      publishStatus
+      publishStatus,
     };
   },
 });

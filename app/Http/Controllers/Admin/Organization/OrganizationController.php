@@ -74,7 +74,7 @@ class OrganizationController extends Controller
             $toast['type'] = Session::has('error') ? 'error' : 'success';
             $elements = json_decode(file_get_contents(app_path('IATI/Data/organizationElementJsonSchema.json')), true);
             $elementGroups = json_decode(file_get_contents(app_path('Data/Organization/OrganisationElementsGroup.json')), true);
-            $types = $this->getOrganizationTypes();
+            $types = $this->organizationService->getOrganizationTypes();
             $organization = $this->organizationService->getOrganizationData(Auth::user()->organization_id);
             $progress = $this->organizationService->organizationMandatoryCompletePercentage($organization);
             $mandatoryCompleted = isMandatoryElementCompleted($organization->element_status);
@@ -121,24 +121,6 @@ class OrganizationController extends Controller
     public function destroy($organization): void
     {
         //
-    }
-
-    /**
-     * Returns array of dropdown elements in organization.
-     *
-     * @return array
-     */
-    public function getOrganizationTypes(): array
-    {
-        return [
-            'budgetType'       => getCodeList('BudgetStatus', 'Activity', false),
-            'languages'        => getCodeList('Language', 'Organization', false),
-            'documentCategory' => getCodeList('DocumentCategory', 'Activity', false),
-            'organizationType' => getCodeList('OrganizationType', 'Organization', false),
-            'country'          => getCodeList('Country', 'Organization', false),
-            'regionVocabulary' => getCodeList('RegionVocabulary', 'Activity'),
-            'region' => getCodeList('Region', 'Activity'),
-        ];
     }
 
     /**

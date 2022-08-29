@@ -82,11 +82,6 @@ class OrganizationWorkflowService
         );
         $organizationPublished = $this->organizationPublishedService->getOrganizationPublished($organization->id);
         $publishingInfo = $settings->publishing_info;
-
-        if (is_string($publishingInfo)) {
-            $publishingInfo = json_decode($publishingInfo, true);
-        }
-
         $this->publisherService->publishOrganizationFile($publishingInfo, $organizationPublished, $organization);
         $this->organizationService->updatePublishedStatus($organization, 'published', true);
     }

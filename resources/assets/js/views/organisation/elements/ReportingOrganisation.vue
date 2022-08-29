@@ -7,7 +7,7 @@
       'mb-4 border-b border-n-20 pb-4': Number(index) != content.length - 1,
     }"
   >
-    <div class="elements-detail wider">
+    <div class="elements-detail mb-4">
       <div class="category">
         <span>{{
           reporting_org.type

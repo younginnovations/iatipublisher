@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers\Admin\Workflow;
 
 use App\Exceptions\PublisherNotFound;
@@ -40,13 +42,13 @@ class OrganizationWorkflowController extends Controller
     public function publish(): JsonResponse
     {
         try {
+            DB::beginTransaction();
             $organization = Auth::user()->organization;
 
             if ($this->hasNoPublisherInfo($organization->settings)) {
                 return response()->json(['success' => false, 'message' => 'Please update the publishing information first.']);
             }
 
-            DB::beginTransaction();
             $this->organizationWorkflowService->publishOrganization($organization);
             DB::commit();
 

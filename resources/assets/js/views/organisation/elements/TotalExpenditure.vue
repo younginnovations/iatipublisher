@@ -7,19 +7,16 @@
     }"
   >
     <div class="elements-detail mb-4">
-      <div class="category flex">Expenditure</div>
+      <div class="flex text-sm ml-2">
+        <span v-if="total_expenditure.value[0].amount">
+          {{ total_expenditure.value['0'].amount ?? 'Budget Not Available' }}
+          {{ total_expenditure.value['0'].currency }}
+        </span>
+        <span v-else> Expenditure Amount Not Available</span>
+      </div>
       <div class="ml-4">
         <table>
           <tbody>
-            <tr>
-              <td>Value Amount</td>
-              <td>
-                {{
-                  total_expenditure.value['0'].amount ?? 'Budget Not Available'
-                }}
-                {{ total_expenditure.value['0'].currency }}
-              </td>
-            </tr>
             <tr>
               <td>Period</td>
               <td>
