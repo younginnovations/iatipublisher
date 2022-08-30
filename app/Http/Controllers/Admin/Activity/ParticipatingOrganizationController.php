@@ -42,10 +42,10 @@ class ParticipatingOrganizationController extends Controller
     public function edit(int $id): View|RedirectResponse
     {
         try {
-            $element  = getElementSchema('participating_org');
+            $element = getElementSchema('participating_org');
             $activity = $this->participatingOrganizationService->getActivityData($id);
-            $form     = $this->participatingOrganizationService->formGenerator($id);
-            $data     = ['core' => $element['criteria'] ?? '', 'status' => $activity->participating_org_element_completed ?? false, 'title' => $element['label'], 'name' => 'participating_org'];
+            $form = $this->participatingOrganizationService->formGenerator($id);
+            $data = ['core' => $element['criteria'] ?? '', 'status' => $activity->participating_org_element_completed ?? false, 'title' => $element['label'], 'name' => 'participating_org'];
 
             return view('admin.activity.participatingOrganization.edit', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {

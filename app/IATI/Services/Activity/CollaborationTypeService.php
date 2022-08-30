@@ -52,7 +52,7 @@ class CollaborationTypeService
      *
      * @param $id
      *
-     * @return Object
+     * @return object
      */
     public function getActivityData($id): Object
     {

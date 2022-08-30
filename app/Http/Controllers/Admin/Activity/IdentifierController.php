@@ -41,10 +41,10 @@ class IdentifierController extends Controller
     public function edit(int $id): View|RedirectResponse
     {
         try {
-            $element  = getElementSchema('iati_identifier');
+            $element = getElementSchema('iati_identifier');
             $activity = $this->identifierService->getActivityData($id);
-            $form     = $this->identifierService->formGenerator($id);
-            $data     = ['core' => $element['criteria'] ?? '', 'status' => $activity->identifier_element_completed, 'title' => $element['label'], 'name' => 'iati_identifier'];
+            $form = $this->identifierService->formGenerator($id);
+            $data = ['core' => $element['criteria'] ?? '', 'status' => $activity->identifier_element_completed, 'title' => $element['label'], 'name' => 'iati_identifier'];
 
             return view('admin.activity.identifier.edit', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {

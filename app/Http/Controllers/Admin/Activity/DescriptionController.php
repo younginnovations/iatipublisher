@@ -70,7 +70,7 @@ class DescriptionController extends Controller
     public function update(DescriptionRequest $request, $id): JsonResponse|RedirectResponse
     {
         try {
-            $activityData        = $this->descriptionService->getActivityData($id);
+            $activityData = $this->descriptionService->getActivityData($id);
             $activityDescription = $request->all();
 
             if (!$this->descriptionService->update($activityDescription, $activityData)) {

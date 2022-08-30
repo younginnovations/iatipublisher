@@ -33,7 +33,7 @@ class ScopeService
     public function __construct(ActivityRepository $activityRepository, BaseFormCreator $baseFormCreator)
     {
         $this->activityRepository = $activityRepository;
-        $this->baseFormCreator    = $baseFormCreator;
+        $this->baseFormCreator = $baseFormCreator;
     }
 
     /**
@@ -83,11 +83,11 @@ class ScopeService
      */
     public function formGenerator($id): Form
     {
-        $element                    = getElementSchema('activity_scope');
-        $model['activity_scope']    = $this->getScopeData($id);
+        $element = getElementSchema('activity_scope');
+        $model['activity_scope'] = $this->getScopeData($id);
         $this->baseFormCreator->url = route('admin.activity.scope.update', [$id]);
 
-        return $this->baseFormCreator->editForm($model, $element, 'PUT', '/activity/'.$id);
+        return $this->baseFormCreator->editForm($model, $element, 'PUT', '/activity/' . $id);
     }
 
     /**

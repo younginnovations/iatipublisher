@@ -33,7 +33,7 @@ class DefaultAidTypeService
     public function __construct(ActivityRepository $activityRepository, BaseFormCreator $baseFormCreator)
     {
         $this->activityRepository = $activityRepository;
-        $this->baseFormCreator    = $baseFormCreator;
+        $this->baseFormCreator = $baseFormCreator;
     }
 
     /**
@@ -53,7 +53,7 @@ class DefaultAidTypeService
      *
      * @param $id
      *
-     * @return Object
+     * @return object
      */
     public function getActivityData($id): object
     {
@@ -83,11 +83,11 @@ class DefaultAidTypeService
      */
     public function formGenerator($id): Form
     {
-        $element                    = getElementSchema('default_aid_type');
-        $model['default_aid_type']  = $this->getDefaultAidTypeData($id);
+        $element = getElementSchema('default_aid_type');
+        $model['default_aid_type'] = $this->getDefaultAidTypeData($id);
         $this->baseFormCreator->url = route('admin.activity.default-aid-type.update', [$id]);
 
-        return $this->baseFormCreator->editForm($model, $element, 'PUT', '/activity/'.$id);
+        return $this->baseFormCreator->editForm($model, $element, 'PUT', '/activity/' . $id);
     }
 
     /**
@@ -100,7 +100,7 @@ class DefaultAidTypeService
     public function getXmlData(Activity $activity): array
     {
         $activityData = [];
-        $aidTypeArray = (array)$activity->default_aid_type;
+        $aidTypeArray = (array) $activity->default_aid_type;
 
         if (count($aidTypeArray)) {
             foreach ($aidTypeArray as $aidType) {

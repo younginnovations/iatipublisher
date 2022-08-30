@@ -33,7 +33,7 @@ class RelatedActivityService
     public function __construct(ActivityRepository $activityRepository, BaseFormCreator $baseFormCreator)
     {
         $this->activityRepository = $activityRepository;
-        $this->baseFormCreator    = $baseFormCreator;
+        $this->baseFormCreator = $baseFormCreator;
     }
 
     /**
@@ -83,11 +83,11 @@ class RelatedActivityService
      */
     public function formGenerator($id): Form
     {
-        $element                    = getElementSchema('related_activity');
-        $model['related_activity']  = $this->getRelatedActivityData($id);
+        $element = getElementSchema('related_activity');
+        $model['related_activity'] = $this->getRelatedActivityData($id);
         $this->baseFormCreator->url = route('admin.activity.related-activity.update', [$id]);
 
-        return $this->baseFormCreator->editForm($model, $element, 'PUT', '/activity/'.$id);
+        return $this->baseFormCreator->editForm($model, $element, 'PUT', '/activity/' . $id);
     }
 
     /**
@@ -99,8 +99,8 @@ class RelatedActivityService
      */
     public function getXmlData(Activity $activity): array
     {
-        $activityData      = [];
-        $relatedActivities = (array)$activity->related_activity;
+        $activityData = [];
+        $relatedActivities = (array) $activity->related_activity;
 
         if (count($relatedActivities)) {
             foreach ($relatedActivities as $relatedActivity) {

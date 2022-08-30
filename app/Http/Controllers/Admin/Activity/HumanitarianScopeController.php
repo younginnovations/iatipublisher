@@ -41,10 +41,10 @@ class HumanitarianScopeController extends Controller
     public function edit(int $id): View|RedirectResponse
     {
         try {
-            $element  = getElementSchema('humanitarian_scope');
+            $element = getElementSchema('humanitarian_scope');
             $activity = $this->humanitarianScopeService->getActivityData($id);
-            $form     = $this->humanitarianScopeService->formGenerator($id);
-            $data     = [
+            $form = $this->humanitarianScopeService->formGenerator($id);
+            $data = [
                 'core'   => $element['criteria'] ?? '',
                 'status' => $activity->humanitarian_scope_element_completed,
                 'title'  => $element['label'],

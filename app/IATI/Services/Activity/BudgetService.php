@@ -7,7 +7,6 @@ namespace App\IATI\Services\Activity;
 use App\IATI\Elements\Builder\ParentCollectionFormCreator;
 use App\IATI\Models\Activity\Activity;
 use App\IATI\Repositories\Activity\ActivityRepository;
-use App\IATI\Repositories\Activity\BudgetRepository;
 use Illuminate\Support\Arr;
 use Kris\LaravelFormBuilder\Form;
 
@@ -34,7 +33,7 @@ class BudgetService
      */
     public function __construct(ActivityRepository $activityRepository, ParentCollectionFormCreator $parentCollectionFormCreator)
     {
-        $this->activityRepository          = $activityRepository;
+        $this->activityRepository = $activityRepository;
         $this->parentCollectionFormCreator = $parentCollectionFormCreator;
     }
 
@@ -61,11 +60,11 @@ class BudgetService
      */
     public function formGenerator($id): Form
     {
-        $element                                = getElementSchema('budget');
-        $model['budget']                        = $this->activityRepository->find($id)->budget;
+        $element = getElementSchema('budget');
+        $model['budget'] = $this->activityRepository->find($id)->budget;
         $this->parentCollectionFormCreator->url = route('admin.activity.budget.update', [$id]);
 
-        return $this->parentCollectionFormCreator->editForm($model, $element, 'PUT', '/activity/'.$id);
+        return $this->parentCollectionFormCreator->editForm($model, $element, 'PUT', '/activity/' . $id);
     }
 
     /**
@@ -78,7 +77,7 @@ class BudgetService
     public function getXmlData(Activity $activity): array
     {
         $activityData = [];
-        $budgets      = (array)$activity->budget;
+        $budgets = (array) $activity->budget;
 
         if (count($budgets)) {
             foreach ($budgets as $budget) {

@@ -36,7 +36,7 @@ class SectorService
      */
     public function __construct(ActivityRepository $activityRepository, ParentCollectionFormCreator $parentCollectionFormCreator)
     {
-        $this->activityRepository          = $activityRepository;
+        $this->activityRepository = $activityRepository;
         $this->parentCollectionFormCreator = $parentCollectionFormCreator;
     }
 
@@ -87,11 +87,11 @@ class SectorService
      */
     public function formGenerator($id): Form
     {
-        $element                                = getElementSchema('sector');
-        $model['sector']                        = $this->getSectorData($id);
+        $element = getElementSchema('sector');
+        $model['sector'] = $this->getSectorData($id);
         $this->parentCollectionFormCreator->url = route('admin.activity.sector.update', [$id]);
 
-        return $this->parentCollectionFormCreator->editForm($model, $element, 'PUT', '/activity/'.$id);
+        return $this->parentCollectionFormCreator->editForm($model, $element, 'PUT', '/activity/' . $id);
     }
 
     /**
@@ -104,7 +104,7 @@ class SectorService
     public function getXmlData(Activity $activity)
     {
         $activityData = [];
-        $sectors      = (array)$activity->sector;
+        $sectors = (array) $activity->sector;
 
         if (count($sectors)) {
             foreach ($sectors as $sector) {

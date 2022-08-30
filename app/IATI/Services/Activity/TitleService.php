@@ -35,7 +35,7 @@ class TitleService
     public function __construct(ActivityRepository $activityRepository, BaseFormCreator $baseFormCreator)
     {
         $this->activityRepository = $activityRepository;
-        $this->baseFormCreator    = $baseFormCreator;
+        $this->baseFormCreator = $baseFormCreator;
     }
 
     /**
@@ -85,11 +85,11 @@ class TitleService
      */
     public function formGenerator($id): Form
     {
-        $element                    = getElementSchema('title');
-        $model['narrative']         = $this->getTitleData($id);
+        $element = getElementSchema('title');
+        $model['narrative'] = $this->getTitleData($id);
         $this->baseFormCreator->url = route('admin.activity.title.update', [$id]);
 
-        return $this->baseFormCreator->editForm($model, $element, 'PUT', '/activity/'.$id);
+        return $this->baseFormCreator->editForm($model, $element, 'PUT', '/activity/' . $id);
     }
 
     /**
@@ -101,7 +101,7 @@ class TitleService
      */
     public function getXmlData(Activity $activity): array
     {
-        $titles       = (array)$activity->title;
+        $titles = (array) $activity->title;
         $activityData = [];
 
         if (count($titles)) {

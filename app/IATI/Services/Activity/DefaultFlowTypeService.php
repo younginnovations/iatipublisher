@@ -33,7 +33,7 @@ class DefaultFlowTypeService
     public function __construct(ActivityRepository $activityRepository, BaseFormCreator $baseFormCreator)
     {
         $this->activityRepository = $activityRepository;
-        $this->baseFormCreator    = $baseFormCreator;
+        $this->baseFormCreator = $baseFormCreator;
     }
 
     /**
@@ -53,7 +53,7 @@ class DefaultFlowTypeService
      *
      * @param $id
      *
-     * @return Object
+     * @return object
      */
     public function getActivityData($id): object
     {
@@ -83,11 +83,11 @@ class DefaultFlowTypeService
      */
     public function formGenerator($id): Form
     {
-        $element                    = getElementSchema('default_flow_type');
+        $element = getElementSchema('default_flow_type');
         $model['default_flow_type'] = $this->getDefaultFlowTypeData($id);
         $this->baseFormCreator->url = route('admin.activity.default-flow-type.update', [$id]);
 
-        return $this->baseFormCreator->editForm($model, $element, 'PUT', '/activity/'.$id);
+        return $this->baseFormCreator->editForm($model, $element, 'PUT', '/activity/' . $id);
     }
 
     /**

@@ -35,7 +35,7 @@ class HumanitarianScopeService
      */
     public function __construct(ActivityRepository $activityRepository, ParentCollectionFormCreator $parentCollectionFormCreator)
     {
-        $this->activityRepository          = $activityRepository;
+        $this->activityRepository = $activityRepository;
         $this->parentCollectionFormCreator = $parentCollectionFormCreator;
     }
 
@@ -86,11 +86,11 @@ class HumanitarianScopeService
      */
     public function formGenerator($id): Form
     {
-        $element                                = getElementSchema('humanitarian_scope');
-        $model['humanitarian_scope']            = $this->getHumanitarianScopeData($id);
+        $element = getElementSchema('humanitarian_scope');
+        $model['humanitarian_scope'] = $this->getHumanitarianScopeData($id);
         $this->parentCollectionFormCreator->url = route('admin.activity.humanitarian-scope.update', [$id]);
 
-        return $this->parentCollectionFormCreator->editForm($model, $element, 'PUT', '/activity/'.$id);
+        return $this->parentCollectionFormCreator->editForm($model, $element, 'PUT', '/activity/' . $id);
     }
 
     /**
@@ -103,7 +103,7 @@ class HumanitarianScopeService
     public function getXmlData(Activity $activity): array
     {
         $activityHumanitarianScope = [];
-        $humanitarianScopes        = (array)$activity->humanitarian_scope;
+        $humanitarianScopes = (array) $activity->humanitarian_scope;
 
         foreach ($humanitarianScopes as $humanitarianScope) {
             $activityHumanitarianScope[] = [
@@ -113,7 +113,7 @@ class HumanitarianScopeService
                     'vocabulary-uri' => Arr::get($humanitarianScope, 'vocabulary_uri', null),
                     'code'           => Arr::get($humanitarianScope, 'code', null),
                 ],
-                'narrative'   => $this->buildNarrative(Arr::get($humanitarianScope, 'narrative', null),),
+                'narrative'   => $this->buildNarrative(Arr::get($humanitarianScope, 'narrative', null), ),
             ];
         }
 

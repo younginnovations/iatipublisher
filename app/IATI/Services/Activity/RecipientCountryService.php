@@ -35,7 +35,7 @@ class RecipientCountryService
      */
     public function __construct(ActivityRepository $activityRepository, ParentCollectionFormCreator $parentCollectionFormCreator)
     {
-        $this->activityRepository          = $activityRepository;
+        $this->activityRepository = $activityRepository;
         $this->parentCollectionFormCreator = $parentCollectionFormCreator;
     }
 
@@ -86,11 +86,11 @@ class RecipientCountryService
      */
     public function formGenerator($id): Form
     {
-        $element                                = getElementSchema('recipient_country');
-        $model['recipient_country']             = $this->getRecipientCountryData($id);
+        $element = getElementSchema('recipient_country');
+        $model['recipient_country'] = $this->getRecipientCountryData($id);
         $this->parentCollectionFormCreator->url = route('admin.activity.recipient-country.update', [$id]);
 
-        return $this->parentCollectionFormCreator->editForm($model, $element, 'PUT', '/activity/'.$id);
+        return $this->parentCollectionFormCreator->editForm($model, $element, 'PUT', '/activity/' . $id);
     }
 
     /**
@@ -102,8 +102,8 @@ class RecipientCountryService
      */
     public function getXmlData(Activity $activity): array
     {
-        $activityData       = [];
-        $recipientCountries = (array)$activity->recipient_country;
+        $activityData = [];
+        $recipientCountries = (array) $activity->recipient_country;
 
         if (count($recipientCountries)) {
             foreach ($recipientCountries as $recipientCountry) {

@@ -36,7 +36,7 @@ class OtherIdentifierService
      */
     public function __construct(ActivityRepository $activityRepository, MultilevelSubElementFormCreator $multilevelSubElementFormCreator)
     {
-        $this->activityRepository              = $activityRepository;
+        $this->activityRepository = $activityRepository;
         $this->multilevelSubElementFormCreator = $multilevelSubElementFormCreator;
     }
 
@@ -87,11 +87,11 @@ class OtherIdentifierService
      */
     public function formGenerator($id): Form
     {
-        $element                                = getElementSchema('other_identifier');
-        $model                                  = $this->getOtherIdentifierData($id) ?: [];
+        $element = getElementSchema('other_identifier');
+        $model = $this->getOtherIdentifierData($id) ?: [];
         $this->parentCollectionFormCreator->url = route('admin.activity.other-identifier.update', [$id]);
 
-        return $this->parentCollectionFormCreator->editForm($model, $element, 'PUT', '/activity/'.$id);
+        return $this->parentCollectionFormCreator->editForm($model, $element, 'PUT', '/activity/' . $id);
     }
 
     /**
@@ -103,8 +103,8 @@ class OtherIdentifierService
      */
     public function getXmlData(Activity $activity): array
     {
-        $activityData     = [];
-        $otherIdentifiers = (array)$activity->other_identifier;
+        $activityData = [];
+        $otherIdentifiers = (array) $activity->other_identifier;
 
         if (count($otherIdentifiers)) {
             foreach ($otherIdentifiers as $otherIdentifier) {

@@ -34,7 +34,7 @@ class ContactInfoService
      */
     public function __construct(ActivityRepository $activityRepository, ParentCollectionFormCreator $parentCollectionFormCreator)
     {
-        $this->activityRepository          = $activityRepository;
+        $this->activityRepository = $activityRepository;
         $this->parentCollectionFormCreator = $parentCollectionFormCreator;
     }
 
@@ -55,7 +55,7 @@ class ContactInfoService
      *
      * @param $id
      *
-     * @return Object
+     * @return object
      */
     public function getActivityData($id): object
     {
@@ -94,11 +94,11 @@ class ContactInfoService
      */
     public function formGenerator($id): Form
     {
-        $element                                = getElementSchema('contact_info');
-        $model['contact_info']                  = $this->getContactInfoData($id) ?: [];
+        $element = getElementSchema('contact_info');
+        $model['contact_info'] = $this->getContactInfoData($id) ?: [];
         $this->parentCollectionFormCreator->url = route('admin.activity.contact-info.update', [$id]);
 
-        return $this->parentCollectionFormCreator->editForm($model, $element, 'PUT', '/activity/'.$id);
+        return $this->parentCollectionFormCreator->editForm($model, $element, 'PUT', '/activity/' . $id);
     }
 
     /**
@@ -111,7 +111,7 @@ class ContactInfoService
     public function getXmlData(Activity $activity): array
     {
         $activityData = [];
-        $contacts     = (array)$activity->contact_info;
+        $contacts = (array) $activity->contact_info;
 
         if (count($contacts)) {
             foreach ($contacts as $contact) {

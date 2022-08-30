@@ -55,10 +55,10 @@ class RedirectActivity
         PeriodService $periodService,
         TransactionService $transactionService
     ) {
-        $this->activityService    = $activityService;
-        $this->resultService      = $resultService;
-        $this->indicatorService   = $indicatorService;
-        $this->periodService      = $periodService;
+        $this->activityService = $activityService;
+        $this->resultService = $resultService;
+        $this->indicatorService = $indicatorService;
+        $this->periodService = $periodService;
         $this->transactionService = $transactionService;
     }
 
@@ -83,8 +83,7 @@ class RedirectActivity
             return $next($request);
         }
 
-
-        $id = (int)$request->route('id');
+        $id = (int) $request->route('id');
 
         if (strlen($id) === strlen($request->route('id'))) {
             $activity = [];
@@ -113,7 +112,6 @@ class RedirectActivity
                         return redirect(RouteServiceProvider::HOME)->with('error', 'Transaction does not exist');
                     }
                 }
-
             } elseif ($module === 'result') {
                 $result = $this->resultService->getResult($id);
 

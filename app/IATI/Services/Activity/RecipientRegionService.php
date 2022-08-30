@@ -35,7 +35,7 @@ class RecipientRegionService
      */
     public function __construct(ActivityRepository $activityRepository, ParentCollectionFormCreator $parentCollectionFormCreator)
     {
-        $this->activityRepository          = $activityRepository;
+        $this->activityRepository = $activityRepository;
         $this->parentCollectionFormCreator = $parentCollectionFormCreator;
     }
 
@@ -86,11 +86,11 @@ class RecipientRegionService
      */
     public function formGenerator($id): Form
     {
-        $element                                = getElementSchema('recipient_region');
-        $model['recipient_region']              = $this->getRecipientRegionData($id);
+        $element = getElementSchema('recipient_region');
+        $model['recipient_region'] = $this->getRecipientRegionData($id);
         $this->parentCollectionFormCreator->url = route('admin.activity.recipient-region.update', [$id]);
 
-        return $this->parentCollectionFormCreator->editForm($model, $element, 'PUT', '/activity/'.$id);
+        return $this->parentCollectionFormCreator->editForm($model, $element, 'PUT', '/activity/' . $id);
     }
 
     /**
@@ -102,8 +102,8 @@ class RecipientRegionService
      */
     public function getXmlData(Activity $activity): array
     {
-        $activityData     = [];
-        $recipientRegions = (array)$activity->recipient_region;
+        $activityData = [];
+        $recipientRegions = (array) $activity->recipient_region;
 
         if (count($recipientRegions)) {
             foreach ($recipientRegions as $recipientRegion) {

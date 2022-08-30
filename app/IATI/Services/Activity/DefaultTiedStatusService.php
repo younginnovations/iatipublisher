@@ -33,7 +33,7 @@ class DefaultTiedStatusService
     public function __construct(ActivityRepository $activityRepository, BaseFormCreator $baseFormCreator)
     {
         $this->activityRepository = $activityRepository;
-        $this->baseFormCreator    = $baseFormCreator;
+        $this->baseFormCreator = $baseFormCreator;
     }
 
     /**
@@ -53,7 +53,7 @@ class DefaultTiedStatusService
      *
      * @param $id
      *
-     * @return Object
+     * @return object
      */
     public function getActivityData($id): object
     {
@@ -83,11 +83,11 @@ class DefaultTiedStatusService
      */
     public function formGenerator($id): Form
     {
-        $element                      = getElementSchema('default_tied_status');
+        $element = getElementSchema('default_tied_status');
         $model['default_tied_status'] = $this->getDefaultTiedStatusData($id);
-        $this->baseFormCreator->url   = route('admin.activity.default-tied-status.update', [$id]);
+        $this->baseFormCreator->url = route('admin.activity.default-tied-status.update', [$id]);
 
-        return $this->baseFormCreator->editForm($model, $element, 'PUT', '/activity/'.$id);
+        return $this->baseFormCreator->editForm($model, $element, 'PUT', '/activity/' . $id);
     }
 
     /**

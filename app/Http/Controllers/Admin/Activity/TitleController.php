@@ -43,10 +43,10 @@ class TitleController extends Controller
     public function edit(int $id): Factory|View|RedirectResponse|Application
     {
         try {
-            $element  = getElementSchema('title');
+            $element = getElementSchema('title');
             $activity = $this->titleService->getActivityData($id);
-            $form     = $this->titleService->formGenerator($id);
-            $data     = [
+            $form = $this->titleService->formGenerator($id);
+            $data = [
                 'core'   => $element['criteria'] ?? '',
                 'status' => $activity->title_element_completed,
                 'title'  => $element['label'],

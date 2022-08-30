@@ -32,7 +32,7 @@ class ActivityIdentifierService
     public function __construct(activityRepository $activityRepository, BaseFormCreator $baseFormCreator)
     {
         $this->activityRepository = $activityRepository;
-        $this->baseFormCreator    = $baseFormCreator;
+        $this->baseFormCreator = $baseFormCreator;
     }
 
     /**
@@ -52,7 +52,7 @@ class ActivityIdentifierService
      *
      * @param $id
      *
-     * @return Object
+     * @return object
      */
     public function getActivityData($id): object
     {
@@ -82,10 +82,10 @@ class ActivityIdentifierService
      */
     public function formGenerator($id): Form
     {
-        $element                      = getElementSchema('activity_identifier');
+        $element = getElementSchema('activity_identifier');
         $model['activity_identifier'] = $this->getActivityIdentifierData($id);
-        $this->baseFormCreator->url   = route('admin.activity.identifier.update', [$id]);
+        $this->baseFormCreator->url = route('admin.activity.identifier.update', [$id]);
 
-        return $this->baseFormCreator->editForm($model['activity_identifier'], $element, 'PUT', '/activities/'.$id);
+        return $this->baseFormCreator->editForm($model['activity_identifier'], $element, 'PUT', '/activities/' . $id);
     }
 }

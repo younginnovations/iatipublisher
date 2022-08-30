@@ -35,7 +35,7 @@ class CountryBudgetItemService
      */
     public function __construct(ActivityRepository $activityRepository, MultilevelSubElementFormCreator $multilevelSubElementFormCreator)
     {
-        $this->activityRepository              = $activityRepository;
+        $this->activityRepository = $activityRepository;
         $this->multilevelSubElementFormCreator = $multilevelSubElementFormCreator;
     }
 
@@ -56,7 +56,7 @@ class CountryBudgetItemService
      *
      * @param $id
      *
-     * @return Object
+     * @return object
      */
     public function getActivityData($id): object
     {
@@ -92,11 +92,11 @@ class CountryBudgetItemService
      */
     public function formGenerator($id): Form
     {
-        $element                                    = getElementSchema('country_budget_items');
-        $model                                      = $this->getCountryBudgetItemData($id) ?: [];
+        $element = getElementSchema('country_budget_items');
+        $model = $this->getCountryBudgetItemData($id) ?: [];
         $this->multilevelSubElementFormCreator->url = route('admin.activity.country-budget-items.update', [$id]);
 
-        return $this->multilevelSubElementFormCreator->editForm($model, $element, 'PUT', '/activity/'.$id);
+        return $this->multilevelSubElementFormCreator->editForm($model, $element, 'PUT', '/activity/' . $id);
     }
 
     /**
@@ -108,8 +108,8 @@ class CountryBudgetItemService
      */
     public function getXmlData(Activity $activity): array
     {
-        $activityData      = [];
-        $countryBudgetItem = (array)$activity->country_budget_items;
+        $activityData = [];
+        $countryBudgetItem = (array) $activity->country_budget_items;
 
         if (count($countryBudgetItem)) {
             $activityData[] = [

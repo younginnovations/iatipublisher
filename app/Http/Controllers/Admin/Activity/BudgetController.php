@@ -35,7 +35,7 @@ class BudgetController extends Controller
      */
     public function __construct(BudgetService $budgetService, ActivityService $activityService)
     {
-        $this->budgetService   = $budgetService;
+        $this->budgetService = $budgetService;
         $this->activityService = $activityService;
     }
 
@@ -49,10 +49,10 @@ class BudgetController extends Controller
     public function edit(int $id): View|RedirectResponse
     {
         try {
-            $element  = getElementSchema('budget');
+            $element = getElementSchema('budget');
             $activity = $this->activityService->getActivity($id);
-            $form     = $this->budgetService->formGenerator($id);
-            $data     = [
+            $form = $this->budgetService->formGenerator($id);
+            $data = [
                 'core'   => $element['criteria'] ?? false,
                 'status' => $activity->budget_element_completed ?? false,
                 'title'  => $element['label'],

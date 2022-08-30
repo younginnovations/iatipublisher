@@ -36,7 +36,7 @@ class TagService
      */
     public function __construct(ActivityRepository $activityRepository, ParentCollectionFormCreator $parentCollectionFormCreator)
     {
-        $this->activityRepository          = $activityRepository;
+        $this->activityRepository = $activityRepository;
         $this->parentCollectionFormCreator = $parentCollectionFormCreator;
     }
 
@@ -87,11 +87,11 @@ class TagService
      */
     public function formGenerator($id): Form
     {
-        $element                                = getElementSchema('tag');
-        $model['tag']                           = $this->getTagData($id);
+        $element = getElementSchema('tag');
+        $model['tag'] = $this->getTagData($id);
         $this->parentCollectionFormCreator->url = route('admin.activity.tag.update', [$id]);
 
-        return $this->parentCollectionFormCreator->editForm($model, $element, 'PUT', '/activity/'.$id);
+        return $this->parentCollectionFormCreator->editForm($model, $element, 'PUT', '/activity/' . $id);
     }
 
     /**
@@ -104,7 +104,7 @@ class TagService
     public function getXmlData(Activity $activity): array
     {
         $activityData = [];
-        $tags         = (array)$activity->tag;
+        $tags = (array) $activity->tag;
 
         if (count($tags)) {
             foreach ($tags as $tag) {

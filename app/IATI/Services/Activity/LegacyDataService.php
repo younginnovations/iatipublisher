@@ -33,7 +33,7 @@ class LegacyDataService
     public function __construct(ActivityRepository $activityRepository, BaseFormCreator $baseFormCreator)
     {
         $this->activityRepository = $activityRepository;
-        $this->baseFormCreator    = $baseFormCreator;
+        $this->baseFormCreator = $baseFormCreator;
     }
 
     /**
@@ -83,11 +83,11 @@ class LegacyDataService
      */
     public function formGenerator($id): Form
     {
-        $element                    = getElementSchema('legacy_data');
-        $model['legacy_data']       = $this->getActivityLegacyData($id);
+        $element = getElementSchema('legacy_data');
+        $model['legacy_data'] = $this->getActivityLegacyData($id);
         $this->baseFormCreator->url = route('admin.activity.legacy-data.update', [$id]);
 
-        return $this->baseFormCreator->editForm($model, $element, 'PUT', '/activity/'.$id);
+        return $this->baseFormCreator->editForm($model, $element, 'PUT', '/activity/' . $id);
     }
 
     /**
@@ -100,7 +100,7 @@ class LegacyDataService
     public function getXmlData(Activity $activity): array
     {
         $activityData = [];
-        $legacyData   = (array)$activity->legacy_data;
+        $legacyData = (array) $activity->legacy_data;
 
         if (count($legacyData)) {
             foreach ($legacyData as $legacyDatum) {

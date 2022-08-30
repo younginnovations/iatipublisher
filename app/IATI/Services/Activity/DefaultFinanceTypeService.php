@@ -33,7 +33,7 @@ class DefaultFinanceTypeService
     public function __construct(ActivityRepository $activityRepository, BaseFormCreator $baseFormCreator)
     {
         $this->activityRepository = $activityRepository;
-        $this->baseFormCreator    = $baseFormCreator;
+        $this->baseFormCreator = $baseFormCreator;
     }
 
     /**
@@ -53,7 +53,7 @@ class DefaultFinanceTypeService
      *
      * @param $id
      *
-     * @return Object
+     * @return object
      */
     public function getActivityData($id): object
     {
@@ -83,11 +83,11 @@ class DefaultFinanceTypeService
      */
     public function formGenerator($id): Form
     {
-        $element                       = getElementSchema('default_finance_type');
+        $element = getElementSchema('default_finance_type');
         $model['default_finance_type'] = $this->getDefaultFinanceTypeData($id);
-        $this->baseFormCreator->url    = route('admin.activity.default-finance-type.update', [$id]);
+        $this->baseFormCreator->url = route('admin.activity.default-finance-type.update', [$id]);
 
-        return $this->baseFormCreator->editForm($model, $element, 'PUT', '/activity/'.$id);
+        return $this->baseFormCreator->editForm($model, $element, 'PUT', '/activity/' . $id);
     }
 
     /**

@@ -42,7 +42,7 @@ export default defineComponent({
     TableLayout,
     Loader,
   },
-  setup() {
+  setup(props) {
     interface ActivitiesInterface {
       last_page: number;
     }

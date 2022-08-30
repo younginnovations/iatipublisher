@@ -35,7 +35,7 @@ class DateService
      */
     public function __construct(ActivityRepository $activityRepository, ParentCollectionFormCreator $parentCollectionFormCreator)
     {
-        $this->activityRepository          = $activityRepository;
+        $this->activityRepository = $activityRepository;
         $this->parentCollectionFormCreator = $parentCollectionFormCreator;
     }
 
@@ -56,7 +56,7 @@ class DateService
      *
      * @param $id
      *
-     * @return Object
+     * @return object
      */
     public function getActivityData($id): object
     {
@@ -90,11 +90,11 @@ class DateService
      */
     public function formGenerator($id): Form
     {
-        $element                                = getElementSchema('activity_date');
-        $model['activity_date']                 = $this->getDateData($id);
+        $element = getElementSchema('activity_date');
+        $model['activity_date'] = $this->getDateData($id);
         $this->parentCollectionFormCreator->url = route('admin.activity.date.update', [$id]);
 
-        return $this->parentCollectionFormCreator->editForm($model, $element, 'PUT', '/activity/'.$id);
+        return $this->parentCollectionFormCreator->editForm($model, $element, 'PUT', '/activity/' . $id);
     }
 
     /**
@@ -107,7 +107,7 @@ class DateService
     public function getXmlData(Activity $activity): array
     {
         $activityData = [];
-        $activityDate = (array)$activity->activity_date;
+        $activityDate = (array) $activity->activity_date;
 
         if (count($activityDate)) {
             foreach ($activityDate as $ActivityDate) {

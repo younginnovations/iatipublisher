@@ -35,7 +35,7 @@ class PeriodService
      */
     public function __construct(PeriodRepository $periodRepository, ResultElementFormCreator $resultElementFormCreator)
     {
-        $this->periodRepository         = $periodRepository;
+        $this->periodRepository = $periodRepository;
         $this->resultElementFormCreator = $resultElementFormCreator;
     }
 
@@ -137,7 +137,7 @@ class PeriodService
      */
     public function createFormGenerator($indicatorId): Form
     {
-        $element                             = getElementSchema('period');
+        $element = getElementSchema('period');
         $this->resultElementFormCreator->url = route('admin.indicator.period.store', $indicatorId);
 
         return $this->resultElementFormCreator->editForm([], $element, 'POST', route('admin.indicator.period.index', $indicatorId));
@@ -154,8 +154,8 @@ class PeriodService
      */
     public function editFormGenerator($indicatorId, $periodId): Form
     {
-        $element                             = getElementSchema('period');
-        $indicatorPeriod                     = $this->getPeriod($periodId);
+        $element = getElementSchema('period');
+        $indicatorPeriod = $this->getPeriod($periodId);
         $this->resultElementFormCreator->url = route('admin.indicator.period.update', [$indicatorId, $periodId]);
 
         return $this->resultElementFormCreator->editForm($indicatorPeriod->period, $element, 'PUT', route('admin.indicator.period.index', $indicatorId));

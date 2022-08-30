@@ -41,10 +41,10 @@ class DefaultFlowTypeController extends Controller
     public function edit(int $id): View|RedirectResponse
     {
         try {
-            $element  = getElementSchema('default_flow_type');
+            $element = getElementSchema('default_flow_type');
             $activity = $this->defaultFlowTypeService->getActivityData($id);
-            $form     = $this->defaultFlowTypeService->formGenerator($id);
-            $data     = [
+            $form = $this->defaultFlowTypeService->formGenerator($id);
+            $data = [
                 'core'   => $element['criteria'] ?? '',
                 'status' => $activity->default_flow_type_element_completed,
                 'title'  => $element['label'],
@@ -70,7 +70,7 @@ class DefaultFlowTypeController extends Controller
     public function update(DefaultFlowTypeRequest $request, $id): JsonResponse|RedirectResponse
     {
         try {
-            $activityDefaultFlowType = $request->get('default_flow_type') !== null ? (int)$request->get('default_flow_type') : null;
+            $activityDefaultFlowType = $request->get('default_flow_type') !== null ? (int) $request->get('default_flow_type') : null;
 
             if (!$this->defaultFlowTypeService->update($id, $activityDefaultFlowType)) {
                 return redirect()->route('admin.activity.show', $id)->with('error', 'Error has occurred while updating default-flow-type.');

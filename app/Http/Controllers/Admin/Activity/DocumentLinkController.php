@@ -47,8 +47,8 @@ class DocumentLinkController extends Controller
         DatabaseManager $db
     ) {
         $this->documentLinkService = $documentLinkService;
-        $this->documentService     = $documentService;
-        $this->db                  = $db;
+        $this->documentService = $documentService;
+        $this->db = $db;
     }
 
     /**
@@ -61,10 +61,10 @@ class DocumentLinkController extends Controller
     public function edit(int $id): View|RedirectResponse
     {
         try {
-            $element  = getElementSchema('document_link');
+            $element = getElementSchema('document_link');
             $activity = $this->documentLinkService->getActivityData($id);
-            $form     = $this->documentLinkService->formGenerator($id);
-            $data     = [
+            $form = $this->documentLinkService->formGenerator($id);
+            $data = [
                 'core'   => $element['criteria'] ?? '',
                 'status' => $activity->document_link_element_completed ?? false,
                 'title'  => $element['label'],

@@ -21,7 +21,6 @@ class DocumentLinkService
      */
     protected ActivityRepository $activityRepository;
 
-
     /**
      * @var ParentCollectionFormCreator
      */
@@ -35,7 +34,7 @@ class DocumentLinkService
      */
     public function __construct(ActivityRepository $activityRepository, ParentCollectionFormCreator $parentCollectionFormCreator)
     {
-        $this->activityRepository          = $activityRepository;
+        $this->activityRepository = $activityRepository;
         $this->parentCollectionFormCreator = $parentCollectionFormCreator;
     }
 
@@ -87,10 +86,10 @@ class DocumentLinkService
      */
     public function formGenerator($id): Form
     {
-        $element                = getElementSchema('document_link');
-        $activity               = $this->getActivityData($id);
+        $element = getElementSchema('document_link');
+        $activity = $this->getActivityData($id);
         $model['document_link'] = $this->getDocumentLinkData($id) ?: [];
-        $documentLinks          = $activity->documentLinks()->orderBy('updated_at', 'desc')->get()->toArray();
+        $documentLinks = $activity->documentLinks()->orderBy('updated_at', 'desc')->get()->toArray();
 
         foreach ($model['document_link'] as $key => $document) {
             foreach ($documentLinks as $findIndex => $file) {
@@ -106,7 +105,7 @@ class DocumentLinkService
 
         $this->parentCollectionFormCreator->url = route('admin.activity.document-link.update', [$id]);
 
-        return $this->parentCollectionFormCreator->editForm($model, $element, 'PUT', '/activity/'.$id);
+        return $this->parentCollectionFormCreator->editForm($model, $element, 'PUT', '/activity/' . $id);
     }
 
     /**
@@ -118,8 +117,8 @@ class DocumentLinkService
      */
     public function getXmlData(Activity $activity): array
     {
-        $activityData  = [];
-        $documentLinks = (array)$activity->document_link;
+        $activityData = [];
+        $documentLinks = (array) $activity->document_link;
 
         if (count($documentLinks)) {
             foreach ($documentLinks as $documentLink) {

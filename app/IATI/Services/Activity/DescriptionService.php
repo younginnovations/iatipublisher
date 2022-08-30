@@ -6,7 +6,6 @@ namespace App\IATI\Services\Activity;
 
 use App\IATI\Elements\Builder\ParentCollectionFormCreator;
 use App\IATI\Repositories\Activity\ActivityRepository;
-use App\IATI\Repositories\Activity\DescriptionRepository;
 use App\IATI\Traits\XmlBaseElement;
 use Kris\LaravelFormBuilder\Form;
 
@@ -35,7 +34,7 @@ class DescriptionService
      */
     public function __construct(ActivityRepository $activityRepository, ParentCollectionFormCreator $parentCollectionFormCreator)
     {
-        $this->activityRepository          = $activityRepository;
+        $this->activityRepository = $activityRepository;
         $this->parentCollectionFormCreator = $parentCollectionFormCreator;
     }
 
@@ -86,11 +85,11 @@ class DescriptionService
      */
     public function formGenerator($id): Form
     {
-        $element                                = getElementSchema('description');
-        $model['description']                   = $this->getDescriptionData($id);
+        $element = getElementSchema('description');
+        $model['description'] = $this->getDescriptionData($id);
         $this->parentCollectionFormCreator->url = route('admin.activity.description.update', [$id]);
 
-        return $this->parentCollectionFormCreator->editForm($model, $element['description'], 'PUT', '/activity/'.$id);
+        return $this->parentCollectionFormCreator->editForm($model, $element['description'], 'PUT', '/activity/' . $id);
     }
 
     /**
@@ -119,7 +118,7 @@ class DescriptionService
     public function getXmlData(Activity $activity): array
     {
         $activityData = [];
-        $descriptions = (array)$activity->description;
+        $descriptions = (array) $activity->description;
 
         if (count($descriptions)) {
             foreach ($descriptions as $description) {

@@ -41,10 +41,10 @@ class SectorController extends Controller
     public function edit(int $id): View|RedirectResponse
     {
         try {
-            $element  = getElementSchema('sector');
+            $element = getElementSchema('sector');
             $activity = $this->sectorService->getActivityData($id);
-            $form     = $this->sectorService->formGenerator($id);
-            $data     = [
+            $form = $this->sectorService->formGenerator($id);
+            $data = [
                 'core'   => $element['criteria'] ?? '',
                 'status' => $activity->sector_element_completed,
                 'title'  => $element['label'],

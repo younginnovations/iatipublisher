@@ -40,7 +40,7 @@ class TransactionService
         TransactionRepository $transactionRepository,
         TransactionElementFormCreator $transactionElementFormCreator
     ) {
-        $this->transactionRepository         = $transactionRepository;
+        $this->transactionRepository = $transactionRepository;
         $this->transactionElementFormCreator = $transactionElementFormCreator;
     }
 
@@ -165,10 +165,10 @@ class TransactionService
      */
     public function createFormGenerator($activityId): Form
     {
-        $element                                  = getElementSchema('transactions');
+        $element = getElementSchema('transactions');
         $this->transactionElementFormCreator->url = route('admin.activity.transaction.store', $activityId);
 
-        return $this->transactionElementFormCreator->editForm([], $element, 'POST', '/activity/'.$activityId);
+        return $this->transactionElementFormCreator->editForm([], $element, 'POST', '/activity/' . $activityId);
     }
 
     /**
@@ -182,11 +182,11 @@ class TransactionService
      */
     public function editFormGenerator($transactionId, $activityId): Form
     {
-        $element                                  = getElementSchema('transactions');
-        $activityTransaction                      = $this->getTransaction($transactionId);
+        $element = getElementSchema('transactions');
+        $activityTransaction = $this->getTransaction($transactionId);
         $this->transactionElementFormCreator->url = route('admin.activity.transaction.update', [$activityId, $transactionId]);
 
-        return $this->transactionElementFormCreator->editForm($activityTransaction->transaction, $element, 'PUT', '/activity/'.$activityId);
+        return $this->transactionElementFormCreator->editForm($activityTransaction->transaction, $element, 'PUT', '/activity/' . $activityId);
     }
 
     /**
@@ -230,11 +230,11 @@ class TransactionService
 
         foreach ($transactions as $totalTransaction) {
             $transaction = $totalTransaction->transaction;
-            $sector      = [];
+            $sector = [];
 
             foreach (Arr::get($transaction, 'sector', []) as $sectorData) {
                 if ($sectorData) {
-                    $vocabulary  = Arr::get($sectorData, 'sector_vocabulary', null);
+                    $vocabulary = Arr::get($sectorData, 'sector_vocabulary', null);
                     $sectorValue = $this->getSectorValue($vocabulary, $sectorData);
 
                     $sector[] = [
@@ -285,7 +285,7 @@ class TransactionService
             if (Arr::get($transaction, 'aid_type', null)) {
                 foreach (Arr::get($transaction, 'aid_type') as $aidType) {
                     $vocabulary = Arr::get($aidType, 'aidtype_vocabulary', null);
-                    $code       = $this->getAidTypeCode($vocabulary, $aidType);
+                    $code = $this->getAidTypeCode($vocabulary, $aidType);
 
                     $aidType[] = [
                         '@attributes' => [

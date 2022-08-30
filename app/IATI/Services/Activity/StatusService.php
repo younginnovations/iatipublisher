@@ -33,7 +33,7 @@ class StatusService
     public function __construct(ActivityRepository $activityRepository, BaseFormCreator $baseFormCreator)
     {
         $this->activityRepository = $activityRepository;
-        $this->baseFormCreator    = $baseFormCreator;
+        $this->baseFormCreator = $baseFormCreator;
     }
 
     /**
@@ -83,11 +83,11 @@ class StatusService
      */
     public function formGenerator($id): Form
     {
-        $element                    = getElementSchema('activity_status');
-        $model['activity_status']   = $this->getStatusData($id);
+        $element = getElementSchema('activity_status');
+        $model['activity_status'] = $this->getStatusData($id);
         $this->baseFormCreator->url = route('admin.activity.status.update', [$id]);
 
-        return $this->baseFormCreator->editForm($model, $element, 'PUT', '/activity/'.$id);
+        return $this->baseFormCreator->editForm($model, $element, 'PUT', '/activity/' . $id);
     }
 
     /**

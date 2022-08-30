@@ -56,10 +56,10 @@ class PeriodController extends Controller
         ResultService $resultService,
         ActivityService $activityService
     ) {
-        $this->periodService    = $periodService;
+        $this->periodService = $periodService;
         $this->indicatorService = $indicatorService;
-        $this->resultService    = $resultService;
-        $this->activityService  = $activityService;
+        $this->resultService = $resultService;
+        $this->activityService = $activityService;
     }
 
     /**
@@ -97,9 +97,9 @@ class PeriodController extends Controller
     public function index($indicatorId): Factory|View|RedirectResponse|Application
     {
         try {
-            $indicator  = $this->indicatorService->getIndicator($indicatorId);
-            $result     = $indicator->result;
-            $activity   = $result->activity;
+            $indicator = $this->indicatorService->getIndicator($indicatorId);
+            $result = $indicator->result;
+            $activity = $result->activity;
             $parentData = [
                 'indicator' => [
                     'id'    => $indicatorId,
@@ -112,8 +112,8 @@ class PeriodController extends Controller
             ];
 
             $period = $this->periodService->getPeriods($indicatorId)->toArray();
-            $types  = getPeriodTypes();
-            $toast  = generateToastData();
+            $types = getPeriodTypes();
+            $toast = generateToastData();
 
             return view('admin.activity.period.period', compact('activity', 'parentData', 'period', 'types', 'toast'));
         } catch (\Exception $e) {
@@ -133,11 +133,11 @@ class PeriodController extends Controller
     public function create($indicatorId): Factory|View|RedirectResponse|Application
     {
         try {
-            $element   = getElementSchema('period');
+            $element = getElementSchema('period');
             $indicator = $this->indicatorService->getIndicator($indicatorId);
-            $activity  = $indicator->result->activity;
-            $form      = $this->periodService->createFormGenerator($indicatorId);
-            $data      = ['core' => $element['criteria'] ?? false, 'status' => false, 'title' => $element['label'], 'name' => 'period'];
+            $activity = $indicator->result->activity;
+            $form = $this->periodService->createFormGenerator($indicatorId);
+            $data = ['core' => $element['criteria'] ?? false, 'status' => false, 'title' => $element['label'], 'name' => 'period'];
 
             return view('admin.activity.period.edit', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {
@@ -159,8 +159,8 @@ class PeriodController extends Controller
     {
         try {
             $periodData = $request->except(['_token']);
-            $indicator  = $this->indicatorService->getIndicator($indicatorId);
-            $messages   = $this->validateData([
+            $indicator = $this->indicatorService->getIndicator($indicatorId);
+            $messages = $this->validateData([
                 'measure' => $indicator['measure'],
                 'period'  => $periodData,
             ]);
@@ -200,8 +200,8 @@ class PeriodController extends Controller
     {
         try {
             $indicator = $this->indicatorService->getIndicator($indicatorId);
-            $result    = $indicator->result;
-            $activity  = $result->activity;
+            $result = $indicator->result;
+            $activity = $result->activity;
 
             $parentData = [
                 'result'    => [
@@ -213,9 +213,9 @@ class PeriodController extends Controller
                     'title' => $indicator['indicator']['title'][0]['narrative'],
                 ],
             ];
-            $period     = $this->periodService->getPeriod($periodId);
-            $types      = getPeriodTypes();
-            $toast      = generateToastData();
+            $period = $this->periodService->getPeriod($periodId);
+            $types = getPeriodTypes();
+            $toast = generateToastData();
 
             return view('admin.activity.period.detail', compact('activity', 'parentData', 'period', 'types', 'toast'));
         } catch (\Exception $e) {
@@ -239,11 +239,11 @@ class PeriodController extends Controller
     public function edit($indicatorId, $periodId): Factory|View|RedirectResponse|Application
     {
         try {
-            $element   = getElementSchema('period');
+            $element = getElementSchema('period');
             $indicator = $this->indicatorService->getIndicator($indicatorId);
-            $activity  = $indicator->result->activity;
-            $form      = $this->periodService->editFormGenerator($indicatorId, $periodId);
-            $data      = ['core' => $element['criteria'] ?? false, 'status' => false, 'title' => $element['label'], 'name' => 'period'];
+            $activity = $indicator->result->activity;
+            $form = $this->periodService->editFormGenerator($indicatorId, $periodId);
+            $data = ['core' => $element['criteria'] ?? false, 'status' => false, 'title' => $element['label'], 'name' => 'period'];
 
             return view('admin.activity.period.edit', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {
@@ -266,7 +266,7 @@ class PeriodController extends Controller
     {
         try {
             $periodData = $request->except(['_method', '_token']);
-            $period     = $this->periodService->getPeriod($periodId);
+            $period = $this->periodService->getPeriod($periodId);
 
             $messages = $this->validateData([
                 'measure' => $this->indicatorService->getIndicator($indicatorId)['indicator']['measure'],
@@ -299,7 +299,7 @@ class PeriodController extends Controller
     }
 
     /**
-     * Deletes period
+     * Deletes period.
      *
      * @param Period $period
      *
@@ -320,7 +320,7 @@ class PeriodController extends Controller
     private function validateData(array $period): string
     {
         $messages = '';
-        $measure  = $period['measure'];
+        $measure = $period['measure'];
 
         if ($measure === '5') {
             foreach ($period['period']['target'] as $target) {

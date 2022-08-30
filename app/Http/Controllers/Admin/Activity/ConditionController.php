@@ -35,7 +35,6 @@ class ConditionController extends Controller
      * Renders condition edit form.
      *
      * @param int $id
-     *
      */
     public function edit(int $id): View|RedirectResponse
     {

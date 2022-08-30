@@ -131,11 +131,11 @@ class IndicatorController extends Controller
     public function create($resultId): Factory|View|RedirectResponse|Application
     {
         try {
-            $element  = getElementSchema('indicator');
-            $result   = $this->resultService->getResult($resultId);
+            $element = getElementSchema('indicator');
+            $result = $this->resultService->getResult($resultId);
             $activity = $result->activity;
-            $form     = $this->indicatorService->createFormGenerator($resultId);
-            $data     = ['core' => $element['criteria'] ?? false, 'status' => false, 'title' => $element['label'], 'name' => 'indicator'];
+            $form = $this->indicatorService->createFormGenerator($resultId);
+            $data = ['core' => $element['criteria'] ?? false, 'status' => false, 'title' => $element['label'], 'name' => 'indicator'];
 
             return view('admin.activity.indicator.edit', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {

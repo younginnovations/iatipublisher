@@ -41,10 +41,10 @@ class DefaultTiedStatusController extends Controller
     public function edit(int $id): View|RedirectResponse
     {
         try {
-            $element  = getElementSchema('default_tied_status');
+            $element = getElementSchema('default_tied_status');
             $activity = $this->defaultTiedStatusService->getActivityData($id);
-            $form     = $this->defaultTiedStatusService->formGenerator($id);
-            $data     = [
+            $form = $this->defaultTiedStatusService->formGenerator($id);
+            $data = [
                 'core'   => $element['criteria'] ?? '',
                 'status' => $activity->default_tied_status_element_completed,
                 'title'  => $element['label'],
@@ -70,7 +70,7 @@ class DefaultTiedStatusController extends Controller
     public function update(DefaultTiedStatusRequest $request, $id): JsonResponse|RedirectResponse
     {
         try {
-            $activityDefaultTiedStatus = $request->get('default_tied_status') !== null ? (int)$request->get('default_tied_status') : null;
+            $activityDefaultTiedStatus = $request->get('default_tied_status') !== null ? (int) $request->get('default_tied_status') : null;
 
             if (!$this->defaultTiedStatusService->update($id, $activityDefaultTiedStatus)) {
                 return redirect()->route('admin.activity.show', $id)->with('error', 'Error has occurred while updating default-tied-status.');

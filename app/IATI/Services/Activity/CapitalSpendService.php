@@ -6,7 +6,6 @@ namespace App\IATI\Services\Activity;
 
 use App\IATI\Elements\Builder\BaseFormCreator;
 use App\IATI\Models\Activity\Activity;
-use App\IATI\Repositories\Activity\CapitalSpendRepository;
 use App\IATI\Repositories\Activity\ActivityRepository;
 use Kris\LaravelFormBuilder\Form;
 
@@ -54,7 +53,7 @@ class CapitalSpendService
      *
      * @param $id
      *
-     * @return Object
+     * @return object
      */
     public function getActivityData($id): Object
     {

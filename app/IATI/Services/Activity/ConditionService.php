@@ -35,7 +35,7 @@ class ConditionService
      */
     public function __construct(ActivityRepository $activityRepository, MultilevelSubElementFormCreator $multilevelSubElementFormCreator)
     {
-        $this->activityRepository              = $activityRepository;
+        $this->activityRepository = $activityRepository;
         $this->multilevelSubElementFormCreator = $multilevelSubElementFormCreator;
     }
 
@@ -56,7 +56,7 @@ class ConditionService
      *
      * @param $id
      *
-     * @return Object
+     * @return object
      */
     public function getActivityData($id): object
     {
@@ -92,11 +92,11 @@ class ConditionService
      */
     public function formGenerator($id): Form
     {
-        $element                                    = getElementSchema('conditions');
-        $model                                      = $this->getConditionData($id) ?: [];
+        $element = getElementSchema('conditions');
+        $model = $this->getConditionData($id) ?: [];
         $this->multilevelSubElementFormCreator->url = route('admin.activity.conditions.update', [$id]);
 
-        return $this->multilevelSubElementFormCreator->editForm($model, $element, 'PUT', '/activity/'.$id);
+        return $this->multilevelSubElementFormCreator->editForm($model, $element, 'PUT', '/activity/' . $id);
     }
 
     /**
@@ -109,7 +109,7 @@ class ConditionService
     public function getXmlData(Activity $activity): array
     {
         $activityData = [];
-        $conditions   = (array)$activity->conditions;
+        $conditions = (array) $activity->conditions;
 
         if (count($conditions)) {
             $activityData[] = [

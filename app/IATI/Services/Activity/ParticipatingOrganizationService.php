@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\IATI\Services\Activity;
 
 use App\IATI\Elements\Builder\ParentCollectionFormCreator;
-use App\IATI\Traits\XmlBaseElement;
 use App\IATI\Repositories\Activity\ActivityRepository;
+use App\IATI\Traits\XmlBaseElement;
 use Kris\LaravelFormBuilder\Form;
 
 /**

@@ -39,10 +39,10 @@ class RelatedActivityController extends Controller
     public function edit(int $id): View|RedirectResponse
     {
         try {
-            $element  = getElementSchema('related_activity');
+            $element = getElementSchema('related_activity');
             $activity = $this->relatedActivityService->getActivityData($id);
-            $form     = $this->relatedActivityService->formGenerator($id);
-            $data     = [
+            $form = $this->relatedActivityService->formGenerator($id);
+            $data = [
                 'core'   => $element['criteria'] ?? '',
                 'status' => $activity->related_activity_element_completed,
                 'title'  => $element['label'],
