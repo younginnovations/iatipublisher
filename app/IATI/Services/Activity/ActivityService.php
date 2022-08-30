@@ -72,7 +72,7 @@ class ActivityService
     public function store($input): Model
     {
         $activity_identifier = [
-            'activity_identifier'  => $input['activity_identifier'],
+            'activity_identifier' => $input['activity_identifier'],
         ];
 
         $activity_title = [
@@ -83,10 +83,10 @@ class ActivityService
         ];
 
         return $this->activityRepository->store([
-            'iati_identifier' => $activity_identifier,
-            'title'           => $activity_title,
-            'org_id'          => Auth::user()->organization_id,
-            'element_status'  => getDefaultElementStatus(),
+            'iati_identifier'      => $activity_identifier,
+            'title'                => $activity_title,
+            'org_id'               => Auth::user()->organization_id,
+            'element_status'       => getDefaultElementStatus(),
             'default_field_values' => $this->getDefaultValues(),
         ]);
     }
@@ -188,7 +188,8 @@ class ActivityService
     public function activityPublishingProgress($activity): float|int
     {
         $core_elements = getCoreElements();
-        $completed_core_element_count = $activity->organization->element_status['reporting_org'] ? 1 : 0;
+        $orgElementStatus = $activity->organization->element_status;
+        $completed_core_element_count = (array_key_exists('reporting_org', $orgElementStatus) && $orgElementStatus['reporting_org']) ? 1 : 0;
 
         foreach ($core_elements as $core_element) {
             if (array_key_exists($core_element, $activity->element_status) && $activity->element_status[$core_element]) {
