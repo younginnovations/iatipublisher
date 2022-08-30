@@ -92,7 +92,10 @@ class RedirectActivity
 
             if ($module === 'activity') {
                 $activity = $this->activityService->getActivity($id);
-                $this->activityCheck($activity);
+
+                if ($activity === null || !$activity->isActivityOfOrg()) {
+                    return redirect(RouteServiceProvider::HOME)->with('error', 'Activity does not exist');
+                }
 
                 $byPassResultRoutes = ['admin.activity.result.index', 'admin.activity.results.paginate', 'admin.activity.result.create', 'admin.activity.result.store'];
 
@@ -116,8 +119,13 @@ class RedirectActivity
             } elseif ($module === 'result') {
                 $result = $this->resultService->getResult($id);
 
-                $this->emptySubModuleCheck($result);
-                $this->activityCheck($result->activity);
+                if ($result === null) {
+                    return redirect(RouteServiceProvider::HOME)->with('error', 'Result does not exist');
+                }
+
+                if ($result->activity === null || !$result->activity->isActivityOfOrg()) {
+                    return redirect(RouteServiceProvider::HOME)->with('error', 'Activity does not exist');
+                }
 
                 $byPassIndicatorRoutes = ['admin.result.indicator.index', 'admin.result.indicators.paginate', 'admin.result.indicator.create', 'admin.result.indicator.store'];
 
@@ -133,9 +141,17 @@ class RedirectActivity
             } elseif ($module === 'indicator') {
                 $indicator = $this->indicatorService->getIndicator($id);
 
-                $this->emptySubModuleCheck($indicator);
-                $this->emptySubModuleCheck($indicator->result);
-                $this->activityCheck($indicator->result->activity);
+                if ($indicator === null) {
+                    return redirect(RouteServiceProvider::HOME)->with('error', 'Indicator does not exist');
+                }
+
+                if ($indicator->result === null) {
+                    return redirect(RouteServiceProvider::HOME)->with('error', 'Result does not exist');
+                }
+
+                if ($indicator->result->activity === null || !$indicator->result->activity->isActivityOfOrg()) {
+                    return redirect(RouteServiceProvider::HOME)->with('error', 'Activity does not exist');
+                }
 
                 $byPassPeriodRoutes = ['admin.indicator.period.index', 'admin.indicator.periods.paginate', 'admin.indicator.period.create', 'admin.indicator.period.store'];
 
@@ -168,19 +184,5 @@ class RedirectActivity
         }
 
         return [$routeParams[1], $routeParams[2]];
-    }
-
-    public function activityCheck($activity)
-    {
-        if ($activity === null || !$activity->isActivityOfOrg()) {
-            return redirect(RouteServiceProvider::HOME)->with('error', 'Activity does not exist');
-        }
-    }
-
-    public function emptySubModuleCheck($subModule)
-    {
-        if ($subModule === null) {
-            return redirect(RouteServiceProvider::HOME)->with('error', 'Result or Indicator or Period does not exist');
-        }
     }
 }
