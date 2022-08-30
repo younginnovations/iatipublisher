@@ -42,7 +42,7 @@
 
             <li v-if="periodData.length === 0">
               <a
-                :href="`${resultLink}/indicator/${indicator.id}/period/create`"
+                :href="`/indicator/${indicator.id}/period/create`"
                 :class="linkClasses"
                 class="border border-dashed border-n-40"
               >
@@ -74,56 +74,56 @@
               <div class="indicators">
                 <table>
                   <tbody>
-                  <template
-                    v-if="indicatorData.title[0].narrative.length > 0"
-                  >
-                    <TitleElement
-                      id="title"
-                      :data="indicatorData.title[0]"
-                      :title-type="types.language"
+                    <template
+                      v-if="indicatorData.title[0].narrative.length > 0"
+                    >
+                      <TitleElement
+                        id="title"
+                        :data="indicatorData.title[0]"
+                        :title-type="types.language"
+                      />
+                    </template>
+
+                    <Ascending id="ascending" :data="indicatorData.ascending" />
+
+                    <Measure
+                      id="measure"
+                      :data="indicatorData.measure"
+                      :measure-type="types.indicatorMeasure"
                     />
-                  </template>
 
-                  <Ascending id="ascending" :data="indicatorData.ascending" />
-
-                  <Measure
-                    id="measure"
-                    :data="indicatorData.measure"
-                    :measure-type="types.indicatorMeasure"
-                  />
-
-                  <AggregationStatus
-                    id="aggregation_status"
-                    :data="indicatorData.aggregation_status"
-                  />
-
-                  <template
-                    v-if="indicatorData.description[0].narrative.length > 0"
-                  >
-                    <Description
-                      id="description"
-                      :data="indicatorData.description[0]"
-                      :desc-type="types.language"
+                    <AggregationStatus
+                      id="aggregation_status"
+                      :data="indicatorData.aggregation_status"
                     />
-                  </template>
 
-                  <template v-if="indicatorData.reference.length > 0">
-                    <Reference
-                      id="reference"
-                      :data="indicatorData.reference"
-                      :ref-type="types"
-                    />
-                  </template>
+                    <template
+                      v-if="indicatorData.description[0].narrative.length > 0"
+                    >
+                      <Description
+                        id="description"
+                        :data="indicatorData.description[0]"
+                        :desc-type="types.language"
+                      />
+                    </template>
 
-                  <template v-if="indicatorData.baseline.length > 0">
-                    <Baseline
-                      id="baseline"
-                      :data="indicatorData.baseline"
-                      :base-type="types"
-                    />
-                  </template>
+                    <template v-if="indicatorData.reference.length > 0">
+                      <Reference
+                        id="reference"
+                        :data="indicatorData.reference"
+                        :ref-type="types"
+                      />
+                    </template>
 
-                  <Period id="period" :data="periodData" />
+                    <template v-if="indicatorData.baseline.length > 0">
+                      <Baseline
+                        id="baseline"
+                        :data="indicatorData.baseline"
+                        :base-type="types"
+                      />
+                    </template>
+
+                    <Period id="period" :data="periodData" />
                   </tbody>
                 </table>
               </div>
