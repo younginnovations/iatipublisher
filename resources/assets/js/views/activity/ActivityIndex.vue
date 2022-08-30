@@ -42,6 +42,12 @@ export default defineComponent({
     TableLayout,
     Loader,
   },
+  props: {
+    toast: {
+      type: Object,
+      required: true,
+    },
+  },
   setup(props) {
     interface ActivitiesInterface {
       last_page: number;

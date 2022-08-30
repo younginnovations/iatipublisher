@@ -163,7 +163,7 @@ class Activity extends Model
     /**
      * Returns default title.
      *
-     * @throws \JsonException
+     * @return string
      */
     public function getDefaultTitleNarrativeAttribute(): string
     {

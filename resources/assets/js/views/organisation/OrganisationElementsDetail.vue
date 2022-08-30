@@ -1,8 +1,8 @@
 <template>
-  <div class="activities__content--element px-3 py-3" :class="layout">
-    <div class="rounded-lg bg-white p-4">
-      <div class="mb-4 flex">
-        <div :id="title" class="title flex grow text-n-50">
+  <div class="px-3 py-3 activities__content--element" :class="layout">
+    <div class="p-4 bg-white rounded-lg">
+      <div class="flex mb-4">
+        <div :id="title" class="flex title grow text-n-50">
           <template v-if="title === 'name'">
             <svg-vue
               class="mr-1.5 text-xl text-bluecoral"
@@ -27,7 +27,9 @@
               class="mr-1.5 text-xl text-bluecoral"
             ></svg-vue>
           </template>
-          <div class="title text-sm font-bold">{{ title.replaceAll("_", "-") }}</div>
+          <div class="text-sm font-bold title">
+            {{ replaceUnderscore(title) }}
+          </div>
           <div
             class="status ml-2.5 flex text-xs leading-5"
             :class="{
@@ -40,7 +42,7 @@
             <span v-else>not completed</span>
           </div>
         </div>
-        <div class="icons flex">
+        <div class="flex icons">
           <a
             class="edit-button mr-2.5 flex items-center text-xs font-bold uppercase"
             :href="'/organisation/' + title"
@@ -54,10 +56,14 @@
           <template v-if="'moon' in data">
             <svg-vue v-if="data.moon" class="mr-1.5" icon="moon"></svg-vue>
           </template>
-          <HoverText v-if="tooltip" :hover-text="tooltip" class="text-n-40"></HoverText>
+          <HoverText
+            v-if="tooltip"
+            :hover-text="tooltip"
+            class="text-n-40"
+          ></HoverText>
         </div>
       </div>
-      <div class="divider mb-4 h-px w-full bg-n-20"></div>
+      <div class="w-full h-px mb-4 divider bg-n-20"></div>
       <div class="text-sm text-n-50">
         <!-- iati_organizational_identifier -->
         <div v-if="title == 'organisation_identifier'">
@@ -106,7 +112,7 @@
         </div>
 
         <!-- document link -->
-        <div v-if="title == 'document_link'" class="document-link text-xs">
+        <div v-if="title == 'document_link'" class="text-xs document-link">
           <DocumentLink :content="content" />
         </div>
         <!-- document link ends -->
@@ -116,8 +122,8 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, provide } from "vue";
-import HoverText from "Components/HoverText.vue";
+import { defineProps, provide } from 'vue';
+import HoverText from 'Components/HoverText.vue';
 
 import {
   ReportingOrganisation,
@@ -127,7 +133,7 @@ import {
   RecipientCountryBudget,
   TotalExpenditure,
   DocumentLink,
-} from "Organisation/elements/Index";
+} from 'Organisation/elements/Index';
 
 const props = defineProps({
   data: {
@@ -149,12 +155,12 @@ const props = defineProps({
   language: {
     type: String,
     required: false,
-    default: "en",
+    default: 'en',
   },
   width: {
     type: String,
     required: false,
-    default: "",
+    default: '',
   },
   types: {
     type: Object,
@@ -168,10 +174,16 @@ const props = defineProps({
 
 // const status = '';
 
-let layout = "basis-6/12";
-if (props.width === "full") {
-  layout = "basis-full";
+let layout = 'basis-6/12';
+if (props.width === 'full') {
+  layout = 'basis-full';
 }
 
-provide("orgTypes", props.types);
+provide('orgTypes', props.types);
+
+const replaceUnderscore = (string) => {
+  let regex = /_/g;
+  let result = string.replace(regex, '-');
+  return result;
+};
 </script>

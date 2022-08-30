@@ -160,7 +160,7 @@ const data = reactive({
     },
     {
       name: 'Organisation DATA',
-      permalink: '#',
+      permalink: '/organisation',
       active: false,
     },
     {

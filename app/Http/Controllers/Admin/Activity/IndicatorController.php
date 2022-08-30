@@ -58,9 +58,9 @@ class IndicatorController extends Controller
         ActivityService $activityService
     ) {
         $this->indicatorService = $indicatorService;
-        $this->periodService    = $periodService;
-        $this->resultService    = $resultService;
-        $this->activityService  = $activityService;
+        $this->periodService = $periodService;
+        $this->resultService = $resultService;
+        $this->activityService = $activityService;
     }
 
     /**
@@ -73,8 +73,8 @@ class IndicatorController extends Controller
     public function index($resultId): View|RedirectResponse
     {
         try {
-            $result     = $this->resultService->getResult($resultId);
-            $activity   = $result->activity;
+            $result = $this->resultService->getResult($resultId);
+            $activity = $result->activity;
             $parentData = [
                 'result' => [
                     'id'    => $resultId,
@@ -82,8 +82,8 @@ class IndicatorController extends Controller
                 ],
             ];
             $indicators = $this->indicatorService->getIndicators($resultId);
-            $types      = getIndicatorTypes();
-            $toast      = generateToastData();
+            $types = getIndicatorTypes();
+            $toast = generateToastData();
 
             return view('admin.activity.indicator.indicator', compact('activity', 'parentData', 'indicators', 'types', 'toast'));
         } catch (\Exception $e) {
@@ -160,7 +160,7 @@ class IndicatorController extends Controller
     {
         try {
             $indicatorData = $request->except(['_token']);
-            $indicator     = $this->indicatorService->create([
+            $indicator = $this->indicatorService->create([
                 'result_id' => $resultId,
                 'indicator' => $indicatorData,
             ]);
@@ -190,13 +190,13 @@ class IndicatorController extends Controller
     public function show($resultId, $indicatorId): Factory|View|RedirectResponse|Application
     {
         try {
-            $indicator   = $this->indicatorService->getIndicator($indicatorId);
-            $result      = $indicator->result;
+            $indicator = $this->indicatorService->getIndicator($indicatorId);
+            $result = $indicator->result;
             $resultTitle = $result['result']['title'];
-            $activity    = $result->activity;
-            $period      = $this->periodService->getPeriods($indicatorId)->toArray();
-            $types       = getIndicatorTypes();
-            $toast       = generateToastData();
+            $activity = $result->activity;
+            $period = $this->periodService->getPeriods($indicatorId)->toArray();
+            $types = getIndicatorTypes();
+            $toast = generateToastData();
 
             return view('admin.activity.indicator.detail', compact('activity', 'resultTitle', 'indicator', 'period', 'types', 'toast'));
         } catch (\Exception $e) {

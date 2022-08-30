@@ -89,7 +89,7 @@ class DescriptionService
         $model['description'] = $this->getDescriptionData($id);
         $this->parentCollectionFormCreator->url = route('admin.activity.description.update', [$id]);
 
-        return $this->parentCollectionFormCreator->editForm($model, $element['description'], 'PUT', '/activity/' . $id);
+        return $this->parentCollectionFormCreator->editForm($model, $element, 'PUT', '/activity/' . $id);
     }
 
     /**

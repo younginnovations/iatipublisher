@@ -208,19 +208,21 @@ class ActivityService
     {
         $organizationSettings = Auth::user()->organization->settings;
 
-        if ($organizationSettings->default_values && $organizationSettings->activity_default_values) {
-            return array_merge(
-                $organizationSettings->default_values,
-                $organizationSettings->activity_default_values
-            );
-        }
+        if (!empty($organizationSettings)) {
+            if ($organizationSettings->default_values && $organizationSettings->activity_default_values) {
+                return array_merge(
+                    $organizationSettings->default_values,
+                    $organizationSettings->activity_default_values
+                );
+            }
 
-        if ($organizationSettings->default_values) {
-            return $organizationSettings->default_values;
-        }
+            if ($organizationSettings->default_values) {
+                return $organizationSettings->default_values;
+            }
 
-        if ($organizationSettings->activity_default_values) {
-            return $organizationSettings->activity_default_values;
+            if ($organizationSettings->activity_default_values) {
+                return $organizationSettings->activity_default_values;
+            }
         }
 
         return null;

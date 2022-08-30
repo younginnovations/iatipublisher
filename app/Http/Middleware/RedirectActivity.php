@@ -91,7 +91,8 @@ class RedirectActivity
             [$module, $subModule] = $this->getRouteParams($request->route()->getName());
 
             if ($module === 'activity') {
-                $this->activityCheck($this->activityService->getActivity($id));
+                $activity = $this->activityService->getActivity($id);
+                $this->activityCheck($activity);
 
                 $byPassResultRoutes = ['admin.activity.result.index', 'admin.activity.results.paginate', 'admin.activity.result.create', 'admin.activity.result.store'];
 
