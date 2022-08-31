@@ -117,7 +117,11 @@ class ConditionService
                 '@attributes' => [
                     'attached' => Arr::get($conditions, 'condition_attached', null),
                 ],
-                'condition'   => Arr::get($conditions, 'condition_attached', null) === '1' ? $this->buildCondition(Arr::get($conditions, 'condition', [])) : [],
+                'condition'   => (Arr::get($conditions, 'condition_attached', null) === '1' || Arr::get($conditions, 'condition_attached', null) === 1) ? $this->buildCondition(Arr::get(
+                    $conditions,
+                    'condition',
+                    []
+                )) : [],
             ];
         }
 

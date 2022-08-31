@@ -264,15 +264,12 @@ class TransactionService
             if (Arr::get($transaction, 'recipient_region', null)) {
                 $recipientRegion = [
                     '@attributes' => [
-                        'code'           => Arr::get(
-                            $transaction,
-                            'recipient_region.0.region_vocabulary',
-                            null
-                        ) === 1 ? Arr::get(
-                            $transaction,
-                            'recipient_region.0.region_code',
-                            null
-                        ) : Arr::get($transaction, 'recipient_region.0.custom_code', null),
+                        'code'           => (Arr::get($transaction, 'recipient_region.0.region_vocabulary', null) === 1
+                            || Arr::get($transaction, 'recipient_region.0.region_vocabulary', null) === '1') ? Arr::get(
+                                $transaction,
+                                'recipient_region.0.region_code',
+                                null
+                            ) : Arr::get($transaction, 'recipient_region.0.custom_code', null),
                         'vocabulary'     => Arr::get($transaction, 'recipient_region.0.region_vocabulary', null),
                         'vocabulary-uri' => Arr::get($transaction, 'recipient_region.0.vocabulary_uri', null),
                     ],
