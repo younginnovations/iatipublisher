@@ -1,11 +1,5 @@
 <template>
   <div>
-    <Toast
-      v-if="toastVisibility"
-      class="toast top-28"
-      :message="toastMessage"
-      :type="toastType"
-    />
     <button
       ref="dropdownBtn"
       class="button primary-btn relative font-bold"
@@ -36,7 +30,6 @@
       :modal-active="modalValue"
       @close="modalToggle"
       @close-modal="modalToggle"
-      @toast="toast"
     />
   </div>
 </template>
@@ -45,22 +38,16 @@
 import { reactive, defineComponent, ref, onMounted } from 'vue';
 import CreateModal from '../CreateModal.vue';
 import { useToggle } from '@vueuse/core';
-import Toast from '../../../components/Toast.vue';
 
 export default defineComponent({
   name: 'AddActivityButton',
   components: {
     CreateModal,
-    Toast,
   },
   setup() {
     const state = reactive({
       isVisible: false,
     });
-
-    const toastVisibility = ref(false);
-    const toastMessage = ref('');
-    const toastType = ref(false);
 
     const [modalValue, modalToggle] = useToggle();
 
@@ -69,13 +56,6 @@ export default defineComponent({
     const toggleModel = (value: boolean) => {
       modelVisible.value = value;
     };
-
-    function toast(message: string, type: boolean) {
-      toastVisibility.value = true;
-      setTimeout(() => (toastVisibility.value = false), 5000);
-      toastMessage.value = message;
-      toastType.value = type;
-    }
 
     const liClass =
       'block p-2.5 text-n-40 text-tiny leading-[1.5] font-bold hover:text-n-50 hover:bg-n-10';
@@ -98,10 +78,6 @@ export default defineComponent({
       liClass,
       modelVisible,
       modalValue,
-      toastVisibility,
-      toastMessage,
-      toastType,
-      toast,
       toggle,
       modalToggle,
       toggleModel,

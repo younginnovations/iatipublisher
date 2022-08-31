@@ -90,6 +90,7 @@ const deleteFunction = () => {
       setTimeout(() => {
         loader.value = false;
         deleteValue.value = false;
+        location.reload();
       }, 1000);
     }
   });

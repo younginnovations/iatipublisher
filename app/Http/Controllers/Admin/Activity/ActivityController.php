@@ -118,6 +118,7 @@ class ActivityController extends Controller
             $this->db->beginTransaction();
             $activity = $this->activityService->store($input);
             $this->db->commit();
+            Session::put('success', 'Activity has been created successfully.');
 
             return response()->json([
                 'success' => true,
@@ -210,6 +211,8 @@ class ActivityController extends Controller
             $activity = $this->activityService->getActivity($activityId);
 
             if ($activity->linked_to_iati) {
+                Session::put('error', 'Activity must be un-published before deleting.');
+
                 return response()->json(['success' => false, 'message' => 'Activity must be un-published before deleting.']);
             }
 

@@ -7,6 +7,7 @@ namespace App\IATI\Services\Activity;
 use App\IATI\Elements\Builder\BaseFormCreator;
 use App\IATI\Models\Activity\Activity;
 use App\IATI\Repositories\Activity\ActivityRepository;
+use Illuminate\Support\Arr;
 use Kris\LaravelFormBuilder\Form;
 
 /**
@@ -76,7 +77,7 @@ class DefaultAidTypeService
     /**
      * Generates default aid type.
      *
-     * @param id
+     * @param $id
      *
      * @return Form
      * @throws \JsonException

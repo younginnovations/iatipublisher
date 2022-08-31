@@ -70,7 +70,7 @@ class HumanitarianScopeController extends Controller
     public function update(HumanitarianScopeRequest $request, $id): JsonResponse|RedirectResponse
     {
         try {
-            if (!$this->humanitarianScopeService->update($id, $request->all())) {
+            if ($this->humanitarianScopeService->update($id, $request->except(['_token', '_method']))) {
                 return redirect()->route('admin.activity.show', $id)->with('success', 'Humanitarian-scope updated successfully.');
             }
 
