@@ -78,6 +78,8 @@ class ActivityPublished extends Model
      */
     protected function getFilename($delimiter, $file): string
     {
-        return reset(explode($delimiter, $file));
+        $file = explode($delimiter, $file);
+
+        return reset($file);
     }
 }

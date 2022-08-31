@@ -119,13 +119,13 @@ Route::name('admin.')->group(function () {
     Route::get('/activity/{id}/transactions/page/{page?}', [App\Http\Controllers\Admin\Activity\TransactionController::class, 'getPaginatedTransactions'])->name('activity.transactions.paginate');
 
     // Publish Activity
-    Route::post('activities/{id}/publish', [ActivityWorkflowController::class, 'publish'])->name('activities.publish');
+    Route::post('activity/{id}/publish', [ActivityWorkflowController::class, 'publish'])->name('activity.publish');
 
     //Unpublish Activity
-    Route::post('activities/{id}/unpublish', [ActivityWorkflowController::class, 'unpublish'])->name('activities.unpublish');
+    Route::post('activity/{id}/unpublish', [ActivityWorkflowController::class, 'unpublish'])->name('activity.unpublish');
 
     //Validate Activity
-    Route::post('activities/{id}/validateActivity', [ActivityWorkflowController::class, 'validateActivity'])->name('activities.validateActivity');
+    Route::post('activity/{id}/validateActivity', [ActivityWorkflowController::class, 'validateActivity'])->name('activity.validateActivity');
 
     Route::resource('activity.result', ResultController::class)->parameters(['activity' => 'id', 'result'=>'resultId']);
     Route::get('/activity/{id}/results/page/{page?}', [ResultController::class, 'getPaginatedResults'])->name('activity.results.paginate');

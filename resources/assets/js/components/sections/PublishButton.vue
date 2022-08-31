@@ -278,7 +278,7 @@ const validatorFunction = () => {
   loader.value = true;
   loaderText.value = 'Validating Activities';
 
-  axios.post(`/activities/${id}/validateActivity`).then((res) => {
+  axios.post(`/activity/${id}/validateActivity`).then((res) => {
     const response = res.data;
     const errors = response.errors;
 
@@ -318,7 +318,7 @@ const publishFunction = () => {
   loaderText.value = 'Publishing';
   resetPublishStep();
 
-  axios.post(`/activities/${id}/publish`).then((res) => {
+  axios.post(`/activity/${id}/publish`).then((res) => {
     const response = res.data;
     toastMessage.message = response.message;
     toastMessage.type = response.success;
