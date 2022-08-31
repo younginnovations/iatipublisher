@@ -84,7 +84,7 @@ class TransactionObserver
         $key = array_key_first($transaction->getDirty());
         $data = Arr::get($transaction->getDirty(), $key);
 
-        if (!in_array($key, getNonArrayElements())) {
+        if (!in_array($key, getNonArrayElements(), true)) {
             $updatedData = $this->elementCompleteService->setDefaultValues($data, $transaction->activity);
             $transaction->$key = $updatedData;
             $transaction->saveQuietly();

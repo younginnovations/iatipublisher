@@ -115,7 +115,7 @@ class TransactionService
      */
     public function update($id, $transactionData): bool
     {
-        return $this->transactionRepository->update($id, ['transaction' => Arr::get($this->sanitizeTransactionData($transactionData), 'transaction', [])]);
+        return $this->transactionRepository->update($id, $this->sanitizeTransactionData(['transaction' => $transactionData]));
     }
 
     /**

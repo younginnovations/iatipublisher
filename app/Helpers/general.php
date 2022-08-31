@@ -185,15 +185,15 @@ if (!function_exists('getDefaultOrganizationElementStatus')) {
     function getDefaultOrganizationElementStatus(): array
     {
         return [
-            'identifier'                => false,
-            'name'                      => false,
-            'reporting_org'             => false,
-            'total_budget'              => false,
-            'total_expenditure'         => false,
-            'recipient_org_budget'      => false,
-            'recipient_country_budget'  => false,
-            'recipient_region_budget'   => false,
-            'document_link'             => false,
+            'identifier'               => false,
+            'name'                     => false,
+            'reporting_org'            => false,
+            'total_budget'             => false,
+            'total_expenditure'        => false,
+            'recipient_org_budget'     => false,
+            'recipient_country_budget' => false,
+            'recipient_region_budget'  => false,
+            'document_link'            => false,
         ];
     }
 }
@@ -286,15 +286,15 @@ if (!function_exists('getMandatoryElementsWithTrueValue')) {
     function getMandatoryElementsWithTrueValue(): array
     {
         return [
-            'identifier'                => true,
-            'name'                      => true,
-            'reporting_org'             => true,
-            'total_budget'              => true,
-            'total_expenditure'         => true,
-            'recipient_org_budget'      => true,
-            'recipient_country_budget'  => true,
-            'recipient_region_budget'   => true,
-            'document_link'             => true,
+            'identifier'               => true,
+            'name'                     => true,
+            'reporting_org'            => true,
+            'total_budget'             => true,
+            'total_expenditure'        => true,
+            'recipient_org_budget'     => true,
+            'recipient_country_budget' => true,
+            'recipient_region_budget'  => true,
+            'document_link'            => true,
         ];
     }
 }
@@ -610,7 +610,7 @@ if (!function_exists('getDefaultLanguage')) {
  *
  * @param $data
  */
-function removeEmptyValues(&$data)
+function removeEmptyValues(&$data): void
 {
     foreach ($data as &$subData) {
         if (is_array($subData)) {
@@ -620,8 +620,8 @@ function removeEmptyValues(&$data)
 
     $data = array_filter(
         $data,
-        function ($value) {
-            return $value !== '' && $value != [];
+        static function ($value) {
+            return $value !== '' && $value !== [];
         }
     );
 }
@@ -633,5 +633,5 @@ function removeEmptyValues(&$data)
  */
 function getNonArrayElements(): array
 {
-    return ['activity_status', 'activity_scope', 'default_flow_type', 'default_finance_type', 'default_tied_status', 'capital_spend'];
+    return ['activity_status', 'activity_scope', 'default_flow_type', 'default_finance_type', 'default_tied_status', 'capital_spend', 'collaboration_type'];
 }
