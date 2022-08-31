@@ -115,6 +115,8 @@ class TransactionService
      */
     public function update($id, $transactionData): bool
     {
+        $transactionData['transaction'] = $transactionData;
+
         return $this->transactionRepository->update($id, $this->sanitizeTransactionData(['transaction' => $transactionData]));
     }
 
