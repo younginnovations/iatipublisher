@@ -64,7 +64,7 @@ class ActivityRepository extends Repository
             $whereSql .= " AND org_id=$organizationId";
         }
 
-        if (array_key_exists('query', $queryParams) && !empty($queryParams['query'])) {
+        if (array_key_exists('query', $queryParams) && (!empty($queryParams['query']) || $queryParams['query'] === '0')) {
             $query = $queryParams['query'];
             $innerSql = 'select id, json_array_elements(title) title_array from activities';
 
