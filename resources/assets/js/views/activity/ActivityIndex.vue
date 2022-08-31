@@ -118,7 +118,11 @@ export default defineComponent({
     };
 
     function fetchActivities(active_page: number) {
-      axios.get('/activities/page/' + active_page).then((res) => {
+      let queryString = '';
+      if (currentURL.includes('?')) {
+        queryString = window.location.search;
+      }
+      axios.get('/activities/page/' + active_page + queryString).then((res) => {
         const response = res.data;
         Object.assign(activities, response.data);
         isEmpty.value = !response.data;

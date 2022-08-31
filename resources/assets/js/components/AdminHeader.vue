@@ -216,7 +216,15 @@ const spinner = ref(false);
 const searchFunction = () => {
   spinner.value = true;
   const param = searchValue.value?.replace('#', '');
-  let href = param ? `/activities?q=${param}` : '/activities/';
+  let sortingParam = '';
+
+  if (currentURL.includes('?') && currentURL.includes('&')) {
+    const queryString = window.location.search;
+    let queryStringArr = queryString.split('&') as [];
+    sortingParam = '&' + queryStringArr.slice(1).join('&');
+  }
+
+  let href = param ? `/activities?q=${param}${sortingParam}` : '/activities/';
   window.location.href = href;
 };
 
