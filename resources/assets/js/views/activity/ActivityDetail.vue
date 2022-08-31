@@ -13,11 +13,11 @@
               <div class="breadcrumb__title">
                 <span
                   class="overflow-hidden breadcrumb__title last text-n-30"
-                >{{ pageTitle ?? 'Untitled' }}</span
+                  >{{ pageTitle ?? 'Untitled' }}</span
                 >
                 <span class="ellipsis__title--hover w-[calc(100%_+_35px)]">{{
-                    pageTitle ? pageTitle : 'Untitled'
-                  }}</span>
+                  pageTitle ? pageTitle : 'Untitled'
+                }}</span>
               </div>
             </div>
           </nav>
@@ -149,7 +149,7 @@
             v-for="(post, key, index) in groupedData"
             :key="index"
             v-smooth-scroll
-            :href="`#${key}`"
+            :href="`#${String(key)}`"
             class="tab-btn-anchor"
           >
             <button :disabled="post.status == 'disabled'" class="tab-btn">
