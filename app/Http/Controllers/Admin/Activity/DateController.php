@@ -104,17 +104,17 @@ class DateController extends Controller
             $type = $activityDate['type'];
 
             if (isset($date) && isset($type)) {
-                if ($type == 2 || $type == 4) {
+                if ($type === '2' || $type === '4') {
                     (strtotime($date) <= strtotime(date('Y-m-d'))) ?: $messages[] = sprintf(
                         'Actual Start Date and Actual End Date must be Today or past days. (block %s)',
                         $blockIndex
                     );
                 }
 
-                if ($type == 4) {
+                if ($type === '4') {
                     $actualStartDate = array_column(
                         array_filter($activityDates, function ($date) {
-                            return $date['type'] == 2;
+                            return $date['type'] === '2';
                         }),
                         'date'
                     );
@@ -129,10 +129,10 @@ class DateController extends Controller
                     }
                 }
 
-                if ($type == 3) {
+                if ($type === '3') {
                     $plannedStartDate = array_column(
                         array_filter($activityDates, function ($date) {
-                            return $date['type'] == 1;
+                            return $date['type'] === '1';
                         }),
                         'date'
                     );
