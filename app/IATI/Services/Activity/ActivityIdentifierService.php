@@ -44,7 +44,12 @@ class ActivityIdentifierService
      */
     public function getActivityIdentifierData(int $activity_id): ?array
     {
-        return $this->activityRepository->find($activity_id)->iati_identifier;
+        $activity = $this->activityRepository->find($activity_id);
+
+        return [
+            'activity_identifier' => $activity->iati_identifier['activity_identifier'],
+            'iati_identifier_text' => $activity->organization->identifier . '-' . $activity->iati_identifier['activity_identifier'],
+        ];
     }
 
     /**
@@ -82,7 +87,7 @@ class ActivityIdentifierService
      */
     public function formGenerator($id): Form
     {
-        $element = getElementSchema('activity_identifier');
+        $element = getElementSchema('iati_identifier');
         $model['activity_identifier'] = $this->getActivityIdentifierData($id);
         $this->baseFormCreator->url = route('admin.activity.identifier.update', [$id]);
 

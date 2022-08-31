@@ -182,7 +182,7 @@
                   :id="key"
                   :data="element"
                   :types="types"
-                  :title="name.toString()"
+                  :title="String(name)"
                   :activity-id="activity.id"
                   :width="
                     String(name) === 'iati_identifier' ||
@@ -205,7 +205,7 @@
                   :id="key"
                   :data="element"
                   :types="types"
-                  :title="name.toString()"
+                  :title="String(name)"
                   :activity-id="activity.id"
                   :completed="status[name] ?? false"
                   tooltip="Example text"

@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace App\Http\Requests\Activity;
 
+use App\IATI\Services\Activity\ActivityService;
+use App\IATI\Services\Activity\IndicatorService;
+use App\IATI\Services\Activity\ResultService;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
 /**
@@ -16,10 +18,33 @@ use Illuminate\Support\Facades\Validator;
 class ActivityBaseRequest extends FormRequest
 {
     /**
-     * ActivityBaseRequest constructor.
+     * @var IndicatorService
      */
-    public function __construct()
+    protected IndicatorService $indicatorService;
+
+    /**
+     * @var ResultService
+     */
+    protected ResultService $resultService;
+
+    /**
+     * @var ActivityService
+     */
+    protected ActivityService $activityService;
+
+    /**
+     * ActivityBaseRequest constructor.
+     *
+     * @param IndicatorService
+     * @param ResultService
+     * @param ActivityService
+     */
+    public function __construct(IndicatorService $indicatorService, ResultService $resultService, ActivityService $activityService)
     {
+        $this->indicatorService = $indicatorService;
+        $this->resultService = $resultService;
+        $this->activityService = $activityService;
+
         Validator::extendImplicit(
             'unique_lang',
             function ($attribute, $value) {
@@ -167,6 +192,28 @@ class ActivityBaseRequest extends FormRequest
     }
 
     /**
+     * Returns default values related to an activity.
+     */
+    public function getActivityDefaultValues()
+    {
+        $parameters = $this->route()->parameters();
+        $route = $this->getRequestUri();
+        $activity = [];
+
+        if (str_starts_with($route, 'indicator')) {
+            $indicator = $this->indicatorService->getIndicator($parameters['id']);
+            $activity = $indicator->result->activity;
+        } elseif (str_starts_with($route, 'result')) {
+            $result = $this->resultService->getResult($parameters['id']);
+            $activity = $result->activity;
+        } else {
+            $activity = $this->activityService->getActivity($parameters['id']);
+        }
+
+        return $activity->default_field_values;
+    }
+
+    /**
      * Validator for unique lang.
      *
      * @param      $attribute
@@ -179,7 +226,8 @@ class ActivityBaseRequest extends FormRequest
     public function uniqueDefaultLangValidator($attribute, $value, $parameters, $validator): bool
     {
         $languages = [];
-        $defaultLanguage = Auth::user()->organization->settings->default_values['default_language'] ?? null;
+        $defaultValues = $this->getActivityDefaultValues();
+        $defaultLanguage = $defaultValues['default_language'];
 
         $validator->addReplacer(
             'unique_default_lang',
@@ -267,6 +315,7 @@ class ActivityBaseRequest extends FormRequest
     {
         $messages = [];
         $messages[sprintf('%s.narrative.unique_lang', $formBase)] = 'The @xml:lang field must be unique.';
+        $messages[sprintf('%s.narrative.unique_default_lang', $formBase)] = 'The @xml:lang field must be unique.';
 
         foreach ($formFields as $narrativeIndex => $narrative) {
             $messages[sprintf(

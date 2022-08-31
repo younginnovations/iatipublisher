@@ -70,7 +70,7 @@ class LegacyDataController extends Controller
     public function update(LegacyDataRequest $request, $id): JsonResponse|RedirectResponse
     {
         try {
-            if (!$this->activityLegacyDataService->update($id, $request->all())) {
+            if ($this->activityLegacyDataService->update($id, $request->all())) {
                 return redirect()->route('admin.activity.show', $id)->with('success', 'Legacy-data updated successfully.');
             }
 
