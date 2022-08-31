@@ -202,6 +202,11 @@
               </template>
               <template v-else>
                 <Result
+                  v-if="
+                    (typeof element.content === 'object'
+                      ? Object.keys(element.content).length > 0
+                      : element.content) || typeof element.content === 'number'
+                  "
                   :id="key"
                   :data="element"
                   :types="types"
