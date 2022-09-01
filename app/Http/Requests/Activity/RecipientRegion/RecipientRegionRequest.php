@@ -5,7 +5,10 @@ declare(strict_types=1);
 namespace App\Http\Requests\Activity\RecipientRegion;
 
 use App\Http\Requests\Activity\ActivityBaseRequest;
+use App\IATI\Services\Activity\ActivityService;
+use App\IATI\Services\Activity\IndicatorService;
 use App\IATI\Services\Activity\RecipientCountryService;
+use App\IATI\Services\Activity\ResultService;
 use Illuminate\Support\Arr;
 
 /**
@@ -16,16 +19,17 @@ class RecipientRegionRequest extends ActivityBaseRequest
     /**
      * @var RecipientCountryService
      */
-    protected $recipientCountryService;
+    protected RecipientCountryService $recipientCountryService;
 
     /**
      * RecipientRegionRequest Constructor.
      *
      * @param RecipientCountryService $recipientCountryService
      */
-    public function __construct(RecipientCountryService $recipientCountryService)
+    public function __construct(IndicatorService $indicatorService, ResultService $resultService, ActivityService $activityService, RecipientCountryService $recipientCountryService)
     {
-        parent::__construct();
+        parent::__construct($indicatorService, $resultService, $activityService);
+
         $this->recipientCountryService = $recipientCountryService;
     }
 

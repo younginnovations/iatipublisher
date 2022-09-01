@@ -35,12 +35,13 @@ class ActivityBaseRequest extends FormRequest
     /**
      * ActivityBaseRequest constructor.
      *
-     * @param IndicatorService
-     * @param ResultService
-     * @param ActivityService
+     * @param IndicatorService $indicatorService
+     * @param ResultService    $resultService
+     * @param ActivityService  $activityService
      */
     public function __construct(IndicatorService $indicatorService, ResultService $resultService, ActivityService $activityService)
     {
+        parent::__construct();
         $this->indicatorService = $indicatorService;
         $this->resultService = $resultService;
         $this->activityService = $activityService;
@@ -156,7 +157,7 @@ class ActivityBaseRequest extends FormRequest
         foreach ($value as $language) {
             $code = isset($language['code']) ? $language['code'] : ($language['language'] ?? '');
 
-            if (in_array($code, $languageCodes)) {
+            if (in_array($code, $languageCodes, true)) {
                 return false;
             }
 
@@ -181,7 +182,7 @@ class ActivityBaseRequest extends FormRequest
         foreach ($value as $category) {
             $code = $category['code'];
 
-            if (in_array($code, $categoryCodes)) {
+            if (in_array($code, $categoryCodes, true)) {
                 return false;
             }
 
@@ -198,7 +199,6 @@ class ActivityBaseRequest extends FormRequest
     {
         $parameters = $this->route()->parameters();
         $route = $this->getRequestUri();
-        $activity = [];
 
         if (str_starts_with($route, 'indicator')) {
             $indicator = $this->indicatorService->getIndicator($parameters['id']);
@@ -218,7 +218,7 @@ class ActivityBaseRequest extends FormRequest
      *
      * @param      $attribute
      * @param      $value
-     * @param      $parameter
+     * @param      $parameters
      * @param      $validator
      *
      * @return bool
@@ -244,7 +244,7 @@ class ActivityBaseRequest extends FormRequest
             }
 
             if (count($languages) === count(array_unique($languages))) {
-                if ((in_array('', $languages) || in_array(null, $languages)) && in_array($defaultLanguage, $languages)) {
+                if ((in_array('', $languages, true) || in_array(null, $languages, true)) && in_array($defaultLanguage, $languages, true)) {
                     $check = false;
                 }
             }
