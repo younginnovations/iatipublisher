@@ -227,30 +227,35 @@ class ActivityBaseRequest extends FormRequest
     {
         $languages = [];
         $defaultValues = $this->getActivityDefaultValues();
-        $defaultLanguage = $defaultValues['default_language'];
 
-        $validator->addReplacer(
-            'unique_default_lang',
-            function ($message) use ($validator, $defaultLanguage) {
-                return str_replace(':language', getCodeListArray('Languages', 'ActivityArray')[$defaultLanguage], $message);
-            }
-        );
+        if (!empty($defaultValues)) {
+            $defaultLanguage = $defaultValues['default_language'];
 
-        $check = true;
+            $validator->addReplacer(
+                'unique_default_lang',
+                function ($message) use ($validator, $defaultLanguage) {
+                    return str_replace(':language', getCodeListArray('Languages', 'ActivityArray')[$defaultLanguage], $message);
+                }
+            );
 
-        if ($defaultLanguage) {
-            foreach ($value as $narrative) {
-                $languages[] = $narrative['language'];
-            }
+            $check = true;
 
-            if (count($languages) === count(array_unique($languages))) {
-                if ((in_array('', $languages, true) || in_array(null, $languages, true)) && in_array($defaultLanguage, $languages, true)) {
-                    $check = false;
+            if ($defaultLanguage) {
+                foreach ($value as $narrative) {
+                    $languages[] = $narrative['language'];
+                }
+
+                if (count($languages) === count(array_unique($languages))) {
+                    if ((in_array('', $languages, true) || in_array(null, $languages, true)) && in_array($defaultLanguage, $languages, true)) {
+                        $check = false;
+                    }
                 }
             }
+
+            return $check;
         }
 
-        return $check;
+        return true;
     }
 
     /**
