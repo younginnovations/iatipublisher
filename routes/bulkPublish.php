@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Route;
 */
 Route::name('admin.')->group(function () {
     Route::get('activities/core-elements-completed', [\App\Http\Controllers\Admin\Workflow\BulkPublishingController::class, 'checkCoreElementsCompleted'])->name('activities.coreElementsCompleted');
-    Route::get('activities/validate-activities', [\App\Http\Controllers\Admin\Workflow\BulkPublishingController::class, 'validateActivities'])->name('activities.validateActivities');
+    Route::post('activities/validate-activities', [\App\Http\Controllers\Admin\Workflow\BulkPublishingController::class, 'validateActivities'])->name('activities.validateActivities');
     Route::get('activities/start-bulk-publish', [\App\Http\Controllers\Admin\Workflow\BulkPublishingController::class, 'startBulkPublish'])->name('activities.startBulkPublish');
     Route::get('activities/bulk-publish-status', [\App\Http\Controllers\Admin\Workflow\BulkPublishingController::class, 'getBulkPublishStatus'])->name('activities.bulkPublishStatus');
 });

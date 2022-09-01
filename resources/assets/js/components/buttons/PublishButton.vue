@@ -14,9 +14,9 @@
     @reset="resetPublishStep"
   >
     <div class="mb-4 popup">
-      <div class="flex mb-6 title">
+      <div class="flex items-center mb-6 text-sm title">
         <svg-vue
-          class="mr-1 mt-0.5 text-lg"
+          class="mr-1 text-lg"
           :class="{
             'text-spring-50': publishStateChange.alertState,
             'text-crimson-40': !publishStateChange.alertState,
