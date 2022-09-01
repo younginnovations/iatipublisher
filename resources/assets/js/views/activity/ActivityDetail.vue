@@ -230,9 +230,9 @@ import { useToggle } from '@vueuse/core';
 import { Result } from './elements/Index';
 import HoverText from 'Components/HoverText.vue';
 import ProgressBar from 'Components/RadialProgressBar.vue';
-import Publish from 'Components/sections/PublishButton.vue';
-import UnPublish from 'Components/sections/UnPublishButton.vue';
-import DeleteButton from 'Components/sections/DeleteButton.vue';
+import Publish from 'Components/buttons/PublishButton.vue';
+import UnPublish from 'Components/buttons/UnPublishButton.vue';
+import DeleteButton from 'Components/buttons/DeleteButton.vue';
 import Errors from 'Components/sections/StickyErrors.vue';
 import Toast from 'Components/Toast.vue';
 

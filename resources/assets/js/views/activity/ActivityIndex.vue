@@ -5,7 +5,7 @@
   >
     <div id="activity">
       <Loader v-if="isLoading"></Loader>
-      <PageTitle :show-buttons="state.showButtons" />
+      <PageTitle />
       <div class="overflow-hidden" :class="{ 'bg-white': isEmpty }">
         <ErrorMessage :is-empty="isEmpty"></ErrorMessage>
         <EmptyActivity v-if="isEmpty" />
