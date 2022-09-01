@@ -610,7 +610,7 @@ if (!function_exists('getDefaultLanguage')) {
  *
  * @param $data
  */
-function removeEmptyValues(&$data): void
+function removeEmptyValues(&$data)
 {
     foreach ($data as &$subData) {
         if (is_array($subData)) {
@@ -620,8 +620,8 @@ function removeEmptyValues(&$data): void
 
     $data = array_filter(
         $data,
-        static function ($value) {
-            return $value !== '' && $value !== [];
+        function ($value) {
+            return $value !== '' && $value != [];
         }
     );
 }

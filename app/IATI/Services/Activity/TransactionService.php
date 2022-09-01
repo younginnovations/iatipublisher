@@ -33,7 +33,7 @@ class TransactionService
     /**
      * TransactionService constructor.
      *
-     * @param TransactionRepository         $transactionRepository
+     * @param TransactionRepository $transactionRepository
      * @param TransactionElementFormCreator $transactionElementFormCreator
      */
     public function __construct(
@@ -115,7 +115,10 @@ class TransactionService
      */
     public function update($id, $transactionData): bool
     {
-        return $this->transactionRepository->update($id, $this->sanitizeTransactionData(['transaction' => $transactionData]));
+        return $this->transactionRepository->update(
+            $id,
+            $this->sanitizeTransactionData(['transaction' => $transactionData])
+        );
     }
 
     /**
@@ -184,9 +187,17 @@ class TransactionService
     {
         $element = getElementSchema('transactions');
         $activityTransaction = $this->getTransaction($transactionId);
-        $this->transactionElementFormCreator->url = route('admin.activity.transaction.update', [$activityId, $transactionId]);
+        $this->transactionElementFormCreator->url = route(
+            'admin.activity.transaction.update',
+            [$activityId, $transactionId]
+        );
 
-        return $this->transactionElementFormCreator->editForm($activityTransaction->transaction, $element, 'PUT', '/activity/' . $activityId);
+        return $this->transactionElementFormCreator->editForm(
+            $activityTransaction->transaction,
+            $element,
+            'PUT',
+            '/activity/' . $activityId
+        );
     }
 
     /**
@@ -206,7 +217,9 @@ class TransactionService
                     if (is_array($sub_element)) {
                         foreach ($sub_element as $inner_key => $inner_element) {
                             if (is_array($inner_element)) {
-                                $transactionData['transaction'][$transaction_key][$sub_key][$inner_key] = array_values($inner_element);
+                                $transactionData['transaction'][$transaction_key][$sub_key][$inner_key] = array_values(
+                                    $inner_element
+                                );
                             }
                         }
                     }
@@ -264,12 +277,15 @@ class TransactionService
             if (Arr::get($transaction, 'recipient_region', null)) {
                 $recipientRegion = [
                     '@attributes' => [
-                        'code'           => (Arr::get($transaction, 'recipient_region.0.region_vocabulary', null) === 1
-                            || Arr::get($transaction, 'recipient_region.0.region_vocabulary', null) === '1') ? Arr::get(
-                                $transaction,
-                                'recipient_region.0.region_code',
-                                null
-                            ) : Arr::get($transaction, 'recipient_region.0.custom_code', null),
+                        'code'           => Arr::get(
+                            $transaction,
+                            'recipient_region.0.region_vocabulary',
+                            null
+                        ) == 1 ? Arr::get(
+                            $transaction,
+                            'recipient_region.0.region_code',
+                            null
+                        ) : Arr::get($transaction, 'recipient_region.0.custom_code', null),
                         'vocabulary'     => Arr::get($transaction, 'recipient_region.0.region_vocabulary', null),
                         'vocabulary-uri' => Arr::get($transaction, 'recipient_region.0.vocabulary_uri', null),
                     ],
@@ -293,7 +309,13 @@ class TransactionService
                 }
             }
 
-            $transactionData[] = $this->getTransactionData($transaction, $sector, $recipientCountry, $recipientRegion, $aidType);
+            $transactionData[] = $this->getTransactionData(
+                $transaction,
+                $sector,
+                $recipientCountry,
+                $recipientRegion,
+                $aidType
+            );
         }
 
         return $transactionData;
