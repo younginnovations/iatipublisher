@@ -230,6 +230,13 @@ class ActivityController extends Controller
         }
     }
 
+    /**
+     * Sanitizes the request for removing code injections.
+     *
+     * @param $request
+     *
+     * @return array
+     */
     public function sanitizeRequest($request): array
     {
         $tableConfig = getTableConfig('activity');

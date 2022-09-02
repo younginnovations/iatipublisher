@@ -6,7 +6,6 @@ namespace App\IATI\Services\Activity;
 
 use App\IATI\Models\Activity\Activity;
 use App\IATI\Repositories\Activity\ActivityRepository;
-use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -30,16 +29,6 @@ class ActivityService
     public function __construct(ActivityRepository $activityRepository)
     {
         $this->activityRepository = $activityRepository;
-    }
-
-    /**
-     * Returns all activities present in database.
-     *
-     * @return Collection
-     */
-    public function getAllActivities(): Collection
-    {
-        return $this->activityRepository->getActivityForOrganization(Auth::user()->organization_id);
     }
 
     /**
@@ -104,18 +93,6 @@ class ActivityService
     }
 
     /**
-     * Checks if specific activity exists.
-     *
-     * @param int $id
-     *
-     * @return bool
-     */
-    public function activityExists(int $id): bool
-    {
-        return $this->getActivity($id) !== null;
-    }
-
-    /**
      * Returns activity identifiers used by an organization.
      *
      * @param $id
@@ -132,7 +109,7 @@ class ActivityService
      *
      * @param $serviceName
      *
-     * @return Application|mixed
+     * @return mixed
      */
     public function getService($serviceName): mixed
     {
@@ -173,7 +150,7 @@ class ActivityService
      *
      * @return void
      */
-    public function resetActivityWorkflow($activity_id)
+    public function resetActivityWorkflow($activity_id): void
     {
         $this->activityRepository->resetActivityWorkflow($activity_id);
     }

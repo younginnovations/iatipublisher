@@ -77,7 +77,7 @@ class RedirectActivity
             'admin.activities.paginate',
             'admin.activities.codelist',
             'admin.activity.store',
-//            'admin.activities.validateActivity'
+            //'admin.activities.validateActivity'
         ];
 
         if (in_array($request->route()->getName(), $byPassActivityRoutes, true)) {
@@ -176,6 +176,13 @@ class RedirectActivity
         return abort(404);
     }
 
+    /**
+     * Returns the route parameters.
+     *
+     * @param $params
+     *
+     * @return array
+     */
     public function getRouteParams($params): array
     {
         $routeParams = explode('.', $params);

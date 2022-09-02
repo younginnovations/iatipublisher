@@ -194,8 +194,10 @@ class ActivityBaseRequest extends FormRequest
 
     /**
      * Returns default values related to an activity.
+     *
+     * @return mixed
      */
-    public function getActivityDefaultValues()
+    public function getActivityDefaultValues(): mixed
     {
         $parameters = $this->route()->parameters();
         $route = $this->getRequestUri();

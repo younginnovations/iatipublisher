@@ -595,6 +595,13 @@ if (!function_exists('getTableConfig')) {
 }
 
 if (!function_exists('getDefaultLanguage')) {
+    /**
+     * Gets the default language.
+     *
+     * @param $defaultValues
+     *
+     * @return string
+     */
     function getDefaultLanguage($defaultValues): string
     {
         if (!empty($defaultValues) && array_key_exists('default_language', $defaultValues) && !empty($defaultValues['default_language'])) {
@@ -605,33 +612,37 @@ if (!function_exists('getDefaultLanguage')) {
     }
 }
 
-/**
- * Removes empty values.
- *
- * @param $data
- */
-function removeEmptyValues(&$data)
-{
-    foreach ($data as &$subData) {
-        if (is_array($subData)) {
-            removeEmptyValues($subData);
+if (!function_exists('removeEmptyValues')) {
+    /**
+     * Removes empty values.
+     *
+     * @param $data
+     */
+    function removeEmptyValues(&$data): void
+    {
+        foreach ($data as &$subData) {
+            if (is_array($subData)) {
+                removeEmptyValues($subData);
+            }
         }
-    }
 
-    $data = array_filter(
-        $data,
-        function ($value) {
-            return $value !== '' && $value != [];
-        }
-    );
+        $data = array_filter(
+            $data,
+            function ($value) {
+                return $value !== '' && $value != [];
+            }
+        );
+    }
 }
 
-/**
- * Returns array of elements which do not store data as array.
- *
- * @return array
- */
-function getNonArrayElements(): array
-{
-    return ['activity_status', 'activity_scope', 'default_flow_type', 'default_finance_type', 'default_tied_status', 'capital_spend', 'collaboration_type'];
+if (!function_exists('getNonArrayElements')) {
+    /**
+     * Returns array of elements which do not store data as array.
+     *
+     * @return array
+     */
+    function getNonArrayElements(): array
+    {
+        return ['activity_status', 'activity_scope', 'default_flow_type', 'default_finance_type', 'default_tied_status', 'capital_spend', 'collaboration_type'];
+    }
 }

@@ -25,16 +25,6 @@ class ActivityRepository extends Repository
     }
 
     /**
-     * Returns all activities present in database.
-     *
-     * @return Collection
-     */
-    public function getAllActivities(): Collection
-    {
-        return $this->model->all();
-    }
-
-    /**
      * Returns activity identifiers used by an organization.
      *
      * @param $organizationId
@@ -49,13 +39,13 @@ class ActivityRepository extends Repository
     /**
      * Returns activity identifiers used by an organization.
      *
-     * @param     $organizationId
-     * @param     $queryParams
-     * @param int $page
+     * @param       $organizationId
+     * @param array $queryParams
+     * @param int   $page
      *
      * @return Collection|LengthAwarePaginator
      */
-    public function getActivityForOrganization($organizationId, $queryParams, int $page = 1): Collection|LengthAwarePaginator
+    public function getActivityForOrganization($organizationId, array $queryParams = [], int $page = 1): Collection|LengthAwarePaginator
     {
         $whereSql = '1=1';
         $bindParams = [];
@@ -89,8 +79,8 @@ class ActivityRepository extends Repository
         }
 
         return $this->model->whereRaw($whereSql, $bindParams)
-                    ->orderBy($orderBy, $direction)
-                    ->paginate(10, ['*'], 'activity', $page);
+                           ->orderBy($orderBy, $direction)
+                           ->paginate(10, ['*'], 'activity', $page);
     }
 
     /**
@@ -131,7 +121,7 @@ class ActivityRepository extends Repository
      *
      * @return void
      */
-    public function resetActivityWorkflow($activity_id)
+    public function resetActivityWorkflow($activity_id): void
     {
         $this->model->whereId($activity_id)->update(['status' => 'draft']);
     }
