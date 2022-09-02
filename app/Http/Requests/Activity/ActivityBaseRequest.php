@@ -200,12 +200,12 @@ class ActivityBaseRequest extends FormRequest
     public function getActivityDefaultValues(): mixed
     {
         $parameters = $this->route()->parameters();
-        $route = $this->getRequestUri();
+        $routeParam = explode('.', $this->route()->getName());
 
-        if (str_starts_with($route, 'indicator')) {
+        if ($routeParam[2] === 'indicator') {
             $indicator = $this->indicatorService->getIndicator($parameters['id']);
             $activity = $indicator->result->activity;
-        } elseif (str_starts_with($route, 'result')) {
+        } elseif ($routeParam[2] === 'result') {
             $result = $this->resultService->getResult($parameters['id']);
             $activity = $result->activity;
         } else {

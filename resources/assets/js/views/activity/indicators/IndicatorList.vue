@@ -62,7 +62,7 @@
             </td>
             <td>{{ types.indicatorMeasure[indicator.indicator.measure] }}</td>
             <td class="capitalize">
-              {{ Number(indicator.indicator.aggregation_status) != 0 }}
+              {{ parseInt(indicator.indicator.aggregation_status) ? 'True' : indicator.indicator.aggregation_status ? 'False' : 'Not Available'  }}
             </td>
             <td>
               <div class="flex text-n-40">
