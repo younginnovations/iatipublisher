@@ -86,7 +86,7 @@
         "label": "Tag"
       },
       "collaboration_type": {
-        "core": false,
+        "core": true,
         "label": "Collaboration Type"
       },
       "default_flow_type": {
