@@ -77,7 +77,8 @@ spec:
                   php artisan migrate --force;
                   php artisan db:seed --force;
                   php artisan route:clear;
-                  npm run prod;
+                  npm i;
+                  npm run production;
                   chown -R webuser:webgroup /var/www/html;
         env:
         - name: PHP_POOL_NAME
@@ -286,8 +287,8 @@ spec:
               key: IATI_VALIDATOR_KEY
         resources:
           limits:
-            memory: "500Mi"
-            cpu: "500m"
+            memory: "2Gi"
+            cpu: "1"
         ports:
         - containerPort: 80
       imagePullSecrets:
