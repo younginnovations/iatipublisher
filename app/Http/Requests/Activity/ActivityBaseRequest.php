@@ -203,16 +203,13 @@ class ActivityBaseRequest extends FormRequest
         $routeParam = explode('.', $this->route()->getName());
 
         if ($routeParam[2] === 'indicator') {
-            $indicator = $this->indicatorService->getIndicator($parameters['id']);
+            $indicator = $this->indicatorService->getIndicator($parameters['indicatorId']);
             $activity = $indicator->result->activity;
-        } elseif ($routeParam[2] === 'result') {
-            $result = $this->resultService->getResult($parameters['id']);
-            $activity = $result->activity;
-        } else {
+        } elseif ($routeParam[1] === 'activity' || $routeParam[2] === 'result') {
             $activity = $this->activityService->getActivity($parameters['id']);
         }
 
-        return $activity->default_field_values;
+        return $activity->default_field_values ?? [];
     }
 
     /**

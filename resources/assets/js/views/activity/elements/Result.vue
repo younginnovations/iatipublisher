@@ -11,7 +11,7 @@
             {{ title.toString().replace(/_/g, '-') }}
           </div>
 
-          <!-- <div
+           <div
             class="status ml-2.5 flex text-xs leading-5"
             :class="{
               'text-spring-50': completed === true,
@@ -21,7 +21,7 @@
             <b class="mr-2 text-base leading-3">.</b>
             <span v-if="completed">completed</span>
             <span v-else>not completed</span>
-          </div> -->
+          </div>
         </div>
         <div class="flex items-center icons">
           <Btn
