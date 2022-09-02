@@ -5,42 +5,26 @@
     class="elements-detail"
     :class="{ 'mb-4': Number(key) !== data.length - 1 }"
   >
-    <div class="tb-title category">
-      <span v-if="post.region_vocabulary">{{
-        types.regionVocabulary[post.region_vocabulary]
-      }}</span>
+    <div class="category">
+      <span v-if="post.type">
+        {{ types.humanitarianScopeType[post.type] ?? 'Not available' }}
+      </span>
       <span v-else>Vocabulary Not Available</span>
     </div>
     <div class="ml-5">
       <table>
         <tbody>
-          <tr v-if="post.region_vocabulary === '1'">
-            <td>Region Code</td>
+          <tr>
+            <td>Vocabulary</td>
             <td>
-              <span v-if="post.region_code">{{
-                types.region[post.region_code]
-              }}</span>
-              <span v-else>Not Available</span>
-            </td>
-          </tr>
-          <tr v-else>
-            <td>Custom Code</td>
-            <td>
-              <span v-if="post.custom_code">{{ post.custom_code }}</span>
-              <span v-else>Not Available</span>
+              {{
+                types.humanitarianScopeVocabulary[post.vocabulary] ??
+                'Not available'
+              }}
             </td>
           </tr>
           <tr>
-            <td>Percentage</td>
-            <td>
-              <span v-if="post.percentage">
-                ({{ roundFloat(post.percentage) }}%)
-              </span>
-              <span v-else>Not Available</span>
-            </td>
-          </tr>
-          <tr v-if="post.region_vocabulary === '99'">
-            <td>Vocabulary-uri</td>
+            <td>Vocabulary URI</td>
             <td>
               <a
                 v-if="post.vocabulary_uri"
@@ -49,7 +33,13 @@
               >
                 {{ post.vocabulary_uri }}
               </a>
-              <span v-else>Not Available</span>
+              <span v-else class="italic">Not Available</span>
+            </td>
+          </tr>
+          <tr>
+            <td>Code</td>
+            <td>
+              {{ post.code ?? 'Not Available' }}
             </td>
           </tr>
           <tr>
@@ -92,14 +82,10 @@ defineProps({
 });
 
 interface Types {
-  regionVocabulary: [];
-  region: [];
+  humanitarianScopeVocabulary: [];
   languages: [];
+  humanitarianScopeType: [];
 }
 
 const types = inject('types') as Types;
-
-function roundFloat(num: string) {
-  return parseFloat(num).toFixed(2);
-}
 </script>

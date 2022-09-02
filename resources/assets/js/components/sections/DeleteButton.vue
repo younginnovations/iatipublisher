@@ -79,7 +79,7 @@ const deleteFunction = () => {
   loader.value = true;
   loader.text = 'Deleting';
 
-  axios.delete(`/activities/${id}`).then((res) => {
+  axios.delete(`/activity/${id}`).then((res) => {
     const response = res.data;
     toastMessage.message = response.message;
     toastMessage.type = response.success;
@@ -90,6 +90,7 @@ const deleteFunction = () => {
       setTimeout(() => {
         loader.value = false;
         deleteValue.value = false;
+        location.reload();
       }, 1000);
     }
   });

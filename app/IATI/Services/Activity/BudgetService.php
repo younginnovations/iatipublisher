@@ -6,8 +6,7 @@ namespace App\IATI\Services\Activity;
 
 use App\IATI\Elements\Builder\ParentCollectionFormCreator;
 use App\IATI\Models\Activity\Activity;
-use App\IATI\Repositories\Activity\BudgetRepository;
-use Illuminate\Database\Eloquent\Model;
+use App\IATI\Repositories\Activity\ActivityRepository;
 use Illuminate\Support\Arr;
 use Kris\LaravelFormBuilder\Form;
 
@@ -17,9 +16,9 @@ use Kris\LaravelFormBuilder\Form;
 class BudgetService
 {
     /**
-     * @var BudgetRepository
+     * @var ActivityRepository
      */
-    protected BudgetRepository $budgetRepository;
+    protected ActivityRepository $activityRepository;
 
     /**
      * @var ParentCollectionFormCreator
@@ -29,66 +28,43 @@ class BudgetService
     /**
      * BudgetService constructor.
      *
-     * @param BudgetRepository $budgetRepository
+     * @param ActivityRepository          $activityRepository
      * @param ParentCollectionFormCreator $parentCollectionFormCreator
      */
-    public function __construct(BudgetRepository $budgetRepository, ParentCollectionFormCreator $parentCollectionFormCreator)
+    public function __construct(ActivityRepository $activityRepository, ParentCollectionFormCreator $parentCollectionFormCreator)
     {
-        $this->budgetRepository = $budgetRepository;
+        $this->activityRepository = $activityRepository;
         $this->parentCollectionFormCreator = $parentCollectionFormCreator;
-    }
-
-    /**
-     * Returns budget data of an activity.
-     *
-     * @param int $activity_id
-     *
-     * @return array|null
-     */
-    public function getBudgetData(int $activity_id): ?array
-    {
-        return $this->budgetRepository->getBudgetData($activity_id);
-    }
-
-    /**
-     * Returns activity object.
-     *
-     * @param $id
-     *
-     * @return Model
-     */
-    public function getActivityData($id): Model
-    {
-        return $this->budgetRepository->getActivityData($id);
     }
 
     /**
      * Updates activity budget.
      *
+     * @param $id
      * @param $activityBudget
-     * @param $activity
      *
      * @return bool
      */
-    public function update($activityBudget, $activity): bool
+    public function update($id, $activityBudget): bool
     {
-        return $this->budgetRepository->update($activityBudget, $activity);
+        return $this->activityRepository->update($id, ['budget' => array_values($activityBudget['budget'])]);
     }
 
     /**
      * Generates budget form.
      *
-     * @param id
+     * @param $id
      *
      * @return Form
+     * @throws \JsonException
      */
     public function formGenerator($id): Form
     {
         $element = getElementSchema('budget');
-        $model['budget'] = $this->getBudgetData($id);
-        $this->parentCollectionFormCreator->url = route('admin.activities.budget.update', [$id]);
+        $model['budget'] = $this->activityRepository->find($id)->budget;
+        $this->parentCollectionFormCreator->url = route('admin.activity.budget.update', [$id]);
 
-        return $this->parentCollectionFormCreator->editForm($model, $element['budget'], 'PUT', '/activities/' . $id);
+        return $this->parentCollectionFormCreator->editForm($model, $element, 'PUT', '/activity/' . $id);
     }
 
     /**

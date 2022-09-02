@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace App\IATI\Services\Activity;
 
 use App\IATI\Elements\Builder\ResultElementFormCreator;
-use App\IATI\Models\Activity\Period;
 use App\IATI\Repositories\Activity\PeriodRepository;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Arr;
 use Kris\LaravelFormBuilder\Form;
 
 /**
@@ -30,13 +30,76 @@ class PeriodService
     /**
      * PeriodService constructor.
      *
-     * @param PeriodRepository $periodRepository
+     * @param PeriodRepository         $periodRepository
      * @param ResultElementFormCreator $resultElementFormCreator
      */
     public function __construct(PeriodRepository $periodRepository, ResultElementFormCreator $resultElementFormCreator)
     {
         $this->periodRepository = $periodRepository;
         $this->resultElementFormCreator = $resultElementFormCreator;
+    }
+
+    /**
+     * Return specific result indicator period.
+     *
+     * @param $indicatorId
+     *
+     * @return object
+     */
+    public function getPeriods($indicatorId): object
+    {
+        return $this->periodRepository->findAllBy('indicator_id', $indicatorId);
+    }
+
+    /**
+     * Checks if specific indicator exists for specific result.
+     *
+     * @param int $indicatorId
+     * @param int $id
+     *
+     * @return bool
+     */
+    public function indicatorPeriodExist(int $indicatorId, int $id): bool
+    {
+        return $this->getIndicatorPeriod($indicatorId, $id) !== null;
+    }
+
+    /**
+     * Returns specific result of specific activity.
+     *
+     * @param int $indicatorId
+     * @param int $id
+     *
+     * @return mixed
+     */
+    public function getIndicatorPeriod(int $indicatorId, int $id): mixed
+    {
+        return $this->periodRepository->getIndicatorPeriod($indicatorId, $id);
+    }
+
+    /**
+     * Return specific result indicator period.
+     *
+     * @param $id
+     *
+     * @return object|null
+     */
+    public function getPeriod($id): ?object
+    {
+        return $this->periodRepository->find($id);
+    }
+
+    /**
+     * Returns array of paginated period belonging to indicator of an result.
+     *
+     * @param int $indicatorId
+     * @param int $page
+     *
+     * @return LengthAwarePaginator|Collection
+     */
+    public function getPaginatedPeriod(int $indicatorId, int $page): LengthAwarePaginator|Collection
+    {
+        return $this->periodRepository->getPaginatedPeriod($indicatorId, $page);
     }
 
     /**
@@ -48,93 +111,101 @@ class PeriodService
      */
     public function create(array $periodData): Model
     {
-        return $this->periodRepository->create($periodData);
+        return $this->periodRepository->store($this->sanitizePeriodData($periodData));
     }
 
     /**
      * Update Indicator Period.
      *
-     * @param array $periodData
-     * @param Period $resultIndicatorPeriod
+     * @param int $id
+     * @param     $periodData
      *
      * @return bool
      */
-    public function update(array $periodData, Period $resultIndicatorPeriod): bool
+    public function update(int $id, $periodData): bool
     {
-        return $this->periodRepository->update($periodData, $resultIndicatorPeriod);
-    }
-
-    /**
-     * Return specific result indicator period.
-     *
-     * @param $indicatorId
-     * @param $indicatorPeriodId
-     *
-     * @return Model
-     */
-    public function getIndicatorPeriod($indicatorId, $indicatorPeriodId): Model
-    {
-        return $this->periodRepository->getIndicatorPeriod($indicatorId, $indicatorPeriodId);
+        return $this->periodRepository->update($id, ['period' => Arr::get($this->sanitizePeriodData($periodData), 'period', [])]);
     }
 
     /**
      * Generates create period form.
      *
-     * @param $activityId
-     * @param $resultId
+     * @param $indicatorId
+     *
+     * @return Form
+     * @throws \JsonException
+     */
+    public function createFormGenerator($indicatorId): Form
+    {
+        $element = getElementSchema('period');
+        $this->resultElementFormCreator->url = route('admin.indicator.period.store', $indicatorId);
+
+        return $this->resultElementFormCreator->editForm([], $element, 'POST', route('admin.indicator.period.index', $indicatorId));
+    }
+
+    /**
+     * Generates create period form.
+     *
      * @param $indicatorId
      * @param $periodId
      *
      * @return Form
+     * @throws \JsonException
      */
-    public function editFormGenerator($activityId, $resultId, $indicatorId, $periodId): Form
+    public function editFormGenerator($indicatorId, $periodId): Form
     {
         $element = getElementSchema('period');
-        $indicatorPeriod = $this->getIndicatorPeriod($indicatorId, $periodId);
-        $this->resultElementFormCreator->url = route('admin.activities.result.indicator.period.update', [$activityId, $resultId, $indicatorId, $periodId]);
+        $indicatorPeriod = $this->getPeriod($periodId);
+        $this->resultElementFormCreator->url = route('admin.indicator.period.update', [$indicatorId, $periodId]);
 
-        return $this->resultElementFormCreator->editForm($indicatorPeriod->period, $element, 'PUT', '/activities/' . $activityId);
+        return $this->resultElementFormCreator->editForm($indicatorPeriod->period, $element, 'PUT', route('admin.indicator.period.index', $indicatorId));
     }
 
     /**
-     * Generates create period form.
+     * Function to sanitize indicator data.
      *
-     * @param $activityId
-     * @param $resultId
-     * @param $indicatorId
+     * @param array $periodData
      *
-     * @return Form
+     * @return array
      */
-    public function createFormGenerator($activityId, $resultId, $indicatorId): Form
+    public function sanitizePeriodData(array $periodData): array
     {
-        $element = getElementSchema('period');
-        $this->resultElementFormCreator->url = route('admin.activities.result.indicator.period.store', [$activityId, $resultId, $indicatorId]);
+        foreach ($periodData['period'] as $period_key => $period) {
+            if (is_array($period)) {
+                $periodData['period'][$period_key] = array_values($period);
 
-        return $this->resultElementFormCreator->editForm([], $element, 'POST', '/activities/' . $activityId);
-    }
+                foreach ($periodData['period'][$period_key] as $sub_key => $sub_element) {
+                    if (is_array($sub_element)) {
+                        foreach ($periodData['period'][$period_key][$sub_key] as $inner_key => $inner_element) {
+                            if (is_array($inner_element)) {
+                                $periodData['period'][$period_key][$sub_key][$inner_key] = array_values($inner_element);
 
-    /*
-     * Return specific result indicator period.
-     *
-     * @param $indicatorId
-     *
-     * @return Collection
-     */
-    public function getPeriodOfIndicator($indicatorId): Collection
-    {
-        return $this->periodRepository->getPeriodOfIndicator($indicatorId);
-    }
+                                foreach ($periodData['period'][$period_key][$sub_key][$inner_key] as $deep_key => $deep_element) {
+                                    if (is_array($deep_element)) {
+                                        foreach ($periodData['period'][$period_key][$sub_key][$inner_key][$deep_key] as $inner_deep_key => $inner_deep_element) {
+                                            if (is_array($inner_deep_element)) {
+                                                $periodData['period'][$period_key][$sub_key][$inner_key][$deep_key][$inner_deep_key] = array_values($inner_deep_element);
 
-    /**
-     * Returns array of paginated period belonging to indicator of an result.
-     *
-     * @param $indicatorId
-     * @param $page
-     *
-     * return LengthAwarePaginator|Collection
-     */
-    public function getPaginatedPeriod($indicatorId, $page): LengthAwarePaginator|Collection
-    {
-        return $this->periodRepository->getPaginatedPeriod($indicatorId, $page);
+                                                foreach ($periodData['period'][$period_key][$sub_key][$inner_key][$deep_key][$inner_deep_key] as $deeperKey => $deeperValue) {
+                                                    if (is_array($deeperValue)) {
+                                                        foreach ($periodData['period'][$period_key][$sub_key][$inner_key][$deep_key][$inner_deep_key][$deeperKey] as $innerDeeperKey => $innerDeeperValue) {
+                                                            if (is_array($innerDeeperValue)) {
+                                                                $periodData['period'][$period_key][$sub_key][$inner_key][$deep_key][$inner_deep_key][$deeperKey][$innerDeeperKey] = array_values($innerDeeperValue);
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        return $periodData;
     }
 }

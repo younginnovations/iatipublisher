@@ -36,7 +36,7 @@ class DefaultAidTypeController extends Controller
      *
      * @param int $id
      *
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|void
+     * @return View|RedirectResponse
      */
     public function edit(int $id): View|RedirectResponse
     {
@@ -55,10 +55,7 @@ class DefaultAidTypeController extends Controller
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activities.show', $id)->with(
-                'error',
-                'Error has occurred while rendering default-aid-type form.'
-            );
+            return redirect()->route('admin.activity.show', $id)->with('error', 'Error has occurred while rendering default-aid-type form.');
         }
     }
 
@@ -72,27 +69,17 @@ class DefaultAidTypeController extends Controller
     public function update(DefaultAidTypeRequest $request, $id): JsonResponse|RedirectResponse
     {
         try {
-            $activityData = $this->defaultAidTypeService->getActivityData($id);
             $activityDefaultAidType = $request->all();
 
-            if (!$this->defaultAidTypeService->update($activityDefaultAidType, $activityData)) {
-                return redirect()->route('admin.activities.show', $id)->with(
-                    'error',
-                    'Error has occurred while updating default-aid-type.'
-                );
+            if (!$this->defaultAidTypeService->update($id, $activityDefaultAidType)) {
+                return redirect()->route('admin.activity.show', $id)->with('error', 'Error has occurred while updating default-aid-type.');
             }
 
-            return redirect()->route('admin.activities.show', $id)->with(
-                'success',
-                'Default-aid-type updated successfully.'
-            );
+            return redirect()->route('admin.activity.show', $id)->with('success', 'Default-aid-type updated successfully.');
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activities.show', $id)->with(
-                'error',
-                'Error has occurred while updating default aid type.'
-            );
+            return redirect()->route('admin.activity.show', $id)->with('error', 'Error has occurred while updating default aid type.');
         }
     }
 }

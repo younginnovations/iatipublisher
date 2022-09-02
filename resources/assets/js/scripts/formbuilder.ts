@@ -3,9 +3,7 @@ import 'select2';
 import { DynamicField } from './DynamicField';
 
 const dynamicField = new DynamicField();
-class FormBuilder
-{
-
+class FormBuilder {
   // adds new collection of sub-element
   public addForm(ev: Event): void {
     ev.preventDefault();
@@ -110,7 +108,9 @@ class FormBuilder
 
     const count = $(target).attr('parent_count')
       ? parseInt($(target).attr('parent_count') as string) + 1
-      : ($(target).prev().find('.multi-form').length ? $(target).prev().find('.multi-form').length : $(target).prev().find('.wrapped-child-body').length) + 1;
+      : ($(target).prev().find('.multi-form').length
+          ? $(target).prev().find('.multi-form').length
+          : $(target).prev().find('.wrapped-child-body').length) + 1;
 
     let proto = container.data('prototype').replace(/__PARENT_NAME__/g, count);
     proto = proto.replace(/__NAME__/g, 0);
@@ -153,7 +153,10 @@ class FormBuilder
     $('.add_to_collection').attr('child_count', count);
 
     if (collectionLength > 1) {
-      $(target).closest('.form-child-body').remove();
+      const tg = $(target).closest('.form-child-body');
+      console.log(tg.next('.error'));
+      tg.next('.error').remove();
+      tg.remove();
     }
   }
 
@@ -315,12 +318,14 @@ $(function () {
   }
 
   $('body').on('select2:open', '.select2', () => {
-    const select_search = document.querySelector('.select2-search__field') as HTMLElement;
+    const select_search = document.querySelector(
+      '.select2-search__field'
+    ) as HTMLElement;
 
     if (select_search) {
       select_search.focus();
     }
-  })
+  });
 
   /**
    * checks registration agency, country and registration number to deduce identifier
@@ -329,45 +334,60 @@ $(function () {
   console.log($('#organisation_identifier'));
   $('#organisation_identifier').attr('disabled', 'disabled');
 
-  function updateRegistrationAgency(country: JQuery){
-     if(country.val()){
-      $.ajax({ url: '/organisation/agency/' + country.val() })
-      .then((response) => {
-        const current_val = $('#organization_registration_agency').val()??'';
-        let val = false;
+  function updateRegistrationAgency(country: JQuery) {
+    if (country.val()) {
+      $.ajax({ url: '/organisation/agency/' + country.val() }).then(
+        (response) => {
+          const current_val =
+            $('#organization_registration_agency').val() ?? '';
+          let val = false;
 
-        $('#organization_registration_agency').empty();
+          $('#organization_registration_agency').empty();
 
-        for (const data in response.data) {
-          if(data===current_val){
-            val=true;
+          for (const data in response.data) {
+            if (data === current_val) {
+              val = true;
+            }
+
+            $('#organization_registration_agency')
+              .append(new Option(response.data[data], data, true, true))
+              .val('')
+              .trigger('change');
           }
 
-          $('#organization_registration_agency').append(new Option(response.data[data], data, true, true)).val('').trigger('change');
+          $('#organization_registration_agency')
+            .val(val ? current_val : '')
+            .trigger('change');
         }
-
-        $('#organization_registration_agency').val(val?current_val:'').trigger('change');
-      });
+      );
     }
   }
 
   $('body').on('select2:select', '#organization_country', function () {
     updateRegistrationAgency($(this));
-  })
+  });
 
-  $('body').on('select2:select', '#organization_registration_agency', function () {
-    const identifier = $(this).val() + '-' + $('#registration_number').val();
-    $('#organisation_identifier').val(identifier);
-  })
+  $('body').on(
+    'select2:select',
+    '#organization_registration_agency',
+    function () {
+      const identifier = $(this).val() + '-' + $('#registration_number').val();
+      $('#organisation_identifier').val(identifier);
+    }
+  );
 
-  $('body').on('select2:clear', '#organization_registration_agency', function () {
-    const identifier = '-' + $('#registration_number').val();
-    $('#organisation_identifier').val(identifier);
-  })
+  $('body').on(
+    'select2:clear',
+    '#organization_registration_agency',
+    function () {
+      const identifier = '-' + $('#registration_number').val();
+      $('#organisation_identifier').val(identifier);
+    }
+  );
 
   $('body').on('keyup', '#registration_number', function () {
-    const identifier = $('#organization_registration_agency').val() + '-' + $(this).val();
+    const identifier =
+      $('#organization_registration_agency').val() + '-' + $(this).val();
     $('#organisation_identifier').val(identifier);
-  })
-
+  });
 });

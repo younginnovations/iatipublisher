@@ -6,8 +6,7 @@ namespace App\IATI\Services\Activity;
 
 use App\IATI\Elements\Builder\BaseFormCreator;
 use App\IATI\Models\Activity\Activity;
-use App\IATI\Repositories\Activity\LegacyDataRepository;
-use Illuminate\Database\Eloquent\Model;
+use App\IATI\Repositories\Activity\ActivityRepository;
 use Illuminate\Support\Arr;
 use Kris\LaravelFormBuilder\Form;
 
@@ -17,9 +16,9 @@ use Kris\LaravelFormBuilder\Form;
 class LegacyDataService
 {
     /**
-     * @var LegacyDataRepository
+     * @var ActivityRepository
      */
-    protected LegacyDataRepository $legacyDataRepository;
+    protected ActivityRepository $activityRepository;
 
     /**
      * @var BaseFormCreator
@@ -29,12 +28,12 @@ class LegacyDataService
     /**
      * LegacyDataService constructor.
      *
-     * @param LegacyDataRepository $legacyDataRepository
-     * @param BaseFormCreator $baseFormCreator
+     * @param ActivityRepository $activityRepository
+     * @param BaseFormCreator    $baseFormCreator
      */
-    public function __construct(LegacyDataRepository $legacyDataRepository, BaseFormCreator $baseFormCreator)
+    public function __construct(ActivityRepository $activityRepository, BaseFormCreator $baseFormCreator)
     {
-        $this->legacyDataRepository = $legacyDataRepository;
+        $this->activityRepository = $activityRepository;
         $this->baseFormCreator = $baseFormCreator;
     }
 
@@ -47,7 +46,7 @@ class LegacyDataService
      */
     public function getActivityLegacyData(int $activity_id): ?array
     {
-        return $this->legacyDataRepository->getActivityLegacyData($activity_id);
+        return $this->activityRepository->find($activity_id)->legacy_data;
     }
 
     /**
@@ -55,40 +54,41 @@ class LegacyDataService
      *
      * @param $id
      *
-     * @return Model
+     * @return object
      */
-    public function getActivityData($id): Model
+    public function getActivityData($id): object
     {
-        return $this->legacyDataRepository->getActivityData($id);
+        return $this->activityRepository->find($id);
     }
 
     /**
      * Updates activity legacy.
      *
+     * @param $id
      * @param $activityLegacy
-     * @param $activity
      *
      * @return bool
      */
-    public function update($activityLegacy, $activity): bool
+    public function update($id, $activityLegacy): bool
     {
-        return $this->legacyDataRepository->update($activityLegacy, $activity);
+        return $this->activityRepository->update($id, ['legacy_data' => array_values($activityLegacy['legacy_data'])]);
     }
 
     /**
      * Generates budget form.
      *
-     * @param id
+     * @param $id
      *
      * @return Form
+     * @throws \JsonException
      */
     public function formGenerator($id): Form
     {
         $element = getElementSchema('legacy_data');
         $model['legacy_data'] = $this->getActivityLegacyData($id);
-        $this->baseFormCreator->url = route('admin.activities.legacy-data.update', [$id]);
+        $this->baseFormCreator->url = route('admin.activity.legacy-data.update', [$id]);
 
-        return $this->baseFormCreator->editForm($model, $element, 'PUT', '/activities/' . $id);
+        return $this->baseFormCreator->editForm($model, $element, 'PUT', '/activity/' . $id);
     }
 
     /**
@@ -101,15 +101,15 @@ class LegacyDataService
     public function getXmlData(Activity $activity): array
     {
         $activityData = [];
-        $legacyDatas = (array) $activity->legacy_data;
+        $legacyData = (array) $activity->legacy_data;
 
-        if (count($legacyDatas)) {
-            foreach ($legacyDatas as $legacyData) {
+        if (count($legacyData)) {
+            foreach ($legacyData as $legacyDatum) {
                 $activityData[] = [
                     '@attributes' => [
-                        'name'            => Arr::get($legacyData, 'legacy_name', null),
-                        'value'           => Arr::get($legacyData, 'value', null),
-                        'iati-equivalent' => Arr::get($legacyData, 'iati_equivalent', null),
+                        'name'            => Arr::get($legacyDatum, 'legacy_name', null),
+                        'value'           => Arr::get($legacyDatum, 'value', null),
+                        'iati-equivalent' => Arr::get($legacyDatum, 'iati_equivalent', null),
                     ],
                 ];
             }

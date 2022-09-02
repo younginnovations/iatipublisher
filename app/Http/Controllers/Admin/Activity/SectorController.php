@@ -36,7 +36,7 @@ class SectorController extends Controller
      *
      * @param int $id
      *
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|void
+     * @return View|RedirectResponse
      */
     public function edit(int $id): View|RedirectResponse
     {
@@ -45,20 +45,17 @@ class SectorController extends Controller
             $activity = $this->sectorService->getActivityData($id);
             $form = $this->sectorService->formGenerator($id);
             $data = [
-                'core' => $element['criteria'] ?? '',
+                'core'   => $element['criteria'] ?? '',
                 'status' => $activity->sector_element_completed,
-                'title' => $element['label'],
-                'name' => 'sector',
+                'title'  => $element['label'],
+                'name'   => 'sector',
             ];
 
             return view('admin.activity.sector.edit', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activities.show', $id)->with(
-                'error',
-                'Error has occurred while opening activity sector form.'
-            );
+            return redirect()->route('admin.activity.show', $id)->with('error', 'Error has occurred while opening activity sector form.');
         }
     }
 
@@ -66,34 +63,22 @@ class SectorController extends Controller
      * Updates sector data.
      *
      * @param Request $request
-     * @param $id
+     * @param         $id
      *
      * @return JsonResponse|RedirectResponse
      */
     public function update(SectorRequest $request, $id): JsonResponse|RedirectResponse
     {
         try {
-            $activityData = $this->sectorService->getActivityData($id);
-            $activityDescription = $request->all();
-
-            if (!$this->sectorService->update($activityDescription, $activityData)) {
-                return redirect()->route('admin.activities.show', $id)->with(
-                    'error',
-                    'Error has occurred while updating activity sector.'
-                );
+            if (!$this->sectorService->update($id, $request->all())) {
+                return redirect()->route('admin.activity.show', $id)->with('error', 'Error has occurred while updating activity sector.');
             }
 
-            return redirect()->route('admin.activities.show', $id)->with(
-                'success',
-                'Activity sector updated successfully.'
-            );
+            return redirect()->route('admin.activity.show', $id)->with('success', 'Activity sector updated successfully.');
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activities.show', $id)->with(
-                'error',
-                'Error has occurred while updating activity sector.'
-            );
+            return redirect()->route('admin.activity.show', $id)->with('error', 'Error has occurred while updating activity sector.');
         }
     }
 }

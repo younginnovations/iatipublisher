@@ -11,6 +11,7 @@ use App\IATI\Services\ElementCompleteService;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 /**
  * Class Organization.
@@ -98,11 +99,21 @@ class Organization extends Model
     /**
      * Organization has one user.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     * @return HasOne
      */
-    public function user(): \Illuminate\Database\Eloquent\Relations\HasOne
+    public function user(): HasOne
     {
         return $this->hasOne(User::class, 'organization_id', 'id');
+    }
+
+    /**
+     * Organization has settings.
+     *
+     * @return HasOne
+     */
+    public function settings(): HasOne
+    {
+        return $this->hasOne(Setting::class, 'organization_id', 'id');
     }
 
     /**
@@ -119,19 +130,9 @@ class Organization extends Model
     }
 
     /**
-     * Organization has one setting.
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\HasOne
-     */
-    public function settings(): \Illuminate\Database\Eloquent\Relations\HasOne
-    {
-        return $this->hasOne(Setting::class, 'organization_id', 'id');
-    }
-
-    /**
      * An Organization can have many Activities published.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
     public function publishedFiles(): HasMany
     {

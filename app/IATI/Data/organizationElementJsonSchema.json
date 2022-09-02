@@ -22,7 +22,7 @@
         "choices": "Organization/OrganizationRegistrationAgency.json",
         "required": true,
         "criteria": "mandatory",
-        "hover_text": "Select the agency in your country where your organisation is registered. If you do not know this information please email support@iatistandard.org",
+        "hover_text": "Select the agency in your country where your organisation is registered. If you do not know this information please email PubToolTest@iatistandard.org",
         "help_text": ""
       },
       "registration_number": {
@@ -31,7 +31,7 @@
         "type": "text",
         "required": true,
         "criteria": "mandatory",
-        "hover_text": "Provide the registration number for your organisation that has been provided by organisation registration agency. If you do not know this please email support@iatistandard.org.",
+        "hover_text": "Provide the registration number for your organisation that has been provided by organisation registration agency. If you do not know this please email PubToolTest@iatistandard.org.",
         "help_text": ""
       },
       "iati-activity-identifier": {

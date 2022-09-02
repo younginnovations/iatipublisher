@@ -54,6 +54,8 @@ class ActivityWorkflowController extends Controller
             $activity = $this->activityWorkflowService->findActivity($id);
 
             if ($this->hasNoPublisherInfo($activity->organization->settings)) {
+                Session::put('error', 'Please update the publishing information first.');
+
                 return response()->json(['success' => false, 'message' => 'Please update the publishing information first.']);
             }
 
@@ -122,6 +124,8 @@ class ActivityWorkflowController extends Controller
             $activity = $this->activityWorkflowService->findActivity($id);
 
             if (!$activity->linked_to_iati) {
+                Session::put('error', 'This activity has not been published to un-publish.');
+
                 return response()->json(['success' => false, 'message' => 'This activity has not been published to un-publish.']);
             }
 

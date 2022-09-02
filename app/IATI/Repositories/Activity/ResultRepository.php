@@ -4,102 +4,73 @@ declare(strict_types=1);
 
 namespace App\IATI\Repositories\Activity;
 
-use App\IATI\Models\Activity\Activity;
 use App\IATI\Models\Activity\Result;
+use App\IATI\Repositories\Repository;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 /**
  * Class ResultRepository.
  */
-class ResultRepository
+class ResultRepository extends Repository
 {
     /**
-     * @var Activity
+     * @return string
      */
-    protected Activity $activity;
-
-    /**
-     * @var Result
-     */
-    protected Result $activityResult;
-
-    /**
-     * ResultRepository Constructor.
-     * @param Activity $activity
-     * @param Result $activityResult
-     */
-    public function __construct(Activity $activity, Result $activityResult)
+    public function getModel(): string
     {
-        $this->activity = $activity;
-        $this->activityResult = $activityResult;
+        return Result::class;
+    }
+
+    /**
+     * Returns results of specific activity.
+     *
+     * @param $activityId
+     *
+     * @return array
+     */
+    public function getActivityResults($activityId): array
+    {
+        return $this->model->where('activity_id', $activityId)->get()->toArray();
+    }
+
+    /**
+     * Returns paginated results.
+     *
+     * @param int $activityId
+     * @param int $page
+     *
+     * @return Collection|LengthAwarePaginator
+     */
+    public function getPaginatedResult(int $activityId, int $page = 1): Collection|LengthAwarePaginator
+    {
+        return $this->model->where('activity_id', $activityId)->orderBy('created_at', 'DESC')->paginate(10, ['*'], 'result', $page);
     }
 
     /**
      * Create a new ActivityResult.
      *
      * @param array $resultData
+     *
      * @return Model
      */
     public function create(array $resultData): Model
     {
-        $resultData = $this->sanitizeResultData($resultData);
-
-        return $this->activityResult->create($resultData);
+        return $this->model->create($resultData);
     }
 
     /**
-     * Update Activity Result.
-     * @param array          $resultData
-     * @param Result $activityResult
-     * @return bool
+     * Returns specific result of specific activity.
+     *
+     * @param int $activityId
+     * @param int $id
+     *
+     * @return mixed
      */
-    public function update(array $resultData, Result $activityResult): bool
+    public function getActivityResult(int $activityId, int $id): mixed
     {
-        $resultData = $this->sanitizeResultData($resultData);
-        $activityResult->result = $resultData['result'];
-
-        return $activityResult->save();
-    }
-
-    /**
-     * Return specific result.
-     *
-     * @param $id
-     *
-     * @return Model
-     */
-    public function getResult($id): Model
-    {
-        return $this->activityResult->where('id', $id)->first();
-    }
-
-    /**
-     * Function to sanitize result data.
-     *
-     * @param array $resultData
-     *
-     * @return array
-     */
-    public function sanitizeResultData(array $resultData): array
-    {
-        foreach ($resultData['result'] as $result_key => $result) {
-            if (is_array($result)) {
-                $resultData['result'][$result_key] = array_values($result);
-
-                foreach ($result as $sub_key => $sub_element) {
-                    if (is_array($sub_element)) {
-                        foreach ($sub_element as $inner_key => $inner_element) {
-                            if (is_array($inner_element)) {
-                                $resultData['result'][$result_key][$sub_key][$inner_key] = array_values($inner_element);
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        return $resultData;
+        return $this->model->where(['activity_id'=>$activityId, 'id'=>$id])->first();
     }
 
     /**
@@ -111,7 +82,7 @@ class ResultRepository
      */
     public function getActivityResultsWithIndicatorsAndPeriods($activityId): Collection
     {
-        return $this->activityResult->where('activity_id', $activityId)->orderBy('created_at', 'DESC')->with('indicators', 'indicators.periods')->limit(4)->get();
+        return $this->model->where('activity_id', $activityId)->orderBy('created_at', 'DESC')->with('indicators', 'indicators.periods')->limit(4)->get();
     }
 
     /**
@@ -120,34 +91,10 @@ class ResultRepository
      * @param $resultId
      * @param $activityId
      *
-     * @return Model
+     * @return Model|null
      */
-    public function getResultWithIndicatorAndPeriod($resultId, $activityId): Model
+    public function getResultWithIndicatorAndPeriod($resultId, $activityId): ?Model
     {
-        return $this->activityResult->where('id', $resultId)->where('activity_id', $activityId)->with(['indicators', 'indicators.periods'])->first();
-    }
-
-    /**
-     * Return specific result.
-     *
-     * @param $activityId
-     * @return array
-     */
-    public function getActivityResult($activityId): array
-    {
-        return $this->activityResult->where('activity_id', $activityId)->get()->toArray();
-    }
-
-    /**
-     * Returns all results belonging to activityId.
-     *
-     * @param int $activityId
-     * @param int $page
-     *
-     * @return \Illuminate\Database\Eloquent\Collection
-     */
-    public function getPaginatedResult($activityId, $page = 1): Collection | \Illuminate\Pagination\LengthAwarePaginator
-    {
-        return $this->activityResult->where('activity_id', $activityId)->orderBy('created_at', 'DESC')->paginate(10, ['*'], 'result', $page);
+        return $this->model->where('id', $resultId)->where('activity_id', $activityId)->with(['indicators', 'indicators.periods'])->first();
     }
 }

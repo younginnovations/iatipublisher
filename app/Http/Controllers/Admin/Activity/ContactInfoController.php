@@ -37,7 +37,7 @@ class ContactInfoController extends Controller
      *
      * @param int $id
      *
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|void
+     * @return View|RedirectResponse
      */
     public function edit(int $id): View|RedirectResponse
     {
@@ -56,10 +56,7 @@ class ContactInfoController extends Controller
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activities.show', $id)->with(
-                'error',
-                'Error has occurred while rendering contact-info controller item form.'
-            );
+            return redirect()->route('admin.activity.show', $id)->with('error', 'Error has occurred while rendering contact-info controller item form.');
         }
     }
 
@@ -74,27 +71,17 @@ class ContactInfoController extends Controller
     public function update(ContactInfoRequest $request, $id): JsonResponse|RedirectResponse
     {
         try {
-            $activityData = $this->contactInfoService->getActivityData($id);
             $activityCountryBudgetItem = $request->except(['_token', '_method']);
 
-            if (!$this->contactInfoService->update($activityCountryBudgetItem, $activityData)) {
-                return redirect()->route('admin.activities.show', $id)->with(
-                    'error',
-                    'Error has occurred while updating contact-info.'
-                );
+            if (!$this->contactInfoService->update($id, $activityCountryBudgetItem)) {
+                return redirect()->route('admin.activity.show', $id)->with('error', 'Error has occurred while updating contact-info.');
             }
 
-            return redirect()->route('admin.activities.show', $id)->with(
-                'success',
-                'Contact-info updated successfully.'
-            );
+            return redirect()->route('admin.activity.show', $id)->with('success', 'Contact-info updated successfully.');
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activities.show', $id)->with(
-                'error',
-                'Error has occurred while updating contact-info.'
-            );
+            return redirect()->route('admin.activity.show', $id)->with('error', 'Error has occurred while updating contact-info.');
         }
     }
 }

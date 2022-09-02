@@ -36,7 +36,7 @@ class ConditionController extends Controller
      *
      * @param int $id
      *
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|void
+     * @return View|RedirectResponse
      */
     public function edit(int $id): View|RedirectResponse
     {
@@ -55,10 +55,7 @@ class ConditionController extends Controller
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activities.show', $id)->with(
-                'error',
-                'Error has occurred while rendering activity condition form.'
-            );
+            return redirect()->route('admin.activity.show', $id)->with('error', 'Error has occurred while rendering activity condition form.');
         }
     }
 
@@ -73,27 +70,17 @@ class ConditionController extends Controller
     public function update(ConditionRequest $request, $id): JsonResponse|RedirectResponse
     {
         try {
-            $activityData = $this->conditionService->getActivityData($id);
             $activityCondition = $request->except(['_token', '_method']);
 
-            if (!$this->conditionService->update($activityCondition, $activityData)) {
-                return redirect()->route('admin.activities.show', $id)->with(
-                    'error',
-                    'Error has occurred while updating activity condition.'
-                );
+            if (!$this->conditionService->update($id, $activityCondition)) {
+                return redirect()->route('admin.activity.show', $id)->with('error', 'Error has occurred while updating activity condition.');
             }
 
-            return redirect()->route('admin.activities.show', $id)->with(
-                'success',
-                'Activity condition updated successfully.'
-            );
+            return redirect()->route('admin.activity.show', $id)->with('success', 'Activity condition updated successfully.');
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activities.show', $id)->with(
-                'error',
-                'Error has occurred while updating activity condition.'
-            );
+            return redirect()->route('admin.activity.show', $id)->with('error', 'Error has occurred while updating activity condition.');
         }
     }
 }

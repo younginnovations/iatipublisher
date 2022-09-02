@@ -36,7 +36,7 @@ class DescriptionController extends Controller
      *
      * @param int $id
      *
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|void
+     * @return View|RedirectResponse
      */
     public function edit(int $id): View|RedirectResponse
     {
@@ -55,10 +55,7 @@ class DescriptionController extends Controller
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activities.show', $id)->with(
-                'error',
-                'Error has occurred while rendering activity description form.'
-            );
+            return redirect()->route('admin.activity.show', $id)->with('error', 'Error has occurred while rendering activity description form.');
         }
     }
 
@@ -77,23 +74,14 @@ class DescriptionController extends Controller
             $activityDescription = $request->all();
 
             if (!$this->descriptionService->update($activityDescription, $activityData)) {
-                return redirect()->route('admin.activities.show', $id)->with(
-                    'error',
-                    'Error has occurred while updating description.'
-                );
+                return redirect()->route('admin.activity.show', $id)->with('error', 'Error has occurred while updating description.');
             }
 
-            return redirect()->route('admin.activities.show', $id)->with(
-                'success',
-                'Description updated successfully.'
-            );
+            return redirect()->route('admin.activity.show', $id)->with('success', 'Description updated successfully.');
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activities.show', $id)->with(
-                'error',
-                'Error has occurred while updating description.'
-            );
+            return redirect()->route('admin.activity.show', $id)->with('error', 'Error has occurred while updating description.');
         }
     }
 }

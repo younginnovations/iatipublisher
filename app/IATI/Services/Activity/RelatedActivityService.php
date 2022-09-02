@@ -6,8 +6,7 @@ namespace App\IATI\Services\Activity;
 
 use App\IATI\Elements\Builder\BaseFormCreator;
 use App\IATI\Models\Activity\Activity;
-use App\IATI\Repositories\Activity\RelatedActivityRepository;
-use Illuminate\Database\Eloquent\Model;
+use App\IATI\Repositories\Activity\ActivityRepository;
 use Illuminate\Support\Arr;
 use Kris\LaravelFormBuilder\Form;
 
@@ -17,9 +16,9 @@ use Kris\LaravelFormBuilder\Form;
 class RelatedActivityService
 {
     /**
-     * @var RelatedActivityRepository
+     * @var ActivityRepository
      */
-    protected RelatedActivityRepository $relatedActivityRepository;
+    protected ActivityRepository $activityRepository;
 
     /**
      * @var BaseFormCreator
@@ -29,12 +28,12 @@ class RelatedActivityService
     /**
      * RelatedActivityService constructor.
      *
-     * @param RelatedActivityRepository $relatedActivityRepository
-     * @param BaseFormCreator $baseFormCreator
+     * @param ActivityRepository $activityRepository
+     * @param BaseFormCreator    $baseFormCreator
      */
-    public function __construct(RelatedActivityRepository $relatedActivityRepository, BaseFormCreator $baseFormCreator)
+    public function __construct(ActivityRepository $activityRepository, BaseFormCreator $baseFormCreator)
     {
-        $this->relatedActivityRepository = $relatedActivityRepository;
+        $this->activityRepository = $activityRepository;
         $this->baseFormCreator = $baseFormCreator;
     }
 
@@ -47,7 +46,7 @@ class RelatedActivityService
      */
     public function getRelatedActivityData(int $activity_id): ?array
     {
-        return $this->relatedActivityRepository->getRelatedActivityData($activity_id);
+        return $this->activityRepository->find($activity_id)->related_activity;
     }
 
     /**
@@ -55,40 +54,41 @@ class RelatedActivityService
      *
      * @param $id
      *
-     * @return Model
+     * @return object
      */
-    public function getActivityData($id): Model
+    public function getActivityData($id): object
     {
-        return $this->relatedActivityRepository->getActivityData($id);
+        return $this->activityRepository->find($id);
     }
 
     /**
      * Updates activity related activity.
      *
+     * @param $id
      * @param $activityRelatedActivity
-     * @param $activity
      *
      * @return bool
      */
-    public function update($activityRelatedActivity, $activity): bool
+    public function update($id, $activityRelatedActivity): bool
     {
-        return $this->relatedActivityRepository->update($activityRelatedActivity, $activity);
+        return $this->activityRepository->update($id, ['related_activity' => array_values($activityRelatedActivity['related_activity'])]);
     }
 
     /**
      * Generates related activity form.
      *
-     * @param id
+     * @param $id
      *
      * @return Form
+     * @throws \JsonException
      */
     public function formGenerator($id): Form
     {
         $element = getElementSchema('related_activity');
         $model['related_activity'] = $this->getRelatedActivityData($id);
-        $this->baseFormCreator->url = route('admin.activities.related-activity.update', [$id]);
+        $this->baseFormCreator->url = route('admin.activity.related-activity.update', [$id]);
 
-        return $this->baseFormCreator->editForm($model, $element, 'PUT', '/activities/' . $id);
+        return $this->baseFormCreator->editForm($model, $element, 'PUT', '/activity/' . $id);
     }
 
     /**

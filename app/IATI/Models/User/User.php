@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace App\IATI\Models\User;
 
+use App\IATI\Models\Organization\Organization;
 use Database\Factories\IATI\Models\User\UserFactory;
 use Illuminate\Auth\Notifications\VerifyEmail;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notifiable;
@@ -76,11 +78,11 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     /**
-     * User belongs to organization.
+     * @return BelongsTo
      */
-    protected function organization()
+    protected function organization(): BelongsTo
     {
-        return $this->belongsTo('App\IATI\Models\Organization\Organization', 'organization_id');
+        return $this->belongsTo(Organization::class, 'organization_id');
     }
 
     /**

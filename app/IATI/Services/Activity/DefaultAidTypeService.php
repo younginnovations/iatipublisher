@@ -6,8 +6,7 @@ namespace App\IATI\Services\Activity;
 
 use App\IATI\Elements\Builder\BaseFormCreator;
 use App\IATI\Models\Activity\Activity;
-use App\IATI\Repositories\Activity\DefaultAidTypeRepository;
-use Illuminate\Database\Eloquent\Model;
+use App\IATI\Repositories\Activity\ActivityRepository;
 use Illuminate\Support\Arr;
 use Kris\LaravelFormBuilder\Form;
 
@@ -17,9 +16,9 @@ use Kris\LaravelFormBuilder\Form;
 class DefaultAidTypeService
 {
     /**
-     * @var DefaultAidTypeRepository
+     * @var ActivityRepository
      */
-    protected DefaultAidTypeRepository $defaultAidTypeRepository;
+    protected ActivityRepository $activityRepository;
 
     /**
      * @var BaseFormCreator
@@ -29,12 +28,12 @@ class DefaultAidTypeService
     /**
      * DefaultAidTypeService constructor.
      *
-     * @param DefaultAidTypeRepository $defaultAidTypeRepository
-     * @param BaseFormCreator $baseFormCreator
+     * @param ActivityRepository $activityRepository
+     * @param BaseFormCreator    $baseFormCreator
      */
-    public function __construct(DefaultAidTypeRepository $defaultAidTypeRepository, BaseFormCreator $baseFormCreator)
+    public function __construct(ActivityRepository $activityRepository, BaseFormCreator $baseFormCreator)
     {
-        $this->defaultAidTypeRepository = $defaultAidTypeRepository;
+        $this->activityRepository = $activityRepository;
         $this->baseFormCreator = $baseFormCreator;
     }
 
@@ -47,7 +46,7 @@ class DefaultAidTypeService
      */
     public function getDefaultAidTypeData(int $activity_id): ?array
     {
-        return $this->defaultAidTypeRepository->getDefaultAidTypeData($activity_id);
+        return $this->activityRepository->find($activity_id)->default_aid_type;
     }
 
     /**
@@ -55,40 +54,41 @@ class DefaultAidTypeService
      *
      * @param $id
      *
-     * @return Model
+     * @return object
      */
-    public function getActivityData($id): Model
+    public function getActivityData($id): object
     {
-        return $this->defaultAidTypeRepository->getActivityData($id);
+        return $this->activityRepository->find($id);
     }
 
     /**
      * Updates activity default aid type.
      *
+     * @param $id
      * @param $activityDefaultAidType
-     * @param $activity
      *
      * @return bool
      */
-    public function update($activityDefaultAidType, $activity): bool
+    public function update($id, $activityDefaultAidType): bool
     {
-        return $this->defaultAidTypeRepository->update($activityDefaultAidType, $activity);
+        return $this->activityRepository->update($id, ['default_aid_type' => array_values($activityDefaultAidType['default_aid_type'])]);
     }
 
     /**
      * Generates default aid type.
      *
-     * @param id
+     * @param $id
      *
      * @return Form
+     * @throws \JsonException
      */
     public function formGenerator($id): Form
     {
         $element = getElementSchema('default_aid_type');
         $model['default_aid_type'] = $this->getDefaultAidTypeData($id);
-        $this->baseFormCreator->url = route('admin.activities.default-aid-type.update', [$id]);
+        $this->baseFormCreator->url = route('admin.activity.default-aid-type.update', [$id]);
 
-        return $this->baseFormCreator->editForm($model, $element, 'PUT', '/activities/' . $id);
+        return $this->baseFormCreator->editForm($model, $element, 'PUT', '/activity/' . $id);
     }
 
     /**

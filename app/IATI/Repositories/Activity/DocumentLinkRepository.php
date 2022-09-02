@@ -58,6 +58,7 @@ class DocumentLinkRepository
      * @param $activity
      *
      * @return bool
+     * @throws \JsonException
      */
     public function update($documentLink, $activity): bool
     {

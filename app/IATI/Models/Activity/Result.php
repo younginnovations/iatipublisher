@@ -6,6 +6,8 @@ namespace App\IATI\Models\Activity;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * Class Result.
@@ -41,9 +43,9 @@ class Result extends Model
     /**
      * Result belongs to activity.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return BelongsTo
      */
-    public function activity(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    public function activity(): BelongsTo
     {
         return $this->belongsTo(Activity::class, 'activity_id', 'id');
     }
@@ -51,10 +53,39 @@ class Result extends Model
     /**
      * Result hasmany indicators.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
-    public function indicators(): \Illuminate\Database\Eloquent\Relations\HasMany
+    public function indicators(): HasMany
     {
         return $this->hasMany(Indicator::class, 'result_id', 'id');
+    }
+
+    /**
+     * Returns default title.
+     *
+     * @return string
+     */
+    public function getDefaultTitleNarrativeAttribute(): string
+    {
+        $result = $this->result;
+        $titles = $result['title'];
+
+        if (!empty($titles)) {
+            foreach ($titles as $title) {
+                if (array_key_exists('narrative', $title)) {
+                    $narratives = $title['narrative'];
+
+                    foreach ($narratives as $narrative) {
+                        if (array_key_exists('language', $narrative) && !empty($narrative['language']) && $narrative['language'] === getDefaultLanguage($this->activity->default_field_values)) {
+                            return $narrative['narrative'];
+                        }
+                    }
+
+                    return array_key_exists('narrative', $narratives[0]) ? $narratives[0]['narrative'] : '';
+                }
+            }
+        }
+
+        return '';
     }
 }

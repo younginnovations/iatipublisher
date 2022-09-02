@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace App\Http\Requests\Activity\Identifier;
 
-use App\Http\Requests\Activity\ActivityBaseRequest;
 use App\IATI\Services\Activity\ActivityService;
+use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
 /**
  * Class IdentifierRequest.
  */
-class IdentifierRequest extends ActivityBaseRequest
+class IdentifierRequest extends FormRequest
 {
     /**
      * @var ActivityService
@@ -25,7 +25,6 @@ class IdentifierRequest extends ActivityBaseRequest
      */
     public function __construct(ActivityService $activityService)
     {
-        parent::__construct();
         $this->activityService = $activityService;
     }
 

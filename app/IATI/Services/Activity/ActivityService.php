@@ -7,6 +7,8 @@ namespace App\IATI\Services\Activity;
 use App\IATI\Models\Activity\Activity;
 use App\IATI\Repositories\Activity\ActivityRepository;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Auth;
 
 /**
@@ -32,25 +34,17 @@ class ActivityService
     /**
      * Returns all activities present in database.
      *
-     * @return \Illuminate\Database\Eloquent\Collection
-     */
-    public function getAllActivities(): Collection
-    {
-        return $this->activityRepository->getActivityForOrganization(Auth::user()->organization_id);
-    }
-
-    /**
-     * Returns all activities present in database.
+     * @param int   $page
+     * @param array $queryParams
      *
-     * @param int $page
-     *
-     * @return \Illuminate\Database\Eloquent\Collection
+     * @return Collection|LengthAwarePaginator
      */
-    public function getPaginatedActivities(int $page = 1): Collection|\Illuminate\Pagination\LengthAwarePaginator
+    public function getPaginatedActivities(int $page, array $queryParams): Collection|LengthAwarePaginator
     {
-        $activities = $this->activityRepository->getActivityForOrganization(Auth::user()->organization_id, $page);
+        $activities = $this->activityRepository->getActivityForOrganization(Auth::user()->organization_id, $queryParams, $page);
 
-        foreach ($activities as $activity) {
+        foreach ($activities as $idx => $activity) {
+            $activities[$idx]['default_title_narrative'] = $activity->default_title_narrative;
             $activity->setAttribute('coreCompleted', isCoreElementCompleted(array_merge(['reporting_org' => $activity->organization->reporting_org_complete_status], $activity->element_status)));
         }
 
@@ -62,12 +56,12 @@ class ActivityService
      *
      * @param $input
      *
-     * @return \Illuminate\Database\Eloquent\Model
+     * @return Model
      */
-    public function store($input): \Illuminate\Database\Eloquent\Model
+    public function store($input): Model
     {
         $activity_identifier = [
-            'activity_identifier'  => $input['activity_identifier'],
+            'activity_identifier' => $input['activity_identifier'],
         ];
 
         $activity_title = [
@@ -78,10 +72,10 @@ class ActivityService
         ];
 
         return $this->activityRepository->store([
-            'iati_identifier' => $activity_identifier,
-            'title'           => $activity_title,
-            'org_id'          => Auth::user()->organization_id,
-            'element_status'  => getDefaultElementStatus(),
+            'iati_identifier'      => $activity_identifier,
+            'title'                => $activity_title,
+            'org_id'               => Auth::user()->organization_id,
+            'element_status'       => getDefaultElementStatus(),
             'default_field_values' => $this->getDefaultValues(),
         ]);
     }
@@ -103,9 +97,9 @@ class ActivityService
      *
      * @param $id
      *
-     * @return Activity
+     * @return object|null
      */
-    public function getActivity($id): Activity
+    public function getActivity($id): ?object
     {
         return $this->activityRepository->find($id);
     }
@@ -115,7 +109,7 @@ class ActivityService
      *
      * @param $serviceName
      *
-     * @return \Illuminate\Contracts\Foundation\Application|mixed
+     * @return mixed
      */
     public function getService($serviceName): mixed
     {
@@ -156,7 +150,7 @@ class ActivityService
      *
      * @return void
      */
-    public function resetActivityWorkflow($activity_id)
+    public function resetActivityWorkflow($activity_id): void
     {
         $this->activityRepository->resetActivityWorkflow($activity_id);
     }
@@ -171,7 +165,8 @@ class ActivityService
     public function activityPublishingProgress($activity): float|int
     {
         $core_elements = getCoreElements();
-        $completed_core_element_count = $activity->organization->element_status['reporting_org'] ? 1 : 0;
+        $orgElementStatus = $activity->organization->element_status;
+        $completed_core_element_count = (array_key_exists('reporting_org', $orgElementStatus) && $orgElementStatus['reporting_org']) ? 1 : 0;
 
         foreach ($core_elements as $core_element) {
             if (array_key_exists($core_element, $activity->element_status) && $activity->element_status[$core_element]) {
@@ -191,15 +186,21 @@ class ActivityService
     {
         $organizationSettings = Auth::user()->organization->settings;
 
-        if ($organizationSettings->default_values && $organizationSettings->activity_default_values) {
-            return array_merge(
-                $organizationSettings->default_values,
-                $organizationSettings->activity_default_values
-            );
-        } elseif ($organizationSettings->default_values) {
-            return $organizationSettings->default_values;
-        } elseif ($organizationSettings->activity_default_values) {
-            return $organizationSettings->activity_default_values;
+        if (!empty($organizationSettings)) {
+            if ($organizationSettings->default_values && $organizationSettings->activity_default_values) {
+                return array_merge(
+                    $organizationSettings->default_values,
+                    $organizationSettings->activity_default_values
+                );
+            }
+
+            if ($organizationSettings->default_values) {
+                return $organizationSettings->default_values;
+            }
+
+            if ($organizationSettings->activity_default_values) {
+                return $organizationSettings->activity_default_values;
+            }
         }
 
         return null;

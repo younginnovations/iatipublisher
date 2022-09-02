@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace App\Http\Requests\Organization\Name;
 
-use App\Http\Requests\Activity\ActivityBaseRequest;
+use App\Http\Requests\Organization\OrganizationBaseRequest;
 
 /**
  * Class NameRequest.
  */
-class NameRequest extends ActivityBaseRequest
+class NameRequest extends OrganizationBaseRequest
 {
     /**
      * Get the validation rules that apply to the request.

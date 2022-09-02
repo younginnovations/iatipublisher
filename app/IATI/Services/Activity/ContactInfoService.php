@@ -6,9 +6,8 @@ namespace App\IATI\Services\Activity;
 
 use App\IATI\Elements\Builder\ParentCollectionFormCreator;
 use App\IATI\Models\Activity\Activity;
-use App\IATI\Repositories\Activity\ContactInfoRepository;
+use App\IATI\Repositories\Activity\ActivityRepository;
 use App\IATI\Traits\XmlBaseElement;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
 use Kris\LaravelFormBuilder\Form;
 
@@ -20,19 +19,24 @@ class ContactInfoService
     use XmlBaseElement;
 
     /**
-     * @var ContactInfoRepository
+     * @var ActivityRepository
      */
-    protected ContactInfoRepository $contactInfoRepository;
+    protected ActivityRepository $activityRepository;
+
+    /**
+     * @var ParentCollectionFormCreator
+     */
+    private ParentCollectionFormCreator $parentCollectionFormCreator;
 
     /**
      * ContactInfoService constructor.
      *
-     * @param ContactInfoRepository $contactInfoRepository
+     * @param ActivityRepository          $activityRepository
      * @param ParentCollectionFormCreator $parentCollectionFormCreator
      */
-    public function __construct(ContactInfoRepository $contactInfoRepository, ParentCollectionFormCreator $parentCollectionFormCreator)
+    public function __construct(ActivityRepository $activityRepository, ParentCollectionFormCreator $parentCollectionFormCreator)
     {
-        $this->contactInfoRepository = $contactInfoRepository;
+        $this->activityRepository = $activityRepository;
         $this->parentCollectionFormCreator = $parentCollectionFormCreator;
     }
 
@@ -45,7 +49,7 @@ class ContactInfoService
      */
     public function getContactInfoData(int $activity_id): ?array
     {
-        return $this->contactInfoRepository->getContactInfoData($activity_id);
+        return $this->activityRepository->find($activity_id)->contact_info;
     }
 
     /**
@@ -53,24 +57,33 @@ class ContactInfoService
      *
      * @param $id
      *
-     * @return Model
+     * @return object
      */
-    public function getActivityData($id): Model
+    public function getActivityData($id): object
     {
-        return $this->contactInfoRepository->getActivityData($id);
+        return $this->activityRepository->find($id);
     }
 
     /**
      * Updates activity contact info.
      *
+     * @param $id
      * @param $contactInfo
-     * @param $activity
      *
      * @return bool
+     * @throws \JsonException
      */
-    public function update($contactInfo, $activity): bool
+    public function update($id, $contactInfo): bool
     {
-        return $this->contactInfoRepository->update($contactInfo, $activity);
+        $element = getElementSchema('contact_info');
+
+        foreach ($contactInfo['contact_info'] as $key => $contact) {
+            foreach (array_keys($element['sub_elements']) as $subElement) {
+                $contactInfo['contact_info'][$key][$subElement] = array_values($contact[$subElement]);
+            }
+        }
+
+        return $this->activityRepository->update($id, ['contact_info' => $contactInfo['contact_info']]);
     }
 
     /**
@@ -79,14 +92,15 @@ class ContactInfoService
      * @param id
      *
      * @return Form
+     * @throws \JsonException
      */
     public function formGenerator($id): Form
     {
         $element = getElementSchema('contact_info');
         $model['contact_info'] = $this->getContactInfoData($id) ?: [];
-        $this->parentCollectionFormCreator->url = route('admin.activities.contact-info.update', [$id]);
+        $this->parentCollectionFormCreator->url = route('admin.activity.contact-info.update', [$id]);
 
-        return $this->parentCollectionFormCreator->editForm($model, $element, 'PUT', '/activities/' . $id);
+        return $this->parentCollectionFormCreator->editForm($model, $element, 'PUT', '/activity/' . $id);
     }
 
     /**

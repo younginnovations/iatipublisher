@@ -12,7 +12,7 @@
           :type="toastData.type"
         />
       </div>
-      <a :href="`${activityLink}/transactions/create`">
+      <a :href="`${activityLink}/transaction/create`">
         <Btn text="Add Transaction" icon="plus" type="primary" />
       </a>
     </PageTitle>
@@ -23,77 +23,37 @@
         <thead>
           <tr class="bg-n-10">
             <th id="internal_ref" scope="col">
-              <a
-                class="transition duration-500 text-n-50 hover:text-spring-50"
-                href="#"
-              >
-                <span class="sorting-indicator descending">
-                  <svg-vue icon="ascending-arrow" />
-                </span>
-                <span>Internal Ref</span>
-              </a>
+              <span>Internal Ref</span>
             </th>
             <th id="transaction_type" scope="col">
-              <a
-                class="transition duration-500 text-n-50 hover:text-spring-50"
-                href="#"
-              >
-                <span class="sorting-indicator descending">
-                  <svg-vue icon="descending-arrow" />
-                </span>
-                <span>Transaction Type</span>
-              </a>
+              <span>Transaction Type</span>
             </th>
             <th id="transaction_value" scope="col">
-              <a
-                class="transition duration-500 text-n-50 hover:text-spring-50"
-                href="#"
-              >
-                <span class="sorting-indicator descending">
-                  <svg-vue icon="descending-arrow" />
-                </span>
-                <span>Transaction Value</span>
-              </a>
+              <span>Transaction Value</span>
             </th>
             <th id="transaction_date" scope="col">
-              <a
-                class="transition duration-500 text-n-50 hover:text-spring-50"
-                href="#"
-              >
-                <span class="sorting-indicator descending">
-                  <svg-vue icon="descending-arrow" />
-                </span>
-                <span>Transaction Date</span>
-              </a>
+              <span>Transaction Date</span>
             </th>
-            <th id="status" scope="col">
-              <a
-                class="transition duration-500 text-n-50 hover:text-spring-50"
-                href="#"
-              >
-                <span class="sorting-indicator descending">
-                  <svg-vue icon="descending-arrow" />
-                </span>
-                <span>Status</span>
-              </a>
-            </th>
+            <!--            <th id="status" scope="col">-->
+            <!--              <a-->
+            <!--                class="transition duration-500 text-n-50 hover:text-spring-50"-->
+            <!--                href="#"-->
+            <!--              >-->
+            <!--                <span class="sorting-indicator descending">-->
+            <!--                  <svg-vue icon="descending-arrow" />-->
+            <!--                </span>-->
+            <!--                <span>Status</span>-->
+            <!--              </a>-->
+            <!--            </th>-->
             <th id="action" scope="col">
-              <a
-                class="transition duration-500 text-n-50 hover:text-spring-50"
-                href="#"
-              >
-                <span class="sorting-indicator descending">
-                  <svg-vue icon="descending-arrow" />
-                </span>
-                <span>Action</span>
-              </a>
+              <span>Action</span>
             </th>
           </tr>
         </thead>
         <tbody>
           <tr v-for="(trans, t, index) in transactionsData.data" :key="index">
             <td>
-              <a :href="`${activityLink}/transactions/${trans.id}`">
+              <a :href="`${activityLink}/transaction/${trans.id}`">
                 <span>{{ trans.transaction.reference ?? '- - -' }}</span>
               </a>
             </td>
@@ -119,12 +79,12 @@
                 }}
               </span>
             </td>
-            <td><span class="text-spring-50">completed</span></td>
+            <!--            <td><span class="text-spring-50">completed</span></td>-->
             <td>
               <div class="flex text-n-40">
                 <a
                   class="mr-6"
-                  :href="`${activityLink}/transactions/${trans.id}/edit`"
+                  :href="`${activityLink}/transaction/${trans.id}/edit`"
                 >
                   <svg-vue icon="edit" class="text-xl"></svg-vue>
                 </a>
@@ -138,7 +98,11 @@
       </table>
     </div>
     <div class="mt-6">
-      <Pagination :data="transactionsData" @fetch-activities="fetchListings" />
+      <Pagination
+        v-if="transactionsData && transactionsData.last_page > 1"
+        :data="transactionsData"
+        @fetch-activities="fetchListings"
+      />
     </div>
   </div>
 </template>
@@ -187,17 +151,37 @@ export default defineComponent({
     const { activity } = toRefs(props);
     const activityId = activity.value.id,
       activityTitle = getActivityTitle(activity.value.title, 'en'),
-      activityLink = `/activities/${activityId}`;
+      activityLink = `/activity/${activityId}`;
     const toastData = reactive({
       visibility: false,
       message: '',
       type: true,
     });
 
-    const transactionsData = reactive({});
+    interface TransactionInterface {
+      last_page: number;
+      data: {
+        id: number;
+        transaction: {
+          reference: string;
+          transaction_type: {
+            transaction_type_code: string;
+          }[];
+          value: {
+            amount: string;
+          }[];
+          transaction_date: {
+            date: Date;
+          }[];
+        };
+        activity_id: number;
+      }[];
+    }
+
+    const transactionsData = reactive({}) as TransactionInterface;
 
     onMounted(async () => {
-      axios.get(`/activities/${activityId}/transactions/page/1`).then((res) => {
+      axios.get(`/activity/${activityId}/transactions/page/1`).then((res) => {
         const response = res.data;
         Object.assign(transactionsData, response.data);
       });
@@ -215,7 +199,7 @@ export default defineComponent({
 
     function fetchListings(active_page: number) {
       axios
-        .get(`/activities/${activityId}/transactions/page/` + active_page)
+        .get(`/activity/${activityId}/transactions/page/` + active_page)
         .then((res) => {
           const response = res.data;
           Object.assign(transactionsData, response.data);

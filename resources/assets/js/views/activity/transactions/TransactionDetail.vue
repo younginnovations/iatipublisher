@@ -3,7 +3,7 @@
     <PageTitle
       :breadcrumb-data="breadcrumbData"
       :title="`${transactionData.reference ?? 'Untitled'} - Transaction detail`"
-      :back-link="`${activityLink}/transactions`"
+      :back-link="`${activityLink}/transaction`"
     >
       <div class="mb-3">
         <Toast
@@ -14,7 +14,7 @@
       </div>
       <Btn
         text="Edit Transaction"
-        :link="`${activityLink}/transactions/${transaction.id}/edit`"
+        :link="`${activityLink}/transaction/${transaction.id}/edit`"
         icon="edit"
       />
     </PageTitle>
@@ -27,7 +27,7 @@
         >
           <ul class="text-sm font-bold leading-relaxed">
             <li v-for="(rData, r, ri) in transactionData" :key="ri">
-              <a v-smooth-scroll :href="`#${r}`" :class="linkClasses">
+              <a v-smooth-scroll :href="`#${String(r)}`" :class="linkClasses">
                 <svg-vue icon="moon" class="mr-2 text-base"></svg-vue>
                 {{ r }}
               </a>
@@ -42,7 +42,7 @@
             <TransactionElement
               :data="post"
               :element-name="key.toString()"
-              :edit-url="`/activities/${transaction.activity_id}/result/${transaction.id}`"
+              :edit-url="`/activity/${transaction.activity_id}/transaction/${transaction.id}`"
               :width="
                 key.toString() === 'value' ||
                 key.toString() === 'transaction_type' ||
@@ -117,7 +117,7 @@ export default defineComponent({
 
     const activityId = activity.value.id,
       activityTitle = getActivityTitle(activity.value.title, 'en'),
-      activityLink = `/activities/${activityId}`,
+      activityLink = `/activity/${activityId}`,
       transactionLink = `${activityLink}/transaction/${transaction.value.id}`;
 
     /**
@@ -126,7 +126,7 @@ export default defineComponent({
     const breadcrumbData = [
       {
         title: 'Your Activities',
-        link: '/activities',
+        link: '/activity',
       },
       {
         title: activityTitle,

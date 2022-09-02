@@ -70,13 +70,7 @@
         <a
           v-if="!(index.toString() === 'indicator' || index.toString() === 'period')"
           class="elements__item relative flex cursor-pointer flex-col items-center justify-center rounded border border-dashed border-n-40 py-2.5 text-n-30"
-          :href="
-            post.has_data
-              ? `#${index}`
-              : index === 'result' || index == 'transactions'
-              ? `/activities/${activityId}/${index}/create`
-              : `/activities/${activityId}/${index}`
-          "
+          :href="getLink(post.has_data, index.toString())"
         >
           <div class="absolute top-0 right-0 inline-flex mt-1 mr-1 status_icons">
             <svg-vue
@@ -178,12 +172,25 @@ export default defineComponent({
       });
     });
 
+    function getLink(has_data:number, index:string) {
+      if(has_data){
+        return `#${index}`;
+      }
+      else if(index=='result' || index=='transactions'){
+        let element = index=='result' ? 'result' : 'transaction'
+        return `/activity/${props.activityId}/${element}/create`;
+      }
+
+      return  `/activity/${props.activityId}/${index}`;
+    }
+
     return {
       searchBtnValue,
       searchBtnToggle,
       elements,
       filteredElements,
       dropdownFilter,
+      getLink,
       dropdown,
       dropdownBtn,
     };

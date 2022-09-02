@@ -36,7 +36,7 @@ class PolicyMarkerController extends Controller
      *
      * @param int $id
      *
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|void
+     * @return View|RedirectResponse
      */
     public function edit(int $id): View|RedirectResponse
     {
@@ -55,10 +55,7 @@ class PolicyMarkerController extends Controller
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activities.show', $id)->with(
-                'error',
-                'Error has occurred while opening policy-marker form.'
-            );
+            return redirect()->route('admin.activity.show', $id)->with('error', 'Error has occurred while opening policy-marker form.');
         }
     }
 
@@ -73,27 +70,15 @@ class PolicyMarkerController extends Controller
     public function update(PolicyMarkerRequest $request, $id): JsonResponse|RedirectResponse
     {
         try {
-            $activityData = $this->policyMarkerService->getActivityData($id);
-            $activityPolicyMarker = $request->all();
-
-            if (!$this->policyMarkerService->update($activityPolicyMarker, $activityData)) {
-                return redirect()->route('admin.activities.show', $id)->with(
-                    'error',
-                    'Error has occurred while updating policy-marker.'
-                );
+            if (!$this->policyMarkerService->update($id, $request->all())) {
+                return redirect()->route('admin.activity.show', $id)->with('error', 'Error has occurred while updating policy-marker.');
             }
 
-            return redirect()->route('admin.activities.show', $id)->with(
-                'success',
-                'Policy-marker updated successfully.'
-            );
+            return redirect()->route('admin.activity.show', $id)->with('success', 'Policy-marker updated successfully.');
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activities.show', $id)->with(
-                'error',
-                'Error has occurred while updating policy-marker.'
-            );
+            return redirect()->route('admin.activity.show', $id)->with('error', 'Error has occurred while updating policy-marker.');
         }
     }
 }
