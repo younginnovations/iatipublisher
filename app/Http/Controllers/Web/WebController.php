@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Str;
 
 /**
  * Class WebController.
@@ -18,7 +20,11 @@ class WebController extends Controller
      */
     public function index($page = 'signin'): \Illuminate\Contracts\Support\Renderable
     {
-        return view('web.welcome', compact('page'));
+        // dd(Str::contains(Redirect::intended()->getTargetUrl(), '/email/verify/'));
+        $message = Str::contains(Redirect::intended()->getTargetUrl(), '/email/verify/') ? 'User must be logged in to verify email.' : '';
+        // dd($message);s
+
+        return view('web.welcome', compact('page', 'message'));
     }
 
     /**
