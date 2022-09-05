@@ -53,8 +53,6 @@ jobs:
           platforms: linux/arm64
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-        env:
-          MIX_ENCRYPTION_KEY: ${{ secrets.MIX_ENCRYPTION_KEY }}
 
   use-k8s-manifest:
     runs-on: ubuntu-latest
