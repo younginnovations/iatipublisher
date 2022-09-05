@@ -7,6 +7,7 @@ namespace App\IATI\Services\User;
 use App\IATI\Models\User\User;
 use App\IATI\Repositories\Organization\OrganizationRepository;
 use App\IATI\Repositories\User\UserRepository;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
 /**
@@ -73,5 +74,26 @@ class UserService
         User::sendEmail($user);
 
         return $user;
+    }
+
+    /**
+     * Stores the user that exists in IATI.
+     *
+     * @return bool
+     */
+    public function getStatus(): bool
+    {
+        return $this->userRepo->getStatus(Auth::user()->id);
+    }
+
+    /**
+     * Stores the user that exists in IATI.
+     *
+     * @return void
+     */
+    public function resendVerificationEmail()
+    {
+        User::sendEmail(Auth::user());
+        User::resendEmail(Auth::user());
     }
 }

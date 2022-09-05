@@ -3,11 +3,18 @@
     <Loader v-if="loaderVisibility" />
     <div class="reset reset__password" @keyup.enter="reset">
       <h2>Reset Password</h2>
-      <p>Please enter your new password</p>
-      <span v-if="errorData.email != ''" class="error" role="alert">
-        {{ errorData.email }}
-      </span>
-      <div class="reset__content mt-8">
+      <p class="mb-4">Please enter your new password</p>
+      <div class="text-center">
+        <span v-if="errorData.email != ''" class="error" role="alert">
+          {{ errorData.email }}
+        </span>
+      </div>
+      <div
+        :class="{
+          'reset__content mt-8': !errorData.email,
+          'reset__content mt-3': errorData.email,
+        }"
+      >
         <label class="text-sm font-bold text-bluecoral" for="password"
           >New Password</label
         >

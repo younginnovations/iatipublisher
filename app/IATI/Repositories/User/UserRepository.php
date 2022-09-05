@@ -17,7 +17,7 @@ class UserRepository extends Repository
      *
      * @return string
      */
-    public function getModel():string
+    public function getModel(): string
     {
         return User::class;
     }
@@ -27,8 +27,18 @@ class UserRepository extends Repository
      *
      * @return string
      */
-    public function sendEmail($user):void
+    public function sendEmail($user): void
     {
         User::sendEmail($user);
+    }
+
+    /**
+     * Returns user model.
+     *
+     * @return bool
+     */
+    public function getStatus($user_id): bool
+    {
+        return ($this->model->find($user_id))['email_verified_at'] ? true : false;
     }
 }

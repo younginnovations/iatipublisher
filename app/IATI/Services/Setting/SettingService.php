@@ -82,4 +82,20 @@ class SettingService
             ],
         ]);
     }
+
+    /**
+     * Return array containing status of default and publisher information.
+     *
+     * @return array
+     */
+    public function getStatus(): array
+    {
+        $setting = $this->getSetting();
+
+        return [
+            'default_status'   => $setting && !in_array(null, array_values($setting['default_values'])) && !in_array(null, array_values($setting['activity_default_values'])) ? true : false,
+            'publisher_status' => $setting && $setting['publishing_info'] ? ($setting['publishing_info']['api_token'] && $setting['publishing_info']['token_verification'] ? true : false) : false,
+            'token_status' => $setting['publishing_info']['token_verification'],
+        ];
+    }
 }

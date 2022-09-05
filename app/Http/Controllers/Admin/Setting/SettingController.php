@@ -243,4 +243,31 @@ class SettingController extends Controller
             return ['success' => false, 'message' => $e->getMessage()];
         }
     }
+
+    /**
+     * Get setting status.
+     *
+     * @param array $data
+     *
+     * @return JsonResponse
+     */
+    public function getSettingStatus(): JsonResponse
+    {
+        try {
+            $status = $this->settingService->getStatus();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Setting status successfully retrieved.',
+                'data' => $status,
+            ]);
+        } catch (\Exception $e) {
+            logger()->error($e->getMessage());
+
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ]);
+        }
+    }
 }
