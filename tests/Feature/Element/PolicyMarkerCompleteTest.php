@@ -24,7 +24,7 @@ class PolicyMarkerCompleteTest extends ElementCompleteTest
      */
     public function test_policy_marker_type_mandatory_attributes(): void
     {
-        $this->test_mandatory_attributes($this->element, ['policy_marker']);
+        $this->test_mandatory_attributes($this->element, ['policy_marker', 'policy_marker_text']);
     }
 
     /**
