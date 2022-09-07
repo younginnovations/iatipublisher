@@ -8,11 +8,7 @@
     icon="approved-cloud"
     @click="publishValue = true"
   />
-  <Modal
-    :modal-active="publishValue"
-    width="583"
-    @close="publishToggle"
-  >
+  <Modal :modal-active="publishValue" width="583" @close="publishToggle">
     <div class="popup mb-4">
       <div class="title mb-6 flex">
         <svg-vue
@@ -143,7 +139,7 @@ const publishStateChange = computed(() => {
     publishState.title = 'Mandatory Elements Complete';
     publishState.description =
       'Congratulations! All the mandatory elements are complete. Continue to publish this organization.';
-    publishState.icon = 'tick'
+    publishState.icon = 'tick';
   } else {
     publishState.title = 'Mandatory Elements not complete';
     publishState.description =
@@ -155,12 +151,13 @@ const publishStateChange = computed(() => {
 });
 
 // call api for publishing
-interface ToastMessageTypeface {
+interface ToastDataTypeface {
   message: string;
   type: boolean;
+  visibility: boolean;
 }
 
-const toastMessage = inject('toastMessage') as ToastMessageTypeface;
+const toastData = inject('toastData') as ToastDataTypeface;
 
 const publishFunction = () => {
   loader.value = true;
@@ -170,8 +167,10 @@ const publishFunction = () => {
   axios.post(`/organisation/publish`).then((res) => {
     const response = res.data;
     loader.value = false;
-    toastMessage.message = response.message;
-    toastMessage.type = response.success;
+    toastData.message = response.message;
+    toastData.type = response.success;
+    toastData.visibility = true;
+
     setTimeout(() => {
       loader.value = false;
     }, 2000);
@@ -190,8 +189,9 @@ const unPublishFunction = () => {
 
   axios.post(`/organisation/unpublish`).then((res) => {
     const response = res.data;
-    toastMessage.message = response.message;
-    toastMessage.type = response.success;
+    toastData.message = response.message;
+    toastData.type = response.success;
+    toastData.visibility = true;
     setTimeout(() => {
       loader.value = false;
     }, 2000);

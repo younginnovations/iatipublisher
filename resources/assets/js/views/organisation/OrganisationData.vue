@@ -1,19 +1,19 @@
 <template>
   <div class="relative bg-paper px-10 pt-4 pb-[71px]">
     <!-- title section -->
-    <div class="mb-6 page-title">
+    <div class="page-title mb-6">
       <div class="flex items-end gap-4">
         <div class="title grow-0">
           <div class="max-w-sm pb-4 text-caption-c1 text-n-40">
             <nav aria-label="breadcrumbs" class="rank-math-breadcrumb">
               <div class="flex">
-                <a class="font-bold whitespace-nowrap" href="/activities"
+                <a class="whitespace-nowrap font-bold" href="/activities"
                   >Your Organisation</a
                 >
-                <span class="mx-4 separator"> / </span>
+                <span class="separator mx-4"> / </span>
                 <div class="breadcrumb__title">
                   <span
-                    class="overflow-hidden breadcrumb__title last text-n-30"
+                    class="breadcrumb__title last overflow-hidden text-n-30"
                     >{{
                       organization.name
                         ? organization.name['0'].narrative ?? 'Untitled'
@@ -31,15 +31,15 @@
               </div>
             </nav>
           </div>
-          <div class="inline-flex items-center max-w-3xl">
+          <div class="inline-flex max-w-3xl items-center">
             <div class="mr-3">
               <a href="/activities">
                 <svg-vue icon="arrow-short-left" />
               </a>
             </div>
             <div>
-              <h4 class="relative mr-4 text-2xl font-bold ellipsis__title">
-                <span class="overflow-hidden ellipsis__title">
+              <h4 class="ellipsis__title relative mr-4 text-2xl font-bold">
+                <span class="ellipsis__title overflow-hidden">
                   {{
                     organization.name
                       ? organization.name['0'].narrative ?? 'Untitled'
@@ -57,20 +57,20 @@
             </div>
           </div>
         </div>
-        <div class="flex flex-col items-end justify-end actions grow">
-          <div class="mb-3">
+        <div class="actions flex grow flex-col items-end justify-end">
+          <!-- <div class="mb-3">
             <Toast
               v-if="toastData.visibility"
               :message="toastData.message"
               :type="toastData.type"
             />
-          </div>
+          </div> -->
           <div class="inline-flex justify-end">
             <Toast
-              v-if="toastMessage.message"
+              v-if="toastData.message"
               class="mr-3.5"
-              :message="toastMessage.message"
-              :type="toastMessage.type"
+              :message="toastData.message"
+              :type="toastData.type"
             />
 
             <!-- Download File -->
@@ -86,21 +86,21 @@
               @close="downloadToggle"
             >
               <div class="mb-4">
-                <div class="flex mb-6 title">
+                <div class="title mb-6 flex">
                   <svg-vue
                     class="mr-1 mt-0.5 text-lg text-spring-50"
                     icon="download-file"
                   />
                   <b>Download file.</b>
                 </div>
-                <div class="p-4 rounded-lg bg-mint">
+                <div class="rounded-lg bg-mint p-4">
                   Click the download button to save the file.
                 </div>
               </div>
               <div class="flex justify-end">
                 <div class="inline-flex">
                   <BtnComponent
-                    class="px-6 uppercase bg-white"
+                    class="bg-white px-6 uppercase"
                     text="Go Back"
                     type=""
                     @click="downloadValue = false"
@@ -128,21 +128,21 @@
               @close="deleteToggle"
             >
               <div class="mb-4">
-                <div class="flex mb-6 title">
+                <div class="title mb-6 flex">
                   <svg-vue
                     class="mr-1 mt-0.5 text-lg text-crimson-40"
                     icon="delete"
                   />
                   <b>Delete organisation</b>
                 </div>
-                <div class="p-4 rounded-lg bg-rose">
+                <div class="rounded-lg bg-rose p-4">
                   Are you sure you want to delete this organisation?
                 </div>
               </div>
               <div class="flex justify-end">
                 <div class="inline-flex">
                   <BtnComponent
-                    class="px-6 uppercase bg-white"
+                    class="bg-white px-6 uppercase"
                     text="Go Back"
                     type=""
                     @click="deleteValue = false"
@@ -166,9 +166,9 @@
     <!-- title section ends -->
     <div class="activities">
       <aside class="activities__sidebar">
-        <div class="flex mb-1">
-          <div class="mr-1 activities__card progress">
-            <div class="flex items-center justify-between mb-2">
+        <div class="mb-1 flex">
+          <div class="activities__card progress mr-1">
+            <div class="mb-2 flex items-center justify-between">
               <span class="mr-2">Publishing Progress</span>
               <HoverText
                 hover-text="You cannot publish an activity until all the mandatory fields have been filled."
@@ -178,14 +178,14 @@
               />
             </div>
             <RadialProgressBar
-              class="h-20 mb-3 text-8xl"
+              class="mb-3 h-20 text-8xl"
               :is-percent="true"
               :percent="progress"
             ></RadialProgressBar>
             <span>Fill core elements to get 100% score</span>
           </div>
           <div class="activities__card elements">
-            <div class="flex items-center justify-between mb-7">
+            <div class="mb-7 flex items-center justify-between">
               <span>Elements</span>
               <HoverText
                 hover-text="You cannot publish an activity until all the mandatory fields have been filled."
@@ -193,7 +193,7 @@
                 class="hover-text"
               />
             </div>
-            <div class="flex justify-between mb-3">
+            <div class="mb-3 flex justify-between">
               <div class="flex items-center space-x-1">
                 <svg-vue icon="star" />
                 <span>Mandatory</span>
@@ -224,8 +224,8 @@
           :completed="co"
         />
       </aside>
-      <div class="overflow-hidden activities__content">
-        <div class="inline-flex flex-wrap gap-2 mb-3">
+      <div class="activities__content overflow-hidden">
+        <div class="mb-3 inline-flex flex-wrap gap-2">
           <a
             v-for="(post, key, index) in groupedData"
             :key="index"
@@ -245,10 +245,10 @@
             </button>
           </a>
         </div>
-        <div class="flex flex-wrap -mx-3 activities__content--elements">
+        <div class="activities__content--elements -mx-3 flex flex-wrap">
           <template v-for="(post, key, index) in groupedData" :key="index">
             <div
-              class="relative flex items-center w-full mx-3 mt-3 mb-1 text-sm uppercase elements-title text-n-40"
+              class="elements-title relative mx-3 mt-3 mb-1 flex w-full items-center text-sm uppercase text-n-40"
             >
               <div class="mr-4 shrink-0">{{ key }}</div>
             </div>
@@ -284,7 +284,14 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, onMounted, toRefs, provide } from 'vue';
+import {
+  defineComponent,
+  reactive,
+  onMounted,
+  toRefs,
+  provide,
+  watch,
+} from 'vue';
 import HoverText from '../../components/HoverText.vue';
 import RadialProgressBar from '../../components/RadialProgressBar.vue';
 import OrganisationElements from './OrganisationElements.vue';
@@ -355,15 +362,20 @@ export default defineComponent({
 
     onMounted(() => {
       if (props.toast.message !== '') {
-        toastData.type = props.toast.type;
+        toastData.type = props.toast.type === 'success' ? true : false;
         toastData.visibility = true;
         toastData.message = props.toast.message;
       }
-
-      setTimeout(() => {
-        toastData.visibility = false;
-      }, 5000);
     });
+
+    watch(
+      () => toastData.message,
+      () => {
+        setTimeout(() => {
+          toastData.visibility = false;
+        }, 5000);
+      }
+    );
 
     /**
      * Grouping all the data's for scroll function
@@ -432,14 +444,14 @@ export default defineComponent({
       status: organizationProps.status,
     });
 
-    const toastMessage = reactive({
-      message: '',
-      type: false,
-    });
+    // const toastMessage = reactive({
+    //   message: "",
+    //   type: false,
+    // });
 
     provide('publishMessage', publishMessage);
     provide('mandatoryCompleted', props.mandatoryCompleted);
-    provide('toastMessage', toastMessage);
+    provide('toastData', toastData);
     provide('publishStatus', publishStatus);
 
     return {
@@ -455,7 +467,6 @@ export default defineComponent({
       downloadToggle,
       elementProps,
       toastData,
-      toastMessage,
       publishStatus,
     };
   },
