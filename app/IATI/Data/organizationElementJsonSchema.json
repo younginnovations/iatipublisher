@@ -58,6 +58,7 @@
         "type": "text",
         "required": true,
         "criteria": "mandatory",
+        "element_criteria":"mandatory",
         "add_more": true,
         "hover_text": "The free text name or description of the item being described. This can be repeated in multiple languages. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/title/narrative/'> For more information </a>",
         "help_text": "",
@@ -128,6 +129,7 @@
         "type": "textarea",
         "required": true,
         "criteria": "mandatory",
+        "element_criteria": "mandatory",
         "add_more": true,
         "attr": {
           "row": 4
@@ -174,6 +176,7 @@
         "name": "period_start",
         "label": "period-start",
         "add_more": false,
+        "element_criteria": "mandatory",
         "hover_text": "The start of the budget period. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/total-budget/period-start/'>For more information</a>",
         "attributes": {
           "date": {
@@ -192,6 +195,7 @@
         "name": "period_end",
         "label": "period-end",
         "add_more": false,
+        "element_criteria" : "mandatory",
         "hover_text": "The end of the period (which must not be greater than one year). <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/total-budget/period-end/'>For more information</a>",
         "attributes": {
           "date": {
@@ -210,6 +214,7 @@
         "name": "value",
         "label": "value",
         "add_more": false,
+        "element_criteria": "mandatory",
         "hover_text": "The total value of the organisation’s aid budget for this period. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/total-budget/value/'>For more information</a>",
         "attributes": {
           "amount": {
@@ -352,6 +357,7 @@
         "name": "recipient_org",
         "label": "recipient-org",
         "add_more": false,
+        "element_criteria": "mandatory",
         "hover_text": "The organisation that will receive the funds. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/recipient-org-budget/recipient-org/'>For more information</a>",
         "attributes": {
           "ref": {
@@ -398,6 +404,7 @@
         "name": "period_start",
         "label": "period-start",
         "add_more": false,
+        "element_criteria":"mandatory",
         "hover_text": "This element must occur once and only once (within each parent element). <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/recipient-org-budget/period-start/'>For more information</a>",
         "attributes": {
           "date": {
@@ -416,6 +423,7 @@
         "name": "period_end",
         "label": "period-end",
         "add_more": false,
+        "element_criteria":"mandatory",
         "hover_text": "The end of the period (which must not be greater than one year). <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/recipient-org-budget/period-end/'>For more information</a>",
         "attributes": {
           "date": {
@@ -434,6 +442,7 @@
         "name": "value",
         "label": "value",
         "add_more": false,
+        "element_criteria":"mandatory",
         "hover_text": "The total value of the money budgeted to be disbursed to the specified recipient organisation during this time period. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/recipient-org-budget/value/'>For more information</a>",
         "attributes": {
           "amount": {
@@ -578,6 +587,7 @@
         "label": "Recipient Region",
         "criteria": "mandatory",
         "add_more": false,
+        "element_criteria":"mandatory",
         "hover_text": "The supranational geographic region where funds have been allocated. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/recipient-region-budget/recipient-region/'>For more information</a>",
         "attributes": {
           "vocabulary": {
@@ -656,6 +666,7 @@
         "name": "period_start",
         "label": "period-start",
         "add_more": false,
+        "element_criteria":"mandatory",
         "hover_text": "The start of the budget period.This element must occur once and only once (within each parent element). <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/recipient-region-budget/period-start/'>For more information</a>",
         "attributes": {
           "date": {
@@ -674,6 +685,7 @@
         "name": "period_end",
         "label": "period-end",
         "add_more": false,
+        "element_criteria":"mandatory",
         "hover_text": "The end of the period (which must not be greater than one year). <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/recipient-region-budget/period-end/'>For more information</a>",
         "attributes": {
           "date": {
@@ -692,6 +704,7 @@
         "name": "value",
         "label": "value",
         "add_more": false,
+        "element_criteria":"mandatory",
         "hover_text": "The total value of the money budgeted to be disbursed to the specified country during this time period. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/recipient-country-budget/value/'>For more information</a>",
         "attributes": {
           "amount": {
@@ -834,8 +847,8 @@
       "recipient_country": {
         "name": "recipient_country",
         "label": "recipient-country",
-        "criteria": "",
         "add_more": true,
+        "element_criteria":"mandatory",
         "hover_text": "The recipient country. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/recipient-country-budget/recipient-country/'>For more information</a>",
         "attributes": {
           "code": {
@@ -884,6 +897,7 @@
         "name": "period_start",
         "label": "period-start",
         "add_more": false,
+        "element_criteria":"mandatory",
         "hover_text": "The start of the budget period.This element must occur once and only once (within each parent element). <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/recipient-country-budget/period-start/'>For more information</a>",
         "attributes": {
           "date": {
@@ -902,6 +916,7 @@
         "name": "period_end",
         "label": "period-end",
         "add_more": false,
+        "element_criteria":"mandatory",
         "hover_text": "The end of the period (which must not be greater than one year). <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/recipient-country-budget/period-end/'>For more information</a>",
         "attributes": {
           "date": {
@@ -920,6 +935,7 @@
         "name": "value",
         "label": "value",
         "add_more": false,
+        "element_criteria":"mandatory",
         "hover_text": "The total value of the money budgeted to be disbursed to the specified recipient organisation during this time period. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/recipient-country-budget/value/'>For more information</a>",
         "attributes": {
           "amount": {
@@ -1051,6 +1067,7 @@
         "name": "period_start",
         "label": "period-start",
         "add_more": false,
+        "element_criteria":"mandatory",
         "hover_text": "The start of the budget period. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/total-expenditure/period-start/'>For more information</a>",
         "attributes": {
           "date": {
@@ -1069,6 +1086,7 @@
         "name": "period_end",
         "label": "period-end",
         "add_more": false,
+        "element_criteria":"mandatory",
         "hover_text": "The end of the period (which must not be greater than one year) <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/total-expenditure/period-end/'>For more information</a>",
         "attributes": {
           "date": {
@@ -1087,6 +1105,7 @@
         "name": "value",
         "label": "value",
         "add_more": false,
+        "element_criteria":"mandatory",
         "hover_text": "The total value of the organisation’s aid expenditure for this period. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/total-expenditure/value/'>For more information</a>",
         "attributes": {
           "amount": {
@@ -1228,8 +1247,8 @@
         "type": "select",
         "multiselect": false,
         "choices": "Activity/FileFormat.json",
-        "required": false,
-        "criteria": "",
+        "required": true,
+        "criteria": "mandatory",
         "hover_text": "An IANA code for the MIME type of the document being referenced, e.g. “application/pdf”. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/document-link/'>For more information</a>",
         "help_text": ""
       }
@@ -1239,6 +1258,7 @@
         "name": "title",
         "label": "title",
         "add_more": false,
+        "element_criteria":"mandatory",
         "hover_text": "A short, human-readable title. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/document-link/title/'>For more information</a>",
         "attributes": {},
         "sub_elements": {
@@ -1311,6 +1331,7 @@
         "name": "category",
         "label": "Category",
         "add_more": true,
+        "element_criteria":"mandatory",
         "wrapper_collection": false,
         "hover_text": "IATI Document Category Code. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/document-link/category/'>For more information",
         "attributes": {

@@ -35,7 +35,7 @@ class SectorCompleteTest extends ElementCompleteTest
      */
     public function test_sector_type_mandatory_sub_elements(): void
     {
-        $this->test_mandatory_sub_elements($this->element, []);
+        $this->test_mandatory_sub_elements($this->element, ['narrative'=>['language']]);
     }
 
     /**

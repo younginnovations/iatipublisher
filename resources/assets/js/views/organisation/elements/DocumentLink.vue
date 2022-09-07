@@ -76,14 +76,15 @@
                   class="item"
                   :class="{ 'mb-1.5': i != document_link.language.length - 1 }"
                 >
-                  <span v-if="document_link.language.length>0">
+                  <span>
                     {{
-                      document_link.language
+                      (document_link.language
                         .map((entry) => types.languages[entry.code])
-                        .join(', ')
+                        .join(', ') === '' )?'Language Not Available':(document_link.language
+                        .map((entry) => types.languages[entry.code])
+                        .join(', '))
                     }}
                   </span>
-                  <span v-else> Not Available </span>
                 </div>
               </td>
             </tr>

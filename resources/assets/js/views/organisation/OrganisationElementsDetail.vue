@@ -50,12 +50,6 @@
             <svg-vue class="mr-0.5 text-base" icon="edit"></svg-vue>
             <span>Edit</span>
           </a>
-          <template v-if="'core' in data">
-            <svg-vue v-if="data.core" class="mr-1.5" icon="core"></svg-vue>
-          </template>
-          <template v-if="'moon' in data">
-            <svg-vue v-if="data.moon" class="mr-1.5" icon="moon"></svg-vue>
-          </template>
           <HoverText
             v-if="tooltip"
             :hover-text="tooltip"

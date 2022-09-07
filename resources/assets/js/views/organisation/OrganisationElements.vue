@@ -15,6 +15,7 @@
       </div>
       <div class="relative grid justify-items-end">
         <button
+          ref="dropdownBtn"
           class="button panel-btn dropdown-btn"
           @click="searchBtnToggle()"
         >
@@ -36,6 +37,7 @@
         </button>
         <div
           v-show="searchBtnValue"
+          ref="dropdown"
           class="button__dropdown button dropdown-btn absolute right-0 top-full z-10 w-[118px] bg-white text-left shadow-dropdown"
         >
           <ul class="w-full bg-eggshell py-2">
@@ -74,7 +76,6 @@
             class="text-base text-teal-50"
             icon="double-tick"
           ></svg-vue>
-          <!-- <svg-vue v-if="post.core" class="text-base text-camel-50" icon="core"></svg-vue> -->
         </div>
         <template v-if="index === 'name'">
           <svg-vue
@@ -97,7 +98,7 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, reactive } from 'vue';
+import { computed, defineComponent, reactive, onMounted, ref } from 'vue';
 import { useToggle } from '@vueuse/core';
 
 export default defineComponent({
@@ -119,6 +120,9 @@ export default defineComponent({
   },
   setup(props) {
     const [searchBtnValue, searchBtnToggle] = useToggle();
+    const dropdown = ref();
+    const dropdownBtn = ref();
+
     /**
      * Search functionality
      */
@@ -134,14 +138,20 @@ export default defineComponent({
           return key
             .toLowerCase()
             .includes(
-              elements.search.toLowerCase().replace(/_/g, ' ').replace(/-/g, '_')
+              elements.search
+                .toLowerCase()
+                .replace(/_/g, ' ')
+                .replace(/-/g, '_')
             );
         } else {
           if (value[elements.status]) {
             return key
               .toLowerCase()
               .includes(
-                elements.search.toLowerCase().replace(/_/g, ' ').replace(/-/g, '_')
+                elements.search
+                  .toLowerCase()
+                  .replace(/_/g, ' ')
+                  .replace(/-/g, '_')
               );
           }
         }
@@ -149,6 +159,18 @@ export default defineComponent({
 
       const justStrings = Object.fromEntries(filtered);
       return justStrings;
+    });
+
+    onMounted(() => {
+      window.addEventListener('click', (e) => {
+        if (
+          !dropdownBtn.value.contains(e.target) &&
+          !dropdown.value.contains(e.target) &&
+          searchBtnValue.value
+        ) {
+          searchBtnToggle();
+        }
+      });
     });
 
     const dropdownFilter = (s: string) => {
@@ -159,6 +181,8 @@ export default defineComponent({
     return {
       searchBtnValue,
       searchBtnToggle,
+      dropdown,
+      dropdownBtn,
       elements,
       filteredElements,
       dropdownFilter,

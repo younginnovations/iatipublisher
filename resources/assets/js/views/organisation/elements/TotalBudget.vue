@@ -8,19 +8,19 @@
     }"
   >
     <div class="elements-detail mb-4">
-        <div class="category flex">
-          {{
-            types?.budgetType[total_budget.total_budget_status] ??
-            'Budget Status Not Available'
-          }}
-        </div>
-        <div class="flex text-sm">
-          <span v-if="total_budget.value[0].amount">
-            {{ total_budget.value['0'].amount }}
-            {{ total_budget.value['0'].currency }}
-          </span>
-          <span v-else> Budget Amount Not Available</span>
-        </div>
+      <div class="category flex">
+        {{
+          types?.budgetType[total_budget.total_budget_status] ??
+          'Budget Status Not Available'
+        }}
+      </div>
+      <div class="flex text-sm">
+        <span v-if="total_budget.value[0].amount">
+          {{ total_budget.value['0'].amount }}
+          {{ total_budget.value['0'].currency }}
+        </span>
+        <span v-else> Budget Amount Not Available</span>
+      </div>
       <table>
         <tbody>
           <tr>
@@ -79,13 +79,12 @@
                     </td>
                   </tr>
                   <tr>
-                    <td>Value</td>
+                    <td>Value Date</td>
                     <td>
-                      {{ budget_line.value['0'].amount }}
-                      {{ budget_line.value['0'].currency }} ({{
+                      {{
                         formatDate(budget_line.value['0'].value_date) ??
                         'Value Date Not Available'
-                      }})
+                      }}
                     </td>
                   </tr>
                   <tr>
