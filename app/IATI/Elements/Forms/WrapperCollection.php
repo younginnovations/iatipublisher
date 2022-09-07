@@ -45,11 +45,11 @@ class WrapperCollection extends Form
                         'property'       => 'name',
                         'prototype'      => true,
                         'prototype_name' => '__NAME__',
-                        'element_criteria' => Arr::get($field, 'element_criteria', ''),
                         'options'        => [
                             'class'           => 'App\IATI\Elements\Forms\SubElementForm',
                             'data'            => $field,
                             'label'           => false,
+                            'element_criteria' => Arr::get($field, 'element_criteria', ''),
                             'wrapper'         => [
                                 'class' => 'form-field-group form-child-body flex flex-wrap rounded-br-lg border-y border-r border-spring-50 p-6',
                             ],

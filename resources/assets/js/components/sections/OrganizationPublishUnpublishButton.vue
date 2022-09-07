@@ -137,10 +137,12 @@ interface ToastDataTypeface {
   visibility: boolean;
 }
 const toastData = inject("toastData") as ToastDataTypeface;
+
 const publishFunction = () => {
   loader.value = true;
   loaderText.value = "Publishing";
   publishValue.value = false;
+
   axios.post(`/organisation/publish`).then((res) => {
     const response = res.data;
     loader.value = false;
