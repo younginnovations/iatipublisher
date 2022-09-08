@@ -467,4 +467,16 @@ class TransactionService
             ],
         ];
     }
+
+    /**
+     * Deletes specific transaction.
+     *
+     * @param $id
+     *
+     * @return bool
+     */
+    public function deleteTransaction($id): bool
+    {
+        return $this->transactionRepository->delete($id);
+    }
 }

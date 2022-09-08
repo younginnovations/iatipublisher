@@ -7,7 +7,6 @@ namespace App\Http\Controllers\Admin\Activity;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Activity\Transaction\TransactionRequest;
 use App\IATI\Elements\Builder\BaseFormCreator;
-use App\IATI\Models\Activity\Transaction;
 use App\IATI\Services\Activity\ActivityService;
 use App\IATI\Services\Activity\TransactionService;
 use Illuminate\Contracts\Foundation\Application;
@@ -249,12 +248,31 @@ class TransactionController extends Controller
     }
 
     /**
-     * @param Transaction $transaction
+     * Deletes Specific Transaction.
      *
-     * @return void
+     * @param $id
+     * @param $transactionId
+     *
+     * @return JsonResponse
      */
-    public function destroy(Transaction $transaction): void
+    public function destroy($id, $transactionId): JsonResponse
     {
-        dd('here');
+        try {
+            $this->transactionService->deleteTransaction($transactionId);
+
+            return response()->json([
+                'status'      => true,
+                'msg'         => 'Transaction Deleted Successfully',
+                'activity_id' => $id,
+            ]);
+        } catch (\Exception $e) {
+            logger()->error($e->getMessage());
+
+            return response()->json([
+                'status'      => true,
+                'msg'         => 'Transaction Delete Error',
+                'activity_id' => $id,
+            ], 400);
+        }
     }
 }

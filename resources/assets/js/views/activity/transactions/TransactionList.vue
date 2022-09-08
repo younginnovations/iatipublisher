@@ -247,7 +247,12 @@ export default defineComponent({
     }
 
     const deleteFunction = () => {
-      console.log(activity.value)
+      axios
+        .delete(`/activity/${activityId}/transaction/3`)
+        .then((res) => {
+          const response = res.data;
+          Object.assign(transactionsData, response.data);
+        });
     };
 
     /**
