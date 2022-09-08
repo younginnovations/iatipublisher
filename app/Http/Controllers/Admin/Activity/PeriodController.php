@@ -299,15 +299,32 @@ class PeriodController extends Controller
     }
 
     /**
-     * Deletes period.
+     * Deletes Specific Period.
      *
-     * @param Period $period
+     * @param $id
+     * @param $periodId
      *
-     * @return void
+     * @return JsonResponse
      */
-    public function destroy(Period $period): void
+    public function destroy($id, $periodId): JsonResponse
     {
-        //
+        try {
+            $this->periodService->deletePeriod($periodId);
+
+            return response()->json([
+                'status'      => true,
+                'msg'         => 'Period Deleted Successfully',
+                'indicator_id' => $id,
+            ]);
+        } catch (\Exception $e) {
+            logger()->error($e->getMessage());
+
+            return response()->json([
+                'status'      => true,
+                'msg'         => 'Period Delete Error',
+                'indicator_id' => $id,
+            ], 400);
+        }
     }
 
     /**
