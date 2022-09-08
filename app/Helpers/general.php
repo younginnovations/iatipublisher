@@ -578,6 +578,25 @@ if (!function_exists('isCoreElement')) {
         return in_array($element, getCoreElements(), true);
     }
 }
+
+if (!function_exists('isMandatoryElement')) {
+    /**
+     * Checks if an activity element is a core element.
+     *
+     * @param $element
+     *
+     * @return bool
+     */
+    function isMandatoryElement($element): bool
+    {
+        $mandatory_elements = [
+            'indicator',
+        ];
+
+        return in_array($element, $mandatory_elements, true);
+    }
+}
+
 if (!function_exists('getTableConfig')) {
     /**
      * Gets the table config of activity.

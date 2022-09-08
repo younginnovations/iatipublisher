@@ -45,11 +45,11 @@ class WrapperCollectionForm extends Form
                         'property'       => 'name',
                         'prototype'      => true,
                         'prototype_name' => '__NAME__',
-                        'element_criteria' => Arr::get($field, 'element_criteria', ''),
                         'options'        => [
                             'class'           => 'App\IATI\Elements\Forms\SubElementForm',
                             'data'            => $field,
                             'label'           => false,
+                            'element_criteria' => Arr::get($field, 'element_criteria', ''),
                             'wrapper'         => [
                                 'class' => ((Arr::get($data, 'attributes', null) && isset($field['name']) && strtolower(
                                     $field['name']

@@ -36,9 +36,9 @@
                 <b class="mr-2 text-base leading-3">.</b>
                 <span>{{ $data['status'] ? 'completed' : 'not completed' }}</span>
             </div> --}}
-            @if ($data['core'])
+            {{-- @if ($data['core'])
                 <svg-vue icon="core"></svg-vue>
-            @endif
+            @endif --}}
         </div>
         <div class="flex icons">
             <span class="text-xs"><sup class="text-salmon-50">*</sup> Mandatory fields</span>

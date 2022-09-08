@@ -2151,8 +2151,8 @@
             "name": "narrative",
             "label": "narrative",
             "type": "textarea",
-            "required": true,
-            "criteria": "mandatory",
+            "required": false,
+            "criteria": "",
             "add_more": true,
             "hover_text": "The free text name or description of the item being described. This can be repeated in multiple languages. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/title/narrative/'>For more information</a>",
             "help_text": "",
@@ -2214,8 +2214,8 @@
             "name": "narrative",
             "label": "narrative",
             "type": "textarea",
-            "required": true,
-            "criteria": "mandatory",
+            "required": false,
+            "criteria": "",
             "add_more": true,
             "hover_text": "The free text name or description of the item being described. This can be repeated in multiple languages. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/title/narrative/'>For more information</a>",
             "help_text": "",
@@ -2863,8 +2863,8 @@
                 "name": "narrative",
                 "label": "narrative",
                 "type": "textarea",
-                "required": false,
-                "criteria": "",
+                "required": true,
+                "criteria": "mandatory",
                 "add_more": true,
                 "attr": {
                   "row": 4
@@ -2896,8 +2896,8 @@
                 "name": "narrative",
                 "label": "narrative",
                 "type": "textarea",
-                "required": false,
-                "criteria": "",
+                "required": true,
+                "criteria": "mandatory",
                 "add_more": true,
                 "attr": {
                   "row": 4
@@ -3146,8 +3146,8 @@
                     "name": "narrative",
                     "label": "narrative",
                     "type": "textarea",
-                    "required": false,
-                    "criteria": "",
+                    "required": true,
+                    "criteria": "mandatory",
                     "add_more": true,
                     "attr": {
                       "row": 4
@@ -3180,8 +3180,8 @@
                     "name": "narrative",
                     "label": "narrative",
                     "type": "textarea",
-                    "required": false,
-                    "criteria": "",
+                    "required": true,
+                    "criteria": "mandatory",
                     "add_more": true,
                     "attr": {
                       "row": 4
@@ -3271,8 +3271,8 @@
                 "name": "reference",
                 "label": "@ref",
                 "type": "text",
-                "required": true,
-                "criteria": "mandatory",
+                "required": false,
+                "criteria": "",
                 "hover_text": "A cross-reference to the internal reference assigned to a defined location: iati-activity/location/@ref. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/indicator/baseline/location/'>For more information</a>",
                 "help_text": ""
               }
@@ -3350,8 +3350,8 @@
                 "name": "narrative",
                 "label": "narrative",
                 "type": "textarea",
-                "required": false,
-                "criteria": "",
+                "required": true,
+                "criteria": "mandatory",
                 "add_more": true,
                 "hover_text": "The free text name or description of the item being described. This can be repeated in multiple languages. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/indicator/period/target/comment/narrative/'>For more information</a>",
                 "help_text": "",
@@ -3364,8 +3364,8 @@
                     "label": "@xml:lang",
                     "type": "select",
                     "choices": "Activity/Language.json",
-                    "required": false,
-                    "criteria": "recommended",
+                    "required": true,
+                    "criteria": "mandatory",
                     "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/indicator/period/target/comment/narrative/'>For more information</a>",
                     "help_text": ""
                   }
@@ -3484,8 +3484,8 @@
                         "label": "@xml:lang",
                         "type": "select",
                         "choices": "Activity/Language.json",
-                        "required": false,
-                        "criteria": "recommended",
+                        "required": true,
+                        "criteria": "mandatory",
                         "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/indicator/period/target/document-link/description/narrative/'>For more information</a>",
                         "help_text": ""
                       }
@@ -4240,6 +4240,7 @@
             "type": "textarea",
             "required": false,
             "criteria": "",
+            "element_criteria":"recommended",
             "add_more": true,
             "attr": {
               "row": 4

@@ -42,6 +42,9 @@
             @if (isCoreElement($data['name']))
                 <svg-vue icon="core" class="ml-2"></svg-vue>
             @endif
+            @if (isMandatoryElement($data['name']))
+                <svg-vue icon="star" class="ml-2"></svg-vue>
+            @endif
         </div>
         <div class="flex icons">
             <span class="text-xs"><sup class="text-salmon-50">*</sup> Mandatory fields</span>
