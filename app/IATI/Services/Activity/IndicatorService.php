@@ -214,4 +214,16 @@ class IndicatorService
 
         return $indicatorData;
     }
+
+    /**
+     * Deletes indicator.
+     *
+     * @param $id
+     *
+     * @return bool
+     */
+    public function deleteIndicator($id): bool
+    {
+        return $this->indicatorRepository->delete($id);
+    }
 }

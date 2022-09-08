@@ -13,7 +13,7 @@ use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Session;
 
 /**
  * Class ResultController.
@@ -242,14 +242,33 @@ class ResultController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Deletes Specific Result.
      *
-     * @param Result $result
+     * @param $id
+     * @param $resultId
      *
-     * @return Response
+     * @return JsonResponse
      */
-    public function destroy(Result $result)
+    public function destroy($id, $resultId): JsonResponse
     {
-        //
+        try {
+            $this->resultService->deleteResult($resultId);
+            Session::flash('success', 'Result Deleted Successfully');
+
+            return response()->json([
+                'status'      => true,
+                'msg'         => 'Result Deleted Successfully',
+                'activity_id' => $id,
+            ]);
+        } catch (\Exception $e) {
+            logger()->error($e->getMessage());
+            Session::flash('error', 'Result Delete Error');
+
+            return response()->json([
+                'status'      => true,
+                'msg'         => 'Result Delete Error',
+                'activity_id' => $id,
+            ], 400);
+        }
     }
 }

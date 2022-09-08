@@ -282,7 +282,7 @@
                                           text="Show full period list"
                                           icon=""
                                           design="bgText"
-                                          :link="`/indicator/${indicator.id}/period/`"
+                                          :link="`/indicator/${indicator.id}/period`"
                                         />
                                       </div>
                                     </div>

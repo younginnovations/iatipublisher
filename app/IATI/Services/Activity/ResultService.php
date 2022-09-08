@@ -434,4 +434,16 @@ class ResultService
 
         return $targetData;
     }
+
+    /**
+     * Deletes specific result.
+     *
+     * @param $id
+     *
+     * @return bool
+     */
+    public function deleteResult($id): bool
+    {
+        return $this->resultRepository->delete($id);
+    }
 }
