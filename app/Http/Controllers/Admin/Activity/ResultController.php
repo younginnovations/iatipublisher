@@ -241,21 +241,21 @@ class ResultController extends Controller
     }
 
     /**
-     * Deletes Specific Transaction.
+     * Deletes Specific Result.
      *
      * @param $id
-     * @param $transactionId
+     * @param $resultId
      *
      * @return JsonResponse
      */
-    public function destroy($id, $transactionId): JsonResponse
+    public function destroy($id, $resultId): JsonResponse
     {
         try {
-            $this->transactionService->deleteTransaction($transactionId);
+            $this->resultService->deleteResult($resultId);
 
             return response()->json([
                 'status'      => true,
-                'msg'         => 'Transaction Deleted Successfully',
+                'msg'         => 'Result Deleted Successfully',
                 'activity_id' => $id,
             ]);
         } catch (\Exception $e) {
@@ -263,7 +263,7 @@ class ResultController extends Controller
 
             return response()->json([
                 'status'      => true,
-                'msg'         => 'Transaction Delete Error',
+                'msg'         => 'Result Delete Error',
                 'activity_id' => $id,
             ], 400);
         }
