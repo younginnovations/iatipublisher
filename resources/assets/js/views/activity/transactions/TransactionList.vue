@@ -1,4 +1,31 @@
 <template>
+  <Modal :modal-active="deleteValue" width="583" @close="deleteToggle">
+    <div class="mb-4">
+      <div class="flex mb-6 title">
+        <svg-vue class="mr-1 mt-0.5 text-lg text-crimson-40" icon="delete" />
+        <b>Delete activity</b>
+      </div>
+      <div class="p-4 rounded-lg bg-rose">
+        Are you sure you want to delete this transaction?
+      </div>
+    </div>
+    <div class="flex justify-end">
+      <div class="inline-flex">
+        <BtnComponent
+          class="px-6 uppercase bg-white"
+          text="Go Back"
+          type=""
+          @click="deleteValue = false"
+        />
+        <BtnComponent
+          class="space"
+          text="Delete"
+          type="primary"
+          @click="deleteFunction"
+        />
+      </div>
+    </div>
+  </Modal>
   <div class="relative bg-paper px-10 pt-4 pb-[71px]">
     <PageTitle
       :breadcrumb-data="breadcrumbData"
@@ -88,9 +115,13 @@
                 >
                   <svg-vue icon="edit" class="text-xl"></svg-vue>
                 </a>
-                <button class="">
-                  <svg-vue icon="delete" class="text-xl"></svg-vue>
-                </button>
+                <BtnComponent
+                  class=""
+                  text=""
+                  type="secondary"
+                  icon="delete"
+                  @click="deleteValue = true"
+                />
               </div>
             </td>
           </tr>
@@ -108,7 +139,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, toRefs, reactive, onMounted } from 'vue';
+import { defineComponent, toRefs, reactive, onMounted, provide, inject } from 'vue'
 import axios from 'axios';
 
 //components
@@ -116,10 +147,17 @@ import Btn from 'Components/ButtonComponent.vue';
 import Pagination from 'Components/TablePagination.vue';
 import PageTitle from 'Components/sections/PageTitle.vue';
 import Toast from 'Components/Toast.vue';
+import BtnComponent from 'Components/ButtonComponent.vue';
+import Modal from 'Components/PopupModal.vue';
 
 //composable
 import dateFormat from 'Composable/dateFormat';
 import getActivityTitle from 'Composable/title';
+import { useToggle } from '@vueuse/core'
+
+// toggle state for modal popup
+let [deleteValue, deleteToggle] = useToggle();
+
 
 export default defineComponent({
   name: 'TransactionList',
@@ -128,6 +166,8 @@ export default defineComponent({
     Pagination,
     PageTitle,
     Toast,
+    BtnComponent,
+    Modal,
   },
   props: {
     activity: {
@@ -145,7 +185,7 @@ export default defineComponent({
     toast: {
       type: Object,
       required: true,
-    },
+    }
   },
   setup(props) {
     const { activity } = toRefs(props);
@@ -206,6 +246,10 @@ export default defineComponent({
         });
     }
 
+    const deleteFunction = () => {
+      console.log(activity.value)
+    };
+
     /**
      * Breadcrumb data
      */
@@ -232,6 +276,9 @@ export default defineComponent({
       getActivityTitle,
       fetchListings,
       toastData,
+      deleteValue,
+      deleteToggle,
+      deleteFunction,
     };
   },
 });
