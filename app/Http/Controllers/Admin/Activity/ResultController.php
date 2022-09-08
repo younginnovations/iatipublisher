@@ -13,7 +13,6 @@ use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Response;
 
 /**
  * Class ResultController.
@@ -242,14 +241,31 @@ class ResultController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Deletes Specific Transaction.
      *
-     * @param Result $result
+     * @param $id
+     * @param $transactionId
      *
-     * @return Response
+     * @return JsonResponse
      */
-    public function destroy(Result $result)
+    public function destroy($id, $transactionId): JsonResponse
     {
-        //
+        try {
+            $this->transactionService->deleteTransaction($transactionId);
+
+            return response()->json([
+                'status'      => true,
+                'msg'         => 'Transaction Deleted Successfully',
+                'activity_id' => $id,
+            ]);
+        } catch (\Exception $e) {
+            logger()->error($e->getMessage());
+
+            return response()->json([
+                'status'      => true,
+                'msg'         => 'Transaction Delete Error',
+                'activity_id' => $id,
+            ], 400);
+        }
     }
 }

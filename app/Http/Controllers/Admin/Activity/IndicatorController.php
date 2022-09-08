@@ -6,7 +6,6 @@ namespace App\Http\Controllers\Admin\Activity;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Activity\Indicator\IndicatorRequest;
-use App\IATI\Models\Activity\Indicator;
 use App\IATI\Services\Activity\ActivityService;
 use App\IATI\Services\Activity\IndicatorService;
 use App\IATI\Services\Activity\PeriodService;
@@ -275,14 +274,31 @@ class IndicatorController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Deletes Specific Indicator.
      *
-     * @param Indicator $indicator
+     * @param $id
+     * @param $indicatorId
      *
-     * @return void
+     * @return JsonResponse
      */
-    public function destroy(Indicator $indicator): void
+    public function destroy($id, $indicatorId): JsonResponse
     {
-        //
+        try {
+            $this->indicatorService->deleteIndicator($indicatorId);
+
+            return response()->json([
+                'status'    => true,
+                'msg'       => 'Indicator Deleted Successfully',
+                'result_id' => $id,
+            ]);
+        } catch (\Exception $e) {
+            logger()->error($e->getMessage());
+
+            return response()->json([
+                'status'    => true,
+                'msg'       => 'Indicator Delete Error',
+                'result_id' => $id,
+            ], 400);
+        }
     }
 }
