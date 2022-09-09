@@ -13,8 +13,8 @@
         <b v-else>Delete</b>
       </div>
       <div class="rounded-lg bg-rose p-4">
-        <b v-if="props.itemType==='result'">Are you sure you want to delete this Result?</b>
-        <b v-else-if="props.itemType==='indicator'">Are you sure you want to delete this Indicator?</b>
+        <b v-if="props.itemType==='result'">Are you sure you want to delete this Result? Related Indicators and Periods will also be deleted</b>
+        <b v-else-if="props.itemType==='indicator'">Are you sure you want to delete this Indicator? Related Periods will also be deleted</b>
         <b v-else-if="props.itemType==='period'">Are you sure you want to delete this Period?</b>
         <b v-else-if="props.itemType==='transaction'">Are you sure you want to delete this Transaction?</b>
         <b v-else>Are you sure you want to delete this module?</b>
