@@ -72,9 +72,7 @@
                 >
                   <svg-vue icon="edit" class="text-xl"></svg-vue>
                 </a>
-                <button class="">
-                  <svg-vue icon="delete" class="text-xl"></svg-vue>
-                </button>
+                <DeleteAction :item-id="indicator.id" item-type="indicator" />
               </div>
             </td>
           </tr>
@@ -93,7 +91,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, toRefs, reactive, ref, onMounted } from 'vue';
+import { defineComponent, toRefs, reactive, ref, onMounted, provide } from 'vue';
 import axios from 'axios';
 
 // components
@@ -101,6 +99,7 @@ import Btn from 'Components/ButtonComponent.vue';
 import Pagination from 'Components/TablePagination.vue';
 import PageTitle from 'Components/sections/PageTitle.vue';
 import Toast from 'Components/Toast.vue';
+import DeleteAction from 'Components/sections/DeleteAction.vue';
 
 // composable
 import dateFormat from 'Composable/dateFormat';
@@ -113,6 +112,7 @@ export default defineComponent({
     Pagination,
     PageTitle,
     Toast,
+    DeleteAction
   },
   props: {
     activity: {
@@ -219,6 +219,9 @@ export default defineComponent({
           isEmpty.value = response.data ? false : true;
         });
     }
+
+    // provide
+    provide('parentItemId', resultId);
 
     return {
       activityId,

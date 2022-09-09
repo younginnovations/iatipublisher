@@ -1,31 +1,4 @@
 <template>
-  <Modal :modal-active="deleteValue" width="583" @close="deleteToggle">
-    <div class="mb-4">
-      <div class="flex mb-6 title">
-        <svg-vue class="mr-1 mt-0.5 text-lg text-crimson-40" icon="delete" />
-        <b>Delete activity</b>
-      </div>
-      <div class="p-4 rounded-lg bg-rose">
-        Are you sure you want to delete this transaction?
-      </div>
-    </div>
-    <div class="flex justify-end">
-      <div class="inline-flex">
-        <BtnComponent
-          class="px-6 uppercase bg-white"
-          text="Go Back"
-          type=""
-          @click="deleteValue = false"
-        />
-        <BtnComponent
-          class="space"
-          text="Delete"
-          type="primary"
-          @click="deleteFunction"
-        />
-      </div>
-    </div>
-  </Modal>
   <div class="relative bg-paper px-10 pt-4 pb-[71px]">
     <PageTitle
       :breadcrumb-data="breadcrumbData"
@@ -115,13 +88,7 @@
                 >
                   <svg-vue icon="edit" class="text-xl"></svg-vue>
                 </a>
-                <BtnComponent
-                  class=""
-                  text=""
-                  type="secondary"
-                  icon="delete"
-                  @click="deleteValue = true"
-                />
+                <DeleteAction :item-id="trans.id" item-type="transaction" />
               </div>
             </td>
           </tr>
@@ -147,8 +114,7 @@ import Btn from 'Components/ButtonComponent.vue';
 import Pagination from 'Components/TablePagination.vue';
 import PageTitle from 'Components/sections/PageTitle.vue';
 import Toast from 'Components/Toast.vue';
-import BtnComponent from 'Components/ButtonComponent.vue';
-import Modal from 'Components/PopupModal.vue';
+import DeleteAction from 'Components/sections/DeleteAction.vue';
 
 //composable
 import dateFormat from 'Composable/dateFormat';
@@ -166,8 +132,7 @@ export default defineComponent({
     Pagination,
     PageTitle,
     Toast,
-    BtnComponent,
-    Modal,
+    DeleteAction
   },
   props: {
     activity: {
@@ -246,14 +211,8 @@ export default defineComponent({
         });
     }
 
-    const deleteFunction = () => {
-      axios
-        .delete(`/activity/${activityId}/transaction/3`)
-        .then((res) => {
-          const response = res.data;
-          Object.assign(transactionsData, response.data);
-        });
-    };
+    // Provide
+    provide('parentItemId', activityId);
 
     /**
      * Breadcrumb data
@@ -283,7 +242,6 @@ export default defineComponent({
       toastData,
       deleteValue,
       deleteToggle,
-      deleteFunction,
     };
   },
 });
