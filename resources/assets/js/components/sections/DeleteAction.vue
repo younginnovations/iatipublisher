@@ -40,7 +40,7 @@
 </template>
 
 <script setup lang="ts">
-import { inject, defineProps } from 'vue';
+import { defineProps } from 'vue';
 import { useToggle } from '@vueuse/core';
 import axios from 'axios';
 
@@ -56,9 +56,6 @@ const props = defineProps({
 
 // toggle state for modal popup
 let [deleteValue, deleteToggle] = useToggle();
-
-//activity id
-const id = inject('parentItemId');
 
 const deleteFunction = () => {
   if (props.itemType === 'result' || props.itemType === 'transaction') {
