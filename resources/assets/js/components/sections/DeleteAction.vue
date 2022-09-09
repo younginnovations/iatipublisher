@@ -6,10 +6,18 @@
     <div class="mb-4">
       <div class="title mb-6 flex">
         <svg-vue class="mr-1 mt-0.5 text-lg text-crimson-40" icon="delete" />
-        <b>Delete activity</b>
+        <b v-if="props.itemType==='result'">Delete Result</b>
+        <b v-else-if="props.itemType==='indicator'">Delete Indicator</b>
+        <b v-else-if="props.itemType==='period'">Delete Period</b>
+        <b v-else-if="props.itemType==='transaction'">Delete Transaction</b>
+        <b v-else>Delete</b>
       </div>
       <div class="rounded-lg bg-rose p-4">
-        Are you sure you want to delete this activity?
+        <b v-if="props.itemType==='result'">Are you sure you want to delete this Result?</b>
+        <b v-else-if="props.itemType==='indicator'">Are you sure you want to delete this Indicator?</b>
+        <b v-else-if="props.itemType==='period'">Are you sure you want to delete this Period?</b>
+        <b v-else-if="props.itemType==='transaction'">Are you sure you want to delete this Transaction?</b>
+        <b v-else>Are you sure you want to delete this module?</b>
       </div>
     </div>
     <div class="flex justify-end">

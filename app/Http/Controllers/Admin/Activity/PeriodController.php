@@ -6,7 +6,6 @@ namespace App\Http\Controllers\Admin\Activity;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Activity\Period\PeriodRequest;
-use App\IATI\Models\Activity\Period;
 use App\IATI\Services\Activity\ActivityService;
 use App\IATI\Services\Activity\IndicatorService;
 use App\IATI\Services\Activity\PeriodService;
@@ -16,6 +15,7 @@ use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Session;
 
 /**
  * PeriodController Class.
@@ -310,18 +310,20 @@ class PeriodController extends Controller
     {
         try {
             $this->periodService->deletePeriod($periodId);
+            Session::flash('success', 'Period Deleted Successfully');
 
             return response()->json([
-                'status'      => true,
-                'msg'         => 'Period Deleted Successfully',
+                'status'       => true,
+                'msg'          => 'Period Deleted Successfully',
                 'indicator_id' => $id,
             ]);
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
+            Session::flash('error', 'Period Delete Error');
 
             return response()->json([
-                'status'      => true,
-                'msg'         => 'Period Delete Error',
+                'status'       => true,
+                'msg'          => 'Period Delete Error',
                 'indicator_id' => $id,
             ], 400);
         }

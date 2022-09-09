@@ -13,6 +13,7 @@ use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Session;
 
 /**
  * Class ResultController.
@@ -252,6 +253,7 @@ class ResultController extends Controller
     {
         try {
             $this->resultService->deleteResult($resultId);
+            Session::flash('success', 'Result Deleted Successfully');
 
             return response()->json([
                 'status'      => true,
@@ -260,6 +262,7 @@ class ResultController extends Controller
             ]);
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
+            Session::flash('error', 'Result Delete Error');
 
             return response()->json([
                 'status'      => true,
