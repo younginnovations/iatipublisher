@@ -208,4 +208,16 @@ class PeriodService
 
         return $periodData;
     }
+
+    /**
+     * Deletes specific period.
+     *
+     * @param $id
+     *
+     * @return bool
+     */
+    public function deletePeriod($id): bool
+    {
+        return $this->periodRepository->delete($id);
+    }
 }

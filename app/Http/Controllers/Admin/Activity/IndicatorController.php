@@ -6,17 +6,18 @@ namespace App\Http\Controllers\Admin\Activity;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Activity\Indicator\IndicatorRequest;
-use App\IATI\Models\Activity\Indicator;
 use App\IATI\Services\Activity\ActivityService;
 use App\IATI\Services\Activity\IndicatorService;
 use App\IATI\Services\Activity\PeriodService;
 use App\IATI\Services\Activity\ResultService;
+use Exception;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Session;
 
 /**
  * IndicatorController Class.
@@ -86,7 +87,7 @@ class IndicatorController extends Controller
             $toast = generateToastData();
 
             return view('admin.activity.indicator.indicator', compact('activity', 'parentData', 'indicators', 'types', 'toast'));
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             logger()->error($e->getMessage());
 
             return redirect()->route('admin.activity.result.index', $resultId)->with(
@@ -114,7 +115,7 @@ class IndicatorController extends Controller
                 'message' => 'Indicators fetched successfully',
                 'data'    => $indicator,
             ]);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             logger()->error($e->getMessage());
 
             return response()->json(['success' => false, 'message' => 'Error occurred while fetching the data']);
@@ -138,7 +139,7 @@ class IndicatorController extends Controller
             $data = ['core' => $element['criteria'] ?? false, 'status' => false, 'title' => $element['label'], 'name' => 'indicator'];
 
             return view('admin.activity.indicator.edit', compact('form', 'activity', 'data'));
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             logger()->error($e->getMessage());
 
             return redirect()->route('admin.result.indicator.index', [$resultId])->with(
@@ -169,7 +170,7 @@ class IndicatorController extends Controller
                 'success',
                 'Result indicator created successfully.'
             );
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             logger()->error($e->getMessage());
 
             return redirect()->route('admin.result.indicator.index', $resultId)->with(
@@ -199,7 +200,7 @@ class IndicatorController extends Controller
             $toast = generateToastData();
 
             return view('admin.activity.indicator.detail', compact('activity', 'resultTitle', 'indicator', 'period', 'types', 'toast'));
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             logger()->error($e->getMessage());
 
             return redirect()->route('admin.result.indicator.index', $resultId)->with(
@@ -227,7 +228,7 @@ class IndicatorController extends Controller
             $data = ['core' => $element['criteria'] ?? false, 'status' => false, 'title' => $element['label'], 'name' => 'indicator'];
 
             return view('admin.activity.indicator.edit', compact('form', 'activity', 'data'));
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             logger()->error($e->getMessage());
 
             return redirect()->route('admin.result.indicator.index', $resultId)->with(
@@ -264,7 +265,7 @@ class IndicatorController extends Controller
                 'success',
                 'Indicator updated successfully.'
             );
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             logger()->error($e->getMessage());
 
             return redirect()->route('admin.result.indicator.index', $resultId)->with(
@@ -275,14 +276,33 @@ class IndicatorController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Deletes Specific Indicator.
      *
-     * @param Indicator $indicator
+     * @param $id
+     * @param $indicatorId
      *
-     * @return void
+     * @return JsonResponse
      */
-    public function destroy(Indicator $indicator): void
+    public function destroy($id, $indicatorId): JsonResponse
     {
-        //
+        try {
+            $this->indicatorService->deleteIndicator($indicatorId);
+            Session::flash('success', 'Indicator Deleted Successfully');
+
+            return response()->json([
+                'status'    => true,
+                'msg'       => 'Indicator Deleted Successfully',
+                'result_id' => $id,
+            ]);
+        } catch (Exception $e) {
+            logger()->error($e->getMessage());
+            Session::flash('error', 'Indicator Delete Error');
+
+            return response()->json([
+                'status'    => true,
+                'msg'       => 'Indicator Delete Error',
+                'result_id' => $id,
+            ], 400);
+        }
     }
 }

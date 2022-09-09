@@ -26,6 +26,11 @@ export default defineComponent({
       required: false,
       default: "",
     },
+    link: {
+      type: String,
+      required: false,
+      default: "",
+    },
   },
   setup(props) {
     let btnType = '';

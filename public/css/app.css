@@ -3982,6 +3982,10 @@ span.select2-container--default .select2-results__option[aria-selected] {
   --tw-bg-opacity: 1;
   background-color: rgba(var(--n-10), var(--tw-bg-opacity));
 }
+.hover\:text-spring-50:hover {
+  --tw-text-opacity: 1;
+  color: rgba(var(--spring-50), var(--tw-text-opacity));
+}
 .hover\:text-bluecoral:hover {
   --tw-text-opacity: 1;
   color: rgba(var(--bluecoral), var(--tw-text-opacity));
@@ -3989,10 +3993,6 @@ span.select2-container--default .select2-results__option[aria-selected] {
 .hover\:text-n-50:hover {
   --tw-text-opacity: 1;
   color: rgba(var(--n-50), var(--tw-text-opacity));
-}
-.hover\:text-spring-50:hover {
-  --tw-text-opacity: 1;
-  color: rgba(var(--spring-50), var(--tw-text-opacity));
 }
 @media (min-width: 640px) {
 

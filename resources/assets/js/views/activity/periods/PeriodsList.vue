@@ -54,9 +54,7 @@
                 <a class="mr-6 text-n-40" :href="`${periodLink}/${pe.id}/edit`">
                   <svg-vue icon="edit" class="text-xl"></svg-vue>
                 </a>
-                <a class="text-n-40" href="#">
-                  <svg-vue icon="delete" class="text-xl"></svg-vue>
-                </a>
+                <DeleteAction item-type="period" :item-id="pe.id" />
               </div>
             </td>
           </tr>
@@ -75,13 +73,14 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, toRefs, onMounted, ref, reactive } from 'vue';
+import { defineComponent, toRefs, onMounted, ref, reactive, provide } from 'vue';
 import axios from 'axios';
 // components
 import Btn from 'Components/ButtonComponent.vue';
 import Pagination from 'Components/TablePagination.vue';
 import PageTitle from 'Components/sections/PageTitle.vue';
 import Toast from 'Components/Toast.vue';
+import DeleteAction from 'Components/sections/DeleteAction.vue';
 
 // composable
 import dateFormat from 'Composable/dateFormat';
@@ -94,6 +93,8 @@ export default defineComponent({
     Pagination,
     PageTitle,
     Toast,
+    DeleteAction
+
   },
   props: {
     activity: {
@@ -205,6 +206,9 @@ export default defineComponent({
           isEmpty.value = response.data ? false : true;
         });
     }
+
+    // provide
+    provide('parentItemId', indicatorId);
 
     return {
       breadcrumbData,

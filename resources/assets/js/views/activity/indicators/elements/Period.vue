@@ -54,7 +54,7 @@
             text="Show full period list"
             icon=""
             design="bgText"
-            :link="`/indicator/${id.indicator}/period/`"
+            :link="`/indicator/${id.indicator}/period`"
             class="mr-2.5"
           />
         </div>

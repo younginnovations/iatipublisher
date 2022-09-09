@@ -88,9 +88,7 @@
                 >
                   <svg-vue icon="edit" class="text-xl"></svg-vue>
                 </a>
-                <button class="">
-                  <svg-vue icon="delete" class="text-xl"></svg-vue>
-                </button>
+                <DeleteAction :item-id="trans.id" item-type="transaction" />
               </div>
             </td>
           </tr>
@@ -108,7 +106,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, toRefs, reactive, onMounted } from 'vue';
+import { defineComponent, toRefs, reactive, onMounted, provide } from 'vue';
 import axios from 'axios';
 
 //components
@@ -116,10 +114,15 @@ import Btn from 'Components/ButtonComponent.vue';
 import Pagination from 'Components/TablePagination.vue';
 import PageTitle from 'Components/sections/PageTitle.vue';
 import Toast from 'Components/Toast.vue';
+import DeleteAction from 'Components/sections/DeleteAction.vue';
 
 //composable
 import dateFormat from 'Composable/dateFormat';
 import getActivityTitle from 'Composable/title';
+import { useToggle } from '@vueuse/core';
+
+// toggle state for modal popup
+let [deleteValue, deleteToggle] = useToggle();
 
 export default defineComponent({
   name: 'TransactionList',
@@ -128,6 +131,7 @@ export default defineComponent({
     Pagination,
     PageTitle,
     Toast,
+    DeleteAction,
   },
   props: {
     activity: {
@@ -206,6 +210,9 @@ export default defineComponent({
         });
     }
 
+    // Provide
+    provide('parentItemId', activityId);
+
     /**
      * Breadcrumb data
      */
@@ -232,6 +239,8 @@ export default defineComponent({
       getActivityTitle,
       fetchListings,
       toastData,
+      deleteValue,
+      deleteToggle,
     };
   },
 });

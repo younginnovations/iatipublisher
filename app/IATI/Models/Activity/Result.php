@@ -63,9 +63,9 @@ class Result extends Model
     /**
      * Returns default title.
      *
-     * @return string
+     * @return string|null
      */
-    public function getDefaultTitleNarrativeAttribute(): string
+    public function getDefaultTitleNarrativeAttribute(): string | null
     {
         $result = $this->result;
         $titles = $result['title'];
