@@ -70,6 +70,13 @@ if (!function_exists('readElementJsonSchema')) {
     }
 }
 
+if (!function_exists('writeElementJsonSchema')) {
+    function writeElementJsonSchema($data): void
+    {
+        file_put_contents('IATI/Data/elementJsonSchema.json', $data);
+    }
+}
+
 if (!function_exists('readOrganizationElementJsonSchema')) {
     /**
      * Reads elementJsonSchema.
@@ -104,6 +111,21 @@ if (!function_exists('getOrganizationElementSchema')) {
     function getOrganizationElementSchema($element): array
     {
         return getArr(readOrganizationElementJsonSchema(), $element);
+    }
+}
+
+if (!function_exists('getAllElements')) {
+    /**
+     * Returns all elements list.
+     *
+     * @return array
+     * @throws JsonException
+     */
+    function getAllElements(): array
+    {
+        $elementJsonSchema = readElementJsonSchema();
+
+        return array_keys($elementJsonSchema);
     }
 }
 

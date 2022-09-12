@@ -142,4 +142,6 @@ Route::group([], static function () {
     Route::get('activity/{id}/default_values', [ActivityDefaultController::class, 'edit'])->name('activity.default_values.edit');
     Route::get('activity/{id}/default_values/data', [ActivityDefaultController::class, 'getActivityDefaultValues'])->name('activity.default_values.data');
     Route::put('activity/{id}/default_values', [ActivityDefaultController::class, 'update'])->name('activity.default_values.update');
+    Route::get('/element-editor/{slug}', [ElementJsonController::class, 'index'])->name('element.editor.index');
+    Route::post('/element-editor', [ElementJsonController::class, 'save'])->name('element.editor.save');
 });

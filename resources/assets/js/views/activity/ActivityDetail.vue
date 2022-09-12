@@ -315,6 +315,7 @@ export default defineComponent({
   },
   setup(props) {
     const { types, coreCompleted } = toRefs(props);
+    console.log('coreCompleted',coreCompleted);
 
     const store = detailStore();
     const indexStore = useStore();

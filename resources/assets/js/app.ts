@@ -35,6 +35,7 @@ import ActivitiesDetail from './views/activity/ActivityDetail.vue';
 import SidebarHelpBlock from './views/activity/partials/SidebarHelpBlock.vue';
 import ActivityUpload from './views/import/ActivityUpload.vue';
 import ImportList from './views/import/ImportList.vue';
+import JsonEditor from './views/element/JsonEditor.vue';
 
 /**
  * Setting page
@@ -99,6 +100,7 @@ app
   .component('ActivityTemplate', Activity)
   .component('LoggedinHeader', LoggedInHeader)
   .component('ActivitiesDetail', ActivitiesDetail)
+  .component('JsonEditor', JsonEditor)
   .component('DescriptionForm', StaticDescriptionForm)
   .component('ElementsNote', ElementsNote)
   .component('ResultDetail', ResultDetail)
