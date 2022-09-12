@@ -860,7 +860,7 @@ class ElementCompleteService
     {
         $this->element = 'other_identifier';
 
-        return $this->isLevelTwoSingleDimensionElementCompleted($activity->other_identifier);
+        return $this->isLevelTwoMultiDimensionElementCompleted($activity->other_identifier);
     }
 
     /**
