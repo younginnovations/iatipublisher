@@ -607,7 +607,10 @@ if (!function_exists('getTableConfig')) {
      */
     function getTableConfig($module): array
     {
-        $tableConfig = ['activity' => ['orderBy' => ['updated_at'], 'direction' => ['asc', 'desc']]];
+        $tableConfig = [
+            'activity' => ['orderBy' => ['updated_at'], 'direction' => ['asc', 'desc']],
+            'organisation' => ['orderBy' => ['updated_at', 'all_activities_count', 'name'], 'direction' => ['asc', 'desc']],
+        ];
 
         return $tableConfig[$module];
     }
@@ -663,5 +666,35 @@ if (!function_exists('getNonArrayElements')) {
     function getNonArrayElements(): array
     {
         return ['activity_status', 'activity_scope', 'default_flow_type', 'default_finance_type', 'default_tied_status', 'capital_spend', 'collaboration_type', 'identifier'];
+    }
+}
+
+if (!function_exists('isSuperAdmin')) {
+    /**
+     * Returns whether user is superadmin or not.
+     *
+     * @return bool
+     */
+    function isSuperAdmin(): bool
+    {
+        return auth()->user()->role_id === \App\IATI\Models\User\User::SUPER_ADMIN_ID || session()->get('role_id') === \App\IATI\Models\User\User::SUPER_ADMIN_ID;
+    }
+}
+
+if (!function_exists('isSuperAdminRoute')) {
+    /**
+     * Checks if the request route contains prefix SuperAdmin.
+     *
+     * @return bool
+     */
+    function isSuperAdminRoute(): bool
+    {
+        if (request()->route()) {
+            $routeAction = request()->route()->getAction();
+
+            return $routeAction['namespace'] === 'SuperAdmin';
+        }
+
+        return false;
     }
 }

@@ -2,6 +2,7 @@
 
 namespace Database\Factories\IATI\Models\User;
 
+use App\IATI\Models\User\Role;
 use App\IATI\Models\User\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
@@ -20,6 +21,8 @@ class UserFactory extends Factory
      */
     public function definition(): array
     {
+        Role::factory()->create();
+
         return [
             'username'        => 'test_username',
             'email'           => 'test@gmail.com',

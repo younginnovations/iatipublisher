@@ -15,6 +15,7 @@ class DatabaseSeeder extends Seeder
     {
         if ((env('APP_ENV') == 'local') || (env('APP_ENV') == 'staging')) {
             $this->call([
+                RoleTableSeeder::class,
                 OrganizationSeeder::class,
                 UserSeeder::class,
                 ActivityTableSeeder::class,

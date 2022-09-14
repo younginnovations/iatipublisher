@@ -2,6 +2,8 @@
 
 namespace App\Http;
 
+use App\Http\Middleware\OrganizationUserMiddleware;
+use App\Http\Middleware\SuperAdminMiddleware;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
 class Kernel extends HttpKernel
@@ -47,6 +49,7 @@ class Kernel extends HttpKernel
             \Illuminate\View\Middleware\ShareErrorsFromSession::class,
             \App\Http\Middleware\VerifyCsrfToken::class,
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
+            OrganizationUserMiddleware::class,
         ],
 
         'activity' => [
@@ -88,5 +91,6 @@ class Kernel extends HttpKernel
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'activity.auth' => \App\Http\Middleware\RedirectActivity::class,
+        'superadmin' => SuperAdminMiddleware::class,
     ];
 }

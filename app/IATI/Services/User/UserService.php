@@ -96,4 +96,16 @@ class UserService
         User::sendEmail(Auth::user());
         User::resendEmail(Auth::user());
     }
+
+    /**
+     * Returns user if found.
+     *
+     * @param $id
+     *
+     * @return object
+     */
+    public function getUser($id): object
+    {
+        return $this->userRepo->getUser($id);
+    }
 }
