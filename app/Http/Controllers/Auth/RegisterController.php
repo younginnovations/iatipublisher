@@ -15,6 +15,7 @@ use Illuminate\Database\DatabaseManager;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
 
 /**
@@ -221,6 +222,7 @@ class RegisterController extends Controller
         }
         $user = $this->create($request->all());
         event(new Registered($user));
+        Session::put('role_id', 1);
 
         return response()->json(['success' => true, 'message' => 'User registered successfully']);
     }

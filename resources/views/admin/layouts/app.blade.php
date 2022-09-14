@@ -44,19 +44,22 @@
 </head>
 
 <body class="overflow-x-hidden">
-  <div id="app">
-    <loggedin-header :user="{{ Auth::user() }}" :organization="{{ Auth::user()->organization }}"
-      :languages="{{ json_encode(getCodeListArray('Languages', 'ActivityArray')) }}"></loggedin-header>
+    <div id="app">
+        <loggedin-header :user="{{ Auth::user() }}" :organization="{{ Auth::user()->organization }}"
+            :languages="{{ json_encode(getCodeListArray('Languages', 'ActivityArray')) }}"></loggedin-header>
 
-    <main>
-      @yield('content')
-      @stack('scripts')
-    </main>
-  </div>
+        <main>
+            @if(isSuperAdmin() && !isSuperAdminRoute())
+                <a href="{{ route('superadmin.switchBack') }}">Switch Back</a>
+            @endif
+            @yield('content')
+            @stack('scripts')
+        </main>
+    </div>
 
-  <script defer src="/manifest.js"></script>
-  <script defer src="/js/vendor.js"></script>
-  <script defer src="/js/app.js"></script>
+    <script defer src="/manifest.js"></script>
+    <script defer src="/js/vendor.js"></script>
+    <script defer src="/js/app.js"></script>
 </body>
 
 </html>

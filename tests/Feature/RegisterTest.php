@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\IATI\Models\Organization\Organization;
+use App\IATI\Models\User\Role;
 use App\IATI\Models\User\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Str;
@@ -217,6 +218,8 @@ class RegisterTest extends TestCase
      */
     public function test_successful_registration(): void
     {
+        Role::factory()->create();
+
         $this->post('/register', [
             'publisher_id'          => Str::random(5),
             'publisher_name'        => Str::random(5),

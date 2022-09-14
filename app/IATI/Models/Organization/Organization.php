@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\IATI\Models\Organization;
 
+use App\IATI\Models\Activity\Activity;
 use App\IATI\Models\Activity\ActivityPublished;
 use App\IATI\Models\Setting\Setting;
 use App\IATI\Models\User\User;
@@ -137,5 +138,15 @@ class Organization extends Model
     public function publishedFiles(): HasMany
     {
         return $this->hasMany(ActivityPublished::class, 'organization_id', 'id');
+    }
+
+    /**
+     * Organization has many activities.
+     *
+     * @return HasMany
+     */
+    public function allActivities(): HasMany
+    {
+        return $this->hasMany(Activity::class, 'org_id', 'id');
     }
 }

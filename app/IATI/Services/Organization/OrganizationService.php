@@ -8,6 +8,7 @@ use App\IATI\Models\Organization\Organization;
 use App\IATI\Repositories\Organization\OrganizationRepository;
 use App\IATI\Traits\OrganizationXmlBaseElements;
 use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
 
@@ -152,5 +153,18 @@ class OrganizationService
             'regionVocabulary' => getCodeList('RegionVocabulary', 'Activity'),
             'region'           => getCodeList('Region', 'Activity'),
         ];
+    }
+
+    /**
+     * Returns organizations in paginated format.
+     *
+     * @param $page
+     * @param $request
+     *
+     * @return null|LengthAwarePaginator
+     */
+    public function getPaginatedOrganizations($page, $request): ?LengthAwarePaginator
+    {
+        return $this->organizationRepo->getPaginatedOrganizations($page, $request);
     }
 }

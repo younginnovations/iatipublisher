@@ -41,4 +41,16 @@ class UserRepository extends Repository
     {
         return ($this->model->find($user_id))['email_verified_at'] ? true : false;
     }
+
+    /**
+     * Returns user if found.
+     *
+     * @param $id
+     *
+     * @return object
+     */
+    public function getUser($id): object
+    {
+        return $this->model->findOrFail($id);
+    }
 }
