@@ -72,8 +72,6 @@ jobs:
           namespace: 'iati-publisher'
           manifests: |
               packages/main.yaml
-              packages/cert-issuer-stage.yaml
-              packages/cert-issuer-prod.yaml
               packages/sealed-registry-credentials.yaml
               packages/sealed-iati-env.yaml
           kubectl-version: 'latest'
