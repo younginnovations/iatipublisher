@@ -5,13 +5,12 @@
       title="Indicator List"
       :back-link="`${resultLink}`"
     >
-      <div class="mb-3">
-        <Toast
-          v-if="toastData.visibility"
-          :message="toastData.message"
-          :type="toastData.type"
-        />
-      </div>
+      <Toast
+        v-if="toastData.visibility"
+        :message="toastData.message"
+        :type="toastData.type"
+        class="mr-3"
+      />
       <a :href="`${indicatorLink}/create`">
         <Btn text="Add Indicator" icon="plus" type="primary" />
       </a>
@@ -38,31 +37,29 @@
         <tbody>
           <tr v-for="(indicator, t, index) in indicatorsData.data" :key="index">
             <td>
-              <div class="relative ellipsis">
+              <div class="ellipsis relative">
                 <a
                   :href="`/result/${indicator.result_id}/indicator/${indicator.id}`"
-                  class="overflow-hidden ellipsis text-n-50"
+                  class="ellipsis overflow-hidden text-n-50"
                 >
-                  {{
-                    getActivityTitle(
-                      indicator.indicator.title[0].narrative,
-                      'en'
-                    )
-                  }}
+                  {{ getActivityTitle(indicator.indicator.title[0].narrative, "en") }}
                 </a>
                 <div class="w-52">
                   <span class="ellipsis__title--hover">{{
-                    getActivityTitle(
-                      indicator.indicator.title[0].narrative,
-                      'en'
-                    )
+                    getActivityTitle(indicator.indicator.title[0].narrative, "en")
                   }}</span>
                 </div>
               </div>
             </td>
             <td>{{ types.indicatorMeasure[indicator.indicator.measure] }}</td>
             <td class="capitalize">
-              {{ parseInt(indicator.indicator.aggregation_status) ? 'True' : indicator.indicator.aggregation_status ? 'False' : 'Not Available'  }}
+              {{
+                parseInt(indicator.indicator.aggregation_status)
+                  ? "True"
+                  : indicator.indicator.aggregation_status
+                  ? "False"
+                  : "Not Available"
+              }}
             </td>
             <td>
               <div class="flex text-n-40">
@@ -91,28 +88,28 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, toRefs, reactive, ref, onMounted, provide } from 'vue';
-import axios from 'axios';
+import { defineComponent, toRefs, reactive, ref, onMounted, provide } from "vue";
+import axios from "axios";
 
 // components
-import Btn from 'Components/ButtonComponent.vue';
-import Pagination from 'Components/TablePagination.vue';
-import PageTitle from 'Components/sections/PageTitle.vue';
-import Toast from 'Components/Toast.vue';
-import DeleteAction from 'Components/sections/DeleteAction.vue';
+import Btn from "Components/ButtonComponent.vue";
+import Pagination from "Components/TablePagination.vue";
+import PageTitle from "Components/sections/PageTitle.vue";
+import Toast from "Components/Toast.vue";
+import DeleteAction from "Components/sections/DeleteAction.vue";
 
 // composable
-import dateFormat from 'Composable/dateFormat';
-import getActivityTitle from 'Composable/title';
+import dateFormat from "Composable/dateFormat";
+import getActivityTitle from "Composable/title";
 
 export default defineComponent({
-  name: 'IndicatorList',
+  name: "IndicatorList",
   components: {
     Btn,
     Pagination,
     PageTitle,
     Toast,
-    DeleteAction
+    DeleteAction,
   },
   props: {
     activity: {
@@ -143,7 +140,7 @@ export default defineComponent({
       activityTitle = activity.value.title,
       activityLink = `/activity/${activityId}`,
       resultId = parentData.value.result.id,
-      resultTitle = getActivityTitle(parentData.value.result.title, 'en'),
+      resultTitle = getActivityTitle(parentData.value.result.title, "en"),
       resultLink = `${activityLink}/result/${resultId}`,
       indicatorLink = `/result/${resultId}/indicator`;
 
@@ -166,7 +163,7 @@ export default defineComponent({
     const isEmpty = ref(false);
     const toastData = reactive({
       visibility: false,
-      message: '',
+      message: "",
       type: true,
     });
 
@@ -175,11 +172,11 @@ export default defineComponent({
      */
     const breadcrumbData = [
       {
-        title: 'Your Activities',
-        link: '/activities',
+        title: "Your Activities",
+        link: "/activities",
       },
       {
-        title: getActivityTitle(activityTitle, 'en'),
+        title: getActivityTitle(activityTitle, "en"),
         link: `/activity/${activityId}`,
       },
       {
@@ -187,8 +184,8 @@ export default defineComponent({
         link: `/activity/${activityId}/result/${resultId}`,
       },
       {
-        title: 'Indicator List',
-        link: '',
+        title: "Indicator List",
+        link: "",
       },
     ];
 
@@ -199,7 +196,7 @@ export default defineComponent({
         isEmpty.value = response.data.data.length ? false : true;
       });
 
-      if (props.toast.message !== '') {
+      if (props.toast.message !== "") {
         toastData.type = props.toast.type;
         toastData.visibility = true;
         toastData.message = props.toast.message;
@@ -211,17 +208,15 @@ export default defineComponent({
     });
 
     function fetchListings(active_page: number) {
-      axios
-        .get(`/result/${resultId}/indicators/page/` + active_page)
-        .then((res) => {
-          const response = res.data;
-          Object.assign(indicatorsData, response.data);
-          isEmpty.value = response.data ? false : true;
-        });
+      axios.get(`/result/${resultId}/indicators/page/` + active_page).then((res) => {
+        const response = res.data;
+        Object.assign(indicatorsData, response.data);
+        isEmpty.value = response.data ? false : true;
+      });
     }
 
     // provide
-    provide('parentItemId', resultId);
+    provide("parentItemId", resultId);
 
     return {
       activityId,
