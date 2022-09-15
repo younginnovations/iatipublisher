@@ -306,11 +306,12 @@ class ActivityController extends Controller
         }
     }
 
-    /*
-    * Get activity detail data type
-    *
-    * @return array
-    */
+    /**
+     * Get activity detail data type.
+     *
+     * @return array
+     * @throws \JsonException
+     */
     public function getActivityDetailDataType(): array
     {
         return [
@@ -329,7 +330,6 @@ class ActivityController extends Controller
             'descriptionType'             => getCodeList('DescriptionType', 'Activity', false),
             'humanitarianScopeType'       => getCodeList('HumanitarianScopeType', 'Activity', false),
             'humanitarianScopeVocabulary' => getCodeList('HumanitarianScopeVocabulary', 'Activity', false),
-            'aidTypeVocabulary'           => getCodeList('AidTypeVocabulary', 'Activity', false),
             'earmarkingCategory'          => getCodeList('EarmarkingCategory', 'Activity', false),
             'earmarkingModality'          => getCodeList('EarmarkingModality', 'Activity', false),
             'cashandVoucherModalities'    => getCodeList('CashandVoucherModalities', 'Activity', false),
@@ -363,44 +363,6 @@ class ActivityController extends Controller
             'resultType'                  => getCodeList('ResultType', 'Activity', false),
             'transactionType'             => getCodeList('TransactionType', 'Activity', false),
             'crsChannelCode'              => getCodeList('CRSChannelCode', 'Activity', false),
-        ];
-    }
-
-    /**
-     * Returns array containing activity detail status.
-     *
-     * @param Activity $activity
-     *
-     * @return array
-     */
-    public function getActivityDetailStatus($activity): array
-    {
-        return [
-            'iati_identifier'      => $activity->identifier_element_completed,
-            'title'                => $activity->title_element_completed,
-            'description'          => $activity->description_element_completed,
-            'activity_status'      => $activity->activity_status_element_completed,
-            'activity_date'        => $activity->activity_date_element_completed,
-            'activity_scope'       => $activity->activity_scope_element_completed,
-            'recipient_country'    => $activity->recipient_country_element_completed,
-            'recipient_region'     => $activity->recipient_region_element_completed,
-            'collaboration_type'   => $activity->collaboration_type_element_completed,
-            'default_finance_type' => $activity->default_finance_type_element_completed,
-            'default_aid_type'     => $activity->default_aid_type_element_completed,
-            'default_tied_status'  => $activity->default_tied_status_element_completed,
-            'capital_spend'        => $activity->capital_spend_element_completed,
-            'related_activity'     => $activity->related_activity_element_completed,
-            'sector'               => $activity->sector_element_completed,
-            'humanitarian_scope'   => $activity->humanitarian_scope_element_completed,
-            'legacy_data'          => $activity->legacy_data_element_completed,
-            'tag'                  => $activity->tag_element_completed,
-            'policy_marker'        => $activity->policy_marker_element_completed,
-            'other_identifier'     => $activity->other_identifier_element_completed,
-            'country_budget_items' => $activity->country_budget_items_element_completed,
-            'budget'               => $activity->budget_element_completed,
-            'result' => true,
-            'indicator' => true,
-            'period' => true,
         ];
     }
 }
