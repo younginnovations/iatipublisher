@@ -23,7 +23,7 @@
         <Btn
           text="Add Period"
           icon="add"
-          :link="`${resultLink}/indicator/${indicator.id}/period/create`"
+          :link="`/indicator/${indicator.id}/period/create`"
           class="mr-2.5"
         />
         <Btn text="Edit Indicator" :link="`${indicatorLink}/${indicator.id}/edit`" />
