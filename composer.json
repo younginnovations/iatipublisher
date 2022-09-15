@@ -11,10 +11,12 @@
         "guzzlehttp/guzzle": "^7.4",
         "kris/laravel-form-builder": "1.*",
         "laravel/framework": "^9.0",
+        "laravel/horizon": "^5.10",
         "laravel/sanctum": "^2.14",
         "laravel/tinker": "^2.7",
         "laravel/ui": "^3.4",
         "league/flysystem-aws-s3-v3": "^3.0",
+        "predis/predis": "^2.0",
         "symfony/psr-http-message-bridge": "^2.1"
     },
     "require-dev": {
