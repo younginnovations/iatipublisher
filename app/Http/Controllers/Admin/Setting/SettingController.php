@@ -51,8 +51,9 @@ class SettingController extends Controller
             $currencies = getCodeListArray('Currency', 'OrganizationArray');
             $languages = getCodeList('Language', 'Organization');
             $humanitarian = trans('setting.humanitarian_types');
+            $budgetNotProvided = getCodeList('BudgetNotProvided', 'Activity');
 
-            return view('admin.settings.index', compact('currencies', 'languages', 'humanitarian'));
+            return view('admin.settings.index', compact('currencies', 'languages', 'humanitarian', 'budgetNotProvided'));
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 

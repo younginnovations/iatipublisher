@@ -33,7 +33,7 @@ class SettingFactory extends Factory
             ]),
             'activity_default_values'  => json_encode([
                 'hierarchy' => '2',
-                'linked_data_url' => 'test',
+                'budget_not_provided' => 'test',
                 'humanitarian' => 'no',
             ]),
         ];

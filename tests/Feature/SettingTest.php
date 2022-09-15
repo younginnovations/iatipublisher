@@ -53,7 +53,7 @@ class SettingTest extends TestCase
                  'default_language' => '',
                  'humanitarian'     => '',
                  'hierarchy'        => '',
-                 'linked_data_url'  => '',
+                 'budget_not_provided'  => '',
              ])
              ->assertStatus(200)
              ->assertJsonStructure([
@@ -78,7 +78,7 @@ class SettingTest extends TestCase
                  'default_language' => '',
                  'humanitarian'     => '',
                  'hierarchy'        => '',
-                 'linked_data_url'  => '',
+                 'budget_not_provided'  => '',
              ])
              ->assertStatus(200)
              ->assertJsonStructure([
@@ -182,7 +182,7 @@ class SettingTest extends TestCase
                  'default_currency' => 'BND',
                  'default_language' => 'ab',
                  'hierarchy'        => '2',
-                 'linked_data_url'  => 'test',
+                 'budget_not_provided'  => 'test',
                  'humanitarian'     => 'no',
              ])
              ->assertStatus(200)
