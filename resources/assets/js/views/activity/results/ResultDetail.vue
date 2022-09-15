@@ -5,14 +5,12 @@
       title="Result Detail"
       :back-link="`${activityLink}/result`"
     >
-      <div class="mb-3">
-        <Toast
-          v-if="toastData.visibility"
-          :message="toastData.message"
-          :type="toastData.type"
-          class="mr-3"
-        />
-      </div>
+      <Toast
+        v-if="toastData.visibility"
+        :message="toastData.message"
+        :type="toastData.type"
+        class="mr-3"
+      />
       <a :href="`${activityLink}/result/create`">
         <Btn text="Edit Result" :link="`${resultLink}/edit`" icon="edit" />
       </a>

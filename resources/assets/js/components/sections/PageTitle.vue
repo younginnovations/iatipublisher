@@ -21,7 +21,7 @@
           </div>
         </div>
       </div>
-      <div class="flex justify-end actions grow">
+      <div class="flex justify-end items-center actions grow">
         <slot />
       </div>
     </div>

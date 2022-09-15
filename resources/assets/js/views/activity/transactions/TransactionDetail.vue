@@ -5,14 +5,12 @@
       :title="`${transactionData.reference ?? 'Untitled'} - Transaction detail`"
       :back-link="`${activityLink}/transaction`"
     >
-      <div class="mb-3">
-        <Toast
-          v-if="toastData.visibility"
-          :message="toastData.message"
-          :type="toastData.type"
-          class="mr-3"
-        />
-      </div>
+      <Toast
+        v-if="toastData.visibility"
+        :message="toastData.message"
+        :type="toastData.type"
+        class="mr-3"
+      />
       <Btn
         text="Edit Transaction"
         :link="`${activityLink}/transaction/${transaction.id}/edit`"
@@ -23,7 +21,7 @@
     <div class="activities">
       <aside class="activities__sidebar">
         <Notes class="mb-4" />
-        <div class="sticky top-0 px-6 py-4 rounded-lg indicator bg-eggshell text-n-50">
+        <div class="indicator sticky top-0 rounded-lg bg-eggshell px-6 py-4 text-n-50">
           <ul class="text-sm font-bold leading-relaxed">
             <li v-for="(rData, r, ri) in transactionData" :key="ri">
               <a v-smooth-scroll :href="`#${String(r)}`" :class="linkClasses">
@@ -36,7 +34,7 @@
       </aside>
       <div class="activities__content">
         <div></div>
-        <div class="flex flex-wrap -mx-3 -mt-3 activities__content--elements">
+        <div class="activities__content--elements -mx-3 -mt-3 flex flex-wrap">
           <template v-for="(post, key) in transactionData" :key="key">
             <TransactionElement
               :data="post"
