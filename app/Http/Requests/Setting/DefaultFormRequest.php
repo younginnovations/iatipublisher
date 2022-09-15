@@ -27,7 +27,7 @@ class DefaultFormRequest extends FormRequest
             'default_currency' => 'sometimes',
             'default_language' => 'sometimes',
             'hierarchy' => 'sometimes|nullable|integer|min:1|lte:4',
-            'linked_data_url' => 'sometimes',
+            'budget_not_provided' => 'sometimes',
             'humanitarian' => 'sometimes',
         ];
     }
