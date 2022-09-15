@@ -13,7 +13,7 @@
       <table>
         <tr>
           <td>Value</td>
-          <td v-if="post.value">{{ post.value }}</td>
+          <td v-if="post.value"><span class="description">{{ post.value }}</span></td>
           <td v-else class="italic">Not Available</td>
         </tr>
       </table>

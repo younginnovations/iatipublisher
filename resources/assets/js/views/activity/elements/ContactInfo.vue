@@ -32,7 +32,7 @@
                       : 'Not Available'
                   }})
                 </div>
-                <div class="w-[500px] max-w-full text-sm">
+                <div class="w-[500px] max-w-full">
                   {{ narrative.narrative ?? 'Not Available' }}
                 </div>
               </div>
@@ -57,7 +57,7 @@
                       : 'Not Available'
                   }})
                 </div>
-                <div class="w-[500px] max-w-full text-sm">
+                <div class="w-[500px] max-w-full">
                   {{ narrative.narrative ?? 'Not Available' }}
                 </div>
               </div>
@@ -83,7 +83,7 @@
                       : 'Not Available'
                   }})
                 </div>
-                <div class="w-[500px] max-w-full text-sm">
+                <div class="w-[500px] max-w-full">
                   {{ narrative.narrative ?? 'Not Available' }}
                 </div>
               </div>
@@ -108,7 +108,7 @@
                       : 'Not Available'
                   }})
                 </div>
-                <div class="w-[500px] max-w-full text-sm">
+                <div class="w-[500px] max-w-full">
                   {{ narrative.narrative ?? 'Not Available' }}
                 </div>
               </div>
@@ -125,7 +125,7 @@
                   'mb-4': k !== post.telephone.length - 1,
                 }"
               >
-                <div class="w-[500px] max-w-full text-sm">
+                <div class="w-[500px] max-w-full">
                   {{ tel.telephone ?? 'Not Available' }}
                 </div>
               </div>
@@ -142,7 +142,7 @@
                   'mb-4': k !== post.website.length - 1,
                 }"
               >
-                <div class="w-[500px] max-w-full text-sm">
+                <div class="w-[500px] max-w-full">
                   {{ w.website ?? 'Not Available' }}
                 </div>
               </div>
@@ -167,7 +167,7 @@
                       : 'Not Available'
                   }})
                 </div>
-                <div class="w-[500px] max-w-full text-sm">
+                <div class="w-[500px] max-w-full">
                   {{ narrative.narrative ?? 'Not Available' }}
                 </div>
               </div>

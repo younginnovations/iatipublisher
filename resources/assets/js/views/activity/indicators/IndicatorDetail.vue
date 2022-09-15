@@ -124,21 +124,21 @@
                 </table>
               </div>
             </div>
-          </div>
-          <div v-if="indicatorData.document_link.length > 0" id="document_link">
-            <div class="title mb-4">
-              <div class="item elements-detail wider">
-                <table class="mb-5">
-                  <tr>
-                    <td>Document Link</td>
-                    <td></td>
-                  </tr>
-                </table>
+            <div v-if="indicatorData.document_link.length > 0" id="document_link">
+              <div class="mb-4 title">
+                <div class="item elements-detail wider">
+                  <table class="mb-5">
+                    <tr>
+                      <td>Document Link</td>
+                      <td></td>
+                    </tr>
+                  </table>
+                </div>
+                <div class="w-full h-px mb-4 border-b divider border-n-20"></div>
               </div>
-              <div class="divider mb-4 h-px w-full border-b border-n-20"></div>
-            </div>
-            <div class="ml-4">
-              <DocumentLink :data="indicatorData.document_link" :type="types" />
+              <div class="ml-4">
+                <DocumentLink :data="indicatorData.document_link" :type="types" />
+              </div>
             </div>
           </div>
         </div>

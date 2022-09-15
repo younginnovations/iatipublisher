@@ -49,7 +49,7 @@
             </div>
           </div>
         </div>
-        <div class="shrink-0">
+        <div class="shrink-0 -mt-1">
           <Btn
             text="Show full period list"
             icon=""

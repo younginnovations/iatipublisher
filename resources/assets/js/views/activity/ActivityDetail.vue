@@ -33,7 +33,7 @@
               </a>
             </div>
             <div class="inline-flex flex-wrap grow">
-              <h4 class="relative text-2xl font-bold ellipsis__title">
+              <h4 class="relative text-2xl font-bold ellipsis__title leading-loose">
                 <span class="overflow-hidden ellipsis__title">
                   {{ pageTitle ? pageTitle : 'Untitled' }}
                 </span>
@@ -79,7 +79,7 @@
           <Errors
             v-if="store.state.publishErrors.length > 0"
             :error-data="store.state.publishErrors"
-            class="absolute right-0 -mr-10 bottom-full"
+            class="absolute right-0 -mr-10 bottom-[calc(100%+8px)]"
           />
         </div>
       </div>

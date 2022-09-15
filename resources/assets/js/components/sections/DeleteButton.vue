@@ -78,6 +78,7 @@ const toastMessage = inject('toastMessage') as ToastMessageTypeface;
 const deleteFunction = () => {
   loader.value = true;
   loader.text = 'Deleting';
+  deleteValue.value = false;
 
   axios.delete(`/activity/${id}`).then((res) => {
     const response = res.data;
@@ -89,7 +90,6 @@ const deleteFunction = () => {
     } else {
       setTimeout(() => {
         loader.value = false;
-        deleteValue.value = false;
         location.reload();
       }, 1000);
     }
