@@ -45,8 +45,6 @@ class DateController extends Controller
             $activity = $this->dateService->getActivityData($id);
             $form = $this->dateService->formGenerator($id);
             $data = [
-                'core' => $element['criteria'] ?? '',
-                'status' => $activity->activity_date_element_completed,
                 'title' => $element['label'],
                 'name' => 'activity_date',
             ];

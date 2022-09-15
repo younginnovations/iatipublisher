@@ -137,7 +137,7 @@ class PeriodController extends Controller
             $indicator = $this->indicatorService->getIndicator($indicatorId);
             $activity = $indicator->result->activity;
             $form = $this->periodService->createFormGenerator($indicatorId);
-            $data = ['core' => $element['criteria'] ?? false, 'status' => false, 'title' => $element['label'], 'name' => 'period'];
+            $data = ['title' => $element['label'], 'name' => 'period'];
 
             return view('admin.activity.period.edit', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {
@@ -243,7 +243,7 @@ class PeriodController extends Controller
             $indicator = $this->indicatorService->getIndicator($indicatorId);
             $activity = $indicator->result->activity;
             $form = $this->periodService->editFormGenerator($indicatorId, $periodId);
-            $data = ['core' => $element['criteria'] ?? false, 'status' => false, 'title' => $element['label'], 'name' => 'period'];
+            $data = ['title' => $element['label'], 'name' => 'period'];
 
             return view('admin.activity.period.edit', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {

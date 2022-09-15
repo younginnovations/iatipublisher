@@ -41,7 +41,7 @@ class TotalExpenditureController extends Controller
             $organization = $this->totalExpenditureService->getOrganizationData($id);
             $form = $this->totalExpenditureService->formGenerator($id);
             $status = $organization->total_expenditure_element_completed ?? false;
-            $data = ['core'=> $element['total_expenditure']['criteria'] ?? false, 'status'=> $organization->total_expenditure_element_completed ?? false, 'title'=> $element['total_expenditure']['label'], 'name'=>'total-expenditure'];
+            $data = ['title'=> $element['total_expenditure']['label'], 'name'=>'total-expenditure'];
 
             return view('admin.organisation.forms.totalExpenditure.totalExpenditure', compact('form', 'organization', 'data'));
         } catch (\Exception $e) {

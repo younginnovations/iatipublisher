@@ -46,8 +46,6 @@ class ContactInfoController extends Controller
             $activity = $this->contactInfoService->getActivityData($id);
             $form = $this->contactInfoService->formGenerator($id);
             $data = [
-                'core' => $element['criteria'] ?? '',
-                'status' => false,
                 'title' => $element['label'],
                 'name' => 'contact_info',
             ];

@@ -45,8 +45,6 @@ class DefaultAidTypeController extends Controller
             $activity = $this->defaultAidTypeService->getActivityData($id);
             $form = $this->defaultAidTypeService->formGenerator($id);
             $data = [
-                'core' => $element['criteria'] ?? '',
-                'status' => $activity->default_aid_type_element_completed,
                 'title' => $element['label'],
                 'name' => 'default_aid_type',
             ];

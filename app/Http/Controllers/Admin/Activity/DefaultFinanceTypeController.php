@@ -45,8 +45,6 @@ class DefaultFinanceTypeController extends Controller
             $activity = $this->defaultFinanceTypeService->getActivityData($id);
             $form = $this->defaultFinanceTypeService->formGenerator($id);
             $data = [
-                'core' => $element['criteria'] ?? '',
-                'status' => $activity->default_finance_type_element_completed,
                 'title' => $element['label'],
                 'name' => 'default_finance_type',
             ];

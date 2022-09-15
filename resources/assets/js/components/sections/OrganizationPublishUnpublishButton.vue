@@ -1,3 +1,4 @@
+<!-- eslint-disable vue/no-v-html -->
 <template>
   <BtnComponent
     v-if="!publishStatus.is_published || publishStatus.status === 'draft'"

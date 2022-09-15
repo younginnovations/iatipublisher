@@ -44,7 +44,7 @@ class OrganizationIdentifierController extends Controller
             $element = json_decode(file_get_contents(app_path('IATI/Data/organizationElementJsonSchema.json')), true);
             $organization = $this->organizationIdentifierService->getOrganizationData($id);
             $form = $this->organizationIdentifierService->formGenerator($id);
-            $data = ['core' => $element['organisation_identifier']['criteria'] ?? false, 'status' => $organization->identifier_element_completed ?? false, 'title' => $element['organisation_identifier']['label'], 'name' => 'organisation-identifier'];
+            $data = ['title' => $element['organisation_identifier']['label'], 'name' => 'organisation-identifier'];
 
             return view('admin.organisation.forms.organisationIdentifier.edit', compact('form', 'organization', 'data'));
         } catch (\Exception $e) {

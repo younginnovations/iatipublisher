@@ -34,12 +34,6 @@ class ResultElementForm extends BaseForm
             }
         }
 
-        // add this to static form element by updating the status dynamically in case the status is required in result and period form
-        // <div class="status flex justify-end rounded-lg mb-1.5">
-        //     <div class="flex status text-xs leading-relaxed text-salmon-50">
-        //         <b class="mr-2 text-base leading-3">.</b><span>not completed</span>
-        //     </div>
-        // </div>
         if ($sub_elements) {
             foreach ($sub_elements as $name => $sub_element) {
                 $this->add(sprintf('sub_elements.%s.name_heading', $name), 'static', [

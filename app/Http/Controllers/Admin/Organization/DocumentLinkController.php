@@ -44,7 +44,7 @@ class DocumentLinkController extends Controller
             $organization = $this->documentLinkService->getOrganizationData($id);
             $form = $this->documentLinkService->formGenerator($id);
             $status = $organization->document_link_element_completed ?? false;
-            $data = ['core'=> $element['document_link']['criteria'] ?? false, 'status'=> $organization->document_link_element_completed ?? false, 'title'=> $element['document_link']['label'], 'name'=>'document-link'];
+            $data = ['status'=> $organization->document_link_element_completed ?? false, 'title'=> $element['document_link']['label'], 'name'=>'document-link'];
 
             return view('admin.organisation.forms.documentLink.documentLink', compact('form', 'organization', 'data'));
         } catch (\Exception $e) {

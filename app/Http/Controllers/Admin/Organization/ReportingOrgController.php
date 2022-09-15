@@ -43,7 +43,7 @@ class ReportingOrgController extends Controller
             $element = json_decode(file_get_contents(app_path('IATI/Data/organizationElementJsonSchema.json')), true);
             $organization = $this->reportingOrgService->getOrganizationData($id);
             $form = $this->reportingOrgService->formGenerator($id);
-            $data = ['core'=> $element['reporting_org']['criteria'] ?? false, 'status'=> $organization->reporting_org_element_completed ?? false, 'title'=> $element['reporting_org']['label'], 'name'=>'reporting-org'];
+            $data = ['title'=> $element['reporting_org']['label'], 'name'=>'reporting-org'];
 
             return view('admin.organisation.forms.reportingOrg.reportingOrg', compact('form', 'organization', 'data'));
         } catch (\Exception $e) {

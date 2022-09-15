@@ -45,8 +45,6 @@ class CapitalSpendController extends Controller
             $activity = $this->capitalSpendService->getActivityData($id);
             $form = $this->capitalSpendService->formGenerator($id);
             $data = [
-                'core' => $element['criteria'] ?? '',
-                'status' => $activity->capital_spend_element_completed,
                 'title' => $element['label'],
                 'name' => 'capital_spend',
             ];
