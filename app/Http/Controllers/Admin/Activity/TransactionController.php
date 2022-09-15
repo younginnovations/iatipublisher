@@ -117,7 +117,7 @@ class TransactionController extends Controller
             $element = getElementSchema('transactions');
             $activity = $this->activityService->getActivity($activityId);
             $form = $this->transactionService->createFormGenerator($activityId);
-            $data = ['core' => $element['transactions']['criteria'] ?? false, 'title' => $element['transactions']['label'], 'name' => 'transactions'];
+            $data = ['core' => $element['transactions']['criteria'] ?? false, 'title' => $element['label'], 'name' => 'transactions'];
 
             return view('admin.activity.transaction.edit', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {
@@ -202,7 +202,7 @@ class TransactionController extends Controller
             $element = getElementSchema('transactions');
             $activity = $this->activityService->getActivity($activityId);
             $form = $this->transactionService->editFormGenerator($transactionId, $activityId);
-            $data = ['core' => $element['transactions']['criteria'] ?? false, 'title' => $element['transactions']['label'], 'name' => 'transactions'];
+            $data = ['core' => $element['transactions']['criteria'] ?? false, 'title' => $element['label'], 'name' => 'transactions'];
 
             return view('admin.activity.transaction.edit', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {

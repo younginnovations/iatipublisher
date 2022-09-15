@@ -64,7 +64,7 @@ class DocumentLinkController extends Controller
             $element = getElementSchema('document_link');
             $activity = $this->documentLinkService->getActivityData($id);
             $form = $this->documentLinkService->formGenerator($id);
-            $data = ['core' => false, 'title' => $element['document_link']['label'], 'name' => 'document_link'];
+            $data = ['core' => false, 'title' => $element['label'], 'name' => 'document_link'];
 
             return view('admin.activity.documentLink.edit', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {
