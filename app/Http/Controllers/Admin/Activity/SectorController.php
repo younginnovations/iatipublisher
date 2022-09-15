@@ -44,12 +44,7 @@ class SectorController extends Controller
             $element = getElementSchema('sector');
             $activity = $this->sectorService->getActivityData($id);
             $form = $this->sectorService->formGenerator($id);
-            $data = [
-                'core'   => $element['criteria'] ?? '',
-                'status' => $activity->sector_element_completed,
-                'title'  => $element['label'],
-                'name'   => 'sector',
-            ];
+            $data = ['title' => $element['label'], 'name' => 'sector'];
 
             return view('admin.activity.sector.edit', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {

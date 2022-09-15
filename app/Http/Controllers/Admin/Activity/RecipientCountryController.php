@@ -44,12 +44,7 @@ class RecipientCountryController extends Controller
             $element = getElementSchema('recipient_country');
             $activity = $this->recipientCountryService->getActivityData($id);
             $form = $this->recipientCountryService->formGenerator($id);
-            $data = [
-                'core' => $element['criteria'] ?? '',
-                'status' => $activity->recipient_country_element_completed,
-                'title' => $element['label'],
-                'name' => 'recipient_country',
-            ];
+            $data = ['title' => $element['label'], 'name' => 'recipient_country'];
 
             return view('admin.activity.recipientCountry.edit', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {

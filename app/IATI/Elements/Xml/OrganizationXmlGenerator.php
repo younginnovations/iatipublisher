@@ -172,7 +172,6 @@ class OrganizationXmlGenerator
             'xml:lang'              => $default_values->default_language ?? null,
             'default-currency'      => $default_values->default_currency ?? null,
             'hierarchy'             => $activity_default_values->default_hierarchy ?? 1,
-            'linked-data-uri'       => $activity_default_values->linked_data_uri ?? null,
         ];
 
         return $this->arrayToXml->createXml('iati-organisations', $xmlData);

@@ -39,6 +39,7 @@ class ResultElementForm extends BaseForm
                 $this->add(sprintf('sub_elements.%s.name_heading', $name), 'static', [
                     'title'   => true,
                     'content' => '<div class="bg-white" id=' . $name . '>
+
                     <div class="title flex items-center mb-4">
                         <div class="text-sm shrink-0 uppercase text-n-40 font-bold">' . $name . '</div>
                         <div class="line grow h-px border-b border-n-40 ml-4"></div>

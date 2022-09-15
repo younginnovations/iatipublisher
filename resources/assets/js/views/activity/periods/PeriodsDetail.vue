@@ -5,44 +5,38 @@
       title="Period Detail"
       :back-link="`${periodLink}`"
     >
-      <div class="mb-3">
+      <div class="flex justify-end">
         <Toast
           v-if="toastData.visibility"
           :message="toastData.message"
           :type="toastData.type"
+          class="mr-3"
         />
-      </div>
-      <div class="flex justify-end">
         <!-- <Status class="mr-2.5" :data="false" /> -->
-        <Btn
-          text="Add Period"
-          icon="add"
-          :link="`${periodLink}/create`"
-          class="mr-2.5"
-        />
+        <Btn text="Add Period" icon="add" :link="`${periodLink}/create`" class="mr-2.5" />
         <Btn text="Edit Period" :link="`${periodLink}/${period.id}/edit`" />
       </div>
     </PageTitle>
 
     <div class="activities">
       <aside class="activities__sidebar">
-        <div
-          class="sticky top-0 px-6 py-4 rounded-lg indicator bg-eggshell text-n-50"
-        >
-          <ul class="text-sm font-bold leading-relaxed">
-            <li>
-              <a v-smooth-scroll href="#target" :class="linkClasses">
-                <svg-vue icon="moon" class="mr-2 text-base"></svg-vue>
-                target
-              </a>
-            </li>
-            <li>
-              <a v-smooth-scroll href="#actual" :class="linkClasses">
-                <svg-vue icon="moon" class="mr-2 text-base"></svg-vue>
-                actual
-              </a>
-            </li>
-          </ul>
+        <div v-sticky-component>
+          <div class="px-6 py-4 rounded-lg indicator bg-eggshell text-n-50">
+            <ul class="text-sm font-bold leading-relaxed">
+              <li>
+                <a v-smooth-scroll href="#target" :class="linkClasses">
+                  <svg-vue icon="moon" class="mr-2 text-base"></svg-vue>
+                  target
+                </a>
+              </li>
+              <li>
+                <a v-smooth-scroll href="#actual" :class="linkClasses">
+                  <svg-vue icon="moon" class="mr-2 text-base"></svg-vue>
+                  actual
+                </a>
+              </li>
+            </ul>
+          </div>
         </div>
       </aside>
       <div class="activities__content">
@@ -64,21 +58,21 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, toRefs, provide, onMounted, reactive } from 'vue';
+import { defineComponent, toRefs, provide, onMounted, reactive } from "vue";
 
 //component
-import Btn from 'Components/buttons/Link.vue';
-import PageTitle from 'Components/sections/PageTitle.vue';
-import Toast from 'Components/Toast.vue';
+import Btn from "Components/buttons/Link.vue";
+import PageTitle from "Components/sections/PageTitle.vue";
+import Toast from "Components/Toast.vue";
 
-import { TargetValue, ActualValue } from './elements/Index';
+import { TargetValue, ActualValue } from "./elements/Index";
 
 //composable
-import dateFormat from 'Composable/dateFormat';
-import getActivityTitle from 'Composable/title';
+import dateFormat from "Composable/dateFormat";
+import getActivityTitle from "Composable/title";
 
 export default defineComponent({
-  name: 'PeriodDetail',
+  name: "PeriodDetail",
   components: {
     TargetValue,
     ActualValue,
@@ -110,30 +104,30 @@ export default defineComponent({
   },
   setup(props) {
     const linkClasses =
-      'flex items-center w-full bg-white rounded p-2 text-sm text-n-50 font-bold leading-normal mb-2 shadow-default';
+      "flex items-center w-full bg-white rounded p-2 text-sm text-n-50 font-bold leading-normal mb-2 shadow-default";
     let { period, activity, parentData, types } = toRefs(props);
 
     const toastData = reactive({
       visibility: false,
-      message: '',
+      message: "",
       type: true,
     });
 
     // vue provide
-    provide('types', types.value);
+    provide("types", types.value);
 
     //indicator
     const periodData = period.value.period;
 
     //titles
     const activityId = activity.value.id,
-      activityTitle = getActivityTitle(activity.value.title, 'en'),
+      activityTitle = getActivityTitle(activity.value.title, "en"),
       activityLink = `/activity/${activityId}`,
       resultId = parentData.value.result.id,
-      resultTitle = getActivityTitle(parentData.value.result.title, 'en'),
+      resultTitle = getActivityTitle(parentData.value.result.title, "en"),
       resultLink = `${activityLink}/result/${resultId}`,
       indicatorId = parentData.value.indicator.id,
-      indicatorTitle = getActivityTitle(parentData.value.indicator.title, 'en'),
+      indicatorTitle = getActivityTitle(parentData.value.indicator.title, "en"),
       indicatorLink = `/result/${resultId}/indicator/${indicatorId}`,
       periodLink = `/indicator/${indicatorId}/period`;
 
@@ -142,8 +136,8 @@ export default defineComponent({
      */
     const breadcrumbData = [
       {
-        title: 'Your Activities',
-        link: '/activities',
+        title: "Your Activities",
+        link: "/activities",
       },
       {
         title: activityTitle,
@@ -158,13 +152,13 @@ export default defineComponent({
         link: indicatorLink,
       },
       {
-        title: 'Period',
-        link: '',
+        title: "Period",
+        link: "",
       },
     ];
 
     onMounted(() => {
-      if (props.toast.message !== '') {
+      if (props.toast.message !== "") {
         toastData.type = props.toast.type;
         toastData.visibility = true;
         toastData.message = props.toast.message;

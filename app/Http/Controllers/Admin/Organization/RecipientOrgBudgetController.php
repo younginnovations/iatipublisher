@@ -43,7 +43,7 @@ class RecipientOrgBudgetController extends Controller
             $element = json_decode(file_get_contents(app_path('IATI/Data/organizationElementJsonSchema.json')), true);
             $organization = $this->recipientOrgBudgetService->getOrganizationData($id);
             $form = $this->recipientOrgBudgetService->formGenerator($id);
-            $data = ['core' => $element['recipient_region_budget']['criteria'] ?? false, 'status' => $organization->element_status['recipient_region_budget'] ?? false, 'title' => $element['recipient_org_budget']['label'], 'name' => 'recipient_org_budget'];
+            $data = ['title' => $element['recipient_org_budget']['label'], 'name' => 'recipient_org_budget'];
 
             return view('admin.organisation.forms.recipientOrgBudget.recipientOrgBudget', compact('form', 'organization', 'data'));
         } catch (\Exception $e) {

@@ -21,7 +21,7 @@
           </div>
         </div>
       </div>
-      <div class="flex flex-col items-end justify-end actions grow">
+      <div class="flex justify-end items-center actions grow">
         <slot />
       </div>
     </div>
@@ -29,13 +29,13 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent } from "vue";
 
 // components
-import Breadcrumb from 'Components/BreadCrumb.vue';
+import Breadcrumb from "Components/BreadCrumb.vue";
 
 export default defineComponent({
-  name: 'PageTitle',
+  name: "PageTitle",
   components: { Breadcrumb },
   props: {
     breadcrumbData: {

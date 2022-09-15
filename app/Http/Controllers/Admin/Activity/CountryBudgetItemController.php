@@ -45,8 +45,6 @@ class CountryBudgetItemController extends Controller
             $activity = $this->countryBudgetItemService->getActivityData($id);
             $form = $this->countryBudgetItemService->formGenerator($id);
             $data = [
-                'core'   => $element['criteria'] ?? '',
-                'status' => $activity->country_budget_items_element_completed,
                 'title'  => $element['label'],
                 'name'   => 'country_budget_items',
             ];

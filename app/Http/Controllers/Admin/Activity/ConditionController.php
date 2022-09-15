@@ -45,8 +45,6 @@ class ConditionController extends Controller
             $activity = $this->conditionService->getActivityData($id);
             $form = $this->conditionService->formGenerator($id);
             $data = [
-                'core' => $element['criteria'] ?? false,
-                'status' => $activity->conditions_element_completed,
                 'title' => $element['label'],
                 'name' => 'conditions',
             ];

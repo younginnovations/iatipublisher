@@ -306,11 +306,12 @@ class ActivityController extends Controller
         }
     }
 
-    /*
-    * Get activity detail data type
-    *
-    * @return array
-    */
+    /**
+     * Get activity detail data type.
+     *
+     * @return array
+     * @throws \JsonException
+     */
     public function getActivityDetailDataType(): array
     {
         return [

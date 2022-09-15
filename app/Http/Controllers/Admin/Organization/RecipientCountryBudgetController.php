@@ -40,7 +40,7 @@ class RecipientCountryBudgetController extends Controller
             $element = json_decode(file_get_contents(app_path('IATI/Data/organizationElementJsonSchema.json')), true);
             $organization = $this->recipientCountryBudgetService->getOrganizationData($id);
             $form = $this->recipientCountryBudgetService->formGenerator($id);
-            $data = ['core' => $element['recipient_country_budget']['criteria'] ?? false, 'status' => $organization->recipient_country_budget_element_completed ?? false, 'title' => $element['recipient_country_budget']['label'], 'name' => 'recipient_country_budget'];
+            $data = ['title' => $element['recipient_country_budget']['label'], 'name' => 'recipient_country_budget'];
 
             return view('admin.organisation.forms.recipientCountryBudget.recipientCountryBudget', compact('form', 'organization', 'data'));
         } catch (\Exception $e) {

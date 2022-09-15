@@ -43,7 +43,7 @@ import ResetPassword from './views/reset/ResetPassword.vue';
 /**
  * Organisation data
  */
- import OrganisationData from './views/organisation/OrganisationData.vue';
+import OrganisationData from './views/organisation/OrganisationData.vue';
 
 /**
  * Additional Components
@@ -112,6 +112,139 @@ app.component('OrganisationData', OrganisationData);
 app.use(SvgVue);
 
 app.use(VueSmoothScroll);
+
+// detect scroll up or down
+let lastScrollTop = 0,
+  affixType = 'sticky-none';
+
+const stickySidebar = (el: {
+  firstChild: HTMLElement;
+  offsetWidth: number;
+  getBoundingClientRect: () => {
+    (): object;
+    new(): object;
+    left: number | null;
+    top: number | null;
+    bottom: number | null;
+  };
+  style: { cssText: string };
+}) => {
+  console.log('-----------' + affixType + '---------');
+
+  //sticky element/child data
+  const stickyElement = el.firstChild,
+    elHeight = stickyElement.offsetHeight,
+    stickyCurrentTop = stickyElement?.getBoundingClientRect().top,
+    stickyCurrentBottom = stickyElement?.getBoundingClientRect().bottom;
+
+  //sticky element's parent/wrapper data
+  const elWidth = el.offsetWidth,
+    elScrollLeft = el.getBoundingClientRect().left ?? 0,
+    elScrollTop = el.getBoundingClientRect().top ?? 0,
+    elScrollBottom = el.getBoundingClientRect().bottom ?? 0,
+    viewportHeight = window.innerHeight;
+
+  // window/document data
+  const currentWindowsScrollPosition = window.pageYOffset,
+    targetScrollPosition =
+      elScrollBottom ?? +currentWindowsScrollPosition - viewportHeight;
+
+  const isScrollDown =
+    currentWindowsScrollPosition > lastScrollTop ? true : false;
+
+  const isScrollUp = !isScrollDown;
+
+  lastScrollTop =
+    currentWindowsScrollPosition <= 0 ? 0 : currentWindowsScrollPosition;
+
+  if (elHeight < viewportHeight) {
+    el.style.cssText = `position: sticky; top:0`;
+    stickyElement.style.cssText = ``;
+  } else {
+    el.style.cssText = `position: relative;height: ${elHeight}px;`;
+    if (isScrollDown) {
+      const elementCss = scrollDown(affixType, stickyElement.style.cssText, stickyCurrentTop, stickyCurrentBottom, elScrollTop, elScrollLeft, elWidth, viewportHeight, targetScrollPosition, currentWindowsScrollPosition);
+      stickyElement.style.cssText = elementCss.cssText;
+      affixType = elementCss.type;
+    } else if (isScrollUp) {
+      const elementCss = scrollUp(affixType, stickyElement.style.cssText, stickyCurrentTop, elScrollLeft, elScrollTop, elWidth);
+      stickyElement.style.cssText = elementCss.cssText;
+      affixType = elementCss.type;
+    }
+  }
+};
+
+const scrollDown = (affixType, cssText, stickyCurrentTop, stickyCurrentBottom, elScrollTop, elScrollLeft, elWidth, viewportHeight, targetScrollPosition, currentWindowsScrollPosition) => {
+  switch (affixType) {
+    case 'sticky-top':
+      cssText = `position: relative; transform: translate3d(0, ${stickyCurrentTop - elScrollTop
+        }px, 0);`;
+      affixType = 'sticky-translate';
+      break;
+
+    case 'sticky-bottom':
+      // no actions needed
+      break;
+
+    case 'sticky-translate':
+      if (stickyCurrentBottom <= viewportHeight) {
+        cssText = `position: fixed; top: auto; left: ${elScrollLeft}; bottom: 20px; width: ${elWidth}px`;
+        affixType = 'sticky-bottom';
+      }
+      break;
+
+    case 'sticky-none':
+      if (targetScrollPosition <= currentWindowsScrollPosition) {
+        cssText = `position: fixed; top: auto; left: ${elScrollLeft}; bottom: 5px; width: ${elWidth}px`;
+        affixType = 'sticky-bottom';
+      }
+      break;
+  }
+
+  return { 'type': affixType, 'cssText': cssText };
+
+};
+
+const scrollUp = (affixType, cssText, stickyCurrentTop, elScrollLeft, elScrollTop, elWidth) => {
+  switch (affixType) {
+    case 'sticky-top':
+      if (elScrollTop >= 0) {
+        cssText = `position: relative;`;
+        affixType = 'sticky-none';
+      }
+      break;
+
+    case 'sticky-bottom':
+      cssText = `position: relative; transform: translate3d(0, ${stickyCurrentTop - elScrollTop
+        }px, 0);`;
+      affixType = 'sticky-translate';
+      break;
+
+    case 'sticky-translate':
+      if (stickyCurrentTop >= 0) {
+        cssText = `position: fixed; top: 5px; left: ${elScrollLeft}; width: ${elWidth}px`;
+        affixType = 'sticky-top';
+      }
+      break;
+
+    case 'sticky-none':
+      //no actions needed
+      break;
+  }
+
+  return { 'type': affixType, 'cssText': cssText };
+}
+
+
+// custom directive
+app.directive('sticky-component', {
+  mounted(el) {
+    window.addEventListener('scroll', () => stickySidebar(el));
+  },
+  unmounted(el) {
+    window.removeEventListener('scroll', () => stickySidebar(el));
+  },
+});
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to

@@ -44,12 +44,7 @@ class DefaultTiedStatusController extends Controller
             $element = getElementSchema('default_tied_status');
             $activity = $this->defaultTiedStatusService->getActivityData($id);
             $form = $this->defaultTiedStatusService->formGenerator($id);
-            $data = [
-                'core'   => $element['criteria'] ?? '',
-                'status' => $activity->default_tied_status_element_completed,
-                'title'  => $element['label'],
-                'name'   => 'default_tied_status',
-            ];
+            $data = ['title' => $element['label'], 'name' => 'default_tied_status'];
 
             return view('admin.activity.defaultTiedStatus.edit', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {

@@ -42,12 +42,7 @@ class RelatedActivityController extends Controller
             $element = getElementSchema('related_activity');
             $activity = $this->relatedActivityService->getActivityData($id);
             $form = $this->relatedActivityService->formGenerator($id);
-            $data = [
-                'core'   => $element['criteria'] ?? '',
-                'status' => $activity->related_activity_element_completed,
-                'title'  => $element['label'],
-                'name'   => 'related_activity',
-            ];
+            $data = ['title' => $element['label'], 'name' => 'related_activity'];
 
             return view('admin.activity.relatedActivity.edit', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {

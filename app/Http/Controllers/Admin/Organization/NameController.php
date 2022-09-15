@@ -44,7 +44,7 @@ class NameController extends Controller
             $organization = $this->nameService->getOrganizationData($id);
             $form = $this->nameService->formGenerator($id);
             $status = $organization->name_element_completed ?? false;
-            $data = ['core'=> $element['name']['criteria'] ?? false, 'status'=> $organization->name_element_completed ?? false, 'title'=> $element['name']['label'], 'name'=>'name'];
+            $data = ['title'=> $element['name']['label'], 'name'=>'name'];
 
             return view('admin.organisation.forms.name.name', compact('form', 'organization', 'data'));
         } catch (\Exception $e) {

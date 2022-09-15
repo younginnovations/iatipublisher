@@ -44,12 +44,7 @@ class StatusController extends Controller
             $element = getElementSchema('activity_status');
             $activity = $this->statusService->getActivityData($id);
             $form = $this->statusService->formGenerator($id);
-            $data = [
-                'core' => $element['criteria'] ?? false,
-                'status' => $activity->activity_status_element_completed ?? false,
-                'title' => $element['label'],
-                'name' => 'activity_status',
-            ];
+            $data = ['title' => $element['label'], 'name' => 'activity_status'];
 
             return view('admin.activity.status.edit', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {

@@ -45,8 +45,6 @@ class CollaborationTypeController extends Controller
             $activity = $this->collaborationTypeService->getActivityData($id);
             $form = $this->collaborationTypeService->formGenerator($id);
             $data = [
-                'core' => $element['criteria'] ?? '',
-                'status' => $activity->collaboration_type_element_completed,
                 'title' => $element['label'],
                 'name' => 'collaboration_type',
             ];

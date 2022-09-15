@@ -9,11 +9,7 @@
           <h2 class="ml-3 text-heading-4 font-bold text-n-50">Settings</h2>
         </div>
         <div>
-          <Toast
-            v-if="toastVisibility"
-            :message="toastMessage"
-            :type="toastType"
-          />
+          <Toast v-if="toastVisibility" :message="toastMessage" :type="toastType" />
         </div>
       </div>
       <div class="setting__container overflow-x-hidden">
@@ -48,6 +44,7 @@
           :currencies="currencies"
           :languages="languages"
           :humanitarian="humanitarian"
+          :budget-not-provided="budgetNotProvided"
           @keyup.enter="submitForm"
         />
       </div>
@@ -59,11 +56,7 @@
           class="primary-btn save-btn"
           @click="submitForm('setting/store/publisher')"
         >
-          {{
-            tab === 'publish'
-              ? 'Save publishing setting'
-              : 'Save default values'
-          }}
+          {{ tab === "publish" ? "Save publishing setting" : "Save default values" }}
         </button>
       </div>
     </div>
@@ -71,14 +64,14 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, computed, onMounted } from 'vue';
-import { useStore } from '../../store';
-import { ActionTypes } from '../../store/setting/actions';
-import axios from 'axios';
-import SettingDefaultForm from './SettingDefaultForm.vue';
-import SettingPublishingForm from './SettingPublishingForm.vue';
-import Loader from '../../components/Loader.vue';
-import Toast from '../../components/Toast.vue';
+import { defineComponent, ref, computed, onMounted } from "vue";
+import { useStore } from "../../store";
+import { ActionTypes } from "../../store/setting/actions";
+import axios from "axios";
+import SettingDefaultForm from "./SettingDefaultForm.vue";
+import SettingPublishingForm from "./SettingPublishingForm.vue";
+import Loader from "../../components/Loader.vue";
+import Toast from "../../components/Toast.vue";
 
 export default defineComponent({
   components: {
@@ -105,14 +98,18 @@ export default defineComponent({
       type: [String, Object],
       required: true,
     },
+    budgetNotProvided: {
+      type: Object,
+      required: true,
+    },
   },
 
   setup(props) {
-    const tab = ref('publish');
+    const tab = ref("publish");
     const store = useStore();
     const loaderVisibility = ref(false);
     const toastVisibility = ref(false);
-    const toastMessage = ref('');
+    const toastMessage = ref("");
     const toastType = ref(false);
 
     const publishingForm = computed(() => store.state.publishingForm);
@@ -137,7 +134,7 @@ export default defineComponent({
     }
 
     onMounted(async () => {
-      const { data } = await axios.get('/setting/data');
+      const { data } = await axios.get("/setting/data");
       const settingData = data.data;
 
       if (settingData) {
@@ -154,32 +151,28 @@ export default defineComponent({
         if (publisherInfo) {
           for (const key in publisherInfo) {
             updateStore(
-              typeof publisherInfo[key] === 'string'
-                ? 'UPDATE_PUBLISHING_FORM'
-                : 'UPDATE_PUBLISHER_INFO',
+              typeof publisherInfo[key] === "string"
+                ? "UPDATE_PUBLISHING_FORM"
+                : "UPDATE_PUBLISHER_INFO",
               key,
               publisherInfo[key]
             );
           }
 
           if (publisherInfo.api_token) {
-            updateStore(
-              'UPDATE_PUBLISHER_INFO',
-              'isVerificationRequested',
-              true
-            );
+            updateStore("UPDATE_PUBLISHER_INFO", "isVerificationRequested", true);
           }
         }
 
         if (defaultValues) {
           for (const key in defaultValues) {
-            updateStore('UPDATE_DEFAULT_VALUES', key, defaultValues[key]);
+            updateStore("UPDATE_DEFAULT_VALUES", key, defaultValues[key]);
           }
         }
 
         if (activityValues) {
           for (const key in activityValues) {
-            updateStore('UPDATE_DEFAULT_VALUES', key, activityValues[key]);
+            updateStore("UPDATE_DEFAULT_VALUES", key, activityValues[key]);
           }
         }
       }
@@ -192,12 +185,12 @@ export default defineComponent({
 
     function submitDefault() {
       for (const data in defaultError.value) {
-        updateStore('UPDATE_DEFAULT_ERROR', data, '');
+        updateStore("UPDATE_DEFAULT_ERROR", data, "");
       }
       loaderVisibility.value = true;
 
       axios
-        .post('/setting/store/default', defaultForm.value)
+        .post("/setting/store/default", defaultForm.value)
         .then((res) => {
           const response = res.data;
           loaderVisibility.value = false;
@@ -207,7 +200,7 @@ export default defineComponent({
           toastType.value = response.success;
 
           if (response.success) {
-            updateStore('UPDATE_PUBLISHER_INFO', response.data.hierarchial, '');
+            updateStore("UPDATE_PUBLISHER_INFO", response.data.hierarchial, "");
           }
 
           loaderVisibility.value = false;
@@ -216,7 +209,7 @@ export default defineComponent({
           const { errors } = error.response.data;
 
           for (const e in errors) {
-            updateStore('UPDATE_DEFAULT_ERROR', e, errors[e][0]);
+            updateStore("UPDATE_DEFAULT_ERROR", e, errors[e][0]);
           }
 
           loaderVisibility.value = false;
@@ -227,7 +220,7 @@ export default defineComponent({
       loaderVisibility.value = true;
 
       for (const data in publishingError.value) {
-        updateStore('UPDATE_PUBLISHING_ERROR', data, '');
+        updateStore("UPDATE_PUBLISHING_ERROR", data, "");
       }
 
       axios
@@ -240,22 +233,18 @@ export default defineComponent({
 
           if (response.success) {
             updateStore(
-              'UPDATE_PUBLISHER_INFO',
-              'publisher_verification',
+              "UPDATE_PUBLISHER_INFO",
+              "publisher_verification",
               response.data.publisher_verification
             );
 
             updateStore(
-              'UPDATE_PUBLISHER_INFO',
-              'token_verification',
+              "UPDATE_PUBLISHER_INFO",
+              "token_verification",
               response.data.token_verification
             );
 
-            updateStore(
-              'UPDATE_PUBLISHER_INFO',
-              'isVerificationRequested',
-              true
-            );
+            updateStore("UPDATE_PUBLISHER_INFO", "isVerificationRequested", true);
           }
 
           loaderVisibility.value = false;
@@ -268,16 +257,16 @@ export default defineComponent({
           const { errors } = error.response.data;
 
           for (const e in errors) {
-            updateStore('UPDATE_PUBLISHING_ERROR', e, errors[e][0]);
+            updateStore("UPDATE_PUBLISHING_ERROR", e, errors[e][0]);
           }
 
           loaderVisibility.value = false;
         });
     }
 
-    function submitForm(url = 'setting/verify') {
-      if (tab.value === 'publish') submitPublishing(url);
-      if (tab.value === 'default') submitDefault();
+    function submitForm(url = "setting/verify") {
+      if (tab.value === "publish") submitPublishing(url);
+      if (tab.value === "default") submitDefault();
     }
 
     return {

@@ -136,7 +136,7 @@ class IndicatorController extends Controller
             $result = $this->resultService->getResult($resultId);
             $activity = $result->activity;
             $form = $this->indicatorService->createFormGenerator($resultId);
-            $data = ['core' => $element['criteria'] ?? false, 'status' => false, 'title' => $element['label'], 'name' => 'indicator'];
+            $data = ['status' => false, 'title' => $element['label'], 'name' => 'indicator'];
 
             return view('admin.activity.indicator.edit', compact('form', 'activity', 'data'));
         } catch (Exception $e) {
@@ -225,7 +225,7 @@ class IndicatorController extends Controller
             $element = getElementSchema('indicator');
             $activity = $this->activityService->getActivity($result->activity->id);
             $form = $this->indicatorService->editFormGenerator($resultId, $indicatorId);
-            $data = ['core' => $element['criteria'] ?? false, 'status' => false, 'title' => $element['label'], 'name' => 'indicator'];
+            $data = ['title' => $element['label'], 'name' => 'indicator'];
 
             return view('admin.activity.indicator.edit', compact('form', 'activity', 'data'));
         } catch (Exception $e) {

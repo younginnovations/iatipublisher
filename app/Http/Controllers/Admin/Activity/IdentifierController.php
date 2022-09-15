@@ -44,7 +44,7 @@ class IdentifierController extends Controller
             $element = getElementSchema('iati_identifier');
             $activity = $this->identifierService->getActivityData($id);
             $form = $this->identifierService->formGenerator($id);
-            $data = ['core' => $element['criteria'] ?? '', 'status' => $activity->identifier_element_completed, 'title' => $element['label'], 'name' => 'iati_identifier'];
+            $data = ['title' => $element['label'], 'name' => 'iati_identifier'];
 
             return view('admin.activity.identifier.edit', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {

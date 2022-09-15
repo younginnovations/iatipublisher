@@ -213,7 +213,7 @@ class ResultService
      * @return Form
      * @throws \JsonException
      */
-    public function editFormGenerator($activityId, $resultId): Form
+    public function editFormGenerator($resultId, $activityId): Form
     {
         $element = getElementSchema('result');
         $activityResult = $this->getResult($resultId);

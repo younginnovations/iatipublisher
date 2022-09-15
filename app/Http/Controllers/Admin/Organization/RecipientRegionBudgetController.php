@@ -43,7 +43,7 @@ class RecipientRegionBudgetController extends Controller
             $element = json_decode(file_get_contents(app_path('IATI/Data/organizationElementJsonSchema.json')), true);
             $organization = $this->recipientRegionBudgetService->getOrganizationData($id);
             $form = $this->recipientRegionBudgetService->formGenerator($id);
-            $data = ['core' => $element['recipient_region_budget']['criteria'] ?? false, 'status' => $organization->recipient_region_budget_element_completed ?? false, 'title' => $element['recipient_region_budget']['label'], 'name' => 'recipient_region_budget'];
+            $data = ['title' => $element['recipient_region_budget']['label'], 'name' => 'recipient_region_budget'];
 
             return view('admin.organisation.forms.recipientRegionBudget.recipientRegionBudget', compact('form', 'organization', 'data'));
         } catch (\Exception $e) {

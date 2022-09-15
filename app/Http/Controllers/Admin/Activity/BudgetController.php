@@ -53,8 +53,6 @@ class BudgetController extends Controller
             $activity = $this->activityService->getActivity($id);
             $form = $this->budgetService->formGenerator($id);
             $data = [
-                'core'   => $element['criteria'] ?? false,
-                'status' => $activity->budget_element_completed ?? false,
                 'title'  => $element['label'],
                 'name'   => 'budget',
             ];

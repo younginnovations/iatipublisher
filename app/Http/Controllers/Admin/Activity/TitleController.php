@@ -46,12 +46,7 @@ class TitleController extends Controller
             $element = getElementSchema('title');
             $activity = $this->titleService->getActivityData($id);
             $form = $this->titleService->formGenerator($id);
-            $data = [
-                'core'   => $element['criteria'] ?? '',
-                'status' => $activity->title_element_completed,
-                'title'  => $element['label'],
-                'name'   => 'title',
-            ];
+            $data = ['title' => $element['label'], 'name' => 'title'];
 
             return view('admin.activity.title.edit', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {

@@ -5,14 +5,13 @@
       title="Indicator Detail"
       :back-link="`${indicatorLink}`"
     >
-      <div class="mb-3">
+      <div class="flex justify-end">
         <Toast
           v-if="toastData.visibility"
           :message="toastData.message"
           :type="toastData.type"
+          class="mr-3"
         />
-      </div>
-      <div class="flex justify-end">
         <!-- <Status class="mr-2.5" :data="false" /> -->
         <Btn
           text="Add Indicator"
@@ -21,17 +20,18 @@
           class="mr-2.5"
         />
         <Btn
-          text="Edit Indicator"
-          :link="`${indicatorLink}/${indicator.id}/edit`"
+          text="Add Period"
+          icon="add"
+          :link="`/indicator/${indicator.id}/period/create`"
+          class="mr-2.5"
         />
+        <Btn text="Edit Indicator" :link="`${indicatorLink}/${indicator.id}/edit`" />
       </div>
     </PageTitle>
 
     <div class="activities">
       <aside class="activities__sidebar">
-        <div
-          class="sticky top-0 px-6 py-4 rounded-lg indicator bg-eggshell text-n-50"
-        >
+        <div class="indicator sticky top-0 rounded-lg bg-eggshell px-6 py-4 text-n-50">
           <ul class="text-sm font-bold leading-relaxed">
             <li v-for="(rData, r, ri) in indicatorData" :key="ri">
               <a v-smooth-scroll :href="`#${String(r)}`" :class="linkClasses">
@@ -61,12 +61,12 @@
       </aside>
       <div class="activities__content">
         <div></div>
-        <div class="px-4 py-5 bg-white">
+        <div class="bg-white px-4 py-5">
           <div
             class="elements-detail wider"
             :class="{ 'mb-10': indicatorData.document_link.length > 0 }"
           >
-            <div class="flex category">
+            <div class="category flex">
               {{ indicatorTitle }}
             </div>
 
@@ -74,9 +74,7 @@
               <div class="indicators">
                 <table>
                   <tbody>
-                    <template
-                      v-if="indicatorData.title[0].narrative.length > 0"
-                    >
+                    <template v-if="indicatorData.title[0].narrative.length > 0">
                       <TitleElement
                         id="title"
                         :data="indicatorData.title[0]"
@@ -97,9 +95,7 @@
                       :data="indicatorData.aggregation_status"
                     />
 
-                    <template
-                      v-if="indicatorData.description[0].narrative.length > 0"
-                    >
+                    <template v-if="indicatorData.description[0].narrative.length > 0">
                       <Description
                         id="description"
                         :data="indicatorData.description[0]"
@@ -130,7 +126,7 @@
             </div>
           </div>
           <div v-if="indicatorData.document_link.length > 0" id="document_link">
-            <div class="mb-4 title">
+            <div class="title mb-4">
               <div class="item elements-detail wider">
                 <table class="mb-5">
                   <tr>
@@ -139,7 +135,7 @@
                   </tr>
                 </table>
               </div>
-              <div class="w-full h-px mb-4 border-b divider border-n-20"></div>
+              <div class="divider mb-4 h-px w-full border-b border-n-20"></div>
             </div>
             <div class="ml-4">
               <DocumentLink :data="indicatorData.document_link" :type="types" />
@@ -152,12 +148,12 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, toRefs, onMounted, reactive, provide } from 'vue';
+import { defineComponent, toRefs, onMounted, reactive, provide } from "vue";
 
 //component
-import Btn from 'Components/buttons/Link.vue';
-import PageTitle from 'Components/sections/PageTitle.vue';
-import Toast from 'Components/Toast.vue';
+import Btn from "Components/buttons/Link.vue";
+import PageTitle from "Components/sections/PageTitle.vue";
+import Toast from "Components/Toast.vue";
 
 import {
   TitleElement,
@@ -169,13 +165,13 @@ import {
   Baseline,
   DocumentLink,
   Period,
-} from './elements/Index';
+} from "./elements/Index";
 
 //composable
-import getActivityTitle from 'Composable/title';
+import getActivityTitle from "Composable/title";
 
 export default defineComponent({
-  name: 'IndicatorDetail',
+  name: "IndicatorDetail",
   components: {
     TitleElement,
     Measure,
@@ -218,11 +214,11 @@ export default defineComponent({
   },
   setup(props) {
     const linkClasses =
-      'flex items-center w-full bg-white rounded p-2 text-sm text-n-50 font-bold leading-normal mb-2 shadow-default';
+      "flex items-center w-full bg-white rounded p-2 text-sm text-n-50 font-bold leading-normal mb-2 shadow-default";
 
     const toastData = reactive({
       visibility: false,
-      message: '',
+      message: "",
       type: true,
     });
     let { indicator, activity, period, resultTitle } = toRefs(props);
@@ -238,27 +234,27 @@ export default defineComponent({
       indicator: indicator.value.id,
     };
 
-    provide('parentData', parentData);
+    provide("parentData", parentData);
 
     const activityId = activity.value.id,
       activityTitle = activity.value.title,
       activityLink = `/activity/${activityId}`,
       resultId = indicator.value.result_id,
-      resultTitled = getActivityTitle(resultTitle.value[0].narrative, 'en'),
+      resultTitled = getActivityTitle(resultTitle.value[0].narrative, "en"),
       resultLink = `${activityLink}/result/${resultId}`,
       indicatorLink = `/result/${resultId}/indicator`,
-      indicatorTitle = getActivityTitle(indicatorData.title[0].narrative, 'en');
+      indicatorTitle = getActivityTitle(indicatorData.title[0].narrative, "en");
 
     /**
      * Breadcrumb data
      */
     const breadcrumbData = [
       {
-        title: 'Your Activities',
-        link: '/activities',
+        title: "Your Activities",
+        link: "/activities",
       },
       {
-        title: getActivityTitle(activityTitle, 'en'),
+        title: getActivityTitle(activityTitle, "en"),
         link: activityLink,
       },
       {
@@ -267,12 +263,12 @@ export default defineComponent({
       },
       {
         title: indicatorTitle,
-        link: '',
+        link: "",
       },
     ];
 
     onMounted(() => {
-      if (props.toast.message !== '') {
+      if (props.toast.message !== "") {
         toastData.type = props.toast.type;
         toastData.visibility = true;
         toastData.message = props.toast.message;

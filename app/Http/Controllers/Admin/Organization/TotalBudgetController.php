@@ -40,7 +40,7 @@ class TotalBudgetController extends Controller
             $element = json_decode(file_get_contents(app_path('IATI/Data/organizationElementJsonSchema.json')), true);
             $organization = $this->totalBudgetService->getOrganizationData($id);
             $form = $this->totalBudgetService->formGenerator($id);
-            $data = ['core'=> $element['total_budget']['criteria'] ?? false, 'status'=> $organization->total_budget_element_completed ?? false, 'title'=> $element['total_budget']['label'], 'name'=>'total-budget'];
+            $data = ['title'=> $element['total_budget']['label'], 'name'=>'total-budget'];
 
             return view('admin.organisation.forms.totalBudget.totalBudget', compact('form', 'organization', 'data'));
         } catch (\Exception $e) {

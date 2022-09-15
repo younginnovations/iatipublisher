@@ -44,15 +44,10 @@ class ConditionRequest extends ActivityBaseRequest
 
         foreach ($formFields as $conditionIndex => $condition) {
             $conditionForm = sprintf('condition.%s', $conditionIndex);
-            $rules[sprintf('%s.condition_type', $conditionForm)] = 'required_if:condition_attached,1';
             $rules = array_merge(
                 $rules,
                 $this->getRulesForNarrative($condition['narrative'], $conditionForm)
             );
-
-            foreach ($condition['narrative'] as $narrativeIndex => $narrative) {
-                $rules[sprintf('%s.narrative.%s.narrative', $conditionForm, $narrativeIndex)][] = 'required_if:condition_attached,1';
-            }
         }
 
         return $rules;

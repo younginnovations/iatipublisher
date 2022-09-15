@@ -44,12 +44,7 @@ class LegacyDataController extends Controller
             $element = getElementSchema('legacy_data');
             $activity = $this->activityLegacyDataService->getActivityData($id);
             $form = $this->activityLegacyDataService->formGenerator($id);
-            $data = [
-                'core' => $element['criteria'] ?? '',
-                'status' => $activity->legacy_data_element_completed,
-                'title' => $element['label'],
-                'name' => 'legacy_data',
-            ];
+            $data = ['title' => $element['label'], 'name' => 'legacy_data'];
 
             return view('admin.activity.legacyData.edit', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {

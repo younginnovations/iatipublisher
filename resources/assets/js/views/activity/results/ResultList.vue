@@ -5,13 +5,12 @@
       title="Result List"
       :back-link="activityLink"
     >
-      <div class="mb-3">
-        <Toast
-          v-if="toastData.visibility"
-          :message="toastData.message"
-          :type="toastData.type"
-        />
-      </div>
+      <Toast
+        v-if="toastData.visibility"
+        :message="toastData.message"
+        :type="toastData.type"
+        class="mr-3"
+      />
       <a :href="`${activityLink}/result/create`">
         <Btn text="Add Result" icon="plus" type="primary" />
       </a>
@@ -44,25 +43,25 @@
                   :href="`${activityLink}/result/${result.id}`"
                   class="overflow-hidden ellipsis text-n-50"
                 >
-                  {{ getActivityTitle(result.result.title[0].narrative, 'en') }}
+                  {{ getActivityTitle(result.result.title[0].narrative, "en") }}
                 </a>
                 <div class="w-52">
                   <span class="ellipsis__title--hover">{{
-                    getActivityTitle(result.result.title[0].narrative, 'en')
+                    getActivityTitle(result.result.title[0].narrative, "en")
                   }}</span>
                 </div>
               </div>
             </td>
             <td>
-              {{ types.resultType[result.result.type] ?? 'Not Available' }}
+              {{ types.resultType[result.result.type] ?? "Not Available" }}
             </td>
             <td class="capitalize">
               {{
                 parseInt(result.result.aggregation_status)
-                  ? 'True'
+                  ? "True"
                   : result.result.aggregation_status
-                  ? 'False'
-                  : 'Not Available'
+                  ? "False"
+                  : "Not Available"
               }}
             </td>
             <td>
@@ -92,28 +91,28 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, toRefs, onMounted, reactive, provide } from 'vue';
-import axios from 'axios';
+import { defineComponent, ref, toRefs, onMounted, reactive, provide } from "vue";
+import axios from "axios";
 
 // components
-import Btn from 'Components/ButtonComponent.vue';
-import Pagination from 'Components/TablePagination.vue';
-import PageTitle from 'Components/sections/PageTitle.vue';
-import Toast from 'Components/Toast.vue';
-import DeleteAction from 'Components/sections/DeleteAction.vue';
+import Btn from "Components/ButtonComponent.vue";
+import Pagination from "Components/TablePagination.vue";
+import PageTitle from "Components/sections/PageTitle.vue";
+import Toast from "Components/Toast.vue";
+import DeleteAction from "Components/sections/DeleteAction.vue";
 
 // composable
-import dateFormat from 'Composable/dateFormat';
-import getActivityTitle from 'Composable/title';
+import dateFormat from "Composable/dateFormat";
+import getActivityTitle from "Composable/title";
 
 export default defineComponent({
-  name: 'ResultsList',
+  name: "ResultsList",
   components: {
     Btn,
     Pagination,
     PageTitle,
     Toast,
-    DeleteAction
+    DeleteAction,
   },
   props: {
     activity: {
@@ -140,7 +139,7 @@ export default defineComponent({
       activityLink = `/activity/${activityId}`;
     const toastData = reactive({
       visibility: false,
-      message: '',
+      message: "",
       type: true,
     });
 
@@ -167,16 +166,16 @@ export default defineComponent({
      */
     const breadcrumbData = [
       {
-        title: 'Your Activities',
-        link: '/activities',
+        title: "Your Activities",
+        link: "/activities",
       },
       {
-        title: getActivityTitle(activityTitle, 'en'),
+        title: getActivityTitle(activityTitle, "en"),
         link: activityLink,
       },
       {
-        title: 'Result List',
-        link: '',
+        title: "Result List",
+        link: "",
       },
     ];
 
@@ -187,7 +186,7 @@ export default defineComponent({
         isEmpty.value = response.data.data.length ? false : true;
       });
 
-      if (props.toast.message !== '') {
+      if (props.toast.message !== "") {
         toastData.type = props.toast.type;
         toastData.visibility = true;
         toastData.message = props.toast.message;
@@ -199,17 +198,15 @@ export default defineComponent({
     });
 
     function fetchListings(active_page: number) {
-      axios
-        .get(`/activity/${activityId}/results/page/` + active_page)
-        .then((res) => {
-          const response = res.data;
-          Object.assign(resultsData, response.data);
-          isEmpty.value = response.data ? false : true;
-        });
+      axios.get(`/activity/${activityId}/results/page/` + active_page).then((res) => {
+        const response = res.data;
+        Object.assign(resultsData, response.data);
+        isEmpty.value = response.data ? false : true;
+      });
     }
 
     // Provide
-    provide('parentItemId', activityId);
+    provide("parentItemId", activityId);
 
     return {
       breadcrumbData,

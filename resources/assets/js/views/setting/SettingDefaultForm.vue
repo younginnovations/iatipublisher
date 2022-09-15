@@ -38,8 +38,8 @@
           </span>
 
           <p v-if="!defaultError.default_currency">
-            If you do not set your default currency, you have to choose and
-            select currency manually for all the financial transactions.
+            If you do not set your default currency, you have to choose and select
+            currency manually for all the financial transactions.
           </p>
         </div>
         <div>
@@ -69,9 +69,8 @@
           </span>
 
           <p v-if="!defaultError.default_language">
-            If you do not set your default language, you have to choose and
-            select language for all the narrative text in activity and
-            organisation.
+            If you do not set your default language, you have to choose and select
+            language for all the narrative text in activity and organisation.
           </p>
         </div>
       </div>
@@ -104,25 +103,29 @@
             {{ defaultError.hierarchy }}
           </span>
           <p v-if="!defaultError.hierarchy">
-            If hierarchy is not reported then 1 is assumed. If multiple levels
-            are reported then, to avoid double counting, financial transactions
-            should only be reported at the lowest hierarchical level.
+            If hierarchy is not reported then 1 is assumed. If multiple levels are
+            reported then, to avoid double counting, financial transactions should only be
+            reported at the lowest hierarchical level.
           </p>
         </div>
         <div>
           <div class="flex justify-between">
-            <label for="linked-data-uri">Linked Data URI</label>
+            <label for="budget-not-provided">Budget Not Provided</label>
           </div>
-          <input
-            id="linked-data-url"
-            v-model="defaultForm.linked_data_url"
-            class="register__input mb-2"
-            type="text"
-            placeholder="Type linked data URL here"
-            @input="updateStore('linked_data_url')"
+          <Multiselect
+            id="budget_not_provided"
+            v-model="defaultForm.budget_not_provided"
+            class="vue__select"
+            :class="{
+              error__input: defaultError.budget_not_provided,
+            }"
+            placeholder="Select budget not provided type here"
+            :options="props.budgetNotProvided"
+            :searchable="true"
+            @click="updateStore('budget_not_provided')"
           />
-          <span v-if="defaultError.linked_data_url" class="error" role="alert">
-            {{ defaultError.linked_data_url }}
+          <span v-if="defaultError.budget_not_provided" class="error" role="alert">
+            {{ defaultError.budget_not_provided }}
           </span>
         </div>
         <div>
@@ -162,11 +165,11 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed } from 'vue';
-import Multiselect from '@vueform/multiselect';
-import { useStore } from '../../store';
-import { ActionTypes } from '../../store/setting/actions';
-import HoverText from './../../components/HoverText.vue';
+import { defineComponent, computed } from "vue";
+import Multiselect from "@vueform/multiselect";
+import { useStore } from "../../store";
+import { ActionTypes } from "../../store/setting/actions";
+import HoverText from "./../../components/HoverText.vue";
 
 export default defineComponent({
   components: {
@@ -184,6 +187,10 @@ export default defineComponent({
       required: true,
     },
     humanitarian: {
+      type: [String, Object],
+      required: true,
+    },
+    budgetNotProvided: {
       type: [String, Object],
       required: true,
     },

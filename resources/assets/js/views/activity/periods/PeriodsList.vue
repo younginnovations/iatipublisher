@@ -5,13 +5,12 @@
       title="Periods List"
       :back-link="indicatorLink"
     >
-      <div class="mb-3">
-        <Toast
-          v-if="toastData.visibility"
-          :message="toastData.message"
-          :type="toastData.type"
-        />
-      </div>
+      <Toast
+        v-if="toastData.visibility"
+        :message="toastData.message"
+        :type="toastData.type"
+        class="mr-3"
+      />
       <a :href="`${periodLink}/create`">
         <Btn text="Add Period" icon="plus" type="primary" />
       </a>
@@ -39,13 +38,13 @@
                 {{
                   pe.period.period_start[0].date
                     ? dateFormat(pe.period.period_start[0].date)
-                    : 'Not Available'
+                    : "Not Available"
                 }}
                 -
                 {{
                   pe.period.period_end[0].date
                     ? dateFormat(pe.period.period_end[0].date)
-                    : 'Not Available'
+                    : "Not Available"
                 }}
               </a>
             </td>
@@ -73,28 +72,27 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, toRefs, onMounted, ref, reactive, provide } from 'vue';
-import axios from 'axios';
+import { defineComponent, toRefs, onMounted, ref, reactive, provide } from "vue";
+import axios from "axios";
 // components
-import Btn from 'Components/ButtonComponent.vue';
-import Pagination from 'Components/TablePagination.vue';
-import PageTitle from 'Components/sections/PageTitle.vue';
-import Toast from 'Components/Toast.vue';
-import DeleteAction from 'Components/sections/DeleteAction.vue';
+import Btn from "Components/ButtonComponent.vue";
+import Pagination from "Components/TablePagination.vue";
+import PageTitle from "Components/sections/PageTitle.vue";
+import Toast from "Components/Toast.vue";
+import DeleteAction from "Components/sections/DeleteAction.vue";
 
 // composable
-import dateFormat from 'Composable/dateFormat';
-import getActivityTitle from 'Composable/title';
+import dateFormat from "Composable/dateFormat";
+import getActivityTitle from "Composable/title";
 
 export default defineComponent({
-  name: 'PeriodList',
+  name: "PeriodList",
   components: {
     Btn,
     Pagination,
     PageTitle,
     Toast,
-    DeleteAction
-
+    DeleteAction,
   },
   props: {
     activity: {
@@ -149,7 +147,7 @@ export default defineComponent({
 
     const toastData = reactive({
       visibility: false,
-      message: '',
+      message: "",
       type: true,
     });
 
@@ -158,24 +156,24 @@ export default defineComponent({
      */
     const breadcrumbData = [
       {
-        title: 'Your Activities',
-        link: '/activity',
+        title: "Your Activities",
+        link: "/activity",
       },
       {
-        title: getActivityTitle(activityTitle, 'en'),
+        title: getActivityTitle(activityTitle, "en"),
         link: activityLink,
       },
       {
-        title: getActivityTitle(resultTitle, 'en'),
+        title: getActivityTitle(resultTitle, "en"),
         link: resultLink,
       },
       {
-        title: getActivityTitle(indicatorTitle, 'en'),
+        title: getActivityTitle(indicatorTitle, "en"),
         link: indicatorLink,
       },
       {
-        title: 'Periods List',
-        link: '',
+        title: "Periods List",
+        link: "",
       },
     ];
 
@@ -186,7 +184,7 @@ export default defineComponent({
         isEmpty.value = response.data.data.length ? false : true;
       });
 
-      if (props.toast.message !== '') {
+      if (props.toast.message !== "") {
         toastData.type = props.toast.type;
         toastData.visibility = true;
         toastData.message = props.toast.message;
@@ -198,17 +196,15 @@ export default defineComponent({
     });
 
     function fetchListings(active_page: number) {
-      axios
-        .get(`/indicator/${indicatorId}/periods/page/` + active_page)
-        .then((res) => {
-          const response = res.data;
-          Object.assign(periodsData, response.data);
-          isEmpty.value = response.data ? false : true;
-        });
+      axios.get(`/indicator/${indicatorId}/periods/page/` + active_page).then((res) => {
+        const response = res.data;
+        Object.assign(periodsData, response.data);
+        isEmpty.value = response.data ? false : true;
+      });
     }
 
     // provide
-    provide('parentItemId', indicatorId);
+    provide("parentItemId", indicatorId);
 
     return {
       breadcrumbData,
