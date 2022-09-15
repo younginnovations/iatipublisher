@@ -44,7 +44,7 @@ class RecipientRegionController extends Controller
             $element = getElementSchema('recipient_region');
             $activity = $this->recipientRegionService->getActivityData($id);
             $form = $this->recipientRegionService->formGenerator($id);
-            $data = ['core' => $element['recipient_region']['criteria'] ?? '', 'title' => $element['recipient_region']['label'], 'name' => 'recipient_region'];
+            $data = ['core' => $element['recipient_region']['criteria'] ?? '', 'title' => $element['label'], 'name' => 'recipient_region'];
 
             return view('admin.activity.recipientRegion.edit', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {

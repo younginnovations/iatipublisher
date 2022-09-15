@@ -44,7 +44,7 @@ class ScopeController extends Controller
             $element = getElementSchema('activity_scope');
             $activity = $this->scopeService->getActivityData($id);
             $form = $this->scopeService->formGenerator($id);
-            $data = ['core' => $element['activity_scope']['criteria'] ?? '', 'title' => $element['activity_scope']['label'], 'name' => 'activity_scope'];
+            $data = ['core' => $element['activity_scope']['criteria'] ?? '', 'title' => $element['label'], 'name' => 'activity_scope'];
 
             return view('admin.activity.scope.edit', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {

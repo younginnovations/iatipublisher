@@ -44,7 +44,7 @@ class HumanitarianScopeController extends Controller
             $element = getElementSchema('humanitarian_scope');
             $activity = $this->humanitarianScopeService->getActivityData($id);
             $form = $this->humanitarianScopeService->formGenerator($id);
-            $data = ['core' => $element['humanitarian_scope']['criteria'] ?? '', 'title' => $element['humanitarian_scope']['label'], 'name' => 'humanitarian_scope'];
+            $data = ['core' => $element['humanitarian_scope']['criteria'] ?? '', 'title' => $element['label'], 'name' => 'humanitarian_scope'];
 
             return view('admin.activity.humanitarianScope.edit', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {
