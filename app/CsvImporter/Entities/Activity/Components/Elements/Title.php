@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\CsvImporter\Entities\Activity\Components\Elements;
 
 use App\CsvImporter\Entities\Activity\Components\Elements\Foundation\Iati\Element;
@@ -14,7 +16,7 @@ class Title extends Element
      * Csv Header for Title element.
      * @var array
      */
-    private $_csvHeader = ['activity_title'];
+    private array $_csvHeader = ['activity_title'];
 
     /**
      * Index under which the data is stored within the object.
@@ -51,7 +53,10 @@ class Title extends Element
 
     /**
      * Prepare Title element.
+     *
      * @param $fields
+     *
+     * @return void
      */
     public function prepare($fields)
     {
@@ -66,21 +71,26 @@ class Title extends Element
 
     /**
      * Map data from CSV file into Title data format.
+     *
      * @param $value
+     *
+     * @return void
      */
-    public function map($value)
+    public function map($value): void
     {
-        if (!(is_null($value) || $value == '')) {
+        if (!(is_null($value) || $value === '')) {
             $this->data[end($this->_csvHeader)][] = $this->setNarrative($value);
         }
     }
 
     /**
      * Set the Narrative for the Title element.
+     *
      * @param $value
+     *
      * @return array
      */
-    public function setNarrative($value)
+    public function setNarrative($value): array
     {
         $narrative = ['narrative' => $value, 'language' => ''];
         $this->narratives[] = $narrative;
@@ -90,15 +100,17 @@ class Title extends Element
 
     /**
      * Get the languages for the Title element.
+     *
      * @return mixed
      */
-    public function language()
+    public function language(): mixed
     {
         return $this->languages;
     }
 
     /**
      * Provides the rules for the IATI Element validation.
+     *
      * @return array
      */
     public function rules(): array
@@ -111,6 +123,7 @@ class Title extends Element
 
     /**
      * Provides custom messages used for IATI Element Validation.
+     *
      * @return array
      */
     public function messages(): array
@@ -123,8 +136,10 @@ class Title extends Element
 
     /**
      * Validate data for IATI Element.
+     *
+     * @return $this
      */
-    public function validate()
+    public function validate(): static
     {
         $this->validator = $this->factory->sign($this->data())
                                          ->with($this->rules(), $this->messages())
