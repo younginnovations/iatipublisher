@@ -90,12 +90,22 @@ class Budget extends Element
         if (!isset($this->data['budget'][$index]['budget_type'])) {
             $this->data['budget'][$index]['budget_type'] = '';
         }
+<<<<<<< Updated upstream
         if ($key === $this->_csvHeaders[0]) {
             $validBudgetTypes = $this->loadCodeList('BudgetType');
 
             foreach ($validBudgetTypes as $key => $budgetType) {
                 if (ucwords($value) === $budgetType) {
                     $value = $key;
+=======
+
+        if ($key == $this->_csvHeaders[0]) {
+            $validBudgetTypes = $this->loadCodeList('BudgetType');
+
+            foreach ($validBudgetTypes as $name => $budgetType) {
+                if (ucwords($value) == $budgetType) {
+                    $value = $name;
+>>>>>>> Stashed changes
                     break;
                 }
             }

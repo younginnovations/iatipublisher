@@ -2,7 +2,6 @@
 
 namespace App\CsvImporter\Entities\Activity\Components\Factory;
 
-use App\Helpers\GetCodeName;
 use Carbon\Carbon;
 use Illuminate\Contracts\Translation\Translator;
 use Illuminate\Support\Arr;
@@ -417,12 +416,12 @@ class Validation extends Factory
                 // $defaultLanguage = getDefaultLanguage();
                 $defaultLanguage = 'en';
 
-                $validator->addReplacer(
-                    'unique_default_lang',
-                    function ($message, $attribute, $rule, $parameters) use ($validator, $defaultLanguage) {
-                        return str_replace(':language', app(GetCodeName::class)->getActivityCodeName('Language', $defaultLanguage), $message);
-                    }
-                );
+                // $validator->addReplacer(
+                //     'unique_default_lang',
+                //     function ($message, $attribute, $rule, $parameters) use ($validator, $defaultLanguage) {
+                //         return str_replace(':language', app(GetCodeName::class)->getActivityCodeName('Language', $defaultLanguage), $message);
+                //     }
+                // );
 
                 $check = true;
                 if ($value && is_array($value)) {

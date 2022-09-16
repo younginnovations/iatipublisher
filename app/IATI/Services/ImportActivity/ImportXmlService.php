@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\IATI\Services\ImportActivity;
 
-use App\CsvImporter\Entities\Activity\Components\Elements\Transaction;
 use App\IATI\Repositories\Activity\ActivityRepository;
 use App\IATI\Repositories\Activity\IndicatorRepository;
 use App\IATI\Repositories\Activity\PeriodRepository;

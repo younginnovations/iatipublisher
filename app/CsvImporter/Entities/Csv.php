@@ -44,7 +44,6 @@ abstract class Csv
      */
     protected function initialize($row, $activityIdentifiers, $version)
     {
-        // return app()->make(ActivityRow::class, [$row, $this->organizationId, $this->userId, $activityIdentifiers, $version]);
         return  new ActivityRow($row, $this->organizationId, $this->userId, $activityIdentifiers, $version);
     }
 

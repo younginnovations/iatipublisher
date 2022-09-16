@@ -413,8 +413,6 @@ class ImportCsvService
         FileFacade::put($path, json_encode($activities));
 
         return $activities;
-
-        // return view(sprintf('Activity.csvImporter.%s', $view), compact('activities'))->render();
     }
 
     /**

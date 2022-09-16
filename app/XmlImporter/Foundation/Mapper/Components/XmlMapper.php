@@ -2,7 +2,6 @@
 
 namespace App\XmlImporter\Foundation\Mapper\Components;
 
-use App\XmlImporter\Foundation\Support\Factory\Mapper as MapperFactory;
 use App\XmlImporter\Foundation\Support\Helpers\Traits\XmlHelper;
 use App\XmlImporter\Foundation\XmlQueueWriter;
 use Illuminate\Support\Arr;
@@ -12,7 +11,7 @@ use Illuminate\Support\Arr;
  */
 class XmlMapper
 {
-    use XmlHelper, MapperFactory;
+    use XmlHelper;
 
     /**
      * @var
@@ -109,6 +108,20 @@ class XmlMapper
     }
 
     /**
+     * Initialize XmlMapper components according to the Xml Version.
+     *
+     * @return mixed
+     */
+    public function initComponents()
+    {
+        $this->iatiActivity = null;
+
+        $this->activity = app()->make('App\XmlImporter\Foundation\Mapper\Components\Activity');
+        $this->transactionElement = app()->make('App\XmlImporter\Foundation\Mapper\Components\Elements\Transaction');
+        $this->resultElement = app()->make('App\XmlImporter\Foundation\Mapper\Components\Elements\Result');
+    }
+
+    /**
      * Map raw Xml data into AidStream database compatible data for import.
      *
      * @param array $activities
@@ -124,8 +137,6 @@ class XmlMapper
 
         $totalActivities = count($activities);
         $mappedData = [];
-
-        // dd($template);
 
         foreach ($activities as $index => $activity) {
             $this->initComponents();
