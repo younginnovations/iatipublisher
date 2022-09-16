@@ -1,9 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\CsvImporter\Entities\Activity\Components\Elements;
 
 use App\CsvImporter\Entities\Activity\Components\Elements\Foundation\Iati\Element;
 use App\CsvImporter\Entities\Activity\Components\Factory\Validation;
+use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Support\Arr;
 
 /**
@@ -14,7 +17,7 @@ class RecipientCountry extends Element
     /**
      * CSV Header of Description with their code.
      */
-    private $_csvHeaders = ['recipient_country_code', 'recipient_country_percentage'];
+    private array $_csvHeaders = ['recipient_country_code', 'recipient_country_percentage'];
 
     /**
      * Index under which the data is stored within the object.
@@ -25,23 +28,26 @@ class RecipientCountry extends Element
     /**
      * @var array
      */
-    protected $countries = [];
+    protected array $countries = [];
 
     /**
      * @var array
      */
-    protected $percentage = [];
+    protected array $percentage = [];
 
     /**
      * @var int
      */
-    protected $totalPercentage = 0;
+    protected int $totalPercentage = 0;
 
     /**
      * @var
      */
     protected $recipientRegion;
 
+    /**
+     * @var
+     */
     protected $fields;
 
     /**
@@ -63,7 +69,10 @@ class RecipientCountry extends Element
 
     /**
      * Prepare RecipientCountry Element.
+     *
      * @param $fields
+     *
+     * @return void
      */
     public function prepare($fields): void
     {
@@ -78,13 +87,16 @@ class RecipientCountry extends Element
 
     /**
      * Map data from CSV file into RecipientCountry data format.
+     *
      * @param $key
      * @param $value
      * @param $index
+     *
+     * @return void
      */
     public function map($key, $value, $index): void
     {
-        if (!(is_null($value) || $value == '')) {
+        if (!(is_null($value) || $value === '')) {
             $this->setCountry($key, $value, $index);
             $this->setPercentage($key, $value, $index);
             $this->setNarrative($index);
@@ -93,11 +105,12 @@ class RecipientCountry extends Element
 
     /**
      * Set Country for RecipientCountry.
+     *
      * @param $key
      * @param $value
      * @param $index
-     * @return mixed
-     * @internal param $key
+     *
+     * @return void
      */
     protected function setCountry($key, $value, $index): void
     {
@@ -105,7 +118,7 @@ class RecipientCountry extends Element
             $this->data['recipient_country'][$index]['country_code'] = '';
         }
 
-        if ($key == $this->_csvHeaders[0] && (!is_null($value))) {
+        if ($key === $this->_csvHeaders[0] && (!is_null($value))) {
             $this->countries[] = $value;
             $this->countries = array_unique($this->countries);
 
@@ -115,9 +128,12 @@ class RecipientCountry extends Element
 
     /**
      * Set Percentage for RecipientCountry Element.
+     *
      * @param $key
      * @param $value
      * @param $index
+     *
+     * @return void
      */
     protected function setPercentage($key, $value, $index): void
     {
@@ -125,7 +141,7 @@ class RecipientCountry extends Element
             $this->data['recipient_country'][$index]['percentage'] = '';
         }
 
-        if ($key == $this->_csvHeaders[1] && (!is_null($value))) {
+        if ($key === $this->_csvHeaders[1] && (!is_null($value))) {
             $this->percentage[] = $value;
             $this->data['recipient_country'][$index]['percentage'] = $value;
         }
@@ -133,8 +149,10 @@ class RecipientCountry extends Element
 
     /**
      * Set Narrative for RecipientCountry Element.
+     *
      * @param $index
-     * @return array
+     *
+     * @return void
      */
     protected function setNarrative($index): void
     {
@@ -145,8 +163,11 @@ class RecipientCountry extends Element
 
     /**
      * Validate data for IATI Element.
+     *
+     * @return $this
+     * @throws BindingResolutionException
      */
-    public function validate()
+    public function validate(): static
     {
         $this->recipientRegion($this->fields);
 
@@ -158,29 +179,31 @@ class RecipientCountry extends Element
             ->getValidatorInstance();
         $this->setValidity();
 
-        unset($this->data['recipient_country_total_percentage']);
-        unset($this->data['recipient_region']);
+        unset($this->data['recipient_country_total_percentage'], $this->data['recipient_region']);
 
         return $this;
     }
 
     /**
      * Provides the rules for the IATI Element validation.
+     *
      * @return array
+     * @throws \JsonException
      */
     public function rules(): array
     {
         $codes = $this->validRecipientCountry();
         $rules = [];
 
-        if (count($this->fields) == 20) {
+        if (count($this->fields) === 20) {
             $rules = [
                 'recipient_country' => sprintf('required_if:recipient_region,%s', ''),
             ];
         }
 
-        if (($this->data['recipient_region'] == '') && array_key_exists('recipient_country', $this->data)
-        && (!(abs(100.0 - $this->totalPercentage()) < 0.01) && $this->totalPercentage() != 0)) {
+        if (($this->data['recipient_region'] == '')
+            && array_key_exists('recipient_country', $this->data)
+            && (!(abs(100.0 - $this->totalPercentage()) < 0.01) && $this->totalPercentage() !== 0)) {
             $rules['recipient_country_total_percentage'] = 'percentage_sum';
         }
 
@@ -195,6 +218,7 @@ class RecipientCountry extends Element
 
     /**
      * Provides custom messages used for IATI Element Validation.
+     *
      * @return array
      */
     public function messages(): array
@@ -224,7 +248,9 @@ class RecipientCountry extends Element
 
     /**
      * Return valid Recipient Country.
+     *
      * @return string
+     * @throws \JsonException
      */
     protected function validRecipientCountry(): string
     {
@@ -236,7 +262,11 @@ class RecipientCountry extends Element
 
     /**
      * Store Recipient Region object.
+     *
      * @param $fields
+     *
+     * @return void
+     * @throws BindingResolutionException
      */
     protected function recipientRegion($fields): void
     {
@@ -245,6 +275,7 @@ class RecipientCountry extends Element
 
     /**
      * Calculate total Percentage of Recipient Country.
+     *
      * @return int
      */
     public function totalPercentage(): int
