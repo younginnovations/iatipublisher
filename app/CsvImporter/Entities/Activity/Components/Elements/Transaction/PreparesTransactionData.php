@@ -305,11 +305,13 @@ trait PreparesTransactionData
 
     /**
      * Load the provided Activity CodeList.
+     *
      * @param        $codeList
      * @param string $directory
+     *
      * @return array
      */
-    protected function loadCodeList($codeList, $directory = 'Activity'):array
+    protected function loadCodeList($codeList, string $directory = 'Activity'):array
     {
         return getCodeList($codeList, $directory);
     }

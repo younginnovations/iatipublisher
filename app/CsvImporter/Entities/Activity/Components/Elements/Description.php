@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\CsvImporter\Entities\Activity\Components\Elements;
 
 use App\CsvImporter\Entities\Activity\Components\Elements\Foundation\Iati\Element;
@@ -14,18 +16,18 @@ class Description extends Element
     /**
      * CSV Header of Description with their code.
      */
-    private $_csvHeaders = ['activity_description_general' => 1, 'activity_description_objectives' => 2, 'activity_description_target_groups' => 3, 'activity_description_others' => 4];
+    private array $_csvHeaders = ['activity_description_general' => 1, 'activity_description_objectives' => 2, 'activity_description_target_groups' => 3, 'activity_description_others' => 4];
 
     /**
      * Index under which the data is stored within the object.
      * @var string
      */
-    protected $index = 'description';
+    protected string $index = 'description';
 
     /**
      * @var array
      */
-    protected $narratives = [];
+    protected array $narratives = [];
 
     /**
      * @var
@@ -35,12 +37,12 @@ class Description extends Element
     /**
      * @var array
      */
-    protected $types = [];
+    protected array $types = [];
 
     /**
      * @var array
      */
-    protected $template = [['type' => '', 'narrative' => ['narrative' => '', 'language' => '']]];
+    protected array $template = [['type' => '', 'narrative' => ['narrative' => '', 'language' => '']]];
 
     /**
      * Description constructor.
@@ -55,7 +57,10 @@ class Description extends Element
 
     /**
      * Prepare the Description element.
+     *
      * @param $fields
+     *
+     * @return void
      */
     public function prepare($fields)
     {
@@ -70,12 +75,15 @@ class Description extends Element
 
     /**
      * Map data from CSV file into Description data format.
+     *
      * @param $key
      * @param $value
+     *
+     * @return void
      */
     public function map($key, $value): void
     {
-        if (!(is_null($value) || $value == '')) {
+        if (!(is_null($value) || $value === '')) {
             $type = $this->setType($key);
             $this->data['description'][$type]['type'] = $type;
             $this->data['description'][$type]['narrative'][] = $this->setNarrative($value);
@@ -84,10 +92,12 @@ class Description extends Element
 
     /**
      * Set the type for the Description element.
+     *
      * @param $key
+     *
      * @return mixed
      */
-    public function setType($key)
+    public function setType($key): mixed
     {
         $this->types[] = $key;
         $this->types = array_unique($this->types);
@@ -97,7 +107,9 @@ class Description extends Element
 
     /**
      * Set the Narrative for the Description element.
+     *
      * @param $value
+     *
      * @return array
      */
     public function setNarrative($value): array
@@ -110,6 +122,7 @@ class Description extends Element
 
     /**
      * Provides the rules for the IATI Element validation.
+     *
      * @return array
      */
     public function rules(): array
@@ -127,6 +140,7 @@ class Description extends Element
 
     /**
      * Provides custom messages used for IATI Element Validation.
+     *
      * @return array
      */
     public function messages(): array
@@ -144,8 +158,10 @@ class Description extends Element
 
     /**
      * Validate data for IATI Element.
+     *
+     * @return $this
      */
-    public function validate()
+    public function validate(): static
     {
         $this->validator = $this->factory->sign($this->data())
                                          ->with($this->rules(), $this->messages())

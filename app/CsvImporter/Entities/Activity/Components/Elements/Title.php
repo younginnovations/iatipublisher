@@ -20,7 +20,7 @@ class Title extends Element
      * Index under which the data is stored within the object.
      * @var string
      */
-    protected $index = 'activity_title';
+    protected string $index = 'activity_title';
 
     /**
      * @var
@@ -36,7 +36,7 @@ class Title extends Element
      * Template for Title element.
      * @var array
      */
-    protected $template = [['narrative' => '', 'language' => '']];
+    protected array $template = [['narrative' => '', 'language' => '']];
 
     /**
      * Title constructor.

@@ -21,7 +21,7 @@ class PolicyMarker extends Element
      * Index under which the data is stored within the object.
      * @var string
      */
-    protected $index = 'policy_marker';
+    protected string $index = 'policy_marker';
 
     /**
      * PolicyMarker constructor.

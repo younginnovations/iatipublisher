@@ -25,7 +25,7 @@ class ActivityScope extends Element
      *
      * @var string
      */
-    protected $index = 'activity_scope';
+    protected string $index = 'activity_scope';
 
     /**
      * ActivityScope constructor.

@@ -18,13 +18,13 @@ class Transaction extends Element
     /**
      * @var array
      */
-    protected $data = [];
+    protected array $data = [];
 
     /**
      * Index under which the data is stored within the object.
      * @var string
      */
-    protected $index = 'transaction';
+    protected string $index = 'transaction';
 
     /**
      * @var array
@@ -55,7 +55,7 @@ class Transaction extends Element
     /**
      * @var array
      */
-    protected $template = [
+    protected array $template = [
         'reference'             => '',
         'humanitarian'          => '',
         'transaction_type'      => ['transaction_type_code' => ''],
