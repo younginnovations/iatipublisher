@@ -69,7 +69,7 @@
                       <tr>
                         <td>Result Type</td>
                         <td>
-                          <div class="text-sm">
+                          <div>
                             {{ types.resultType[result.result.type] }}
                           </div>
                         </td>
@@ -89,7 +89,7 @@
                                   : types.languages[currentLanguage]
                               }})
                             </div>
-                            <div class="w-[500px] max-w-full text-sm">
+                            <div class="w-[500px] max-w-full">
                               {{
                                 getActivityTitle(
                                   result.result.description[0].narrative,

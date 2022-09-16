@@ -12,7 +12,7 @@
               <span class="mx-4 separator"> / </span>
               <div class="breadcrumb__title">
                 <span
-                  class="overflow-hidden breadcrumb__title last text-n-30"
+                  class="overflow-hidden breadcrumb__title last text-n-30 max-w-lg"
                   >{{ pageTitle ?? 'Untitled' }}</span
                 >
                 <span class="ellipsis__title--hover w-[calc(100%_+_35px)]">{{
@@ -32,7 +32,7 @@
                 <svg-vue icon="arrow-short-left" />
               </a>
             </div>
-            <div class="inline-flex flex-wrap grow">
+            <div class="inline-flex flex-wrap grow items-center min-h-[48px]">
               <h4 class="relative text-2xl font-bold ellipsis__title">
                 <span class="overflow-hidden ellipsis__title">
                   {{ pageTitle ? pageTitle : 'Untitled' }}
@@ -79,7 +79,7 @@
           <Errors
             v-if="store.state.publishErrors.length > 0"
             :error-data="store.state.publishErrors"
-            class="absolute right-0 -mr-10 bottom-full"
+            class="absolute right-0 -mr-10 bottom-[calc(100%+6px)]"
           />
         </div>
       </div>
