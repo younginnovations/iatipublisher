@@ -1,9 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\CsvImporter\Entities\Activity\Components\Elements;
 
 use App\CsvImporter\Entities\Activity\Components\Elements\Foundation\Iati\Element;
 use App\CsvImporter\Entities\Activity\Components\Factory\Validation;
+use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Support\Arr;
 
 /**
@@ -14,7 +17,7 @@ class RecipientRegion extends Element
     /**
      * CSV Header of Description with their code.
      */
-    private $_csvHeaders = ['recipient_region_code', 'recipient_region_percentage'];
+    private array $_csvHeaders = ['recipient_region_code', 'recipient_region_percentage'];
 
     /**
      * Index under which the data is stored within the object.
@@ -25,12 +28,12 @@ class RecipientRegion extends Element
     /**
      * @var array
      */
-    protected $regions = [];
+    protected array $regions = [];
 
     /**
      * @var array
      */
-    protected $percentage = [];
+    protected array $percentage = [];
 
     /**
      * @var array
@@ -45,8 +48,11 @@ class RecipientRegion extends Element
     /**
      * @var int
      */
-    protected $totalPercentage = 0;
+    protected int $totalPercentage = 0;
 
+    /**
+     * @var
+     */
     protected $fields;
 
     /**
@@ -64,7 +70,10 @@ class RecipientRegion extends Element
 
     /**
      * Prepare RecipientRegion Element.
+     *
      * @param $fields
+     *
+     * @return void
      */
     public function prepare($fields): void
     {
@@ -79,13 +88,16 @@ class RecipientRegion extends Element
 
     /**
      * Map data from CSV into RecipientRegion data format.
+     *
      * @param $key
      * @param $value
      * @param $index
+     *
+     * @return void
      */
     public function map($key, $value, $index): void
     {
-        if (!(is_null($value) || $value == '')) {
+        if (!(is_null($value) || $value === '')) {
             $this->setRegion($key, $value, $index);
             $this->setRegionVocabulary($index);
             $this->setVocabularyUri($index);
@@ -96,18 +108,20 @@ class RecipientRegion extends Element
 
     /**
      * Set Region of RecipientRegion.
+     *
      * @param $key
      * @param $value
      * @param $index
-     * @return mixed
+     *
+     * @return void
      */
-    protected function setRegion($key, $value, $index)
+    protected function setRegion($key, $value, $index): void
     {
         if (!isset($this->data['recipient_region'][$index]['region_code'])) {
             $this->data['recipient_region'][$index]['region_code'] = '';
         }
 
-        if ($key == $this->_csvHeaders[0] && (!is_null($value))) {
+        if ($key === $this->_csvHeaders[0] && (!is_null($value))) {
             $this->regions[] = $value;
             $this->regions = array_unique($this->regions);
 
@@ -117,9 +131,12 @@ class RecipientRegion extends Element
 
     /**
      * Set Percentage of RecipientRegion.
+     *
      * @param $key
      * @param $value
      * @param $index
+     *
+     * @return void
      */
     protected function setPercentage($key, $value, $index): void
     {
@@ -127,7 +144,7 @@ class RecipientRegion extends Element
             $this->data['recipient_region'][$index]['percentage'] = '';
         }
 
-        if ($key == $this->_csvHeaders[1] && (!is_null($value))) {
+        if ($key === $this->_csvHeaders[1] && (!is_null($value))) {
             $this->percentage[] = $value;
 
             $this->data['recipient_region'][$index]['percentage'] = $value;
@@ -136,10 +153,12 @@ class RecipientRegion extends Element
 
     /**
      * Set Narrative of RecipientRegion.
+     *
      * @param $index
-     * @return array
+     *
+     * @return void
      */
-    protected function setNarrative($index)
+    protected function setNarrative($index): void
     {
         $narrative = ['narrative' => '', 'language' => ''];
 
@@ -148,23 +167,29 @@ class RecipientRegion extends Element
 
     /**
      * Set VocabularyUri of RecipientRegion.
+     *
      * @param $index
+     *
+     * @return void
      */
-    protected function setVocabularyUri($index)
+    protected function setVocabularyUri($index): void
     {
         $this->data['recipient_region'][$index]['vocabulary_uri'] = '';
     }
 
     /**
-     *Set Region Vocabulary of RecipientRegion.
+     * Set Region Vocabulary of RecipientRegion.
+     *
      * @param $index
+     *
+     * @return void
      */
-    protected function setRegionVocabulary($index)
+    protected function setRegionVocabulary($index): void
     {
         $regionCode = $this->data['recipient_region'][$index]['region_code'];
         $validRegions = explode(',', $this->validRecipientRegion());
 
-        if (in_array($regionCode, $validRegions)) {
+        if (in_array($regionCode, $validRegions, true)) {
             $this->data['recipient_region'][$index]['region_vocabulary'] = 1;
         } else {
             $this->data['recipient_region'][$index]['region_vocabulary'] = '';
@@ -173,8 +198,10 @@ class RecipientRegion extends Element
 
     /**
      * Validate data for IATI Element.
+     *
+     * @return $this
      */
-    public function validate()
+    public function validate(): static
     {
         $recipientCountry = $this->recipientCountry->data;
 
@@ -186,14 +213,14 @@ class RecipientRegion extends Element
             ->with($this->rules(), $this->messages())
             ->getValidatorInstance();
         $this->setValidity();
-        unset($this->data['recipient_region_total_percentage']);
-        unset($this->data['recipient_country']);
+        unset($this->data['recipient_region_total_percentage'], $this->data['recipient_country']);
 
         return $this;
     }
 
     /**
      * Provides the rules for the IATI Element validation.
+     *
      * @return array
      */
     public function rules(): array
@@ -201,15 +228,15 @@ class RecipientRegion extends Element
         $codes = $this->validRecipientRegion();
         $rules = [];
 
-        if (count($this->fields) == 20) {
+        if (count($this->fields) === 20) {
             $rules = [
                 'recipient_region' => sprintf('required_if:recipient_country,%s', ''),
             ];
         }
-        ($this->data['recipient_country'] != '' && (array_key_exists('recipient_region', $this->data)))
+        ($this->data['recipient_country'] !== '' && (array_key_exists('recipient_region', $this->data)))
         ? $rules['total_percentage'] = 'recipient_country_region_percentage_sum' : null;
 
-        ($this->data['recipient_country'] == '' && array_key_exists('recipient_region', $this->data))
+        ($this->data['recipient_country'] === '' && array_key_exists('recipient_region', $this->data))
         ? $rules['recipient_region_total_percentage'] = 'percentage_sum' : null;
 
         foreach (Arr::get($this->data(), 'recipient_region', []) as $key => $value) {
@@ -222,6 +249,7 @@ class RecipientRegion extends Element
 
     /**
      * Provides custom messages used for IATI Element Validation.
+     *
      * @return array
      */
     public function messages(): array
@@ -251,9 +279,11 @@ class RecipientRegion extends Element
 
     /**
      * Return Valid Recipient Region Codes.
+     *
      * @return string
+     * @throws \JsonException
      */
-    protected function validRecipientRegion()
+    protected function validRecipientRegion(): string
     {
         $recipientRegionCodeList = $this->loadCodeList('Region');
         $codes = array_keys($recipientRegionCodeList);
@@ -263,18 +293,23 @@ class RecipientRegion extends Element
 
     /**
      * Store Recipient Country Object.
+     *
      * @param $fields
+     *
+     * @return void
+     * @throws BindingResolutionException
      */
-    protected function recipientCountry($fields)
+    protected function recipientCountry($fields): void
     {
         $this->recipientCountry = app()->makeWith(RecipientCountry::class, ['fields' => $fields]);
     }
 
     /**
      * Calculate Total Percentage of Recipient Region.
-     * @return int
+     *
+     * @return float|int|string
      */
-    public function totalPercentage()
+    public function totalPercentage(): float|int|string
     {
         foreach ($this->percentage as $percentage) {
             if (is_numeric($percentage)) {

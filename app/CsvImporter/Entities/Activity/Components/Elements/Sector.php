@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\CsvImporter\Entities\Activity\Components\Elements;
 
 use App\CsvImporter\Entities\Activity\Components\Elements\Foundation\Iati\Element;
@@ -17,12 +19,12 @@ class Sector extends Element
     /**
      * @var null|string
      */
-    protected $type;
+    protected ?string $type;
 
     /**
      * CSV Header of Description with their code.
      */
-    private $_csvHeaders = ['sector_vocabulary', 'sector_code', 'sector_percentage', 'sector_vocabulary_uri', 'sector_narrative'];
+    private array $_csvHeaders = ['sector_vocabulary', 'sector_code', 'sector_percentage', 'sector_vocabulary_uri', 'sector_narrative'];
 
     /**
      * Index under which the data is stored within the object.
@@ -33,17 +35,17 @@ class Sector extends Element
     /**
      * @var array
      */
-    protected $vocabularies = [];
+    protected array $vocabularies = [];
 
     /**
      * @var array
      */
-    protected $codes = [];
+    protected array $codes = [];
 
     /**
      * @var array
      */
-    protected $percentage = [];
+    protected array $percentage = [];
 
     /**
      * @var string
@@ -81,7 +83,10 @@ class Sector extends Element
 
     /**
      * Prepare data for Sector Element.
+     *
      * @param $fields
+     *
+     * @return void
      */
     public function prepare($fields): void
     {
@@ -96,9 +101,12 @@ class Sector extends Element
 
     /**
      * Map data from CSV File to Sector data format.
+     *
      * @param $key
      * @param $value
      * @param $index
+     *
+     * @return void
      */
     public function map($key, $value, $index): void
     {
@@ -115,13 +123,16 @@ class Sector extends Element
 
     /**
      * Set sector vocabulary for Sector.
+     *
      * @param $key
      * @param $value
      * @param $index
+     *
+     * @return void
      */
     protected function setSectorVocabulary($key, $value, $index): void
     {
-        if ($key == $this->_csvHeaders[0]) {
+        if ($key === $this->_csvHeaders[0]) {
             $value = (!$value) ? '' : $value;
             $this->vocabularies[] = $value;
             $this->data['sector'][$index]['sector_vocabulary'] = $value;
@@ -130,16 +141,19 @@ class Sector extends Element
 
     /**
      * Set sector code for Sector.
+     *
      * @param $key
      * @param $value
      * @param $index
+     *
+     * @return void
      */
     protected function setSectorCode($key, $value, $index): void
     {
-        if ($key == $this->_csvHeaders[1]) {
+        if ($key === $this->_csvHeaders[1]) {
             $sectorVocabulary = (int) $this->data['sector'][$index]['sector_vocabulary'];
 
-            if ($sectorVocabulary == 1) {
+            if ($sectorVocabulary === 1) {
                 ($value) ?: $value = '';
                 $this->codes[] = $value;
                 $this->data['sector'][$index]['sector_code'] = $value;
@@ -151,27 +165,35 @@ class Sector extends Element
 
     /**
      * Set vocabulary uri for Sector.
+     *
+     * @param $key
+     * @param $value
      * @param $index
+     *
+     * @return void
      */
     protected function setVocabularyUri($key, $value, $index): void
     {
-        if ($key == $this->_csvHeaders[3]) {
+        if ($key === $this->_csvHeaders[3]) {
             $this->data['sector'][$index]['vocabulary_uri'] = $value;
         }
     }
 
     /**
      * Set sector category code for Sector.
+     *
      * @param $key
      * @param $value
      * @param $index
+     *
+     * @return void
      */
     protected function setSectorCategoryCode($key, $value, $index): void
     {
-        if ($key == $this->_csvHeaders[1]) {
+        if ($key === $this->_csvHeaders[1]) {
             $sectorVocabulary = $this->data['sector'][$index]['sector_vocabulary'];
 
-            if ($sectorVocabulary == 2) {
+            if ($sectorVocabulary === 2) {
                 ($value) ?: $value = '';
                 $this->codes[] = $value;
                 $this->data['sector'][$index]['sector_category_code'] = $value;
@@ -183,16 +205,19 @@ class Sector extends Element
 
     /**
      * Set sector sdg goal for Sector.
+     *
      * @param $key
      * @param $value
      * @param $index
+     *
+     * @return void
      */
     protected function setSectorSdgGoal($key, $value, $index): void
     {
-        if ($key == $this->_csvHeaders[1]) {
+        if ($key === $this->_csvHeaders[1]) {
             $sectorVocabulary = $this->data['sector'][$index]['sector_vocabulary'];
 
-            if ($sectorVocabulary == 7) {
+            if ($sectorVocabulary === 7) {
                 ($value) ?: $value = '';
                 $this->codes[] = $value;
                 $this->data['sector'][$index]['sector_sdg_goal'] = $value;
@@ -204,16 +229,19 @@ class Sector extends Element
 
     /**
      * Set sector sdg target for Sector.
+     *
      * @param $key
      * @param $value
      * @param $index
+     *
+     * @return void
      */
     protected function setSectorSdgTarget($key, $value, $index): void
     {
-        if ($key == $this->_csvHeaders[1]) {
+        if ($key === $this->_csvHeaders[1]) {
             $sectorVocabulary = $this->data['sector'][$index]['sector_vocabulary'];
 
-            if ($sectorVocabulary == 8) {
+            if ($sectorVocabulary === 8) {
                 ($value) ?: $value = '';
                 $this->codes[] = $value;
                 $this->data['sector'][$index]['sector_sdg_target'] = $value;
@@ -225,16 +253,19 @@ class Sector extends Element
 
     /**
      * Set sector text for Sector.
+     *
      * @param $key
      * @param $value
      * @param $index
+     *
+     * @return void
      */
     protected function setSectorText($key, $value, $index): void
     {
-        if ($key == $this->_csvHeaders[1]) {
+        if ($key === $this->_csvHeaders[1]) {
             $sectorVocabulary = $this->data['sector'][$index]['sector_vocabulary'];
 
-            if ($sectorVocabulary != 1 && $sectorVocabulary != 2 && $sectorVocabulary != 7 && $sectorVocabulary != 8) {
+            if ($sectorVocabulary !== 1 && $sectorVocabulary !== 2 && $sectorVocabulary !== 7 && $sectorVocabulary !== 8) {
                 ($value) ?: $value = '';
                 $this->codes[] = $value;
                 $this->data['sector'][$index]['sector_text'] = $value;
@@ -246,13 +277,16 @@ class Sector extends Element
 
     /**
      * Set sector percentage for Sector.
+     *
      * @param $key
      * @param $value
      * @param $index
+     *
+     * @return void
      */
     protected function setSectorPercentage($key, $value, $index): void
     {
-        if ($key == $this->_csvHeaders[2]) {
+        if ($key === $this->_csvHeaders[2]) {
             ($value) ?: $value = '';
             $this->percentage[] = $value;
             $this->data['sector'][$index]['percentage'] = $value;
@@ -261,31 +295,21 @@ class Sector extends Element
 
     /**
      * Set narrative for Sector.
+     *
+     * @param $key
+     * @param $value
      * @param $index
+     *
+     * @return void
      */
     protected function setNarrative($key, $value, $index): void
     {
-        if ($key == $this->_csvHeaders[4]) {
-            $sectorVocabulary = $this->data['sector'][$index]['sector_vocabulary'];
-            $sectorCode = $this->data['sector'][$index]['sector_text'];
+        if ($key === $this->_csvHeaders[4]) {
             $value = $value ?: '';
             $narrative = [
                 'narrative' => $value,
                 'language'  => '',
             ];
-            // if (($sectorVocabulary == '99' || $sectorVocabulary == '98') && !$value) {
-            // if ($customVocabs = $this->customVocabs($this->organizationId)) {
-                //     foreach ($customVocabs as $customVocab) {
-                //         if ($sectorCode == $customVocab['code']) {
-                //             $narrative = [
-                //                 'narrative' => $customVocab['description'],
-                //                 'language'  => '',
-                //             ];
-
-                //         }
-                //     }
-            // }
-            // }
 
             $this->data['sector'][$index]['narrative'][] = $narrative;
             $this->isEmptySector($index);
@@ -294,7 +318,10 @@ class Sector extends Element
 
     /**
      * Check if the sector array is empty.
+     *
      * @param $index
+     *
+     * @return void
      */
     protected function isEmptySector($index): void
     {
@@ -314,8 +341,10 @@ class Sector extends Element
 
     /**
      * Validate data for IATI Element.
+     *
+     * @return $this
      */
-    public function validate()
+    public function validate(): static
     {
         $this->validator = $this->factory->sign($this->data())
             ->with($this->rules(), $this->messages())
@@ -327,6 +356,7 @@ class Sector extends Element
 
     /**
      * Provides the rules for the IATI Element validation.
+     *
      * @return array
      */
     public function rules(): array
@@ -342,9 +372,9 @@ class Sector extends Element
             'sector.*.percentage'        => 'required',
         ];
 
-        if ($this->type == 'activity') {
+        if ($this->type === 'activity') {
             $rules['sector'] = 'nullable|sector_percentage_sum';
-        } elseif ($this->type == 'transaction') {
+        } elseif ($this->type === 'transaction') {
             $rules['sector'] = 'sector_percentage_sum';
         }
 
@@ -388,6 +418,7 @@ class Sector extends Element
 
     /**
      * Provides custom messages used for IATI Element Validation.
+     *
      * @return array
      */
     public function messages(): array
@@ -452,23 +483,27 @@ class Sector extends Element
 
     /**
      * Return Valid Sector Vocabulary Code.
+     *
      * @param $name
-     * @param $version
+     *
      * @return array
+     * @throws \JsonException
      */
     protected function validSectorCodeList($name): array
     {
-        $codeList = $this->loadCodeList($name);
-        $list = array_keys($codeList);
-
-        return $list;
+        return array_keys($this->loadCodeList($name));
     }
 
-    protected function getCsvType($fields)
+    /**
+     * @param $fields
+     *
+     * @return string|null
+     */
+    protected function getCsvType($fields): ?string
     {
-        if (count($fields) == getCsvHeaderCount($this->version, 'Activity', 'basic')) {
+        if (count($fields) === getCsvHeaderCount($this->version, 'Activity', 'basic')) {
             return 'activity';
-        } elseif (count($fields) == getCsvHeaderCount($this->version, 'Activity', 'transaction')) {
+        } elseif (count($fields) === getCsvHeaderCount($this->version, 'Activity', 'transaction')) {
             return 'transaction';
         }
 
@@ -478,7 +513,9 @@ class Sector extends Element
     /**
      * Set version for sector.
      *
-     * @param string $version
+     * @param $version
+     *
+     * @return void
      */
     public function setVersion($version)
     {

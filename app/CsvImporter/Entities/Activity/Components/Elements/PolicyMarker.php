@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\CsvImporter\Entities\Activity\Components\Elements;
 
 use App\CsvImporter\Entities\Activity\Components\Elements\Foundation\Iati\Element;
@@ -15,7 +17,7 @@ class PolicyMarker extends Element
      * Csv Header for PolicyMarker element.
      * @var array
      */
-    protected $_csvHeaders = ['policy_marker_vocabulary', 'policy_marker_code', 'policy_marker_significance'];
+    protected array $_csvHeaders = ['policy_marker_vocabulary', 'policy_marker_code', 'policy_marker_significance'];
 
     /**
      * Index under which the data is stored within the object.
@@ -36,7 +38,10 @@ class PolicyMarker extends Element
 
     /**
      * Prepare the IATI Element.
+     *
      * @param $fields
+     *
+     * @return void
      */
     protected function prepare($fields): void
     {
@@ -51,13 +56,16 @@ class PolicyMarker extends Element
 
     /**
      * Map data from CSV file into Policy Marker data format.
+     *
      * @param $key
      * @param $value
      * @param $index
+     *
+     * @return void
      */
     protected function map($key, $value, $index): void
     {
-        if (!(is_null($value) || $value == '')) {
+        if (!(is_null($value) || $value === '')) {
             $this->setVocabulary($key, $value, $index);
             $this->setVocabularyUri($key, $value, $index);
             $this->setSignificance($key, $value, $index);
@@ -68,25 +76,31 @@ class PolicyMarker extends Element
 
     /**
      * Set Vocabulary for PolicyMarker element.
+     *
      * @param $key
      * @param $value
      * @param $index
+     *
+     * @return void
      */
     protected function setVocabulary($key, $value, $index): void
     {
         if (!isset($this->data['policy_marker'][$index]['policy_marker_vocabulary'])) {
             $this->data['policy_marker'][$index]['policy_marker_vocabulary'] = '';
         }
-        if ($key == $this->_csvHeaders[0]) {
+        if ($key === $this->_csvHeaders[0]) {
             $this->data['policy_marker'][$index]['policy_marker_vocabulary'] = $value;
         }
     }
 
     /**
      * Set VocabularyUri for PolicyMarker element.
+     *
      * @param $key
      * @param $value
      * @param $index
+     *
+     * @return void
      */
     protected function setVocabularyUri($key, $value, $index): void
     {
@@ -100,25 +114,31 @@ class PolicyMarker extends Element
 
     /**
      * Set Significance for PolicyMarker element.
+     *
      * @param $key
      * @param $value
      * @param $index
+     *
+     * @return void
      */
     protected function setSignificance($key, $value, $index): void
     {
         if (!isset($this->data['policy_marker'][$index]['significance'])) {
             $this->data['policy_marker'][$index]['significance'] = '';
         }
-        if ($key == $this->_csvHeaders[2]) {
+        if ($key === $this->_csvHeaders[2]) {
             $this->data['policy_marker'][$index]['significance'] = $value;
         }
     }
 
     /**
      * Set policy marker code for PolicyMarker element.
+     *
      * @param $key
      * @param $value
      * @param $index
+     *
+     * @return void
      */
     protected function setPolicyMarker($key, $value, $index): void
     {
@@ -130,7 +150,7 @@ class PolicyMarker extends Element
             $this->data['policy_marker'][$index]['policy_marker_text'] = '';
         }
 
-        if ($key == $this->_csvHeaders[1]) {
+        if ($key === $this->_csvHeaders[1]) {
             $vocabulary = $this->data['policy_marker'][$index]['policy_marker_vocabulary'];
             switch ($vocabulary) {
                 case '1':
@@ -149,9 +169,12 @@ class PolicyMarker extends Element
 
     /**
      * Set Narrative for PolicyMarker element.
+     *
      * @param $key
      * @param $value
      * @param $index
+     *
+     * @return void
      */
     protected function setNarrative($key, $value, $index): void
     {
@@ -173,8 +196,10 @@ class PolicyMarker extends Element
 
     /**
      * Validate data for IATI Element.
+     *
+     * @return $this
      */
-    public function validate()
+    public function validate(): static
     {
         $this->validator = $this->factory->sign($this->data())
             ->with($this->rules(), $this->messages())
@@ -187,6 +212,7 @@ class PolicyMarker extends Element
 
     /**
      * Provides the rules for the IATI Element validation.
+     *
      * @return array
      */
     public function rules(): array
@@ -215,6 +241,7 @@ class PolicyMarker extends Element
 
     /**
      * Provides custom messages used for IATI Element Validation.
+     *
      * @return array
      */
     public function messages(): array
@@ -242,14 +269,16 @@ class PolicyMarker extends Element
     }
 
     /**
-     * Get the valid PolicyMaker Codes from the PolicyMarker codelist as a string.
-     * @param        $codeList
-     * @param string $version
+     * Get the valid PolicyMaker Codes from the PolicyMarker code list as a string.
+     *
+     * @param $codeList
+     *
      * @return string
+     * @throws \JsonException
      */
     protected function policyMarkerCodeList($codeList): string
     {
-        list($policyMarkerCodeList, $codes) = [$this->loadCodeList($codeList), []];
+        [$policyMarkerCodeList, $codes] = [$this->loadCodeList($codeList), []];
         $codes = array_keys($policyMarkerCodeList);
 
         return implode(',', array_keys(array_flip($codes)));
