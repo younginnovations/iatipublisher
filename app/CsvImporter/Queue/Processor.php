@@ -49,7 +49,5 @@ class Processor
         $this->dispatch(
             new ImportActivity(new CsvProcessor($csv), $filename, $activityIdentifiers)
         );
-        // $d = new ImportActivity(new CsvProcessor($csv), $filename, $activityIdentifiers);
-        // $d->handle();
     }
 }
