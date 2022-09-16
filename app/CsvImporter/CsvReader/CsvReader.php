@@ -1,10 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\CsvImporter\CsvReader;
 
 use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Excel;
 use PhpOffice\PhpSpreadsheet\IOFactory;
+use PhpOffice\PhpSpreadsheet\Reader\Exception;
 
 /**
  * Class CsvReader.
@@ -14,7 +17,7 @@ class CsvReader
     /**
      * @var Excel
      */
-    protected $reader;
+    protected Excel $reader;
 
     /**
      * CsvReader constructor.
@@ -28,9 +31,9 @@ class CsvReader
     /**
      * Loads xml file.
      *
-     * @param        $file
+     * @param string $file
      *
-     * @return \Maatwebsite\Excel\Readers\LaravelExcelReader
+     * @return Collection
      */
     public function load(string $file): Collection
     {
@@ -42,9 +45,10 @@ class CsvReader
     /**
      * Parses xml file to array.
      *
-     * @param $file
+     * @param string $file
      *
      * @return array
+     * @throws Exception
      */
     public function parseExcelFile(string $file): array
     {
@@ -63,7 +67,7 @@ class CsvReader
     /**
      * Maps content to header.
      *
-     * @param $content
+     * @param array $content
      *
      * @return Collection
      */
@@ -72,6 +76,8 @@ class CsvReader
         $headers = $content[0];
         $data = array_splice($content, 1);
         $finalArray = [];
+        $arr = [];
+
         foreach ($data as $value) {
             foreach ($value as $k => $v) {
                 $key = str_replace(' ', '_', strtolower(trim($headers[$k])));

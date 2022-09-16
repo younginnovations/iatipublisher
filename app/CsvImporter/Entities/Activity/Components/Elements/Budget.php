@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\CsvImporter\Entities\Activity\Components\Elements;
 
 use App\CsvImporter\Entities\Activity\Components\Elements\Foundation\Iati\Element;
@@ -15,10 +17,11 @@ class Budget extends Element
      * Csv Header for Budget element.
      * @var array
      */
-    private $_csvHeaders = ['budget_type', 'budget_status', 'budget_period_start', 'budget_period_end', 'budget_value', 'budget_value_date', 'budget_currency'];
+    private array $_csvHeaders = ['budget_type', 'budget_status', 'budget_period_start', 'budget_period_end', 'budget_value', 'budget_value_date', 'budget_currency'];
 
     /**
      * Index under which the data is stored within the object.
+     *
      * @var string
      */
     protected $index = 'budget';
@@ -36,7 +39,10 @@ class Budget extends Element
 
     /**
      * Prepare the IATI Element.
+     *
      * @param $fields
+     *
+     * @return void
      */
     protected function prepare($fields): void
     {
@@ -51,9 +57,12 @@ class Budget extends Element
 
     /**
      * Map data from CSV file into Budget data format.
+     *
      * @param $key
      * @param $value
      * @param $index
+     *
+     * @return void
      */
     protected function map($key, $value, $index): void
     {
@@ -69,20 +78,23 @@ class Budget extends Element
 
     /**
      * Set Budget type for Budget Element.
+     *
      * @param $key
      * @param $value
      * @param $index
+     *
+     * @return void
      */
     protected function setBudgetType($key, $value, $index): void
     {
         if (!isset($this->data['budget'][$index]['budget_type'])) {
             $this->data['budget'][$index]['budget_type'] = '';
         }
-        if ($key == $this->_csvHeaders[0]) {
+        if ($key === $this->_csvHeaders[0]) {
             $validBudgetTypes = $this->loadCodeList('BudgetType');
 
             foreach ($validBudgetTypes as $key => $budgetType) {
-                if (ucwords($value) == $budgetType) {
+                if (ucwords($value) === $budgetType) {
                     $value = $key;
                     break;
                 }
@@ -94,16 +106,19 @@ class Budget extends Element
 
     /**
      * Set Budget status for Budget Element.
+     *
      * @param $key
      * @param $value
      * @param $index
+     *
+     * @return void
      */
     protected function setBudgetStatus($key, $value, $index): void
     {
         if (!isset($this->data['budget'][$index]['status'])) {
             $this->data['budget'][$index]['status'] = '';
         }
-        if ($key == $this->_csvHeaders[1]) {
+        if ($key === $this->_csvHeaders[1]) {
             $validBudgetStatus = $this->loadCodeList('BudgetStatus');
 
             foreach ($validBudgetStatus as $key => $budgetStatus) {
@@ -118,60 +133,72 @@ class Budget extends Element
 
     /**
      * Set Budget period start for Budget Element.
+     *
      * @param $key
      * @param $value
      * @param $index
+     *
+     * @return void
      */
     protected function setBudgetPeriodStart($key, $value, $index): void
     {
         if (!isset($this->data['budget'][$index]['period_start'][0]['date'])) {
             $this->data['budget'][$index]['period_start'][0]['date'] = '';
         }
-        if ($key == $this->_csvHeaders[2]) {
+        if ($key === $this->_csvHeaders[2]) {
             $this->data['budget'][$index]['period_start'][0]['date'] = dateFormat('Y-m-d', $value);
         }
     }
 
     /**
      * Set Budget period end for Budget Element.
+     *
      * @param $key
      * @param $value
      * @param $index
+     *
+     * @return void
      */
     protected function setBudgetPeriodEnd($key, $value, $index): void
     {
         if (!isset($this->data['budget'][$index]['period_end'][0]['date'])) {
             $this->data['budget'][$index]['period_end'][0]['date'] = '';
         }
-        if ($key == $this->_csvHeaders[3]) {
+        if ($key === $this->_csvHeaders[3]) {
             $this->data['budget'][$index]['period_end'][0]['date'] = dateFormat('Y-m-d', $value);
         }
     }
 
     /**
      * Set Budget value and value date for Budget Element.
+     *
      * @param $key
      * @param $value
      * @param $index
+     *
+     * @return void
      */
     protected function setBudgetValue($key, $value, $index): void
     {
         if (!isset($this->data['budget'][$index]['value'])) {
             $this->data['budget'][$index]['value'] = '';
         }
-        if ($key == $this->_csvHeaders[4]) {
+        if ($key === $this->_csvHeaders[4]) {
             $this->data['budget'][$index]['value'][0]['amount'] = str_replace(',', '', $value);
         }
-        if ($key == $this->_csvHeaders[5]) {
+        if ($key === $this->_csvHeaders[5]) {
             $this->data['budget'][$index]['value'][0]['value_date'] = dateFormat('Y-m-d', $value);
         }
     }
 
     /**
      * Set Budget currency for Budget Element.
+     *
      * @param $key
      * @param $value
      * @param $index
+     *
+     * @return void
      */
     protected function setBudgetCurrency($key, $value, $index): void
     {
@@ -182,15 +209,17 @@ class Budget extends Element
                 ],
             ];
         }
-        if ($key == $this->_csvHeaders[6]) {
+        if ($key === $this->_csvHeaders[6]) {
             $this->data['budget'][$index]['value'][0]['currency'] = strtoupper($value);
         }
     }
 
     /**
      * Validate data for IATI Element.
+     *
+     * @return $this
      */
-    public function validate()
+    public function validate(): static
     {
         $this->validator = $this->factory->sign($this->data())
             ->with($this->rules(), $this->messages())
@@ -203,6 +232,7 @@ class Budget extends Element
 
     /**
      * Provides the IATI Currency code list.
+     *
      * @return string
      */
     protected function currencyCodeList(): string
@@ -215,6 +245,7 @@ class Budget extends Element
 
     /**
      * Provides the rules for the IATI Element validation.
+     *
      * @return array
      */
     public function rules(): array
@@ -307,7 +338,7 @@ class Budget extends Element
      */
     protected function budgetCodeListWithValue($codeList): string
     {
-        list($budgetCodeList, $codes) = [$this->loadCodeList($codeList), []];
+        [$budgetCodeList, $codes] = [$this->loadCodeList($codeList), []];
         $codes = array_keys($budgetCodeList) + array_values($budgetCodeList);
 
         return implode(',', array_keys(array_flip($codes)));
