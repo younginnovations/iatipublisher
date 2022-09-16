@@ -99,7 +99,6 @@ onMounted(() => {
 
 // watching change in value of completed
 watch(completed, async (newValue) => {
-  console.log(newValue);
   if (newValue === 'completed') {
     clearInterval(intervalID);
 

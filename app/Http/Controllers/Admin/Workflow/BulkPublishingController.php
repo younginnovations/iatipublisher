@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers\Admin\Workflow;
 
 use App\Http\Controllers\Controller;
@@ -143,6 +145,7 @@ class BulkPublishingController extends Controller
     {
         try {
             DB::beginTransaction();
+
             if ($this->activityWorkflowService->hasNoPublisherInfo(auth()->user()->organization->settings)) {
                 return response()->json(['success' => false, 'message' => 'Please update the publishing information first.']);
             }
@@ -191,7 +194,7 @@ class BulkPublishingController extends Controller
             $uuid = request()->get('uuid');
 
             if ($organizationId && $uuid) {
-                $publishStatus = $this->publishingStatusService->getBulkPublishingStatuses($organizationId, $uuid);
+                $publishStatus = $this->publishingStatusService->getActivityPublishingStatus($organizationId, $uuid);
 
                 if (count($publishStatus)) {
                     $response = $this->bulkPublishingService->getPublishingResponse($publishStatus);
