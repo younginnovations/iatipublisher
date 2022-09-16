@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\CsvImporter\Entities\Activity\Components\Elements;
 
 use App\CsvImporter\Entities\Activity\Components\Elements\Foundation\Iati\Element;
@@ -15,7 +17,7 @@ class RelatedActivity extends Element
      * Csv Header for RelatedActivity element.
      * @var array
      */
-    private $_csvHeaders = ['related_activity_identifier', 'related_activity_type'];
+    private array $_csvHeaders = ['related_activity_identifier', 'related_activity_type'];
 
     /**
      * Index under which the data is stored within the object.
@@ -36,7 +38,10 @@ class RelatedActivity extends Element
 
     /**
      * Prepare RelatedActivity element.
+     *
      * @param $fields
+     *
+     * @return void
      */
     public function prepare($fields)
     {
@@ -51,13 +56,16 @@ class RelatedActivity extends Element
 
     /**
      * Map data from CSV file into RelatedActivity data format.
+     *
      * @param $key
-     * @param $value
      * @param $index
+     * @param $value
+     *
+     * @return void
      */
     public function map($key, $index, $value): void
     {
-        if (!(is_null($value) || $value == '')) {
+        if (!(is_null($value) || $value === '')) {
             $this->setRelatedActivityIdentifier($key, $value, $index);
             $this->setRelatedActivityType($key, $value, $index);
         }
@@ -65,9 +73,12 @@ class RelatedActivity extends Element
 
     /**
      * Maps RelatedActivity Identifiers.
+     *
      * @param $key
      * @param $value
      * @param $index
+     *
+     * @return void
      */
     protected function setRelatedActivityIdentifier($key, $value, $index): void
     {
@@ -75,16 +86,20 @@ class RelatedActivity extends Element
             $this->data['related_activity'][$index]['activity_identifier'] = '';
         }
 
-        if ($key == $this->_csvHeaders[0]) {
+        if ($key === $this->_csvHeaders[0]) {
             $this->data['related_activity'][$index]['activity_identifier'] = $value;
         }
     }
 
     /**
      * Maps RelatedActivity Type.
+     *
      * @param $key
      * @param $value
      * @param $index
+     *
+     * @return void
+     * @throws \JsonException
      */
     protected function setRelatedActivityType($key, $value, $index): void
     {
@@ -92,7 +107,7 @@ class RelatedActivity extends Element
             $this->data['related_activity'][$index]['relationship_type'] = '';
         }
 
-        if ($key == $this->_csvHeaders[1]) {
+        if ($key === $this->_csvHeaders[1]) {
             $relatedActivityType = $this->loadCodeList('RelatedActivityType');
 
             foreach ($relatedActivityType as $key => $type) {
@@ -108,7 +123,9 @@ class RelatedActivity extends Element
 
     /**
      * Provides RelatedActivity Codes.
+     *
      * @return string
+     * @throws \JsonException
      */
     protected function relatedActivityCode(): string
     {
@@ -120,7 +137,9 @@ class RelatedActivity extends Element
 
     /**
      * Provides the rules for the IATI Element validation.
+     *
      * @return array
+     * @throws \JsonException
      */
     public function rules(): array
     {
@@ -143,6 +162,7 @@ class RelatedActivity extends Element
 
     /**
      * Provides custom messages used for IATI Element Validation.
+     *
      * @return array
      */
     public function messages(): array
@@ -160,8 +180,11 @@ class RelatedActivity extends Element
 
     /**
      * Validate data for IATI Element.
+     *
+     * @return $this
+     * @throws \JsonException
      */
-    public function validate()
+    public function validate(): static
     {
         $this->validator = $this->factory->sign($this->data())
                                          ->with($this->rules(), $this->messages())
