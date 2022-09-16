@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Requests\Activity\UploadActivity;
 
 use App\Http\Requests\Activity\ActivityBaseRequest;
@@ -10,6 +12,9 @@ use Illuminate\Support\Facades\Validator;
  */
 class ImportActivityRequest extends ActivityBaseRequest
 {
+    /**
+     * Construct.
+     */
     public function __construct()
     {
         Validator::extend(
@@ -18,7 +23,7 @@ class ImportActivityRequest extends ActivityBaseRequest
                 $mimes = ['application/excel', 'application/vnd.ms-excel', 'application/msexcel', 'text/csv', 'text/xml', 'application/xml'];
                 $fileMime = $value->getClientMimeType();
 
-                return in_array($fileMime, $mimes);
+                return in_array($fileMime, $mimes, true);
             }
         );
     }
@@ -28,7 +33,7 @@ class ImportActivityRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    public function rules()
+    public function rules(): array
     {
         $rules = [];
         $rules['activity'] = 'required|activity_file';
@@ -38,9 +43,10 @@ class ImportActivityRequest extends ActivityBaseRequest
 
     /**
      * prepare error message.
-     * @return mixed
+     *
+     * @return array
      */
-    public function messages()
+    public function messages(): array
     {
         $messages['activity.required'] = trans('validation.required', ['attribute' => trans('elementForm.activity_file')]);
         $messages['activity.activity_file'] = trans('validation.mimes', ['attribute' => trans('global.activity'), 'values' => 'csv']);

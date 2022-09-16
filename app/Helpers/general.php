@@ -673,9 +673,10 @@ if (!function_exists('getNonArrayElements')) {
  * Returns UTF-8 if any exception or charset is not found.
  *
  * @param $file
+ *
  * @return string
  */
-function getEncodingType($file)
+function getEncodingType($file): string
 {
     try {
         $response = exec('file -i ' . $file->getPathname());
@@ -694,11 +695,9 @@ function getEncodingType($file)
 /**
  * Get csv header count by type from config.
  *
- * @param string $version
- * @param string $type
- * @return string
+ * @return int|string
  */
-function getCsvHeaderCount()
+function getCsvHeaderCount(): int|string
 {
     // Activity   => [
     //     'basic'                     => '27',
@@ -712,10 +711,12 @@ function getCsvHeaderCount()
 
 /**
  * trim an input.
+ *
  * @param $input
+ *
  * @return string
  */
-function trimInput($input)
+function trimInput($input): string
 {
     return trim(preg_replace('/\s+/', ' ', $input));
 }
@@ -727,9 +728,9 @@ function trimInput($input)
  * @param $date
  * @return false|string
  */
-function dateFormat($format, $date)
+function dateFormat($format, $date): bool|string
 {
-    if ($date != '') {
+    if ($date !== '') {
         if ((str_contains($date, '/'))) {
             $formattedDate = str_replace('/', '-', $date);
 
