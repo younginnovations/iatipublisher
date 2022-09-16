@@ -2,7 +2,6 @@
 
 namespace App\Xml\Validator\Traits;
 
-use App\Helpers\GetCodeName;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Request;
 
@@ -38,14 +37,6 @@ trait RegistersValidationRules
                 $languages = [];
                 // $defaultLanguage = getDefaultLanguage();
                 $defaultLanguage = 'en';
-
-                $validator->addReplacer(
-                    'unique_default_lang',
-                    function ($message, $attribute, $rule, $parameters) use ($validator, $defaultLanguage) {
-//                        return str_replace(':language', app(GetCodeName::class)->getActivityCodeName('Language', $defaultLanguage), $message);
-                        return str_replace(':language', app(GetCodeName::class)->getActivityCodeName('Language', $defaultLanguage), $message);
-                    }
-                );
 
                 $check = true;
                 foreach ((array) $value as $narrative) {

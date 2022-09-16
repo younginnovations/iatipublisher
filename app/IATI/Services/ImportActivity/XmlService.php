@@ -29,35 +29,6 @@ class XmlService
     }
 
     /**
-     * @param $activity
-     * @param $transaction
-     * @param $result
-     * @param $settings
-     * @param $activityElement
-     * @param $orgElem
-     * @param $organization
-     */
-    public function generateActivityXml($activity, $transaction, $result, $settings, $activityElement, $orgElem, $organization)
-    {
-        $this->xmlGenerator->generateXml($activity, $transaction, $result, $settings, $activityElement, $orgElem, $organization);
-    }
-
-    /**
-     * @param $activity
-     * @param $transaction
-     * @param $result
-     * @param $settings
-     * @param $activityElement
-     * @param $orgElem
-     * @param $organization
-     * @return string
-     */
-    public function generateTemporaryActivityXml($activity, $transaction, $result, $settings, $activityElement, $orgElem, $organization)
-    {
-        return $this->xmlGenerator->generateTemporaryXml($activity, $transaction, $result, $settings, $activityElement, $orgElem, $organization);
-    }
-
-    /**
      * @param $filename
      * @param $organizationId
      * @param $publishedActivity
@@ -66,54 +37,6 @@ class XmlService
     public function savePublishedFiles($filename, $organizationId, $publishedActivity)
     {
         return $this->xmlGenerator->savePublishedFiles($filename, $organizationId, $publishedActivity);
-    }
-
-    /**
-     * @param $xmlFiles
-     * @param $filename
-     */
-    public function getMergeXml($xmlFiles, $filename)
-    {
-        $this->xmlGenerator->getMergeXml($xmlFiles, $filename);
-    }
-
-    /**
-     * @param $activity
-     * @return string
-     */
-    public function segmentedXmlFile($activity)
-    {
-        return $this->xmlGenerator->segmentedXmlFile($activity);
-    }
-
-    /**
-     * Check if the specific xml is validate as per schema or not.
-     * @param $activityData
-     * @param $transactionData
-     * @param $resultData
-     * @param $settings
-     * @param $activityElement
-     * @param $orgElem
-     * @param $organization
-     * @return array
-     */
-    public function validateActivitySchema($activityData, $transactionData, $resultData, $settings, $activityElement, $orgElem, $organization)
-    {
-        // Enable user error handling
-        libxml_use_internal_errors(true);
-
-        $tempXml = $this->xmlGenerator->getXml($activityData, $transactionData, $resultData, $settings, $activityElement, $orgElem, $organization);
-        $xml = new \DOMDocument();
-        $xmlFile = $tempXml->saveXML();
-        $xml->loadXML($xmlFile);
-        $schemaPath = app_path(sprintf('/Core/%s/XmlSchema/iati-activities-schema.xsd', session('version')));
-        $errors = [];
-        if (!$xml->schemaValidate($schemaPath)) {
-            $schemaErrors = $this->libxml_fetch_errors();
-            $errors = $this->getSpecificErrors($xmlFile, $schemaErrors);
-        }
-
-        return $errors;
     }
 
     /**
