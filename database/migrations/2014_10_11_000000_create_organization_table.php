@@ -31,7 +31,6 @@ return new class extends Migration {
             $table->json('document_link')->nullable();
             $table->json('total_expenditure')->nullable();
             $table->json('name')->nullable();
-            $table->boolean('reporting_org_complete_status')->nullable()->default(false);
             $table->string('country')->nullable();
             $table->string('logo_url')->nullable();
             $table->string('organization_url')->nullable();

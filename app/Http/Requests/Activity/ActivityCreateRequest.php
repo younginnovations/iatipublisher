@@ -57,7 +57,6 @@ class ActivityCreateRequest extends FormRequest
 
         return [
             'narrative'             => ['required'],
-            'language'              => ['required'],
             'activity_identifier'   => ['required', Rule::notIn($activityIdentifiers), 'not_regex:/(&|!|\/|\||\?)/'],
             'iati_identifier_text'  => ['sometimes'],
         ];

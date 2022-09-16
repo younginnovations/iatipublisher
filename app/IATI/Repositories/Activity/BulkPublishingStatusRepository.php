@@ -44,7 +44,7 @@ class BulkPublishingStatusRepository extends Repository
      *
      * @return object|null
      */
-    public function getBulkPublishingStatuses($organizationId, $uuid): ?object
+    public function getActivityPublishingStatus($organizationId, $uuid): ?object
     {
         return $this->model->where('organization_id', $organizationId)
                            ->where('job_batch_uuid', $uuid)
@@ -58,7 +58,7 @@ class BulkPublishingStatusRepository extends Repository
      *
      * @return object|null
      */
-    public function ongoingBulkPublishingStatuses($organizationId): ?object
+    public function ongoingActivityPublishingStatus($organizationId): ?object
     {
         return $this->model->where('organization_id', $organizationId)
                            ->where('status', 'created')

@@ -252,16 +252,16 @@
         },
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.235.8",
+            "version": "3.235.9",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "cc33d53d735a3835adff212598f2a20ee9ac9531"
+                "reference": "103d38254ef7fc6659ecb08f4b18bc1299011f8a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/cc33d53d735a3835adff212598f2a20ee9ac9531",
-                "reference": "cc33d53d735a3835adff212598f2a20ee9ac9531",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/103d38254ef7fc6659ecb08f4b18bc1299011f8a",
+                "reference": "103d38254ef7fc6659ecb08f4b18bc1299011f8a",
                 "shasum": ""
             },
             "require": {
@@ -340,9 +340,9 @@
             "support": {
                 "forum": "https://forums.aws.amazon.com/forum.jspa?forumID=80",
                 "issues": "https://github.com/aws/aws-sdk-php/issues",
-                "source": "https://github.com/aws/aws-sdk-php/tree/3.235.8"
+                "source": "https://github.com/aws/aws-sdk-php/tree/3.235.9"
             },
-            "time": "2022-09-14T18:18:31+00:00"
+            "time": "2022-09-15T18:22:15+00:00"
         },
         {
             "name": "brick/math",
@@ -1384,16 +1384,16 @@
         },
         {
             "name": "laravel/framework",
-            "version": "v9.30.0",
+            "version": "v9.30.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/framework.git",
-                "reference": "2ca2b168a3e995a8ec6ea2805906379095d20080"
+                "reference": "9533f7926f31939f25a620fbbf545318c18c943f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/framework/zipball/2ca2b168a3e995a8ec6ea2805906379095d20080",
-                "reference": "2ca2b168a3e995a8ec6ea2805906379095d20080",
+                "url": "https://api.github.com/repos/laravel/framework/zipball/9533f7926f31939f25a620fbbf545318c18c943f",
+                "reference": "9533f7926f31939f25a620fbbf545318c18c943f",
                 "shasum": ""
             },
             "require": {
@@ -1486,7 +1486,8 @@
                 "phpstan/phpstan": "^1.4.7",
                 "phpunit/phpunit": "^9.5.8",
                 "predis/predis": "^1.1.9|^2.0",
-                "symfony/cache": "^6.0"
+                "symfony/cache": "^6.0",
+                "symfony/uid": "^6.0"
             },
             "suggest": {
                 "ably/ably-php": "Required to use the Ably broadcast driver (^1.0).",
@@ -1521,7 +1522,8 @@
                 "symfony/http-client": "Required to enable support for the Symfony API mail transports (^6.0).",
                 "symfony/mailgun-mailer": "Required to enable support for the Mailgun mail transport (^6.0).",
                 "symfony/postmark-mailer": "Required to enable support for the Postmark mail transport (^6.0).",
-                "symfony/psr-http-message-bridge": "Required to use PSR-7 bridging features (^2.0)."
+                "symfony/psr-http-message-bridge": "Required to use PSR-7 bridging features (^2.0).",
+                "symfony/uid": "Required to generate ULIDs for Eloquent (^6.0)."
             },
             "type": "library",
             "extra": {
@@ -1565,12 +1567,10 @@
                 "issues": "https://github.com/laravel/framework/issues",
                 "source": "https://github.com/laravel/framework"
             },
-            "time": "2022-09-13T14:06:14+00:00"
+            "time": "2022-09-15T13:15:47+00:00"
         },
         {
             "name": "laravel/horizon",
-<<<<<<< HEAD
-<<<<<<< HEAD
             "version": "v5.10.1",
             "source": {
                 "type": "git",
@@ -1581,26 +1581,6 @@
                 "type": "zip",
                 "url": "https://api.github.com/repos/laravel/horizon/zipball/1570c8a4612484a37392eca986f06d01b771cb96",
                 "reference": "1570c8a4612484a37392eca986f06d01b771cb96",
-=======
-            "version": "v5.10.0",
-=======
-            "version": "v5.10.1",
->>>>>>> Bulk Publishing Completed:
-            "source": {
-                "type": "git",
-                "url": "https://github.com/laravel/horizon.git",
-                "reference": "1570c8a4612484a37392eca986f06d01b771cb96"
-            },
-            "dist": {
-                "type": "zip",
-<<<<<<< HEAD
-                "url": "https://api.github.com/repos/laravel/horizon/zipball/8cbdf156dbbc146be5527d0c5fae185a3d31fff0",
-                "reference": "8cbdf156dbbc146be5527d0c5fae185a3d31fff0",
->>>>>>> 418-bulk-publishing-feature
-=======
-                "url": "https://api.github.com/repos/laravel/horizon/zipball/1570c8a4612484a37392eca986f06d01b771cb96",
-                "reference": "1570c8a4612484a37392eca986f06d01b771cb96",
->>>>>>> Bulk Publishing Completed:
                 "shasum": ""
             },
             "require": {
@@ -1662,21 +1642,9 @@
             ],
             "support": {
                 "issues": "https://github.com/laravel/horizon/issues",
-<<<<<<< HEAD
-<<<<<<< HEAD
                 "source": "https://github.com/laravel/horizon/tree/v5.10.1"
             },
             "time": "2022-09-05T16:33:43+00:00"
-=======
-                "source": "https://github.com/laravel/horizon/tree/v5.10.0"
-            },
-            "time": "2022-08-11T17:05:00+00:00"
->>>>>>> 418-bulk-publishing-feature
-=======
-                "source": "https://github.com/laravel/horizon/tree/v5.10.1"
-            },
-            "time": "2022-09-05T16:33:43+00:00"
->>>>>>> Bulk Publishing Completed:
         },
         {
             "name": "laravel/sanctum",
@@ -3040,8 +3008,6 @@
         },
         {
             "name": "predis/predis",
-<<<<<<< HEAD
-<<<<<<< HEAD
             "version": "v2.0.2",
             "source": {
                 "type": "git",
@@ -3052,26 +3018,6 @@
                 "type": "zip",
                 "url": "https://api.github.com/repos/predis/predis/zipball/8b5fa928560b48a054fb1fd485fc65f2d8aa9e5c",
                 "reference": "8b5fa928560b48a054fb1fd485fc65f2d8aa9e5c",
-=======
-            "version": "v2.0.0",
-=======
-            "version": "v2.0.2",
->>>>>>> Bulk Publishing Completed:
-            "source": {
-                "type": "git",
-                "url": "https://github.com/predis/predis.git",
-                "reference": "8b5fa928560b48a054fb1fd485fc65f2d8aa9e5c"
-            },
-            "dist": {
-                "type": "zip",
-<<<<<<< HEAD
-                "url": "https://api.github.com/repos/predis/predis/zipball/99c253733dee9447d26257dc669d33d5ac84713d",
-                "reference": "99c253733dee9447d26257dc669d33d5ac84713d",
->>>>>>> 418-bulk-publishing-feature
-=======
-                "url": "https://api.github.com/repos/predis/predis/zipball/8b5fa928560b48a054fb1fd485fc65f2d8aa9e5c",
-                "reference": "8b5fa928560b48a054fb1fd485fc65f2d8aa9e5c",
->>>>>>> Bulk Publishing Completed:
                 "shasum": ""
             },
             "require": {
@@ -3121,15 +3067,7 @@
             ],
             "support": {
                 "issues": "https://github.com/predis/predis/issues",
-<<<<<<< HEAD
-<<<<<<< HEAD
                 "source": "https://github.com/predis/predis/tree/v2.0.2"
-=======
-                "source": "https://github.com/predis/predis/tree/v2.0.0"
->>>>>>> 418-bulk-publishing-feature
-=======
-                "source": "https://github.com/predis/predis/tree/v2.0.2"
->>>>>>> Bulk Publishing Completed:
             },
             "funding": [
                 {
@@ -3137,15 +3075,7 @@
                     "type": "github"
                 }
             ],
-<<<<<<< HEAD
-<<<<<<< HEAD
             "time": "2022-09-06T14:34:14+00:00"
-=======
-            "time": "2022-06-08T13:14:56+00:00"
->>>>>>> 418-bulk-publishing-feature
-=======
-            "time": "2022-09-06T14:34:14+00:00"
->>>>>>> Bulk Publishing Completed:
         },
         {
             "name": "psr/container",
@@ -3712,16 +3642,16 @@
         },
         {
             "name": "ramsey/uuid",
-            "version": "4.5.0",
+            "version": "4.5.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ramsey/uuid.git",
-                "reference": "ef842484ba57f163c6d465ab744bfecb872a11d4"
+                "reference": "a161a26d917604dc6d3aa25100fddf2556e9f35d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ramsey/uuid/zipball/ef842484ba57f163c6d465ab744bfecb872a11d4",
-                "reference": "ef842484ba57f163c6d465ab744bfecb872a11d4",
+                "url": "https://api.github.com/repos/ramsey/uuid/zipball/a161a26d917604dc6d3aa25100fddf2556e9f35d",
+                "reference": "a161a26d917604dc6d3aa25100fddf2556e9f35d",
                 "shasum": ""
             },
             "require": {
@@ -3790,7 +3720,7 @@
             ],
             "support": {
                 "issues": "https://github.com/ramsey/uuid/issues",
-                "source": "https://github.com/ramsey/uuid/tree/4.5.0"
+                "source": "https://github.com/ramsey/uuid/tree/4.5.1"
             },
             "funding": [
                 {
@@ -3802,7 +3732,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2022-09-15T01:44:53+00:00"
+            "time": "2022-09-16T03:22:46+00:00"
         },
         {
             "name": "symfony/console",
