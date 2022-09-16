@@ -1,8 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\CsvImporter\Entities\Activity\Components;
 
 use App\CsvImporter\Entities\Row;
+use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 
@@ -14,33 +17,29 @@ class ActivityRow extends Row
     /**
      * Base Namespace for the Activity Element classes.
      */
-    const BASE_NAMESPACE = 'App\CsvImporter\Entities\Activity\Components\Elements';
-
-    /**
-     * Namespace for the Transaction Element classes.
-     */
-    const TRANSACTION_NAMESPACE = 'App\CsvImporter\Entities\Activity\Components\Elements\Transaction';
+    public const BASE_NAMESPACE = 'App\CsvImporter\Entities\Activity\Components\Elements';
 
     /**
      * Directory where the validated Csv data is written before import.
      */
-    const CSV_DATA_STORAGE_PATH = 'csvImporter/tmp';
+    public const CSV_DATA_STORAGE_PATH = 'csvImporter/tmp';
 
     /**
      * File in which the valid Csv data is written before import.
      */
-    const VALID_CSV_FILE = 'valid.json';
+    public const VALID_CSV_FILE = 'valid.json';
 
     /**
      * File in which the invalid Csv data is written before import.
      */
-    const INVALID_CSV_FILE = 'invalid.json';
+    public const INVALID_CSV_FILE = 'invalid.json';
 
     /**
      * Activity Elements for an Activity Row.
+     *
      * @var array
      */
-    protected $activityElements = [
+    protected array $activityElements = [
         'identifier',
         'title',
         'defaultFieldValues',
@@ -55,19 +54,20 @@ class ActivityRow extends Row
 
     /**
      * Transaction Elements for an Activity Row.
+     *
      * @var string
      */
-    protected $transactionElement = 'transaction';
+    protected string $transactionElement = 'transaction';
 
     /**
      * @var array
      */
-    protected $transactionRows = [];
+    protected array $transactionRows = [];
 
     /**
      * @var array
      */
-    protected $transactionCSVHeaders = [
+    protected array $transactionCSVHeaders = [
         'transaction_internal_reference',
         'transaction_type',
         'transaction_date',
@@ -93,7 +93,7 @@ class ActivityRow extends Row
     /**
      * @var array
      */
-    protected $otherElements = [
+    protected array $otherElements = [
         'activityScope',
         'budget',
         'policyMarker',
@@ -109,10 +109,8 @@ class ActivityRow extends Row
 
     /**
      * Flag for existence of the identifier.
-     *
-     * @var
      */
-    protected $existence = false;
+    protected bool $existence = false;
 
     /**
      * @var
@@ -167,7 +165,7 @@ class ActivityRow extends Row
     /**
      * @var array
      */
-    protected $transaction = [];
+    protected array $transaction = [];
 
     /**
      * @var
@@ -187,19 +185,18 @@ class ActivityRow extends Row
     /**
      * @var array
      */
-    protected $validElements = [];
+    protected array $validElements = [];
 
     /**
      * Current Organization's id.
-     * @var
      */
     public $organizationId;
 
     /**
      * Current User's id.
-     * @var
      */
     protected $userId;
+
     /**
      * @var
      */
@@ -210,14 +207,16 @@ class ActivityRow extends Row
      *
      * @var string
      */
-    public $version;
+    public string $version;
 
     /**
      * ActivityRow constructor.
+     *
      * @param $fields
      * @param $organizationId
      * @param $userId
      * @param $activityIdentifiers
+     * @param $version
      */
     public function __construct($fields, $organizationId, $userId, $activityIdentifiers, $version)
     {
@@ -251,18 +250,20 @@ class ActivityRow extends Row
 
     /**
      * Process the Row.
+     *
      * @return $this
      */
-    public function process()
+    public function process(): static
     {
         return $this;
     }
 
     /**
      * Validate the Row.
+     *
      * @return $this
      */
-    public function validate()
+    public function validate(): static
     {
         $this->validateElements()->validateSelf();
 
@@ -271,8 +272,10 @@ class ActivityRow extends Row
 
     /**
      * Store the Row in a temporary JSON File for further usage.
+     *
+     * @return void
      */
-    public function keep()
+    public function keep(): void
     {
         $this->makeDirectoryIfNonExistent()
             ->writeCsvDataAsJson($this->getCsvFilepath());
@@ -280,18 +283,20 @@ class ActivityRow extends Row
 
     /**
      * Get the name of a method according to the type of uploaded Csv.
-     * @return null|string
+     *
+     * @return string
      */
-    protected function getMethodNameByType()
+    protected function getMethodNameByType(): string
     {
         return 'otherFieldsWithTransaction';
     }
 
     /**
      * Instantiate the Activity Element classes.
+     *
      * @return $this
      */
-    protected function makeActivityElements()
+    protected function makeActivityElements(): static
     {
         foreach ($this->activityElements() as $element) {
             if (class_exists($namespace = $this->getNamespace($element, self::BASE_NAMESPACE))) {
@@ -315,9 +320,11 @@ class ActivityRow extends Row
 
     /**
      * Instantiate the Transaction Element classes.
+     *
      * @return $this
+     * @throws BindingResolutionException
      */
-    protected function makeTransactionElements()
+    protected function makeTransactionElements(): static
     {
         $this->mapTransactionData();
 
@@ -337,8 +344,10 @@ class ActivityRow extends Row
 
     /**
      * Instantiate the Other Elements classes.
+     *
+     * @return $this
      */
-    protected function makeOtherFieldsElements()
+    protected function makeOtherFieldsElements(): static
     {
         foreach ($this->otherElements() as $element) {
             if (class_exists($namespace = $this->getNamespace($element, self::BASE_NAMESPACE))) {
@@ -352,8 +361,10 @@ class ActivityRow extends Row
 
     /**
      * Map Transaction data into singular Transaction block for each Activity.
+     *
+     * @return void
      */
-    protected function mapTransactionData()
+    protected function mapTransactionData(): void
     {
         foreach ($this->fields() as $key => $values) {
             if (array_key_exists($key, array_flip($this->transactionCSVHeaders))) {
@@ -368,8 +379,10 @@ class ActivityRow extends Row
 
     /**
      * Remove empty Transaction rows.
+     *
+     * @return void
      */
-    protected function removeEmptyTransactionData()
+    protected function removeEmptyTransactionData(): void
     {
         foreach ($this->transactionRows as $index => $transactionRow) {
             $totalNull = 0;
@@ -379,7 +392,7 @@ class ActivityRow extends Row
                 }
             }
 
-            if ($totalNull == count($this->transactionCSVHeaders)) {
+            if ($totalNull === count($this->transactionCSVHeaders)) {
                 unset($this->transactionRows[$index]);
             }
         }
@@ -387,38 +400,43 @@ class ActivityRow extends Row
 
     /**
      * Get the Activity elements.
+     *
      * @return array
      */
-    protected function activityElements()
+    protected function activityElements(): array
     {
         return $this->activityElements;
     }
 
     /**
      * Get the Transaction Elements.
-     * @return array
+     *
+     * @return array|string
      */
-    protected function transactionElement()
+    protected function transactionElement(): array|string
     {
         return $this->transactionElement;
     }
 
     /**
      * Get the other Elements.
+     *
      * @return array
      */
-    protected function otherElements()
+    protected function otherElements(): array
     {
         return $this->otherElements;
     }
 
     /**
      * Validate all elements contained in the ActivityRow.
+     *
+     * @return $this
      */
-    protected function validateElements()
+    protected function validateElements(): static
     {
         foreach ($this->elements() as $element) {
-            if ($element == 'transaction') {
+            if ($element === 'transaction') {
                 foreach ($this->$element as $transaction) {
                     $transaction->validate()->withErrors();
                     $this->recordErrors($transaction);
@@ -438,9 +456,10 @@ class ActivityRow extends Row
 
     /**
      * Set the validity for the whole ActivityRow.
+     *
      * @return $this
      */
-    protected function validateSelf()
+    protected function validateSelf(): static
     {
         // if (in_array(false, $this->validElements)) {
         //     $this->isValid = false;
@@ -453,8 +472,10 @@ class ActivityRow extends Row
 
     /**
      * Make the storage directory, if it does not exist, to store the validated Csv data before import.
+     *
+     * @return $this
      */
-    protected function makeDirectoryIfNonExistent()
+    protected function makeDirectoryIfNonExistent(): static
     {
         $path = sprintf('%s/%s/%s/', storage_path(self::CSV_DATA_STORAGE_PATH), $this->organizationId, $this->userId);
 
@@ -469,9 +490,10 @@ class ActivityRow extends Row
 
     /**
      * Get the file path for the validated Csv data to be stored before import.
+     *
      * @return string
      */
-    protected function getCsvFilepath()
+    protected function getCsvFilepath(): string
     {
         if ($this->isValid) {
             return storage_path(sprintf('%s/%s/%s/%s', self::CSV_DATA_STORAGE_PATH, $this->organizationId, $this->userId, self::VALID_CSV_FILE));
@@ -482,14 +504,15 @@ class ActivityRow extends Row
 
     /**
      * Get the data in the current ActivityRow.
+     *
      * @return array
      */
-    protected function data()
+    protected function data(): array
     {
         $this->data = [];
 
         foreach ($this->elements() as $element) {
-            if ($element == 'transaction') {
+            if ($element === 'transaction') {
                 foreach ($this->$element as $transaction) {
                     $this->data[$element][] = $transaction->data($transaction->pluckIndex());
                 }
@@ -505,9 +528,12 @@ class ActivityRow extends Row
 
     /**
      * Write the validated data into the designated destination file.
+     *
      * @param $destinationFilePath
+     *
+     * @return void
      */
-    protected function writeCsvDataAsJson($destinationFilePath)
+    protected function writeCsvDataAsJson($destinationFilePath): void
     {
         if (file_exists($destinationFilePath)) {
             $this->appendDataIntoFile($destinationFilePath);
@@ -518,14 +544,18 @@ class ActivityRow extends Row
 
     /**
      * Append data into the file containing previous data.
+     *
      * @param $destinationFilePath
+     *
+     * @return void
+     * @throws \JsonException
      */
-    protected function appendDataIntoFile($destinationFilePath)
+    protected function appendDataIntoFile($destinationFilePath): void
     {
-        if ($currentContents = json_decode(file_get_contents($destinationFilePath), true)) {
+        if ($currentContents = json_decode(file_get_contents($destinationFilePath), true, 512, JSON_THROW_ON_ERROR)) {
             $currentContents[] = ['data' => $this->data(), 'errors' => $this->errors(), 'status' => 'processed', 'existence' => $this->existence];
 
-            file_put_contents($destinationFilePath, json_encode($currentContents));
+            file_put_contents($destinationFilePath, json_encode($currentContents, JSON_THROW_ON_ERROR));
         } else {
             $this->createNewFile($destinationFilePath);
         }
@@ -533,28 +563,34 @@ class ActivityRow extends Row
 
     /**
      * Write the validated data into a new file.
+     *
      * @param $destinationFilePath
+     *
+     * @return void
+     * @throws \JsonException
      */
-    protected function createNewFile($destinationFilePath)
+    protected function createNewFile($destinationFilePath): void
     {
-        file_put_contents($destinationFilePath, json_encode([['data' => $this->data(), 'errors' => $this->errors(), 'status' => 'processed', 'existence' => $this->existence]]));
+        file_put_contents($destinationFilePath, json_encode([['data' => $this->data(), 'errors' => $this->errors(), 'status' => 'processed', 'existence' => $this->existence]], JSON_THROW_ON_ERROR));
         shell_exec(sprintf('chmod 777 -R %s', $destinationFilePath));
     }
 
     /**
      * Get all the errors associated with the current ActivityRow.
+     *
      * @return array
      */
-    public function errors()
+    public function errors(): array
     {
         return $this->errors;
     }
 
     /**
      * Record errors within the ActivityRow.
+     *
      * @param $element
      */
-    protected function recordErrors($element)
+    protected function recordErrors($element): void
     {
         foreach ($element->errors() as $errors) {
             $this->errors[] = $errors;
@@ -563,10 +599,12 @@ class ActivityRow extends Row
 
     /**
      * Validate unique against Identifiers and Transaction Internal References within the uploaded CSV file.
+     *
      * @param $rows
+     *
      * @return $this
      */
-    public function validateUnique($rows)
+    public function validateUnique($rows): static
     {
         $commonIdentifierCount = $this->countDuplicateActivityIdentifiers($rows);
         $references = $this->getTransactionInternalReferences();
@@ -582,9 +620,10 @@ class ActivityRow extends Row
      * Checks if the activityIdentifiers already exists or not.
      *
      * @param $row
+     *
      * @return $this
      */
-    public function checkExistence($row)
+    public function checkExistence($row): static
     {
         if (array_intersect($this->activityIdentifiers, Arr::get($row, 'activity_identifier', []))) {
             $this->existence = true;
@@ -595,18 +634,20 @@ class ActivityRow extends Row
 
     /**
      * Get the Transactions for the ActivityRow.
+     *
      * @return array
      */
-    public function getTransactions()
+    public function getTransactions(): array
     {
         return $this->transaction;
     }
 
     /**
      * Get all the internal references for an Activity's Transactions.
+     *
      * @return array
      */
-    protected function getTransactionInternalReferences()
+    protected function getTransactionInternalReferences(): array
     {
         $references = [];
 
@@ -621,20 +662,18 @@ class ActivityRow extends Row
 
     /**
      * Get the count of duplicated Activity Identifiers.
+     *
      * @param $rows
+     *
      * @return int
      */
-    protected function countDuplicateActivityIdentifiers($rows)
+    protected function countDuplicateActivityIdentifiers($rows): int
     {
         $commonIdentifierCount = 0;
 
-        foreach ($rows as $index => $row) {
-            if (array_key_exists('activity_identifier', $row)) {
-                if ($this->identifier->data()) {
-                    if ($this->identifier->data()['activity_identifier'] == Arr::get($row, 'activity_identifier.0')) {
-                        $commonIdentifierCount++;
-                    }
-                }
+        foreach ($rows as $row) {
+            if (array_key_exists('activity_identifier', $row) && $this->identifier->data() && $this->identifier->data()['activity_identifier'] === Arr::get($row, 'activity_identifier.0')) {
+                $commonIdentifierCount++;
             }
         }
 
@@ -643,12 +682,14 @@ class ActivityRow extends Row
 
     /**
      * Check if the Transaction Internal References are duplicated within the uploaded CSV file.
+     *
      * @param $references
+     *
      * @return bool
      */
-    protected function containsDuplicateTransactions($references)
+    protected function containsDuplicateTransactions($references): bool
     {
-        if ((!empty($references)) && (count(array_unique($references)) != count($this->getTransactions()))) {
+        if ((!empty($references)) && (count(array_unique($references)) !== count($this->getTransactions()))) {
             $this->errors[] = 'There are duplicate Transactions for this Activity in the uploaded Csv File.';
 
             return true;
@@ -659,10 +700,12 @@ class ActivityRow extends Row
 
     /**
      * Check if the Activity Identifiers are duplicated within the uploaded CSV file.
+     *
      * @param $commonIdentifierCount
+     *
      * @return bool
      */
-    protected function containsDuplicateActivities($commonIdentifierCount)
+    protected function containsDuplicateActivities($commonIdentifierCount): bool
     {
         if ($commonIdentifierCount > 1) {
             $this->errors[] = 'This Activity has been duplicated in the uploaded Csv File.';

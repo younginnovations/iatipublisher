@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\CsvImporter\Entities\Activity\Components\Elements;
 
 use App\CsvImporter\Entities\Activity\Components\Elements\Foundation\Iati\Element;
@@ -13,18 +15,21 @@ class ActivityScope extends Element
 {
     /**
      * Csv Header for ActivityScope element.
+     *
      * @var array
      */
-    private $_csvHeader = ['activity_scope'];
+    private array $_csvHeader = ['activity_scope'];
 
     /**
      * Index under which the data is stored within the object.
+     *
      * @var string
      */
     protected $index = 'activity_scope';
 
     /**
      * ActivityScope constructor.
+     *
      * @param            $fields
      * @param Validation $factory
      */
@@ -36,7 +41,10 @@ class ActivityScope extends Element
 
     /**
      * Prepare the IATI Element.
+     *
      * @param $fields
+     *
+     * @return void
      */
     protected function prepare($fields): void
     {
@@ -51,20 +59,25 @@ class ActivityScope extends Element
 
     /**
      * Map data from CSV file into ActivitySec data format.
+     *
      * @param $value
      * @param $values
+     *
+     * @return void
      */
     protected function map($value, $values): void
     {
-        if (!(is_null($value) || $value == '')) {
-            (count(array_filter($values)) == 1) ? $this->data[$this->csvHeader()] = $value : $this->data[$this->csvHeader()][] = $value;
+        if (!(is_null($value) || $value === '')) {
+            (count(array_filter($values)) === 1) ? $this->data[$this->csvHeader()] = $value : $this->data[$this->csvHeader()][] = $value;
         }
     }
 
     /**
      * Validate data for IATI Element.
+     *
+     * @return $this
      */
-    public function validate()
+    public function validate(): static
     {
         $this->validator = $this->factory->sign($this->data())
                                          ->with($this->rules(), $this->messages())
@@ -77,6 +90,7 @@ class ActivityScope extends Element
 
     /**
      * Provides the rules for the IATI Element validation.
+     *
      * @return array
      */
     public function rules(): array
@@ -88,6 +102,7 @@ class ActivityScope extends Element
 
     /**
      * Provides custom messages used for IATI Element Validation.
+     *
      * @return array
      */
     public function messages(): array
@@ -100,11 +115,12 @@ class ActivityScope extends Element
 
     /**
      * Get the valid ActivityScope from the ActivityScope codelist as a string.
+     *
      * @return string
      */
     protected function validActivityScope(): string
     {
-        list($activityStatusCodeList, $codes) = [$this->loadCodeList('ActivityScope'), []];
+        [$activityStatusCodeList, $codes] = [$this->loadCodeList('ActivityScope'), []];
         $codes = array_keys($activityStatusCodeList);
 
         return implode(',', array_keys(array_flip($codes)));
@@ -112,9 +128,10 @@ class ActivityScope extends Element
 
     /**
      * Get the Csv header for ActivityStatus.
+     *
      * @return mixed
      */
-    protected function csvHeader()
+    protected function csvHeader(): mixed
     {
         return end($this->_csvHeader);
     }

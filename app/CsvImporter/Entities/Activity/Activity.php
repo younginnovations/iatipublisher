@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\CsvImporter\Entities\Activity;
 
 use App\CsvImporter\Entities\Csv;
@@ -18,10 +20,12 @@ class Activity extends Csv
 
     /**
      * Activity constructor.
+     *
      * @param $rows
      * @param $organizationId
      * @param $userId
      * @param $activityIdentifiers
+     * @param $version
      */
     public function __construct($rows, $organizationId, $userId, $activityIdentifiers, $version)
     {
@@ -38,7 +42,7 @@ class Activity extends Csv
      *
      * @return $this
      */
-    public function process()
+    public function process(): static
     {
         foreach ($this->rows() as $row) {
             $this->initialize($row, $this->activityIdentifiers, $this->version)
