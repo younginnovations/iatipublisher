@@ -1,8 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\CsvImporter\Entities\Activity\Components\Elements\Transaction;
 
 use App\CsvImporter\Entities\Activity\Components\Elements\Foundation\Traits\SectorQueries;
+use Illuminate\Contracts\Container\BindingResolutionException;
 
 /**
  * Class PreparesTransactionData.
@@ -13,18 +16,23 @@ trait PreparesTransactionData
 
     /**
      * Set Internal Reference for Transaction.
+     *
      * @param $key
      * @param $value
+     *
+     * @return void
      */
     protected function setInternalReference($key, $value): void
     {
-        if ($key == $this->_csvHeaders[0]) {
+        if ($key === $this->_csvHeaders[0]) {
             $this->data['transaction']['reference'] = $value;
         }
     }
 
     /**
      * Set the Humanitarian field for the Transaction Element.
+     *
+     * @return void
      */
     protected function setHumanitarian(): void
     {
@@ -35,16 +43,19 @@ trait PreparesTransactionData
 
     /**
      * Set the Transaction Type for the Transaction Element.
+     *
      * @param $key
      * @param $value
+     *
+     * @return void
      */
     protected function setTransactionType($key, $value): void
     {
-        if ($key == $this->_csvHeaders[1]) {
+        if ($key === $this->_csvHeaders[1]) {
             $validTransactionType = $this->loadCodeList('TransactionType');
 
             foreach ($validTransactionType as $name => $type) {
-                if (ucwords($value) == $type) {
+                if (ucwords($value) === $type) {
                     $value = $name;
                 }
             }
@@ -54,36 +65,45 @@ trait PreparesTransactionData
 
     /**
      * Set the date for the Transaction Element.
+     *
      * @param $key
      * @param $value
+     *
+     * @return void
      */
     protected function setTransactionDate($key, $value): void
     {
-        if ($key == $this->_csvHeaders[2]) {
+        if ($key === $this->_csvHeaders[2]) {
             $this->data['transaction']['transaction_date'][] = ['date' => dateFormat('Y-m-d', $value)];
         }
     }
 
     /**
      * Set the value for the Transaction Element.
+     *
      * @param $key
      * @param $value
+     *
+     * @return void
      */
     protected function setTransactionValue($key, $value): void
     {
-        if ($key == $this->_csvHeaders[3]) {
+        if ($key === $this->_csvHeaders[3]) {
             $this->data['transaction']['value'][0]['amount'] = str_replace(',', '', $value);
         }
     }
 
     /**
      * Set the value date for the Transaction Element.
+     *
      * @param $key
      * @param $value
+     *
+     * @return void
      */
     protected function setTransactionValueDate($key, $value): void
     {
-        if ($key == $this->_csvHeaders[4]) {
+        if ($key === $this->_csvHeaders[4]) {
             $this->data['transaction']['value'][0]['date'] = dateFormat('Y-m-d', $value);
             $this->data['transaction']['value'][0]['currency'] = '';
         }
@@ -91,60 +111,71 @@ trait PreparesTransactionData
 
     /**
      * Set the description for the Transaction Element.
+     *
      * @param $key
      * @param $value
+     *
+     * @return void
      */
     protected function setTransactionDescription($key, $value): void
     {
-        if ($key == $this->_csvHeaders[5]) {
+        if ($key === $this->_csvHeaders[5]) {
             $this->data['transaction']['description'][0]['narrative'][0] = ['narrative' => $value, 'language' => ''];
         }
     }
 
     /**
      * Set the Provider Organization for the Transaction Element.
+     *
      * @param $key
      * @param $value
+     *
+     * @return void
      */
     protected function setProviderOrganization($key, $value): void
     {
-        if ($key == $this->_csvHeaders[6]) {
+        if ($key === $this->_csvHeaders[6]) {
             $this->data['transaction']['provider_organization'][0]['organization_identifier_code'] = $value;
         }
-        if ($key == $this->_csvHeaders[7]) {
+        if ($key === $this->_csvHeaders[7]) {
             $this->data['transaction']['provider_organization'][0]['provider_activity_id'] = $value;
         }
-        if ($key == $this->_csvHeaders[8]) {
+        if ($key === $this->_csvHeaders[8]) {
             $this->data['transaction']['provider_organization'][0]['type'] = $this->setOrganizationTypeNameToCode($value);
         }
-        if ($key == $this->_csvHeaders[9]) {
+        if ($key === $this->_csvHeaders[9]) {
             $this->data['transaction']['provider_organization'][0]['narrative'][0] = ['narrative' => $value, 'language' => ''];
         }
     }
 
     /**
      * Set the Receiver Organization for the Transaction Element.
+     *
      * @param $key
      * @param $value
+     *
+     * @return void
      */
     protected function setReceiverOrganization($key, $value): void
     {
-        if ($key == $this->_csvHeaders[10]) {
+        if ($key === $this->_csvHeaders[10]) {
             $this->data['transaction']['receiver_organization'][0]['organization_identifier_code'] = $value;
         }
-        if ($key == $this->_csvHeaders[11]) {
+        if ($key === $this->_csvHeaders[11]) {
             $this->data['transaction']['receiver_organization'][0]['receiver_activity_id'] = $value;
         }
-        if ($key == $this->_csvHeaders[12]) {
+        if ($key === $this->_csvHeaders[12]) {
             $this->data['transaction']['receiver_organization'][0]['type'] = $this->setOrganizationTypeNameToCode($value);
         }
-        if ($key == $this->_csvHeaders[13]) {
+        if ($key === $this->_csvHeaders[13]) {
             $this->data['transaction']['receiver_organization'][0]['narrative'][0] = ['narrative' => $value, 'language' => ''];
         }
     }
 
     /**
      * Set the Disbursement Channel for the Transaction Element.
+     *
+     * @return void
      */
     protected function setDisbursementChannel(): void
     {
@@ -155,23 +186,27 @@ trait PreparesTransactionData
 
     /**
      * Set the Sector for the Transaction Element.
+     *
      * @param $key
      * @param $value
+     *
+     * @return void
+     * @throws BindingResolutionException
      */
     protected function setSector($key, $value): void
     {
-        if ($key == $this->_csvHeaders[14]) {
+        if ($key === $this->_csvHeaders[14]) {
             $this->data['transaction']['sector'][0]['sector_vocabulary'] = $value;
         }
-        if ($key == $this->_csvHeaders[15]) {
+        if ($key === $this->_csvHeaders[15]) {
             $this->data['transaction']['sector'][0]['vocabulary_uri'] = $value;
         }
-        if ($key == $this->_csvHeaders[16]) {
+        if ($key === $this->_csvHeaders[16]) {
             $sectorVocabulary = $this->data['transaction']['sector'][0]['sector_vocabulary'];
             $this->setSectorCode($sectorVocabulary, $value);
         }
 
-        if ($key == $this->_csvHeaders[17]) {
+        if ($key === $this->_csvHeaders[17]) {
             $sectorVocabulary = $this->data['transaction']['sector'][0]['sector_vocabulary'];
             $sectorCode = $this->data['transaction']['sector'][0]['sector_text'];
             $value = $value ?: '';
@@ -180,10 +215,10 @@ trait PreparesTransactionData
                 'language'  => '',
             ];
 
-            if ($sectorVocabulary == '99' || $sectorVocabulary == '98' && !$value) {
+            if ($sectorVocabulary === '99' || $sectorVocabulary === '98' && !$value) {
                 if ($customVocabs = $this->customVocabs($this->activityRow->organizationId)) {
                     foreach ($customVocabs as $customVocab) {
-                        if ($sectorCode == $customVocab['code']) {
+                        if ($sectorCode === $customVocab['code']) {
                             $narrative = [
                                 'narrative' => $customVocab['description'],
                                 'language'  => '',
@@ -199,36 +234,39 @@ trait PreparesTransactionData
 
     /**
      * Set the Sector code for the Transaction Element's Sector.
+     *
      * @param $sectorVocabulary
      * @param $value
+     *
+     * @return void
      */
     protected function setSectorCode($sectorVocabulary, $value): void
     {
-        if ($sectorVocabulary == 1) {
+        if ($sectorVocabulary === 1) {
             $this->data['transaction']['sector'][0]['sector_code'] = $value;
         } else {
             $this->data['transaction']['sector'][0]['sector_code'] = '';
         }
 
-        if ($sectorVocabulary == 2) {
+        if ($sectorVocabulary === 2) {
             $this->data['transaction']['sector'][0]['sector_category_code'] = $value;
         } else {
             $this->data['transaction']['sector'][0]['sector_category_code'] = '';
         }
 
-        if ($sectorVocabulary == 7) {
+        if ($sectorVocabulary === 7) {
             $this->data['transaction']['sector'][0]['sector_sdg_goal'] = $value;
         } else {
             $this->data['transaction']['sector'][0]['sector_sdg_goal'] = '';
         }
 
-        if ($sectorVocabulary == 8) {
+        if ($sectorVocabulary === 8) {
             $this->data['transaction']['sector'][0]['sector_sdg_target'] = $value;
         } else {
             $this->data['transaction']['sector'][0]['sector_sdg_target'] = '';
         }
 
-        if ($sectorVocabulary != 1 && $sectorVocabulary != 2 && $sectorVocabulary != 7 && $sectorVocabulary != 8) {
+        if ($sectorVocabulary !== 1 && $sectorVocabulary !== 2 && $sectorVocabulary !== 7 && $sectorVocabulary !== 8) {
             $this->data['transaction']['sector'][0]['sector_text'] = $value;
         } else {
             $this->data['transaction']['sector'][0]['sector_text'] = '';
@@ -237,12 +275,15 @@ trait PreparesTransactionData
 
     /**
      * Set the Recipient Country for the Transaction Element.
+     *
      * @param $key
      * @param $value
+     *
+     * @return void
      */
     protected function setRecipientCountry($key, $value): void
     {
-        if ($key == $this->_csvHeaders[18]) {
+        if ($key === $this->_csvHeaders[18]) {
             $this->data['transaction']['recipient_country'][0]['country_code'] = $value;
             $this->data['transaction']['recipient_country'][0]['narrative'][0] = ['narrative' => '', 'language' => ''];
         }
@@ -250,12 +291,15 @@ trait PreparesTransactionData
 
     /**
      * Set the Recipient Region for the Transaction Element.
+     *
      * @param $key
      * @param $value
+     *
+     * @return void
      */
     protected function setRecipientRegion($key, $value): void
     {
-        if ($key == $this->_csvHeaders[19]) {
+        if ($key === $this->_csvHeaders[19]) {
             $this->data['transaction']['recipient_region'][0]['region_code'] = $value;
             $this->data['transaction']['recipient_region'][0]['vocabulary'] = '';
             $this->data['transaction']['recipient_region'][0]['vocabulary_uri'] = '';
@@ -265,6 +309,8 @@ trait PreparesTransactionData
 
     /**
      * Set the Flow Type for the Transaction Element.
+     *
+     * @return void
      */
     protected function setFlowType(): void
     {
@@ -275,6 +321,8 @@ trait PreparesTransactionData
 
     /**
      * Set the Finance Type for the Transaction Element.
+     *
+     * @return void
      */
     protected function setFinanceType(): void
     {
@@ -285,6 +333,8 @@ trait PreparesTransactionData
 
     /**
      * Set the Aid Type for the Transaction Element.
+     *
+     * @return void
      */
     protected function setAidType(): void
     {
@@ -295,6 +345,8 @@ trait PreparesTransactionData
 
     /**
      * Set Ties Status for Transaction Element.
+     *
+     * @return void
      */
     protected function setTiedStatus(): void
     {
@@ -310,17 +362,26 @@ trait PreparesTransactionData
      * @param string $directory
      *
      * @return array
+     * @throws \JsonException
      */
     protected function loadCodeList($codeList, string $directory = 'Activity'):array
     {
         return getCodeList($codeList, $directory);
     }
 
-    protected function setOrganizationTypeNameToCode($value)
+    /**
+     * Set organization type name.
+     *
+     * @param $value
+     *
+     * @return mixed
+     * @throws \JsonException
+     */
+    protected function setOrganizationTypeNameToCode($value): mixed
     {
         $validOrganizationType = $this->loadCodeList('OrganizationType', 'Organization');
         foreach ($validOrganizationType as $name => $type) {
-            if (ucwords($value) == $type) {
+            if (ucwords($value) === $type) {
                 $value = $name;
                 break;
             }

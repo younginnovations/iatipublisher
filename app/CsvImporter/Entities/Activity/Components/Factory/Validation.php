@@ -1,11 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\CsvImporter\Entities\Activity\Components\Factory;
 
 use Carbon\Carbon;
 use Illuminate\Contracts\Translation\Translator;
 use Illuminate\Support\Arr;
 use Illuminate\Validation\Factory;
+use Illuminate\Validation\Validator;
 
 /**
  * Class Validation.
@@ -15,19 +18,19 @@ class Validation extends Factory
     /**
      * @var array
      */
-    protected $data = [];
+    protected array $data = [];
 
     /**
      * Rules for the validation.
      * @var array
      */
-    protected $rules = [];
+    protected array $rules = [];
 
     /**
      * Messages for failed validation rules.
      * @var array
      */
-    protected $messages = [];
+    protected array $messages = [];
 
     /**
      * Validation constructor.
@@ -41,35 +44,40 @@ class Validation extends Factory
 
     /**
      * Set the data to be validated.
+     *
      * @param $data
+     *
      * @return $this
      */
-    public function sign($data)
+    public function sign($data): static
     {
         $this->data = $data;
 
         return $this;
     }
 
-    /**
-     * Append rules and messages for the Validator.
-     * @param array $rules
-     * @param array $messages
-     * @return $this
-     */
-    public function with(array $rules = [], array $messages = [])
-    {
-        $this->rules = $rules;
-        $this->messages = $messages;
+/**
+ * Append rules and messages for the Validator.
+ *
+ * @param array $rules
+ * @param array $messages
+ *
+ * @return $this
+ */
+public function with(array $rules = [], array $messages = []): static
+{
+    $this->rules = $rules;
+    $this->messages = $messages;
 
-        return $this;
-    }
+    return $this;
+}
 
     /**
      * Get the Validator instance for the data to be validated with the current rules and messages.
-     * @return \Illuminate\Validation\Validator
+     *
+     * @return Validator
      */
-    public function getValidatorInstance()
+    public function getValidatorInstance(): Validator
     {
         if (!$this->data) {
             $this->data = [];
@@ -80,8 +88,10 @@ class Validation extends Factory
 
     /**
      * Register required validation rules.
+     *
+     * @return void
      */
-    public function registerValidationRules()
+    public function registerValidationRules(): void
     {
         $this->extend(
             'start_end_date',
@@ -92,16 +102,16 @@ class Validation extends Factory
                     $planned_start_date = Arr::get($dates, 'planned_start_date.0.date');
                     $planned_end_date = Arr::get($dates, 'planned_end_date.0.date');
 
-                    if (($actual_start_date > $actual_end_date) && ($actual_start_date != '' && $actual_end_date != '')) {
+                    if (($actual_start_date > $actual_end_date) && ($actual_start_date !== '' && $actual_end_date !== '')) {
                         return false;
-                    } elseif (($planned_start_date > $planned_end_date) && ($planned_start_date != '' && $planned_end_date != '')) {
+                    } elseif (($planned_start_date > $planned_end_date) && ($planned_start_date !== '' && $planned_end_date !== '')) {
                         return false;
-                    } elseif (($actual_start_date > $planned_end_date) && ($actual_start_date != '' && $planned_end_date != '')
-                        && ($actual_end_date == '' && $planned_start_date == '')
+                    } elseif (($actual_start_date > $planned_end_date) && ($actual_start_date !== '' && $planned_end_date !== '')
+                        && ($actual_end_date === '' && $planned_start_date === '')
                     ) {
                         return false;
-                    } elseif (($planned_start_date > $actual_end_date) && ($planned_start_date != '' && $actual_end_date != '')
-                        && ($planned_end_date == '' && $actual_start_date == '')
+                    } elseif (($planned_start_date > $actual_end_date) && ($planned_start_date !== '' && $actual_end_date !== '')
+                        && ($planned_end_date === '' && $actual_start_date === '')
                     ) {
                         return false;
                     }
@@ -118,7 +128,7 @@ class Validation extends Factory
             function ($attribute, $date, $parameters, $validator) {
                 $dateType = (!is_array($date)) ?: Arr::get($date, '0.type');
 
-                if ($dateType == 2 || $dateType == 4) {
+                if ($dateType === 2 || $dateType === 4) {
                     $actual_date = (!is_array($date)) ?: Arr::get($date, '0.date');
                     if ($actual_date > date('Y-m-d')) {
                         return false;
@@ -182,7 +192,7 @@ class Validation extends Factory
                     );
 
                     foreach ($totalPercentage as $key => $percentage) {
-                        if ($percentage != '' && $percentage != 100) {
+                        if ($percentage !== '' && $percentage !== 100) {
                             return false;
                         }
                     }
@@ -205,11 +215,11 @@ class Validation extends Factory
                             $totalPercentage += $percentage;
                         }
                     }
-                    if (count($values) == 1 && $totalPercentage == 0) {
+                    if (count($values) === 1 && $totalPercentage === 0) {
                         return true;
                     }
 
-                    if ($totalPercentage != 100) {
+                    if ($totalPercentage !== 100) {
                         return false;
                     }
 
@@ -230,12 +240,12 @@ class Validation extends Factory
         $this->extendImplicit(
             'required_only_one_among',
             function ($attribute, $values, $parameters, $validator) {
-                list($identifierIndex, $narrativeIndex) = $parameters;
+                [$identifierIndex, $narrativeIndex] = $parameters;
                 $isValid = false;
 
                 if ($values) {
                     foreach ($values as $key => $value) {
-                        list($identifier, $narratives) = [Arr::get($value, $identifierIndex, ''), Arr::get($value, $narrativeIndex, [])];
+                        [$identifier, $narratives] = [Arr::get($value, $identifierIndex, ''), Arr::get($value, $narrativeIndex, [])];
 
                         foreach ($narratives as $index => $narrative) {
                             $narrativeValue = Arr::get($narrative, 'narrative');
@@ -259,17 +269,18 @@ class Validation extends Factory
                 $sectorInActivityLevel = true;
                 $status = true;
                 foreach ($values as $value) {
-                    if ($value['activitySector'] == '') {
+                    if ($value['activitySector'] === '') {
                         $sectorInActivityLevel = false;
                     }
 
-                    if ($value['sector_vocabulary'] == '' && $value['sector_code'] == ''
-                        && $value['sector_text'] == '' && $value['sector_category_code'] == '' && Arr::get($value, 'sector_sdg_goal') == '' && Arr::get($value, 'sector_sdg_target') == '' && $sectorInActivityLevel == false
+                    if ($value['sector_vocabulary'] === '' && $value['sector_code'] === ''
+                        && $value['sector_text'] === '' && $value['sector_category_code'] === '' && Arr::get($value, 'sector_sdg_goal') === '' && Arr::get($value, 'sector_sdg_target') === '' &&
+                        $sectorInActivityLevel === false
                     ) {
                         $status = false;
-                    } elseif (($value['sector_vocabulary'] != '' || $value['sector_code'] != ''
-                        || $value['sector_text'] != '' || $value['sector_category_code'] != '' || Arr::get($value, 'sector_sdg_goal') != '' || Arr::get($value, 'sector_sdg_target') != '')
-                        && $sectorInActivityLevel == true
+                    } elseif (($value['sector_vocabulary'] !== '' || $value['sector_code'] !== ''
+                        || $value['sector_text'] !== '' || $value['sector_category_code'] !== '' || Arr::get($value, 'sector_sdg_goal') !== '' || Arr::get($value, 'sector_sdg_target') !== '')
+                        && $sectorInActivityLevel === true
                     ) {
                         $status = false;
                     }
@@ -299,14 +310,14 @@ class Validation extends Factory
                     }
                 }
 
-                if (($activityRecipientCountry == '' && $activityRecipientRegion == '')
-                    && ($transactionRecipientRegion != '' || $transactionRecipientCountry != '')
+                if (($activityRecipientCountry === '' && $activityRecipientRegion === '')
+                    && ($transactionRecipientRegion !== '' || $transactionRecipientCountry !== '')
                 ) {
                     return true;
                 }
 
-                if (($activityRecipientCountry != '' || $activityRecipientRegion != '')
-                    && ($transactionRecipientRegion == '' && $transactionRecipientCountry == '')
+                if (($activityRecipientCountry !== '' || $activityRecipientRegion !== '')
+                    && ($transactionRecipientRegion === '' && $transactionRecipientCountry === '')
                 ) {
                     return true;
                 }
@@ -325,7 +336,7 @@ class Validation extends Factory
                     $periodStart = strtotime(Arr::get($value, 'period_start.0.date'));
                     $periodEnd = strtotime(Arr::get($value, 'period_end.0.date'));
 
-                    if ($periodStart == false || $periodEnd == false) {
+                    if ($periodStart === false || $periodEnd === false) {
                         return true;
                     }
 
@@ -351,7 +362,7 @@ class Validation extends Factory
                     $isPeriodStartDate = strtotime($periodStart);
                     $isPeriodEndDate = strtotime($periodEnd);
 
-                    if ($isPeriodStartDate != false && $isPeriodEndDate != false) {
+                    if ($isPeriodStartDate !== false && $isPeriodEndDate !== false) {
                         $periodStart = Carbon::parse($periodStart);
                         $periodEnd = Carbon::parse($periodEnd);
 
@@ -373,14 +384,14 @@ class Validation extends Factory
             'only_one_among',
             function ($attribute, $values, $parameters, $validator) {
                 foreach ($values as $value) {
-                    if ((Arr::get($value, 'organization_identifier_code', '') == '')
-                        && (Arr::get($value, 'type', '') == '')
-                        && (Arr::get($value, 'provider_activity_id') == '')
-                        && (Arr::get($value, 'narrative.0.narrative') == '')
+                    if ((Arr::get($value, 'organization_identifier_code', '') === '')
+                        && (Arr::get($value, 'type', '') === '')
+                        && (Arr::get($value, 'provider_activity_id') === '')
+                        && (Arr::get($value, 'narrative.0.narrative') === '')
                     ) {
                         return true;
                     }
-                    if (($value['organization_identifier_code'] == '') && (Arr::get($value, 'narrative.0.narrative') == '')) {
+                    if (($value['organization_identifier_code'] === '') && (Arr::get($value, 'narrative.0.narrative') === '')) {
                         return false;
                     }
 
