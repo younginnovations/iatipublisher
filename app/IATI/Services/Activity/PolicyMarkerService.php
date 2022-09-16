@@ -108,7 +108,7 @@ class PolicyMarkerService
 
         if (count($policyMarkers)) {
             foreach ($policyMarkers as $policyMarker) {
-                $vocabulary = Arr::get($policyMarker, 'policymarker_vocabulary', null);
+                $vocabulary = Arr::get($policyMarker, 'policy_marker_vocabulary', null);
 
                 switch ($vocabulary) {
                     case '99':

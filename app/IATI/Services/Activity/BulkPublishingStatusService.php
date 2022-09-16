@@ -73,9 +73,9 @@ class BulkPublishingStatusService
      *
      * @return object|null
      */
-    public function getBulkPublishingStatuses($organizationId, $uuid): ?object
+    public function getActivityPublishingStatus($organizationId, $uuid): ?object
     {
-        return $this->bulkPublishingStatusRepository->getBulkPublishingStatuses($organizationId, $uuid);
+        return $this->bulkPublishingStatusRepository->getActivityPublishingStatus($organizationId, $uuid);
     }
 
     /**
@@ -96,12 +96,14 @@ class BulkPublishingStatusService
 
     /**
      * Checks if organization has any bulk publishing processes.
+     *
      * @param $organizationId
+     *
      * @return bool
      */
     public function ongoingBulkPublishing($organizationId): bool
     {
-        $statuses = $this->bulkPublishingStatusRepository->ongoingBulkPublishingStatuses($organizationId);
+        $statuses = $this->bulkPublishingStatusRepository->ongoingActivityPublishingStatus($organizationId);
 
         if (count($statuses)) {
             return true;

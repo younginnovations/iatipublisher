@@ -79,6 +79,7 @@ class ActivityObserver
     {
         $this->setElementStatus($activity, true);
         $this->resetActivityStatus($activity);
+        $this->setTitleDefaultValues($activity);
         $activity->saveQuietly();
     }
 
@@ -115,5 +116,19 @@ class ActivityObserver
     public function resetActivityStatus($model): void
     {
         $model->status = 'draft';
+    }
+
+    /**
+     * Sets default values for language for activity title.
+     *
+     * @param $activity
+     *
+     * @return void
+     */
+    public function setTitleDefaultValues($activity): void
+    {
+        $activityData = $activity->title;
+        $updatedData = $this->elementCompleteService->setDefaultValues($activityData, $activity);
+        $activity->title = $updatedData;
     }
 }

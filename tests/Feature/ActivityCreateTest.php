@@ -24,7 +24,7 @@ class ActivityCreateTest extends TestCase
         $user = User::factory()->create();
         Activity::factory()->create(['org_id'=>$org->id]);
         $this->actingAs($user)->post('/activity', [])
-             ->assertSessionHasErrors(['narrative', 'language', 'activity_identifier']);
+             ->assertSessionHasErrors(['narrative', 'activity_identifier']);
     }
 
     /**

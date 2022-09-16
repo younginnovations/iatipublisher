@@ -92,7 +92,7 @@ class BulkPublishingService
      */
     public function getCompleteStatus($activity): string
     {
-        if (isCoreElementCompleted(array_merge(['reporting_org' => $activity->organization->reporting_org_complete_status], $activity->element_status))) {
+        if (isCoreElementCompleted(array_merge(['reporting_org' => $activity->organization->reporting_org_element_completed], $activity->element_status))) {
             return 'complete';
         }
 
@@ -117,14 +117,14 @@ class BulkPublishingService
             $response = $this->validateWithException($activity);
 
             if (!Arr::get($response, 'success', true)) {
-                return ['success' => false, 'error' => 'Error has occurred while validating activity.'];
+                logger()->error('Error has occurred while validating activity with id' . $activityId);
+            } else {
+                $totalResponse[$activity->id] = [
+                    'activity_id' => $activity->id,
+                    'title' => Arr::get($activity->title, '0.narrative', 'Not Available') ?: 'Not Available',
+                    'response' => $response,
+                ];
             }
-
-            $totalResponse[$activity->id] = [
-                'activity_id' => $activity->id,
-                'title' => Arr::get($activity->title, '0.narrative', 'Not Available') ?: 'Not Available',
-                'response' => $response,
-            ];
         }
 
         return $this->modifyResponse($totalResponse);
