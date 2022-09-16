@@ -111,8 +111,6 @@ class Validation extends Factory
             $errors[$element][$index] = Arr::get($error, 0, '');
         }
 
-        // $errors = $this->embedLinks($errors, $shouldBeUnique);
-
         return $errors;
     }
 

@@ -43,9 +43,9 @@ trait PreparesTransactionData
         if ($key == $this->_csvHeaders[1]) {
             $validTransactionType = $this->loadCodeList('TransactionType');
 
-            foreach ($validTransactionType as $key => $type) {
+            foreach ($validTransactionType as $name => $type) {
                 if (ucwords($value) == $type) {
-                    $value = $key;
+                    $value = $name;
                 }
             }
             $this->data['transaction']['transaction_type'][] = ['transaction_type_code' => $value];
@@ -317,9 +317,9 @@ trait PreparesTransactionData
     protected function setOrganizationTypeNameToCode($value)
     {
         $validOrganizationType = $this->loadCodeList('OrganizationType', 'Organization');
-        foreach ($validOrganizationType as $key => $type) {
+        foreach ($validOrganizationType as $name => $type) {
             if (ucwords($value) == $type) {
-                $value = $key;
+                $value = $name;
                 break;
             }
         }
