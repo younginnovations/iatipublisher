@@ -14,30 +14,6 @@ class Transaction
      */
     protected $transaction = [];
 
-    // /**
-    //  * Map raw Xml Transaction data for import.
-    //  *
-    //  * @param array $transactions
-    //  * @param       $template
-    //  * @return array
-    //  */
-    // public function map(array $transactions, $template, $upgrade)
-    // {
-    //     foreach ($transactions as $index => $transaction) {
-    //         $this->transaction[$index] = $template['transaction'];
-    //         $this->reference($transaction, $index);
-    //         $this->humanitarian($transaction, $index);
-
-    //         foreach ($this->getValue($transaction) as $subElement) {
-    //             $fieldName = $this->name($subElement['name']);
-
-    //             $this->$fieldName($subElement, $index);
-    //         }
-    //     }
-
-    //     return $this->transaction;
-    // }
-
     /**
      * @param $element
      * @param $index
@@ -243,26 +219,5 @@ class Transaction
         }
 
         $this->transaction[$index]['aid_type'][0]['aid_type_vocabulary'] = $vocabulary;
-    }
-
-    /**
-     * Upgrade transaction default aid type to V203.
-     *
-     * @param mixed $subElement
-     * @param mixed $index
-     * @return void
-     */
-    public function upgradeAidType($subElement, $index)
-    {
-        $code = $this->attributes($subElement, 'code');
-
-        $this->transaction[$index]['aid_type'][0]['aid_type'][0] = [
-            'aid_type_vocabulary'  => $code ? 1 : '',
-            'aid_type_code'            => (!is_array($code)) ? $code : '',
-            'earmarking_category' => '',
-            'earmarking_modality' => '',
-            'aid_type_code'       => '',
-            'cash_and_voucher_modalities' => '',
-        ];
     }
 }
