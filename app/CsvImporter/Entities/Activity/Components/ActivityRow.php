@@ -461,11 +461,11 @@ class ActivityRow extends Row
      */
     protected function validateSelf(): static
     {
-        // if (in_array(false, $this->validElements)) {
-        //     $this->isValid = false;
-        // } else {
-        $this->isValid = true;
-        // }
+        if (in_array(false, $this->validElements)) {
+            $this->isValid = false;
+        } else {
+            $this->isValid = true;
+        }
 
         return $this;
     }
@@ -495,11 +495,7 @@ class ActivityRow extends Row
      */
     protected function getCsvFilepath(): string
     {
-        if ($this->isValid) {
-            return storage_path(sprintf('%s/%s/%s/%s', self::CSV_DATA_STORAGE_PATH, $this->organizationId, $this->userId, self::VALID_CSV_FILE));
-        }
-
-        return storage_path(sprintf('%s/%s/%s/%s', self::CSV_DATA_STORAGE_PATH, $this->organizationId, $this->userId, self::INVALID_CSV_FILE));
+        return storage_path(sprintf('%s/%s/%s/%s', self::CSV_DATA_STORAGE_PATH, $this->organizationId, $this->userId, self::VALID_CSV_FILE));
     }
 
     /**

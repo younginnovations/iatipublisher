@@ -100,14 +100,11 @@ class ImportActivityController extends Controller
                     $user = Auth::user();
                     $this->importXmlService->startImport($file->getClientOriginalName(), $user->id, $user->organization_id);
                 }
-
-                $response = [
-                    'status' => 'success',
-                    'message' => 'Xml Uploaded successfully.',
-                ];
             } else {
                 if ($this->importCsvService->isCsvFileEmpty($file)) {
-                    $response = ['type' => 'danger', 'code' => ['message', ['message' => trans('error.no_data_available')]]];
+                    $response = ['type' => 'danger', 'code' => ['message', ['message' => trans('Data not available')]]];
+
+                    return response()->json($response);
                 }
 
                 $this->importCsvService->clearOldImport();
@@ -122,7 +119,9 @@ class ImportActivityController extends Controller
                     $response = null;
 
                     if (!$this->importCsvService->isInUTF8Encoding($filename)) {
-                        $response = ['type' => 'warning', 'code' => ['encoding_error', ['message' => trans('error.something_is_not_right')]]];
+                        $response = ['success' => false, 'code' => ['encoding_error', ['message' => 'Something went wrong']]];
+
+                        return response()->json($response);
                     }
                 }
             }
@@ -166,7 +165,7 @@ class ImportActivityController extends Controller
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->back()->withResponse(['success' =>false, 'message' => 'Error has occured while importing activity.']);
+            return redirect()->back()->withResponse(['success' => false, 'message' => 'Error has occured while importing activity.']);
         }
     }
 
@@ -185,7 +184,7 @@ class ImportActivityController extends Controller
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activity')->withResponse(['success' =>false, 'message' => 'Error has occurred while checking the status.']);
+            return redirect()->route('admin.activity')->withResponse(['success' => false, 'message' => 'Error has occurred while checking the status.']);
         }
     }
 
@@ -216,7 +215,7 @@ class ImportActivityController extends Controller
                 $data = array_merge($this->getValidData(), $this->getInvalidData());
             }
 
-            return response()->json(['status' => 'success', 'data' => $data, 'status'=> $status]);
+            return response()->json(['status' => 'success', 'data' => $data, 'status' => $status]);
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
@@ -257,62 +256,15 @@ class ImportActivityController extends Controller
         return $activities;
     }
 
-    /*
-     * Clear all invalid Activities.
-     * @return \Illuminate\Http\JsonResponse
+    /**
+     * Fix file permission while on staging environment.
+     *
+     * @param $path
+     *
+     * @return void
      */
-    // public function clearInvalidActivities()
-    // {
-    //     if ($this->importCsvService->clearInvalidActivities()) {
-    //         return response()->json('cleared');
-    //     }
-
-    //     return response()->json('error');
-    // }
-
-    // /**
-    //  * Get the Csv Import status from the current User's session.
-    //  * @return \Illuminate\Http\JsonResponse
-    //  */
-    // public function checkSessionStatus()
-    // {
-    //     return response()->json(['status' => $this->importCsvService->getSessionStatus()]);
-    // }
-
-    /*
-     * Cancel the CSV Uploading Process.
-     */
-    // public function cancel()
-    // {
-    //     $this->importCsvService->removeImportDirectory();
-    //     $this->importCsvService->clearSession(['import-status', 'filename']);
-
-    //     return redirect()->route('activity.upload-csv');
-    // }
-
-    // /**
-    //  * Get processed data from the server.
-    //  *
-    //  * @return \Illuminate\Http\JsonResponse
-    //  */
-    // public function getData(): JsonResponse
-    // {
-    //     if (!($response = $this->importCsvService->getData())) {
-    //         $response = ['render' => sprintf('<p>%s</p>', trans('error.data_not_available'))];
-    //     }
-
-    //     return response()->json($response);
-    // }
-
-    // /**
-    //  * Fix file permission while on staging environment.
-    //  *
-    //  * @param $path
-    //  *
-    //  * @return void
-    //  */
-    // protected function fixPermission($path): void
-    // {
-    //     shell_exec(sprintf('chmod 777 -R %s', $path));
-    // }
+    protected function fixPermission($path): void
+    {
+        shell_exec(sprintf('chmod 777 -R %s', $path));
+    }
 }
