@@ -1,5 +1,5 @@
 @extends('admin.layouts.app')
 
 @section('content')
-    Organisations List
+    <organisation-list></organisation-list>
 @endsection

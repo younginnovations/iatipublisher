@@ -45,13 +45,16 @@
 
 <body class="overflow-x-hidden">
     <div id="app">
+        @if (isSuperAdmin() && !isSuperAdminRoute())
+            <admin-bar :name="{{ json_encode(Auth::user()->full_name) }}"
+                :organization-name="{{ json_encode(Auth::user()->organization->publisher_name) }}">
+            </admin-bar>
+        @endif
         <loggedin-header :user="{{ Auth::user() }}" :organization="{{ Auth::user()->organization }}"
-            :languages="{{ json_encode(getCodeListArray('Languages', 'ActivityArray')) }}"></loggedin-header>
+            :languages="{{ json_encode(getCodeListArray('Languages', 'ActivityArray')) }}"
+            :super-admin="{{ json_encode(!isSuperAdminRoute()) }}"></loggedin-header>
 
         <main>
-            @if(isSuperAdmin() && !isSuperAdminRoute())
-                <a href="{{ route('superadmin.switchBack') }}">Switch Back</a>
-            @endif
             @yield('content')
             @stack('scripts')
         </main>

@@ -43,7 +43,7 @@
           </li>
         </ul>
       </nav>
-      <nav>
+      <nav v-if="superAdmin" class="flex justify-end grow">
         <ul class="activity-nav-list -mx-4">
           <li
             v-for="(menu, index) in data.menus"
@@ -63,21 +63,31 @@
         </ul>
       </nav>
     </div>
-    <div class="user-nav">
+    <div class="user-nav" :class="{ 'grow-0': superAdmin, 'grow justify-end': !superAdmin }">
       <div class="user-nav">
         <div class="search">
           <input
+            v-if="superAdmin"
             v-model="searchValue"
             class="search__input mr-3.5"
             type="text"
             placeholder="Search activity..."
-            @keyup.enter="searchFunction"
+            @keyup.enter="searchFunction('/activities')"
+          />
+          <input
+            v-else
+            v-model="searchValue"
+            class="search__input"
+            type="text"
+            placeholder="Search organisation..."
+            @keyup.enter="searchFunction('/list-organisations')"
           />
           <svg-vue icon="search" />
           <span v-if="spinner" class="spinner" />
         </div>
         <button
-          class="add-btn button secondary-btn mr-3.5 font-bold"
+          v-if="superAdmin"
+          class="button secondary-btn mr-3.5 font-bold"
           @click="modalValue = true"
         >
           <svg-vue icon="add" />
@@ -112,9 +122,6 @@
       </div>
     </div>
 
-    <!--====================
-        Add Activity Modal
-    ========================-->
     <CreateModal
       :modal-active="modalValue"
       @close="modalToggle"
@@ -134,7 +141,9 @@ import Toast from './Toast.vue';
 defineProps({
   user: { type: Object, required: true },
   organization: { type: Object, required: true },
+  superAdmin: { type: Boolean, required: true },
 });
+
 const toastVisibility = ref(false);
 const toastMessage = ref('');
 const toastType = ref(false);
@@ -218,7 +227,7 @@ if (currentURL.includes('?')) {
   searchValue.value = search;
 }
 const spinner = ref(false);
-const searchFunction = () => {
+const searchFunction = (url: string) => {
   spinner.value = true;
   const param = searchValue.value?.replace('#', '');
   let sortingParam = '';
@@ -227,7 +236,7 @@ const searchFunction = () => {
     let queryStringArr = queryString.split('&') as [];
     sortingParam = '&' + queryStringArr.slice(1).join('&');
   }
-  let href = param ? `/activities?q=${param}${sortingParam}` : '/activities/';
+  let href = param ? `${url}?q=${param}${sortingParam}` : '/activities/';
   window.location.href = href;
 };
 onMounted(async () => {
