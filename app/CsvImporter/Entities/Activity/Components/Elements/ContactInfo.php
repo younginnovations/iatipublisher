@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\CsvImporter\Entities\Activity\Components\Elements;
 
 use App\CsvImporter\Entities\Activity\Components\Elements\Foundation\Iati\Element;
@@ -11,15 +13,10 @@ use App\CsvImporter\Entities\Activity\Components\Factory\Validation;
 class ContactInfo extends Element
 {
     /**
-     * Defines constant for Contact Info Template path.
-     */
-    const TEMPLATE_FILE_PATH = '/Services/CsvImporter/Entities/Activity/Components/Elements/Templates/ContactInfo.json';
-
-    /**
      * Csv Header for ContactInfo element.
      * @var array
      */
-    private $_csvHeaders = [
+    private array $_csvHeaders = [
         'contact_type',
         'contact_organization',
         'contact_department',
@@ -33,12 +30,14 @@ class ContactInfo extends Element
 
     /**
      * Index under which the data is stored within the object.
+     *
      * @var string
      */
     protected $index = 'contact_info';
 
     /**
      * ContactInfo constructor.
+     *
      * @param            $fields
      * @param Validation $factory
      */
@@ -50,7 +49,10 @@ class ContactInfo extends Element
 
     /**
      * Prepare ContactInfo element.
+     *
      * @param $fields
+     *
+     * @return void
      */
     public function prepare($fields): void
     {
@@ -65,13 +67,16 @@ class ContactInfo extends Element
 
     /**
      * Map data from CSV file into ContactInfo data format.
+     *
      * @param $key
-     * @param $value
      * @param $index
+     * @param $value
+     *
+     * @return void
      */
     public function map($key, $index, $value): void
     {
-        if (!(is_null($value) || $value == '')) {
+        if (!(is_null($value) || $value === '')) {
             $this->setContactType($key, $value, $index);
             $this->setContactOrganization($key, $value, $index);
             $this->setContactDepartment($key, $value, $index);
@@ -86,9 +91,12 @@ class ContactInfo extends Element
 
     /**
      * Maps ContactInfo Identifiers.
+     *
      * @param $key
      * @param $value
      * @param $index
+     *
+     * @return void
      */
     protected function setContactType($key, $value, $index): void
     {
@@ -96,7 +104,7 @@ class ContactInfo extends Element
             $this->data['contact_info'][$index]['type'] = '';
         }
 
-        if ($key == $this->_csvHeaders[0]) {
+        if ($key === $this->_csvHeaders[0]) {
             // $relatedActivityType = $this->loadCodeList('ContactType');
 
             // foreach ($relatedActivityType as $name => $code) {
@@ -112,9 +120,12 @@ class ContactInfo extends Element
 
     /**
      * Maps ContactInfo Type.
+     *
      * @param $key
      * @param $value
      * @param $index
+     *
+     * @return void
      */
     protected function setContactOrganization($key, $value, $index): void
     {
@@ -124,16 +135,19 @@ class ContactInfo extends Element
 
         $this->data['contact_info'][$index]['organisation'][0]['narrative'][0]['language'] = '';
 
-        if ($key == $this->_csvHeaders[1]) {
+        if ($key === $this->_csvHeaders[1]) {
             $this->data['contact_info'][$index]['organisation'][0]['narrative'][0]['narrative'] = $value;
         }
     }
 
     /**
      * Maps Contact Department.
+     *
      * @param $key
      * @param $value
      * @param $index
+     *
+     * @return void
      */
     protected function setContactDepartment($key, $value, $index): void
     {
@@ -143,16 +157,19 @@ class ContactInfo extends Element
 
         $this->data['contact_info'][$index]['department'][0]['narrative'][0]['language'] = '';
 
-        if ($key == $this->_csvHeaders[2]) {
+        if ($key === $this->_csvHeaders[2]) {
             $this->data['contact_info'][$index]['department'][0]['narrative'][0]['narrative'] = $value;
         }
     }
 
     /**
      * Maps Contact Person's Name.
+     *
      * @param $key
      * @param $value
      * @param $index
+     *
+     * @return void
      */
     protected function setContactPersonName($key, $value, $index): void
     {
@@ -162,16 +179,19 @@ class ContactInfo extends Element
 
         $this->data['contact_info'][$index]['person_name'][0]['narrative'][0]['language'] = '';
 
-        if ($key == $this->_csvHeaders[3]) {
+        if ($key === $this->_csvHeaders[3]) {
             $this->data['contact_info'][$index]['person_name'][0]['narrative'][0]['narrative'] = $value;
         }
     }
 
     /**
      * Define Contact Job Title.
+     *
      * @param $key
      * @param $value
      * @param $index
+     *
+     * @return void
      */
     protected function setContactJobTitle($key, $value, $index): void
     {
@@ -181,16 +201,19 @@ class ContactInfo extends Element
 
         $this->data['contact_info'][$index]['job_title'][0]['narrative'][0]['language'] = '';
 
-        if ($key == $this->_csvHeaders[4]) {
+        if ($key === $this->_csvHeaders[4]) {
             $this->data['contact_info'][$index]['job_title'][0]['narrative'][0]['narrative'] = $value;
         }
     }
 
     /**
      * Maps Contact Telephone.
+     *
      * @param $key
      * @param $value
      * @param $index
+     *
+     * @return void
      */
     protected function setContactTelephone($key, $value, $index): void
     {
@@ -198,16 +221,19 @@ class ContactInfo extends Element
             $this->data['contact_info'][$index]['telephone'][0]['telephone'] = '';
         }
 
-        if ($key == $this->_csvHeaders[5]) {
+        if ($key === $this->_csvHeaders[5]) {
             $this->data['contact_info'][$index]['telephone'][0]['telephone'] = $value;
         }
     }
 
     /**
      * Maps Contact Email.
+     *
      * @param $key
      * @param $value
      * @param $index
+     *
+     * @return void
      */
     protected function setContactEmail($key, $value, $index): void
     {
@@ -215,16 +241,19 @@ class ContactInfo extends Element
             $this->data['contact_info'][$index]['email'][0]['email'] = '';
         }
 
-        if ($key == $this->_csvHeaders[6]) {
+        if ($key === $this->_csvHeaders[6]) {
             $this->data['contact_info'][$index]['email'][0]['email'] = $value;
         }
     }
 
     /**
      * Maps Contact Website.
+     *
      * @param $key
      * @param $value
      * @param $index
+     *
+     * @return void
      */
     protected function setContactWebsite($key, $value, $index): void
     {
@@ -232,16 +261,19 @@ class ContactInfo extends Element
             $this->data['contact_info'][$index]['website'][0]['website'] = '';
         }
 
-        if ($key == $this->_csvHeaders[7]) {
+        if ($key === $this->_csvHeaders[7]) {
             $this->data['contact_info'][$index]['website'][0]['website'] = $value;
         }
     }
 
     /**
      * Maps Contact Mailing Address.
+     *
      * @param $key
      * @param $value
      * @param $index
+     *
+     * @return void
      */
     protected function setContactMailingAddress($key, $value, $index): void
     {
@@ -251,25 +283,24 @@ class ContactInfo extends Element
 
         $this->data['contact_info'][$index]['mailing_address'][0]['narrative'][0]['language'] = '';
 
-        if ($key == $this->_csvHeaders[8]) {
+        if ($key === $this->_csvHeaders[8]) {
             $this->data['contact_info'][$index]['mailing_address'][0]['narrative'][0]['narrative'] = $value;
         }
     }
 
     /**
      * Provides ContactType Code.
+     *
      * @return string
      */
     protected function contactTypeCode(): string
     {
-        $contactType = $this->loadCodeList('ContactType');
-        $codes = array_keys($contactType);
-
-        return implode(',', $codes);
+        return implode(',', array_keys($this->loadCodeList('ContactType')));
     }
 
     /**
      * Provides the rules for the IATI Element validation.
+     *
      * @return array
      */
     public function rules(): array
@@ -285,6 +316,7 @@ class ContactInfo extends Element
 
     /**
      * Provides custom messages used for IATI Element Validation.
+     *
      * @return array
      */
     public function messages(): array
@@ -300,8 +332,10 @@ class ContactInfo extends Element
 
     /**
      * Validate data for IATI Element.
+     *
+     * @return $this
      */
-    public function validate()
+    public function validate(): static
     {
         $this->validator = $this->factory->sign($this->data())
                                          ->with($this->rules(), $this->messages())

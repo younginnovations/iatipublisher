@@ -13,7 +13,7 @@ class DefaultFieldValues extends Element
     /**
      * @var array
      */
-    protected $_csvHeaders = ['activity_default_currency', 'activity_default_language', 'humanitarian'];
+    protected array $_csvHeaders = ['activity_default_currency', 'activity_default_language', 'humanitarian'];
 
     /**
      * @var string
@@ -22,6 +22,7 @@ class DefaultFieldValues extends Element
 
     /**
      * DefaultFieldValues constructor.
+     *
      * @param            $fields
      * @param Validation $factory
      */
@@ -33,7 +34,10 @@ class DefaultFieldValues extends Element
 
     /**
      * Prepare the IATI Element.
+     *
      * @param $fields
+     *
+     * @return void
      */
     protected function prepare($fields): void
     {
@@ -48,13 +52,16 @@ class DefaultFieldValues extends Element
 
     /**
      * Map data from CSV file into Default Field Values data format.
+     *
      * @param $key
      * @param $value
      * @param $index
+     *
+     * @return void
      */
     protected function map($key, $value, $index): void
     {
-        if (!(is_null($value) || $value == '')) {
+        if (!(is_null($value) || $value === '')) {
             $this->setLinkedDataUri($key, $value, $index);
             $this->setDefaultLanguage($key, $value, $index);
             $this->setDefaultCurrency($key, $value, $index);
@@ -70,9 +77,12 @@ class DefaultFieldValues extends Element
 
     /**
      * Set linked data uri for the default field values.
+     *
      * @param $key
      * @param $value
      * @param $index
+     *
+     * @return void
      */
     protected function setLinkedDataUri($key, $value, $index): void
     {
@@ -85,9 +95,12 @@ class DefaultFieldValues extends Element
 
     /**
      * Set language for the default field values.
+     *
      * @param $key
      * @param $value
      * @param $index
+     *
+     * @return void
      */
     protected function setDefaultLanguage($key, $value, $index): void
     {
@@ -95,16 +108,19 @@ class DefaultFieldValues extends Element
             $this->data['default_field_values'][$index]['default_language'] = '';
         }
 
-        if ($key == $this->_csvHeaders[1]) {
+        if ($key === $this->_csvHeaders[1]) {
             $this->data['default_field_values'][$index]['default_language'] = strtolower($value);
         }
     }
 
     /**
      * Set currency for the default field values.
+     *
      * @param $key
      * @param $value
      * @param $index
+     *
+     * @return void
      */
     protected function setDefaultCurrency($key, $value, $index): void
     {
@@ -112,16 +128,19 @@ class DefaultFieldValues extends Element
             $this->data['default_field_values'][$index]['default_currency'] = '';
         }
 
-        if ($key == $this->_csvHeaders[0]) {
+        if ($key === $this->_csvHeaders[0]) {
             $this->data['default_field_values'][$index]['default_currency'] = strtoupper($value);
         }
     }
 
     /**
      * Set hierarchy for the default field values.
+     *
      * @param $key
      * @param $value
      * @param $index
+     *
+     * @return void
      */
     protected function setDefaultHierarchy($key, $value, $index): void
     {
@@ -136,9 +155,12 @@ class DefaultFieldValues extends Element
 
     /**
      * Set collaboration type for the default field values.
+     *
      * @param $key
      * @param $value
      * @param $index
+     *
+     * @return void
      */
     protected function setDefaultCollaborationType($key, $value, $index): void
     {
@@ -153,9 +175,12 @@ class DefaultFieldValues extends Element
 
     /**
      * Set flow type for the default field values.
+     *
      * @param $key
      * @param $value
      * @param $index
+     *
+     * @return void
      */
     protected function setDefaultFlowType($key, $value, $index): void
     {
@@ -170,9 +195,12 @@ class DefaultFieldValues extends Element
 
     /**
      * Set finance type for the default field values.
+     *
      * @param $key
      * @param $value
      * @param $index
+     *
+     * @return void
      */
     protected function setDefaultFinanceType($key, $value, $index): void
     {
@@ -186,9 +214,12 @@ class DefaultFieldValues extends Element
 
     /**
      * Set aid type for the default field values.
+     *
      * @param $key
      * @param $value
      * @param $index
+     *
+     * @return void
      */
     protected function setDefaultAidType($key, $value, $index): void
     {
@@ -218,22 +249,23 @@ class DefaultFieldValues extends Element
 
     /**
      * Set humanitarian for the default field values.
+     *
      * @param $key
      * @param $value
      * @param $index
+     *
+     * @return void
      */
     protected function setHumanitarian($key, $value, $index): void
     {
         if (!isset($this->data['default_field_values'][$index]['humanitarian'])) {
             $this->data['default_field_values'][$index]['humanitarian'] = '';
         }
-        if ($key == $this->_csvHeaders[2]) {
-            if ((strtolower($value) == 'yes') || (strtolower($value) == 'true')) {
+        if ($key === $this->_csvHeaders[2]) {
+            if ((strtolower($value) === 'yes') || (strtolower($value) === 'true')) {
                 $value = '1';
-            } else {
-                if ((strtolower($value) == 'no') || (strtolower($value) == 'false')) {
-                    $value = '0';
-                }
+            } elseif ((strtolower($value) === 'no') || (strtolower($value) === 'false')) {
+                $value = '0';
             }
 
             $this->data['default_field_values'][$index]['humanitarian'] = $value;
@@ -242,8 +274,10 @@ class DefaultFieldValues extends Element
 
     /**
      * Validate data for IATI Element.
+     *
+     * @return $this
      */
-    public function validate()
+    public function validate(): static
     {
         $this->validator = $this->factory->sign($this->data())
                                          ->with($this->rules(), $this->messages())
@@ -256,6 +290,7 @@ class DefaultFieldValues extends Element
 
     /**
      * Provides the rules for the IATI Element validation.
+     *
      * @return array
      */
     public function rules(): array
@@ -270,6 +305,7 @@ class DefaultFieldValues extends Element
 
     /**
      * Provides custom messages used for IATI Element Validation.
+     *
      * @return array
      */
     public function messages(): array
@@ -283,13 +319,15 @@ class DefaultFieldValues extends Element
     }
 
     /**
-     * Return Codelist of the default Field Values.
+     * Return Code list of the default Field Values.
+     *
      * @param $codeList
+     *
      * @return string
      */
     protected function defaultValueCodeList($codeList): string
     {
-        list($defaultValueCodeList, $codes) = [$this->loadCodeList($codeList), []];
+        [$defaultValueCodeList, $codes] = [$this->loadCodeList($codeList), []];
         $codes = array_keys($defaultValueCodeList);
 
         return implode(',', array_keys(array_flip($codes)));
