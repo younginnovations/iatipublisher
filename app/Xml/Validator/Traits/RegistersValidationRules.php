@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Xml\Validator\Traits;
 
 use Illuminate\Support\Arr;
@@ -13,7 +15,7 @@ trait RegistersValidationRules
     /**
      * Register the required validation rules.
      */
-    protected function registerValidationRules()
+    protected function registerValidationRules(): void
     {
         $this->extendImplicit(
             'unique_lang',
@@ -21,7 +23,7 @@ trait RegistersValidationRules
                 $languages = [];
                 foreach ((array) $value as $narrative) {
                     $language = $narrative['language'];
-                    if (in_array($language, $languages)) {
+                    if (in_array($language, $languages, true)) {
                         return false;
                     }
                     $languages[] = $language;
@@ -44,7 +46,7 @@ trait RegistersValidationRules
                 }
 
                 if (count($languages) === count(array_unique($languages))) {
-                    if (in_array('', $languages) && in_array($defaultLanguage, $languages)) {
+                    if (in_array('', $languages, true) && in_array($defaultLanguage, $languages, true)) {
                         $check = false;
                     }
                 }
@@ -61,7 +63,7 @@ trait RegistersValidationRules
         );
 
         $this->extendImplicit('total', function ($attribute, $value, $parameters, $validator) {
-            if ($value == 100) {
+            if ($value === 100) {
                 return true;
             }
 
@@ -93,22 +95,22 @@ trait RegistersValidationRules
                 $planned_end_date = '';
 
                 foreach ($dates as $date) {
-                    $actual_start_date = (Arr::get($date, 'type') == 2) ? Arr::get($date, 'date') : $actual_start_date;
-                    $actual_end_date = (Arr::get($date, 'type') == 4) ? Arr::get($date, 'date') : $actual_end_date;
-                    $planned_start_date = (Arr::get($date, 'type') == 1) ? Arr::get($date, 'date') : $planned_start_date;
-                    $planned_end_date = (Arr::get($date, 'type') == 3) ? Arr::get($date, 'date') : $planned_end_date;
+                    $actual_start_date = (Arr::get($date, 'type') === 2) ? Arr::get($date, 'date') : $actual_start_date;
+                    $actual_end_date = (Arr::get($date, 'type') === 4) ? Arr::get($date, 'date') : $actual_end_date;
+                    $planned_start_date = (Arr::get($date, 'type') === 1) ? Arr::get($date, 'date') : $planned_start_date;
+                    $planned_end_date = (Arr::get($date, 'type') === 3) ? Arr::get($date, 'date') : $planned_end_date;
                 }
 
-                if (($actual_start_date > $actual_end_date) && ($actual_start_date != '' && $actual_end_date != '')) {
+                if (($actual_start_date > $actual_end_date) && ($actual_start_date !== '' && $actual_end_date !== '')) {
                     return false;
-                } elseif (($planned_start_date > $planned_end_date) && ($planned_start_date != '' && $planned_end_date != '')) {
+                } elseif (($planned_start_date > $planned_end_date) && ($planned_start_date !== '' && $planned_end_date !== '')) {
                     return false;
-                } elseif (($actual_start_date > $planned_end_date) && ($actual_start_date != '' && $planned_end_date != '')
-                    && ($actual_end_date == '' && $planned_start_date == '')
+                } elseif (($actual_start_date > $planned_end_date) && ($actual_start_date !== '' && $planned_end_date !== '')
+                    && ($actual_end_date === '' && $planned_start_date === '')
                 ) {
                     return false;
-                } elseif (($planned_start_date > $actual_end_date) && ($planned_start_date != '' && $actual_end_date != '')
-                    && ($planned_end_date == '' && $actual_start_date == '')
+                } elseif (($planned_start_date > $actual_end_date) && ($planned_start_date !== '' && $actual_end_date !== '')
+                    && ($planned_end_date === '' && $actual_start_date === '')
                 ) {
                     return false;
                 }
@@ -122,7 +124,7 @@ trait RegistersValidationRules
             function ($attribute, $date, $parameters, $validator) {
                 $dateType = (!is_array($date)) ?: Arr::get($date, '0.type');
 
-                if ($dateType == 2 || $dateType == 4) {
+                if ($dateType === 2 || $dateType === 4) {
                     $actual_date = (!is_array($date)) ?: Arr::get($date, '0.date');
                     if ($actual_date > date('Y-m-d')) {
                         return false;

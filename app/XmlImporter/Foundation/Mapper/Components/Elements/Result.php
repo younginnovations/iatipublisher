@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\XmlImporter\Foundation\Mapper\Components\Elements;
 
 use App\XmlImporter\Foundation\Support\Helpers\Traits\XmlHelper;
@@ -24,8 +26,10 @@ class Result
     /**
      * @param array $results
      * @param       $template
+     *
+     * @return mixed
      */
-    public function map(array $results, $template)
+    public function map(array $results, $template): mixed
     {
         foreach ($results as $index => $result) {
             $this->result[$index] = $template['result'];
@@ -44,13 +48,14 @@ class Result
      * @param $index
      * @return array
      */
-    protected function indicator($result, $index)
+    protected function indicator($result, $index): array
     {
         $indicatorAttributes = $this->filterAttributes(Arr::get($result, 'value', []), 'indicator', ['measure', 'ascending']);
         $indicators = $this->filterValues(Arr::get($result, 'value', []), 'indicator');
         $indicatorTemplate = Arr::get($this->result[$index], 'indicator', []);
 
         $indicatorData = [Arr::get($indicatorTemplate, 0, [])];
+
         foreach ($indicators as $index => $indicator) {
             $indicator = $indicator['indicator'];
             $indicatorData[$index]['measure'] = Arr::get($indicatorAttributes, $index . 'measure', '');
@@ -70,7 +75,7 @@ class Result
      * @param $indicatorTemplate
      * @return string
      */
-    protected function reference($indicator, $indicatorTemplate)
+    protected function reference($indicator, $indicatorTemplate): string
     {
         $references = $this->filterAttributes($indicator, 'reference', ['vocabulary', 'code', 'indicator_uri']);
         $referenceData = Arr::get($indicatorTemplate, '0.reference');
@@ -84,9 +89,10 @@ class Result
     /**
      * @param $indicator
      * @param $indicatorTemplate
-     * @return string
+     *
+     * @return array|string
      */
-    protected function baseline($indicator, $indicatorTemplate)
+    protected function baseline($indicator, $indicatorTemplate): array|string
     {
         $baseline = Arr::get($indicatorTemplate, '0.baseline');
         $baselineAttributes = $this->filterAttributes($indicator, 'baseline', ['year', 'value']);
@@ -103,7 +109,7 @@ class Result
      * @param $indicatorTemplate
      * @return string
      */
-    protected function period($indicator, $indicatorTemplate)
+    protected function period($indicator, $indicatorTemplate): string
     {
         $periods = $this->filterValues($indicator, 'period');
         $periodsData = $periodsTemplate = Arr::get($indicatorTemplate, '0.period');
@@ -126,9 +132,10 @@ class Result
     /**
      * @param $period
      * @param $periodTemplate
-     * @return string
+     *
+     * @return array|string
      */
-    protected function target($period, $periodTemplate)
+    protected function target($period, $periodTemplate): array|string
     {
         $targetData = Arr::get($periodTemplate, '0.target');
         $targetData[0]['value'] = Arr::get($this->filterAttributes($period, 'target', ['value']), '0.value', '');
@@ -143,9 +150,10 @@ class Result
     /**
      * @param $period
      * @param $periodTemplate
-     * @return string
+     *
+     * @return array|string
      */
-    protected function actual($period, $periodTemplate)
+    protected function actual($period, $periodTemplate): array|string
     {
         $actualData = Arr::get($periodTemplate, '0.actual');
         $actualData[0]['value'] = Arr::get($this->filterAttributes($period, 'actual', ['value']), '0.value', '');
@@ -160,12 +168,14 @@ class Result
     /**
      * @param $data
      * @param $template
-     * @return string
+     *
+     * @return array|string
      */
-    protected function location($data, $template)
+    protected function location($data, $template): array|string
     {
         $locationData = Arr::get($template, '0.location', []);
         $locations = $this->filterAttributes($data, 'location', ['ref']);
+
         foreach ($locations as $index => $location) {
             $locationData[$index]['ref'] = Arr::get($location, 'ref');
         }
@@ -176,12 +186,14 @@ class Result
     /**
      * @param $data
      * @param $template
-     * @return string
+     *
+     * @return array|string
      */
-    protected function dimension($data, $template)
+    protected function dimension($data, $template): array|string
     {
         $dimensionData = Arr::get($template, '0.dimension', []);
         $dimensions = $this->filterAttributes($data, 'dimension', ['name', 'value']);
+
         foreach ($dimensions as $index => $dimension) {
             $dimensionData[$index]['name'] = Arr::get($dimension, 'name');
             $dimensionData[$index]['value'] = Arr::get($dimension, 'value');
@@ -193,12 +205,14 @@ class Result
     /**
      * @param $data
      * @param $template
-     * @return string
+     *
+     * @return array|string
      */
-    protected function comment($data, $template)
+    protected function comment($data, $template): array|string
     {
         $commentData = Arr::get($template, '0.comment', []);
         $comments = Arr::get($this->filterValues($data, 'comment'), '0.comment', []);
+
         foreach ($comments as $index => $comment) {
             $commentData[0]['narrative'][$index] = Arr::get($this->narrative($comment), '0');
         }

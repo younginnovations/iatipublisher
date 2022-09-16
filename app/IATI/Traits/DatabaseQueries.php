@@ -1,8 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\IATI\Traits;
 
 use App\Models\Activity\Activity;
+use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Arr;
 
@@ -13,7 +16,9 @@ trait DatabaseQueries
 {
     /**
      * Get all Activity Identifiers present until now.
+     *
      * @return array
+     * @throws BindingResolutionException
      */
     protected function activityIdentifiers(): array
     {
@@ -28,7 +33,9 @@ trait DatabaseQueries
 
     /**
      * Get all the Activities.
+     *
      * @return Collection
+     * @throws BindingResolutionException
      */
     protected function activities(): Collection
     {
