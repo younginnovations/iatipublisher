@@ -12,6 +12,8 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * Class BulkPublishingController.
@@ -70,16 +72,14 @@ class BulkPublishingController extends Controller
     public function checkCoreElementsCompleted(Request $request): JsonResponse
     {
         try {
-            $activityIds = $request->get('activities');
-
             if ($this->publishingStatusService->ongoingBulkPublishing(auth()->user()->organization->id)) {
                 return response()->json(['success' => false, 'message' => 'Another bulk publishing is already in progress.']);
             }
 
-            if (json_decode($activityIds)) {
-                $coreElementsCompleted = $this->bulkPublishingService->getCoreElementsCompletedArray(json_decode($activityIds, true));
+            $activityIds = json_decode($request->get('activities'), true, 512, JSON_THROW_ON_ERROR);
 
-                return response()->json(['success' => true, 'message' => 'Retrieved data successfully.', 'data' => $coreElementsCompleted]);
+            if (!empty($activityIds)) {
+                return response()->json(['success' => true, 'message' => 'Retrieved data successfully.', 'data' => $this->bulkPublishingService->getCoreElementsCompletedArray($activityIds)]);
             }
 
             return response()->json(['success' => false, 'message' => 'No activities selected.']);
@@ -91,7 +91,7 @@ class BulkPublishingController extends Controller
     }
 
     /**
-     * Validates activites on IATI validator.
+     * Validates activities on IATI validator.
      *
      * @param Request $request
      *
@@ -108,10 +108,10 @@ class BulkPublishingController extends Controller
                 return response()->json(['success' => false, 'message' => 'Please update the publishing information first.']);
             }
 
-            $activityIds = $request->get('activities');
+            $activityIds = json_decode($request->get('activities'), true, 512, JSON_THROW_ON_ERROR);
 
-            if (json_decode($activityIds, true)) {
-                $validationResponse = $this->bulkPublishingService->validateActivitiesOnIATI(json_decode($activityIds, true));
+            if (!empty($activityIds)) {
+                $validationResponse = $this->bulkPublishingService->validateActivitiesOnIATI($activityIds);
                 DB::commit();
 
                 if (!Arr::get($validationResponse, 'success', true)) {
@@ -151,10 +151,10 @@ class BulkPublishingController extends Controller
                 return response()->json(['success' => false, 'message' => 'Another bulk publishing is already in progress.']);
             }
 
-            $activityIds = $request->get('activities');
+            $activityIds = json_decode($request->get('activities'), false, 512, JSON_THROW_ON_ERROR);
 
-            if (json_decode($activityIds, true)) {
-                $activities = $this->activityService->getActivitiesHavingIds(json_decode($activityIds, true));
+            if (!empty($activityIds)) {
+                $activities = $this->activityService->getActivitiesHavingIds($activityIds);
 
                 if (!count($activities)) {
                     return response()->json(['success' => false, 'message' => 'No activities selected.']);
@@ -207,6 +207,10 @@ class BulkPublishingController extends Controller
             logger()->error($e->getMessage());
 
             return response()->json(['success' => false, 'message' => 'Status generation failed.']);
+        } catch (NotFoundExceptionInterface|ContainerExceptionInterface $e) {
+            logger()->error($e->getMessage());
+
+            return response()->json(['success' => false, 'message' => 'Request error']);
         }
     }
 }

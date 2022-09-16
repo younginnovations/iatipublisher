@@ -142,19 +142,19 @@ class BulkPublishingService
     public function validateWithException($activity): array
     {
         try {
-            $response = $this->activityWorkflowService->validateActivityOnIATIValidator($activity);
+            $response = json_decode($this->activityWorkflowService->validateActivityOnIATIValidator($activity), true, 512, JSON_THROW_ON_ERROR);
 
-            if ($this->validatorService->updateOrCreateResponse($activity->id, json_decode($response, true))) {
-                return json_decode($response, true);
+            if ($this->validatorService->updateOrCreateResponse($activity->id, $response)) {
+                return $response;
             }
 
             return ['success' => false, 'error' => 'Error has occurred while validating activity.'];
         } catch (BadResponseException $ex) {
-            if ($ex->getCode() == 422) {
-                $response = $ex->getResponse()->getBody()->getContents();
+            if ($ex->getCode() === 422) {
+                $response = json_decode($ex->getResponse()->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
-                if ($this->validatorService->updateOrCreateResponse($activity->id, json_decode($response, true))) {
-                    return json_decode($response, true);
+                if ($this->validatorService->updateOrCreateResponse($activity->id, $response)) {
+                    return $response;
                 }
             }
 
