@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\CsvImporter\Entities\Activity\Components\Elements;
 
 use App\CsvImporter\Entities\Activity\Components\ActivityRow;
@@ -29,7 +31,7 @@ class Transaction extends Element
     /**
      * @var array
      */
-    protected $_csvHeaders = [
+    protected array $_csvHeaders = [
         'transaction_internal_reference',
         'transaction_type',
         'transaction_date',
@@ -84,8 +86,11 @@ class Transaction extends Element
     /**
      * @var ActivityRow
      */
-    protected $activityRow;
+    protected ActivityRow $activityRow;
 
+    /**
+     * @var
+     */
     private $version;
 
     /**
@@ -103,9 +108,12 @@ class Transaction extends Element
 
     /**
      * Prepare the IATI Element.
+     *
      * @param $fields
+     *
+     * @return void
      */
-    protected function prepare($fields)
+    protected function prepare($fields): void
     {
         foreach ($fields as $key => $value) {
             $value = (!is_null($value)) ? $value : '';
@@ -131,8 +139,10 @@ class Transaction extends Element
 
     /**
      * Validate data for IATI Element.
+     *
+     * @return $this
      */
-    public function validate()
+    public function validate(): static
     {
         $activitySector = Arr::get($this->activityLevelSector(), 'sector', []);
         $this->data['transaction']['sector'][0]['activitySector'] = (empty($activitySector) ? '' : $activitySector);
@@ -148,15 +158,14 @@ class Transaction extends Element
             ->getValidatorInstance();
         $this->setValidity();
 
-        unset($this->data['transaction']['sector'][0]['activitySector']);
-        unset($this->data['transaction']['activityRecipientRegion']);
-        unset($this->data['transaction']['activityRecipientCountry']);
+        unset($this->data['transaction']['sector'][0]['activitySector'], $this->data['transaction']['activityRecipientRegion'], $this->data['transaction']['activityRecipientCountry']);
 
         return $this;
     }
 
     /**
      * Provides the rules for the IATI Element validation.
+     *
      * @return array
      */
     public function rules(): array
@@ -225,6 +234,7 @@ class Transaction extends Element
 
     /**
      * Provides custom messages used for IATI Element Validation.
+     *
      * @return array
      */
     public function messages(): array
@@ -313,13 +323,15 @@ class Transaction extends Element
 
     /**
      * Get the valid codes/names from the respective code list.
+     *
      * @param $name
-     * @param $version
+     * @param string $directory
+     *
      * @return string
      */
-    protected function validCodeOrName($name, $directory = 'Activity')
+    protected function validCodeOrName($name, string $directory = 'Activity'): string
     {
-        list($validCodes, $codes) = [$this->loadCodeList($name, $directory), []];
+        [$validCodes, $codes] = [$this->loadCodeList($name, $directory), []];
         $codes = array_keys($validCodes);
 
         return implode(',', array_keys(array_flip($codes)));
@@ -327,12 +339,14 @@ class Transaction extends Element
 
     /**
      * Get the valid codes from the respective code list.
-     * @param        $name
-     * @param        $version
+     *
+     * @param $name
      * @param string $directory
+     *
      * @return string
+     * @throws \JsonException
      */
-    protected function validCodeList($name, $directory = 'Activity')
+    protected function validCodeList($name, string $directory = 'Activity'): string
     {
         $codeList = getCodeList($name, $directory);
         $codes = array_keys($codeList);
@@ -342,32 +356,42 @@ class Transaction extends Element
 
     /**
      * Get the Sector for the Activity Level.
+     *
      * @return mixed
      */
-    protected function activityLevelSector()
+    protected function activityLevelSector(): mixed
     {
         return $this->activityRow->sector->data;
     }
 
     /**
      * Get the Recipient Country for the Activity Level.
+     *
      * @return mixed
      */
-    protected function activityLevelRecipientCountry()
+    protected function activityLevelRecipientCountry(): mixed
     {
         return $this->activityRow->recipientCountry->data;
     }
 
     /**
      * Get the Recipient Region for the Activity Level.
+     *
      * @return mixed
      */
-    protected function activityLevelRecipientRegion()
+    protected function activityLevelRecipientRegion(): mixed
     {
         return $this->activityRow->recipientRegion->data;
     }
 
-    public function setVersion($version)
+    /**
+     * Sets version.
+     *
+     * @param $version
+     *
+     * @return void
+     */
+    public function setVersion($version): void
     {
         $this->version = $version;
     }
