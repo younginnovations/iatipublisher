@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\CsvImporter\Entities\Activity\Components\Elements;
 
 use App\CsvImporter\Entities\Activity\Components\Elements\Foundation\Iati\Element;
@@ -21,12 +23,12 @@ class Identifier extends Element
     /**
      * CSV Header of Description with their code.
      */
-    private $_csvHeader = ['activity_identifier'];
+    private array $_csvHeader = ['activity_identifier'];
 
     /**
      * @var array
      */
-    protected $template = [['activity_identifier' => '']];
+    protected array $template = [['activity_identifier' => '']];
 
     /**
      * Description constructor.
@@ -41,7 +43,10 @@ class Identifier extends Element
 
     /**
      * Prepare the Identifier element.
+     *
      * @param $fields
+     *
+     * @return void
      */
     protected function prepare($fields): void
     {
@@ -56,7 +61,10 @@ class Identifier extends Element
 
     /**
      * Map data from CSV file into Identifier data format.
+     *
      * @param $value
+     *
+     * @return void
      */
     public function map($value): void
     {
@@ -67,8 +75,10 @@ class Identifier extends Element
 
     /**
      * Validate data for Identifier.
+     *
+     * @return $this
      */
-    public function validate()
+    public function validate(): static
     {
         $this->validator = $this->factory->sign($this->data())
                                          ->with($this->rules(), $this->messages())
@@ -81,6 +91,7 @@ class Identifier extends Element
 
     /**
      * Provides the rules for the Identifier validation.
+     *
      * @return array
      */
     public function rules(): array
@@ -93,6 +104,7 @@ class Identifier extends Element
 
     /**
      * Provides custom messages used for Identifier Validation.
+     *
      * @return array
      */
     public function messages(): array
@@ -105,7 +117,10 @@ class Identifier extends Element
 
     /**
      * Set the organizationId for the current Organization.
+     *
      * @param $organizationId
+     *
+     * @return void
      */
     public function setOrganization($organizationId): void
     {

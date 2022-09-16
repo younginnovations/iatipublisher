@@ -20,7 +20,7 @@ class RecipientRegion extends Element
      * Index under which the data is stored within the object.
      * @var string
      */
-    protected $index = 'recipient_region';
+    protected string $index = 'recipient_region';
 
     /**
      * @var array
@@ -35,7 +35,7 @@ class RecipientRegion extends Element
     /**
      * @var array
      */
-    protected $template = [['region_code' => '', 'region_vocabulary' => '', 'vocabulary_uri' => '', 'percentage' => '', 'narrative' => ['narrative' => '', 'language' => '']]];
+    protected array $template = [['region_code' => '', 'region_vocabulary' => '', 'vocabulary_uri' => '', 'percentage' => '', 'narrative' => ['narrative' => '', 'language' => '']]];
 
     /**
      * @var

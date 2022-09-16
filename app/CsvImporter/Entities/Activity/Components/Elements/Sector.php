@@ -28,7 +28,7 @@ class Sector extends Element
      * Index under which the data is stored within the object.
      * @var string
      */
-    protected $index = 'sector';
+    protected string $index = 'sector';
 
     /**
      * @var array
@@ -53,7 +53,7 @@ class Sector extends Element
     /**
      * @var array
      */
-    protected $template = [
+    protected array $template = [
         [
             'sector_vocabulary'    => '',
             'vocabulary_uri'       => '',
