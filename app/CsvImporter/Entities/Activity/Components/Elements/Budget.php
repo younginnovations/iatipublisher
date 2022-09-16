@@ -24,7 +24,7 @@ class Budget extends Element
      *
      * @var string
      */
-    protected $index = 'budget';
+    protected string $index = 'budget';
 
     /**
      * Budget constructor.

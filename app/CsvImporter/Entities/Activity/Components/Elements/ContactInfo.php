@@ -33,7 +33,7 @@ class ContactInfo extends Element
      *
      * @var string
      */
-    protected $index = 'contact_info';
+    protected string $index = 'contact_info';
 
     /**
      * ContactInfo constructor.

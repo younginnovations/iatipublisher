@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\CsvImporter\Entities\Activity\Components\Elements;
 
 use App\CsvImporter\Entities\Activity\Components\Elements\Foundation\Iati\Element;
@@ -13,23 +15,23 @@ class ParticipatingOrganization extends Element
     /**
      * @var array
      */
-    private $_csvHeaders = ['participating_organisation_role', 'participating_organisation_type', 'participating_organisation_name', 'participating_organisation_identifier'];
+    private array $_csvHeaders = ['participating_organisation_role', 'participating_organisation_type', 'participating_organisation_name', 'participating_organisation_identifier'];
 
     /**
      * Index under which the data is stored within the object.
      * @var string
      */
-    protected $index = 'participating_organization';
+    protected string $index = 'participating_organization';
 
     /**
      * @var array
      */
-    protected $template = ['type' => '', 'date' => '', 'narrative' => ['narrative' => '', 'language' => '']];
+    protected array $template = ['type' => '', 'date' => '', 'narrative' => ['narrative' => '', 'language' => '']];
 
     /**
      * @var array
      */
-    protected $types = [];
+    protected array $types = [];
 
     /**
      * @var
@@ -39,7 +41,7 @@ class ParticipatingOrganization extends Element
     /**
      * @var array
      */
-    protected $orgRoles = [];
+    protected array $orgRoles = [];
 
     /**
      * ParticipatingOrganisation constructor.
@@ -54,7 +56,10 @@ class ParticipatingOrganization extends Element
 
     /**
      * Prepare ParticipatingOrganisation Element.
+     *
      * @param $fields
+     *
+     * @return void
      */
     public function prepare($fields): void
     {
@@ -69,9 +74,12 @@ class ParticipatingOrganization extends Element
 
     /**
      * Map data from CSV file into ParticipatingOrganisation data format.
+     *
      * @param $key
      * @param $value
      * @param $index
+     *
+     * @return void
      */
     public function map($key, $value, $index): void
     {
@@ -87,9 +95,13 @@ class ParticipatingOrganization extends Element
 
     /**
      * Set Organisation Role of Participating Organisation.
+     *
      * @param $key
      * @param $value
      * @param $index
+     *
+     * @return void
+     * @throws \JsonException
      */
     protected function setOrganisationRole($key, $value, $index): void
     {
@@ -97,11 +109,11 @@ class ParticipatingOrganization extends Element
             $this->data['participating_organization'][$index]['organization_role'] = '';
         }
 
-        if ($key == $this->_csvHeaders[0] && (!is_null($value))) {
+        if ($key === $this->_csvHeaders[0] && (!is_null($value))) {
             $validOrganizationRoles = $this->loadCodeList('OrganisationRole', 'Organization');
 
             foreach ($validOrganizationRoles as $name => $role) {
-                if (strcasecmp($value, $role) == 0) {
+                if (strcasecmp($value, $role) === 0) {
                     $value = $name;
                     break;
                 }
@@ -116,9 +128,12 @@ class ParticipatingOrganization extends Element
 
     /**
      * Set Identifier of Participating Organisation.
+     *
      * @param $key
      * @param $value
      * @param $index
+     *
+     * @return void
      */
     protected function setIdentifier($key, $value, $index): void
     {
@@ -126,16 +141,20 @@ class ParticipatingOrganization extends Element
             $this->data['participating_organization'][$index]['identifier'] = '';
         }
 
-        if ($key == $this->_csvHeaders[3] && (!is_null($value))) {
+        if ($key === $this->_csvHeaders[3] && (!is_null($value))) {
             $this->data['participating_organization'][$index]['identifier'] = $value;
         }
     }
 
     /**
      * Set OrganisationType for Participating Organisation.
+     *
      * @param $key
      * @param $value
      * @param $index
+     *
+     * @return void
+     * @throws \JsonException
      */
     protected function setOrganisationType($key, $value, $index): void
     {
@@ -143,7 +162,7 @@ class ParticipatingOrganization extends Element
             $this->data['participating_organization'][$index]['type'] = '';
         }
 
-        if ($key == $this->_csvHeaders[0] && (!is_null($value))) {
+        if ($key === $this->_csvHeaders[0] && (!is_null($value))) {
             $validOrganizationTypes = $this->loadCodeList('OrganizationType', 'Organization');
 
             foreach ($validOrganizationTypes as $name => $role) {
@@ -182,16 +201,19 @@ class ParticipatingOrganization extends Element
 
     /**
      * Set Narrative for ParticipatingOrganisation.
+     *
      * @param $key
      * @param $value
      * @param $index
+     *
+     * @return void
      */
     protected function setNarrative($key, $value, $index): void
     {
         if (!isset($this->data['participating_organization'][$index]['narrative'])) {
             $this->data['participating_organization'][$index]['narrative'][] = ['narrative' => '', 'language' => ''];
         } else {
-            if ($key == $this->_csvHeaders[2]) {
+            if ($key === $this->_csvHeaders[2]) {
                 foreach ($this->data['participating_organization'][$index]['narrative'] as $d) {
                     $this->data['participating_organization'][$index]['narrative'] = array_filter($d);
                 }
@@ -206,6 +228,7 @@ class ParticipatingOrganization extends Element
 
     /**
      * Provides the rules for the IATI Element validation.
+     *
      * @return array
      */
     public function rules(): array
@@ -221,6 +244,7 @@ class ParticipatingOrganization extends Element
 
     /**
      * Provides custom messages used for IATI Element Validation.
+     *
      * @return array
      */
     public function messages(): array
@@ -242,8 +266,10 @@ class ParticipatingOrganization extends Element
 
     /**
      * Validate data for IATI Element.
+     *
+     * @return $this
      */
-    public function validate()
+    public function validate(): static
     {
         $this->validator = $this->factory->sign($this->data())
             ->with($this->rules(), $this->messages())
@@ -256,11 +282,13 @@ class ParticipatingOrganization extends Element
 
     /**
      * Get the valid OrganizationRole from the OrganizationRole codelist as a string.
+     *
      * @return string
+     * @throws \JsonException
      */
     protected function validOrganizationRoles(): string
     {
-        list($organizationRoleCodeList, $organizationRoles) = [$this->loadCodeList('OrganisationRole', 'Organization'), []];
+        [$organizationRoleCodeList, $organizationRoles] = [$this->loadCodeList('OrganisationRole', 'Organization'), []];
         $organizationRoles = array_keys($organizationRoleCodeList) + array_values($organizationRoleCodeList);
 
         return implode(',', array_keys(array_flip($organizationRoles)));
@@ -268,11 +296,13 @@ class ParticipatingOrganization extends Element
 
     /**
      * Get the valid OrganizationType from the OrganizationType codelist as a string.
+     *
      * @return string
+     * @throws \JsonException
      */
     protected function validOrganizationTypes(): string
     {
-        list($organizationTypeCodeList, $organizationTypes) = [$this->loadCodeList('OrganizationType', 'Organization'), []];
+        [$organizationTypeCodeList, $organizationTypes] = [$this->loadCodeList('OrganizationType', 'Organization'), []];
 
         $organizationTypes = array_keys($organizationTypeCodeList) + array_values($organizationTypeCodeList);
 

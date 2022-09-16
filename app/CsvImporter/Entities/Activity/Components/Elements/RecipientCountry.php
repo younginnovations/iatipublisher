@@ -20,7 +20,7 @@ class RecipientCountry extends Element
      * Index under which the data is stored within the object.
      * @var string
      */
-    protected $index = 'recipient_country';
+    protected string $index = 'recipient_country';
 
     /**
      * @var array
@@ -47,7 +47,7 @@ class RecipientCountry extends Element
     /**
      * @var array
      */
-    protected $template = [['country_code' => '', 'percentage' => '', 'narrative' => ['narrative' => '', 'language' => '']]];
+    protected array $template = [['country_code' => '', 'percentage' => '', 'narrative' => ['narrative' => '', 'language' => '']]];
 
     /**
      * Description constructor.

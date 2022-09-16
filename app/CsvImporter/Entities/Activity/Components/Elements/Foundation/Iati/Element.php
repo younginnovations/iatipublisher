@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\CsvImporter\Entities\Activity\Components\Elements\Foundation\Iati;
 
 /**
@@ -7,25 +9,26 @@ namespace App\CsvImporter\Entities\Activity\Components\Elements\Foundation\Iati;
  */
 abstract class Element
 {
-//    use ManagesErrors;
-
-    public $errors = [];
+    /**
+     * @var array
+     */
+    public array $errors = [];
 
     /**
      * Index under which the data is stored within the object.
      * @var string
      */
-    protected $index;
+    protected string $index;
 
     /**
      * @var array
      */
-    protected $data = [];
+    protected array $data = [];
 
     /**
      * @var array
      */
-    protected $template = [];
+    protected array $template = [];
 
     /**
      * @var
@@ -67,17 +70,20 @@ abstract class Element
 
     /**
      * Set the validity for the IATI Element data.
+     *
+     * @return void
      */
-    protected function setValidity()
+    protected function setValidity(): void
     {
         $this->isValid = $this->validator->passes();
     }
 
     /**
      * @param null $popIndex
+     *
      * @return array
      */
-    public function data($popIndex = null)
+    public function data($popIndex = null): array
     {
         if (!$this->data) {
             $this->data = [];
@@ -96,46 +102,54 @@ abstract class Element
 
     /**
      * Get the template for the IATI Element.
+     *
      * @return array
      */
-    public function template()
+    public function template(): array
     {
         return $this->template;
     }
 
     /**
      * Load the provided Activity CodeList.
+     *
      * @param        $codeList
      * @param string $directory
+     *
      * @return array
+     * @throws \JsonException
      */
-    protected function loadCodeList($codeList, $directory = 'Activity'): array
+    protected function loadCodeList($codeList, string $directory = 'Activity'): array
     {
         return getCodeList($codeList, $directory);
     }
 
-    /**
-     * Check the validity of an Element.
-     * @return mixed
-     */
-    public function isValid(): mixed
-    {
-        return $this->isValid;
-    }
+        /**
+         * Check the validity of an Element.
+         *
+         * @return mixed
+         */
+        public function isValid(): mixed
+        {
+            return $this->isValid;
+        }
 
     /**
      * Get the index under which the data is stored within the object.
-     * @return mixed
+     *
+     * @return string
      */
-    public function pluckIndex(): mixed
+    public function pluckIndex(): string
     {
         return $this->index;
     }
 
     /**
      * Record all errors within the Element classes.
+     *
+     * @return void
      */
-    public function withErrors()
+    public function withErrors(): void
     {
         foreach ($this->validator->errors()->getMessages() as $element => $errors) {
             foreach ($errors as $error) {
@@ -146,7 +160,12 @@ abstract class Element
         $this->errors = array_unique($this->errors);
     }
 
-    public function errors()
+    /**
+     * Returns error.
+     *
+     * @return array
+     */
+    public function errors(): array
     {
         return $this->errors;
     }
