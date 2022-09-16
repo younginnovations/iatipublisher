@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\CsvImporter\Queue;
 
 use App\CsvImporter\Entities\Activity\Activity;
@@ -21,17 +23,17 @@ class CsvProcessor
     /**
      * @var array
      */
-    protected $data = [];
+    protected array $data = [];
 
     /**
      * @var Activity
      */
-    public $activity;
+    public Activity $activity;
 
     /**
      * @var string
      */
-    protected $csvIdentifier = 'activity_identifier';
+    protected string $csvIdentifier = 'activity_identifier';
 
     /**
      * CsvProcessor constructor.
@@ -44,11 +46,15 @@ class CsvProcessor
 
     /**
      * Handle the import functionality.
+     *
      * @param $organizationId
      * @param $userId
      * @param $activityIdentifiers
+     * @param $version
+     *
+     * @throws \JsonException
      */
-    public function handle($organizationId, $userId, $activityIdentifiers, $version)
+    public function handle($organizationId, $userId, $activityIdentifiers, $version): void
     {
         $this->filterHeader();
         if ($this->isCorrectCsv($version)) {
@@ -65,7 +71,7 @@ class CsvProcessor
                 mkdir($filepath, 0777, true);
             }
 
-            file_put_contents($filepath . '/' . $filename, json_encode(['mismatch' => true]));
+            file_put_contents($filepath . '/' . $filename, json_encode(['mismatch' => true], JSON_THROW_ON_ERROR));
         }
     }
 
@@ -73,16 +79,20 @@ class CsvProcessor
      * Initialize an object for the Activity class with the provided options.
      *
      * @param array $options
+     *
+     * @return void
      */
-    protected function initActivity(array $options = [])
+    protected function initActivity(array $options = []): void
     {
         $this->activity = new Activity($this->data, Arr::get($options, 'organization_id'), Arr::get($options, 'user_id'), Arr::get($options, 'activity_identifiers'), Arr::get($options, 'version'));
     }
 
     /**
      * Group rows into single Activities.
+     *
+     * @return void
      */
-    protected function groupValues()
+    protected function groupValues(): void
     {
         $index = -1;
 
@@ -97,10 +107,13 @@ class CsvProcessor
 
     /**
      * Group the values of a row to a specific index.
+     *
      * @param $row
      * @param $index
+     *
+     * @return void
      */
-    protected function group($row, $index)
+    protected function group($row, $index): void
     {
         foreach ($row as $key => $value) {
             $this->setValue($index, $key, $value);
@@ -109,23 +122,28 @@ class CsvProcessor
 
     /**
      * Set the provided value to the provided key/index.
+     *
      * @param $index
      * @param $key
      * @param $value
+     *
+     * @return void
      */
-    protected function setValue($index, $key, $value)
+    protected function setValue($index, $key, $value): void
     {
         $this->data[$index][$key][] = $value;
     }
 
     /**
      * Check if the next row is new row or not.
+     *
      * @param $row
+     *
      * @return bool
      */
-    protected function isSameEntity($row)
+    protected function isSameEntity($row): bool
     {
-        if (is_null($row[$this->csvIdentifier]) || $row[$this->csvIdentifier] == '') {
+        if (is_null($row[$this->csvIdentifier]) || $row[$this->csvIdentifier] === '') {
             return true;
         }
 
@@ -134,9 +152,12 @@ class CsvProcessor
 
     /**
      * Check if the headers are correct according to the provided template.
+     *
+     * @param $version
+     *
      * @return bool
      */
-    protected function isCorrectCsv($version)
+    protected function isCorrectCsv($version): bool
     {
         if (!$this->csv) {
             return false;
@@ -147,9 +168,10 @@ class CsvProcessor
 
     /**
      * Filter unwanted keys generated while copying and pasting csv headers. For ex 0 index.
-     * @return mixed
+     *
+     * @return void
      */
-    protected function filterHeader()
+    protected function filterHeader(): void
     {
         foreach ($this->csv as $index => $csvHeaders) {
             foreach ($csvHeaders as $headerIndex => $header) {

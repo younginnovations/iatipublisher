@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\CsvImporter\Entities\Activity\Components;
 
 /**
@@ -11,19 +13,21 @@ class Grouping
      * Stores grouped period rows.
      * @var array
      */
-    protected $grouped = [];
+    protected array $grouped = [];
 
     /**
-     * Stores raw datas to be grouped.
+     * Stores raw data to be grouped.
+     *
      * @var array
      */
-    protected $fields;
+    protected array $fields;
 
     /**
      * Period keys.
+     *
      * @var array
      */
-    protected $keys;
+    protected array $keys;
 
     /**
      * Grouping constructor.
@@ -38,8 +42,10 @@ class Grouping
 
     /**
      * Group rows into single Activities.
+     *
+     * @return array
      */
-    public function groupValues()
+    public function groupValues(): array
     {
         $index = -1;
 
@@ -57,14 +63,15 @@ class Grouping
     }
 
     /**
-     * Check if the next row is new row or not.
+     * @param $index
      * @param $i
+     *
      * @return bool
      */
-    protected function isSameEntity($index, $i)
+    protected function isSameEntity($index, $i): bool
     {
-        if ((is_null($this->fields[$this->keys[0]][$i]) || $this->fields[$this->keys[0]][$i] == '')
-            && (is_null($this->fields[$this->keys[1]][$i]) || $this->fields[$this->keys[1]][$i] == '')
+        if ((is_null($this->fields[$this->keys[0]][$i]) || $this->fields[$this->keys[0]][$i] === '')
+            && (is_null($this->fields[$this->keys[1]][$i]) || $this->fields[$this->keys[1]][$i] === '')
         ) {
             return true;
         }
@@ -74,10 +81,13 @@ class Grouping
 
     /**
      * Set the provided value to the provided key/index.
+     *
      * @param $index
      * @param $i
+     *
+     * @return void
      */
-    protected function setValue($index, $i)
+    protected function setValue($index, $i): void
     {
         foreach ($this->fields as $row => $value) {
             if (array_key_exists($row, array_flip($this->keys))) {

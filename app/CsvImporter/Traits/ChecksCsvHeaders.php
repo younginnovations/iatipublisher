@@ -1,8 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\CsvImporter\Traits;
 
 use App\CsvImporter\CsvReader\CsvReader;
+use Illuminate\Contracts\Container\BindingResolutionException;
 
 /**
  * Class ChecksCsvHeaders.
@@ -11,11 +14,14 @@ trait ChecksCsvHeaders
 {
     /**
      * Load Csv template.
+     *
      * @param $version
      * @param $filename
-     * @return array
+     *
+     * @return mixed
+     * @throws BindingResolutionException
      */
-    protected function loadTemplate($version, $filename)
+    protected function loadTemplate($version, $filename): mixed
     {
         $excel = app()->make(CsvReader::class);
         $file = $excel->load(app_path(sprintf('Services/CsvImporter/Templates/Activity/%s/%s.csv', $version, $filename)));
@@ -25,10 +31,12 @@ trait ChecksCsvHeaders
 
     /**
      * Check if the difference of the csv headers is empty.
+     *
      * @param array $diffHeaders
+     *
      * @return bool
      */
-    protected function isSameCsvHeader(array $diffHeaders)
+    protected function isSameCsvHeader(array $diffHeaders): bool
     {
         if (empty($diffHeaders)) {
             return true;
@@ -39,12 +47,14 @@ trait ChecksCsvHeaders
 
     /**
      * Check if the headers are correct for the uploaded Csv File.
-     * @param        $csvHeaders
-     * @param        $templateFileName
-     * @param string $version
+     *
+     * @param $csvHeaders
+     * @param $templateFileName
+     *
      * @return bool
+     * @throws BindingResolutionException
      */
-    protected function checkHeadersFor($csvHeaders, $templateFileName)
+    protected function checkHeadersFor($csvHeaders, $templateFileName): bool
     {
         $templateHeaders = $this->loadTemplate($templateFileName);
         $templateHeaders = array_keys($templateHeaders[0]);
@@ -56,13 +66,14 @@ trait ChecksCsvHeaders
     /**
      * Check if the headers for the uploaded Csv file matches with the provided header count.
      *
-     * @param $actualHeaders
-     * @param $providedHeaderCount
+     * @param array $actualHeaders
+     * @param       $providedHeaderCount
+     *
      * @return bool
      */
-    protected function headerCountMatches(array $actualHeaders, $providedHeaderCount)
+    protected function headerCountMatches(array $actualHeaders, $providedHeaderCount): bool
     {
-        return count($actualHeaders) == $providedHeaderCount;
+        return count($actualHeaders) === $providedHeaderCount;
     }
 
     /**
@@ -70,7 +81,7 @@ trait ChecksCsvHeaders
      *
      * @return bool
      */
-    protected function hasCorrectHeaders()
+    protected function hasCorrectHeaders(): bool
     {
         $csvHeaders = array_keys($this->csv[0]);
 
@@ -80,12 +91,13 @@ trait ChecksCsvHeaders
     /**
      * Convert array of uppercase string to camelcase string.
      *
-     * @param array $arr
-     * @return array replaced string
+     * @param $arr
+     *
+     * @return array
      */
-    public function replaceString($arr)
+    public function replaceString($arr): array
     {
-        return array_map(function ($data) {
+        return array_map(static function ($data) {
             return str_replace(' ', '_', str_replace(['(', ')'], '', $data));
         }, array_map(
             'strtolower',
@@ -96,10 +108,12 @@ trait ChecksCsvHeaders
     /**
      * Get csv headers array from file.
      *
-     * @param string $filename
+     * @param $type
+     * @param $filename
+     *
      * @return array
      */
-    public function getCsvHeaderArray($type, $filename)
+    public function getCsvHeaderArray($type, $filename): array
     {
         $path = app_path(sprintf('CsvImporter/Templates/%s/%s.csv', $type, $filename));
         $data = array_map('str_getcsv', file($path));
@@ -110,12 +124,13 @@ trait ChecksCsvHeaders
     /**
      * Compare file headers.
      *
-     * @param array $headers
-     * @param string $filename
-     * @param string $version
+     * @param $headers
+     * @param $type
+     * @param $filename
+     *
      * @return bool
      */
-    public function checkSameHeaders($headers, $type, $filename)
+    public function checkSameHeaders($headers, $type, $filename): bool
     {
         $csvHeaders = $this->getCsvHeaderArray($type, $filename);
         $fileHeaders = $this->replaceString($csvHeaders);

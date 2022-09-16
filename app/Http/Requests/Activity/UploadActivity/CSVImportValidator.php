@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Requests\Activity\UploadActivity;
 
 use DateTime;
@@ -11,14 +13,14 @@ use Maatwebsite\Excel\Facades\Excel;
  */
 class CSVImportValidator
 {
-    const REQUIRED_NONEMPTY_FIELD = 1;
-    const IDENTICAL_INTERNAL_REFERENCE = 1;
+    public const REQUIRED_NONEMPTY_FIELD = 1;
+    public const IDENTICAL_INTERNAL_REFERENCE = 1;
 
     public function __construct()
     {
         Validator::extend(
             'multiple_value_in',
-            function ($attribute, $value, $parameters, $validator) {
+            static function ($attribute, $value, $parameters, $validator) {
                 $inputs = explode(';', $value);
                 foreach ($inputs as $input) {
                     if (!in_array($input, $parameters)) {
