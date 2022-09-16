@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\IATI\Services\ImportActivity;
 
 use App\IATI\Elements\Xml\XmlGenerator;
@@ -16,7 +18,12 @@ class XmlService
     /**
      * @var XmlGenerator
      */
-    protected $xmlGenerator;
+    protected XmlGenerator $xmlGenerator;
+
+    /**
+     * @var XmlSchemaErrorParser
+     */
+    private XmlSchemaErrorParser $xmlErrorParser;
 
     /**
      * @param XmlGenerator         $xmlGenerator
@@ -32,20 +39,23 @@ class XmlService
      * @param $filename
      * @param $organizationId
      * @param $publishedActivity
+     *
      * @return array
      */
-    public function savePublishedFiles($filename, $organizationId, $publishedActivity)
+    public function savePublishedFiles($filename, $organizationId, $publishedActivity): array
     {
         return $this->xmlGenerator->savePublishedFiles($filename, $organizationId, $publishedActivity);
     }
 
     /**
      * get all the modified errors.
+     *
      * @param $validateXml
      * @param $errors
+     *
      * @return array
      */
-    public function getSpecificErrors($validateXml, $errors)
+    public function getSpecificErrors($validateXml, $errors): array
     {
         $errorsList = [];
         foreach ($errors as $error) {
@@ -56,8 +66,7 @@ class XmlService
         $messages = [];
         foreach ($errorsList as $message => $count) {
             if ($count > 1) {
-                $newMessage = str_replace('The required', 'Multiple', $message);
-                $newMessage = str_replace(' is ', ' are ', $newMessage);
+                $newMessage = str_replace(['The required', ' is '], ['Multiple', ' are '], $message);
             } else {
                 $newMessage = $message;
             }
@@ -69,11 +78,13 @@ class XmlService
 
     /**
      * Get messages for schema errors.
+     *
      * @param $tempXmlContent
      * @param $version
+     *
      * @return array
      */
-    public function getSchemaErrors($tempXmlContent, $version)
+    public function getSchemaErrors($tempXmlContent, $version): array
     {
         libxml_use_internal_errors(true);
         $xml = new \DOMDocument();
@@ -89,29 +100,25 @@ class XmlService
 
     /**
      * get Xml in format.
+     *
      * @param $tempXmlContent
+     *
      * @return array
      */
-    public function getFormattedXml($tempXmlContent)
+    public function getFormattedXml($tempXmlContent): array
     {
-        // $xmlString = htmlspecialchars($tempXmlContent);
-        // $xmlString = str_replace(" ", "&nbsp;&nbsp;", $xmlString);
-        $xmlLines = explode("\n", $tempXmlContent);
-
-        return $xmlLines;
+        return explode("\n", $tempXmlContent);
     }
 
     /**
-     *  formats uploaded xml.
+     * formats uploaded xml.
+     *
      * @param $tempXmlContent
+     *
      * @return array
      */
-    public function formatUploadedXml($tempXmlContent)
+    public function formatUploadedXml($tempXmlContent): array
     {
-        // $xmlString = htmlspecialchars($tempXmlContent);
-        // $xmlString = str_replace(" ", "&nbsp;", $xmlString);
-        $xmlLines = explode("\n", $tempXmlContent);
-
-        return $xmlLines;
+        return explode("\n", $tempXmlContent);
     }
 }
