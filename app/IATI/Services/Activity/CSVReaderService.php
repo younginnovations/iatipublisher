@@ -1,10 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\IATI\Services\Activity;
 
 use Excel;
 use Illuminate\Support\Collection;
 use PhpOffice\PhpSpreadsheet\IOFactory;
+use PhpOffice\PhpSpreadsheet\Reader\Exception;
 
 /**
  * Class CSVReaderService.
@@ -14,7 +17,7 @@ class CSVReaderService
     /**
      * @var Excel
      */
-    protected $reader;
+    protected Excel $reader;
 
     /**
      * CSVReaderService constructor.
@@ -25,10 +28,6 @@ class CSVReaderService
         $this->reader = $reader;
     }
 
-    /**
-     * @param        $file
-     * @return \Maatwebsite\Excel\Readers\LaravelExcelReader
-     */
     // public function load($file)
     // {
     //     $encoding = getEncodingType($file);
@@ -40,6 +39,11 @@ class CSVReaderService
     //     return $this->reader->load($file, null, $encoding);
     // }
 
+    /**
+     * @param string $file
+     *
+     * @return Collection
+     */
     public function load(string $file): Collection
     {
         $array = $this->parseExcelFile($file);
@@ -47,6 +51,12 @@ class CSVReaderService
         return $this->mapHeaders($array[0]);
     }
 
+    /**
+     * @param string $file
+     *
+     * @return array
+     * @throws Exception
+     */
     public function parseExcelFile(string $file): array
     {
         $fileType = IOFactory::identify($file);
@@ -61,11 +71,18 @@ class CSVReaderService
         return $arr;
     }
 
+    /**
+     * @param array $content
+     *
+     * @return Collection
+     */
     public function mapHeaders(array $content): Collection
     {
         $headers = $content[0];
         $data = array_splice($content, 1);
         $finalArray = [];
+        $arr = [];
+
         foreach ($data as $value) {
             foreach ($value as $k => $v) {
                 $key = str_replace(' ', '_', strtolower(trim($headers[$k])));
