@@ -105,7 +105,7 @@ class ActivityRow extends Row
      * All Elements for an Activity Row.
      * @var
      */
-    protected $elements;
+    protected array $elements;
 
     /**
      * Flag for existence of the identifier.

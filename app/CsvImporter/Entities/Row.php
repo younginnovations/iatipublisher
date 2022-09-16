@@ -1,6 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\CsvImporter\Entities;
+
+use Illuminate\Contracts\Container\BindingResolutionException;
 
 /**
  * Class Row.
@@ -11,7 +15,7 @@ abstract class Row
      * Elements for a Row.
      * @var array
      */
-    protected $elements = [];
+    protected array $elements = [];
 
     /**
      * Fields in the Row.
@@ -22,51 +26,58 @@ abstract class Row
     /**
      * @var bool
      */
-    protected $isValid = false;
+    protected bool $isValid = false;
 
     /**
      * Data in the row.
      * @var array
      */
-    protected $data = [];
+    protected array $data = [];
 
     /**
      * @var array
      */
-    protected $errors = [];
+    protected array $errors = [];
 
     /**
      * Initialize the Row object.
+     *
      * @return mixed
      */
-    abstract public function init();
+    abstract public function init(): mixed;
 
     /**
      * Process the Row.
+     *
      * @return mixed
      */
-    abstract public function process();
+    abstract public function process(): mixed;
 
     /**
      * Validate the Row.
+     *
      * @return mixed
      */
-    abstract public function validate();
+    abstract public function validate(): mixed;
 
     /**
      * Store the Row in a temporary JSON File for further usage.
+     *
      * @return mixed
      */
-    abstract public function keep();
+    abstract public function keep(): mixed;
 
     /**
      * Initialize the objects for the all the elements in the Row.
-     * @param      $classNamespace
-     * @param      $fields
-     * @param null $data
+     *
+     * @param $classNamespace
+     * @param $fields
+     * @param $data
+     *
      * @return mixed
+     * @throws BindingResolutionException
      */
-    protected function make($classNamespace, $fields, $data = null)
+    protected function make($classNamespace, $fields, $data = null): mixed
     {
         if ($data) {
             return app()->makeWith($classNamespace, ['fields' => $fields, 'orgId' => $data]);
@@ -77,19 +88,22 @@ abstract class Row
 
     /**
      * Get the Fields of the Row.
+     *
      * @return mixed
      */
-    public function fields()
+    public function fields(): mixed
     {
         return $this->fields;
     }
 
     /**
      * Get the value of a Field in a Row with specific fieldName.
+     *
      * @param $fieldName
+     *
      * @return mixed
      */
-    public function field($fieldName)
+    public function field($fieldName): mixed
     {
         if (array_key_exists($fieldName, $this->fields)) {
             return $this->fields[$fieldName];
@@ -98,20 +112,23 @@ abstract class Row
 
     /**
      * Get all elements of a Row.
+     *
      * @return array
      */
-    protected function elements()
+    protected function elements(): array
     {
         return $this->elements;
     }
 
     /**
      * Get the namespace for the element class.
+     *
      * @param $element
      * @param $baseNamespace
+     *
      * @return string
      */
-    protected function getNamespace($element, $baseNamespace)
+    protected function getNamespace($element, $baseNamespace): string
     {
         return sprintf('%s\%s', $baseNamespace, ucfirst($element));
     }

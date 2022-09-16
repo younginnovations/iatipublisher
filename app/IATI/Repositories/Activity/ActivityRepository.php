@@ -155,9 +155,10 @@ class ActivityRepository extends Repository
      * Provides activity identifiers.
      *
      * @param $orgId
+     *
      * @return mixed
      */
-    public function getActivities($orgId)
+    public function getActivities($orgId): mixed
     {
         return $this->model->where('org_id', $orgId)->get();
     }
@@ -167,7 +168,7 @@ class ActivityRepository extends Repository
      * @param       $organizationId
      * @return static
      */
-    public function importXmlActivities(array $mappedActivity, $organizationId)
+    public function importXmlActivities(array $mappedActivity, $organizationId): static
     {
         $mappedActivity['default_field_values'] = [];
 
@@ -208,15 +209,15 @@ class ActivityRepository extends Repository
     }
 
     /**
-     * Get element from activity array
-     *
+     * Returns activity element
+     * 
      * @param $activity
      * @param $type
-     * @param $get_values
+     * @param bool $get_values
      *
      * @return array|null
      */
-    public function getActivityElement($activity, $type, $get_values = true): array|null
+    public function getActivityElement($activity, $type, bool $get_values = true): ?array
     {
         if (isset($activity[$type]) && !empty($activity[$type])) {
             return $get_values ? array_values((array) $activity[$type]) : (array) $activity[$type];
@@ -227,11 +228,13 @@ class ActivityRepository extends Repository
 
     /**
      * Set Default values for the imported csv activities.
+     *
      * @param $defaultFieldValues
      * @param $organizationId
+     *
      * @return mixed
      */
-    protected function setDefaultFieldValues($defaultFieldValues, $organizationId)
+    protected function setDefaultFieldValues($defaultFieldValues, $organizationId): mixed
     {
         $settings = Setting::where('organization_id', $organizationId)->first();
         $settingsDefaultFieldValues = $settings ? $settings->default_values + $settings->activity_default_values : [];
@@ -250,10 +253,12 @@ class ActivityRepository extends Repository
 
     /**
      * Create Activity from the csv data.
+     *
      * @param $activityData
+     *
      * @return Activity
      */
-    public function createActivity($activityData)
+    public function createActivity($activityData): Activity
     {
         $defaultFieldValues = $this->setDefaultFieldValues($activityData['default_field_values'], $activityData['organization_id']);
 
@@ -287,11 +292,12 @@ class ActivityRepository extends Repository
     /**
      * Only updates data provided in activity csv.
      *
-     * @param Activity $activity
+     * @param       $id
      * @param array $activityData
-     * @return Activity $activity
+     *
+     * @return Activity
      */
-    public function updateActivity($id, array $activityData)
+    public function updateActivity($id, array $activityData): Activity
     {
         $defaultFieldValues = $this->setDefaultFieldValues($activityData['default_field_values'], $activityData['organization_id']);
 
@@ -322,7 +328,15 @@ class ActivityRepository extends Repository
         );
     }
 
-    public function getActivityWithIdentifier($org_id, $identifier)
+    /**
+     * Returns activity.
+     *
+     * @param $org_id
+     * @param $identifier
+     *
+     * @return mixed
+     */
+    public function getActivityWithIdentifier($org_id, $identifier): mixed
     {
         return $this->model->where('org_id', $org_id)->whereJsonContains('iati_identifier->activity_identifier', $identifier['activity_identifier'])->first();
     }
