@@ -71,7 +71,7 @@
             </div>
 
             <div class="ml-4">
-              <div class="indicators">
+              <div class="indicators elements-detail">
                 <table>
                   <tbody>
                     <template v-if="indicatorData.title[0].narrative.length > 0">
