@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Admin\ImportActivity;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Activity\ActivityCreateRequest;
 use App\Http\Requests\Activity\UploadActivity\ImportActivityRequest;
 use App\IATI\Services\Activity\ActivityService;
 use App\IATI\Services\ImportActivity\ImportCsvService;
 use App\IATI\Services\ImportActivity\ImportXmlService;
 use Exception;
+use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\DatabaseManager;
 use Illuminate\Http\JsonResponse;
@@ -81,10 +81,9 @@ class ImportActivityController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param ActivityCreateRequest $request
+     * @param ImportActivityRequest $request
      *
      * @return JsonResponse
-     * @throws \Throwable
      */
     public function store(ImportActivityRequest $request): JsonResponse
     {
@@ -140,8 +139,9 @@ class ImportActivityController extends Controller
      * @param Request $request
      *
      * @return mixed
+     * @throws \Throwable
      */
-    public function importValidatedActivities(Request $request)
+    public function importValidatedActivities(Request $request): mixed
     {
         try {
             $this->db->beginTransaction();
@@ -172,7 +172,7 @@ class ImportActivityController extends Controller
     /**
      * Show the status page for the Csv Import process.
      *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return Factory|\Illuminate\View\View
      */
     public function status(): View|RedirectResponse
     {
@@ -191,13 +191,12 @@ class ImportActivityController extends Controller
     /**
      * Check Import Status.
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function checkStatus(): JsonResponse
     {
         try {
             $filetype = Session::get('import_filetype');
-            $status = '';
 
             if ($filetype === 'xml') {
                 $result = $this->importXmlService->loadJsonFile('status.json');
@@ -205,7 +204,7 @@ class ImportActivityController extends Controller
                 $status = Arr::get($result, 'success');
             } else {
                 $result = $this->importCsvService->importIsComplete() ?? 'Processing';
-                $status = $result !== 'Processing' ? true : false;
+                $status = $result !== 'Processing';
 
                 $data = [
                     'valid_data' => $this->getValidData(),
@@ -225,7 +224,9 @@ class ImportActivityController extends Controller
 
     /**
      * Get the remaining invalid data.
+     *
      * @return array
+     * @throws \JsonException
      */
     public function getInvalidData(): array
     {
@@ -233,7 +234,7 @@ class ImportActivityController extends Controller
         $activities = [];
 
         if (file_exists($filepath)) {
-            $activities = json_decode(file_get_contents($filepath), true);
+            $activities = json_decode(file_get_contents($filepath), true, 512, JSON_THROW_ON_ERROR);
         }
 
         return $activities;
@@ -243,6 +244,7 @@ class ImportActivityController extends Controller
      * Get the remaining valid data.
      *
      * @return array
+     * @throws \JsonException
      */
     public function getValidData(): array
     {
@@ -250,7 +252,7 @@ class ImportActivityController extends Controller
         $activities = [];
 
         if (file_exists($filepath)) {
-            $activities = json_decode(file_get_contents($filepath), true);
+            $activities = json_decode(file_get_contents($filepath), true, 512, JSON_THROW_ON_ERROR);
         }
 
         return $activities;

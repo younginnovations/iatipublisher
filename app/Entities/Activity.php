@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entities;
 
 /**
@@ -12,14 +14,19 @@ class Activity extends Csv
      */
     protected $activityIdentifiers;
 
+    /**
+     * @var
+     */
     private $version;
 
     /**
      * Activity constructor.
+     *
      * @param $rows
      * @param $organizationId
      * @param $userId
      * @param $activityIdentifiers
+     * @param $version
      */
     public function __construct($rows, $organizationId, $userId, $activityIdentifiers, $version)
     {
@@ -36,7 +43,7 @@ class Activity extends Csv
      *
      * @return $this
      */
-    public function process()
+    public function process(): static
     {
         foreach ($this->rows() as $row) {
             $this->initialize($row, $this->activityIdentifiers, $this->version)

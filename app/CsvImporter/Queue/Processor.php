@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\CsvImporter\Queue;
 
 use App\CsvImporter\CsvReader\CsvReader;
@@ -18,12 +20,12 @@ class Processor
     /**
      * @var ImportActivity
      */
-    protected $importActivity;
+    protected ImportActivity $importActivity;
 
     /**
      * @var CsvReader
      */
-    protected $csvReader;
+    protected CsvReader $csvReader;
 
     /**
      * Processor constructor.
@@ -36,11 +38,14 @@ class Processor
 
     /**
      * Push a CSV file's data for processing into Queue.
+     *
      * @param $file
      * @param $filename
      * @param $activityIdentifiers
+     *
+     * @return void
      */
-    public function pushIntoQueue($file, $filename, $activityIdentifiers)
+    public function pushIntoQueue($file, $filename, $activityIdentifiers): void
     {
         $str = mb_convert_encoding(file_get_contents($file), 'UTF-8');
         file_put_contents($file, $str);

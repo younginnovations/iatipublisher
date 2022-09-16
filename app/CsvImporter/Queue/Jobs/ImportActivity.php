@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\CsvImporter\Queue\Jobs;
 
 use App\CsvImporter\Queue\CsvProcessor;
@@ -16,16 +18,16 @@ class ImportActivity extends Job implements ShouldQueue
     /**
      * @var CsvProcessor
      */
-    protected $csvProcessor;
+    protected CsvProcessor $csvProcessor;
 
     /**
      * Current Organization's Id.
      * @var
      */
-    protected $organizationId;
+    protected mixed $organizationId;
 
     /**
-     * Current User's Id.
+     * Current User's id.
      * @var
      */
     protected $userId;
@@ -33,17 +35,21 @@ class ImportActivity extends Job implements ShouldQueue
     /**
      * Directory where the uploaded Csv file is stored temporarily before import.
      */
-    const UPLOADED_CSV_STORAGE_PATH = 'csvImporter/tmp/file';
+    public const UPLOADED_CSV_STORAGE_PATH = 'csvImporter/tmp/file';
 
     /**
      * @var
      */
     protected $filename;
+
     /**
      * @var
      */
     private $activityIdentifiers;
 
+    /**
+     * @var
+     */
     private $version;
 
     /**
@@ -68,7 +74,7 @@ class ImportActivity extends Job implements ShouldQueue
      *
      * @return void
      */
-    public function handle()
+    public function handle(): void
     {
         $directoryPath = storage_path(sprintf('%s/%s/%s', 'csvImporter/tmp', $this->organizationId, $this->userId));
         if (!is_dir($directoryPath)) {
@@ -76,10 +82,10 @@ class ImportActivity extends Job implements ShouldQueue
         }
         $path = sprintf('%s/%s', $directoryPath, 'status.json');
         try {
-            file_put_contents($path, json_encode(['status' => 'Processing']));
+            file_put_contents($path, json_encode(['status' => 'Processing'], JSON_THROW_ON_ERROR));
 
             $this->csvProcessor->handle($this->organizationId, $this->userId, $this->activityIdentifiers, $this->version);
-            file_put_contents($path, json_encode(['status' => 'Complete']));
+            file_put_contents($path, json_encode(['status' => 'Complete'], JSON_THROW_ON_ERROR));
 
             $uploadedFilepath = $this->getStoredCsvFilePath($this->filename);
 
@@ -89,7 +95,7 @@ class ImportActivity extends Job implements ShouldQueue
 
             $this->delete();
         } catch (\Exception $exception) {
-            file_put_contents($path, json_encode(['status' => 'Complete']));
+            file_put_contents($path, json_encode(['status' => 'Complete'], JSON_THROW_ON_ERROR));
 
             Log::error($exception->getMessage() . ' in ' . $exception->getFile() . ':' . $exception->getLine());
             $this->delete();
@@ -98,10 +104,12 @@ class ImportActivity extends Job implements ShouldQueue
 
     /**
      * Get the temporary Csv filepath for the uploaded Csv file.
+     *
      * @param $filename
+     *
      * @return string
      */
-    protected function getStoredCsvFilePath($filename)
+    protected function getStoredCsvFilePath($filename): string
     {
         return sprintf('%s/%s', storage_path(sprintf('%s/%s/%s', self::UPLOADED_CSV_STORAGE_PATH, $this->organizationId, $this->userId)), $filename);
     }

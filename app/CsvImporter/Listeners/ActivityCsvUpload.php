@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\CsvImporter\Listeners;
 
 use App\CsvImporter\Events\ActivityCsvWasUploaded;
@@ -13,7 +15,7 @@ class ActivityCsvUpload
     /**
      * @var ImportCsvService
      */
-    protected $importCsvService;
+    protected ImportCsvService $importCsvService;
 
     /**
      * Create the event listener.
@@ -31,7 +33,7 @@ class ActivityCsvUpload
      * @param  ActivityCsvWasUploaded $event
      * @return bool
      */
-    public function handle(ActivityCsvWasUploaded $event)
+    public function handle(ActivityCsvWasUploaded $event): bool
     {
         $this->importCsvService->process($event->filename);
 

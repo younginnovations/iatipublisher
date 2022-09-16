@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\CsvImporter\Events;
 
 use Illuminate\Queue\SerializesModels;
@@ -31,7 +33,7 @@ class ActivityCsvWasUploaded
      *
      * @return array
      */
-    public function broadcastOn()
+    public function broadcastOn(): array
     {
         return [];
     }

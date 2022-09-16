@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\CsvImporter\Entities;
 
 use App\CsvImporter\Entities\Activity\Components\ActivityRow;
@@ -33,16 +35,18 @@ abstract class Csv
      *
      * @var array
      */
-    protected $csvRows = [];
+    protected array $csvRows = [];
 
     /**
      * Initialize an ActivityRow object.
      *
      * @param $row
      * @param $activityIdentifiers
+     * @param $version
+     *
      * @return ActivityRow
      */
-    protected function initialize($row, $activityIdentifiers, $version)
+    protected function initialize($row, $activityIdentifiers, $version): ActivityRow
     {
         return  new ActivityRow($row, $this->organizationId, $this->userId, $activityIdentifiers, $version);
     }
@@ -52,7 +56,7 @@ abstract class Csv
      *
      * @return mixed
      */
-    public function rows()
+    public function rows(): mixed
     {
         return $this->rows;
     }
