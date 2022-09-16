@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Xml\Providers;
 
 /**
@@ -21,7 +23,7 @@ class XmlServiceProvider
      * @param $version
      * @return $this
      */
-    public function initializeGenerator($version)
+    public function initializeGenerator($version): static
     {
         $this->generator = 'App\IATI\Elements\Xml\XmlGenerator';
 
@@ -33,7 +35,7 @@ class XmlServiceProvider
      * @param $version
      * @return $this
      */
-    public function initializeValidator($version)
+    public function initializeValidator($version): static
     {
         $this->validator = 'App\IATI\Services\ImportActivity\XmlService';
 
@@ -46,7 +48,7 @@ class XmlServiceProvider
      * @param $filename
      * @return $this
      */
-    public function generateXmlFiles($includedActivities, $filename)
+    public function generateXmlFiles($includedActivities, $filename): static
     {
         $this->generator->getMergeXml($includedActivities, $filename);
 
@@ -60,7 +62,7 @@ class XmlServiceProvider
      * @param $includedActivities
      * @return $this
      */
-    public function save($filename, $organizationId, $includedActivities)
+    public function save($filename, $organizationId, $includedActivities): static
     {
         $this->generator->savePublishedFiles($filename, $organizationId, $includedActivities);
 
@@ -74,7 +76,7 @@ class XmlServiceProvider
      * @param $activityElement
      * @return mixed
      */
-    public function validate($activity, $organizationElement, $activityElement)
+    public function validate($activity, $organizationElement, $activityElement): mixed
     {
         $organization = $activity->organization;
 
@@ -83,11 +85,13 @@ class XmlServiceProvider
 
     /**
      * Generate an Activity Xml file.
-     * @param $activity
-     * @param $organizationElement
-     * @param $activityElement
+     *
+     * @param      $activity
+     * @param      $organizationElement
+     * @param      $activityElement
+     * @param null $unpublish
      */
-    public function generate($activity, $organizationElement, $activityElement, $unpublish = null)
+    public function generate($activity, $organizationElement, $activityElement, $unpublish = null): void
     {
         $organization = $activity->organization;
         $this->generator->generateActivityXml($activity, $activity->transactions, $activity->results, $organization->settings, $activityElement, $organizationElement, $organization, $unpublish);

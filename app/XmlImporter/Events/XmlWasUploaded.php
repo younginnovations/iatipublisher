@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\XmlImporter\Events;
 
 use App\Events\Event;
@@ -52,7 +54,7 @@ class XmlWasUploaded extends Event
      *
      * @return array
      */
-    public function broadcastOn()
+    public function broadcastOn(): array
     {
         return [];
     }
