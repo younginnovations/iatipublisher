@@ -29,46 +29,71 @@ class ImportXmlService
     /**
      * Temporary Xml file storage location.
      */
-    const UPLOADED_XML_STORAGE_PATH = 'xmlImporter/tmp/file';
+    public const UPLOADED_XML_STORAGE_PATH = 'xmlImporter/tmp/file';
 
     /**
      * @var XmlServiceProvider
      */
-    protected $xmlServiceProvider;
+    protected XmlServiceProvider $xmlServiceProvider;
 
     /**
      * @var XmlProcessor
      */
-    protected $xmlProcessor;
+    protected XmlProcessor $xmlProcessor;
 
     /**
      * @var LoggerInterface
      */
-    protected $logger;
+    protected LoggerInterface $logger;
 
     /**
      * @var Filesystem
      */
-    protected $filesystem;
+    protected Filesystem $filesystem;
 
     /**
      * @var XmlService
      */
-    protected $xmlService;
+    protected XmlService $xmlService;
 
-    protected $activityRepository;
-    protected $transactionRepository;
-    protected $resultRepository;
-    protected $periodRepository;
+    /**
+     * @var ActivityRepository
+     */
+    protected ActivityRepository $activityRepository;
+
+    /**
+     * @var TransactionRepository
+     */
+    protected TransactionRepository $transactionRepository;
+
+    /**
+     * @var ResultRepository
+     */
+    protected ResultRepository $resultRepository;
+
+    /**
+     * @var PeriodRepository
+     */
+    protected PeriodRepository $periodRepository;
+
+    /**
+     * @var IndicatorRepository
+     */
+    private IndicatorRepository $indicatorRepository;
 
     /**
      * XmlImportManager constructor.
      *
-     * @param XmlServiceProvider $xmlServiceProvider
-     * @param XmlProcessor       $xmlProcessor
-     * @param LoggerInterface    $logger
-     * @param Filesystem         $filesystem
-     * @param XmlService         $xmlService
+     * @param XmlServiceProvider    $xmlServiceProvider
+     * @param ActivityRepository    $activityRepository
+     * @param TransactionRepository $transactionRepository
+     * @param ResultRepository      $resultRepository
+     * @param PeriodRepository      $periodRepository
+     * @param IndicatorRepository   $indicatorRepository
+     * @param XmlProcessor          $xmlProcessor
+     * @param LoggerInterface       $logger
+     * @param Filesystem            $filesystem
+     * @param XmlService            $xmlService
      */
     public function __construct(
         XmlServiceProvider $xmlServiceProvider,
@@ -98,9 +123,10 @@ class ImportXmlService
      * Temporarily store the uploaded Xml file.
      *
      * @param UploadedFile $file
+     *
      * @return bool|null
      */
-    public function store(UploadedFile $file)
+    public function store(UploadedFile $file): ?bool
     {
         try {
             $file->move($this->temporaryXmlStorage(), $file->getClientOriginalName());
@@ -122,9 +148,12 @@ class ImportXmlService
 
     /**
      * Create Valid activities.
+     *
      * @param $activities
+     *
+     * @return bool
      */
-    public function create($activities)
+    public function create($activities): bool
     {
         $contents = $this->loadJsonFile('valid.json');
 
@@ -141,85 +170,92 @@ class ImportXmlService
         // $this->activityImportStatus($activities);
     }
 
-    /**
-     *  Save transaction of mapped activity in database.
-     * @param $activity
-     * @param $activityId
-     * @return $this
-     */
-    protected function saveTransactions($transactions, $activityId)
-    {
-        foreach ($transactions as $transaction) {
-            $this->transactionRepository->store([
-                'activity_id' => $activityId,
-                'transaction' => $transaction,
-            ]);
-        }
-
-        return $this;
+/**
+ * Save transaction of mapped activity in database.
+ *
+ * @param $transactions
+ * @param $activityId
+ *
+ * @return $this
+ */
+protected function saveTransactions($transactions, $activityId): static
+{
+    foreach ($transactions as $transaction) {
+        $this->transactionRepository->store([
+            'activity_id' => $activityId,
+            'transaction' => $transaction,
+        ]);
     }
 
-    /**
-     *  Save result of mapped activity in database.
-     * @param $activity
-     * @param $activityId
-     * @return $this
-     */
-    protected function saveResults($results, $activityId)
-    {
-        foreach ($results as $result) {
-            $result = (array) $result;
-            $indicators = $result['indicator'];
-            unset($result['indicator']);
+    return $this;
+}
 
-            $savedResult = $this->resultRepository->store([
-                'activity_id' => $activityId,
-                'result' => $result,
+/**
+ * Save result of mapped activity in database.
+ *
+ * @param $results
+ * @param $activityId
+ *
+ * @return $this
+ */
+protected function saveResults($results, $activityId): static
+{
+    foreach ($results as $result) {
+        $result = (array) $result;
+        $indicators = $result['indicator'];
+        unset($result['indicator']);
+
+        $savedResult = $this->resultRepository->store([
+            'activity_id' => $activityId,
+            'result' => $result,
+        ]);
+
+        foreach ($indicators as $indicator) {
+            $indicator = (array) $indicator;
+            $periods = $indicator['period'];
+            $savedIndicatory = $this->indicatorRepository->store([
+                'result_id' => $savedResult['id'],
+                'indicator' => $indicator,
             ]);
 
-            foreach ($indicators as $indicator) {
-                $indicator = (array) $indicator;
-                $periods = $indicator['period'];
-                $savedIndicatory = $this->indicatorRepository->store([
-                    'result_id' => $savedResult['id'],
-                    'indicator' => $indicator,
+            foreach ($periods as $period) {
+                $this->periodRepository->store([
+                    'indicator_id' => $savedIndicatory['id'],
+                    'period' => $period,
                 ]);
-
-                foreach ($periods as $period) {
-                    $this->periodRepository->store([
-                        'indicator_id' => $savedIndicatory['id'],
-                        'period' => $period,
-                    ]);
-                }
             }
         }
-
-        return $this;
     }
 
-    /**
-     *  Save document link of mapped activity in database.
-     * @param $activity
-     * @param $activityId
-     * @return $this
-     */
-    protected function saveDocumentLink($documentLinks, $activityId)
-    {
-        foreach ($documentLinks as $documentLink) {
-            $documentLinkData['document_link'] = $documentLink;
-            $this->documentLinkRepo->xmlDocumentLink($documentLinkData, $activityId);
-        }
+    return $this;
+}
 
-        return $this;
+/**
+ * Save document link of mapped activity in database.
+ *
+ * @param $documentLinks
+ * @param $activityId
+ *
+ * @return $this
+ */
+protected function saveDocumentLink($documentLinks, $activityId): static
+{
+    foreach ($documentLinks as $documentLink) {
+        $documentLinkData['document_link'] = $documentLink;
+        $this->documentLinkRepo->xmlDocumentLink($documentLinkData, $activityId);
     }
+
+    return $this;
+}
 
     /**
      * Get the temporary storage path for the uploaded Xml file.
      *
-     * @param null $filename
+     * @param $filename
+     *
      * @return string
      */
-    protected function temporaryXmlStorage($filename = null)
+    protected function temporaryXmlStorage($filename = null): string
     {
         if ($filename) {
             return sprintf('%s/%s', storage_path(sprintf('%s/%s', self::UPLOADED_XML_STORAGE_PATH, Auth::user()->organization_id)), $filename);
@@ -228,10 +264,14 @@ class ImportXmlService
         return storage_path(sprintf('%s/%s/', self::UPLOADED_XML_STORAGE_PATH, Auth::user()->organization_id));
     }
 
-    public function checkStatus()
+    /**
+     * @return mixed|null
+     * @throws \JsonException
+     */
+    public function checkStatus(): mixed
     {
         if (file_exists($this->temporaryXmlStorage('status.json'))) {
-            $content = json_decode(file_get_contents($this->temporaryXmlStorage('status.json')), true);
+            $content = json_decode(file_get_contents($this->temporaryXmlStorage('status.json')), true, 512, JSON_THROW_ON_ERROR);
 
             return $content['xml_import_status'];
         }
@@ -239,7 +279,10 @@ class ImportXmlService
         return null;
     }
 
-    public function deleteStatusFile()
+    /**
+     * @return void
+     */
+    public function deleteStatusFile(): void
     {
         $this->filesystem->delete($this->temporaryXmlStorage('status.json'));
     }
@@ -249,7 +292,7 @@ class ImportXmlService
      *
      * @return mixed
      */
-    protected function getUserId()
+    protected function getUserId(): mixed
     {
         if (auth()->check()) {
             return auth()->user()->id;
@@ -261,14 +304,17 @@ class ImportXmlService
      * @param $userId
      * @param $organizationId
      * @param $consortium_id
+     *
+     * @return void
+     * @throws \JsonException
      */
-    public function startImport($filename, $userId, $organizationId, $consortium_id = null)
+    public function startImport($filename, $userId, $organizationId, $consortium_id = null): void
     {
         if (file_exists($this->temporaryXmlStorage('valid.json'))) {
             unlink($this->temporaryXmlStorage('valid.json'));
         }
 
-        $contents = json_encode(['xml_import_status' => 'started']);
+        $contents = json_encode(['xml_import_status' => 'started'], JSON_THROW_ON_ERROR);
         $this->filesystem->put($this->temporaryXmlStorage('status.json'), $contents);
         $this->fireXmlUploadEvent($filename, $userId, $organizationId, $consortium_id);
     }
@@ -280,8 +326,10 @@ class ImportXmlService
      * @param $userId
      * @param $organizationId
      * @param $consortium_id
+     *
+     * @return void
      */
-    protected function fireXmlUploadEvent($filename, $userId, $organizationId, $consortium_id = null)
+    protected function fireXmlUploadEvent($filename, $userId, $organizationId, $consortium_id = null): void
     {
         Event::dispatch(new XmlWasUploaded($filename, $userId, $organizationId, $consortium_id));
     }
@@ -290,15 +338,16 @@ class ImportXmlService
      * Load a json file with a specific filename.
      *
      * @param $filename
+     *
      * @return mixed|null
      */
-    public function loadJsonFile($filename)
+    public function loadJsonFile($filename): mixed
     {
         try {
             $filePath = $this->temporaryXmlStorage($filename);
 
             if (file_exists($filePath)) {
-                return json_decode(file_get_contents($filePath));
+                return json_decode(file_get_contents($filePath), false, 512, JSON_THROW_ON_ERROR);
             }
 
             return false;
@@ -319,7 +368,7 @@ class ImportXmlService
     /**
      * Remove Temporarily Stored Xml file.
      */
-    public function removeTemporaryXmlFolder()
+    public function removeTemporaryXmlFolder(): void
     {
         $filePath = $this->temporaryXmlStorage();
         $this->filesystem->deleteDirectory($filePath);
@@ -327,10 +376,11 @@ class ImportXmlService
 
     /**
      * Returns errors from the xml.
+     *
      * @param $filename
      * @param $version
      */
-    public function parseXmlErrors($filename, $version)
+    public function parseXmlErrors($filename, $version): void
     {
         $filePath = $this->temporaryXmlStorage($filename);
         $xml = $this->loadXml($filePath);
@@ -342,10 +392,12 @@ class ImportXmlService
 
     /**
      * Load the xml from the given filePath.
+     *
      * @param $filePath
+     *
      * @return string
      */
-    protected function loadXml($filePath)
+    protected function loadXml($filePath): string
     {
         libxml_use_internal_errors(true);
 
