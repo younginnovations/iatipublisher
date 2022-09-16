@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Imports;
 
 use Illuminate\Support\Arr;
@@ -9,14 +11,22 @@ use PhpOffice\PhpSpreadsheet\Shared\Date;
 
 class ActivityXlsToCollection implements WithHeadingRow, WithMapping
 {
+    /**
+     * @param $row
+     *
+     * @return array
+     */
     public function map($row): array
     {
-        $row = $this->formatDates($row);
-
-        return $row;
+        return $this->formatDates($row);
     }
 
-    public function formatDates($row)
+    /**
+     * @param $row
+     *
+     * @return mixed
+     */
+    public function formatDates($row): mixed
     {
         $dateElements = ['actual_start_date', 'actual_end_date', 'planned_start_date', 'planned_end_date', 'budget_period_start', 'budget_period_end', 'budget_value_date', 'transaction_date', 'transaction_value_date'];
 

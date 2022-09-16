@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Xml;
 
 use Illuminate\Support\Str;
@@ -7,7 +9,7 @@ use SimpleXMLIterator;
 
 class XmlSchemaErrorParser
 {
-    protected $mappings = [
+    protected array $mappings = [
         '1868'    => 'The required :element Code is missing from the ‘:element’ element.',
         '1871'    => 'The required :sub-element is missing from the ‘:element’ element.',
         'default' => 'The required :element is missing from the ‘:element’ element',
@@ -19,7 +21,7 @@ class XmlSchemaErrorParser
      * @param $validateXml
      * @return mixed|string
      */
-    public function getModifiedError($error, $validateXml)
+    public function getModifiedError($error, $validateXml): mixed
     {
         $errorLine = $error->line;
         $xmlLines = explode("\n", $validateXml);
@@ -27,9 +29,8 @@ class XmlSchemaErrorParser
         $errorCodeElement = $this->getErrorElementName($xmlLines, $errorLine);
         $elementsInXml = $this->getElementsFromXml($validateXml);
         $mainElement = $this->getMainElement($errorCodeElement, $elementsInXml, $xmlLines, $errorLine);
-        $message = $this->getProperMessage($errorCodeElement, $mainElement, $error);
 
-        return $message;
+        return $this->getProperMessage($errorCodeElement, $mainElement, $error);
     }
 
     /**
@@ -37,7 +38,7 @@ class XmlSchemaErrorParser
      * @param $xmlLines
      * @return mixed
      */
-    protected function removeSpace($xmlLines)
+    protected function removeSpace($xmlLines): mixed
     {
         array_walk_recursive(
             $xmlLines,
@@ -55,7 +56,7 @@ class XmlSchemaErrorParser
      * @param $errorLine
      * @return mixed
      */
-    protected function getErrorElementName($xmlLines, $errorLine)
+    protected function getErrorElementName($xmlLines, $errorLine): mixed
     {
         $errorCode = substr($xmlLines[$errorLine - 1], 1);
         $errorCode = preg_split('/( |>|<)/', $errorCode);
@@ -65,10 +66,13 @@ class XmlSchemaErrorParser
 
     /**
      * get all the main elements from xml.
+     *
      * @param $validateXml
+     *
      * @return array
+     * @throws \Exception
      */
-    protected function getElementsFromXml($validateXml)
+    protected function getElementsFromXml($validateXml): array
     {
         $parsedXml = new SimpleXMLIterator($validateXml);
         $elements = [];
@@ -89,12 +93,12 @@ class XmlSchemaErrorParser
      * @param $errorLine
      * @return mixed
      */
-    protected function getMainElement($errorCodeElement, $elementsInXml, $xmlLines, $errorLine)
+    protected function getMainElement($errorCodeElement, $elementsInXml, $xmlLines, $errorLine): mixed
     {
-        if (in_array($errorCodeElement, $elementsInXml)) {
+        if (in_array($errorCodeElement, $elementsInXml, true)) {
             return $errorCodeElement;
         } else {
-            $errorLine = $errorLine - 1;
+            $errorLine--;
             $errorCodeElement = $this->getErrorElementName($xmlLines, $errorLine);
 
             return $this->getMainElement($errorCodeElement, $elementsInXml, $xmlLines, $errorLine);
@@ -108,17 +112,18 @@ class XmlSchemaErrorParser
      * @param $error
      * @return mixed|string
      */
-    protected function getProperMessage($errorCodeElement, $mainElement, $error)
+    protected function getProperMessage($errorCodeElement, $mainElement, $error): mixed
     {
         $mappings = (array_key_exists($error->code, $this->mappings)) ? $this->mappings[$error->code] : $this->mappings['default'];
 
-        if (strtolower($errorCodeElement) === strtolower($mainElement) && (int) $error->code != 1871) {
+        if (strtolower($errorCodeElement) === strtolower($mainElement) && (int) $error->code !== 1871) {
             $message = str_replace(':element', ucfirst($errorCodeElement), $mappings);
         } elseif ((int) $error->code === 1871) {
             preg_match("/\( ([a-z\-].+) \)/", $error->message, $matches);
             $missingElem = str_replace('-', ' ', Str::title(!empty($matches) ? $matches[1] : null));
             $message = str_replace(':element', ucfirst($mainElement), $mappings);
-            if ($mainElement == 'result' && (strpos($missingElem, 'Indicator') == true)) {
+
+            if ($mainElement === 'result' && (strpos($missingElem, 'Indicator') === true)) {
                 $message = str_replace(':sub-element', "'Result Indicator'", $message);
             } else {
                 $message = str_replace(':sub-element', $missingElem, $message);
