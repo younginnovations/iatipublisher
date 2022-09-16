@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\CsvImporter\Entities\Activity\Components\Elements;
 
 use App\CsvImporter\Entities\Activity\Components\Elements\Foundation\Iati\Element;
@@ -14,10 +16,11 @@ class ActivityStatus extends Element
     /**
      * CSV Header of Description with their code.
      */
-    private $_csvHeader = ['activity_status'];
+    private array $_csvHeader = ['activity_status'];
 
     /**
      * Index under which the data is stored within the object.
+     *
      * @var string
      */
     protected $index = 'activity_status';
@@ -37,9 +40,12 @@ class ActivityStatus extends Element
 
     /**
      * Prepare the ActivityStatus element.
+     *
      * @param $fields
+     *
+     * @return void
      */
-    public function prepare($fields)
+    public function prepare($fields): void
     {
         foreach ($fields as $key => $values) {
             if (!is_null($values) && array_key_exists($key, array_flip($this->_csvHeader))) {
@@ -52,26 +58,30 @@ class ActivityStatus extends Element
 
     /**
      * Map data from CSV into ActivityStatus data format.
+     *
      * @param $value
      * @param $values
+     *
+     * @return void
      */
-    public function map($value, $values)
+    public function map($value, $values): void
     {
-        if (!(is_null($value) || $value == '')) {
+        if (!(is_null($value) || $value === '')) {
             $validActivityStatus = $this->loadCodeList('ActivityStatus');
 
             foreach ($validActivityStatus as $key => $status) {
-                if (ucwords($value) == $status) {
+                if (ucwords($value) === $status) {
                     $value = $key;
                     break;
                 }
             }
-            (count(array_filter($values)) == 1) ? $this->data[$this->csvHeader()] = $value : $this->data[$this->csvHeader()][] = $value;
+            (count(array_filter($values)) === 1) ? $this->data[$this->csvHeader()] = $value : $this->data[$this->csvHeader()][] = $value;
         }
     }
 
     /**
      * Provides the rules for the IATI Element validation.
+     *
      * @return array
      */
     public function rules(): array
@@ -87,6 +97,7 @@ class ActivityStatus extends Element
 
     /**
      * Provides custom messages used for IATI Element Validation.
+     *
      * @return array
      */
     public function messages(): array
@@ -102,8 +113,10 @@ class ActivityStatus extends Element
 
     /**
      * Validate data for IATI Element.
+     *
+     * @return $this
      */
-    public function validate()
+    public function validate(): static
     {
         $this->validator = $this->factory->sign($this->data())
                                          ->with($this->rules(), $this->messages())
@@ -116,20 +129,22 @@ class ActivityStatus extends Element
 
     /**
      * Get the Csv header for ActivityStatus.
+     *
      * @return mixed
      */
-    protected function csvHeader()
+    protected function csvHeader(): mixed
     {
         return end($this->_csvHeader);
     }
 
     /**
      * Get the valid ActivityStatus from the ActivityStatus codelist as a string.
+     *
      * @return string
      */
     protected function validActivityStatus(): string
     {
-        list($activityStatusCodeList, $codes) = [$this->loadCodeList('ActivityStatus'), []];
+        [$activityStatusCodeList, $codes] = [$this->loadCodeList('ActivityStatus'), []];
         $codes = array_keys($activityStatusCodeList);
 
         return implode(',', array_keys(array_flip($codes)));

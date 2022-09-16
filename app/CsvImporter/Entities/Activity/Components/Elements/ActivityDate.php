@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\CsvImporter\Entities\Activity\Components\Elements;
 
 use App\CsvImporter\Entities\Activity\Components\Elements\Foundation\Iati\Element;
@@ -13,18 +15,21 @@ class ActivityDate extends Element
 {
     /**
      * Csv Headers for the ActivityDate element.
+     *
      * @var array
      */
-    private $_csvHeaders = ['actual_start_date' => 2, 'actual_end_date' => 4, 'planned_start_date' => 1, 'planned_end_date' => 3];
+    private array $_csvHeaders = ['actual_start_date' => 2, 'actual_end_date' => 4, 'planned_start_date' => 1, 'planned_end_date' => 3];
 
     /**
      * Index under which the data is stored within the object.
+     *
      * @var string
      */
     protected $index = 'activity_date';
 
     /**
      * Template for the ActivityDate element.
+     *
      * @var array
      */
     protected $template = ['type' => '', 'date' => '', 'narrative' => ['narrative' => '', 'language' => '']];
@@ -32,7 +37,7 @@ class ActivityDate extends Element
     /**
      * @var array
      */
-    protected $types = [];
+    protected array $types = [];
 
     /**
      * @var
@@ -44,14 +49,24 @@ class ActivityDate extends Element
      */
     protected $dates;
 
-    protected $actualDates = [];
+    /**
+     * @var array
+     */
+    protected array $actualDates = [];
 
-    protected $plannedDates = [];
+    /**
+     * @var array
+     */
+    protected array $plannedDates = [];
 
-    protected $activityDate = [];
+    /**
+     * @var array
+     */
+    protected array $activityDate = [];
 
     /**
      * ActivityDate constructor.
+     *
      * @param            $fields
      * @param Validation $factory
      */
@@ -63,7 +78,10 @@ class ActivityDate extends Element
 
     /**
      * Prepare ActivityDate element.
+     *
      * @param $fields
+     *
+     * @return void
      */
     public function prepare($fields): void
     {
@@ -81,13 +99,16 @@ class ActivityDate extends Element
 
     /**
      * Map data from CSV file into the ActivityDate data format.
+     *
      * @param $key
      * @param $value
      * @param $index
+     *
+     * @return void
      */
     public function map($key, $value, &$index):  void
     {
-        if (!(is_null($value) || $value == '')) {
+        if (!(is_null($value) || $value === '')) {
             $type = $this->setType($key);
             $this->data['activity_date'][$index]['date'] = $this->setDate($value);
             $this->data['activity_date'][$index]['type'] = $type;
@@ -97,10 +118,12 @@ class ActivityDate extends Element
 
     /**
      * Set the type for ActivityDate element.
+     *
      * @param $key
+     *
      * @return mixed
      */
-    public function setType($key)
+    public function setType($key): mixed
     {
         $this->types[] = $key;
         $this->types = array_unique($this->types);
@@ -110,10 +133,12 @@ class ActivityDate extends Element
 
     /**
      * Set the Date for the ActivityDate element.
+     *
      * @param $value
-     * @return mixed
+     *
+     * @return bool|string
      */
-    public function setDate($value)
+    public function setDate($value): bool|string
     {
         $this->dates[] = dateFormat('Y-m-d', $value);
 
@@ -122,7 +147,9 @@ class ActivityDate extends Element
 
     /**
      * Set the Narrative for the ActivityDate element.
+     *
      * @param $value
+     *
      * @return array
      */
     public function setNarrative($value): array
@@ -135,6 +162,7 @@ class ActivityDate extends Element
 
     /**
      * Provides the rules for the IATI Element validation.
+     *
      * @return array
      */
     public function rules(): array
@@ -155,6 +183,7 @@ class ActivityDate extends Element
 
     /**
      * Provides custom messages used for IATI Element Validation.
+     *
      * @return array
      */
     public function messages(): array
@@ -178,8 +207,10 @@ class ActivityDate extends Element
 
     /**
      * Validate data for IATI Element.
+     *
+     * @return $this
      */
-    public function validate()
+    public function validate(): static
     {
         $this->activityDateRules();
 
@@ -194,6 +225,8 @@ class ActivityDate extends Element
 
     /**
      * Append additional rules for Activity Date.
+     *
+     * @return void
      */
     protected function activityDateRules(): void
     {
@@ -203,6 +236,8 @@ class ActivityDate extends Element
 
     /**
      * Sort ActivityDate by their type.
+     *
+     * @return void
      */
     protected function sortByType(): void
     {
@@ -211,7 +246,7 @@ class ActivityDate extends Element
         foreach (Arr::get($this->data(), 'activity_date', []) as $key => $value) {
             $type = Arr::get($dates, Arr::get($value, 'type', ''), '');
 
-            if ($type == $dates[2] || $type == $dates[4]) {
+            if ($type === $dates[2] || $type === $dates[4]) {
                 $this->actualDates[$dates[$this->_csvHeaders[$type]]][] = $value;
             } else {
                 $this->plannedDates[$dates[$this->_csvHeaders[$type]]][] = $value;
