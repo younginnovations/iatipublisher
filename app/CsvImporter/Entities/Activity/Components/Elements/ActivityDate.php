@@ -25,14 +25,14 @@ class ActivityDate extends Element
      *
      * @var string
      */
-    protected $index = 'activity_date';
+    protected string $index = 'activity_date';
 
     /**
      * Template for the ActivityDate element.
      *
      * @var array
      */
-    protected $template = ['type' => '', 'date' => '', 'narrative' => ['narrative' => '', 'language' => '']];
+    protected array $template = ['type' => '', 'date' => '', 'narrative' => ['narrative' => '', 'language' => '']];
 
     /**
      * @var array

@@ -23,9 +23,9 @@ class ActivityStatus extends Element
      *
      * @var string
      */
-    protected $index = 'activity_status';
+    protected string $index = 'activity_status';
 
-    protected $data;
+    protected array $data;
 
     /**
      * Description constructor.

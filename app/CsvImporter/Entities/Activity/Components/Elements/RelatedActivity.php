@@ -21,7 +21,7 @@ class RelatedActivity extends Element
      * Index under which the data is stored within the object.
      * @var string
      */
-    protected $index = 'related_activity';
+    protected string $index = 'related_activity';
 
     /**
      * RelatedActivity constructor.

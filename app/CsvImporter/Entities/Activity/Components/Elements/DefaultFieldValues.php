@@ -18,7 +18,7 @@ class DefaultFieldValues extends Element
     /**
      * @var string
      */
-    protected $index = 'default_field_values';
+    protected string $index = 'default_field_values';
 
     /**
      * DefaultFieldValues constructor.
