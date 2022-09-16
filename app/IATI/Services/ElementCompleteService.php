@@ -165,7 +165,6 @@ class ElementCompleteService
 
             if (!array_key_exists($mandatoryAttribute, $data) || (empty($data[$mandatoryAttribute]))) {
                 //dd('isAttributeDataCompleted fx called1', ' Attribute is empty', 'attribute-check:', $mandatoryAttributes, $mandatoryAttribute, $data);
-                // dd($mandatoryAttribute);
 
                 return false;
             }
