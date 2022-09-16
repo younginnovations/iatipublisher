@@ -26,7 +26,6 @@ class ImportXml extends Job implements ShouldQueue
      * @param $organizationId
      * @param $userId
      * @param $filename
-     * @param $consortium_id
      */
     public function __construct($organizationId, $userId, $filename)
     {

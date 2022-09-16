@@ -416,13 +416,6 @@ class Validation extends Factory
                 // $defaultLanguage = getDefaultLanguage();
                 $defaultLanguage = 'en';
 
-                // $validator->addReplacer(
-                //     'unique_default_lang',
-                //     function ($message, $attribute, $rule, $parameters) use ($validator, $defaultLanguage) {
-                //         return str_replace(':language', app(GetCodeName::class)->getActivityCodeName('Language', $defaultLanguage), $message);
-                //     }
-                // );
-
                 $check = true;
                 if ($value && is_array($value)) {
                     foreach ($value as $narrative) {
