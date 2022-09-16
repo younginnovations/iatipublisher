@@ -35,7 +35,7 @@ class TitleCompleteTest extends ElementCompleteTest
      */
     public function test_title_mandatory_sub_elements(): void
     {
-        $this->test_mandatory_sub_elements($this->element, ['narrative' => ['narrative']]);
+        $this->test_mandatory_sub_elements($this->element, ['narrative' => ['narrative', 'language']]);
     }
 
     /**

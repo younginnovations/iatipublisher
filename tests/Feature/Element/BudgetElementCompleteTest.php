@@ -35,7 +35,7 @@ class BudgetElementCompleteTest extends ElementCompleteTest
      */
     public function test_budget_mandatory_sub_elements(): void
     {
-        $this->test_mandatory_sub_elements($this->element, ['period_start' => ['date'], 'period_end' => ['date'], 'budget_value' => ['value_date']]);
+        $this->test_mandatory_sub_elements($this->element, ['period_start' => ['date'], 'period_end' => ['date'], 'budget_value' => ['amount', 'value_date']]);
     }
 
     /**

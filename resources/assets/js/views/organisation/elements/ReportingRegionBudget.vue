@@ -6,8 +6,8 @@
       'mb-4 border-b border-n-20 pb-4': Number(index) != content.length - 1,
     }"
   >
-    <div class="mb-4 elements-detail">
-      <div class="flex category">
+    <div class="elements-detail mb-4">
+      <div class="category flex">
         {{
           recipient_region_budget.status
             ? types?.budgetType[recipient_region_budget.status]
@@ -126,8 +126,8 @@
       </div>
     </div>
 
-    <div class="overflow-hidden border rounded-t-lg indicator border-n-20">
-      <div class="flex items-center px-6 py-2 border-b head border-n-20">
+    <div class="indicator overflow-hidden rounded-t-lg border border-n-20">
+      <div class="head flex items-center border-b border-n-20 px-6 py-2">
         <span class="text-xs font-bold text-n-50">Budget line</span>
       </div>
       <div
@@ -139,13 +139,12 @@
             j !== recipient_region_budget.budget_line.length - 1,
         }"
       >
-        <div class="flex px-6 py-2 indicator-content">
+        <div class="indicator-content flex px-6 py-2">
           <div class="elements-detail grow">
-            <div class="flex category">
+            <div class="category flex">
               <span>
                 {{ budget_line.value['0'].amount ?? 'Budget Not Available' }}
                 {{ budget_line.value['0'].currency }}
-                ({{ formatDate(budget_line.value['0'].value_date) }})
               </span>
             </div>
             <div class="ml-4">
@@ -155,6 +154,12 @@
                     <td class="pr-20 text-n-40">Reference</td>
                     <td>
                       {{ budget_line.ref ?? 'Reference Not Available' }}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Value Date</td>
+                    <td>
+                      {{ formatDate(budget_line.value['0'].value_date) }}
                     </td>
                   </tr>
                   <tr>

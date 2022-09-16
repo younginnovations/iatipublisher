@@ -28,20 +28,17 @@
     <div class="flex mb-4">
         <div class="flex title grow">
             <span class="text-bluecoral text-xl mr-1.5">
-                @if ($data['name'] === 'reporting_org' ||
-                    $data['name'] === 'default_tied_status' ||
-                    $data['name'] === 'crs_add' ||
-                    $data['name'] === 'fss')
-                    <svg-vue icon="activity-elements/building"></svg-vue>
-                @else
-                    <svg-vue icon="activity-elements/{{ $data['name'] }}"></svg-vue>
-                @endif
+                    <svg-vue icon="organisation-elements/{{ str_replace('-','_',$data['name']) }}"></svg-vue>
             </span>
             <div class="text-sm font-bold title"> {{ str_replace(' ', '-', strtolower($data['title'])) }}</div>
-
-            @if (isCoreElement($data['name']))
-                <svg-vue icon="core" class="ml-2"></svg-vue>
-            @endif
+            {{-- <div
+                class="{{ $data['status'] ? 'text-spring-50' : 'text-crimson-50' }} flex status text-xs leading-5 ml-2.5 mr-2.5">
+                <b class="mr-2 text-base leading-3">.</b>
+                <span>{{ $data['status'] ? 'completed' : 'not completed' }}</span>
+            </div> --}}
+            {{-- @if ($data['core'])
+                <svg-vue icon="core"></svg-vue>
+            @endif --}}
         </div>
         <div class="flex icons">
             <span class="text-xs"><sup class="text-salmon-50">*</sup> Mandatory fields</span>

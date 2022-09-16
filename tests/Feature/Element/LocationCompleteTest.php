@@ -490,7 +490,7 @@ class LocationCompleteTest extends ElementCompleteTest
     public function test_location_sub_element_description_empty_narrative_json_array(): void
     {
         $actualData = json_decode(
-            '[{"ref":"ref 1","location_reach":[{"code":"1"}],"location_id":[{"vocabulary":"A2","code":"vocab code"}],"name":[{"narrative":[{"narrative":"name 1","language":"aa"}]}],"description":[{"narrative":[{"narrative":"","language":"aa"}]}],"activity_description":[{"narrative":[{"narrative":"activity description 1","language":"ab"}]}],"administrative":[{"vocabulary":"A2","code":"DZ","level":"1236"}],"point":[{"srs_name":"http://www.opengis.net/def/crs/EPSG/0/4326","pos":[{"latitude":"56","longitude":"27"}]}],"exactness":[{"code":"1"}],"location_class":[{"code":"2"}],"feature_designation":[{"code":"CMPQ"}]}]',
+            '[{"ref":"ref 1","location_reach":[{"code":"1"}],"location_id":[{"vocabulary":"A2","code":"vocab code"}],"name":[{"narrative":[{"narrative":"name 1","language":"aa"}]}],"description":[{"narrative":[{}]}],"activity_description":[{"narrative":[{"narrative":"activity description 1","language":"ab"}]}],"administrative":[{"vocabulary":"A2","code":"DZ","level":"1236"}],"point":[{"srs_name":"http://www.opengis.net/def/crs/EPSG/0/4326","pos":[{"latitude":"56","longitude":"27"}]}],"exactness":[{"code":"1"}],"location_class":[{"code":"2"}],"feature_designation":[{"code":"CMPQ"}]}]',
             true,
             512,
             JSON_THROW_ON_ERROR
@@ -514,7 +514,7 @@ class LocationCompleteTest extends ElementCompleteTest
             JSON_THROW_ON_ERROR
         );
 
-        $this->test_level_two_multi_dimensional_element_incomplete($this->element, $actualData);
+        $this->test_level_two_multi_dimensional_element_complete($this->element, $actualData);
     }
 
     /**
@@ -532,7 +532,7 @@ class LocationCompleteTest extends ElementCompleteTest
             JSON_THROW_ON_ERROR
         );
 
-        $this->test_level_two_multi_dimensional_element_incomplete($this->element, $actualData);
+        $this->test_level_two_multi_dimensional_element_complete($this->element, $actualData);
     }
 
     /**
