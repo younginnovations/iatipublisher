@@ -62,6 +62,7 @@ class FormBuilder {
     if ($(target).attr('form_type')) {
       $(target).prev().last().find('.select2').select2({
         placeholder: 'Select an option',
+        allowClear: true
       });
 
       $(this)
@@ -90,6 +91,7 @@ class FormBuilder {
         .find('.select2')
         .select2({
           placeholder: 'Select an option',
+          allowClear: true
         });
     }
 
@@ -118,6 +120,7 @@ class FormBuilder {
     $(target).prev().append($(proto));
     $(target).prev().find('.multi-form').last().find('.select2').select2({
       placeholder: 'Select an option',
+      allowClear: true
     });
     $(target)
       .prev()
