@@ -65,18 +65,18 @@
               }"
             >
               <div>
-                <span>
+                <div class="description">
                   {{ com.narrative ? com.narrative : 'Not Available' }}
                   &nbsp;
-                </span>
-                <span>
+                </div>
+                <div>
                   (Language:
                   {{
                     com.language
                       ? baseType.language[com.language]
                       : 'Not Available'
                   }})
-                </span>
+                </div>
               </div>
             </div>
           </div>

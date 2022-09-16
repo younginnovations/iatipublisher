@@ -12,7 +12,7 @@
           <div v-if="title.language" class="mb-1 language">
             (Language: {{ titleType[title.language] }})
           </div>
-          <div class="text-xs">
+          <div class="text-xs description">
             {{ title.narrative??'Not Available' }}
           </div>
         </div>

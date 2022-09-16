@@ -248,7 +248,7 @@
                                           </div>
                                         </div>
                                       </div>
-                                      <div class="shrink-0 -mt-1">
+                                      <div class="shrink-0">
                                         <Btn
                                           class="-mt-1"
                                           text="Show full period list"
