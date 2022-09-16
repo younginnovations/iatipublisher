@@ -47,6 +47,12 @@ import ResetPassword from './views/reset/ResetPassword.vue';
 import OrganisationData from './views/organisation/OrganisationData.vue';
 
 /**
+ * Organisation List / Proxy
+ */
+import OrganisationList from './views/superadmin/OrganisationList.vue';
+import AdminBar from './views/superadmin/components/AdminBar.vue';
+
+/**
  * Additional Components
  */
 import HoverText from './components/HoverText.vue';
@@ -109,6 +115,12 @@ app.component('LoadingState', LoadingState);
 app.component('OrganisationData', OrganisationData);
 
 /**
+ * Proxy
+ */
+app.component('OrganisationList', OrganisationList);
+app.component('AdminBar', AdminBar);
+
+/**
  * Extension to inline SVG files with Vue.js and optimize them automatically with SVGO
  */
 app.use(SvgVue);
@@ -124,7 +136,7 @@ const stickySidebar = (el: {
   offsetWidth: number;
   getBoundingClientRect: () => {
     (): object;
-    new(): object;
+    new (): object;
     left: number | null;
     top: number | null;
     bottom: number | null;
@@ -165,22 +177,52 @@ const stickySidebar = (el: {
   } else {
     el.style.cssText = `position: relative;height: ${elHeight}px;`;
     if (isScrollDown) {
-      const elementCss = scrollDown(affixType, stickyElement.style.cssText, stickyCurrentTop, stickyCurrentBottom, elScrollTop, elScrollLeft, elWidth, viewportHeight, targetScrollPosition, currentWindowsScrollPosition);
+      const elementCss = scrollDown(
+        affixType,
+        stickyElement.style.cssText,
+        stickyCurrentTop,
+        stickyCurrentBottom,
+        elScrollTop,
+        elScrollLeft,
+        elWidth,
+        viewportHeight,
+        targetScrollPosition,
+        currentWindowsScrollPosition
+      );
       stickyElement.style.cssText = elementCss.cssText;
       affixType = elementCss.type;
     } else if (isScrollUp) {
-      const elementCss = scrollUp(affixType, stickyElement.style.cssText, stickyCurrentTop, elScrollLeft, elScrollTop, elWidth);
+      const elementCss = scrollUp(
+        affixType,
+        stickyElement.style.cssText,
+        stickyCurrentTop,
+        elScrollLeft,
+        elScrollTop,
+        elWidth
+      );
       stickyElement.style.cssText = elementCss.cssText;
       affixType = elementCss.type;
     }
   }
 };
 
-const scrollDown = (affixType, cssText, stickyCurrentTop, stickyCurrentBottom, elScrollTop, elScrollLeft, elWidth, viewportHeight, targetScrollPosition, currentWindowsScrollPosition) => {
+const scrollDown = (
+  affixType,
+  cssText,
+  stickyCurrentTop,
+  stickyCurrentBottom,
+  elScrollTop,
+  elScrollLeft,
+  elWidth,
+  viewportHeight,
+  targetScrollPosition,
+  currentWindowsScrollPosition
+) => {
   switch (affixType) {
     case 'sticky-top':
-      cssText = `position: relative; transform: translate3d(0, ${stickyCurrentTop - elScrollTop
-        }px, 0);`;
+      cssText = `position: relative; transform: translate3d(0, ${
+        stickyCurrentTop - elScrollTop
+      }px, 0);`;
       affixType = 'sticky-translate';
       break;
 
@@ -203,11 +245,17 @@ const scrollDown = (affixType, cssText, stickyCurrentTop, stickyCurrentBottom, e
       break;
   }
 
-  return { 'type': affixType, 'cssText': cssText };
-
+  return { type: affixType, cssText: cssText };
 };
 
-const scrollUp = (affixType, cssText, stickyCurrentTop, elScrollLeft, elScrollTop, elWidth) => {
+const scrollUp = (
+  affixType,
+  cssText,
+  stickyCurrentTop,
+  elScrollLeft,
+  elScrollTop,
+  elWidth
+) => {
   switch (affixType) {
     case 'sticky-top':
       if (elScrollTop >= 0) {
@@ -217,8 +265,9 @@ const scrollUp = (affixType, cssText, stickyCurrentTop, elScrollLeft, elScrollTo
       break;
 
     case 'sticky-bottom':
-      cssText = `position: relative; transform: translate3d(0, ${stickyCurrentTop - elScrollTop
-        }px, 0);`;
+      cssText = `position: relative; transform: translate3d(0, ${
+        stickyCurrentTop - elScrollTop
+      }px, 0);`;
       affixType = 'sticky-translate';
       break;
 
@@ -234,9 +283,8 @@ const scrollUp = (affixType, cssText, stickyCurrentTop, elScrollLeft, elScrollTo
       break;
   }
 
-  return { 'type': affixType, 'cssText': cssText };
-}
-
+  return { type: affixType, cssText: cssText };
+};
 
 // custom directive
 app.directive('sticky-component', {

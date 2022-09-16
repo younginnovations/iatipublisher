@@ -6,7 +6,7 @@
     <div class="flex items-end gap-4">
       <div class="title max-w-[50%] xl:basis-6/12">
         <div class="inline-flex items-center">
-          <div class="mr-3">
+          <div v-if="backLink" class="mr-3">
             <a :href="backLink">
               <svg-vue icon="arrow-short-left"></svg-vue>
             </a>
@@ -21,7 +21,7 @@
           </div>
         </div>
       </div>
-      <div class="actions flex grow items-center justify-end">
+      <div class="flex flex-col items-end justify-end actions grow">
         <slot />
       </div>
     </div>
