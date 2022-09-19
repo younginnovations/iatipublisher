@@ -36,7 +36,7 @@
   }
 }
 .form__input {
-  @apply mb-2 box-border w-full rounded border border-n-30 outline-none duration-300;
+  @apply mb-2 box-border w-full rounded border border-n-30 text-bluecoral outline-none duration-300;
   padding: 13px 0 13px 16px;
 
   &::placeholder {

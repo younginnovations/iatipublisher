@@ -4,6 +4,7 @@ const mix = require('laravel-mix');
 require('laravel-mix-svg-vue');
 const tailwindCss = require('tailwindcss');
 
+mix.extract();
 if (mix.inProduction()) {
   mix.version();
   mix.options({
@@ -70,3 +71,5 @@ mix
     ],
   })
   .version();
+
+mix.options({ runtimeChunkPath: '.' });
