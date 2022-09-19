@@ -67,10 +67,10 @@ class PolicyMarker extends Element
     {
         if (!(is_null($value) || $value === '')) {
             $this->setVocabulary($key, $value, $index);
-            $this->setVocabularyUri($key, $value, $index);
+            $this->setVocabularyUri($index);
             $this->setSignificance($key, $value, $index);
             $this->setPolicyMarker($key, $value, $index);
-            $this->setNarrative($key, $value, $index);
+            $this->setNarrative($index);
         }
     }
 
@@ -96,17 +96,16 @@ class PolicyMarker extends Element
     /**
      * Set VocabularyUri for PolicyMarker element.
      *
-     * @param $key
-     * @param $value
      * @param $index
      *
      * @return void
      */
-    protected function setVocabularyUri($key, $value, $index): void
+    protected function setVocabularyUri($index): void
     {
         if (!isset($this->data['policy_marker'][$index]['vocabulary_uri'])) {
             $this->data['policy_marker'][$index]['vocabulary_uri'] = '';
         }
+
         if (array_key_exists('policy_marker_vocabulary', $this->data['policy_marker'][$index])) {
             $this->data['policy_marker'][$index]['vocabulary_uri'] = '';
         }
@@ -170,13 +169,11 @@ class PolicyMarker extends Element
     /**
      * Set Narrative for PolicyMarker element.
      *
-     * @param $key
-     * @param $value
      * @param $index
      *
      * @return void
      */
-    protected function setNarrative($key, $value, $index): void
+    protected function setNarrative($index): void
     {
         if (!isset($this->data['policy_marker'][$index]['narrative'])) {
             $this->data['policy_marker'][$index]['narrative'] = '';
