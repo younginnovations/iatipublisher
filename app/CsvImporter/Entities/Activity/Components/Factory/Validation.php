@@ -56,21 +56,21 @@ class Validation extends Factory
         return $this;
     }
 
-/**
- * Append rules and messages for the Validator.
- *
- * @param array $rules
- * @param array $messages
- *
- * @return $this
- */
-public function with(array $rules = [], array $messages = []): static
-{
-    $this->rules = $rules;
-    $this->messages = $messages;
+    /**
+     * Append rules and messages for the Validator.
+     *
+     * @param array $rules
+     * @param array $messages
+     *
+     * @return $this
+     */
+    public function with(array $rules = [], array $messages = []): static
+    {
+        $this->rules = $rules;
+        $this->messages = $messages;
 
-    return $this;
-}
+        return $this;
+    }
 
     /**
      * Get the Validator instance for the data to be validated with the current rules and messages.
@@ -95,7 +95,7 @@ public function with(array $rules = [], array $messages = []): static
     {
         $this->extend(
             'start_end_date',
-            function ($attribute, $dates, $parameters, $validator) {
+            function ($attribute, $dates) {
                 if ($dates && is_array($dates)) {
                     $actual_start_date = Arr::get($dates, 'actual_start_date.0.date');
                     $actual_end_date = Arr::get($dates, 'actual_end_date.0.date');
@@ -125,7 +125,7 @@ public function with(array $rules = [], array $messages = []): static
 
         $this->extend(
             'actual_date',
-            function ($attribute, $date, $parameters, $validator) {
+            function ($attribute, $date) {
                 $dateType = (!is_array($date)) ?: Arr::get($date, '0.type');
 
                 if ($dateType === 2 || $dateType === 4) {
@@ -141,7 +141,7 @@ public function with(array $rules = [], array $messages = []): static
 
         $this->extend(
             'multiple_activity_date',
-            function ($attribute, $dates, $parameters, $validator) {
+            function ($attribute, $dates) {
                 if ($dates && is_array($dates)) {
                     foreach ($dates as $activityDate) {
                         if (count($activityDate) > 1) {
@@ -158,9 +158,12 @@ public function with(array $rules = [], array $messages = []): static
 
         $this->extend(
             'start_date_required',
-            function ($attribute, $dates, $parameters, $validator) {
+            function ($attribute, $dates) {
                 if (is_array($dates)) {
-                    if (array_key_exists('actual_start_date', $dates) || array_key_exists('planned_start_date', $dates)) {
+                    if (array_key_exists('actual_start_date', $dates) || array_key_exists(
+                        'planned_start_date',
+                        $dates
+                    )) {
                         return true;
                     }
 
@@ -173,7 +176,7 @@ public function with(array $rules = [], array $messages = []): static
 
         $this->extend(
             'sector_percentage_sum',
-            function ($attribute, $value, $parameters, $validator) {
+            function ($attribute, $value) {
                 $totalPercentage = [];
 
                 if ($value && is_array($value)) {
@@ -191,7 +194,7 @@ public function with(array $rules = [], array $messages = []): static
                         }
                     );
 
-                    foreach ($totalPercentage as $key => $percentage) {
+                    foreach ($totalPercentage as $percentage) {
                         if ($percentage !== '' && $percentage !== 100) {
                             return false;
                         }
@@ -206,7 +209,7 @@ public function with(array $rules = [], array $messages = []): static
 
         $this->extend(
             'percentage_sum',
-            function ($attribute, $values, $parameters, $validator) {
+            function ($attribute, $values) {
                 $totalPercentage = 0;
                 if ($values) {
                     foreach ($values as $value) {
@@ -215,6 +218,7 @@ public function with(array $rules = [], array $messages = []): static
                             $totalPercentage += $percentage;
                         }
                     }
+
                     if (count($values) === 1 && $totalPercentage === 0) {
                         return true;
                     }
@@ -232,29 +236,32 @@ public function with(array $rules = [], array $messages = []): static
 
         $this->extend(
             'recipient_country_region_percentage_sum',
-            function ($attribute, $value, $parameters, $validator) {
+            function ($attribute, $value) {
                 return number_format($value) == 100;
             }
         );
 
         $this->extendImplicit(
             'required_only_one_among',
-            function ($attribute, $values, $parameters, $validator) {
+            function ($attribute, $values, $parameters) {
                 [$identifierIndex, $narrativeIndex] = $parameters;
                 $isValid = false;
 
                 if ($values) {
-                    foreach ($values as $key => $value) {
-                        [$identifier, $narratives] = [Arr::get($value, $identifierIndex, ''), Arr::get($value, $narrativeIndex, [])];
+                    foreach ($values as $value) {
+                        [$identifier, $narratives] = [
+                            Arr::get($value, $identifierIndex, ''),
+                            Arr::get($value, $narrativeIndex, []),
+                        ];
 
-                        foreach ($narratives as $index => $narrative) {
+                        foreach ($narratives as $narrative) {
                             $narrativeValue = Arr::get($narrative, 'narrative');
 
                             if (!$identifier && !$narrativeValue) {
                                 return false;
-                            } else {
-                                $isValid = true;
                             }
+
+                            $isValid = true;
                         }
                     }
                 }
@@ -265,21 +272,28 @@ public function with(array $rules = [], array $messages = []): static
 
         $this->extend(
             'check_sector',
-            function ($attribute, $values, $parameters, $validator) {
+            function ($attribute, $values) {
                 $sectorInActivityLevel = true;
                 $status = true;
+
                 foreach ($values as $value) {
                     if ($value['activitySector'] === '') {
                         $sectorInActivityLevel = false;
                     }
 
                     if ($value['sector_vocabulary'] === '' && $value['sector_code'] === ''
-                        && $value['sector_text'] === '' && $value['sector_category_code'] === '' && Arr::get($value, 'sector_sdg_goal') === '' && Arr::get($value, 'sector_sdg_target') === '' &&
+                        && $value['sector_text'] === '' && $value['sector_category_code'] === '' && Arr::get(
+                            $value,
+                            'sector_sdg_goal'
+                        ) === '' && Arr::get($value, 'sector_sdg_target') === '' &&
                         $sectorInActivityLevel === false
                     ) {
                         $status = false;
                     } elseif (($value['sector_vocabulary'] !== '' || $value['sector_code'] !== ''
-                        || $value['sector_text'] !== '' || $value['sector_category_code'] !== '' || Arr::get($value, 'sector_sdg_goal') !== '' || Arr::get($value, 'sector_sdg_target') !== '')
+                            || $value['sector_text'] !== '' || $value['sector_category_code'] !== '' || Arr::get(
+                                $value,
+                                'sector_sdg_goal'
+                            ) !== '' || Arr::get($value, 'sector_sdg_target') !== '')
                         && $sectorInActivityLevel === true
                     ) {
                         $status = false;
@@ -292,7 +306,7 @@ public function with(array $rules = [], array $messages = []): static
 
         $this->extend(
             'check_recipient_region_country',
-            function ($attribute, $values, $parameters, $validator) {
+            function ($attribute, $values) {
                 $transactionRecipientCountry = Arr::get($values, 'recipient_country.0.country_code');
                 $transactionRecipientRegion = Arr::get($values, 'recipient_region.0.region_code');
                 $activityRecipientRegion = '';
@@ -328,61 +342,54 @@ public function with(array $rules = [], array $messages = []): static
 
         $this->extend(
             'start_before_end_date',
-            function ($attribute, $values, $parameters, $validator) {
+            function ($attribute, $values) {
                 if (count($values) > 1) {
                     return true;
                 }
-                foreach ($values as $value) {
-                    $periodStart = strtotime(Arr::get($value, 'period_start.0.date'));
-                    $periodEnd = strtotime(Arr::get($value, 'period_end.0.date'));
 
-                    if ($periodStart === false || $periodEnd === false) {
-                        return true;
-                    }
+                $periodStart = strtotime(Arr::get($values[array_key_first($values)], 'period_start.0.date'));
+                $periodEnd = strtotime(Arr::get($values[array_key_first($values)], 'period_end.0.date'));
 
-                    if ($periodStart <= $periodEnd) {
-                        return true;
-                    }
-
-                    return false;
+                if ($periodStart === false || $periodEnd === false) {
+                    return true;
                 }
+
+                if ($periodStart <= $periodEnd) {
+                    return true;
+                }
+
+                return false;
             }
         );
 
         $this->extend(
             'diff_one_year',
-            function ($attribute, $values, $parameters, $validator) {
+            function ($attribute, $values) {
                 if (count($values) > 1) {
                     return true;
                 }
 
-                foreach ($values as $value) {
-                    $periodStart = Arr::get($value, 'period_start.0.date');
-                    $periodEnd = Arr::get($value, 'period_end.0.date');
-                    $isPeriodStartDate = strtotime($periodStart);
-                    $isPeriodEndDate = strtotime($periodEnd);
+                $periodStart = Arr::get($values[array_key_first($values)], 'period_start.0.date');
+                $periodEnd = Arr::get($values[array_key_first($values)], 'period_end.0.date');
+                $isPeriodStartDate = strtotime($periodStart);
+                $isPeriodEndDate = strtotime($periodEnd);
 
-                    if ($isPeriodStartDate !== false && $isPeriodEndDate !== false) {
-                        $periodStart = Carbon::parse($periodStart);
-                        $periodEnd = Carbon::parse($periodEnd);
+                if ($isPeriodStartDate !== false && $isPeriodEndDate !== false) {
+                    $periodStart = Carbon::parse($periodStart);
+                    $periodEnd = Carbon::parse($periodEnd);
 
-                        $diff = $periodStart->diff($periodEnd)->days;
+                    $diff = $periodStart->diff($periodEnd)->days;
 
-                        if ($diff <= 365) {
-                            return true;
-                        }
-
-                        return false;
-                    }
-
-                    return true;
+                    return $diff <= 365;
                 }
+
+                return true;
             }
         );
 
         $this->extendImplicit(
             'only_one_among',
-            function ($attribute, $values, $parameters, $validator) {
+            function ($attribute, $values) {
                 foreach ($values as $value) {
                     if ((Arr::get($value, 'organization_identifier_code', '') === '')
                         && (Arr::get($value, 'type', '') === '')
@@ -391,7 +398,11 @@ public function with(array $rules = [], array $messages = []): static
                     ) {
                         return true;
                     }
-                    if (($value['organization_identifier_code'] === '') && (Arr::get($value, 'narrative.0.narrative') === '')) {
+
+                    if (($value['organization_identifier_code'] === '') && (Arr::get(
+                        $value,
+                        'narrative.0.narrative'
+                    ) === '')) {
                         return false;
                     }
 
@@ -402,13 +413,14 @@ public function with(array $rules = [], array $messages = []): static
 
         $this->extendImplicit(
             'unique_lang',
-            function ($attribute, $value, $parameters, $validator) {
+            function ($attribute, $value) {
                 $languages = [];
+
                 if (!is_null($value) && is_array($value)) {
                     foreach ($value as $narrative) {
                         $language = Arr::get($narrative, 'narrative.0.language', '');
 
-                        if (in_array($language, $languages)) {
+                        if (in_array($language, $languages, true)) {
                             return false;
                         }
 
@@ -422,21 +434,22 @@ public function with(array $rules = [], array $messages = []): static
 
         $this->extendImplicit(
             'unique_default_lang',
-            function ($attribute, $value, $parameters, $validator) {
+            function ($attribute, $value) {
                 $languages = [];
-                // $defaultLanguage = getDefaultLanguage();
                 $defaultLanguage = 'en';
-
                 $check = true;
+
                 if ($value && is_array($value)) {
                     foreach ($value as $narrative) {
                         $languages[] = Arr::get($narrative, 'narrative.0.language', '');
                     }
 
-                    if (count($languages) === count(array_unique($languages))) {
-                        if (in_array('', $languages) && in_array($defaultLanguage, $languages)) {
-                            $check = false;
-                        }
+                    if ((count($languages) === count(array_unique($languages))) && in_array(
+                        '',
+                        $languages,
+                        true
+                    ) && in_array($defaultLanguage, $languages, true)) {
+                        $check = false;
                     }
                 }
 
