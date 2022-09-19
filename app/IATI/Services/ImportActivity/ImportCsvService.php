@@ -147,11 +147,11 @@ class ImportCsvService
             Session::put('file_type', $fileType);
             Session::put('user_id', Auth::user()->id);
             Session::put('org_id', Auth::user()->organization->id);
-            // $this->fixStagingPermission($this->getTemporaryFilepath());
+            $this->fixStagingPermission($this->getTemporaryFilepath());
 
-            // if (file_exists($this->getTemporaryFilepath('valid.json'))) {
-            //     unlink($this->getTemporaryFilepath('valid.json'));
-            // }
+            if (file_exists($this->getTemporaryFilepath('valid.json'))) {
+                unlink($this->getTemporaryFilepath('valid.json'));
+            }
 
             $activityIdentifiers = $this->getIdentifiers();
 
