@@ -42,9 +42,9 @@ abstract class Row
     /**
      * Initialize the Row object.
      *
-     * @return mixed
+     * @return void
      */
-    abstract public function init(): mixed;
+    abstract public function init(): void;
 
     /**
      * Process the Row.
@@ -63,9 +63,9 @@ abstract class Row
     /**
      * Store the Row in a temporary JSON File for further usage.
      *
-     * @return mixed
+     * @return void
      */
-    abstract public function keep(): mixed;
+    abstract public function keep(): void;
 
     /**
      * Initialize the objects for the all the elements in the Row.
