@@ -77,16 +77,24 @@ class XmlQueueWriter
 
     /**
      * XmlQueueWriter constructor.
-     * @param                    $userId
-     * @param                    $orgId
-     * @param                    $dbIatiIdentifiers
-     * @param ActivityRepository $activityRepo
-     * @param TransactionRepository        $transactionRepo
-     * @param ResultRepository           $resultRepo
-     * @param DocumentLinkRepository       $documentLinkRepo
+     *
+     * @param                        $userId
+     * @param                        $orgId
+     * @param                        $dbIatiIdentifiers
+     * @param ActivityRepository     $activityRepo
+     * @param TransactionRepository  $transactionRepo
+     * @param ResultRepository       $resultRepo
+     * @param DocumentLinkRepository $documentLinkRepo
      */
-    public function __construct($userId, $orgId, $dbIatiIdentifiers, ActivityRepository $activityRepo, TransactionRepository $transactionRepo, ResultRepository $resultRepo, DocumentLinkRepository $documentLinkRepo)
-    {
+    public function __construct(
+        $userId,
+        $orgId,
+        $dbIatiIdentifiers,
+        ActivityRepository $activityRepo,
+        TransactionRepository $transactionRepo,
+        ResultRepository $resultRepo,
+        DocumentLinkRepository $documentLinkRepo
+    ) {
         $this->activityRepo = $activityRepo;
         $this->transactionRepo = $transactionRepo;
         $this->resultRepo = $resultRepo;
@@ -137,62 +145,62 @@ class XmlQueueWriter
         return true;
     }
 
-/**
- * Save transaction of mapped activity in database.
- *
- * @param $activity
- * @param $activityId
- *
- * @return $this
- */
-protected function saveTransactions($activity, $activityId): static
-{
-    $transactionRepo = $this->transactionRepo;
+    /**
+     * Save transaction of mapped activity in database.
+     *
+     * @param $activity
+     * @param $activityId
+     *
+     * @return $this
+     */
+    protected function saveTransactions($activity, $activityId): static
+    {
+        $transactionRepo = $this->transactionRepo;
 
-    foreach (Arr::get($activity, 'transactions', []) as $transaction) {
-        $transactionRepo->createTransaction($transaction, $activityId);
+        foreach (Arr::get($activity, 'transactions', []) as $transaction) {
+            $transactionRepo->createTransaction($transaction, $activityId);
+        }
+
+        return $this;
     }
 
-    return $this;
-}
+    /**
+     * Save result of mapped activity in database.
+     *
+     * @param $activity
+     * @param $activityId
+     *
+     * @return $this
+     */
+    protected function saveResults($activity, $activityId): static
+    {
+        $resultRepo = $this->resultRepo;
+        foreach (Arr::get($activity, 'result', []) as $result) {
+            $resultData['result'] = $result;
+            $resultRepo->xmlResult($resultData, $activityId);
+        }
 
-/**
- * Save result of mapped activity in database.
- *
- * @param $activity
- * @param $activityId
- *
- * @return $this
- */
-protected function saveResults($activity, $activityId): static
-{
-    $resultRepo = $this->resultRepo;
-    foreach (Arr::get($activity, 'result', []) as $result) {
-        $resultData['result'] = $result;
-        $resultRepo->xmlResult($resultData, $activityId);
+        return $this;
     }
 
-    return $this;
-}
+    /**
+     * Save document link of mapped activity in database.
+     *
+     * @param $activity
+     * @param $activityId
+     *
+     * @return $this
+     */
+    protected function saveDocumentLink($activity, $activityId): static
+    {
+        $documentLinkRepo = $this->documentLinkRepo;
+        foreach (Arr::get($activity, 'document_link', []) as $documentLink) {
+            $documentLinkData['document_link'] = $documentLink;
+            $documentLinkRepo->xmlDocumentLink($documentLinkData, $activityId);
+        }
 
-/**
- * Save document link of mapped activity in database.
- *
- * @param $activity
- * @param $activityId
- *
- * @return $this
- */
-protected function saveDocumentLink($activity, $activityId): static
-{
-    $documentLinkRepo = $this->documentLinkRepo;
-    foreach (Arr::get($activity, 'document_link', []) as $documentLink) {
-        $documentLinkData['document_link'] = $documentLink;
-        $documentLinkRepo->xmlDocumentLink($documentLinkData, $activityId);
+        return $this;
     }
-
-    return $this;
-}
 
     /**
      * Get the temporary storage path for the uploaded Xml file.
@@ -300,6 +308,7 @@ protected function saveDocumentLink($activity, $activityId): static
      * @param $index
      *
      * @return void
+     * @throws \JsonException
      */
     protected function storeValidActivity($activity, $index): void
     {
