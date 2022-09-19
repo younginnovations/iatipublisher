@@ -85,8 +85,8 @@ class SuperAdminController extends Controller
         $tableConfig = getTableConfig('organisation');
         $queryParams = [];
 
-        if (!empty($request->get('organisation'))) {
-            $queryParams['organisation'] = $request->get('organisation');
+        if (!empty($request->get('q'))) {
+            $queryParams['q'] = $request->get('q');
         }
 
         if (in_array($request->get('orderBy'), $tableConfig['orderBy'], true)) {

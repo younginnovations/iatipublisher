@@ -79,10 +79,10 @@ class OrganizationRepository extends Repository
         $bindParams = [];
 
         if (array_key_exists(
-            'organisation',
+            'q',
             $queryParams
-        ) && !empty($queryParams['organisation'])) {
-            $query = $queryParams['organisation'];
+        ) && !empty($queryParams['q'])) {
+            $query = $queryParams['q'];
             $innerSql = 'select id, json_array_elements(name) name_array from organizations';
 
             $whereSql .= " AND id in (select x1.id from ($innerSql)x1 where (x1.name_array->>'narrative')::text ilike ?)";
@@ -103,7 +103,7 @@ class OrganizationRepository extends Repository
         $organizations = $this->model->withCount('allActivities')
                                      ->with('user');
 
-        if (array_key_exists('organisation', $queryParams) && !empty($queryParams['organisation'])) {
+        if (array_key_exists('q', $queryParams) && !empty($queryParams['q'])) {
             $organizations->whereRaw($whereSql, $bindParams)
                           ->orWhereHas('user', function ($q) use ($bindParams) {
                               $q->where('email', 'ilike', $bindParams);
