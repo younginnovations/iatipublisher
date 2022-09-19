@@ -7,8 +7,8 @@ namespace App\CsvImporter\Queue\Jobs;
 use App\CsvImporter\Queue\CsvProcessor;
 use App\Jobs\Job;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Support\Facades\Auth;
-use Log;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Session;
 
 /**
  * Class ImportActivity.
@@ -48,11 +48,6 @@ class ImportActivity extends Job implements ShouldQueue
     private $activityIdentifiers;
 
     /**
-     * @var
-     */
-    private $version;
-
-    /**
      * Create a new job instance.
      *
      * @param CsvProcessor $csvProcessor
@@ -62,11 +57,10 @@ class ImportActivity extends Job implements ShouldQueue
     public function __construct(CsvProcessor $csvProcessor, $filename, $activityIdentifiers)
     {
         $this->csvProcessor = $csvProcessor;
-        $this->organizationId = session('org_id');
-        $this->userId = Auth::user()->organization_id;
+        $this->organizationId = Session::get('org_id');
+        $this->userId = Session::get('user_id');
         $this->filename = $filename;
         $this->activityIdentifiers = $activityIdentifiers;
-        $this->version = session('version');
     }
 
     /**
@@ -76,7 +70,7 @@ class ImportActivity extends Job implements ShouldQueue
      */
     public function handle(): void
     {
-        $directoryPath = storage_path(sprintf('%s/%s/%s', 'csvImporter/tmp', $this->organizationId, $this->userId));
+        $directoryPath = storage_path(sprintf('%s/%s', 'csvImporter/tmp', $this->organizationId));
         if (!is_dir($directoryPath)) {
             mkdir($directoryPath, 0777, true);
         }
@@ -84,7 +78,7 @@ class ImportActivity extends Job implements ShouldQueue
         try {
             file_put_contents($path, json_encode(['status' => 'Processing'], JSON_THROW_ON_ERROR));
 
-            $this->csvProcessor->handle($this->organizationId, $this->userId, $this->activityIdentifiers, $this->version);
+            $this->csvProcessor->handle($this->organizationId, $this->userId, $this->activityIdentifiers);
             file_put_contents($path, json_encode(['status' => 'Complete'], JSON_THROW_ON_ERROR));
 
             $uploadedFilepath = $this->getStoredCsvFilePath($this->filename);
@@ -111,6 +105,6 @@ class ImportActivity extends Job implements ShouldQueue
      */
     protected function getStoredCsvFilePath($filename): string
     {
-        return sprintf('%s/%s', storage_path(sprintf('%s/%s/%s', self::UPLOADED_CSV_STORAGE_PATH, $this->organizationId, $this->userId)), $filename);
+        return sprintf('%s/%s', storage_path(sprintf('%s/%s', self::UPLOADED_CSV_STORAGE_PATH, Session::get('org_id'))), $filename);
     }
 }

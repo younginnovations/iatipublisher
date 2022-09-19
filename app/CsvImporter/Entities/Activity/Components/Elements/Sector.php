@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\CsvImporter\Entities\Activity\Components\Elements;
 
 use App\CsvImporter\Entities\Activity\Components\Elements\Foundation\Iati\Element;
-use App\CsvImporter\Entities\Activity\Components\Elements\Foundation\Traits\SectorQueries;
 use App\CsvImporter\Entities\Activity\Components\Factory\Validation;
 use Illuminate\Support\Arr;
 
@@ -14,8 +13,6 @@ use Illuminate\Support\Arr;
  */
 class Sector extends Element
 {
-    use SectorQueries;
-
     /**
      * @var null|string
      */
@@ -46,11 +43,6 @@ class Sector extends Element
      * @var array
      */
     protected array $percentage = [];
-
-    /**
-     * @var string
-     */
-    protected $version;
 
     /**
      * @var array
@@ -501,24 +493,12 @@ class Sector extends Element
      */
     protected function getCsvType($fields): ?string
     {
-        if (count($fields) === getCsvHeaderCount($this->version, 'Activity', 'basic')) {
+        if (count($fields) === getCsvHeaderCount('Activity', 'basic')) {
             return 'activity';
-        } elseif (count($fields) === getCsvHeaderCount($this->version, 'Activity', 'transaction')) {
+        } elseif (count($fields) === getCsvHeaderCount('Activity', 'transaction')) {
             return 'transaction';
         }
 
         return null;
-    }
-
-    /**
-     * Set version for sector.
-     *
-     * @param $version
-     *
-     * @return void
-     */
-    public function setVersion($version)
-    {
-        $this->version = $version;
     }
 }

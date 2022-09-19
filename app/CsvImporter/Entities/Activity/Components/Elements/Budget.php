@@ -94,12 +94,12 @@ class Budget extends Element
         if ($key == $this->_csvHeaders[0]) {
             $validBudgetTypes = $this->loadCodeList('BudgetType');
 
-            foreach ($validBudgetTypes as $name => $budgetType) {
-                if (ucwords($value) == $budgetType) {
-                    $value = $name;
-                    break;
-                }
-            }
+            // foreach ($validBudgetTypes as $name => $budgetType) {
+            //     if (ucwords($value) == $budgetType) {
+            //         $value = $name;
+            //         break;
+            //     }
+            // }
 
             $this->data['budget'][$index]['budget_type'] = $value;
         }
@@ -122,12 +122,12 @@ class Budget extends Element
         if ($key === $this->_csvHeaders[1]) {
             $validBudgetStatus = $this->loadCodeList('BudgetStatus');
 
-            foreach ($validBudgetStatus as $key => $budgetStatus) {
-                if (ucwords($value) == $budgetStatus) {
-                    $value = $key;
-                    break;
-                }
-            }
+            // foreach ($validBudgetStatus as $name => $budgetStatus) {
+            //     if (ucwords($value) == $budgetStatus) {
+            //         $value = $name;
+            //         break;
+            //     }
+            // }
             $this->data['budget'][$index]['status'] = $value;
         }
     }
@@ -185,7 +185,7 @@ class Budget extends Element
             $this->data['budget'][$index]['value'] = '';
         }
         if ($key === $this->_csvHeaders[4]) {
-            $this->data['budget'][$index]['value'][0]['amount'] = str_replace(',', '', $value);
+            $this->data['budget'][$index]['value'][0]['amount'] = $value;
         }
         if ($key === $this->_csvHeaders[5]) {
             $this->data['budget'][$index]['value'][0]['value_date'] = dateFormat('Y-m-d', $value);

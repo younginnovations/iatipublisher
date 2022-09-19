@@ -80,11 +80,10 @@ class XmlService
      * Get messages for schema errors.
      *
      * @param $tempXmlContent
-     * @param $version
      *
      * @return array
      */
-    public function getSchemaErrors($tempXmlContent, $version): array
+    public function getSchemaErrors($tempXmlContent): array
     {
         libxml_use_internal_errors(true);
         $xml = new \DOMDocument();

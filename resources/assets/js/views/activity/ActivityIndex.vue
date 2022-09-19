@@ -1,19 +1,12 @@
 <template>
-  <div
-    id="activity-listing-page"
-    class="page-height bg-paper px-10 pt-4 pb-[71px]"
-  >
+  <div id="activity-listing-page" class="page-height bg-paper px-10 pt-4 pb-[71px]">
     <div id="activity">
       <Loader v-if="isLoading"></Loader>
       <PageTitle />
       <div class="overflow-hidden" :class="{ 'bg-white': isEmpty }">
         <ErrorMessage :is-empty="isEmpty"></ErrorMessage>
         <EmptyActivity v-if="isEmpty" />
-        <TableLayout
-          v-if="!isEmpty"
-          :data="activities"
-          @show-or-hide="showOrHide"
-        />
+        <TableLayout v-if="!isEmpty" :data="activities" @show-or-hide="showOrHide" />
         <div v-if="!isEmpty" class="mt-6">
           <Pagination
             v-if="activities && activities.last_page > 1"
@@ -27,18 +20,18 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, provide, reactive, ref } from 'vue';
-import axios from 'axios';
+import { defineComponent, onMounted, provide, reactive, ref } from "vue";
+import axios from "axios";
 
-import EmptyActivity from './partials/EmptyActivity.vue';
-import TableLayout from './partials/TableLayout.vue';
-import Pagination from 'Components/TablePagination.vue';
-import PageTitle from './partials/PageTitle.vue';
-import Loader from 'Components/Loader.vue';
-import ErrorMessage from 'Components/ErrorMessage.vue';
+import EmptyActivity from "./partials/EmptyActivity.vue";
+import TableLayout from "./partials/TableLayout.vue";
+import Pagination from "Components/TablePagination.vue";
+import PageTitle from "./partials/PageTitle.vue";
+import Loader from "Components/Loader.vue";
+import ErrorMessage from "Components/ErrorMessage.vue";
 
 export default defineComponent({
-  name: 'ActivityComponent',
+  name: "ActivityComponent",
   components: {
     EmptyActivity,
     PageTitle,
@@ -60,10 +53,10 @@ export default defineComponent({
     const activities = reactive({}) as ActivitiesInterface;
     const isLoading = ref(true);
     const currentURL = window.location.href;
-    let endpoint = '';
+    let endpoint = "";
     let showEmptyTemplate = false;
 
-    if (currentURL.includes('?')) {
+    if (currentURL.includes("?")) {
       const queryString = window.location.search;
       endpoint = `/activities/page${queryString}`;
     } else {
@@ -74,18 +67,18 @@ export default defineComponent({
     //for session message
     const toastData = reactive({
       visibility: false,
-      message: '',
+      message: "",
       type: true,
     });
 
     // for publish button
     const toastMessage = reactive({
-      message: '',
+      message: "",
       type: false,
     });
 
     onMounted(() => {
-      if (props.toast.message !== '') {
+      if (props.toast.message !== "") {
         toastData.type = props.toast.type;
         toastData.visibility = true;
         toastData.message = props.toast.message;
@@ -123,19 +116,19 @@ export default defineComponent({
     };
 
     function fetchActivities(active_page: number) {
-      let queryString = '';
-      if (currentURL.includes('?')) {
+      let queryString = "";
+      if (currentURL.includes("?")) {
         queryString = window.location.search;
       }
-      axios.get('/activities/page/' + active_page + queryString).then((res) => {
+      axios.get("/activities/page/" + active_page + queryString).then((res) => {
         const response = res.data;
         Object.assign(activities, response.data);
         isEmpty.value = !response.data;
       });
     }
 
-    provide('toastMessage', toastMessage);
-    provide('toastData', toastData);
+    provide("toastMessage", toastMessage);
+    provide("toastData", toastData);
 
     return {
       activities,
