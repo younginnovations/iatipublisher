@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\XmlImporter\Foundation\Support\Providers;
 
 /**
@@ -12,7 +14,7 @@ class TemplateServiceProvider
      *
      * @var string
      */
-    protected $relativeTemplatePath = '/XmlImporter/Foundation/Support/Templates';
+    protected string $relativeTemplatePath = '/XmlImporter/Foundation/Support/Templates';
 
     /**
      * Template for a specific Xml version.
@@ -40,20 +42,23 @@ class TemplateServiceProvider
      * Load template for a specific version.
      *
      * @param string $version
-     * @return array
+     *
+     * @return mixed
+     * @throws \JsonException
      */
-    public function load($version = 'V202')
+    public function load(string $version = 'V202'): mixed
     {
-        return json_decode($this->read($version), true);
+        return json_decode($this->read($version), true, 512, JSON_THROW_ON_ERROR);
     }
 
     /**
      * Read the template file.
      *
      * @param $version
-     * @return string
+     *
+     * @return bool|string
      */
-    protected function read($version)
+    protected function read($version): bool|string
     {
         return file_get_contents(sprintf('%s/activity-template.json', $this->templatePath()));
     }
@@ -61,16 +66,17 @@ class TemplateServiceProvider
     /**
      * @return string
      */
-    protected function templatePath()
+    protected function templatePath(): string
     {
         return app_path() . $this->relativeTemplatePath();
     }
 
     /**
      * Get the relative path for the template files.
+     *
      * @return string
      */
-    protected function relativeTemplatePath()
+    protected function relativeTemplatePath(): string
     {
         return $this->relativeTemplatePath;
     }

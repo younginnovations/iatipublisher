@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\XmlImporter\Foundation\Mapper\Components\Elements;
 
 use App\XmlImporter\Foundation\Support\Helpers\Traits\XmlHelper;
@@ -12,18 +14,24 @@ class Transaction
     /**
      * @var array
      */
-    protected $transaction = [];
+    protected array $transaction = [];
 
     /**
      * @param $element
      * @param $index
      */
-    protected function reference($element, $index)
+    protected function reference($element, $index): void
     {
         $this->transaction[$index]['reference'] = $this->attributes($element, 'ref');
     }
 
-    protected function humanitarian($element, $index)
+    /**
+     * @param $element
+     * @param $index
+     *
+     * @return void
+     */
+    protected function humanitarian($element, $index): void
     {
         $this->transaction[$index]['humanitarian'] = $this->attributes($element, 'humanitarian');
     }
@@ -31,8 +39,10 @@ class Transaction
     /**
      * @param $subElement
      * @param $index
+     *
+     * @return void
      */
-    protected function transactionType($subElement, $index)
+    protected function transactionType($subElement, $index): void
     {
         $this->transaction[$index]['transaction_type'][0]['transaction_type_code'] = $this->attributes($subElement, 'code');
     }
@@ -40,28 +50,34 @@ class Transaction
     /**
      * @param $subElement
      * @param $index
+     *
+     * @return void
      */
-    protected function transactionDate($subElement, $index)
+    protected function transactionDate($subElement, $index): void
     {
         $this->transaction[$index]['transaction_date'][0]['date'] = dateFormat('Y-m-d', $this->attributes($subElement, 'iso-date'));
     }
 
     /**
-     * @param $subElement
-     * @param $index
+     * @param $fields
+     * @param $key
+     *
+     * @return void
      */
-    protected function value($subElement, $index)
+    protected function value($fields, $key): void
     {
-        $this->transaction[$index]['value'][0]['amount'] = $this->getValue($subElement);
-        $this->transaction[$index]['value'][0]['date'] = dateFormat('Y-m-d', $this->attributes($subElement, 'value-date'));
-        $this->transaction[$index]['value'][0]['currency'] = $this->attributes($subElement, 'currency');
+        $this->transaction[$key]['value'][0]['amount'] = $this->getValue($fields);
+        $this->transaction[$key]['value'][0]['date'] = dateFormat('Y-m-d', $this->attributes($fields, 'value-date'));
+        $this->transaction[$key]['value'][0]['currency'] = $this->attributes($fields, 'currency');
     }
 
     /**
      * @param $subElement
      * @param $index
+     *
+     * @return void
      */
-    protected function description($subElement, $index)
+    protected function description($subElement, $index): void
     {
         $this->transaction[$index]['description'][0]['narrative'] = $this->narrative($subElement);
     }
@@ -69,8 +85,10 @@ class Transaction
     /**
      * @param $subElement
      * @param $index
+     *
+     * @return void
      */
-    protected function providerOrg($subElement, $index)
+    protected function providerOrg($subElement, $index): void
     {
         $this->transaction[$index]['provider_organization'][0]['organization_identifier_code'] = $this->attributes($subElement, 'ref');
         $this->transaction[$index]['provider_organization'][0]['type'] = $this->attributes($subElement, 'type');
@@ -81,8 +99,10 @@ class Transaction
     /**
      * @param $subElement
      * @param $index
+     *
+     * @return void
      */
-    protected function receiverOrg($subElement, $index)
+    protected function receiverOrg($subElement, $index): void
     {
         $this->transaction[$index]['receiver_organization'][0]['organization_identifier_code'] = $this->attributes($subElement, 'ref');
         $this->transaction[$index]['receiver_organization'][0]['type'] = $this->attributes($subElement, 'type');
@@ -93,8 +113,10 @@ class Transaction
     /**
      * @param $subElement
      * @param $index
+     *
+     * @return void
      */
-    protected function disbursementChannel($subElement, $index)
+    protected function disbursementChannel($subElement, $index): void
     {
         $this->transaction[$index]['disbursement_channel'][0]['disbursement_channel_code'] = $this->attributes($subElement, 'code');
     }
@@ -102,13 +124,15 @@ class Transaction
     /**
      * @param $subElement
      * @param $index
+     *
+     * @return void
      */
-    protected function sector($subElement, $index)
+    protected function sector($subElement, $index): void
     {
         $this->transaction[$index]['sector'][0]['sector_vocabulary'] = ($vocabulary = $this->attributes($subElement, 'vocabulary'));
-        $this->transaction[$index]['sector'][0]['sector_code'] = ($vocabulary == 1) ? $this->attributes($subElement, 'code') : '';
-        $this->transaction[$index]['sector'][0]['sector_category_code'] = ($vocabulary == 2) ? $this->attributes($subElement, 'code') : '';
-        $this->transaction[$index]['sector'][0]['sector_text'] = ($vocabulary != 1 && $vocabulary != 2) ? $this->attributes($subElement, 'code') : '';
+        $this->transaction[$index]['sector'][0]['sector_code'] = ($vocabulary === 1) ? $this->attributes($subElement, 'code') : '';
+        $this->transaction[$index]['sector'][0]['sector_category_code'] = ($vocabulary === 2) ? $this->attributes($subElement, 'code') : '';
+        $this->transaction[$index]['sector'][0]['sector_text'] = ($vocabulary !== 1 && $vocabulary !== 2) ? $this->attributes($subElement, 'code') : '';
         $this->transaction[$index]['sector'][0]['vocabulary_uri'] = $this->attributes($subElement, 'vocabulary-uri');
         $this->transaction[$index]['sector'][0]['narrative'] = $this->narrative($subElement);
     }
@@ -116,8 +140,10 @@ class Transaction
     /**
      * @param $subElement
      * @param $index
+     *
+     * @return void
      */
-    protected function recipientCountry($subElement, $index)
+    protected function recipientCountry($subElement, $index): void
     {
         $this->transaction[$index]['recipient_country'][0]['country_code'] = $this->attributes($subElement, 'code');
         $this->transaction[$index]['recipient_country'][0]['narrative'] = $this->narrative($subElement);
@@ -126,8 +152,10 @@ class Transaction
     /**
      * @param $subElement
      * @param $index
+     *
+     * @return void
      */
-    protected function recipientRegion($subElement, $index)
+    protected function recipientRegion($subElement, $index): void
     {
         $this->transaction[$index]['recipient_region'][0]['region_code'] = $this->attributes($subElement, 'code');
         $this->transaction[$index]['recipient_region'][0]['vocabulary'] = $this->attributes($subElement, 'vocabulary');
@@ -138,8 +166,10 @@ class Transaction
     /**
      * @param $subElement
      * @param $index
+     *
+     * @return void
      */
-    protected function flowType($subElement, $index)
+    protected function flowType($subElement, $index): void
     {
         $this->transaction[$index]['flow_type'][0]['flow_type'] = $this->attributes($subElement, 'code');
     }
@@ -147,8 +177,10 @@ class Transaction
     /**
      * @param $subElement
      * @param $index
+     *
+     * @return void
      */
-    protected function financeType($subElement, $index)
+    protected function financeType($subElement, $index): void
     {
         $this->transaction[$index]['finance_type'][0]['finance_type'] = $this->attributes($subElement, 'code');
     }
@@ -156,17 +188,20 @@ class Transaction
     /**
      * @param $subElement
      * @param $index
+     *
+     * @return void
      */
-    protected function tiedStatus($subElement, $index)
+    protected function tiedStatus($subElement, $index): void
     {
         $this->transaction[$index]['tied_status'][0]['tied_status_code'] = $this->attributes($subElement, 'code');
     }
 
     /**
      * @param array $element
-     * @return array
+     *
+     * @return mixed
      */
-    protected function getValue(array $element)
+    protected function getValue(array $element): mixed
     {
         return Arr::get($element, 'value', []);
     }
@@ -176,9 +211,10 @@ class Transaction
      *
      * @param array $transactions
      * @param       $template
+     *
      * @return array
      */
-    public function map(array $transactions, $template)
+    public function map(array $transactions, $template): array
     {
         foreach ($transactions as $index => $transaction) {
             $this->transaction[$index] = $template['transaction'];
@@ -197,8 +233,10 @@ class Transaction
     /**
      * @param $subElement
      * @param $index
+     *
+     * @return void
      */
-    protected function aidType($subElement, $index)
+    protected function aidType($subElement, $index): void
     {
         $vocabulary = $this->attributes($subElement, 'vocabulary');
         $code = $this->attributes($subElement, 'code');

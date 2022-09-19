@@ -1,9 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\XmlImporter\Foundation;
 
 use App\XmlImporter\Foundation\Mapper\Components\XmlMapper;
 use App\XmlImporter\Foundation\Support\Providers\TemplateServiceProvider;
+use Illuminate\Contracts\Container\BindingResolutionException;
 
 /**
  * Class XmlProcessor.
@@ -13,12 +16,12 @@ class XmlProcessor
     /**
      * @var TemplateServiceProvider
      */
-    protected $templateServiceProvider;
+    protected TemplateServiceProvider $templateServiceProvider;
 
     /**
      * @var array
      */
-    protected $transactions = [];
+    protected array $transactions = [];
 
     /**
      * @var
@@ -40,14 +43,15 @@ class XmlProcessor
      * Process the uploaded Xml data into AidStream compatible data format.
      *
      * @param array $xml
-     * @param       $version
      * @param       $userId
      * @param       $orgId
      * @param       $dbIatiIdentifiers
-     * @param       $consortium_id
-     * @return      bool
+     *
+     * @return bool
+     * @throws BindingResolutionException
+     * @throws \JsonException
      */
-    public function process(array $xml, $userId, $orgId, $dbIatiIdentifiers)
+    public function process(array $xml, $userId, $orgId, $dbIatiIdentifiers): bool
     {
         if ($this->xmlMapper->isValidActivityFile($xml)) {
             $this->xmlMapper
