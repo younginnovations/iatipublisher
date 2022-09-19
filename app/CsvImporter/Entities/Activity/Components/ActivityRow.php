@@ -30,11 +30,6 @@ class ActivityRow extends Row
     public const VALID_CSV_FILE = 'valid.json';
 
     /**
-     * File in which the invalid Csv data is written before import.
-     */
-    public const INVALID_CSV_FILE = 'invalid.json';
-
-    /**
      * Activity Elements for an Activity Row.
      *
      * @var array
@@ -117,11 +112,6 @@ class ActivityRow extends Row
      * @var
      */
     protected $identifier;
-
-    /**
-     * @var
-     */
-    protected $defaultFieldValues;
 
     /**
      * @var
@@ -223,7 +213,7 @@ class ActivityRow extends Row
     /**
      * Initialize the Row object.
      */
-    public function init()
+    public function init(): void
     {
         $method = $this->getMethodNameByType();
 
@@ -270,7 +260,7 @@ class ActivityRow extends Row
      *
      * @return void
      */
-    public function keep()
+    public function keep():void
     {
         $this->makeDirectoryIfNonExistent()
             ->writeCsvDataAsJson($this->getCsvFilepath());
