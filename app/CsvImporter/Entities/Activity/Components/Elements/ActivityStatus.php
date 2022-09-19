@@ -25,12 +25,18 @@ class ActivityStatus extends Element
      */
     protected string $index = 'activity_status';
 
+    /**
+     * @var array
+     */
     protected array $data;
 
     /**
      * Description constructor.
+     *
      * @param            $fields
      * @param Validation $factory
+     *
+     * @throws \JsonException
      */
     public function __construct($fields, Validation $factory)
     {
@@ -44,6 +50,7 @@ class ActivityStatus extends Element
      * @param $fields
      *
      * @return void
+     * @throws \JsonException
      */
     public function prepare($fields): void
     {
@@ -63,6 +70,7 @@ class ActivityStatus extends Element
      * @param $values
      *
      * @return void
+     * @throws \JsonException
      */
     public function map($value, $values): void
     {
@@ -141,6 +149,7 @@ class ActivityStatus extends Element
      * Get the valid ActivityStatus from the ActivityStatus codelist as a string.
      *
      * @return string
+     * @throws \JsonException
      */
     protected function validActivityStatus(): string
     {

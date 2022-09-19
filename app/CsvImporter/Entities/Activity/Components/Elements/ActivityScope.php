@@ -76,6 +76,7 @@ class ActivityScope extends Element
      * Validate data for IATI Element.
      *
      * @return $this
+     * @throws \JsonException
      */
     public function validate(): static
     {
@@ -92,6 +93,7 @@ class ActivityScope extends Element
      * Provides the rules for the IATI Element validation.
      *
      * @return array
+     * @throws \JsonException
      */
     public function rules(): array
     {
@@ -117,6 +119,7 @@ class ActivityScope extends Element
      * Get the valid ActivityScope from the ActivityScope codelist as a string.
      *
      * @return string
+     * @throws \JsonException
      */
     protected function validActivityScope(): string
     {

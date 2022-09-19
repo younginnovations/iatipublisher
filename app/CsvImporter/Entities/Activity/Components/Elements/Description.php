@@ -62,7 +62,7 @@ class Description extends Element
      *
      * @return void
      */
-    public function prepare($fields)
+    public function prepare($fields): void
     {
         foreach ($fields as $key => $values) {
             if (!is_null($values) && array_key_exists($key, $this->_csvHeaders)) {
