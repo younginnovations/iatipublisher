@@ -22,15 +22,17 @@ class ImportActivity extends Job implements ShouldQueue
 
     /**
      * Current Organization's Id.
-     * @var
+     *
+     * @var int|mixed
      */
     protected mixed $organizationId;
 
     /**
      * Current User's id.
-     * @var
+     *
+     * @var int|mixed
      */
-    protected $userId;
+    protected int $userId;
 
     /**
      * Directory where the uploaded Csv file is stored temporarily before import.
@@ -38,14 +40,14 @@ class ImportActivity extends Job implements ShouldQueue
     public const UPLOADED_CSV_STORAGE_PATH = 'csvImporter/tmp/file';
 
     /**
-     * @var
+     * @var string
      */
-    protected $filename;
+    protected string $filename;
 
     /**
-     * @var
+     * @var array
      */
-    private $activityIdentifiers;
+    private array $activityIdentifiers;
 
     /**
      * Create a new job instance.
@@ -67,12 +69,14 @@ class ImportActivity extends Job implements ShouldQueue
      * Execute the job.
      *
      * @return void
+     * @throws \JsonException
      */
     public function handle(): void
     {
         $directoryPath = storage_path(sprintf('%s/%s', 'csvImporter/tmp', $this->organizationId));
-        if (!is_dir($directoryPath)) {
-            mkdir($directoryPath, 0777, true);
+
+        if (!mkdir($directoryPath, 0777, true) && !is_dir($directoryPath)) {
+            throw new \RuntimeException(sprintf('Directory "%s" was not created', $directoryPath));
         }
         $path = sprintf('%s/%s', $directoryPath, 'status.json');
         try {

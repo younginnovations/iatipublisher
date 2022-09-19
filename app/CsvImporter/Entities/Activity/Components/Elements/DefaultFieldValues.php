@@ -324,6 +324,7 @@ class DefaultFieldValues extends Element
      * @param $codeList
      *
      * @return string
+     * @throws \JsonException
      */
     protected function defaultValueCodeList($codeList): string
     {

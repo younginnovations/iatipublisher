@@ -180,18 +180,22 @@ class ActivityRow extends Row
 
     /**
      * Current Organization's id.
+     *
+     * @var int
      */
-    public $organizationId;
+    public int $organizationId;
 
     /**
      * Current User's id.
+     *
+     * @var int
      */
-    protected $userId;
+    protected int $userId;
 
     /**
-     * @var
+     * @var array
      */
-    protected $activityIdentifiers;
+    protected array $activityIdentifiers;
 
     /**
      * ActivityRow constructor.
@@ -328,6 +332,7 @@ class ActivityRow extends Row
      * Instantiate the Other Elements classes.
      *
      * @return $this
+     * @throws BindingResolutionException
      */
     protected function makeOtherFieldsElements(): static
     {
@@ -461,8 +466,8 @@ class ActivityRow extends Row
     {
         $path = sprintf('%s/%s/', storage_path(self::CSV_DATA_STORAGE_PATH), $this->organizationId);
 
-        if (!file_exists($path)) {
-            mkdir($path, 0777, true);
+        if (!file_exists($path) && !mkdir($path, 0777, true) && !is_dir($path)) {
+            throw new \RuntimeException(sprintf('Directory "%s" was not created', $path));
         }
 
         shell_exec(sprintf('chmod 777 -R %s', $path));
@@ -510,6 +515,7 @@ class ActivityRow extends Row
      * @param $destinationFilePath
      *
      * @return void
+     * @throws \JsonException
      */
     protected function writeCsvDataAsJson($destinationFilePath): void
     {
@@ -630,7 +636,7 @@ class ActivityRow extends Row
         $references = [];
 
         foreach ($this->getTransactions() as $transaction) {
-            if (($reference = Arr::get($transaction->data(), 'transaction.reference')) != '') {
+            if (($reference = Arr::get($transaction->data(), 'transaction.reference')) !== '') {
                 $references[] = $reference;
             }
         }

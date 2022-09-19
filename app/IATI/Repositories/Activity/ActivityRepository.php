@@ -144,9 +144,10 @@ class ActivityRepository extends Repository
      * Provides activity identifiers.
      *
      * @param $orgId
-     * @return mixed
+     *
+     * @return Collection|array
      */
-    public function getActivityIdentifiers($orgId)
+    public function getActivityIdentifiers($orgId): Collection|array
     {
         return $this->model->where('org_id', $orgId)->get('iati_identifier->activity_identifier');
     }
