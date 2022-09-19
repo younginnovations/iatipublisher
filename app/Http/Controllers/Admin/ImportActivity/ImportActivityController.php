@@ -206,12 +206,7 @@ class ImportActivityController extends Controller
                 $result = $this->importCsvService->importIsComplete() ?? 'Processing';
                 $status = $result !== 'Processing';
 
-                $data = [
-                    'valid_data' => $this->getValidData(),
-                    'invalid_data' => $this->getInvalidData(),
-                ];
-
-                $data = array_merge($this->getValidData(), $this->getInvalidData());
+                $data = $this->getValidData();
             }
 
             return response()->json(['status' => 'success', 'data' => $data, 'status' => $status]);
@@ -220,24 +215,6 @@ class ImportActivityController extends Controller
 
             return response()->json(['status' => 'error', 'message' => $e->getMessage()]);
         }
-    }
-
-    /**
-     * Get the remaining invalid data.
-     *
-     * @return array
-     * @throws \JsonException
-     */
-    public function getInvalidData(): array
-    {
-        $filepath = $this->importCsvService->getFilePath(false);
-        $activities = [];
-
-        if (file_exists($filepath)) {
-            $activities = json_decode(file_get_contents($filepath), true, 512, JSON_THROW_ON_ERROR);
-        }
-
-        return $activities;
     }
 
     /**
@@ -268,5 +245,24 @@ class ImportActivityController extends Controller
     protected function fixPermission($path): void
     {
         shell_exec(sprintf('chmod 777 -R %s', $path));
+    }
+
+    /**
+     * Returns csv file import template.
+     *
+     * @return JsonResponse
+     */
+    public function downloadTemplate()
+    {
+        try {
+            $path = app_path(sprintf('CsvImporter/Templates/%s/%s.csv', 'Activity', 'other_fields_transaction'));
+            $csv = file_get_contents($path);
+
+            return $csv;
+        } catch (\Exception $e) {
+            logger()->error($e->getMessage());
+
+            return response()->json(['success' => false, 'message' => $e->getMessage()]);
+        }
     }
 }

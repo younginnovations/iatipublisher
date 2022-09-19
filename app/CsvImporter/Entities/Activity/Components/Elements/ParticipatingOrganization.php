@@ -112,12 +112,12 @@ class ParticipatingOrganization extends Element
         if ($key === $this->_csvHeaders[0] && (!is_null($value))) {
             $validOrganizationRoles = $this->loadCodeList('OrganisationRole', 'Organization');
 
-            foreach ($validOrganizationRoles as $name => $role) {
-                if (strcasecmp($value, $role) === 0) {
-                    $value = $name;
-                    break;
-                }
-            }
+            // foreach ($validOrganizationRoles as $name => $role) {
+            //     if (strcasecmp($value, $role) === 0) {
+            //         $value = $name;
+            //         break;
+            //     }
+            // }
 
             $this->orgRoles[] = $value;
             $this->orgRoles = array_unique($this->orgRoles);
@@ -165,12 +165,12 @@ class ParticipatingOrganization extends Element
         if ($key === $this->_csvHeaders[0] && (!is_null($value))) {
             $validOrganizationTypes = $this->loadCodeList('OrganizationType', 'Organization');
 
-            foreach ($validOrganizationTypes as $name => $role) {
-                if (strcasecmp($value, $role) == 0) {
-                    $value = $name;
-                    break;
-                }
-            }
+            // foreach ($validOrganizationTypes as $name => $role) {
+            //     if (strcasecmp($value, $role) == 0) {
+            //         $value = $name;
+            //         break;
+            //     }
+            // }
 
             $this->types[] = $value;
             $this->types = array_unique($this->types);

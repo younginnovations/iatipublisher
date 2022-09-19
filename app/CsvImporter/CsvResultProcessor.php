@@ -38,7 +38,7 @@ class CsvResultProcessor
     /**
      * Total no. of header present in basic csv version 203.
      */
-    public const CSV_HEADERS_COUNT = 40;
+    public const CSV_HEADERS_COUNT = 69;
 
     /**
      * CsvProcessor constructor.
@@ -54,18 +54,17 @@ class CsvResultProcessor
      *
      * @param $organizationId
      * @param $userId
-     * @param $version
      *
      * @return void
      */
-    public function handle($organizationId, $userId, $version): void
+    public function handle($organizationId, $userId): void
     {
-        if ($this->isCorrectCsv($version)) {
+        if ($this->isCorrectCsv()) {
             $this->groupValues();
             $this->initResult(['organization_id' => $organizationId, 'user_id' => $userId]);
-            $this->result->process($version);
+            $this->result->process();
         } else {
-            $filepath = storage_path('csvImporter/tmp/result/' . $organizationId . '/' . $userId);
+            $filepath = storage_path('csvImporter/tmp/result/' . $organizationId);
             $filename = 'header_mismatch.json';
 
             if (!file_exists($filepath)) {
@@ -180,30 +179,27 @@ class CsvResultProcessor
     /**
      * Check if the headers are correct according to the provided template.
      *
-     * @param $version
-     *
      * @return bool
      */
-    protected function isCorrectCsv($version): bool
+    protected function isCorrectCsv(): bool
     {
         if (!$this->csv) {
             return false;
         }
 
-        return $this->hasCorrectHeaders($version);
+        return $this->hasCorrectHeaders();
     }
 
     /**
      * Load Csv template.
      *
-     * @param $version
      * @param $filename
      *
      * @return mixed
      */
-    protected function loadTemplate($version, $filename): mixed
+    protected function loadTemplate($filename): mixed
     {
-        $file = Excel::toCollection(new CsvToArrayWithHeaders, app_path(sprintf('Services/CsvImporter/Templates/Activity/%s/%s.csv', $version, $filename)))->first();
+        $file = Excel::toCollection(new CsvToArrayWithHeaders, app_path(sprintf('CsvImporter/Templates/Activity/%s.csv', $filename)))->first();
 
         return $file->toArray();
     }
@@ -229,13 +225,12 @@ class CsvResultProcessor
      *
      * @param $csvHeaders
      * @param $templateFileName
-     * @param $version
      *
      * @return bool
      */
-    protected function checkHeadersFor($csvHeaders, $templateFileName, $version): bool
+    protected function checkHeadersFor($csvHeaders, $templateFileName): bool
     {
-        $templateHeaders = $this->loadTemplate($version, $templateFileName);
+        $templateHeaders = $this->loadTemplate($templateFileName);
         $templateHeaders = array_keys($templateHeaders[0]);
         $diffHeaders = array_diff($csvHeaders, $templateHeaders);
 
@@ -258,17 +253,15 @@ class CsvResultProcessor
     /**
      * Check if the uploaded Csv file has correct headers.
      *
-     * @param $version
-     *
      * @return bool
      */
-    protected function hasCorrectHeaders($version): bool
+    protected function hasCorrectHeaders(): bool
     {
         $csvHeaders = array_keys($this->csv[0]);
         $headerCount = self::CSV_HEADERS_COUNT;
 
         if ($this->headerCountMatches($csvHeaders, $headerCount)) {
-            return $this->checkHeadersFor($csvHeaders, 'result', $version);
+            return $this->checkHeadersFor($csvHeaders, 'result');
         }
 
         return false;

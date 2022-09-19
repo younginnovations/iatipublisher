@@ -89,11 +89,6 @@ class Transaction extends Element
     protected ActivityRow $activityRow;
 
     /**
-     * @var
-     */
-    private $version;
-
-    /**
      * Transaction constructor.
      * @param            $transactionRow
      * @param            $activityRow
@@ -384,17 +379,5 @@ class Transaction extends Element
     protected function activityLevelRecipientRegion(): mixed
     {
         return $this->activityRow->recipientRegion->data;
-    }
-
-    /**
-     * Sets version.
-     *
-     * @param $version
-     *
-     * @return void
-     */
-    public function setVersion($version): void
-    {
-        $this->version = $version;
     }
 }

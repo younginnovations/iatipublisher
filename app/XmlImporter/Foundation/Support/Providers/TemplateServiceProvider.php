@@ -41,12 +41,9 @@ class TemplateServiceProvider
     /**
      * Load template for a specific version.
      *
-     * @param string $version
-     *
-     * @return mixed
-     * @throws \JsonException
+     * @return array
      */
-    public function load(string $version = 'V202'): mixed
+    public function load(): mixed
     {
         return json_decode($this->read($version), true, 512, JSON_THROW_ON_ERROR);
     }
@@ -54,16 +51,16 @@ class TemplateServiceProvider
     /**
      * Read the template file.
      *
-     * @param $version
-     *
      * @return bool|string
      */
-    protected function read($version): bool|string
+    protected function read(): bool|string
     {
         return file_get_contents(sprintf('%s/activity-template.json', $this->templatePath()));
     }
 
     /**
+     * Returns xml template path.
+     *
      * @return string
      */
     protected function templatePath(): string

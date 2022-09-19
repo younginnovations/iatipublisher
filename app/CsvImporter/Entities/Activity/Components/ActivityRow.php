@@ -203,27 +203,18 @@ class ActivityRow extends Row
     protected $activityIdentifiers;
 
     /**
-     * System Version.
-     *
-     * @var string
-     */
-    public string $version;
-
-    /**
      * ActivityRow constructor.
      *
      * @param $fields
      * @param $organizationId
      * @param $userId
      * @param $activityIdentifiers
-     * @param $version
      */
-    public function __construct($fields, $organizationId, $userId, $activityIdentifiers, $version)
+    public function __construct($fields, $organizationId, $userId, $activityIdentifiers)
     {
         $this->fields = $fields;
         $this->organizationId = $organizationId;
         $this->userId = $userId;
-        $this->version = $version;
         $this->init();
         $this->activityIdentifiers = $activityIdentifiers;
     }
@@ -302,7 +293,6 @@ class ActivityRow extends Row
             if (class_exists($namespace = $this->getNamespace($element, self::BASE_NAMESPACE))) {
                 if ($element === 'sector') {
                     $this->$element = $this->make($namespace, $this->fields(), $this->organizationId);
-                    $this->$element->setVersion($this->version);
                 } else {
                     $this->$element = $this->make($namespace, $this->fields());
                 }
@@ -332,9 +322,6 @@ class ActivityRow extends Row
             if (class_exists($namespace = $this->getNamespace($this->transactionElement(), self::BASE_NAMESPACE))) {
                 $this->transaction[] = app()->makeWith($namespace, ['transactionRow' => $transactionRow, 'activityRow' => $this]);
             }
-        }
-        foreach ($this->transaction as $key => $transaction) {
-            $this->transaction[$key]->setVersion($this->version);
         }
 
         $this->elements[] = $this->transactionElement();
@@ -477,7 +464,7 @@ class ActivityRow extends Row
      */
     protected function makeDirectoryIfNonExistent(): static
     {
-        $path = sprintf('%s/%s/%s/', storage_path(self::CSV_DATA_STORAGE_PATH), $this->organizationId, $this->userId);
+        $path = sprintf('%s/%s/', storage_path(self::CSV_DATA_STORAGE_PATH), $this->organizationId);
 
         if (!file_exists($path)) {
             mkdir($path, 0777, true);
@@ -495,7 +482,7 @@ class ActivityRow extends Row
      */
     protected function getCsvFilepath(): string
     {
-        return storage_path(sprintf('%s/%s/%s/%s', self::CSV_DATA_STORAGE_PATH, $this->organizationId, $this->userId, self::VALID_CSV_FILE));
+        return storage_path(sprintf('%s/%s/%s', self::CSV_DATA_STORAGE_PATH, $this->organizationId, self::VALID_CSV_FILE));
     }
 
     /**
