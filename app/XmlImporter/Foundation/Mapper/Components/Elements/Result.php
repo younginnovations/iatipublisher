@@ -56,15 +56,15 @@ class Result
 
         $indicatorData = [Arr::get($indicatorTemplate, 0, [])];
 
-        foreach ($indicators as $index => $indicator) {
+        foreach ($indicators as $key => $indicator) {
             $indicator = $indicator['indicator'];
-            $indicatorData[$index]['measure'] = Arr::get($indicatorAttributes, $index . 'measure', '');
-            $indicatorData[$index]['ascending'] = Arr::get($indicatorAttributes, $index . 'ascending', '');
-            $indicatorData[$index]['title'][0]['narrative'] = $this->value($indicator, 'title');
-            $indicatorData[$index]['description'][0]['narrative'] = $this->value($indicator, 'description');
-            $indicatorData[$index]['reference'] = $this->reference($indicator, $indicatorTemplate);
-            $indicatorData[$index]['baseline'] = $this->baseline($indicator, $indicatorTemplate);
-            $indicatorData[$index]['period'] = $this->period($indicator, $indicatorTemplate);
+            $indicatorData[$key]['measure'] = Arr::get($indicatorAttributes, $key . 'measure', '');
+            $indicatorData[$key]['ascending'] = Arr::get($indicatorAttributes, $key . 'ascending', '');
+            $indicatorData[$key]['title'][0]['narrative'] = $this->value($indicator, 'title');
+            $indicatorData[$key]['description'][0]['narrative'] = $this->value($indicator, 'description');
+            $indicatorData[$key]['reference'] = $this->reference($indicator, $indicatorTemplate);
+            $indicatorData[$key]['baseline'] = $this->baseline($indicator, $indicatorTemplate);
+            $indicatorData[$key]['period'] = $this->period($indicator, $indicatorTemplate);
         }
 
         return $indicatorData;

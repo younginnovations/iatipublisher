@@ -19,7 +19,7 @@ trait RegistersValidationRules
     {
         $this->extendImplicit(
             'unique_lang',
-            function ($attribute, $value, $parameters, $validator) {
+            function ($attribute, $value) {
                 $languages = [];
                 foreach ((array) $value as $narrative) {
                     $language = $narrative['language'];
@@ -35,7 +35,7 @@ trait RegistersValidationRules
 
         $this->extendImplicit(
             'unique_default_lang',
-            function ($attribute, $value, $parameters, $validator) {
+            function ($attribute, $value) {
                 $languages = [];
                 // $defaultLanguage = getDefaultLanguage();
                 $defaultLanguage = 'en';
@@ -57,12 +57,12 @@ trait RegistersValidationRules
 
         $this->extendImplicit(
             'sum',
-            function ($attribute, $value, $parameters, $validator) {
+            function () {
                 return false;
             }
         );
 
-        $this->extendImplicit('total', function ($attribute, $value, $parameters, $validator) {
+        $this->extendImplicit('total', function ($attribute, $value) {
             if ($value === 100) {
                 return true;
             }
@@ -72,7 +72,7 @@ trait RegistersValidationRules
 
         $this->extendImplicit(
             'required_with_language',
-            function ($attribute, $value, $parameters, $validator) {
+            function ($attribute) {
                 $language = preg_replace('/([^~]+).narrative/', '$1.language', $attribute);
 
                 return !(Request::get($language) && !Request::get($attribute));
@@ -81,14 +81,14 @@ trait RegistersValidationRules
 
         $this->extend(
             'exclude_operators',
-            function ($attribute, $value, $parameters, $validator) {
+            function ($attribute, $value) {
                 return !preg_match('/[\&\|\?|]+/', $value);
             }
         );
 
         $this->extend(
             'start_end_date',
-            function ($attribute, $dates, $parameters, $validator) {
+            function ($attribute, $dates) {
                 $actual_start_date = '';
                 $actual_end_date = '';
                 $planned_start_date = '';
@@ -121,7 +121,7 @@ trait RegistersValidationRules
 
         $this->extend(
             'actual_date',
-            function ($attribute, $date, $parameters, $validator) {
+            function ($attribute, $date) {
                 $dateType = (!is_array($date)) ?: Arr::get($date, '0.type');
 
                 if ($dateType === 2 || $dateType === 4) {
@@ -137,7 +137,7 @@ trait RegistersValidationRules
 
         $this->extend(
             'start_date_required',
-            function ($attribute, $dates, $parameters, $validator) {
+            function ($attribute, $dates) {
                 $dateTypes = [];
                 foreach ($dates as $date) {
                     $dateTypes[] = $date['type'];
@@ -154,7 +154,7 @@ trait RegistersValidationRules
 
         $this->extendImplicit(
             'year_value_narrative_validation',
-            function ($attribute, $value, $parameters, $validator) {
+            function ($attribute, $value) {
                 $narratives = $value['comment'][0]['narrative'];
                 $hasNarrative = false;
                 foreach ($narratives as $narrative) {
