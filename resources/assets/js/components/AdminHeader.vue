@@ -101,11 +101,13 @@
                 <div>
                   <svg-vue class="user-profile" icon="user-profile" />
                 </div>
-                <div class="flex flex-col break-all capitalize leading-4">
-                  <span class="text-n-50">{{ user.full_name }}</span
-                  ><span class="text-tiny text-n-40">{{
-                    organization.publisher_name
-                  }}</span>
+                <div class="flex flex-col leading-4 capitalize break-all">
+                  <span class="text-n-50">
+                    {{ user.full_name }}
+                  </span>
+                  <span class="text-tiny text-n-40">
+                    {{ organization?.publisher_name }}
+                  </span>
                 </div>
               </li>
               <li class="dropdown__list border-b border-b-n-20">
@@ -123,6 +125,7 @@
     </div>
 
     <CreateModal
+      v-if="superAdmin"
       :modal-active="modalValue"
       @close="modalToggle"
       @close-modal="modalToggle"
@@ -132,15 +135,20 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, ref, reactive, onMounted } from 'vue';
-import type { Ref } from 'vue';
+import { defineProps, ref, reactive, onMounted, Ref } from 'vue';
 import axios from 'axios';
 import { useToggle } from '@vueuse/core';
 import CreateModal from '../views/activity/CreateModal.vue';
 import Toast from './Toast.vue';
+
 defineProps({
   user: { type: Object, required: true },
-  organization: { type: Object, required: true },
+  organization: {
+    type: Object,
+    validator: (v: unknown) =>
+      typeof v === 'object' || typeof v === 'string' || v === null,
+    required: true,
+  },
   superAdmin: { type: Boolean, required: true },
 });
 

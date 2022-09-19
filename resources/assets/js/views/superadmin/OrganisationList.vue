@@ -27,9 +27,12 @@
 
 <script setup lang="ts">
 import { reactive, provide } from 'vue';
+
 // Components
 import PageTitle from 'Components/sections/PageTitle.vue';
 import Loader from 'Components/sections/ProgressLoader.vue';
+import Toast from 'Components/Toast.vue';
+
 import TableList from './components/TableList.vue';
 
 // ref
@@ -54,5 +57,5 @@ const toastMessage = reactive({
 
 // provide
 provide('loader', loader);
-provide('toastMessage', toastMessage);
+provide('toastData', toastMessage);
 </script>
