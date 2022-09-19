@@ -1,25 +1,3 @@
-@font-face {
-  font-weight: 400;
-  font-family: 'Arial';
-  font-style: normal;
-  src: url('../fonts/Arial/arial-webfont.ttf');
-  src: url('../fonts/Arial/arial-webfont.eot') format('eot'),
-    url('../fonts/Arial/arial-webfont.svg') format('svg'),
-    url('../fonts/Arial/arial-webfont.woff') format('woff');
-  font-display: swap;
-}
-
-@font-face {
-  font-weight: 700;
-  font-family: 'Arial';
-  font-style: normal;
-  src: url('../fonts/Arial/arialbd-webfont.ttf');
-  src: url('../fonts/Arial/arialbd-webfont.eot') format('eot'),
-    url('../fonts/Arial/arialbd-webfont.svg') format('svg'),
-    url('../fonts/Arial/arialbd-webfont.woff') format('woff');
-  font-display: swap;
-}
-
 body {
   letter-spacing: -0.02em;
   -webkit-font-smoothing: antialiased;
