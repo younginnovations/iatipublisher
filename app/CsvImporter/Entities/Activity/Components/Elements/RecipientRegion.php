@@ -57,8 +57,11 @@ class RecipientRegion extends Element
 
     /**
      * Description constructor.
+     *
      * @param            $fields
      * @param Validation $factory
+     *
+     * @throws BindingResolutionException
      */
     public function __construct($fields, Validation $factory)
     {
@@ -183,6 +186,7 @@ class RecipientRegion extends Element
      * @param $index
      *
      * @return void
+     * @throws \JsonException
      */
     protected function setRegionVocabulary($index): void
     {
@@ -222,6 +226,7 @@ class RecipientRegion extends Element
      * Provides the rules for the IATI Element validation.
      *
      * @return array
+     * @throws \JsonException
      */
     public function rules(): array
     {

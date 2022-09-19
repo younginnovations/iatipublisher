@@ -112,6 +112,7 @@ class XmlQueueWriter
      * @param $index
      *
      * @return bool
+     * @throws \JsonException
      */
     public function save($mappedActivity, $totalActivities, $index): bool
     {
@@ -181,6 +182,7 @@ class XmlQueueWriter
      * @param $existing
      *
      * @return void
+     * @throws \JsonException
      */
     protected function storeXmlImportStatus($totalActivities, $currentActivity, $success, $failed, $existing): void
     {

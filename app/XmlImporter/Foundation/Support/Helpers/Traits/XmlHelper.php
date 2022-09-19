@@ -82,7 +82,7 @@ trait XmlHelper
         foreach ($values as $value) {
             if ($this->name($value['name']) === $key) {
                 foreach (Arr::get($value, 'attributes', []) as $attributeKey => $attribute) {
-                    if ($attributeKey == 'indicator-uri') {
+                    if ($attributeKey === 'indicator-uri') {
                         $attributeKey = 'indicator_uri';
                     }
                     // (!array_key_exists($attributeKey, array_flip($template))) ?: $data[$index][$attributeKey] = $attribute;

@@ -96,7 +96,7 @@ trait ChecksCsvHeaders
     public function replaceString($arr): array
     {
         return array_map(static function ($data) {
-            return str_replace(' ', '_', str_replace(['(', ')'], '', $data));
+            return str_replace(['(', ')', ' '], ['', '', '_'], $data);
         }, array_map(
             'strtolower',
             array_map('trim', $arr)

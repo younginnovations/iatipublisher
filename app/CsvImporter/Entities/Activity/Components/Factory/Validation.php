@@ -237,7 +237,7 @@ class Validation extends Factory
         $this->extend(
             'recipient_country_region_percentage_sum',
             function ($attribute, $value) {
-                return number_format($value) == 100;
+                return number_format($value) === 100;
             }
         );
 
@@ -416,7 +416,7 @@ class Validation extends Factory
             function ($attribute, $value) {
                 $languages = [];
 
-                if (!is_null($value) && is_array($value)) {
+                if (is_array($value)) {
                     foreach ($value as $narrative) {
                         $language = Arr::get($narrative, 'narrative.0.language', '');
 

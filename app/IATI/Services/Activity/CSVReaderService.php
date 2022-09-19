@@ -43,6 +43,7 @@ class CSVReaderService
      * @param string $file
      *
      * @return Collection
+     * @throws Exception
      */
     public function load(string $file): Collection
     {

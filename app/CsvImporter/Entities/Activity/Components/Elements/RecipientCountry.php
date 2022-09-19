@@ -166,6 +166,7 @@ class RecipientCountry extends Element
      *
      * @return $this
      * @throws BindingResolutionException
+     * @throws \JsonException
      */
     public function validate(): static
     {
@@ -201,7 +202,7 @@ class RecipientCountry extends Element
             ];
         }
 
-        if (($this->data['recipient_region'] == '')
+        if (($this->data['recipient_region'] === '')
             && array_key_exists('recipient_country', $this->data)
             && (!(abs(100.0 - $this->totalPercentage()) < 0.01) && $this->totalPercentage() !== 0)) {
             $rules['recipient_country_total_percentage'] = 'percentage_sum';

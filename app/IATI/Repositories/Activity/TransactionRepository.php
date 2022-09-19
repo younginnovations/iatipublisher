@@ -94,9 +94,11 @@ class TransactionRepository extends Repository
     /**
      * Delete transactions with activity id.
      *
+     * @param $activityId
+     *
      * @return bool
      */
-    public function deleteTransaction($activityId)
+    public function deleteTransaction($activityId): bool
     {
         return $this->model->where('activity_id', $activityId)->delete();
     }
