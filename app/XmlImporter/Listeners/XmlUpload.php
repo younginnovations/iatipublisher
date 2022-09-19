@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\XmlImporter\Listeners;
 
 use App\IATI\Services\ImportActivity\ImportXmlService;
@@ -18,12 +20,12 @@ class XmlUpload
     /**
      * @var ImportXmlService
      */
-    protected $importXmlService;
+    protected ImportXmlService $importXmlService;
 
     /**
      * @var XmlQueueProcessor
      */
-    protected $xmlQueueProcessor;
+    protected XmlQueueProcessor $xmlQueueProcessor;
 
     /**
      * XmlUpload constructor.
@@ -42,7 +44,7 @@ class XmlUpload
      * @param XmlWasUploaded $event
      * @return bool
      */
-    public function handle(XmlWasUploaded $event)
+    public function handle(XmlWasUploaded $event): bool
     {
         $this->dispatch(new ImportXml($event->organizationId, $event->userId, $event->filename, $event->consortium_id));
 
