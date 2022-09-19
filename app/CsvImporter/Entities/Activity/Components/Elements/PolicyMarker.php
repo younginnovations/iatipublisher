@@ -211,6 +211,7 @@ class PolicyMarker extends Element
      * Provides the rules for the IATI Element validation.
      *
      * @return array
+     * @throws \JsonException
      */
     public function rules(): array
     {
@@ -275,7 +276,7 @@ class PolicyMarker extends Element
      */
     protected function policyMarkerCodeList($codeList): string
     {
-        [$policyMarkerCodeList, $codes] = [$this->loadCodeList($codeList), []];
+        [$policyMarkerCodeList] = [$this->loadCodeList($codeList), []];
         $codes = array_keys($policyMarkerCodeList);
 
         return implode(',', array_keys(array_flip($codes)));

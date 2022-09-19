@@ -65,6 +65,7 @@ class RelatedActivity extends Element
      * @param $value
      *
      * @return void
+     * @throws \JsonException
      */
     public function map($key, $index, $value): void
     {

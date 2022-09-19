@@ -43,6 +43,7 @@ trait PreparesTransactionData
      * @param $value
      *
      * @return void
+     * @throws \JsonException
      */
     protected function setTransactionType($key, $value): void
     {
@@ -128,6 +129,7 @@ trait PreparesTransactionData
      * @param $value
      *
      * @return void
+     * @throws \JsonException
      */
     protected function setProviderOrganization($key, $value): void
     {
@@ -152,6 +154,7 @@ trait PreparesTransactionData
      * @param $value
      *
      * @return void
+     * @throws \JsonException
      */
     protected function setReceiverOrganization($key, $value): void
     {

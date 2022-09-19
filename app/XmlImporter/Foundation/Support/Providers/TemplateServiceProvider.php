@@ -42,10 +42,11 @@ class TemplateServiceProvider
      * Load template for a specific version.
      *
      * @return array
+     * @throws \JsonException
      */
     public function load(): mixed
     {
-        return json_decode($this->read($version), true, 512, JSON_THROW_ON_ERROR);
+        return json_decode($this->read(), true, 512, JSON_THROW_ON_ERROR);
     }
 
     /**

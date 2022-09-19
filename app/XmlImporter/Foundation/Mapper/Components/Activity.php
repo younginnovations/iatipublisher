@@ -758,7 +758,7 @@ class Activity
      *
      * @return array
      */
-    public function defaultAidType($element, $template): array
+    public function defaultAidType(mixed $element, mixed $template): array
     {
         $this->defaultAidType[$this->index] = $template['default_aid_type'];
 

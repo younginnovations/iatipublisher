@@ -321,10 +321,11 @@ class Transaction extends Element
     /**
      * Get the valid codes/names from the respective code list.
      *
-     * @param $name
+     * @param        $name
      * @param string $directory
      *
      * @return string
+     * @throws \JsonException
      */
     protected function validCodeOrName($name, string $directory = 'Activity'): string
     {

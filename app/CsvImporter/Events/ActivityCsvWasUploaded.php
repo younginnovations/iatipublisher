@@ -14,9 +14,9 @@ class ActivityCsvWasUploaded
     use SerializesModels;
 
     /**
-     * @var
+     * @var string
      */
-    public $filename;
+    public string $filename;
 
     /**
      * Create a new event instance.

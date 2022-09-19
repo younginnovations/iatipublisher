@@ -250,15 +250,12 @@ class ImportActivityController extends Controller
     /**
      * Returns csv file import template.
      *
-     * @return JsonResponse
+     * @return bool|JsonResponse|string
      */
-    public function downloadTemplate()
+    public function downloadTemplate(): bool|JsonResponse|string
     {
         try {
-            $path = app_path(sprintf('CsvImporter/Templates/%s/%s.csv', 'Activity', 'other_fields_transaction'));
-            $csv = file_get_contents($path);
-
-            return $csv;
+            return file_get_contents(app_path(sprintf('CsvImporter/Templates/%s/%s.csv', 'Activity', 'other_fields_transaction')));
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 

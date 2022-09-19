@@ -103,15 +103,19 @@ trait RegistersValidationRules
 
                 if (($actual_start_date > $actual_end_date) && ($actual_start_date !== '' && $actual_end_date !== '')) {
                     return false;
-                } elseif (($planned_start_date > $planned_end_date) && ($planned_start_date !== '' && $planned_end_date !== '')) {
+                }
+
+                if (($planned_start_date > $planned_end_date) && ($planned_start_date !== '' && $planned_end_date !== '')) {
                     return false;
-                } elseif (($actual_start_date > $planned_end_date) && ($actual_start_date !== '' && $planned_end_date !== '')
-                    && ($actual_end_date === '' && $planned_start_date === '')
-                ) {
+                }
+
+                if (($actual_start_date > $planned_end_date) && ($actual_start_date !== '' && $planned_end_date !== '')
+                    && ($actual_end_date === '' && $planned_start_date === '')) {
                     return false;
-                } elseif (($planned_start_date > $actual_end_date) && ($planned_start_date !== '' && $actual_end_date !== '')
-                    && ($planned_end_date === '' && $actual_start_date === '')
-                ) {
+                }
+
+                if (($planned_start_date > $actual_end_date) && ($planned_start_date !== '' && $actual_end_date !== '')
+                    && ($planned_end_date === '' && $actual_start_date === '')) {
                     return false;
                 }
 
@@ -171,7 +175,7 @@ trait RegistersValidationRules
                 isset($value['year']) ?: $value['year'] = null;
                 isset($value['value']) ?: $value['value'] = null;
 
-                return $hasNarrative && ($value['year'] || $value['value']);
+                return $value['year'] || $value['value'];
             }
         );
     }

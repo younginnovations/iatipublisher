@@ -18,11 +18,6 @@ class Processor
     use DispatchesJobs;
 
     /**
-     * @var ImportActivity
-     */
-    protected ImportActivity $importActivity;
-
-    /**
      * @var CsvReader
      */
     protected CsvReader $csvReader;
