@@ -130,7 +130,7 @@ class ImportXmlService
     {
         try {
             $file->move($this->temporaryXmlStorage(), $file->getClientOriginalName());
-            shell_exec(sprintf('chmod 777 -R %s', $this->temporaryXmlStorage()));
+            // shell_exec(sprintf('chmod 777 -R %s', $this->temporaryXmlStorage()));
 
             return true;
         } catch (Exception $exception) {
@@ -159,15 +159,25 @@ class ImportXmlService
 
         foreach ($activities as $value) {
             $activity = $contents[$value];
-            $storeActivity = $this->activityRepository->importXmlActivities((array) $activity->data, Auth::user()->organization_id);
-            $activityId = $storeActivity->id;
-            $this->saveTransactions($activity->data->transactions, $activityId)
-                ->saveResults($activity->data->result, $activityId);
+
+            if ($activity->existence === true) {
+                $oldActivity = $this->activityRepository->getActivityWithIdentifier(Auth::user()->organization->id, (array) $activity->data->identifier);
+                // dd($oldActivity->id);
+                $storeActivity = $this->activityRepository->importXmlActivities($oldActivity->id, (array) $activity->data);
+                $this->transactionRepository->deleteTransaction($oldActivity->id);
+                $this->resultRepository->deleteResult($oldActivity->id);
+
+                $this->saveTransactions($activity->data->transactions, $oldActivity->id)
+                    ->saveResults($activity->data->result, $oldActivity->id);
+            } else {
+                $storeActivity = $this->activityRepository->importXmlActivities(null, (array) $activity->data);
+                $activityId = $storeActivity->id;
+                $this->saveTransactions($activity->data->transactions, $activityId)
+                    ->saveResults($activity->data->result, $activityId);
+            }
         }
 
         return true;
-
-        // $this->activityImportStatus($activities);
     }
 
 /**
@@ -378,14 +388,15 @@ protected function saveDocumentLink($documentLinks, $activityId): static
      * Returns errors from the xml.
      *
      * @param $filename
-     * @param $version
+     *
+     * @return void
      */
-    public function parseXmlErrors($filename, $version): void
+    public function parseXmlErrors($filename): void
     {
         $filePath = $this->temporaryXmlStorage($filename);
         $xml = $this->loadXml($filePath);
         $xmlLines = $this->xmlService->formatUploadedXml($xml);
-        $messages = $this->xmlService->getSchemaErrors($xml, $version);
+        $messages = $this->xmlService->getSchemaErrors($xml);
         Session::put('xmlLines', $xmlLines);
         Session::put('messages', $messages);
     }

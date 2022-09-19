@@ -89,13 +89,6 @@ class XmlMapper
     ];
 
     /**
-     * Iati version.
-     *
-     * @var string
-     */
-    protected string $version = '2.03';
-
-    /**
      * Upgrade flag.
      *
      * @var bool
@@ -278,18 +271,4 @@ public function map(array $activities, $template, $userId, $orgId, $dbIatiIdenti
             $this->{$elementName}[] = $subElement;
         }
     }
-
-/**
- * Set upgrade flag for older xml versions.
- *
- * @param bool $value
- *
- * @return $this
- */
-public function setUpgradeFlag(bool $value = false): static
-{
-    $this->upgrade = $value;
-
-    return $this;
-}
 }

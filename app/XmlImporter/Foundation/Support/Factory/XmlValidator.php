@@ -3840,7 +3840,6 @@ class XmlValidator
     /**
      * Get the valid codes from the respective code list.
      * @param        $name
-     * @param        $version
      * @param string $directory
      * @return string
      */
@@ -3854,7 +3853,6 @@ class XmlValidator
 
     /**
      * @param        $codeList
-     * @param        $version
      * @param string $directory
      * @return mixed
      */

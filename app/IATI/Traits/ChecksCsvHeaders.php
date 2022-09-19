@@ -14,17 +14,15 @@ trait ChecksCsvHeaders
 {
     /**
      * Load Csv template.
-     *
-     * @param $version
      * @param $filename
      *
      * @return array
      * @throws BindingResolutionException
      */
-    protected function loadTemplate($version, $filename): array
+    protected function loadTemplate($filename): array
     {
         $excel = app()->make(CsvReader::class);
-        $file = $excel->load(app_path(sprintf('Services/CsvImporter/Templates/Activity/%s/%s.csv', $version, $filename)));
+        $file = $excel->load(app_path(sprintf('Services/CsvImporter/Templates/Activity/%s.csv', $filename)));
 
         return $file->toArray();
     }
@@ -56,7 +54,7 @@ trait ChecksCsvHeaders
      */
     protected function checkHeadersFor($csvHeaders, $templateFileName): bool
     {
-        $templateHeaders = $this->loadTemplate($version, $templateFileName);
+        $templateHeaders = $this->loadTemplate($templateFileName);
         $templateHeaders = array_keys($templateHeaders[0]);
         $diffHeaders = array_diff($csvHeaders, $templateHeaders);
 
@@ -84,28 +82,6 @@ trait ChecksCsvHeaders
     protected function hasCorrectHeaders()
     {
         $csvHeaders = array_keys($this->csv[0]);
-        $headerCount = [
-            'basic'                     => '27',
-            'transaction'               => '47',
-            'other_fields'              => '49',
-            'other_fields_transaction'  => '69',
-        ];
-
-        // if ($this->headerCountMatches($csvHeaders, $headerCount['basic'])) {
-        //     return $this->checkSameHeaders($csvHeaders, 'Activity', 'basic');
-        // }
-
-        // if ($this->headerCountMatches($csvHeaders, getCsvHeaderCount($version, 'Activity', 'transaction'))) {
-        //     return $this->checkSameHeaders($csvHeaders, 'Activity', 'transaction');
-        // }
-
-        // if ($this->headerCountMatches($csvHeaders, getCsvHeaderCount($version, 'Activity', 'other_fields'))) {
-        //     return $this->checkSameHeaders($csvHeaders, 'Activity', 'other_fields');
-        // }
-
-        // if ($this->headerCountMatches($csvHeaders, $headerCount['other_fields_transaction'])) {
-        //     return $this->checkSameHeaders($csvHeaders, 'Activity', 'other_fields_transaction');
-        // }
 
         return 69;
     }

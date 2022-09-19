@@ -70,7 +70,7 @@ class ActivityStatus extends Element
             $validActivityStatus = $this->loadCodeList('ActivityStatus');
 
             foreach ($validActivityStatus as $key => $status) {
-                if (ucwords($value) === $status) {
+                if ($value === $status) {
                     $value = $key;
                     break;
                 }

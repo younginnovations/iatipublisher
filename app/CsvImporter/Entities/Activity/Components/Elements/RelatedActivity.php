@@ -110,12 +110,12 @@ class RelatedActivity extends Element
         if ($key === $this->_csvHeaders[1]) {
             $relatedActivityType = $this->loadCodeList('RelatedActivityType');
 
-            foreach ($relatedActivityType as $key => $type) {
-                if (ucwords($value) == $key) {
-                    $value = $type;
-                    break;
-                }
-            }
+            // foreach ($relatedActivityType as $key => $type) {
+            //     if (ucwords($value) == $key) {
+            //         $value = $type;
+            //         break;
+            //     }
+            // }
 
             $this->data['related_activity'][$index]['relationship_type'] = $value;
         }

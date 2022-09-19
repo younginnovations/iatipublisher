@@ -105,7 +105,7 @@ class ContactInfo extends Element
         }
 
         if ($key === $this->_csvHeaders[0]) {
-            // $relatedActivityType = $this->loadCodeList('ContactType');
+            $relatedActivityType = $this->loadCodeList('ContactType');
 
             // foreach ($relatedActivityType as $name => $code) {
             //     if (ucwords($value) == $name) {

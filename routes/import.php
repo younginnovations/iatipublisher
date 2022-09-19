@@ -20,4 +20,5 @@ Route::name('admin.')->group(function () {
     // Route::get('/import/status', [ImportActivityController::class, 'status'])->name('import.status');
     Route::get('/import/check_status', [ImportActivityController::class, 'checkStatus'])->name('import.check.status');
     Route::post('/import/activity', [ImportActivityController::class, 'importValidatedActivities'])->name('import.activity');
+    Route::get('/import/download/csv', [ImportActivityController::class, 'downloadTemplate'])->name('import.csv');
 });

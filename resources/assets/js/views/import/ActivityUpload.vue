@@ -84,7 +84,7 @@
               <div class="flex items-center space-x-2.5">
                 <button class="relative text-sm text-bluecoral">
                   <svg-vue :icon="'download'" class="mr-1" />
-                  <span>Download .CSV activity Template</span>
+                  <span @click="downloadExcel">Download .CSV activity Template</span>
                 </button>
                 <HoverText
                   hover-text="This template contains all the elements that you have to fill as per the IATI Standard before uploading in IATI Publisher. Please make sure that you follow the structure and format of the template."
@@ -146,7 +146,23 @@ export default defineComponent({
         .catch((err) => {
           error.value = "The file field is required and must be csv or xml.";
         });
-      loader.value = false;
+      // loader.value = false;
+    }
+
+    function downloadExcel() {
+      axios({
+        url: "import/download/csv",
+        method: "GET",
+        responseType: "arraybuffer",
+      }).then((response) => {
+        let blob = new Blob([response.data], {
+          type: "application/csv",
+        });
+        let link = document.createElement("a");
+        link.href = window.URL.createObjectURL(blob);
+        link.download = "csv_test.csv";
+        link.click();
+      });
     }
 
     return {
@@ -155,6 +171,7 @@ export default defineComponent({
       uploadFile,
       loader,
       loaderText,
+      downloadExcel,
     };
   },
 });
