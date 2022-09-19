@@ -1,8 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\XmlImporter\Foundation\Support\Providers;
 
 use App\IATI\Models\Organization\Organization;
+use Sabre\Xml\ParseException;
 use Sabre\Xml\Service;
 
 /**
@@ -13,17 +16,17 @@ class XmlServiceProvider
     /**
      * @var Service
      */
-    protected $xmlService;
+    protected Service $xmlService;
 
     /**
      * @var XmlErrorServiceProvider
      */
-    protected $xmlErrorServiceProvider;
+    protected XmlErrorServiceProvider $xmlErrorServiceProvider;
 
     /**
      * @var Organization
      */
-    protected $organization;
+    protected Organization $organization;
 
     /**
      * Xml constructor.
@@ -45,9 +48,11 @@ class XmlServiceProvider
      * Load xml data into an array|object|string.
      *
      * @param $data
+     *
      * @return array|object|string
+     * @throws ParseException
      */
-    public function load($data)
+    public function load($data): array|object|string
     {
         return $this->xmlService->parse($data);
     }
@@ -56,9 +61,11 @@ class XmlServiceProvider
      * Returns the AidStream relevant name for the version, i.e., 'V103', 'V202', etc.
      *
      * @param $data
+     *
      * @return string
+     * @throws \Exception
      */
-    public function version($data)
+    public function version($data): string
     {
         $document = new \SimpleXMLElement($data);
 
@@ -68,10 +75,11 @@ class XmlServiceProvider
     /**
      * Convert xml version to string representation of version.
      *
-     * @param string $version
+     * @param $version
+     *
      * @return string
      */
-    protected function convertToVersion($version)
+    protected function convertToVersion($version): string
     {
         return 'V' . str_replace('.', '', $version);
     }
@@ -80,9 +88,10 @@ class XmlServiceProvider
      * Validate the uploaded Xml file against its schema.
      *
      * @param $contents
+     *
      * @return bool
      */
-    public function isValidAgainstSchema($contents)
+    public function isValidAgainstSchema($contents): bool
     {
         return $this->xmlErrorServiceProvider
             ->load($contents)
@@ -92,10 +101,9 @@ class XmlServiceProvider
     /**
      * Get the path for the Xml Schema according to the version of the Xml.
      *
-     * @param $version
      * @return string
      */
-    protected function getSchemaPath()
+    protected function getSchemaPath(): string
     {
         return app_path('XmlImporter/Template/iati-activities-schema.xsd');
     }
