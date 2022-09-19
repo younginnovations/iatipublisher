@@ -699,13 +699,6 @@ function getEncodingType($file): string
  */
 function getCsvHeaderCount(): int|string
 {
-    // Activity   => [
-    //     'basic'                     => '27',
-    //     'transaction'               => '47',
-    //     'other_fields'              => '49',
-    //     'other_fields_transaction'  => '69',
-    //   ],
-
     return 69;
 }
 

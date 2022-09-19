@@ -14,17 +14,15 @@ trait ChecksCsvHeaders
 {
     /**
      * Load Csv template.
-     *
-     * @param $version
      * @param $filename
      *
      * @return mixed
      * @throws BindingResolutionException
      */
-    protected function loadTemplate($version, $filename): mixed
+    protected function loadTemplate($filename): mixed
     {
         $excel = app()->make(CsvReader::class);
-        $file = $excel->load(app_path(sprintf('Services/CsvImporter/Templates/Activity/%s/%s.csv', $version, $filename)));
+        $file = $excel->load(app_path(sprintf('Services/CsvImporter/Templates/Activity/%s.csv', $filename)));
 
         return $file->toArray();
     }
@@ -48,8 +46,8 @@ trait ChecksCsvHeaders
     /**
      * Check if the headers are correct for the uploaded Csv File.
      *
-     * @param $csvHeaders
-     * @param $templateFileName
+     * @param        $csvHeaders
+     * @param        $templateFileName
      *
      * @return bool
      * @throws BindingResolutionException

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\CsvImporter\Entities\Activity\Components\Elements\Transaction;
 
-use App\CsvImporter\Entities\Activity\Components\Elements\Foundation\Traits\SectorQueries;
 use Illuminate\Contracts\Container\BindingResolutionException;
 
 /**
@@ -12,8 +11,6 @@ use Illuminate\Contracts\Container\BindingResolutionException;
  */
 trait PreparesTransactionData
 {
-    use SectorQueries;
-
     /**
      * Set Internal Reference for Transaction.
      *
@@ -54,11 +51,13 @@ trait PreparesTransactionData
         if ($key === $this->_csvHeaders[1]) {
             $validTransactionType = $this->loadCodeList('TransactionType');
 
-            foreach ($validTransactionType as $name => $type) {
-                if (ucwords($value) === $type) {
-                    $value = $name;
-                }
-            }
+            // foreach ($validTransactionType as $name => $type) {
+            //     dd('transaction value',$value);
+
+            // if (ucwords($value) === $type) {
+            //         $value = $name;
+            //     }
+            // }
             $this->data['transaction']['transaction_type'][] = ['transaction_type_code' => $value];
         }
     }
@@ -89,7 +88,7 @@ trait PreparesTransactionData
     protected function setTransactionValue($key, $value): void
     {
         if ($key === $this->_csvHeaders[3]) {
-            $this->data['transaction']['value'][0]['amount'] = str_replace(',', '', $value);
+            $this->data['transaction']['value'][0]['amount'] = $value;
         }
     }
 
@@ -208,25 +207,11 @@ trait PreparesTransactionData
 
         if ($key === $this->_csvHeaders[17]) {
             $sectorVocabulary = $this->data['transaction']['sector'][0]['sector_vocabulary'];
-            $sectorCode = $this->data['transaction']['sector'][0]['sector_text'];
             $value = $value ?: '';
             $narrative = [
                 'narrative' => $value,
                 'language'  => '',
             ];
-
-            if ($sectorVocabulary === '99' || $sectorVocabulary === '98' && !$value) {
-                if ($customVocabs = $this->customVocabs($this->activityRow->organizationId)) {
-                    foreach ($customVocabs as $customVocab) {
-                        if ($sectorCode === $customVocab['code']) {
-                            $narrative = [
-                                'narrative' => $customVocab['description'],
-                                'language'  => '',
-                            ];
-                        }
-                    }
-                }
-            }
 
             $this->data['transaction']['sector'][0]['narrative'][0] = $narrative;
         }
@@ -380,12 +365,12 @@ trait PreparesTransactionData
     protected function setOrganizationTypeNameToCode($value): mixed
     {
         $validOrganizationType = $this->loadCodeList('OrganizationType', 'Organization');
-        foreach ($validOrganizationType as $name => $type) {
-            if (ucwords($value) === $type) {
-                $value = $name;
-                break;
-            }
-        }
+        // foreach ($validOrganizationType as $name => $type) {
+        //     if (ucwords($value) === $type) {
+        //         $value = $name;
+        //         break;
+        //     }
+        // }
 
         return $value;
     }

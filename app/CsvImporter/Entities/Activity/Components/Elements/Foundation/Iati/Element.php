@@ -81,9 +81,9 @@ abstract class Element
     /**
      * @param null $popIndex
      *
-     * @return array
+     * @return array|int
      */
-    public function data($popIndex = null): array
+    public function data($popIndex = null): array|int
     {
         if (!$this->data) {
             $this->data = [];
@@ -124,15 +124,15 @@ abstract class Element
         return getCodeList($codeList, $directory);
     }
 
-        /**
-         * Check the validity of an Element.
-         *
-         * @return mixed
-         */
-        public function isValid(): mixed
-        {
-            return $this->isValid;
-        }
+    /**
+     * Check the validity of an Element.
+     *
+     * @return mixed
+     */
+    public function isValid(): mixed
+    {
+        return $this->isValid;
+    }
 
     /**
      * Get the index under which the data is stored within the object.

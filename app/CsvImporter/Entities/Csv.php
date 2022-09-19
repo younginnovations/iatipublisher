@@ -42,13 +42,12 @@ abstract class Csv
      *
      * @param $row
      * @param $activityIdentifiers
-     * @param $version
      *
      * @return ActivityRow
      */
-    protected function initialize($row, $activityIdentifiers, $version): ActivityRow
+    protected function initialize($row, $activityIdentifiers)
     {
-        return  new ActivityRow($row, $this->organizationId, $this->userId, $activityIdentifiers, $version);
+        return  new ActivityRow($row, $this->organizationId, $this->userId, $activityIdentifiers);
     }
 
     /**

@@ -106,7 +106,7 @@ class XmlQueueProcessor
                 // shell_exec(sprintf('chmod 777 -R %s', $this->temporaryXmlStorage()));
                 $this->databaseManager->rollback();
 
-                $this->storeInJsonFile('schema_error.json', ['filename' => $filename, 'version' => $this->xmlServiceProvider->version($contents)]);
+                $this->storeInJsonFile('schema_error.json', ['filename' => $filename]);
             }
 
             return false;

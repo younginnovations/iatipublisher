@@ -168,11 +168,63 @@ class ActivityRepository extends Repository
      * @param       $organizationId
      * @return static
      */
-    public function importXmlActivities(array $mappedActivity, $organizationId): static
+    public function importXmlActivities($activity_id, array $mappedActivity): static
+    {
+        $mappedActivity['default_field_values'] = [];
+        $mappedActivity = (array) json_decode(json_encode($mappedActivity, 512));
+
+        $data = [
+            'iati_identifier' => $mappedActivity['identifier'],
+            'title' => array_values((array) $mappedActivity['title'] ?? []),
+            'description' => array_values((array) $mappedActivity['description'] ?? []),
+            'activity_status' => $mappedActivity['activity_status'] ?? [],
+            'activity_date' => array_values((array) $mappedActivity['activity_date'] ?? []),
+            'participating_org' => array_values((array) $mappedActivity['participating_organization'] ?? []),
+            'recipient_country' => $this->getActivityElement((array) $mappedActivity, 'recipient_country'),
+            'recipient_region' => $this->getActivityElement((array) $mappedActivity, 'recipient_region'),
+            'sector' => $this->getActivityElement((array) $mappedActivity, 'sector'),
+            'location' => $this->getActivityElement((array) $mappedActivity, 'location'),
+            'conditions' => $this->getActivityElement((array) $mappedActivity, 'conditions', false),
+            'document_link' => $this->getActivityElement((array) $mappedActivity, 'document_link'),
+            'country_budget_items' => $this->getActivityElement((array) $mappedActivity, 'country_budget_items', false),
+            'planned_disbursement' => $this->getActivityElement((array) $mappedActivity, 'planned_disbursement'),
+            'humanitarian_scope' => $this->getActivityElement((array) $mappedActivity, 'humanitarian_scope'),
+            'other_identifier' => $this->getActivityElement((array) $mappedActivity, 'other_identifier'),
+            'legacy_data' => $this->getActivityElement((array) $mappedActivity, 'legacy_data'),
+            'tag' => $this->getActivityElement((array) $mappedActivity, 'tag'),
+            'org_id' => $mappedActivity['organization_id'] ?? 1,
+            'policy_marker' => $this->getActivityElement((array) $mappedActivity, 'policy_marker'),
+            'budget' => $this->getActivityElement((array) $mappedActivity, 'budget'),
+            'activity_scope' => Arr::get($this->getActivityElement((array) $mappedActivity, 'activity_scope'), '0', null),
+            'collaboration_type' => Arr::get($mappedActivity, 'collaboration_type', null),
+            'capital_spend' => Arr::get($mappedActivity, 'capital_spend', null),
+            'default_flow_type' => Arr::get($mappedActivity, 'default_flow_type', null),
+            'default_finance_type' => Arr::get($mappedActivity, 'default_finance_type', null),
+            'default_aid_type' => Arr::get($mappedActivity, 'default_aid_type', null),
+            'default_tied_status' => Arr::get($mappedActivity, 'default_tied_status', null),
+            'contact_info' => $this->getActivityElement((array) $mappedActivity, 'contact_info'),
+            'related_activity' => $this->getActivityElement((array) $mappedActivity, 'related_activity'),
+        ];
+
+        if ($activity_id) {
+            // $data = (array)json_decode(json_encode($data, 512));
+            // dd($data);
+            return $this->model->where('id', $activity_id)->update($data);
+        }
+
+        return $this->model->create($data);
+    }
+
+    /**
+     * @param array $mappedActivity
+     * @param       $organizationId
+     * @return static
+     */
+    public function updateXmlActivities($activity_id, array $mappedActivity)
     {
         $mappedActivity['default_field_values'] = [];
 
-        return $this->model->create(
+        return $this->model->where('id', $activity_id)->update(
             [
                 'iati_identifier' => $mappedActivity['identifier'],
                 'title' => array_values((array) $mappedActivity['title'] ?? []),
@@ -209,8 +261,8 @@ class ActivityRepository extends Repository
     }
 
     /**
-     * Returns activity element
-     * 
+     * Returns activity element.
+     *
      * @param $activity
      * @param $type
      * @param bool $get_values

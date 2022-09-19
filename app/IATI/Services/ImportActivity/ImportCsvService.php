@@ -144,7 +144,14 @@ class ImportCsvService
             $file = new File($this->getStoredCsvPath($filename));
 
             $fileType = $this->getFileType($file);
-            Session::put(['file_type' => $fileType]);
+            Session::put('file_type', $fileType);
+            Session::put('user_id', Auth::user()->id);
+            Session::put('org_id', Auth::user()->organization->id);
+            // $this->fixStagingPermission($this->getTemporaryFilepath());
+
+            // if (file_exists($this->getTemporaryFilepath('valid.json'))) {
+            //     unlink($this->getTemporaryFilepath('valid.json'));
+            // }
 
             $activityIdentifiers = $this->getIdentifiers();
 
@@ -185,10 +192,15 @@ class ImportCsvService
             $iati_identifier_text = $organizationIdentifier . '-' . Arr::get($activity, 'data.identifier.activity_identifier');
             $activity['data']['identifier']['iati_identifier_text'] = $iati_identifier_text;
 
-            if ($this->isOldActivity($activity)) {
+            if (Arr::get($activity, 'existence') === true) {
                 $oldActivity = $this->activityRepo->getActivityWithIdentifier($organizationId, Arr::get($activity, 'data.identifier'));
-
                 $this->activityRepo->updateActivity($oldActivity->id, Arr::get($activity, 'data'));
+
+                $this->transactionRepo->deleteTransaction($oldActivity->id);
+
+                if (array_key_exists('transaction', $activity['data'])) {
+                    $this->createTransaction(Arr::get($activity['data'], 'transaction', []), $oldActivity->id);
+                }
             } else {
                 $createdActivity = $this->activityRepo->createActivity(Arr::get($activity, 'data'));
 
@@ -285,7 +297,7 @@ class ImportCsvService
      */
     protected function checkStatusFile(): bool
     {
-        return file_exists(storage_path(sprintf('%s/%s/%s', self::CSV_DATA_STORAGE_PATH, session('org_id'), 'status.json')));
+        return file_exists(storage_path(sprintf('%s/%s/%s', self::CSV_DATA_STORAGE_PATH, Session::get('org_id'), 'status.json')));
     }
 
     /**
@@ -295,7 +307,8 @@ class ImportCsvService
      */
     public function removeImportDirectory(): void
     {
-        $this->filesystem->deleteDirectory(storage_path(sprintf('%s/%s/%s', self::CSV_DATA_STORAGE_PATH, session('org_id'), $this->userId)));
+        $directoryPath = storage_path(sprintf('%s/%s', self::CSV_DATA_STORAGE_PATH, Session::get('org_id')));
+        $this->filesystem->deleteDirectory($directoryPath);
     }
 
 /**
@@ -333,44 +346,7 @@ public function startImport($filename): static
      */
     public function getFilePath($isValid): string
     {
-        if ($isValid) {
-            return storage_path(sprintf('%s/%s/%s', self::CSV_DATA_STORAGE_PATH, Auth::user()->organization_id, self::VALID_CSV_FILE));
-        }
-
-        return storage_path(sprintf('%s/%s/%s', self::CSV_DATA_STORAGE_PATH, Auth::user()->organization_id, self::INVALID_CSV_FILE));
-    }
-
-    /**
-     * Clear all invalid activities.
-     *
-     * @return bool|null
-     */
-    public function clearInvalidActivities(): ?bool
-    {
-        try {
-            [$file, $temporaryFile] = [$this->getFilePath(false), $this->getTemporaryFilepath('invalid-temp.json')];
-
-            if (file_exists($file)) {
-                unlink($file);
-            }
-
-            if (file_exists($temporaryFile)) {
-                unlink($temporaryFile);
-            }
-
-            return true;
-        } catch (Exception $exception) {
-            $this->logger->error(
-                sprintf('Error clearing invalid Activities due to [%s]', $exception->getMessage()),
-                [
-                    'trace'           => $exception->getTraceAsString(),
-                    'user_id'         => $this->userId,
-                    'organization_id' => session('org_id'),
-                ]
-            );
-
-            return null;
-        }
+        return storage_path(sprintf('%s/%s/%s', self::CSV_DATA_STORAGE_PATH, Auth::user()->organization_id, self::VALID_CSV_FILE));
     }
 
     /**
@@ -383,10 +359,10 @@ public function startImport($filename): static
     public function getTemporaryFilepath($filename = null): string
     {
         if ($filename) {
-            return storage_path(sprintf('%s/%s/%s/%s', self::CSV_DATA_STORAGE_PATH, session('org_id'), $this->userId, $filename));
+            return storage_path(sprintf('%s/%s/%s', self::CSV_DATA_STORAGE_PATH, Session::get('org_id'), $filename));
         }
 
-        return storage_path(sprintf('%s/%s/%s/', self::CSV_DATA_STORAGE_PATH, session('org_id'), $this->userId));
+        return storage_path(sprintf('%s/%s/', self::CSV_DATA_STORAGE_PATH, Session::get('org_id')));
     }
 
     /**
@@ -437,7 +413,7 @@ public function startImport($filename): static
         $activities = json_decode(file_get_contents($filePath), true, 512, JSON_THROW_ON_ERROR);
         $path = $this->getTemporaryFilepath($temporaryFileName);
 
-        // $this->fixStagingPermission($this->getTemporaryFilepath());
+        $this->fixStagingPermission($this->getTemporaryFilepath());
 
         FileFacade::put($path, json_encode($activities, JSON_THROW_ON_ERROR));
 
@@ -471,7 +447,7 @@ public function startImport($filename): static
                 [
                     'trace'           => $exception->getTraceAsString(),
                     'user_id'         => $this->userId,
-                    'organization_id' => session('org_id'),
+                    'organization_id' => Session::get('org_id'),
                 ]
             );
 
@@ -515,10 +491,10 @@ public function startImport($filename): static
     public function getStoredCsvPath($filename = null): string
     {
         if ($filename) {
-            return sprintf('%s/%s', storage_path(sprintf('%s/%s/%s', self::UPLOADED_CSV_STORAGE_PATH, session('org_id'), $this->userId)), $filename);
+            return sprintf('%s/%s', storage_path(sprintf('%s/%s', self::UPLOADED_CSV_STORAGE_PATH, Session::get('org_id'))), $filename);
         }
 
-        return storage_path(sprintf('%s/%s/%s/', self::UPLOADED_CSV_STORAGE_PATH, session('org_id'), $this->userId));
+        return storage_path(sprintf('%s/%s/', self::UPLOADED_CSV_STORAGE_PATH, Session::get('org_id')));
     }
 
     /**
@@ -599,8 +575,11 @@ public function startImport($filename): static
      */
     public function deleteFile($filename): static
     {
-        if (file_exists($this->getTemporaryFilepath($filename))) {
-            unlink($this->getTemporaryFilepath($filename));
+        $path = $this->getTemporaryFilepath($filename);
+
+        if (file_exists($path)) {
+            $this->fixStagingPermission($path);
+            unlink($path);
         }
 
         return $this;
@@ -663,7 +642,7 @@ public function startImport($filename): static
         $this->removeImportDirectory();
 
         if ($this->hasOldData()) {
-            $this->clearSession(['import-status', 'filename', 'activity_consortium_id']);
+            $this->clearSession(['import-status', 'filename']);
         }
     }
 
@@ -718,17 +697,6 @@ public function startImport($filename): static
         $org_id = Auth::user()->organization_id;
 
         return Arr::flatten($this->activityRepo->getActivityIdentifiers($org_id)->toArray());
-    }
-
-    /**
-     * Check if the uploaded Activity data is of an existing Activity.
-     *
-     * @param $activity
-     * @return bool
-     */
-    protected function isOldActivity($activity): bool
-    {
-        return Arr::get($activity, 'existence') === true;
     }
 
     /**

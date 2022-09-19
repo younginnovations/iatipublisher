@@ -54,17 +54,17 @@ class CsvProcessor
      *
      * @throws \JsonException
      */
-    public function handle($organizationId, $userId, $activityIdentifiers, $version): void
+    public function handle($organizationId, $userId, $activityIdentifiers): void
     {
         $this->filterHeader();
-        if ($this->isCorrectCsv($version)) {
+        if ($this->isCorrectCsv()) {
             $this->groupValues();
 
-            $this->initActivity(['organization_id' => $organizationId, 'user_id' => $userId, 'activity_identifiers' => $activityIdentifiers, 'version' => $version]);
+            $this->initActivity(['organization_id' => $organizationId, 'user_id' => $userId, 'activity_identifiers' => $activityIdentifiers]);
 
             $this->activity->process();
         } else {
-            $filepath = storage_path('csvImporter/tmp/' . $organizationId . '/' . $userId);
+            $filepath = storage_path('csvImporter/tmp/' . $organizationId);
             $filename = 'header_mismatch.json';
 
             if (!is_dir($filepath)) {
@@ -84,7 +84,7 @@ class CsvProcessor
      */
     protected function initActivity(array $options = []): void
     {
-        $this->activity = new Activity($this->data, Arr::get($options, 'organization_id'), Arr::get($options, 'user_id'), Arr::get($options, 'activity_identifiers'), Arr::get($options, 'version'));
+        $this->activity = new Activity($this->data, Arr::get($options, 'organization_id'), Arr::get($options, 'user_id'), Arr::get($options, 'activity_identifiers'));
     }
 
     /**
@@ -157,13 +157,13 @@ class CsvProcessor
      *
      * @return bool
      */
-    protected function isCorrectCsv($version): bool
+    protected function isCorrectCsv(): bool
     {
         if (!$this->csv) {
             return false;
         }
 
-        return $this->hasCorrectHeaders($version);
+        return $this->hasCorrectHeaders();
     }
 
     /**

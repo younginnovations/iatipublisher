@@ -20,10 +20,9 @@ class XmlServiceProvider
 
     /**
      * Initialize an Xml Generator instance.
-     * @param $version
      * @return $this
      */
-    public function initializeGenerator($version): static
+    public function initializeGenerator(): static
     {
         $this->generator = 'App\IATI\Elements\Xml\XmlGenerator';
 
@@ -32,10 +31,10 @@ class XmlServiceProvider
 
     /**
      * Initialize an Xml Validator instance.
-     * @param $version
+     *
      * @return $this
      */
-    public function initializeValidator($version): static
+    public function initializeValidator(): static
     {
         $this->validator = 'App\IATI\Services\ImportActivity\XmlService';
 
