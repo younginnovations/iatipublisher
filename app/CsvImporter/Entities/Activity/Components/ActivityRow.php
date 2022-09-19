@@ -103,7 +103,8 @@ class ActivityRow extends Row
 
     /**
      * All Elements for an Activity Row.
-     * @var
+     *
+     * @var array
      */
     protected array $elements;
 
@@ -233,8 +234,11 @@ class ActivityRow extends Row
 
     /**
      * Initiate the ActivityRow elements with Activity, Transaction and Other Fields.
+     *
+     * @return void
+     * @throws BindingResolutionException
      */
-    public function otherFieldsWithTransaction()
+    public function otherFieldsWithTransaction(): void
     {
         $this->makeActivityElements()->makeTransactionElements()->makeOtherFieldsElements();
     }
@@ -266,7 +270,7 @@ class ActivityRow extends Row
      *
      * @return void
      */
-    public function keep(): void
+    public function keep()
     {
         $this->makeDirectoryIfNonExistent()
             ->writeCsvDataAsJson($this->getCsvFilepath());
@@ -286,6 +290,7 @@ class ActivityRow extends Row
      * Instantiate the Activity Element classes.
      *
      * @return $this
+     * @throws BindingResolutionException
      */
     protected function makeActivityElements(): static
     {
@@ -448,7 +453,7 @@ class ActivityRow extends Row
      */
     protected function validateSelf(): static
     {
-        if (in_array(false, $this->validElements)) {
+        if (in_array(false, $this->validElements, true)) {
             $this->isValid = false;
         } else {
             $this->isValid = true;
