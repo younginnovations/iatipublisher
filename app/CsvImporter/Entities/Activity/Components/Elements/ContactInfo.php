@@ -97,6 +97,7 @@ class ContactInfo extends Element
      * @param $index
      *
      * @return void
+     * @throws \JsonException
      */
     protected function setContactType($key, $value, $index): void
     {
@@ -292,6 +293,7 @@ class ContactInfo extends Element
      * Provides ContactType Code.
      *
      * @return string
+     * @throws \JsonException
      */
     protected function contactTypeCode(): string
     {
@@ -302,6 +304,7 @@ class ContactInfo extends Element
      * Provides the rules for the IATI Element validation.
      *
      * @return array
+     * @throws \JsonException
      */
     public function rules(): array
     {
@@ -334,6 +337,7 @@ class ContactInfo extends Element
      * Validate data for IATI Element.
      *
      * @return $this
+     * @throws \JsonException
      */
     public function validate(): static
     {

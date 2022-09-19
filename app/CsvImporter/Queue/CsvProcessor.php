@@ -50,13 +50,13 @@ class CsvProcessor
      * @param $organizationId
      * @param $userId
      * @param $activityIdentifiers
-     * @param $version
      *
      * @throws \JsonException
      */
     public function handle($organizationId, $userId, $activityIdentifiers): void
     {
         $this->filterHeader();
+
         if ($this->isCorrectCsv()) {
             $this->groupValues();
 
@@ -67,8 +67,8 @@ class CsvProcessor
             $filepath = storage_path('csvImporter/tmp/' . $organizationId);
             $filename = 'header_mismatch.json';
 
-            if (!is_dir($filepath)) {
-                mkdir($filepath, 0777, true);
+            if (!mkdir($filepath, 0777, true) && !is_dir($filepath)) {
+                throw new \RuntimeException(sprintf('Directory "%s" was not created', $filepath));
             }
 
             file_put_contents($filepath . '/' . $filename, json_encode(['mismatch' => true], JSON_THROW_ON_ERROR));
