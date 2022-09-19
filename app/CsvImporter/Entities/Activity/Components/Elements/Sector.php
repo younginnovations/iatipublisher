@@ -318,14 +318,14 @@ class Sector extends Element
     protected function isEmptySector($index): void
     {
         if (
-            $this->data['sector'][$index]['sector_vocabulary'] == ''
-            && $this->data['sector'][$index]['vocabulary_uri'] == ''
-            && $this->data['sector'][$index]['sector_code'] == ''
-            && $this->data['sector'][$index]['sector_category_code'] == ''
-            && $this->data['sector'][$index]['sector_sdg_goal'] == ''
-            && $this->data['sector'][$index]['sector_sdg_target'] == ''
-            && $this->data['sector'][$index]['sector_text'] == ''
-            && $this->data['sector'][$index]['percentage'] == ''
+            $this->data['sector'][$index]['sector_vocabulary'] === ''
+            && $this->data['sector'][$index]['vocabulary_uri'] === ''
+            && $this->data['sector'][$index]['sector_code'] === ''
+            && $this->data['sector'][$index]['sector_category_code'] === ''
+            && $this->data['sector'][$index]['sector_sdg_goal'] === ''
+            && $this->data['sector'][$index]['sector_sdg_target'] === ''
+            && $this->data['sector'][$index]['sector_text'] === ''
+            && $this->data['sector'][$index]['percentage'] === ''
         ) {
             unset($this->data['sector'][$index]);
         }
@@ -335,6 +335,7 @@ class Sector extends Element
      * Validate data for IATI Element.
      *
      * @return $this
+     * @throws \JsonException
      */
     public function validate(): static
     {
@@ -350,6 +351,7 @@ class Sector extends Element
      * Provides the rules for the IATI Element validation.
      *
      * @return array
+     * @throws \JsonException
      */
     public function rules(): array
     {
@@ -495,7 +497,9 @@ class Sector extends Element
     {
         if (count($fields) === getCsvHeaderCount('Activity', 'basic')) {
             return 'activity';
-        } elseif (count($fields) === getCsvHeaderCount('Activity', 'transaction')) {
+        }
+
+        if (count($fields) === getCsvHeaderCount('Activity', 'transaction')) {
             return 'transaction';
         }
 

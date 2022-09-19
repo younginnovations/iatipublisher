@@ -130,6 +130,7 @@ class ImportXmlService
     {
         try {
             $file->move($this->temporaryXmlStorage(), $file->getClientOriginalName());
+
             // shell_exec(sprintf('chmod 777 -R %s', $this->temporaryXmlStorage()));
 
             return true;
@@ -152,6 +153,7 @@ class ImportXmlService
      * @param $activities
      *
      * @return bool
+     * @throws \JsonException
      */
     public function create($activities): bool
     {
@@ -168,95 +170,95 @@ class ImportXmlService
                 $this->resultRepository->deleteResult($oldActivity->id);
 
                 $this->saveTransactions($activity->data->transactions, $oldActivity->id)
-                    ->saveResults($activity->data->result, $oldActivity->id);
+                     ->saveResults($activity->data->result, $oldActivity->id);
             } else {
                 $storeActivity = $this->activityRepository->importXmlActivities(null, (array) $activity->data);
                 $activityId = $storeActivity->id;
                 $this->saveTransactions($activity->data->transactions, $activityId)
-                    ->saveResults($activity->data->result, $activityId);
+                     ->saveResults($activity->data->result, $activityId);
             }
         }
 
         return true;
     }
 
-/**
- * Save transaction of mapped activity in database.
- *
- * @param $transactions
- * @param $activityId
- *
- * @return $this
- */
-protected function saveTransactions($transactions, $activityId): static
-{
-    foreach ($transactions as $transaction) {
-        $this->transactionRepository->store([
-            'activity_id' => $activityId,
-            'transaction' => $transaction,
-        ]);
+    /**
+     * Save transaction of mapped activity in database.
+     *
+     * @param $transactions
+     * @param $activityId
+     *
+     * @return $this
+     */
+    protected function saveTransactions($transactions, $activityId): static
+    {
+        foreach ($transactions as $transaction) {
+            $this->transactionRepository->store([
+                'activity_id' => $activityId,
+                'transaction' => $transaction,
+            ]);
+        }
+
+        return $this;
     }
 
-    return $this;
-}
+    /**
+     * Save result of mapped activity in database.
+     *
+     * @param $results
+     * @param $activityId
+     *
+     * @return $this
+     */
+    protected function saveResults($results, $activityId): static
+    {
+        foreach ($results as $result) {
+            $result = (array) $result;
+            $indicators = $result['indicator'];
+            unset($result['indicator']);
 
-/**
- * Save result of mapped activity in database.
- *
- * @param $results
- * @param $activityId
- *
- * @return $this
- */
-protected function saveResults($results, $activityId): static
-{
-    foreach ($results as $result) {
-        $result = (array) $result;
-        $indicators = $result['indicator'];
-        unset($result['indicator']);
-
-        $savedResult = $this->resultRepository->store([
-            'activity_id' => $activityId,
-            'result' => $result,
-        ]);
-
-        foreach ($indicators as $indicator) {
-            $indicator = (array) $indicator;
-            $periods = $indicator['period'];
-            $savedIndicatory = $this->indicatorRepository->store([
-                'result_id' => $savedResult['id'],
-                'indicator' => $indicator,
+            $savedResult = $this->resultRepository->store([
+                'activity_id' => $activityId,
+                'result'      => $result,
             ]);
 
-            foreach ($periods as $period) {
-                $this->periodRepository->store([
-                    'indicator_id' => $savedIndicatory['id'],
-                    'period' => $period,
+            foreach ($indicators as $indicator) {
+                $indicator = (array) $indicator;
+                $periods = $indicator['period'];
+                $savedIndicatory = $this->indicatorRepository->store([
+                    'result_id' => $savedResult['id'],
+                    'indicator' => $indicator,
                 ]);
+
+                foreach ($periods as $period) {
+                    $this->periodRepository->store([
+                        'indicator_id' => $savedIndicatory['id'],
+                        'period'       => $period,
+                    ]);
+                }
             }
         }
+
+        return $this;
     }
 
-    return $this;
-}
+    /**
+     * Save document link of mapped activity in database.
+     *
+     * @param $documentLinks
+     * @param $activityId
+     *
+     * @return $this
+     */
+    protected function saveDocumentLink($documentLinks, $activityId): static
+    {
+        foreach ($documentLinks as $documentLink) {
+            $documentLinkData['document_link'] = $documentLink;
+            $this->documentLinkRepo->xmlDocumentLink($documentLinkData, $activityId);
+        }
 
-/**
- * Save document link of mapped activity in database.
- *
- * @param $documentLinks
- * @param $activityId
- *
- * @return $this
- */
-protected function saveDocumentLink($documentLinks, $activityId): static
-{
-    foreach ($documentLinks as $documentLink) {
-        $documentLinkData['document_link'] = $documentLink;
-        $this->documentLinkRepo->xmlDocumentLink($documentLinkData, $activityId);
+        return $this;
     }
-
-    return $this;
-}
 
     /**
      * Get the temporary storage path for the uploaded Xml file.

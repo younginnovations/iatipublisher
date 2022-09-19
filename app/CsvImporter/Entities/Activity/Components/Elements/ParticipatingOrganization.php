@@ -80,6 +80,7 @@ class ParticipatingOrganization extends Element
      * @param $index
      *
      * @return void
+     * @throws \JsonException
      */
     public function map($key, $value, $index): void
     {
@@ -230,6 +231,7 @@ class ParticipatingOrganization extends Element
      * Provides the rules for the IATI Element validation.
      *
      * @return array
+     * @throws \JsonException
      */
     public function rules(): array
     {
@@ -268,6 +270,7 @@ class ParticipatingOrganization extends Element
      * Validate data for IATI Element.
      *
      * @return $this
+     * @throws \JsonException
      */
     public function validate(): static
     {
@@ -288,7 +291,7 @@ class ParticipatingOrganization extends Element
      */
     protected function validOrganizationRoles(): string
     {
-        [$organizationRoleCodeList, $organizationRoles] = [$this->loadCodeList('OrganisationRole', 'Organization'), []];
+        [$organizationRoleCodeList] = [$this->loadCodeList('OrganisationRole', 'Organization'), []];
         $organizationRoles = array_keys($organizationRoleCodeList) + array_values($organizationRoleCodeList);
 
         return implode(',', array_keys(array_flip($organizationRoles)));
@@ -302,7 +305,7 @@ class ParticipatingOrganization extends Element
      */
     protected function validOrganizationTypes(): string
     {
-        [$organizationTypeCodeList, $organizationTypes] = [$this->loadCodeList('OrganizationType', 'Organization'), []];
+        [$organizationTypeCodeList] = [$this->loadCodeList('OrganizationType', 'Organization'), []];
 
         $organizationTypes = array_keys($organizationTypeCodeList) + array_values($organizationTypeCodeList);
 

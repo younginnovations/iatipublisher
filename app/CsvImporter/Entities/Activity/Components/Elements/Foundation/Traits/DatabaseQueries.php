@@ -18,6 +18,7 @@ trait DatabaseQueries
      * Get all Activity Identifiers present until now.
      *
      * @return array
+     * @throws BindingResolutionException
      */
     protected function activityIdentifiers(): array
     {

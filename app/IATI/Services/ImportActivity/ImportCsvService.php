@@ -102,6 +102,7 @@ class ImportCsvService
 
     /**
      * ImportManager constructor.
+     *
      * @param Excel                  $excel
      * @param Processor              $processor
      * @param LoggerInterface        $logger
@@ -261,6 +262,7 @@ class ImportCsvService
      * @param $activities
      *
      * @return void
+     * @throws \JsonException
      */
     protected function activityImportStatus($activities): void
     {
@@ -312,20 +314,20 @@ class ImportCsvService
         $this->filesystem->deleteDirectory($directoryPath);
     }
 
-/**
- * Set the key to specify that import process has started for the current User.
- *
- * @param $filename
- *
- * @return $this
- */
-public function startImport($filename): static
-{
-    Session::put('import-status', 'Processing');
-    Session::put('filename', $filename);
+    /**
+     * Set the key to specify that import process has started for the current User.
+     *
+     * @param $filename
+     *
+     * @return $this
+     */
+    public function startImport($filename): static
+    {
+        Session::put('import-status', 'Processing');
+        Session::put('filename', $filename);
 
-    return $this;
-}
+        return $this;
+    }
 
     /**
      * Remove the import-status key from the User's current session.
@@ -505,7 +507,7 @@ public function startImport($filename): static
      */
     public function refreshSessionIfRequired(): void
     {
-        if (Session::get('import-status') == 'Complete') {
+        if (Session::get('import-status') === 'Complete') {
             Session::forget('filename');
         }
     }
@@ -540,6 +542,7 @@ public function startImport($filename): static
 
     /**
      * Clear keys from the current session.
+     *
      * @param array $keys
      */
     public function clearSession(array $keys): void
@@ -561,6 +564,7 @@ public function startImport($filename): static
 
     /**
      * Fix file permission while on staging environment.
+     *
      * @param $path
      */
     protected function fixStagingPermission($path): void
@@ -571,7 +575,9 @@ public function startImport($filename): static
 
     /**
      * Delete a temporary file with the provided filename.
+     *
      * @param $filename
+     *
      * @return $this
      */
     public function deleteFile($filename): static
@@ -588,6 +594,7 @@ public function startImport($filename): static
 
     /**
      * Fire Csv Upload event on Csv File upload.
+     *
      * @param $filename
      */
     public function fireCsvUploadEvent($filename): void
@@ -628,11 +635,7 @@ public function startImport($filename): static
      */
     protected function hasOldData(): bool
     {
-        if (Session::has('import-status') || Session::has('filename') || Session::has('activity_consortium_id')) {
-            return true;
-        }
-
-        return false;
+        return Session::has('import-status') || Session::has('filename') || Session::has('activity_consortium_id');
     }
 
     /**
@@ -685,7 +688,7 @@ public function startImport($filename): static
      */
     public function isCsvFileEmpty($file): bool
     {
-        return (($this->excel->toCollection(new CsvToArray, $file)->first()->count() > 1)) ? false : true;
+        return !((($this->excel->toCollection(new CsvToArray, $file)->first()->count() > 1)));
     }
 
     /**
@@ -711,11 +714,7 @@ public function startImport($filename): static
     {
         $file = new File($this->getStoredCsvPath($filename));
 
-        if (getEncodingType($file) === self::DEFAULT_ENCODING) {
-            return true;
-        }
-
-        return false;
+        return getEncodingType($file) === self::DEFAULT_ENCODING;
     }
 
     /**
@@ -729,7 +728,6 @@ public function startImport($filename): static
     {
         $fileContent = array_map('str_getcsv', file($file->getPathName()));
         $headerCount = count($fileContent[0]);
-        $headersArray = 69;
 
         return $headersArray[$headerCount] ?? $this->reportHeaderMismatch();
     }
