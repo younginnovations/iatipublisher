@@ -17,9 +17,12 @@ class XmlSchemaErrorParser
 
     /**
      * get modified message send as per the schema.
+     *
      * @param $error
      * @param $validateXml
+     *
      * @return mixed|string
+     * @throws \Exception
      */
     public function getModifiedError($error, $validateXml): mixed
     {
@@ -77,7 +80,7 @@ class XmlSchemaErrorParser
         $parsedXml = new SimpleXMLIterator($validateXml);
         $elements = [];
         foreach ($parsedXml->children()->children() as $key => $data) {
-            if ($key != 'title') {
+            if ($key !== 'title') {
                 $elements[] = $key;
             }
         }
@@ -97,12 +100,12 @@ class XmlSchemaErrorParser
     {
         if (in_array($errorCodeElement, $elementsInXml, true)) {
             return $errorCodeElement;
-        } else {
-            $errorLine--;
-            $errorCodeElement = $this->getErrorElementName($xmlLines, $errorLine);
-
-            return $this->getMainElement($errorCodeElement, $elementsInXml, $xmlLines, $errorLine);
         }
+
+        $errorLine--;
+        $errorCodeElement = $this->getErrorElementName($xmlLines, $errorLine);
+
+        return $this->getMainElement($errorCodeElement, $elementsInXml, $xmlLines, $errorLine);
     }
 
     /**

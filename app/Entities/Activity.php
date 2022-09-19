@@ -10,9 +10,9 @@ namespace App\Entities;
 class Activity extends Csv
 {
     /**
-     * @var
+     * @var array
      */
-    protected $activityIdentifiers;
+    protected array $activityIdentifiers;
 
     /**
      * @var

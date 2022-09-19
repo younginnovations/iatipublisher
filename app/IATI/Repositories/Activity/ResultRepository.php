@@ -99,13 +99,13 @@ class ResultRepository extends Repository
     }
 
     /**
-     * Deletes result with acitivity id.
+     * Deletes result with activity id.
      *
      * @param $activity_id
      *
-     * @return int
+     * @return mixed
      */
-    public function deleteResult($activity_id)
+    public function deleteResult($activity_id): mixed
     {
         return $this->model->where('activity_id', $activity_id)->delete();
     }
