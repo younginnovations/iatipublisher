@@ -15,18 +15,21 @@ class RelatedActivity extends Element
 {
     /**
      * Csv Header for RelatedActivity element.
+     *
      * @var array
      */
     private array $_csvHeaders = ['related_activity_identifier', 'related_activity_type'];
 
     /**
      * Index under which the data is stored within the object.
+     *
      * @var string
      */
     protected string $index = 'related_activity';
 
     /**
      * RelatedActivity constructor.
+     *
      * @param            $fields
      * @param Validation $factory
      */
@@ -43,7 +46,7 @@ class RelatedActivity extends Element
      *
      * @return void
      */
-    public function prepare($fields)
+    public function prepare($fields): void
     {
         foreach ($fields as $key => $values) {
             if (!is_null($values) && array_key_exists($key, array_flip($this->_csvHeaders))) {
@@ -108,15 +111,6 @@ class RelatedActivity extends Element
         }
 
         if ($key === $this->_csvHeaders[1]) {
-            $relatedActivityType = $this->loadCodeList('RelatedActivityType');
-
-            // foreach ($relatedActivityType as $key => $type) {
-            //     if (ucwords($value) == $key) {
-            //         $value = $type;
-            //         break;
-            //     }
-            // }
-
             $this->data['related_activity'][$index]['relationship_type'] = $value;
         }
     }

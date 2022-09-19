@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace App\CsvImporter\Entities\Activity\Components\Elements\Transaction;
 
-use Illuminate\Contracts\Container\BindingResolutionException;
-
 /**
  * Class PreparesTransactionData.
  */
@@ -190,23 +188,23 @@ trait PreparesTransactionData
      * @param $value
      *
      * @return void
-     * @throws BindingResolutionException
      */
     protected function setSector($key, $value): void
     {
         if ($key === $this->_csvHeaders[14]) {
             $this->data['transaction']['sector'][0]['sector_vocabulary'] = $value;
         }
+
         if ($key === $this->_csvHeaders[15]) {
             $this->data['transaction']['sector'][0]['vocabulary_uri'] = $value;
         }
+
         if ($key === $this->_csvHeaders[16]) {
             $sectorVocabulary = $this->data['transaction']['sector'][0]['sector_vocabulary'];
             $this->setSectorCode($sectorVocabulary, $value);
         }
 
         if ($key === $this->_csvHeaders[17]) {
-            $sectorVocabulary = $this->data['transaction']['sector'][0]['sector_vocabulary'];
             $value = $value ?: '';
             $narrative = [
                 'narrative' => $value,

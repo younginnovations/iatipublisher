@@ -253,15 +253,11 @@ class Activity
 
     /**
      * @param $element
-     * @param $template
      * @return array
      */
-    public function title($element, $template): array
+    public function title($element): array
     {
-        foreach ($element['value'] as $index => $value) {
-            $this->title = $template['title'];
-            $this->title = $this->narrative($element);
-        }
+        $this->title = $this->narrative($element);
 
         return $this->title;
     }
