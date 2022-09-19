@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\XmlImporter\Foundation\Support\Factory;
 
 use Illuminate\Support\Arr;
@@ -24,7 +26,10 @@ class XmlValidator
         $this->factory = $factory;
     }
 
-    public function rules()
+    /**
+     * @return array
+     */
+    public function rules(): array
     {
         $activity = $this->activity;
         $rules = [];
@@ -77,7 +82,7 @@ class XmlValidator
      *
      * @return array
      */
-    public function messages()
+    public function messages(): array
     {
         $activity = $this->activity;
         $messages = [];
@@ -119,10 +124,6 @@ class XmlValidator
         return $messages;
     }
 
-    /**
-     * @param $activity
-     * @return $this
-     */
     public function init($activity)
     {
         $this->activity = $activity;
@@ -131,21 +132,17 @@ class XmlValidator
     }
 
     /**
-     * @param      $activityId
      * @param bool $shouldBeUnique
+     *
      * @return array
      */
-    public function validateActivity($shouldBeUnique = false)
+    public function validateActivity(bool $shouldBeUnique = false): array
     {
         return $this->factory->initialize($this->activity, $this->rules(), $this->messages())
             ->passes()
             ->withErrors($shouldBeUnique);
     }
 
-    /**
-     * @param array $activity
-     * @return mixed
-     */
     protected function rulesForTitle(array $activity)
     {
         $title = Arr::get($activity, 'title', []);

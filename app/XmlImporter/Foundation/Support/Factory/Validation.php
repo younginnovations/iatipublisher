@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\XmlImporter\Foundation\Support\Factory;
 
 use App\Xml\Validator\Traits\RegistersValidationRules;
@@ -25,7 +27,7 @@ class Validation extends Factory
      *
      * @var array
      */
-    protected $elementLinks = [
+    protected array $elementLinks = [
         'Other Identifier' => 'activity.other-identifier.index',
         'Title' => 'activity.title.index',
         'Description' => 'activity.description.index',
@@ -60,6 +62,7 @@ class Validation extends Factory
 
     /**
      * Validation constructor.
+     *
      * @param Translator $translator
      */
     public function __construct(Translator $translator)
@@ -68,27 +71,28 @@ class Validation extends Factory
         $this->registerValidationRules();
     }
 
-    /**
-     * Initialize the validator object.
-     *
-     * @param $activity
-     * @param $rules
-     * @param $messages
-     * @return $this
-     */
-    public function initialize($activity, $rules, $messages)
-    {
-        $this->validator = $this->make($activity, $rules, $messages);
+/**
+ * Initialize the validator object.
+ *
+ * @param $activity
+ * @param $rules
+ * @param $messages
+ *
+ * @return $this
+ */
+public function initialize($activity, $rules, $messages): static
+{
+    $this->validator = $this->make($activity, $rules, $messages);
 
-        return $this;
-    }
+    return $this;
+}
 
     /**
      * Run the validator and check if it passes.
      *
      * @return $this
      */
-    public function passes()
+    public function passes(): static
     {
         $this->validator->passes();
 
@@ -98,11 +102,11 @@ class Validation extends Factory
     /**
      * Get the unique validation errors.
      *
-     * @param      $activityId
      * @param bool $shouldBeUnique
+     *
      * @return array
      */
-    public function withErrors($shouldBeUnique = false)
+    public function withErrors(bool $shouldBeUnique = false): array
     {
         $errors = [];
 
@@ -118,9 +122,10 @@ class Validation extends Factory
      * Parse the errors from the validator.
      *
      * @param $index
+     *
      * @return string
      */
-    protected function parseErrors($index)
+    protected function parseErrors($index): string
     {
         $element = Arr::get(explode('.', $index), 0, '');
 
@@ -132,7 +137,7 @@ class Validation extends Factory
      *
      * @return mixed
      */
-    protected function errors()
+    protected function errors(): mixed
     {
         return $this->validator->errors()->getMessages();
     }
@@ -142,9 +147,10 @@ class Validation extends Factory
      *
      * @param $elementNarrative
      * @param $elementName
+     *
      * @return array
      */
-    public function getRulesForNarrative($elementNarrative, $elementName)
+    public function getRulesForNarrative($elementNarrative, $elementName): array
     {
         $rules = [];
         $rules[sprintf('%s.narrative', $elementName)][] = 'unique_lang';
@@ -162,9 +168,10 @@ class Validation extends Factory
      *
      * @param $elementNarrative
      * @param $elementName
+     *
      * @return array
      */
-    public function getMessagesForNarrative($elementNarrative, $elementName)
+    public function getMessagesForNarrative($elementNarrative, $elementName): array
     {
         $messages = [];
         $messages[sprintf('%s.narrative.unique_lang', $elementName)] = trans(
@@ -194,16 +201,17 @@ class Validation extends Factory
      *
      * @param $elementNarrative
      * @param $elementName
+     *
      * @return array
      */
-    public function getRulesForRequiredNarrative($elementNarrative, $elementName)
+    public function getRulesForRequiredNarrative($elementNarrative, $elementName): array
     {
         $rules = [];
         $rules[sprintf('%s.narrative', $elementName)][] = 'unique_lang';
         $rules[sprintf('%s.narrative', $elementName)][] = 'unique_default_lang';
 
         foreach ($elementNarrative as $narrativeIndex => $narrative) {
-            if (boolval($narrative['language'])) {
+            if ((bool) $narrative['language']) {
                 $rules[sprintf(
                     '%s.narrative.%s.narrative',
                     $elementName,
@@ -226,9 +234,10 @@ class Validation extends Factory
      *
      * @param $elementNarrative
      * @param $elementName
+     *
      * @return array
      */
-    public function getMessagesForRequiredNarrative($elementNarrative, $elementName)
+    public function getMessagesForRequiredNarrative($elementNarrative, $elementName): array
     {
         $messages = [];
         $messages[sprintf('%s.narrative.unique_lang', $elementName)] = trans(
@@ -237,7 +246,7 @@ class Validation extends Factory
         );
 
         foreach ($elementNarrative as $narrativeIndex => $narrative) {
-            if (boolval($narrative['language'])) {
+            if ($narrative['language']) {
                 $messages[sprintf(
                     '%s.narrative.%s.narrative.required_with',
                     $elementName,
@@ -264,22 +273,24 @@ class Validation extends Factory
      * @param $sector
      * @param $formFields
      * @param $formBase
+     *
      * @return array
      */
-    public function getRulesForTransactionSectorNarrative($sector, $formFields, $formBase)
+    public function getRulesForTransactionSectorNarrative($sector, $formFields, $formBase): array
     {
         $rules = [];
         $rules[sprintf('%s.narrative', $formBase)][] = 'unique_lang';
         $rules[sprintf('%s.narrative', $formBase)][] = 'unique_default_lang';
+
         foreach ($formFields as $narrativeIndex => $narrative) {
             $rules[sprintf('%s.narrative.%s.narrative', $formBase, $narrativeIndex)][] = 'required_with_language';
-            if ($narrative['narrative'] != '') {
+            if ($narrative['narrative'] !== '') {
                 $rules[sprintf(
                     '%s.sector_vocabulary',
                     $formBase
                 )] = 'required_with:' . sprintf('%s.narrative.%s.narrative', $formBase, $narrativeIndex);
-                if ($sector['sector_vocabulary'] == 1 || $sector['sector_vocabulary'] == 2) {
-                    if ($sector['sector_vocabulary'] == 1) {
+                if ($sector['sector_vocabulary'] === 1 || $sector['sector_vocabulary'] === 2) {
+                    if ($sector['sector_vocabulary'] === 1) {
                         $rules[sprintf(
                             '%s.sector_code',
                             $formBase
@@ -289,7 +300,7 @@ class Validation extends Factory
                             $narrativeIndex
                         );
                     }
-                    if ($sector['sector_vocabulary'] == 2) {
+                    if ($sector['sector_vocabulary'] === 2) {
                         $rules[sprintf(
                             '%s.sector_category_code',
                             $formBase
@@ -321,15 +332,17 @@ class Validation extends Factory
      * @param $sector
      * @param $formFields
      * @param $formBase
+     *
      * @return array
      */
-    public function getMessagesForTransactionSectorNarrative($sector, $formFields, $formBase)
+    public function getMessagesForTransactionSectorNarrative($sector, $formFields, $formBase): array
     {
         $messages = [];
         $messages[sprintf('%s.narrative.unique_lang', $formBase)] = trans(
             'validation.unique',
             ['attribute' => trans('elementForm.language')]
         );
+
         foreach ($formFields as $narrativeIndex => $narrative) {
             $messages[sprintf(
                 '%s.narrative.%s.narrative.required_with_language',
@@ -340,13 +353,13 @@ class Validation extends Factory
                 ['attribute' => trans('elementForm.narrative'), 'values' => trans('elementForm.language')]
             );
 
-            if ($narrative['narrative'] != '') {
+            if ($narrative['narrative'] !== '') {
                 $messages[sprintf('%s.sector_vocabulary.required_with', $formBase)] = trans(
                     'validation.required_with',
                     ['attribute' => trans('elementForm.sector_vocabulary'), 'values' => trans('elementForm.narrative')]
                 );
-                if ($sector['sector_vocabulary'] == 1 || $sector['sector_vocabulary'] == 2) {
-                    if ($sector['sector_vocabulary'] == 1) {
+                if ($sector['sector_vocabulary'] === 1 || $sector['sector_vocabulary'] === 2) {
+                    if ($sector['sector_vocabulary'] === 1) {
                         $messages[sprintf('%s.sector_code.required_with', $formBase)] = trans(
                             'validation.required_with',
                             [
@@ -355,7 +368,7 @@ class Validation extends Factory
                             ]
                         );
                     }
-                    if ($sector['sector_vocabulary'] == 2) {
+                    if ($sector['sector_vocabulary'] === 2) {
                         $messages[sprintf('%s.sector_category_code.required_with', $formBase)] = trans(
                             'validation.required_with',
                             [
@@ -379,15 +392,17 @@ class Validation extends Factory
     /**
      * Returns rules for narrative.
      *
-     * @param      $formFields
-     * @param      $formBase
+     * @param $formFields
+     * @param $formBase
+     *
      * @return array
      */
-    public function getRulesForResultNarrative($formFields, $formBase)
+    public function getRulesForResultNarrative($formFields, $formBase): array
     {
         $rules = [];
         $rules[sprintf('%s.narrative', $formBase)][] = 'unique_lang';
         $rules[sprintf('%s.narrative', $formBase)][] = 'unique_default_lang';
+
         foreach ($formFields as $narrativeIndex => $narrative) {
             $rules[sprintf('%s.narrative.%s.narrative', $formBase, $narrativeIndex)][] = 'required';
         }
@@ -417,9 +432,10 @@ class Validation extends Factory
      *
      * @param $formFields
      * @param $formBase
+     *
      * @return array
      */
-    public function getMessagesForPeriodStart($formFields, $formBase)
+    public function getMessagesForPeriodStart($formFields, $formBase): array
     {
         $messages = [];
         foreach ($formFields as $periodStartKey => $periodStartVal) {
@@ -441,9 +457,10 @@ class Validation extends Factory
      *
      * @param $formFields
      * @param $formBase
+     *
      * @return array
      */
-    public function getRulesForPeriodEnd($formFields, $formBase)
+    public function getRulesForPeriodEnd($formFields, $formBase): array
     {
         $rules = [];
 
@@ -464,9 +481,10 @@ class Validation extends Factory
      *
      * @param $formFields
      * @param $formBase
+     *
      * @return array
      */
-    public function getMessagesForPeriodEnd($formFields, $formBase)
+    public function getMessagesForPeriodEnd($formFields, $formBase): array
     {
         $messages = [];
 
@@ -490,10 +508,12 @@ class Validation extends Factory
 
     /**
      * Get distinct errors from a list of errors.
+     *
      * @param $errors
-     * @return mixed
+     *
+     * @return array
      */
-    protected function getDistinctErrors($errors)
+    protected function getDistinctErrors($errors): array
     {
         return array_unique($errors);
     }
@@ -504,9 +524,10 @@ class Validation extends Factory
      * @param       $activityId
      * @param array $errors
      * @param bool  $shouldBeUnique
+     *
      * @return array
      */
-    protected function embedLinks($activityId, array $errors, $shouldBeUnique = false)
+    protected function embedLinks($activityId, array $errors, bool $shouldBeUnique = false): array
     {
         $links = [];
 
@@ -540,13 +561,14 @@ class Validation extends Factory
      * @param $element
      * @param $elementErrors
      * @param $activityId
+     *
      * @return array
      */
-    protected function getErrors($element, $elementErrors, $activityId)
+    protected function getErrors($element, $elementErrors, $activityId): array
     {
         $errors = [];
-
         $index = 0;
+
         foreach ($elementErrors as $elementIndex => $error) {
             $elementName = Str::snake(Str::camel(strtolower($this->parseErrors($elementIndex))));
             $errorIndex = (int) Arr::get(explode('.', $elementIndex), '1');
