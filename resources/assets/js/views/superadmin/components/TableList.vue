@@ -11,7 +11,16 @@
               <span>Activities</span>
             </th>
             <th id="updated_on" scope="col" style="width: 173px">
-              <span>Updated On</span>
+              <a
+                class="transition duration-500 text-n-50 hover:text-spring-50"
+                :class="dateSortingDirection()"
+                :href="sortByDateUrl()"
+              >
+                <span class="sorting-indicator">
+                  <svg-vue :icon="`${dateSortingDirection()}-arrow`" />
+                </span>
+                <span>Updated On</span>
+              </a>
             </th>
             <th id="proxy" scope="col" style="width: 158px">
               <span></span>
@@ -27,8 +36,8 @@
           </tr>
           <tr v-for="data in organisationData.data.data" v-else :key="data.id">
             <td>
-              <div>{{ data.name[0].narrative }}</div>
-              <div class="text-blue-40">{{ data.user.email }}</div>
+              <div>{{ data?.name[0]?.narrative ?? 'Name not available' }}</div>
+              <div class="text-blue-40">{{ data?.user?.email }}</div>
             </td>
             <td class="text-n-40">
               {{ data.all_activities_count }} activities
@@ -92,6 +101,7 @@ interface oDataInterface {
     name: {
       narrative: string;
     }[];
+    organization_url: string;
     user: {
       email: string;
     };
@@ -160,5 +170,26 @@ const proxyUser = (id: number) => {
       toastMessage.type = response.success;
     }
   });
+};
+
+/**
+ * Sorting By update on
+ */
+let query = '',
+  dateSortDirection = 'asc';
+
+const dateSortingDirection = () => {
+  return dateSortDirection === 'asc' ? 'descending' : 'ascending';
+};
+
+const sortByDateUrl = () => {
+  if (currentURL.includes('?')) {
+    const queryString = window.location.search,
+      urlParams = new URLSearchParams(queryString);
+    query = urlParams.get('q') ?? '';
+    dateSortDirection = urlParams.get('direction') === 'desc' ? 'asc' : 'desc';
+  }
+
+  return `?q=${query}&orderBy=updated_at&direction=${dateSortDirection}`;
 };
 </script>

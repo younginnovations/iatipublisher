@@ -52,7 +52,7 @@
         @endif
         <loggedin-header :user="{{ Auth::user() }}" :organization="{{ Auth::user()->organization }}"
             :languages="{{ json_encode(getCodeListArray('Languages', 'ActivityArray')) }}"
-            :super-admin="{{ json_encode(!isSuperAdminRoute()) }}"></loggedin-header>
+            v-bind:super-admin="{{ json_encode(!isSuperAdminRoute()) }}"></loggedin-header>
 
         <main>
             @yield('content')
