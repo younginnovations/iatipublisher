@@ -1,12 +1,16 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\XmlImporter\Foundation;
 
 use App\IATI\Repositories\Activity\ActivityRepository;
 use App\XmlImporter\Foundation\Support\Providers\XmlServiceProvider;
+use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Database\DatabaseManager;
 use Illuminate\Support\Arr;
 use Psr\Log\LoggerInterface;
+use Sabre\Xml\ParseException;
 
 /**
  * Class XmlQueueProcessor.
@@ -16,13 +20,13 @@ class XmlQueueProcessor
     /**
      * @var XmlServiceProvider
      */
-    protected $xmlServiceProvider;
+    protected XmlServiceProvider $xmlServiceProvider;
     /**
      * @var XmlProcessor
      */
-    protected $xmlProcessor;
+    protected XmlProcessor $xmlProcessor;
 
-    const UPLOADED_XML_STORAGE_PATH = 'xmlImporter/tmp/file';
+    public const UPLOADED_XML_STORAGE_PATH = 'xmlImporter/tmp/file';
     /**
      * @var
      */
@@ -40,15 +44,15 @@ class XmlQueueProcessor
     /**
      * @var ActivityRepository
      */
-    protected $activityRepo;
+    protected ActivityRepository $activityRepo;
     /**
      * @var LoggerInterface
      */
-    private $logger;
+    private LoggerInterface $logger;
     /**
      * @var DatabaseManager
      */
-    private $databaseManager;
+    private DatabaseManager $databaseManager;
 
     /**
      * XmlQueueProcessor constructor.
@@ -73,11 +77,14 @@ class XmlQueueProcessor
      * @param $filename
      * @param $orgId
      * @param $userId
-     * @param $consortium_id
-     * @return bool|null
-     * @throws \Exception
+     *
+     * @return bool
+     * @throws BindingResolutionException
+     * @throws \JsonException
+     * @throws ParseException
+     * @throws \Throwable
      */
-    public function import($filename, $orgId, $userId)
+    public function import($filename, $orgId, $userId): bool
     {
         try {
             $this->orgId = $orgId;
@@ -113,10 +120,11 @@ class XmlQueueProcessor
     /**
      * Get the temporary storage path for the uploaded Xml file.
      *
-     * @param null $filename
+     * @param $filename
+     *
      * @return string
      */
-    protected function temporaryXmlStorage($filename = null)
+    protected function temporaryXmlStorage($filename = null): string
     {
         if ($filename) {
             return sprintf('%s/%s', storage_path(sprintf('%s/%s', self::UPLOADED_XML_STORAGE_PATH, $this->orgId)), $filename);
@@ -127,20 +135,25 @@ class XmlQueueProcessor
 
     /**
      * Store data in given json filename.
+     *
      * @param $filename
      * @param $data
+     *
+     * @return void
+     * @throws \JsonException
      */
-    protected function storeInJsonFile($filename, $data)
+    protected function storeInJsonFile($filename, $data): void
     {
         $filePath = $this->temporaryXmlStorage($filename);
-        file_put_contents($filePath, json_encode($data));
+        file_put_contents($filePath, json_encode($data, JSON_THROW_ON_ERROR));
     }
 
     /**
      * Returns activities of the organisation.
-     * @return \App\Core\V201\Repositories\Activity\modal
+     *
+     * @return mixed
      */
-    protected function dbActivities()
+    protected function dbActivities(): mixed
     {
         return $this->activityRepo->getActivities($this->orgId);
     }
@@ -148,9 +161,11 @@ class XmlQueueProcessor
     /**
      * Returns array of iati identifiers present in the activities of the organisation.
      *
+     * @param $org_id
+     *
      * @return array
      */
-    protected function dbIatiIdentifiers($org_id)
+    protected function dbIatiIdentifiers($org_id): array
     {
         return Arr::flatten($this->activityRepo->getActivityIdentifiers($org_id)->toArray());
     }

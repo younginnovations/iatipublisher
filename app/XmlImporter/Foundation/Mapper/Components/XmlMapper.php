@@ -1,9 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\XmlImporter\Foundation\Mapper\Components;
 
 use App\XmlImporter\Foundation\Support\Helpers\Traits\XmlHelper;
 use App\XmlImporter\Foundation\XmlQueueWriter;
+use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Support\Arr;
 
 /**
@@ -21,17 +24,17 @@ class XmlMapper
     /**
      * @var array
      */
-    protected $iatiActivity = [];
+    protected array $iatiActivity = [];
 
     /**
      * @var array
      */
-    protected $transaction = [];
+    protected array $transaction = [];
 
     /**
      * @var
      */
-    protected $transactionElement;
+    protected array $transactionElement;
 
     /**
      * @var
@@ -41,17 +44,17 @@ class XmlMapper
     /**
      * @var array
      */
-    protected $result = [];
+    protected array $result = [];
 
     /**
      * @var array
      */
-    protected $data = [];
+    protected array $data = [];
 
     /**
      * @var array
      */
-    protected $activityElements = [
+    protected array $activityElements = [
         'iatiIdentifier',
         'otherIdentifier',
         'reportingOrg',
@@ -90,14 +93,14 @@ class XmlMapper
      *
      * @var string
      */
-    protected $version = '2.03';
+    protected string $version = '2.03';
 
     /**
      * Upgrade flag.
      *
      * @var bool
      */
-    protected $upgrade;
+    protected bool $upgrade;
 
     /**
      * Xml constructor.
@@ -110,9 +113,10 @@ class XmlMapper
     /**
      * Initialize XmlMapper components according to the Xml Version.
      *
-     * @return mixed
+     * @return void
+     * @throws BindingResolutionException
      */
-    public function initComponents()
+    public function initComponents(): void
     {
         $this->iatiActivity = null;
 
@@ -121,45 +125,49 @@ class XmlMapper
         $this->resultElement = app()->make('App\XmlImporter\Foundation\Mapper\Components\Elements\Result');
     }
 
-    /**
-     * Map raw Xml data into AidStream database compatible data for import.
-     *
-     * @param array $activities
-     * @param       $template
-     * @param       $userId
-     * @param       $orgId
-     * @param       $dbIatiIdentifiers
-     * @return $this
-     */
-    public function map(array $activities, $template, $userId, $orgId, $dbIatiIdentifiers)
-    {
-        $xmlQueueWriter = app()->makeWith(XmlQueueWriter::class, ['userId' => $userId, 'orgId' => $orgId, 'dbIatiIdentifiers' => $dbIatiIdentifiers]);
+/**
+ * Map raw Xml data into AidStream database compatible data for import.
+ *
+ * @param array $activities
+ * @param       $template
+ * @param       $userId
+ * @param       $orgId
+ * @param       $dbIatiIdentifiers
+ *
+ * @return $this
+ * @throws BindingResolutionException
+ */
+public function map(array $activities, $template, $userId, $orgId, $dbIatiIdentifiers): static
+{
+    $xmlQueueWriter = app()->makeWith(XmlQueueWriter::class, ['userId' => $userId, 'orgId' => $orgId, 'dbIatiIdentifiers' => $dbIatiIdentifiers]);
 
-        $totalActivities = count($activities);
-        $mappedData = [];
+    $totalActivities = count($activities);
+    $mappedData = [];
 
-        foreach ($activities as $index => $activity) {
-            $this->initComponents();
-            $mappedData[$index] = $this->activity->map($this->filter($activity, 'iatiActivity'), $template, $this->upgrade);
-            $mappedData[$index]['default_field_values'] = $this->defaultFieldValues($activity, $template);
-            $mappedData[$index]['transactions'] = $this->transactionElement->map($this->filter($activity, 'transaction'), $template, $this->upgrade);
-            $mappedData[$index]['result'] = $this->resultElement->map($this->filter($activity, 'result'), $template);
+    foreach ($activities as $index => $activity) {
+        $this->initComponents();
+        $mappedData[$index] = $this->activity->map($this->filter($activity, 'iatiActivity'), $template, $this->upgrade);
+        $mappedData[$index]['default_field_values'] = $this->defaultFieldValues($activity, $template);
+        $mappedData[$index]['transactions'] = $this->transactionElement->map($this->filter($activity, 'transaction'), $template, $this->upgrade);
+        $mappedData[$index]['result'] = $this->resultElement->map($this->filter($activity, 'result'), $template);
 
-            $xmlQueueWriter->save($mappedData[$index], $totalActivities, $index);
-        }
-
-        return $this;
+        $xmlQueueWriter->save($mappedData[$index], $totalActivities, $index);
     }
+
+    return $this;
+}
 
     /**
      * Returns false if the xml is not activity file.
+     *
      * @param $activities
+     *
      * @return bool
      */
-    public function isValidActivityFile($activities)
+    public function isValidActivityFile($activities): bool
     {
         foreach ($activities as $activity) {
-            if ($this->name(Arr::get($activity, 'name'), '') != 'iatiActivity') {
+            if ($this->name(Arr::get($activity, 'name'), '') !== 'iatiActivity') {
                 return false;
             }
         }
@@ -172,7 +180,7 @@ class XmlMapper
      *
      * @return array
      */
-    public function data()
+    public function data(): array
     {
         return $this->data;
     }
@@ -180,18 +188,19 @@ class XmlMapper
     /**
      * Store the mapped Xml data in a temporary json file.
      */
-    public function keep()
+    public function keep(): void
     {
     }
 
     /**
      * Filter the default field values from the xml data.
      *
-     * @param array $activity
-     * @param       $template
-     * @return mixed
+     * @param $activity
+     * @param $template
+     *
+     * @return array
      */
-    protected function defaultFieldValues($activity, $template)
+    protected function defaultFieldValues($activity, $template): array
     {
         $defaultFieldValues[0] = $template['default_field_values'];
         $defaultFieldValues[0]['default_currency'] = $this->attributes($activity, 'default-currency');
@@ -208,16 +217,18 @@ class XmlMapper
      *
      * @param $xmlData
      * @param $elementName
+     *
+     * @return mixed
      */
-    protected function filter($xmlData, $elementName)
+    protected function filter($xmlData, $elementName): mixed
     {
-        list($this->transaction, $this->result) = [[], []];
+        [$this->transaction, $this->result] = [[], []];
         foreach ($this->value($xmlData) as $subElement) {
-            if ($elementName == 'transaction') {
+            if ($elementName === 'transaction') {
                 $this->filterForTransactions($subElement, $elementName);
-            } elseif ($elementName == 'result') {
+            } elseif ($elementName === 'result') {
                 $this->filterForResults($subElement, $elementName);
-            } elseif ($elementName == 'iatiActivity') {
+            } elseif ($elementName === 'iatiActivity') {
                 $this->filterForActivity($subElement, $elementName);
             }
         }
@@ -230,10 +241,12 @@ class XmlMapper
      *
      * @param $subElement
      * @param $elementName
+     *
+     * @return void
      */
-    protected function filterForActivity($subElement, $elementName)
+    protected function filterForActivity($subElement, $elementName): void
     {
-        if (in_array($this->name($subElement), $this->activityElements)) {
+        if (in_array($this->name($subElement), $this->activityElements, true)) {
             $this->{$elementName}[] = $subElement;
         }
     }
@@ -243,10 +256,12 @@ class XmlMapper
      *
      * @param $subElement
      * @param $elementName
+     *
+     * @return void
      */
-    protected function filterForTransactions($subElement, $elementName)
+    protected function filterForTransactions($subElement, $elementName): void
     {
-        if ($this->name($subElement) == $elementName) {
+        if ($this->name($subElement) === $elementName) {
             $this->{$elementName}[] = $subElement;
         }
     }
@@ -254,24 +269,27 @@ class XmlMapper
     /**
      * @param $subElement
      * @param $elementName
+     *
+     * @return void
      */
-    protected function filterForResults($subElement, $elementName)
+    protected function filterForResults($subElement, $elementName): void
     {
-        if ($this->name($subElement) == $elementName) {
+        if ($this->name($subElement) === $elementName) {
             $this->{$elementName}[] = $subElement;
         }
     }
 
-    /**
-     * Set upgrade flag for older xml versions.
-     *
-     * @param bool $value
-     * @return XmlMapper
-     */
-    public function setUpgradeFlag($value = false)
-    {
-        $this->upgrade = $value;
+/**
+ * Set upgrade flag for older xml versions.
+ *
+ * @param bool $value
+ *
+ * @return $this
+ */
+public function setUpgradeFlag(bool $value = false): static
+{
+    $this->upgrade = $value;
 
-        return $this;
-    }
+    return $this;
+}
 }

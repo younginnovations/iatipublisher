@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\XmlImporter\Foundation;
 
 use App\IATI\Repositories\Activity\ActivityRepository;
@@ -17,48 +19,56 @@ class XmlQueueWriter
     /**
      * @var ActivityRepository
      */
-    protected $activityRepo;
+    protected ActivityRepository $activityRepo;
+
     /**
-     * @var Transaction
+     * @var TransactionRepository
      */
-    protected $transactionRepo;
+    protected TransactionRepository $transactionRepo;
+
     /**
-     * @var Result
+     * @var ResultRepository
      */
-    protected $resultRepo;
+    protected ResultRepository $resultRepo;
+
     /**
-     * @var DocumentLink
+     * @var DocumentLinkRepository
      */
-    protected $documentLinkRepo;
+    protected DocumentLinkRepository $documentLinkRepo;
+
     /**
      *  Path to xml importer.
      */
-    const UPLOADED_XML_STORAGE_PATH = 'xmlImporter/tmp/file';
+    public const UPLOADED_XML_STORAGE_PATH = 'xmlImporter/tmp/file';
+
     /**
      * @var
      */
     protected $userId;
+
     /**
      * @var
      */
     protected $orgId;
+
     /**
      * @var
      */
     protected $jsonData;
+
     /**
      * @var int
      */
-    protected $success = 0;
+    protected int $success = 0;
     /**
      * @var int
      */
-    protected $failed = 0;
+    protected int $failed = 0;
 
     /**
      * @var array
      */
-    protected $existing = [];
+    protected array $existing = [];
 
     /**
      * @var
@@ -87,19 +97,21 @@ class XmlQueueWriter
     }
 
     /**
-     *  Store mapped activity in database.
+     * Store mapped activity in database.
+     *
      * @param $mappedActivity
      * @param $totalActivities
      * @param $index
+     *
      * @return bool
      */
-    public function save($mappedActivity, $totalActivities, $index)
+    public function save($mappedActivity, $totalActivities, $index): bool
     {
         $iatiIdentifierText = Arr::get($mappedActivity, 'identifier.iati_identifier_text');
         $xmlValidator = app(XmlValidator::class);
 
         if ($this->activityAlreadyExists($iatiIdentifierText)) {
-            array_push($this->existing, $iatiIdentifierText);
+            $this->existing[] = $iatiIdentifierText;
         }
 
         $errors = $xmlValidator
@@ -125,63 +137,71 @@ class XmlQueueWriter
         return true;
     }
 
-    /**
-     *  Save transaction of mapped activity in database.
-     * @param $activity
-     * @param $activityId
-     * @return $this
-     */
-    protected function saveTransactions($activity, $activityId)
-    {
-        $transactionRepo = $this->transactionRepo;
-        foreach (Arr::get($activity, 'transactions', []) as $transaction) {
-            $transactionRepo->createTransaction($transaction, $activityId);
-        }
+/**
+ * Save transaction of mapped activity in database.
+ *
+ * @param $activity
+ * @param $activityId
+ *
+ * @return $this
+ */
+protected function saveTransactions($activity, $activityId): static
+{
+    $transactionRepo = $this->transactionRepo;
 
-        return $this;
+    foreach (Arr::get($activity, 'transactions', []) as $transaction) {
+        $transactionRepo->createTransaction($transaction, $activityId);
     }
 
-    /**
-     *  Save result of mapped activity in database.
-     * @param $activity
-     * @param $activityId
-     * @return $this
-     */
-    protected function saveResults($activity, $activityId)
-    {
-        $resultRepo = $this->resultRepo;
-        foreach (Arr::get($activity, 'result', []) as $result) {
-            $resultData['result'] = $result;
-            $resultRepo->xmlResult($resultData, $activityId);
-        }
+    return $this;
+}
 
-        return $this;
+/**
+ * Save result of mapped activity in database.
+ *
+ * @param $activity
+ * @param $activityId
+ *
+ * @return $this
+ */
+protected function saveResults($activity, $activityId): static
+{
+    $resultRepo = $this->resultRepo;
+    foreach (Arr::get($activity, 'result', []) as $result) {
+        $resultData['result'] = $result;
+        $resultRepo->xmlResult($resultData, $activityId);
     }
 
-    /**
-     *  Save document link of mapped activity in database.
-     * @param $activity
-     * @param $activityId
-     * @return $this
-     */
-    protected function saveDocumentLink($activity, $activityId)
-    {
-        $documentLinkRepo = $this->documentLinkRepo;
-        foreach (Arr::get($activity, 'document_link', []) as $documentLink) {
-            $documentLinkData['document_link'] = $documentLink;
-            $documentLinkRepo->xmlDocumentLink($documentLinkData, $activityId);
-        }
+    return $this;
+}
 
-        return $this;
+/**
+ * Save document link of mapped activity in database.
+ *
+ * @param $activity
+ * @param $activityId
+ *
+ * @return $this
+ */
+protected function saveDocumentLink($activity, $activityId): static
+{
+    $documentLinkRepo = $this->documentLinkRepo;
+    foreach (Arr::get($activity, 'document_link', []) as $documentLink) {
+        $documentLinkData['document_link'] = $documentLink;
+        $documentLinkRepo->xmlDocumentLink($documentLinkData, $activityId);
     }
+
+    return $this;
+}
 
     /**
      * Get the temporary storage path for the uploaded Xml file.
      *
      * @param null $filename
+     *
      * @return string
      */
-    protected function temporaryXmlStorage($filename = null)
+    protected function temporaryXmlStorage($filename = null): string
     {
         if ($filename) {
             return sprintf('%s/%s', storage_path(sprintf('%s/%s', self::UPLOADED_XML_STORAGE_PATH, $this->orgId)), $filename);
@@ -190,19 +210,26 @@ class XmlQueueWriter
         return storage_path(sprintf('%s/%s/', self::UPLOADED_XML_STORAGE_PATH, $this->orgId));
     }
 
-    public function activityAlreadyExists($identifier)
+    /**
+     * @param $identifier
+     *
+     * @return bool
+     */
+    public function activityAlreadyExists($identifier): bool
     {
-        return in_array($identifier, $this->dbIatiIdentifiers);
+        return in_array($identifier, $this->dbIatiIdentifiers, true);
     }
 
     /**
-     *  Check if the iati identifier text is similar to the identifier of imported xml file.
+     * Check if the iati identifier text is similar to the identifier of imported xml file.
+     *
      * @param $xmlIdentifier
+     *
      * @return bool
      */
-    protected function isIatiIdentifierDifferent($xmlIdentifier)
+    protected function isIatiIdentifierDifferent($xmlIdentifier): bool
     {
-        if ($xmlIdentifier == '' || in_array($xmlIdentifier, $this->dbIatiIdentifiers)) {
+        if ($xmlIdentifier === '' || in_array($xmlIdentifier, $this->dbIatiIdentifiers, true)) {
             return false;
         }
 
@@ -210,13 +237,15 @@ class XmlQueueWriter
     }
 
     /**
-     * Store status of completed xml file.
      * @param $totalActivities
      * @param $currentActivity
      * @param $success
      * @param $failed
+     * @param $existing
+     *
+     * @return void
      */
-    protected function storeXmlImportStatus($totalActivities, $currentActivity, $success, $failed, $existing)
+    protected function storeXmlImportStatus($totalActivities, $currentActivity, $success, $failed, $existing): void
     {
         shell_exec(sprintf('chmod 777 -R %s', $this->temporaryXmlStorage()));
         $data = ['total_activities' => $totalActivities, 'current_activity_count' => $currentActivity, 'success' => $success, 'failed' => $failed, 'existing' => $existing];
@@ -225,30 +254,40 @@ class XmlQueueWriter
 
     /**
      * Append data into the file containing previous data.
+     *
+     * @param $data
+     * @param $errors
+     * @param $existence
      * @param $destinationFilePath
+     *
+     * @return void
+     * @throws \JsonException
      */
-    protected function appendDataIntoFile($data, $errors, $existence, $destinationFilePath)
+    protected function appendDataIntoFile($data, $errors, $existence, $destinationFilePath): void
     {
-        array_walk_recursive($errors, function ($a) use (&$return) {
+        array_walk_recursive($errors, static function ($a) use (&$return) {
             $return[] = $a;
         });
 
         if (file_exists($destinationFilePath)) {
-            $currentContents = json_decode(file_get_contents($destinationFilePath), true);
+            $currentContents = json_decode(file_get_contents($destinationFilePath), true, 512, JSON_THROW_ON_ERROR);
             $currentContents[] = ['data' => $data, 'errors' => $errors, 'status' => 'processed', 'existence' => $existence];
 
-            file_put_contents($destinationFilePath, json_encode($currentContents));
+            file_put_contents($destinationFilePath, json_encode($currentContents, JSON_THROW_ON_ERROR));
         } else {
-            file_put_contents($destinationFilePath, json_encode([['data' => $data, 'errors' => $errors, 'status' => 'processed', 'existence' => $existence]]));
+            file_put_contents($destinationFilePath, json_encode([['data' => $data, 'errors' => $errors, 'status' => 'processed', 'existence' => $existence]], JSON_THROW_ON_ERROR));
         }
     }
 
     /**
      * Store Activities having same identifier in a json file.
+     *
      * @param $activity
      * @param $index
+     *
+     * @return void
      */
-    protected function storeInvalidActivity($activity, $index)
+    protected function storeInvalidActivity($activity, $index): void
     {
         $this->jsonData[$index] = $activity;
         $this->storeInJsonFile('xml_invalid.json', $this->jsonData);
@@ -256,10 +295,13 @@ class XmlQueueWriter
 
     /**
      * Store Activities having same identifier in a json file.
+     *
      * @param $activity
      * @param $index
+     *
+     * @return void
      */
-    protected function storeValidActivity($activity, $index)
+    protected function storeValidActivity($activity, $index): void
     {
         $data = ['data' => $activity, 'existence' => false, 'existing' => 'hey'];
 
@@ -268,12 +310,16 @@ class XmlQueueWriter
 
     /**
      * Store data in given json filename.
+     *
      * @param $filename
      * @param $data
+     *
+     * @return void
+     * @throws \JsonException
      */
-    protected function storeInJsonFile($filename, $data)
+    protected function storeInJsonFile($filename, $data): void
     {
         $filePath = $this->temporaryXmlStorage($filename);
-        file_put_contents($filePath, json_encode($data));
+        file_put_contents($filePath, json_encode($data, JSON_THROW_ON_ERROR));
     }
 }

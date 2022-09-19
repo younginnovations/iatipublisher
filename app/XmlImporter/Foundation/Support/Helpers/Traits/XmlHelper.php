@@ -1,7 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\XmlImporter\Foundation\Support\Helpers\Traits;
 
+use ArrayAccess;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 
@@ -14,17 +17,20 @@ trait XmlHelper
      * Returns lat and long for location field.
      *
      * @param $values
-     * @return array
+     *
+     * @return string[]
      */
-    protected function latAndLong($values)
+    protected function latAndLong($values): array
     {
         $narrative = $this->value($values, 'point');
         $data = ['latitude' => '', 'longitude' => ''];
         foreach ($narrative as $latLong) {
             $narrative = $latLong['narrative'];
-            if ($narrative != '') {
+
+            if ($narrative !== '') {
                 $text = explode(' ', $latLong['narrative']);
-                if (count($text) == 2) {
+
+                if (count($text) === 2) {
                     $data['latitude'] = $text[0];
                     $data['longitude'] = $text[1];
                 }
@@ -37,12 +43,12 @@ trait XmlHelper
     /**
      * Filter the provided key and groups the values in array.
      *
-     * $values = data['value']
-     * @param      $values
-     * @param null $key
-     * @return array
+     * @param $values
+     * @param $key
+     *
+     * @return array|string[][]
      */
-    protected function filterValues($values, $key = null)
+    protected function filterValues($values, $key = null): array
     {
         $index = 0;
         $data = [[$key => '']];
@@ -50,7 +56,7 @@ trait XmlHelper
         $values = $values ?: [];
 
         foreach ($values as $value) {
-            if ($this->name($value['name']) == $key) {
+            if ($this->name($value['name']) === $key) {
                 $data[$index][$key] = $this->value($value);
                 $index++;
             }
@@ -60,28 +66,27 @@ trait XmlHelper
     }
 
     /**
-     *  Filter the provided key, Convert the provided template to array and groups the attributes.
+     * Filter the provided key, Convert the provided template to array and groups the attributes.
      *
      * @param       $values
-     * @param null  $key
+     * @param       $key
      * @param array $template
+     *
      * @return array
      */
-    protected function filterAttributes($values, $key, array $template)
+    protected function filterAttributes($values, $key, array $template): array
     {
         $values = $values ?: [];
-
-        $index = 0;
         $data = $this->templateToArray($template);
+
         foreach ($values as $value) {
-            if ($this->name($value['name']) == $key) {
+            if ($this->name($value['name']) === $key) {
                 foreach (Arr::get($value, 'attributes', []) as $attributeKey => $attribute) {
                     if ($attributeKey == 'indicator-uri') {
                         $attributeKey = 'indicator_uri';
                     }
                     // (!array_key_exists($attributeKey, array_flip($template))) ?: $data[$index][$attributeKey] = $attribute;
                 }
-                $index++;
             }
         }
 
@@ -92,22 +97,20 @@ trait XmlHelper
      * Converts the provided template into empty key => value pairs.
      *
      * @param array $template
+     *
      * @return array
      */
-    protected function templateToArray(array $template)
+    protected function templateToArray(array $template): array
     {
-        if (is_array($template)) {
-            $data = [array_flip($template)];
-            foreach ($data as $index => $values) {
-                foreach ($values as $key => $value) {
-                    $data[$index][$key] = '';
-                }
-            }
+        $data = [array_flip($template)];
 
-            return $data;
+        foreach ($data as $index => $values) {
+            foreach ($values as $key => $value) {
+                $data[$index][$key] = '';
+            }
         }
 
-        return [];
+        return $data;
     }
 
     /**
@@ -118,15 +121,16 @@ trait XmlHelper
      *
      * @param array $fields
      * @param null  $key
-     * @return array|mixed|string
+     *
+     * @return array|ArrayAccess|mixed|string[][]
      */
-    protected function value(array $fields, $key = null)
+    protected function value(array $fields, $key = null): mixed
     {
         if (!$key) {
             return Arr::get($fields, 'value', '');
         }
         foreach ($fields as $field) {
-            if ($this->name($field['name']) == $key) {
+            if ($this->name($field['name']) === $key) {
                 if (is_array($field['value'])) {
                     return $this->narrative($field);
                 }
@@ -142,11 +146,13 @@ trait XmlHelper
      * Returns the all narrative present in the provided $subElement.
      *
      * @param $subElement
-     * @return mixed
+     *
+     * @return \string[][]
      */
-    protected function narrative($subElement)
+    protected function narrative($subElement): array
     {
         $field = [['narrative' => '', 'language' => '']];
+
         if (is_array(Arr::get((array) $subElement, 'value', []))) {
             foreach (Arr::get((array) $subElement, 'value', []) as $index => $value) {
                 $field[$index] = [
@@ -156,24 +162,25 @@ trait XmlHelper
             }
 
             return $field;
-        } else {
-            $field[0] = [
-                'narrative' => trim(Arr::get($subElement, 'value', '')),
-                'language'  => $this->attributes($subElement, 'lang'),
-            ];
-
-            return $field;
         }
+
+        $field[0] = [
+            'narrative' => trim(Arr::get($subElement, 'value', '')),
+            'language'  => $this->attributes($subElement, 'lang'),
+        ];
+
+        return $field;
     }
 
     /**
      * Get the name of the current Xml element.
      *
-     * @param      $element
+     * @param $element
      * @param bool $snakeCase
+     *
      * @return string
      */
-    protected function name($element, $snakeCase = false)
+    protected function name($element, bool $snakeCase = false): string
     {
         if (is_array($element)) {
             $camelCaseString = Str::camel(str_replace('{}', '', $element['name']));
@@ -194,15 +201,16 @@ trait XmlHelper
      * @param array $element
      * @param null  $key
      * @param null  $fieldName
+     *
      * @return mixed|string
      */
-    public function attributes(array $element, $key = null, $fieldName = null)
+    public function attributes(array $element, $key = null, $fieldName = null): mixed
     {
         if (!$key) {
             return Arr::get($element, 'attributes', []);
         }
 
-        if ($fieldName && $key) {
+        if ($fieldName) {
             return $this->getSpecificAttribute($element, $fieldName, $key);
         }
 
@@ -215,17 +223,16 @@ trait XmlHelper
      * @param array $element
      * @param       $fieldName
      * @param       $key
-     * @return mixed|string
+     *
+     * @return mixed
      */
-    protected function getSpecificAttribute(array $element, $fieldName, $key)
+    protected function getSpecificAttribute(array $element, $fieldName, $key): mixed
     {
         $value = '';
 
         foreach (Arr::get($element, 'value', []) as $value) {
-            if ($fieldName == $this->name($value['name'])) {
+            if ($fieldName === $this->name($value['name'])) {
                 return $this->attributes($value, $key);
-            } else {
-                $value = '';
             }
         }
 
@@ -237,15 +244,16 @@ trait XmlHelper
      *
      * @param array $element
      * @param       $key
-     * @return string
+     *
+     * @return mixed
      */
-    protected function getLanguageAttribute(array $element, $key)
+    protected function getLanguageAttribute(array $element, $key): mixed
     {
         $value = Arr::get($element, 'attributes', []);
 
         if ($value) {
             foreach ($value as $itemKey => $item) {
-                if ($key == substr($itemKey, -4, 4)) {
+                if ($key === substr($itemKey, -4, 4)) {
                     return $item;
                 }
             }
@@ -258,18 +266,20 @@ trait XmlHelper
 
     /**
      * Returns narratives of provided key. (Mostly for V1 XML).
+     *
      * @param array $fields
      * @param       $key
-     * @return array
+     *
+     * @return \string[][]
      */
-    protected function groupNarrative(array $fields, $key = null)
+    protected function groupNarrative(array $fields, $key = null): array
     {
         $narrative = [['narrative' => '', 'language' => '']];
         $index = 0;
 
         if ($key) {
             foreach ($fields as $field) {
-                if ($this->name($field['name']) == $key) {
+                if ($this->name($field['name']) === $key) {
                     $narrative[$index] = Arr::get($this->narrative($field), '0');
                     $index++;
                 }
