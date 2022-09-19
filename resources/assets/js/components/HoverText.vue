@@ -17,6 +17,7 @@
           : 'help__text right-0 ' + width,
       ]"
     >
+      <div v-if="showIatiReference" class="text-bluecoral mb-2 italic">IATI standard reference</div>
       <span class="font-bold text-bluecoral">{{ name }}</span>
       <!-- eslint-disable vue/no-v-html -->
       <p v-html="hoverText" />
@@ -62,6 +63,11 @@ export default defineComponent({
       required: false,
       default: '',
     },
+    showIatiReference: {
+      type: Boolean,
+      required: false,
+      default: false
+    }
   },
 });
 </script>
@@ -74,6 +80,10 @@ export default defineComponent({
     @apply invisible absolute top-4 z-20 space-y-1.5 rounded bg-eggshell p-4 text-left text-xs text-n-40 opacity-0 duration-200;
     transition: all 0.3s ease-out;
     box-shadow: 0px 4px 40px rgb(0 0 0 / 10%);
+
+    p a {
+      font-weight: 700;
+    }
   }
 }
 

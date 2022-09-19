@@ -50,6 +50,8 @@ class WrapperCollectionForm extends Form
                             'data'            => $field,
                             'label'           => false,
                             'element_criteria' => Arr::get($field, 'element_criteria', ''),
+                            'hover_text' => Arr::get($field, 'hover_text', ''),
+                            'help_text' => Arr::get($field, 'help_text', ''),
                             'wrapper'         => [
                                 'class' => ((Arr::get($data, 'attributes', null) && isset($field['name']) && strtolower(
                                     $field['name']
@@ -104,7 +106,8 @@ class WrapperCollectionForm extends Form
         $options = [
             'label'       => $field['label'] ?? '',
             'help_block'  => [
-                'text' => $field['help_text']['text'] ?? '',
+                'text' => $field['help_text'] ?? '',
+                'title' => $field['label'],
             ],
             'hover_block' => [
                 'title' => $field['label'],
@@ -114,6 +117,7 @@ class WrapperCollectionForm extends Form
             'multiple'    => $field['multiple'] ?? false,
             'attr'        => [
                 'class' => 'form__input border-0',
+                'placeholder' => Arr::get($field, 'placeholder', ''),
             ],
             'wrapper'     => [
                 'class' => 'form-field basis-6/12 max-w-half sub-attribute',
@@ -122,6 +126,7 @@ class WrapperCollectionForm extends Form
 
         if (array_key_exists('type', $field) && $field['type'] == 'select') {
             $options['attr']['class'] = 'select2';
+            $options['attr']['data-placeholder'] = Arr::get($field, 'placeholder', '');
             $options['empty_value'] = $field['empty_value'] ?? 'Select a value';
             $options['choices'] = $field['choices'] ? (is_string($field['choices']) ? ($this->getCodeList($field['choices'])) : $field['choices']) : false;
             $options['default_value'] = $field['default'] ?? '';
@@ -181,6 +186,8 @@ class WrapperCollectionForm extends Form
                     'data'            => $field,
                     'label'           => false,
                     'element_criteria' => Arr::get($field, 'element_criteria', ''),
+                    'hover_text' => Arr::get($field, 'hover_text', ''),
+                    'help_text' => Arr::get($field, 'help_text', ''),
                     'wrapper'         => [
                         'class' => 'wrapped-child-body',
                     ],

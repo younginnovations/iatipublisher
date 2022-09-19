@@ -57,7 +57,8 @@ class SubElementForm extends Form
         $options = [
             'label' => $field['label'] ?? '',
             'help_block' => [
-                'text' => $field['help_text']['text'] ?? '',
+                'text' => $field['help_text'] ?? '',
+                'title' => $field['label'],
             ],
             'hover_block' => [
                 'title' => $field['label'],
@@ -67,6 +68,7 @@ class SubElementForm extends Form
             'multiple' => $field['multiple'] ?? false,
             'attr' => [
                 'class' => 'form__input border-0',
+                'placeholder' => Arr::get($field, 'placeholder', ''),
             ],
             'wrapper' => [
                 'class' => 'form-field basis-6/12 max-w-half',
@@ -75,6 +77,7 @@ class SubElementForm extends Form
 
         if (array_key_exists('type', $field) && $field['type'] == 'select') {
             $options['attr']['class'] = 'select2';
+            $options['attr']['data-placeholder'] = Arr::get($field, 'placeholder', '');
             $options['empty_value'] = $field['empty_value'] ?? 'Select a value';
             $options['choices'] = $field['choices'] ? (is_string($field['choices']) ? ($this->getCodeList($field['choices'])) : $field['choices']) : false;
             $options['default_value'] = $field['default'] ?? '';

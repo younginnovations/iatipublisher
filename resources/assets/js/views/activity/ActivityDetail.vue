@@ -195,7 +195,7 @@
                       : 'full'
                   "
                   :completed="status[name] ?? false"
-                  tooltip="Example text"
+                  :tooltip="element.hover_text"
                 />
               </template>
               <template v-else>
@@ -211,7 +211,7 @@
                   :title="String(name)"
                   :activity-id="activity.id"
                   :completed="status[name] ?? false"
-                  tooltip="Example text"
+                  :tooltip="element.hover_text"
                 />
               </template>
             </template>
@@ -364,6 +364,7 @@ export default defineComponent({
             Object.keys(activityProps[k]).length)
         ) {
           activities[key]['elements'][k]['content'] = activityProps[k];
+          activities[key]["elements"][k]["hover_text"] = elementProps[k]["hover_text"] ?? "";
           flag = true;
         } else {
           delete activities[key][k];

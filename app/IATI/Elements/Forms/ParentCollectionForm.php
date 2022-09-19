@@ -16,7 +16,7 @@ class ParentCollectionForm extends BaseForm
      *
      * @return mixed|void
      */
-    public function buildForm():void
+    public function buildForm(): void
     {
         $field = $this->getData();
 
@@ -33,13 +33,15 @@ class ParentCollectionForm extends BaseForm
                     'data' => $this->data,
                     'label' => false,
                     'element_criteria' => $field['element_criteria'] ?? '',
+                    'hover_text' => Arr::get($field, 'hover_text', ''),
+                    'help_text' => Arr::get($field, 'help_text', ''),
                     'wrapper' => [
                         'class' => 'multi-form relative',
                     ],
                     'dynamic_wrapper' => [
                         'class' => (isset($field['add_more']) && $field['add_more']) ?
-                        (strtolower($field['name']) === 'narrative' && Arr::get($field, 'attributes', null) ? 'border-l border-spring-50 pb-11' : 'subelement rounded-tl-lg border-l border-spring-50 pb-11')
-                        : 'subelement rounded-tl-lg border-l border-spring-50 mb-6',
+                            (strtolower($field['name']) === 'narrative' && Arr::get($field, 'attributes', null) ? 'border-l border-spring-50 pb-11' : 'subelement rounded-tl-lg border-l border-spring-50 pb-11')
+                            : 'subelement rounded-tl-lg border-l border-spring-50 mb-6',
                     ],
                 ],
             ]

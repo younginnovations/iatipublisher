@@ -8,6 +8,7 @@
             <div class="activities">
                 <aside class="activities__sidebar">
                     <elements-note></elements-note>
+                    <sidebar-help-block></sidebar-help-block>
                 </aside>
                 <div class="activities__content">
                     <div class="inline-flex flex-wrap gap-2 mb-8">

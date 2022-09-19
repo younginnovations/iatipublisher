@@ -59,7 +59,7 @@
             />
           </div>
           <svg-vue v-if="activityCoreElements().includes(title)" class="mr-1.5" icon="core"></svg-vue>
-          <HoverText v-if="tooltip" :hover-text="tooltip" class="text-n-40" />
+          <HoverText v-if="tooltip" :name="title.toString().replace(/_/g, '-')" :hover-text="tooltip" :show-iati-reference="true" class="text-n-40" />
         </div>
       </div>
 
