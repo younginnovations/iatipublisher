@@ -84,6 +84,7 @@ class Budget extends Element
      * @param $index
      *
      * @return void
+     * @throws \JsonException
      */
     protected function setBudgetType($key, $value, $index): void
     {
@@ -91,7 +92,7 @@ class Budget extends Element
             $this->data['budget'][$index]['budget_type'] = '';
         }
 
-        if ($key == $this->_csvHeaders[0]) {
+        if ($key === $this->_csvHeaders[0]) {
             $validBudgetTypes = $this->loadCodeList('BudgetType');
 
             // foreach ($validBudgetTypes as $name => $budgetType) {
@@ -113,6 +114,7 @@ class Budget extends Element
      * @param $index
      *
      * @return void
+     * @throws \JsonException
      */
     protected function setBudgetStatus($key, $value, $index): void
     {
@@ -235,6 +237,7 @@ class Budget extends Element
      * Provides the IATI Currency code list.
      *
      * @return string
+     * @throws \JsonException
      */
     protected function currencyCodeList(): string
     {
@@ -248,6 +251,7 @@ class Budget extends Element
      * Provides the rules for the IATI Element validation.
      *
      * @return array
+     * @throws \JsonException
      */
     public function rules(): array
     {
@@ -334,8 +338,11 @@ class Budget extends Element
 
     /**
      * Get the valid BudgetCodes from the Budget codelist as a string.
+     *
      * @param        $codeList
+     *
      * @return string
+     * @throws \JsonException
      */
     protected function budgetCodeListWithValue($codeList): string
     {

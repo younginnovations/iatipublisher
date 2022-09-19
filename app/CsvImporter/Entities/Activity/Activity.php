@@ -12,9 +12,9 @@ use App\CsvImporter\Entities\Csv;
 class Activity extends Csv
 {
     /**
-     * @var
+     * @var array
      */
-    protected $activityIdentifiers;
+    protected array $activityIdentifiers;
 
     /**
      * Activity constructor.
