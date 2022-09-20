@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\XmlImporter\Foundation\Support\Helpers\Traits;
 
-use ArrayAccess;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 
@@ -122,7 +121,7 @@ trait XmlHelper
      * @param array $fields
      * @param null  $key
      *
-     * @return array|ArrayAccess|mixed|string[][]
+     * @return array
      */
     protected function value(array $fields, $key = null): mixed
     {
@@ -147,16 +146,17 @@ trait XmlHelper
      *
      * @param $subElement
      *
-     * @return \string[][]
+     * @return array
      */
     protected function narrative($subElement): array
     {
         $field = [['narrative' => '', 'language' => '']];
 
-        if (is_array(Arr::get((array) $subElement, 'value', []))) {
-            foreach (Arr::get((array) $subElement, 'value', []) as $index => $value) {
+        if (is_array(Arr::get($subElement, 'value', []))) {
+            foreach (Arr::get($subElement, 'value', []) as $index => $value) {
+                $narrative = empty(Arr::get($value, 'value', '')) ? '' : Arr::get($value, 'value', '');
                 $field[$index] = [
-                    'narrative' => trim(Arr::get($value, 'value', '')),
+                    'narrative' => trim($narrative),
                     'language'  => $this->attributes($value, 'lang'),
                 ];
             }
@@ -164,9 +164,11 @@ trait XmlHelper
             return $field;
         }
 
+        $narrative = empty(Arr::get($subElement, 'value', '')) ? '' : Arr::get($subElement, 'value', '');
+
         $field[0] = [
-            'narrative' => trim(Arr::get($subElement, 'value', '')),
-            'language'  => $this->attributes($subElement, 'lang'),
+            'narrative' => trim($narrative),
+            'language'  => $this->attributes((array) $subElement, 'lang'),
         ];
 
         return $field;
@@ -175,7 +177,7 @@ trait XmlHelper
     /**
      * Get the name of the current Xml element.
      *
-     * @param $element
+     * @param      $element
      * @param bool $snakeCase
      *
      * @return string
