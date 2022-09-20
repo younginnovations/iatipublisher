@@ -28,13 +28,6 @@ class ActivityDate extends Element
     protected string $index = 'activity_date';
 
     /**
-     * Template for the ActivityDate element.
-     *
-     * @var array
-     */
-    protected array $template = ['type' => '', 'date' => '', 'narrative' => ['narrative' => '', 'language' => '']];
-
-    /**
      * @var array
      */
     protected array $types = [];
@@ -112,7 +105,7 @@ class ActivityDate extends Element
             $type = $this->setType($key);
             $this->data['activity_date'][$index]['date'] = $this->setDate($value);
             $this->data['activity_date'][$index]['type'] = $type;
-            $this->data['activity_date'][$index]['narrative'][] = $this->setNarrative($value);
+            $this->data['activity_date'][$index]['narrative'][] = $this->setNarrative();
         }
     }
 
@@ -148,11 +141,10 @@ class ActivityDate extends Element
     /**
      * Set the Narrative for the ActivityDate element.
      *
-     * @param $value
      *
      * @return array
      */
-    public function setNarrative($value): array
+    public function setNarrative(): array
     {
         $narrative = ['narrative' => '', 'language' => ''];
         $this->narratives[] = $narrative;
