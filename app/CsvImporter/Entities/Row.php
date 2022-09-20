@@ -108,6 +108,8 @@ abstract class Row
         if (array_key_exists($fieldName, $this->fields)) {
             return $this->fields[$fieldName];
         }
+
+        return false;
     }
 
     /**
