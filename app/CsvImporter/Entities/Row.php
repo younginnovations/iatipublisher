@@ -91,7 +91,7 @@ abstract class Row
      *
      * @return mixed
      */
-    public function fields(): mixed
+    public function getFields(): mixed
     {
         return $this->fields;
     }

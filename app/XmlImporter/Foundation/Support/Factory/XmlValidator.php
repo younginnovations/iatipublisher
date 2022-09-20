@@ -72,7 +72,8 @@ class XmlValidator
         $rules = array_merge($rules, $this->rulesForLegacyData($activity));
         $rules = array_merge($rules, $this->rulesForCondition($activity));
         $rules = array_merge($rules, $this->rulesForTransaction($activity));
-        $rules = array_merge($rules, $this->rulesForResult($activity));
+
+        array_merge($rules, $this->rulesForResult($activity));
 
         return $rules;
     }
@@ -119,7 +120,7 @@ class XmlValidator
         $messages = array_merge($messages, $this->messagesForLegacyData($activity));
         $messages = array_merge($messages, $this->messagesForCondition($activity));
         $messages = array_merge($messages, $this->messagesForTransaction($activity));
-        $messages = array_merge($messages, $this->messagesForResult($activity));
+        array_merge($messages, $this->messagesForResult($activity));
 
         return $messages;
     }
@@ -143,7 +144,12 @@ class XmlValidator
             ->withErrors($shouldBeUnique);
     }
 
-    protected function rulesForTitle(array $activity)
+    /**
+     * @param array $activity
+     *
+     * @return array
+     */
+    protected function rulesForTitle(array $activity): array
     {
         $title = Arr::get($activity, 'title', []);
         $rules['title'] = 'nullable';
@@ -159,16 +165,16 @@ class XmlValidator
     }
 
     /**
-     * Messages for Title.
-     *
      * @param array $activity
-     * @return mixed
+     *
+     * @return array
      */
-    protected function messagesForTitle(array $activity)
+    protected function messagesForTitle(array $activity): array
     {
         $title = Arr::get($activity, 'title', []);
         $messages['title.required'] = trans('validation.required', ['attribute' => trans('element.title')]);
         $messages['title.unique_lang'] = trans('validation.unique', ['attribute' => trans('element.language')]);
+
         foreach ($title as $narrativeIndex => $narrative) {
             $messages[sprintf('title.%s.narrative.required_with', $narrativeIndex)] = trans(
                 'validation.required_with',
@@ -185,11 +191,10 @@ class XmlValidator
      * @param array $activity
      * @return array
      */
-    protected function rulesForDescription(array $activity)
+    protected function rulesForDescription(array $activity): array
     {
         $rules = [];
         $descriptions = Arr::get($activity, 'description');
-
         $rules['description'] = 'nullable';
 
         foreach ($descriptions as $descriptionIndex => $description) {
@@ -197,13 +202,11 @@ class XmlValidator
                 'nullable|in:%s',
                 $this->validCodeList('DescriptionType')
             );
-            $rules = array_merge(
-                $rules,
-                $this->factory->getRulesForNarrative(
-                    Arr::get($description, 'narrative', []),
-                    sprintf('description.%s', $descriptionIndex)
-                )
-            );
+            $tempRules = $this->factory->getRulesForNarrative(Arr::get($description, 'narrative', []), sprintf('description.%s', $descriptionIndex));
+
+            foreach ($tempRules as $idx=>$tempRule) {
+                $rules[$idx] = $tempRule;
+            }
         }
 
         return $rules;
@@ -215,7 +218,7 @@ class XmlValidator
      * @param array $activity
      * @return array
      */
-    protected function messagesForDescription(array $activity)
+    protected function messagesForDescription(array $activity): array
     {
         $messages = [];
         $descriptions = Arr::get($activity, 'description');
@@ -249,7 +252,7 @@ class XmlValidator
      * @param array $activity
      * @return array
      */
-    public function rulesForOtherIdentifier(array $activity)
+    public function rulesForOtherIdentifier(array $activity): array
     {
         $rules = [];
         $otherIdentifiers = Arr::get($activity, 'other_identifier', []);
@@ -276,7 +279,7 @@ class XmlValidator
      * @param array $activity
      * @return array
      */
-    public function messagesForOtherIdentifier(array $activity)
+    public function messagesForOtherIdentifier(array $activity): array
     {
         $messages = [];
         $otherIdentifiers = Arr::get($activity, 'other_identifier', []);
@@ -311,7 +314,7 @@ class XmlValidator
      * @param $otherIdentifierBase
      * @return array
      */
-    public function rulesForOwnerOrg($ownerOrgData, $otherIdentifierBase)
+    public function rulesForOwnerOrg($ownerOrgData, $otherIdentifierBase): array
     {
         $rules = [];
 
@@ -333,7 +336,7 @@ class XmlValidator
      * @param $otherIdentifierBase
      * @return array
      */
-    public function messagesForOwnerOrg($ownerOrgData, $otherIdentifierBase)
+    public function messagesForOwnerOrg($ownerOrgData, $otherIdentifierBase): array
     {
         $messages = [];
 
@@ -354,11 +357,10 @@ class XmlValidator
      * @param array $activity
      * @return array
      */
-    protected function rulesForActivityDate(array $activity)
+    protected function rulesForActivityDate(array $activity): array
     {
         $rules = [];
         $activityDates = Arr::get($activity, 'activity_date', []);
-
         $rules['activity_date'] = 'required|start_date_required|start_end_date';
 
         foreach ($activityDates as $activityDateIndex => $activityDate) {
@@ -383,9 +385,8 @@ class XmlValidator
      * @param array $activity
      * @return array
      */
-    protected function messagesForActivityDate(array $activity)
+    protected function messagesForActivityDate(array $activity): array
     {
-        $messages = [];
         $activityDates = Arr::get($activity, 'activity_date', []);
 
         $messages = [
@@ -437,7 +438,7 @@ class XmlValidator
      * @param array $activity
      * @return array
      */
-    protected function rulesForContactInfo(array $activity)
+    protected function rulesForContactInfo(array $activity): array
     {
         $rules = [];
         $contacts = Arr::get($activity, 'contact_info', []);
@@ -469,7 +470,7 @@ class XmlValidator
      * @param array $activity
      * @return array
      */
-    protected function messagesForContactInfo(array $activity)
+    protected function messagesForContactInfo(array $activity): array
     {
         $messages = [];
         $contacts = Arr::get($activity, 'contact_info', []);
@@ -499,7 +500,7 @@ class XmlValidator
      * @param $contactBase
      * @return array
      */
-    protected function getRulesForOrganization($organizationData, $contactBase)
+    protected function getRulesForOrganization($organizationData, $contactBase): array
     {
         $rules = [];
 
@@ -521,7 +522,7 @@ class XmlValidator
      * @param $contactBase
      * @return array
      */
-    protected function getMessagesForOrganization($organizationData, $contactBase)
+    protected function getMessagesForOrganization($organizationData, $contactBase): array
     {
         $messages = [];
 
@@ -543,7 +544,7 @@ class XmlValidator
      * @param $contactBase
      * @return array
      */
-    protected function getRulesForDepartment($departments, $contactBase)
+    protected function getRulesForDepartment($departments, $contactBase): array
     {
         $rules = [];
 
@@ -565,7 +566,7 @@ class XmlValidator
      * @param $contactBase
      * @return array
      */
-    protected function getMessagesForDepartment($departments, $contactBase)
+    protected function getMessagesForDepartment($departments, $contactBase): array
     {
         $messages = [];
 
@@ -587,7 +588,7 @@ class XmlValidator
      * @param $contactBase
      * @return array
      */
-    protected function getRulesForPersonName($personNames, $contactBase)
+    protected function getRulesForPersonName($personNames, $contactBase): array
     {
         $rules = [];
 
@@ -609,7 +610,7 @@ class XmlValidator
      * @param $contactBase
      * @return array
      */
-    protected function getMessagesForPersonName($personNames, $contactBase)
+    protected function getMessagesForPersonName($personNames, $contactBase): array
     {
         $messages = [];
 
@@ -631,7 +632,7 @@ class XmlValidator
      * @param $contactBase
      * @return array
      */
-    protected function getRulesForJobTitle($jobTitles, $contactBase)
+    protected function getRulesForJobTitle($jobTitles, $contactBase): array
     {
         $rules = [];
 
@@ -650,7 +651,7 @@ class XmlValidator
      * @param $contactBase
      * @return array
      */
-    protected function getMessagesForJobTitle($jobTitles, $contactBase)
+    protected function getMessagesForJobTitle($jobTitles, $contactBase): array
     {
         $messages = [];
 
@@ -672,7 +673,7 @@ class XmlValidator
      * @param $contactBase
      * @return array
      */
-    protected function getRulesForMailingAddress($mailingAddresses, $contactBase)
+    protected function getRulesForMailingAddress($mailingAddresses, $contactBase): array
     {
         $rules = [];
 
@@ -694,7 +695,7 @@ class XmlValidator
      * @param $contactBase
      * @return array
      */
-    protected function getMessagesForMailingAddress($mailingAddresses, $contactBase)
+    protected function getMessagesForMailingAddress($mailingAddresses, $contactBase): array
     {
         $messages = [];
 
@@ -716,7 +717,7 @@ class XmlValidator
      * @param $contactBase
      * @return array
      */
-    protected function getRulesForEmail($emails, $contactBase)
+    protected function getRulesForEmail($emails, $contactBase): array
     {
         $rules = [];
 
@@ -734,7 +735,7 @@ class XmlValidator
      * @param $contactBase
      * @return array
      */
-    protected function getMessagesForEmail($emails, $contactBase)
+    protected function getMessagesForEmail($emails, $contactBase): array
     {
         $messages = [];
 
@@ -755,7 +756,7 @@ class XmlValidator
      * @param $contactBase
      * @return array
      */
-    protected function getRulesForWebsite($websites, $contactBase)
+    protected function getRulesForWebsite($websites, $contactBase): array
     {
         $rules = [];
 
@@ -773,7 +774,7 @@ class XmlValidator
      * @param $contactBase
      * @return array
      */
-    protected function getMessagesForWebsite($websites, $contactBase)
+    protected function getMessagesForWebsite($websites, $contactBase): array
     {
         $messages = [];
 
@@ -787,9 +788,9 @@ class XmlValidator
     /**
      * returns rules for participating organization.
      * @param array $activity
-     * @return array|mixed
+     * @return array
      */
-    public function rulesForParticipatingOrg(array $activity)
+    public function rulesForParticipatingOrg(array $activity): array
     {
         $rules = [];
         $participatingOrganizations = Arr::get($activity, 'participating_organization', []);
@@ -822,9 +823,9 @@ class XmlValidator
     /**
      * returns messages for participating organization.
      * @param array $activity
-     * @return array|mixed
+     * @return array
      */
-    public function messagesForParticipatingOrg(array $activity)
+    public function messagesForParticipatingOrg(array $activity): array
     {
         $messages = [];
         $participatingOrganizations = Arr::get($activity, 'participating_organization', []);
@@ -872,11 +873,10 @@ class XmlValidator
      * @param array $activity
      * @return array
      */
-    public function rulesForRecipientCountry(array $activity)
+    public function rulesForRecipientCountry(array $activity): array
     {
         $rules = [];
         $recipientCountries = Arr::get($activity, 'recipient_country', []);
-        $recipientRegion = Arr::get($activity, 'recipient_region');
 
         foreach ($recipientCountries as $recipientCountryIndex => $recipientCountry) {
             $recipientCountryBase = 'recipient_country.' . $recipientCountryIndex;
@@ -902,7 +902,7 @@ class XmlValidator
      * @param array $activity
      * @return array
      */
-    public function messagesForRecipientCountry(array $activity)
+    public function messagesForRecipientCountry(array $activity): array
     {
         $messages = [];
         $recipientCountries = Arr::get($activity, 'recipient_country', []);
@@ -941,13 +941,12 @@ class XmlValidator
     /**
      * returns rules for recipient region.
      * @param array $activity
-     * @return array|mixed
+     * @return array
      */
-    public function rulesForRecipientRegion(array $activity)
+    public function rulesForRecipientRegion(array $activity): array
     {
         $rules = [];
         $recipientRegions = Arr::get($activity, 'recipient_region', []);
-        $recipientCountry = Arr::get($activity, 'recipient_country', []);
 
         foreach ($recipientRegions as $recipientRegionIndex => $recipientRegion) {
             $recipientRegionBase = 'recipient_region.' . $recipientRegionIndex;
@@ -971,9 +970,9 @@ class XmlValidator
     /**
      * returns messages for recipient region m.
      * @param array $activity
-     * @return array|mixed
+     * @return array
      */
-    public function messagesForRecipientRegion(array $activity)
+    public function messagesForRecipientRegion(array $activity): array
     {
         $messages = [];
         $recipientRegions = Arr::get($activity, 'recipient_region', []);
@@ -1017,7 +1016,7 @@ class XmlValidator
      * @param array $activity
      * @return array
      */
-    protected function rulesForLocation(array $activity)
+    protected function rulesForLocation(array $activity): array
     {
         $rules = [];
         $locations = Arr::get($activity, 'location', []);
@@ -1067,7 +1066,7 @@ class XmlValidator
      * @param array $activity
      * @return array
      */
-    protected function messagesForLocation(array $activity)
+    protected function messagesForLocation(array $activity): array
     {
         $messages = [];
         $locations = Arr::get($activity, 'location', []);
@@ -1124,18 +1123,18 @@ class XmlValidator
      * @param $locationBase
      * @return array
      */
-    protected function getRulesForLocationId($locationsIds, $locationBase)
+    protected function getRulesForLocationId($locationsIds, $locationBase): array
     {
         $rules = [];
         foreach ($locationsIds as $locationIdIndex => $locationId) {
             $locationIdBase = sprintf('%s.location_id.%s', $locationBase, $locationIdIndex);
-            if ($locationId['code'] != '') {
+            if ($locationId['code'] !== '') {
                 $rules[sprintf('%s.vocabulary', $locationIdBase)] = 'required_with:' . sprintf(
                     '%s.code',
                     $locationIdBase
                 );
             }
-            if ($locationId['vocabulary'] != '') {
+            if ($locationId['vocabulary'] !== '') {
                 $rules[sprintf('%s.code', $locationIdBase)] = 'required_with:' . sprintf(
                     '%s.vocabulary',
                     $locationIdBase
@@ -1152,18 +1151,18 @@ class XmlValidator
      * @param $locationBase
      * @return array
      */
-    protected function getMessagesForLocationId($locationsIds, $locationBase)
+    protected function getMessagesForLocationId($locationsIds, $locationBase): array
     {
         $messages = [];
         foreach ($locationsIds as $locationIdIndex => $locationId) {
             $locationIdBase = sprintf('%s.location_id.%s', $locationBase, $locationIdIndex);
-            if ($locationId['code'] != '') {
+            if ($locationId['code'] !== '') {
                 $messages[sprintf('%s.vocabulary.required_with', $locationIdBase)] = trans(
                     'validation.required_with',
                     ['attribute' => trans('elementForm.vocabulary'), 'values' => trans('elementForm.code')]
                 );
             }
-            if ($locationId['vocabulary'] != '') {
+            if ($locationId['vocabulary'] !== '') {
                 $messages[sprintf('%s.code.required_with', $locationIdBase)] = trans(
                     'validation.required_with',
                     ['attribute' => trans('elementForm.code'), 'values' => trans('elementForm.vocabulary')]
@@ -1180,7 +1179,7 @@ class XmlValidator
      * @param $locationBase
      * @return array
      */
-    protected function getRulesForName($locationName, $locationBase)
+    protected function getRulesForName($locationName, $locationBase): array
     {
         $rules = [];
         foreach ($locationName as $nameIndex => $name) {
@@ -1197,7 +1196,7 @@ class XmlValidator
      * @param $locationBase
      * @return array
      */
-    protected function getMessagesForName($locationName, $locationBase)
+    protected function getMessagesForName($locationName, $locationBase): array
     {
         $messages = [];
         foreach ($locationName as $nameIndex => $name) {
@@ -1217,7 +1216,7 @@ class XmlValidator
      * @param $locationBase
      * @return array
      */
-    protected function getRulesForLocationDescription($locationDescription, $locationBase)
+    protected function getRulesForLocationDescription($locationDescription, $locationBase): array
     {
         $rules = [];
         foreach ($locationDescription as $descriptionIndex => $description) {
@@ -1237,7 +1236,7 @@ class XmlValidator
      * @param $locationBase
      * @return array
      */
-    protected function getMessagesForLocationDescription($locationDescription, $locationBase)
+    protected function getMessagesForLocationDescription($locationDescription, $locationBase): array
     {
         $messages = [];
         foreach ($locationDescription as $descriptionIndex => $description) {
@@ -1253,11 +1252,13 @@ class XmlValidator
 
     /**
      * returns rules for activity description.
+     *
      * @param array $activityDescription
      * @param       $locationBase
+     *
      * @return array
      */
-    protected function getRulesForActivityDescription($activityDescription, $locationBase)
+    protected function getRulesForActivityDescription(array $activityDescription, $locationBase): array
     {
         $rules = [];
         foreach ($activityDescription as $descriptionIndex => $description) {
@@ -1273,11 +1274,13 @@ class XmlValidator
 
     /**
      * returns messages for activity description.
+     *
      * @param array $activityDescription
      * @param       $locationBase
+     *
      * @return array
      */
-    protected function getMessagesForActivityDescription($activityDescription, $locationBase)
+    protected function getMessagesForActivityDescription(array $activityDescription, $locationBase): array
     {
         $messages = [];
         foreach ($activityDescription as $descriptionIndex => $description) {
@@ -1297,7 +1300,7 @@ class XmlValidator
      * @param $locationBase
      * @return array
      */
-    protected function getRulesForAdministrative($administrativeData, $locationBase)
+    protected function getRulesForAdministrative($administrativeData, $locationBase): array
     {
         $rules = [];
         foreach ($administrativeData as $administrativeIndex => $administrative) {
@@ -1314,7 +1317,7 @@ class XmlValidator
      * @param $locationBase
      * @return array
      */
-    protected function getMessagesForAdministrative($administrativeData, $locationBase)
+    protected function getMessagesForAdministrative($administrativeData, $locationBase): array
     {
         $messages = [];
         foreach ($administrativeData as $administrativeIndex => $administrative) {
@@ -1334,7 +1337,7 @@ class XmlValidator
      * @param $locationBase
      * @return array
      */
-    protected function getRulesForPoint($points, $locationBase)
+    protected function getRulesForPoint($points, $locationBase): array
     {
         $rules = [];
         $pointBase = sprintf('%s.point.0', $locationBase);
@@ -1354,7 +1357,7 @@ class XmlValidator
      * @param $locationBase
      * @return array
      */
-    protected function getMessagesForPoint($formFields, $locationBase)
+    protected function getMessagesForPoint($formFields, $locationBase): array
     {
         $messages = [];
         $pointBase = sprintf('%s.point.0', $locationBase);
@@ -1385,10 +1388,12 @@ class XmlValidator
 
     /**
      * returns rules for sector.
+     *
      * @param array $activity
-     * @return array|mixed
+     *
+     * @return array
      */
-    public function rulesForSector(array $activity)
+    public function rulesForSector(array $activity): array
     {
         $rules = [];
         $sectors = Arr::get($activity, 'sector', []);
@@ -1406,8 +1411,8 @@ class XmlValidator
                 $this->validCodeList('SectorCategory')
             );
 
-            if ($sector['sector_vocabulary'] == 1 || $sector['sector_vocabulary'] == 2) {
-                if ($sector['sector_vocabulary'] == 1) {
+            if ($sector['sector_vocabulary'] === 1 || $sector['sector_vocabulary'] === 2) {
+                if ($sector['sector_vocabulary'] === 1) {
                     $rules[sprintf(
                         '%s.sector_code',
                         $sectorBase
@@ -1416,7 +1421,7 @@ class XmlValidator
                         $this->validCodeList('SectorCode')
                     );
                 }
-                if ($sector['sector_code'] != '') {
+                if ($sector['sector_code'] !== '') {
                     $rules[sprintf(
                         '%s.sector_vocabulary',
                         $sectorBase
@@ -1425,7 +1430,7 @@ class XmlValidator
                         $this->validCodeList('SectorVocabulary')
                     );
                 }
-                if ($sector['sector_vocabulary'] == 2) {
+                if ($sector['sector_vocabulary'] === 2) {
                     $rules[sprintf(
                         '%s.sector_category_code',
                         $sectorBase
@@ -1434,7 +1439,7 @@ class XmlValidator
                         $this->validCodeList('SectorCategory')
                     );
                 }
-                if ($sector['sector_category_code'] != '') {
+                if ($sector['sector_category_code'] !== '') {
                     $rules[sprintf(
                         '%s.sector_vocabulary',
                         $sectorBase
@@ -1444,14 +1449,14 @@ class XmlValidator
                     );
                 }
             } else {
-                if ($sector['sector_vocabulary'] != '') {
+                if ($sector['sector_vocabulary'] !== '') {
                     $rules[sprintf(
                         '%s.sector_text',
                         $sectorBase
                     )] = 'required_with:' . $sectorBase . '.sector_vocabulary';
                 }
 
-                if ($sector['sector_text'] != '') {
+                if ($sector['sector_text'] !== '') {
                     $rules[sprintf(
                         '%s.sector_vocabulary',
                         $sectorBase
@@ -1461,7 +1466,7 @@ class XmlValidator
                     );
                 }
 
-                if ($sector['sector_vocabulary'] == '99' || $sector['sector_vocabulary'] == '98') {
+                if ($sector['sector_vocabulary'] === '99' || $sector['sector_vocabulary'] === '98') {
                     $rules[sprintf(
                         '%s.vocabulary_uri',
                         $sectorBase
@@ -1478,6 +1483,7 @@ class XmlValidator
             }
 
             $rules[sprintf('%s.percentage', $sectorBase)] = 'nullable|numeric|max:100';
+
             if (count($sectors) > 1) {
                 $rules[sprintf('%s.percentage', $sectorBase)] = 'required|numeric|max:100';
             }
@@ -1489,7 +1495,7 @@ class XmlValidator
         $indexes = [];
 
         foreach ($totalPercentage as $index => $value) {
-            if (is_numeric($index) && $value != 100) {
+            if (is_numeric($index) && $value !== 100) {
                 $indexes[] = $index;
             }
         }
@@ -1498,7 +1504,7 @@ class XmlValidator
 
         foreach ($totalPercentage as $i => $percentage) {
             foreach ($indexes as $index) {
-                if ($index == $percentage) {
+                if ($index === $percentage) {
                     $fields[] = $i;
                 }
             }
@@ -1514,9 +1520,9 @@ class XmlValidator
     /**
      * returns messages for sector.
      * @param array $activity
-     * @return array|mixed
+     * @return array
      */
-    public function messagesForSector(array $activity)
+    public function messagesForSector(array $activity): array
     {
         $messages = [];
         $sectors = Arr::get($activity, 'sector', []);
@@ -1541,8 +1547,8 @@ class XmlValidator
                 ['attribute' => trans('elementForm.sector_code')]
             );
 
-            if ($sector['sector_vocabulary'] == 1 || $sector['sector_vocabulary'] == 2) {
-                if ($sector['sector_vocabulary'] == 1) {
+            if ($sector['sector_vocabulary'] === 1 || $sector['sector_vocabulary'] === 2) {
+                if ($sector['sector_vocabulary'] === 1) {
                     $messages[sprintf('%s.sector_code.%s', $sectorBase, 'required_with')] = trans(
                         'validation.required_with',
                         [
@@ -1551,7 +1557,7 @@ class XmlValidator
                         ]
                     );
                 }
-                if ($sector['sector_code'] != '') {
+                if ($sector['sector_code'] !== '') {
                     $messages[sprintf('%s.sector_vocabulary.%s', $sectorBase, 'required_with')] = trans(
                         'validation.required_with',
                         [
@@ -1560,7 +1566,7 @@ class XmlValidator
                         ]
                     );
                 }
-                if ($sector['sector_vocabulary'] == 2) {
+                if ($sector['sector_vocabulary'] === 2) {
                     $messages[sprintf('%s.sector_category_code.%s', $sectorBase, 'required_with')] = trans(
                         'validation.required_with',
                         [
@@ -1569,7 +1575,7 @@ class XmlValidator
                         ]
                     );
                 }
-                if ($sector['sector_category_code'] != '') {
+                if ($sector['sector_category_code'] !== '') {
                     $messages[sprintf('%s.sector_vocabulary.%s', $sectorBase, 'required_with')] = trans(
                         'validation.required_with',
                         [
@@ -1579,7 +1585,7 @@ class XmlValidator
                     );
                 }
             } else {
-                if ($sector['sector_vocabulary'] != '') {
+                if ($sector['sector_vocabulary'] !== '') {
                     $messages[sprintf('%s.sector_text.%s', $sectorBase, 'required_with')] = trans(
                         'validation.required_with',
                         [
@@ -1589,7 +1595,7 @@ class XmlValidator
                     );
                 }
 
-                if ($sector['sector_text'] != '') {
+                if ($sector['sector_text'] !== '') {
                     $messages[sprintf('%s.sector_vocabulary.%s', $sectorBase, 'required_with')] = trans(
                         'validation.required_with',
                         [
@@ -1599,7 +1605,7 @@ class XmlValidator
                     );
                 }
 
-                if ($sector['sector_vocabulary'] == '99' || $sector['sector_vocabulary'] == '98') {
+                if ($sector['sector_vocabulary'] === '99' || $sector['sector_vocabulary'] === '98') {
                     $messages[sprintf('%s.vocabulary_uri.%s', $sectorBase, 'required_with')] = trans(
                         'validation.required_with',
                         [
@@ -1659,10 +1665,9 @@ class XmlValidator
      * @param $sectors
      * @return array
      */
-    protected function getRulesForPercentage($sectors)
+    protected function getRulesForPercentage($sectors): array
     {
         $array = [];
-        $totalPercentage = 0;
 
         if (count($sectors) > 1) {
             foreach ($sectors as $sectorIndex => $sector) {
@@ -1689,14 +1694,14 @@ class XmlValidator
      * @param array $activity
      * @return array
      */
-    public function rulesForCountryBudgetItems(array $activity)
+    public function rulesForCountryBudgetItems(array $activity): array
     {
         $rules = [];
         $countryBudgetItems = Arr::get($activity, 'country_budget_items', []);
 
         foreach ($countryBudgetItems as $countryBudgetItemIndex => $countryBudgetItem) {
             $countryBudgetItemBase = sprintf('country_budget_items.%s', $countryBudgetItemIndex);
-            $code = Arr::get($countryBudgetItem, 'vocabulary', '') == 1 ? 'code' : 'code_text';
+            $code = Arr::get($countryBudgetItem, 'vocabulary', '') === 1 ? 'code' : 'code_text';
             $rules[sprintf('%s.budget_item.0.%s', $countryBudgetItemBase, $code)] = 'required';
             $rules[sprintf('%s.vocabulary', $countryBudgetItemBase)] = sprintf(
                 'required|in:%s',
@@ -1721,14 +1726,14 @@ class XmlValidator
      * @param array $activity
      * @return array
      */
-    public function messagesForCountryBudgetItems(array $activity)
+    public function messagesForCountryBudgetItems(array $activity): array
     {
         $messages = [];
         $countryBudgetItems = Arr::get($activity, 'country_budget_items', []);
 
         foreach ($countryBudgetItems as $countryBudgetItemIndex => $countryBudgetItem) {
             $countryBudgetItemBase = sprintf('country_budget_items.%s', $countryBudgetItemIndex);
-            $code = Arr::get($countryBudgetItem, 'vocabulary', '') == 1 ? 'code' : 'code_text';
+            $code = Arr::get($countryBudgetItem, 'vocabulary', '') === 1 ? 'code' : 'code_text';
             $messages[sprintf(
                 '%s.budget_item.0.%s.required',
                 $countryBudgetItemBase,
@@ -1763,14 +1768,14 @@ class XmlValidator
      * @param $countryBudgetItems
      * @return array
      */
-    public function getBudgetItemRules($budgetItems, $countryBudgetItemBase, $code, $countryBudgetItems)
+    public function getBudgetItemRules($budgetItems, $countryBudgetItemBase, $code, $countryBudgetItems): array
     {
         $rules = [];
         foreach ($budgetItems as $budgetItemIndex => $budgetItem) {
             $budgetItemBase = sprintf('%s.budget_item.%s', $countryBudgetItemBase, $budgetItemIndex);
             $rules[sprintf('%s.percentage', $budgetItemBase)] = 'nullable|numeric|max:100';
             $rules[sprintf('%s.%s', $budgetItemBase, $code)] = 'required';
-            ($code != 'code') ?: $rules[sprintf('%s.%s', $budgetItemBase, $code)] = sprintf(
+            ($code !== 'code') ?: $rules[sprintf('%s.%s', $budgetItemBase, $code)] = sprintf(
                 'in:%s',
                 $this->validCodeList('BudgetIdentifier')
             );
@@ -1794,7 +1799,7 @@ class XmlValidator
      * @param       $code
      * @return array
      */
-    public function getBudgetItemMessages($budgetItems, $countryBudgetItemBase, $code)
+    public function getBudgetItemMessages($budgetItems, $countryBudgetItemBase, $code): array
     {
         $messages = [];
         foreach ($budgetItems as $budgetItemIndex => $budgetItem) {
@@ -1842,7 +1847,7 @@ class XmlValidator
      * @param $budgetItemBase
      * @return array
      */
-    public function getBudgetItemDescriptionRules($descriptions, $budgetItemBase)
+    public function getBudgetItemDescriptionRules($descriptions, $budgetItemBase): array
     {
         $rules = [];
         foreach ($descriptions as $descriptionIndex => $description) {
@@ -1859,9 +1864,10 @@ class XmlValidator
      * @param $budgetItemBase
      * @return array
      */
-    public function getBudgetItemDescriptionMessages($descriptions, $budgetItemBase)
+    public function getBudgetItemDescriptionMessages($descriptions, $budgetItemBase): array
     {
         $messages = [];
+
         foreach ($descriptions as $descriptionIndex => $description) {
             $descriptionBase = sprintf('%s.description.%s', $budgetItemBase, $descriptionIndex);
             $messages = $this->factory->getMessagesForNarrative($description['narrative'], $descriptionBase);
@@ -1874,7 +1880,7 @@ class XmlValidator
      * @param $countryBudget
      * @return array
      */
-    protected function getRulesForBudgetPercentage($countryBudget)
+    protected function getRulesForBudgetPercentage($countryBudget): array
     {
         $countryBudgetItems = Arr::get($countryBudget, '0.budget_item', []);
         $totalPercentage = 0;
@@ -1884,14 +1890,14 @@ class XmlValidator
 
         if (count($countryBudgetItems) > 1) {
             foreach ($countryBudgetItems as $key => $countryBudgetItem) {
-                ($countryBudgetItem['percentage'] != '') ? $countryBudgetPercentage = $countryBudgetItem['percentage'] : $isEmpty = true;
+                ($countryBudgetItem['percentage'] !== '') ? $countryBudgetPercentage = $countryBudgetItem['percentage'] : $isEmpty = true;
                 $totalPercentage = $totalPercentage + $countryBudgetPercentage;
             }
 
             foreach ($countryBudgetItems as $key => $countryBudgetItem) {
                 if ($isEmpty) {
                     $rules["country_budget_items.0.budget_item.$key.percentage"] = 'required';
-                } elseif ($totalPercentage != 100) {
+                } elseif ($totalPercentage !== 100) {
                     $rules["country_budget_items.0.budget_item.$key.percentage"] = 'sum';
                 }
             }
@@ -1905,9 +1911,9 @@ class XmlValidator
     /**
      * returns rules for HumanitarianScope.
      * @param array $activity
-     * @return array|mixed
+     * @return array
      */
-    public function rulesForHumanitarianScope(array $activity)
+    public function rulesForHumanitarianScope(array $activity): array
     {
         $rules = [];
         $humanitarianScopes = Arr::get($activity, 'humanitarian_scope', []);
@@ -1923,7 +1929,7 @@ class XmlValidator
                 $this->validCodeList('HumanitarianScopeVocabulary')
             );
             $rules[$humanitarianScopeBase . '.vocabulary_uri'] = 'nullable|url';
-            if (Arr::get($humanitarianScope, 'vocabulary') == '99') {
+            if (Arr::get($humanitarianScope, 'vocabulary') === '99') {
                 $rules[$humanitarianScopeBase . '.vocabulary_uri'] = 'url|required';
             }
             $rules[$humanitarianScopeBase . '.code'] = 'required|string';
@@ -1943,9 +1949,9 @@ class XmlValidator
      * Returns messages for HumanitarianScope.
      *
      * @param array $activity
-     * @return array|mixed
+     * @return array
      */
-    public function messagesForHumanitarianScope(array $activity)
+    public function messagesForHumanitarianScope(array $activity): array
     {
         $messages = [];
         $humanitarianScopes = Arr::get($activity, 'humanitarian_scope', []);
@@ -1977,7 +1983,7 @@ class XmlValidator
                 ['attribute' => trans('element.humanitarian_scope')]
             );
             $messages[$humanitarianScopeForm . '.vocabulary_uri.url'] = trans('validation.url');
-            if (Arr::get($humanitarianScope, 'vocabulary') == '99') {
+            if (Arr::get($humanitarianScope, 'vocabulary') === '99') {
                 $messages[$humanitarianScopeForm . '.vocabulary_uri.required'] = trans(
                     'validation.required',
                     ['attribute' => trans('elementForm.vocabulary_uri')]
@@ -2001,7 +2007,7 @@ class XmlValidator
      * @param array $activity
      * @return array
      */
-    public function rulesForPolicyMarker(array $activity)
+    public function rulesForPolicyMarker(array $activity): array
     {
         $rules = [];
         $policyMarkers = Arr::get($activity, 'policy_marker', []);
@@ -2014,7 +2020,7 @@ class XmlValidator
             );
             $rules[sprintf('%s.vocabulary_uri', $policyMarkerForm)] = 'nullable|url';
 
-            if (Arr::get($policyMarker, 'vocabulary') == '99') {
+            if (Arr::get($policyMarker, 'vocabulary') === '99') {
                 $rules[sprintf('%s.policy_marker_text', $policyMarkerForm)] = 'required';
                 $rules[sprintf('%s.vocabulary_uri', $policyMarkerForm)] = 'url|required';
             } else {
@@ -2042,7 +2048,7 @@ class XmlValidator
      * @param array $activity
      * @return array
      */
-    public function messagesForPolicyMarker(array $activity)
+    public function messagesForPolicyMarker(array $activity): array
     {
         $messages = [];
         $policyMarkers = Arr::get($activity, 'policy_marker', []);
@@ -2055,7 +2061,7 @@ class XmlValidator
             );
             $messages[sprintf('%s.vocabulary_uri.url', $policyMarkerForm)] = trans('validation.url');
 
-            if (Arr::get($policyMarker, 'vocabulary') == '99') {
+            if (Arr::get($policyMarker, 'vocabulary') === '99') {
                 $messages[sprintf('%s.policy_marker_text.required', $policyMarkerForm)] = trans(
                     'validation.required',
                     ['attribute' => trans('element.policy_marker')]
@@ -2093,7 +2099,7 @@ class XmlValidator
      * @param array $activity
      * @return array
      */
-    protected function rulesForBudget(array $activity)
+    protected function rulesForBudget(array $activity): array
     {
         $rules = [];
         $budgets = Arr::get($activity, 'budget', []);
@@ -2117,6 +2123,7 @@ class XmlValidator
 
             $startDate = Arr::get($budget, 'period_start.0.date');
             $newDate = $startDate ? date('Y-m-d', strtotime($startDate . '+1year')) : '';
+
             if ($newDate) {
                 $rules[$budgetBase . '.period_end.0.date'][] = sprintf('before:%s', $newDate);
             }
@@ -2131,7 +2138,7 @@ class XmlValidator
      * @param array $activity
      * @return array
      */
-    protected function messagesForBudget(array $activity)
+    protected function messagesForBudget(array $activity): array
     {
         $messages = [];
         $budgets = Arr::get($activity, 'budget', []);
@@ -2171,7 +2178,7 @@ class XmlValidator
      * @param $budgetBase
      * @return array
      */
-    protected function getRulesForValue($budgetValues, $budgetBase)
+    protected function getRulesForValue($budgetValues, $budgetBase): array
     {
         $rules = [];
         foreach ($budgetValues as $valueIndex => $value) {
@@ -2188,7 +2195,7 @@ class XmlValidator
      * @param $budgetBase
      * @return array
      */
-    protected function getMessagesForValue($budgetValues, $budgetBase)
+    protected function getMessagesForValue($budgetValues, $budgetBase): array
     {
         $messages = [];
         foreach ($budgetValues as $valueIndex => $value) {
@@ -2214,7 +2221,7 @@ class XmlValidator
      * @param array $activity
      * @return array
      */
-    protected function rulesForPlannedDisbursement(array $activity)
+    protected function rulesForPlannedDisbursement(array $activity): array
     {
         $rules = [];
         $plannedDisbursements = Arr::get($activity, 'planned_disbursement', []);
@@ -2243,7 +2250,7 @@ class XmlValidator
      * @param array $activity
      * @return array
      */
-    protected function messagesForPlannedDisbursement(array $activity)
+    protected function messagesForPlannedDisbursement(array $activity): array
     {
         $messages = [];
         $plannedDisbursements = Arr::get($activity, 'planned_disbursement', []);
@@ -2276,7 +2283,7 @@ class XmlValidator
      * @param       $plannedDisbursementBase
      * @return array
      */
-    protected function getRulesForProviderOrg(array $providerOrgData, $plannedDisbursementBase)
+    protected function getRulesForProviderOrg(array $providerOrgData, $plannedDisbursementBase): array
     {
         $rules = [];
 
@@ -2300,7 +2307,7 @@ class XmlValidator
      * @param       $plannedDisbursementBase
      * @return array
      */
-    protected function getMessagesForProviderOrg(array $providerOrgData, $plannedDisbursementBase)
+    protected function getMessagesForProviderOrg(array $providerOrgData, $plannedDisbursementBase): array
     {
         $message = [];
 
@@ -2324,7 +2331,7 @@ class XmlValidator
      * @param       $plannedDisbursementBase
      * @return array
      */
-    protected function getRulesForReceiverOrg(array $receiverOrgData, $plannedDisbursementBase)
+    protected function getRulesForReceiverOrg(array $receiverOrgData, $plannedDisbursementBase): array
     {
         $rules = [];
 
@@ -2348,7 +2355,7 @@ class XmlValidator
      * @param       $plannedDisbursementBase
      * @return array
      */
-    protected function getMessagesForReceiverOrg(array $receiverOrgData, $plannedDisbursementBase)
+    protected function getMessagesForReceiverOrg(array $receiverOrgData, $plannedDisbursementBase): array
     {
         $message = [];
 
@@ -2371,7 +2378,7 @@ class XmlValidator
      * @param array $activity
      * @return array
      */
-    protected function rulesForDocumentLink(array $activity)
+    protected function rulesForDocumentLink(array $activity): array
     {
         $rules = [];
         $documentLinks = Arr::get($activity, 'document_links', []);
@@ -2409,7 +2416,7 @@ class XmlValidator
      * @param array $activity
      * @return array
      */
-    protected function messagesForDocumentLink(array $activity)
+    protected function messagesForDocumentLink(array $activity): array
     {
         $messages = [];
         $documentLinks = Arr::get($activity, 'document_links', []);
@@ -2462,7 +2469,7 @@ class XmlValidator
      * @param $documentLinkBase
      * @return array
      */
-    protected function getRulesForDocumentCategory($categories, $documentLinkBase)
+    protected function getRulesForDocumentCategory($categories, $documentLinkBase): array
     {
         $rules = [];
         foreach ($categories as $documentCategoryIndex => $documentCategory) {
@@ -2481,7 +2488,7 @@ class XmlValidator
      * @param $documentLinkBase
      * @return array
      */
-    protected function getMessagesForDocumentCategory($categories, $documentLinkBase)
+    protected function getMessagesForDocumentCategory($categories, $documentLinkBase): array
     {
         $messages = [];
         foreach ($categories as $documentCategoryIndex => $documentCategory) {
@@ -2507,7 +2514,7 @@ class XmlValidator
      * @param array $activity
      * @return array
      */
-    protected function rulesForRelatedActivity(array $activity)
+    protected function rulesForRelatedActivity(array $activity): array
     {
         $rules = [];
         $relatedActivities = Arr::get($activity, 'related_activity', []);
@@ -2528,7 +2535,7 @@ class XmlValidator
      * @param array $activity
      * @return array
      */
-    protected function messagesForRelatedActivity(array $activity)
+    protected function messagesForRelatedActivity(array $activity): array
     {
         $messages = [];
         $relatedActivities = Arr::get($activity, 'related_activity', []);
@@ -2556,7 +2563,7 @@ class XmlValidator
      * @param array $activity
      * @return array
      */
-    protected function rulesForLegacyData(array $activity)
+    protected function rulesForLegacyData(array $activity): array
     {
         $rules = [];
         $legacy = Arr::get($activity, 'legacy_data', []);
@@ -2574,7 +2581,7 @@ class XmlValidator
      * @param array $activity
      * @return array
      */
-    protected function messagesForLegacyData(array $activity)
+    protected function messagesForLegacyData(array $activity): array
     {
         $messages = [];
         $legacy = Arr::get($activity, 'legacy_data', []);
@@ -2598,7 +2605,7 @@ class XmlValidator
      * @param array $activity
      * @return array
      */
-    protected function rulesForCondition(array $activity)
+    protected function rulesForCondition(array $activity): array
     {
         $rules = [];
         $conditions = Arr::get($activity, 'conditions', []);
@@ -2632,7 +2639,7 @@ class XmlValidator
      * @param array $activity
      * @return array
      */
-    protected function messagesForCondition(array $activity)
+    protected function messagesForCondition(array $activity): array
     {
         $messages = [];
         $conditions = Arr::get($activity, 'conditions', []);
@@ -2683,9 +2690,9 @@ class XmlValidator
     /**
      * returns rules for transaction.
      * @param $activity
-     * @return array|mixed
+     * @return array
      */
-    protected function rulesForTransaction($activity)
+    protected function rulesForTransaction($activity): array
     {
         $rules = [];
         $transactions = Arr::get($activity, 'transaction', []);
@@ -2771,9 +2778,9 @@ class XmlValidator
     /**
      * returns messages for transaction.
      * @param $activity
-     * @return array|mixed
+     * @return array
      */
-    protected function messagesForTransaction($activity)
+    protected function messagesForTransaction($activity): array
     {
         $messages = [];
         $transactions = Arr::get($activity, 'transaction', []);
@@ -2857,11 +2864,12 @@ class XmlValidator
      * @param $transactionId
      * @return array
      */
-    protected function getReferences($transactions, $transactionId)
+    protected function getReferences($transactions, $transactionId): array
     {
         $references = [];
+
         foreach ($transactions as $transaction) {
-            if (Arr::get($transaction, 'id', '') != $transactionId) {
+            if (Arr::get($transaction, 'id', '') !== $transactionId) {
                 $references[] = Arr::get($transaction, 'transaction.reference');
             }
         }
@@ -2874,7 +2882,7 @@ class XmlValidator
      * @param           $transactionBase
      * @return array
      */
-    protected function getRulesForTransactionProviderOrg(array $providers, $transactionBase)
+    protected function getRulesForTransactionProviderOrg(array $providers, $transactionBase): array
     {
         $rules = [];
 
@@ -2894,7 +2902,7 @@ class XmlValidator
      * @param         $transactionBase
      * @return array
      */
-    protected function getMessagesForTransactionProviderOrg(array $providers, $transactionBase)
+    protected function getMessagesForTransactionProviderOrg(array $providers, $transactionBase): array
     {
         $message = [];
 
@@ -2910,11 +2918,12 @@ class XmlValidator
     }
 
     /**
-     * @param       $receivers
+     * @param array $receivers
      * @param       $transactionBase
+     *
      * @return array
      */
-    protected function getRulesForTransactionReceiverOrg(array $receivers, $transactionBase)
+    protected function getRulesForTransactionReceiverOrg(array $receivers, $transactionBase): array
     {
         $rules = [];
 
@@ -2934,7 +2943,7 @@ class XmlValidator
      * @param       $transactionBase
      * @return array
      */
-    protected function getMessagesForTransactionReceiverOrg(array $receivers, $transactionBase)
+    protected function getMessagesForTransactionReceiverOrg(array $receivers, $transactionBase): array
     {
         $message = [];
 
@@ -2953,9 +2962,9 @@ class XmlValidator
      * returns rules for sector.
      * @param $sectors
      * @param $transactionBase
-     * @return array|mixed
+     * @return array
      */
-    public function getSectorsRules($sectors, $transactionBase)
+    public function getSectorsRules($sectors, $transactionBase): array
     {
         $rules = [];
 
@@ -2972,7 +2981,7 @@ class XmlValidator
                 $this->validCodeList('SectorCategory')
             );
 
-            if ($sector['sector_vocabulary'] == 1) {
+            if ($sector['sector_vocabulary'] === 1) {
                 $rules[sprintf(
                     '%s.sector_code',
                     $sectorBase
@@ -2987,7 +2996,7 @@ class XmlValidator
                     'in:%s|required_with:' . $sectorBase . '.sector_code',
                     $this->validCodeList('SectorVocabulary')
                 );
-            } elseif ($sector['sector_vocabulary'] == 2) {
+            } elseif ($sector['sector_vocabulary'] === 2) {
                 $rules[sprintf(
                     '%s.sector_category_code',
                     $sectorBase
@@ -3002,7 +3011,7 @@ class XmlValidator
                     'in:%s|required_with:' . $sectorBase . '.sector_category_code',
                     $this->validCodeList('SectorVocabulary')
                 );
-            } elseif ($sector['sector_vocabulary'] == 98 || $sector['sector_vocabulary'] == 99) {
+            } elseif ($sector['sector_vocabulary'] === 98 || $sector['sector_vocabulary'] === 99) {
                 $rules[sprintf(
                     '%s.vocabulary_uri',
                     $sectorBase
@@ -3014,7 +3023,7 @@ class XmlValidator
                         $narrativeKey
                     )] = 'required|required_with_language';
                 }
-            } elseif ($sector['sector_vocabulary'] != '') {
+            } elseif ($sector['sector_vocabulary'] !== '') {
                 $rules[sprintf('%s.sector_text', $sectorBase)] = 'required_with:' . $sectorBase . '.sector_vocabulary';
                 $rules[sprintf(
                     '%s.sector_vocabulary',
@@ -3025,7 +3034,7 @@ class XmlValidator
                 );
             }
         }
-        $rules = array_merge(
+        array_merge(
             $rules,
             $this->factory->getRulesForTransactionSectorNarrative($sector, $sector['narrative'], $sectorBase)
         );
@@ -3037,9 +3046,9 @@ class XmlValidator
      * returns messages for sector.
      * @param $sectors
      * @param $transactionBase
-     * @return array|mixed
+     * @return array
      */
-    public function getSectorsMessages($sectors, $transactionBase)
+    public function getSectorsMessages($sectors, $transactionBase): array
     {
         $messages = [];
 
@@ -3059,7 +3068,7 @@ class XmlValidator
                 ['attribute' => trans('elementForm.sector_code')]
             );
 
-            if ($sector['sector_vocabulary'] == 1) {
+            if ($sector['sector_vocabulary'] === 1) {
                 $messages[sprintf('%s.sector_code.%s', $sectorBase, 'required_with')] = trans(
                     'validation.required_with',
                     ['attribute' => trans('elementForm.sector_code'), 'values' => trans('sector_vocabulary')]
@@ -3068,7 +3077,7 @@ class XmlValidator
                     'validation.required_with',
                     ['attribute' => trans('elementForm.sector_vocabulary'), 'values' => trans('sector_code')]
                 );
-            } elseif ($sector['sector_vocabulary'] == 2) {
+            } elseif ($sector['sector_vocabulary'] === 2) {
                 $messages[sprintf('%s.sector_category_code.%s', $sectorBase, 'required_with')] = trans(
                     'validation.required_with',
                     ['attribute' => trans('elementForm.sector_code'), 'values' => trans('sector_vocabulary')]
@@ -3077,7 +3086,7 @@ class XmlValidator
                     'validation.required_with',
                     ['attribute' => trans('elementForm.sector_vocabulary'), 'values' => trans('sector_code')]
                 );
-            } elseif ($sector['sector_vocabulary'] == 98 || $sector['sector_vocabulary'] == 99) {
+            } elseif ($sector['sector_vocabulary'] === 98 || $sector['sector_vocabulary'] === 99) {
                 $messages[sprintf('%s.vocabulary_uri.%s', $sectorBase, 'required_with')] = trans(
                     'validation.required_with',
                     [
@@ -3101,7 +3110,7 @@ class XmlValidator
                         ['attribute' => trans('elementForm.narrative'), 'values' => trans('elementForm.languages')]
                     );
                 }
-            } elseif ($sector['sector_vocabulary'] != '') {
+            } elseif ($sector['sector_vocabulary'] !== '') {
                 $messages[sprintf('%s.sector_text.%s', $sectorBase, 'required_with')] = trans(
                     'validation.required_with',
                     ['attribute' => trans('elementForm.sector_code'), 'values' => trans('sector_vocabulary')]
@@ -3147,9 +3156,9 @@ class XmlValidator
      * returns messages for recipient region.
      * @param $recipientRegions
      * @param $transactionBase
-     * @return array|mixed
+     * @return array
      */
-    public function getRecipientRegionMessages($recipientRegions, $transactionBase)
+    public function getRecipientRegionMessages($recipientRegions, $transactionBase): array
     {
         $messages = [];
 
@@ -3175,7 +3184,7 @@ class XmlValidator
      * @param $transactionBase
      * @return array
      */
-    protected function getTransactionTypeRules($types, $transactionBase)
+    protected function getTransactionTypeRules($types, $transactionBase): array
     {
         $rules = [];
 
@@ -3196,7 +3205,7 @@ class XmlValidator
      * @param $transactionBase
      * @return array
      */
-    protected function getTransactionTypeMessages($types, $transactionBase)
+    protected function getTransactionTypeMessages($types, $transactionBase): array
     {
         $messages = [];
 
@@ -3221,9 +3230,10 @@ class XmlValidator
      * @param $transactionBase
      * @return array
      */
-    protected function getTransactionDateRules($transactionDate, $transactionBase)
+    protected function getTransactionDateRules($transactionDate, $transactionBase): array
     {
         $rules = [];
+
         foreach ($transactionDate as $dateIndex => $date) {
             $dateBase = sprintf('%s.transaction_date.%s', $transactionBase, $dateIndex);
             $rules[sprintf('%s.date', $dateBase)] = 'required';
@@ -3238,9 +3248,10 @@ class XmlValidator
      * @param $transactionBase
      * @return array
      */
-    protected function getTransactionDateMessages($transactionDate, $transactionBase)
+    protected function getTransactionDateMessages($transactionDate, $transactionBase): array
     {
         $messages = [];
+
         foreach ($transactionDate as $dateIndex => $date) {
             $dateBase = sprintf('%s.transaction_date.%s', $transactionBase, $dateIndex);
             $messages[sprintf('%s.date.required', $dateBase)] = trans(
@@ -3258,9 +3269,10 @@ class XmlValidator
      * @param $transactionBase
      * @return array
      */
-    protected function getValueRules($transactionValue, $transactionBase)
+    protected function getValueRules($transactionValue, $transactionBase): array
     {
         $rules = [];
+
         foreach ($transactionValue as $valueIndex => $value) {
             $valueBase = sprintf('%s.value.%s', $transactionBase, $valueIndex);
             $rules[sprintf('%s.current', $valueBase)] = sprintf('in:%s', $this->validCodeList('Currency'));
@@ -3277,9 +3289,10 @@ class XmlValidator
      * @param $transactionBase
      * @return array
      */
-    protected function getValueMessages($transactionValue, $transactionBase)
+    protected function getValueMessages($transactionValue, $transactionBase): array
     {
         $messages = [];
+
         foreach ($transactionValue as $valueIndex => $value) {
             $valueBase = sprintf('%s.value.%s', $transactionBase, $valueIndex);
             $messages[sprintf('%s.amount.required', $valueBase)] = trans(
@@ -3305,9 +3318,10 @@ class XmlValidator
      * @param $transactionBase
      * @return array
      */
-    protected function getDescriptionRules($descriptions, $transactionBase)
+    protected function getDescriptionRules($descriptions, $transactionBase): array
     {
         $rules = [];
+
         foreach ($descriptions as $descriptionIndex => $description) {
             $narrativeBase = sprintf('%s.description.%s', $transactionBase, $descriptionIndex);
             $rules = array_merge(
@@ -3325,9 +3339,10 @@ class XmlValidator
      * @param $transactionBase
      * @return array
      */
-    protected function getDescriptionMessages($descriptions, $transactionBase)
+    protected function getDescriptionMessages($descriptions, $transactionBase): array
     {
         $messages = [];
+
         foreach ($descriptions as $descriptionIndex => $description) {
             $narrativeBase = sprintf('%s.description.%s', $transactionBase, $descriptionIndex);
             $messages = array_merge(
@@ -3342,9 +3357,9 @@ class XmlValidator
     /**
      * returns rules for result.
      * @param array $activity
-     * @return array|mixed
+     * @return array
      */
-    protected function rulesForResult(array $activity)
+    protected function rulesForResult(array $activity): array
     {
         $rules = [];
         $results = Arr::get($activity, 'results', []);
@@ -3376,9 +3391,9 @@ class XmlValidator
     /**
      * returns messages for result.
      * @param $activity
-     * @return array|mixed
+     * @return array
      */
-    protected function messagesForResult($activity)
+    protected function messagesForResult($activity): array
     {
         $messages = [];
         $results = Arr::get($activity, 'results', []);
@@ -3416,9 +3431,9 @@ class XmlValidator
      * returns rules for indicator.
      * @param $indicators
      * @param $resultBase
-     * @return array|mixed
+     * @return array
      */
-    protected function getRulesForIndicator($indicators, $resultBase)
+    protected function getRulesForIndicator($indicators, $resultBase): array
     {
         $rules = [];
 
@@ -3450,9 +3465,9 @@ class XmlValidator
      * returns messages for indicator.
      * @param $indicators
      * @param $resultBase
-     * @return array|mixed
+     * @return array
      */
-    protected function getMessagesForIndicator($indicators, $resultBase)
+    protected function getMessagesForIndicator($indicators, $resultBase): array
     {
         $messages = [];
 
@@ -3487,9 +3502,9 @@ class XmlValidator
      * returns rules for reference.
      * @param $formFields
      * @param $formBase
-     * @return array|mixed
+     * @return array
      */
-    protected function getRulesForReference($formFields, $formBase)
+    protected function getRulesForReference($formFields, $formBase): array
     {
         $rules = [];
 
@@ -3513,9 +3528,9 @@ class XmlValidator
      * returns messages for reference.
      * @param $formFields
      * @param $formBase
-     * @return array|mixed
+     * @return array
      */
-    protected function getMessagesForReference($formFields, $formBase)
+    protected function getMessagesForReference($formFields, $formBase): array
     {
         $messages = [];
 
@@ -3539,9 +3554,9 @@ class XmlValidator
      * returns rules for baseline.
      * @param $formFields
      * @param $formBase
-     * @return array|mixed
+     * @return array
      */
-    protected function getRulesForBaseline($formFields, $formBase)
+    protected function getRulesForBaseline($formFields, $formBase): array
     {
         $rules = [];
 
@@ -3566,9 +3581,9 @@ class XmlValidator
      * returns messages for baseline.
      * @param $formFields
      * @param $formBase
-     * @return array|mixed
+     * @return array
      */
-    protected function getMessagesForBaseline($formFields, $formBase)
+    protected function getMessagesForBaseline($formFields, $formBase): array
     {
         $messages = [];
 
@@ -3614,9 +3629,9 @@ class XmlValidator
      * returns rules for period.
      * @param $formFields
      * @param $formBase
-     * @return array|mixed
+     * @return array
      */
-    protected function getRulesForPeriod($formFields, $formBase)
+    protected function getRulesForPeriod($formFields, $formBase): array
     {
         $rules = [];
 
@@ -3638,9 +3653,9 @@ class XmlValidator
      * returns messages for period.
      * @param $formFields
      * @param $formBase
-     * @return array|mixed
+     * @return array
      */
-    protected function getMessagesForPeriod($formFields, $formBase)
+    protected function getMessagesForPeriod($formFields, $formBase): array
     {
         $messages = [];
 
@@ -3662,9 +3677,9 @@ class XmlValidator
      * returns rules for target.
      * @param $formFields
      * @param $formBase
-     * @return array|mixed
+     * @return array
      */
-    protected function getRulesForTarget($formFields, $formBase)
+    protected function getRulesForTarget($formFields, $formBase): array
     {
         $rules = [];
 
@@ -3687,9 +3702,9 @@ class XmlValidator
      * returns messages for target.
      * @param $formFields
      * @param $formBase
-     * @return array|mixed
+     * @return array
      */
-    protected function getMessagesForTarget($formFields, $formBase)
+    protected function getMessagesForTarget($formFields, $formBase): array
     {
         $messages = [];
 
@@ -3717,12 +3732,13 @@ class XmlValidator
      * @param $periodEnd
      * @return array
      */
-    protected function getRulesForResultPeriodStart($formFields, $formBase, $periodEnd)
+    protected function getRulesForResultPeriodStart($formFields, $formBase, $periodEnd): array
     {
         $rules = [];
+
         foreach ($formFields as $periodStartKey => $periodStartVal) {
             $periodEndLocation = $formBase . '.period_end.' . $periodStartKey . '.date';
-            if ($periodEnd[$periodStartKey]['date'] != '') {
+            if ($periodEnd[$periodStartKey]['date'] !== '') {
                 $rules[$formBase . '.period_start.' . $periodStartKey . '.date'] = sprintf(
                     'required_with:%s|date',
                     $periodEndLocation
@@ -3743,7 +3759,7 @@ class XmlValidator
     {
         $messages = [];
         foreach ($formFields as $periodStartKey => $periodStartVal) {
-            if ($periodEnd[$periodStartKey]['date'] != '') {
+            if ($periodEnd[$periodStartKey]['date'] !== '') {
                 $messages[$formBase . '.period_start.' . $periodStartKey . '.date.required_with'] = trans(
                     'validation.required_with',
                     [
@@ -3767,12 +3783,13 @@ class XmlValidator
      * @param $periodStart
      * @return array
      */
-    protected function getRulesForResultPeriodEnd($formFields, $formBase, $periodStart)
+    protected function getRulesForResultPeriodEnd($formFields, $formBase, $periodStart): array
     {
         $rules = [];
+
         foreach ($formFields as $periodEndKey => $periodEndVal) {
             $periodStartLocation = $formBase . '.period_start.' . $periodEndKey . '.date';
-            if ($periodStart[$periodEndKey]['date'] != '') {
+            if ($periodStart[$periodEndKey]['date'] !== '') {
                 $rules[$formBase . '.period_end.' . $periodEndKey . '.date'] = sprintf(
                     'required_with:%s|date|after:%s',
                     $periodStartLocation,
@@ -3790,11 +3807,12 @@ class XmlValidator
      * @param $periodStart
      * @return array
      */
-    protected function getMessagesForResultPeriodEnd($formFields, $formBase, $periodStart)
+    protected function getMessagesForResultPeriodEnd($formFields, $formBase, $periodStart): array
     {
         $messages = [];
+
         foreach ($formFields as $periodEndKey => $periodEndVal) {
-            if ($periodStart[$periodEndKey]['date'] != '') {
+            if ($periodStart[$periodEndKey]['date'] !== '') {
                 $messages[$formBase . '.period_end.' . $periodEndKey . '.date.required_with'] = trans(
                     'validation.required_with',
                     ['attribute' => trans('elementForm.period_end'), 'values' => trans('elementForm.period_start')]
@@ -3819,13 +3837,14 @@ class XmlValidator
      * @param $formBase
      * @return array
      */
-    protected function getMessagesForResultNarrative($formFields, $formBase)
+    protected function getMessagesForResultNarrative($formFields, $formBase): array
     {
         $messages = [];
         $messages[sprintf('%s.narrative.unique_lang', $formBase)] = trans(
             'validation.unique',
             ['attribute' => trans('elementForm.languages')]
         );
+
         foreach ($formFields as $narrativeIndex => $narrative) {
             $messages[sprintf(
                 '%s.narrative.%s.narrative.required',
@@ -3839,24 +3858,25 @@ class XmlValidator
 
     /**
      * Get the valid codes from the respective code list.
+     *
      * @param        $name
      * @param string $directory
+     *
      * @return string
      */
-    protected function validCodeList($name, $directory = 'Activity')
+    protected function validCodeList($name, string $directory = 'Activity'): string
     {
-        $codeList = $this->loadCodeList($name, $directory);
-        $codes = array_keys($codeList);
-
-        return implode(',', $codes);
+        return implode(',', array_keys($this->loadCodeList($name, $directory)));
     }
 
     /**
      * @param        $codeList
      * @param string $directory
+     *
      * @return mixed
+     * @throws \JsonException
      */
-    protected function loadCodeList($codeList, $directory = 'Activity')
+    protected function loadCodeList($codeList, string $directory = 'Activity'): mixed
     {
         return getCodeList($codeList, $directory, false);
     }
@@ -3865,9 +3885,9 @@ class XmlValidator
      * return rules for tag.
      *
      * @param array $activity
-     * @return array $rules
+     * @return array
      */
-    public function rulesForTag(array $activity)
+    public function rulesForTag(array $activity): array
     {
         $rules = [];
         $tags = Arr::get($activity, 'tag', []);
@@ -3880,16 +3900,16 @@ class XmlValidator
 
             $tagVocabulary = Arr::get($tag, 'tag_vocabulary');
 
-            if ($tagVocabulary == 1) {
+            if ($tagVocabulary === 1) {
                 $rules[sprintf('%s.tag_code', $tagForm)] = 'required';
             }
-            if ($tagVocabulary == 2) {
+            if ($tagVocabulary === 2) {
                 $rules[sprintf('%s.goals_tag_code', $tagForm)] = 'required';
             }
-            if ($tagVocabulary == 3) {
+            if ($tagVocabulary === 3) {
                 $rules[sprintf('%s.targets_tag_code', $tagForm)] = 'required';
             }
-            if ($tagVocabulary == 99) {
+            if ($tagVocabulary === 99) {
                 $rules[sprintf('%s.tag_text', $tagForm)] = 'required';
                 $rules[sprintf('%s.vocabulary_uri', $tagForm)] = 'url|required_with:' . $tagForm . '.tag_vocabulary';
             }
@@ -3903,9 +3923,9 @@ class XmlValidator
      * returns messages for tag.
      *
      * @param array $activity
-     * @return array $messages
+     * @return array
      */
-    public function messagesForTag(array $activity)
+    public function messagesForTag(array $activity): array
     {
         $messages = [];
         $tags = Arr::get($activity, 'tag', []);
@@ -3916,17 +3936,17 @@ class XmlValidator
 
             $tagVocabulary = Arr::get($tag, 'tag_vocabulary');
 
-            if ($tagVocabulary == 1) {
+            if ($tagVocabulary === 1) {
                 $messages[sprintf('%s.tag_code.required', $tagForm)] = trans('validation.required', ['attribute' => trans('elementForm.tag_code')]);
             }
-            if ($tagVocabulary == 2) {
+            if ($tagVocabulary === 2) {
                 $messages[sprintf('%s.goals_tag_code.required', $tagForm)] = trans('validation.required', ['attribute' => trans('elementForm.tag_code')]);
             }
-            if ($tagVocabulary == 3) {
+            if ($tagVocabulary === 3) {
                 $messages[sprintf('%s.targets_tag_code.required', $tagForm)] = trans('validation.required', ['attribute' => trans('elementForm.tag_code')]);
             }
 
-            if ($tagVocabulary == 99) {
+            if ($tagVocabulary === 99) {
                 $messages[sprintf('%s.tag_text.required', $tagForm)] = trans('validation.required', ['attribute' => trans('elementForm.tag_code')]);
                 $messages[sprintf('%s.vocabulary_uri.%s', $tagForm, 'required_with')] = trans(
                     'validation.required_with',
@@ -3949,7 +3969,7 @@ class XmlValidator
      * @param array $activity
      * @return array
      */
-    protected function rulesForDefaultAidType(array $activity)
+    protected function rulesForDefaultAidType(array $activity): array
     {
         $defaultAidType = (array) Arr::get($activity, 'default_aid_type', []);
         $rules = [];
@@ -3958,16 +3978,17 @@ class XmlValidator
             $aidtypeForm = sprintf('default_aid_type.%s', $index);
             $rules[sprintf('%s.aid_type_vocabulary', $aidtypeForm)] = 'required|in:1,2,3,4';
             $vocabulary = Arr::get($aidtype, 'aid_type_vocabulary');
-            if ($vocabulary == 1) {
+
+            if ($vocabulary === 1) {
                 $rules[sprintf('%s.default_aid_type', $aidtypeForm)] = sprintf('required_with:%s|in:%s', $aidtypeForm . '.aid_type_vocabulary', $this->validCodeList('AidType', 'V203'));
             }
-            if ($vocabulary == 2) {
+            if ($vocabulary === 2) {
                 $rules[sprintf('%s.earmarking_category', $aidtypeForm)] = sprintf('required_with:%s|in:%s', $aidtypeForm . '.aid_type_vocabulary', $this->validCodeList('EarmarkingCategory', 'V203'));
             }
-            if ($vocabulary == 3) {
+            if ($vocabulary === 3) {
                 $rules[sprintf('%s.default_aid_type_text', $aidtypeForm)] = sprintf('required_with:%s|in:%s', $aidtypeForm . '.aid_type_vocabulary', $this->validCodeList('EarmarkingModality', 'V203'));
             }
-            if ($vocabulary == 4) {
+            if ($vocabulary === 4) {
                 $rules[sprintf('%s.cash_and_voucher_modalities', $aidtypeForm)] = sprintf('required_with:%s|in:%s', $aidtypeForm . '.aid_type_vocabulary', $this->validCodeList('CashandVoucherModalities', 'V203'));
             }
         }
@@ -3981,7 +4002,7 @@ class XmlValidator
      * @param array $activity
      * @return array
      */
-    protected function messagesForDefaultAidType(array $activity)
+    protected function messagesForDefaultAidType(array $activity): array
     {
         $defaultAidType = Arr::get($activity, 'default_aid_type', []);
         $messages = [];
@@ -3993,14 +4014,14 @@ class XmlValidator
 
             $vocabulary = Arr::get($aidtype, 'aid_type_vocabulary');
 
-            if ($vocabulary == 1) {
+            if ($vocabulary === 1) {
                 $messages[sprintf('%s.default_aid_type.%s', $aidtypeForm, 'required_with')] = trans(
                     'validation.required_with',
                     ['attribute' => trans('elementForm.default_aid_type'), 'values' => trans('elementForm.default_aid_type_vocabulary')]
                 );
                 $messages[sprintf('%s.default_aid_type.in', $aidtypeForm)] = trans('validation.code_list', ['attribute' => trans('element.default_aid_type')]);
             }
-            if ($vocabulary == 2) {
+            if ($vocabulary === 2) {
                 $messages[sprintf('%s.earmarking_category.%s', $aidtypeForm, 'required_with')] = trans(
                     'validation.required_with',
                     ['attribute' => trans('elementForm.default_aid_type'), 'values' => trans('elementForm.default_aid_type_vocabulary')]
@@ -4010,7 +4031,7 @@ class XmlValidator
                     ['attribute' => trans('elementForm.default_aid_type')]
                 );
             }
-            if ($vocabulary == 3) {
+            if ($vocabulary === 3) {
                 $messages[sprintf('%s.default_aid_type_text.%s', $aidtypeForm, 'required_with')] = trans(
                     'validation.required_with',
                     ['attribute' => trans('elementForm.default_aid_type'), 'values' => trans('elementForm.default_aid_type_vocabulary')]
@@ -4020,7 +4041,7 @@ class XmlValidator
                     ['attribute' => trans('elementForm.default_aid_type')]
                 );
             }
-            if ($vocabulary == 4) {
+            if ($vocabulary === 4) {
                 $messages[sprintf('%s.cash_and_voucher_modalities.%s', $aidtypeForm, 'required_with')] = trans(
                     'validation.required_with',
                     ['attribute' => trans('elementForm.default_aid_type'), 'values' => trans('elementForm.default_aid_type_vocabulary')]

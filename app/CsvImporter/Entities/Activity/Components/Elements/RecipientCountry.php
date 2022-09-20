@@ -170,7 +170,7 @@ class RecipientCountry extends Element
      */
     public function validate(): static
     {
-        $this->recipientRegion($this->fields);
+        $this->getRecipientRegion($this->fields);
 
         $recipientRegion = $this->recipientRegion->data;
         $this->data['recipient_region'] = (empty($recipientRegion)) ? '' : $recipientRegion;
@@ -269,7 +269,7 @@ class RecipientCountry extends Element
      * @return void
      * @throws BindingResolutionException
      */
-    protected function recipientRegion($fields): void
+    protected function getRecipientRegion($fields): void
     {
         $this->recipientRegion = app()->makeWith(RecipientRegion::class, ['fields' => $fields]);
     }

@@ -115,8 +115,6 @@ class ImportActivityController extends Controller
 
                     $this->fixPermission(storage_path('csvImporter/tmp'));
 
-                    $response = null;
-
                     if (!$this->importCsvService->isInUTF8Encoding($filename)) {
                         $response = ['success' => false, 'code' => ['encoding_error', ['message' => 'Something went wrong']]];
 

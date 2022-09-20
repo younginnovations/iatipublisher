@@ -291,9 +291,9 @@ class ActivityRow extends Row
         foreach ($this->activityElements() as $element) {
             if (class_exists($namespace = $this->getNamespace($element, self::BASE_NAMESPACE))) {
                 if ($element === 'sector') {
-                    $this->$element = $this->make($namespace, $this->fields(), $this->organizationId);
+                    $this->$element = $this->make($namespace, $this->getFields(), $this->organizationId);
                 } else {
-                    $this->$element = $this->make($namespace, $this->fields());
+                    $this->$element = $this->make($namespace, $this->getFields());
                 }
 
                 if ($element === 'identifier') {
@@ -338,7 +338,7 @@ class ActivityRow extends Row
     {
         foreach ($this->otherElements() as $element) {
             if (class_exists($namespace = $this->getNamespace($element, self::BASE_NAMESPACE))) {
-                $this->$element = $this->make($namespace, $this->fields());
+                $this->$element = $this->make($namespace, $this->getFields());
                 $this->elements[] = $element;
             }
         }
@@ -353,7 +353,7 @@ class ActivityRow extends Row
      */
     protected function mapTransactionData(): void
     {
-        foreach ($this->fields() as $key => $values) {
+        foreach ($this->getFields() as $key => $values) {
             if (array_key_exists($key, array_flip($this->transactionCSVHeaders))) {
                 foreach ($values as $index => $value) {
                     $this->transactionRows[$index][$key] = $value;

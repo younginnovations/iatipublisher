@@ -129,7 +129,7 @@ abstract class Element
      *
      * @return mixed
      */
-    public function isValid(): mixed
+    public function isElementValid(): mixed
     {
         return $this->isValid;
     }
