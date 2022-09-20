@@ -63,6 +63,7 @@ class Budget extends Element
      * @param $index
      *
      * @return void
+     * @throws \JsonException
      */
     protected function map($key, $value, $index): void
     {
@@ -84,7 +85,6 @@ class Budget extends Element
      * @param $index
      *
      * @return void
-     * @throws \JsonException
      */
     protected function setBudgetType($key, $value, $index): void
     {
@@ -93,8 +93,7 @@ class Budget extends Element
         }
 
         if ($key === $this->_csvHeaders[0]) {
-            $validBudgetTypes = $this->loadCodeList('BudgetType');
-
+            //$validBudgetTypes = $this->loadCodeList('BudgetType');
             // foreach ($validBudgetTypes as $name => $budgetType) {
             //     if (ucwords($value) == $budgetType) {
             //         $value = $name;
@@ -114,7 +113,6 @@ class Budget extends Element
      * @param $index
      *
      * @return void
-     * @throws \JsonException
      */
     protected function setBudgetStatus($key, $value, $index): void
     {
@@ -122,7 +120,7 @@ class Budget extends Element
             $this->data['budget'][$index]['status'] = '';
         }
         if ($key === $this->_csvHeaders[1]) {
-            $validBudgetStatus = $this->loadCodeList('BudgetStatus');
+            //$validBudgetStatus = $this->loadCodeList('BudgetStatus');
 
             // foreach ($validBudgetStatus as $name => $budgetStatus) {
             //     if (ucwords($value) == $budgetStatus) {
@@ -337,7 +335,7 @@ class Budget extends Element
     }
 
     /**
-     * Get the valid BudgetCodes from the Budget codelist as a string.
+     * Get the valid BudgetCodes from the Budget code list as a string.
      *
      * @param        $codeList
      *
@@ -346,7 +344,7 @@ class Budget extends Element
      */
     protected function budgetCodeListWithValue($codeList): string
     {
-        [$budgetCodeList, $codes] = [$this->loadCodeList($codeList), []];
+        $budgetCodeList = $this->loadCodeList($codeList);
         $codes = array_keys($budgetCodeList) + array_values($budgetCodeList);
 
         return implode(',', array_keys(array_flip($codes)));

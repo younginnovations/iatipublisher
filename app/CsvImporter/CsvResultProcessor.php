@@ -56,6 +56,7 @@ class CsvResultProcessor
      * @param $userId
      *
      * @return void
+     * @throws \JsonException
      */
     public function handle($organizationId, $userId): void
     {
@@ -67,11 +68,11 @@ class CsvResultProcessor
             $filepath = storage_path('csvImporter/tmp/result/' . $organizationId);
             $filename = 'header_mismatch.json';
 
-            if (!file_exists($filepath)) {
-                mkdir($filepath, 0777, true);
+            if (!file_exists($filepath) && !mkdir($filepath, 0777, true) && !is_dir($filepath)) {
+                throw new \RuntimeException(sprintf('Directory "%s" was not created', $filepath));
             }
 
-            file_put_contents($filepath . '/' . $filename, json_encode(['mismatch' => true]));
+            file_put_contents($filepath . '/' . $filename, json_encode(['mismatch' => true], JSON_THROW_ON_ERROR));
         }
     }
 

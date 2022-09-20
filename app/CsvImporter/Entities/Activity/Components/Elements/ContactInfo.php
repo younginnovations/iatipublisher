@@ -97,7 +97,6 @@ class ContactInfo extends Element
      * @param $index
      *
      * @return void
-     * @throws \JsonException
      */
     protected function setContactType($key, $value, $index): void
     {
@@ -106,7 +105,7 @@ class ContactInfo extends Element
         }
 
         if ($key === $this->_csvHeaders[0]) {
-            $relatedActivityType = $this->loadCodeList('ContactType');
+            //$relatedActivityType = $this->loadCodeList('ContactType');
 
             // foreach ($relatedActivityType as $name => $code) {
             //     if (ucwords($value) == $name) {

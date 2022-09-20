@@ -116,17 +116,14 @@ class ActivityScope extends Element
     }
 
     /**
-     * Get the valid ActivityScope from the ActivityScope codelist as a string.
+     * Get the valid ActivityScope from the ActivityScope code list as a string.
      *
      * @return string
      * @throws \JsonException
      */
     protected function validActivityScope(): string
     {
-        [$activityStatusCodeList, $codes] = [$this->loadCodeList('ActivityScope'), []];
-        $codes = array_keys($activityStatusCodeList);
-
-        return implode(',', array_keys(array_flip($codes)));
+        return implode(',', array_keys(array_flip(array_keys($this->loadCodeList('ActivityScope')))));
     }
 
     /**
