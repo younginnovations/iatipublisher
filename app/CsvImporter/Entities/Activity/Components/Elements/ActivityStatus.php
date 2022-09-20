@@ -153,9 +153,6 @@ class ActivityStatus extends Element
      */
     protected function validActivityStatus(): string
     {
-        [$activityStatusCodeList, $codes] = [$this->loadCodeList('ActivityStatus'), []];
-        $codes = array_keys($activityStatusCodeList);
-
-        return implode(',', array_keys(array_flip($codes)));
+        return implode(',', array_keys(array_flip(array_keys($this->loadCodeList('ActivityStatus')))));
     }
 }

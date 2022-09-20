@@ -62,15 +62,15 @@ class DefaultFieldValues extends Element
     protected function map($key, $value, $index): void
     {
         if (!(is_null($value) || $value === '')) {
-            $this->setLinkedDataUri($key, $value, $index);
+            $this->setLinkedDataUri($index);
             $this->setDefaultLanguage($key, $value, $index);
             $this->setDefaultCurrency($key, $value, $index);
-            $this->setDefaultHierarchy($key, $value, $index);
-            $this->setDefaultCollaborationType($key, $value, $index);
-            $this->setDefaultFlowType($key, $value, $index);
-            $this->setDefaultFinanceType($key, $value, $index);
-            $this->setDefaultAidType($key, $value, $index);
-            $this->setDefaultTiedStatus($key, $value, $index);
+            $this->setDefaultHierarchy($index);
+            $this->setDefaultCollaborationType($index);
+            $this->setDefaultFlowType($index);
+            $this->setDefaultFinanceType($index);
+            $this->setDefaultAidType($index);
+            $this->setDefaultTiedStatus($index);
             $this->setHumanitarian($key, $value, $index);
         }
     }
@@ -78,18 +78,12 @@ class DefaultFieldValues extends Element
     /**
      * Set linked data uri for the default field values.
      *
-     * @param $key
-     * @param $value
      * @param $index
      *
      * @return void
      */
-    protected function setLinkedDataUri($key, $value, $index): void
+    protected function setLinkedDataUri($index): void
     {
-        if (!isset($this->data['default_field_values'][$index]['linked_data_uri'])) {
-            $this->data['default_field_values'][$index]['linked_data_uri'] = '';
-        }
-
         $this->data['default_field_values'][$index]['linked_data_uri'] = '';
     }
 
@@ -136,13 +130,11 @@ class DefaultFieldValues extends Element
     /**
      * Set hierarchy for the default field values.
      *
-     * @param $key
-     * @param $value
      * @param $index
      *
      * @return void
      */
-    protected function setDefaultHierarchy($key, $value, $index): void
+    protected function setDefaultHierarchy($index): void
     {
         if (!isset($this->data['default_field_values'][$index]['default_hierarchy'])) {
             $this->data['default_field_values'][$index]['default_hierarchy'] = '';
@@ -156,13 +148,11 @@ class DefaultFieldValues extends Element
     /**
      * Set collaboration type for the default field values.
      *
-     * @param $key
-     * @param $value
      * @param $index
      *
      * @return void
      */
-    protected function setDefaultCollaborationType($key, $value, $index): void
+    protected function setDefaultCollaborationType($index): void
     {
         if (!isset($this->data['default_field_values'][$index]['default_collaboration_type'])) {
             $this->data['default_field_values'][$index]['default_collaboration_type'] = '';
@@ -176,13 +166,11 @@ class DefaultFieldValues extends Element
     /**
      * Set flow type for the default field values.
      *
-     * @param $key
-     * @param $value
      * @param $index
      *
      * @return void
      */
-    protected function setDefaultFlowType($key, $value, $index): void
+    protected function setDefaultFlowType($index): void
     {
         if (!isset($this->data['default_field_values'][$index]['default_flow_type'])) {
             $this->data['default_field_values'][$index]['default_flow_type'] = '';
@@ -196,13 +184,11 @@ class DefaultFieldValues extends Element
     /**
      * Set finance type for the default field values.
      *
-     * @param $key
-     * @param $value
      * @param $index
      *
      * @return void
      */
-    protected function setDefaultFinanceType($key, $value, $index): void
+    protected function setDefaultFinanceType($index): void
     {
         if (!isset($this->data['default_field_values'][$index]['default_finance_type'])) {
             $this->data['default_field_values'][$index]['default_finance_type'] = '';
@@ -215,13 +201,11 @@ class DefaultFieldValues extends Element
     /**
      * Set aid type for the default field values.
      *
-     * @param $key
-     * @param $value
      * @param $index
      *
      * @return void
      */
-    protected function setDefaultAidType($key, $value, $index): void
+    protected function setDefaultAidType($index): void
     {
         if (!isset($this->data['default_field_values'][$index]['default_aid_type'])) {
             $this->data['default_field_values'][$index]['default_aid_type'] = '';
@@ -233,11 +217,12 @@ class DefaultFieldValues extends Element
 
     /**
      * Set tied status for the default field values.
-     * @param $key
-     * @param $value
+     *
      * @param $index
+     *
+     * @return void
      */
-    protected function setDefaultTiedStatus($key, $value, $index): void
+    protected function setDefaultTiedStatus($index): void
     {
         if (!isset($this->data['default_field_values'][$index]['default_tied_status'])) {
             $this->data['default_field_values'][$index]['default_tied_status'] = '';
@@ -292,6 +277,7 @@ class DefaultFieldValues extends Element
      * Provides the rules for the IATI Element validation.
      *
      * @return array
+     * @throws \JsonException
      */
     public function rules(): array
     {

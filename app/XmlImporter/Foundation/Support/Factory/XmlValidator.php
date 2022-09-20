@@ -208,7 +208,6 @@ class XmlValidator
                 $rules[$idx] = $tempRule;
             }
         }
-        dd($rules);
 
         return $rules;
     }

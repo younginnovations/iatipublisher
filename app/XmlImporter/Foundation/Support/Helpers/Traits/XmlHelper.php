@@ -265,31 +265,4 @@ trait XmlHelper
 
         return '';
     }
-
-    /**
-     * Returns narratives of provided key. (Mostly for V1 XML).
-     *
-     * @param array $fields
-     * @param       $key
-     *
-     * @return \string[][]
-     */
-    protected function groupNarrative(array $fields, $key = null): array
-    {
-        $narrative = [['narrative' => '', 'language' => '']];
-        $index = 0;
-
-        if ($key) {
-            foreach ($fields as $field) {
-                if ($this->name($field['name']) === $key) {
-                    $narrative[$index] = Arr::get($this->narrative($field), '0');
-                    $index++;
-                }
-            }
-        } else {
-            $narrative = $this->narrative($fields);
-        }
-
-        return $narrative;
-    }
 }

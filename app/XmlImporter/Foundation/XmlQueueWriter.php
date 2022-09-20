@@ -108,13 +108,11 @@ class XmlQueueWriter
      * Store mapped activity in database.
      *
      * @param $mappedActivity
-     * @param $totalActivities
-     * @param $index
      *
      * @return bool
      * @throws \JsonException
      */
-    public function save($mappedActivity, $totalActivities, $index): bool
+    public function save($mappedActivity): bool
     {
         $activity_identifier = Arr::get($mappedActivity, 'identifier.activity_identifier');
         $xmlValidator = app(XmlValidator::class);
@@ -159,39 +157,6 @@ class XmlQueueWriter
     }
 
     /**
-     * Check if the iati identifier text is similar to the identifier of imported xml file.
-     *
-     * @param $xmlIdentifier
-     *
-     * @return bool
-     */
-    protected function isIatiIdentifierDifferent($xmlIdentifier): bool
-    {
-        if ($xmlIdentifier === '' || in_array($xmlIdentifier, $this->dbIatiIdentifiers, true)) {
-            return false;
-        }
-
-        return true;
-    }
-
-    /**
-     * @param $totalActivities
-     * @param $currentActivity
-     * @param $success
-     * @param $failed
-     * @param $existing
-     *
-     * @return void
-     * @throws \JsonException
-     */
-    protected function storeXmlImportStatus($totalActivities, $currentActivity, $success, $failed, $existing): void
-    {
-        // shell_exec(sprintf('chmod 777 -R %s', $this->temporaryXmlStorage()));
-        $data = ['total_activities' => $totalActivities, 'current_activity_count' => $currentActivity, 'success' => $success, 'failed' => $failed, 'existing' => $existing];
-        $this->storeInJsonFile('xml_completed_status.json', $data);
-    }
-
-    /**
      * Append data into the file containing previous data.
      *
      * @param $data
@@ -216,20 +181,5 @@ class XmlQueueWriter
         } else {
             file_put_contents($destinationFilePath, json_encode([['data' => $data, 'errors' => $errors, 'status' => 'processed', 'existence' => $existence]], JSON_THROW_ON_ERROR));
         }
-    }
-
-    /**
-     * Store data in given json filename.
-     *
-     * @param $filename
-     * @param $data
-     *
-     * @return void
-     * @throws \JsonException
-     */
-    protected function storeInJsonFile($filename, $data): void
-    {
-        $filePath = $this->temporaryXmlStorage($filename);
-        file_put_contents($filePath, json_encode($data, JSON_THROW_ON_ERROR));
     }
 }

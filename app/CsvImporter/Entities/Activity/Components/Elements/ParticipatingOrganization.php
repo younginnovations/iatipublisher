@@ -102,7 +102,6 @@ class ParticipatingOrganization extends Element
      * @param $index
      *
      * @return void
-     * @throws \JsonException
      */
     protected function setOrganisationRole($key, $value, $index): void
     {
@@ -111,7 +110,7 @@ class ParticipatingOrganization extends Element
         }
 
         if ($key === $this->_csvHeaders[0] && (!is_null($value))) {
-            $validOrganizationRoles = $this->loadCodeList('OrganisationRole', 'Organization');
+            //$validOrganizationRoles = $this->loadCodeList('OrganisationRole', 'Organization');
 
             // foreach ($validOrganizationRoles as $name => $role) {
             //     if (strcasecmp($value, $role) === 0) {
@@ -155,7 +154,6 @@ class ParticipatingOrganization extends Element
      * @param $index
      *
      * @return void
-     * @throws \JsonException
      */
     protected function setOrganisationType($key, $value, $index): void
     {
@@ -164,7 +162,7 @@ class ParticipatingOrganization extends Element
         }
 
         if ($key === $this->_csvHeaders[0] && (!is_null($value))) {
-            $validOrganizationTypes = $this->loadCodeList('OrganizationType', 'Organization');
+            //$validOrganizationTypes = $this->loadCodeList('OrganizationType', 'Organization');
 
             // foreach ($validOrganizationTypes as $name => $role) {
             //     if (strcasecmp($value, $role) == 0) {
@@ -291,21 +289,21 @@ class ParticipatingOrganization extends Element
      */
     protected function validOrganizationRoles(): string
     {
-        [$organizationRoleCodeList] = [$this->loadCodeList('OrganisationRole', 'Organization'), []];
+        $organizationRoleCodeList = $this->loadCodeList('OrganisationRole', 'Organization');
         $organizationRoles = array_keys($organizationRoleCodeList) + array_values($organizationRoleCodeList);
 
         return implode(',', array_keys(array_flip($organizationRoles)));
     }
 
     /**
-     * Get the valid OrganizationType from the OrganizationType codelist as a string.
+     * Get the valid OrganizationType from the OrganizationType code list as a string.
      *
      * @return string
      * @throws \JsonException
      */
     protected function validOrganizationTypes(): string
     {
-        [$organizationTypeCodeList] = [$this->loadCodeList('OrganizationType', 'Organization'), []];
+        $organizationTypeCodeList = $this->loadCodeList('OrganizationType', 'Organization');
 
         $organizationTypes = array_keys($organizationTypeCodeList) + array_values($organizationTypeCodeList);
 
