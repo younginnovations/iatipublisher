@@ -727,11 +727,10 @@ class Activity
     /**
      * @param array $elementData
      * @param       $template
-     * @param       $upgrade
      *
      * @return array
      */
-    public function map(array $elementData, $template, $upgrade): array
+    public function map(array $elementData, $template): array
     {
         foreach ($elementData as $element) {
             $elementName = $this->name($element);
