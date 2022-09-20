@@ -43,12 +43,11 @@ trait PreparesTransactionData
      * @param $value
      *
      * @return void
-     * @throws \JsonException
      */
     protected function setTransactionType($key, $value): void
     {
         if ($key === $this->_csvHeaders[1]) {
-            $validTransactionType = $this->loadCodeList('TransactionType');
+            //$validTransactionType = $this->loadCodeList('TransactionType');
 
             // foreach ($validTransactionType as $name => $type) {
             //     dd('transaction value',$value);
@@ -361,11 +360,10 @@ trait PreparesTransactionData
      * @param $value
      *
      * @return mixed
-     * @throws \JsonException
      */
     protected function setOrganizationTypeNameToCode($value): mixed
     {
-        $validOrganizationType = $this->loadCodeList('OrganizationType', 'Organization');
+        //$validOrganizationType = $this->loadCodeList('OrganizationType', 'Organization');
         // foreach ($validOrganizationType as $name => $type) {
         //     if (ucwords($value) === $type) {
         //         $value = $name;

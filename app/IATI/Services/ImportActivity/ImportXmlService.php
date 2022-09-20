@@ -243,24 +243,6 @@ class ImportXmlService
     }
 
     /**
-     * Save document link of mapped activity in database.
-     *
-     * @param $documentLinks
-     * @param $activityId
-     *
-     * @return $this
-     */
-    protected function saveDocumentLink($documentLinks, $activityId): static
-    {
-        foreach ($documentLinks as $documentLink) {
-            $documentLinkData['document_link'] = $documentLink;
-            $this->documentLinkRepo->xmlDocumentLink($documentLinkData, $activityId);
-        }
-
-        return $this;
-    }
-
-    /**
      * Get the temporary storage path for the uploaded Xml file.
      *
      * @param $filename
@@ -274,41 +256,6 @@ class ImportXmlService
         }
 
         return storage_path(sprintf('%s/%s/', self::UPLOADED_XML_STORAGE_PATH, Auth::user()->organization_id));
-    }
-
-    /**
-     * @return mixed|null
-     * @throws \JsonException
-     */
-    public function checkStatus(): mixed
-    {
-        if (file_exists($this->temporaryXmlStorage('status.json'))) {
-            $content = json_decode(file_get_contents($this->temporaryXmlStorage('status.json')), true, 512, JSON_THROW_ON_ERROR);
-
-            return $content['xml_import_status'];
-        }
-
-        return null;
-    }
-
-    /**
-     * @return void
-     */
-    public function deleteStatusFile(): void
-    {
-        $this->filesystem->delete($this->temporaryXmlStorage('status.json'));
-    }
-
-    /**
-     * Get the id for the current user.
-     *
-     * @return mixed
-     */
-    protected function getUserId(): mixed
-    {
-        if (auth()->check()) {
-            return auth()->user()->id;
-        }
     }
 
     /**
@@ -375,15 +322,6 @@ class ImportXmlService
 
             return null;
         }
-    }
-
-    /**
-     * Remove Temporarily Stored Xml file.
-     */
-    public function removeTemporaryXmlFolder(): void
-    {
-        $filePath = $this->temporaryXmlStorage();
-        $this->filesystem->deleteDirectory($filePath);
     }
 
     /**

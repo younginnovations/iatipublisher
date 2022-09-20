@@ -216,32 +216,6 @@ class ImportCsvService
     }
 
     /**
-     * Merge existing transactions with imported transactions based on transaction reference.
-     *
-     * @param array    $activity
-     * @param Activity $oldActivity
-     *
-     * @return void
-     */
-    public function mergeTransactions(array &$activity, Activity $oldActivity): void
-    {
-        foreach (Arr::get($activity, 'data.transaction', []) as $key => $transaction) {
-            if (!empty(Arr::get($transaction, 'reference'))) {
-                $reference = $transaction['reference'];
-
-                foreach ($oldActivity->transactions as $oldTransaction) {
-                    if ($reference === $oldTransaction->transaction['reference']) {
-                        $newTransaction = $transaction + $oldTransaction->transaction;
-                        $oldTransaction->transaction = $newTransaction;
-                        unset($activity['data']['transaction'][$key]);
-                        $oldTransaction->save();
-                    }
-                }
-            }
-        }
-    }
-
-    /**
      * Create Transaction of Valid Activities.
      *
      * @param $transactions
@@ -379,29 +353,6 @@ class ImportCsvService
     }
 
     /**
-     * Get the Csv Import status from the current User's session.
-     *
-     * @return mixed|string|null
-     * @throws \JsonException
-     */
-    public function getSessionStatus(): mixed
-    {
-        if ($this->checkStatusFile()) {
-            $status = file_get_contents($this->getTemporaryFilepath('status.json'));
-
-            if (json_decode($status, true, 512, JSON_THROW_ON_ERROR)['status'] === 'Complete') {
-                return 'Complete';
-            }
-        }
-
-        if (Session::has('import-status')) {
-            return Session::get('import-status');
-        }
-
-        return null;
-    }
-
-    /**
      * Get the processed data from the server.
      *
      * @param $filePath
@@ -513,26 +464,6 @@ class ImportCsvService
     }
 
     /**
-     * Check if any exceptions have been caught.
-     *
-     * @return bool
-     * @throws \JsonException
-     */
-    public function caughtExceptions(): bool
-    {
-        $filepath = $this->getTemporaryFilepath('header_mismatch.json');
-
-        if (file_exists($filepath)) {
-            $contents = json_decode(file_get_contents($filepath), true, 512, JSON_THROW_ON_ERROR);
-            if (array_key_exists('mismatch', $contents)) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    /**
      * Record if the headers have been mismatched during processing.
      */
     public function reportHeaderMismatch(): void
@@ -553,16 +484,6 @@ class ImportCsvService
     }
 
     /**
-     * Check if header mismatch has been recorded.
-     *
-     * @return bool
-     */
-    public function headersHadBeenMismatched(): bool
-    {
-        return Session::has('header_mismatch') && (Session::get('header_mismatch') === true);
-    }
-
-    /**
      * Fix file permission while on staging environment.
      *
      * @param $path
@@ -571,25 +492,6 @@ class ImportCsvService
     {
         // TODO: Remove this.
         shell_exec(sprintf('chmod 777 -R %s', $path));
-    }
-
-    /**
-     * Delete a temporary file with the provided filename.
-     *
-     * @param $filename
-     *
-     * @return $this
-     */
-    public function deleteFile($filename): static
-    {
-        $path = $this->getTemporaryFilepath($filename);
-
-        if (file_exists($path)) {
-            $this->fixStagingPermission($path);
-            unlink($path);
-        }
-
-        return $this;
     }
 
     /**
@@ -648,35 +550,6 @@ class ImportCsvService
         if ($this->hasOldData()) {
             $this->clearSession(['import-status', 'filename']);
         }
-    }
-
-    /**
-     * Fetch the processed data.
-     *
-     * @param $filepath
-     * @param $temporaryFilename
-     *
-     * @return array|mixed
-     * @throws \JsonException
-     */
-    public function fetchData($filepath, $temporaryFilename): mixed
-    {
-        $activities = json_decode(file_get_contents($filepath), true, 512, JSON_THROW_ON_ERROR);
-        $tempPath = $this->getTemporaryFilepath($temporaryFilename);
-
-        if (file_exists($tempPath)) {
-            $old = json_decode(file_get_contents($tempPath), true, 512, JSON_THROW_ON_ERROR);
-            $diff = array_diff_key($activities, $old);
-            $total = array_merge($diff, $old);
-
-            FileFacade::put($tempPath, json_encode($total, JSON_THROW_ON_ERROR));
-
-            $activities = $diff;
-        } else {
-            FileFacade::put($tempPath, json_encode($activities, JSON_THROW_ON_ERROR));
-        }
-
-        return $activities;
     }
 
     /**
