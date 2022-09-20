@@ -93,14 +93,6 @@ class Budget extends Element
         }
 
         if ($key === $this->_csvHeaders[0]) {
-            //$validBudgetTypes = $this->loadCodeList('BudgetType');
-            // foreach ($validBudgetTypes as $name => $budgetType) {
-            //     if (ucwords($value) == $budgetType) {
-            //         $value = $name;
-            //         break;
-            //     }
-            // }
-
             $this->data['budget'][$index]['budget_type'] = $value;
         }
     }
@@ -120,14 +112,6 @@ class Budget extends Element
             $this->data['budget'][$index]['status'] = '';
         }
         if ($key === $this->_csvHeaders[1]) {
-            //$validBudgetStatus = $this->loadCodeList('BudgetStatus');
-
-            // foreach ($validBudgetStatus as $name => $budgetStatus) {
-            //     if (ucwords($value) == $budgetStatus) {
-            //         $value = $name;
-            //         break;
-            //     }
-            // }
             $this->data['budget'][$index]['status'] = $value;
         }
     }

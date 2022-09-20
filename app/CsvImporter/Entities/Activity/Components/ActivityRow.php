@@ -114,64 +114,9 @@ class ActivityRow extends Row
     protected $identifier;
 
     /**
-     * @var
-     */
-    public $title;
-
-    /**
-     * @var
-     */
-    protected $description;
-
-    /**
-     * @var
-     */
-    protected $activityStatus;
-
-    /**
-     * @var
-     */
-    protected $activityDate;
-
-    /**
-     * @var
-     */
-    protected $participatingOrganization;
-
-    /**
-     * @var
-     */
-    public $recipientCountry;
-
-    /**
-     * @var
-     */
-    public $recipientRegion;
-
-    /**
-     * @var
-     */
-    public $sector;
-
-    /**
      * @var array
      */
     protected array $transaction = [];
-
-    /**
-     * @var
-     */
-    protected $budget;
-
-    /**
-     * @var
-     */
-    protected $activityScope;
-
-    /**
-     * @var
-     */
-    protected $policyMarker;
 
     /**
      * @var array
