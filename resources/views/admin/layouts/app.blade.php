@@ -19,7 +19,23 @@
 
   <!-- Fonts -->
   {{-- <link href="http://fonts.cdnfonts.com/css/arial" rel="stylesheet"> --}}
-  <link rel="preload" href="Arial" as="font" type="font/format" crossorigin>
+
+  {{-- Normal --}}
+  <link rel="preload" href="{{ asset('fonts/Arial/arial-webfont.woff') }}" as="font" type="font/woff" crossorigin>
+  <link rel="preload" href="{{ asset('fonts/Arial/arial-webfont.eot') }}" as="font" type="font/eot" crossorigin>
+  <link rel="preload" href="{{ asset('fonts/Arial/arial-webfont.svg') }}" as="font" type="font/svg" crossorigin>
+  <link rel="preload" href="{{ asset('fonts/Arial/arial-webfont.ttf') }}" as="font" type="font/ttf" crossorigin>
+
+  {{-- Bold --}}
+  <link rel="preload" href="{{ asset('fonts/Arial/arialbd-webfont.woff') }}" as="font" type="font/woff"
+    crossorigin>
+  <link rel="preload" href="{{ asset('fonts/Arial/arialbd-webfont.eot') }}" as="font" type="font/eot"
+    crossorigin>
+  <link rel="preload" href="{{ asset('fonts/Arial/arialbd-webfont.svg') }}" as="font" type="font/svg"
+    crossorigin>
+  <link rel="preload" href="{{ asset('fonts/Arial/arialbd-webfont.ttf') }}" as="font" type="font/ttf"
+    crossorigin>
+
 
   <!-- Styles -->
   <link href="{{ asset('css/app.css') }}" rel="stylesheet">

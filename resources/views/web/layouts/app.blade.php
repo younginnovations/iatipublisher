@@ -13,8 +13,6 @@
   <script defer src="{{ mix('js/script.js') }}"></script>
   {{-- <script defer src="{{ mix('js/app.js') }}"></script> --}}
 
-  <link rel="preload" href="Arial" as="font" type="font/format" crossorigin>
-
   <meta name="csrf-token" content="{{ csrf_token() }}">
   <link rel="icon"
     href="{{ URL::asset('https://prod-iati-website.azureedge.net/prod-iati-website/favicons/favicon-32x32.png') }}"
