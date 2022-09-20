@@ -50,7 +50,7 @@ class Grouping
         $index = -1;
 
         foreach ($this->fields[$this->keys[0]] as $i => $row) {
-            if (!$this->isSameEntity($index, $i)) {
+            if (!$this->isSameEntity($i)) {
                 $index++;
             }
 
@@ -63,20 +63,14 @@ class Grouping
     }
 
     /**
-     * @param $index
      * @param $i
      *
      * @return bool
      */
-    protected function isSameEntity($index, $i): bool
+    protected function isSameEntity($i): bool
     {
-        if ((is_null($this->fields[$this->keys[0]][$i]) || $this->fields[$this->keys[0]][$i] === '')
-            && (is_null($this->fields[$this->keys[1]][$i]) || $this->fields[$this->keys[1]][$i] === '')
-        ) {
-            return true;
-        }
-
-        return false;
+        return (is_null($this->fields[$this->keys[0]][$i]) || $this->fields[$this->keys[0]][$i] === '')
+            && (is_null($this->fields[$this->keys[1]][$i]) || $this->fields[$this->keys[1]][$i] === '');
     }
 
     /**

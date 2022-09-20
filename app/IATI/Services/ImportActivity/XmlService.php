@@ -36,47 +36,6 @@ class XmlService
     }
 
     /**
-     * @param $filename
-     * @param $organizationId
-     * @param $publishedActivity
-     *
-     * @return array
-     */
-    public function savePublishedFiles($filename, $organizationId, $publishedActivity): array
-    {
-        return $this->xmlGenerator->savePublishedFiles($filename, $organizationId, $publishedActivity);
-    }
-
-    /**
-     * get all the modified errors.
-     *
-     * @param $validateXml
-     * @param $errors
-     *
-     * @return array
-     */
-    public function getSpecificErrors($validateXml, $errors): array
-    {
-        $errorsList = [];
-        foreach ($errors as $error) {
-            $errMessage = $this->xmlErrorParser->getModifiedError($error, $validateXml);
-            isset($errorsList[$errMessage]) ? $errorsList[$errMessage] += 1 : $errorsList[$errMessage] = 1;
-        }
-
-        $messages = [];
-        foreach ($errorsList as $message => $count) {
-            if ($count > 1) {
-                $newMessage = str_replace(['The required', ' is '], ['Multiple', ' are '], $message);
-            } else {
-                $newMessage = $message;
-            }
-            $messages[] = $newMessage;
-        }
-
-        return $messages;
-    }
-
-    /**
      * Get messages for schema errors.
      *
      * @param $tempXmlContent
@@ -95,18 +54,6 @@ class XmlService
         }
 
         return $messages;
-    }
-
-    /**
-     * get Xml in format.
-     *
-     * @param $tempXmlContent
-     *
-     * @return array
-     */
-    public function getFormattedXml($tempXmlContent): array
-    {
-        return explode("\n", $tempXmlContent);
     }
 
     /**

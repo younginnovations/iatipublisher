@@ -153,8 +153,6 @@ class CsvProcessor
     /**
      * Check if the headers are correct according to the provided template.
      *
-     * @param $version
-     *
      * @return bool
      */
     protected function isCorrectCsv(): bool
