@@ -45,17 +45,17 @@ abstract class Csv
      *
      * @return ActivityRow
      */
-    protected function initialize($row, $activityIdentifiers)
+    protected function initialize($row, $activityIdentifiers): ActivityRow
     {
-        return  new ActivityRow($row, $this->organizationId, $this->userId, $activityIdentifiers);
+        return new ActivityRow($row, $this->organizationId, $this->userId, $activityIdentifiers);
     }
 
     /**
      * Get the rows in the CSV.
      *
-     * @return mixed
+     * @return array
      */
-    public function rows(): mixed
+    public function getRows(): array
     {
         return $this->rows;
     }

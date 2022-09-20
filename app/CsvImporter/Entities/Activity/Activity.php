@@ -40,7 +40,7 @@ class Activity extends Csv
      */
     public function process(): static
     {
-        foreach ($this->rows() as $row) {
+        foreach ($this->getRows() as $row) {
             $this->initialize($row, $this->activityIdentifiers)
                  ->process()
                  ->validate()

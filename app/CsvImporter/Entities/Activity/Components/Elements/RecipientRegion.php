@@ -68,7 +68,7 @@ class RecipientRegion extends Element
         $this->prepare($fields);
         $this->factory = $factory;
         $this->fields = $fields;
-        $this->recipientCountry($fields);
+        $this->getRecipientCountry($fields);
     }
 
     /**
@@ -304,7 +304,7 @@ class RecipientRegion extends Element
      * @return void
      * @throws BindingResolutionException
      */
-    protected function recipientCountry($fields): void
+    protected function getRecipientCountry($fields): void
     {
         $this->recipientCountry = app()->makeWith(RecipientCountry::class, ['fields' => $fields]);
     }
