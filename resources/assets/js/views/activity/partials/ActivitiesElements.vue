@@ -43,7 +43,10 @@
           class="button__dropdown button dropdown-btn"
         >
           <ul class="w-full py-2 bg-eggshell">
-            <li class="flex py-1.5 px-3.5 hover:bg-white" @click="dropdownFilter('')">
+            <li
+              class="flex py-1.5 px-3.5 hover:bg-white"
+              @click="dropdownFilter('')"
+            >
               <svg-vue class="mr-1 text-lg" icon="box" />
               <span>All Elements</span>
             </li>
@@ -68,18 +71,22 @@
     <div class="grid grid-cols-2 gap-2 mt-3 elements__listing">
       <template v-for="(post, index) in filteredElements" :key="index">
         <a
-          v-if="!(index.toString() === 'indicator' || index.toString() === 'period')"
+          v-if="
+            !(index.toString() === 'indicator' || index.toString() === 'period')
+          "
           class="elements__item relative flex cursor-pointer flex-col items-center justify-center rounded border border-dashed border-n-40 py-2.5 text-n-30"
           :href="getLink(post.has_data, index.toString())"
         >
-          <div class="absolute top-0 right-0 inline-flex mt-1 mr-1 status_icons">
+          <div
+            class="absolute top-0 right-0 inline-flex mt-1 mr-1 status_icons"
+          >
             <svg-vue
               v-if="post.completed"
               class="text-base text-spring-50"
               icon="double-tick"
             ></svg-vue>
             <svg-vue
-              v-if="post.criteria"
+              v-if="activityCoreElements().includes(index.toString())"
               class="text-base text-camel-50"
               icon="core"
             ></svg-vue>
@@ -92,13 +99,19 @@
               index === 'fss'
             "
           >
-            <svg-vue class="text-base" icon="activity-elements/building"></svg-vue>
+            <svg-vue
+              class="text-base"
+              icon="activity-elements/building"
+            ></svg-vue>
           </template>
           <template v-else>
-            <svg-vue :icon="'activity-elements/' + index" class="text-base"></svg-vue>
+            <svg-vue
+              :icon="'activity-elements/' + index"
+              class="text-base"
+            ></svg-vue>
           </template>
           <div class="mt-1 text-xs title">
-            {{ index.toString().replace(/_/g, "-") }}
+            {{ index.toString().replace(/_/g, '-') }}
           </div>
         </a>
       </template>
@@ -106,96 +119,86 @@
   </div>
 </template>
 
-<script lang="ts">
-import { computed, defineComponent, reactive, onMounted, ref } from "vue";
-import { useToggle } from "@vueuse/core";
+<script setup lang="ts">
+import { computed, defineProps, reactive, onMounted, ref } from 'vue';
+import { useToggle } from '@vueuse/core';
 
-export default defineComponent({
-  name: "ActivitiesElements",
-  components: {},
-  props: {
-    data: {
-      type: Object,
-      required: true,
-    },
-    activityId: {
-      type: Number,
-      required: true,
-    },
+import { activityCoreElements } from 'Composable/coreElements';
+
+const props = defineProps({
+  data: {
+    type: Object,
+    required: true,
   },
-  setup(props) {
-    const dropdown = ref();
-    const dropdownBtn = ref();
-    const [searchBtnValue, searchBtnToggle] = useToggle();
-    /**
-     * Search functionality
-     */
-    const elements = reactive({
-      search: "",
-      status: "",
-    });
-
-    const asArrayData = Object.entries(props.data);
-    const filteredElements = computed(() => {
-      const filtered = asArrayData.filter(([key, value]) => {
-        if (!elements.status) {
-          return key
-            .toLowerCase()
-            .includes(elements.search.toLowerCase().replace("_", "").replace("-", "_"));
-        } else {
-          if (value[elements.status]) {
-            return key
-              .toLowerCase()
-              .includes(elements.search.toLowerCase().replace("_", "").replace("-", "_"));
-          }
-        }
-      });
-
-      const justStrings = Object.fromEntries(filtered);
-      return justStrings;
-    });
-
-    const dropdownFilter = (s: string) => {
-      elements.status = s;
-      searchBtnToggle();
-    };
-
-    onMounted(() => {
-      window.addEventListener("click", (e) => {
-        if (
-          !dropdownBtn.value.contains(e.target) &&
-          !dropdown.value.contains(e.target) &&
-          searchBtnValue.value
-        ) {
-          searchBtnToggle();
-        }
-      });
-    });
-
-    function getLink(has_data:number, index:string) {
-      if(has_data){
-        return `#${index}`;
-      }
-      else if(index=='result' || index=='transactions'){
-        let element = index=='result' ? 'result' : 'transaction'
-        return `/activity/${props.activityId}/${element}/create`;
-      }
-
-      return  `/activity/${props.activityId}/${index}`;
-    }
-
-    return {
-      searchBtnValue,
-      searchBtnToggle,
-      elements,
-      filteredElements,
-      dropdownFilter,
-      getLink,
-      dropdown,
-      dropdownBtn,
-    };
+  activityId: {
+    type: Number,
+    required: true,
   },
 });
+
+const dropdown = ref();
+const dropdownBtn = ref();
+const [searchBtnValue, searchBtnToggle] = useToggle();
+
+/**
+ * Search functionality
+ */
+const elements = reactive({
+  search: '',
+  status: '',
+});
+
+const asArrayData = Object.entries(props.data);
+const filteredElements = computed(() => {
+  const filtered = asArrayData.filter(([key, value]) => {
+    if (!elements.status) {
+      return key
+        .toLowerCase()
+        .includes(
+          elements.search.toLowerCase().replace('_', '').replace('-', '_')
+        );
+    } else {
+      if (value[elements.status]) {
+        return key
+          .toLowerCase()
+          .includes(
+            elements.search.toLowerCase().replace('_', '').replace('-', '_')
+          );
+      }
+    }
+  });
+
+  const justStrings = Object.fromEntries(filtered);
+  return justStrings;
+});
+
+const dropdownFilter = (s: string) => {
+  elements.status = s;
+  searchBtnToggle();
+};
+
+onMounted(() => {
+  window.addEventListener('click', (e) => {
+    if (
+      !dropdownBtn.value.contains(e.target) &&
+      !dropdown.value.contains(e.target) &&
+      searchBtnValue.value
+    ) {
+      searchBtnToggle();
+    }
+  });
+});
+
+function getLink(has_data: number, index: string) {
+  if (has_data) {
+    return `#${index}`;
+  } else if (index == 'result' || index == 'transactions') {
+    let element = index == 'result' ? 'result' : 'transaction';
+    return `/activity/${props.activityId}/${element}/create`;
+  }
+
+  return `/activity/${props.activityId}/${index}`;
+}
 </script>
 
 <style lang="scss">

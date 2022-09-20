@@ -12,7 +12,7 @@
               <span class="mx-4 separator"> / </span>
               <div class="breadcrumb__title">
                 <span
-                  class="overflow-hidden breadcrumb__title last text-n-30 max-w-lg"
+                  class="max-w-lg overflow-hidden breadcrumb__title last text-n-30"
                   >{{ pageTitle ?? 'Untitled' }}</span
                 >
                 <span class="ellipsis__title--hover w-[calc(100%_+_35px)]">{{
@@ -32,7 +32,7 @@
                 <svg-vue icon="arrow-short-left" />
               </a>
             </div>
-            <div class="inline-flex flex-wrap grow items-center min-h-[48px]">
+            <div class="inline-flex min-h-[48px] grow flex-wrap items-center">
               <h4 class="relative text-2xl font-bold ellipsis__title">
                 <span class="overflow-hidden ellipsis__title">
                   {{ pageTitle ? pageTitle : 'Untitled' }}
@@ -79,7 +79,7 @@
           <Errors
             v-if="store.state.publishErrors.length > 0"
             :error-data="store.state.publishErrors"
-            class="absolute right-0 -mr-10 bottom-[calc(100%+6px)]"
+            class="absolute right-0 bottom-[calc(100%+6px)] -mr-10"
           />
         </div>
       </div>
@@ -126,7 +126,7 @@
             </div>
             <div class="flex justify-between">
               <div class="flex items-center space-x-1">
-                <svg-vue icon="double-tick" />
+                <svg-vue class="text-spring-50" icon="double-tick" />
                 <span>Completed</span>
               </div>
               <HoverText
@@ -316,7 +316,7 @@ export default defineComponent({
     });
 
     /**
-     * For modal popupcompleted
+     * For modal popup completed
      */
     const [deleteValue, deleteToggle] = useToggle();
     const [downloadValue, downloadToggle] = useToggle();
