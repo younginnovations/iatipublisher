@@ -34,6 +34,7 @@ class Validation extends Factory
 
     /**
      * Validation constructor.
+     *
      * @param Translator $translator
      */
     public function __construct(Translator $translator)
@@ -184,10 +185,10 @@ class Validation extends Factory
                         $value,
                         function ($element) use (&$totalPercentage) {
                             $sectorVocabulary = (int) $element['sector_vocabulary'];
-                            $sectorPercentage = $element['percentage'];
+                            $sectorPercentage = (float) $element['percentage'];
 
                             if (array_key_exists($sectorVocabulary, $totalPercentage)) {
-                                $totalPercentage[$sectorVocabulary] += (float) $sectorPercentage;
+                                $totalPercentage[$sectorVocabulary] += $sectorPercentage;
                             } else {
                                 $totalPercentage[$sectorVocabulary] = $sectorPercentage;
                             }
