@@ -73,12 +73,13 @@ class Result
     /**
      * @param $indicator
      * @param $indicatorTemplate
-     * @return string
+     * @return array
      */
-    protected function reference($indicator, $indicatorTemplate): string
+    protected function reference($indicator, $indicatorTemplate): array
     {
         $references = $this->filterAttributes($indicator, 'reference', ['vocabulary', 'code', 'indicator_uri']);
         $referenceData = Arr::get($indicatorTemplate, '0.reference');
+
         foreach ($references as $referenceIndex => $reference) {
             $referenceData[$referenceIndex] = $reference;
         }
@@ -90,9 +91,9 @@ class Result
      * @param $indicator
      * @param $indicatorTemplate
      *
-     * @return array|string
+     * @return array
      */
-    protected function baseline($indicator, $indicatorTemplate): array|string
+    protected function baseline($indicator, $indicatorTemplate): array
     {
         $baseline = Arr::get($indicatorTemplate, '0.baseline');
         $baselineAttributes = $this->filterAttributes($indicator, 'baseline', ['year', 'value']);
@@ -107,9 +108,9 @@ class Result
     /**
      * @param $indicator
      * @param $indicatorTemplate
-     * @return string
+     * @return array
      */
-    protected function period($indicator, $indicatorTemplate): string
+    protected function period($indicator, $indicatorTemplate): array
     {
         $periods = $this->filterValues($indicator, 'period');
         $periodsData = $periodsTemplate = Arr::get($indicatorTemplate, '0.period');
@@ -133,9 +134,9 @@ class Result
      * @param $period
      * @param $periodTemplate
      *
-     * @return array|string
+     * @return array
      */
-    protected function target($period, $periodTemplate): array|string
+    protected function target($period, $periodTemplate): array
     {
         $targetData = Arr::get($periodTemplate, '0.target');
         $targetData[0]['value'] = Arr::get($this->filterAttributes($period, 'target', ['value']), '0.value', '');
@@ -151,9 +152,9 @@ class Result
      * @param $period
      * @param $periodTemplate
      *
-     * @return array|string
+     * @return array
      */
-    protected function actual($period, $periodTemplate): array|string
+    protected function actual($period, $periodTemplate): array
     {
         $actualData = Arr::get($periodTemplate, '0.actual');
         $actualData[0]['value'] = Arr::get($this->filterAttributes($period, 'actual', ['value']), '0.value', '');
@@ -169,9 +170,9 @@ class Result
      * @param $data
      * @param $template
      *
-     * @return array|string
+     * @return array
      */
-    protected function location($data, $template): array|string
+    protected function location($data, $template): array
     {
         $locationData = Arr::get($template, '0.location', []);
         $locations = $this->filterAttributes($data, 'location', ['ref']);
@@ -187,9 +188,9 @@ class Result
      * @param $data
      * @param $template
      *
-     * @return array|string
+     * @return array
      */
-    protected function dimension($data, $template): array|string
+    protected function dimension($data, $template): array
     {
         $dimensionData = Arr::get($template, '0.dimension', []);
         $dimensions = $this->filterAttributes($data, 'dimension', ['name', 'value']);
@@ -206,9 +207,9 @@ class Result
      * @param $data
      * @param $template
      *
-     * @return array|string
+     * @return array
      */
-    protected function comment($data, $template): array|string
+    protected function comment($data, $template): array
     {
         $commentData = Arr::get($template, '0.comment', []);
         $comments = Arr::get($this->filterValues($data, 'comment'), '0.comment', []);
