@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\XmlImporter\Foundation\Mapper\Components;
 
+use App\XmlImporter\Foundation\Mapper\Components\Elements\Result;
+use App\XmlImporter\Foundation\Mapper\Components\Elements\Transaction;
 use App\XmlImporter\Foundation\Support\Helpers\Traits\XmlHelper;
 use App\XmlImporter\Foundation\XmlQueueWriter;
 use Illuminate\Contracts\Container\BindingResolutionException;
@@ -32,9 +34,9 @@ class XmlMapper
     protected array $transaction = [];
 
     /**
-     * @var
+     * @var Transaction
      */
-    protected array $transactionElement;
+    protected Transaction $transactionElement;
 
     /**
      * @var
@@ -89,13 +91,6 @@ class XmlMapper
     ];
 
     /**
-     * Upgrade flag.
-     *
-     * @var bool
-     */
-    protected bool $upgrade;
-
-    /**
      * Xml constructor.
      */
     public function __construct()
@@ -111,44 +106,44 @@ class XmlMapper
      */
     public function initComponents(): void
     {
-        $this->iatiActivity = null;
+        $this->iatiActivity = [];
 
-        $this->activity = app()->make('App\XmlImporter\Foundation\Mapper\Components\Activity');
-        $this->transactionElement = app()->make('App\XmlImporter\Foundation\Mapper\Components\Elements\Transaction');
-        $this->resultElement = app()->make('App\XmlImporter\Foundation\Mapper\Components\Elements\Result');
+        $this->activity = app()->make(Activity::class);
+        $this->transactionElement = app()->make(Transaction::class);
+        $this->resultElement = app()->make(Result::class);
     }
 
-/**
- * Map raw Xml data into AidStream database compatible data for import.
- *
- * @param array $activities
- * @param       $template
- * @param       $userId
- * @param       $orgId
- * @param       $dbIatiIdentifiers
- *
- * @return $this
- * @throws BindingResolutionException
- */
-public function map(array $activities, $template, $userId, $orgId, $dbIatiIdentifiers): static
-{
-    $xmlQueueWriter = app()->makeWith(XmlQueueWriter::class, ['userId' => $userId, 'orgId' => $orgId, 'dbIatiIdentifiers' => $dbIatiIdentifiers]);
+    /**
+     * Map raw Xml data into AidStream database compatible data for import.
+     *
+     * @param array $activities
+     * @param       $template
+     * @param       $userId
+     * @param       $orgId
+     * @param       $dbIatiIdentifiers
+     *
+     * @return $this
+     * @throws BindingResolutionException
+     */
+    public function map(array $activities, $template, $userId, $orgId, $dbIatiIdentifiers): static
+    {
+        $xmlQueueWriter = app()->makeWith(XmlQueueWriter::class, ['userId' => $userId, 'orgId' => $orgId, 'dbIatiIdentifiers' => $dbIatiIdentifiers]);
 
-    $totalActivities = count($activities);
-    $mappedData = [];
+        $totalActivities = count($activities);
+        $mappedData = [];
 
-    foreach ($activities as $index => $activity) {
-        $this->initComponents();
-        $mappedData[$index] = $this->activity->map($this->filter($activity, 'iatiActivity'), $template, $this->upgrade);
-        $mappedData[$index]['default_field_values'] = $this->defaultFieldValues($activity, $template);
-        $mappedData[$index]['transactions'] = $this->transactionElement->map($this->filter($activity, 'transaction'), $template, $this->upgrade);
-        $mappedData[$index]['result'] = $this->resultElement->map($this->filter($activity, 'result'), $template);
+        foreach ($activities as $index => $activity) {
+            $this->initComponents();
+            $mappedData[$index] = $this->activity->map($this->filter($activity, 'iatiActivity'), $template);
+            $mappedData[$index]['default_field_values'] = $this->defaultFieldValues($activity, $template);
+            $mappedData[$index]['transactions'] = $this->transactionElement->map($this->filter($activity, 'transaction'), $template);
+            $mappedData[$index]['result'] = $this->resultElement->map($this->filter($activity, 'result'), $template);
 
-        $xmlQueueWriter->save($mappedData[$index], $totalActivities, $index);
+            $xmlQueueWriter->save($mappedData[$index], $totalActivities, $index);
+        }
+
+        return $this;
     }
-
-    return $this;
-}
 
     /**
      * Returns false if the xml is not activity file.
@@ -160,7 +155,7 @@ public function map(array $activities, $template, $userId, $orgId, $dbIatiIdenti
     public function isValidActivityFile($activities): bool
     {
         foreach ($activities as $activity) {
-            if ($this->name(Arr::get($activity, 'name'), '') !== 'iatiActivity') {
+            if ($this->name(Arr::get($activity, 'name')) !== 'iatiActivity') {
                 return false;
             }
         }
