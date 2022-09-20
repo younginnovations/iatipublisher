@@ -428,13 +428,13 @@ class ActivityRow extends Row
                     $transaction->validate()->withErrors();
                     $this->recordErrors($transaction);
 
-                    $this->validElements[] = $transaction->isValid();
+                    $this->validElements[] = $transaction->isElementValid();
                 }
             } else {
                 $this->$element->validate()->withErrors();
                 $this->recordErrors($this->$element);
 
-                $this->validElements[] = $this->$element->isValid();
+                $this->validElements[] = $this->$element->isElementValid();
             }
         }
 
