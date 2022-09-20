@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Organization\OrganizationIdentifier\OrganizationIdentifierRequest;
 use App\IATI\Services\Organization\OrganizationIdentifierService;
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
@@ -35,13 +36,13 @@ class OrganizationIdentifierController extends Controller
     /**
      * Renders title edit form.
      *
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|void|RedirectResponse
+     * @return View|RedirectResponse
      */
     public function edit(): View|RedirectResponse
     {
         try {
             $id = Auth::user()->organization_id;
-            $element = json_decode(file_get_contents(app_path('IATI/Data/organizationElementJsonSchema.json')), true);
+            $element = json_decode(file_get_contents(app_path('IATI/Data/organizationElementJsonSchema.json')), true, 512, JSON_THROW_ON_ERROR);
             $organization = $this->organizationIdentifierService->getOrganizationData($id);
             $form = $this->organizationIdentifierService->formGenerator($id);
             $data = ['title' => $element['organisation_identifier']['label'], 'name' => 'organisation-identifier'];
@@ -60,6 +61,7 @@ class OrganizationIdentifierController extends Controller
      * @param OrganizationIdentifierRequest $request
      *
      * @return RedirectResponse
+     * @throws GuzzleException
      */
     public function update(OrganizationIdentifierRequest $request): RedirectResponse
     {
@@ -68,18 +70,18 @@ class OrganizationIdentifierController extends Controller
             $organizationIdentifier = $request->all();
 
             if (!$this->verifyPublisher($organizationIdentifier)) {
-                return redirect()->route('admin.organisation.index', $id)->with('error', 'Error has occurred while updating organization identifier. Please enter correct identifier as present in IATI Registry.');
+                return redirect()->route('admin.organisation.index')->with('error', 'Error has occurred while updating organization identifier. Please enter correct identifier as present in IATI Registry.');
             }
 
             if (!$this->organizationIdentifierService->update($id, $organizationIdentifier)) {
-                return redirect()->route('admin.organisation.index', $id)->with('error', 'Error has occurred while updating organization identifier.');
+                return redirect()->route('admin.organisation.index')->with('error', 'Error has occurred while updating organization identifier.');
             }
 
-            return redirect()->route('admin.organisation.index', $id)->with('success', 'Organization identifier updated successfully.');
+            return redirect()->route('admin.organisation.index')->with('success', 'Organization identifier updated successfully.');
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.organisation.index', $id)->with('error', 'Error has occurred while updating organization identifier.');
+            return redirect()->route('admin.organisation.index')->with('error', 'Error has occurred while updating organization identifier.');
         }
     }
 
@@ -89,6 +91,7 @@ class OrganizationIdentifierController extends Controller
      * @param array $data
      *
      * @return bool
+     * @throws GuzzleException
      */
     public function verifyPublisher(array $data): bool
     {
@@ -111,13 +114,9 @@ class OrganizationIdentifierController extends Controller
                 'connect_timeout' => 500,
             ]);
 
-            $response = json_decode($res->getBody()->getContents())->result;
+            $response = json_decode($res->getBody()->getContents(), false, 512, JSON_THROW_ON_ERROR)->result;
 
-            if ($response->publisher_iati_id === $identifier) {
-                return true;
-            }
-
-            return false;
+            return $response->publisher_iati_id === $identifier;
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 

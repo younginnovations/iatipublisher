@@ -34,13 +34,13 @@ class DocumentLinkController extends Controller
     /**
      * Renders title edit form.
      *
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|void|RedirectResponse
+     * @return View|RedirectResponse
      */
     public function edit(): View|RedirectResponse
     {
         try {
             $id = Auth::user()->organization_id;
-            $element = json_decode(file_get_contents(app_path('IATI/Data/organizationElementJsonSchema.json')), true);
+            $element = json_decode(file_get_contents(app_path('IATI/Data/organizationElementJsonSchema.json')), true, 512, JSON_THROW_ON_ERROR);
             $organization = $this->documentLinkService->getOrganizationData($id);
             $form = $this->documentLinkService->formGenerator($id);
             $status = $organization->document_link_element_completed ?? false;
@@ -64,18 +64,15 @@ class DocumentLinkController extends Controller
     public function update(DocumentLinkRequest $request): RedirectResponse
     {
         try {
-            $id = Auth::user()->organization_id;
-            $documentLink = $request->all();
-
-            if (!$this->documentLinkService->update($id, $documentLink)) {
-                return redirect()->route('admin.organisation.index', $id)->with('error', 'Error has occurred while updating organization document-link.');
+            if (!$this->documentLinkService->update(Auth::user()->organization_id, $request->all())) {
+                return redirect()->route('admin.organisation.index')->with('error', 'Error has occurred while updating organization document-link.');
             }
 
-            return redirect()->route('admin.organisation.index', $id)->with('success', 'Organization document-link updated successfully.');
+            return redirect()->route('admin.organisation.index')->with('success', 'Organization document-link updated successfully.');
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.organisation.index', $id)->with('error', 'Error has occurred while updating organization document-link.');
+            return redirect()->route('admin.organisation.index')->with('error', 'Error has occurred while updating organization document-link.');
         }
     }
 }

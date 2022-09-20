@@ -1,6 +1,6 @@
 <template>
   <div class="activities__card elements__panel">
-    <div class="mb-3 grid grid-flow-col">
+    <div class="grid grid-flow-col mb-3">
       <div class="relative">
         <svg-vue
           class="panel__search absolute left-2.5 top-3 text-sm text-n-30"
@@ -40,7 +40,7 @@
           ref="dropdown"
           class="button__dropdown button dropdown-btn absolute right-0 top-full z-10 w-[118px] bg-white text-left shadow-dropdown"
         >
-          <ul class="w-full bg-eggshell py-2">
+          <ul class="w-full py-2 bg-eggshell">
             <li
               class="flex py-1.5 px-3.5 hover:bg-white"
               @click="dropdownFilter('')"
@@ -59,22 +59,27 @@
         </div>
       </div>
     </div>
-    <div class="elements__listing grid grid-cols-2 gap-2">
+    <div class="grid grid-cols-2 gap-2 elements__listing">
       <a
         v-for="(post, index) in filteredElements"
-        :key="index"
+        :key="String(index)"
         class="elements__item relative flex cursor-pointer flex-col items-center justify-center rounded border border-dashed border-n-40 px-[3px] py-2.5 text-n-30"
         :href="post.has_data ? '#' + index : '/organisation/' + index"
       >
-        <div class="status_icons absolute right-0 top-0 mt-1 mr-1 inline-flex">
+        <div class="absolute top-0 right-0 inline-flex mt-1 mr-1 status_icons">
           <svg-vue
             v-if="
-              String(index) === 'organisation_identifier'
+              index === 'organisation_identifier'
                 ? status['identifier']
-                : status[index]
+                : status[index.toString()]
             "
             class="text-base text-teal-50"
             icon="double-tick"
+          ></svg-vue>
+          <svg-vue
+            v-if="orgMandatoryElements().includes(index.toString())"
+            class="text-base text-camel-50"
+            icon="star"
           ></svg-vue>
         </div>
         <template v-if="index === 'name'">
@@ -89,7 +94,7 @@
             class="text-base"
           ></svg-vue>
         </template>
-        <div class="title mt-1 break-all text-xs">
+        <div class="mt-1 text-xs break-all title">
           {{ index.toString().replace(/_/g, '-') }}
         </div>
       </a>
@@ -97,96 +102,76 @@
   </div>
 </template>
 
-<script lang="ts">
-import { computed, defineComponent, reactive, onMounted, ref } from 'vue';
+<script setup lang="ts">
+import { computed, defineProps, reactive, onMounted, ref } from 'vue';
 import { useToggle } from '@vueuse/core';
+import { orgMandatoryElements } from 'Composable/coreElements';
 
-export default defineComponent({
-  name: 'OrganisationElements',
-  components: {},
-  props: {
-    data: {
-      type: Object,
-      required: true,
-    },
-    status: {
-      type: Object,
-      required: true,
-    },
-    completed: {
-      type: Object,
-      required: true,
-    },
+const props = defineProps({
+  data: {
+    type: Object,
+    required: true,
   },
-  setup(props) {
-    const [searchBtnValue, searchBtnToggle] = useToggle();
-    const dropdown = ref();
-    const dropdownBtn = ref();
-
-    /**
-     * Search functionality
-     */
-    const elements = reactive({
-      search: '',
-      status: '',
-    });
-
-    const asArrayData = Object.entries(props.data);
-    const filteredElements = computed(() => {
-      const filtered = asArrayData.filter(([key, value]) => {
-        if (!elements.status) {
-          return key
-            .toLowerCase()
-            .includes(
-              elements.search
-                .toLowerCase()
-                .replace(/_/g, ' ')
-                .replace(/-/g, '_')
-            );
-        } else {
-          if (value[elements.status]) {
-            return key
-              .toLowerCase()
-              .includes(
-                elements.search
-                  .toLowerCase()
-                  .replace(/_/g, ' ')
-                  .replace(/-/g, '_')
-              );
-          }
-        }
-      });
-
-      const justStrings = Object.fromEntries(filtered);
-      return justStrings;
-    });
-
-    onMounted(() => {
-      window.addEventListener('click', (e) => {
-        if (
-          !dropdownBtn.value.contains(e.target) &&
-          !dropdown.value.contains(e.target) &&
-          searchBtnValue.value
-        ) {
-          searchBtnToggle();
-        }
-      });
-    });
-
-    const dropdownFilter = (s: string) => {
-      elements.status = s;
-      searchBtnToggle();
-    };
-
-    return {
-      searchBtnValue,
-      searchBtnToggle,
-      dropdown,
-      dropdownBtn,
-      elements,
-      filteredElements,
-      dropdownFilter,
-    };
+  status: {
+    type: Object,
+    required: true,
+  },
+  completed: {
+    type: Object,
+    required: true,
   },
 });
+
+const [searchBtnValue, searchBtnToggle] = useToggle();
+const dropdown = ref();
+const dropdownBtn = ref();
+
+/**
+ * Search functionality
+ */
+const elements = reactive({
+  search: '',
+  status: '',
+});
+
+const asArrayData = Object.entries(props.data);
+const filteredElements = computed(() => {
+  const filtered = asArrayData.filter(([key, value]) => {
+    if (!elements.status) {
+      return key
+        .toLowerCase()
+        .includes(
+          elements.search.toLowerCase().replace(/_/g, ' ').replace(/-/g, '_')
+        );
+    } else {
+      if (value[elements.status]) {
+        return key
+          .toLowerCase()
+          .includes(
+            elements.search.toLowerCase().replace(/_/g, ' ').replace(/-/g, '_')
+          );
+      }
+    }
+  });
+
+  const justStrings = Object.fromEntries(filtered);
+  return justStrings;
+});
+
+onMounted(() => {
+  window.addEventListener('click', (e) => {
+    if (
+      !dropdownBtn.value.contains(e.target) &&
+      !dropdown.value.contains(e.target) &&
+      searchBtnValue.value
+    ) {
+      searchBtnToggle();
+    }
+  });
+});
+
+const dropdownFilter = (s: string) => {
+  elements.status = s;
+  searchBtnToggle();
+};
 </script>

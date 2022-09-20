@@ -1,7 +1,8 @@
 import $ from 'jquery';
+import jQuery from 'jquery';
 import 'select2';
 
-$(document).ready(() => {
+jQuery(function () {
   $('body').on('click', '#hamburger', () => {
     $('#nav-list').toggleClass('nav-active');
     $('#hamburger').toggleClass('active');
@@ -23,3 +24,16 @@ $(window).on('load', function () {
   const overlay = $('.overlay');
   overlay.addClass('hidden');
 });
+
+/**
+ * Disable submit button after single  click
+ */
+const submitBtn = 'form button[type="submit"]',
+  submitBtnElement = $(submitBtn);
+
+if (submitBtnElement.length > 0) {
+  $('body').on('click', submitBtn, function () {
+    $(this).attr('disabled', 'disabled');
+    $(this).closest('form').trigger('submit');
+  });
+}

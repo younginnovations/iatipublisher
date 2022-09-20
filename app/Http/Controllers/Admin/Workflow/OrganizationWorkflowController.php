@@ -8,6 +8,7 @@ use App\Exceptions\PublisherNotFound;
 use App\Http\Controllers\Controller;
 use App\IATI\Services\Workflow\OrganizationWorkflowService;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -35,7 +36,6 @@ class OrganizationWorkflowController extends Controller
     /**
      * Publish an organization.
      *
-     * @param $organizationId
      *
      * @return JsonResponse
      */
@@ -96,11 +96,11 @@ class OrganizationWorkflowController extends Controller
     }
 
     /**
-     * Unpublish an organization from the IATI registry.
+     * UnPublish an organization from the IATI registry.
      *
-     * @return JsonResponse
+     * @return JsonResponse|RedirectResponse
      */
-    public function unpublish(): JsonResponse
+    public function unPublish(): JsonResponse|RedirectResponse
     {
         try {
             DB::beginTransaction();
