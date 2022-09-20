@@ -36,7 +36,8 @@
           </tr>
           <tr v-for="data in organisationData.data.data" v-else :key="data.id">
             <td>
-              <div>{{ data?.name[0]?.narrative ?? 'Name not available' }}</div>
+              <div v-if="data.name">{{ data?.name[0]?.narrative ?? 'Name not available' }}</div>
+              <div v-else>Name not available</div>
               <div class="text-blue-40">{{ data?.user?.email }}</div>
             </td>
             <td class="text-n-40">
