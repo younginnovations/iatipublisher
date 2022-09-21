@@ -49,10 +49,6 @@
 
 </head>
 
-<style>
-
-</style>
-
 <body class="overflow-x-hidden">
   <div id="app">
     <loggedin-header :user="{{ Auth::user() }}" :organization="{{ Auth::user()->organization }}"
