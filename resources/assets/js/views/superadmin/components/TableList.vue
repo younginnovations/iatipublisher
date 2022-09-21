@@ -5,19 +5,67 @@
         <thead>
           <tr class="bg-n-10">
             <th id="organisation_name" scope="col">
-              <span>Organisation Name</span>
+              <a
+                class="transition duration-500 text-n-50 hover:text-spring-50"
+                :class="
+                  orderType === 'name'
+                    ? sortingDirection()
+                    : defaultSortDirection
+                "
+                :href="sortBy('name')"
+              >
+                <span class="sorting-indicator">
+                  <svg-vue
+                    :icon="`${
+                      orderType === 'name'
+                        ? sortingDirection()
+                        : defaultSortDirection
+                    }-arrow`"
+                  />
+                </span>
+                <span>Organisation Name</span>
+              </a>
             </th>
             <th id="activities" scope="col" style="width: 173px">
-              <span>Activities</span>
+              <a
+                class="transition duration-500 text-n-50 hover:text-spring-50"
+                :class="
+                  orderType === 'all_activities_count'
+                    ? sortingDirection()
+                    : defaultSortDirection
+                "
+                :href="sortBy('all_activities_count')"
+              >
+                <span class="sorting-indicator">
+                  <svg-vue
+                    :icon="`${
+                      orderType === 'all_activities_count'
+                        ? sortingDirection()
+                        : defaultSortDirection
+                    }-arrow`"
+                  />
+                </span>
+                <span>Activities</span>
+              </a>
             </th>
             <th id="updated_on" scope="col" style="width: 173px">
               <a
                 class="transition duration-500 text-n-50 hover:text-spring-50"
-                :class="dateSortingDirection()"
-                :href="sortByDateUrl()"
+                :class="
+                  orderType === 'updated_at'
+                    ? sortingDirection()
+                    : defaultSortDirection
+                "
+                :href="sortBy('updated_at')"
               >
                 <span class="sorting-indicator">
-                  <svg-vue :icon="`${dateSortingDirection()}-arrow`" />
+                  <svg-vue
+                    :icon="`${
+                      orderType === 'updated_at'
+                        ? sortingDirection()
+                        : defaultSortDirection
+                    }-arrow`"
+                  />
                 </span>
                 <span>Updated On</span>
               </a>
@@ -36,7 +84,9 @@
           </tr>
           <tr v-for="data in organisationData.data.data" v-else :key="data.id">
             <td>
-              <div v-if="data.name">{{ data?.name[0]?.narrative ?? 'Name not available' }}</div>
+              <div v-if="data.name">
+                {{ data?.name[0]?.narrative ?? 'Name not available' }}
+              </div>
               <div v-else>Name not available</div>
               <div class="text-blue-40">{{ data?.user?.email }}</div>
             </td>
@@ -67,7 +117,7 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, onMounted, inject } from 'vue';
+import { reactive, onMounted, inject, ref } from 'vue';
 import axios from 'axios';
 
 import dateFormat from 'Composable/dateFormat';
@@ -177,20 +227,25 @@ const proxyUser = (id: number) => {
  * Sorting By update on
  */
 let query = '',
-  dateSortDirection = 'asc';
+  defaultSortDirection = 'ascending',
+  sortDirection = 'desc';
 
-const dateSortingDirection = () => {
-  return dateSortDirection === 'asc' ? 'descending' : 'ascending';
+let orderType = ref('');
+
+const queryString = window.location.search,
+  urlParams = new URLSearchParams(queryString);
+orderType.value = urlParams.get('orderBy') ?? '';
+
+const sortingDirection = () => {
+  return sortDirection === 'asc' ? 'descending' : 'ascending';
 };
 
-const sortByDateUrl = () => {
+const sortBy = (order) => {
   if (currentURL.includes('?')) {
-    const queryString = window.location.search,
-      urlParams = new URLSearchParams(queryString);
     query = urlParams.get('q') ?? '';
-    dateSortDirection = urlParams.get('direction') === 'desc' ? 'asc' : 'desc';
+    sortDirection = urlParams.get('direction') === 'desc' ? 'asc' : 'desc';
   }
 
-  return `?q=${query}&orderBy=updated_at&direction=${dateSortDirection}`;
+  return `?q=${query}&orderBy=${order}&direction=${sortDirection}`;
 };
 </script>
