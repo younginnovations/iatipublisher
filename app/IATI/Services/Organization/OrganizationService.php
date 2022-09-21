@@ -6,13 +6,17 @@ namespace App\IATI\Services\Organization;
 
 use App\IATI\Models\Organization\Organization;
 use App\IATI\Repositories\Organization\OrganizationRepository;
+use App\IATI\Traits\OrganizationXmlBaseElements;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Arr;
 
 /**
  * Class OrganizationService.
  */
 class OrganizationService
 {
+    use OrganizationXmlBaseElements;
+
     /**
      * @var OrganizationRepository
      */
@@ -45,37 +49,23 @@ class OrganizationService
      *
      * @return array
      */
-    public function getReportingOrgXmlData(Organization $organization)
+    public function getReportingOrgXmlData(Organization $organization): array
     {
         $organizationData = [];
-        //    $orgReportingOrg = (array) $organization->reporting_org;
+        $orgReportingOrg = (array) $organization->reporting_org;
 
-        //    foreach ($orgReportingOrg as $OrgReportingOrg) {
-        //        $organizationData[] = [
-        //            '@attributes' => [
-        //                'type'               => $OrgReportingOrg['reporting_organization_type'],
-        //                'ref'                => $OrgReportingOrg['reporting_organization_identifier'],
-        //                'secondary-reporter' => $organization->secondary_reporter
-        //            ],
-        //            'narrative'   => $this->buildNarrative($OrgReportingOrg['narrative']),
-        //        ];
-        //    }
-
-        $organizationData[] = [
-            '@attributes' => [
-                'type'               => '21',
-                'ref'                => 'MCfAE',
-                'secondary-reporter' => null,
-            ],
-            'narrative'   => [
-                [
-                    '@value' => 'Dummy reporting org',
+        if (count($orgReportingOrg)) {
+            foreach ($orgReportingOrg as $OrgReportingOrg) {
+                $organizationData[] = [
                     '@attributes' => [
-                        'xml:lang' => 'en',
+                        'type'               => Arr::get($OrgReportingOrg, 'type', null),
+                        'ref'                => Arr::get($OrgReportingOrg, 'ref', null),
+                        'secondary-reporter' => Arr::get($OrgReportingOrg, 'secondary_reporter', null),
                     ],
-                ],
-            ],
-        ];
+                    'narrative'   => $this->buildNarrative(Arr::get($OrgReportingOrg, 'narrative', [])),
+                ];
+            }
+        }
 
         return $organizationData;
     }
@@ -131,7 +121,10 @@ class OrganizationService
         $completed_mandatory_element_count = 0;
 
         foreach ($mandatory_elements as $mandatory_element) {
-            if (array_key_exists($mandatory_element, $organization->element_status) && $organization->element_status[$mandatory_element]) {
+            if (array_key_exists(
+                $mandatory_element,
+                $organization->element_status
+            ) && $organization->element_status[$mandatory_element]) {
                 $completed_mandatory_element_count++;
             }
         }
@@ -153,7 +146,7 @@ class OrganizationService
             'organizationType' => getCodeList('OrganizationType', 'Organization', false),
             'country'          => getCodeList('Country', 'Organization', false),
             'regionVocabulary' => getCodeList('RegionVocabulary', 'Activity'),
-            'region' => getCodeList('Region', 'Activity'),
+            'region'           => getCodeList('Region', 'Activity'),
         ];
     }
 }
