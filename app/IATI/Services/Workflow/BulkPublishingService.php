@@ -73,10 +73,12 @@ class BulkPublishingService
             foreach ($activityIds as $id) {
                 $activity = $this->activityService->getActivity($id);
 
-                $coreElementsCompleted[$this->getCompleteStatus($activity)][] = [
-                    'activity_id' => $activity->id,
-                    'title' => Arr::get($activity->title, '0.narrative', 'Not Available') ?: 'Not Available',
-                ];
+                if ($activity && !$activity->linked_to_iati) {
+                    $coreElementsCompleted[$this->getCompleteStatus($activity)][] = [
+                        'activity_id' => $activity->id,
+                        'title' => Arr::get($activity->title, '0.narrative', 'Not Available') ?: 'Not Available',
+                    ];
+                }
             }
         }
 
@@ -114,16 +116,19 @@ class BulkPublishingService
 
         foreach ($activityIds as $activityId) {
             $activity = $this->activityService->getActivity($activityId);
-            $response = $this->validateWithException($activity);
 
-            if (!Arr::get($response, 'success', true)) {
-                logger()->error('Error has occurred while validating activity with id' . $activityId);
-            } else {
-                $totalResponse[$activity->id] = [
-                    'activity_id' => $activity->id,
-                    'title' => Arr::get($activity->title, '0.narrative', 'Not Available') ?: 'Not Available',
-                    'response' => $response,
-                ];
+            if ($activity && !$activity->linked_to_iati) {
+                $response = $this->validateWithException($activity);
+
+                if (!Arr::get($response, 'success', true)) {
+                    logger()->error('Error has occurred while validating activity with id' . $activityId);
+                } else {
+                    $totalResponse[$activity->id] = [
+                        'activity_id' => $activity->id,
+                        'title' => Arr::get($activity->title, '0.narrative', 'Not Available') ?: 'Not Available',
+                        'response' => $response,
+                    ];
+                }
             }
         }
 

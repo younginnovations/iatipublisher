@@ -2,7 +2,7 @@
 
 return [
     'humanitarian_types' => [
-      'yes' => 'Yes',
-      'no' => 'No',
+      '1' => 'Yes',
+      '0' => 'No',
     ],
 ];
