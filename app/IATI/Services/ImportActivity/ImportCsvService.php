@@ -176,7 +176,7 @@ class ImportCsvService
      */
     public function create($activities): void
     {
-        $contents = json_decode(file_get_contents($this->getFilePath(true)), true, 512, JSON_THROW_ON_ERROR);
+        $contents = json_decode(file_get_contents($this->getFilePath()), true, 512, JSON_THROW_ON_ERROR);
         $organizationId = Auth::user()->organization_id;
 
         $organizationIdentifier = Arr::get(
