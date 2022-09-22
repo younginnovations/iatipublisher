@@ -185,13 +185,13 @@ class ImportActivityController extends Controller
                 return redirect()->route('admin.activities.index');
             }
 
-            // if (Session::has('header_mismatch') && Session::get('header_mismatch')) {
-            //     $message = $filetype === 'xml' ? 'Invalid xml schema. Please upload correct schema file' : 'Invalid file content. Please upload file with correct header and content.';
-            //     Session::put('error',$message);
-            //     Session::forget('header_mismatch');
+            if (Session::has('header_mismatch') && Session::get('header_mismatch')) {
+                $message = $filetype === 'xml' ? 'Invalid xml schema. Please upload correct schema file' : 'Invalid file content. Please upload file with correct header and content.';
+                Session::put('error', $message);
+                Session::forget('header_mismatch');
 
-            //     return redirect()->route('admin.activities.index');
-            // }
+                return redirect()->route('admin.activities.index');
+            }
 
             return view('admin.import.list');
         } catch (\Exception $e) {

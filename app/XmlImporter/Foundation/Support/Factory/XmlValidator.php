@@ -33,47 +33,54 @@ class XmlValidator
     {
         $activity = $this->activity;
         $rules = [];
-        $rules = array_merge($rules, $this->rulesForTitle($activity));
-        $rules = array_merge($rules, $this->rulesForDescription($activity));
-        $rules = array_merge($rules, $this->rulesForOtherIdentifier($activity));
         $rules['activity_status'] = sprintf('nullable|in:%s', $this->validCodeList('ActivityStatus'));
-        $rules = array_merge($rules, $this->rulesForActivityDate($activity));
-        $rules = array_merge($rules, $this->rulesForContactInfo($activity));
         $rules['activity_scope'] = sprintf('in:%s', $this->validCodeList('ActivityScope'));
-        $rules = array_merge($rules, $this->rulesForParticipatingOrg($activity));
-        $rules = array_merge($rules, $this->rulesForRecipientCountry($activity));
-        $rules = array_merge($rules, $this->rulesForRecipientRegion($activity));
-        $rules = array_merge($rules, $this->rulesForLocation($activity));
-        $rules = array_merge($rules, $this->rulesForSector($activity));
-        $rules = array_merge($rules, $this->rulesForTag($activity));
-        $rules = array_merge($rules, $this->rulesForCountryBudgetItems($activity));
-        $rules = array_merge($rules, $this->rulesForHumanitarianScope($activity));
-        $rules = array_merge($rules, $this->rulesForPolicyMarker($activity));
-        // if (!is_array($activity['default_flow_type'])) {
-        //     $rules['default_flow_type'] = sprintf('in:%s', $this->validCodeList('FlowType'));
-        // }
-        // if (!is_array($activity['collaboration_type'])) {
-        //     $rules['collaboration_type'] = sprintf('in:%s', $this->validCodeList('CollaborationType'));
-        // }
-        // if (!is_array($activity['default_finance_type'])) {
-        //     $rules['default_finance_type'] = sprintf('in:%s', $this->validCodeList('FinanceType'));
-        // }
-        // $rules = array_merge($rules, $this->rulesForDefaultAidType($activity));
-        // if (!is_array($activity['default_tied_status'])) {
-        //     $rules['default_tied_status'] = sprintf('in:%s', $this->validCodeList('TiedStatus'));
-        // }
-        $rules = array_merge($rules, $this->rulesForBudget($activity));
-        $rules = array_merge($rules, $this->rulesForPlannedDisbursement($activity));
-        // if (!is_array($activity['capital_spend'])) {
-        //     $rules['capital_spend'] = 'numeric|max:100|min:0';
-        // }
-        $rules = array_merge($rules, $this->rulesForDocumentLink($activity));
-        $rules = array_merge($rules, $this->rulesForRelatedActivity($activity));
-        $rules = array_merge($rules, $this->rulesForLegacyData($activity));
-        $rules = array_merge($rules, $this->rulesForCondition($activity));
-        $rules = array_merge($rules, $this->rulesForTransaction($activity));
+        if (!is_array($activity['default_flow_type'])) {
+            $rules['default_flow_type'] = sprintf('in:%s', $this->validCodeList('FlowType'));
+        }
+        if (!is_array($activity['collaboration_type'])) {
+            $rules['collaboration_type'] = sprintf('in:%s', $this->validCodeList('CollaborationType'));
+        }
+        if (!is_array($activity['default_finance_type'])) {
+            $rules['default_finance_type'] = sprintf('in:%s', $this->validCodeList('FinanceType'));
+        }
+        if (!is_array($activity['default_tied_status'])) {
+            $rules['default_tied_status'] = sprintf('in:%s', $this->validCodeList('TiedStatus'));
+        }
+        if (!is_array($activity['capital_spend'])) {
+            $rules['capital_spend'] = 'numeric|max:100|min:0';
+        }
+        $tempRules = [
+            $this->rulesForTitle($activity),
+            $this->rulesForDescription($activity),
+            $this->rulesForOtherIdentifier($activity),
+            $this->rulesForActivityDate($activity),
+            $this->rulesForContactInfo($activity),
+            $this->rulesForParticipatingOrg($activity),
+            $this->rulesForRecipientCountry($activity),
+            $this->rulesForRecipientRegion($activity),
+            $this->rulesForLocation($activity),
+            $this->rulesForSector($activity),
+            $this->rulesForTag($activity),
+            $this->rulesForCountryBudgetItems($activity),
+            $this->rulesForHumanitarianScope($activity),
+            $this->rulesForPolicyMarker($activity),
+            $this->rulesForBudget($activity),
+            $this->rulesForPlannedDisbursement($activity),
+            $this->rulesForDocumentLink($activity),
+            $this->rulesForRelatedActivity($activity),
+            $this->rulesForLegacyData($activity),
+            $this->rulesForCondition($activity),
+            $this->rulesForTransaction($activity),
+            $this->rulesForResult($activity),
+            $this->rulesForDefaultAidType($activity),
+        ];
 
-        array_merge($rules, $this->rulesForResult($activity));
+        foreach ($tempRules as $tempRule) {
+            foreach ($tempRule as $idx => $rule) {
+                $rules[$idx] = $rule;
+            }
+        }
 
         return $rules;
     }
@@ -87,40 +94,49 @@ class XmlValidator
     {
         $activity = $this->activity;
         $messages = [];
-        $messages = array_merge($messages, $this->messagesForTitle($activity));
-        $messages = array_merge($messages, $this->messagesForDescription($activity));
-        $messages = array_merge($messages, $this->messagesForOtherIdentifier($activity));
         $messages['activity_status.required'] = trans('validation.required', ['attribute' => trans('element.activity_status')]);
         $messages['activity_status.in'] = trans('validation.code_list', ['attribute' => trans('element.activity_status')]);
-        $messages = array_merge($messages, $this->messagesForActivityDate($activity));
-        $messages = array_merge($messages, $this->messagesForContactInfo($activity));
         $messages['activity_scope.required'] = trans('validation.required', ['attribute' => trans('element.activity_scope')]);
         $messages['activity_scope.in'] = trans('validation.code_list', ['attribute' => trans('element.activity_scope')]);
-        $messages = array_merge($messages, $this->messagesForParticipatingOrg($activity));
-        $messages = array_merge($messages, $this->messagesForRecipientCountry($activity));
-        $messages = array_merge($messages, $this->messagesForRecipientRegion($activity));
-        $messages = array_merge($messages, $this->messagesForLocation($activity));
-        $messages = array_merge($messages, $this->messagesForSector($activity));
-        $messages = array_merge($messages, $this->messagesForTag($activity));
-        $messages = array_merge($messages, $this->messagesForCountryBudgetItems($activity));
-        $messages = array_merge($messages, $this->messagesForHumanitarianScope($activity));
-        $messages = array_merge($messages, $this->messagesForPolicyMarker($activity));
         $messages['collaboration_type.in'] = trans('validation.code_list', ['attribute' => trans('element.collaboration_type')]);
         $messages['default_flow_type.in'] = trans('validation.code_list', ['attribute' => trans('element.default_flow_type')]);
         $messages['default_finance_type.in'] = trans('validation.code_list', ['attribute' => trans('element.default_finance_type')]);
-        $messages = array_merge($messages, $this->messagesForDefaultAidType($activity));
         $messages['default_tied_status.in'] = trans('validation.code_list', ['attribute' => trans('element.default_tied_status')]);
-        $messages = array_merge($messages, $this->messagesForBudget($activity));
-        $messages = array_merge($messages, $this->messagesForPlannedDisbursement($activity));
         $messages['capital_spend.numeric'] = trans('validation.numeric', ['attribute' => trans('element.capital_spend')]);
         $messages['capital_spend.max'] = trans('validation.max.numeric', ['attribute' => trans('element.capital_spend'), 'max' => 100]);
         $messages['capital_spend.min'] = trans('validation.negative', ['attribute' => trans('element.capital_spend')]);
-        $messages = array_merge($messages, $this->messagesForDocumentLink($activity));
-        $messages = array_merge($messages, $this->messagesForRelatedActivity($activity));
-        $messages = array_merge($messages, $this->messagesForLegacyData($activity));
-        $messages = array_merge($messages, $this->messagesForCondition($activity));
-        $messages = array_merge($messages, $this->messagesForTransaction($activity));
-        array_merge($messages, $this->messagesForResult($activity));
+
+        $tempMessages = [
+            $this->messagesForTitle($activity),
+            $this->messagesForDescription($activity),
+            $this->messagesForOtherIdentifier($activity),
+            $this->messagesForActivityDate($activity),
+            $this->messagesForContactInfo($activity),
+            $this->messagesForParticipatingOrg($activity),
+            $this->messagesForRecipientCountry($activity),
+            $this->messagesForRecipientRegion($activity),
+            $this->messagesForLocation($activity),
+            $this->messagesForSector($activity),
+            $this->messagesForTag($activity),
+            $this->messagesForCountryBudgetItems($activity),
+            $this->messagesForHumanitarianScope($activity),
+            $this->messagesForPolicyMarker($activity),
+            $this->messagesForDefaultAidType($activity),
+            $this->messagesForBudget($activity),
+            $this->messagesForPlannedDisbursement($activity),
+            $this->messagesForDocumentLink($activity),
+            $this->messagesForRelatedActivity($activity),
+            $this->messagesForLegacyData($activity),
+            $this->messagesForCondition($activity),
+            $this->messagesForTransaction($activity),
+            $this->messagesForResult($activity),
+        ];
+
+        foreach ($tempMessages as $tempMessage) {
+            foreach ($tempMessage as $idx => $message) {
+                $messages[$idx] = $message;
+            }
+        }
 
         return $messages;
     }
@@ -153,13 +169,6 @@ class XmlValidator
     {
         $title = Arr::get($activity, 'title', []);
         $rules['title'] = 'nullable';
-        // $rules['title.*.narrative'] = 'nullable|unique_lang|unique_default_lang';
-        // foreach ($title as $narrativeIndex => $narrative) {
-        //     $rules[sprintf('title.%s.narrative', $narrativeIndex)] = sprintf(
-        //         'required_with:%s',
-        //         'title.' . $narrativeIndex . '.language'
-        //     );
-        // }
 
         return $rules;
     }
@@ -235,13 +244,12 @@ class XmlValidator
                 'validation.code_list',
                 ['attribute' => trans('elementForm.description_type')]
             );
-            $messages = array_merge(
-                $messages,
-                $this->factory->getMessagesForNarrative(
-                    Arr::get($description, 'narrative', []),
-                    sprintf('description.%s', $descriptionIndex)
-                )
-            );
+
+            $tempMessages = $this->factory->getMessagesForNarrative(Arr::get($description, 'narrative', []), sprintf('description.%s', $descriptionIndex));
+
+            foreach ($tempMessages as $idx => $tempMessage) {
+                $messages[$idx] = $tempMessage;
+            }
         }
 
         return $messages;
@@ -346,10 +354,6 @@ class XmlValidator
 
         foreach ($ownerOrgData as $ownerOrgIndex => $ownerOrg) {
             $ownerOrgBase = sprintf('%s.owner_org.%s', $otherIdentifierBase, $ownerOrgIndex);
-            $messages = array_merge(
-                $messages,
-                $this->factory->getMessagesForNarrative($ownerOrg['narrative'], $ownerOrgBase)
-            );
 
             $tempMessages = $this->factory->getMessagesForNarrative($ownerOrg['narrative'], $ownerOrgBase);
 
@@ -528,10 +532,11 @@ class XmlValidator
 
         foreach ($organizationData as $organizationIndex => $organization) {
             $organizationBase = sprintf('%s.organization.%s', $contactBase, $organizationIndex);
-            $rules = array_merge(
-                $rules,
-                $this->factory->getRulesForNarrative($organization['narrative'], $organizationBase)
-            );
+            $tempRules = $this->factory->getRulesForNarrative($organization['narrative'], $organizationBase);
+
+            foreach ($tempRules as $idx => $tempRule) {
+                $rules[$idx] = $tempRule;
+            }
         }
 
         return $rules;
