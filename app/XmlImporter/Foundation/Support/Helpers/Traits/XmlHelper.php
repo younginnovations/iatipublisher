@@ -76,6 +76,7 @@ trait XmlHelper
     protected function filterAttributes($values, $key, array $template): array
     {
         $values = $values ?: [];
+        $index = 0;
         $data = $this->templateToArray($template);
 
         foreach ($values as $value) {
@@ -84,8 +85,12 @@ trait XmlHelper
                     if ($attributeKey === 'indicator-uri') {
                         $attributeKey = 'indicator_uri';
                     }
-                    // (!array_key_exists($attributeKey, array_flip($template))) ?: $data[$index][$attributeKey] = $attribute;
+
+                    if (array_key_exists($attributeKey, array_flip($template))) {
+                        $data[$index][$attributeKey] = $attribute;
+                    }
                 }
+                $index++;
             }
         }
 

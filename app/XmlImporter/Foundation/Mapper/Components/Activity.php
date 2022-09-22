@@ -183,39 +183,12 @@ class Activity
     /**
      * @var array
      */
-    protected array $emptyNarrative = [['narrative' => '', 'language' => '']];
-
-    // /**
-    //  * @param array $elementData
-    //  * @param       $template
-    //  * @return array
-    //  */
-    // public function map($elementData = [], $template, $upgrade)
-    // {
-    //     foreach ($elementData as $activityIndex => $element) {
-    //         $elementName = $this->name($element);
-    //         $this->resetIndex($elementName);
-    //         if (array_key_exists($elementName, $this->activityElements)) {
-    //             $this->activity[$this->activityElements[$elementName]] = $this->$elementName($element, $template);
-    //         }
-    //     }
-
-    //     if (array_key_exists('description', $this->activity)) {
-    //         $this->activity['description'] = array_values(Arr::get($this->activity, ['description'], null));
-    //     }
-
-    //     return $this->activity;
-    // }
+    protected array $tagVariable = [];
 
     /**
-     * @param $elementName
+     * @var array
      */
-    protected function resetIndex($elementName): void
-    {
-        // if ((!array_key_exists($this->activityElements[$elementName], $this->activity))) {
-        //     $this->index = 0;
-        // }
-    }
+    protected array $emptyNarrative = [['narrative' => '', 'language' => '']];
 
     /**
      * @param $element
@@ -253,6 +226,7 @@ class Activity
 
     /**
      * @param $element
+     *
      * @return array
      */
     public function title($element): array
@@ -264,10 +238,10 @@ class Activity
 
     /**
      * @param $element
-     * @param $template
+     *
      * @return array
      */
-    public function reportingOrg($element, $template): array
+    public function reportingOrg($element): array
     {
         if (empty($this->identifier)) {
             $this->orgRef = $this->attributes($element, 'ref');
@@ -280,10 +254,10 @@ class Activity
 
     /**
      * @param $element
-     * @param $template
+     *
      * @return array
      */
-    public function description($element, $template): array
+    public function description($element): array
     {
         $type = $this->attributes($element, 'type');
         $descType = ($type === '') ? 1 : $type;
@@ -323,12 +297,11 @@ class Activity
 
     /**
      * @param $element
-     * @param $template
      *
      * @return mixed|string
      * @throws \JsonException
      */
-    public function activityStatus($element, $template): mixed
+    public function activityStatus($element): mixed
     {
         $activityStatusCodes = array_flip(getCodeList('ActivityStatus', 'Activity'));
         $code = $this->attributes($element, 'code');
@@ -362,11 +335,10 @@ class Activity
 
     /**
      * @param $element
-     * @param $template
      *
      * @return int
      */
-    public function activityScope($element, $template): int
+    public function activityScope($element): int
     {
         return (int) $this->attributes($element, 'code');
     }
@@ -374,6 +346,7 @@ class Activity
     /**
      * @param $element
      * @param $template
+     *
      * @return array
      */
     public function contactInfo($element, $template): array
@@ -416,11 +389,30 @@ class Activity
 
     /**
      * @param $element
-     * @param $template
      *
      * @return int|null
      */
-    public function defaultFlowType($element, $template): ?int
+    public function defaultFlowType($element): ?int
+    {
+        return $this->attributes($element, 'code') ? (int) $this->attributes($element, 'code') : null;
+    }
+
+    /**
+     * @param $element
+     *
+     * @return int|null
+     */
+    public function defaultFinanceType($element): ?int
+    {
+        return $this->attributes($element, 'code') ? (int) $this->attributes($element, 'code') : null;
+    }
+
+    /**
+     * @param $element
+     *
+     * @return int|null
+     */
+    public function defaultTiedStatus($element): ?int
     {
         return $this->attributes($element, 'code') ? (int) $this->attributes($element, 'code') : null;
     }
@@ -429,27 +421,6 @@ class Activity
      * @param $element
      * @param $template
      *
-     * @return int|null
-     */
-    public function defaultFinanceType($element, $template): ?int
-    {
-        return $this->attributes($element, 'code') ? (int) $this->attributes($element, 'code') : null;
-    }
-
-    /**
-     * @param $element
-     * @param $template
-     *
-     * @return int|null
-     */
-    public function defaultTiedStatus($element, $template): ?int
-    {
-        return $this->attributes($element, 'code') ? (int) $this->attributes($element, 'code') : null;
-    }
-
-    /**
-     * @param $element
-     * @param $template
      * @return array
      */
     public function budget($element, $template): array
@@ -470,6 +441,7 @@ class Activity
     /**
      * @param $element
      * @param $template
+     *
      * @return array
      */
     public function recipientRegion($element, $template): array
@@ -488,6 +460,7 @@ class Activity
     /**
      * @param $element
      * @param $template
+     *
      * @return array
      */
     public function recipientCountry($element, $template): array
@@ -504,6 +477,7 @@ class Activity
     /**
      * @param $element
      * @param $template
+     *
      * @return array
      */
     public function location($element, $template): array
@@ -536,6 +510,7 @@ class Activity
     /**
      * @param $element
      * @param $template
+     *
      * @return array
      */
     public function plannedDisbursement($element, $template): array
@@ -569,6 +544,7 @@ class Activity
     /**
      * @param $element
      * @param $template
+     *
      * @return array
      */
     public function countryBudgetItems($element, $template): array
@@ -593,6 +569,7 @@ class Activity
     /**
      * @param $element
      * @param $template
+     *
      * @return array
      */
     public function documentLink($element, $template): array
@@ -614,6 +591,7 @@ class Activity
     /**
      * @param $element
      * @param $template
+     *
      * @return array
      */
     public function policyMarker($element, $template): array
@@ -636,6 +614,7 @@ class Activity
     /**
      * @param $element
      * @param $template
+     *
      * @return array
      */
     public function conditions($element, $template): array
@@ -654,6 +633,7 @@ class Activity
     /**
      * @param $element
      * @param $template
+     *
      * @return array
      */
     public function legacyData($element, $template): array
@@ -670,6 +650,7 @@ class Activity
     /**
      * @param $element
      * @param $template
+     *
      * @return array
      */
     public function humanitarianScope($element, $template): array
@@ -687,22 +668,20 @@ class Activity
 
     /**
      * @param $element
-     * @param $template
      *
      * @return int|null
      */
-    public function collaborationType($element, $template): ?int
+    public function collaborationType($element): ?int
     {
         return $this->attributes($element, 'code') ? (int) $this->attributes($element, 'code') : null;
     }
 
     /**
      * @param $element
-     * @param $template
      *
      * @return float|null
      */
-    private function capitalSpend($element, $template): ?float
+    private function capitalSpend($element): ?float
     {
         return $this->attributes($element, 'code') ? (float) $this->attributes($element, 'code') : null;
     }
@@ -710,6 +689,7 @@ class Activity
     /**
      * @param $element
      * @param $template
+     *
      * @return array
      */
     public function relatedActivity($element, $template): array
@@ -732,7 +712,6 @@ class Activity
     {
         foreach ($elementData as $element) {
             $elementName = $this->name($element);
-            $this->resetIndex($elementName);
 
             if (array_key_exists($elementName, $this->activityElements)) {
                 $this->activity[$this->activityElements[$elementName]] = $this->$elementName($element, $template);
@@ -783,65 +762,39 @@ class Activity
     }
 
     /**
-     * Upgrade default aid type to V203.
+     * Read tag from xml.
      *
      * @param $element
      * @param $template
      *
      * @return array
      */
-    public function upgradeDefaultAidType($element, $template): array
+    public function tag($element, $template): array
     {
-        $this->defaultAidType[$this->index] = $template['default_aid_type'];
-        $code = $this->attributes($element, 'code');
-
-        $this->defaultAidType[$this->index] = [
-            'default_aid_type_vocabulary'  => $code ? 1 : '',
-            'default_aid_type'            => (!is_array($code)) ? $code : '',
-            'earmarking_category'         => '',
-            'default_aid_type_text'       => '',
-            'cash_and_voucher_modalities' => '',
-        ];
-
-        $this->index++;
-
-        return $this->defaultAidType;
-    }
-
-    /**
-     * Read tag from xml.
-     *
-     * @param $element
-     * @param $template
-     *
-     * @return mixed
-     */
-    public function tag($element, $template): mixed
-    {
-        $this->tag[$this->index] = $template['tag'];
+        $this->tagVariable[$this->index] = $template['tag'];
         $tagVocabulary = $this->attributes($element, 'vocabulary');
 
-        $this->tag[$this->index]['tag_vocabulary'] = $this->attributes($element, 'vocabulary');
-        $this->tag[$this->index]['vocabulary_uri'] = $this->attributes($element, 'vocabulary-uri');
-        $this->tag[$this->index]['narrative'] = $this->narrative($element);
+        $this->tagVariable[$this->index]['tag_vocabulary'] = $this->attributes($element, 'vocabulary');
+        $this->tagVariable[$this->index]['vocabulary_uri'] = $this->attributes($element, 'vocabulary-uri');
+        $this->tagVariable[$this->index]['narrative'] = $this->narrative($element);
 
         switch ($tagVocabulary) {
             case '1':
-                $this->tag[$this->index]['tag_code'] = $this->attributes($element, 'code');
+                $this->tagVariable[$this->index]['tag_code'] = $this->attributes($element, 'code');
                 break;
             case '2':
-                $this->tag[$this->index]['goals_tag_code'] = $this->attributes($element, 'code');
+                $this->tagVariable[$this->index]['goals_tag_code'] = $this->attributes($element, 'code');
                 break;
             case '3':
-                $this->tag[$this->index]['targets_tag_code'] = $this->attributes($element, 'code');
+                $this->tagVariable[$this->index]['targets_tag_code'] = $this->attributes($element, 'code');
                 break;
             case '99':
-                $this->tag[$this->index]['tag_text'] = $this->attributes($element, 'code');
+                $this->tagVariable[$this->index]['tag_text'] = $this->attributes($element, 'code');
                 break;
         }
 
         $this->index++;
 
-        return $this->tag;
+        return $this->tagVariable;
     }
 }

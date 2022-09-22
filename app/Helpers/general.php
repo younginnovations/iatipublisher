@@ -693,11 +693,11 @@ function getEncodingType($file): string
 }
 
 /**
- * Get csv header count by type from config.
+ * Get csv header count.
  *
- * @return int|string
+ * @return int
  */
-function getCsvHeaderCount(): int|string
+function getCsvHeaderCount(): int
 {
     return 69;
 }
