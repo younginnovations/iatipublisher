@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\IATI\Traits;
 
-use App\Models\Activity\Activity;
+use App\IATI\Models\Activity\Activity;
 use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Arr;

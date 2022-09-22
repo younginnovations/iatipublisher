@@ -207,7 +207,7 @@ class ImportActivityController extends Controller
                 $data = $this->getValidData();
             }
 
-            return response()->json(['status' => 'success', 'data' => $data, 'status' => $status]);
+            return response()->json(['status' => $status, 'data' => $data]);
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 

@@ -8,6 +8,7 @@ use App\IATI\Repositories\Activity\ActivityRepository;
 use App\XmlImporter\Foundation\Support\Providers\XmlServiceProvider;
 use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Database\DatabaseManager;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Arr;
 use Psr\Log\LoggerInterface;
 use Sabre\Xml\ParseException;
@@ -151,9 +152,9 @@ class XmlQueueProcessor
     /**
      * Returns activities of the organisation.
      *
-     * @return mixed
+     * @return Collection|array
      */
-    protected function dbActivities(): mixed
+    protected function dbActivities(): Collection|array
     {
         return $this->activityRepo->getActivities($this->orgId);
     }

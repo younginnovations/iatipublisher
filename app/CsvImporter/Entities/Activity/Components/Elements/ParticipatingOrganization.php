@@ -60,6 +60,7 @@ class ParticipatingOrganization extends Element
      * @param $fields
      *
      * @return void
+     * @throws \JsonException
      */
     public function prepare($fields): void
     {
@@ -80,7 +81,6 @@ class ParticipatingOrganization extends Element
      * @param $index
      *
      * @return void
-     * @throws \JsonException
      */
     public function map($key, $value, $index): void
     {

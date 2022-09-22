@@ -90,9 +90,12 @@ class Transaction extends Element
 
     /**
      * Transaction constructor.
+     *
      * @param            $transactionRow
      * @param            $activityRow
      * @param Validation $factory
+     *
+     * @throws \JsonException
      */
     public function __construct($transactionRow, $activityRow, Validation $factory)
     {
@@ -107,6 +110,7 @@ class Transaction extends Element
      * @param $fields
      *
      * @return void
+     * @throws \JsonException
      */
     protected function prepare($fields): void
     {
