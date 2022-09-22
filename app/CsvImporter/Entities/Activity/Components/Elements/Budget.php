@@ -43,6 +43,7 @@ class Budget extends Element
      * @param $fields
      *
      * @return void
+     * @throws \JsonException
      */
     protected function prepare($fields): void
     {
@@ -63,7 +64,6 @@ class Budget extends Element
      * @param $index
      *
      * @return void
-     * @throws \JsonException
      */
     protected function map($key, $value, $index): void
     {
@@ -203,6 +203,7 @@ class Budget extends Element
      * Validate data for IATI Element.
      *
      * @return $this
+     * @throws \JsonException
      */
     public function validate(): static
     {

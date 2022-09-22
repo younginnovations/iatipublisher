@@ -102,11 +102,9 @@ class Validation extends Factory
     /**
      * Get the unique validation errors.
      *
-     * @param bool $shouldBeUnique
-     *
      * @return array
      */
-    public function withErrors(bool $shouldBeUnique = false): array
+    public function withErrors(): array
     {
         $errors = [];
 
@@ -289,6 +287,7 @@ class Validation extends Factory
                     '%s.sector_vocabulary',
                     $formBase
                 )] = 'required_with:' . sprintf('%s.narrative.%s.narrative', $formBase, $narrativeIndex);
+
                 if ($sector['sector_vocabulary'] === 1 || $sector['sector_vocabulary'] === 2) {
                     if ($sector['sector_vocabulary'] === 1) {
                         $rules[sprintf(
@@ -358,6 +357,7 @@ class Validation extends Factory
                     'validation.required_with',
                     ['attribute' => trans('elementForm.sector_vocabulary'), 'values' => trans('elementForm.narrative')]
                 );
+
                 if ($sector['sector_vocabulary'] === 1 || $sector['sector_vocabulary'] === 2) {
                     if ($sector['sector_vocabulary'] === 1) {
                         $messages[sprintf('%s.sector_code.required_with', $formBase)] = trans(
@@ -421,6 +421,7 @@ class Validation extends Factory
     public function getRulesForPeriodStart($formFields, $formBase): array
     {
         $rules = [];
+
         foreach ($formFields as $periodStartKey => $periodStartVal) {
             $rules[$formBase . '.period_start.' . $periodStartKey . '.date'] = 'required|date';
         }
@@ -439,6 +440,7 @@ class Validation extends Factory
     public function getMessagesForPeriodStart($formFields, $formBase): array
     {
         $messages = [];
+
         foreach ($formFields as $periodStartKey => $periodStartVal) {
             $messages[$formBase . '.period_start.' . $periodStartKey . '.date.required'] = trans(
                 'validation.required',

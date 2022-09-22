@@ -157,9 +157,9 @@ class ActivityRepository extends Repository
      *
      * @param $orgId
      *
-     * @return mixed
+     * @return Collection|array
      */
-    public function getActivities($orgId): mixed
+    public function getActivities($orgId): Collection|array
     {
         return $this->model->where('org_id', $orgId)->get();
     }

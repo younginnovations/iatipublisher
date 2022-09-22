@@ -195,6 +195,7 @@ class PolicyMarker extends Element
      * Validate data for IATI Element.
      *
      * @return $this
+     * @throws \JsonException
      */
     public function validate(): static
     {

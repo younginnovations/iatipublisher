@@ -173,12 +173,11 @@ class ImportCsvService
      * Create Valid activities.
      *
      * @param      $activities
-     * @param bool $dontOverwrite
      *
      * @return void
      * @throws \JsonException
      */
-    public function create($activities, bool $dontOverwrite = false): void
+    public function create($activities): void
     {
         $contents = json_decode(file_get_contents($this->getFilePath(true)), true, 512, JSON_THROW_ON_ERROR);
         $organizationId = Auth::user()->organization_id;
@@ -260,6 +259,7 @@ class ImportCsvService
     protected function removeImportedActivity($checkedActivities): void
     {
         $validActivities = json_decode(file_get_contents($this->getFilePath(true)), true, 512, JSON_THROW_ON_ERROR);
+
         foreach ($checkedActivities as $key => $activity) {
             unset($validActivities[$key]);
         }

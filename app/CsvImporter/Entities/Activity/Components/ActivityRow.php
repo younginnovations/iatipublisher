@@ -208,6 +208,7 @@ class ActivityRow extends Row
      * Store the Row in a temporary JSON File for further usage.
      *
      * @return void
+     * @throws \JsonException
      */
     public function keep():void
     {

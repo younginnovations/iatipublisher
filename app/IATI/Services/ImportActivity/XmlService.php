@@ -49,6 +49,7 @@ class XmlService
         $xml->loadXML($tempXmlContent);
         $schemaPath = app_path('/XmlImporter/Template/iati-activities-schema.xsd');
         $messages = [];
+
         if (!$xml->schemaValidate($schemaPath)) {
             $messages = $this->libxml_display_errors();
         }
