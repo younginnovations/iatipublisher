@@ -77,14 +77,42 @@ class ActivityStatus extends Element
         if (!(is_null($value) || $value === '')) {
             $validActivityStatus = $this->loadCodeList('ActivityStatus');
 
-            foreach ($validActivityStatus as $code => $name) {
-                if ($value === $name) {
-                    $value = $code;
-                    break;
+            if (!is_int($value)) {
+                foreach ($validActivityStatus as $code => $name) {
+                    if (strcasecmp(trim($value), $name) === 0) {
+                        $value = is_int($code) ? (int) $code : $code;
+                        break;
+                    }
                 }
             }
+
+            // dump('akdfh', $values, count(array_filter($values)));
+            // $value =1;
+            $this->data[$this->csvHeader()] = $value;
+            // dump('data');
+            // dump('data',$this->data);
+
             (count(array_filter($values)) === 1) ? $this->data[$this->csvHeader()] = $value : $this->data[$this->csvHeader()][] = $value;
+        } else {
+            $this->data[$this->csvHeader()] = [null];
         }
+    }
+
+    /**
+     * Validate data for IATI Element.
+     *
+     * @return $this
+     * @throws \JsonException
+     */
+    public function validate(): static
+    {
+        $this->validator = $this->factory->sign($this->data)
+            ->with($this->rules(), $this->messages())
+            ->getValidatorInstance();
+
+        $this->setValidity();
+
+        return $this;
     }
 
     /**
@@ -99,7 +127,7 @@ class ActivityStatus extends Element
             $this->csvHeader() => sprintf('nullable|in:%s', $this->validActivityStatus()),
         ];
 
-        (!is_array(Arr::get($this->data, 'activity_status'))) ?: $rules[$this->csvHeader()] .= '|size:1';
+        (!is_array(Arr::get($this->data, 'activity_status'))) ?: $rules[$this->csvHeader()] .= 'nullable|size:1';
 
         return $rules;
     }
@@ -118,23 +146,6 @@ class ActivityStatus extends Element
             sprintf('%s.size', $key)     => trans('validation.multiple_values', ['attribute' => trans('element.activity_status')]),
             sprintf('%s.in', $key)       => trans('validation.code_list', ['attribute' => trans('element.activity_status')]),
         ];
-    }
-
-    /**
-     * Validate data for IATI Element.
-     *
-     * @return $this
-     * @throws \JsonException
-     */
-    public function validate(): static
-    {
-        $this->validator = $this->factory->sign($this->data())
-                                         ->with($this->rules(), $this->messages())
-                                         ->getValidatorInstance();
-
-        $this->setValidity();
-
-        return $this;
     }
 
     /**

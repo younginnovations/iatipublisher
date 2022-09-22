@@ -48,7 +48,7 @@ class ImportActivityRequest extends ActivityBaseRequest
      */
     public function messages(): array
     {
-        $messages['activity.required'] = trans('validation.required', ['attribute' => trans('elementForm.activity_file')]);
+        $messages['activity.required'] = trans('validation.required', ['attribute' => trans('activity_file')]);
         $messages['activity.activity_file'] = trans('validation.mimes', ['attribute' => trans('global.activity'), 'values' => 'csv']);
 
         return $messages;

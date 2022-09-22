@@ -8,7 +8,7 @@
           </th>
           <th id="date" scope="col">
             <a
-              class="transition duration-500 text-n-50 hover:text-spring-50"
+              class="text-n-50 transition duration-500 hover:text-spring-50"
               :href="sortByDateUrl()"
             >
               <span class="sorting-indicator" :class="sortingDirection()">
@@ -47,10 +47,10 @@
                 v-if="datum['already_published']"
                 class="absolute top-0 left-0"
               />
-              <div class="relative ellipsis">
+              <div class="ellipsis relative">
                 <a
                   :href="'/activity/' + datum['id']"
-                  class="overflow-hidden ellipsis text-n-50"
+                  class="ellipsis overflow-hidden text-n-50"
                   >{{ datum["default_title_narrative"] ?? "Untitled" }}</a
                 >
                 <div class="w-52">

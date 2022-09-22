@@ -35,21 +35,11 @@ class XmlValidator
         $rules = [];
         $rules['activity_status'] = sprintf('nullable|in:%s', $this->validCodeList('ActivityStatus'));
         $rules['activity_scope'] = sprintf('in:%s', $this->validCodeList('ActivityScope'));
-        if (!is_array($activity['default_flow_type'])) {
-            $rules['default_flow_type'] = sprintf('in:%s', $this->validCodeList('FlowType'));
-        }
-        if (!is_array($activity['collaboration_type'])) {
-            $rules['collaboration_type'] = sprintf('in:%s', $this->validCodeList('CollaborationType'));
-        }
-        if (!is_array($activity['default_finance_type'])) {
-            $rules['default_finance_type'] = sprintf('in:%s', $this->validCodeList('FinanceType'));
-        }
-        if (!is_array($activity['default_tied_status'])) {
-            $rules['default_tied_status'] = sprintf('in:%s', $this->validCodeList('TiedStatus'));
-        }
-        if (!is_array($activity['capital_spend'])) {
-            $rules['capital_spend'] = 'numeric|max:100|min:0';
-        }
+        $rules['default_flow_type'] = sprintf('in:%s', $this->validCodeList('FlowType'));
+        $rules['collaboration_type'] = sprintf('in:%s', $this->validCodeList('CollaborationType'));
+        $rules['default_finance_type'] = sprintf('in:%s', $this->validCodeList('FinanceType'));
+        $rules['default_tied_status'] = sprintf('in:%s', $this->validCodeList('TiedStatus'));
+        $rules['capital_spend'] = 'numeric|max:100|min:0';
         $tempRules = [
             $this->rulesForTitle($activity),
             $this->rulesForDescription($activity),
@@ -849,12 +839,13 @@ class XmlValidator
             $identifier = $participatingOrgBase . '.identifier';
             $narrative = sprintf('%s.narrative.0.narrative', $participatingOrgBase);
             $rules[$identifier] = 'exclude_operators|required_without:' . $narrative;
+            $rules[$narrative] = [];
             $rules[$narrative][] = 'required_without:' . $identifier;
-            //check
-            $rules = array_merge_recursive(
-                $rules,
-                $this->factory->getRulesForNarrative($participatingOrg['narrative'], $participatingOrgBase)
-            );
+            $tempRules = $this->factory->getRulesForNarrative($participatingOrg['narrative'], $participatingOrgBase);
+
+            foreach ($tempRules as $idx => $tempRule) {
+                $rules[$idx] = $tempRule;
+            }
         }
 
         return $rules;
@@ -1089,13 +1080,7 @@ class XmlValidator
                 'in:%s',
                 $this->validCodeList('LocationType')
             );
-            // $tempMessages =                 $this->messagesForOwnerOrg(Arr::get($otherIdentifier, 'owner_org', []), $otherIdentifierBase);
 
-            // foreach ($tempMessages as $idx => $tempMessage) {
-            //     $messages[$idx] = $tempMessage;
-            // }
-
-            //check
             $tempRules = [
                 $this->getRulesForLocationId(Arr::get($location, 'location_id', []), $locationBase),
                 $this->getRulesForName(Arr::get($location, 'name', []), $locationBase),
@@ -1215,6 +1200,7 @@ class XmlValidator
     protected function getMessagesForLocationId($locationsIds, $locationBase): array
     {
         $messages = [];
+
         foreach ($locationsIds as $locationIdIndex => $locationId) {
             $locationIdBase = sprintf('%s.location_id.%s', $locationBase, $locationIdIndex);
             if ($locationId['code'] !== '') {
@@ -1223,6 +1209,7 @@ class XmlValidator
                     ['attribute' => trans('elementForm.vocabulary'), 'values' => trans('elementForm.code')]
                 );
             }
+
             if ($locationId['vocabulary'] !== '') {
                 $messages[sprintf('%s.code.required_with', $locationIdBase)] = trans(
                     'validation.required_with',
@@ -1236,13 +1223,16 @@ class XmlValidator
 
     /**
      * returns rules for name.
+     *
      * @param $locationName
      * @param $locationBase
+     *
      * @return array
      */
     protected function getRulesForName($locationName, $locationBase): array
     {
         $rules = [];
+
         foreach ($locationName as $nameIndex => $name) {
             $narrativeBase = sprintf('%s.name.%s', $locationBase, $nameIndex);
             $tempRules = $this->factory->getRulesForNarrative($name['narrative'], $narrativeBase);
@@ -1308,6 +1298,7 @@ class XmlValidator
     protected function getMessagesForLocationDescription($locationDescription, $locationBase): array
     {
         $messages = [];
+
         foreach ($locationDescription as $descriptionIndex => $description) {
             $narrativeBase = sprintf('%s.location_description.%s', $locationBase, $descriptionIndex);
             $tempMessages = $this->factory->getMessagesForNarrative($description['narrative'], $narrativeBase);
@@ -1331,6 +1322,7 @@ class XmlValidator
     protected function getRulesForActivityDescription(array $activityDescription, $locationBase): array
     {
         $rules = [];
+
         foreach ($activityDescription as $descriptionIndex => $description) {
             $narrativeBase = sprintf('%s.activity_description.%s', $locationBase, $descriptionIndex);
             $tempRules = $this->factory->getRulesForNarrative($description['narrative'], $narrativeBase);
@@ -2204,6 +2196,7 @@ class XmlValidator
             $newDate = $startDate ? date('Y-m-d', strtotime($startDate . '+1year')) : '';
 
             if ($newDate) {
+                $rules[$budgetBase . '.period_end.0.date'] = [];
                 $rules[$budgetBase . '.period_end.0.date'][] = sprintf('before:%s', $newDate);
             }
         }
@@ -2412,7 +2405,7 @@ class XmlValidator
             $tempMessages = $this->factory->getMessagesForNarrative($providerOrg['narrative'], $providerOrgBase);
 
             foreach ($tempMessages as $idx => $tempMessage) {
-                $messages[$idx] = $tempMessage;
+                $message[$idx] = $tempMessage;
             }
         }
 
@@ -2462,7 +2455,7 @@ class XmlValidator
             $tempMessages = $this->factory->getMessagesForNarrative($receiverOrg['narrative'], $receiverOrgBase);
 
             foreach ($tempMessages as $idx => $tempMessage) {
-                $messages[$idx] = $tempMessage;
+                $message[$idx] = $tempMessage;
             }
         }
 
@@ -2500,6 +2493,7 @@ class XmlValidator
                 }
             }
 
+            $rules[sprintf('%s.document_link.title.0.narrative.0.narrative', $documentLinkBase)] = [];
             $rules[sprintf('%s.document_link.title.0.narrative.0.narrative', $documentLinkBase)][] = 'required';
         }
 
@@ -2715,6 +2709,11 @@ class XmlValidator
             }
 
             foreach ($condition['narrative'] as $narrativeIndex => $narrative) {
+                $rules[sprintf(
+                    '%s.narrative.%s.narrative',
+                    $conditionBase,
+                    $narrativeIndex
+                )] = [];
                 $rules[sprintf(
                     '%s.narrative.%s.narrative',
                     $conditionBase,
@@ -3013,7 +3012,7 @@ class XmlValidator
             $tempMessages = $this->factory->getMessagesForNarrative($providerOrg['narrative'], $providerOrgBase);
 
             foreach ($tempMessages as $idx => $tempMessage) {
-                $messages[$idx] = $tempMessage;
+                $message[$idx] = $tempMessage;
             }
         }
 
@@ -3056,7 +3055,7 @@ class XmlValidator
             $tempMessages = $this->factory->getMessagesForNarrative($receiverOrg['narrative'], $receiverOrgBase);
 
             foreach ($tempMessages as $idx => $tempMessage) {
-                $messages[$idx] = $tempMessage;
+                $message[$idx] = $tempMessage;
             }
         }
 
@@ -3299,7 +3298,7 @@ class XmlValidator
 
         foreach ($types as $typeIndex => $type) {
             $typeBase = sprintf('%s.transaction_type.%s', $transactionBase, $typeIndex);
-            $rules[sprintf('%s.transaction_type_code', $typeBase, $typeIndex)] = sprintf(
+            $rules[sprintf('%s.transaction_type_code', $typeBase)] = sprintf(
                 'required|in:%s',
                 $this->validCodeList('TransactionType')
             );

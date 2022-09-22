@@ -56,6 +56,12 @@ class CsvProcessor
     public function handle($organizationId, $userId, $activityIdentifiers): void
     {
         $this->filterHeader();
+        $directoryPath = storage_path(sprintf('%s/%s', env('CSV_DATA_STORAGE_PATH ', 'app/CsvImporter/tmp/'), $organizationId));
+        $path = sprintf('%s/%s', $directoryPath, 'header_mismatch.json');
+
+        if (file_exists($path)) {
+            unlink($path);
+        }
 
         if ($this->isCorrectCsv()) {
             $this->groupValues();
@@ -63,6 +69,8 @@ class CsvProcessor
             $this->initActivity(['organization_id' => $organizationId, 'user_id' => $userId, 'activity_identifiers' => $activityIdentifiers]);
 
             $this->activity->process();
+        } else {
+            file_put_contents($path, json_encode(['header_mismatch' => true], JSON_THROW_ON_ERROR));
         }
     }
 
@@ -142,7 +150,7 @@ class CsvProcessor
      *
      * @return bool
      */
-    protected function isCorrectCsv(): bool
+    public function isCorrectCsv(): bool
     {
         if (!$this->csv) {
             return false;

@@ -727,10 +727,18 @@ function dateFormat($format, $date): bool|string
         if ((str_contains($date, '/'))) {
             $formattedDate = str_replace('/', '-', $date);
 
-            return date($format, strtotime($formattedDate));
+            if (strtotime($formattedDate)) {
+                return date($format, strtotime($formattedDate));
+            }
+
+            return false;
         }
 
-        return date($format, strtotime($date));
+        if (strtotime($date)) {
+            return date($format, strtotime($date));
+        }
+
+        return false;
     }
 
     return '';

@@ -39,12 +39,13 @@ class ActivityRow extends Row
         'title',
         'defaultFieldValues',
         'description',
-        'activityStatus',
         'activityDate',
         'participatingOrganization',
         'recipientCountry',
         'recipientRegion',
         'sector',
+        'activityScope',
+        'activityStatus',
     ];
 
     /**
@@ -89,7 +90,6 @@ class ActivityRow extends Row
      * @var array
      */
     protected array $otherElements = [
-        'activityScope',
         'budget',
         'policyMarker',
         'relatedActivity',
@@ -419,9 +419,9 @@ class ActivityRow extends Row
     /**
      * Get the data in the current ActivityRow.
      *
-     * @return array
+     * @return array|string
      */
-    protected function data(): array
+    protected function data(): array|string
     {
         $this->data = [];
 

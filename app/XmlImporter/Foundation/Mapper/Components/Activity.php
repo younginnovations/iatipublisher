@@ -218,7 +218,7 @@ class Activity
         $this->otherIdentifier[$this->index]['reference'] = $this->attributes($element, 'ref');
         $this->otherIdentifier[$this->index]['type'] = $this->attributes($element, 'type');
         $this->otherIdentifier[$this->index]['owner_org'][0]['reference'] = $this->attributes($element, 'ref', 'ownerOrg');
-        $this->otherIdentifier[$this->index]['owner_org'][0]['narrative'] = (($narrative = $this->value(Arr::get($element, 'value', []), 'ownerOrg')) === '') ? $this->emptyNarrative : $narrative;
+        // $this->otherIdentifier[$this->index]['owner_org'][0]['narrative'] = (($narrative = $this->value(Arr::get($element, 'value', []), 'ownerOrg')) === '') ? $this->emptyNarrative : $narrative;
         $this->index++;
 
         return $this->otherIdentifier;
@@ -482,6 +482,7 @@ class Activity
      */
     public function location($element, $template): array
     {
+        // dump($template, $element);
         $this->location[$this->index] = $template['location'];
         $this->location[$this->index]['ref'] = $this->attributes($element, 'ref');
         $this->location[$this->index]['location_reach'][0]['code'] = $this->attributes($element, 'code', 'locationReach');
@@ -621,10 +622,17 @@ class Activity
     {
         $this->conditions = $template['conditions'];
         $this->conditions['condition_attached'] = $this->attributes($element, 'attached');
-        foreach (Arr::get($element, 'value', []) as $index => $condition) {
-            $this->conditions['condition'][$index]['condition_type'] = $this->attributes($condition, 'type');
-            $this->conditions['condition'][$index]['narrative'] = $this->narrative($condition);
+
+        if (Arr::get($element, 'value', false)) {
+            foreach (Arr::get($element, 'value', []) as $index => $condition) {
+                $this->conditions['condition'][$index]['condition_type'] = $this->attributes($condition, 'type');
+                $this->conditions['condition'][$index]['narrative'] = $this->narrative($condition);
+            }
         }
+        // else {
+        //     $this->conditions['condition'][$index]['condition_type'] = $this->attributes($condition, 'type');
+        //     $this->conditions['condition'][$index]['narrative'] = $this->narrative($condition);
+        // }
         $this->index++;
 
         return $this->conditions;

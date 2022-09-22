@@ -48,7 +48,7 @@ class RecipientRegion extends Element
     /**
      * @var int
      */
-    protected int $totalPercentage = 0;
+    protected float $totalPercentage = 0;
 
     /**
      * @var
@@ -320,7 +320,7 @@ class RecipientRegion extends Element
     {
         foreach ($this->percentage as $percentage) {
             if (is_numeric($percentage)) {
-                $this->totalPercentage += $percentage;
+                $this->totalPercentage = (float) $this->totalPercentage + (float) $percentage;
             }
         }
 

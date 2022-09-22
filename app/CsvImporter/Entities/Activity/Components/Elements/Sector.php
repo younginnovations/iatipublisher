@@ -102,15 +102,17 @@ class Sector extends Element
      */
     public function map($key, $value, $index): void
     {
-        $this->setSectorVocabulary($key, $value, $index);
-        $this->setVocabularyUri($key, $value, $index);
-        $this->setSectorCode($key, $value, $index);
-        $this->setSectorCategoryCode($key, $value, $index);
-        $this->setSectorSdgGoal($key, $value, $index);
-        $this->setSectorSdgTarget($key, $value, $index);
-        $this->setSectorText($key, $value, $index);
-        $this->setSectorPercentage($key, $value, $index);
-        $this->setNarrative($key, $value, $index);
+        if (!(is_null($value) || $value === '')) {
+            $this->setSectorVocabulary($key, $value, $index);
+            $this->setVocabularyUri($key, $value, $index);
+            $this->setSectorCode($key, $value, $index);
+            $this->setSectorCategoryCode($key, $value, $index);
+            $this->setSectorSdgGoal($key, $value, $index);
+            $this->setSectorSdgTarget($key, $value, $index);
+            $this->setSectorText($key, $value, $index);
+            $this->setSectorPercentage($key, $value, $index);
+            $this->setNarrative($key, $value, $index);
+        }
     }
 
     /**
@@ -370,39 +372,41 @@ class Sector extends Element
             $rules['sector'] = 'nullable|sector_percentage_sum';
         }
 
-        foreach (Arr::get($this->data(), 'sector') as $key => $value) {
-            $sectorForm = sprintf('sector.%s', $key);
-            $vocabulary = Arr::get($value, 'sector_vocabulary');
+        if (Arr::get($this->data(), 'sector', false)) {
+            foreach (Arr::get($this->data(), 'sector') as $key => $value) {
+                $sectorForm = sprintf('sector.%s', $key);
+                $vocabulary = Arr::get($value, 'sector_vocabulary');
 
-            if ($vocabulary) {
-                $rules[sprintf('%s.vocabulary_uri', $sectorForm)] = 'nullable|url';
+                if ($vocabulary) {
+                    $rules[sprintf('%s.vocabulary_uri', $sectorForm)] = 'nullable|url';
 
-                switch ($vocabulary) {
-                    case '1':
-                        $rules[sprintf('%s.sector_code', $sectorForm)] = sprintf('nullable|in:%s', $sectorCodeList);
-                        break;
-                    case '2':
-                        $rules[sprintf('%s.sector_category_code', $sectorForm)] = sprintf('nullable|in:%s', $sectorCategoryCodeList);
-                        break;
-                    case '7':
-                        $rules[sprintf('%s.sector_sdg_goal', $sectorForm)] = sprintf('nullable|in:%s', $sectorSdgGoalsCodeList);
-                        break;
-                    case '8':
-                        $rules[sprintf('%s.sector_sdg_target', $sectorForm)] = sprintf('nullable|in:%s', $sectorSdgTargetsCodeList);
-                        break;
-                    case '98':
-                    case '99':
-                        $rules[sprintf('%s.sector_text', $sectorForm)] = 'required';
-                        $rules[sprintf('%s.vocabulary_uri', $sectorForm)] = 'required_with:' . $sectorForm . '.sector_vocabulary';
-                        $rules[sprintf('%s.narrative.0.narrative', $sectorForm)] = 'required';
-                        break;
-                    default:
-                        $rules[sprintf('%s.sector_text', $sectorForm)] = 'required';
-                        break;
+                    switch ($vocabulary) {
+                        case '1':
+                            $rules[sprintf('%s.sector_code', $sectorForm)] = sprintf('nullable|in:%s', $sectorCodeList);
+                            break;
+                        case '2':
+                            $rules[sprintf('%s.sector_category_code', $sectorForm)] = sprintf('nullable|in:%s', $sectorCategoryCodeList);
+                            break;
+                        case '7':
+                            $rules[sprintf('%s.sector_sdg_goal', $sectorForm)] = sprintf('nullable|in:%s', $sectorSdgGoalsCodeList);
+                            break;
+                        case '8':
+                            $rules[sprintf('%s.sector_sdg_target', $sectorForm)] = sprintf('nullable|in:%s', $sectorSdgTargetsCodeList);
+                            break;
+                        case '98':
+                        case '99':
+                            $rules[sprintf('%s.sector_text', $sectorForm)] = 'required';
+                            $rules[sprintf('%s.vocabulary_uri', $sectorForm)] = 'required_with:' . $sectorForm . '.sector_vocabulary';
+                            $rules[sprintf('%s.narrative.0.narrative', $sectorForm)] = 'required';
+                            break;
+                        default:
+                            $rules[sprintf('%s.sector_text', $sectorForm)] = 'required';
+                            break;
+                    }
                 }
-            }
 
-            $rules['sector.' . $key . '.percentage'] = 'numeric|max:100|min:0';
+                $rules['sector.' . $key . '.percentage'] = 'numeric|max:100|min:0';
+            }
         }
 
         return $rules;
@@ -423,51 +427,53 @@ class Sector extends Element
             'sector.*.percentage'                 => trans('validation.required', ['attribute' => trans('elementForm.sector_percentage')]),
         ];
 
-        foreach (Arr::get($this->data(), 'sector') as $key => $value) {
-            $sectorForm = sprintf('sector.%s', $key);
-            $vocabulary = Arr::get($value, 'sector_vocabulary');
-            if ($vocabulary) {
-                $messages[sprintf('%s.vocabulary_uri.%s', $sectorForm, 'url')] = trans('validation.active_url', ['attribute' => trans('elementForm.sector_vocabulary_uri')]);
+        if (Arr::get($this->data(), 'sector', false)) {
+            foreach (Arr::get($this->data(), 'sector') as $key => $value) {
+                $sectorForm = sprintf('sector.%s', $key);
+                $vocabulary = Arr::get($value, 'sector_vocabulary');
+                if ($vocabulary) {
+                    $messages[sprintf('%s.vocabulary_uri.%s', $sectorForm, 'url')] = trans('validation.active_url', ['attribute' => trans('elementForm.sector_vocabulary_uri')]);
 
-                switch ($vocabulary) {
-                    case '1':
-                        $messages[sprintf('%s.sector_code.%s', $sectorForm, 'required')] = trans('validation.required', ['attribute' => trans('elementForm.sector_code')]);
-                        $messages[sprintf('%s.sector_code.%s', $sectorForm, 'in')] = trans('validation.invalid_in_transaction', ['attribute' => trans('elementForm.sector_code')]);
-                        break;
-                    case '2':
-                        $messages[sprintf('%s.sector_category_code.%s', $sectorForm, 'required')] = trans('validation.required', ['attribute' => trans('elementForm.sector_code')]);
-                        $messages[sprintf('%s.sector_category_code.%s', $sectorForm, 'in')] = trans('validation.invalid_in_transaction', ['attribute' => trans('elementForm.sector_code')]);
+                    switch ($vocabulary) {
+                        case '1':
+                            $messages[sprintf('%s.sector_code.%s', $sectorForm, 'required')] = trans('validation.required', ['attribute' => trans('elementForm.sector_code')]);
+                            $messages[sprintf('%s.sector_code.%s', $sectorForm, 'in')] = trans('validation.invalid_in_transaction', ['attribute' => trans('elementForm.sector_code')]);
+                            break;
+                        case '2':
+                            $messages[sprintf('%s.sector_category_code.%s', $sectorForm, 'required')] = trans('validation.required', ['attribute' => trans('elementForm.sector_code')]);
+                            $messages[sprintf('%s.sector_category_code.%s', $sectorForm, 'in')] = trans('validation.invalid_in_transaction', ['attribute' => trans('elementForm.sector_code')]);
 
-                        break;
-                    case '7':
-                        $messages[sprintf('%s.sector_sdg_goal.%s', $sectorForm, 'required')] = trans('validation.required', ['attribute' => trans('elementForm.sector_code')]);
-                        $messages[sprintf('%s.sector_sdg_goal.%s', $sectorForm, 'in')] = trans('validation.invalid_in_transaction', ['attribute' => trans('elementForm.sector_code')]);
-                        break;
-                    case '8':
-                        $messages[sprintf('%s.sector_sdg_target.%s', $sectorForm, 'required')] = trans('validation.required', ['attribute' => trans('elementForm.sector_code')]);
-                        $messages[sprintf('%s.sector_sdg_target.%s', $sectorForm, 'in')] = trans('validation.invalid_in_transaction', ['attribute' => trans('elementForm.sector_code')]);
-                        break;
-                    case '98':
-                    case '99':
-                        $messages[sprintf('%s.sector_text.%s', $sectorForm, 'required')] = trans('validation.required', ['attribute' => trans('elementForm.sector_code')]);
-                        $messages[sprintf('%s.vocabulary_uri.%s', $sectorForm, 'required_with')] = trans(
-                            'validation.required_with',
-                            [
-                                'attribute' => trans('elementForm.vocabulary_uri'),
-                                'values'    => trans('elementForm.sector_code'),
-                            ]
-                        );
-                        $messages[sprintf('%s.narrative.0.narrative.%s', $sectorForm, 'required')] = trans('validation.required', ['attribute' => trans('elementForm.sector_narrative')]);
-                        break;
-                    default:
-                        $messages[sprintf('%s.sector_text.%s', $sectorForm, 'required')] = trans('validation.required', ['attribute' => trans('elementForm.sector_code')]);
-                        break;
+                            break;
+                        case '7':
+                            $messages[sprintf('%s.sector_sdg_goal.%s', $sectorForm, 'required')] = trans('validation.required', ['attribute' => trans('elementForm.sector_code')]);
+                            $messages[sprintf('%s.sector_sdg_goal.%s', $sectorForm, 'in')] = trans('validation.invalid_in_transaction', ['attribute' => trans('elementForm.sector_code')]);
+                            break;
+                        case '8':
+                            $messages[sprintf('%s.sector_sdg_target.%s', $sectorForm, 'required')] = trans('validation.required', ['attribute' => trans('elementForm.sector_code')]);
+                            $messages[sprintf('%s.sector_sdg_target.%s', $sectorForm, 'in')] = trans('validation.invalid_in_transaction', ['attribute' => trans('elementForm.sector_code')]);
+                            break;
+                        case '98':
+                        case '99':
+                            $messages[sprintf('%s.sector_text.%s', $sectorForm, 'required')] = trans('validation.required', ['attribute' => trans('elementForm.sector_code')]);
+                            $messages[sprintf('%s.vocabulary_uri.%s', $sectorForm, 'required_with')] = trans(
+                                'validation.required_with',
+                                [
+                                    'attribute' => trans('elementForm.vocabulary_uri'),
+                                    'values'    => trans('elementForm.sector_code'),
+                                ]
+                            );
+                            $messages[sprintf('%s.narrative.0.narrative.%s', $sectorForm, 'required')] = trans('validation.required', ['attribute' => trans('elementForm.sector_narrative')]);
+                            break;
+                        default:
+                            $messages[sprintf('%s.sector_text.%s', $sectorForm, 'required')] = trans('validation.required', ['attribute' => trans('elementForm.sector_code')]);
+                            break;
+                    }
                 }
-            }
 
-            $messages['sector.' . $key . '.percentage.numeric'] = trans('validation.numeric', ['attribute' => trans('elementForm.sector_percentage')]);
-            $messages['sector.' . $key . '.percentage.min'] = trans('validation.max.numeric', ['attribute' => trans('elementForm.sector_percentage'), 'max' => 100]);
-            $messages['sector.' . $key . '.percentage.max'] = trans('validation.min.numeric', ['attribute' => trans('elementForm.sector_percentage'), 'min' => 100]);
+                $messages['sector.' . $key . '.percentage.numeric'] = trans('validation.numeric', ['attribute' => trans('elementForm.sector_percentage')]);
+                $messages['sector.' . $key . '.percentage.min'] = trans('validation.max.numeric', ['attribute' => trans('elementForm.sector_percentage'), 'max' => 100]);
+                $messages['sector.' . $key . '.percentage.max'] = trans('validation.min.numeric', ['attribute' => trans('elementForm.sector_percentage'), 'min' => 100]);
+            }
         }
 
         return $messages;

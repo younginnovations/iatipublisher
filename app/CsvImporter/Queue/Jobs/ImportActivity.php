@@ -38,7 +38,6 @@ class ImportActivity extends Job implements ShouldQueue
      * Directory where the uploaded Csv file is stored temporarily before import.
      */
     public string $csv_file_storage_path;
-    public string $csv_data_storage_path;
 
     /**
      * @var string
@@ -82,9 +81,13 @@ class ImportActivity extends Job implements ShouldQueue
         }
 
         $path = sprintf('%s/%s', $directoryPath, 'status.json');
+        $data_path = sprintf('%s/%s', $directoryPath, 'valid.json');
         try {
-            file_put_contents($path, json_encode(['status' => 'Processing'], JSON_THROW_ON_ERROR));
+            if (file_exists($data_path)) {
+                unlink(sprintf('%s/%s', $directoryPath, 'valid.json'));
+            }
 
+            file_put_contents($path, json_encode(['status' => 'Processing'], JSON_THROW_ON_ERROR));
             $this->csvProcessor->handle($this->organizationId, $this->userId, $this->activityIdentifiers);
             file_put_contents($path, json_encode(['status' => 'Complete'], JSON_THROW_ON_ERROR));
 
