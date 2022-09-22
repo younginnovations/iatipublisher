@@ -30,32 +30,15 @@ class XmlWasUploaded extends Event
     public $organizationId;
 
     /**
-     * @var int
-     */
-    public $consortium_id;
-
-    /**
      * XmlWasUploaded constructor.
      * @param $filename
      * @param $userId
      * @param $organizationId
-     * @param $consortium_id
      */
-    public function __construct($filename, $userId, $organizationId, $consortium_id = null)
+    public function __construct($filename, $userId, $organizationId)
     {
         $this->filename = $filename;
         $this->userId = $userId;
         $this->organizationId = $organizationId;
-        $this->consortium_id = $consortium_id;
-    }
-
-    /**
-     * Get the channels the event should be broadcast on.
-     *
-     * @return array
-     */
-    public function broadcastOn(): array
-    {
-        return [];
     }
 }

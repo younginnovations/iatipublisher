@@ -289,8 +289,6 @@ class Activity
         $descType = ($type === '') ? 1 : $type;
         $this->description[$descType]['type'] = $descType;
 
-        // need to look at this again
-        // dd($descType,$this->description, Arr::get($this->description, $descType, []));
         if (array_key_exists('narrative', Arr::get($this->description, $descType, []))) {
             $narrativeIndex = count($this->description[$descType]['narrative']);
 
@@ -740,7 +738,6 @@ class Activity
                 $this->activity[$this->activityElements[$elementName]] = $this->$elementName($element, $template);
             }
         }
-        // dd($elementName, $this->activityElements);
 
         if (array_key_exists('description', $this->activity)) {
             $this->activity['description'] = array_values(Arr::get($this->activity, 'description', null));

@@ -9,6 +9,7 @@ use App\XmlImporter\Foundation\Support\Providers\XmlServiceProvider;
 use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Database\DatabaseManager;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Psr\Log\LoggerInterface;
 use Sabre\Xml\ParseException;
@@ -27,7 +28,7 @@ class XmlQueueProcessor
      */
     protected XmlProcessor $xmlProcessor;
 
-    public const UPLOADED_XML_STORAGE_PATH = 'xmlImporter/tmp/file';
+    public string $xml_file_storage_path;
     /**
      * @var
      */
@@ -70,6 +71,7 @@ class XmlQueueProcessor
         $this->activityRepo = $activityRepo;
         $this->logger = $logger;
         $this->databaseManager = $databaseManager;
+        $this->xml_file_storage_path = env('XML_DATA_STORAGE_PATH ', 'app/XmlImporter/tmp');
     }
 
     /**
@@ -104,16 +106,16 @@ class XmlQueueProcessor
 
                 return true;
             } else {
-                // shell_exec(sprintf('chmod 777 -R %s', $this->temporaryXmlStorage()));
                 $this->databaseManager->rollback();
+                Request::session()->put('header_mismatch', true);
 
                 $this->storeInJsonFile('schema_error.json', ['filename' => $filename]);
             }
 
             return false;
         } catch (\Exception $exception) {
-            $this->logger->error('Xml Import process failed for Organization: ' . $orgId . ', User:' . $userId, ['error' => $exception->getTraceAsString()]);
-            $this->storeInJsonFile('error.json', ['code' => 'processing_error', 'message' => 'error']);
+            $this->logger->error('Xml Import process failed for Organization: ' . $orgId . ', User:' . $userId, ['error' => $exception]);
+            $this->storeInJsonFile('error.json', ['code' => 'processing_error', 'message' => $exception]);
             throw  $exception;
         }
     }
@@ -128,10 +130,10 @@ class XmlQueueProcessor
     protected function temporaryXmlStorage($filename = null): string
     {
         if ($filename) {
-            return sprintf('%s/%s', storage_path(sprintf('%s/%s', self::UPLOADED_XML_STORAGE_PATH, $this->orgId)), $filename);
+            return sprintf('%s/%s', storage_path(sprintf('%s/%s', $this->xml_file_storage_path, $this->orgId)), $filename);
         }
 
-        return storage_path(sprintf('%s/%s/', self::UPLOADED_XML_STORAGE_PATH, $this->orgId));
+        return storage_path(sprintf('%s/%s/', $this->xml_file_storage_path, $this->orgId));
     }
 
     /**

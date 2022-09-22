@@ -39,7 +39,7 @@ class XmlQueueWriter
     /**
      *  Path to xml importer.
      */
-    public const UPLOADED_XML_STORAGE_PATH = 'xmlImporter/tmp/file';
+    public string $xml_data_storage_path;
 
     /**
      * @var
@@ -102,6 +102,7 @@ class XmlQueueWriter
         $this->userId = $userId;
         $this->orgId = $orgId;
         $this->dbIatiIdentifiers = $dbIatiIdentifiers;
+        $this->xml_data_storage_path = env('XML_DATA_STORAGE_PATH ', 'app/XmlImporter/tmp');
     }
 
     /**
@@ -125,7 +126,7 @@ class XmlQueueWriter
         $mappedActivity['org_id'] = $this->orgId;
         $this->success++;
 
-        $this->appendDataIntoFile($mappedActivity, Arr::flatten($errors), $existing, storage_path(sprintf('%s/%s/%s', self::UPLOADED_XML_STORAGE_PATH, $this->orgId, 'valid.json')));
+        $this->appendDataIntoFile($mappedActivity, Arr::flatten($errors), $existing, storage_path(sprintf('%s/%s/%s', $this->xml_data_storage_path, $this->orgId, 'valid.json')));
 
         return true;
     }
@@ -140,10 +141,10 @@ class XmlQueueWriter
     protected function temporaryXmlStorage($filename = null): string
     {
         if ($filename) {
-            return sprintf('%s/%s', storage_path(sprintf('%s/%s', self::UPLOADED_XML_STORAGE_PATH, $this->orgId)), $filename);
+            return sprintf('%s/%s', storage_path(sprintf('%s/%s', $this->xml_data_storage_path, $this->orgId)), $filename);
         }
 
-        return storage_path(sprintf('%s/%s/', self::UPLOADED_XML_STORAGE_PATH, $this->orgId));
+        return storage_path(sprintf('%s/%s/', $this->xml_data_storage_path, $this->orgId));
     }
 
     /**

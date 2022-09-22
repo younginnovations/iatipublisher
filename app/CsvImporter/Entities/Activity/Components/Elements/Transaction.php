@@ -140,7 +140,7 @@ class Transaction extends Element
      * Validate data for IATI Element.
      *
      * @return $this
-     * @throws \JsonException
+     * @throw \JsonException
      */
     public function validate(): static
     {
@@ -156,9 +156,12 @@ class Transaction extends Element
         $this->validator = $this->factory->sign($this->data())
             ->with($this->rules(), $this->messages())
             ->getValidatorInstance();
+
         $this->setValidity();
 
-        unset($this->data['transaction']['sector'][0]['activitySector'], $this->data['transaction']['activityRecipientRegion'], $this->data['transaction']['activityRecipientCountry']);
+        unset($this->data['transaction']['sector'][0]['activitySector']);
+        unset($this->data['transaction']['activityRecipientRegion']);
+        unset($this->data['transaction']['activityRecipientCountry']);
 
         return $this;
     }
@@ -167,7 +170,7 @@ class Transaction extends Element
      * Provides the rules for the IATI Element validation.
      *
      * @return array
-     * @throws \JsonException
+     * @throw \JsonException
      */
     public function rules(): array
     {
@@ -182,10 +185,10 @@ class Transaction extends Element
 
         $rules = [
             'transaction'                                          => 'check_recipient_region_country',
-            'transaction.transaction_type.*.transaction_type_code' => sprintf('nullable|in:%s', $this->validCodeOrName('TransactionType', 'Activity')),
-            'transaction.transaction_date.*.date'                  => 'nullable|date_format:Y-m-d',
-            'transaction.value.*.amount'                           => 'nullable|numeric',
-            'transaction.value.*.date'                             => 'nullable|date_format:Y-m-d',
+            'transaction.transaction_type.*.transaction_type_code' => sprintf('required|in:%s', $this->validCodeOrName('TransactionType')),
+            'transaction.transaction_date.*.date'                  => 'required|date_format:Y-m-d',
+            'transaction.value.*.amount'                           => 'required|numeric',
+            'transaction.value.*.date'                             => 'required|date_format:Y-m-d',
             'transaction.provider_organization.*.type'             => sprintf('in:%s', $this->validCodeOrName('OrganizationType', 'Organization')),
             'transaction.provider_organization'                    => 'only_one_among',
             'transaction.receiver_organization.*.type'             => sprintf('in:%s', $this->validCodeOrName('OrganizationType', 'Organization')),
@@ -206,16 +209,16 @@ class Transaction extends Element
 
                 switch ($vocabulary) {
                     case '1':
-                        $rules[sprintf('%s.sector_code', $sectorForm)] = sprintf('nullable|in:%s', $sectorCodeList);
+                        $rules[sprintf('%s.sector_code', $sectorForm)] = sprintf('required|in:%s', $sectorCodeList);
                         break;
                     case '2':
-                        $rules[sprintf('%s.sector_category_code', $sectorForm)] = sprintf('nullable|in:%s', $sectorCategoryCodeList);
+                        $rules[sprintf('%s.sector_category_code', $sectorForm)] = sprintf('required|in:%s', $sectorCategoryCodeList);
                         break;
                     case '7':
-                        $rules[sprintf('%s.sector_sdg_goal', $sectorForm)] = sprintf('nullable|in:%s', $sectorSdgGoalsCodeList);
+                        $rules[sprintf('%s.sector_sdg_goal', $sectorForm)] = sprintf('required|in:%s', $sectorSdgGoalsCodeList);
                         break;
                     case '8':
-                        $rules[sprintf('%s.sector_sdg_target', $sectorForm)] = sprintf('nullable|in:%s', $sectorSdgTargetsCodeList);
+                        $rules[sprintf('%s.sector_sdg_target', $sectorForm)] = sprintf('required|in:%s', $sectorSdgTargetsCodeList);
                         break;
                     case '98':
                     case '99':
@@ -331,10 +334,11 @@ class Transaction extends Element
      * @return string
      * @throws \JsonException
      */
-    protected function validCodeOrName($name, string $directory = 'Activity'): string
+    protected function validCodeOrName($name, $directory = 'Activity'): string
     {
-        [$validCodes, $codes] = [$this->loadCodeList($name, $directory), []];
-        $codes = array_keys($validCodes);
+        list($validCodes, $codes) = [$this->loadCodeList($name, $directory), []];
+
+        $codes = array_keys($validCodes) + array_values($validCodes);
 
         return implode(',', array_keys(array_flip($codes)));
     }
@@ -348,9 +352,9 @@ class Transaction extends Element
      * @return string
      * @throws \JsonException
      */
-    protected function validCodeList($name, string $directory = 'Activity'): string
+    protected function validCodeList($name, $directory = 'Activity'): string
     {
-        $codeList = getCodeList($name, $directory);
+        $codeList = $this->loadCodeList($name, $directory);
         $codes = array_keys($codeList);
 
         return implode(',', $codes);

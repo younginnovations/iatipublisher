@@ -141,9 +141,9 @@
   "default_finance_type": "",
   "default_aid_type": {
     "default_aid_type": "",
-    "default_aidtype_vocabulary": "",
+    "default_aid_type_vocabulary": "",
     "earmarking_category": "",
-    "default_aid_type_text": "",
+    "earmarking_modality": "",
     "cash_and_voucher_modalities": ""
   },
   "default_tied_status": "",
@@ -393,15 +393,11 @@
     ],
     "aid_type": [
       {
-        "aid_type": [
-          {
-            "aid_type_vocabulary": "",
-            "earmarking_category": "",
-            "earmarking_modality": "",
-            "aid_type_code": "",
-            "cash_and_voucher_modalities": ""
-          }
-        ]
+        "aid_type_code": "",
+        "aid_type_vocabulary": "",
+        "earmarking_category": "",
+        "earmarking_modality": "",
+        "cash_and_voucher_modalities": ""
       }
     ],
     "tied_status": [

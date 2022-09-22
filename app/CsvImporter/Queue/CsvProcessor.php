@@ -6,6 +6,7 @@ namespace App\CsvImporter\Queue;
 
 use App\CsvImporter\Entities\Activity\Activity;
 use App\CsvImporter\Traits\ChecksCsvHeaders;
+use Illuminate\Contracts\Session\Session;
 use Illuminate\Support\Arr;
 
 /**
@@ -64,14 +65,7 @@ class CsvProcessor
 
             $this->activity->process();
         } else {
-            $filepath = storage_path('csvImporter/tmp/' . $organizationId);
-            $filename = 'header_mismatch.json';
-
-            if (!mkdir($filepath, 0777, true) && !is_dir($filepath)) {
-                throw new \RuntimeException(sprintf('Directory "%s" was not created', $filepath));
-            }
-
-            file_put_contents($filepath . '/' . $filename, json_encode(['mismatch' => true], JSON_THROW_ON_ERROR));
+            Session::put('header_mismatch', true);
         }
     }
 
