@@ -45,8 +45,11 @@ class ParticipatingOrganization extends Element
 
     /**
      * ParticipatingOrganisation constructor.
+     *
      * @param            $fields
      * @param Validation $factory
+     *
+     * @throws \JsonException
      */
     public function __construct($fields, Validation $factory)
     {
@@ -80,6 +83,7 @@ class ParticipatingOrganization extends Element
      * @param $index
      *
      * @return void
+     * @throws \JsonException
      */
     public function map($key, $value, $index): void
     {
@@ -102,6 +106,7 @@ class ParticipatingOrganization extends Element
      *
      * @return void
      * @throw \JsonExceptioon
+     * @throws \JsonException
      */
     protected function setOrganisationRole($key, $value, $index): void
     {
@@ -109,7 +114,7 @@ class ParticipatingOrganization extends Element
             $this->data['participating_organization'][$index]['organization_role'] = '';
         }
 
-        if ($key == $this->_csvHeaders[0] && (!is_null($value))) {
+        if ($key === $this->_csvHeaders[0] && (!is_null($value))) {
             $validOrganizationRoles = $this->loadCodeList('OrganisationRole', 'Organization');
 
             foreach ($validOrganizationRoles as $code => $name) {
@@ -154,7 +159,7 @@ class ParticipatingOrganization extends Element
      * @param $index
      *
      * @return void
-     * @throw \JsonException
+     * @throws \JsonException
      */
     protected function setOrganisationType($key, $value, $index): void
     {
@@ -162,11 +167,11 @@ class ParticipatingOrganization extends Element
             $this->data['participating_organization'][$index]['type'] = '';
         }
 
-        if ($key == $this->_csvHeaders[1] && (!is_null($value))) {
+        if ($key === $this->_csvHeaders[1] && (!is_null($value))) {
             $validOrganizationType = $this->loadCodeList('OrganizationType', 'Organization');
 
             foreach ($validOrganizationType as $code => $name) {
-                if (!is_int($value) && strcasecmp($value, $name) == 0) {
+                if (!is_int($value) && strcasecmp($value, $name) === 0) {
                     $value = $code;
                     break;
                 }
@@ -265,8 +270,9 @@ class ParticipatingOrganization extends Element
      *
      * @return string
      * @throw \JsonException
+     * @throws \JsonException
      */
-    protected function validOrganizationRoles()
+    protected function validOrganizationRoles(): string
     {
         $organizationRoleCodeList = $this->loadCodeList('OrganisationRole', 'Organization');
         $organizationRoles = array_keys($organizationRoleCodeList) + array_values($organizationRoleCodeList);
@@ -279,6 +285,7 @@ class ParticipatingOrganization extends Element
      *
      * @return string
      * @throw \JsonException
+     * @throws \JsonException
      */
     protected function validOrganizationTypes(): string
     {

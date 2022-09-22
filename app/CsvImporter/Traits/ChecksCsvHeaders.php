@@ -4,29 +4,11 @@ declare(strict_types=1);
 
 namespace App\CsvImporter\Traits;
 
-use App\CsvImporter\CsvReader\CsvReader;
-use Illuminate\Contracts\Container\BindingResolutionException;
-
 /**
  * Class ChecksCsvHeaders.
  */
 trait ChecksCsvHeaders
 {
-    /**
-     * Load Csv template.
-     * @param $filename
-     *
-     * @return mixed
-     * @throws BindingResolutionException
-     */
-    protected function loadTemplate($filename): mixed
-    {
-        $excel = app()->make(CsvReader::class);
-        $file = $excel->load(app_path(sprintf('CsvImporter/Templates/Activity/%s.csv', $filename)));
-
-        return $file->toArray();
-    }
-
     /**
      * Check if the difference of the csv headers is empty.
      *
@@ -41,37 +23,6 @@ trait ChecksCsvHeaders
         }
 
         return false;
-    }
-
-    /**
-     * Check if the headers are correct for the uploaded Csv File.
-     *
-     * @param        $csvHeaders
-     * @param        $templateFileName
-     *
-     * @return bool
-     * @throws BindingResolutionException
-     */
-    protected function checkHeadersFor($csvHeaders, $templateFileName): bool
-    {
-        $templateHeaders = $this->loadTemplate($templateFileName);
-        $templateHeaders = array_keys($templateHeaders[0]);
-        $diffHeaders = array_diff($csvHeaders, $templateHeaders);
-
-        return $this->isSameCsvHeader($diffHeaders);
-    }
-
-    /**
-     * Check if the headers for the uploaded Csv file matches with the provided header count.
-     *
-     * @param array $actualHeaders
-     * @param       $providedHeaderCount
-     *
-     * @return bool
-     */
-    protected function headerCountMatches(array $actualHeaders, $providedHeaderCount): bool
-    {
-        return count($actualHeaders) === $providedHeaderCount;
     }
 
     /**

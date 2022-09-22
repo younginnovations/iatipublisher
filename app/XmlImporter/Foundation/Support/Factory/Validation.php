@@ -510,55 +510,6 @@ class Validation extends Factory
     }
 
     /**
-     * Get distinct errors from a list of errors.
-     *
-     * @param $errors
-     *
-     * @return array
-     */
-    protected function getDistinctErrors($errors): array
-    {
-        return array_unique($errors);
-    }
-
-    /**
-     * Embed Links to the respective elements for the error messages.
-     *
-     * @param       $activityId
-     * @param array $errors
-     * @param bool  $shouldBeUnique
-     *
-     * @return array
-     */
-    protected function embedLinks($activityId, array $errors, bool $shouldBeUnique = false): array
-    {
-        $links = [];
-
-        foreach ($errors as $element => $error) {
-            $index = 0;
-            if (!in_array($element, ['Transaction', 'Results', 'Document Links'])) {
-                if ($shouldBeUnique) {
-                    $error = $this->getDistinctErrors($error);
-                }
-
-                foreach ($error as $errorText) {
-                    $link = isset($this->elementLinks[$element]) ? route(
-                        $this->elementLinks[$element],
-                        $activityId
-                    ) : '';
-                    $links[$element][$index]['link'] = $link;
-                    $links[$element][$index]['message'] = $errorText;
-                    $index++;
-                }
-            } else {
-                $links[$element] = $this->getErrors($element, $error, $activityId);
-            }
-        }
-
-        return $links;
-    }
-
-    /**
      * Get the errors in the uploaded Xml File.
      *
      * @param $element

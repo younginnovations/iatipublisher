@@ -37,6 +37,7 @@ class Activity extends Csv
      * Process the Activity Csv.
      *
      * @return $this
+     * @throws \JsonException
      */
     public function process(): static
     {

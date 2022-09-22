@@ -212,9 +212,9 @@ class Transaction
      * @param array $transactions
      * @param       $template
      *
-     * @return mixed
+     * @return array
      */
-    public function map(array $transactions, $template): mixed
+    public function map(array $transactions, $template): array
     {
         foreach ($transactions as $index => $transaction) {
             $this->transaction[$index] = $template['transaction'];
