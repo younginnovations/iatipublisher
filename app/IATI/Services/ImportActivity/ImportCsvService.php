@@ -19,6 +19,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\File as FileFacade;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Excel;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\File\File;
@@ -149,7 +150,9 @@ class ImportCsvService
             Session::put('user_id', Auth::user()->id);
             Session::put('org_id', Auth::user()->organization->id);
 
+            // dd(Storage::exists(sprintf('%s/%s/valid.json', $this->csv_data_storage_path, Session::get('org_id'))));
             // unable to delete file currently
+            // Storage::delete(sprintf('%s/%s', $this->csv_data_storage_path, Session::get('org_id')));
             // $directoryPath = storage_path(sprintf('%s/%s', $this->csv_data_storage_path, Session::get('org_id')));
             // $this->filesystem->deleteDirectory($directoryPath);
             $activityIdentifiers = $this->getIdentifiers();
@@ -448,26 +451,6 @@ class ImportCsvService
         }
 
         return storage_path(sprintf('%s/%s/', $this->csv_file_storage_path, Session::get('org_id')));
-    }
-
-    /**
-     * Reset session values if necessary.
-     *
-     * @return void
-     */
-    public function refreshSessionIfRequired(): void
-    {
-        if (Session::get('import-status') === 'Complete') {
-            Session::forget('filename');
-        }
-    }
-
-    /**
-     * Record if the headers have been mismatched during processing.
-     */
-    public function reportHeaderMismatch(): void
-    {
-        Session::put('header_mismatch', true);
     }
 
     /**

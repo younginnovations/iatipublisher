@@ -63,6 +63,8 @@ class CsvProcessor
             $this->initActivity(['organization_id' => $organizationId, 'user_id' => $userId, 'activity_identifiers' => $activityIdentifiers]);
 
             $this->activity->process();
+        } else {
+            request()->session()->put('header_mismatch', true);
         }
     }
 
