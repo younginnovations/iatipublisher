@@ -368,8 +368,6 @@ class Sector extends Element
 
         if ($this->type === 'activity') {
             $rules['sector'] = 'nullable|sector_percentage_sum';
-        } elseif ($this->type === 'transaction') {
-            $rules['sector'] = 'sector_percentage_sum';
         }
 
         foreach (Arr::get($this->data(), 'sector') as $key => $value) {
@@ -495,12 +493,8 @@ class Sector extends Element
      */
     protected function getCsvType($fields): ?string
     {
-        if (count($fields) === getCsvHeaderCount('Activity', 'basic')) {
+        if (count($fields) === getCsvHeaderCount()) {
             return 'activity';
-        }
-
-        if (count($fields) === getCsvHeaderCount('Activity', 'transaction')) {
-            return 'transaction';
         }
 
         return null;
