@@ -6,7 +6,6 @@ namespace App\CsvImporter\Queue;
 
 use App\CsvImporter\Entities\Activity\Activity;
 use App\CsvImporter\Traits\ChecksCsvHeaders;
-use Illuminate\Contracts\Session\Session;
 use Illuminate\Support\Arr;
 
 /**
@@ -64,8 +63,6 @@ class CsvProcessor
             $this->initActivity(['organization_id' => $organizationId, 'user_id' => $userId, 'activity_identifiers' => $activityIdentifiers]);
 
             $this->activity->process();
-        } else {
-            Session::put('header_mismatch', true);
         }
     }
 

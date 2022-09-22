@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\IATI\Services\ImportActivity;
 
 use App\IATI\Elements\Xml\XmlGenerator;
-use App\IATI\Services\Xml\XmlSchemaErrorParser;
 use App\IATI\Traits\XmlServiceTrait;
 
 /**
@@ -21,18 +20,11 @@ class XmlService
     protected XmlGenerator $xmlGenerator;
 
     /**
-     * @var XmlSchemaErrorParser
-     */
-    private XmlSchemaErrorParser $xmlErrorParser;
-
-    /**
      * @param XmlGenerator         $xmlGenerator
-     * @param XmlSchemaErrorParser $xmlSchemaErrorParser
      */
-    public function __construct(XmlGenerator $xmlGenerator, XmlSchemaErrorParser $xmlSchemaErrorParser)
+    public function __construct(XmlGenerator $xmlGenerator)
     {
         $this->xmlGenerator = $xmlGenerator;
-        $this->xmlErrorParser = $xmlSchemaErrorParser;
     }
 
     /**

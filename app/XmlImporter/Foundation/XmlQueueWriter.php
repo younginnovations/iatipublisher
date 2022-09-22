@@ -132,22 +132,6 @@ class XmlQueueWriter
     }
 
     /**
-     * Get the temporary storage path for the uploaded Xml file.
-     *
-     * @param null $filename
-     *
-     * @return string
-     */
-    protected function temporaryXmlStorage($filename = null): string
-    {
-        if ($filename) {
-            return sprintf('%s/%s', storage_path(sprintf('%s/%s', $this->xml_data_storage_path, $this->orgId)), $filename);
-        }
-
-        return storage_path(sprintf('%s/%s/', $this->xml_data_storage_path, $this->orgId));
-    }
-
-    /**
      * @param $identifier
      *
      * @return bool
