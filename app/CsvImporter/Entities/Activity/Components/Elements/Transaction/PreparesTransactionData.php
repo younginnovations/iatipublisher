@@ -11,6 +11,7 @@ trait PreparesTransactionData
 {
     /**
      * Set Internal Reference for Transaction.
+     *
      * @param $key
      * @param $value
      *
@@ -60,10 +61,13 @@ trait PreparesTransactionData
 
     /**
      * Set the date for the Transaction Element.
+     *
      * @param $key
      * @param $value
+     *
+     * @return void
      */
-    protected function setTransactionDate($key, $value)
+    protected function setTransactionDate($key, $value): void
     {
         if ($key === $this->_csvHeaders[2]) {
             $this->data['transaction']['transaction_date'][] = ['date' => dateFormat('Y-m-d', $value)];
@@ -72,10 +76,13 @@ trait PreparesTransactionData
 
     /**
      * Set the value for the Transaction Element.
+     *
      * @param $key
      * @param $value
+     *
+     * @return void
      */
-    protected function setTransactionValue($key, $value)
+    protected function setTransactionValue($key, $value): void
     {
         if ($key == $this->_csvHeaders[3]) {
             $this->data['transaction']['value'][0]['amount'] = str_replace(',', '', (string) $value);
@@ -84,10 +91,13 @@ trait PreparesTransactionData
 
     /**
      * Set the value date for the Transaction Element.
+     *
      * @param $key
      * @param $value
+     *
+     * @return void
      */
-    protected function setTransactionValueDate($key, $value)
+    protected function setTransactionValueDate($key, $value): void
     {
         if ($key == $this->_csvHeaders[4]) {
             $this->data['transaction']['value'][0]['date'] = dateFormat('Y-m-d', $value);
@@ -97,10 +107,13 @@ trait PreparesTransactionData
 
     /**
      * Set the description for the Transaction Element.
+     *
      * @param $key
      * @param $value
+     *
+     * @return void
      */
-    protected function setTransactionDescription($key, $value)
+    protected function setTransactionDescription($key, $value): void
     {
         if ($key == $this->_csvHeaders[5]) {
             $this->data['transaction']['description'][0]['narrative'][0] = ['narrative' => $value, 'language' => ''];
@@ -158,8 +171,10 @@ trait PreparesTransactionData
 
     /**
      * Set the Disbursement Channel for the Transaction Element.
+     *
+     * @return void
      */
-    protected function setDisbursementChannel()
+    protected function setDisbursementChannel(): void
     {
         if (array_key_exists('receiver_organization', $this->data['transaction'])) {
             $this->data['transaction']['disbursement_channel'][0] = ['disbursement_channel_code' => ''];
@@ -202,10 +217,13 @@ trait PreparesTransactionData
 
     /**
      * Set the Sector code for the Transaction Element's Sector.
+     *
      * @param $sectorVocabulary
      * @param $value
+     *
+     * @return void
      */
-    protected function setSectorCode($sectorVocabulary, $value)
+    protected function setSectorCode($sectorVocabulary, $value): void
     {
         if ($sectorVocabulary == 1) {
             $this->data['transaction']['sector'][0]['sector_code'] = $value;
@@ -240,10 +258,13 @@ trait PreparesTransactionData
 
     /**
      * Set the Recipient Country for the Transaction Element.
+     *
      * @param $key
      * @param $value
+     *
+     * @void
      */
-    protected function setRecipientCountry($key, $value)
+    protected function setRecipientCountry($key, $value): void
     {
         if ($key == $this->_csvHeaders[18]) {
             $this->data['transaction']['recipient_country'][0]['country_code'] = $value;
@@ -253,10 +274,13 @@ trait PreparesTransactionData
 
     /**
      * Set the Recipient Region for the Transaction Element.
+     *
      * @param $key
      * @param $value
+     *
+     * @return void
      */
-    protected function setRecipientRegion($key, $value)
+    protected function setRecipientRegion($key, $value): void
     {
         if ($key == $this->_csvHeaders[19]) {
             $this->data['transaction']['recipient_region'][0]['region_code'] = $value;
@@ -268,8 +292,10 @@ trait PreparesTransactionData
 
     /**
      * Set the Flow Type for the Transaction Element.
+     *
+     * @return void
      */
-    protected function setFlowType()
+    protected function setFlowType(): void
     {
         if (array_key_exists('recipient_region', $this->data['transaction'])) {
             $this->data['transaction']['flow_type'][0] = ['flow_type' => ''];
@@ -278,8 +304,10 @@ trait PreparesTransactionData
 
     /**
      * Set the Finance Type for the Transaction Element.
+     *
+     * @return void
      */
-    protected function setFinanceType()
+    protected function setFinanceType(): void
     {
         if (array_key_exists('flow_type', $this->data['transaction'])) {
             $this->data['transaction']['finance_type'][0] = ['finance_type' => ''];
@@ -288,8 +316,10 @@ trait PreparesTransactionData
 
     /**
      * Set the Aid Type for the Transaction Element.
+     *
+     * @return void
      */
-    protected function setAidType()
+    protected function setAidType(): void
     {
         if (array_key_exists('finance_type', $this->data['transaction'])) {
             $this->data['transaction']['aid_type'][0] = ['aid_type' => ''];
@@ -298,8 +328,10 @@ trait PreparesTransactionData
 
     /**
      * Set Ties Status for Transaction Element.
+     *
+     * @return void
      */
-    protected function setTiedStatus()
+    protected function setTiedStatus():void
     {
         if (array_key_exists('aid_type', $this->data['transaction'])) {
             $this->data['transaction']['tied_status'][0] = ['tied_status_code' => ''];
@@ -308,8 +340,10 @@ trait PreparesTransactionData
 
     /**
      * Load the provided Activity CodeList.
+     *
      * @param        $codeList
      * @param string $directory
+     *
      * @return array
      */
     protected function loadCodeList($codeList, $directory = 'Activity'): array
