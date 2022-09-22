@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Entities;
 
-use App\Imports\ActivityRow;
+use App\CsvImporter\Entities\Activity\Components\ActivityRow;
 
 /**
  * Class Csv.
@@ -42,14 +42,13 @@ abstract class Csv
      *
      * @param $row
      * @param $activityIdentifiers
-     * @param $version
      *
      * @return ActivityRow
      */
-    protected function initialize($row, $activityIdentifiers, $version): ActivityRow
+    protected function initialize($row, $activityIdentifiers): ActivityRow
     {
         // return app()->make(ActivityRow::class, [$row, $this->organizationId, $this->userId, $activityIdentifiers, $version]);
-        return  new ActivityRow($row, $this->organizationId, $this->userId, $activityIdentifiers, $version);
+        return  new ActivityRow($row, $this->organizationId, $this->userId, $activityIdentifiers);
     }
 
     /**

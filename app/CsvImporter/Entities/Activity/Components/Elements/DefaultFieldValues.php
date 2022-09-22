@@ -261,6 +261,7 @@ class DefaultFieldValues extends Element
      * Validate data for IATI Element.
      *
      * @return $this
+     * @throws \JsonException
      */
     public function validate(): static
     {
@@ -314,9 +315,6 @@ class DefaultFieldValues extends Element
      */
     protected function defaultValueCodeList($codeList): string
     {
-        [$defaultValueCodeList, $codes] = [$this->loadCodeList($codeList), []];
-        $codes = array_keys($defaultValueCodeList);
-
-        return implode(',', array_keys(array_flip($codes)));
+        return implode(',', array_keys(array_flip(array_keys($this->loadCodeList($codeList)))));
     }
 }

@@ -91,6 +91,7 @@ class ActivityStatus extends Element
      * Provides the rules for the IATI Element validation.
      *
      * @return array
+     * @throws \JsonException
      */
     public function rules(): array
     {
@@ -123,6 +124,7 @@ class ActivityStatus extends Element
      * Validate data for IATI Element.
      *
      * @return $this
+     * @throws \JsonException
      */
     public function validate(): static
     {

@@ -24,9 +24,9 @@ class XmlProcessor
     protected array $transactions = [];
 
     /**
-     * @var
+     * @var XmlMapper
      */
-    protected $xmlMapper;
+    protected XmlMapper $xmlMapper;
 
     /**
      * Xml constructor.
