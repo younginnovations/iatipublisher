@@ -16,6 +16,9 @@ use Illuminate\Support\Facades\Auth;
  */
 class TotalExpenditureController extends Controller
 {
+    /**
+     * @var TotalExpenditureService
+     */
     protected TotalExpenditureService $totalExpenditureService;
 
     /**
@@ -31,16 +34,15 @@ class TotalExpenditureController extends Controller
     /**
      * Renders title edit form.
      *
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|void|RedirectResponse
+     * @return View|RedirectResponse
      */
     public function edit(): View|RedirectResponse
     {
         try {
             $id = Auth::user()->organization_id;
-            $element = json_decode(file_get_contents(app_path('IATI/Data/organizationElementJsonSchema.json')), true);
+            $element = json_decode(file_get_contents(app_path('IATI/Data/organizationElementJsonSchema.json')), true, 512, JSON_THROW_ON_ERROR);
             $organization = $this->totalExpenditureService->getOrganizationData($id);
             $form = $this->totalExpenditureService->formGenerator($id);
-            $status = $organization->total_expenditure_element_completed ?? false;
             $data = ['title'=> $element['total_expenditure']['label'], 'name'=>'total-expenditure'];
 
             return view('admin.organisation.forms.totalExpenditure.totalExpenditure', compact('form', 'organization', 'data'));
@@ -61,18 +63,15 @@ class TotalExpenditureController extends Controller
     public function update(TotalExpenditureRequest $request): RedirectResponse
     {
         try {
-            $id = Auth::user()->organization_id;
-            $organizationTitle = $request->all();
-
-            if (!$this->totalExpenditureService->update($id, $organizationTitle)) {
-                return redirect()->route('admin.organisation.index', $id)->with('error', 'Error has occurred while updating organization total-expenditure.');
+            if (!$this->totalExpenditureService->update(Auth::user()->organization_id, $request->all())) {
+                return redirect()->route('admin.organisation.index')->with('error', 'Error has occurred while updating organization total-expenditure.');
             }
 
-            return redirect()->route('admin.organisation.index', $id)->with('success', 'Organization total-expenditure updated successfully.');
+            return redirect()->route('admin.organisation.index')->with('success', 'Organization total-expenditure updated successfully.');
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.organisation.index', $id)->with('error', 'Error has occurred while updating organization total-expenditure.');
+            return redirect()->route('admin.organisation.index')->with('error', 'Error has occurred while updating organization total-expenditure.');
         }
     }
 }

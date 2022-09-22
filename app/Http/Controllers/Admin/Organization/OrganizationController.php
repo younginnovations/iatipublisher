@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Admin\Organization;
 
 use App\Http\Controllers\Controller;
+use App\IATI\Models\Organization\Organization;
 use App\IATI\Services\Organization\OrganizationService;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
@@ -20,7 +21,7 @@ class OrganizationController extends Controller
     /**
      * @var OrganizationService
      */
-    protected $organizationService;
+    protected OrganizationService $organizationService;
 
     /**
      * OrganizationController Constructor.
@@ -34,7 +35,7 @@ class OrganizationController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(): void
     {
         //
     }
@@ -52,7 +53,8 @@ class OrganizationController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param Request $request
+     *
      * @return void
      */
     public function store(Request $request): void
@@ -63,8 +65,6 @@ class OrganizationController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param $id
-     *
      * @return View|RedirectResponse
      */
     public function show(): View|RedirectResponse
@@ -72,8 +72,8 @@ class OrganizationController extends Controller
         try {
             $toast['message'] = Session::has('error') ? Session::get('error') : (Session::get('success') ? Session::get('success') : '');
             $toast['type'] = Session::has('error') ? 'error' : 'success';
-            $elements = json_decode(file_get_contents(app_path('IATI/Data/organizationElementJsonSchema.json')), true);
-            $elementGroups = json_decode(file_get_contents(app_path('Data/Organization/OrganisationElementsGroup.json')), true);
+            $elements = json_decode(file_get_contents(app_path('IATI/Data/organizationElementJsonSchema.json')), true, 512, JSON_THROW_ON_ERROR);
+            $elementGroups = json_decode(file_get_contents(app_path('Data/Organization/OrganisationElementsGroup.json')), true, 512, JSON_THROW_ON_ERROR);
             $types = $this->organizationService->getOrganizationTypes();
             $organization = $this->organizationService->getOrganizationData(Auth::user()->organization_id);
             $progress = $this->organizationService->organizationMandatoryCompletePercentage($organization);
@@ -92,10 +92,11 @@ class OrganizationController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\IATI\Models\Organization\Organization  $organization
+     * @param Organization $organization
+     *
      * @return void
      */
-    public function edit($organization): void
+    public function edit(Organization $organization): void
     {
         //
     }
@@ -103,11 +104,12 @@ class OrganizationController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\IATI\Models\Organization\Organization  $organization
+     * @param Request      $request
+     * @param Organization $organization
+     *
      * @return void
      */
-    public function update(Request $request, $organization): void
+    public function update(Request $request, Organization $organization): void
     {
         //
     }
@@ -115,10 +117,11 @@ class OrganizationController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\IATI\Models\Organization\Organization  $organization
+     * @param Organization $organization
+     *
      * @return void
      */
-    public function destroy($organization): void
+    public function destroy(Organization $organization): void
     {
         //
     }
@@ -127,6 +130,7 @@ class OrganizationController extends Controller
      * Returns list of registration agency specific to a country.
      *
      * @return array
+     * @throws \JsonException
      */
     public function getRegistrationAgency($country_code): array
     {
@@ -134,7 +138,7 @@ class OrganizationController extends Controller
         $filtered_agency = [];
 
         foreach ($registration_agency as $key => $value) {
-            if (in_array(str_split($key, 2)[0], [$country_code, 'XI', 'XR'])) {
+            if (in_array(str_split($key, 2)[0], [$country_code, 'XI', 'XR'], true)) {
                 $filtered_agency[$key] = $value;
             }
         }

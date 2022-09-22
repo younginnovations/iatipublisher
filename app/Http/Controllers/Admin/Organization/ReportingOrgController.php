@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\Auth;
 class ReportingOrgController extends Controller
 {
     /**
-     * @var
+     * @var ReportingOrgService
      */
     protected reportingOrgService $reportingOrgService;
 
@@ -34,13 +34,13 @@ class ReportingOrgController extends Controller
     /**
      * Renders title edit form.
      *
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|void|RedirectResponse
+     * @return View|RedirectResponse
      */
     public function edit(): View|RedirectResponse
     {
         try {
             $id = Auth::user()->organization_id;
-            $element = json_decode(file_get_contents(app_path('IATI/Data/organizationElementJsonSchema.json')), true);
+            $element = json_decode(file_get_contents(app_path('IATI/Data/organizationElementJsonSchema.json')), true, 512, JSON_THROW_ON_ERROR);
             $organization = $this->reportingOrgService->getOrganizationData($id);
             $form = $this->reportingOrgService->formGenerator($id);
             $data = ['title'=> $element['reporting_org']['label'], 'name'=>'reporting-org'];
@@ -63,18 +63,15 @@ class ReportingOrgController extends Controller
     public function update(ReportingOrgRequest $request): RedirectResponse
     {
         try {
-            $id = Auth::user()->organization_id;
-            $reportingOrg = $request->all();
-
-            if (!$this->reportingOrgService->update($id, $reportingOrg)) {
-                return redirect()->route('admin.organisation.index', $id)->with('error', 'Error has occurred while updating organization reporting_org.');
+            if (!$this->reportingOrgService->update(Auth::user()->organization_id, $request->all())) {
+                return redirect()->route('admin.organisation.index')->with('error', 'Error has occurred while updating organization reporting_org.');
             }
 
-            return redirect()->route('admin.organisation.index', $id)->with('success', 'Organization reporting_org updated successfully.');
+            return redirect()->route('admin.organisation.index')->with('success', 'Organization reporting_org updated successfully.');
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.organisation.index', $id)->with('error', 'Error has occurred while updating organization reporting_org.');
+            return redirect()->route('admin.organisation.index')->with('error', 'Error has occurred while updating organization reporting_org.');
         }
     }
 }
