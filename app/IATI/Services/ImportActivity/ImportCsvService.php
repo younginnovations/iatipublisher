@@ -32,7 +32,7 @@ class ImportCsvService
     /**
      * Directory where the validated Csv data is written before import.
      */
-    public const CSV_DATA_STORAGE_PATH = 'csvImporter/tmp';
+    public string $csv_data_storage_path;
 
     /**
      * File in which the valida Csv data is written before import.
@@ -47,7 +47,7 @@ class ImportCsvService
     /**
      * Directory where the uploaded Csv file is stored temporarily before import.
      */
-    public const UPLOADED_CSV_STORAGE_PATH = 'csvImporter/tmp/file';
+    public string $csv_file_storage_path;
 
     /**
      * Default encoding for csv file.
@@ -131,6 +131,8 @@ class ImportCsvService
         $this->transactionRepo = $transactionRepo;
         $this->userId = Auth::user()?->organization_id ?? 1;
         $this->filesystem = $filesystem;
+        $this->csv_data_storage_path = env('CSV_DATA_STORAGE_PATH', 'app/CsvImporter/file');
+        $this->csv_file_storage_path = env('CSV_FILE_STORAGE_PATH', 'app/CsvImporter/file');
     }
 
     /**
@@ -149,10 +151,9 @@ class ImportCsvService
             Session::put('file_type', $fileType);
             Session::put('user_id', Auth::user()->id);
             Session::put('org_id', Auth::user()->organization->id);
-            $this->fixStagingPermission($this->getTemporaryFilepath());
 
             if (file_exists($this->getTemporaryFilepath('valid.json'))) {
-                unlink($this->getTemporaryFilepath('valid.json'));
+                unlink($this->getTemporaryFilepath());
             }
 
             $activityIdentifiers = $this->getIdentifiers();
@@ -274,7 +275,7 @@ class ImportCsvService
      */
     protected function checkStatusFile(): bool
     {
-        return file_exists(storage_path(sprintf('%s/%s/%s', self::CSV_DATA_STORAGE_PATH, Session::get('org_id'), 'status.json')));
+        return file_exists(sprintf('%s/%s/%s', $this->csv_data_storage_path, Session::get('org_id'), 'status.json'));
     }
 
     /**
@@ -284,7 +285,7 @@ class ImportCsvService
      */
     public function removeImportDirectory(): void
     {
-        $directoryPath = storage_path(sprintf('%s/%s', self::CSV_DATA_STORAGE_PATH, Session::get('org_id')));
+        $directoryPath = storage_path(sprintf('%s/%s', $this->csv_data_storage_path, Session::get('org_id')));
         $this->filesystem->deleteDirectory($directoryPath);
     }
 
@@ -317,13 +318,17 @@ class ImportCsvService
     /**
      * Get the filepath to the file in which the Csv data is written after processing for import.
      *
-     * @param $isValid
+     * @param $filename
      *
      * @return string
      */
-    public function getFilePath($isValid): string
+    public function getFilePath($filename = null): string
     {
-        return storage_path(sprintf('%s/%s/%s', self::CSV_DATA_STORAGE_PATH, Auth::user()->organization_id, self::VALID_CSV_FILE));
+        if ($filename) {
+            return storage_path(sprintf('%s/%s/%s', $this->csv_data_storage_path, Auth::user()->organization_id, $filename));
+        }
+
+        return storage_path(sprintf('%s/%s/%s', $this->csv_data_storage_path, Auth::user()->organization_id, self::VALID_CSV_FILE));
     }
 
     /**
@@ -336,10 +341,10 @@ class ImportCsvService
     public function getTemporaryFilepath($filename = null): string
     {
         if ($filename) {
-            return storage_path(sprintf('%s/%s/%s', self::CSV_DATA_STORAGE_PATH, Session::get('org_id'), $filename));
+            return storage_path(sprintf('%s/%s/%s', $this->csv_data_storage_path, Session::get('org_id'), $filename));
         }
 
-        return storage_path(sprintf('%s/%s/', self::CSV_DATA_STORAGE_PATH, Session::get('org_id')));
+        return storage_path(sprintf('%s/%s/', $this->csv_data_storage_path, Session::get('org_id')));
     }
 
     /**
@@ -366,8 +371,6 @@ class ImportCsvService
     {
         $activities = json_decode(file_get_contents($filePath), true, 512, JSON_THROW_ON_ERROR);
         $path = $this->getTemporaryFilepath($temporaryFileName);
-
-        $this->fixStagingPermission($this->getTemporaryFilepath());
 
         FileFacade::put($path, json_encode($activities, JSON_THROW_ON_ERROR));
 
@@ -445,10 +448,10 @@ class ImportCsvService
     public function getStoredCsvPath($filename = null): string
     {
         if ($filename) {
-            return sprintf('%s/%s', storage_path(sprintf('%s/%s', self::UPLOADED_CSV_STORAGE_PATH, Session::get('org_id'))), $filename);
+            return sprintf('%s/%s', storage_path(sprintf('%s/%s', $this->csv_file_storage_path, Session::get('org_id'))), $filename);
         }
 
-        return storage_path(sprintf('%s/%s/', self::UPLOADED_CSV_STORAGE_PATH, Session::get('org_id')));
+        return storage_path(sprintf('%s/%s/', $this->csv_file_storage_path, Session::get('org_id')));
     }
 
     /**
@@ -468,7 +471,7 @@ class ImportCsvService
      */
     public function reportHeaderMismatch(): void
     {
-        Session::put(['header_mismatch' => true]);
+        Session::put('header_mismatch', true);
     }
 
     /**
@@ -481,17 +484,6 @@ class ImportCsvService
         foreach ($keys as $key) {
             Session::forget($key);
         }
-    }
-
-    /**
-     * Fix file permission while on staging environment.
-     *
-     * @param $path
-     */
-    protected function fixStagingPermission($path): void
-    {
-        // TODO: Remove this.
-        shell_exec(sprintf('chmod 777 -R %s', $path));
     }
 
     /**
@@ -515,8 +507,6 @@ class ImportCsvService
         $filePath = $this->getTemporaryFilepath('status.json');
 
         if (file_exists($filePath)) {
-            $this->fixStagingPermission($filePath);
-
             $jsonContents = file_get_contents($filePath);
             $contents = json_decode($jsonContents, true, 512, JSON_THROW_ON_ERROR);
 
@@ -537,7 +527,7 @@ class ImportCsvService
      */
     protected function hasOldData(): bool
     {
-        return Session::has('import-status') || Session::has('filename') || Session::has('activity_consortium_id');
+        return Session::has('import-status') || Session::has('filename');
     }
 
     /**

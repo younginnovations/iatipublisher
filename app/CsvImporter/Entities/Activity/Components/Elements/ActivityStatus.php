@@ -77,9 +77,9 @@ class ActivityStatus extends Element
         if (!(is_null($value) || $value === '')) {
             $validActivityStatus = $this->loadCodeList('ActivityStatus');
 
-            foreach ($validActivityStatus as $key => $status) {
-                if ($value === $status) {
-                    $value = $key;
+            foreach ($validActivityStatus as $code => $name) {
+                if ($value === $name) {
+                    $value = $code;
                     break;
                 }
             }

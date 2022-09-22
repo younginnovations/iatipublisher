@@ -188,7 +188,7 @@ class Validation extends Factory
                             $sectorPercentage = (float) $element['percentage'];
 
                             if (array_key_exists($sectorVocabulary, $totalPercentage)) {
-                                $totalPercentage[$sectorVocabulary] += $sectorPercentage;
+                                $totalPercentage[$sectorVocabulary] = (float) $totalPercentage[$sectorVocabulary] + (float) $sectorPercentage;
                             } else {
                                 $totalPercentage[$sectorVocabulary] = $sectorPercentage;
                             }

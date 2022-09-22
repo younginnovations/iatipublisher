@@ -178,11 +178,11 @@ class ActivityRepository extends Repository
 
         $data = [
             'iati_identifier'      => $mappedActivity['identifier'],
-            'title'                => array_values($mappedActivity['title'] ?? []),
-            'description'          => array_values($mappedActivity['description'] ?? []),
-            'activity_status'      => $mappedActivity['activity_status'] ?? [],
-            'activity_date'        => array_values($mappedActivity['activity_date'] ?? []),
-            'participating_org'    => array_values($mappedActivity['participating_organization'] ?? []),
+            'title'                => $this->getActivityElement($mappedActivity, 'title'),
+            'description'          => $this->getActivityElement($mappedActivity, 'description'),
+            'activity_status'      => $mappedActivity['activity_status'] ?? null,
+            'activity_date'        => $this->getActivityElement($mappedActivity, 'activity_date'),
+            'participating_org'    => $this->getActivityElement($mappedActivity, 'participating_org'),
             'recipient_country'    => $this->getActivityElement($mappedActivity, 'recipient_country'),
             'recipient_region'     => $this->getActivityElement($mappedActivity, 'recipient_region'),
             'sector'               => $this->getActivityElement($mappedActivity, 'sector'),
@@ -195,7 +195,7 @@ class ActivityRepository extends Repository
             'other_identifier'     => $this->getActivityElement($mappedActivity, 'other_identifier'),
             'legacy_data'          => $this->getActivityElement($mappedActivity, 'legacy_data'),
             'tag'                  => $this->getActivityElement($mappedActivity, 'tag'),
-            'org_id'               => $mappedActivity['organization_id'] ?? 1,
+            'org_id'               => $mappedActivity['org_id'],
             'policy_marker'        => $this->getActivityElement($mappedActivity, 'policy_marker'),
             'budget'               => $this->getActivityElement($mappedActivity, 'budget'),
             'activity_scope'       => Arr::get($this->getActivityElement($mappedActivity, 'activity_scope'), '0', null),
@@ -214,52 +214,6 @@ class ActivityRepository extends Repository
         }
 
         return $this->model->create($data);
-    }
-
-    /**
-     * @param       $activity_id
-     * @param array $mappedActivity
-     *
-     * @return int
-     */
-    public function updateXmlActivities($activity_id, array $mappedActivity): int
-    {
-        $mappedActivity['default_field_values'] = [];
-
-        return $this->model->where('id', $activity_id)->update(
-            [
-                'iati_identifier'      => $mappedActivity['identifier'],
-                'title'                => array_values($mappedActivity['title'] ?? []),
-                'description'          => array_values($mappedActivity['description'] ?? []),
-                'activity_status'      => $mappedActivity['activity_status'] ?? [],
-                'activity_date'        => array_values($mappedActivity['activity_date'] ?? []),
-                'participating_org'    => array_values($mappedActivity['participating_organization'] ?? []),
-                'recipient_country'    => $this->getActivityElement($mappedActivity, 'recipient_country'),
-                'recipient_region'     => $this->getActivityElement($mappedActivity, 'recipient_region'),
-                'sector'               => $this->getActivityElement($mappedActivity, 'sector'),
-                'location'             => $this->getActivityElement($mappedActivity, 'location'),
-                'conditions'           => $this->getActivityElement($mappedActivity, 'conditions', false),
-                'document_link'        => $this->getActivityElement($mappedActivity, 'document_link'),
-                'country_budget_items' => $this->getActivityElement($mappedActivity, 'country_budget_items', false),
-                'planned_disbursement' => $this->getActivityElement($mappedActivity, 'planned_disbursement'),
-                'humanitarian_scope'   => $this->getActivityElement($mappedActivity, 'humanitarian_scope'),
-                'other_identifier'     => $this->getActivityElement($mappedActivity, 'other_identifier'),
-                'legacy_data'          => $this->getActivityElement($mappedActivity, 'legacy_data'),
-                'tag'                  => $this->getActivityElement($mappedActivity, 'tag'),
-                'org_id'               => $mappedActivity['organization_id'] ?? 1,
-                'policy_marker'        => $this->getActivityElement($mappedActivity, 'policy_marker'),
-                'budget'               => $this->getActivityElement($mappedActivity, 'budget'),
-                'activity_scope'       => Arr::get($this->getActivityElement($mappedActivity, 'activity_scope'), '0', null),
-                'collaboration_type'   => Arr::get($mappedActivity, 'collaboration_type', null),
-                'capital_spend'        => Arr::get($mappedActivity, 'capital_spend', null),
-                'default_flow_type'    => Arr::get($mappedActivity, 'default_flow_type', null),
-                'default_finance_type' => Arr::get($mappedActivity, 'default_finance_type', null),
-                'default_aid_type'     => Arr::get($mappedActivity, 'default_aid_type', null),
-                'default_tied_status'  => Arr::get($mappedActivity, 'default_tied_status', null),
-                'contact_info'         => $this->getActivityElement($mappedActivity, 'contact_info'),
-                'related_activity'     => $this->getActivityElement($mappedActivity, 'related_activity'),
-            ]
-        );
     }
 
     /**

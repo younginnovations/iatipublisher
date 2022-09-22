@@ -58,33 +58,6 @@ class XmlServiceProvider
     }
 
     /**
-     * Returns the AidStream relevant name for the version, i.e., 'V103', 'V202', etc.
-     *
-     * @param $data
-     *
-     * @return string
-     * @throws \Exception
-     */
-    public function version($data): string
-    {
-        $document = new \SimpleXMLElement($data);
-
-        return $this->convertToVersion($document['version']);
-    }
-
-    /**
-     * Convert xml version to string representation of version.
-     *
-     * @param $version
-     *
-     * @return string
-     */
-    protected function convertToVersion($version): string
-    {
-        return 'V' . str_replace('.', '', $version);
-    }
-
-    /**
      * Validate the uploaded Xml file against its schema.
      *
      * @param $contents

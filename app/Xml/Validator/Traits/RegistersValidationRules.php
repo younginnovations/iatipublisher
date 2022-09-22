@@ -73,7 +73,7 @@ trait RegistersValidationRules
         $this->extendImplicit(
             'required_with_language',
             function ($attribute) {
-                $language = preg_replace('/([^~]+).narrative/', '$1.language', $attribute);
+                $language = preg_replace('/([^~]+).narrative/', '$1.language', (string) $attribute);
 
                 return !(Request::get($language) && !Request::get($attribute));
             }

@@ -20,6 +20,7 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Storage;
 
 /**
  * Class ActivityController.
@@ -46,6 +47,8 @@ class ImportActivityController extends Controller
      */
     protected DatabaseManager $db;
 
+    public string $csv_data_storage_path;
+
     /**
      * ActivityController Constructor.
      *
@@ -60,6 +63,7 @@ class ImportActivityController extends Controller
         $this->importCsvService = $importCsvService;
         $this->importXmlService = $importXmlService;
         $this->db = $db;
+        $this->csv_data_storage_path = env('CSV_DATA_STORAGE_PATH ', 'app/CsvImporter/tmp');
     }
 
     /**
@@ -70,6 +74,8 @@ class ImportActivityController extends Controller
     public function index(): View|JsonResponse
     {
         try {
+            Session::forget('header_mismatch');
+
             return view('admin.import.index');
         } catch (Exception $e) {
             logger()->error($e->getMessage());
@@ -93,8 +99,6 @@ class ImportActivityController extends Controller
             Session::put('import_filetype', $filetype);
 
             if ($filetype === 'xml') {
-                $this->fixPermission(storage_path('xmlImporter/tmp'));
-
                 if ($this->importXmlService->store($file)) {
                     $user = Auth::user();
                     $this->importXmlService->startImport($file->getClientOriginalName(), $user->id, $user->organization_id);
@@ -112,8 +116,6 @@ class ImportActivityController extends Controller
                     $filename = str_replace(' ', '', $file->getClientOriginalName());
                     $this->importCsvService->startImport($filename)
                         ->fireCsvUploadEvent($filename);
-
-                    $this->fixPermission(storage_path('csvImporter/tmp'));
 
                     if (!$this->importCsvService->isInUTF8Encoding($filename)) {
                         $response = ['success' => false, 'code' => ['encoding_error', ['message' => 'Something went wrong']]];
@@ -161,7 +163,9 @@ class ImportActivityController extends Controller
 
             return response()->json(['success' => true, 'message' => 'Imported successfully', 'type' => $filetype]);
         } catch (\Exception $e) {
+            logger()->error($e);
             logger()->error($e->getMessage());
+            Session::put('error', 'Error occured while importing activity');
 
             return redirect()->back()->withResponse(['success' => false, 'message' => 'Error has occured while importing activity.']);
         }
@@ -175,14 +179,25 @@ class ImportActivityController extends Controller
     public function status(): View|RedirectResponse
     {
         try {
-            // not required
-            $data = null;
+            $filetype = Session::get('import_filetype');
 
-            return view('admin.import.list', compact('data'));
+            if (!$filetype) {
+                return redirect()->route('admin.activities.index');
+            }
+
+            // if (Session::has('header_mismatch') && Session::get('header_mismatch')) {
+            //     $message = $filetype === 'xml' ? 'Invalid xml schema. Please upload correct schema file' : 'Invalid file content. Please upload file with correct header and content.';
+            //     Session::put('error',$message);
+            //     Session::forget('header_mismatch');
+
+            //     return redirect()->route('admin.activities.index');
+            // }
+
+            return view('admin.import.list');
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activity')->withResponse(['success' => false, 'message' => 'Error has occurred while checking the status.']);
+            return redirect()->route('admin.activities.index')->withResponse(['success' => false, 'message' => 'Error has occurred while checking the status.']);
         }
     }
 
@@ -223,7 +238,7 @@ class ImportActivityController extends Controller
      */
     public function getValidData(): array
     {
-        $filepath = $this->importCsvService->getFilePath(true);
+        $filepath = $this->importCsvService->getFilePath();
         $activities = [];
 
         if (file_exists($filepath)) {
@@ -231,18 +246,6 @@ class ImportActivityController extends Controller
         }
 
         return $activities;
-    }
-
-    /**
-     * Fix file permission while on staging environment.
-     *
-     * @param $path
-     *
-     * @return void
-     */
-    protected function fixPermission($path): void
-    {
-        shell_exec(sprintf('chmod 777 -R %s', $path));
     }
 
     /**

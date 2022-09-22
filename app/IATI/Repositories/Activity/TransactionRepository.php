@@ -96,9 +96,9 @@ class TransactionRepository extends Repository
      *
      * @param $activityId
      *
-     * @return bool
+     * @return bool|int
      */
-    public function deleteTransaction($activityId): bool
+    public function deleteTransaction($activityId): bool|int
     {
         return $this->model->where('activity_id', $activityId)->delete();
     }

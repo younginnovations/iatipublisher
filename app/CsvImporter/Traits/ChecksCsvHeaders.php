@@ -22,7 +22,7 @@ trait ChecksCsvHeaders
     protected function loadTemplate($filename): mixed
     {
         $excel = app()->make(CsvReader::class);
-        $file = $excel->load(app_path(sprintf('Services/CsvImporter/Templates/Activity/%s.csv', $filename)));
+        $file = $excel->load(app_path(sprintf('CsvImporter/Templates/Activity/%s.csv', $filename)));
 
         return $file->toArray();
     }
