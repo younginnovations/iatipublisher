@@ -8,21 +8,21 @@
   />
   <Modal :modal-active="unpublishValue" width="583" @close="unpublishToggle">
     <div class="mb-4">
-      <div class="title mb-6 flex">
+      <div class="flex mb-6 title">
         <svg-vue
           class="mr-1 mt-0.5 text-lg text-crimson-40"
           icon="cancel-cloud"
         />
         <b>Unpublish activity</b>
       </div>
-      <div class="rounded-lg bg-rose p-4">
+      <div class="p-4 rounded-lg bg-rose">
         Are you sure you want to unpublish this activity?
       </div>
     </div>
     <div class="flex justify-end">
       <div class="inline-flex">
         <BtnComponent
-          class="bg-white px-6 uppercase"
+          class="px-6 uppercase bg-white"
           text="Go Back"
           type=""
           @click="unpublishValue = false"
@@ -54,7 +54,7 @@ import Modal from 'Components/PopupModal.vue';
 import Loader from 'Components/sections/ProgressLoader.vue';
 
 // Vuex Store
-import { useStore } from 'Store/activities/show';
+import { detailStore } from 'Store/activities/show';
 
 const props = defineProps({
   type: { type: String, default: 'primary' },
@@ -67,7 +67,7 @@ const { activityId } = toRefs(props);
 let [unpublishValue, unpublishToggle] = useToggle();
 
 //Global State
-const store = useStore();
+const store = detailStore();
 
 //activity id
 const id = activityId.value;

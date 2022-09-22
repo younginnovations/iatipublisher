@@ -10,6 +10,7 @@
     <div class="flex items-center accordion-title">
       <a
         :href="`/activity/${error.activity_id}`"
+        target="_blank"
         class="pr-2 activity-title grow text-n-50"
       >
         {{ error.title }}
@@ -46,6 +47,7 @@
         </ul>
         <a
           :href="`/activity/${error.activity_id}`"
+          target="_blank"
           class="inline-flex items-center"
         >
           <span class="mr-1 grow">View the errors and warnings in detail</span>

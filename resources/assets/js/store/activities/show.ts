@@ -42,6 +42,6 @@ const activityDetailStore = createStore({
   actions,
 });
 
-export function useStore() {
+export function detailStore() {
   return activityDetailStore;
 }

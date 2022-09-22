@@ -50,11 +50,13 @@ import BtnComponent from 'Components/ButtonComponent.vue';
 import Modal from 'Components/PopupModal.vue';
 import Loader from 'Components/sections/ProgressLoader.vue';
 
+// Vuex Store
+import { useStore } from 'Store/activities/index';
+
+const store = useStore();
+
 // toggle state for modal popup
 let [deleteValue, deleteToggle] = useToggle();
-
-//activity id
-const id = inject('activityID');
 
 // display/hide validator loader
 interface LoaderTypeface {
@@ -79,8 +81,9 @@ const deleteFunction = () => {
   loader.value = true;
   loader.text = 'Deleting';
   deleteValue.value = false;
+  const deleteEndPoint = `/activity/${store.state.selectedActivities}`;
 
-  axios.delete(`/activity/${id}`).then((res) => {
+  axios.delete(deleteEndPoint).then((res) => {
     const response = res.data;
     toastMessage.message = response.message;
     toastMessage.type = response.success;

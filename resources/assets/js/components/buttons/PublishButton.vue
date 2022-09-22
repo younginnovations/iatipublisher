@@ -136,7 +136,7 @@ import Modal from 'Components/PopupModal.vue';
 import Loader from 'Components/sections/ProgressLoader.vue';
 
 // Vuex Store
-import { useStore } from 'Store/activities/show';
+import { detailStore } from 'Store/activities/show';
 
 const props = defineProps({
   type: { type: String, default: 'primary' },
@@ -153,7 +153,7 @@ const { alreadyPublished, linkedToIati, status, coreCompleted, activityId } =
 /**
  *  Global State
  */
-const store = useStore();
+const store = detailStore();
 
 //activity id
 const id = activityId.value;
