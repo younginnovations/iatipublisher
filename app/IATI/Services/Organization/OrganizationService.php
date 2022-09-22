@@ -7,6 +7,7 @@ namespace App\IATI\Services\Organization;
 use App\IATI\Models\Organization\Organization;
 use App\IATI\Repositories\Organization\OrganizationRepository;
 use App\IATI\Traits\OrganizationXmlBaseElements;
+use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
 
@@ -36,6 +37,8 @@ class OrganizationService
      * Store user.
      *
      * @param array $data
+     *
+     * @return Model
      */
     public function create(array $data): Model
     {
@@ -87,9 +90,9 @@ class OrganizationService
      *
      * @param $serviceName
      *
-     * @return \Illuminate\Contracts\Foundation\Application|mixed
+     * @return Application|mixed
      */
-    public function getService($serviceName)
+    public function getService($serviceName): mixed
     {
         return app(sprintf("App\IATI\Services\Organization\%s", $serviceName));
     }
@@ -136,6 +139,7 @@ class OrganizationService
      * Returns array of dropdown elements in organization.
      *
      * @return array
+     * @throws \JsonException
      */
     public function getOrganizationTypes(): array
     {

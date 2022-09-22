@@ -8,6 +8,7 @@ use App\IATI\Services\Activity\ActivityService;
 use App\IATI\Services\Activity\BulkPublishingStatusService;
 use App\IATI\Services\Validator\ActivityValidatorResponseService;
 use GuzzleHttp\Exception\BadResponseException;
+use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 
@@ -107,8 +108,8 @@ class BulkPublishingService
      * @param $activityIds
      *
      * @return array
-     *
-     * @throws \Exception
+     * @throws GuzzleException
+     * @throws \JsonException
      */
     public function validateActivitiesOnIATI($activityIds): array
     {
@@ -141,8 +142,8 @@ class BulkPublishingService
      * @param $activity
      *
      * @return array
-     *
-     * @throws \Exception
+     * @throws GuzzleException
+     * @throws \JsonException
      */
     public function validateWithException($activity): array
     {
@@ -167,7 +168,7 @@ class BulkPublishingService
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            throw new \Exception();
+            throw new \RuntimeException();
         }
     }
 
@@ -194,7 +195,7 @@ class BulkPublishingService
     }
 
     /**
-     * Checks errors in acrtivity and returns modified array.
+     * Checks errors in activity and returns modified array.
      *
      * @param $response
      * @param $modifiedResponse

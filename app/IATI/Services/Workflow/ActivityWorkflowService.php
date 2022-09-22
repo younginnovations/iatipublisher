@@ -91,9 +91,9 @@ class ActivityWorkflowService
      *
      * @param $activityId
      *
-     * @return Activity
+     * @return object
      */
-    public function findActivity($activityId): Activity
+    public function findActivity($activityId): object
     {
         return $this->activityService->getActivity($activityId);
     }
@@ -102,11 +102,11 @@ class ActivityWorkflowService
      * Publish an activity to the IATI registry.
      *
      * @param $activity
-     * @param $publishFile
+     * @param bool $publishFile
      *
      * @return void
      */
-    public function publishActivity($activity, $publishFile = true): void
+    public function publishActivity($activity, bool $publishFile = true): void
     {
         $organization = $activity->organization;
         $settings = $organization->settings;
@@ -167,6 +167,7 @@ class ActivityWorkflowService
      * @param $activity
      *
      * @return string
+     * @throws GuzzleException
      */
     public function validateActivityOnIATIValidator($activity): string
     {
