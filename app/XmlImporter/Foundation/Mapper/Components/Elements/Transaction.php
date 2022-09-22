@@ -17,6 +17,8 @@ class Transaction
     protected array $transaction = [];
 
     /**
+     * Maps reference value.
+     *
      * @param $element
      * @param $index
      */
@@ -26,6 +28,8 @@ class Transaction
     }
 
     /**
+     * Maps humanitarian value.
+     *
      * @param $element
      * @param $index
      *
@@ -37,6 +41,8 @@ class Transaction
     }
 
     /**
+     * Maps transaction type value.
+     *
      * @param $subElement
      * @param $index
      *
@@ -48,6 +54,8 @@ class Transaction
     }
 
     /**
+     * Maps transaction date value.
+     *
      * @param $subElement
      * @param $index
      *
@@ -59,6 +67,8 @@ class Transaction
     }
 
     /**
+     * Maps value attributes.
+     *
      * @param $fields
      * @param $key
      *
@@ -72,6 +82,8 @@ class Transaction
     }
 
     /**
+     * Maps description value.
+     *
      * @param $subElement
      * @param $index
      *
@@ -83,6 +95,8 @@ class Transaction
     }
 
     /**
+     * Maps provider org attributes.
+     *
      * @param $subElement
      * @param $index
      *
@@ -97,6 +111,8 @@ class Transaction
     }
 
     /**
+     * Maps receiver org attributes.
+     *
      * @param $subElement
      * @param $index
      *
@@ -122,6 +138,8 @@ class Transaction
     }
 
     /**
+     * Maps sector attributes.
+     *
      * @param $subElement
      * @param $index
      *
@@ -138,6 +156,8 @@ class Transaction
     }
 
     /**
+     * Maps recipient country attributes.
+     *
      * @param $subElement
      * @param $index
      *
@@ -150,6 +170,8 @@ class Transaction
     }
 
     /**
+     * Maps recipient region attributes.
+     *
      * @param $subElement
      * @param $index
      *
@@ -164,6 +186,8 @@ class Transaction
     }
 
     /**
+     * Maps flow type attributes.
+     *
      * @param $subElement
      * @param $index
      *
@@ -175,6 +199,8 @@ class Transaction
     }
 
     /**
+     * Maps finance type attributes.
+     *
      * @param $subElement
      * @param $index
      *
@@ -186,6 +212,8 @@ class Transaction
     }
 
     /**
+     * Maps tied status attributes.
+     *
      * @param $subElement
      * @param $index
      *
@@ -197,6 +225,8 @@ class Transaction
     }
 
     /**
+     * Gets all the attributes present in the transaction element.
+     *
      * @param array $element
      *
      * @return mixed

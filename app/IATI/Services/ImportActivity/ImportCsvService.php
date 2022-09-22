@@ -131,7 +131,7 @@ class ImportCsvService
         $this->transactionRepo = $transactionRepo;
         $this->userId = Auth::user()?->organization_id ?? 1;
         $this->filesystem = $filesystem;
-        $this->csv_data_storage_path = env('CSV_DATA_STORAGE_PATH', 'app/CsvImporter/file');
+        $this->csv_data_storage_path = env('CSV_DATA_STORAGE_PATH', 'app/CsvImporter/tmp');
         $this->csv_file_storage_path = env('CSV_FILE_STORAGE_PATH', 'app/CsvImporter/file');
     }
 
@@ -146,16 +146,12 @@ class ImportCsvService
     {
         try {
             $file = new File($this->getStoredCsvPath($filename));
-
-            $fileType = $this->getFileType($file);
-            Session::put('file_type', $fileType);
             Session::put('user_id', Auth::user()->id);
             Session::put('org_id', Auth::user()->organization->id);
 
-            if (file_exists($this->getTemporaryFilepath('valid.json'))) {
-                unlink($this->getTemporaryFilepath());
-            }
-
+            // unable to delete file currently
+            // $directoryPath = storage_path(sprintf('%s/%s', $this->csv_data_storage_path, Session::get('org_id')));
+            // $this->filesystem->deleteDirectory($directoryPath);
             $activityIdentifiers = $this->getIdentifiers();
 
             $this->processor->pushIntoQueue($file, $filename, $activityIdentifiers);
@@ -578,20 +574,5 @@ class ImportCsvService
         $file = new File($this->getStoredCsvPath($filename));
 
         return getEncodingType($file) === self::DEFAULT_ENCODING;
-    }
-
-    /**
-     * Get type of file.
-     *
-     * @param File $file
-     *
-     * @return string|null
-     */
-    public function getFileType(File $file): ?string
-    {
-        $fileContent = array_map('str_getcsv', file($file->getPathName()));
-        $headerCount = count($fileContent[0]);
-
-        return $headersArray[$headerCount] ?? $this->reportHeaderMismatch();
     }
 }

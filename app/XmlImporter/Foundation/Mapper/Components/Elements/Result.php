@@ -115,17 +115,13 @@ class Result
         $periods = $this->filterValues($indicator, 'period');
         $periodsData = $periodsTemplate = Arr::get($indicatorTemplate, '0.period');
 
-        // WIP
-        // foreach ($periods as $index => $period) {
-        // foreach (Arr::get($element, 'value', []) as $index => $budgetItem) {
-        //     $this->countryBudgetItems[$this->index]['budget_item'][$index]['code'] = ($vocabulary == 1) ? $this->attributes($budgetItem, 'code') : '';
-        //     $this->countryBudgetItems[$this->index]['budget_item'][$index]['code_text'] = ($vocabulary != 1) ? $this->attributes($budgetItem, 'code') : '';
-        //     $this->countryBudgetItems[$this->index]['budget_item'][$index]['percentage'] = $this->attributes($budgetItem, 'percentage');            $period = Arr::get($period, 'period', []);
-        // $periodsData[$index]['period_start'][0]['date'] = Arr::get($this->filterAttributes($period, 'periodStart', ['iso-date']), '0.iso-date', '');
-        // $periodsData[$index]['period_end'][0]['date'] = Arr::get($this->filterAttributes($period, 'periodEnd', ['iso-date']), '0.iso-date', '');
-        // $periodsData[$index]['target'] = $this->target($period, $periodsTemplate);
-        // $periodsData[$index]['actual'] = $this->actual($period, $periodsTemplate);
-        // }
+        foreach ($periods as $index => $period) {
+            $period = Arr::get($period, 'period', []);
+            $periodsData[$index]['period_start'][0]['date'] = Arr::get($this->filterAttributes($period, 'periodStart', ['iso-date']), '0.iso-date', '');
+            $periodsData[$index]['period_end'][0]['date'] = Arr::get($this->filterAttributes($period, 'periodEnd', ['iso-date']), '0.iso-date', '');
+            $periodsData[$index]['target'] = $this->target($period, $periodsTemplate);
+            $periodsData[$index]['actual'] = $this->actual($period, $periodsTemplate);
+        }
 
         return $periodsData;
     }
