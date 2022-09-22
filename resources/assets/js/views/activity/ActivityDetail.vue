@@ -242,7 +242,8 @@ import ActivityElement from 'Activity/partials/ActivityElement.vue';
 import PreviouslyPublished from 'Components/status/PreviouslyPublished.vue';
 
 // Vuex Store
-import { useStore } from 'Store/activities/show';
+import { detailStore } from 'Store/activities/show';
+import { useStore } from 'Store/activities/index';
 
 export default defineComponent({
   components: {
@@ -307,7 +308,8 @@ export default defineComponent({
   setup(props) {
     const { types, coreCompleted } = toRefs(props);
 
-    const store = useStore();
+    const store = detailStore();
+    const indexStore = useStore();
 
     const toastData = reactive({
       visibility: false,
@@ -449,8 +451,9 @@ export default defineComponent({
     // vue provides
     provide('types', types.value);
     provide('coreCompleted', coreCompleted.value);
-    provide('activityID', activity.value.id);
     provide('toastMessage', toastMessage);
+
+    indexStore.dispatch('updateSelectedActivities', [activity.value.id]);
 
     /**
      * Breadcrumb data

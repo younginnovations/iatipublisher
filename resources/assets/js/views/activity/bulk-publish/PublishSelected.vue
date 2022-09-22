@@ -98,7 +98,11 @@
                     i != coreInCompletedActivities.length - 1,
                 }"
               >
-                <a :href="`${permalink}${act.activity_id}`" class="">
+                <a
+                  :href="`${permalink}${act.activity_id}`"
+                  target="_blank"
+                  class=""
+                >
                   {{ act.title }}
                 </a>
               </div>
@@ -109,6 +113,10 @@
         <div class="flex justify-end">
           <div class="inline-flex">
             <BtnComponent
+              v-if="
+                coreCompletedActivities.length > 0 ||
+                coreInCompletedActivities.length > 0
+              "
               class="px-6 uppercase bg-white"
               type=""
               text="Continue Anyway"

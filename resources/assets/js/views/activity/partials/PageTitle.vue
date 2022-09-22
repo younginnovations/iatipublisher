@@ -43,25 +43,19 @@
           </div>
         </div>
       </div>
-      <div class="flex justify-end actions grow">
-        <div class="inline-flex items-center">
+      <div class="relative flex flex-col items-end justify-end actions grow">
+        <div class="inline-flex justify-end">
           <Toast
             v-if="toastMessage.visibility"
             class="mr-3.5"
             :message="toastMessage.message"
             :type="toastMessage.type"
           />
-          <div class="inline-flex items-center">
-            <PublishSelected class="mr-3.5" />
-            <BtnComponent
-              v-if="store.state.selectedActivities.length > 0"
-              class="mr-3.5"
-              type="secondary"
-              text="Delete Selected"
-              icon="delete"
-            />
+          <div class="inline-flex items-center justify-end gap-3">
+            <PublishSelected />
+            <DeleteButton v-if="store.state.selectedActivities.length === 1" />
+            <AddActivityButton />
           </div>
-          <AddActivityButton />
         </div>
       </div>
     </div>
@@ -71,9 +65,9 @@
 <script setup lang="ts">
 import { inject } from 'vue';
 import AddActivityButton from './AddActivityButton.vue';
-import BtnComponent from 'Components/ButtonComponent.vue';
 import Toast from 'Components/Toast.vue';
 import PublishSelected from 'Activity/bulk-publish/PublishSelected.vue';
+import DeleteButton from 'Components/buttons/DeleteButton.vue';
 
 // Vuex Store
 import { useStore } from 'Store/activities/index';
