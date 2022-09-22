@@ -198,7 +198,6 @@
           :activity-id="organization.id"
           :data="elementProps"
           :status="status"
-          :completed="co"
         />
       </aside>
       <div class="activities__content overflow-hidden">

@@ -56,7 +56,6 @@ class ParticipatingOrganization extends Element
 
     /**
      * Prepare ParticipatingOrganisation Element.
-     *
      * @param $fields
      *
      * @return void
@@ -65,7 +64,7 @@ class ParticipatingOrganization extends Element
     public function prepare($fields): void
     {
         foreach ($fields as $key => $values) {
-            if (array_key_exists($key, array_flip($this->_csvHeaders))) {
+            if (!is_null($values) && array_key_exists($key, array_flip($this->_csvHeaders))) {
                 foreach ($values as $index => $value) {
                     $this->map($key, $value, $index);
                 }
@@ -88,7 +87,7 @@ class ParticipatingOrganization extends Element
             $this->setOrganisationRole($key, $value, $index);
             $this->setIdentifier($key, $value, $index);
             $this->setOrganisationType($key, $value, $index);
-            $this->data['participating_organization'][$index]['ref'] = '';
+            $this->data['participating_organization'][$index]['activity_id'] = '';
             $this->data['participating_organization'][$index]['crs_channel_code'] = $value;
             $this->setNarrative($key, $value, $index);
         }
@@ -102,6 +101,7 @@ class ParticipatingOrganization extends Element
      * @param $index
      *
      * @return void
+     * @throw \JsonExceptioon
      */
     protected function setOrganisationRole($key, $value, $index): void
     {
@@ -109,15 +109,15 @@ class ParticipatingOrganization extends Element
             $this->data['participating_organization'][$index]['organization_role'] = '';
         }
 
-        if ($key === $this->_csvHeaders[0] && (!is_null($value))) {
-            //$validOrganizationRoles = $this->loadCodeList('OrganisationRole', 'Organization');
+        if ($key == $this->_csvHeaders[0] && (!is_null($value))) {
+            $validOrganizationRoles = $this->loadCodeList('OrganisationRole', 'Organization');
 
-            // foreach ($validOrganizationRoles as $name => $role) {
-            //     if (strcasecmp($value, $role) === 0) {
-            //         $value = $name;
-            //         break;
-            //     }
-            // }
+            foreach ($validOrganizationRoles as $code => $name) {
+                if (!is_int($value) && strcasecmp($value, $name) === 0) {
+                    $value = $code;
+                    break;
+                }
+            }
 
             $this->orgRoles[] = $value;
             $this->orgRoles = array_unique($this->orgRoles);
@@ -154,6 +154,7 @@ class ParticipatingOrganization extends Element
      * @param $index
      *
      * @return void
+     * @throw \JsonException
      */
     protected function setOrganisationType($key, $value, $index): void
     {
@@ -161,41 +162,21 @@ class ParticipatingOrganization extends Element
             $this->data['participating_organization'][$index]['type'] = '';
         }
 
-        if ($key === $this->_csvHeaders[0] && (!is_null($value))) {
-            //$validOrganizationTypes = $this->loadCodeList('OrganizationType', 'Organization');
+        if ($key == $this->_csvHeaders[1] && (!is_null($value))) {
+            $validOrganizationType = $this->loadCodeList('OrganizationType', 'Organization');
 
-            // foreach ($validOrganizationTypes as $name => $role) {
-            //     if (strcasecmp($value, $role) == 0) {
-            //         $value = $name;
-            //         break;
-            //     }
-            // }
+            foreach ($validOrganizationType as $code => $name) {
+                if (!is_int($value) && strcasecmp($value, $name) == 0) {
+                    $value = $code;
+                    break;
+                }
+            }
 
             $this->types[] = $value;
             $this->types = array_unique($this->types);
 
             $this->data['participating_organization'][$index]['type'] = $value;
         }
-
-        // if (!isset($this->data['participating_organization'][$index]['type'])) {
-        //     $this->data['participating_organization'][$index]['type'] = '';
-        // }
-
-        // if ($key == $this->_csvHeaders[1] && (!is_null($value))) {
-        //     $validOrganizationType = $this->loadCodeList('OrganizationType', 'Organization');
-
-        //     foreach ($validOrganizationType as $index => $type) {
-        //         if (strcasecmp($value, $type) == 0) {
-        //             $value = $index;
-        //             break;
-        //         }
-        //     }
-
-        //     $types[] = $value;
-        //     $types = array_unique($types);
-
-        //     $this->data['participating_organization'][$index]['type'] = $value;
-        // }
     }
 
     /**
@@ -234,10 +215,8 @@ class ParticipatingOrganization extends Element
     public function rules(): array
     {
         return [
-            // 'participating_organization'                     => 'nullable|required_only_one_among:identifier,narrative',
-            'participating_organization'                     => 'nullable',
-            // 'participating_organization.*.organization_role' => sprintf('nullable|in:%s', $this->validOrganizationRoles()),
-            'participating_organization.*.organization_role' => sprintf('nullable|in:%s', $this->validOrganizationRoles()),
+            'participating_organization'                     => 'required|required_only_one_among:identifier,narrative',
+            'participating_organization.*.organization_role' => sprintf('required|in:%s', $this->validOrganizationRoles()),
             'participating_organization.*.type' => sprintf('in:%s', $this->validOrganizationTypes()),
         ];
     }
@@ -285,9 +264,9 @@ class ParticipatingOrganization extends Element
      * Get the valid OrganizationRole from the OrganizationRole codelist as a string.
      *
      * @return string
-     * @throws \JsonException
+     * @throw \JsonException
      */
-    protected function validOrganizationRoles(): string
+    protected function validOrganizationRoles()
     {
         $organizationRoleCodeList = $this->loadCodeList('OrganisationRole', 'Organization');
         $organizationRoles = array_keys($organizationRoleCodeList) + array_values($organizationRoleCodeList);
@@ -299,7 +278,7 @@ class ParticipatingOrganization extends Element
      * Get the valid OrganizationType from the OrganizationType code list as a string.
      *
      * @return string
-     * @throws \JsonException
+     * @throw \JsonException
      */
     protected function validOrganizationTypes(): string
     {
