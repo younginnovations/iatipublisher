@@ -62,7 +62,7 @@ class FormBuilder {
     if ($(target).attr('form_type')) {
       $(target).prev().last().find('.select2').select2({
         placeholder: 'Select an option',
-        allowClear: true
+        allowClear: true,
       });
 
       $(this)
@@ -91,7 +91,7 @@ class FormBuilder {
         .find('.select2')
         .select2({
           placeholder: 'Select an option',
-          allowClear: true
+          allowClear: true,
         });
     }
 
@@ -120,7 +120,7 @@ class FormBuilder {
     $(target).prev().append($(proto));
     $(target).prev().find('.multi-form').last().find('.select2').select2({
       placeholder: 'Select an option',
-      allowClear: true
+      allowClear: true,
     });
     $(target)
       .prev()
@@ -157,7 +157,6 @@ class FormBuilder {
 
     if (collectionLength > 1) {
       const tg = $(target).closest('.form-child-body');
-      console.log(tg.next('.error'));
       tg.next('.error').remove();
       tg.remove();
     }
@@ -202,6 +201,14 @@ class FormBuilder {
             )
           );
       });
+
+    const formField = $('form>.form-field');
+
+    if (formField.length > 0) {
+      formField.wrapAll(
+        '<div class="form-field-group-outer flex flex-wrap mb-6 -mx-3 gap-y-6"></div>'
+      );
+    }
   }
 
   public addWrapperOnAdd(target: EventTarget): void {
@@ -334,7 +341,6 @@ $(function () {
    * checks registration agency, country and registration number to deduce identifier
    */
   updateRegistrationAgency($('#organization_country'));
-  console.log($('#organisation_identifier'));
   $('#organisation_identifier').attr('disabled', 'disabled');
 
   function updateRegistrationAgency(country: JQuery) {

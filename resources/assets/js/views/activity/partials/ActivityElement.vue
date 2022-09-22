@@ -58,7 +58,7 @@
               class="edit-button mr-2.5"
             />
           </div>
-          <svg-vue v-if="data.core" class="mr-1.5" icon="core"></svg-vue>
+          <svg-vue v-if="activityCoreElements().includes(title)" class="mr-1.5" icon="core"></svg-vue>
           <HoverText v-if="tooltip" :hover-text="tooltip" class="text-n-40" />
         </div>
       </div>
@@ -516,8 +516,12 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue';
+<script setup lang="ts">
+import { defineProps } from 'vue';
+import moment from 'moment';
+
+import {activityCoreElements} from 'Composable/coreElements';
+
 //components
 import {
   IatiIdentifier,
@@ -540,87 +544,54 @@ import {
   HumanitarianScope,
   PlannedDisbursement,
 } from 'Activity/elements/Index';
+
 import Btn from 'Components/buttons/Link.vue';
 import Status from 'Components/status/ElementStatus.vue';
 import HoverText from 'Components/HoverText.vue';
 
-import moment from 'moment';
-import dateFormat from 'Composable/dateFormat';
-
-export default defineComponent({
-  name: 'ActivityElement',
-  components: {
-    HoverText,
-    Btn,
-    Status,
-    IatiIdentifier,
-    OtherIdentifier,
-    TitleElement,
-    Description,
-    ActivityDate,
-    ContactInfo,
-    ParticipatingOrg,
-    RecipientCountry,
-    RecipientRegion,
-    Transactions,
-    Location,
-    Sector,
-    LegacyData,
-    Conditions,
-    RelatedActivity,
-    PolicyMarker,
-    Tag,
-    HumanitarianScope,
-    PlannedDisbursement,
+const props = defineProps({
+  data: {
+    type: Object,
+    required: true,
   },
-  props: {
-    data: {
-      type: Object,
-      required: true,
-    },
-    activityId: {
-      type: Number,
-      required: true,
-    },
-    title: {
-      type: String,
-      required: true,
-    },
-    tooltip: {
-      type: String,
-      required: false,
-      default: '',
-    },
-    width: {
-      type: String,
-      required: false,
-      default: '',
-    },
-    types: {
-      type: Object,
-      required: true,
-    },
-    completed: {
-      type: Boolean,
-      required: true,
-    },
+  activityId: {
+    type: Number,
+    required: true,
   },
-  setup(props) {
-    const status = '';
-    let layout = 'basis-6/12';
-    if (props.width === 'full') {
-      layout = 'basis-full';
-    }
-
-    function formatDate(date: Date) {
-      return moment(date).format('LL');
-    }
-
-    function roundFloat(num: string) {
-      return parseFloat(num).toFixed(2);
-    }
-
-    return { layout, status, props, formatDate, roundFloat, dateFormat };
+  title: {
+    type: String,
+    required: true,
+  },
+  tooltip: {
+    type: String,
+    required: false,
+    default: '',
+  },
+  width: {
+    type: String,
+    required: false,
+    default: '',
+  },
+  types: {
+    type: Object,
+    required: true,
+  },
+  completed: {
+    type: Boolean,
+    required: true,
   },
 });
+
+let layout = 'basis-6/12';
+if (props.width === 'full') {
+  layout = 'basis-full';
+}
+
+function formatDate(date: Date) {
+  return moment(date).format('LL');
+}
+
+function roundFloat(num: string) {
+  return parseFloat(num).toFixed(2);
+}
 </script>

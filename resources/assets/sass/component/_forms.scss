@@ -31,6 +31,16 @@ form {
     &:not(:last-child) {
       @apply mb-6;
     }
+
+    .form-field {
+      @apply p-3;
+      .help-text {
+        @apply mt-2 text-xs leading-relaxed;
+      }
+      .code {
+        @apply mb-0;
+      }
+    }
   }
   button.delete-item {
     @apply absolute h-8 w-8 cursor-pointer overflow-hidden rounded-full bg-n-40 -indent-40;
@@ -44,18 +54,8 @@ form {
     }
   }
 
-  .form-field {
-    @apply p-3;
-    .help-text {
-      @apply mt-2 text-xs leading-relaxed;
-    }
-    .code {
-      @apply mb-0;
-    }
-  }
-
-  > .form-field {
-    @apply mb-6 p-0;
+  .form-field-group-outer .form-field {
+    @apply px-3;
   }
 
   .form-field-label {
@@ -110,12 +110,19 @@ form {
   }
   .add_more {
     @apply relative;
+    &:before {
+      content: '';
+      @apply absolute left-0 top-0 h-1/2 w-px border-l border-spring-50;
+    }
     &:after {
       content: '';
       @apply absolute left-0 top-2/4 h-px w-3.5 -translate-y-1/2 border-b border-spring-50;
     }
   }
   .subelement {
+    &.border-l > label {
+      border-left: 0;
+    }
     .subelement,
     .subelement + button {
       @apply ml-6;

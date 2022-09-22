@@ -42,7 +42,7 @@
             <span v-else>not completed</span>
           </div>
         </div>
-        <div class="flex icons">
+        <div class="flex items-center icons">
           <a
             class="edit-button mr-2.5 flex items-center text-xs font-bold uppercase"
             :href="'/organisation/' + title"
@@ -50,6 +50,11 @@
             <svg-vue class="mr-0.5 text-base" icon="edit"></svg-vue>
             <span>Edit</span>
           </a>
+          <svg-vue
+            v-if="orgMandatoryElements().includes(title)"
+            class="mr-1.5"
+            icon="star"
+          ></svg-vue>
           <HoverText
             v-if="tooltip"
             :hover-text="tooltip"
@@ -118,6 +123,7 @@
 <script setup lang="ts">
 import { defineProps, provide } from 'vue';
 import HoverText from 'Components/HoverText.vue';
+import { orgMandatoryElements } from 'Composable/coreElements';
 
 import {
   ReportingOrganisation,

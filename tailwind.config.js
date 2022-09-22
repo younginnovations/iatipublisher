@@ -11,7 +11,7 @@ function withOpacity(variableName) {
 module.exports = {
   content: [
     './resources/**/*.blade.php',
-    './resources/**/*.js',
+    './resources/**/*.ts',
     './resources/**/*.vue',
     './config/*.php',
     './app/**/*.php',

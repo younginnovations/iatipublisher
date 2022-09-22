@@ -34,16 +34,15 @@ class NameController extends Controller
     /**
      * Renders title edit form.
      *
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|void|RedirectResponse
+     * @return View|RedirectResponse
      */
     public function edit(): View|RedirectResponse
     {
         try {
             $id = Auth::user()->organization_id;
-            $element = json_decode(file_get_contents(app_path('IATI/Data/organizationElementJsonSchema.json')), true);
+            $element = json_decode(file_get_contents(app_path('IATI/Data/organizationElementJsonSchema.json')), true, 512, JSON_THROW_ON_ERROR);
             $organization = $this->nameService->getOrganizationData($id);
             $form = $this->nameService->formGenerator($id);
-            $status = $organization->name_element_completed ?? false;
             $data = ['title'=> $element['name']['label'], 'name'=>'name'];
 
             return view('admin.organisation.forms.name.name', compact('form', 'organization', 'data'));
@@ -64,18 +63,15 @@ class NameController extends Controller
     public function update(NameRequest $request): RedirectResponse
     {
         try {
-            $id = Auth::user()->organization_id;
-            $organizationName = $request->all();
-
-            if (!$this->nameService->update($id, $organizationName)) {
-                return redirect()->route('admin.organisation.index', $id)->with('error', 'Error has occurred while updating organization name.');
+            if (!$this->nameService->update(Auth::user()->organization_id, $request->all())) {
+                return redirect()->route('admin.organisation.index')->with('error', 'Error has occurred while updating organization name.');
             }
 
-            return redirect()->route('admin.organisation.index', $id)->with('success', 'Organization name updated successfully.');
+            return redirect()->route('admin.organisation.index')->with('success', 'Organization name updated successfully.');
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.organisation.index', $id)->with('error', 'Error has occurred while updating organization name.');
+            return redirect()->route('admin.organisation.index')->with('error', 'Error has occurred while updating organization name.');
         }
     }
 }

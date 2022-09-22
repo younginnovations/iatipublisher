@@ -16,6 +16,9 @@ use Illuminate\Support\Facades\Auth;
  */
 class RecipientCountryBudgetController extends Controller
 {
+    /**
+     * @var RecipientCountryBudgetService
+     */
     protected RecipientCountryBudgetService $recipientCountryBudgetService;
 
     /**
@@ -31,13 +34,13 @@ class RecipientCountryBudgetController extends Controller
     /**
      * Renders title edit form.
      *
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|void|RedirectResponse
+     * @return View|RedirectResponse
      */
     public function edit(): View|RedirectResponse
     {
         try {
             $id = Auth::user()->organization_id;
-            $element = json_decode(file_get_contents(app_path('IATI/Data/organizationElementJsonSchema.json')), true);
+            $element = json_decode(file_get_contents(app_path('IATI/Data/organizationElementJsonSchema.json')), true, 512, JSON_THROW_ON_ERROR);
             $organization = $this->recipientCountryBudgetService->getOrganizationData($id);
             $form = $this->recipientCountryBudgetService->formGenerator($id);
             $data = ['title' => $element['recipient_country_budget']['label'], 'name' => 'recipient_country_budget'];
@@ -60,18 +63,15 @@ class RecipientCountryBudgetController extends Controller
     public function update(RecipientCountryBudgetRequest $request): RedirectResponse
     {
         try {
-            $id = Auth::user()->organization_id;
-            $recipientCountryBudget = $request->all();
-
-            if (!$this->recipientCountryBudgetService->update($id, $recipientCountryBudget)) {
-                return redirect()->route('admin.organisation.index', $id)->with('error', 'Error has occurred while updating organization recipient-country-budget.');
+            if (!$this->recipientCountryBudgetService->update(Auth::user()->organization_id, $request->all())) {
+                return redirect()->route('admin.organisation.index')->with('error', 'Error has occurred while updating organization recipient-country-budget.');
             }
 
-            return redirect()->route('admin.organisation.index', $id)->with('success', 'Organization recipient-country-budget updated successfully.');
+            return redirect()->route('admin.organisation.index')->with('success', 'Organization recipient-country-budget updated successfully.');
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.organisation.index', $id)->with('error', 'Error has occurred while updating organization recipient-country-budget.');
+            return redirect()->route('admin.organisation.index')->with('error', 'Error has occurred while updating organization recipient-country-budget.');
         }
     }
 }

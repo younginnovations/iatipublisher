@@ -31,13 +31,13 @@ class TotalBudgetController extends Controller
     /**
      * Renders title edit form.
      *
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|void|RedirectResponse
+     * @return View|RedirectResponse
      */
     public function edit(): View|RedirectResponse
     {
         try {
             $id = Auth::user()->organization_id;
-            $element = json_decode(file_get_contents(app_path('IATI/Data/organizationElementJsonSchema.json')), true);
+            $element = json_decode(file_get_contents(app_path('IATI/Data/organizationElementJsonSchema.json')), true, 512, JSON_THROW_ON_ERROR);
             $organization = $this->totalBudgetService->getOrganizationData($id);
             $form = $this->totalBudgetService->formGenerator($id);
             $data = ['title'=> $element['total_budget']['label'], 'name'=>'total-budget'];
@@ -60,18 +60,15 @@ class TotalBudgetController extends Controller
     public function update(TotalBudgetRequest $request): RedirectResponse
     {
         try {
-            $id = Auth::user()->organization_id;
-            $totalBudget = $request->all();
-
-            if (!$this->totalBudgetService->update($id, $totalBudget)) {
-                return redirect()->route('admin.organisation.index', $id)->with('error', 'Error has occurred while updating organization total-budget.');
+            if (!$this->totalBudgetService->update(Auth::user()->organization_id, $request->all())) {
+                return redirect()->route('admin.organisation.index')->with('error', 'Error has occurred while updating organization total-budget.');
             }
 
-            return redirect()->route('admin.organisation.index', $id)->with('success', 'Organization total-budget updated successfully.');
+            return redirect()->route('admin.organisation.index')->with('success', 'Organization total-budget updated successfully.');
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.organisation.index', $id)->with('error', 'Error has occurred while updating organization total-budget.');
+            return redirect()->route('admin.organisation.index')->with('error', 'Error has occurred while updating organization total-budget.');
         }
     }
 }
