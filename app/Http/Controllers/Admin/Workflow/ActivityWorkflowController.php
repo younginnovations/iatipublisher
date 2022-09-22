@@ -118,6 +118,7 @@ class ActivityWorkflowController extends Controller
      * @param $id
      *
      * @return JsonResponse
+     * @throws \JsonException
      */
     public function validateActivity($id): JsonResponse
     {
@@ -125,17 +126,17 @@ class ActivityWorkflowController extends Controller
             $activity = $this->activityWorkflowService->findActivity($id);
             $response = $this->activityWorkflowService->validateActivityOnIATIValidator($activity);
 
-            if ($this->validatorService->updateOrCreateResponse($id, json_decode($response, true))) {
-                return response()->json(json_decode($response, true));
+            if ($this->validatorService->updateOrCreateResponse($id, json_decode($response, true, 512, JSON_THROW_ON_ERROR))) {
+                return response()->json(json_decode($response, true, 512, JSON_THROW_ON_ERROR));
             }
 
             return response()->json(['success' => false, 'error' => 'Error has occurred while validating activity.']);
         } catch (BadResponseException $ex) {
-            if ($ex->getCode() == 422) {
+            if ($ex->getCode() === 422) {
                 $response = $ex->getResponse()->getBody()->getContents();
 
-                if ($this->validatorService->updateOrCreateResponse($id, json_decode($response, true))) {
-                    return response()->json(json_decode($response, true));
+                if ($this->validatorService->updateOrCreateResponse($id, json_decode($response, true, 512, JSON_THROW_ON_ERROR))) {
+                    return response()->json(json_decode($response, true, 512, JSON_THROW_ON_ERROR));
                 }
             }
 
