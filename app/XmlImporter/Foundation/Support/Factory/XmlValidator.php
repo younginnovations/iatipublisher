@@ -202,9 +202,10 @@ class XmlValidator
                 'nullable|in:%s',
                 $this->validCodeList('DescriptionType')
             );
+
             $tempRules = $this->factory->getRulesForNarrative(Arr::get($description, 'narrative', []), sprintf('description.%s', $descriptionIndex));
 
-            foreach ($tempRules as $idx=>$tempRule) {
+            foreach ($tempRules as $idx => $tempRule) {
                 $rules[$idx] = $tempRule;
             }
         }
@@ -264,10 +265,11 @@ class XmlValidator
                 'nullable|in:%s',
                 $this->validCodeList('OtherIdentifierType')
             );
-            $rules = array_merge(
-                $rules,
-                $this->rulesForOwnerOrg(Arr::get($otherIdentifier, 'owner_org', []), $otherIdentifierBase)
-            );
+            $tempRules = $this->rulesForOwnerOrg(Arr::get($otherIdentifier, 'owner_org', []), $otherIdentifierBase);
+
+            foreach ($tempRules as $idx => $tempRule) {
+                $rules[$idx] = $tempRule;
+            }
         }
 
         return $rules;
@@ -298,10 +300,11 @@ class XmlValidator
                 'validation.code_list',
                 ['attribute' => trans('elementForm.type')]
             );
-            $messages = array_merge(
-                $messages,
-                $this->messagesForOwnerOrg(Arr::get($otherIdentifier, 'owner_org', []), $otherIdentifierBase)
-            );
+            $tempMessages = $this->messagesForOwnerOrg(Arr::get($otherIdentifier, 'owner_org', []), $otherIdentifierBase);
+
+            foreach ($tempMessages as $idx => $tempMessage) {
+                $messages[$idx] = $tempMessage;
+            }
         }
 
         return $messages;
@@ -320,10 +323,11 @@ class XmlValidator
 
         foreach ($ownerOrgData as $ownerOrgIndex => $ownerOrg) {
             $ownerOrgBase = sprintf('%s.owner_org.%s', $otherIdentifierBase, $ownerOrgIndex);
-            $rules = array_merge(
-                $rules,
-                $this->factory->getRulesForNarrative(Arr::get($ownerOrg, 'narrative', []), $ownerOrgBase)
-            );
+            $tempRules = $this->factory->getRulesForNarrative(Arr::get($ownerOrg, 'narrative', []), $ownerOrgBase);
+
+            foreach ($tempRules as $idx => $tempRule) {
+                $rules[$idx] = $tempRule;
+            }
         }
 
         return $rules;
@@ -346,6 +350,12 @@ class XmlValidator
                 $messages,
                 $this->factory->getMessagesForNarrative($ownerOrg['narrative'], $ownerOrgBase)
             );
+
+            $tempMessages = $this->factory->getMessagesForNarrative($ownerOrg['narrative'], $ownerOrgBase);
+
+            foreach ($tempMessages as $idx => $tempMessage) {
+                $messages[$idx] = $tempMessage;
+            }
         }
 
         return $messages;
@@ -370,10 +380,11 @@ class XmlValidator
                 $this->validCodeList('ActivityDateType')
             );
             $rules[sprintf('%s.date', $activityDateBase)] = 'date|actual_date|nullable';
-            $rules = array_merge(
-                $rules,
-                $this->factory->getRulesForNarrative($activityDate['narrative'], $activityDateBase)
-            );
+            $tempRules = $this->factory->getRulesForNarrative($activityDate['narrative'], $activityDateBase);
+
+            foreach ($tempRules as $idx => $tempRule) {
+                $rules[$idx] = $tempRule;
+            }
         }
 
         return $rules;
@@ -423,10 +434,11 @@ class XmlValidator
                 'validation.date',
                 ['attribute' => trans('element.activity_date')]
             );
-            $messages = array_merge(
-                $messages,
-                $this->factory->getMessagesForNarrative($activityDate['narrative'], $activityDateBase)
-            );
+            $tempMessages = $this->factory->getMessagesForNarrative($activityDate['narrative'], $activityDateBase);
+
+            foreach ($tempMessages as $idx => $tempMessage) {
+                $messages[$idx] = $tempMessage;
+            }
         }
 
         return $messages;
@@ -449,16 +461,21 @@ class XmlValidator
                 'in:%s',
                 $this->validCodeList('ContactType')
             );
-            $rules = array_merge(
-                $rules,
+            $tempRules = [
                 $this->getRulesForDepartment(Arr::get($contactInfo, 'department', []), $contactInfoBase),
                 $this->getRulesForOrganization(Arr::get($contactInfo, 'organization', []), $contactInfoBase),
                 $this->getRulesForPersonName(Arr::get($contactInfo, 'person_name', []), $contactInfoBase),
                 $this->getRulesForJobTitle(Arr::get($contactInfo, 'job_title', []), $contactInfoBase),
                 $this->getRulesForMailingAddress(Arr::get($contactInfo, 'mailing_address', []), $contactInfoBase),
                 $this->getRulesForEmail(Arr::get($contactInfo, 'email', []), $contactInfoBase),
-                $this->getRulesForWebsite(Arr::get($contactInfo, 'website', []), $contactInfoBase)
-            );
+                $this->getRulesForWebsite(Arr::get($contactInfo, 'website', []), $contactInfoBase),
+            ];
+
+            foreach ($tempRules as $tempRule) {
+                foreach ($tempRules as $idx => $rule) {
+                    $rules[$idx] = $rule;
+                }
+            }
         }
 
         return $rules;
@@ -478,16 +495,21 @@ class XmlValidator
         foreach ($contacts as $contactInfoIndex => $contactInfo) {
             $contactInfoBase = sprintf('contact_info.%s', $contactInfoIndex);
             $messages[sprintf('%s.type.in', $contactInfoBase)] = 'Invalid Contact Info Type';
-            $messages = array_merge(
-                $messages,
+            $tempMessages = [
                 $this->getMessagesForDepartment(Arr::get($contactInfo, 'department', []), $contactInfoBase),
                 $this->getMessagesForOrganization(Arr::get($contactInfo, 'organization', []), $contactInfoBase),
                 $this->getMessagesForPersonName(Arr::get($contactInfo, 'person_name', []), $contactInfoBase),
                 $this->getMessagesForJobTitle(Arr::get($contactInfo, 'job_title', []), $contactInfoBase),
                 $this->getMessagesForMailingAddress(Arr::get($contactInfo, 'mailing_address', []), $contactInfoBase),
                 $this->getMessagesForEmail(Arr::get($contactInfo, 'email', []), $contactInfoBase),
-                $this->getMessagesForWebsite(Arr::get($contactInfo, 'website', []), $contactInfoBase)
-            );
+                $this->getMessagesForWebsite(Arr::get($contactInfo, 'website', []), $contactInfoBase),
+            ];
+
+            foreach ($tempMessages as $tempMessage) {
+                foreach ($tempMessage as $idx => $message) {
+                    $messages[$idx] = $message;
+                }
+            }
         }
 
         return $messages;
@@ -528,10 +550,11 @@ class XmlValidator
 
         foreach ($organizationData as $organizationIndex => $organization) {
             $organizationBase = sprintf('%s.organization.%s', $contactBase, $organizationIndex);
-            $messages = array_merge(
-                $messages,
-                $this->factory->getMessagesForNarrative($organization['narrative'], $organizationBase)
-            );
+            $tempMessages = $this->factory->getMessagesForNarrative($organization['narrative'], $organizationBase);
+
+            foreach ($tempMessages as $idx => $tempMessage) {
+                $messages[$idx] = $tempMessage;
+            }
         }
 
         return $messages;
@@ -550,10 +573,11 @@ class XmlValidator
 
         foreach ($departments as $departmentIndex => $department) {
             $departmentBase = sprintf('%s.department.%s', $contactBase, $departmentIndex);
-            $rules = array_merge(
-                $rules,
-                $this->factory->getRulesForNarrative($department['narrative'], $departmentBase)
-            );
+            $tempRules = $this->factory->getRulesForNarrative($department['narrative'], $departmentBase);
+
+            foreach ($tempRules as $idx => $tempRule) {
+                $rules[$idx] = $tempRule;
+            }
         }
 
         return $rules;
@@ -572,10 +596,11 @@ class XmlValidator
 
         foreach ($departments as $departmentIndex => $department) {
             $departmentBase = sprintf('%s.department.%s', $contactBase, $departmentIndex);
-            $messages = array_merge(
-                $messages,
-                $this->factory->getMessagesForNarrative($department['narrative'], $departmentBase)
-            );
+            $tempMessages = $this->factory->getMessagesForNarrative($department['narrative'], $departmentBase);
+
+            foreach ($tempMessages as $idx => $tempMessage) {
+                $messages[$idx] = $tempMessage;
+            }
         }
 
         return $messages;
@@ -594,10 +619,11 @@ class XmlValidator
 
         foreach ($personNames as $personNameIndex => $personName) {
             $personNameBase = sprintf('%s.person_name.%s', $contactBase, $personNameIndex);
-            $rules = array_merge(
-                $rules,
-                $this->factory->getRulesForNarrative($personName['narrative'], $personNameBase)
-            );
+            $tempRules = $this->factory->getRulesForNarrative($personName['narrative'], $personNameBase);
+
+            foreach ($tempRules as $idx => $tempRule) {
+                $rules[$idx] = $tempRule;
+            }
         }
 
         return $rules;
@@ -616,10 +642,11 @@ class XmlValidator
 
         foreach ($personNames as $personNameIndex => $personName) {
             $personNameBase = sprintf('%s.person_name.%s', $contactBase, $personNameIndex);
-            $messages = array_merge(
-                $messages,
-                $this->factory->getMessagesForNarrative($personName['narrative'], $personNameBase)
-            );
+            $tempMessages = $this->factory->getMessagesForNarrative($personName['narrative'], $personNameBase);
+
+            foreach ($tempMessages as $idx => $tempMessage) {
+                $messages[$idx] = $tempMessage;
+            }
         }
 
         return $messages;
@@ -638,7 +665,11 @@ class XmlValidator
 
         foreach ($jobTitles as $jobTitleIndex => $jobTitle) {
             $jobTitleBase = sprintf('%s.job_title.%s', $contactBase, $jobTitleIndex);
-            $rules = array_merge($rules, $this->factory->getRulesForNarrative($jobTitle['narrative'], $jobTitleBase));
+            $tempRules = $this->factory->getRulesForNarrative($jobTitle['narrative'], $jobTitleBase);
+
+            foreach ($tempRules as $idx => $tempRule) {
+                $messages[$idx] = $tempRule;
+            }
         }
 
         return $rules;
@@ -657,10 +688,11 @@ class XmlValidator
 
         foreach ($jobTitles as $jobTitleIndex => $jobTitle) {
             $jobTitleBase = sprintf('%s.job_title.%s', $contactBase, $jobTitleIndex);
-            $messages = array_merge(
-                $messages,
-                $this->factory->getMessagesForNarrative($jobTitle['narrative'], $jobTitleBase)
-            );
+            $tempMessages = $this->factory->getMessagesForNarrative($jobTitle['narrative'], $jobTitleBase);
+
+            foreach ($tempMessages as $idx => $tempMessage) {
+                $messages[$idx] = $tempMessage;
+            }
         }
 
         return $messages;
@@ -679,10 +711,11 @@ class XmlValidator
 
         foreach ($mailingAddresses as $mailingAddressIndex => $mailingAddress) {
             $mailingAddressBase = sprintf('%s.mailing_address.%s', $contactBase, $mailingAddressIndex);
-            $rules = array_merge(
-                $rules,
-                $this->factory->getRulesForNarrative($mailingAddress['narrative'], $mailingAddressBase)
-            );
+            $tempRules = $this->factory->getRulesForNarrative($mailingAddress['narrative'], $mailingAddressBase);
+
+            foreach ($tempRules as $idx => $tempRule) {
+                $rules[$idx] = $tempRule;
+            }
         }
 
         return $rules;
@@ -701,10 +734,11 @@ class XmlValidator
 
         foreach ($mailingAddresses as $mailingAddressIndex => $mailingAddress) {
             $mailingAddressBase = sprintf('%s.mailing_address.%s', $contactBase, $mailingAddressIndex);
-            $messages = array_merge(
-                $messages,
-                $this->factory->getMessagesForNarrative($mailingAddress['narrative'], $mailingAddressBase)
-            );
+            $tempMessages = $this->factory->getMessagesForNarrative($mailingAddress['narrative'], $mailingAddressBase);
+
+            foreach ($tempMessages as $idx => $tempMessage) {
+                $messages[$idx] = $tempMessage;
+            }
         }
 
         return $messages;
@@ -811,6 +845,7 @@ class XmlValidator
             $narrative = sprintf('%s.narrative.0.narrative', $participatingOrgBase);
             $rules[$identifier] = 'exclude_operators|required_without:' . $narrative;
             $rules[$narrative][] = 'required_without:' . $identifier;
+            //check
             $rules = array_merge_recursive(
                 $rules,
                 $this->factory->getRulesForNarrative($participatingOrg['narrative'], $participatingOrgBase)
@@ -859,10 +894,11 @@ class XmlValidator
                 'validation.required_without',
                 ['attribute' => trans('elementForm.narrative'), 'values' => trans('elementForm.identifier')]
             );
-            $messages = array_merge(
-                $messages,
-                $this->factory->getMessagesForNarrative($participatingOrg['narrative'], $participatingOrgBase)
-            );
+            $tempMessages = $this->factory->getMessagesForNarrative($participatingOrg['narrative'], $participatingOrgBase);
+
+            foreach ($tempMessages as $idx => $tempMessage) {
+                $messages[$idx] = $tempMessage;
+            }
         }
 
         return $messages;
@@ -888,10 +924,11 @@ class XmlValidator
             if (count($recipientCountries) > 1) {
                 $rules[$recipientCountryBase . '.percentage'] = 'required|numeric|max:100';
             }
-            $rules = array_merge(
-                $rules,
-                $this->factory->getRulesForNarrative($recipientCountry['narrative'], $recipientCountryBase)
-            );
+            $tempRules = $this->factory->getRulesForNarrative($recipientCountry['narrative'], $recipientCountryBase);
+
+            foreach ($tempRules as $idx => $tempRule) {
+                $rules[$idx] = $tempRule;
+            }
         }
 
         return $rules;
@@ -929,10 +966,11 @@ class XmlValidator
                 'validation.required',
                 ['attribute' => trans('elementForm.percentage')]
             );
-            $messages = array_merge(
-                $messages,
-                $this->factory->getMessagesForNarrative($recipientCountry['narrative'], $recipientCountryBase)
-            );
+            $tempMessages = $this->factory->getMessagesForNarrative($recipientCountry['narrative'], $recipientCountryBase);
+
+            foreach ($tempMessages as $idx => $tempMessage) {
+                $messages[$idx] = $tempMessage;
+            }
         }
 
         return $messages;
@@ -958,10 +996,11 @@ class XmlValidator
             if (count($recipientRegions) > 1) {
                 $rules[$recipientRegionBase . '.percentage'] = 'required|numeric|max:100';
             }
-            $rules = array_merge(
-                $rules,
-                $this->factory->getRulesForNarrative(Arr::get($recipientRegion, 'narrative', []), $recipientRegionBase)
-            );
+            $tempRules = $this->factory->getRulesForNarrative(Arr::get($recipientRegion, 'narrative', []), $recipientRegionBase);
+
+            foreach ($tempRules as $idx => $tempRule) {
+                $rules[$idx] = $tempRule;
+            }
         }
 
         return $rules;
@@ -999,13 +1038,11 @@ class XmlValidator
                 'validation.required',
                 ['attribute' => trans('elementForm.percentage')]
             );
-            $messages = array_merge(
-                $messages,
-                $this->factory->getMessagesForNarrative(
-                    Arr::get($recipientRegion, 'narrative', []),
-                    $recipientRegionBase
-                )
-            );
+            $tempMessages = $this->factory->getMessagesForNarrative(Arr::get($recipientRegion, 'narrative', []), $recipientRegionBase);
+
+            foreach ($tempMessages as $idx => $tempMessage) {
+                $messages[$idx] = $tempMessage;
+            }
         }
 
         return $messages;
@@ -1047,15 +1084,27 @@ class XmlValidator
                 'in:%s',
                 $this->validCodeList('LocationType')
             );
-            $rules = array_merge(
-                $rules,
+            // $tempMessages =                 $this->messagesForOwnerOrg(Arr::get($otherIdentifier, 'owner_org', []), $otherIdentifierBase);
+
+            // foreach ($tempMessages as $idx => $tempMessage) {
+            //     $messages[$idx] = $tempMessage;
+            // }
+
+            //check
+            $tempRules = [
                 $this->getRulesForLocationId(Arr::get($location, 'location_id', []), $locationBase),
                 $this->getRulesForName(Arr::get($location, 'name', []), $locationBase),
                 $this->getRulesForLocationDescription(Arr::get($location, 'location_description', []), $locationBase),
                 $this->getRulesForActivityDescription(Arr::get($location, 'activity_description', []), $locationBase),
                 $this->getRulesForAdministrative(Arr::get($location, 'administrative', []), $locationBase),
-                $this->getRulesForPoint(Arr::get($location, 'point', []), $locationBase)
-            );
+                $this->getRulesForPoint(Arr::get($location, 'point', []), $locationBase),
+            ];
+
+            foreach ($tempRules as $tempRule) {
+                foreach ($tempRule as $idx => $rule) {
+                    $rules[$idx] = $rule;
+                }
+            }
         }
 
         return $rules;
@@ -1097,8 +1146,8 @@ class XmlValidator
                 'validation.code_list',
                 ['attribute' => trans('elementForm.feature_designation_code')]
             );
-            $messages = array_merge(
-                $messages,
+
+            $tempMessages = [
                 $this->getMessagesForLocationId(Arr::get($location, 'location_id', []), $locationBase),
                 $this->getMessagesForName(Arr::get($location, 'name', []), $locationBase),
                 $this->getMessagesForLocationDescription(
@@ -1110,8 +1159,14 @@ class XmlValidator
                     $locationBase
                 ),
                 $this->getMessagesForAdministrative(Arr::get($location, 'administrative', []), $locationBase),
-                $this->getMessagesForPoint(Arr::get($location, 'point', []), $locationBase)
-            );
+                $this->getMessagesForPoint(Arr::get($location, 'point', []), $locationBase),
+            ];
+
+            foreach ($tempMessages as $tempMessage) {
+                foreach ($tempMessage as $idx => $message) {
+                    $messages[$idx] = $message;
+                }
+            }
         }
 
         return $messages;
@@ -1126,6 +1181,7 @@ class XmlValidator
     protected function getRulesForLocationId($locationsIds, $locationBase): array
     {
         $rules = [];
+
         foreach ($locationsIds as $locationIdIndex => $locationId) {
             $locationIdBase = sprintf('%s.location_id.%s', $locationBase, $locationIdIndex);
             if ($locationId['code'] !== '') {
@@ -1184,7 +1240,11 @@ class XmlValidator
         $rules = [];
         foreach ($locationName as $nameIndex => $name) {
             $narrativeBase = sprintf('%s.name.%s', $locationBase, $nameIndex);
-            $rules = array_merge($rules, $this->factory->getRulesForNarrative($name['narrative'], $narrativeBase));
+            $tempRules = $this->factory->getRulesForNarrative($name['narrative'], $narrativeBase);
+
+            foreach ($tempRules as $idx => $tempRule) {
+                $rules[$idx] = $tempRule;
+            }
         }
 
         return $rules;
@@ -1199,12 +1259,14 @@ class XmlValidator
     protected function getMessagesForName($locationName, $locationBase): array
     {
         $messages = [];
+
         foreach ($locationName as $nameIndex => $name) {
             $narrativeBase = sprintf('%s.name.%s', $locationBase, $nameIndex);
-            $messages = array_merge(
-                $messages,
-                $this->factory->getMessagesForNarrative($name['narrative'], $narrativeBase)
-            );
+            $tempMessages = $this->factory->getMessagesForNarrative($name['narrative'], $narrativeBase);
+
+            foreach ($tempMessages as $idx => $tempMessage) {
+                $messages[$idx] = $tempMessage;
+            }
         }
 
         return $messages;
@@ -1219,12 +1281,14 @@ class XmlValidator
     protected function getRulesForLocationDescription($locationDescription, $locationBase): array
     {
         $rules = [];
+
         foreach ($locationDescription as $descriptionIndex => $description) {
             $narrativeBase = sprintf('%s.location_description.%s', $locationBase, $descriptionIndex);
-            $rules = array_merge(
-                $rules,
-                $this->factory->getRulesForNarrative($description['narrative'], $narrativeBase)
-            );
+            $tempRules = $this->factory->getRulesForNarrative($description['narrative'], $narrativeBase);
+
+            foreach ($tempRules as $idx => $tempRule) {
+                $messages[$idx] = $tempRule;
+            }
         }
 
         return $rules;
@@ -1241,10 +1305,11 @@ class XmlValidator
         $messages = [];
         foreach ($locationDescription as $descriptionIndex => $description) {
             $narrativeBase = sprintf('%s.location_description.%s', $locationBase, $descriptionIndex);
-            $messages = array_merge(
-                $messages,
-                $this->factory->getMessagesForNarrative($description['narrative'], $narrativeBase)
-            );
+            $tempMessages = $this->factory->getMessagesForNarrative($description['narrative'], $narrativeBase);
+
+            foreach ($tempMessages as $idx => $tempMessage) {
+                $messages[$idx] = $tempMessage;
+            }
         }
 
         return $messages;
@@ -1263,10 +1328,11 @@ class XmlValidator
         $rules = [];
         foreach ($activityDescription as $descriptionIndex => $description) {
             $narrativeBase = sprintf('%s.activity_description.%s', $locationBase, $descriptionIndex);
-            $rules = array_merge(
-                $rules,
-                $this->factory->getRulesForNarrative($description['narrative'], $narrativeBase)
-            );
+            $tempRules = $this->factory->getRulesForNarrative($description['narrative'], $narrativeBase);
+
+            foreach ($tempRules as $idx => $tempRule) {
+                $messages[$idx] = $tempRule;
+            }
         }
 
         return $rules;
@@ -1285,10 +1351,11 @@ class XmlValidator
         $messages = [];
         foreach ($activityDescription as $descriptionIndex => $description) {
             $narrativeBase = sprintf('%s.activity_description.%s', $locationBase, $descriptionIndex);
-            $messages = array_merge(
-                $messages,
-                $this->factory->getMessagesForNarrative($description['narrative'], $narrativeBase)
-            );
+            $tempMessages = $this->factory->getMessagesForNarrative($description['narrative'], $narrativeBase);
+
+            foreach ($tempMessages as $idx => $tempMessage) {
+                $messages[$idx] = $tempMessage;
+            }
         }
 
         return $messages;
@@ -1487,7 +1554,12 @@ class XmlValidator
             if (count($sectors) > 1) {
                 $rules[sprintf('%s.percentage', $sectorBase)] = 'required|numeric|max:100';
             }
-            $rules = array_merge($this->factory->getRulesForNarrative($sector['narrative'], $sectorBase), $rules);
+
+            $tempRules = $this->factory->getRulesForNarrative($sector['narrative'], $sectorBase);
+
+            foreach ($tempRules as $idx => $tempRule) {
+                $rules[$idx] = $tempRule;
+            }
         }
 
         $totalPercentage = $this->getRulesForPercentage($sectors);
@@ -1651,10 +1723,12 @@ class XmlValidator
                 'validation.sum',
                 ['attribute' => trans('element.sector')]
             );
-            $messages = array_merge(
-                $this->factory->getMessagesForNarrative($sector['narrative'], $sectorBase),
-                $messages
-            );
+
+            $tempMessages = $this->factory->getMessagesForNarrative($sector['narrative'], $sectorBase);
+
+            foreach ($tempMessages as $idx => $tempMessage) {
+                $messages[$idx] = $tempMessage;
+            }
         }
 
         return $messages;
@@ -1707,15 +1781,12 @@ class XmlValidator
                 'required|in:%s',
                 $this->validCodeList('BudgetIdentifierVocabulary')
             );
-            $rules = array_merge(
-                $rules,
-                $this->getBudgetItemRules(
-                    $countryBudgetItem['budget_item'],
-                    $countryBudgetItemBase,
-                    $code,
-                    $countryBudgetItems
-                )
-            );
+
+            $tempRules = $this->getBudgetItemRules($countryBudgetItem['budget_item'], $countryBudgetItemBase, $code, $countryBudgetItems);
+
+            foreach ($tempRules as $idx => $tempRule) {
+                $rules[$idx] = $tempRule;
+            }
         }
 
         return $rules;
@@ -1747,14 +1818,11 @@ class XmlValidator
                 'validation.code_list',
                 ['attribute' => trans('elementForm.vocabulary')]
             );
-            $messages = array_merge(
-                $messages,
-                $this->getBudgetItemMessages(
-                    Arr::get($countryBudgetItem, 'budget_item', []),
-                    $countryBudgetItemBase,
-                    $code
-                )
-            );
+            $tempMessages = $this->getBudgetItemMessages(Arr::get($countryBudgetItem, 'budget_item', []), $countryBudgetItemBase, $code);
+
+            foreach ($tempMessages as $idx => $tempMessage) {
+                $messages[$idx] = $tempMessage;
+            }
         }
 
         return $messages;
@@ -1779,14 +1847,16 @@ class XmlValidator
                 'in:%s',
                 $this->validCodeList('BudgetIdentifier')
             );
-            $rules = array_merge(
-                $rules,
-                $this->getBudgetItemDescriptionRules(Arr::get($budgetItem, 'description', []), $budgetItemBase)
-            );
-            $rules = array_merge(
-                $rules,
-                $this->getRulesForBudgetPercentage($countryBudgetItems)
-            );
+            $tempRules = [
+                $this->getBudgetItemDescriptionRules(Arr::get($budgetItem, 'description', []), $budgetItemBase),
+                $this->getRulesForBudgetPercentage($countryBudgetItems),
+            ];
+
+            foreach ($tempRules as $tempRule) {
+                foreach ($tempRule as $idx => $rule) {
+                    $rules[$idx] = $rule;
+                }
+            }
         }
 
         return $rules;
@@ -1832,10 +1902,11 @@ class XmlValidator
                 'validation.total',
                 ['attribute' => trans('elementForm.percentage'), 'values' => trans('elementForm.budget_item)')]
             );
-            $messages = array_merge(
-                $messages,
-                $this->getBudgetItemDescriptionMessages(Arr::get($budgetItem, 'description', []), $budgetItemBase)
-            );
+            $tempMessages = $this->getBudgetItemDescriptionMessages(Arr::get($budgetItem, 'description', []), $budgetItemBase);
+
+            foreach ($tempMessages as $idx => $tempMessage) {
+                $messages[$idx] = $tempMessage;
+            }
         }
 
         return $messages;
@@ -1933,13 +2004,11 @@ class XmlValidator
                 $rules[$humanitarianScopeBase . '.vocabulary_uri'] = 'url|required';
             }
             $rules[$humanitarianScopeBase . '.code'] = 'required|string';
-            $rules = array_merge(
-                $rules,
-                $this->factory->getRulesForNarrative(
-                    Arr::get($humanitarianScope, 'narrative', []),
-                    $humanitarianScopeBase
-                )
-            );
+            $tempRules = $this->factory->getRulesForNarrative(Arr::get($humanitarianScope, 'narrative', []), $humanitarianScopeBase);
+
+            foreach ($tempRules as $idx => $tempRule) {
+                $rules[$idx] = $tempRule;
+            }
         }
 
         return $rules;
@@ -1989,13 +2058,11 @@ class XmlValidator
                     ['attribute' => trans('elementForm.vocabulary_uri')]
                 );
             }
-            $messages = array_merge(
-                $messages,
-                $this->factory->getMessagesForNarrative(
-                    Arr::get($humanitarianScope, 'narrative', []),
-                    $humanitarianScopeForm
-                )
-            );
+            $tempMessages = $this->factory->getMessagesForNarrative(Arr::get($humanitarianScope, 'narrative', []), $humanitarianScopeForm);
+
+            foreach ($tempMessages as $idx => $tempMessage) {
+                $messages[$idx] = $tempMessage;
+            }
         }
 
         return $messages;
@@ -2033,10 +2100,11 @@ class XmlValidator
                 'in:%s',
                 $this->validCodeList('PolicySignificance')
             );
-            $rules = array_merge(
-                $rules,
-                $this->factory->getRulesForNarrative($policyMarker['narrative'], $policyMarkerForm)
-            );
+            $tempRules = $this->factory->getRulesForNarrative($policyMarker['narrative'], $policyMarkerForm);
+
+            foreach ($tempRules as $idx => $tempRule) {
+                $rules[$idx] = $tempRule;
+            }
         }
 
         return $rules;
@@ -2084,10 +2152,11 @@ class XmlValidator
                 'validation.code_list',
                 ['attribute' => trans('element.significance_code')]
             );
-            $messages = array_merge(
-                $messages,
-                $this->factory->getMessagesForNarrative($policyMarker['narrative'], $policyMarkerForm)
-            );
+            $tempMessages = $this->factory->getMessagesForNarrative($policyMarker['narrative'], $policyMarkerForm);
+
+            foreach ($tempMessages as $idx => $tempMessage) {
+                $messages[$idx] = $tempMessage;
+            }
         }
 
         return $messages;
@@ -2114,12 +2183,17 @@ class XmlValidator
                 'in:%s',
                 $this->validCodeList('BudgetType')
             );
-            $rules = array_merge(
-                $rules,
+            $tempRules = [
                 $this->factory->getRulesForPeriodStart($budget['period_start'], $budgetBase),
                 $this->factory->getRulesForPeriodEnd($budget['period_end'], $budgetBase),
-                $this->getRulesForValue($budget['value'], $budgetBase)
-            );
+                $this->getRulesForValue($budget['value'], $budgetBase),
+            ];
+
+            foreach ($tempRules as $tempRule) {
+                foreach ($tempRule as $idx => $rule) {
+                    $rules[$idx] = $rule;
+                }
+            }
 
             $startDate = Arr::get($budget, 'period_start.0.date');
             $newDate = $startDate ? date('Y-m-d', strtotime($startDate . '+1year')) : '';
@@ -2158,12 +2232,18 @@ class XmlValidator
                 'validation.code_list',
                 ['attribute' => trans('elementForm.budget_code')]
             );
-            $messages = array_merge(
-                $messages,
-                $this->factory->getMessagesForPeriodStart($budget['period_start'], $budgetBase),
-                $this->factory->getMessagesForPeriodEnd($budget['period_end'], $budgetBase),
-                $this->getMessagesForValue($budget['value'], $budgetBase)
-            );
+            $tempMessages = [
+                $this->factory->getRulesForPeriodStart($budget['period_start'], $budgetBase),
+                $this->factory->getRulesForPeriodEnd($budget['period_end'], $budgetBase),
+                $this->getRulesForValue($budget['value'], $budgetBase),
+            ];
+
+            foreach ($tempMessages as $tempMessage) {
+                foreach ($tempMessage as $idx => $message) {
+                    $messages[$idx] = $message;
+                }
+            }
+
             $messages[$budgetBase . '.period_end.0.date.before'] = trans(
                 'validation.before',
                 ['attribute' => trans('elementForm.period_end'), 'date' => trans('elementForm.period_start')]
@@ -2233,14 +2313,19 @@ class XmlValidator
                 $this->validCodeList('BudgetType')
             );
 
-            $rules = array_merge(
-                $rules,
+            $tempRules = [
                 $this->factory->getRulesForPeriodStart($plannedDisbursement['period_start'], $plannedDisbursementBase),
                 $this->factory->getRulesForPeriodEnd($plannedDisbursement['period_end'], $plannedDisbursementBase),
                 $this->getRulesForValue($plannedDisbursement['value'], $plannedDisbursementBase),
                 $this->getRulesForProviderOrg($plannedDisbursement['provider_org'], $plannedDisbursementBase),
-                $this->getRulesForReceiverOrg($plannedDisbursement['receiver_org'], $plannedDisbursementBase)
-            );
+                $this->getRulesForReceiverOrg($plannedDisbursement['receiver_org'], $plannedDisbursementBase),
+            ];
+
+            foreach ($tempRules as $tempRule) {
+                foreach ($tempRule as $idx => $rule) {
+                    $rules[$idx] = $rule;
+                }
+            }
         }
 
         return $rules;
@@ -2257,22 +2342,23 @@ class XmlValidator
 
         foreach ($plannedDisbursements as $plannedDisbursementIndex => $plannedDisbursement) {
             $plannedDisbursementBase = sprintf('planned_disbursement.%s', $plannedDisbursementIndex);
-            $rules[sprintf('%s.planned_disbursement_type.in', $plannedDisbursementBase)] = trans(
+            $messages[sprintf('%s.planned_disbursement_type.in', $plannedDisbursementBase)] = trans(
                 'validation.code_list',
                 ['attribute' => trans('elementForm.planned_disbursement_type')]
             );
-
-            $messages = array_merge(
-                $messages,
-                $this->factory->getMessagesForPeriodStart(
-                    $plannedDisbursement['period_start'],
-                    $plannedDisbursementBase
-                ),
+            $tempMessages = [
+                $this->factory->getMessagesForPeriodStart($plannedDisbursement['period_start'], $plannedDisbursementBase),
                 $this->factory->getMessagesForPeriodEnd($plannedDisbursement['period_end'], $plannedDisbursementBase),
                 $this->getMessagesForValue($plannedDisbursement['value'], $plannedDisbursementBase),
                 $this->getMessagesForProviderOrg($plannedDisbursement['provider_org'], $plannedDisbursementBase),
-                $this->getMessagesForReceiverOrg($plannedDisbursement['receiver_org'], $plannedDisbursementBase)
-            );
+                $this->getMessagesForReceiverOrg($plannedDisbursement['receiver_org'], $plannedDisbursementBase),
+            ];
+
+            foreach ($tempMessages as $tempRule) {
+                foreach ($tempRule as $idx => $message) {
+                    $messages[$idx] = $message;
+                }
+            }
         }
 
         return $messages;
@@ -2293,10 +2379,11 @@ class XmlValidator
                 'in:%s',
                 $this->validCodeList('OrganizationType', 'Organization')
             );
-            $rules = array_merge(
-                $rules,
-                $this->factory->getRulesForNarrative($providerOrg['narrative'], $providerOrgBase)
-            );
+            $tempRules = $this->factory->getRulesForNarrative($providerOrg['narrative'], $providerOrgBase);
+
+            foreach ($tempRules as $idx => $tempRule) {
+                $rules[$idx] = $tempRule;
+            }
         }
 
         return $rules;
@@ -2317,10 +2404,11 @@ class XmlValidator
                 'validation.code_list',
                 ['attribute' => trans('elementForm.organisation_type')]
             );
-            $message = array_merge(
-                $message,
-                $this->factory->getMessagesForNarrative($providerOrg['narrative'], $providerOrgBase)
-            );
+            $tempMessages = $this->factory->getMessagesForNarrative($providerOrg['narrative'], $providerOrgBase);
+
+            foreach ($tempMessages as $idx => $tempMessage) {
+                $messages[$idx] = $tempMessage;
+            }
         }
 
         return $message;
@@ -2341,10 +2429,11 @@ class XmlValidator
                 'in:%s',
                 $this->validCodeList('OrganizationType', 'Organization')
             );
-            $rules = array_merge(
-                $rules,
-                $this->factory->getRulesForNarrative($receiverOrg['narrative'], $receiverOrgBase)
-            );
+            $tempRules = $this->factory->getRulesForNarrative($receiverOrg['narrative'], $receiverOrgBase);
+
+            foreach ($tempRules as $idx => $tempRule) {
+                $rules[$idx] = $tempRule;
+            }
         }
 
         return $rules;
@@ -2365,10 +2454,11 @@ class XmlValidator
                 'validation.code_list',
                 ['attribute' => trans('elementForm.organisation_type')]
             );
-            $message = array_merge(
-                $message,
-                $this->factory->getMessagesForNarrative($receiverOrg['narrative'], $receiverOrgBase)
-            );
+            $tempMessages = $this->factory->getMessagesForNarrative($receiverOrg['narrative'], $receiverOrgBase);
+
+            foreach ($tempMessages as $idx => $tempMessage) {
+                $messages[$idx] = $tempMessage;
+            }
         }
 
         return $message;
@@ -2394,18 +2484,17 @@ class XmlValidator
                 'in:%s',
                 $this->validCodeList('Language')
             );
-            $rules = array_merge(
-                $rules,
-                $this->factory->getRulesForNarrative(Arr::get(
-                    $documentLink,
-                    'document_link.title.0.narrative',
-                    []
-                ), sprintf('%s.document_link.title.0', $documentLinkBase)),
-                $this->getRulesForDocumentCategory(
-                    Arr::get($documentLink, 'document_link.category', []),
-                    sprintf('%s.document_link', $documentLinkBase)
-                )
-            );
+            $tempRules = [
+                $this->factory->getRulesForNarrative(Arr::get($documentLink, 'document_link.title.0.narrative', []), sprintf('%s.document_link.title.0', $documentLinkBase)),
+                $this->getRulesForDocumentCategory(Arr::get($documentLink, 'document_link.category', []), sprintf('%s.document_link', $documentLinkBase)),
+            ];
+
+            foreach ($tempRules as $tempRule) {
+                foreach ($tempRule as $idx => $rule) {
+                    $rules[$idx] = $rule;
+                }
+            }
+
             $rules[sprintf('%s.document_link.title.0.narrative.0.narrative', $documentLinkBase)][] = 'required';
         }
 
@@ -2440,21 +2529,17 @@ class XmlValidator
                 '%s.document_link.language.*.language.in',
                 $documentLinkBase
             )] = trans('validation.code_list', ['attribute' => trans('elementForm.language')]);
-            $messages = array_merge(
-                $messages,
-                $this->factory->getMessagesForNarrative(
-                    Arr::get(
-                        $documentLink,
-                        'document_link.title.0.narrative',
-                        []
-                    ),
-                    sprintf('%s.document_link.title.0', $documentLinkBase)
-                ),
-                $this->getMessagesForDocumentCategory(
-                    Arr::get($documentLink, 'document_link.category', []),
-                    sprintf('%s.document_link', $documentLinkBase)
-                )
-            );
+            $tempMessages = [
+                $this->factory->getMessagesForNarrative(Arr::get($documentLink, 'document_link.title.0.narrative', []), sprintf('%s.document_link.title.0', $documentLinkBase)),
+                $this->getMessagesForDocumentCategory(Arr::get($documentLink, 'document_link.category', []), sprintf('%s.document_link', $documentLinkBase)),
+            ];
+
+            foreach ($tempMessages as $tempMessage) {
+                foreach ($tempMessage as $idx => $message) {
+                    $messages[$idx] = $message;
+                }
+            }
+
             $messages[sprintf(
                 '%s.document_link.title.0.narrative.0.narrative.required',
                 $documentLinkBase
@@ -2618,10 +2703,11 @@ class XmlValidator
                 'required_if:condition_attached,1|in:%s',
                 $this->validCodeList('ConditionType')
             );
-            $rules = array_merge(
-                $rules,
-                $this->factory->getRulesForNarrative($condition['narrative'], $conditionBase)
-            );
+            $tempRules = $this->factory->getRulesForNarrative($condition['narrative'], $conditionBase);
+
+            foreach ($tempRules as $idx => $tempRule) {
+                $rules[$idx] = $tempRule;
+            }
 
             foreach ($condition['narrative'] as $narrativeIndex => $narrative) {
                 $rules[sprintf(
@@ -2667,10 +2753,11 @@ class XmlValidator
                 'validation.code_list',
                 ['attribute' => trans('elementForm.condition_type')]
             );
-            $messages = array_merge(
-                $messages,
-                $this->factory->getMessagesForNarrative($condition['narrative'], $conditionBase)
-            );
+            $tempMessages = $this->factory->getMessagesForNarrative($condition['narrative'], $conditionBase);
+
+            foreach ($tempMessages as $idx => $tempMessage) {
+                $messages[$idx] = $tempMessage;
+            }
 
             foreach ($condition['narrative'] as $narrativeIndex => $narrative) {
                 $messages[sprintf('%s.narrative.%s.narrative.required_if', $conditionBase, $narrativeIndex)] = trans(
@@ -2745,9 +2832,7 @@ class XmlValidator
                 'in:%s',
                 $this->validCodeList('TiedStatus')
             );
-
-            $rules = array_merge(
-                $rules,
+            $tempRules = [
                 $this->getTransactionTypeRules(
                     Arr::get($transaction, 'transaction.transaction_type', []),
                     $transactionBase
@@ -2768,8 +2853,14 @@ class XmlValidator
                     $transaction,
                     'transaction.receiver_organization',
                     []
-                ), $transactionBase)
-            );
+                ), $transactionBase),
+            ];
+
+            foreach ($tempRules as $tempRule) {
+                foreach ($tempRule as $idx => $rule) {
+                    $rules[$idx] = $rule;
+                }
+            }
         }
 
         return $rules;
@@ -2827,8 +2918,7 @@ class XmlValidator
                 ['attribute' => trans('elementForm.tied_status_code')]
             );
 
-            $messages = array_merge(
-                $messages,
+            $tempMessages = [
                 $this->getTransactionTypeMessages(
                     Arr::get($transaction, 'transaction.transaction_type', []),
                     $transactionBase
@@ -2852,8 +2942,14 @@ class XmlValidator
                     $transaction,
                     'transaction.receiver_organization',
                     []
-                ), $transactionBase)
-            );
+                ), $transactionBase),
+            ];
+
+            foreach ($tempMessages as $tempMessage) {
+                foreach ($tempMessage as $idx => $message) {
+                    $messages[$idx] = $message;
+                }
+            }
         }
 
         return $messages;
@@ -2888,10 +2984,11 @@ class XmlValidator
 
         foreach ($providers as $providerOrgIndex => $providerOrg) {
             $providerOrgBase = sprintf('%s.provider_organization.%s', $transactionBase, $providerOrgIndex);
-            $rules = array_merge(
-                $rules,
-                $this->factory->getRulesForNarrative($providerOrg['narrative'], $providerOrgBase)
-            );
+            $tempRules = $this->factory->getRulesForNarrative($providerOrg['narrative'], $providerOrgBase);
+
+            foreach ($tempRules as $idx => $tempRule) {
+                $rules[$idx] = $tempRule;
+            }
         }
 
         return $rules;
@@ -2908,10 +3005,11 @@ class XmlValidator
 
         foreach ($providers as $providerOrgIndex => $providerOrg) {
             $providerOrgBase = sprintf('%s.provider_organization.%s', $transactionBase, $providerOrgIndex);
-            $message = array_merge(
-                $message,
-                $this->factory->getMessagesForNarrative($providerOrg['narrative'], $providerOrgBase)
-            );
+            $tempMessages = $this->factory->getMessagesForNarrative($providerOrg['narrative'], $providerOrgBase);
+
+            foreach ($tempMessages as $idx => $tempMessage) {
+                $messages[$idx] = $tempMessage;
+            }
         }
 
         return $message;
@@ -2929,10 +3027,11 @@ class XmlValidator
 
         foreach ($receivers as $receiverOrgIndex => $receiverOrg) {
             $receiverOrgBase = sprintf('%s.receiver_organization.%s', $transactionBase, $receiverOrgIndex);
-            $rules = array_merge(
-                $rules,
-                $this->factory->getRulesForNarrative($receiverOrg['narrative'], $receiverOrgBase)
-            );
+            $tempRules = $this->factory->getRulesForNarrative($receiverOrg['narrative'], $receiverOrgBase);
+
+            foreach ($tempRules as $idx => $tempRule) {
+                $rules[$idx] = $tempRule;
+            }
         }
 
         return $rules;
@@ -2949,10 +3048,11 @@ class XmlValidator
 
         foreach ($receivers as $receiverOrgIndex => $receiverOrg) {
             $receiverOrgBase = sprintf('%s.receiver_organization.%s', $transactionBase, $receiverOrgIndex);
-            $message = array_merge(
-                $message,
-                $this->factory->getMessagesForNarrative($receiverOrg['narrative'], $receiverOrgBase)
-            );
+            $tempMessages = $this->factory->getMessagesForNarrative($receiverOrg['narrative'], $receiverOrgBase);
+
+            foreach ($tempMessages as $idx => $tempMessage) {
+                $messages[$idx] = $tempMessage;
+            }
         }
 
         return $message;
@@ -3034,10 +3134,11 @@ class XmlValidator
                 );
             }
         }
-        array_merge(
-            $rules,
-            $this->factory->getRulesForTransactionSectorNarrative($sector, $sector['narrative'], $sectorBase)
-        );
+        $tempRules = $this->factory->getRulesForTransactionSectorNarrative($sector, $sector['narrative'], $sectorBase);
+
+        foreach ($tempRules as $idx => $tempRule) {
+            $rules[$idx] = $tempRule;
+        }
 
         return $rules;
     }
@@ -3121,10 +3222,11 @@ class XmlValidator
                 );
             }
         }
-        $messages = array_merge(
-            $messages,
-            $this->factory->getMessagesForTransactionSectorNarrative($sector, $sector['narrative'], $sectorBase)
-        );
+        $tempMessages = $this->factory->getMessagesForTransactionSectorNarrative($sector, $sector['narrative'], $sectorBase);
+
+        foreach ($tempMessages as $idx => $tempMessage) {
+            $messages[$idx] = $tempMessage;
+        }
 
         return $messages;
     }
@@ -3143,10 +3245,11 @@ class XmlValidator
             $recipientRegionBase = sprintf('%s.recipient_region.%s', $transactionBase, $recipientRegionIndex);
             $rules[$recipientRegionBase . '.region_code'] = 'required';
             $rules[$recipientRegionBase . '.vocabulary_uri'] = 'nullable|url';
-            $rules = array_merge(
-                $rules,
-                $this->factory->getRulesForNarrative($recipientRegion['narrative'], $recipientRegionBase)
-            );
+            $tempRules = $this->factory->getRulesForNarrative($recipientRegion['narrative'], $recipientRegionBase);
+
+            foreach ($tempRules as $idx => $tempRule) {
+                $rules[$idx] = $tempRule;
+            }
         }
 
         return $rules;
@@ -3169,10 +3272,11 @@ class XmlValidator
                 ['attribute' => trans('elementForm.recipient_region_code')]
             );
             $messages[$recipientRegionBase . '.vocabulary_uri.url'] = trans('validation.url');
-            $messages = array_merge(
-                $messages,
-                $this->factory->getMessagesForNarrative($recipientRegion['narrative'], $recipientRegionBase)
-            );
+            $tempMessages = $this->factory->getMessagesForNarrative($recipientRegion['narrative'], $recipientRegionBase);
+
+            foreach ($tempMessages as $idx => $tempMessage) {
+                $messages[$idx] = $tempMessage;
+            }
         }
 
         return $messages;
@@ -3324,10 +3428,11 @@ class XmlValidator
 
         foreach ($descriptions as $descriptionIndex => $description) {
             $narrativeBase = sprintf('%s.description.%s', $transactionBase, $descriptionIndex);
-            $rules = array_merge(
-                $rules,
-                $this->factory->getRulesForNarrative($description['narrative'], $narrativeBase)
-            );
+            $tempRules = $this->factory->getRulesForNarrative($description['narrative'], $narrativeBase);
+
+            foreach ($tempRules as $idx => $tempRule) {
+                $rules[$idx] = $tempRule;
+            }
         }
 
         return $rules;
@@ -3345,10 +3450,11 @@ class XmlValidator
 
         foreach ($descriptions as $descriptionIndex => $description) {
             $narrativeBase = sprintf('%s.description.%s', $transactionBase, $descriptionIndex);
-            $messages = array_merge(
-                $messages,
-                $this->factory->getMessagesForNarrative($description['narrative'], $narrativeBase)
-            );
+            $tempMessages = $this->factory->getMessagesForNarrative($description['narrative'], $narrativeBase);
+
+            foreach ($tempMessages as $idx => $tempMessage) {
+                $messages[$idx] = $tempMessage;
+            }
         }
 
         return $messages;
@@ -3371,18 +3477,17 @@ class XmlValidator
                 $this->validCodeList('ResultType')
             );
 
-            $rules = array_merge(
-                $rules,
-                $this->factory->getRulesForRequiredNarrative(
-                    Arr::get($result, 'result.title.0.narrative', []),
-                    sprintf('%s.title.0', $resultBase)
-                ),
-                $this->factory->getRulesForNarrative(
-                    Arr::get($result, 'result.description.0.narrative', []),
-                    sprintf('%s.description.0', $resultBase)
-                ),
-                $this->getRulesForIndicator(Arr::get($result, 'result.indicator', []), $resultBase)
-            );
+            $tempRules = [
+                $this->factory->getRulesForRequiredNarrative(Arr::get($result, 'result.title.0.narrative', []), sprintf('%s.title.0', $resultBase)),
+                $this->factory->getRulesForNarrative(Arr::get($result, 'result.description.0.narrative', []), sprintf('%s.description.0', $resultBase)),
+                $this->getRulesForIndicator(Arr::get($result, 'result.indicator', []), $resultBase),
+            ];
+
+            foreach ($tempRules as $tempRule) {
+                foreach ($tempRule as $idx => $rule) {
+                    $rules[$idx] = $rule;
+                }
+            }
         }
 
         return $rules;
@@ -3408,20 +3513,17 @@ class XmlValidator
                 'validation.code_list',
                 ['attribute' => trans('elementForm.result_type')]
             );
+            $tempMessages = [
+                $this->factory->getMessagesForRequiredNarrative(Arr::get($result, 'result.title.0.narrative', []), sprintf('%s.title.0', $resultBase)),
+                $this->factory->getMessagesForNarrative(Arr::get($result, 'result.description.0.narrative', []), sprintf('%s.description.0', $resultBase)),
+                $this->getMessagesForIndicator(Arr::get($result, 'result.indicator', []), $resultBase),
+            ];
 
-            $messages = array_merge(
-                $messages,
-                $this->factory->getMessagesForRequiredNarrative(Arr::get(
-                    $result,
-                    'result.title.0.narrative',
-                    []
-                ), sprintf('%s.title.0', $resultBase)),
-                $this->factory->getMessagesForNarrative(
-                    Arr::get($result, 'result.description.0.narrative', []),
-                    sprintf('%s.description.0', $resultBase)
-                ),
-                $this->getMessagesForIndicator(Arr::get($result, 'result.indicator', []), $resultBase)
-            );
+            foreach ($tempMessages as $tempMessage) {
+                foreach ($tempMessage as $idx => $message) {
+                    $messages[$idx] = $message;
+                }
+            }
         }
 
         return $messages;
@@ -3445,17 +3547,19 @@ class XmlValidator
             );
             $rules[sprintf('%s.ascending', $indicatorBase)] = 'in:1,0';
 
-            $rules = array_merge(
-                $rules,
+            $tempRules = [
                 $this->factory->getRulesForResultNarrative($indicator['title'], sprintf('%s.title.0', $indicatorBase)),
-                $this->factory->getRulesForNarrative(
-                    $indicator['description'],
-                    sprintf('%s.description.0', $indicatorBase)
-                ),
+                $this->factory->getRulesForNarrative($indicator['description'], sprintf('%s.description.0', $indicatorBase)),
                 $this->getRulesForReference($indicator['reference'], $indicatorBase),
                 $this->getRulesForBaseline($indicator['baseline'], $indicatorBase),
-                $this->getRulesForPeriod($indicator['period'], $indicatorBase)
-            );
+                $this->getRulesForPeriod($indicator['period'], $indicatorBase),
+            ];
+
+            foreach ($tempRules as $tempRule) {
+                foreach ($tempRule as $idx => $rule) {
+                    $rules[$idx] = $rule;
+                }
+            }
         }
 
         return $rules;
@@ -3481,8 +3585,9 @@ class XmlValidator
                 'validation.required',
                 ['attribute' => trans('elementForm.measure')]
             );
-            $messages = array_merge(
-                $messages,
+
+            $tempMessages = [
+
                 $this->factory->getMessagesForNarrative($indicator['title'], sprintf('%s.title.0', $indicatorBase)),
                 $this->getMessagesForResultNarrative($indicator['title'], sprintf('%s.title.0', $indicatorBase)),
                 $this->factory->getMessagesForNarrative(
@@ -3491,8 +3596,14 @@ class XmlValidator
                 ),
                 $this->getMessagesForReference($indicator['reference'], $indicatorBase),
                 $this->getMessagesForBaseline($indicator['baseline'], $indicatorBase),
-                $this->getMessagesForPeriod($indicator['period'], $indicatorBase)
-            );
+                $this->getMessagesForPeriod($indicator['period'], $indicatorBase),
+            ];
+
+            foreach ($tempMessages as $tempMessage) {
+                foreach ($tempMessage as $idx => $message) {
+                    $messages[$idx] = $message;
+                }
+            }
         }
 
         return $messages;
@@ -3565,13 +3676,11 @@ class XmlValidator
             $rules[$baselineForm] = 'year_value_narrative_validation:' . $baselineForm . '.comment.0.narrative';
             $rules[sprintf('%s.year', $baselineForm)] = sprintf('numeric|required_with:%s.value', $baselineForm);
             $rules[sprintf('%s.value', $baselineForm)] = sprintf('numeric|required_with:%s.year', $baselineForm);
-            $rules = array_merge(
-                $rules,
-                $this->factory->getRulesForNarrative(
-                    $baseline['comment'][0]['narrative'],
-                    sprintf('%s.comment.0', $baselineForm)
-                )
-            );
+            $tempRules = $this->factory->getRulesForNarrative($baseline['comment'][0]['narrative'], sprintf('%s.comment.0', $baselineForm));
+
+            foreach ($tempRules as $idx => $tempRule) {
+                $rules[$idx] = $tempRule;
+            }
         }
 
         return $rules;
@@ -3613,13 +3722,11 @@ class XmlValidator
                 'validation.numeric',
                 ['attribute' => trans('elementForm.value')]
             );
-            $messages = array_merge(
-                $messages,
-                $this->factory->getMessagesForNarrative(
-                    $baseline['comment'][0]['narrative'],
-                    sprintf('%s.comment.0', $baselineForm)
-                )
-            );
+            $tempMessages = $this->factory->getMessagesForNarrative($baseline['comment'][0]['narrative'], sprintf('%s.comment.0', $baselineForm));
+
+            foreach ($tempMessages as $idx => $tempMessage) {
+                $messages[$idx] = $tempMessage;
+            }
         }
 
         return $messages;
@@ -3637,13 +3744,18 @@ class XmlValidator
 
         foreach ($formFields as $periodIndex => $period) {
             $periodForm = sprintf('%s.period.%s', $formBase, $periodIndex);
-            $rules = array_merge(
-                $rules,
+            $tempRules = [
                 $this->getRulesForResultPeriodStart($period['period_start'], $periodForm, $period['period_end']),
                 $this->getRulesForResultPeriodEnd($period['period_end'], $periodForm, $period['period_start']),
                 $this->getRulesForTarget($period['target'], sprintf('%s.target', $periodForm)),
-                $this->getRulesForTarget($period['actual'], sprintf('%s.actual', $periodForm))
-            );
+                $this->getRulesForTarget($period['actual'], sprintf('%s.actual', $periodForm)),
+            ];
+
+            foreach ($tempRules as $tempRule) {
+                foreach ($tempRules as $idx => $rule) {
+                    $rules[$idx] = $rule;
+                }
+            }
         }
 
         return $rules;
@@ -3661,13 +3773,18 @@ class XmlValidator
 
         foreach ($formFields as $periodIndex => $period) {
             $periodForm = sprintf('%s.period.%s', $formBase, $periodIndex);
-            $messages = array_merge(
-                $messages,
+            $tempMessages = [
                 $this->getMessagesForResultPeriodStart($period['period_start'], $periodForm, $period['period_end']),
                 $this->getMessagesForResultPeriodEnd($period['period_end'], $periodForm, $period['period_start']),
                 $this->getMessagesForTarget($period['target'], sprintf('%s.target', $periodForm)),
-                $this->getMessagesForTarget($period['actual'], sprintf('%s.actual', $periodForm))
-            );
+                $this->getMessagesForTarget($period['actual'], sprintf('%s.actual', $periodForm)),
+            ];
+
+            foreach ($tempMessages as $tempMessage) {
+                foreach ($tempMessage as $idx => $message) {
+                    $messages[$idx] = $message;
+                }
+            }
         }
 
         return $messages;
@@ -3686,13 +3803,11 @@ class XmlValidator
         foreach ($formFields as $targetIndex => $target) {
             $targetForm = sprintf('%s.%s', $formBase, $targetIndex);
             $rules[$targetForm] = 'year_value_narrative_validation';
-            $rules = array_merge(
-                $rules,
-                $this->factory->getRulesForNarrative(
-                    $target['comment'][0]['narrative'],
-                    sprintf('%s.comment.0', $targetForm)
-                )
-            );
+            $tempRules = $this->factory->getRulesForNarrative($target['comment'][0]['narrative'], sprintf('%s.comment.0', $targetForm));
+
+            foreach ($tempRules as $idx => $tempRule) {
+                $rules[$idx] = $tempRule;
+            }
         }
 
         return $rules;
@@ -3714,13 +3829,11 @@ class XmlValidator
                 'validation.year_narrative_validation',
                 ['year' => trans('elementForm.value'), 'narrative' => trans('elementForm.narrative')]
             );
-            $messages = array_merge(
-                $messages,
-                $this->factory->getMessagesForNarrative(
-                    $target['comment'][0]['narrative'],
-                    sprintf('%s.comment.0', $targetForm)
-                )
-            );
+            $tempMessages = $this->factory->getMessagesForNarrative($target['comment'][0]['narrative'], sprintf('%s.comment.0', $targetForm));
+
+            foreach ($tempMessages as $idx => $tempMessage) {
+                $messages[$idx] = $tempMessage;
+            }
         }
 
         return $messages;
@@ -3913,7 +4026,11 @@ class XmlValidator
                 $rules[sprintf('%s.tag_text', $tagForm)] = 'required';
                 $rules[sprintf('%s.vocabulary_uri', $tagForm)] = 'url|required_with:' . $tagForm . '.tag_vocabulary';
             }
-            $rules = array_merge($rules, $this->factory->getRulesForNarrative(Arr::get($tag, 'narrative'), $tagForm));
+            $tempRules = $this->factory->getRulesForNarrative(Arr::get($tag, 'narrative'), $tagForm);
+
+            foreach ($tempRules as $idx => $tempRule) {
+                $rules[$idx] = $tempRule;
+            }
         }
 
         return $rules;
@@ -3956,8 +4073,11 @@ class XmlValidator
                     ]
                 );
             }
+            $tempMessages = $this->factory->getMessagesForNarrative($tag['narrative'], $tagForm);
 
-            $messages = array_merge($messages, $this->factory->getMessagesForNarrative($tag['narrative'], $tagForm));
+            foreach ($tempMessages as $idx => $tempMessage) {
+                $messages[$idx] = $tempMessage;
+            }
         }
 
         return $messages;

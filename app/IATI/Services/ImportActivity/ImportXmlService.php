@@ -29,7 +29,7 @@ class ImportXmlService
     /**
      * Temporary Xml file storage location.
      */
-    public const UPLOADED_XML_STORAGE_PATH = 'xmlImporter/tmp/file';
+    public string $xml_file_storage_path;
 
     /**
      * @var XmlServiceProvider
@@ -117,6 +117,7 @@ class ImportXmlService
         $this->resultRepository = $resultRepository;
         $this->indicatorRepository = $indicatorRepository;
         $this->periodRepository = $periodRepository;
+        $this->xml_file_storage_path = env('XML_FILE_STORAGE_PATH ', 'app/XmlImporter/tmp');
     }
 
     /**
@@ -130,8 +131,6 @@ class ImportXmlService
     {
         try {
             $file->move($this->temporaryXmlStorage(), $file->getClientOriginalName());
-
-            // shell_exec(sprintf('chmod 777 -R %s', $this->temporaryXmlStorage()));
 
             return true;
         } catch (Exception $exception) {
@@ -164,18 +163,17 @@ class ImportXmlService
 
             if ($activity->existence === true) {
                 $oldActivity = $this->activityRepository->getActivityWithIdentifier(Auth::user()->organization->id, (array) $activity->data->identifier);
-                // dd($oldActivity->id);
                 $storeActivity = $this->activityRepository->importXmlActivities($oldActivity->id, (array) $activity->data);
                 $this->transactionRepository->deleteTransaction($oldActivity->id);
                 $this->resultRepository->deleteResult($oldActivity->id);
 
                 $this->saveTransactions($activity->data->transactions, $oldActivity->id)
-                     ->saveResults($activity->data->result, $oldActivity->id);
+                    ->saveResults($activity->data->result, $oldActivity->id);
             } else {
                 $storeActivity = $this->activityRepository->importXmlActivities(null, (array) $activity->data);
                 $activityId = $storeActivity->id;
                 $this->saveTransactions($activity->data->transactions, $activityId)
-                     ->saveResults($activity->data->result, $activityId);
+                    ->saveResults($activity->data->result, $activityId);
             }
         }
 
@@ -192,11 +190,13 @@ class ImportXmlService
      */
     protected function saveTransactions($transactions, $activityId): static
     {
-        foreach ($transactions as $transaction) {
-            $this->transactionRepository->store([
-                'activity_id' => $activityId,
-                'transaction' => $transaction,
-            ]);
+        if ($transactions) {
+            foreach ($transactions as $transaction) {
+                $this->transactionRepository->store([
+                    'activity_id' => $activityId,
+                    'transaction' => $transaction,
+                ]);
+            }
         }
 
         return $this;
@@ -212,29 +212,31 @@ class ImportXmlService
      */
     protected function saveResults($results, $activityId): static
     {
-        foreach ($results as $result) {
-            $result = (array) $result;
-            $indicators = $result['indicator'];
-            unset($result['indicator']);
+        if ($results) {
+            foreach ($results as $result) {
+                $result = (array) $result;
+                $indicators = $result['indicator'];
+                unset($result['indicator']);
 
-            $savedResult = $this->resultRepository->store([
-                'activity_id' => $activityId,
-                'result'      => $result,
-            ]);
-
-            foreach ($indicators as $indicator) {
-                $indicator = (array) $indicator;
-                $periods = $indicator['period'];
-                $savedIndicatory = $this->indicatorRepository->store([
-                    'result_id' => $savedResult['id'],
-                    'indicator' => $indicator,
+                $savedResult = $this->resultRepository->store([
+                    'activity_id' => $activityId,
+                    'result'      => $result,
                 ]);
 
-                foreach ($periods as $period) {
-                    $this->periodRepository->store([
-                        'indicator_id' => $savedIndicatory['id'],
-                        'period'       => $period,
+                foreach ($indicators as $indicator) {
+                    $indicator = (array) $indicator;
+                    $periods = $indicator['period'];
+                    $savedIndicatory = $this->indicatorRepository->store([
+                        'result_id' => $savedResult['id'],
+                        'indicator' => $indicator,
                     ]);
+
+                    foreach ($periods as $period) {
+                        $this->periodRepository->store([
+                            'indicator_id' => $savedIndicatory['id'],
+                            'period'       => $period,
+                        ]);
+                    }
                 }
             }
         }
@@ -252,22 +254,21 @@ class ImportXmlService
     protected function temporaryXmlStorage($filename = null): string
     {
         if ($filename) {
-            return sprintf('%s/%s', storage_path(sprintf('%s/%s', self::UPLOADED_XML_STORAGE_PATH, Auth::user()->organization_id)), $filename);
+            return sprintf('%s/%s', storage_path(sprintf('%s/%s', $this->xml_file_storage_path, Auth::user()->organization_id)), $filename);
         }
 
-        return storage_path(sprintf('%s/%s/', self::UPLOADED_XML_STORAGE_PATH, Auth::user()->organization_id));
+        return storage_path(sprintf('%s/%s/', $this->xml_file_storage_path, Auth::user()->organization_id));
     }
 
     /**
      * @param $filename
      * @param $userId
      * @param $organizationId
-     * @param $consortium_id
      *
      * @return void
      * @throws \JsonException
      */
-    public function startImport($filename, $userId, $organizationId, $consortium_id = null): void
+    public function startImport($filename, $userId, $organizationId): void
     {
         if (file_exists($this->temporaryXmlStorage('valid.json'))) {
             unlink($this->temporaryXmlStorage('valid.json'));
@@ -275,7 +276,7 @@ class ImportXmlService
 
         $contents = json_encode(['xml_import_status' => 'started'], JSON_THROW_ON_ERROR);
         $this->filesystem->put($this->temporaryXmlStorage('status.json'), $contents);
-        $this->fireXmlUploadEvent($filename, $userId, $organizationId, $consortium_id);
+        $this->fireXmlUploadEvent($filename, $userId, $organizationId);
     }
 
     /**
@@ -284,13 +285,12 @@ class ImportXmlService
      * @param $filename
      * @param $userId
      * @param $organizationId
-     * @param $consortium_id
      *
      * @return void
      */
-    protected function fireXmlUploadEvent($filename, $userId, $organizationId, $consortium_id = null): void
+    protected function fireXmlUploadEvent($filename, $userId, $organizationId): void
     {
-        Event::dispatch(new XmlWasUploaded($filename, $userId, $organizationId, $consortium_id));
+        Event::dispatch(new XmlWasUploaded($filename, $userId, $organizationId));
     }
 
     /**

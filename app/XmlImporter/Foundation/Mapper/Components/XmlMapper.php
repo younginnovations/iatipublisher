@@ -26,7 +26,7 @@ class XmlMapper
     /**
      * @var array
      */
-    protected array $iatiActivity = [];
+    protected $iatiActivity;
 
     /**
      * @var array
@@ -107,7 +107,6 @@ class XmlMapper
     public function initComponents(): void
     {
         $this->iatiActivity = [];
-
         $this->activity = app()->make(Activity::class);
         $this->transactionElement = app()->make(Transaction::class);
         $this->resultElement = app()->make(Result::class);
