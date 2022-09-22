@@ -9,7 +9,6 @@ use App\XmlImporter\Foundation\Support\Providers\XmlServiceProvider;
 use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Database\DatabaseManager;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Psr\Log\LoggerInterface;
 use Sabre\Xml\ParseException;
@@ -107,7 +106,7 @@ class XmlQueueProcessor
                 return true;
             } else {
                 $this->databaseManager->rollback();
-                Request::session()->put('header_mismatch', true);
+                request()->session()->put('header_mismatch', true);
 
                 $this->storeInJsonFile('schema_error.json', ['filename' => $filename]);
             }
