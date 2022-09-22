@@ -133,13 +133,16 @@ trait XmlHelper
         if (!$key) {
             return Arr::get($fields, 'value', '');
         }
-        foreach ($fields as $field) {
-            if ($this->name($field['name']) === $key) {
-                if (is_array($field['value'])) {
-                    return $this->narrative($field);
-                }
 
-                return Arr::get($field, 'value', '');
+        if (!empty($fields)) {
+            foreach ($fields as $field) {
+                if ($this->name($field['name']) === $key) {
+                    if (is_array($field['value'])) {
+                        return $this->narrative($field);
+                    }
+
+                    return Arr::get($field, 'value', '');
+                }
             }
         }
 
@@ -236,10 +239,13 @@ trait XmlHelper
     protected function getSpecificAttribute(array $element, $fieldName, $key): mixed
     {
         $value = '';
+        dump('foreach', $element, empty(Arr::get($element, 'value', [])));
 
-        foreach (Arr::get($element, 'value', []) as $value) {
-            if ($fieldName === $this->name($value['name'])) {
-                return $this->attributes($value, $key);
+        if (!empty(Arr::get($element, 'value', []))) {
+            foreach (Arr::get($element, 'value', []) as $value) {
+                if ($fieldName === $this->name($value['name'])) {
+                    return $this->attributes($value, $key);
+                }
             }
         }
 

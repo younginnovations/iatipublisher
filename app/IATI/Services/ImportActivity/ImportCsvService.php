@@ -149,9 +149,6 @@ class ImportCsvService
             Session::put('user_id', Auth::user()->id);
             Session::put('org_id', Auth::user()->organization->id);
 
-            // unable to delete file currently
-            // $directoryPath = storage_path(sprintf('%s/%s', $this->csv_data_storage_path, Session::get('org_id')));
-            // $this->filesystem->deleteDirectory($directoryPath);
             $activityIdentifiers = $this->getIdentifiers();
 
             $this->processor->pushIntoQueue($file, $filename, $activityIdentifiers);
@@ -448,26 +445,6 @@ class ImportCsvService
         }
 
         return storage_path(sprintf('%s/%s/', $this->csv_file_storage_path, Session::get('org_id')));
-    }
-
-    /**
-     * Reset session values if necessary.
-     *
-     * @return void
-     */
-    public function refreshSessionIfRequired(): void
-    {
-        if (Session::get('import-status') === 'Complete') {
-            Session::forget('filename');
-        }
-    }
-
-    /**
-     * Record if the headers have been mismatched during processing.
-     */
-    public function reportHeaderMismatch(): void
-    {
-        Session::put('header_mismatch', true);
     }
 
     /**

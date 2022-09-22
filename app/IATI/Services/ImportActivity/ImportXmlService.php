@@ -163,17 +163,17 @@ class ImportXmlService
 
             if ($activity->existence === true) {
                 $oldActivity = $this->activityRepository->getActivityWithIdentifier(Auth::user()->organization->id, (array) $activity->data->identifier);
-                $storeActivity = $this->activityRepository->importXmlActivities($oldActivity->id, (array) $activity->data);
+
+                $this->activityRepository->importXmlActivities($oldActivity->id, (array) $activity->data);
                 $this->transactionRepository->deleteTransaction($oldActivity->id);
                 $this->resultRepository->deleteResult($oldActivity->id);
-
                 $this->saveTransactions($activity->data->transactions, $oldActivity->id)
                     ->saveResults($activity->data->result, $oldActivity->id);
             } else {
                 $storeActivity = $this->activityRepository->importXmlActivities(null, (array) $activity->data);
-                $activityId = $storeActivity->id;
-                $this->saveTransactions($activity->data->transactions, $activityId)
-                    ->saveResults($activity->data->result, $activityId);
+
+                $this->saveTransactions($activity->data->transactions, $storeActivity->id)
+                    ->saveResults($activity->data->result, $storeActivity->id);
             }
         }
 

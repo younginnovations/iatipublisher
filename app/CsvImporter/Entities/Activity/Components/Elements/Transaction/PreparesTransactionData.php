@@ -46,12 +46,15 @@ trait PreparesTransactionData
      */
     protected function setTransactionType($key, $value): void
     {
-        if ($key == $this->_csvHeaders[1]) {
+        if ($key === $this->_csvHeaders[1]) {
             $validTransactionType = $this->loadCodeList('TransactionType', 'Activity');
 
-            foreach ($validTransactionType as $code => $name) {
-                if (!is_int($value) && strcasecmp($value, $name)) {
-                    $value = $code;
+            if (!is_int($value)) {
+                foreach ($validTransactionType as $code => $name) {
+                    if (strcasecmp(trim($value), (string) $name) === 0) {
+                        $value = is_int($code) ? (int) $code : $code;
+                        break;
+                    }
                 }
             }
 
@@ -84,7 +87,7 @@ trait PreparesTransactionData
      */
     protected function setTransactionValue($key, $value): void
     {
-        if ($key == $this->_csvHeaders[3]) {
+        if ($key === $this->_csvHeaders[3]) {
             $this->data['transaction']['value'][0]['amount'] = str_replace(',', '', (string) $value);
         }
     }
@@ -99,7 +102,7 @@ trait PreparesTransactionData
      */
     protected function setTransactionValueDate($key, $value): void
     {
-        if ($key == $this->_csvHeaders[4]) {
+        if ($key === $this->_csvHeaders[4]) {
             $this->data['transaction']['value'][0]['date'] = dateFormat('Y-m-d', $value);
             $this->data['transaction']['value'][0]['currency'] = '';
         }
@@ -115,7 +118,7 @@ trait PreparesTransactionData
      */
     protected function setTransactionDescription($key, $value): void
     {
-        if ($key == $this->_csvHeaders[5]) {
+        if ($key === $this->_csvHeaders[5]) {
             $this->data['transaction']['description'][0]['narrative'][0] = ['narrative' => $value, 'language' => ''];
         }
     }
@@ -130,16 +133,16 @@ trait PreparesTransactionData
      */
     protected function setProviderOrganization($key, $value): void
     {
-        if ($key == $this->_csvHeaders[6]) {
+        if ($key === $this->_csvHeaders[6]) {
             $this->data['transaction']['provider_organization'][0]['organization_identifier_code'] = $value;
         }
-        if ($key == $this->_csvHeaders[7]) {
+        if ($key === $this->_csvHeaders[7]) {
             $this->data['transaction']['provider_organization'][0]['provider_activity_id'] = $value;
         }
-        if ($key == $this->_csvHeaders[8]) {
+        if ($key === $this->_csvHeaders[8]) {
             $this->data['transaction']['provider_organization'][0]['type'] = $this->setOrganizationTypeNameToCode($value);
         }
-        if ($key == $this->_csvHeaders[9]) {
+        if ($key === $this->_csvHeaders[9]) {
             $this->data['transaction']['provider_organization'][0]['narrative'][0] = ['narrative' => $value, 'language' => ''];
         }
     }
@@ -155,16 +158,16 @@ trait PreparesTransactionData
      */
     protected function setReceiverOrganization($key, $value): void
     {
-        if ($key == $this->_csvHeaders[10]) {
+        if ($key === $this->_csvHeaders[10]) {
             $this->data['transaction']['receiver_organization'][0]['organization_identifier_code'] = $value;
         }
-        if ($key == $this->_csvHeaders[11]) {
+        if ($key === $this->_csvHeaders[11]) {
             $this->data['transaction']['receiver_organization'][0]['receiver_activity_id'] = $value;
         }
-        if ($key == $this->_csvHeaders[12]) {
+        if ($key === $this->_csvHeaders[12]) {
             $this->data['transaction']['receiver_organization'][0]['type'] = $this->setOrganizationTypeNameToCode($value);
         }
-        if ($key == $this->_csvHeaders[13]) {
+        if ($key === $this->_csvHeaders[13]) {
             $this->data['transaction']['receiver_organization'][0]['narrative'][0] = ['narrative' => $value, 'language' => ''];
         }
     }
@@ -191,7 +194,7 @@ trait PreparesTransactionData
      */
     protected function setSector($key, $value): void
     {
-        if ($key == $this->_csvHeaders[14]) {
+        if ($key === $this->_csvHeaders[14]) {
             $this->data['transaction']['sector'][0]['sector_vocabulary'] = $value;
         }
 
@@ -225,25 +228,25 @@ trait PreparesTransactionData
      */
     protected function setSectorCode($sectorVocabulary, $value): void
     {
-        if ($sectorVocabulary == 1) {
+        if ($sectorVocabulary === 1) {
             $this->data['transaction']['sector'][0]['sector_code'] = $value;
         } else {
             $this->data['transaction']['sector'][0]['sector_code'] = '';
         }
 
-        if ($sectorVocabulary == 2) {
+        if ($sectorVocabulary === 2) {
             $this->data['transaction']['sector'][0]['sector_category_code'] = $value;
         } else {
             $this->data['transaction']['sector'][0]['sector_category_code'] = '';
         }
 
-        if ($sectorVocabulary == 7) {
+        if ($sectorVocabulary === 7) {
             $this->data['transaction']['sector'][0]['sector_sdg_goal'] = $value;
         } else {
             $this->data['transaction']['sector'][0]['sector_sdg_goal'] = '';
         }
 
-        if ($sectorVocabulary == 8) {
+        if ($sectorVocabulary === 8) {
             $this->data['transaction']['sector'][0]['sector_sdg_target'] = $value;
         } else {
             $this->data['transaction']['sector'][0]['sector_sdg_target'] = '';
@@ -266,7 +269,7 @@ trait PreparesTransactionData
      */
     protected function setRecipientCountry($key, $value): void
     {
-        if ($key == $this->_csvHeaders[18]) {
+        if ($key === $this->_csvHeaders[18]) {
             $this->data['transaction']['recipient_country'][0]['country_code'] = $value;
             $this->data['transaction']['recipient_country'][0]['narrative'][0] = ['narrative' => '', 'language' => ''];
         }
@@ -282,7 +285,7 @@ trait PreparesTransactionData
      */
     protected function setRecipientRegion($key, $value): void
     {
-        if ($key == $this->_csvHeaders[19]) {
+        if ($key === $this->_csvHeaders[19]) {
             $this->data['transaction']['recipient_region'][0]['region_code'] = $value;
             $this->data['transaction']['recipient_region'][0]['vocabulary'] = '';
             $this->data['transaction']['recipient_region'][0]['vocabulary_uri'] = '';
@@ -331,7 +334,7 @@ trait PreparesTransactionData
      *
      * @return void
      */
-    protected function setTiedStatus():void
+    protected function setTiedStatus(): void
     {
         if (array_key_exists('aid_type', $this->data['transaction'])) {
             $this->data['transaction']['tied_status'][0] = ['tied_status_code' => ''];
@@ -361,10 +364,13 @@ trait PreparesTransactionData
     protected function setOrganizationTypeNameToCode($value): mixed
     {
         $validOrganizationType = $this->loadCodeList('OrganizationType', 'Organization');
-        foreach ($validOrganizationType as $code => $name) {
-            if (!is_int($value) && strcasecmp($value, $name)) {
-                $value = $code;
-                break;
+
+        if (!is_int($value)) {
+            foreach ($validOrganizationType as $code => $name) {
+                if (strcasecmp(trim($value), $name)) {
+                    $value = is_int($code) ? (int) $code : $code;
+                    break;
+                }
             }
         }
 

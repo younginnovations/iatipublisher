@@ -1,6 +1,10 @@
 <template>
   <td class="title">
-    {{ activity["data"]["title"][0]["narrative"] ?? "Not Available" }}
+    {{
+      activity["data"]["title"][0]
+        ? activity["data"]["title"][0]["narrative"]
+        : "Not Available"
+    }}
 
     <span
       v-if="activity['errors'].length > 0"
@@ -30,17 +34,22 @@
     }}</span>
   </td>
 
-  <td class="check-column">
+  <td class="check-column" @click="(event: Event) => event.stopPropagation()">
     <label class="sr-only" for=""> Select </label>
     <label class="checkbox">
-      <input type="checkbox" @click="selectElement()" />
+      <input
+        v-model="activities"
+        type="checkbox"
+        :value="index"
+        @change="selectElement()"
+      />
       <span class="checkmark" />
     </label>
   </td>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from "@vue/runtime-core";
+import { defineComponent, ref, watch, reactive } from "@vue/runtime-core";
 
 export default defineComponent({
   name: "ImportList",
@@ -54,16 +63,15 @@ export default defineComponent({
       type: String,
       required: true,
     },
-    selectAll: {
+    selectedActivities: {
       type: String,
-      required: false,
-      default: "",
+      required: true,
     },
   },
   emits: ["selectElement"],
   setup(props, { emit }) {
     const active = ref(false);
-
+    const activities = reactive([]);
     function toggleError() {
       active.value = !active.value;
     }
@@ -72,10 +80,24 @@ export default defineComponent({
       emit("selectElement", index);
     };
 
+    watch(
+      () => props.selectedActivities,
+      () => {
+        let selectedData = JSON.parse(props.selectedActivities);
+        if (selectedData.length) {
+          Object.assign(activities, selectedData);
+        } else {
+          activities.length = 0;
+        }
+        // console.log("test", test, activities);
+      }
+    );
+
     return {
       active,
       toggleError,
       selectElement,
+      activities,
     };
   },
 });

@@ -246,35 +246,35 @@ class Transaction extends Element
         $sector = Arr::get($this->data(), 'transaction.sector', []);
         $message = [
             'transaction.check_recipient_region_country'                    => trans('validation.sector_in_activity_and_transaction'),
-            'transaction.transaction_type.*.transaction_type_code.required' => trans('validation.required', ['attribute' => trans('elementForm.transaction_type')]),
-            'transaction.transaction_type.*.transaction_type_code.in'       => trans('validation.code_list', ['attribute' => trans('elementForm.transaction_type')]),
-            'transaction.transaction_date.*.date.required'                  => trans('validation.required', ['attribute' => trans('elementForm.transaction_date')]),
-            'transaction.transaction_date.*.date.date_format'               => trans('validation.csv_date', ['attribute' => trans('elementForm.transaction_date')]),
-            'transaction.value.*.amount.required'                           => trans('validation.required', ['attribute' => trans('elementForm.transaction_value')]),
-            'transaction.value.*.amount.numeric'                            => trans('validation.numeric', ['attribute' => trans('elementForm.transaction_value')]),
-            'transaction.value.*.amount.min'                                => trans('validation.negative', ['attribute' => trans('elementForm.transaction_value')]),
-            'transaction.value.*.date.required'                             => trans('validation.required', ['attribute' => trans('elementForm.transaction_value_date')]),
-            'transaction.value.*.date.date_format'                          => trans('validation.csv_date', ['attribute' => trans('elementForm.transaction_value_date')]),
-            'transaction.provider_organization.*.type.in'                   => trans('validation.invalid_in_transaction', ['attribute' => trans('elementForm.provider_organisation_type')]),
+            'transaction.transaction_type.*.transaction_type_code.required' => trans('validation.required', ['attribute' => trans('transaction element transaction_type')]),
+            'transaction.transaction_type.*.transaction_type_code.in'       => trans('validation.code_list', ['attribute' => trans('transaction element transaction_type')]),
+            'transaction.transaction_date.*.date.required'                  => trans('validation.required', ['attribute' => trans('transaction element transaction_date')]),
+            'transaction.transaction_date.*.date.date_format'               => trans('validation.csv_date', ['attribute' => trans('transaction element transaction_date')]),
+            'transaction.value.*.amount.required'                           => trans('validation.required', ['attribute' => trans('transaction element transaction_value')]),
+            'transaction.value.*.amount.numeric'                            => trans('validation.numeric', ['attribute' => trans('transaction element transaction_value')]),
+            'transaction.value.*.amount.min'                                => trans('validation.negative', ['attribute' => trans('transaction element transaction_value')]),
+            'transaction.value.*.date.required'                             => trans('validation.required', ['attribute' => trans('transaction element transaction_value_date')]),
+            'transaction.value.*.date.date_format'                          => trans('validation.csv_date', ['attribute' => trans('transaction element transaction_value_date')]),
+            'transaction.provider_organization.*.type.in'                   => trans('validation.invalid_in_transaction', ['attribute' => trans('transaction element provider_organisation_type')]),
             'transaction.provider_organization.only_one_among'              => trans(
                 'validation.required_if',
                 [
-                    'attribute' => trans('elementForm.provider_organisation_identifier'),
-                    'values'    => trans('elementForm.organisation_name'),
+                    'attribute' => trans('transaction element provider_organisation_identifier'),
+                    'values'    => trans('transaction element organisation_name'),
                     'value'     => 'absent',
                 ]
             ),
-            'transaction.receiver_organization.*.type.in'                   => trans('validation.invalid_in_transaction', ['attribute' => trans('elementForm.receiver_organisation_type')]),
+            'transaction.receiver_organization.*.type.in'                   => trans('validation.invalid_in_transaction', ['attribute' => trans('transaction element receiver_organisation_type')]),
             'transaction.receiver_organization.only_one_among'              => trans(
                 'validation.required_if_in_transaction',
                 [
-                    'attribute' => trans('elementForm.receiver_organisation_identifier'),
-                    'values'    => trans('elementForm.organisation_name'),
+                    'attribute' => trans('transaction element receiver_organisation_identifier'),
+                    'values'    => trans('transaction element organisation_name'),
                 ]
             ),
             'transaction.sector.check_sector'                               => trans('validation.sector_validation'),
-            'transaction.recipient_country.*.country_code.in'               => trans('validation.invalid_in_transaction', ['attribute' => trans('elementForm.recipient_country_code')]),
-            'transaction.recipient_region.*.region_code.in'                 => trans('validation.invalid_in_transaction', ['attribute' => trans('elementForm.recipient_region_code')]),
+            'transaction.recipient_country.*.country_code.in'               => trans('validation.invalid_in_transaction', ['attribute' => trans('transaction element recipient_country_code')]),
+            'transaction.recipient_region.*.region_code.in'                 => trans('validation.invalid_in_transaction', ['attribute' => trans('transaction element recipient_region_code')]),
         ];
 
         /* Messages for transaction sector */
@@ -283,40 +283,40 @@ class Transaction extends Element
             $vocabulary = Arr::get($sectorValue, 'sector_vocabulary', '');
 
             if ($vocabulary) {
-                $message[sprintf('%s.vocabulary_uri.%s', $sectorForm, 'url')] = trans('validation.active_url', ['attribute' => trans('elementForm.sector_vocabulary_uri')]);
-                $message[sprintf('%s.sector_vocabulary.%s', $sectorForm, 'in')] = trans('validation.invalid_in_transaction', ['attribute' => trans('elementForm.sector_vocabulary')]);
+                $message[sprintf('%s.vocabulary_uri.%s', $sectorForm, 'url')] = trans('validation.active_url', ['attribute' => trans('transaction element sector_vocabulary_uri')]);
+                $message[sprintf('%s.sector_vocabulary.%s', $sectorForm, 'in')] = trans('validation.invalid_in_transaction', ['attribute' => trans('transaction element sector_vocabulary')]);
 
                 switch ($vocabulary) {
                     case '1':
-                        $message[sprintf('%s.sector_code.%s', $sectorForm, 'required')] = trans('validation.required', ['attribute' => trans('elementForm.sector_code')]);
-                        $message[sprintf('%s.sector_code.%s', $sectorForm, 'in')] = trans('validation.invalid_in_transaction', ['attribute' => trans('elementForm.sector_code')]);
+                        $message[sprintf('%s.sector_code.%s', $sectorForm, 'required')] = trans('validation.required', ['attribute' => trans('transaction element sector_code')]);
+                        $message[sprintf('%s.sector_code.%s', $sectorForm, 'in')] = trans('validation.invalid_in_transaction', ['attribute' => trans('transaction element sector_code')]);
                         break;
                     case '2':
-                        $message[sprintf('%s.sector_category_code.%s', $sectorForm, 'required')] = trans('validation.required', ['attribute' => trans('elementForm.sector_code')]);
-                        $message[sprintf('%s.sector_category_code.%s', $sectorForm, 'in')] = trans('validation.invalid_in_transaction', ['attribute' => trans('elementForm.sector_code')]);
+                        $message[sprintf('%s.sector_category_code.%s', $sectorForm, 'required')] = trans('validation.required', ['attribute' => trans('transaction element sector_code')]);
+                        $message[sprintf('%s.sector_category_code.%s', $sectorForm, 'in')] = trans('validation.invalid_in_transaction', ['attribute' => trans('transaction element sector_code')]);
                         break;
                     case '7':
-                        $message[sprintf('%s.sector_sdg_goal.%s', $sectorForm, 'required')] = trans('validation.required', ['attribute' => trans('elementForm.sector_code')]);
-                        $message[sprintf('%s.sector_sdg_goal.%s', $sectorForm, 'in')] = trans('validation.invalid_in_transaction', ['attribute' => trans('elementForm.sector_code')]);
+                        $message[sprintf('%s.sector_sdg_goal.%s', $sectorForm, 'required')] = trans('validation.required', ['attribute' => trans('transaction element sector_code')]);
+                        $message[sprintf('%s.sector_sdg_goal.%s', $sectorForm, 'in')] = trans('validation.invalid_in_transaction', ['attribute' => trans('transaction element sector_code')]);
                         break;
                     case '8':
-                        $message[sprintf('%s.sector_sdg_target.%s', $sectorForm, 'required')] = trans('validation.required', ['attribute' => trans('elementForm.sector_code')]);
-                        $message[sprintf('%s.sector_sdg_target.%s', $sectorForm, 'in')] = trans('validation.invalid_in_transaction', ['attribute' => trans('elementForm.sector_code')]);
+                        $message[sprintf('%s.sector_sdg_target.%s', $sectorForm, 'required')] = trans('validation.required', ['attribute' => trans('transaction element sector_code')]);
+                        $message[sprintf('%s.sector_sdg_target.%s', $sectorForm, 'in')] = trans('validation.invalid_in_transaction', ['attribute' => trans('transaction element sector_code')]);
                         break;
                     case '98':
                     case '99':
-                        $message[sprintf('%s.sector_text.%s', $sectorForm, 'required')] = trans('validation.required', ['attribute' => trans('elementForm.sector_code')]);
+                        $message[sprintf('%s.sector_text.%s', $sectorForm, 'required')] = trans('validation.required', ['attribute' => trans('transaction element sector_code')]);
                         $message[sprintf('%s.vocabulary_uri.%s', $sectorForm, 'required_with')] = trans(
                             'validation.required_with',
                             [
-                                'attribute' => trans('elementForm.vocabulary_uri'),
-                                'values'    => trans('elementForm.sector_code'),
+                                'attribute' => trans('transaction element vocabulary_uri'),
+                                'values'    => trans('transaction element sector_code'),
                             ]
                         );
-                        $messages[sprintf('%s.narrative.0.narrative.%s', $sectorForm, 'required')] = trans('validation.required', ['attribute' => trans('elementForm.transaction_sector_narrative')]);
+                        $messages[sprintf('%s.narrative.0.narrative.%s', $sectorForm, 'required')] = trans('validation.required', ['attribute' => trans('transaction element transaction_sector_narrative')]);
                         break;
                     default:
-                        $message[sprintf('%s.sector_text.%s', $sectorForm, 'required')] = trans('validation.required', ['attribute' => trans('elementForm.sector_code')]);
+                        $message[sprintf('%s.sector_text.%s', $sectorForm, 'required')] = trans('validation.required', ['attribute' => trans('transaction element sector_code')]);
                         break;
                 }
             }

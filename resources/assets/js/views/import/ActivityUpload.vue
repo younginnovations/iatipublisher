@@ -140,13 +140,15 @@ export default defineComponent({
         .post("/import", data, config)
         .then((res) => {
           if (file.value.files.length) {
-            window.location.href = "/import/list";
+            setTimeout(() => {
+              window.location.href = "/import/list";
+            }, 5000);
           }
         })
         .catch((err) => {
           error.value = "The file field is required and must be csv or xml.";
+          loader.value = false;
         });
-      // loader.value = false;
     }
 
     function downloadExcel() {

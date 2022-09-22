@@ -43,11 +43,7 @@
                   type="text"
                   placeholder="Type narrative here"
                 />
-                <span
-                  v-if="errorData.narrative != ''"
-                  class="error"
-                  role="alert"
-                >
+                <span v-if="errorData.narrative != ''" class="error" role="alert">
                   {{ errorData.narrative }}
                 </span>
               </div>
@@ -75,11 +71,7 @@
                   placeholder="Select @xml:lang"
                 />
 
-                <span
-                  v-if="errorData.language != ''"
-                  class="error"
-                  role="alert"
-                >
+                <span v-if="errorData.language != ''" class="error" role="alert">
                   {{ errorData.language }}
                 </span>
 
@@ -126,11 +118,10 @@
                   {{ errorData.activity_identifier }}
                 </span>
                 <span v-else class="text-xs font-normal text-n-40"
-                  >Enter your own unique activity identifier such as
-                  abbreviation or simply a number. Make sure it is unique across
-                  all the activities. IATI Publisher will concatenate
-                  Organization Identifier and Activity Identifier to
-                  autogenerate 'iati-identifier'.
+                  >Enter your own unique activity identifier such as abbreviation or
+                  simply a number. Make sure it is unique across all the activities. IATI
+                  Publisher will concatenate Organization Identifier and Activity
+                  Identifier to autogenerate 'iati-identifier'.
                 </span>
               </div>
               <div>
@@ -146,9 +137,7 @@
                   placeholder=""
                   :value="
                     formData.activity_identifier
-                      ? organization.identifier +
-                        '-' +
-                        formData.activity_identifier
+                      ? organization.identifier + '-' + formData.activity_identifier
                       : ''
                   "
                   disabled="true"
@@ -191,13 +180,13 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, ref, onMounted } from 'vue';
-import Modal from '../../components/PopupModal.vue';
-import BtnComponent from '../../components/ButtonComponent.vue';
-import Multiselect from '@vueform/multiselect';
-import HoverText from '../../components/HoverText.vue';
-import Loader from '../../components/Loader.vue';
-import axios from 'axios';
+import { defineComponent, reactive, ref, onMounted } from "vue";
+import Modal from "../../components/PopupModal.vue";
+import BtnComponent from "../../components/ButtonComponent.vue";
+import Multiselect from "@vueform/multiselect";
+import HoverText from "../../components/HoverText.vue";
+import Loader from "../../components/Loader.vue";
+import axios from "axios";
 
 export default defineComponent({
   components: {
@@ -213,7 +202,7 @@ export default defineComponent({
       required: false,
     },
   },
-  emits: ['closeModal', 'toast'],
+  emits: ["closeModal", "toast"],
 
   setup(props, { emit }) {
     interface ObjectType {
@@ -221,15 +210,15 @@ export default defineComponent({
     }
 
     const formData: ObjectType = reactive({
-      narrative: '',
-      language: '',
-      activity_identifier: '',
+      narrative: "",
+      language: "",
+      activity_identifier: "",
     });
 
     const errorData: ObjectType = reactive({
-      narrative: '',
-      language: '',
-      activity_identifier: '',
+      narrative: "",
+      language: "",
+      activity_identifier: "",
     });
 
     const loaderVisibility = ref(false);
@@ -238,7 +227,7 @@ export default defineComponent({
     const organization: ObjectType = reactive({});
 
     onMounted(async () => {
-      axios.get('/activities/codelists').then((res) => {
+      axios.get("/activities/codelists").then((res) => {
         const response = res.data;
         Object.assign(languages, response.data.languages);
         Object.assign(organization, response.data.organization);
@@ -246,32 +235,32 @@ export default defineComponent({
     });
 
     function closeModal() {
-      emit('closeModal');
+      emit("closeModal");
     }
 
     function storeActivity() {
       loaderVisibility.value = true;
 
       axios
-        .post('/activity', formData)
+        .post("/activity", formData)
         .then((res) => {
           const response = res.data;
           loaderVisibility.value = false;
 
           if (response.success) {
-            emit('toast', response.message, response.success);
-            emit('closeModal');
+            emit("toast", response.message, response.success);
+            emit("closeModal");
             window.location.href = `/activity/${response.data.id}`;
           }
         })
         .catch((error) => {
           const { errors } = error.response.data;
 
-          errorData.narrative = errors.narrative ? errors.narrative[0] : '';
-          errorData.language = errors.language ? errors.language[0] : '';
+          errorData.narrative = errors.narrative ? errors.narrative[0] : "";
+          errorData.language = errors.language ? errors.language[0] : "";
           errorData.activity_identifier = errors.activity_identifier
             ? errors.activity_identifier[0]
-            : '';
+            : "";
 
           loaderVisibility.value = false;
         });

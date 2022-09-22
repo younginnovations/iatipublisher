@@ -105,14 +105,16 @@ class ContactInfo extends Element
         }
 
         if ($key === $this->_csvHeaders[0]) {
-            //$relatedActivityType = $this->loadCodeList('ContactType');
+            $relatedActivityType = $this->loadCodeList('ContactType');
 
-            // foreach ($relatedActivityType as $name => $code) {
-            //     if (ucwords($value) == $name) {
-            //         $value = $code;
-            //         break;
-            //     }
-            // }
+            if (!is_int($value)) {
+                foreach ($relatedActivityType as $code => $name) {
+                    if (strcasecmp(trim($value), (string) $name) === 0) {
+                        $value = $code;
+                        break;
+                    }
+                }
+            }
 
             $this->data['contact_info'][$index]['type'] = $value;
         }
@@ -325,9 +327,9 @@ class ContactInfo extends Element
     {
         $messages = [];
 
-        $messages['contact_info.*.type.in'] = trans('validation.code_list', ['attribute' => trans('elementForm.contact_type')]);
-        $messages['contact_info.*.email.0.email.email'] = trans('validation.email', ['attribute' => trans('elementForm.email')]);
-        $messages['contact_info.*.website.0.website.url'] = trans('validation.url', ['attribute' => trans('elementForm.website')]);
+        $messages['contact_info.*.type.in'] = trans('validation.code_list', ['attribute' => trans('contact info element contact_type')]);
+        $messages['contact_info.*.email.0.email.email'] = trans('validation.email', ['attribute' => trans('contact info element email')]);
+        $messages['contact_info.*.website.0.website.url'] = trans('validation.url', ['attribute' => trans('contact info element website')]);
 
         return $messages;
     }
@@ -341,8 +343,8 @@ class ContactInfo extends Element
     public function validate(): static
     {
         $this->validator = $this->factory->sign($this->data())
-                                         ->with($this->rules(), $this->messages())
-                                         ->getValidatorInstance();
+            ->with($this->rules(), $this->messages())
+            ->getValidatorInstance();
         $this->setValidity();
 
         return $this;
