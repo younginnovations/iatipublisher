@@ -62,16 +62,16 @@
     <div class="grid grid-cols-2 gap-2 elements__listing">
       <a
         v-for="(post, index) in filteredElements"
-        :key="index"
+        :key="String(index)"
         class="elements__item relative flex cursor-pointer flex-col items-center justify-center rounded border border-dashed border-n-40 px-[3px] py-2.5 text-n-30"
         :href="post.has_data ? '#' + index : '/organisation/' + index"
       >
         <div class="absolute top-0 right-0 inline-flex mt-1 mr-1 status_icons">
           <svg-vue
             v-if="
-              String(index) === 'organisation_identifier'
+              index === 'organisation_identifier'
                 ? status['identifier']
-                : status[index]
+                : status[index.toString()]
             "
             class="text-base text-teal-50"
             icon="double-tick"

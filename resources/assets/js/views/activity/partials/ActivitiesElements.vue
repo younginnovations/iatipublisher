@@ -52,7 +52,7 @@
             </li>
             <li
               class="flex py-1.5 px-3.5 hover:bg-white"
-              @click="dropdownFilter('criteria')"
+              @click="dropdownFilter('core')"
             >
               <svg-vue class="mr-1 text-lg" icon="core" />
               <span>Core</span>
@@ -120,7 +120,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, defineProps, reactive, onMounted, ref } from 'vue';
+import { computed, defineProps, reactive, onMounted, ref, toRefs } from 'vue';
 import { useToggle } from '@vueuse/core';
 
 import { activityCoreElements } from 'Composable/coreElements';
@@ -136,6 +136,8 @@ const props = defineProps({
   },
 });
 
+const { data } = toRefs(props);
+
 const dropdown = ref();
 const dropdownBtn = ref();
 const [searchBtnValue, searchBtnToggle] = useToggle();
@@ -148,7 +150,7 @@ const elements = reactive({
   status: '',
 });
 
-const asArrayData = Object.entries(props.data);
+const asArrayData = Object.entries(data.value);
 const filteredElements = computed(() => {
   const filtered = asArrayData.filter(([key, value]) => {
     if (!elements.status) {
@@ -170,6 +172,15 @@ const filteredElements = computed(() => {
 
   const justStrings = Object.fromEntries(filtered);
   return justStrings;
+});
+
+/**
+ * Adding core data
+ */
+Object.keys(data.value).map((key) => {
+  if (activityCoreElements().includes(key.toString())) {
+    data.value[key]['core'] = true;
+  }
 });
 
 const dropdownFilter = (s: string) => {
