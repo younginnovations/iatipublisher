@@ -97,6 +97,7 @@ class RecipientRegion extends Element
      * @param $index
      *
      * @return void
+     * @throws \JsonException
      */
     public function map($key, $value, $index): void
     {
@@ -204,6 +205,7 @@ class RecipientRegion extends Element
      * Validate data for IATI Element.
      *
      * @return $this
+     * @throws \JsonException
      */
     public function validate(): static
     {

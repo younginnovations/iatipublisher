@@ -45,6 +45,7 @@ class RelatedActivity extends Element
      * @param $fields
      *
      * @return void
+     * @throws \JsonException
      */
     public function prepare($fields): void
     {
@@ -103,7 +104,6 @@ class RelatedActivity extends Element
      * @param $index
      *
      * @return void
-     * @throws \JsonException
      */
     protected function setRelatedActivityType($key, $value, $index): void
     {

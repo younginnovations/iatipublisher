@@ -143,11 +143,7 @@ class CsvProcessor
      */
     protected function isSameEntity($row): bool
     {
-        if (is_null($row[$this->csvIdentifier]) || $row[$this->csvIdentifier] === '') {
-            return true;
-        }
-
-        return false;
+        return is_null($row[$this->csvIdentifier]) || $row[$this->csvIdentifier] === '';
     }
 
     /**

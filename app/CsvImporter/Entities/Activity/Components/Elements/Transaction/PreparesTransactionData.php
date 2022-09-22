@@ -128,7 +128,6 @@ trait PreparesTransactionData
      * @param $value
      *
      * @return void
-     * @throws \JsonException
      */
     protected function setProviderOrganization($key, $value): void
     {
