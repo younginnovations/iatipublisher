@@ -74,7 +74,7 @@ class BulkPublishingService
             foreach ($activityIds as $id) {
                 $activity = $this->activityService->getActivity($id);
 
-                if ($activity && !$activity->linked_to_iati) {
+                if ($activity && $activity->status === 'draft') {
                     $coreElementsCompleted[$this->getCompleteStatus($activity)][] = [
                         'activity_id' => $activity->id,
                         'title' => Arr::get($activity->title, '0.narrative', 'Not Available') ?: 'Not Available',
@@ -118,7 +118,7 @@ class BulkPublishingService
         foreach ($activityIds as $activityId) {
             $activity = $this->activityService->getActivity($activityId);
 
-            if ($activity && !$activity->linked_to_iati) {
+            if ($activity && $activity->status === 'draft') {
                 $response = $this->validateWithException($activity);
 
                 if (!Arr::get($response, 'success', true)) {
