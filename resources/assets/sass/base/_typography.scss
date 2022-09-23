@@ -26,11 +26,10 @@ a {
 }
 
 h2 {
-  @apply text-4xl font-bold text-n-50;
-
-  @media screen and (min-width: 640px) {
-    @apply text-heading-3;
+  @media screen and (min-width: 440px) {
+    @apply text-heading-4;
   }
+  @apply text-heading-5 font-bold text-n-50 md:text-heading-3;
 }
 
 h4 {
