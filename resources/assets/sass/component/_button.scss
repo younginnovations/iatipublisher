@@ -10,8 +10,7 @@
   border: none;
   border-radius: 8px;
   outline: none;
-  @apply bg-turquoise;
-  @apply text-n-50;
+  @apply bg-turquoise text-n-50;
 
   &:hover {
     @apply bg-bluecoral;
