@@ -1,7 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Console\Commands;
 
+use App\IATI\Models\User\Role;
 use App\IATI\Models\User\User;
 use Illuminate\Console\Command;
 
@@ -38,7 +41,7 @@ class CreateSuperAdmin extends Command
             'address'   => 'kathmandu',
             'is_active' => true,
             'password'  => bcrypt('password'),
-            'role_id'   => 2,
+            'role_id'   => app(Role::class)->getSuperAdminId(),
         ]);
     }
 }

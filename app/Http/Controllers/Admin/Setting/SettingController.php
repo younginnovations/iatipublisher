@@ -263,7 +263,6 @@ class SettingController extends Controller
                 'data' => $status,
             ]);
         } catch (\Exception $e) {
-            dd($e);
             logger()->error($e->getMessage());
 
             return response()->json([

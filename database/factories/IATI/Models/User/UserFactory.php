@@ -22,6 +22,12 @@ class UserFactory extends Factory
     public function definition(): array
     {
         Role::factory()->create();
+        Role::factory()->create([
+            'id' => 2,
+            'role' => 'superadmin',
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
 
         return [
             'username'        => 'test_username',

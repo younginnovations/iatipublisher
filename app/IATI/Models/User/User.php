@@ -23,11 +23,6 @@ class User extends Authenticatable implements MustVerifyEmail
     use HasApiTokens, HasFactory, Notifiable;
 
     /**
-     * Role id for superadmin.
-     */
-    public const SUPER_ADMIN_ID = 2;
-
-    /**
      * The attributes that are mass assignable.
      *
      * @var array<int, string>
