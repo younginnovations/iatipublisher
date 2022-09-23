@@ -125,4 +125,16 @@ class ActivityRepository extends Repository
     {
         $this->model->whereId($activity_id)->update(['status' => 'draft']);
     }
+
+    /**
+     * Returns activities having given ids.
+     *
+     * @param $activityIds
+     *
+     * @return object
+     */
+    public function getActivitiesHavingIds($activityIds): object
+    {
+        return $this->model->whereIn('id', $activityIds)->where('org_id', auth()->user()->organization->id)->where('status', 'draft')->get();
+    }
 }

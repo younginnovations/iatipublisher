@@ -45,7 +45,7 @@ class ActivityService
 
         foreach ($activities as $idx => $activity) {
             $activities[$idx]['default_title_narrative'] = $activity->default_title_narrative;
-            $activity->setAttribute('coreCompleted', isCoreElementCompleted(array_merge(['reporting_org' => $activity->organization->reporting_org_complete_status], $activity->element_status)));
+            $activity->setAttribute('coreCompleted', isCoreElementCompleted(array_merge(['reporting_org' => $activity->organization->reporting_org_element_completed], $activity->element_status)));
         }
 
         return $activities;
@@ -204,5 +204,17 @@ class ActivityService
         }
 
         return null;
+    }
+
+    /**
+     * Returns activities having given ids.
+     *
+     * @param $activityIds
+     *
+     * @return object
+     */
+    public function getActivitiesHavingIds($activityIds): object
+    {
+        return $this->activityRepository->getActivitiesHavingIds($activityIds);
     }
 }

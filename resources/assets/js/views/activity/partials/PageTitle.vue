@@ -43,122 +43,36 @@
           </div>
         </div>
       </div>
-      <div class="flex justify-end actions grow">
-        <div class="inline-flex items-center">
+      <div class="relative flex flex-col items-end justify-end actions grow">
+        <div class="inline-flex justify-end">
           <Toast
             v-if="toastMessage.visibility"
             class="mr-3.5"
             :message="toastMessage.message"
             :type="toastMessage.type"
           />
-          <div class="inline-flex items-center">
-            <BtnComponent
-              v-if="showButtons"
-              class="mr-3.5"
-              type="secondary"
-              text="Publish Selected"
-              icon="approved-cloud"
-              @click="modalValue = true"
-            />
-            <BtnComponent
-              v-if="showButtons"
-              class="mr-3.5"
-              type="secondary"
-              text="Delete Selected"
-              icon="delete"
-            />
-            <BtnComponent
-              class="mr-3.5"
-              type="secondary"
-              text="Publish"
-              icon="publish"
-              @click="modalValue = true"
-            />
+          <div class="inline-flex items-center justify-end gap-3">
+            <PublishSelected />
+            <DeleteButton v-if="store.state.selectedActivities.length === 1" />
+            <AddActivityButton />
           </div>
-          <AddActivityButton />
         </div>
       </div>
     </div>
-
-    <Modal :modal-active="modalValue" @close="modalToggle">
-      <div class="mb-6 text-sm leading-relaxed eligible-activities">
-        <div class="flex mb-6 title">
-          <svg-vue icon="tick" class="mr-1 mt-0.5 text-lg text-spring-50" />
-          <b>The following activities are eligible for publishing</b>
-        </div>
-        <div class="px-6 rounded-lg eligible-list bg-mint">
-          <div class="py-6 border-b list border-n-20">
-            <a href="#" class=""> EU-Angola Dialogue Facility </a>
-          </div>
-          <div class="py-6 border-b list border-n-20">
-            <a href="#" class=""> Programme in support of Higher Education </a>
-          </div>
-          <div class="py-6 list">
-            <a href="#" class="">
-              AGO.S1 Leadership, advocacy and communication to fast track the
-              AIDS response
-            </a>
-          </div>
-        </div>
-      </div>
-
-      <div class="mb-6 text-sm leading-relaxed non-eligible-activities">
-        <div class="flex mb-6 title">
-          <svg-vue
-            icon="warning-fill"
-            class="mr-1 mt-0.5 text-lg text-crimson-40"
-          />
-          <b>The following activities are eligible for publishing</b>
-        </div>
-        <div class="px-6 rounded-lg eligible-list bg-rose">
-          <div class="py-6 border-b list border-n-20">
-            <a href="#" class=""> EU-Angola Dialogue Facility </a>
-          </div>
-          <div class="py-6 border-b list border-n-20">
-            <a href="#" class=""> Programme in support of Higher Education </a>
-          </div>
-          <div class="py-6 list">
-            <a href="#" class="">
-              UNFPA Angola Improved national population data systems to map and
-              address inequalities; to advance achievement of the Sustainable
-              Development Goals and the commitments of the Programme of Action
-              of the International Cference on Population and Development; and
-              to strengthen interventions in humanitarian crises activities
-            </a>
-          </div>
-        </div>
-      </div>
-      <div class="flex justify-end">
-        <div class="inline-flex">
-          <BtnComponent
-            class="px-6 uppercase bg-white"
-            type=""
-            text="Cancel"
-            @click="modalValue = false"
-          />
-          <BtnComponent
-            class="space"
-            type="primary"
-            text="Publish"
-            @click="modalValue = false"
-          />
-        </div>
-      </div>
-    </Modal>
   </div>
 </template>
 
 <script setup lang="ts">
-import { defineProps, inject } from 'vue';
-import { useToggle } from '@vueuse/core';
+import { inject } from 'vue';
 import AddActivityButton from './AddActivityButton.vue';
-import Modal from 'Components/PopupModal.vue';
-import BtnComponent from 'Components/ButtonComponent.vue';
 import Toast from 'Components/Toast.vue';
+import PublishSelected from 'Activity/bulk-publish/PublishSelected.vue';
+import DeleteButton from 'Components/buttons/DeleteButton.vue';
 
-defineProps({
-  showButtons: { type: Boolean, required: true },
-});
+// Vuex Store
+import { useStore } from 'Store/activities/index';
+
+const store = useStore();
 
 interface ToastInterface {
   visibility: boolean;
@@ -167,6 +81,4 @@ interface ToastInterface {
 }
 
 const toastMessage = inject('toastData') as ToastInterface;
-
-const [modalValue, modalToggle] = useToggle();
 </script>
