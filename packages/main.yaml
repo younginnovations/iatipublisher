@@ -12,20 +12,20 @@ metadata:
   namespace: iati-publisher
 spec:
   tls:
-  - hosts:
-    - "iatipublisher.yipl.com.np"
-    secretName: iati-publisher-prod-tls
+    - hosts:
+        - "iatipublisher.yipl.com.np"
+      secretName: iati-publisher-prod-tls
   rules:
-  - host: "iatipublisher.yipl.com.np"
-    http:
-      paths:
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: iati-publisher-service
-            port:
-              number: 80
+    - host: "iatipublisher.yipl.com.np"
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: iati-publisher-service
+                port:
+                  number: 80
 ---
 apiVersion: v1
 kind: Service
@@ -34,9 +34,9 @@ metadata:
   namespace: iati-publisher
 spec:
   ports:
-  - port: 80
-    targetPort: 80
-    protocol: TCP
+    - port: 80
+      targetPort: 80
+      protocol: TCP
   selector:
     app: iati-publisher-service
 ---
@@ -46,7 +46,7 @@ metadata:
   name: iati-publisher-service
   namespace: iati-publisher
 imagePullSecrets:
-- name: iati-publisher-registry-creds
+  - name: iati-publisher-registry-creds
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -64,239 +64,238 @@ spec:
         app: iati-publisher-service
     spec:
       containers:
-      - name: iati-publisher
-        image: ghcr.io/younginnovations/iatipublisher:main
-        imagePullPolicy: Always
-        lifecycle:
-          postStart:
-            exec:
-              command:
-                - "sh"
-                - "-c"
-                - >
-                  php artisan migrate --force;
-                  php artisan db:seed --force;
-                  php artisan route:clear;
-                  npm i;
-                  npm run production;
-                  chown -R webuser:webgroup /var/www/html;
-        env:
-        - name: PHP_POOL_NAME
-          value: "www"
-        - name: PHP_PM_CONTROL
-          value: ondemand
-        - name: PHP_PM_MAX_CHILDREN
-          value: "20"
-        - name: PHP_PM_START_SERVERS
-          value: "2"
-        - name: PHP_PM_MIN_SPARE_SERVERS
-          value: "1"
-        - name: PHP_PM_MAX_SPARE_SERVERS
-          value: "3"
-        - name: APP_NAME
-          value: IATI Publisher
-        - name: APP_ENV
-          value: staging
-        - name: APP_KEY
-          valueFrom:
-            secretKeyRef:
-              name: iati-secret
-              key: APP_KEY
-        - name: APP_DEBUG
-          value: "false"
-        - name: DEBUGBAR_ENABLED
-          value: "false"
-        - name: APP_URL
-          value: https://iatipublisher.yipl.com.np
-        - name: APP_TIMEZONE
-          value: Asia/Kathmandu
-        - name: APP_LOCALE
-          value: ne
-        - name: APP_LOCALE_FULL_CODE
-          value: ne_NP
-        - name: LOG_HORIZON
-          value: "false"
-        - name: LOG_CHANNEL
-          value: daily
-        - name: LOG_LEVEL
-          value: debug
-        - name: DB_CONNECTION
-          value: pgsql
-        - name: DB_HOST
-          value: kubegres.postgres
-        - name: DB_PORT
-          value: "5432"
-        - name: DB_DATABASE
-          value: iatipublisher_prod
-        - name: DB_USERNAME
-          valueFrom:
-            secretKeyRef:
-              name: iati-secret
-              key: DB_USERNAME
-        - name: DB_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: iati-secret
-              key: DB_PASSWORD
-        - name: BROADCAST_DRIVER
-          value: log
-        - name: CACHE_DRIVER
-          value: redis
-        - name: QUEUE_DRIVER
-          value: redis
-        - name: QUEUE_CONNECTION
-          value: redis
-        - name: REDIS_CLIENT
-          value: predis
-        - name: SESSION_DRIVER
-          value: redis
-        - name: SESSION_LIFETIME
-          value: "120"
-        - name: SESSION_SECURE_COOKIE
-          value: "true"
-        - name: MEMCACHED_HOST
-          value: 127.0.0.1
-        - name: REDIS_HOST
-          value: redis-service.redis
-        - name: REDIS_PORT
-          value: "6379"
-        - name: MAIL_MAILER
-          value: smtp
-        - name: MAIL_HOST
-          value: smtp.gmail.com
-        - name: MAIL_PORT
-          value: "465"
-        - name: MAIL_USERNAME
-          valueFrom:
-            secretKeyRef:
-              name: iati-secret
-              key: MAIL_USERNAME
-        - name: MAIL_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: iati-secret
-              key: MAIL_PASSWORD
-        - name: MAIL_ENCRYPTION
-          value: ssl
-        - name: MAIL_FROM_ADDRESS
-          valueFrom:
-            secretKeyRef:
-              name: iati-secret
-              key: MAIL_USERNAME
-        - name: MAIL_FROM_NAME
-          value: IATI Publisher
-        - name: IATI_URL
-          valueFrom:
-            secretKeyRef:
-              name: iati-secret
-              key: IATI_URL
-        - name: IATI_API_ENDPOINT
-          valueFrom:
-            secretKeyRef:
-              name: iati-secret
-              key: IATI_API_ENDPOINT
-        - name: IATI_YIPL_PUBLISHER_NAME
-          value: Young Innovations Pvt. Ltd
-        - name: IATI_YIPL_PUBLISHER_ID
-          valueFrom:
-            secretKeyRef:
-              name: iati-secret
-              key: IATI_YIPL_PUBLISHER_ID
-        - name: IATI_YIPL_REGISTRATION_AGENCY
-          valueFrom:
-            secretKeyRef:
-              name: iati-secret
-              key: IATI_YIPL_REGISTRATION_AGENCY
-        - name: IATI_YIPL_REGISTRATION_NUMBER
-          valueFrom:
-            secretKeyRef:
-              name: iati-secret
-              key: IATI_YIPL_REGISTRATION_NUMBER
-        - name: IATI_YIPL_IDENTIFIER
-          valueFrom:
-            secretKeyRef:
-              name: iati-secret
-              key: IATI_YIPL_IDENTIFIER
-        - name: IATI_API_KEY
-          valueFrom:
-            secretKeyRef:
-              name: iati-secret
-              key: IATI_API_KEY
-        - name: FILESYSTEM_DRIVER
-          value: minio
-        - name: AWS_ENDPOINT
-          valueFrom:
-            secretKeyRef:
-              name: iati-secret
-              key: AWS_ENDPOINT
-        - name: AWS_URL
-          valueFrom:
-            secretKeyRef:
-              name: iati-secret
-              key: AWS_URL
-        - name: AWS_ACCESS_KEY_ID
-          valueFrom:
-            secretKeyRef:
-              name: iati-secret
-              key: AWS_ACCESS_KEY_ID
-        - name: AWS_SECRET_ACCESS_KEY
-          valueFrom:
-            secretKeyRef:
-              name: iati-secret
-              key: AWS_SECRET_ACCESS_KEY
-        - name: AWS_DEFAULT_REGION
-          valueFrom:
-            secretKeyRef:
-              name: iati-secret
-              key: AWS_DEFAULT_REGION
-        - name: AWS_BUCKET
-          valueFrom:
-            secretKeyRef:
-              name: iati-secret
-              key: AWS_BUCKET
-        - name: AWS_GLIDE_BUCKET
-          valueFrom:
-            secretKeyRef:
-              name: iati-secret
-              key: AWS_GLIDE_BUCKET
-        - name: AWS_EXPORT_CACHE_BUCKET
-          valueFrom:
-            secretKeyRef:
-              name: iati-secret
-              key: AWS_EXPORT_CACHE_BUCKET
-        - name: MIX_ENCRYPTION_KEY
-          valueFrom:
-            secretKeyRef:
-              name: iati-secret
-              key: MIX_ENCRYPTION_KEY
-        - name: IATI_USERNAME
-          valueFrom:
-            secretKeyRef:
-              name: iati-secret
-              key: IATI_USERNAME
-        - name: IATI_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: iati-secret
-              key: IATI_PASSWORD
-        - name: IATI_VALIDATOR_ENDPOINT
-          valueFrom:
-            secretKeyRef:
-              name: iati-secret
-              key: IATI_VALIDATOR_ENDPOINT
-        - name: IATI_VALIDATOR_KEY
-          valueFrom:
-            secretKeyRef:
-              name: iati-secret
-              key: IATI_VALIDATOR_KEY
-        - name: AWS_USE_PATH_STYLE_ENDPOINT
-          value: false
-        resources:
-          limits:
-            memory: "2Gi"
-            cpu: "1"
-        ports:
-        - containerPort: 80
+        - name: iati-publisher
+          image: ghcr.io/younginnovations/iatipublisher:main
+          imagePullPolicy: Always
+          lifecycle:
+            postStart:
+              exec:
+                command:
+                  - "sh"
+                  - "-c"
+                  - >
+                    php artisan migrate --force;
+                    php artisan route:clear;
+                    npm i;
+                    npm run production;
+                    chown -R webuser:webgroup /var/www/html;
+          env:
+            - name: PHP_POOL_NAME
+              value: "www"
+            - name: PHP_PM_CONTROL
+              value: ondemand
+            - name: PHP_PM_MAX_CHILDREN
+              value: "20"
+            - name: PHP_PM_START_SERVERS
+              value: "2"
+            - name: PHP_PM_MIN_SPARE_SERVERS
+              value: "1"
+            - name: PHP_PM_MAX_SPARE_SERVERS
+              value: "3"
+            - name: APP_NAME
+              value: "IATI Publisher"
+            - name: APP_ENV
+              value: staging
+            - name: APP_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: iati-secret
+                  key: APP_KEY
+            - name: APP_DEBUG
+              value: "false"
+            - name: DEBUGBAR_ENABLED
+              value: "false"
+            - name: APP_URL
+              value: https://iatipublisher.yipl.com.np
+            - name: APP_TIMEZONE
+              value: "Asia/Kathmandu"
+            - name: APP_LOCALE
+              value: ne
+            - name: APP_LOCALE_FULL_CODE
+              value: ne_NP
+            - name: LOG_HORIZON
+              value: "false"
+            - name: LOG_CHANNEL
+              value: daily
+            - name: LOG_LEVEL
+              value: debug
+            - name: DB_CONNECTION
+              value: pgsql
+            - name: DB_HOST
+              value: kubegres.postgres
+            - name: DB_PORT
+              value: "5432"
+            - name: DB_DATABASE
+              value: iatipublisher_prod
+            - name: DB_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: iati-secret
+                  key: DB_USERNAME
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: iati-secret
+                  key: DB_PASSWORD
+            - name: BROADCAST_DRIVER
+              value: log
+            - name: CACHE_DRIVER
+              value: redis
+            - name: QUEUE_DRIVER
+              value: redis
+            - name: QUEUE_CONNECTION
+              value: redis
+            - name: REDIS_CLIENT
+              value: predis
+            - name: SESSION_DRIVER
+              value: redis
+            - name: SESSION_LIFETIME
+              value: "120"
+            - name: SESSION_SECURE_COOKIE
+              value: "true"
+            - name: MEMCACHED_HOST
+              value: 127.0.0.1
+            - name: REDIS_HOST
+              value: redis-service.redis
+            - name: REDIS_PORT
+              value: "6379"
+            - name: MAIL_MAILER
+              value: smtp
+            - name: MAIL_HOST
+              value: smtp.gmail.com
+            - name: MAIL_PORT
+              value: "465"
+            - name: MAIL_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: iati-secret
+                  key: MAIL_USERNAME
+            - name: MAIL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: iati-secret
+                  key: MAIL_PASSWORD
+            - name: MAIL_ENCRYPTION
+              value: ssl
+            - name: MAIL_FROM_ADDRESS
+              valueFrom:
+                secretKeyRef:
+                  name: iati-secret
+                  key: MAIL_USERNAME
+            - name: MAIL_FROM_NAME
+              value: IATI Publisher
+            - name: IATI_URL
+              valueFrom:
+                secretKeyRef:
+                  name: iati-secret
+                  key: IATI_URL
+            - name: IATI_API_ENDPOINT
+              valueFrom:
+                secretKeyRef:
+                  name: iati-secret
+                  key: IATI_API_ENDPOINT
+            - name: IATI_YIPL_PUBLISHER_NAME
+              value: "Young Innovations Pvt. Ltd"
+            - name: IATI_YIPL_PUBLISHER_ID
+              valueFrom:
+                secretKeyRef:
+                  name: iati-secret
+                  key: IATI_YIPL_PUBLISHER_ID
+            - name: IATI_YIPL_REGISTRATION_AGENCY
+              valueFrom:
+                secretKeyRef:
+                  name: iati-secret
+                  key: IATI_YIPL_REGISTRATION_AGENCY
+            - name: IATI_YIPL_REGISTRATION_NUMBER
+              valueFrom:
+                secretKeyRef:
+                  name: iati-secret
+                  key: IATI_YIPL_REGISTRATION_NUMBER
+            - name: IATI_YIPL_IDENTIFIER
+              valueFrom:
+                secretKeyRef:
+                  name: iati-secret
+                  key: IATI_YIPL_IDENTIFIER
+            - name: IATI_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: iati-secret
+                  key: IATI_API_KEY
+            - name: FILESYSTEM_DRIVER
+              value: minio
+            - name: AWS_ENDPOINT
+              valueFrom:
+                secretKeyRef:
+                  name: iati-secret
+                  key: AWS_ENDPOINT
+            - name: AWS_URL
+              valueFrom:
+                secretKeyRef:
+                  name: iati-secret
+                  key: AWS_URL
+            - name: AWS_ACCESS_KEY_ID
+              valueFrom:
+                secretKeyRef:
+                  name: iati-secret
+                  key: AWS_ACCESS_KEY_ID
+            - name: AWS_SECRET_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: iati-secret
+                  key: AWS_SECRET_ACCESS_KEY
+            - name: AWS_DEFAULT_REGION
+              valueFrom:
+                secretKeyRef:
+                  name: iati-secret
+                  key: AWS_DEFAULT_REGION
+            - name: AWS_BUCKET
+              valueFrom:
+                secretKeyRef:
+                  name: iati-secret
+                  key: AWS_BUCKET
+            - name: AWS_GLIDE_BUCKET
+              valueFrom:
+                secretKeyRef:
+                  name: iati-secret
+                  key: AWS_GLIDE_BUCKET
+            - name: AWS_EXPORT_CACHE_BUCKET
+              valueFrom:
+                secretKeyRef:
+                  name: iati-secret
+                  key: AWS_EXPORT_CACHE_BUCKET
+            - name: MIX_ENCRYPTION_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: iati-secret
+                  key: MIX_ENCRYPTION_KEY
+            - name: IATI_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: iati-secret
+                  key: IATI_USERNAME
+            - name: IATI_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: iati-secret
+                  key: IATI_PASSWORD
+            - name: IATI_VALIDATOR_ENDPOINT
+              valueFrom:
+                secretKeyRef:
+                  name: iati-secret
+                  key: IATI_VALIDATOR_ENDPOINT
+            - name: IATI_VALIDATOR_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: iati-secret
+                  key: IATI_VALIDATOR_KEY
+            - name: AWS_USE_PATH_STYLE_ENDPOINT
+              value: "false"
+          resources:
+            limits:
+              memory: "2Gi"
+              cpu: "1"
+          ports:
+            - containerPort: 80
       imagePullSecrets:
         - name: iati-publisher-registry-creds
       securityContext: {}
