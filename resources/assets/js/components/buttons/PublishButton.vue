@@ -276,7 +276,7 @@ let err: Err = reactive({
 
 const validatorFunction = () => {
   loader.value = true;
-  loaderText.value = 'Validating Activities';
+  loaderText.value = 'Validating Activity';
 
   axios.post(`/activity/${id}/validateActivity`).then((res) => {
     const response = res.data;
@@ -315,16 +315,16 @@ const toastMessage = inject('toastMessage') as ToastMessageTypeface;
 
 const publishFunction = () => {
   loader.value = true;
-  loaderText.value = 'Publishing';
+  loaderText.value = 'Publishing Activity';
   resetPublishStep();
 
   axios.post(`/activity/${id}/publish`).then((res) => {
     const response = res.data;
     toastMessage.message = response.message;
     toastMessage.type = response.success;
+    store.dispatch('updateUnPublished', response.success);
+    store.dispatch('updateShowPublished', !response.success);
     setTimeout(() => {
-      store.dispatch('updateUnPublished', response.success);
-      store.dispatch('updateShowPublished', !response.success);
       location.reload();
     }, 1000);
   });
