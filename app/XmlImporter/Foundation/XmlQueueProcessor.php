@@ -106,9 +106,7 @@ class XmlQueueProcessor
                 return true;
             } else {
                 $this->databaseManager->rollback();
-                request()->session()->put('header_mismatch', true);
-
-                $this->storeInJsonFile('schema_error.json', ['filename' => $filename]);
+                session()->put('header_mismatch', true);
             }
 
             return false;

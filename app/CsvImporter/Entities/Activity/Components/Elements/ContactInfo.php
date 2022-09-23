@@ -325,9 +325,9 @@ class ContactInfo extends Element
     {
         $messages = [];
 
-        $messages['contact_info.*.type.in'] = trans('validation.code_list', ['attribute' => trans('elementForm.contact_type')]);
-        $messages['contact_info.*.email.0.email.email'] = trans('validation.email', ['attribute' => trans('elementForm.email')]);
-        $messages['contact_info.*.website.0.website.url'] = trans('validation.url', ['attribute' => trans('elementForm.website')]);
+        $messages['contact_info.*.type.in'] = trans('validation.code_list', ['attribute' => trans('contact info element contact_type')]);
+        $messages['contact_info.*.email.0.email.email'] = trans('validation.email', ['attribute' => trans('contact info element email')]);
+        $messages['contact_info.*.website.0.website.url'] = trans('validation.url', ['attribute' => trans('contact info element website')]);
 
         return $messages;
     }

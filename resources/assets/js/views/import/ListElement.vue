@@ -1,3 +1,4 @@
+<!-- eslint-disable vue/no-mutating-props -->
 <template>
   <td class="title">
     {{ activity["data"]["title"][0]["narrative"] ?? "Not Available" }}
@@ -30,10 +31,15 @@
     }}</span>
   </td>
 
-  <td class="check-column">
+  <td class="check-column" @click="(event: Event) => event.stopPropagation()">
     <label class="sr-only" for=""> Select </label>
     <label class="checkbox">
-      <input type="checkbox" @click="selectElement()" />
+      <input
+        v-model="selectedActivities"
+        type="checkbox"
+        :value="index"
+        @change="selectElement()"
+      />
       <span class="checkmark" />
     </label>
   </td>
@@ -54,10 +60,9 @@ export default defineComponent({
       type: String,
       required: true,
     },
-    selectAll: {
-      type: String,
-      required: false,
-      default: "",
+    selectedActivities: {
+      type: Array,
+      required: true,
     },
   },
   emits: ["selectElement"],

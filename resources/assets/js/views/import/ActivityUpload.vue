@@ -141,12 +141,13 @@ export default defineComponent({
         .then((res) => {
           if (file.value.files.length) {
             window.location.href = "/import/list";
+            loader.value = false;
           }
         })
         .catch((err) => {
           error.value = "The file field is required and must be csv or xml.";
+          loader.value = false;
         });
-      // loader.value = false;
     }
 
     function downloadExcel() {
