@@ -6,6 +6,7 @@ namespace App\Observers;
 
 use App\IATI\Models\Organization\Organization;
 use App\IATI\Services\OrganizationElementCompleteService;
+use Illuminate\Support\Arr;
 
 /**
  * Class OrganizationObserver.
@@ -93,6 +94,14 @@ class OrganizationObserver
      */
     public function updated(Organization $organization): void
     {
+        $key = array_key_first($organization->getDirty());
+        $data = Arr::get($organization->getDirty(), $key);
+
+        if (!in_array($key, getNonArrayElements(), true) && !Arr::has($organization->getDirty(), 'is_published')) {
+            $updatedData = $this->organizationElementCompleteService->setOrganizationDefaultValues($data, $organization);
+            $organization->$key = $updatedData;
+        }
+
         $this->setElementStatus($organization);
         $this->resetOrganizationStatus($organization);
         $organization->saveQuietly();

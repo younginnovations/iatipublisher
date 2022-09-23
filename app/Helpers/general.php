@@ -662,6 +662,6 @@ if (!function_exists('getNonArrayElements')) {
      */
     function getNonArrayElements(): array
     {
-        return ['activity_status', 'activity_scope', 'default_flow_type', 'default_finance_type', 'default_tied_status', 'capital_spend', 'collaboration_type'];
+        return ['activity_status', 'activity_scope', 'default_flow_type', 'default_finance_type', 'default_tied_status', 'capital_spend', 'collaboration_type', 'identifier'];
     }
 }

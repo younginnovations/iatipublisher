@@ -93,9 +93,31 @@ class SettingService
         $setting = $this->getSetting();
 
         return [
-            'default_status'   => $setting && $setting['default_values'] && !in_array(null, array_values($setting['default_values'])) && $setting['activity_default_values'] && !in_array(null, array_values($setting['activity_default_values'])) ? true : false,
+            'default_status'   => $setting && $this->defaultSettingsCompleted($setting->default_values, $setting->activity_default_values),
             'publisher_status' => $setting && $setting['publishing_info'] ? ($setting['publishing_info']['api_token'] && $setting['publishing_info']['token_verification'] ? true : false) : false,
             'token_status' => $setting['publishing_info']['token_verification'],
         ];
+    }
+
+    /**
+     * Checks if default settings is completed or not.
+     *
+     * @param $default_values
+     * @param $activity_default_values
+     *
+     * @return bool
+     */
+    public function defaultSettingsCompleted($default_values, $activity_default_values): bool
+    {
+        if (!$default_values || !$activity_default_values) {
+            return false;
+        }
+
+        unset($activity_default_values['budget_not_provided']);
+
+        return !in_array(null, array_values($default_values), true) &&
+               !in_array('', array_values($default_values), true) &&
+               !in_array(null, array_values($activity_default_values), true) &&
+               !in_array('', array_values($activity_default_values), true);
     }
 }

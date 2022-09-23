@@ -114,6 +114,14 @@
         <div>
           <div class="flex justify-between">
             <label for="budget-not-provided">Budget Not Provided</label>
+
+            <button>
+              <HoverText
+                  width="w-72"
+                  name="Budget Not Provided"
+                  hover-text="A code indicating the reason why this activity does not contain any iati-activity/budget elements. The attribute MUST only be used when no budget elements are present."
+              />
+            </button>
           </div>
           <Multiselect
             id="budget_not_provided"
