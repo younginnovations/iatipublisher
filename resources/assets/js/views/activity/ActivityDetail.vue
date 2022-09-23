@@ -56,7 +56,7 @@
 
             <div class="inline-flex items-center justify-end gap-3">
               <!-- Delete Activity -->
-              <DeleteButton />
+              <DeleteButton v-if="store.state.showPublished" />
 
               <!-- Unpublish Activity -->
               <UnPublish
