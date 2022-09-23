@@ -300,7 +300,7 @@ class TransactionService
                     $vocabulary = Arr::get($aidType, 'aidtype_vocabulary', null);
                     $code = $this->getAidTypeCode($vocabulary, $aidType);
 
-                    $aidType[] = [
+                    $aidType = [
                         '@attributes' => [
                             'code'       => $code,
                             'vocabulary' => $vocabulary,
