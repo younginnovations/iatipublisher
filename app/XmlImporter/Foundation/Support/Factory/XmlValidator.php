@@ -47,9 +47,9 @@ class XmlValidator
         if (!is_array($activity['default_tied_status'])) {
             $rules['default_tied_status'] = sprintf('in:%s', $this->validCodeList('TiedStatus'));
         }
-        if (!is_array($activity['capital_spend'])) {
-            $rules['capital_spend'] = 'numeric|max:100|min:0';
-        }
+        // if (!is_array($activity['capital_spend'])) {
+        //     $rules['capital_spend'] = 'numeric|max:100|min:0';
+        // }
         $tempRules = [
             $this->rulesForTitle($activity),
             $this->rulesForDescription($activity),

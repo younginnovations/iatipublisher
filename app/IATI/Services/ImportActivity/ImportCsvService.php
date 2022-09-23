@@ -152,9 +152,12 @@ class ImportCsvService
 
             // dd(Storage::exists(sprintf('%s/%s/valid.json', $this->csv_data_storage_path, Session::get('org_id'))));
             // unable to delete file currently
-            // Storage::delete(sprintf('%s/%s', $this->csv_data_storage_path, Session::get('org_id')));
-            // $directoryPath = storage_path(sprintf('%s/%s', $this->csv_data_storage_path, Session::get('org_id')));
-            // $this->filesystem->deleteDirectory($directoryPath);
+            // if (file_exists($this->getFilePath())) {
+            // file_put_contents()
+            // unlink($this->getFilePath());
+            // Storage::delete(sprintf('%s/%s/valid.json', $this->csv_data_storage_path, Session::get('org_id')));
+            // }
+
             $activityIdentifiers = $this->getIdentifiers();
 
             $this->processor->pushIntoQueue($file, $filename, $activityIdentifiers);

@@ -64,7 +64,8 @@ class CsvProcessor
 
             $this->activity->process();
         } else {
-            request()->session()->put('header_mismatch', true);
+            session(['header_mismatch'=> true]);
+            dump(session()->all());
         }
     }
 
@@ -144,7 +145,7 @@ class CsvProcessor
      *
      * @return bool
      */
-    protected function isCorrectCsv(): bool
+    public function isCorrectCsv(): bool
     {
         if (!$this->csv) {
             return false;
