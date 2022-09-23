@@ -46,9 +46,11 @@
 }
 
 .btn-next {
-  height: 48px;
-  padding: 13px 24px;
-  @apply text-n-50;
+  @media screen and (min-width: 640px) {
+    height: 48px;
+    padding: 13px 24px;
+  }
+  @apply w-36 py-2.5 text-n-50 sm:w-40;
 
   svg {
     margin-left: 13px;

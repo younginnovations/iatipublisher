@@ -26,9 +26,8 @@
   }
 }
 .error {
-  @apply text-crimson-50;
+  @apply text-sm text-crimson-50 sm:text-base;
   font-weight: normal;
-  font-size: 16px;
 }
 .has_error {
   .form__input {
@@ -40,7 +39,11 @@ textarea.form__input {
 }
 .form__input {
   @apply mb-2 box-border w-full rounded border border-n-30 text-bluecoral outline-none duration-300;
-  padding: 13px 0 13px 16px;
+
+  @media screen and (min-width: 640px) {
+    padding: 13px 0 13px 16px;
+  }
+  padding: 10px 0 10px 16px;
 
   &::placeholder {
     @apply text-sm font-normal text-n-40;
@@ -95,8 +98,11 @@ textarea.form__input {
   }
   .vue__select {
     @apply mb-2 border border-n-30 text-sm leading-6 outline-none duration-300;
-    height: 52px;
-    padding: 16px 0px 16px 55px;
+
+    @media screen and (min-width: 640px) {
+      padding: 16px 0px 16px 55px;
+    }
+    padding: 13px 0px 13px 55px;
   }
 }
 .error__input {
