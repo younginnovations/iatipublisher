@@ -65,6 +65,10 @@ class RouteServiceProvider extends ServiceProvider
 
             Route::middleware(['admin', 'auth'])
                 ->namespace($this->namespace)
+                ->group(base_path('routes/import.php'));
+
+            Route::middleware(['admin', 'auth'])
+                ->namespace($this->namespace)
                 ->group(base_path('routes/dashboard.php'));
 
             Route::middleware(['admin', 'auth'])

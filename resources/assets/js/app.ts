@@ -28,6 +28,8 @@ import Activity from './views/activity/ActivityIndex.vue';
 import LoggedInHeader from './components/AdminHeader.vue';
 import ActivitiesDetail from './views/activity/ActivityDetail.vue';
 import SidebarHelpBlock from './views/activity/partials/SidebarHelpBlock.vue';
+import ActivityUpload from './views/import/ActivityUpload.vue';
+import ImportList from './views/import/ImportList.vue';
 
 /**
  * Setting page
@@ -83,6 +85,12 @@ app
   .component('TransactionList', TransactionList)
   .component('TransactionDetail', TransactionDetail)
   .component('SidebarHelpBlock', SidebarHelpBlock);
+
+/*
+* Import page
+*/
+app.component('ActivityUpload', ActivityUpload)
+  .component('ImportList', ImportList);
 
 /*
  * Setting page

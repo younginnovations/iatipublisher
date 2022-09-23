@@ -9,25 +9,33 @@
       <div
         class="progress_bar__state"
         :data-start="text"
-        data-end="Almost there!"
+        data-end="'Almost there!'"
       ></div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { defineProps, onMounted, onUnmounted } from 'vue';
+import { defineProps, onMounted, onUnmounted } from "vue";
 
 defineProps({
-  text: { type: String, required: true },
+  text: {
+    type: String,
+    required: true,
+  },
+  changeText: {
+    type: Boolean,
+    required: false,
+    default: true,
+  },
 });
 
 onMounted(() => {
-  document.body.classList.add('overflow-y-hidden');
+  document.body.classList.add("overflow-y-hidden");
 });
 
 onUnmounted(() => {
-  document.body.classList.remove('overflow-y-hidden');
+  document.body.classList.remove("overflow-y-hidden");
 });
 </script>
 
@@ -57,7 +65,7 @@ onUnmounted(() => {
   }
 
   &.animate-loader &__state::before {
-    content: '';
+    content: "";
     animation: TextChange 6s cubic-bezier(0.01, 1.06, 0.71, 1) forwards;
   }
 

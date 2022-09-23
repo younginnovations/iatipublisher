@@ -648,7 +648,7 @@ if (!function_exists('removeEmptyValues')) {
         $data = array_filter(
             $data,
             function ($value) {
-                return $value !== '' && $value != [];
+                return $value !== '' && $value !== [];
             }
         );
     }
@@ -664,4 +664,74 @@ if (!function_exists('getNonArrayElements')) {
     {
         return ['activity_status', 'activity_scope', 'default_flow_type', 'default_finance_type', 'default_tied_status', 'capital_spend', 'collaboration_type', 'identifier'];
     }
+}
+
+///test
+
+/**
+ * Returns encoding type of the file.
+ * Returns UTF-8 if any exception or charset is not found.
+ *
+ * @param $file
+ *
+ * @return string
+ */
+function getEncodingType($file): string
+{
+    try {
+        $response = exec('file -i ' . $file->getPathname());
+        $charset = strripos($response, 'charset=');
+
+        if ($charset) {
+            return strtoupper(substr($response, $charset + strlen('charset=')));
+        }
+
+        return 'UTF-8';
+    } catch (\Exception $exception) {
+        return 'UTF-8';
+    }
+}
+
+/**
+ * Get csv header count.
+ *
+ * @return int
+ */
+function getCsvHeaderCount(): int
+{
+    return 69;
+}
+
+/**
+ * trim an input.
+ *
+ * @param $input
+ *
+ * @return string
+ */
+function trimInput($input): string
+{
+    return trim(preg_replace('/\s+/', ' ', $input));
+}
+
+/**
+ * Returns formatted date.
+ *
+ * @param $format
+ * @param $date
+ * @return false|string
+ */
+function dateFormat($format, $date): bool|string
+{
+    if ($date !== '') {
+        if ((str_contains($date, '/'))) {
+            $formattedDate = str_replace('/', '-', $date);
+
+            return date($format, strtotime($formattedDate));
+        }
+
+        return date($format, strtotime($date));
+    }
+
+    return '';
 }
