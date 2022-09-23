@@ -84,7 +84,7 @@ class ImportActivity extends Job implements ShouldQueue
         $data_path = sprintf('%s/%s', $directoryPath, 'valid.json');
         try {
             if (file_exists($data_path)) {
-                unlink($data_path);
+                unlink(sprintf('%s/%s', $directoryPath, 'valid.json'));
             }
 
             file_put_contents($path, json_encode(['status' => 'Processing'], JSON_THROW_ON_ERROR));

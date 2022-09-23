@@ -47,7 +47,15 @@ class ImportActivityController extends Controller
      */
     protected DatabaseManager $db;
 
+    /**
+     * @var string
+     */
     public string $csv_data_storage_path;
+
+    /**
+     * @var string
+     */
+    public string $xml_data_storage_path;
 
     /**
      * ActivityController Constructor.
@@ -64,6 +72,7 @@ class ImportActivityController extends Controller
         $this->importXmlService = $importXmlService;
         $this->db = $db;
         $this->csv_data_storage_path = env('CSV_DATA_STORAGE_PATH ', 'app/CsvImporter/tmp');
+        $this->xml_data_storage_path = env('XML_DATA_STORAGE_PATH ', 'app/XmlImporter/tmp');
     }
 
     /**
@@ -181,17 +190,17 @@ class ImportActivityController extends Controller
     {
         try {
             $filetype = Session::get('import_filetype');
+            $org_id = Auth::user()->organization_id;
 
             if (!$filetype) {
                 return redirect()->route('admin.activities.index');
             }
 
-            // dd(Session::has('header_mismatch'),Session::all(), Session::get('header_mismatch'), session()->all());
+            $message = $filetype === 'xml' ? 'Invalid xml schema. Please upload correct schema file' : 'Invalid file content. Please upload file with correct header and content.';
+            $filepath = $filetype === 'xml' ? sprintf('%s/%s/%s', $this->xml_data_storage_path, $org_id, 'header_mismatch.json') : sprintf('%s/%s/%s', $this->csv_data_storage_path, $org_id, 'header_mismatch.json');
 
-            if (Session::has('header_mismatch') && Session::get('header_mismatch')) {
-                $message = $filetype === 'xml' ? 'Invalid xml schema. Please upload correct schema file' : 'Invalid file content. Please upload file with correct header and content.';
+            if (file_exists(storage_path($filepath))) {
                 Session::put('error', $message);
-                Session::forget('header_mismatch');
 
                 return redirect()->route('admin.activities.index');
             }

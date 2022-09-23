@@ -56,6 +56,12 @@ class CsvProcessor
     public function handle($organizationId, $userId, $activityIdentifiers): void
     {
         $this->filterHeader();
+        $directoryPath = storage_path(sprintf('%s/%s', env('CSV_DATA_STORAGE_PATH ', 'app/CsvImporter/tmp/'), $organizationId));
+        $path = sprintf('%s/%s', $directoryPath, 'header_mismatch.json');
+
+        if (file_exists($path)) {
+            unlink($path);
+        }
 
         if ($this->isCorrectCsv()) {
             $this->groupValues();
@@ -64,8 +70,7 @@ class CsvProcessor
 
             $this->activity->process();
         } else {
-            session(['header_mismatch'=> true]);
-            dump(session()->all());
+            file_put_contents($path, json_encode(['header_mismatch' => true], JSON_THROW_ON_ERROR));
         }
     }
 

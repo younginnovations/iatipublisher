@@ -27,7 +27,6 @@ class XmlQueueProcessor
      */
     protected XmlProcessor $xmlProcessor;
 
-    public string $xml_file_storage_path;
     /**
      * @var
      */
@@ -56,6 +55,16 @@ class XmlQueueProcessor
     private DatabaseManager $databaseManager;
 
     /**
+     * @var string
+     */
+    private string $xml_file_storage_path;
+
+    /**
+     * @var string
+     */
+    private string $xml_data_storage_path;
+
+    /**
      * XmlQueueProcessor constructor.
      * @param XmlServiceProvider $xmlServiceProvider
      * @param XmlProcessor       $xmlProcessor
@@ -70,7 +79,8 @@ class XmlQueueProcessor
         $this->activityRepo = $activityRepo;
         $this->logger = $logger;
         $this->databaseManager = $databaseManager;
-        $this->xml_file_storage_path = env('XML_DATA_STORAGE_PATH ', 'app/XmlImporter/tmp');
+        $this->xml_file_storage_path = env('XML_FILE_STORAGE_PATH ', 'app/XmlImporter/file');
+        $this->xml_data_storage_path = env('XML_DATA_STORAGE_PATH ', 'app/XmlImporter/tmp');
     }
 
     /**
@@ -95,6 +105,11 @@ class XmlQueueProcessor
             $file = $this->temporaryXmlStorage($filename);
             $dbIatiIdentifiers = $this->dbIatiIdentifiers($orgId);
             $contents = file_get_contents($file);
+            $mismatch_file = storage_path(sprintf('%s/%s/%s', $this->xml_data_storage_path, $orgId, 'header_mismatch.json'));
+
+            if (file_exists($mismatch_file)) {
+                unlink($mismatch_file);
+            }
 
             if ($this->xmlServiceProvider->isValidAgainstSchema($contents)) {
                 $xmlData = $this->xmlServiceProvider->load($contents);
@@ -105,14 +120,16 @@ class XmlQueueProcessor
 
                 return true;
             } else {
+                $path = storage_path(sprintf('%s/%s/%s', $this->xml_data_storage_path, $orgId, 'header_mismatch.json'));
+
                 $this->databaseManager->rollback();
-                session()->put('header_mismatch', true);
+                file_put_contents($path, json_encode(['header_mismatch' => true], JSON_THROW_ON_ERROR));
             }
 
             return false;
         } catch (\Exception $exception) {
             $this->logger->error('Xml Import process failed for Organization: ' . $orgId . ', User:' . $userId, ['error' => $exception]);
-            $this->storeInJsonFile('error.json', ['code' => 'processing_error', 'message' => $exception]);
+            // $this->storeInJsonFile('error.json', ['code' => 'processing_error', 'message' => $exception]);
             throw  $exception;
         }
     }
@@ -127,10 +144,10 @@ class XmlQueueProcessor
     protected function temporaryXmlStorage($filename = null): string
     {
         if ($filename) {
-            return sprintf('%s/%s', storage_path(sprintf('%s/%s', $this->xml_file_storage_path, $this->orgId)), $filename);
+            return sprintf('%s/%s', storage_path(sprintf('%s/%s', $this->xml_data_storage_path, $this->orgId)), $filename);
         }
 
-        return storage_path(sprintf('%s/%s/', $this->xml_file_storage_path, $this->orgId));
+        return storage_path(sprintf('%s/%s/', $this->xml_data_storage_path, $this->orgId));
     }
 
     /**

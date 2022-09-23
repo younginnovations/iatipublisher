@@ -19,7 +19,6 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\File as FileFacade;
 use Illuminate\Support\Facades\Session;
-use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Excel;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\File\File;
@@ -149,14 +148,6 @@ class ImportCsvService
             $file = new File($this->getStoredCsvPath($filename));
             Session::put('user_id', Auth::user()->id);
             Session::put('org_id', Auth::user()->organization->id);
-
-            // dd(Storage::exists(sprintf('%s/%s/valid.json', $this->csv_data_storage_path, Session::get('org_id'))));
-            // unable to delete file currently
-            // if (file_exists($this->getFilePath())) {
-            // file_put_contents()
-            // unlink($this->getFilePath());
-            // Storage::delete(sprintf('%s/%s/valid.json', $this->csv_data_storage_path, Session::get('org_id')));
-            // }
 
             $activityIdentifiers = $this->getIdentifiers();
 

@@ -92,7 +92,7 @@
             <ListElement
               :activity="activity"
               :index="index"
-              :selected-activities="selectedActivities"
+              :selected-activities="JSON.stringify(selectedActivities)"
               @select-element="updateSelectedActivities(index)"
             />
           </tr>
@@ -159,28 +159,31 @@ export default defineComponent({
     function updateSelectedActivities(activity_id) {
       let index = selectedActivities.indexOf(activity_id);
 
-      if (index >= 0) {
-        selectedActivities.splice(index, 1);
-        selectedCount.value = selectedCount.value - 1;
-      } else {
-        selectedActivities.push(activity_id);
-        selectedCount.value = selectedCount.value + 1;
+      if (activities[activity_id]["errors"].length > 0) {
+        if (index >= 0) {
+          selectedActivities.splice(index, 1);
+          selectedCount.value = selectedCount.value - 1;
+        } else {
+          selectedActivities.push(activity_id);
+          selectedCount.value = selectedCount.value + 1;
+        }
       }
     }
 
     function selectAllActivities() {
       selectAll.value = !selectAll.value;
       selectedCount.value = 0;
+      selectedActivities.length = 0;
 
       Object.keys(activities).forEach((activity_id) => {
         let index = selectedActivities.indexOf(activity_id);
-        console.log(activity_id);
-
-        if (selectAll.value) {
-          selectedActivities.push(activity_id);
-          selectedCount.value = selectedCount.value + 1;
-        } else {
-          selectedActivities.splice(index, 1);
+        if (activities[activity_id]["errors"].length > 0) {
+          if (selectAll.value) {
+            selectedActivities.push(activity_id);
+            selectedCount.value = selectedCount.value + 1;
+          } else {
+            selectedActivities.splice(index, 1);
+          }
         }
       });
       console.log(selectedActivities);
