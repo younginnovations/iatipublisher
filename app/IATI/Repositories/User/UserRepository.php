@@ -23,23 +23,21 @@ class UserRepository extends Repository
     }
 
     /**
-     * Returns user model.
-     *
-     * @return string
+     * @return void
      */
-    public function sendEmail($user): void
+    public function sendEmail(): void
     {
-        User::sendEmail($user);
+        User::sendEmail();
     }
 
     /**
-     * Returns user model.
+     * @param $user_id
      *
      * @return bool
      */
     public function getStatus($user_id): bool
     {
-        return ($this->model->find($user_id))['email_verified_at'] ? true : false;
+        return (bool) ($this->model->find($user_id))['email_verified_at'];
     }
 
     /**

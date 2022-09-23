@@ -4,11 +4,12 @@ namespace Database\Factories\IATI\Models\User;
 
 use App\IATI\Models\User\Role;
 use App\IATI\Models\User\User;
+use App\Model;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Model>
+ * @extends Factory<Model>
  */
 class UserFactory extends Factory
 {
