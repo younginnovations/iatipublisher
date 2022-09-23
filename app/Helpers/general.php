@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\IATI\Models\User\Role;
 use Illuminate\Support\Facades\Session;
 
 if (!function_exists('dashesToCamelCase')) {
@@ -677,7 +678,9 @@ if (!function_exists('isSuperAdmin')) {
      */
     function isSuperAdmin(): bool
     {
-        return auth()->user()->role_id === \App\IATI\Models\User\User::SUPER_ADMIN_ID || session()->get('role_id') === \App\IATI\Models\User\User::SUPER_ADMIN_ID;
+        $superAdminId = app(Role::class)->getSuperAdminId();
+
+        return auth()->user()->role_id === $superAdminId || session()->get('role_id') === $superAdminId;
     }
 }
 

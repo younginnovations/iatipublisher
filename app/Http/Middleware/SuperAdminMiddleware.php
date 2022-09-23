@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Middleware;
 
 use Closure;
@@ -20,6 +22,10 @@ class SuperAdminMiddleware
     public function handle(Request $request, Closure $next): mixed
     {
         if (isSuperAdmin()) {
+            if (session()->get('superadmin_user_id') !== auth()->user()->id) {
+                auth()->loginUsingId(session()->get('superadmin_user_id'));
+            }
+
             return $next($request);
         }
 
