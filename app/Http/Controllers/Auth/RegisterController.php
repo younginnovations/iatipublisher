@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\IATI\Models\User\Role;
 use App\IATI\Services\Organization\OrganizationService;
 use App\IATI\Services\User\UserService;
 use App\Providers\RouteServiceProvider;
@@ -222,7 +223,7 @@ class RegisterController extends Controller
         }
         $user = $this->create($request->all());
         event(new Registered($user));
-        Session::put('role_id', 1);
+        Session::put('role_id', app(Role::class)->getOrganizationAdminId());
 
         return response()->json(['success' => true, 'message' => 'User registered successfully']);
     }

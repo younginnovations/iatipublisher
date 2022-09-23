@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\IATI\Models\User\Role;
 use App\IATI\Models\User\User;
 use App\Providers\RouteServiceProvider;
 use GuzzleHttp\Psr7\Response;
@@ -134,7 +135,7 @@ class LoginController extends Controller
                 $request->session()->put('auth.password_confirmed_at', time());
                 $request->session()->put('role_id', auth()->user()->role_id);
 
-                if (auth()->user()->role_id === User::SUPER_ADMIN_ID) {
+                if (auth()->user()->role_id === app(Role::class)->getSuperAdminId()) {
                     $request->session()->put('superadmin_user_id', auth()->user()->id);
                 }
             }
