@@ -8,7 +8,7 @@
       :message="toastMessage"
       :type="toastType"
     />
-    <figure class="flex items-center grow-0">
+    <figure class="flex grow-0 items-center">
       <a href="/activities">
         <svg-vue icon="logo" class="text-4xl" />
       </a>
@@ -32,8 +32,8 @@
         </li>
       </ul>
     </nav>
-    <nav class="flex justify-end grow">
-      <ul class="flex flex-wrap -mx-4">
+    <nav class="flex grow justify-end">
+      <ul class="-mx-4 flex flex-wrap">
         <li
           v-for="(menu, index) in data.menus"
           :key="index"
@@ -48,7 +48,7 @@
         </li>
       </ul>
     </nav>
-    <div class="flex items-center grow-0">
+    <div class="flex grow-0 items-center">
       <div class="flex items-center">
         <div class="search">
           <input
@@ -58,7 +58,7 @@
             placeholder="Search activity..."
             @keyup.enter="searchFunction"
           />
-          <svg-vue class="absolute text-base left-3 top-3" icon="search" />
+          <svg-vue class="absolute left-3 top-3 text-base" icon="search" />
           <span v-if="spinner" class="spinner" />
         </div>
         <button
@@ -76,14 +76,14 @@
                 <div>
                   <svg-vue class="user-profile" icon="user-profile" />
                 </div>
-                <div class="flex flex-col leading-4 capitalize break-all">
+                <div class="flex flex-col break-all capitalize leading-4">
                   <span class="text-n-50">{{ user.full_name }}</span
                   ><span class="text-tiny text-n-40">{{
                     organization.publisher_name
                   }}</span>
                 </div>
               </li>
-              <li class="border-b dropdown__list border-b-n-20">
+              <li class="dropdown__list border-b border-b-n-20">
                 <svg-vue icon="user" />
                 <a href="#">Your Profile</a>
               </li>
@@ -161,6 +161,11 @@ const data = reactive({
     {
       name: 'Settings',
       permalink: '/setting',
+      active: false,
+    },
+    {
+      name: 'Import Activity',
+      permalink: '/import',
       active: false,
     },
   ],

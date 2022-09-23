@@ -1,17 +1,54 @@
 <template>
-  <section class="section mb-7 sm:mx-10 sm:mb-10 md:mb-14 xl:mx-24 xl:px-1">
+  <section
+    class="section mx-3 mb-7 sm:mx-10 sm:mb-10 md:mb-14 xl:mx-24 xl:px-1"
+  >
     <Loader v-if="isLoaderVisible" />
     <div class="section__container">
-      <div class="section__title mt-7 text-center leading-10 sm:mt-14">
+      <div class="section__title">
         <h2>Create IATI Publisher Account</h2>
         <p>
           Register your organisation to start your IATI publishing journey by
           creating an account in IATI publisher.
         </p>
       </div>
-      <div class="section__wrapper flex">
+      <div class="section__wrapper flex justify-center">
         <EmailVerification v-if="checkStep('3')" :email="formData['email']" />
         <div v-else class="form input__field" @keyup.enter="goToNextForm">
+          <aside class="mb-4 block border-b border-b-n-10 pb-4 xl:hidden">
+            <span class="text-base font-bold"
+              >Step {{ getCurrentStep() }} out of 3</span
+            >
+            <ul class="relative mt-3 text-sm text-n-40">
+              <li
+                v-for="(form, key, i) in registerForm"
+                :key="i"
+                :class="{
+                  'relative font-bold text-n-50': checkStep(key),
+                  'mb-6 hidden': !checkStep(key),
+                }"
+              >
+                <span v-if="checkStep(key)" class="list__active" />
+                <div class="flex items-center">
+                  <span v-if="!form['is_complete']" class="mr-3">
+                    {{ i + 1 }}
+                  </span>
+                  <span
+                    class="font-bold"
+                    :class="{
+                      'text-n-50': checkStep(key),
+                      'text-bluecoral': !checkStep(key) && form.is_complete,
+                      'text-n-40': !checkStep(key) && !form.is_complete,
+                    }"
+                  >
+                    {{ form['title'] }}
+                  </span>
+                </div>
+                <p v-if="checkStep(key)" class="detail mt-2 font-normal">
+                  {{ form['description'] }}
+                </p>
+              </li>
+            </ul>
+          </aside>
           <div class="form__container">
             <div class="flex items-center space-x-1">
               <HoverText
@@ -20,13 +57,13 @@
                 :name="registerForm[getCurrentStep()].title"
                 position="right"
               />
-              <span class="text-2xl font-bold text-n-50">{{
-                  registerForm[getCurrentStep()].title
-                }}</span>
+              <span class="text-xl font-bold text-n-50 sm:text-2xl">{{
+                registerForm[getCurrentStep()].title
+              }}</span>
             </div>
             <div
               v-if="!publisherExists"
-              class="feedback mt-6 h-32 border-l-2 border-crimson-50 bg-crimson-10 p-4 text-sm text-n-50"
+              class="feedback mt-6 border-l-2 border-crimson-50 bg-crimson-10 p-4 text-sm text-n-50 xl:h-32"
             >
               <p class="mb-2 flex font-bold">
                 <svg-vue class="mr-2 text-xl" icon="warning" />
@@ -36,18 +73,18 @@
               <p class="ml-8 xl:mr-1">
                 Please note that if you’re an account holder in
                 <span
-                ><a href="https://iatiregistry.org/">IATI Registry</a></span
+                  ><a href="https://iatiregistry.org/">IATI Registry</a></span
                 >, make sure your
                 <span class="font-bold"
-                >Publisher Name, Publisher ID and IATI Organisation ID</span
+                  >Publisher Name, Publisher ID and IATI Organisation ID</span
                 >
                 match your IATI Registry Information. Contact
                 <span
-                ><a
-                  class="text-bluecoral"
-                  href="mailto:PubToolTest@iatistandard.org"
-                >PubToolTest@iatistandard.org</a
-                ></span
+                  ><a
+                    class="text-bluecoral"
+                    href="mailto:PubToolTest@iatistandard.org"
+                    >PubToolTest@iatistandard.org</a
+                  ></span
                 >
                 for more details.
               </p>
@@ -62,7 +99,7 @@
               >
                 <div class="mb-2 flex items-center justify-between">
                   <label :for="field.id" class="label"
-                  >{{ field['label'] }}
+                    >{{ field['label'] }}
                     <span v-if="field.required" class="text-salmon-40"> *</span>
                   </label>
                   <HoverText
@@ -114,7 +151,7 @@
                 <span
                   v-if="field.help_text && errorData[field.name] === ''"
                   class="text-xs font-normal text-n-40"
-                >{{ field.help_text }}
+                  >{{ field.help_text }}
                 </span>
 
                 <span
@@ -127,7 +164,7 @@
               </div>
             </div>
           </div>
-          <div class="flex items-center justify-between">
+          <div class="flex flex-wrap items-center justify-between">
             <button
               v-if="!checkStep(1)"
               class="btn-back"
@@ -136,17 +173,19 @@
               <svg-vue class="mr-3 cursor-pointer" icon="left-arrow" />
               Go back
             </button>
-            <span v-if="checkStep(1)" class="text-sm font-normal text-n-40"
-            >Already have an account?
+            <span
+              v-if="checkStep(1)"
+              class="pb-4 text-sm font-normal text-n-40 sm:pb-0"
+              >Already have an account?
               <a
                 class="border-b-2 border-b-transparent font-bold text-bluecoral hover:border-b-2 hover:border-b-turquoise hover:text-bluecoral"
                 href="/"
-              >Sign In.</a
+                >Sign In.</a
               ></span
             >
             <button
               v-if="!checkStep(3)"
-              class="btn btn-next w-40"
+              class="btn btn-next"
               @click="goToNextForm()"
             >
               Next Step
@@ -155,19 +194,19 @@
           </div>
           <div v-if="checkStep(2)" class="mt-6 text-center">
             <span class="text-sm font-normal text-n-40"
-            >Already have an account?
+              >Already have an account?
               <a
                 class="border-b-2 border-b-transparent font-bold text-bluecoral hover:border-b-2 hover:border-b-turquoise hover:text-bluecoral"
                 href="/"
-              >Sign In.</a
+                >Sign In.</a
               ></span
             >
           </div>
         </div>
 
-        <aside class="register__sidebar">
+        <aside class="register__sidebar hidden xl:block">
           <span class="text-base font-bold"
-          >Step {{ getCurrentStep() }} out of 3</span
+            >Step {{ getCurrentStep() }} out of 3</span
           >
           <ul class="relative mt-6 text-sm text-n-40">
             <li
@@ -305,7 +344,12 @@ export default defineComponent({
 
     const isTextField = computed(() => {
       return (fieldType: string, fieldName: string) => {
-        return (fieldType === 'text' || fieldType === 'password' || fieldType === 'email') && fieldName != 'identifier';
+        return (
+          (fieldType === 'text' ||
+            fieldType === 'password' ||
+            fieldType === 'email') &&
+          fieldName != 'identifier'
+        );
       };
     });
 
@@ -588,8 +632,8 @@ export default defineComponent({
           errorData.password_confirmation = errors.password_confirmation
             ? errors.password_confirmation[0]
             : errors.password
-              ? errors.password[0]
-              : '';
+            ? errors.password[0]
+            : '';
           isLoaderVisible.value = false;
 
           if (response.success) {
@@ -607,8 +651,8 @@ export default defineComponent({
           errorData.password_confirmation = errors.password_confirmation
             ? errors.password_confirmation[0]
             : errors.password
-              ? errors.password[0]
-              : '';
+            ? errors.password[0]
+            : '';
         });
     }
 
@@ -651,11 +695,16 @@ export default defineComponent({
 
 .section {
   &__container {
-    max-width: 1206px;
+    @media screen and (min-width: 1280px) {
+      max-width: 1206px;
+    }
+    max-width: 865px;
     margin: auto;
 
     .feedback {
-      width: 702px;
+      @media screen and (min-width: 1280px) {
+        width: 702px;
+      }
 
       p {
         line-height: 22px;
@@ -671,13 +720,16 @@ export default defineComponent({
     }
 
     .section__title {
-      margin-bottom: 40px;
+      @media screen and (min-width: 440px) {
+        @apply leading-9;
+      }
+
+      @apply my-7 mx-3 text-center leading-7 sm:leading-10 lg:mb-10 lg:mt-14;
 
       p {
         font-weight: normal;
-        font-size: 16px;
         font-style: normal;
-        @apply text-n-40;
+        @apply text-sm text-n-40 sm:text-base;
       }
     }
 
@@ -721,8 +773,7 @@ export default defineComponent({
 }
 
 .form {
-  @apply bg-white;
-  padding: 40px 80px;
+  @apply bg-white p-5 sm:px-10 sm:py-10 lg:px-20;
   border-top-left-radius: 8px;
   border-bottom-left-radius: 8px;
   width: 862px;
@@ -735,6 +786,10 @@ export default defineComponent({
       @apply border border-crimson-50;
     }
   }
+
+  &__content {
+    margin-top: 24px;
+  }
 }
 
 @media screen and (min-width: 1024px) {
@@ -742,7 +797,6 @@ export default defineComponent({
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 16px;
-    margin-top: 24px;
   }
 }
 </style>

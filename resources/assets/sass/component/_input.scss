@@ -1,35 +1,35 @@
 .input {
   box-sizing: border-box;
-  height: 64px;
   padding: 14px 0px 14px 55px;
   font-size: 16px;
   line-height: 24px;
   border-radius: 8px;
   outline: none;
   transition: 0.3s;
-  @apply border border-n-30;
+  @apply h-14 border border-n-30 sm:h-16;
 
   &:focus {
     @apply border border-n-50 bg-n-10;
   }
+
   &::placeholder {
     letter-spacing: -0.02em;
     @apply font-normal text-n-40;
   }
+
   &:focus::placeholder {
     @apply text-n-50;
   }
-}
-@media screen and (min-width: 640px) {
-  .input {
+
+  @media screen and (min-width: 640px) {
     padding: 20px 0px 20px 55px;
   }
 }
 .error {
-  @apply text-crimson-50;
+  @apply text-sm text-crimson-50 sm:text-base;
   font-weight: normal;
-  font-size: 16px;
 }
+
 .has_error {
   .form__input {
     @apply border border-crimson-50;
@@ -38,17 +38,24 @@
 textarea.form__input {
   display: block;
 }
+
 .form__input {
   @apply mb-2 box-border w-full rounded border border-n-30 text-bluecoral outline-none duration-300;
-  padding: 13px 0 13px 16px;
+
+  @media screen and (min-width: 640px) {
+    padding: 13px 0 13px 16px;
+  }
+  padding: 10px 0 10px 16px;
 
   &::placeholder {
     @apply text-sm font-normal text-n-40;
     letter-spacing: -0.02em;
   }
+
   &:focus {
     @apply border border-n-50 bg-n-10;
   }
+
   &:focus::placeholder {
     @apply text-n-50;
   }
@@ -57,51 +64,66 @@ textarea.form__input {
   .multiselect-option.is-selected {
     @apply bg-n-20 text-n-50;
   }
+
   .multiselect-option.is-selected.is-pointed {
     @apply bg-n-20 text-n-50;
   }
+
   .multiselect.is-active {
     @apply border border-n-50 bg-n-10;
     box-shadow: 0 0 0 0;
   }
+
   .multiselect-placeholder {
     letter-spacing: -0.02em;
     @apply w-[310px] overflow-hidden whitespace-nowrap pr-3 text-sm text-n-40 duration-300;
   }
+
   .multiselect-placeholder::after {
     content: '';
     @apply absolute right-0 top-3 h-6 w-7 bg-white;
   }
+
   .multiselect.is-open {
     .multiselect-placeholder {
       @apply text-n-50;
     }
   }
+
   .multiselect-dropdown {
     @apply border border-n-50;
   }
+
   .multiselect-caret {
     -webkit-mask-image: url('/images/dropdown-arrow.svg');
     mask-image: url('/images/dropdown-arrow.svg');
   }
+
   .multiselect-search {
     @apply border border-n-30 py-2.5;
   }
+
   .multiselect-search:focus {
     @apply bg-n-10;
   }
+
   .multiselect-search:focus + .multiselect-placeholder::after {
     @apply bg-n-10;
   }
+
   .vue__select {
     @apply mb-2 border border-n-30 text-sm leading-6 outline-none duration-300;
-    height: 52px;
-    padding: 16px 0px 16px 55px;
+
+    @media screen and (min-width: 640px) {
+      padding: 16px 0px 16px 55px;
+    }
+    padding: 13px 0px 13px 55px;
   }
 }
 .error__input {
   @apply border border-crimson-50;
 }
+
 .panel__input {
   @apply box-border h-10 w-full rounded border border-n-30 bg-paper py-2.5 pl-7 pr-3 outline-none duration-300;
 
@@ -109,6 +131,7 @@ textarea.form__input {
     @apply text-xs font-normal text-n-30 duration-300;
     letter-spacing: -0.02em;
   }
+
   &:focus::placeholder {
     @apply text-n-40;
   }
