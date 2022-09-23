@@ -1,4 +1,3 @@
-<!-- eslint-disable vue/no-mutating-props -->
 <template>
   <td class="title">
     {{ activity["data"]["title"][0]["narrative"] ?? "Not Available" }}
@@ -35,7 +34,7 @@
     <label class="sr-only" for=""> Select </label>
     <label class="checkbox">
       <input
-        v-model="selectedActivities"
+        v-model="activities"
         type="checkbox"
         :value="index"
         @change="selectElement()"
@@ -46,7 +45,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from "@vue/runtime-core";
+import { defineComponent, ref, watch, reactive } from "@vue/runtime-core";
 
 export default defineComponent({
   name: "ImportList",
@@ -61,14 +60,14 @@ export default defineComponent({
       required: true,
     },
     selectedActivities: {
-      type: Array,
+      type: String,
       required: true,
     },
   },
   emits: ["selectElement"],
   setup(props, { emit }) {
     const active = ref(false);
-
+    const activities = reactive([]);
     function toggleError() {
       active.value = !active.value;
     }
@@ -77,10 +76,24 @@ export default defineComponent({
       emit("selectElement", index);
     };
 
+    watch(
+      () => props.selectedActivities,
+      () => {
+        let selectedData = JSON.parse(props.selectedActivities);
+        if (selectedData.length) {
+          Object.assign(activities, selectedData);
+        } else {
+          activities.length = 0;
+        }
+        // console.log("test", test, activities);
+      }
+    );
+
     return {
       active,
       toggleError,
       selectElement,
+      activities,
     };
   },
 });

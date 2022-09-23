@@ -140,8 +140,9 @@ export default defineComponent({
         .post("/import", data, config)
         .then((res) => {
           if (file.value.files.length) {
-            window.location.href = "/import/list";
-            loader.value = false;
+            setTimeout(() => {
+              window.location.href = "/import/list";
+            }, 5000);
           }
         })
         .catch((err) => {
