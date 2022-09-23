@@ -41,6 +41,8 @@ class BaseForm extends Form
                         'data'            => $field,
                         'label'           => false,
                         'element_criteria'=> Arr::get($field, 'element_criteria', ''),
+                        'hover_text'=> Arr::get($field, 'hover_text', ''),
+                        'help_text'=> Arr::get($field, 'help_text', ''),
                         'wrapper'         => [
                             'class' => 'wrapped-child-body',
                         ],
@@ -84,6 +86,8 @@ class BaseForm extends Form
                         'data'            => $field,
                         'label'           => false,
                         'element_criteria'=> $field['element_criteria'] ?? '',
+                        'hover_text'=> Arr::get($field, 'hover_text', ''),
+                        'help_text'=> Arr::get($field, 'help_text', ''),
                         'wrapper'         => [
                             'class' => ((Arr::get($element, 'attributes', null) && isset($field['name']) && strtolower(
                                 $field['name']
@@ -204,7 +208,9 @@ class BaseForm extends Form
     {
         $options = [
             'help_block'  => [
-                'text' => $field['help_text']['text'] ?? '',
+                'text' => $field['help_text'] ?? '',
+                'title' => $field['label'],
+
             ],
             'hover_block' => [
                 'title' => $field['label'],
@@ -219,6 +225,8 @@ class BaseForm extends Form
                     'read_only',
                     $field
                 ) && $field['read_only'] == true) ? 'readonly' : false,
+                'placeholder' => Arr::get($field, 'placeholder', ''),
+
             ],
             'wrapper'     => [
                 'class' => 'form-field basis-6/12 max-w-half attribute',
@@ -227,6 +235,7 @@ class BaseForm extends Form
 
         if ($field['type'] == 'select') {
             $options['attr']['class'] = 'select2';
+            $options['attr']['data-placeholder'] = Arr::get($field, 'placeholder', '');
             $options['empty_value'] = $field['empty_value'] ?? 'Select a value';
             $options['choices'] = $field['choices'] ? (is_string($field['choices']) ? ($this->getCodeList(
                 $field['choices']

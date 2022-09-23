@@ -34,7 +34,7 @@
             class="mr-2.5"
           />
           <svg-vue class="mr-1.5" icon="core"></svg-vue>
-          <HoverText hover-text="example text" class="text-sm text-n-40"></HoverText>
+          <HoverText :name="title.toString().replace(/_/g, '-')" :hover-text="tooltip" :show-iati-reference="true" class="text-sm text-n-40"></HoverText>
         </div>
       </div>
       <div class="w-full h-px mb-4 divider bg-n-20"></div>

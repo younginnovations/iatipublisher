@@ -21,6 +21,7 @@
               <HoverText
                 name="Default Currency"
                 hover-text="The currency in which you report your financial transactions. You can later manually change the currency on individual transactions and budgets if required."
+                :show-iati-reference="true"
               />
             </button>
           </div>
@@ -49,6 +50,7 @@
               <HoverText
                 name="Default Language"
                 hover-text="The language in which you provide data on your activities. You can later manually change the language on individual text if required."
+                :show-iati-reference="true"
               />
             </button>
           </div>
@@ -88,6 +90,7 @@
                 hover-text="If you are reporting both programmes (parent activities) and projects (child activities),
                 choose the hierarchical level that most of your activities are at. e.g. parent activity = 1; child activity = 2.
                 <br>If all your activities are at the same level i.e. you have no child activities, then choose 1."
+                :show-iati-reference="true"
               />
             </button>
           </div>
@@ -137,6 +140,7 @@
                 width="w-72"
                 name="Humanitarian"
                 hover-text="Add a 'Humanitarian Flag' to every activity that your organisation publishes data on. This means that your organisation identifies all their activities as wholly or partially addressing a humanitarian crisis or multiple crises. You can later manually add or remove a Humanitarian Flag on individual activities if required."
+                :show-iati-reference="true"
               />
             </button>
           </div>

@@ -42,7 +42,9 @@
                             name=""
                           />
                         </div>
-                      </div>
+                    </div>
+
+                    <sidebar-help-block></sidebar-help-block>
                 </aside>
                 <div class="activities__content">
                     <div class="py-[6.06%] px-[12%] bg-white max-w-[1000px]">

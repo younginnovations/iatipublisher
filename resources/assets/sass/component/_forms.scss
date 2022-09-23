@@ -37,9 +37,6 @@ form {
       .help-text {
         @apply mt-2 text-xs leading-relaxed;
       }
-      .code {
-        @apply mb-0;
-      }
     }
   }
   button.delete-item {
@@ -151,6 +148,7 @@ form {
 span.select2-container--default {
   width: 100% !important;
   max-width: 100%;
+  margin-bottom: 0.5rem;
   .select2-selection--single {
     @apply h-12 w-full rounded border border-n-30 px-4 py-3 text-sm text-n-40 outline-none duration-300;
     .select2-selection__rendered {

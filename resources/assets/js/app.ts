@@ -27,6 +27,7 @@ import ElementsNote from './views/activity/partials/ElementsNote.vue';
 import Activity from './views/activity/ActivityIndex.vue';
 import LoggedInHeader from './components/AdminHeader.vue';
 import ActivitiesDetail from './views/activity/ActivityDetail.vue';
+import SidebarHelpBlock from './views/activity/partials/SidebarHelpBlock.vue';
 
 /**
  * Setting page
@@ -80,7 +81,8 @@ app
   .component('PeriodsDetail', PeriodsDetail)
   .component('PeriodsList', PeriodsList)
   .component('TransactionList', TransactionList)
-  .component('TransactionDetail', TransactionDetail);
+  .component('TransactionDetail', TransactionDetail)
+  .component('SidebarHelpBlock', SidebarHelpBlock);
 
 /*
  * Setting page

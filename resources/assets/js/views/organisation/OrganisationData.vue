@@ -201,7 +201,7 @@
           :completed="co"
         />
       </aside>
-      <div class="activities__content overflow-hidden">
+      <div class="activities__content">
         <div class="mb-3 inline-flex flex-wrap gap-2">
           <a
             v-for="(post, key, index) in groupedData"
@@ -340,7 +340,6 @@ export default defineComponent({
     const { ignoreUpdates } = watchIgnorable(toastData, () => undefined, {
       flush: "sync",
     });
-
     watch(
       () => toastData.visibility,
       () => {

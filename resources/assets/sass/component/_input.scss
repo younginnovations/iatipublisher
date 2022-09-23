@@ -35,6 +35,9 @@
     @apply border border-crimson-50;
   }
 }
+textarea.form__input {
+  display: block;
+}
 .form__input {
   @apply mb-2 box-border w-full rounded border border-n-30 text-bluecoral outline-none duration-300;
   padding: 13px 0 13px 16px;

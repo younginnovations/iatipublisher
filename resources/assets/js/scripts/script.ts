@@ -17,6 +17,17 @@ jQuery(function () {
       $('body').removeClass('overflow-hidden');
     }
   });
+
+  const sidebarBlock = $('.sidebar-help-block');
+  $(document).on('click', '.help-button', function () {
+    sidebarBlock.removeClass('hidden');
+    const sidebarContent = $(this).siblings('.help-button-content').html();
+    $('.sidebar-help-block-text').html(sidebarContent);
+  });
+
+  $('.sidebar-help-close').on('click', () => {
+    sidebarBlock.addClass('hidden');
+  });
 });
 
 // remove overlay page loader after loading completes

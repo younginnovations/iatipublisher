@@ -16,6 +16,7 @@
               :name="'title'"
               hover-text="A short, human-readable title. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/title/' target='_blank'>For more information</a>"
               position="right"
+              :show-iati-reference="true"
             />
             <p class="form-group-title">title</p>
           </div>
@@ -30,6 +31,7 @@
                   <HoverText
                     :name="'narrative'"
                     hover-text="The free text name or description of the item being described. This can be repeated in multiple languages. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/title/narrative/' target='_blank'>For more information</a>"
+                    :show-iati-reference="true"
                   />
                 </div>
                 <input
@@ -58,6 +60,7 @@
                   <HoverText
                     name="@xml:lang"
                     hover-text="A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/title/narrative/' target='_blank'>For more information</a>"
+                    :show-iati-reference="true"
                   />
                 </div>
 
@@ -93,6 +96,7 @@
               :name="'iati-identifier'"
               position="right"
               hover-text="A globally unique identifier for the activity.<br><br>This MUST be prefixed with EITHER the current IATI organisation identifier for the reporting organisation (reporting-org/@ref) OR a previous identifier reported in other-identifier, and suffixed with the organisation’s own activity identifier. The prefix and the suffix should be separated by a hyphen “-“.<br><br>Once an activity has been reported to IATI its identifier MUST NOT be changed in subsequent updates. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/iati-identifier/' target='_blank'>For more information</a>"
+              :show-iati-reference="true"
             />
             <p class="form-group-title">iati-identifier</p>
           </div>

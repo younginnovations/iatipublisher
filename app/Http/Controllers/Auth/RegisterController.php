@@ -125,7 +125,7 @@ class RegisterController extends Controller
             $client = new Client($clientConfig);
             $res = $client->request('GET', env('IATI_API_ENDPOINT') . '/action/organization_show', $requestConfig);
 
-            if ($res->getStatusCode() == 404) {
+            if ($res->getStatusCode() === 404) {
                 return response()->json([
                     'success'         => false,
                     'publisher_error' => true,
