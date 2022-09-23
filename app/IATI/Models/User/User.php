@@ -70,10 +70,13 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function isEmailVerified($email_verified_at): bool
     {
-        return $email_verified_at ? true : false;
+        return (bool) $email_verified_at;
     }
 
-    public static function newFactory()
+    /**
+     * @return UserFactory
+     */
+    public static function newFactory(): UserFactory
     {
         return new UserFactory();
     }
@@ -88,10 +91,8 @@ class User extends Authenticatable implements MustVerifyEmail
 
     /**
      * Sends verification email to new user.
-     *
-     * @param $user
      */
-    public static function sendEmail($user): void
+    public static function sendEmail(): void
     {
         VerifyEmail::toMailUsing(function ($notifiable, $url) {
             return (new MailMessage)
