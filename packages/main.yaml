@@ -156,7 +156,7 @@ spec:
             - name: MEMCACHED_HOST
               value: 127.0.0.1
             - name: REDIS_HOST
-              value: redis-service.redis
+              value: redis-service.redis.svc.cluster.local
             - name: REDIS_PORT
               value: "6379"
             - name: MAIL_MAILER
