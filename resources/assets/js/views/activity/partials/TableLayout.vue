@@ -44,7 +44,7 @@
               class="inline-flex items-start transition duration-500 hover:text-spring-50"
             >
               <PreviouslyPublished
-                v-if="datum['already_published']"
+                v-if="datum['linked_to_iati'] && datum['status'] === 'draft'"
                 class="absolute top-0 left-0"
               />
               <div class="ellipsis relative">

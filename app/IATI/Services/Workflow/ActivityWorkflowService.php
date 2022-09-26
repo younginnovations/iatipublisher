@@ -124,7 +124,7 @@ class ActivityWorkflowService
             $this->publisherService->publishFile($publishingInfo, $activityPublished, $organization);
         }
 
-        $this->activityService->updatePublishedStatus($activity, 'published', true, true);
+        $this->activityService->updatePublishedStatus($activity, 'published', true);
         $this->activitySnapshotService->createOrUpdateActivitySnapshot($activity);
     }
 
@@ -139,7 +139,7 @@ class ActivityWorkflowService
     {
         $publishedFile = $this->activityPublishedService->getActivityPublished($activity->org_id);
         $this->removeActivityFromPublishedArray($publishedFile, $activity);
-        $this->activityService->updatePublishedStatus($activity, 'draft', true, false);
+        $this->activityService->updatePublishedStatus($activity, 'draft', false);
         $this->validatorService->deleteValidatorResponse($activity->id);
         $this->xmlGeneratorService->generateNewXmlFile($publishedFile);
     }

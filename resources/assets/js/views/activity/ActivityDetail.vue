@@ -87,7 +87,7 @@
     <!-- title section ends -->
     <div class="activities">
       <aside class="activities__sidebar">
-        <div v-if="publishStatus.already_published" class="mb-2">
+        <div v-if="publishStatus.linked_to_iati && publishStatus.status === 'draft'" class="mb-2">
           <PreviouslyPublished />
         </div>
         <div class="flex mb-1">

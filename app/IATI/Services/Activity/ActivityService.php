@@ -121,14 +121,13 @@ class ActivityService
      *
      * @param $activity
      * @param $status
-     * @param $alreadyPublished
      * @param $linkedToIati
      *
      * @return bool
      */
-    public function updatePublishedStatus($activity, $status, $alreadyPublished, $linkedToIati): bool
+    public function updatePublishedStatus($activity, $status, $linkedToIati): bool
     {
-        return $this->activityRepository->updatePublishedStatus($activity, $status, $alreadyPublished, $linkedToIati);
+        return $this->activityRepository->updatePublishedStatus($activity, $status, $linkedToIati);
     }
 
     /**
