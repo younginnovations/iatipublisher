@@ -1,4 +1,9 @@
 .hamburger {
+  @media screen and (min-width: 440px) {
+    transform: scale(1);
+  }
+  transform: scale(0.9);
+
   span {
     pointer-events: none;
   }
