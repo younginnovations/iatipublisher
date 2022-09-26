@@ -66,5 +66,9 @@
     "vue3-smooth-scroll": "^0.8.1",
     "vuex": "^4.0.2",
     "vuex-map-fields": "^1.4.1"
+  },
+  "engines": {
+    "node": "v16.17.1",
+    "npm": "8.15.0"
   }
 }

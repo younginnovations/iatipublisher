@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: iatipublisher-fpm
+  labels:
+    tier: backend
+    layer: fpm
+spec:
+  selector:
+    matchLabels:
+      tier: backend
+      layer: fpm
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        tier: backend
+        layer: fpm
+    spec:
+      serviceAccountName: iatipublisher
+      imagePullSecrets:
+        - name: github-credentials
+      initContainers:
+        - name: migrations
+          image: ghcr.io/younginnovations/iatipublisher/cli
+          command:
+            - php
+          args:
+            - artisan
+            - migrate
+            - --force
+          envFrom:
+            - configMapRef:
+                name: iatipublisher
+            - secretRef:
+                name: iatipublisher
+      containers:
+      - name: iatipublisher-fpm
+        envFrom:
+          - configMapRef:
+              name: iatipublisher
+          - secretRef:
+              name: iatipublisher
+        image: ghcr.io/younginnovations/iatipublisher/fpm_server
+        imagePullPolicy: IfNotPresent
+        command: [ "/bin/sh","-c" ]
+        args: ["php artisan optimize:clear; php-fpm"]
+        ports:
+        - containerPort: 9000
+        securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+              - ALL
+            privileged: false

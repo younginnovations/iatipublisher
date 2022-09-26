@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: iatipublisher-cron
+  labels:
+    tier: backend
+    layer: cron
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      tier: backend
+      layer: cron
+  template:
+    metadata:
+      labels:
+        tier: backend
+        layer: cron
+    spec:
+      serviceAccountName: iatipublisher
+      imagePullSecrets:
+        - name: github-credentials
+      containers:
+        - name: iatipublisher-cron
+          image: ghcr.io/younginnovations/iatipublisher/cron
+          imagePullPolicy: IfNotPresent
+          envFrom:
+              - configMapRef:
+                  name: iatipublisher
+              - secretRef:
+                  name: iatipublisher
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+            privileged: false

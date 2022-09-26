@@ -1,0 +1,21 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: iatipublisher-webserver-ingress
+spec:
+  tls:
+    - hosts:
+        - iatipublisher.yipl.com.np
+      secretName: wildcard-yipl-com-np-tls-secret
+  rules:
+    - host: iatipublisher.yipl.com.np
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: iatipublisher-webserver
+                port:
+                  number: 80
+  ingressClassName: nginx
