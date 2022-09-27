@@ -66,9 +66,12 @@ class XmlServiceProvider
      */
     public function isValidAgainstSchema($contents): bool
     {
-        return $this->xmlErrorServiceProvider
+        $is_valid = $this->xmlErrorServiceProvider
             ->load($contents)
             ->schemaValidate($this->getSchemaPath());
+
+        // dd(libxml_get_errors());
+        return $is_valid;
     }
 
     /**
