@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: iatipublisher-queue-worker-default
+  labels:
+    tier: backend
+    layer: queue-worker
+    queue: default
+spec:
+  selector:
+    matchLabels:
+      tier: backend
+      layer: queue-worker
+      queue: default
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        tier: backend
+        layer: queue-worker
+        queue: default
+    spec:
+      serviceAccountName: iatipublisher
+      imagePullSecrets:
+        - name: github-credentials
+      containers:
+      - name: iatipublisher-queue-worker
+        envFrom:
+          - configMapRef:
+              name: iatipublisher
+          - secretRef:
+              name: iatipublisher
+        image: ghcr.io/younginnovations/iatipublisher/horizon
+        lifecycle:
+          preStop:
+            exec:
+              command: ["supervisorctl", "stop", "all"]
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 9000

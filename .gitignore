@@ -15,3 +15,7 @@ yarn-error.log
 /.vscode
 .php-cs-fixer.cache
 .DS_Store
+supervisord.log
+supervisord.pid
+secret.yaml
+github-credentials.yaml

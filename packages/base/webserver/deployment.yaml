@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: iatipublisher-webserver
+  labels:
+    tier: backend
+    layer: webserver
+spec:
+  selector:
+    matchLabels:
+      tier: backend
+      layer: webserver
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        tier: backend
+        layer: webserver
+    spec:
+      serviceAccountName: iatipublisher
+      imagePullSecrets:
+        - name: github-credentials
+      containers:
+      - name: iatipublisher-webserver
+        image: ghcr.io/younginnovations/iatipublisher/web_server
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 80
+        env:
+          - name: FPM_HOST
+            value: iatipublisher-fpm:9000
+        securityContext:
+            allowPrivilegeEscalation: false
+            privileged: false
+      securityContext:
+        {}

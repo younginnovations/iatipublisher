@@ -1,0 +1,4 @@
+/vendor
+/node_modules
+supervisord.log
+supervisord.pid

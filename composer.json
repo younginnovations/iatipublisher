@@ -17,7 +17,8 @@
         "laravel/ui": "^3.4",
         "league/flysystem-aws-s3-v3": "^3.0",
         "predis/predis": "^2.0",
-        "symfony/psr-http-message-bridge": "^2.1"
+        "symfony/psr-http-message-bridge": "^2.1",
+        "ext-openssl": "*"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.6",
@@ -39,10 +40,7 @@
     "autoload-dev": {
         "psr-4": {
             "Tests\\": "tests/"
-        },
-        "files": [
-          "app/Helpers/general.php"
-        ]
+        }
     },
     "scripts": {
         "post-autoload-dump": [

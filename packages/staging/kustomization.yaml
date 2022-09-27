@@ -1,0 +1,22 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: iati-staging
+resources:
+- ../base
+- namespace.yaml
+- sealed-secret.yaml
+- config.yaml
+- ingress.yaml
+- github-credentails-sealed-secret.yaml
+
+images:
+  - name: ghcr.io/younginnovations/iatipublisher/cli
+    newTag: latest
+  - name: ghcr.io/younginnovations/iatipublisher/cron
+    newTag: latest
+  - name: ghcr.io/younginnovations/iatipublisher/fpm_server
+    newTag: latest
+  - name: ghcr.io/younginnovations/iatipublisher/web_server
+    newTag: latest
+  - name: ghcr.io/younginnovations/iatipublisher/horizon
+    newTag: latest
