@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 Route::name('admin.')->group(function () {
-    Route::get('/import', [ImportActivityController::class, 'index'])->name('import');
+    Route::get('/import', [ImportActivityController::class, 'index'])->name('import.index');
     Route::post('/import', [ImportActivityController::class, 'store'])->name('import');
     Route::get('/import/list', [ImportActivityController::class, 'status'])->name('import.list');
     // Route::get('/import/status', [ImportActivityController::class, 'status'])->name('import.status');

@@ -68,6 +68,17 @@ class ActivityScope extends Element
     protected function map($value, $values): void
     {
         if (!(is_null($value) || $value === '')) {
+            $validActivityScope = $this->loadCodeList('ActivityScope');
+
+            if (!is_int($value)) {
+                foreach ($validActivityScope as $code => $name) {
+                    if (strcasecmp(trim($value), $name) === 0) {
+                        $value = is_int($code) ? (int) $code : $code;
+                        break;
+                    }
+                }
+            }
+
             (count(array_filter($values)) === 1) ? $this->data[$this->csvHeader()] = $value : $this->data[$this->csvHeader()][] = $value;
         }
     }
@@ -127,7 +138,7 @@ class ActivityScope extends Element
     }
 
     /**
-     * Get the Csv header for ActivityStatus.
+     * Get the Csv header for ActivityScope.
      *
      * @return mixed
      */

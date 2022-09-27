@@ -49,9 +49,12 @@ trait PreparesTransactionData
         if ($key === $this->_csvHeaders[1]) {
             $validTransactionType = $this->loadCodeList('TransactionType', 'Activity');
 
-            foreach ($validTransactionType as $code => $name) {
-                if (!is_int($value) && strcasecmp($value, $name)) {
-                    $value = $code;
+            if (!is_int($value)) {
+                foreach ($validTransactionType as $code => $name) {
+                    if (strcasecmp(trim($value), (string) $name) === 0) {
+                        $value = is_int($code) ? (int) $code : $code;
+                        break;
+                    }
                 }
             }
 
@@ -331,7 +334,7 @@ trait PreparesTransactionData
      *
      * @return void
      */
-    protected function setTiedStatus():void
+    protected function setTiedStatus(): void
     {
         if (array_key_exists('aid_type', $this->data['transaction'])) {
             $this->data['transaction']['tied_status'][0] = ['tied_status_code' => ''];
@@ -361,10 +364,13 @@ trait PreparesTransactionData
     protected function setOrganizationTypeNameToCode($value): mixed
     {
         $validOrganizationType = $this->loadCodeList('OrganizationType', 'Organization');
-        foreach ($validOrganizationType as $code => $name) {
-            if (!is_int($value) && strcasecmp($value, $name)) {
-                $value = $code;
-                break;
+
+        if (!is_int($value)) {
+            foreach ($validOrganizationType as $code => $name) {
+                if (strcasecmp(trim($value), $name)) {
+                    $value = is_int($code) ? (int) $code : $code;
+                    break;
+                }
             }
         }
 

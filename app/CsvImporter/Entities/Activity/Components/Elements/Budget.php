@@ -195,7 +195,7 @@ class Budget extends Element
             ];
         }
         if ($key === $this->_csvHeaders[6]) {
-            $this->data['budget'][$index]['value'][0]['currency'] = strtoupper($value);
+            $this->data['budget'][$index]['value'][0]['currency'] = is_int($value) ? $value : strtoupper($value);
         }
     }
 

@@ -169,6 +169,7 @@ class ImportActivityController extends Controller
 
             $this->db->commit();
 
+            Session::forget('import_filetype');
             Session::put('success', 'Imported data successfully.');
 
             return response()->json(['success' => true, 'message' => 'Imported successfully', 'type' => $filetype]);
@@ -222,6 +223,12 @@ class ImportActivityController extends Controller
     {
         try {
             $filetype = Session::get('import_filetype');
+
+            if (!$filetype) {
+                Session::put('error', 'Please upload csv or xml file to import activity.');
+
+                return response()->json(['status' => 'error', 'message' => 'Please upload csv or xml file to import activity.']);
+            }
 
             if ($filetype === 'xml') {
                 $result = $this->importXmlService->loadJsonFile('status.json');
