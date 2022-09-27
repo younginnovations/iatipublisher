@@ -215,6 +215,10 @@ onMounted(() => {
 });
 
 function getLink(has_data: number, index: string) {
+  if (index == 'reporting_org') {
+    return `/organisation/reporting_org`;
+  }
+
   if (has_data) {
     return index == 'reporting_org' ? `/organisation#${index}` : `#${index}`;
   } else if (index == 'result' || index == 'transactions') {

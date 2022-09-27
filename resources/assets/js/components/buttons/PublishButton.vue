@@ -140,15 +140,13 @@ import { detailStore } from 'Store/activities/show';
 
 const props = defineProps({
   type: { type: String, default: 'primary' },
-  alreadyPublished: { type: Boolean, required: true },
   linkedToIati: { type: Boolean, required: true },
   status: { type: String, required: true },
   coreCompleted: { type: Boolean, required: true },
   activityId: { type: Number, required: true },
 });
 
-const { alreadyPublished, linkedToIati, status, coreCompleted, activityId } =
-  toRefs(props);
+const { linkedToIati, status, coreCompleted, activityId } = toRefs(props);
 
 /**
  *  Global State
@@ -333,7 +331,6 @@ const publishFunction = () => {
 // publish-republish
 
 const publishStatus = reactive({
-  already_published: alreadyPublished.value,
   linked_to_iati: linkedToIati.value,
   status: status.value,
 });

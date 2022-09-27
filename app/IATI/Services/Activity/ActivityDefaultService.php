@@ -41,7 +41,7 @@ class ActivityDefaultService
      *
      * @return bool
      */
-    public function updateActivityDefaultValues(array $data, $activityId): bool
+    public function updateActivityDefaultValues($activityId, array $data): bool
     {
         return $this->activityRepository->update($activityId, [
             'default_field_values' => [

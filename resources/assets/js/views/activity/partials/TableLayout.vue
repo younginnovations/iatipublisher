@@ -37,7 +37,10 @@
         <tr
           v-for="datum in data.data"
           :key="datum['id']"
-          :class="{ already_published: datum['already_published'] }"
+          :class="{
+            'already-published':
+              datum['linked_to_iati'] && datum['status'] === 'draft',
+          }"
         >
           <td class="title">
             <div
@@ -101,7 +104,6 @@
 
               <Publish
                 v-if="datum['status'] !== 'published'"
-                :already-published="datum.already_published"
                 :linked-to-iati="datum.linked_to_iati"
                 :status="datum.status"
                 :core-completed="datum.coreCompleted"
