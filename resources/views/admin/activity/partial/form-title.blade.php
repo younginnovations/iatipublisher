@@ -79,8 +79,7 @@
             @endif
         </div>
         <div class="flex icons">
-            <span class="text-xs"><sup class="text-salmon-50">*</sup> Mandatory fields</span>
-            <hover-text hoverText="tooltip" class="ml-1" />
+            <span class="text-xs"><span class="required-icon">*</span> Mandatory fields</span>
         </div>
     </div>
     <div class="w-full h-px mb-4 divider bg-n-20"></div>

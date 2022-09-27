@@ -28,6 +28,7 @@
 .error {
   @apply text-sm text-crimson-50 sm:text-base;
   font-weight: normal;
+  font-size: 12px;
 }
 
 .has_error {
@@ -144,4 +145,7 @@ textarea.form__input {
     padding: 10px 42px 10px 34px;
     border-radius: 20px;
   }
+}
+.required-icon{
+  @apply text-crimson-50 text-base leading-none relative top-0.5;
 }
