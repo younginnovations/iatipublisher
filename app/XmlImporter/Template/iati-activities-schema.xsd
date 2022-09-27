@@ -89,8 +89,8 @@
     <xsd:complexType>
       <xsd:sequence>
         <xsd:element ref="iati-identifier" minOccurs="1" maxOccurs="1"/>
-        <xsd:element ref="reporting-org" minOccurs="1" maxOccurs="1"/>
-        <xsd:element name="title" type="textRequiredType" minOccurs="1" maxOccurs="1">
+        <xsd:element ref="reporting-org" minOccurs="0" maxOccurs="1"/>
+        <xsd:element name="title" type="textRequiredType" minOccurs="0" maxOccurs="1">
           <xsd:annotation>
             <xsd:documentation xml:lang="en">
               A short, human-readable title that contains a meaningful
@@ -99,7 +99,7 @@
             </xsd:documentation>
           </xsd:annotation>
         </xsd:element>
-        <xsd:element name="description" minOccurs="1" maxOccurs="unbounded">
+        <xsd:element name="description" minOccurs="0" maxOccurs="unbounded">
           <xsd:annotation>
             <xsd:documentation xml:lang="en">
               A longer, human-readable description containing a
@@ -124,10 +124,10 @@
             <xsd:anyAttribute processContents="lax" namespace="##other"/>
           </xsd:complexType>
         </xsd:element>
-        <xsd:element ref="participating-org" minOccurs="1" maxOccurs="unbounded"/>
+        <xsd:element ref="participating-org" minOccurs="0" maxOccurs="unbounded"/>
         <xsd:element ref="other-identifier" minOccurs="0" maxOccurs="unbounded"/>
-        <xsd:element ref="activity-status" minOccurs="1" maxOccurs="1"/>
-        <xsd:element ref="activity-date" minOccurs="1" maxOccurs="unbounded"/>
+        <xsd:element ref="activity-status" minOccurs="0" maxOccurs="1"/>
+        <xsd:element ref="activity-date" minOccurs="0" maxOccurs="unbounded"/>
         <xsd:element ref="contact-info" minOccurs="0" maxOccurs="unbounded"/>
         <xsd:element ref="activity-scope" minOccurs="0" maxOccurs="1"/>
         <xsd:element ref="recipient-country" minOccurs="0" maxOccurs="unbounded"/>
