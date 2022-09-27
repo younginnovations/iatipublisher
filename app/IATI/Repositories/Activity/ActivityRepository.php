@@ -81,8 +81,8 @@ class ActivityRepository extends Repository
         }
 
         return $this->model->whereRaw($whereSql, $bindParams)
-                           ->orderBy($orderBy, $direction)
-                           ->paginate(10, ['*'], 'activity', $page);
+            ->orderBy($orderBy, $direction)
+            ->paginate(10, ['*'], 'activity', $page);
     }
 
     /**
@@ -173,7 +173,7 @@ class ActivityRepository extends Repository
      */
     public function importXmlActivities($activity_id, array $mappedActivity): mixed
     {
-        $mappedActivity['default_field_values'] = [];
+        $defaultFieldValues = $this->setDefaultFieldValues($mappedActivity['default_field_values'], $mappedActivity['org_id']);
         $mappedActivity = json_decode(json_encode($mappedActivity, JSON_THROW_ON_ERROR | 512), true, 512, JSON_THROW_ON_ERROR);
 
         $data = [
@@ -207,6 +207,7 @@ class ActivityRepository extends Repository
             'default_tied_status'  => Arr::get($mappedActivity, 'default_tied_status', null),
             'contact_info'         => $this->getActivityElement($mappedActivity, 'contact_info'),
             'related_activity'     => $this->getActivityElement($mappedActivity, 'related_activity'),
+            'default_field_values' => $defaultFieldValues[0],
         ];
 
         if ($activity_id) {
@@ -248,12 +249,12 @@ class ActivityRepository extends Repository
         $settingsDefaultFieldValues = $settings ? $settings->default_values + $settings->activity_default_values : [];
 
         foreach ($defaultFieldValues as $index => $value) {
-            $settingsDefaultFieldValues[0]['default_currency'] = ((Arr::get((array) $defaultFieldValues, $index . '.default_currency')) === '')
-                ? Arr::get($settingsDefaultFieldValues, '0.default_currency') : '';
-            $settingsDefaultFieldValues[0]['default_language'] = ((Arr::get($defaultFieldValues, $index . '.default_language')) === '')
-                ? Arr::get($settingsDefaultFieldValues, '0.default_language') : '';
-            $settingsDefaultFieldValues[0]['humanitarian'] = ((Arr::get($defaultFieldValues, $index . '.humanitarian')) === '')
-                ? Arr::get($settingsDefaultFieldValues, '0.humanitarian') : '';
+            $settingsDefaultFieldValues[0]['default_currency'] = ((Arr::get((array) $value, 'default_currency')) === '')
+                ? Arr::get($settingsDefaultFieldValues, '0.default_currency') : (Arr::get((array) $value, 'default_currency'));
+            $settingsDefaultFieldValues[0]['default_language'] = ((Arr::get($value, 'default_language')) === '')
+                ? Arr::get($settingsDefaultFieldValues, '0.default_language') : Arr::get($value, 'default_language');
+            $settingsDefaultFieldValues[0]['humanitarian'] = ((Arr::get($value, 'humanitarian')) === '')
+                ? Arr::get($settingsDefaultFieldValues, '0.humanitarian') : Arr::get($value, 'default_language');
         }
 
         return $settingsDefaultFieldValues;

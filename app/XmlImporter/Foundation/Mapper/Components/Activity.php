@@ -482,7 +482,6 @@ class Activity
      */
     public function location($element, $template): array
     {
-        // dump($template, $element);
         $this->location[$this->index] = $template['location'];
         $this->location[$this->index]['ref'] = $this->attributes($element, 'ref');
         $this->location[$this->index]['location_reach'][0]['code'] = $this->attributes($element, 'code', 'locationReach');

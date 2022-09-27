@@ -161,11 +161,6 @@ const data = reactive({
       permalink: "/import",
       active: false,
     },
-    {
-      name: 'Import Activity',
-      permalink: '/import',
-      active: false,
-    },
   ],
 });
 const [modalValue, modalToggle] = useToggle();
