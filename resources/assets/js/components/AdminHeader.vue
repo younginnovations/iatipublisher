@@ -1,6 +1,6 @@
 <template>
   <header
-    class="activity__header flex min-h-[60px] max-w-full gap-10 bg-bluecoral px-10 text-xs leading-normal text-white"
+    class="activity__header flex min-h-[60px] max-w-full justify-between gap-5 bg-bluecoral px-5 text-xs leading-normal text-white sm:gap-10 xl:px-10"
   >
     <Toast
       v-if="toastVisibility"
@@ -8,61 +8,77 @@
       :message="toastMessage"
       :type="toastType"
     />
-    <figure class="flex grow-0 items-center">
-      <a href="/activities">
-        <svg-vue icon="logo" class="text-4xl" />
-      </a>
-    </figure>
-    <nav class="flex grow-0">
-      <ul class="flex flex-wrap">
-        <li
-          v-for="(language, index) in data.languages"
-          :key="index"
-          :class="data.languageNavLiClasses"
-        >
-          <a
-            :class="[
-              { nav__pointer: language.active },
-              data.languageNavAnchorClasses,
-            ]"
-            :href="language.permalink"
+    <div class="flex items-center gap-5">
+      <div class="hamburger-menu">
+        <div id="hamburger" class="hamburger scale-75">
+          <span class="bg-n-20" />
+          <span class="bg-n-20" />
+          <span class="bg-n-20" />
+        </div>
+      </div>
+      <figure class="flex grow-0 items-center">
+        <a href="/activities">
+          <svg-vue icon="logo" class="text-4xl" />
+        </a>
+      </figure>
+    </div>
+    <div id="nav-list" class="activity-nav-menu flex w-full justify-between">
+      <nav>
+        <ul class="flex">
+          <li
+            v-for="(language, index) in data.languages"
+            :key="index"
+            :class="data.languageNavLiClasses"
           >
-            <span class="">{{ language.language }}</span>
-          </a>
-        </li>
-      </ul>
-    </nav>
-    <nav class="flex grow justify-end">
-      <ul class="-mx-4 flex flex-wrap">
-        <li
-          v-for="(menu, index) in data.menus"
-          :key="index"
-          :class="data.menuNavLiClasses"
-        >
-          <a
-            :class="[{ nav__pointer: menu.active }, data.menuNavAnchorClasses]"
-            :href="menu.permalink"
+            <a
+              :class="[
+                { nav__pointer: language.active },
+                data.languageNavAnchorClasses,
+              ]"
+              :href="language.permalink"
+            >
+              <span>{{ language.language }}</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+      <nav>
+        <ul class="activity-nav-list -mx-4">
+          <li
+            v-for="(menu, index) in data.menus"
+            :key="index"
+            :class="data.menuNavLiClasses"
           >
-            <span class="">{{ menu.name }}</span>
-          </a>
-        </li>
-      </ul>
-    </nav>
+            <a
+              :class="[
+                { nav__pointer: menu.active },
+                data.menuNavAnchorClasses,
+              ]"
+              :href="menu.permalink"
+            >
+              <span class="">{{ menu.name }}</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </div>
     <div class="flex grow-0 items-center">
       <div class="flex items-center">
-        <div class="search">
-          <input
-            v-model="searchValue"
-            class="search__input"
-            type="text"
-            placeholder="Search activity..."
-            @keyup.enter="searchFunction"
-          />
-          <svg-vue class="absolute left-3 top-3 text-base" icon="search" />
-          <span v-if="spinner" class="spinner" />
+        <div class="flex items-center">
+          <div class="search">
+            <input
+              v-model="searchValue"
+              class="search__input mr-3.5"
+              type="text"
+              placeholder="Search activity..."
+              @keyup.enter="searchFunction"
+            />
+            <svg-vue icon="search" />
+            <span v-if="spinner" class="spinner" />
+          </div>
         </div>
         <button
-          class="button secondary-btn mr-3.5 font-bold"
+          class="add-btn button secondary-btn mr-3.5 font-bold"
           @click="modalValue = true"
         >
           <svg-vue icon="add" />
@@ -225,8 +241,18 @@ onMounted(async () => {
 <style lang="scss" scoped>
 .activity__header {
   nav {
+    display: flex;
+
     a:hover {
       @apply text-white;
+    }
+    ul {
+      @apply flex;
+    }
+  }
+  .add-btn {
+    @media screen and (max-width: 375px) {
+      display: none;
     }
   }
 }
@@ -235,12 +261,17 @@ onMounted(async () => {
   transform: translate(-50%, -50%);
 }
 .profile__dropdown {
-  @apply invisible absolute right-10 z-20 bg-white text-left text-sm text-bluecoral opacity-0 shadow-dropdown  duration-300;
+  @apply invisible absolute right-3 z-20 bg-white text-left text-sm text-bluecoral opacity-0 shadow-dropdown duration-300 sm:right-10;
   top: 50px;
   width: 265px;
   box-shadow: 4px 4px 40px rgba(0, 50, 76, 0.2);
+
+  @media screen and (max-width: 640px) {
+    width: 220px;
+  }
+
   li {
-    @apply flex items-center space-x-3 p-4;
+    @apply flex items-center space-x-3 p-3 sm:p-4;
     a:hover {
       @apply text-bluecoral;
     }

@@ -1,11 +1,8 @@
 .hamburger {
-  @media screen and (min-width: 440px) {
-    transform: scale(1);
-  }
-  transform: scale(0.9);
+  @apply relative z-50 flex h-11 w-11 cursor-pointer items-center justify-center overflow-hidden rounded;
 
   span {
-    pointer-events: none;
+    @apply pointer-events-none absolute h-1 w-10 rounded-lg duration-300;
   }
   span:nth-child(1) {
     bottom: 18px;
@@ -31,5 +28,12 @@
     left: 2px;
     width: 20px;
     transform: translateY(15px);
+  }
+}
+.hamburger-menu {
+  display: none;
+
+  @media screen and (max-width: 1190px) {
+    display: block;
   }
 }

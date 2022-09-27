@@ -5,7 +5,7 @@
   <Modal :modal-active="props.modalValue">
     <Loader v-if="loaderVisibility" />
 
-    <h5 class="flex mb-5 text-2xl font-bold title text-bluecoral">
+    <h5 class="title mb-5 flex text-xl font-bold text-bluecoral sm:text-2xl">
       Add a title and identifier for the activity
     </h5>
     <div class="overflow-hidden">
@@ -21,7 +21,7 @@
             <p class="form-group-title">title</p>
           </div>
           <div class="form-group">
-            <div class="gap-6 form__content">
+            <div class="form__content gap-6">
               <div>
                 <div class="label-field">
                   <label class="label" for="narrative"
@@ -169,10 +169,10 @@
             </div>
           </div>
         </div>
-        <div class="flex justify-end mt-8">
+        <div class="mt-8 flex justify-end">
           <div class="inline-flex">
             <BtnComponent
-              class="px-3 mx-3 uppercase bg-white"
+              class="mx-3 bg-white px-3 uppercase"
               type=""
               text="Cancel"
               @click="closeModal"

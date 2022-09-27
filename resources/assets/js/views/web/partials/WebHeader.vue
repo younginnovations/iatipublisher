@@ -84,17 +84,11 @@
           </div>
           <div
             id="hamburger"
-            class="hamburger relative mb-4 flex h-11 w-11 cursor-pointer items-center justify-center overflow-hidden rounded xl:hidden"
+            class="hamburger mb-4 scale-90 sm:scale-100 xl:hidden"
           >
-            <span
-              class="absolute h-1 w-10 rounded-lg bg-bluecoral duration-300"
-            />
-            <span
-              class="absolute h-1 w-10 rounded-lg bg-bluecoral duration-300"
-            />
-            <span
-              class="absolute h-1 w-10 rounded-lg bg-bluecoral duration-300"
-            />
+            <span class="bg-bluecoral" />
+            <span class="bg-bluecoral" />
+            <span class="bg-bluecoral" />
           </div>
         </nav>
         <div
