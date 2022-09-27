@@ -2,7 +2,7 @@ name: Production and Staging Deployment
 
 on:
   push:
-    branches: [ main, devops]
+    branches: [ main ]
 
   workflow_dispatch:
 
