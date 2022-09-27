@@ -1,6 +1,10 @@
 <template>
   <td class="title">
-    {{ activity["data"]["title"][0]["narrative"] ?? "Not Available" }}
+    {{
+      activity["data"]["title"][0]
+        ? activity["data"]["title"][0]["narrative"]
+        : "Not Available"
+    }}
 
     <span
       v-if="activity['errors'].length > 0"

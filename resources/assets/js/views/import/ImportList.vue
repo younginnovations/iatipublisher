@@ -142,6 +142,7 @@ export default defineComponent({
           .get("/import/check_status")
           .then((res) => {
             Object.assign(activities, res.data.data);
+            console.log(activities);
             activitiesLength.value = res.data.data.length;
 
             if (res.data.status) {
