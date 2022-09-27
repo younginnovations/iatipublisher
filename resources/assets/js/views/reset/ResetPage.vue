@@ -1,8 +1,8 @@
 <template>
-  <div class="mt-14">
+  <div class="mt-7 sm:mt-14">
     <Loader v-if="loaderVisibility" />
     <div class="reset" @keyup.enter="reset">
-      <div class="mb-8 flex flex-col">
+      <div class="mb-4 flex flex-col sm:mb-8">
         <h2>Password Recovery</h2>
         <p>
           Please enter your email, we will send you a link to reset your
@@ -24,7 +24,7 @@
             error__input: emailError != '',
           }"
         />
-        <svg-vue class="reset__icon mail__icon" icon="mail" />
+        <svg-vue class="mail-icon" icon="mail" />
         <span v-if="emailError" class="error" role="alert"
           >{{ emailError }}
         </span>
@@ -94,10 +94,18 @@ export default defineComponent({
 
 <style lang="scss">
 .reset {
-  width: 583px;
-  margin: auto;
+  @media screen and (min-width: 440px) {
+    @apply p-10;
+  }
+
+  @media screen and (min-width: 640px) {
+    width: 583px;
+    margin: auto;
+
+    @apply p-24;
+  }
   box-shadow: 0px 20px 40px 20px rgba(0, 0, 0, 0.05);
-  @apply rounded-lg bg-white p-24;
+  @apply mx-3 rounded-lg bg-white p-5;
 
   &__content {
     @apply relative flex flex-col;
@@ -105,31 +113,56 @@ export default defineComponent({
     .input {
       @apply my-2 py-5;
     }
-  }
-  &__icon {
-    @apply absolute left-6;
-    top: 51px;
-  }
-  .mail__icon {
-    top: 52px;
+
+    .lock-icon {
+      @apply absolute left-6 text-lg;
+      top: 47px;
+
+      @media screen and (min-width: 640px) {
+        top: 50px;
+        font-size: 20px;
+      }
+    }
+
+    .mail-icon {
+      @apply absolute left-6;
+      top: 47px;
+
+      @media screen and (min-width: 640px) {
+        top: 51px;
+      }
+    }
   }
   h2 {
-    @apply mb-2 text-heading-3 font-bold text-n-50;
-    line-height: 60px;
+    @media screen and (min-width: 640px) {
+      @apply text-heading-3;
+      line-height: 60px;
+    }
+
+    @media screen and (min-width: 440px) {
+      @apply text-heading-4;
+      line-height: 50px;
+    }
+    @apply text-heading-5 font-bold text-n-50 sm:mb-2;
   }
   p {
-    @apply text-base text-n-40;
+    @apply text-sm text-n-40 sm:text-base;
   }
   .reset-btn {
-    @apply mt-3 w-full;
-    padding: 16px 94px;
+    @apply mt-3 w-full text-xs;
+    padding: 14px;
 
     @media screen and (min-width: 640px) {
       padding: 18px 94px;
+      font-size: 14px;
     }
   }
   .verification {
-    font-size: 190px;
+    font-size: 150px;
+
+    @media screen and (min-width: 640px) {
+      font-size: 190px;
+    }
   }
 }
 .reset__password {

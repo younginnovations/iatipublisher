@@ -28,7 +28,7 @@
           type="password"
           placeholder="Enter a new password"
         />
-        <svg-vue class="reset__icon text-lg" icon="pw-lock" />
+        <svg-vue class="lock-icon text-xl" icon="pw-lock" />
         <span v-if="errorData.password != ''" class="error" role="alert">
           {{ errorData.password }}
         </span>
@@ -51,7 +51,7 @@
           type="password"
           placeholder="Re-enter your password"
         />
-        <svg-vue class="reset__icon text-lg" icon="pw-lock" />
+        <svg-vue class="lock-icon text-xl" icon="pw-lock" />
         <span
           v-if="errorData.password_confirmation != ''"
           class="error"
