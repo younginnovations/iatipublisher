@@ -219,7 +219,6 @@ trait XmlHelper
         if (!$key) {
             return Arr::get($element, 'attributes', []);
         }
-
         if ($fieldName) {
             return $this->getSpecificAttribute($element, $fieldName, $key);
         }
@@ -238,8 +237,7 @@ trait XmlHelper
      */
     protected function getSpecificAttribute(array $element, $fieldName, $key): mixed
     {
-        $value = '';
-        dump('foreach', $element, empty(Arr::get($element, 'value', [])));
+        $data = '';
 
         if (!empty(Arr::get($element, 'value', []))) {
             foreach (Arr::get($element, 'value', []) as $value) {
@@ -249,7 +247,7 @@ trait XmlHelper
             }
         }
 
-        return $value;
+        return $data;
     }
 
     /**

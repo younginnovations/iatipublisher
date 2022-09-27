@@ -723,6 +723,10 @@ function trimInput($input): string
  */
 function dateFormat($format, $date): bool|string
 {
+    if (is_array($date)) {
+        return false;
+    }
+
     if ($date !== '') {
         if ((str_contains($date, '/'))) {
             $formattedDate = str_replace('/', '-', $date);
