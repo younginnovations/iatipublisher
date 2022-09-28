@@ -85,10 +85,6 @@ abstract class Element
      */
     public function data($popIndex = null): array|int|string
     {
-        // dump($popIndex);
-        // if($popIndex=='activityStatus' || $popIndex=='activityScope'){
-        // dump('testdd',$this);
-        // }
         if (!$this->data) {
             $this->data = [];
         }

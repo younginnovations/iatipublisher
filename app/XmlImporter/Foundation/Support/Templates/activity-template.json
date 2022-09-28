@@ -171,9 +171,11 @@
   "sector": {
     "sector_vocabulary": "",
     "vocabulary_uri": "",
-    "sector_code": "",
-    "sector_category_code": "",
-    "sector_text": "",
+    "code": "",
+    "category_code": "",
+    "sdg_goal": "",
+    "sdg_target": "",
+    "text": "",
     "percentage": "",
     "narrative": [
       {
@@ -345,10 +347,12 @@
     "sector": [
       {
         "sector_vocabulary": "",
-        "sector_code": "",
-        "sector_category_code": "",
-        "sector_text": "",
+        "code": "",
+        "category_code": "",
+        "text": "",
         "vocabulary_uri": "",
+        "sdg_goal": "",
+        "sdg_target": "",
         "narrative": [
           {
             "narrative": "",
@@ -371,6 +375,7 @@
     "recipient_region": [
       {
         "region_code": "",
+        "custom_code": "",
         "region_vocabulary": "",
         "vocabulary_uri": "",
         "narrative": [

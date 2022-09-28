@@ -1611,7 +1611,7 @@ class XmlValidator
                 'validation.code_list',
                 ['attribute' => trans('elementForm.code')]
             );
-            $messages[sprintf('%s.sector_category_code.in', $sectorBase)] = trans(
+            $messages[sprintf('%s.category_code.in', $sectorBase)] = trans(
                 'validation.code_list',
                 ['attribute' => trans('elementForm.code')]
             );
@@ -1636,7 +1636,7 @@ class XmlValidator
                     );
                 }
                 if ($sector['sector_vocabulary'] === 2) {
-                    $messages[sprintf('%s.sector_category_code.%s', $sectorBase, 'required_with')] = trans(
+                    $messages[sprintf('%s.category_code.%s', $sectorBase, 'required_with')] = trans(
                         'validation.required_with',
                         [
                             'attribute' => trans('elementForm.code'),
@@ -1644,7 +1644,7 @@ class XmlValidator
                         ]
                     );
                 }
-                if ($sector['sector_category_code'] !== '') {
+                if ($sector['category_code'] !== '') {
                     $messages[sprintf('%s.sector_vocabulary.%s', $sectorBase, 'required_with')] = trans(
                         'validation.required_with',
                         [
@@ -1655,7 +1655,7 @@ class XmlValidator
                 }
             } else {
                 if ($sector['sector_vocabulary'] !== '') {
-                    $messages[sprintf('%s.sector_text.%s', $sectorBase, 'required_with')] = trans(
+                    $messages[sprintf('%s.text.%s', $sectorBase, 'required_with')] = trans(
                         'validation.required_with',
                         [
                             'attribute' => trans('elementForm.code'),
@@ -1664,7 +1664,7 @@ class XmlValidator
                     );
                 }
 
-                if ($sector['sector_text'] !== '') {
+                if ($sector['text'] !== '') {
                     $messages[sprintf('%s.sector_vocabulary.%s', $sectorBase, 'required_with')] = trans(
                         'validation.required_with',
                         [
@@ -3183,7 +3183,7 @@ class XmlValidator
                     ['attribute' => trans('elementForm.sector_vocabulary'), 'values' => trans('sector_code')]
                 );
             } elseif ($sector['sector_vocabulary'] === 2) {
-                $messages[sprintf('%s.sector_category_code.%s', $sectorBase, 'required_with')] = trans(
+                $messages[sprintf('%s.category_code.%s', $sectorBase, 'required_with')] = trans(
                     'validation.required_with',
                     ['attribute' => trans('elementForm.code'), 'values' => trans('sector_vocabulary')]
                 );
@@ -3216,7 +3216,7 @@ class XmlValidator
                     );
                 }
             } elseif ($sector['sector_vocabulary'] !== '') {
-                $messages[sprintf('%s.sector_text.%s', $sectorBase, 'required_with')] = trans(
+                $messages[sprintf('%s.text.%s', $sectorBase, 'required_with')] = trans(
                     'validation.required_with',
                     ['attribute' => trans('elementForm.code'), 'values' => trans('sector_vocabulary')]
                 );

@@ -86,11 +86,11 @@ class ActivityStatus extends Element
                 }
             }
 
-            $this->data[$this->csvHeader()] = $value;
-
             (count(array_filter($values)) === 1) ? $this->data[$this->csvHeader()] = $value : $this->data[$this->csvHeader()][] = $value;
         } else {
-            $this->data[$this->csvHeader()] = [null];
+            if ((count(array_filter($values)) === 1)) {
+                $this->data[$this->csvHeader()] = [];
+            }
         }
     }
 

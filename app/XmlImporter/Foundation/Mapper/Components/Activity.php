@@ -314,7 +314,7 @@ class Activity
             return $code;
         }
 
-        return null;
+        return $code;
     }
 
     /**
@@ -374,11 +374,13 @@ class Activity
     public function sector($element, $template): array
     {
         $this->sector[$this->index] = $template['sector'];
-        $vocabulary = $this->attributes($element, 'vocabulary');
+        $vocabulary = (int) $this->attributes($element, 'vocabulary');
         $this->sector[$this->index]['sector_vocabulary'] = $vocabulary;
         $this->sector[$this->index]['vocabulary_uri'] = $this->attributes($element, 'vocabulary-uri');
         $this->sector[$this->index]['code'] = ($vocabulary === 1) ? $this->attributes($element, 'code') : '';
         $this->sector[$this->index]['category_code'] = ($vocabulary === 2) ? $this->attributes($element, 'code') : '';
+        $this->sector[$this->index]['sdg_goal'] = ($vocabulary === 7) ? $this->attributes($element, 'code') : '';
+        $this->sector[$this->index]['sdg_target'] = ($vocabulary === 8) ? $this->attributes($element, 'code') : '';
         $this->sector[$this->index]['text'] = ($vocabulary !== 1 && $vocabulary !== 2) ? $this->attributes($element, 'code') : '';
         $this->sector[$this->index]['percentage'] = $this->attributes($element, 'percentage');
         $this->sector[$this->index]['narrative'] = $this->narrative($element);
@@ -448,6 +450,7 @@ class Activity
     {
         $this->recipientRegion[$this->index] = $template['recipient_region'];
         $this->recipientRegion[$this->index]['region_code'] = $this->attributes($element, 'code');
+        $this->recipientRegion[$this->index]['custom_code'] = $this->attributes($element, 'code');
         $this->recipientRegion[$this->index]['region_vocabulary'] = $this->attributes($element, 'vocabulary');
         $this->recipientRegion[$this->index]['vocabulary_uri'] = $this->attributes($element, 'vocabulary-uri');
         $this->recipientRegion[$this->index]['percentage'] = $this->attributes($element, 'percentage');
@@ -779,22 +782,23 @@ class Activity
     {
         $this->tagVariable[$this->index] = $template['tag'];
         $tagVocabulary = $this->attributes($element, 'vocabulary');
+        $tagVocabulary = is_int($tagVocabulary) ? (int) $tagVocabulary : $tagVocabulary;
 
         $this->tagVariable[$this->index]['tag_vocabulary'] = $this->attributes($element, 'vocabulary');
         $this->tagVariable[$this->index]['vocabulary_uri'] = $this->attributes($element, 'vocabulary-uri');
         $this->tagVariable[$this->index]['narrative'] = $this->narrative($element);
 
         switch ($tagVocabulary) {
-            case '1':
-                $this->tagVariable[$this->index]['tag_code'] = $this->attributes($element, 'code');
+            case 1:
+                $this->tagVariable[$this->index]['tag_text'] = $this->attributes($element, 'code');
                 break;
-            case '2':
+            case 2:
                 $this->tagVariable[$this->index]['goals_tag_code'] = $this->attributes($element, 'code');
                 break;
-            case '3':
+            case 3:
                 $this->tagVariable[$this->index]['targets_tag_code'] = $this->attributes($element, 'code');
                 break;
-            case '99':
+            case 99:
                 $this->tagVariable[$this->index]['tag_text'] = $this->attributes($element, 'code');
                 break;
         }
