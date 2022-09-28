@@ -1,4 +1,4 @@
-ARG PHP_EXTS="bcmath pdo_mysql pdo_pgsql pcntl"
+ARG PHP_EXTS="bcmath pdo_mysql pdo_pgsql pcntl gd"
 ARG PHP_PECL_EXTS="redis"
 ARG MIX_ENCRYPTION_KEY
 
