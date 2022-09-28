@@ -86,8 +86,8 @@ class BaseForm extends Form
                         'data'            => $field,
                         'label'           => false,
                         'element_criteria'=> $field['element_criteria'] ?? '',
-                        'hover_text'=> Arr::get($field, 'hover_text', ''),
-                        'help_text'=> Arr::get($field, 'help_text', ''),
+                        'hover_text'=> Arr::get($field, 'hover_text', '') ?: Arr::get($element, 'hover_text', ''),
+                        'help_text'=> Arr::get($field, 'help_text', '') ?: Arr::get($element, 'help_text', ''),
                         'wrapper'         => [
                             'class' => ((Arr::get($element, 'attributes', null) && isset($field['name']) && strtolower(
                                 $field['name']
@@ -164,6 +164,7 @@ class BaseForm extends Form
         if ($sub_elements) {
             foreach ($sub_elements as $sub_element) {
                 $this->buildCollection($sub_element);
+
                 if (Arr::get($element, 'add_more', false) && Arr::get($sub_element, 'add_more', false)) {
                     $this->add('delete_' . $sub_element['name'], 'button', [
                         'attr' => [
@@ -210,7 +211,6 @@ class BaseForm extends Form
             'help_block'  => [
                 'text' => $field['help_text'] ?? '',
                 'title' => $field['label'],
-
             ],
             'hover_block' => [
                 'title' => $field['label'],

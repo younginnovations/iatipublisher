@@ -30,7 +30,7 @@
                     </div>
                 </div>' : ''; ?>
             <?php if (isset($options['options']['element_criteria']) && $options['options']['element_criteria'] === 'mandatory') : ?>
-                <?= htmlspecialchars_decode(Form::customLabel($name,  '<svg-vue icon="star" class="mr-2"></svg-vue>' . $options['label'] . $help_text, $options['label_attr'])) ?>
+                <?= htmlspecialchars_decode(Form::customLabel($name,  '<svg-vue icon="star" class="mr-2"></svg-vue>' . $options['label'] . $help_text . $hover_text, $options['label_attr'])) ?>
             <?php elseif (isset($options['options']['element_criteria']) && $options['options']['element_criteria'] === 'recommended') : ?>
                 <?= htmlspecialchars_decode(Form::customLabel($name, '<svg-vue icon="moon" class="mr-2"></svg-vue>' . $options['label'] . $help_text . $hover_text, $options['label_attr'])) ?>
             <?php else : ?>
