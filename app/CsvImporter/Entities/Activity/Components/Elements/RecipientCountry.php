@@ -121,8 +121,18 @@ class RecipientCountry extends Element
         if ($key === $this->_csvHeaders[0] && (!is_null($value))) {
             $this->countries[] = $value;
             $this->countries = array_unique($this->countries);
+            $validCountry = $this->loadCodeList('Country');
 
-            $this->data['recipient_country'][$index]['country_code'] = strtoupper($value);
+            if (!is_int($value)) {
+                foreach ($validCountry as $code => $name) {
+                    if (strcasecmp(trim($value), $name) === 0) {
+                        $value = is_int($code) ? (int) $code : $code;
+                        break;
+                    }
+                }
+            }
+
+            $this->data['recipient_country'][$index]['country_code'] = $value;
         }
     }
 

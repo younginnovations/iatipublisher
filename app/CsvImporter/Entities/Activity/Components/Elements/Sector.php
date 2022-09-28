@@ -21,7 +21,7 @@ class Sector extends Element
     /**
      * CSV Header of Description with their code.
      */
-    private array $_csvHeaders = ['sector_vocabulary', 'sector_code', 'sector_percentage', 'sector_vocabulary_uri', 'sector_narrative'];
+    private array $_csvHeaders = ['sector_vocabulary', 'code', 'sector_percentage', 'sector_vocabulary_uri', 'sector_narrative'];
 
     /**
      * Index under which the data is stored within the object.
@@ -51,11 +51,11 @@ class Sector extends Element
         [
             'sector_vocabulary'    => '',
             'vocabulary_uri'       => '',
-            'sector_code'          => '',
-            'sector_category_code' => '',
-            'sector_sdg_goal'      => '',
-            'sector_sdg_target'    => '',
-            'sector_text'          => '',
+            'code'          => '',
+            'category_code' => '',
+            'sdg_goal'      => '',
+            'sdg_target'    => '',
+            'text'          => '',
             'percentage'           => '',
             'narrative'            => ['narrative' => '', 'language' => ''],
         ],
@@ -129,6 +129,18 @@ class Sector extends Element
         if ($key === $this->_csvHeaders[0]) {
             $value = (!$value) ? '' : $value;
             $this->vocabularies[] = $value;
+
+            $validSectorVocab = $this->loadCodeList('SectorVocabulary');
+
+            if (!is_int($value)) {
+                foreach ($validSectorVocab as $code => $name) {
+                    if (strcasecmp(trim($value), $name) === 0) {
+                        $value = is_int($code) ? (int) $code : $code;
+                        break;
+                    }
+                }
+            }
+
             $this->data['sector'][$index]['sector_vocabulary'] = $value;
         }
     }
@@ -150,9 +162,20 @@ class Sector extends Element
             if ($sectorVocabulary === 1) {
                 ($value) ?: $value = '';
                 $this->codes[] = $value;
-                $this->data['sector'][$index]['sector_code'] = $value;
+                $validSectorCode = $this->loadCodeList('SectorCode');
+
+                if (!is_int($value)) {
+                    foreach ($validSectorCode as $code => $name) {
+                        if (strcasecmp(trim($value), $name) === 0) {
+                            $value = is_int($code) ? (int) $code : $code;
+                            break;
+                        }
+                    }
+                }
+
+                $this->data['sector'][$index]['code'] = $value;
             } else {
-                $this->data['sector'][$index]['sector_code'] = '';
+                $this->data['sector'][$index]['code'] = '';
             }
         }
     }
@@ -190,9 +213,20 @@ class Sector extends Element
             if ($sectorVocabulary === 2) {
                 ($value) ?: $value = '';
                 $this->codes[] = $value;
-                $this->data['sector'][$index]['sector_category_code'] = $value;
+                $validCategoryCode = $this->loadCodeList('SectorCategory');
+
+                if (!is_int($value)) {
+                    foreach ($validCategoryCode as $code => $name) {
+                        if (strcasecmp(trim($value), $name) === 0) {
+                            $value = is_int($code) ? (int) $code : $code;
+                            break;
+                        }
+                    }
+                }
+
+                $this->data['sector'][$index]['category_code'] = $value;
             } else {
-                $this->data['sector'][$index]['sector_category_code'] = '';
+                $this->data['sector'][$index]['category_code'] = '';
             }
         }
     }
@@ -214,9 +248,20 @@ class Sector extends Element
             if ($sectorVocabulary === 7) {
                 ($value) ?: $value = '';
                 $this->codes[] = $value;
-                $this->data['sector'][$index]['sector_sdg_goal'] = $value;
+                $validSdgGoal = $this->loadCodeList('UNSDG-Goals');
+
+                if (!is_int($value)) {
+                    foreach ($validSdgGoal as $code => $name) {
+                        if (strcasecmp(trim($value), $name) === 0) {
+                            $value = is_int($code) ? (int) $code : $code;
+                            break;
+                        }
+                    }
+                }
+
+                $this->data['sector'][$index]['sdg_goal'] = $value;
             } else {
-                $this->data['sector'][$index]['sector_sdg_goal'] = '';
+                $this->data['sector'][$index]['sdg_goal'] = '';
             }
         }
     }
@@ -238,9 +283,19 @@ class Sector extends Element
             if ($sectorVocabulary === 8) {
                 ($value) ?: $value = '';
                 $this->codes[] = $value;
-                $this->data['sector'][$index]['sector_sdg_target'] = $value;
+                $validSdgTarget = $this->loadCodeList('UNSDG-Targets');
+
+                if (!is_int($value)) {
+                    foreach ($validSdgTarget as $code => $name) {
+                        if (strcasecmp(trim($value), $name) === 0) {
+                            $value = is_int($code) ? (int) $code : $code;
+                            break;
+                        }
+                    }
+                }
+                $this->data['sector'][$index]['sdg_target'] = $value;
             } else {
-                $this->data['sector'][$index]['sector_sdg_target'] = '';
+                $this->data['sector'][$index]['sdg_target'] = '';
             }
         }
     }
@@ -262,9 +317,9 @@ class Sector extends Element
             if ($sectorVocabulary !== 1 && $sectorVocabulary !== 2 && $sectorVocabulary !== 7 && $sectorVocabulary !== 8) {
                 ($value) ?: $value = '';
                 $this->codes[] = $value;
-                $this->data['sector'][$index]['sector_text'] = $value;
+                $this->data['sector'][$index]['text'] = $value;
             } else {
-                $this->data['sector'][$index]['sector_text'] = '';
+                $this->data['sector'][$index]['text'] = '';
             }
         }
     }
@@ -322,11 +377,11 @@ class Sector extends Element
         if (
             $this->data['sector'][$index]['sector_vocabulary'] === ''
             && $this->data['sector'][$index]['vocabulary_uri'] === ''
-            && $this->data['sector'][$index]['sector_code'] === ''
-            && $this->data['sector'][$index]['sector_category_code'] === ''
-            && $this->data['sector'][$index]['sector_sdg_goal'] === ''
-            && $this->data['sector'][$index]['sector_sdg_target'] === ''
-            && $this->data['sector'][$index]['sector_text'] === ''
+            && $this->data['sector'][$index]['code'] === ''
+            && $this->data['sector'][$index]['category_code'] === ''
+            && $this->data['sector'][$index]['sdg_goal'] === ''
+            && $this->data['sector'][$index]['sdg_target'] === ''
+            && $this->data['sector'][$index]['text'] === ''
             && $this->data['sector'][$index]['percentage'] === ''
         ) {
             unset($this->data['sector'][$index]);
@@ -385,7 +440,7 @@ class Sector extends Element
                             $rules[sprintf('%s.sector_code', $sectorForm)] = sprintf('nullable|in:%s', $sectorCodeList);
                             break;
                         case '2':
-                            $rules[sprintf('%s.sector_category_code', $sectorForm)] = sprintf('nullable|in:%s', $sectorCategoryCodeList);
+                            $rules[sprintf('%s.category_code', $sectorForm)] = sprintf('nullable|in:%s', $sectorCategoryCodeList);
                             break;
                         case '7':
                             $rules[sprintf('%s.sector_sdg_goal', $sectorForm)] = sprintf('nullable|in:%s', $sectorSdgGoalsCodeList);
@@ -440,8 +495,8 @@ class Sector extends Element
                             $messages[sprintf('%s.sector_code.%s', $sectorForm, 'in')] = trans('validation.invalid_in_transaction', ['attribute' => trans('elementForm.sector_code')]);
                             break;
                         case '2':
-                            $messages[sprintf('%s.sector_category_code.%s', $sectorForm, 'required')] = trans('validation.required', ['attribute' => trans('elementForm.sector_code')]);
-                            $messages[sprintf('%s.sector_category_code.%s', $sectorForm, 'in')] = trans('validation.invalid_in_transaction', ['attribute' => trans('elementForm.sector_code')]);
+                            $messages[sprintf('%s.category_code.%s', $sectorForm, 'required')] = trans('validation.required', ['attribute' => trans('elementForm.sector_code')]);
+                            $messages[sprintf('%s.category_code.%s', $sectorForm, 'in')] = trans('validation.invalid_in_transaction', ['attribute' => trans('elementForm.sector_code')]);
 
                             break;
                         case '7':

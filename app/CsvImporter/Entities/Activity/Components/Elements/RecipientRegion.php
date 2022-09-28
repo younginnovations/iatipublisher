@@ -128,6 +128,16 @@ class RecipientRegion extends Element
         if ($key === $this->_csvHeaders[0] && (!is_null($value))) {
             $this->regions[] = $value;
             $this->regions = array_unique($this->regions);
+            $validRegionCode = $this->loadCodeList('Region');
+
+            if (!is_int($value)) {
+                foreach ($validRegionCode as $code => $name) {
+                    if (strcasecmp(trim($value), $name) === 0) {
+                        $value = is_int($code) ? (int) $code : $code;
+                        break;
+                    }
+                }
+            }
 
             $this->data['recipient_region'][$index]['region_code'] = $value;
         }
@@ -192,12 +202,11 @@ class RecipientRegion extends Element
     protected function setRegionVocabulary($index): void
     {
         $regionCode = $this->data['recipient_region'][$index]['region_code'];
-        $validRegions = explode(',', $this->validRecipientRegion());
+        $validRegions = array_flip(explode(',', $this->validRecipientRegion()));
+        $this->data['recipient_region'][$index]['region_vocabulary'] = '';
 
-        if (in_array($regionCode, $validRegions, true)) {
+        if (isset($validRegions[$regionCode])) {
             $this->data['recipient_region'][$index]['region_vocabulary'] = 1;
-        } else {
-            $this->data['recipient_region'][$index]['region_vocabulary'] = '';
         }
     }
 

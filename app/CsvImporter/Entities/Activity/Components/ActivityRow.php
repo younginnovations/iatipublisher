@@ -419,9 +419,9 @@ class ActivityRow extends Row
     /**
      * Get the data in the current ActivityRow.
      *
-     * @return array|string
+     * @return array|string|int
      */
-    protected function data(): array|string
+    protected function data(): array|string|int
     {
         $this->data = [];
 

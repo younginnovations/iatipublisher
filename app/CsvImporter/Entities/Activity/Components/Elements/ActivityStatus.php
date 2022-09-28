@@ -86,11 +86,7 @@ class ActivityStatus extends Element
                 }
             }
 
-            // dump('akdfh', $values, count(array_filter($values)));
-            // $value =1;
             $this->data[$this->csvHeader()] = $value;
-            // dump('data');
-            // dump('data',$this->data);
 
             (count(array_filter($values)) === 1) ? $this->data[$this->csvHeader()] = $value : $this->data[$this->csvHeader()][] = $value;
         } else {
