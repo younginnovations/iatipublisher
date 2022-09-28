@@ -71,7 +71,7 @@ class SubElementForm extends Form
                 'placeholder' => Arr::get($field, 'placeholder', ''),
             ],
             'wrapper' => [
-                'class' => 'form-field basis-6/12 max-w-half',
+                'class' => 'form-field xl:basis-6/12',
             ],
         ];
 

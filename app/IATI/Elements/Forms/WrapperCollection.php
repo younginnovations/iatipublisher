@@ -53,7 +53,7 @@ class WrapperCollection extends Form
                             'hover_text' => Arr::get($field, 'hover_text', ''),
                             'help_text' => Arr::get($field, 'help_text', ''),
                             'wrapper'         => [
-                                'class' => 'form-field-group form-child-body flex flex-wrap rounded-br-lg border-y border-r border-spring-50 p-6',
+                                'class' => 'form-field-group form-child-body xl:flex flex-wrap rounded-br-lg border-y border-r border-spring-50 p-6',
                             ],
                             'dynamic_wrapper' => [
                                 'class' => (isset($field['add_more']) && $field['add_more']) ?
@@ -110,7 +110,7 @@ class WrapperCollection extends Form
                 'placeholder' => Arr::get($field, 'placeholder', ''),
             ],
             'wrapper'     => [
-                'class' => 'form-field basis-6/12 max-w-half sub-attribute',
+                'class' => 'form-field w-full xl:basis-6/12 sub-attribute',
             ],
         ];
 

@@ -7,7 +7,7 @@
             <div class="pt-4 pb-6 max-w-[1000px] mx-auto">
 
                 {{-- page title --}}
-                <div class="page-title mb-6">
+                <div class="page-title mb-4 xl:mb-6">
                     <div class="flex items-end gap-4">
                         <div class="title grow-0">
                             <div class="mb-4 text-caption-c1 text-n-40">

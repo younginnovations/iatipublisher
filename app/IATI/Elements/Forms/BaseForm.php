@@ -91,7 +91,7 @@ class BaseForm extends Form
                         'wrapper'         => [
                             'class' => ((Arr::get($element, 'attributes', null) && isset($field['name']) && strtolower(
                                 $field['name']
-                            ) === 'narrative') ? 'form-field-group form-child-body flex flex-wrap rounded-tl-lg rounded-br-lg border-y border-r border-spring-50 p-6' : 'form-field-group form-child-body flex flex-wrap rounded-br-lg border-y border-r border-spring-50 p-6'),
+                            ) === 'narrative') ? 'form-field-group form-child-body xl:flex flex-wrap rounded-tl-lg rounded-br-lg border-y border-r border-spring-50 p-6' : 'form-field-group form-child-body xl:flex flex-wrap rounded-br-lg border-y border-r border-spring-50 p-6'),
                         ],
                         'dynamic_wrapper' => [
                             'class' => ((isset($field['add_more']) && $field['add_more']) || Arr::get(
@@ -234,7 +234,7 @@ class BaseForm extends Form
 
             ],
             'wrapper'     => [
-                'class' => 'form-field basis-6/12 max-w-half attribute',
+                'class' => 'form-field basis-auto w-full xl:basis-6/12  attribute',
             ],
         ];
 

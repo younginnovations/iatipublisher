@@ -1,10 +1,10 @@
 <template>
-  <div class="mb-6 page-title">
+  <div class="page-title mb-6">
     <div class="pb-4 text-caption-c1 text-n-40">
       <Breadcrumb :data="breadcrumbData" />
     </div>
     <div class="flex items-end gap-4">
-      <div class="title max-w-[50%] basis-6/12">
+      <div class="title max-w-[50%] xl:basis-6/12">
         <div class="inline-flex items-center">
           <div class="mr-3">
             <a :href="backLink">
@@ -12,8 +12,8 @@
             </a>
           </div>
           <div class="">
-            <h4 class="relative mr-4 text-2xl font-bold ellipsis__title">
-              <span class="overflow-hidden ellipsis__title">
+            <h4 class="ellipsis__title relative mr-4 text-2xl font-bold">
+              <span class="ellipsis__title overflow-hidden">
                 {{ title }}
               </span>
               <span class="ellipsis__title--hover">{{ title }}</span>
@@ -21,7 +21,7 @@
           </div>
         </div>
       </div>
-      <div class="flex justify-end items-center actions grow">
+      <div class="actions flex grow items-center justify-end">
         <slot />
       </div>
     </div>
@@ -29,13 +29,13 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+import { defineComponent } from 'vue';
 
 // components
-import Breadcrumb from "Components/BreadCrumb.vue";
+import Breadcrumb from 'Components/BreadCrumb.vue';
 
 export default defineComponent({
-  name: "PageTitle",
+  name: 'PageTitle',
   components: { Breadcrumb },
   props: {
     breadcrumbData: {

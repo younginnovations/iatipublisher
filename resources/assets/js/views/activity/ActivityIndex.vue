@@ -1,7 +1,7 @@
 <template>
   <div
     id="activity-listing-page"
-    class="page-height bg-paper px-10 pt-4 pb-[71px]"
+    class="page-height bg-paper px-5 pt-4 pb-[71px] xl:px-10"
   >
     <div id="activity">
       <Loader v-if="isLoading"></Loader>
