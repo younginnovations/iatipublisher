@@ -427,7 +427,7 @@ class Activity
     {
         $this->budget[$this->index] = $template['budget'];
         $this->budget[$this->index]['budget_type'] = $this->attributes($element, 'type');
-        $this->budget[$this->index]['status'] = $this->attributes($element, 'status');
+        $this->budget[$this->index]['budget_status'] = $this->attributes($element, 'status');
         $this->budget[$this->index]['period_start'][0]['date'] = dateFormat('Y-m-d', $this->attributes($element, 'iso-date', 'periodStart'));
         $this->budget[$this->index]['period_end'][0]['date'] = dateFormat('Y-m-d', $this->attributes($element, 'iso-date', 'periodEnd'));
         $this->budget[$this->index]['value'][0]['amount'] = $this->value(Arr::get($element, 'value', []), 'value');
@@ -550,11 +550,10 @@ class Activity
     public function countryBudgetItems($element, $template): array
     {
         $this->countryBudgetItems[$this->index] = $template['country_budget_items'];
-        $this->countryBudgetItems[$this->index]['vocabulary'] = $vocabulary = $this->attributes($element, 'vocabulary');
+        $this->countryBudgetItems[$this->index]['country_budget_vocabulary'] = $vocabulary = $this->attributes($element, 'vocabulary');
 
         foreach (Arr::get($element, 'value', []) as $index => $budgetItem) {
             $this->countryBudgetItems[$this->index]['budget_item'][$index]['code'] = ($vocabulary === 1) ? $this->attributes($budgetItem, 'code') : '';
-            $this->countryBudgetItems[$this->index]['budget_item'][$index]['code_text'] = ($vocabulary !== 1) ? $this->attributes($budgetItem, 'code') : '';
             $this->countryBudgetItems[$this->index]['budget_item'][$index]['percentage'] = $this->attributes($budgetItem, 'percentage');
             $this->countryBudgetItems[$this->index]['budget_item'][$index]['description'][0]['narrative'] = (($desc = $this->value(
                 Arr::get($budgetItem, 'value', []),

@@ -468,7 +468,7 @@ class Validation extends Factory
         $rules = [];
 
         foreach ($formFields as $periodEndKey => $periodEndVal) {
-            $rules[$formBase . '.period_end.' . $periodEndKey . '.date'][] = 'required';
+            $rules[$formBase . '.period_end.' . $periodEndKey . '.date'][] = 'nullable';
             $rules[$formBase . '.period_end.' . $periodEndKey . '.date'][] = 'date';
             $rules[$formBase . '.period_end.' . $periodEndKey . '.date'][] = sprintf(
                 'after:%s',
