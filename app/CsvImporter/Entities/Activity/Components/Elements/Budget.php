@@ -93,6 +93,17 @@ class Budget extends Element
         }
 
         if ($key === $this->_csvHeaders[0]) {
+            $validBudgetType = $this->loadCodeList('BudgetType');
+
+            if (!is_int($value)) {
+                foreach ($validBudgetType as $code => $name) {
+                    if (strcasecmp(trim($value), $name) === 0) {
+                        $value = is_int($code) ? (int) $code : $code;
+                        break;
+                    }
+                }
+            }
+
             $this->data['budget'][$index]['budget_type'] = $value;
         }
     }
@@ -108,11 +119,22 @@ class Budget extends Element
      */
     protected function setBudgetStatus($key, $value, $index): void
     {
-        if (!isset($this->data['budget'][$index]['status'])) {
-            $this->data['budget'][$index]['status'] = '';
+        if (!isset($this->data['budget'][$index]['budget_status'])) {
+            $this->data['budget'][$index]['budget_status'] = '';
         }
         if ($key === $this->_csvHeaders[1]) {
-            $this->data['budget'][$index]['status'] = $value;
+            $validBudgetStatus = $this->loadCodeList('BudgetStatus');
+
+            if (!is_int($value)) {
+                foreach ($validBudgetStatus as $code => $name) {
+                    if (strcasecmp(trim($value), $name) === 0) {
+                        $value = is_int($code) ? (int) $code : $code;
+                        break;
+                    }
+                }
+            }
+
+            $this->data['budget'][$index]['budget_status'] = $value;
         }
     }
 
@@ -165,14 +187,14 @@ class Budget extends Element
      */
     protected function setBudgetValue($key, $value, $index): void
     {
-        if (!isset($this->data['budget'][$index]['value'])) {
-            $this->data['budget'][$index]['value'] = '';
+        if (!isset($this->data['budget'][$index]['budget_value'])) {
+            $this->data['budget'][$index]['budget_value'][] = '';
         }
         if ($key === $this->_csvHeaders[4]) {
-            $this->data['budget'][$index]['value'][0]['amount'] = $value;
+            $this->data['budget'][$index]['budget_value'][0]['amount'] = $value;
         }
         if ($key === $this->_csvHeaders[5]) {
-            $this->data['budget'][$index]['value'][0]['value_date'] = dateFormat('Y-m-d', $value);
+            $this->data['budget'][$index]['budget_value'][0]['value_date'] = dateFormat('Y-m-d', $value);
         }
     }
 
@@ -187,15 +209,26 @@ class Budget extends Element
      */
     protected function setBudgetCurrency($key, $value, $index): void
     {
-        if (!isset($this->data['budget'][$index]['value'][0]['currency'])) {
-            $this->data['budget'][$index]['value'] = [
+        if (!isset($this->data['budget'][$index]['budget_value'][0]['currency'])) {
+            $this->data['budget'][$index]['budget_value'] = [
                 [
                     'currency' => '',
                 ],
             ];
         }
         if ($key === $this->_csvHeaders[6]) {
-            $this->data['budget'][$index]['value'][0]['currency'] = is_int($value) ? $value : strtoupper($value);
+            $validCurrency = $this->loadCodeList('Currency');
+
+            if (!is_int($value)) {
+                foreach ($validCurrency as $code => $name) {
+                    if (strcasecmp(trim($value), $name) === 0) {
+                        $value = is_int($code) ? (int) $code : $code;
+                        break;
+                    }
+                }
+            }
+
+            $this->data['budget'][$index]['budget_value'][0]['currency'] = $value;
         }
     }
 
@@ -242,48 +275,48 @@ class Budget extends Element
 
         foreach (Arr::get($this->data(), 'budget', []) as $key => $value) {
             $rules['budget.' . $key . '.budget_type'] = sprintf('in:%s', $this->budgetCodeListWithValue('BudgetType'));
-            $rules['budget.' . $key . '.status'] = sprintf(
+            $rules['budget.' . $key . '.budget_status'] = sprintf(
                 'required_with:%s,%s,%s,%s,%s|in:%s',
                 'budget.' . $key . '.budget_type',
                 'budget.' . $key . '.period_start.0.date',
                 'budget.' . $key . '.period_end.0.date',
-                'budget.' . $key . '.value.0.amount',
-                'budget.' . $key . '.value.0.value_date',
+                'budget.' . $key . '.budget_value.0.amount',
+                'budget.' . $key . '.budget_value.0.value_date',
                 $this->budgetCodeListWithValue('BudgetStatus')
             );
             $rules['budget.' . $key . '.period_start.0.date'] = sprintf(
                 'required_with:%s,%s,%s,%s,%s|date_format:Y-m-d',
                 'budget.' . $key . '.budget_type',
-                'budget.' . $key . '.status',
+                'budget.' . $key . '.budget_status',
                 'budget.' . $key . '.period_end.0.date',
-                'budget.' . $key . '.value.0.amount',
-                'budget.' . $key . '.value.0.value_date'
+                'budget.' . $key . '.budget_value.0.amount',
+                'budget.' . $key . '.budget_value.0.value_date'
             );
             $rules['budget.' . $key . '.period_end.0.date'] = sprintf(
                 'required_with:%s,%s,%s,%s,%s|date_format:Y-m-d',
                 'budget.' . $key . '.budget_type',
-                'budget.' . $key . '.status',
+                'budget.' . $key . '.budget_status',
                 'budget.' . $key . '.period_start.0.date',
-                'budget.' . $key . '.value.0.amount',
-                'budget.' . $key . '.value.0.value_date'
+                'budget.' . $key . '.budget_value.0.amount',
+                'budget.' . $key . '.budget_value.0.value_date'
             );
-            $rules['budget.' . $key . '.value.0.amount'] = sprintf(
+            $rules['budget.' . $key . '.budget_value.0.amount'] = sprintf(
                 'required_with:%s,%s,%s,%s,%s|numeric|min:0',
                 'budget.' . $key . '.budget_type',
-                'budget.' . $key . '.status',
+                'budget.' . $key . '.budget_status',
                 'budget.' . $key . '.period_start.0.date',
                 'budget.' . $key . '.period_end.0.date',
-                'budget.' . $key . '.value.0.value_date'
+                'budget.' . $key . '.budget_value.0.value_date'
             );
-            $rules['budget.' . $key . '.value.0.value_date'] = sprintf(
+            $rules['budget.' . $key . '.budget_value.0.value_date'] = sprintf(
                 'required_with:%s,%s,%s, %s,%s|date_format:Y-m-d',
                 'budget.' . $key . '.budget_type',
-                'budget.' . $key . '.status',
+                'budget.' . $key . '.budget_status',
                 'budget.' . $key . '.period_start.0.date',
                 'budget.' . $key . '.period_end.0.date',
-                'budget.' . $key . '.value.0.amount'
+                'budget.' . $key . '.budget_value.0.amount'
             );
-            $rules['budget.' . $key . '.value.0.currency'] = sprintf('in:%s', $this->currencyCodeList());
+            $rules['budget.' . $key . '.budget_value.0.currency'] = sprintf('in:%s', $this->currencyCodeList());
         }
 
         return $rules;
@@ -302,18 +335,18 @@ class Budget extends Element
 
         foreach (Arr::get($this->data(), 'budget', []) as $key => $value) {
             $messages['budget.' . $key . '.budget_type.in'] = trans('validation.code_list', ['attribute' => trans('budget element budget_type')]);
-            $messages['budget.' . $key . '.status.required_with'] = trans('validation.required', ['attribute' => trans('budget element budget_status')]);
-            $messages['budget.' . $key . '.status.in'] = trans('validation.code_list', ['attribute' => trans('element.budget_status')]);
+            $messages['budget.' . $key . '.budget_status.required_with'] = trans('validation.required', ['attribute' => trans('budget element budget_status')]);
+            $messages['budget.' . $key . '.budget_status.in'] = trans('validation.code_list', ['attribute' => trans('element.budget_status')]);
             $messages['budget.' . $key . '.period_start.0.date.date_format'] = trans('validation.csv_date', ['attribute' => trans('budget element budget_period_start_date')]);
             $messages['budget.' . $key . '.period_start.0.date.required_with'] = trans('validation.required', ['attribute' => trans('budget element budget_period_start_date')]);
             $messages['budget.' . $key . '.period_end.0.date.date_format'] = trans('validation.budget_period_end_date', ['attribute' => trans('budget element budget_period_end_date')]);
             $messages['budget.' . $key . '.period_end.0.date.required_with'] = trans('validation.required', ['attribute' => trans('budget element budget_period_end_date')]);
-            $messages['budget.' . $key . '.value.0.amount.required_with'] = trans('validation.required', ['attribute' => trans('budget element budget_value')]);
-            $messages['budget.' . $key . '.value.0.amount.numeric'] = trans('validation.numeric', ['attribute' => trans('budget element budget_value')]);
-            $messages['budget.' . $key . '.value.0.amount.min'] = trans('validation.negative', ['attribute' => trans('budget element budget_value')]);
-            $messages['budget.' . $key . '.value.0.value_date.required_with'] = trans('validation.required', ['attribute' => trans('budget element budget_value_date')]);
-            $messages['budget.' . $key . '.value.0.value_date.date_format'] = trans('validation.csv_date', ['attribute' => trans('budget element budget_value_date')]);
-            $messages['budget.' . $key . '.value.0.currency.in'] = trans('validation.code_list', ['attribute' => trans('budget element budget_currency_code')]);
+            $messages['budget.' . $key . '.budget_value.0.amount.required_with'] = trans('validation.required', ['attribute' => trans('budget element budget_value')]);
+            $messages['budget.' . $key . '.budget_value.0.amount.numeric'] = trans('validation.numeric', ['attribute' => trans('budget element budget_value')]);
+            $messages['budget.' . $key . '.budget_value.0.amount.min'] = trans('validation.negative', ['attribute' => trans('budget element budget_value')]);
+            $messages['budget.' . $key . '.budget_value.0.value_date.required_with'] = trans('validation.required', ['attribute' => trans('budget element budget_value_date')]);
+            $messages['budget.' . $key . '.budget_value.0.value_date.date_format'] = trans('validation.csv_date', ['attribute' => trans('budget element budget_value_date')]);
+            $messages['budget.' . $key . '.budget_value.0.currency.in'] = trans('validation.code_list', ['attribute' => trans('budget element budget_currency_code')]);
         }
 
         return $messages;

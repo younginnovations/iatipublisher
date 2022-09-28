@@ -81,9 +81,9 @@ abstract class Element
     /**
      * @param null $popIndex
      *
-     * @return array|int
+     * @return array|int|string
      */
-    public function data($popIndex = null): array|int
+    public function data($popIndex = null): array|int|string
     {
         // dump($popIndex);
         // if($popIndex=='activityStatus' || $popIndex=='activityScope'){

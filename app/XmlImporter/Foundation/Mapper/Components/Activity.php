@@ -377,9 +377,9 @@ class Activity
         $vocabulary = $this->attributes($element, 'vocabulary');
         $this->sector[$this->index]['sector_vocabulary'] = $vocabulary;
         $this->sector[$this->index]['vocabulary_uri'] = $this->attributes($element, 'vocabulary-uri');
-        $this->sector[$this->index]['sector_code'] = ($vocabulary === 1) ? $this->attributes($element, 'code') : '';
-        $this->sector[$this->index]['sector_category_code'] = ($vocabulary === 2) ? $this->attributes($element, 'code') : '';
-        $this->sector[$this->index]['sector_text'] = ($vocabulary !== 1 && $vocabulary !== 2) ? $this->attributes($element, 'code') : '';
+        $this->sector[$this->index]['code'] = ($vocabulary === 1) ? $this->attributes($element, 'code') : '';
+        $this->sector[$this->index]['category_code'] = ($vocabulary === 2) ? $this->attributes($element, 'code') : '';
+        $this->sector[$this->index]['text'] = ($vocabulary !== 1 && $vocabulary !== 2) ? $this->attributes($element, 'code') : '';
         $this->sector[$this->index]['percentage'] = $this->attributes($element, 'percentage');
         $this->sector[$this->index]['narrative'] = $this->narrative($element);
         $this->index++;

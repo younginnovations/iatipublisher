@@ -89,6 +89,16 @@ class PolicyMarker extends Element
             $this->data['policy_marker'][$index]['policy_marker_vocabulary'] = '';
         }
         if ($key === $this->_csvHeaders[0]) {
+            $validVocabulary = $this->loadCodeList('PolicyMarkerVocabulary');
+
+            if (!is_int($value)) {
+                foreach ($validVocabulary as $code => $name) {
+                    if (strcasecmp(trim($value), $name) === 0) {
+                        $value = is_int($code) ? (int) $code : $code;
+                        break;
+                    }
+                }
+            }
             $this->data['policy_marker'][$index]['policy_marker_vocabulary'] = $value;
         }
     }
@@ -126,6 +136,17 @@ class PolicyMarker extends Element
             $this->data['policy_marker'][$index]['significance'] = '';
         }
         if ($key === $this->_csvHeaders[2]) {
+            $validSignificance = $this->loadCodeList('PolicySignificance');
+
+            if (!is_int($value)) {
+                foreach ($validSignificance as $code => $name) {
+                    if (strcasecmp(trim($value), $name) === 0) {
+                        $value = is_int($code) ? (int) $code : $code;
+                        break;
+                    }
+                }
+            }
+
             $this->data['policy_marker'][$index]['significance'] = $value;
         }
     }
@@ -153,6 +174,16 @@ class PolicyMarker extends Element
             $vocabulary = $this->data['policy_marker'][$index]['policy_marker_vocabulary'];
             switch ($vocabulary) {
                 case '1':
+                    $validMarker = $this->loadCodeList('PolicyMarker');
+
+                    if (!is_int($value)) {
+                        foreach ($validMarker as $code => $name) {
+                            if (strcasecmp(trim($value), $name) === 0) {
+                                $value = is_int($code) ? (int) $code : $code;
+                                break;
+                            }
+                        }
+                    }
                     $this->data['policy_marker'][$index]['policy_marker'] = $value;
                     break;
                 case '99':

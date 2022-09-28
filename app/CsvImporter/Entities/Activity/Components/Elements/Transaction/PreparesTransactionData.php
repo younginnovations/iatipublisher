@@ -195,6 +195,17 @@ trait PreparesTransactionData
     protected function setSector($key, $value): void
     {
         if ($key === $this->_csvHeaders[14]) {
+            $validSectorVocabulary = $this->loadCodeList('SectorVocabulary');
+
+            if (!is_int($value)) {
+                foreach ($validSectorVocabulary as $code => $name) {
+                    if (strcasecmp(trim($value), $name) === 0) {
+                        $value = is_int($code) ? (int) $code : $code;
+                        break;
+                    }
+                }
+            }
+
             $this->data['transaction']['sector'][0]['sector_vocabulary'] = $value;
         }
 
@@ -204,6 +215,7 @@ trait PreparesTransactionData
 
         if ($key === $this->_csvHeaders[16]) {
             $sectorVocabulary = $this->data['transaction']['sector'][0]['sector_vocabulary'];
+
             $this->setSectorCode($sectorVocabulary, $value);
         }
 
@@ -229,33 +241,77 @@ trait PreparesTransactionData
     protected function setSectorCode($sectorVocabulary, $value): void
     {
         if ($sectorVocabulary === 1) {
-            $this->data['transaction']['sector'][0]['sector_code'] = $value;
+            $validSectorCode = $this->loadCodeList('SectorCode');
+
+            if (!is_int($value)) {
+                foreach ($validSectorCode as $code => $name) {
+                    if (strcasecmp(trim($value), $name) === 0) {
+                        $value = is_int($code) ? (int) $code : $code;
+                        break;
+                    }
+                }
+            }
+
+            $this->data['transaction']['sector'][0]['code'] = $value;
         } else {
-            $this->data['transaction']['sector'][0]['sector_code'] = '';
+            $this->data['transaction']['sector'][0]['code'] = '';
         }
 
         if ($sectorVocabulary === 2) {
-            $this->data['transaction']['sector'][0]['sector_category_code'] = $value;
+            $validCategoryCode = $this->loadCodeList('SectorCategory');
+
+            if (!is_int($value)) {
+                foreach ($validCategoryCode as $code => $name) {
+                    if (strcasecmp(trim($value), $name) === 0) {
+                        $value = is_int($code) ? (int) $code : $code;
+                        break;
+                    }
+                }
+            }
+
+            $this->data['transaction']['sector'][0]['category_code'] = $value;
         } else {
-            $this->data['transaction']['sector'][0]['sector_category_code'] = '';
+            $this->data['transaction']['sector'][0]['category_code'] = '';
         }
 
         if ($sectorVocabulary === 7) {
-            $this->data['transaction']['sector'][0]['sector_sdg_goal'] = $value;
+            $validSdgGoals = $this->loadCodeList('UNSDG-Goals');
+
+            if (!is_int($value)) {
+                foreach ($validSdgGoals as $code => $name) {
+                    if (strcasecmp(trim($value), $name) === 0) {
+                        $value = is_int($code) ? (int) $code : $code;
+                        break;
+                    }
+                }
+            }
+
+            $this->data['transaction']['sector'][0]['sdg_goal'] = $value;
         } else {
-            $this->data['transaction']['sector'][0]['sector_sdg_goal'] = '';
+            $this->data['transaction']['sector'][0]['sdg_goal'] = '';
         }
 
         if ($sectorVocabulary === 8) {
-            $this->data['transaction']['sector'][0]['sector_sdg_target'] = $value;
+            $validSdgTarget = $this->loadCodeList('UNSDG-Targets');
+
+            if (!is_int($value)) {
+                foreach ($validSdgTarget as $code => $name) {
+                    if (strcasecmp(trim($value), $name) === 0) {
+                        $value = is_int($code) ? (int) $code : $code;
+                        break;
+                    }
+                }
+            }
+
+            $this->data['transaction']['sector'][0]['sdg_target'] = $value;
         } else {
-            $this->data['transaction']['sector'][0]['sector_sdg_target'] = '';
+            $this->data['transaction']['sector'][0]['sdg_target'] = '';
         }
 
         if ($sectorVocabulary != 1 && $sectorVocabulary != 2 && $sectorVocabulary != 7 && $sectorVocabulary != 8) {
-            $this->data['transaction']['sector'][0]['sector_text'] = $value;
+            $this->data['transaction']['sector'][0]['text'] = $value;
         } else {
-            $this->data['transaction']['sector'][0]['sector_text'] = '';
+            $this->data['transaction']['sector'][0]['text'] = '';
         }
     }
 
@@ -270,6 +326,17 @@ trait PreparesTransactionData
     protected function setRecipientCountry($key, $value): void
     {
         if ($key === $this->_csvHeaders[18]) {
+            $validCountry = $this->loadCodeList('Country');
+
+            if (!is_int($value)) {
+                foreach ($validCountry as $code => $name) {
+                    if (strcasecmp(trim($value), $name) === 0) {
+                        $value = is_int($code) ? (int) $code : $code;
+                        break;
+                    }
+                }
+            }
+
             $this->data['transaction']['recipient_country'][0]['country_code'] = $value;
             $this->data['transaction']['recipient_country'][0]['narrative'][0] = ['narrative' => '', 'language' => ''];
         }
@@ -286,8 +353,19 @@ trait PreparesTransactionData
     protected function setRecipientRegion($key, $value): void
     {
         if ($key === $this->_csvHeaders[19]) {
+            $validRegion = $this->loadCodeList('Region');
+
+            if (!is_int($value)) {
+                foreach ($validRegion as $code => $name) {
+                    if (strcasecmp(trim($value), $name) === 0) {
+                        $value = is_int($code) ? (int) $code : $code;
+                        break;
+                    }
+                }
+            }
+
             $this->data['transaction']['recipient_region'][0]['region_code'] = $value;
-            $this->data['transaction']['recipient_region'][0]['vocabulary'] = '';
+            $this->data['transaction']['recipient_region'][0]['region_vocabulary'] = '';
             $this->data['transaction']['recipient_region'][0]['vocabulary_uri'] = '';
             $this->data['transaction']['recipient_region'][0]['narrative'][0] = ['narrative' => '', 'language' => ''];
         }
@@ -325,7 +403,7 @@ trait PreparesTransactionData
     protected function setAidType(): void
     {
         if (array_key_exists('finance_type', $this->data['transaction'])) {
-            $this->data['transaction']['aid_type'][0] = ['aid_type' => ''];
+            $this->data['transaction']['aid_type'][0] = ['aid_type_vocabulary' => '', 'aid_type_code' => ''];
         }
     }
 

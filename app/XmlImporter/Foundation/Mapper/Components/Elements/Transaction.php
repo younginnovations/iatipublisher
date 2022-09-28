@@ -148,9 +148,9 @@ class Transaction
     protected function sector($subElement, $index): void
     {
         $this->transaction[$index]['sector'][0]['sector_vocabulary'] = ($vocabulary = $this->attributes($subElement, 'vocabulary'));
-        $this->transaction[$index]['sector'][0]['sector_code'] = ($vocabulary === 1) ? $this->attributes($subElement, 'code') : '';
-        $this->transaction[$index]['sector'][0]['sector_category_code'] = ($vocabulary === 2) ? $this->attributes($subElement, 'code') : '';
-        $this->transaction[$index]['sector'][0]['sector_text'] = ($vocabulary !== 1 && $vocabulary !== 2) ? $this->attributes($subElement, 'code') : '';
+        $this->transaction[$index]['sector'][0]['code'] = ($vocabulary === 1) ? $this->attributes($subElement, 'code') : '';
+        $this->transaction[$index]['sector'][0]['category_code'] = ($vocabulary === 2) ? $this->attributes($subElement, 'code') : '';
+        $this->transaction[$index]['sector'][0]['text'] = ($vocabulary !== 1 && $vocabulary !== 2) ? $this->attributes($subElement, 'code') : '';
         $this->transaction[$index]['sector'][0]['vocabulary_uri'] = $this->attributes($subElement, 'vocabulary-uri');
         $this->transaction[$index]['sector'][0]['narrative'] = $this->narrative($subElement);
     }
@@ -180,7 +180,7 @@ class Transaction
     protected function recipientRegion($subElement, $index): void
     {
         $this->transaction[$index]['recipient_region'][0]['region_code'] = $this->attributes($subElement, 'code');
-        $this->transaction[$index]['recipient_region'][0]['vocabulary'] = $this->attributes($subElement, 'vocabulary');
+        $this->transaction[$index]['recipient_region'][0]['region_vocabulary'] = $this->attributes($subElement, 'vocabulary');
         $this->transaction[$index]['recipient_region'][0]['vocabulary_uri'] = $this->attributes($subElement, 'vocabulary-uri');
         $this->transaction[$index]['recipient_region'][0]['narrative'] = $this->narrative($subElement);
     }

@@ -282,19 +282,19 @@ class Validation extends Factory
                         $sectorInActivityLevel = false;
                     }
 
-                    if ($value['sector_vocabulary'] === '' && $value['sector_code'] === ''
-                        && $value['sector_text'] === '' && $value['sector_category_code'] === '' && Arr::get(
+                    if ($value['sector_vocabulary'] === '' && $value['code'] === ''
+                        && $value['text'] === '' && $value['category_code'] === '' && Arr::get(
                             $value,
-                            'sector_sdg_goal'
-                        ) === '' && Arr::get($value, 'sector_sdg_target') === '' &&
+                            'sdg_goal'
+                        ) === '' && Arr::get($value, 'sdg_target') === '' &&
                         $sectorInActivityLevel === false
                     ) {
                         $status = false;
-                    } elseif (($value['sector_vocabulary'] !== '' || $value['sector_code'] !== ''
-                            || $value['sector_text'] !== '' || $value['sector_category_code'] !== '' || Arr::get(
+                    } elseif (($value['sector_vocabulary'] !== '' || $value['code'] !== ''
+                            || $value['text'] !== '' || $value['category_code'] !== '' || Arr::get(
                                 $value,
-                                'sector_sdg_goal'
-                            ) !== '' || Arr::get($value, 'sector_sdg_target') !== '')
+                                'sdg_goal'
+                            ) !== '' || Arr::get($value, 'sdg_target') !== '')
                         && $sectorInActivityLevel === true
                     ) {
                         $status = false;
