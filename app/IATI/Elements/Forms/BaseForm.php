@@ -61,7 +61,7 @@ class BaseForm extends Form
                 ]
             );
 
-            if (isset($field['add_more']) && $field['add_more'] || (isset($element['add_more_attributes']) && $element['add_more_attributes'])) {
+            if (isset($field['add_more']) || (isset($element['add_more_attributes']) && $element['add_more_attributes'])) {
                 $this->add('add_to_collection_' . $field['name'], 'button', [
                     'label' => 'Add More',
                     'attr'  => [
@@ -108,7 +108,7 @@ class BaseForm extends Form
                 ]
             );
 
-            $name = isset($field['name']) ? $field['name'] : $element['name'];
+            $name = $field['name'] ?? $element['name'];
 
             if ((isset($field['add_more']) && $field['add_more']) || Arr::get($element, 'add_more_attributes', false)) {
                 $this->add('add_to_collection_' . $name, 'button', [
@@ -128,7 +128,8 @@ class BaseForm extends Form
     }
 
     /**
-     * @return mixed|void
+     * @return void
+     * @throws \JsonException
      */
     public function buildForm(): void
     {
@@ -178,15 +179,18 @@ class BaseForm extends Form
 
     /**
      * Return codeList array from json codeList.
+     *
      * @param string $filePath
-     * @param bool $code
+     * @param bool   $code
+     *
      * @return array
+     * @throws \JsonException
      */
     public function getCodeList(string $filePath, bool $code = true): array
     {
         $filePath = app_path("Data/$filePath");
         $codeListFromFile = file_get_contents($filePath);
-        $codeLists = json_decode($codeListFromFile, true);
+        $codeLists = json_decode($codeListFromFile, true, 512, JSON_THROW_ON_ERROR);
         $codeList = last($codeLists);
         $data = [];
 
@@ -204,6 +208,7 @@ class BaseForm extends Form
      * @param $field
      *
      * @return void
+     * @throws \JsonException
      */
     public function buildField($field): void
     {
@@ -233,13 +238,11 @@ class BaseForm extends Form
             ],
         ];
 
-        if ($field['type'] == 'select') {
+        if ($field['type'] === 'select') {
             $options['attr']['class'] = 'select2';
             $options['attr']['data-placeholder'] = Arr::get($field, 'placeholder', '');
             $options['empty_value'] = $field['empty_value'] ?? 'Select a value';
-            $options['choices'] = $field['choices'] ? (is_string($field['choices']) ? ($this->getCodeList(
-                $field['choices']
-            )) : $field['choices']) : false;
+            $options['choices'] = $field['choices'] ? (is_string($field['choices']) ? ($this->getCodeList($field['choices'])) : $field['choices']) : false;
             $options['default_value'] = $field['default'] ?? '';
         }
 
