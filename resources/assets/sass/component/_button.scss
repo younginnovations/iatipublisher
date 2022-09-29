@@ -95,6 +95,7 @@ button {
 // tooltip button
 .tooltip-btn {
   @apply relative text-n-30;
+
   button {
     @apply rounded-3xl border border-solid border-n-30 py-1.5 px-2.5;
   }
