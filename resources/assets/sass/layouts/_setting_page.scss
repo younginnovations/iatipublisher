@@ -1,5 +1,5 @@
 .section {
-  @apply bg-paper;
+  @apply mx-3 bg-paper sm:mx-10;
 
   .setting {
     max-width: 1000px;
@@ -8,9 +8,12 @@
     padding: 16px 0px 24px;
 
     &__container {
-      @apply relative rounded-lg bg-white py-14 px-20;
+      @apply relative rounded-lg bg-white p-7 md:py-14 md:px-20;
       max-height: 65vh;
-      overflow-y: auto;
+
+      @media screen and (max-width: 440px) {
+        @apply px-3;
+      }
 
       .vue__select {
         margin: 8px 0px;
@@ -29,10 +32,10 @@
       }
     }
     .register {
-      @apply rounded-lg border border-n-30 p-6;
+      @apply rounded-lg border border-n-30 p-4 sm:p-6;
 
       &__container {
-        @apply grid grid-cols-2 gap-6;
+        @apply grid gap-3 sm:gap-6 lg:grid-cols-2;
 
         .tag__correct {
           @apply absolute right-2 top-10 flex h-5 cursor-pointer items-center justify-center rounded bg-spring-40 text-center text-xs text-white;
@@ -54,6 +57,10 @@
       @apply mt-2 w-full border border-n-30 outline-none duration-300;
       padding: 13px 16px;
       border-radius: 4px;
+
+      @media screen and (max-width: 440px) {
+        padding: 10px;
+      }
 
       &::placeholder {
         @apply text-sm text-n-40;

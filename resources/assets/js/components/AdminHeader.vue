@@ -62,20 +62,18 @@
         </ul>
       </nav>
     </div>
-    <div class="flex grow-0 items-center">
-      <div class="flex items-center">
-        <div class="flex items-center">
-          <div class="search">
-            <input
-              v-model="searchValue"
-              class="search__input mr-3.5"
-              type="text"
-              placeholder="Search activity..."
-              @keyup.enter="searchFunction"
-            />
-            <svg-vue icon="search" />
-            <span v-if="spinner" class="spinner" />
-          </div>
+    <div class="user-nav">
+      <div class="user-nav">
+        <div class="search">
+          <input
+            v-model="searchValue"
+            class="search__input mr-3.5"
+            type="text"
+            placeholder="Search activity..."
+            @keyup.enter="searchFunction"
+          />
+          <svg-vue icon="search" />
+          <span v-if="spinner" class="spinner" />
         </div>
         <button
           class="add-btn button secondary-btn mr-3.5 font-bold"
@@ -254,6 +252,9 @@ onMounted(async () => {
     @media screen and (max-width: 375px) {
       display: none;
     }
+  }
+  .user-nav {
+    @apply flex items-center;
   }
 }
 .toast {
