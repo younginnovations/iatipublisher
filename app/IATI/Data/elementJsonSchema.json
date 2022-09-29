@@ -273,6 +273,7 @@
     "label": "activity status",
     "help_text": "An activity status should be provided. This describes the lifecycle status of the activity from pipeline to completion. You can publish activities that are already completed, currently happening or not yet started. As the activity progresses over time, the activity status should be updated.",
     "hover_text": "The current status of the activity..</br><a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/activity-status/'>For more information</a>",
+    "show_info_in_title": true,
     "attributes": {
       "activity_status": {
         "name": "activity_status",
@@ -350,6 +351,7 @@
   "activity_scope": {
     "label": "activity scope",
     "hover_text": "The geographical scope of the activity: regional, national, sub-national, etc.</br><a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/activity-scope/'>For more information</a>",
+    "show_info_in_title": true,
     "attributes": {
       "activity_scope": {
         "name": "activity_scope",
@@ -472,7 +474,7 @@
         "criteria": "mandatory",
         "hidden": true,
         "hover_text": "Either an OECD DAC or UN region code. Codelist is determined by vocabulary attribute.This attribute is required.</br><a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/recipient-region/'>For more information</a>",
-        "help_text": "",
+        "help_text": "Select the region benefitting from this activity.",
         "parent": {
           "name": "region_vocabulary",
           "value": ["2", "99"]
@@ -499,7 +501,7 @@
         "placeholder": "Type percentage",
         "required": false,
         "criteria": "recommended",
-        "hover_text": "",
+        "hover_text": "The URI where this vocabulary is defined. If the vocabulary is 99 (reporting organisation), the URI where this internal vocabulary is defined. While this is an optional field it is STRONGLY RECOMMENDED that all publishers use it to ensure that the meaning of their codes are fully understood by data users.<br> <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/recipient-region/'>For more information</a>",
         "help_text": "The percentage of total commitments or total activity budget to this item. Content must be a decimal number between 0 and 100 inclusive, with no percentage sign. Percentages for all reported countries and regions within a vocabulary MUST add up to 100.</br><a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/recipient-region/'>For more information</a>"
       }
     },
@@ -921,7 +923,9 @@
   },
   "collaboration_type": {
     "label": "collaboration type",
+    "hover_text": "The type of collaboration involved in the activity’s disbursements, e.g. “bilateral” or “multilateral”.<br> <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/collaboration-type/'>For more information</a>",
     "help_text": "You can describe how funds are flowing between organisations within this activity. For example, funds could be flowing bilaterally, meaning between two governments. This is largely applicable to bilateral and multilateral organisations.",
+    "show_info_in_title": true,
     "attributes": {
       "collaboration_type": {
         "name": "collaboration_type",
@@ -939,7 +943,9 @@
   },
   "default_flow_type": {
     "label": "default flow type",
+    "hover_text": "Whether the activity is funded by Official Development Assistance (ODA), Other Official Flows (OOF), etc.<br> <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/default-flow-type/'>For more information</a>",
     "help_text": "Flow type is another way to categorise financial flows. It distinguishes the flow as official development assistance (ODA), other official flows (OOF), or several types of private flows, including private grants often provided by NGOs and other civil society organisations.",
+    "show_info_in_title": true,
     "attributes": {
       "default_flow_type": {
         "name": "default_flow_type",
@@ -957,7 +963,9 @@
   },
   "default_finance_type": {
     "label": "default finance type",
+    "hover_text": "The type of finance (e.g. grant, loan, debt relief, etc). This the default value for all transactions in the activity report; it can be overridden by individual transactions.<br> <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/default-finance-type/'>For more information</a>",
     "help_text": "Finance type specifies the financial instrument that is being used for this activity. For example, financing is most commonly delivered as a grant or a loan.",
+    "show_info_in_title": true,
     "attributes": {
       "default_finance_type": {
         "name": "default_finance_type",
@@ -1066,7 +1074,9 @@
   },
   "default_tied_status": {
     "label": "default tied status",
+    "hover_text": "Whether the aid is untied, tied, or partially tied. This element specifies a default for all the activity’s financial transactions; it can be overridden at the individual transaction level.<br> <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/default-tied-status/'>For more information</a>",
     "help_text": "You can state the tied status of this transaction. Here you can specify if funds are tied - where they must be spent on goods or services procured from a particular country (e.g. donor country) or group of countries. Or if funds are untied, this is where the recipient organisation is allowed to procure from any country.",
+    "show_info_in_title": true,
     "attributes": {
       "default_tied_status": {
         "name": "default_tied_status",
@@ -1087,6 +1097,7 @@
     "label": "country-budget-items",
     "add_more": true,
     "hover_text": "This item encodes the alignment of activities with both the functional and administrative classifications used in the recipient country’s Chart of Accounts. This applies to both on- and off-budget activities.<br> <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/country-budget-items/'>For more information</a>",
+    "show_info_in_title": true,
     "attributes": {
       "country_budget_vocabulary": {
         "name": "country_budget_vocabulary",
@@ -1268,7 +1279,9 @@
   },
   "capital_spend": {
     "label": "capital spend",
+    "hover_text": "The percentage of the total commitment that is for capital spending.<br> <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/capital-spend/'>For more information</a>",
     "help_text": "Please indicate how much of the total activity’s funding will be spent on capital. Capital describes physical assets with a useful life of more than one year. For example, a road.",
+    "show_info_in_title": true,
     "attributes": {
       "capital_spend": {
         "name": "capital_spend",
@@ -1288,6 +1301,7 @@
     "label": "related-activity",
     "add_more": true,
     "add_more_attributes": true,
+    "hover_text": "Another separately reported IATI activity that is related to this one. The ‘type’ attribute describes the type of relationship: (eg. parent, child, multifunded). It is strongly recommended that linkage between activities in a hierarchical group should always be managed by use of this element with @type of 1 (parent) or 2 (child).<br> <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/related-activity/'>For more information</a>",
     "help_text": "If this activity is part of a programme with multiple activities within one organisation, you should include details of all related activities. Please read more about the <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/codelists/relatedactivitytype/'>types of related activities</a> that you can report.</br>Please only refer to <b>your <u>own</u><b> activities here.",
     "attributes": {
       "activity_identifier": {
@@ -1318,7 +1332,9 @@
     "name": "conditions",
     "label": "conditions",
     "add_more": true,
-    "help_text": "Please declare any conditions or specific terms that are attached to this activity. For example, requirements issued by your funder or a six month review to assess whether or not the activity is worth continuing.</br>If a condition relates to the whole organisation, such as organisation-wide terms and conditions, it should not be reported within this activity. Instead, you should report this in the document-link element in your organisation file.</br><a target='_blank' href=''>Further guidance</a>.",
+    "hover_text": "Specific terms and conditions attached to the activity that, if not met, may influence the delivery of commitments made by participating organisations.<br> <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/conditions/'>For more information</a>",
+    "help_text": "Please declare any conditions or specific terms that are attached to this activity. For example, requirements issued by your funder or a six month review to assess whether or not the activity is worth continuing.</br>If a condition relates to the whole organisation, such as organisation-wide terms and conditions, it should not be reported within this activity. Instead, you should report this in the document-link element in your organisation file.</br><a target='_blank' href='https://iatistandard.org/en/guidance/standard-guidance/conditions/'>Further guidance</a>.",
+    "show_info_in_title": true,
     "attributes": {
       "condition_attached": {
         "name": "condition_attached",
@@ -1391,6 +1407,7 @@
     "label": "legacy-data",
     "add_more": true,
     "add_more_attributes": true,
+    "hover_text": "The legacy data element allows for the reporting of values held in a field in the reporting organisation’s system which is similar, but not identical to an IATI element.<br> <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/legacy-data/'>For more information</a>",
     "help_text": "You can link this activity to your organisation’s internal data and record which IATI Standard element it most relates to.",
     "attributes": {
       "legacy_name": {
@@ -1430,6 +1447,7 @@
     "name": "document_link",
     "label": "document link",
     "add_more": true,
+    "hover_text": "A link to an online, publicly accessible web page or document.<br> <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/document-link/'>For more information</a>",
     "help_text": "You can report further information about this activity by providing a publicly accessible link to a document or webpage.</br>If documents are available in other languages and stored separately, please provide them by creating additional document elements.</br><a target='_blank' href='https://iatistandard.org/en/guidance/standard-guidance/related-documents/'>Further guidance</a>",
     "attributes": {
       "url": {
@@ -1439,7 +1457,7 @@
         "placeholder": "Type url",
         "required": true,
         "criteria": "mandatory",
-        "hover_text": "",
+        "hover_text": "The target URL of the external document, e.g. 'http://www.example.org/doc.odt'.<br> <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/document-link/'>For more information</a>",
         "help_text": "The URL must begin with either ‘http://’ or ‘https://’."
       },
       "format": {
@@ -1450,7 +1468,7 @@
         "choices": "Activity/FileFormat.json",
         "required": true,
         "criteria": "mandatory",
-        "hover_text": "",
+        "hover_text": "An IANA code for the MIME type of the document being referenced, e.g. “application/pdf”.<br> <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/document-link/'>For more information</a>",
         "help_text": "If you know the format of the document file, please type it <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/codelists/fileformat/'>using an option from this list</a>."
       },
       "document": {
@@ -1470,6 +1488,7 @@
         "label": "Title",
         "element_criteria": "mandatory",
         "add_more": false,
+        "hover_text": "A short, human-readable title.<br> <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/document-link/title/'>For information</a>",
         "attributes": {},
         "sub_elements": {
           "narrative": {
@@ -1506,6 +1525,7 @@
         "name": "description",
         "label": "description",
         "add_more": false,
+        "hover_text": "A description of the document contents, or guidance on where to access the relevant information in the document.<br> <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/document-link/description/'>For more information</a>",
         "attributes": {},
         "sub_elements": {
           "narrative": {
@@ -1554,7 +1574,7 @@
             "choices": "Activity/DocumentCategory.json",
             "required": true,
             "criteria": "mandatory",
-            "hover_text": "",
+            "hover_text": "An IATI code defining the category of the document.<br> <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/document-link/category/'>For more information</a>",
             "help_text": "Select a category of the document or webpage that you have provided from <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/codelists/documentcategory/'>this list</a>."
           }
         },
@@ -1584,6 +1604,7 @@
         "name": "document_date",
         "label": "document date",
         "add_more": false,
+        "hover_text": "The date of publication of the document that is being linked to. (@iso-date).<br> <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/document-link/document-date/'>For more information</a>",
         "attributes": {
           "date": {
             "name": "date",
@@ -1842,7 +1863,7 @@
             "attr": {
               "row": 4
             },
-            "hover_text": "The free text name or description of the item being described. This can be repeated in multiple languages.</br><a target='_blank' href=''>For more information</a>",
+            "hover_text": "The free text name or description of the item being described. This can be repeated in multiple languages.</br><a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/contact-info/mailing-address/narrative/'>For more information</a>",
             "help_text": "Provide any further information about this contact.",
             "attributes": {
               "language": {
@@ -1867,7 +1888,7 @@
     "name": "location",
     "label": "location",
     "add_more": true,
-    "hover_text": "The sub-national geographical identification of the target locations of an activity. These can be described by gazetteer reference, coordinates, administrative areas or a textual description. Any number of locations may be reported.</br><a target='_blank' href=''>For more information</a>",
+    "hover_text": "The sub-national geographical identification of the target locations of an activity. These can be described by gazetteer reference, coordinates, administrative areas or a textual description. Any number of locations may be reported.</br><a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/location/'>For more information</a>",
     "help_text": "Provide the sub-national location/s of an activity, if it is known. However <b>location data should only be added when it is safe to do so.</b> It is the publishing organisation’s responsibility to ensure that the data it publishes is safe.</br>You can provide geographic coordinates of a location, the name and description of a location, the administrative area or other features of the location e.g. health centre, village etc.</br><a target='_blank' href='https://iatistandard.org/en/guidance/standard-guidance/countries-regions/'>Further guidance.</a>",
     "attributes": {
       "ref": {
@@ -1939,7 +1960,7 @@
         "name": "name",
         "label": "name",
         "add_more": false,
-        "hover_text": "The human readable name for the location.</br><a href=''>For more information</a>",
+        "hover_text": "The human readable name for the location.</br><a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/location/name/'>For more information</a>",
         "attributes": {},
         "sub_elements": {
           "narrative": {
@@ -1953,7 +1974,7 @@
             "attr": {
               "row": 4
             },
-            "hover_text": "The free text name or description of the item being described. This can be repeated in multiple languages.</br><a href=''>For more information</a>",
+            "hover_text": "The free text name or description of the item being described. This can be repeated in multiple languages.</br><a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/location/name/narrative/'>For more information</a>",
             "help_text": "Provide the free text name of the location of the activity.",
             "attributes": {
               "language": {
@@ -1964,7 +1985,7 @@
                 "choices": "Activity/Language.json",
                 "required": true,
                 "criteria": "mandatory",
-                "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed.</br><a href=''>For more information</a>",
+                "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed.</br><a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/location/name/narrative/'>For more information</a>",
                 "help_text": "Select the language of the text you provided in the narrative. If no language is selected, then your default language is assumed."
               }
             },
@@ -1975,7 +1996,7 @@
       "description": {
         "name": "description",
         "label": "description",
-        "hover_text": "A description that qualifies the location, not the activity.</br><a href=''>For more information</a>",
+        "hover_text": "A description that qualifies the location, not the activity.</br><a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/location/description/'>For more information</a>",
         "attributes": {},
         "sub_elements": {
           "narrative": {
@@ -1989,7 +2010,7 @@
             "attr": {
               "row": 4
             },
-            "hover_text": "The free text name or description of the item being described. This can be repeated in multiple languages.</br><a href=''>For more information</a>",
+            "hover_text": "The free text name or description of the item being described. This can be repeated in multiple languages.</br><a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/location/description/narrative/'>For more information</a>",
             "help_text": "Provide a description of the location of the activity.",
             "attributes": {
               "language": {
@@ -2000,7 +2021,7 @@
                 "choices": "Activity/Language.json",
                 "required": true,
                 "criteria": "mandatory",
-                "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed.</br><a href=''>For more information</a>",
+                "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed.</br><a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/location/description/narrative/'>For more information</a>",
                 "help_text": "Select the language of the text in the narrative. If no language is selected, your default language is assumed."
               }
             },
@@ -2012,7 +2033,7 @@
         "name": "activity_description",
         "label": "activity description",
         "add_more": false,
-        "hover_text": "A description that qualifies the activity taking place at the location. This should not duplicate information provided in the main activity description, and should typically be used to distinguish between activities at multiple locations within a single iati-activity record.</br><a href=''>For more information</a>",
+        "hover_text": "A description that qualifies the activity taking place at the location. This should not duplicate information provided in the main activity description, and should typically be used to distinguish between activities at multiple locations within a single iati-activity record.</br><a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/location/activity-description/'>For more information</a>",
         "attributes": {},
         "sub_elements": {
           "narrative": {
@@ -2026,7 +2047,7 @@
             "attr": {
               "row": 4
             },
-            "hover_text": "The free text name or description of the item being described. This can be repeated in multiple languages.</br><a href=''>For more information</a>",
+            "hover_text": "The free text name or description of the item being described. This can be repeated in multiple languages.</br><a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/location/activity-description/narrative/'>For more information</a>",
             "help_text": "",
             "attributes": {
               "language": {
@@ -2037,7 +2058,7 @@
                 "choices": "Activity/Language.json",
                 "required": true,
                 "criteria": "mandatory",
-                "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed.</br><a href=''>For more information</a>",
+                "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed.</br><a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/location/activity-description/narrative/'>For more information</a>",
                 "help_text": "Select the language of the text in the narrative. If no language is selected, your default language is assumed."
               }
             },
@@ -2049,7 +2070,7 @@
         "name": "administrative",
         "label": "administrative",
         "add_more": false,
-        "hover_text": "Coded identification of national and sub-national divisions according to recognised administrative boundary repositories. Multiple levels may be reported.</br><a href=''>For more information</a>",
+        "hover_text": "Coded identification of national and sub-national divisions according to recognised administrative boundary repositories. Multiple levels may be reported.</br><a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/location/administrative/'>For more information</a>",
         "help_text": "You can provide a unique code to describe the activity location according to an administrative boundary repository.",
         "attributes": {
           "vocabulary": {
@@ -2060,7 +2081,7 @@
             "choices": "Activity/GeographicVocabulary.json",
             "required": true,
             "criteria": "mandatory",
-            "hover_text": "An IATI code for a recognised administrative boundary repository.</br><a href=''>For more information</a>",
+            "hover_text": "An IATI code for a recognised administrative boundary repository.</br><a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/location/administrative/'>For more information</a>",
             "help_text": "Select an <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/codelists/GeographicVocabulary/'>administrative boundary list</a> that includes a code to represent your activity location."
           },
           "code": {
@@ -2071,7 +2092,7 @@
             "choices": "Activity/Country.json",
             "required": true,
             "criteria": "mandatory",
-            "hover_text": "The code for the administrative area being reported from the vocabulary specified.</br><a href=''>For more information</a>",
+            "hover_text": "The code for the administrative area being reported from the vocabulary specified.</br><a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/location/administrative/'>For more information</a>",
             "help_text": "Provide a code to represent your activity location (from your chosen <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/codelists/GeographicVocabulary/'>administrative boundary list</a>)."
           },
           "level": {
@@ -2081,7 +2102,7 @@
             "placeholder": "",
             "required": false,
             "criteria": "Type level",
-            "hover_text": "A number defining a subdivision within a hierarchical system of administrative areas. The precise system for defining the particular meaning of each @level value is determined by the @vocabulary being used.</br><a href=''>For more information</a>",
+            "hover_text": "A number defining a subdivision within a hierarchical system of administrative areas. The precise system for defining the particular meaning of each @level value is determined by the @vocabulary being used.</br><a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/location/administrative/'>For more information</a>",
             "help_text": "Within your chosen <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/codelists/GeographicVocabulary/'>administrative boundary list</a>, you can provide a number to define a subdivision within a hierarchical system of administrative areas."
           }
         },
@@ -2091,7 +2112,7 @@
         "name": "point",
         "label": "point",
         "add_more": false,
-        "hover_text": "The point element is based on a subset of the GML 3.3 Point element.</br><a href=''>For more information</a>",
+        "hover_text": "The point element is based on a subset of the GML 3.3 Point element.</br><a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/location/point/'>For more information</a>",
         "help_text": "You can provide geo-coordinates for the location, in the format of latitude and longitude coordinates.</br>Coordinates are published using the point and pos elements. The point element is always: <point srsName=”http://www.opengis.net/def/crs/EPSG/0/4326”></br>The pos element then contains the latitude coordinate (the first number), followed by the longitude coordinate (the second number) e.g. -46.7733 167.6321.</br>Please note that coordinates can refer to an ‘exact’ or an ‘approximate’ location. This should be specified using the location exactness element.</br><a target='_blank' href='https://iatistandard.org/en/guidance/standard-guidance/sub-national-locations/'>More information.</a>",
         "attributes": {
           "srs_name": {
@@ -2101,7 +2122,7 @@
             "placeholder": "",
             "required": true,
             "criteria": "mandatory",
-            "hover_text": "The name of the spatial reference system used by the coordinates.</br><a href=''>For more information</a>",
+            "hover_text": "The name of the spatial reference system used by the coordinates.</br><a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/location/point/'>For more information</a>",
             "help_text": "This value never changes."
           }
         },
@@ -2109,7 +2130,7 @@
           "pos": {
             "name": "pos",
             "element_criteria": "mandatory",
-            "hover_text": "The latitude and longitude coordinates in the format “lat lng”.</br><a href=''>For more information</a>",
+            "hover_text": "The latitude and longitude coordinates in the format “lat lng”.</br><a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/location/point/pos/'>For more information</a>",
             "help_text": "Add latitude and longitude separated by a space e.g. 31.616944 65.716944</br>If you don’t already have a way to find the coordinates for an activity, there are some online platforms to help, e.g. <a target='_blank' href='https://www.google.com/maps/'>Google Maps</a> and <a target='_blank' href='https://www.latlong.net/'>Latlong.net</a>. To find the coordinates for an activity on Google Maps, right-click over the location of the activity and select ‘what’s here?’. The coordinates will then be presented. Alternatively, type in the coordinates and the location of the activity that will be pinpointed on the map.</br><a target='_blank' href='https://iatistandard.org/en/guidance/standard-guidance/sub-national-locations/'>More information.</a>",
             "attributes": {
               "latitude": {
@@ -2141,7 +2162,7 @@
         "name": "exactness",
         "label": "exactness",
         "add_more": false,
-        "hover_text": "Defines whether the location represents the most distinct point reasonably possible for this type of activity or is an approximation due to lack of more detailed information.</br><a href=''>For more information</a>",
+        "hover_text": "Defines whether the location represents the most distinct point reasonably possible for this type of activity or is an approximation due to lack of more detailed information.</br><a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/location/exactness/'>For more information</a>",
         "attributes": {
           "code": {
             "name": "code",
@@ -2151,7 +2172,7 @@
             "choices": "Activity/GeographicExactness.json",
             "required": true,
             "criteria": "mandatory",
-            "hover_text": "A code from the Geographic Exactness Codelist. This attribute is required.</br><a href=''>For more information</a>",
+            "hover_text": "A code from the Geographic Exactness Codelist. This attribute is required.</br><a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/location/exactness/'>For more information</a>",
             "help_text": "If you have provided the geo-coordinates for the activity location, then select an option from the <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/codelists/geographicexactness/'>Geographic Exactness list</a> to specify whether the location is exact or approximate."
           }
         },
@@ -2161,7 +2182,7 @@
         "name": "location_class",
         "label": "location class",
         "add_more": false,
-        "hover_text": "Whether the location refers to a structure, a populated place (e.g. city or village), an administrative division, or another topological feature (e.g. river, nature reserve).</br><a href=''>For more information</a>",
+        "hover_text": "Whether the location refers to a structure, a populated place (e.g. city or village), an administrative division, or another topological feature (e.g. river, nature reserve).</br><a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/location/location-class/'>For more information</a>",
         "attributes": {
           "code": {
             "name": "code",
@@ -2171,7 +2192,7 @@
             "choices": "Activity/GeographicLocationClass.json",
             "required": true,
             "criteria": "mandatory",
-            "hover_text": "A code from the Location Class codelist. This attribute is required.</br><a href=''>For more information</a>",
+            "hover_text": "A code from the Location Class codelist. This attribute is required.</br><a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/location/location-class/'>For more information</a>",
             "help_text": "Please specify the form of the activity location from the <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/codelists/GeographicLocationClass/'>Geographic Location Class list</a>. For example a populated place (town, farm), or topographical feature (mountain, river)."
           }
         },
@@ -2181,7 +2202,7 @@
         "name": "feature_designation",
         "label": "feature designation",
         "add_more": false,
-        "hover_text": "A more refined coded classification of the type of feature referred to by this location.</br><a href=''>For more information</a>",
+        "hover_text": "A more refined coded classification of the type of feature referred to by this location.</br><a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/location/feature-designation/'>For more information</a>",
         "attributes": {
           "code": {
             "name": "code",
@@ -2191,7 +2212,7 @@
             "choices": "Activity/LocationType.json",
             "required": true,
             "criteria": "mandatory",
-            "hover_text": "A feature designation code form the authorised list (maintained by the US National Geospatial-Intelligence Agency).</br><a href=''>For more information</a>",
+            "hover_text": "A feature designation code form the authorised list (maintained by the US National Geospatial-Intelligence Agency).</br><a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/location/feature-designation/'>For more information</a>",
             "help_text": "You can provide more detail on the type of your activity’s location (e.g. beach, well or college).Please make a selection from the <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/codelists/LocationType/'>Location Type list.</a>"
           }
         },
@@ -2654,6 +2675,7 @@
     "add_more": false,
     "hover_text": "A container for reporting outputs, outcomes, impacts and other results that stem directly from the activity. This may be repeated for each type of result reported.</br><a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/'>For more information.</a>",
     "help_text": "Results describe the benefit or intended benefits of an activity; these can be broken down into types: <b>outputs</b>, <b>outcomes</b> and <b>impacts</b>. You can provide multiple results for your activity. Updating results regularly means that data users can track an activity’s progress, including whether the activity was a success and what challenges were faced. Both positive and negative results should be included. See guidance for more information: ><a target='_blank' href='https://iatistandard.org/en/guidance/standard-guidance/results/'>Results Information</a> and ><a target='_blank' href='https://iatistandard.org/en/guidance/standard-guidance/understanding-results/'>Understanding results data</a>.</br>Please note: security implications may prevent results data from being published, or require results to be aggregated. Any security considerations should be outlined in an organisation’s ><a target='_blank' href='https://iatistandard.org/en/guidance/preparing-organisation/organisation-data-publication/information-and-data-you-cant-publish-exclusions/'>exclusion policy</a>.",
+    "show_info_in_title": true,
     "attributes": {
       "type": {
         "name": "type",
@@ -2931,7 +2953,7 @@
         "add_more": true,
         "make_collection": false,
         "hover_text": "A reference element to allow for the coded identification of results framework.</br><a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/reference/'>For more information</a>",
-        "help_text": "If this result is contained in a results framework, then you may provide information about it. You can choose to provide a reference to a results framework in two ways:</br><b>1.</b> You can provide a reference to a results framework for the result here OR</br><b>2.</b> You can provide a reference to a results framework for each individual indicator that measures this result. For every result that you publish, you will be required to provide an indicator (which measures the result).</br><b>Option 2 is recommended</b>. To implement this option, leave the next three fields blank: code, vocabulary, vocabulary uri.</br>Do note: You cannot provide a reference to a results framework for <b>both</b> the result and indicator. See guidance for more information: <a target='_blank' href=''>Results Information</a> ",
+        "help_text": "If this result is contained in a results framework, then you may provide information about it. You can choose to provide a reference to a results framework in two ways:</br><b>1.</b> You can provide a reference to a results framework for the result here OR</br><b>2.</b> You can provide a reference to a results framework for each individual indicator that measures this result. For every result that you publish, you will be required to provide an indicator (which measures the result).</br><b>Option 2 is recommended</b>. To implement this option, leave the next three fields blank: code, vocabulary, vocabulary uri.</br>Do note: You cannot provide a reference to a results framework for <b>both</b> the result and indicator. See guidance for more information: <a target='_blank' href='https://iatistandard.org/en/guidance/standard-guidance/results/'>Results Information</a> ",
         "attributes": {
           "vocabulary": {
             "name": "vocabulary",
@@ -4851,7 +4873,7 @@
             "required": false,
             "criteria": "",
             "hover_text": "A code from the OECD DAC CRS “Type of flow” codelist. </br><a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/transaction/flow-type/'>For more information</a>",
-            "help_text": "Please select a flow type for this transaction from the <a target='_blank' href=''>following options</a>.</br>Do note: if you select a flow-type for this transaction, this will override the <b>default flow type</b> for the entire activity (which is selected here), enabling you to choose a flow-type on a transaction-by-transaction basis, if needed."
+            "help_text": "Please select a flow type for this transaction from the <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/codelists/FlowType/'>following options</a>.</br>Do note: if you select a flow-type for this transaction, this will override the <b>default flow type</b> for the entire activity (which is selected here), enabling you to choose a flow-type on a transaction-by-transaction basis, if needed."
           }
         },
         "sub_elements": {}
@@ -4872,7 +4894,7 @@
             "required": false,
             "criteria": "",
             "hover_text": "A code from the OECD DAC CRS “Type of finance” codelist. </br><a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/transaction/finance-type/'>For more information</a>",
-            "help_text": "Please select a finance type for this transaction from the <a target='_blank' href=''>following options</a>.</br>Do note: if you select a finance-type for this transaction, this will override the <b>default finance type</b> for the entire activity (which is selected here), enabling you to choose a finance-type on a transaction-by-transaction basis, if needed."
+            "help_text": "Please select a finance type for this transaction from the <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/codelists/financetype/'>following options</a>.</br>Do note: if you select a finance-type for this transaction, this will override the <b>default finance type</b> for the entire activity (which is selected here), enabling you to choose a finance-type on a transaction-by-transaction basis, if needed."
           }
         },
         "sub_elements": {}
