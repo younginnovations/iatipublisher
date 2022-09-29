@@ -1,4 +1,4 @@
-<div class="page-title mb-6">
+<div class="page-title mb-4 xl:mb-6">
   <div class="flex items-end space-x-4">
     <div class="title grow-0">
       <div class="activity__title mb-4 text-caption-c1 text-n-40">
