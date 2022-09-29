@@ -7,6 +7,8 @@ jQuery(function () {
     $('#nav-list').toggleClass('nav-active');
     $('#hamburger').toggleClass('active');
     $('body').toggleClass('overflow-hidden');
+    $('#menu-overlay').toggleClass('menu-overlay');
+    $('#activity-menu-overlay').toggleClass('menu-overlay');
   });
 
   // close the navMenu by clicking outside
@@ -15,6 +17,8 @@ jQuery(function () {
       $('#nav-list').removeClass('nav-active');
       $('#hamburger').removeClass('active');
       $('body').removeClass('overflow-hidden');
+      $('#menu-overlay').removeClass('menu-overlay');
+      $('#activity-menu-overlay').removeClass('menu-overlay');
     }
   });
 
@@ -48,3 +52,4 @@ if (submitBtnElement.length > 0) {
     $(this).closest('form').trigger('submit');
   });
 }
+

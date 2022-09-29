@@ -34,7 +34,7 @@
       </aside>
       <div class="activities__content">
         <div></div>
-        <div class="activities__content--elements -mx-3 -mt-3 flex flex-wrap">
+        <div class="activities__content--elements -mx-3 -mt-3 xl:flex flex-wrap">
           <template v-for="(post, key) in transactionData" :key="key">
             <TransactionElement
               :data="post"
