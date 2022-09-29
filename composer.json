@@ -6,6 +6,10 @@
     "license": "MIT",
     "require": {
         "php": "^8.0",
+        "ext-dom": "*",
+        "ext-libxml": "*",
+        "ext-openssl": "*",
+        "ext-simplexml": "*",
         "arcanedev/log-viewer": "9",
         "fruitcake/laravel-cors": "^2.0.5",
         "guzzlehttp/guzzle": "^7.4",
@@ -17,11 +21,13 @@
         "laravel/ui": "^3.4",
         "league/flysystem-aws-s3-v3": "^3.0",
         "predis/predis": "^2.0",
-        "symfony/psr-http-message-bridge": "^2.1",
-        "ext-openssl": "*"
+        "psr/simple-cache": "^2.0",
+        "sabre/xml": "^4.0",
+        "symfony/psr-http-message-bridge": "^2.1"
     },
     "require-dev": {
-        "barryvdh/laravel-debugbar": "^3.6",
+      "roave/security-advisories": "dev-latest",
+      "barryvdh/laravel-debugbar": "^3.6",
         "fakerphp/faker": "^1.9.1",
         "friendsofphp/php-cs-fixer": "^3.6",
         "laravel/sail": "^1.0.1",
