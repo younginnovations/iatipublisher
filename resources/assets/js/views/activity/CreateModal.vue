@@ -26,7 +26,7 @@
                 <div class="label-field">
                   <label class="label" for="narrative"
                     >narrative
-                    <span class="text-salmon-40"> *</span>
+                    <span class="required-icon"> *</span>
                   </label>
                   <HoverText
                     :name="'narrative'"
@@ -55,7 +55,7 @@
                 <div class="label-field">
                   <label class="label" for=""
                     >@xml: lang
-                    <span class="text-salmon-40"> *</span>
+                    <span class="required-icon"> *</span>
                   </label>
                   <HoverText
                     name="@xml:lang"
@@ -106,7 +106,7 @@
                 <div class="label-field">
                   <label class="label" for=""
                     >activity identifier
-                    <span class="text-salmon-40"> *</span>
+                    <span class="required-icon"> *</span>
                   </label>
                 </div>
                 <input
@@ -137,7 +137,7 @@
                 <div class="label-field">
                   <label class="label" for=""
                     >iati-identifier
-                    <span class="text-salmon-40"> *</span>
+                    <span class="required-icon"> *</span>
                   </label>
                 </div>
                 <input
