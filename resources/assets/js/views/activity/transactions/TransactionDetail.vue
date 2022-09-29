@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-paper px-10 pt-4 pb-[71px]">
+  <div class="bg-paper px-5 xl:px-10 pt-4 pb-[71px]">
     <PageTitle
       :breadcrumb-data="breadcrumbData"
       :title="`${transactionData.reference ?? 'Untitled'} - Transaction detail`"

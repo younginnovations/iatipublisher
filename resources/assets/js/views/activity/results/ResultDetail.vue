@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-paper px-10 pt-4 pb-[71px]">
+  <div class="bg-paper px-5 pt-4 pb-[71px] xl:px-10">
     <PageTitle
       :breadcrumb-data="breadcrumbData"
       title="Result Detail"
@@ -17,7 +17,9 @@
     </PageTitle>
     <div class="activities">
       <aside class="activities__sidebar">
-        <div class="sticky top-0 px-6 py-4 rounded-lg indicator bg-eggshell text-n-50">
+        <div
+          class="indicator sticky top-0 rounded-lg bg-eggshell px-6 py-4 text-n-50"
+        >
           <ul class="text-sm font-bold leading-relaxed">
             <li v-for="(rData, r, ri) in resultsData" :key="ri">
               <a v-smooth-scroll :href="`#${String(r)}`" :class="linkClasses">
@@ -47,7 +49,9 @@
       <div class="activities__content">
         <div></div>
 
-        <div class="flex flex-wrap -mx-3 -mt-3 activities__content--elements">
+        <div
+          class="activities__content--elements -mx-3 -mt-3 flex-wrap xl:flex"
+        >
           <template v-for="(post, key) in result.result" :key="key">
             <ResultElement
               :data="post"
@@ -75,11 +79,15 @@
         <a
           v-if="!hasIndicators"
           :href="`/result/${result.id}/indicator/create`"
-          class="flex w-full px-4 py-3 text-xs leading-normal bg-white border border-dashed rounded add_indicator border-n-40"
+          class="add_indicator flex w-full rounded border border-dashed border-n-40 bg-white px-4 py-3 text-xs leading-normal"
         >
-          <div class="italic text-left grow">You haven't added any indicator yet.</div>
-          <div class="flex items-center font-bold uppercase shrink-0 text-bluecoral">
-            <svg-vue icon="add" class="mr-1 text-base shrink-0"></svg-vue>
+          <div class="grow text-left italic">
+            You haven't added any indicator yet.
+          </div>
+          <div
+            class="flex shrink-0 items-center font-bold uppercase text-bluecoral"
+          >
+            <svg-vue icon="add" class="mr-1 shrink-0 text-base"></svg-vue>
             <span class="grow text-[10px]">Add new indicator</span>
           </div>
         </a>
@@ -89,21 +97,21 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, toRefs, onMounted, reactive } from "vue";
+import { defineComponent, toRefs, onMounted, reactive } from 'vue';
 
 //component
-import ResultElement from "./ResultElement.vue";
-import Indicator from "Activity/results/elements/Indicator.vue";
-import Btn from "Components/buttons/Link.vue";
-import PageTitle from "Components/sections/PageTitle.vue";
-import Toast from "Components/Toast.vue";
+import ResultElement from './ResultElement.vue';
+import Indicator from 'Activity/results/elements/Indicator.vue';
+import Btn from 'Components/buttons/Link.vue';
+import PageTitle from 'Components/sections/PageTitle.vue';
+import Toast from 'Components/Toast.vue';
 
 //composable
-import dateFormat from "Composable/dateFormat";
-import getActivityTitle from "Composable/title";
+import dateFormat from 'Composable/dateFormat';
+import getActivityTitle from 'Composable/title';
 
 export default defineComponent({
-  name: "ResultDetail",
+  name: 'ResultDetail',
   components: {
     ResultElement,
     Indicator,
@@ -131,7 +139,7 @@ export default defineComponent({
   },
   setup(props) {
     const linkClasses =
-      "flex items-center w-full bg-white rounded p-2 text-sm text-n-50 font-bold leading-normal mb-2 shadow-default";
+      'flex items-center w-full bg-white rounded p-2 text-sm text-n-50 font-bold leading-normal mb-2 shadow-default';
 
     let { result, activity } = toRefs(props);
     const hasIndicators = result.value.indicators.length > 0 ? true : false;
@@ -140,12 +148,12 @@ export default defineComponent({
     const activityId = activity.value.id,
       activityTitle = activity.value.title,
       activityLink = `/activity/${activityId}`,
-      resultTitle = getActivityTitle(resultsData.title[0].narrative, "en"),
+      resultTitle = getActivityTitle(resultsData.title[0].narrative, 'en'),
       resultLink = `${activityLink}/result/${result.value.id}`;
 
     const toastData = reactive({
       visibility: false,
-      message: "",
+      message: '',
       type: true,
     });
 
@@ -154,21 +162,21 @@ export default defineComponent({
      */
     const breadcrumbData = [
       {
-        title: "Your Activities",
-        link: "/activities",
+        title: 'Your Activities',
+        link: '/activities',
       },
       {
-        title: getActivityTitle(activityTitle, "en"),
+        title: getActivityTitle(activityTitle, 'en'),
         link: activityLink,
       },
       {
         title: resultTitle,
-        link: "",
+        link: '',
       },
     ];
 
     onMounted(() => {
-      if (props.toast.message !== "") {
+      if (props.toast.message !== '') {
         toastData.type = props.toast.type;
         toastData.visibility = true;
         toastData.message = props.toast.message;

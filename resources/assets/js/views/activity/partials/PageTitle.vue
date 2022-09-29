@@ -1,16 +1,18 @@
 <template>
-  <div class="mb-4 page-title">
+  <div class="page-title mb-4">
     <div class="flex items-end gap-4">
       <div class="title grow-0">
-        <div class="mb-4 text-caption-c1 text-n-40">
+        <div class="mb-2 text-caption-c1 text-n-40 xl:mb-4">
           <nav aria-label="breadcrumbs" class="breadcrumb">
             <p>
-              <span class="font-bold last">Your Activities</span>
+              <span class="last font-bold">Your Activities</span>
             </p>
           </nav>
         </div>
         <div class="inline-flex items-center">
-          <h4 class="mr-4 font-bold">Your Activities</h4>
+          <h4 class="mr-4 text-3xl font-bold xl:text-heading-4">
+            Your Activities
+          </h4>
           <div class="tooltip-btn">
             <button class="">
               <svg-vue icon="question-mark" />
@@ -43,7 +45,7 @@
           </div>
         </div>
       </div>
-      <div class="relative flex flex-col items-end justify-end actions grow">
+      <div class="actions relative flex grow flex-col items-end justify-end">
         <div class="inline-flex justify-end">
           <Toast
             v-if="toastMessage.visibility"

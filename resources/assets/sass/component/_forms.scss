@@ -180,7 +180,7 @@ span.select2-container--default {
   Activity Detail Page
 */
 .activities {
-  @apply flex gap-7;
+  @apply flex gap-5 xl:gap-7;
 
   &__sidebar {
     flex-shrink: 0;
@@ -214,5 +214,11 @@ span.select2-container--default {
     svg {
       @apply text-n-30;
     }
+  }
+}
+.elements-card {
+  @media screen and (max-width: 1190px) {
+    flex-basis: auto;
+    width: 100%;
   }
 }

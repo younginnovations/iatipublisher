@@ -206,7 +206,7 @@ class FormBuilder {
 
     if (formField.length > 0) {
       formField.wrapAll(
-        '<div class="form-field-group-outer flex flex-wrap mb-6 -mx-3 gap-y-6"></div>'
+        '<div class="form-field-group-outer grid xl:grid-cols-2 mb-6 -mx-3 gap-y-6"></div>'
       );
     }
   }
@@ -219,7 +219,7 @@ class FormBuilder {
       .find('.attribute')
       .wrapAll(
         $(
-          '<div class="form-field-group flex flex-wrap rounded-br-lg border-y border-r border-spring-50 attribute-wrapper mb-4"></div>'
+          '<div class="form-field-group grid xl:grid-cols-2 rounded-br-lg border-y border-r border-spring-50 attribute-wrapper mb-4"></div>'
         )
       );
 

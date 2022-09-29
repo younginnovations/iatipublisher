@@ -1,5 +1,5 @@
 <template>
-  <div class="relative bg-paper px-10 pt-4 pb-[71px]">
+  <div class="relative bg-paper px-5 xl:px-10 pt-4 pb-[71px]">
     <PageTitle
       :breadcrumb-data="breadcrumbData"
       title="Indicator List"
