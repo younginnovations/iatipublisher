@@ -138,12 +138,15 @@ textarea.form__input {
   }
 }
 .search {
-  @apply relative mr-3.5;
+  @apply relative;
 
   &__input {
     @apply border border-n-30 bg-transparent outline-none;
     padding: 10px 42px 10px 34px;
     border-radius: 20px;
+  }
+  svg {
+    @apply absolute left-3 top-3 text-base text-n-30;
   }
 }
 .required-icon{

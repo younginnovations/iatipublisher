@@ -3,18 +3,18 @@
     <Transition name="modal-animation">
       <div
         v-if="modalActive"
-        class="fixed top-0 left-0 z-50 flex items-center justify-center w-screen h-screen p-8 modal"
+        class="modal fixed top-0 left-0 z-50 flex h-screen w-screen items-center justify-center p-4 sm:p-8"
       >
         <Transition name="modal-animation-inner">
-          <div class="flex items-center justify-center w-full h-full">
+          <div class="flex h-full w-full items-center justify-center">
             <div
-              class="absolute top-0 left-0 w-full h-full opacity-50 modal-backdrop bg-n-50"
+              class="modal-backdrop absolute top-0 left-0 h-full w-full bg-n-50 opacity-50"
               @click="close"
             />
             <div
               v-if="modalActive"
               :style="`max-width:${width}px;`"
-              class="relative w-full max-h-full p-8 overflow-x-hidden bg-white rounded-lg modal-inner"
+              class="modal-inner relative max-h-full w-full overflow-x-hidden rounded-lg bg-white p-4 sm:p-8"
             >
               <slot />
             </div>

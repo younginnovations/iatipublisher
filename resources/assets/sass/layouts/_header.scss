@@ -145,6 +145,30 @@
     padding: 20px;
   }
 }
+.activity-nav-menu {
+  @media screen and (max-width: 1190px) {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 300px;
+    height: 100vh;
+    padding: 30px;
+    @apply text-white;
+    font-size: 16px;
+    text-align: center;
+    background: rgba(21, 83, 102, 0.5);
+    transform: translateX(100%);
+    backdrop-filter: blur(7px);
+    transition: 0.3s;
+    z-index: 40;
+    flex-direction: column;
+    justify-content: start;
+
+    .activity-nav-list {
+      @apply mt-56 flex flex-col space-y-7;
+    }
+  }
+}
 .nav-active {
   transform: translateX(0%);
 }
@@ -156,6 +180,10 @@
     &:after {
       content: '';
       @apply absolute bottom-0 left-0 h-1 w-full scale-x-0 scale-y-100 rounded-sm bg-turquoise transition-all duration-500;
+
+      @media screen and (max-width: 1190px) {
+        @apply -bottom-3;
+      }
     }
 
     &:hover:after {
