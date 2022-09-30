@@ -148,6 +148,9 @@ defineProps({
     validator: (v: unknown) =>
       typeof v === 'object' || typeof v === 'string' || v === null,
     required: false,
+    default() {
+      return {};
+    },
   },
   superAdmin: { type: Boolean, required: true },
 });
