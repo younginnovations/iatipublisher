@@ -10,6 +10,7 @@ use App\IATI\Models\Activity\Activity;
 use App\IATI\Services\Activity\ActivityService;
 use App\IATI\Services\Activity\ResultService;
 use App\IATI\Services\Activity\TransactionService;
+use App\IATI\Services\Organization\OrganizationService;
 use App\IATI\Services\Validator\ActivityValidatorResponseService;
 use Exception;
 use Illuminate\Contracts\View\View;
@@ -51,26 +52,34 @@ class ActivityController extends Controller
     protected ActivityValidatorResponseService $activityValidatorResponseService;
 
     /**
+     * @var OrganizationService
+     */
+    private OrganizationService $organizationService;
+
+    /**
      * ActivityController Constructor.
      *
-     * @param ActivityService    $activityService
-     * @param DatabaseManager    $db
-     * @param ResultService      $resultService
-     * @param TransactionService $transactionService
+     * @param ActivityService                  $activityService
+     * @param DatabaseManager                  $db
+     * @param ResultService                    $resultService
+     * @param TransactionService               $transactionService
      * @param ActivityValidatorResponseService $activityValidatorResponseService
+     * @param OrganizationService              $organizationService
      */
     public function __construct(
         ActivityService $activityService,
         DatabaseManager $db,
         ResultService $resultService,
         TransactionService $transactionService,
-        ActivityValidatorResponseService $activityValidatorResponseService
+        ActivityValidatorResponseService $activityValidatorResponseService,
+        OrganizationService $organizationService
     ) {
         $this->activityService = $activityService;
         $this->db = $db;
         $this->resultService = $resultService;
         $this->transactionService = $transactionService;
         $this->activityValidatorResponseService = $activityValidatorResponseService;
+        $this->organizationService = $organizationService;
     }
 
     /**
@@ -160,10 +169,11 @@ class ActivityController extends Controller
                 'iati_identifier_text' => $activity->organization->identifier . '-' . $activity->iati_identifier['activity_identifier'],
             ];
             $iatiValidatorResponse = $validatorResponse->response ?? null;
+            $hasReportingOrgData = $this->organizationService->hasReportingOrgData(Auth::user()->organization_id);
 
             return view(
                 'admin.activity.show',
-                compact('elements', 'elementGroups', 'progress', 'activity', 'toast', 'types', 'status', 'results', 'hasIndicatorPeriod', 'transactions', 'coreCompleted', 'iatiValidatorResponse', 'organization_identifier')
+                compact('elements', 'elementGroups', 'progress', 'activity', 'toast', 'types', 'status', 'results', 'hasIndicatorPeriod', 'transactions', 'coreCompleted', 'iatiValidatorResponse', 'organization_identifier', 'hasReportingOrgData')
             );
         } catch (Exception $e) {
             logger()->error($e->getMessage());

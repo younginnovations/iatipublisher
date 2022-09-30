@@ -21,6 +21,10 @@ class DatabaseSeeder extends Seeder
     {
         $this->call([RoleTableSeeder::class]);
 
+        if (env('APP_ENV') === 'production') {
+            Role::factory()->create(['role' => 'superadmin']);
+        }
+
         if ((env('APP_ENV') === 'local') || (env('APP_ENV') === 'staging') || (env('APP_ENV') === 'dev')) {
             $org = Organization::factory()->has(User::factory(['role_id' => app(Role::class)->getOrganizationAdminId()]))->has(Setting::factory())->create();
             $activity_attr = [

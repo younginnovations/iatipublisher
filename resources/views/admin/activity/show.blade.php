@@ -14,6 +14,7 @@
         :has_period="{{ $hasIndicatorPeriod['period'] }}"
         :transactions="{{ json_encode($transactions) }}"
         :core-completed="{{ json_encode($coreCompleted) }}"
-        :iati-validator-response="{{ json_encode($iatiValidatorResponse) }}">
+        :iati-validator-response="{{ json_encode($iatiValidatorResponse) }}"
+        :has-reporting-org-data="{{ json_encode($hasReportingOrgData) }}">
     </activities-detail>
 @endsection

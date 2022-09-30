@@ -75,7 +75,11 @@
             !(index.toString() === 'indicator' || index.toString() === 'period')
           "
           class="elements__item relative flex cursor-pointer flex-col items-center justify-center rounded border border-dashed border-n-40 py-2.5 text-n-30"
-          :href="getLink(post.has_data, index.toString())"
+          :href="
+            index.toString() === 'reporting_org'
+              ? getLink(hasReportingOrgData, index.toString())
+              : getLink(post.has_data, index.toString())
+          "
         >
           <div
             class="absolute top-0 right-0 inline-flex mt-1 mr-1 status_icons"
@@ -120,7 +124,15 @@
 </template>
 
 <script setup lang="ts">
-import { computed, defineProps, reactive, onMounted, ref, toRefs } from 'vue';
+import {
+  computed,
+  defineProps,
+  reactive,
+  onMounted,
+  ref,
+  toRefs,
+  inject,
+} from 'vue';
 import { useToggle } from '@vueuse/core';
 
 import { activityCoreElements } from 'Composable/coreElements';
@@ -137,6 +149,8 @@ const props = defineProps({
 });
 
 const { data } = toRefs(props);
+
+const hasReportingOrgData = inject('hasReportingOrgData') ? 1 : 0;
 
 const dropdown = ref();
 const dropdownBtn = ref();
@@ -202,13 +216,15 @@ onMounted(() => {
 
 function getLink(has_data: number, index: string) {
   if (has_data) {
-    return `#${index}`;
+    return index == 'reporting_org' ? `/organisation#${index}` : `#${index}`;
   } else if (index == 'result' || index == 'transactions') {
     let element = index == 'result' ? 'result' : 'transaction';
     return `/activity/${props.activityId}/${element}/create`;
   }
 
-  return `/activity/${props.activityId}/${index}`;
+  return index == 'reporting_org'
+    ? `/organisation/${index}`
+    : `/activity/${props.activityId}/${index}`;
 }
 </script>
 
