@@ -1,4 +1,4 @@
-ARG PHP_EXTS="bcmath pdo_mysql pdo_pgsql pcntl gd"
+ARG PHP_EXTS="bcmath pdo_mysql pdo_pgsql pcntl"
 ARG PHP_PECL_EXTS="redis"
 ARG MIX_ENCRYPTION_KEY
 
@@ -15,7 +15,6 @@ RUN addgroup -S composer \
     && adduser -S composer -G composer \
     && chown -R composer /opt/apps/laravel-in-kubernetes \
     && apk add --virtual build-dependencies --no-cache ${PHPIZE_DEPS} openssl ca-certificates libxml2-dev oniguruma-dev postgresql-dev \
-    && apk add --no-cache libpq libjpeg-turbo-dev libpng-dev libwebp-dev freetype-dev \
     && docker-php-ext-install -j$(nproc) ${PHP_EXTS} \
     && pecl install -f ${PHP_PECL_EXTS} \
     && docker-php-ext-enable ${PHP_PECL_EXTS} \
@@ -57,7 +56,6 @@ COPY docker/custom_php.ini $PHP_INI_DIR/conf.d/custom_php.ini
 WORKDIR /opt/apps/laravel-in-kubernetes
 
 RUN apk add --virtual build-dependencies --no-cache ${PHPIZE_DEPS} openssl ca-certificates libxml2-dev oniguruma-dev postgresql-dev && \
-    apk add --no-cache libpq libjpeg-turbo-dev libpng-dev libwebp-dev freetype-dev && \
     docker-php-ext-install -j$(nproc) ${PHP_EXTS} && \
     pecl install -f ${PHP_PECL_EXTS} && \
     docker-php-ext-enable ${PHP_PECL_EXTS} && \
@@ -85,7 +83,6 @@ RUN echo "pm.status_path = /status" >> /usr/local/etc/php-fpm.d/zz-docker.conf
 WORKDIR /opt/apps/laravel-in-kubernetes
 
 RUN apk add --virtual build-dependencies --no-cache ${PHPIZE_DEPS} openssl ca-certificates libxml2-dev oniguruma-dev postgresql-dev && \
-    apk add --no-cache libpq libjpeg-turbo-dev libpng-dev libwebp-dev freetype-dev && \
     docker-php-ext-install -j$(nproc) ${PHP_EXTS} && \
     pecl install -f ${PHP_PECL_EXTS} && \
     docker-php-ext-enable ${PHP_PECL_EXTS} && \
