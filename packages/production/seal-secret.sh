@@ -1,11 +1,9 @@
 #!/usr/bin/env bash
 
-kubeseal --controller-namespace kube-system \
-    --controller-name sealed-secrets-sealed-secrets-controller \
+kubeseal --cert https://sealed-secrets.k8s.yipl.com.np/v1/cert.pem \
     --format yaml \
     < secret.yaml > sealed-secret.yaml
 
-kubeseal --controller-namespace kube-system \
-    --controller-name sealed-secrets-sealed-secrets-controller \
+kubeseal --cert https://sealed-secrets.k8s.yipl.com.np/v1/cert.pem \
     --format yaml \
     < github-credentials.yaml > github-credentails-sealed-secret.yaml
