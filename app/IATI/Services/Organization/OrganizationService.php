@@ -87,6 +87,25 @@ class OrganizationService
     }
 
     /**
+     * Checks if organization has reporting data.
+     *
+     * @param $id
+     *
+     * @return bool
+     */
+    public function hasReportingOrgData($id): bool
+    {
+        $orgData = $this->organizationRepo->getOrganizationData($id);
+        $orgData = $orgData->toArray();
+
+        if (!empty($orgData['reporting_org'])) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
      * Returns required service file.
      *
      * @param $serviceName
