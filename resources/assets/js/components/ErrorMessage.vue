@@ -7,11 +7,10 @@
         errorData.publisher_setting
       )
     "
-    class="relative h-full bg-white duration-300"
+    class="relative h-full duration-300 bg-white"
     :class="{
       'mb-5': !isEmpty || !show,
       'mb-10': show,
-      'mb-10': !show,
     }"
   >
     <Loader v-if="isLoaderVisible" />
@@ -24,18 +23,18 @@
       "
     >
       <div class="flex items-center justify-between">
-        <div class="flex h-5 items-center space-x-4">
+        <div class="flex items-center h-5 space-x-4">
           <div :show="show" class="flex items-center">
             <svg-vue
               icon="warning-activity"
-              class="mr-2 grow-0 text-base text-salmon-50"
+              class="mr-2 text-base grow-0 text-salmon-50"
             ></svg-vue>
             <span class="text-sm font-bold text-n-50">
               {{
                 errorData.account_verified ||
                 (errorData.default_setting && errorData.publisher_setting)
-                  ? "1 Alerts"
-                  : "2 Alerts"
+                  ? '1 Alerts'
+                  : '2 Alerts'
               }}
             </span>
           </div>
@@ -44,29 +43,39 @@
             :class="show ? 'text-show' : 'text-hide'"
           >
             <svg-vue icon="red-dot" class="text-[6px]"></svg-vue>
-            <span class="text-sm font-bold text-n-50">Account not verified</span>
+            <span class="text-sm font-bold text-n-50"
+              >Account not verified</span
+            >
           </div>
           <div
             v-if="!errorData.publisher_setting || !errorData.default_setting"
             :class="
-              show && (!errorData.publisher_setting || !errorData.default_setting)
+              show &&
+              (!errorData.publisher_setting || !errorData.default_setting)
                 ? 'text-show'
                 : 'text-hide'
             "
           >
             <svg-vue icon="red-dot" class="text-[6px]"></svg-vue>
-            <span class="text-sm font-bold text-bluecoral">Complete your setup</span>
+            <span class="text-sm font-bold text-bluecoral"
+              >Complete your setup</span
+            >
           </div>
         </div>
         <div>
-          <button class="text-sm leading-relaxed text-bluecoral" @click="show = !show">
-            Show {{ show ? "less" : "more" }}
+          <button
+            class="text-sm leading-relaxed text-bluecoral"
+            @click="show = !show"
+          >
+            Show {{ show ? 'less' : 'more' }}
           </button>
         </div>
       </div>
     </div>
 
-    <div :class="show ? 'border-show duration-300' : 'border-hide duration-300'"></div>
+    <div
+      :class="show ? 'border-show duration-300' : 'border-hide duration-300'"
+    ></div>
 
     <div v-if="!errorData.account_verified" class="ml-4 mr-6">
       <TransitionRoot
@@ -88,10 +97,11 @@
 
             <div class="ml-5 text-left">
               <p>
-                Please check for verification email sent to you and verify your account,
+                Please check for verification email sent to you and verify your
+                account,
                 <span
                   ><a
-                    class="cursor-pointer border-b-2 border-b-bluecoral font-bold text-bluecoral hover:border-b-spring-50"
+                    class="font-bold border-b-2 cursor-pointer border-b-bluecoral text-bluecoral hover:border-b-spring-50"
                     @click="resendVerificationEmail()"
                     >resend verification email</a
                   ></span
@@ -133,7 +143,11 @@
             <div class="ml-5">
               <p>
                 Please
-                <span><a href="/setting" target="_blank">complete your setup</a></span>
+                <span
+                  ><a href="/setting" target="_blank"
+                    >complete your setup</a
+                  ></span
+                >
                 in order to enable complete features of IATI publisher tool.
               </p>
               <div v-if="!errorData.publisher_setting" class="alert__message">
@@ -158,10 +172,10 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, reactive, onMounted, inject } from "vue";
-import { TransitionRoot } from "@headlessui/vue";
-import Loader from "../components/Loader.vue";
-import axios from "axios";
+import { defineComponent, ref, reactive, onMounted, inject } from 'vue';
+import { TransitionRoot } from '@headlessui/vue';
+import Loader from '../components/Loader.vue';
+import axios from 'axios';
 
 export default defineComponent({
   components: {
@@ -182,7 +196,7 @@ export default defineComponent({
       message: string;
       type: boolean;
     }
-    const toastData = inject("toastData") as ToastInterface;
+    const toastData = inject('toastData') as ToastInterface;
     const errorData = reactive({
       account_verified: false,
       default_setting: false,
@@ -194,7 +208,7 @@ export default defineComponent({
       isLoaderVisible.value = true;
 
       axios
-        .post("/user/verification/email")
+        .post('/user/verification/email')
         .then((res) => {
           toastData.visibility = true;
           toastData.message = res.data.message;
@@ -210,30 +224,26 @@ export default defineComponent({
 
       setTimeout(() => {
         toastData.visibility = false;
-        toastData.message = "";
+        toastData.message = '';
         toastData.type = false;
       }, 2000);
     }
 
     onMounted(async () => {
-      axios
-        .get("/setting/status")
-        .then((res) => {
-          const response = res.data;
-          errorData.default_setting = response.data.default_status;
-          errorData.publisher_setting = response.data.publisher_status;
-        });
+      axios.get('/setting/status').then((res) => {
+        const response = res.data;
+        errorData.default_setting = response?.data?.default_status;
+        errorData.publisher_setting = response?.data?.publisher_status;
+      });
 
-      axios
-        .get("/user/verification/status")
-        .then((res) => {
-          const response = res.data;
-          errorData.account_verified = response.data.account_verified;
-        });
+      axios.get('/user/verification/status').then((res) => {
+        const response = res.data;
+        errorData.account_verified = response.data.account_verified;
+      });
 
       setTimeout(() => {
         toastData.visibility = false;
-        toastData.message = "";
+        toastData.message = '';
         toastData.type = false;
       }, 2000);
     });
@@ -250,7 +260,7 @@ export default defineComponent({
 
 <style lang="scss" scoped>
 .alert {
-  @apply bg-camel-10 p-4 pr-6 text-sm leading-relaxed text-n-50 rounded;
+  @apply rounded bg-camel-10 p-4 pr-6 text-sm leading-relaxed text-n-50;
 
   &__container {
     @apply flex flex-col leading-6;
@@ -274,17 +284,17 @@ export default defineComponent({
   @apply flex -translate-y-0 items-center space-x-2 duration-300;
 }
 .border-hide::before {
-  @apply absolute left-0 top-0 bg-salmon-50 duration-300 ease-out rounded;
+  @apply absolute left-0 top-0 rounded bg-salmon-50 duration-300 ease-out;
   width: 2px;
   height: 100%;
-  content: "";
+  content: '';
   transform: translateY(-100%);
 }
 .border-show::before {
-  @apply absolute left-0 top-0 bg-salmon-50 duration-300 ease-out rounded;
+  @apply absolute left-0 top-0 rounded bg-salmon-50 duration-300 ease-out;
   width: 2px;
   height: 100%;
-  content: "";
+  content: '';
   transform: translateY(0%);
 }
 </style>

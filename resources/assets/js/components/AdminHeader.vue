@@ -43,7 +43,7 @@
           </li>
         </ul>
       </nav>
-      <nav>
+      <nav v-if="superAdmin" class="flex justify-end grow">
         <ul class="activity-nav-list -mx-4">
           <li
             v-for="(menu, index) in data.menus"
@@ -63,21 +63,31 @@
         </ul>
       </nav>
     </div>
-    <div class="user-nav">
+    <div class="user-nav" :class="{ 'grow-0': superAdmin, 'grow justify-end': !superAdmin }">
       <div class="user-nav">
         <div class="search">
           <input
+            v-if="superAdmin"
             v-model="searchValue"
             class="search__input mr-3.5"
             type="text"
             placeholder="Search activity..."
-            @keyup.enter="searchFunction"
+            @keyup.enter="searchFunction('/activities')"
+          />
+          <input
+            v-else
+            v-model="searchValue"
+            class="search__input"
+            type="text"
+            placeholder="Search organisation..."
+            @keyup.enter="searchFunction('/list-organisations')"
           />
           <svg-vue icon="search" />
           <span v-if="spinner" class="spinner" />
         </div>
         <button
-          class="add-btn button secondary-btn mr-3.5 font-bold"
+          v-if="superAdmin"
+          class="button secondary-btn mr-3.5 font-bold"
           @click="modalValue = true"
         >
           <svg-vue icon="add" />
@@ -91,11 +101,13 @@
                 <div>
                   <svg-vue class="user-profile" icon="user-profile" />
                 </div>
-                <div class="flex flex-col break-all capitalize leading-4">
-                  <span class="text-n-50">{{ user.full_name }}</span
-                  ><span class="text-tiny text-n-40">{{
-                    organization.publisher_name
-                  }}</span>
+                <div class="flex flex-col leading-4 capitalize break-all">
+                  <span class="text-n-50">
+                    {{ user.full_name }}
+                  </span>
+                  <span class="text-tiny text-n-40">
+                    {{ organization?.publisher_name }}
+                  </span>
                 </div>
               </li>
               <li class="dropdown__list border-b border-b-n-20">
@@ -112,10 +124,8 @@
       </div>
     </div>
 
-    <!--====================
-        Add Activity Modal
-    ========================-->
     <CreateModal
+      v-if="superAdmin"
       :modal-active="modalValue"
       @close="modalToggle"
       @close-modal="modalToggle"
@@ -125,16 +135,26 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, ref, reactive, onMounted } from 'vue';
-import type { Ref } from 'vue';
+import { defineProps, ref, reactive, onMounted, Ref } from 'vue';
 import axios from 'axios';
 import { useToggle } from '@vueuse/core';
 import CreateModal from '../views/activity/CreateModal.vue';
 import Toast from './Toast.vue';
+
 defineProps({
   user: { type: Object, required: true },
-  organization: { type: Object, required: true },
+  organization: {
+    type: Object,
+    validator: (v: unknown) =>
+      typeof v === 'object' || typeof v === 'string' || v === null,
+    required: false,
+    default() {
+      return {};
+    },
+  },
+  superAdmin: { type: Boolean, required: true },
 });
+
 const toastVisibility = ref(false);
 const toastMessage = ref('');
 const toastType = ref(false);
@@ -218,7 +238,7 @@ if (currentURL.includes('?')) {
   searchValue.value = search;
 }
 const spinner = ref(false);
-const searchFunction = () => {
+const searchFunction = (url: string) => {
   spinner.value = true;
   const param = searchValue.value?.replace('#', '');
   let sortingParam = '';
@@ -227,7 +247,7 @@ const searchFunction = () => {
     let queryStringArr = queryString.split('&') as [];
     sortingParam = '&' + queryStringArr.slice(1).join('&');
   }
-  let href = param ? `/activities?q=${param}${sortingParam}` : '/activities/';
+  let href = param ? `${url}?q=${param}${sortingParam}` : '/activities/';
   window.location.href = href;
 };
 onMounted(async () => {

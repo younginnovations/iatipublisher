@@ -6,6 +6,7 @@ namespace App\IATI\Services\Setting;
 
 use App\IATI\Models\Setting\Setting;
 use App\IATI\Repositories\Setting\SettingRepository;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 
 /**
@@ -95,7 +96,7 @@ class SettingService
         return [
             'default_status'   => $setting && $this->defaultSettingsCompleted($setting->default_values, $setting->activity_default_values),
             'publisher_status' => $setting && $setting['publishing_info'] ? ($setting['publishing_info']['api_token'] && $setting['publishing_info']['token_verification'] ? true : false) : false,
-            'token_status' => $setting['publishing_info']['token_verification'],
+            'token_status' => Arr::get($setting, 'publishing_info.token_verification', false),
         ];
     }
 

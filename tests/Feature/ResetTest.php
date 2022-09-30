@@ -1,6 +1,7 @@
 <?php
 
 use App\IATI\Models\Organization\Organization;
+use App\IATI\Models\User\Role;
 use App\IATI\Models\User\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -62,9 +63,10 @@ class ResetTest extends TestCase
      */
     public function test_user_email_recovery(): void
     {
-        Organization::factory()->create();
-        $user = User::factory()->create();
-        $this->json('post', '/password/email', ['email' => $user->email])
+        $role = Role::factory()->create();
+        $org = Organization::factory()->has(User::factory(['role_id'=>$role->id]))->create();
+
+        $this->json('post', '/password/email', ['email' => $org->user->email])
              ->assertStatus(200)
              ->assertJsonStructure(['success', 'message']);
     }

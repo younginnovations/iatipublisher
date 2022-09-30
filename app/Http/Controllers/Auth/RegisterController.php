@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\IATI\Models\User\Role;
 use App\IATI\Services\Organization\OrganizationService;
 use App\IATI\Services\User\UserService;
 use App\Providers\RouteServiceProvider;
@@ -12,9 +13,13 @@ use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Database\DatabaseManager;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Auth\RegistersUsers;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
 
 /**
@@ -89,10 +94,10 @@ class RegisterController extends Controller
     /**
      * @param Request $request
      *
-     * @return \Illuminate\Http\JsonResponse|void
+     * @return JsonResponse|void
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function verifyPublisher(Request $request): \Illuminate\Http\JsonResponse|\GuzzleHttp\Exception\GuzzleException
+    public function verifyPublisher(Request $request): JsonResponse|\GuzzleHttp\Exception\GuzzleException
     {
         try {
             $postData = $request->all();
@@ -179,10 +184,10 @@ class RegisterController extends Controller
      *
      * @param array $data
      *
-     * @return \Illuminate\Database\Eloquent\Model| void
+     * @return Model
      * @throws \Throwable
      */
-    protected function create(array $data): \Illuminate\Database\Eloquent\Model
+    protected function create(array $data): Model
     {
         try {
             $this->db->beginTransaction();
@@ -198,11 +203,11 @@ class RegisterController extends Controller
     /**
      * Handle a registration request for the application.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      *
-     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Http\JsonResponse
+     * @return RedirectResponse|JsonResponse
      */
-    public function register(Request $request): \Illuminate\Http\JsonResponse|\Illuminate\Http\RedirectResponse
+    public function register(Request $request): JsonResponse|RedirectResponse
     {
         $request['password'] = isset($request['password']) && $request['password'] ? decryptString($request['password'], env('MIX_ENCRYPTION_KEY')) : '';
         $request['password_confirmation'] = isset($request['password_confirmation']) && $request['password_confirmation'] ? decryptString($request['password_confirmation'], env('MIX_ENCRYPTION_KEY')) : '';
@@ -221,6 +226,7 @@ class RegisterController extends Controller
         }
         $user = $this->create($request->all());
         event(new Registered($user));
+        Session::put('role_id', app(Role::class)->getOrganizationAdminId());
 
         return response()->json(['success' => true, 'message' => 'User registered successfully']);
     }

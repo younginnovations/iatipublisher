@@ -39,6 +39,7 @@ module.exports = {
       bluecoral: withOpacity('--bluecoral'),
 
       blue: {
+        40: withOpacity('--bluecoral-40'),
         50: withOpacity('--bluecoral-50'),
       },
       // Secondary colors

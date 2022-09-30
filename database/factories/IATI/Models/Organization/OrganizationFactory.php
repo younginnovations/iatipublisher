@@ -4,9 +4,10 @@ namespace Database\Factories\IATI\Models\Organization;
 
 use App\IATI\Models\Organization\Organization;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Database\Eloquent\Model;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Model>
+ * @extends Factory<Model>
  */
 class OrganizationFactory extends Factory
 {
@@ -16,12 +17,10 @@ class OrganizationFactory extends Factory
      * Define the model's default state.
      *
      * @return array
-     * @throws \JsonException
      */
     public function definition(): array
     {
         return [
-            'id'                  => 1,
             'publisher_id'        => env('IATI_YIPL_PUBLISHER_ID'),
             'publisher_name'      => env('IATI_YIPL_PUBLISHER_NAME'),
             'publisher_type'      => 'government',

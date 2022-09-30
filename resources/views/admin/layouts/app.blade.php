@@ -8,9 +8,9 @@
   <!-- CSRF Token -->
   <meta name="csrf-token" content="{{ csrf_token() }}">
 
-  <title>{{ config('app.name', 'IATI Publisher') }}</title>
-  <link rel="icon" type="image"
-    href="https://prod-iati-website.azureedge.net/prod-iati-website/favicons/favicon-32x32.png">
+    <title>{{ config('app.name', 'IATI Publisher') }}</title>
+    <link rel="icon" type="image"
+          href="https://prod-iati-website.azureedge.net/prod-iati-website/favicons/favicon-32x32.png">
 
   <!-- Scripts -->
   {{-- <script defer src="{{ mix('js/app.js') }}"></script> --}}
@@ -44,19 +44,29 @@
 </head>
 
 <body class="overflow-x-hidden">
-  <div id="app">
-    <loggedin-header :user="{{ Auth::user() }}" :organization="{{ Auth::user()->organization }}"
-      :languages="{{ json_encode(getCodeListArray('Languages', 'ActivityArray')) }}"></loggedin-header>
-
+<div id="app">
+    @if (isSuperAdmin() && !isSuperAdminRoute())
+        <admin-bar :name="{{ json_encode(Auth::user()->full_name, JSON_THROW_ON_ERROR) }}"
+                   :organization-name="{{ json_encode(Auth::user()->organization->publisher_name, JSON_THROW_ON_ERROR) }}">
+        </admin-bar>
+    @endif
+    @if (isSuperAdmin())
+        <loggedin-header :user="{{ Auth::user() }}"
+                         :languages="{{ json_encode(getCodeListArray('Languages', 'ActivityArray'), JSON_THROW_ON_ERROR) }}"
+                         v-bind:super-admin="{{ json_encode(!isSuperAdminRoute(), JSON_THROW_ON_ERROR) }}"></loggedin-header>
+    @else
+        <loggedin-header :user="{{ Auth::user() }}" :organization="{{ Auth::user()->organization }}"
+                         :languages="{{ json_encode(getCodeListArray('Languages', 'ActivityArray'), JSON_THROW_ON_ERROR) }}"
+                         v-bind:super-admin="{{ json_encode(!isSuperAdminRoute(), JSON_THROW_ON_ERROR) }}"></loggedin-header>
+    @endif
     <main>
-      @yield('content')
-      @stack('scripts')
+        @yield('content')
+        @stack('scripts')
     </main>
-  </div>
-
-  <script defer src="/manifest.js"></script>
-  <script defer src="/js/vendor.js"></script>
-  <script defer src="/js/app.js"></script>
+</div>
+    <script defer src="/manifest.js"></script>
+    <script defer src="/js/vendor.js"></script>
+    <script defer src="/js/app.js"></script>
 </body>
 
 </html>
