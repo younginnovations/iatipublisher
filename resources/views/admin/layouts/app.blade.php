@@ -12,12 +12,6 @@
     <link rel="icon" type="image"
           href="https://prod-iati-website.azureedge.net/prod-iati-website/favicons/favicon-32x32.png">
 
-  <!-- Scripts -->
-  {{-- <script defer src="{{ mix('js/app.js') }}"></script> --}}
-  <script defer src="{{ mix('js/script.js') }}"></script>
-  <script defer src="{{ mix('js/formbuilder.js') }}"></script>
-
-  <!-- Fonts -->
   {{-- Normal --}}
   <link rel="preload" href="{{ asset('fonts/Arial/arial-webfont.woff') }}" as="font" type="font/woff" crossorigin>
   <link rel="preload" href="{{ asset('fonts/Arial/arial-webfont.eot') }}" as="font" type="font/eot" crossorigin>
@@ -63,10 +57,14 @@
         @yield('content')
         @stack('scripts')
     </main>
-</div>
-    <script defer src="/manifest.js"></script>
-    <script defer src="/js/vendor.js"></script>
-    <script defer src="/js/app.js"></script>
+  </div>
+
+  <script defer src="{{ mix('/manifest.js') }}"></script>
+  <script defer src="{{ mix('/js/vendor.js') }}"></script>
+  <script defer src="{{ mix('/js/app.js') }}"></script>
+  <script defer src="{{ mix('/js/script.js') }}"></script>
+  <script defer src="{{ mix('js/formbuilder.js') }}"></script>
+
 </body>
 
 </html>
