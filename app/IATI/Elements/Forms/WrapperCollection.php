@@ -110,7 +110,7 @@ class WrapperCollection extends Form
                 'placeholder' => Arr::get($field, 'placeholder', ''),
             ],
             'wrapper'     => [
-                'class' => 'form-field w-full xl:basis-6/12 sub-attribute',
+                'class' => 'form-field basis-auto w-full xl:min-w-[300px] xl:basis-6/12 sub-attribute',
             ],
         ];
 

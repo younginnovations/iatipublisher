@@ -82,6 +82,7 @@
               </ul>
             </div>
           </div>
+          <div id="menu-overlay"></div>
           <div
             id="hamburger"
             class="hamburger mb-4 scale-90 sm:scale-100 xl:hidden"

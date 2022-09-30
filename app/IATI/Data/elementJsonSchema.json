@@ -284,7 +284,7 @@
         "required": true,
         "criteria": "mandatory",
         "hover_text": "An IATI code defining the current status of the activity.</br>This attribute is required.</br><a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/activity-status/'>For more information</a>",
-        "help_text": "Select an option that defines the current status of your activity.</br>1.<b> Pipeline/identification</b>: The activity is being scoped or planned</br>2.<b> Implementation</b>: The activity is currently being implemented</br>3.<li><b> Finalisation</b>: Physical activity is complete or the final disbursement has been made, but the activity remains open pending financial sign off or M&E</br>4.<b> Closed</b>: Physical activity is complete or the final disbursement has been made</b>5.<b> Canceled</b>: The activity has been canceled</br>6.<b> Suspended</b>: The activity has been temporarily suspended</li>"
+        "help_text": "Select an option that defines the current status of your activity.</br>1.<b> Pipeline/identification</b>: The activity is being scoped or planned</br>2.<b> Implementation</b>: The activity is currently being implemented</br>3.<li><b> Finalisation</b>: Physical activity is complete or the final disbursement has been made, but the activity remains open pending financial sign off or M&E</br>4.<b> Closed</b>: Physical activity is complete or the final disbursement has been made</br>5.<b> Canceled</b>: The activity has been canceled</br>6.<b> Suspended</b>: The activity has been temporarily suspended</li>"
       }
     },
     "sub_elements": {}
@@ -383,7 +383,7 @@
         "required": true,
         "criteria": "mandatory",
         "hover_text": "ISO 3166-1 alpha-2 code for the country. This attribute is required.</br><a target='_blank' href='https://iatistandard.org/en/iati-standard/203/codelists/country/'>For more information</a>",
-        "help_text": "Select a country benefiting from this activity. However, <b>do not<b> select a country here if you want to specify the recipient country benefiting from the individual transactions within this activity."
+        "help_text": "Select a country benefiting from this activity. However, <b>do not</b> select a country here if you want to specify the recipient country benefiting from the individual transactions within this activity."
       },
       "percentage": {
         "name": "percentage",
@@ -1302,7 +1302,7 @@
     "add_more": true,
     "add_more_attributes": true,
     "hover_text": "Another separately reported IATI activity that is related to this one. The ‘type’ attribute describes the type of relationship: (eg. parent, child, multifunded). It is strongly recommended that linkage between activities in a hierarchical group should always be managed by use of this element with @type of 1 (parent) or 2 (child).<br> <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/related-activity/'>For more information</a>",
-    "help_text": "If this activity is part of a programme with multiple activities within one organisation, you should include details of all related activities. Please read more about the <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/codelists/relatedactivitytype/'>types of related activities</a> that you can report.</br>Please only refer to <b>your <u>own</u><b> activities here.",
+    "help_text": "If this activity is part of a programme with multiple activities within one organisation, you should include details of all related activities. Please read more about the <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/codelists/relatedactivitytype/'>types of related activities</a> that you can report.</br>Please only refer to <b>your <u>own</u></b> activities here.",
     "attributes": {
       "activity_identifier": {
         "name": "activity_identifier",
@@ -4590,7 +4590,7 @@
             "required": false,
             "criteria": "",
             "hover_text": "An IATI code for the vocabulary (codelist) used for sector classifications. If omitted, OECD DAC 5-digit Purpose Codes are assumed. </br><a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/transaction/sector/'>For more information</a>",
-            "help_text": "If you decide to publish what sector this transaction is supporting, then you need to choose a list of sectors. IATI recommends choosing the OECD DAC 5-digit sector codelist, in which you can make a selection from <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/codelists/sector/'>over 300 sectors</a>.</br>You can choose to use another list (see <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/codelists/sectorvocabulary/'>information on all possible options</a>). If you want to use your organisation’s own list of internal sector classifications, select the option: ‘Reporting Organisation’.</br>You can choose to use multiple lists. If you use more than one internal sector classification, please select ‘Reporting Organisation 2’ (which has the code 98) for the additional list. <a target='_blank' href='https://iatistandard.org/en/guidance/standard-guidance/activity-thematic-focus/'>Additional guidance</a>.</br><b>Do not select a list if you have / will choose a sector list for the entire activity.<b>"
+            "help_text": "If you decide to publish what sector this transaction is supporting, then you need to choose a list of sectors. IATI recommends choosing the OECD DAC 5-digit sector codelist, in which you can make a selection from <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/codelists/sector/'>over 300 sectors</a>.</br>You can choose to use another list (see <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/codelists/sectorvocabulary/'>information on all possible options</a>). If you want to use your organisation’s own list of internal sector classifications, select the option: ‘Reporting Organisation’.</br>You can choose to use multiple lists. If you use more than one internal sector classification, please select ‘Reporting Organisation 2’ (which has the code 98) for the additional list. <a target='_blank' href='https://iatistandard.org/en/guidance/standard-guidance/activity-thematic-focus/'>Additional guidance</a>.</br><b>Do not select a list if you have / will choose a sector list for the entire activity.</b>"
           },
           "vocabulary_uri": {
             "name": "vocabulary_uri",
@@ -4990,7 +4990,7 @@
         "label": "tied status",
         "add_more": false,
         "hover_text": "Optional element to override the top-level default-tied-status element on a transaction-by-transaction basis if needed. </br><a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/transaction/tied-status/'>For more information</a>",
-        "help_text": "You can state the tied status of this transaction. Here you can specify if funds are tied - where they must be spent on goods or services procured from a particular country (e.g. donor country) or group of countries. Or if funds are untied, this is where the recipient organisation is allowed to procure from any country.</br>Do note: if you select a tied status for this transaction, this will override the <b>default tied status<b> for the entire activity (which is selected here), enabling you to choose a tied status on a transaction-by-transaction basis, if needed.",
+        "help_text": "You can state the tied status of this transaction. Here you can specify if funds are tied - where they must be spent on goods or services procured from a particular country (e.g. donor country) or group of countries. Or if funds are untied, this is where the recipient organisation is allowed to procure from any country.</br>Do note: if you select a tied status for this transaction, this will override the <b>default tied status</b> for the entire activity (which is selected here), enabling you to choose a tied status on a transaction-by-transaction basis, if needed.",
         "attributes": {
           "tied_status_code": {
             "name": "tied_status_code",

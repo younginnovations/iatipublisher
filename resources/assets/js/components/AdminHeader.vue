@@ -21,6 +21,7 @@
           <svg-vue icon="logo" class="text-4xl" />
         </a>
       </figure>
+       <div id="activity-menu-overlay"></div>
     </div>
     <div id="nav-list" class="activity-nav-menu flex w-full justify-between">
       <nav>
@@ -238,6 +239,8 @@ onMounted(async () => {
 
 <style lang="scss" scoped>
 .activity__header {
+  @apply relative;
+
   nav {
     display: flex;
 

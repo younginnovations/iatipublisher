@@ -1,5 +1,12 @@
 .hamburger {
-  @apply relative z-50 flex h-11 w-11 cursor-pointer items-center justify-center overflow-hidden rounded;
+  @apply relative z-auto flex h-11 w-11 cursor-pointer items-center justify-center overflow-hidden rounded;
+  z-index: 120;
+
+  &.active {
+    span {
+      @apply bg-white;
+    }
+  }
 
   span {
     @apply pointer-events-none absolute h-1 w-10 rounded-lg duration-300;

@@ -111,6 +111,7 @@
     transform: translateX(100%);
     backdrop-filter: blur(7px);
     transition: 0.3s;
+    z-index: 110;
 
     &::backdrop {
       background: rgba(0, 0, 0, 0.2);
@@ -145,6 +146,27 @@
     padding: 20px;
   }
 }
+
+#menu-overlay {
+  @apply xl:hidden;
+}
+
+#activity-menu-overlay {
+  @media screen and (min-width: 1190px) {
+    @apply hidden;
+  }
+}
+
+.menu-overlay {
+  position: fixed;
+  z-index: 100;
+  background-color: rgba(0, 0, 0, 0.5);
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 100%;
+  transition: all 0.3s ease;
+}
 .activity-nav-menu {
   @media screen and (max-width: 1190px) {
     position: fixed;
@@ -160,7 +182,7 @@
     transform: translateX(100%);
     backdrop-filter: blur(7px);
     transition: 0.3s;
-    z-index: 40;
+    z-index: 100;
     flex-direction: column;
     justify-content: start;
 

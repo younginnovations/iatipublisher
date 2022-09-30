@@ -61,7 +61,7 @@ class BaseForm extends Form
                 ]
             );
 
-            if (isset($field['add_more']) || (isset($element['add_more_attributes']) && $element['add_more_attributes'])) {
+            if ((isset($field['add_more']) && $field['add_more']) || (isset($element['add_more_attributes']) && $element['add_more_attributes'])) {
                 $this->add('add_to_collection_' . $field['name'], 'button', [
                     'label' => 'Add More',
                     'attr'  => [
@@ -234,7 +234,7 @@ class BaseForm extends Form
 
             ],
             'wrapper'     => [
-                'class' => 'form-field basis-auto w-full xl:basis-6/12  attribute',
+                'class' => 'form-field basis-auto w-full xl:min-w-[300px] xl:basis-6/12 attribute',
             ],
         ];
 

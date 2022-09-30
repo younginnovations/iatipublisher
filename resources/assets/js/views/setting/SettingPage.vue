@@ -1,5 +1,5 @@
 <template>
-  <section class="section">
+  <section class="section-wrapper">
     <Loader v-if="loaderVisibility" />
     <div class="setting input__field">
       <span class="text-xs font-bold text-n-40">Settings</span>
