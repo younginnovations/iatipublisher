@@ -234,7 +234,7 @@ class BaseForm extends Form
 
             ],
             'wrapper'     => [
-                'class' => 'form-field basis-auto w-full xl:min-w-[300px] xl:basis-6/12 attribute',
+                'class' => 'form-field basis-auto w-full xl:basis-6/12 attribute',
             ],
         ];
 
