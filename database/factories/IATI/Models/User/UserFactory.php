@@ -5,7 +5,6 @@ namespace Database\Factories\IATI\Models\User;
 use App\IATI\Models\User\Role;
 use App\IATI\Models\User\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Support\Facades\Hash;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Model>
@@ -21,22 +20,16 @@ class UserFactory extends Factory
      */
     public function definition(): array
     {
-        Role::factory()->create();
-        Role::factory()->create([
-            'id' => 2,
-            'role' => 'superadmin',
-            'created_at' => now(),
-            'updated_at' => now(),
-        ]);
+        Role::factory()->create(['role' => 'superadmin']);
 
         return [
-            'username'        => 'test_username',
-            'email'           => 'test@gmail.com',
-            'password'        => Hash::make('password'),
-            'full_name'       => 'test_fullname',
-            'address'         => 'test_address',
-            'organization_id' => 1,
-            'is_active'       => true,
+            'username'  => 'yipl_user',
+            'email'     => 'yipl_user@gmail.com',
+            'password'  => bcrypt('password'),
+            'full_name' => 'Young Innovations',
+            'address'   => 'Mahalaxmisthan, Lalitpur',
+            'is_active' => true,
+            'role_id'   => app(Role::class)->getOrganizationAdminId(),
         ];
     }
 }

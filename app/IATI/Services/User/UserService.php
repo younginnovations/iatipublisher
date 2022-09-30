@@ -7,6 +7,7 @@ namespace App\IATI\Services\User;
 use App\IATI\Models\User\User;
 use App\IATI\Repositories\Organization\OrganizationRepository;
 use App\IATI\Repositories\User\UserRepository;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
@@ -41,7 +42,7 @@ class UserService
      *
      * @param array $data
      */
-    public function create(array $data): \Illuminate\Database\Eloquent\Model
+    public function create(array $data): Model
     {
         return $this->userRepo->store($data);
     }
@@ -50,13 +51,15 @@ class UserService
      * Stores the user that exists in IATI.
      *
      * @param array $data
+     *
+     * @return Model
      */
-    public function registerExistingUser(array $data)
+    public function registerExistingUser(array $data): Model
     {
         $organization = $this->organizationRepo->createOrganization([
             'publisher_id'        => $data['publisher_id'],
             'publisher_name'      => $data['publisher_name'],
-            'country'             => isset($data['country']) ? $data['country'] : null,
+            'country'             => $data['country'] ?? null,
             'registration_agency' => $data['registration_agency'],
             'registration_number' => $data['registration_number'],
             'identifier'          => $data['registration_agency'] . '-' . $data['registration_number'],

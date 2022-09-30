@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\IATI\Models\Activity\Activity;
 use App\IATI\Models\Organization\Organization;
+use App\IATI\Models\User\Role;
 use App\IATI\Models\User\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Str;
@@ -20,10 +21,10 @@ class ActivityCreateTest extends TestCase
      */
     public function test_user_must_enter_all_fields_for_creating_activity(): void
     {
-        $org = Organization::factory()->create();
-        $user = User::factory()->create();
+        $role = Role::factory()->create();
+        $org = Organization::factory()->has(User::factory(['role_id'=>$role->id]))->create();
         Activity::factory()->create(['org_id'=>$org->id]);
-        $this->actingAs($user)->post('/activity', [])
+        $this->actingAs($org->user)->post('/activity', [])
              ->assertSessionHasErrors(['narrative', 'activity_identifier']);
     }
 
@@ -34,11 +35,11 @@ class ActivityCreateTest extends TestCase
      */
     public function test_activity_identifier_must_be_unique_for_organization(): void
     {
-        $org = Organization::factory()->create();
-        $user = User::factory()->create();
+        $role = Role::factory()->create();
+        $org = Organization::factory()->has(User::factory(['role_id'=>$role->id]))->create();
         Activity::factory()->create(['org_id'=>$org->id]);
 
-        $this->actingAs($user)->post('/activity', ['narrative' => 'Test text', 'language' => 'en', 'activity_identifier' => 'SYRZ000041', 'iati_identifier_text' => 'CR-NP-SYRZ000041'])
+        $this->actingAs($org->user)->post('/activity', ['narrative' => 'Test text', 'language' => 'en', 'activity_identifier' => 'SYRZ000041', 'iati_identifier_text' => 'CR-NP-SYRZ000041'])
              ->assertStatus(302)
              ->assertSessionHasErrors('activity_identifier');
     }
@@ -50,10 +51,10 @@ class ActivityCreateTest extends TestCase
      */
     public function test_successful_activity_creation(): void
     {
-        $org = Organization::factory()->create();
-        $user = User::factory()->create();
+        $role = Role::factory()->create();
+        $org = Organization::factory()->has(User::factory(['role_id'=>$role->id]))->create();
 
-        $this->actingAs($user)->post('/activity', [
+        $this->actingAs($org->user)->post('/activity', [
             'narrative'            => Str::random(5),
             'language'             => 'en',
             'activity_identifier'  => '11111',

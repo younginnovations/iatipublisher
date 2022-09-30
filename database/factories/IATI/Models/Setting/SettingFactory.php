@@ -20,22 +20,21 @@ class SettingFactory extends Factory
     public function definition(): array
     {
         return [
-            'organization_id' => 1,
-            'publishing_info' => json_encode([
-                'publisher_id' => 'yipl',
+            'publishing_info'         => [
+                'publisher_id'           => 'yipl',
                 'publisher_verification' => true,
-                'api_token' => 'test',
-                'token_verification' => true,
-            ]),
-            'default_values'  => json_encode([
-                'default_currency' => 'BND',
-                'default_language' => 'ae',
-            ]),
-            'activity_default_values'  => json_encode([
-                'hierarchy' => '2',
+                'api_token'              => 'test',
+                'token_verification'     => true,
+            ],
+            'default_values'          => [
+                'default_currency' => 'USD',
+                'default_language' => 'en',
+            ],
+            'activity_default_values' => [
+                'hierarchy'           => '2',
                 'budget_not_provided' => 'test',
-                'humanitarian' => 'no',
-            ]),
+                'humanitarian'        => 'no',
+            ],
         ];
     }
 }

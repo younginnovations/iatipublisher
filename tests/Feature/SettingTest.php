@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\IATI\Models\Organization\Organization;
 use App\IATI\Models\Setting\Setting;
+use App\IATI\Models\User\Role;
 use App\IATI\Models\User\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -30,10 +31,10 @@ class SettingTest extends TestCase
      */
     public function test_the_setting_page_loads_successfully_for_authenticated_user(): void
     {
-        Organization::factory()->create();
-        $user = User::factory()->create();
+        $role = Role::factory()->create();
+        $org = Organization::factory()->has(User::factory(['role_id'=>$role->id]))->create();
 
-        $this->actingAs($user)->get('/setting')
+        $this->actingAs($org->user)->get('/setting')
              ->assertStatus(200);
     }
 
@@ -44,10 +45,10 @@ class SettingTest extends TestCase
      */
     public function test_validation_setting_default_form_empty_data(): void
     {
-        Organization::factory()->create();
-        $user = User::factory()->create();
+        $role = Role::factory()->create();
+        $org = Organization::factory()->has(User::factory(['role_id'=>$role->id]))->create();
 
-        $this->actingAs($user)
+        $this->actingAs($org->user)
              ->post('setting/store/default', [
                  'default_currency' => '',
                  'default_language' => '',
@@ -69,10 +70,10 @@ class SettingTest extends TestCase
      */
     public function test_validation_setting_default_form_filled_data(): void
     {
-        Organization::factory()->create();
-        $user = User::factory()->create();
+        $role = Role::factory()->create();
+        $org = Organization::factory()->has(User::factory(['role_id'=>$role->id]))->create();
 
-        $this->actingAs($user)
+        $this->actingAs($org->user)
              ->post('setting/store/default', [
                  'default_currency' => '',
                  'default_language' => '',
@@ -94,10 +95,10 @@ class SettingTest extends TestCase
      */
     public function test_validation_setting_publishing_form_incorrect_data(): void
     {
-        Organization::factory()->create();
-        $user = User::factory()->create();
+        $role = Role::factory()->create();
+        $org = Organization::factory()->has(User::factory(['role_id'=>$role->id]))->create();
 
-        $this->actingAs($user)
+        $this->actingAs($org->user)
              ->post('setting/store/publisher', [
                  'publisher_id' => 'test111111',
                  'api_token'    => 'asdfkjasldfjlasjddflas',
@@ -116,10 +117,10 @@ class SettingTest extends TestCase
      */
     public function test_validation_setting_publishing_form_incorrect_publisher_id(): void
     {
-        Organization::factory()->create();
-        $user = User::factory()->create();
+        $role = Role::factory()->create();
+        $org = Organization::factory()->has(User::factory(['role_id'=>$role->id]))->create();
 
-        $this->actingAs($user)
+        $this->actingAs($org->user)
              ->post('setting/store/publisher', [
                  'publisher_id' => 'test111111',
                  'api_token'    => 'asdfkjasldfjlasjddflas',
@@ -138,10 +139,10 @@ class SettingTest extends TestCase
      */
     public function test_validation_setting_publishing_form_incorrect_api_token(): void
     {
-        Organization::factory()->create();
-        $user = User::factory()->create();
+        $role = Role::factory()->create();
+        $org = Organization::factory()->has(User::factory(['role_id'=>$role->id]))->create();
 
-        $this->actingAs($user)
+        $this->actingAs($org->user)
              ->post('setting/store/publisher', [
                  'publisher_id' => env('IATI_YIPL_PUBLISHER_ID'),
                  'api_token'    => 'asdfkjasldfjlasjddflas',
@@ -173,11 +174,11 @@ class SettingTest extends TestCase
      */
     public function test_edit_setting_publishing_form(): void
     {
-        Organization::factory()->create();
-        $user = User::factory()->create();
-        Setting::factory()->create();
+        $role = Role::factory()->create();
+        $org = Organization::factory()->has(User::factory(['role_id'=>$role->id]))->create();
+        Setting::factory()->create(['organization_id' => $org->id]);
 
-        $this->actingAs($user)
+        $this->actingAs($org->user)
              ->post('setting/store/default', [
                  'default_currency' => 'BND',
                  'default_language' => 'ab',

@@ -6,12 +6,13 @@ namespace Database\Factories\IATI\Models\User;
 
 use App\IATI\Models\User\Role;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Database\Eloquent\Model;
 use function now;
 
 /**
  * Class RoleFactory.
  *
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Model>
+ * @extends Factory<Model>
  */
 class RoleFactory extends Factory
 {
@@ -25,7 +26,6 @@ class RoleFactory extends Factory
     public function definition(): array
     {
         return [
-            'id' => 1,
             'role' => 'admin',
             'created_at' => now(),
             'updated_at' => now(),

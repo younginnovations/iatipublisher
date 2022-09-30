@@ -4,9 +4,10 @@ namespace Database\Factories\IATI\Models\Activity;
 
 use App\IATI\Models\Activity\Activity;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Database\Eloquent\Model;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Model>
+ * @extends Factory<Model>
  */
 class ActivityFactory extends Factory
 {
@@ -15,20 +16,20 @@ class ActivityFactory extends Factory
     /**
      * Define the model's default state.
      *
-     * @return array|mixed[]
+     * @return array
      */
     public function definition(): array
     {
         return [
             'iati_identifier' => [
-                'activity_identifier'   => 'SYRZ000041',
-                'iati_identifier_text'  => 'CZ-ICO-25755277-SYRZ000041',
+                'activity_identifier'  => 'SYRZ000041',
+                'iati_identifier_text' => 'CZ-ICO-25755277-SYRZ000041',
             ],
-            'title' => [
-              [
-                  'narrative'           => 'DGGF Track 3',
-                  'language'                  => 'en',
-              ],
+            'title'           => [
+                [
+                    'narrative' => 'DGGF Track 3',
+                    'language'  => 'en',
+                ],
             ],
         ];
     }
