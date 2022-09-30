@@ -3,36 +3,28 @@
 namespace Database\Seeders;
 
 use App\IATI\Models\Activity\Activity;
-use App\IATI\Models\Activity\Transaction;
-use App\IATI\Models\Organization\Organization;
-use App\IATI\Models\Setting\Setting;
-use App\IATI\Models\User\Role;
-use App\IATI\Models\User\User;
 use Illuminate\Database\Seeder;
 
-class DatabaseSeeder extends Seeder
+class ActivityTableSeeder extends Seeder
 {
     /**
-     * Seed the application's database.
+     * Run the database seeds.
      *
      * @return void
      */
-    public function run(): void
+    public function run()
     {
-        $this->call([RoleTableSeeder::class]);
-
-        if (env('APP_ENV') === 'production' || (env('APP_ENV') === 'staging') || (env('APP_ENV') === 'dev')) {
-            $this->call([OrganizationSeeder::class, UserSeeder::class]);
-        }
-
-        if (env('APP_ENV') === 'dev') {
-            $this->call([ActivityTableSeeder::class]);
-        }
-
-        if ((env('APP_ENV') === 'local')) {
-            $org = Organization::factory()->has(User::factory(['role_id' => app(Role::class)->getOrganizationAdminId()]))->has(Setting::factory())->create();
-            $activity_attr = [
-                'org_id'               => $org->id,
+        Activity::create(
+            [
+                'iati_identifier'      => [
+                    'activity_identifier'  => 'SYRZ000041',
+                ],
+                'title'                => [
+                    [
+                        'narrative' => 'DGGF Track 3',
+                        'language'  => 'en',
+                    ],
+                ],
                 'description'          => [
                     [
                         'type'      => 1,
@@ -71,9 +63,9 @@ class DatabaseSeeder extends Seeder
                     [
                         'sector_vocabulary'    => 1,
                         'vocabulary_uri'       => '',
-                        'code'          => '72050',
-                        'category_code' => '',
-                        'text'          => '',
+                        'sector_code'          => '72050',
+                        'sector_category_code' => '',
+                        'sector_text'          => '',
                         'percentage'           => '',
                         'narrative'            => [
                             [
@@ -118,8 +110,8 @@ class DatabaseSeeder extends Seeder
                     'default_tied_status'        => '',
                     'humanitarian'               => '1',
                 ],
-            ];
-            Activity::factory()->count(25)->has(Transaction::factory())->create($activity_attr);
-        }
+                'org_id'               => 1,
+            ]
+        );
     }
 }
