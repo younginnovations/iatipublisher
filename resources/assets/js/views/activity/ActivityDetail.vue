@@ -1,18 +1,18 @@
 <template>
   <div class="relative bg-paper px-5 pt-4 pb-[71px] xl:px-10">
     <!-- title section -->
-    <div class="page-title mb-6">
+    <div class="mb-6 page-title">
       <div class="pb-4 text-caption-c1 text-n-40">
         <div>
           <nav aria-label="breadcrumbs" class="rank-math-breadcrumb">
             <div class="flex">
-              <a class="whitespace-nowrap font-bold" href="/activities">
+              <a class="font-bold whitespace-nowrap" href="/activities">
                 Your Activities
               </a>
-              <span class="separator mx-4"> / </span>
+              <span class="mx-4 separator"> / </span>
               <div class="breadcrumb__title">
                 <span
-                  class="breadcrumb__title last max-w-lg overflow-hidden text-n-30"
+                  class="max-w-lg overflow-hidden breadcrumb__title last text-n-30"
                   >{{ pageTitle ?? 'Untitled' }}</span
                 >
                 <span class="ellipsis__title--hover w-[calc(100%_+_35px)]">{{
@@ -26,15 +26,15 @@
 
       <div class="flex items-end gap-4">
         <div class="title max-w-[50%] basis-6/12">
-          <div class="inline-flex w-full items-center">
+          <div class="inline-flex items-center w-full">
             <div class="mr-3">
               <a href="/activities">
                 <svg-vue icon="arrow-short-left" />
               </a>
             </div>
             <div class="inline-flex min-h-[48px] grow flex-wrap items-center">
-              <h4 class="ellipsis__title relative text-2xl font-bold">
-                <span class="ellipsis__title overflow-hidden">
+              <h4 class="relative text-2xl font-bold ellipsis__title">
+                <span class="overflow-hidden ellipsis__title">
                   {{ pageTitle ? pageTitle : 'Untitled' }}
                 </span>
                 <span class="ellipsis__title--hover">
@@ -44,7 +44,7 @@
             </div>
           </div>
         </div>
-        <div class="actions relative flex grow flex-col items-end justify-end">
+        <div class="relative flex flex-col items-end justify-end actions grow">
           <div class="inline-flex justify-end">
             <!-- toast msg for publishing -->
             <Toast
@@ -90,9 +90,9 @@
         <div v-if="publishStatus.already_published" class="mb-2">
           <PreviouslyPublished />
         </div>
-        <div class="mb-1 flex">
-          <div class="activities__card progress mr-1">
-            <div class="mb-2 flex items-center justify-between">
+        <div class="flex mb-1">
+          <div class="mr-1 activities__card progress">
+            <div class="flex items-center justify-between mb-2">
               <span class="mr-2">Publishing Progress</span>
               <HoverText
                 hover-text="You cannot publish an activity until all the mandatory fields have been filled."
@@ -105,7 +105,7 @@
             <span>Fill core elements to get 100% score</span>
           </div>
           <div class="activities__card elements">
-            <div class="mb-7 flex items-center justify-between">
+            <div class="flex items-center justify-between mb-7">
               <span>Elements</span>
               <HoverText
                 hover-text="You cannot publish an activity until all the mandatory fields have been filled."
@@ -113,7 +113,7 @@
                 class="hover-text"
               />
             </div>
-            <div class="mb-3 flex justify-between">
+            <div class="flex justify-between mb-3">
               <div class="flex items-center space-x-1">
                 <svg-vue icon="core" />
                 <span>Core</span>
@@ -142,7 +142,7 @@
         </div>
       </aside>
       <div class="activities__content">
-        <div class="mb-3 inline-flex flex-wrap gap-2">
+        <div class="inline-flex flex-wrap gap-2 mb-3">
           <a
             v-for="(post, key, index) in groupedData"
             :key="index"
@@ -162,10 +162,10 @@
             </button>
           </a>
         </div>
-        <div class="activities__content--elements -mx-3 flex flex-wrap">
+        <div class="flex flex-wrap -mx-3 activities__content--elements">
           <template v-for="(post, key, index) in groupedData" :key="index">
             <div
-              class="elements-title relative mx-3 mt-3 mb-1 flex w-full items-center text-sm uppercase text-n-40"
+              class="relative flex items-center w-full mx-3 mt-3 mb-1 text-sm uppercase elements-title text-n-40"
             >
               <div class="mr-4 shrink-0">{{ formatTitle(key) }}</div>
             </div>
@@ -303,6 +303,10 @@ export default defineComponent({
     },
     iatiValidatorResponse: {
       type: Object,
+      required: true,
+    },
+    hasReportingOrgData: {
+      type: Boolean,
       required: true,
     },
   },
@@ -452,6 +456,7 @@ export default defineComponent({
     });
 
     // vue provides
+    provide('hasReportingOrgData', props.hasReportingOrgData);
     provide('types', types.value);
     provide('coreCompleted', coreCompleted.value);
     provide('toastMessage', toastMessage);
