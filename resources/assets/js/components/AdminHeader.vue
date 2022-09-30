@@ -10,20 +10,20 @@
     />
     <div class="flex items-center gap-5">
       <div class="hamburger-menu">
-        <div id="hamburger" class="hamburger scale-75">
+        <div id="hamburger" class="scale-75 hamburger">
           <span class="bg-n-20" />
           <span class="bg-n-20" />
           <span class="bg-n-20" />
         </div>
       </div>
-      <figure class="flex grow-0 items-center">
+      <figure class="flex items-center grow-0">
         <a href="/activities">
           <svg-vue icon="logo" class="text-4xl" />
         </a>
       </figure>
-       <div id="activity-menu-overlay"></div>
+      <div id="activity-menu-overlay"></div>
     </div>
-    <div id="nav-list" class="activity-nav-menu flex w-full justify-between">
+    <div id="nav-list" class="flex justify-between w-full activity-nav-menu">
       <nav>
         <ul class="flex">
           <li
@@ -44,7 +44,7 @@
         </ul>
       </nav>
       <nav v-if="superAdmin" class="flex justify-end grow">
-        <ul class="activity-nav-list -mx-4">
+        <ul class="-mx-4 activity-nav-list">
           <li
             v-for="(menu, index) in data.menus"
             :key="index"
@@ -63,7 +63,10 @@
         </ul>
       </nav>
     </div>
-    <div class="user-nav" :class="{ 'grow-0': superAdmin, 'grow justify-end': !superAdmin }">
+    <div
+      class="user-nav"
+      :class="{ 'grow-0': superAdmin, 'grow justify-end': !superAdmin }"
+    >
       <div class="user-nav">
         <div class="search">
           <input
@@ -110,7 +113,7 @@
                   </span>
                 </div>
               </li>
-              <li class="dropdown__list border-b border-b-n-20">
+              <li class="border-b dropdown__list border-b-n-20">
                 <svg-vue icon="user" />
                 <a href="#">Your Profile</a>
               </li>
@@ -148,9 +151,6 @@ defineProps({
     validator: (v: unknown) =>
       typeof v === 'object' || typeof v === 'string' || v === null,
     required: false,
-    default() {
-      return {};
-    },
   },
   superAdmin: { type: Boolean, required: true },
 });
