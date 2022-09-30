@@ -10,9 +10,6 @@
   <title>{{ config('app.name', 'IATI Publisher') }}</title>
 
   <link href="{{ mix('css/app.css') }}" rel="stylesheet">
-  <script defer src="{{ mix('js/script.js') }}"></script>
-  {{-- <script defer src="{{ mix('js/app.js') }}"></script> --}}
-
   <!-- Fonts -->
   {{-- Normal --}}
   <link rel="preload" href="{{ asset('fonts/Arial/arial-webfont.woff') }}" as="font" type="font/woff" crossorigin>
@@ -43,9 +40,11 @@
     <web-footer></web-footer>
   </div>
 
-  <script defer src="/manifest.js"></script>
-  <script defer src="/js/vendor.js"></script>
-  <script defer src="/js/app.js"></script>
+  <script defer src="{{ mix('/manifest.js') }}"></script>
+  <script defer src="{{ mix('/js/vendor.js') }}"></script>
+  <script defer src="{{ mix('/js/app.js') }}"></script>
+  <script defer src="{{ mix('js/script.js') }}"></script>
+
 </body>
 
 </html>
