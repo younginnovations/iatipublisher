@@ -78,11 +78,17 @@ class ImportActivityController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return View|JsonResponse
+     * @return View|JsonResponse|RedirectResponse
      */
-    public function index(): View|JsonResponse
+    public function index(): View|JsonResponse|RedirectResponse
     {
         try {
+            if(!Auth::user()->organization_id){
+                Session::put('error', 'User is not associated with any organization.');
+
+                return redirect()->route('admin.activities.index');
+            }
+
             Session::forget('header_mismatch');
 
             return view('admin.import.index');
@@ -193,6 +199,12 @@ class ImportActivityController extends Controller
         try {
             $filetype = Session::get('import_filetype');
             $org_id = Auth::user()->organization_id;
+
+            if(!$org_id){
+                Session::put('error', 'User is not associated with any organization.');
+
+                return redirect()->route('admin.activities.index');
+            }
 
             if (!$filetype) {
                 return redirect()->route('admin.activities.index');
