@@ -142,6 +142,7 @@ jobs:
           context: .
           push: true
           target: web_server
+          file: Dockerfile.staging
           tags: |
             ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/web_server:${{ github.sha }}
             ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/web_server:latest

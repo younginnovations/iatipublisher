@@ -1,8 +1,8 @@
 #!/bin/sh
 . "$(dirname "$0")/_/husky.sh"
 
-php artisan test && \
-npx stylelint "resources/**/*.scss" --fix && \
-npm run lint && \
-composer lint && \
+#php artisan test && \
+#npx stylelint "resources/**/*.scss" --fix && \
+#npm run lint && \
+#composer lint && \
 git add .
