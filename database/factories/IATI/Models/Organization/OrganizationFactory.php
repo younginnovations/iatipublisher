@@ -22,7 +22,7 @@ class OrganizationFactory extends Factory
     public function definition(): array
     {
         return [
-            'publisher_id'        => Str::random(10),
+            'publisher_id'        => 'ztest',
             'publisher_name'      => Str::random(10),
             'publisher_type'      => 'government',
             'country'             => 'NP-SWO',
