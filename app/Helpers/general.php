@@ -3,6 +3,8 @@
 declare(strict_types=1);
 
 use App\IATI\Models\User\Role;
+use Illuminate\Encryption\Encrypter;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Session;
 
 if (!function_exists('dashesToCamelCase')) {
@@ -394,6 +396,36 @@ if (!function_exists('getCodeListArray')) {
     }
 }
 
+if (!function_exists('customDecryptString')) {
+    /**
+     * @param string      $encryptedString
+     * @param string|null $key
+     *
+     * @return bool|string|null
+     */
+    function customDecryptString(string $encryptedString, string $key = null): bool|string|null
+    {
+        $frontendEncryptor = new Encrypter($key ?? env('MIX_ENCRYPTION_KEY'), Config::get('app.cipher'));
+
+        return $frontendEncryptor->decrypt($encryptedString);
+    }
+}
+
+if (!function_exists('customEncryptString')) {
+    /**
+     * @param string      $string
+     * @param string|null $key
+     *
+     * @return bool|string|null
+     */
+    function customEncryptString(string $string, string $key = null): bool|string|null
+    {
+        $frontendEncryptor = new Encrypter($key ?? env('MIX_ENCRYPTION_KEY'), Config::get('app.cipher'));
+
+        return $frontendEncryptor->encrypt($string);
+    }
+}
+
 if (!function_exists('decryptString')) {
     /**
      * Decrypt encrypted base64 string.
@@ -652,7 +684,7 @@ if (!function_exists('removeEmptyValues')) {
         $data = array_filter(
             $data,
             function ($value) {
-                return $value !== '' && $value != [];
+                return $value !== '' && $value !== [];
             }
         );
     }
@@ -700,4 +732,84 @@ if (!function_exists('isSuperAdminRoute')) {
 
         return false;
     }
+}
+
+/**
+ * Returns encoding type of the file.
+ * Returns UTF-8 if any exception or charset is not found.
+ *
+ * @param $file
+ *
+ * @return string
+ */
+function getEncodingType($file): string
+{
+    try {
+        $response = exec('file -i ' . $file->getPathname());
+        $charset = strripos($response, 'charset=');
+
+        if ($charset) {
+            return strtoupper(substr($response, $charset + strlen('charset=')));
+        }
+
+        return 'UTF-8';
+    } catch (\Exception $exception) {
+        return 'UTF-8';
+    }
+}
+
+/**
+ * Get csv header count.
+ *
+ * @return int
+ */
+function getCsvHeaderCount(): int
+{
+    return 69;
+}
+
+/**
+ * trim an input.
+ *
+ * @param $input
+ *
+ * @return string
+ */
+function trimInput($input): string
+{
+    return trim(preg_replace('/\s+/', ' ', $input));
+}
+
+/**
+ * Returns formatted date.
+ *
+ * @param $format
+ * @param $date
+ * @return false|string
+ */
+function dateFormat($format, $date): bool|string
+{
+    if (is_array($date)) {
+        return false;
+    }
+
+    if ($date !== '') {
+        if ((str_contains($date, '/'))) {
+            $formattedDate = str_replace('/', '-', $date);
+
+            if (strtotime($formattedDate)) {
+                return date($format, strtotime($formattedDate));
+            }
+
+            return false;
+        }
+
+        if (strtotime($date)) {
+            return date($format, strtotime($date));
+        }
+
+        return false;
+    }
+
+    return '';
 }

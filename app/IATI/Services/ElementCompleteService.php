@@ -1214,25 +1214,27 @@ class ElementCompleteService
             $data = json_decode($data, true);
         }
 
-        foreach ($data as $key => &$datum) {
-            if (is_array($datum)) {
-                $this->setDefaultValues($datum, $activity);
-            }
+        if ($data) {
+            foreach ($data as $key => &$datum) {
+                if (is_array($datum)) {
+                    $this->setDefaultValues($datum, $activity);
+                }
 
-            if ($key == 'narrative') {
-                $this->tempNarrative = $datum;
-            }
+                if ($key == 'narrative') {
+                    $this->tempNarrative = $datum;
+                }
 
-            if ($key == 'amount') {
-                $this->tempAmount = $datum;
-            }
+                if ($key == 'amount') {
+                    $this->tempAmount = $datum;
+                }
 
-            if ($key == 'language' && empty($datum) && !empty($this->tempNarrative)) {
-                $data['language'] = Arr::get($activity->default_field_values, 'default_language', null);
-            }
+                if ($key == 'language' && empty($datum) && !empty($this->tempNarrative)) {
+                    $data['language'] = Arr::get($activity->default_field_values, 'default_language', null);
+                }
 
-            if ($key == 'currency' && empty($datum) && !empty($this->tempAmount)) {
-                $data['currency'] = Arr::get($activity->default_field_values, 'default_currency', null);
+                if ($key == 'currency' && empty($datum) && !empty($this->tempAmount)) {
+                    $data['currency'] = Arr::get($activity->default_field_values, 'default_currency', null);
+                }
             }
         }
 

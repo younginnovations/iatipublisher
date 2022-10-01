@@ -8,7 +8,11 @@
     <div class="right__container flex w-full flex-col" @keyup.enter="login">
       <h2 class="mb-2 hidden sm:block">Sign In.</h2>
       <span class="text-n-40">Welcome back! Please enter your details.</span>
-      <div v-if="message != '' && !(errorData.username || errorData.password) " class="error text-xs mt-2" role="alert">
+      <div
+        v-if="message != '' && !(errorData.username || errorData.password)"
+        class="error text-xs mt-2"
+        role="alert"
+      >
         {{ message }}
       </div>
       <div class="relative mt-6 mb-4 flex flex-col text-sm text-bluecoral">

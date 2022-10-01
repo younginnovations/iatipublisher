@@ -2,8 +2,8 @@
 
 namespace Database\Seeders;
 
+use App\IATI\Models\User\Role;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
 
 /**
  * Class RoleTableSeeder.
@@ -17,8 +17,14 @@ class RoleTableSeeder extends Seeder
      */
     public function run(): void
     {
-        DB::table('roles')->insert([
-            ['role' => 'admin', 'created_at' => now(), 'updated_at' => now()],
-        ]);
+        /** Create or update superadmin role */
+        /** @var array $superAdminRole */
+        $superAdminRole = Role::factory()->make(['role' => 'superadmin'])->toArray();
+        Role::firstOrCreate($superAdminRole, $superAdminRole);
+
+        /** Create or update admin role */
+        /** @var array $adminRole */
+        $adminRole = Role::factory()->make(['role' => 'admin'])->toArray();
+        Role::firstOrCreate($adminRole, $adminRole);
     }
 }

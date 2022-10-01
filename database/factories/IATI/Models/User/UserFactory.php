@@ -5,6 +5,7 @@ namespace Database\Factories\IATI\Models\User;
 use App\IATI\Models\User\Role;
 use App\IATI\Models\User\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Facades\Hash;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Model>
@@ -25,7 +26,7 @@ class UserFactory extends Factory
         return [
             'username'  => 'yipl_user',
             'email'     => 'yipl_user@gmail.com',
-            'password'  => bcrypt('password'),
+            'password'  => Hash::make('password'),
             'full_name' => 'Young Innovations',
             'address'   => 'Mahalaxmisthan, Lalitpur',
             'is_active' => true,

@@ -7,6 +7,7 @@ namespace App\Console\Commands;
 use App\IATI\Models\User\Role;
 use App\IATI\Models\User\User;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Hash;
 
 /**
  * Class CreateSuperAdmin.
@@ -40,7 +41,7 @@ class CreateSuperAdmin extends Command
             'email'     => 'superadmin@gmail.com',
             'address'   => 'kathmandu',
             'is_active' => true,
-            'password'  => bcrypt('password'),
+            'password'  => Hash::make('password'),
             'role_id'   => app(Role::class)->getSuperAdminId(),
         ]);
     }

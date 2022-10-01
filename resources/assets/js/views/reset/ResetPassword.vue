@@ -101,24 +101,24 @@ export default defineComponent({
     });
 
     function encrypt(string: string, key: string) {
-      var iv = CryptoJS.lib.WordArray.random(16); // the reason to be 16, please read on `encryptMethod` property.
+      let iv = CryptoJS.lib.WordArray.random(16); // the reason to be 16, please read on `encryptMethod` property.
 
-      var salt = CryptoJS.lib.WordArray.random(256);
-      var iterations = 999;
-      var encryptMethodLength = 256 / 4; // example: AES number is 256 / 4 = 64
-      var hashKey = CryptoJS.PBKDF2(key, salt, {
+      let salt = CryptoJS.lib.WordArray.random(256);
+      let iterations = 999;
+      let encryptMethodLength = 256 / 4; // example: AES number is 256 / 4 = 64
+      let hashKey = CryptoJS.PBKDF2(key, salt, {
         hasher: CryptoJS.algo.SHA512,
         keySize: encryptMethodLength / 8,
         iterations: iterations,
       });
 
-      var encrypted = CryptoJS.AES.encrypt(string, hashKey, {
+      let encrypted = CryptoJS.AES.encrypt(string, hashKey, {
         mode: CryptoJS.mode.CBC,
         iv: iv,
       });
-      var encryptedString = CryptoJS.enc.Base64.stringify(encrypted.ciphertext);
+      let encryptedString = CryptoJS.enc.Base64.stringify(encrypted.ciphertext);
 
-      var output = {
+      let output = {
         ciphertext: encryptedString,
         iv: CryptoJS.enc.Hex.stringify(iv),
         salt: CryptoJS.enc.Hex.stringify(salt),

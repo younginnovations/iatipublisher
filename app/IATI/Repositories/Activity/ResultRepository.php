@@ -97,4 +97,16 @@ class ResultRepository extends Repository
     {
         return $this->model->where('id', $resultId)->where('activity_id', $activityId)->with(['indicators', 'indicators.periods'])->first();
     }
+
+    /**
+     * Deletes result with activity id.
+     *
+     * @param $activity_id
+     *
+     * @return mixed
+     */
+    public function deleteResult($activity_id): mixed
+    {
+        return $this->model->where('activity_id', $activity_id)->delete();
+    }
 }

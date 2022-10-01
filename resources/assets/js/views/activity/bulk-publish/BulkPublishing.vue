@@ -31,7 +31,7 @@
           class="flex px-4 py-3 item"
         >
           <div class="pr-2 text-sm leading-normal activity-title grow">
-            {{ value['activity_title'] }}
+            {{ value["activity_title"] }}
           </div>
           <div class="text-xl shrink-0">
             <svg-vue
@@ -52,8 +52,8 @@
   </div>
 </template>
 <script setup lang="ts">
-import { onMounted, ref, reactive, watch, inject } from 'vue';
-import axios from 'axios';
+import { onMounted, ref, reactive, watch, inject } from "vue";
+import axios from "axios";
 
 interface paInterface {
   value: {
@@ -76,10 +76,10 @@ interface actElements {
 }
 
 //inject
-let paStorage = inject('paStorage') as paInterface;
+let paStorage = inject("paStorage") as paInterface;
 
 let activities = ref(paStorage.value.publishingActivities.activities),
-  completed = ref('processing');
+  completed = ref("processing");
 
 let hasFailedActivities = reactive({
   data: {} as actElements,
@@ -93,13 +93,13 @@ let intervalID;
  *   Component lifecycle - onMounted
  */
 onMounted(() => {
-  completed.value = paStorage.value.publishingActivities.status ?? 'processing';
+  completed.value = paStorage.value.publishingActivities.status ?? "processing";
   bulkPublishStatus();
 });
 
 // watching change in value of completed
 watch(completed, async (newValue) => {
-  if (newValue === 'completed') {
+  if (newValue === "completed") {
     clearInterval(intervalID);
 
     // resetting local storage
@@ -121,17 +121,16 @@ const bulkPublishStatus = () => {
       )
       .then((res) => {
         const response = res.data;
-        if ('data' in response) {
+        if ("data" in response) {
           activities.value = response.data.activities;
           completed.value = response.data.status;
 
           // saving in local storage
-          paStorage.value.publishingActivities.activities =
-            response.data.activities;
+          paStorage.value.publishingActivities.activities = response.data.activities;
           paStorage.value.publishingActivities.status = response.data.status;
           paStorage.value.publishingActivities.message = response.data.message;
         } else {
-          completed.value = 'completed';
+          completed.value = "completed";
         }
       });
   }, 2000);
@@ -143,10 +142,10 @@ const bulkPublishStatus = () => {
 const open = ref(true);
 const toggleWindow = (e: Event) => {
   const currentTarget = e.currentTarget as HTMLElement;
-  const target = (
-    currentTarget.closest('#publishing_activities') as HTMLElement
-  ).querySelector<HTMLElement>('.bulk-activities');
-  const elHeight = target?.querySelector('div')?.clientHeight;
+  const target = (currentTarget.closest(
+    "#publishing_activities"
+  ) as HTMLElement).querySelector<HTMLElement>(".bulk-activities");
+  const elHeight = target?.querySelector("div")?.clientHeight;
 
   if (open.value) {
     if (target != null) {
@@ -186,7 +185,7 @@ const failedActivities = (nestedObject: actElements) => {
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const filtered = asArrayData.filter(([key, value]) => {
-    if (Object.values(value).indexOf('failed') > -1) {
+    if (Object.values(value).indexOf("failed") > -1) {
       failedActivitiesID.push(value.activity_id);
       return key;
     }
@@ -210,10 +209,10 @@ const failedActivities = (nestedObject: actElements) => {
  */
 const retryPublishing = () => {
   //reset required states
-  completed.value = 'processing';
+  completed.value = "processing";
 
   for (const key in hasFailedActivities.data) {
-    hasFailedActivities.data[key].status = 'processing';
+    hasFailedActivities.data[key].status = "processing";
   }
 
   activities.value = hasFailedActivities.data;
@@ -223,8 +222,6 @@ const retryPublishing = () => {
 
   axios.get(endpoint).then((res) => {
     const response = res.data;
-
-    console.log(response);
 
     if (response.success) {
       paStorage.value.publishingActivities = response.data;
@@ -238,7 +235,7 @@ const retryPublishing = () => {
 .minus {
   @apply flex h-3 w-3 items-center;
   &:before {
-    content: '';
+    content: "";
     @apply block h-0.5 w-3 rounded-xl bg-blue-50;
   }
 }
@@ -260,7 +257,7 @@ const retryPublishing = () => {
 
   &:before,
   &:after {
-    content: '';
+    content: "";
     @apply absolute left-1/2 top-0 block h-3 w-0.5 -translate-x-1/2 rounded-xl bg-blue-50;
   }
 

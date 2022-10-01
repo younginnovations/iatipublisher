@@ -1,0 +1,182 @@
+<template>
+  <div class="listing__page bg-paper px-10 pt-4 pb-[71px]">
+    <div class="page-title mb-4">
+      <div class="flex items-end gap-4">
+        <div class="title max-w-[50%] basis-6/12">
+          <div class="inline-flex items-center w-full">
+            <div class="mr-3">
+              <a href="/activities">
+                <svg-vue icon="arrow-short-left" />
+              </a>
+            </div>
+            <div class="inline-flex min-h-[48px] grow flex-wrap items-center">
+              <h4 class="relative mr-4 font-bold ellipsis__title">
+                <span class="overflow-hidden ellipsis__title"> Import Activity </span>
+              </h4>
+              <div class="tooltip-btn">
+                <button class="">
+                  <svg-vue icon="question-mark" />
+                  <span>What is activity?</span>
+                </button>
+                <div class="tooltip-btn__content z-[1]">
+                  <div class="content">
+                    <div class="mb-1.5 text-caption-c1 font-bold text-bluecoral">
+                      What is an activity?
+                    </div>
+                    <p>
+                      Organisations need to publish data on their activities. An
+                      ‘activity’ is an individual project or piece of development and
+                      humanitarian work. The unit of work described by an ‘activity’ is
+                      determined by the organisation that is publishing the data. For
+                      example, an activity could be a donor government providing US$ 50
+                      million to a recipient country’s government in order to implement
+                      basic education over 5 years. Another activity could be an NGO
+                      spending US$ 500,000 to deliver clean drinking water to 1000
+                      households over 6 months.
+                    </p>
+                    <p class="text-n-40">
+                      Learn more about how to publish data on activities in IATI’s
+                      publishing
+                      <a href="#" class="text-bluecoral"><b>guidance.</b></a
+                      >.
+                    </p>
+                  </div>
+                  <p>
+                    Organisations need to publish data on their activities. An ‘activity’
+                    is an individual project or piece of development and humanitarian
+                    work. The unit of work described by an ‘activity’ is determined by the
+                    organisation that is publishing the data. For example, an activity
+                    could be a donor government providing US$ 50 million to a recipient
+                    country’s government in order to implement basic education over 5
+                    years. Another activity could be an NGO spending US$ 500,000 to
+                    deliver clean drinking water to 1000 households over 6 months.
+                  </p>
+                  <p class="text-n-40">
+                    Learn more about how to publish data on activities in IATI’s
+                    publishing
+                    <a href="#" class="text-bluecoral"><b>guidance.</b></a
+                    >.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- <div class="actions flex grow justify-end">
+          <div class="inline-flex justify-center">
+            <BtnComponent
+              class="mr-3.5"
+              type="primary"
+              text="Import (5/10)"
+              icon="download-file"
+            />
+          </div>
+        </div> -->
+      </div>
+    </div>
+    <div
+      class="flex min-h-[65vh] items-start justify-center rounded-lg border border-n-20 bg-white"
+    >
+      <div class="mt-24 rounded-lg border border-n-30">
+        <div>
+          <p class="p-4 text-sm font-bold uppercase border-b border-n-30 text-n-50">
+            Import .CSV/.XML file
+          </p>
+          <div class="p-6">
+            <div class="mb-4 rounded border border-n-30 px-4 py-3">
+              <input
+                ref="file"
+                type="file"
+                class="min-w-[480px] cursor-pointer p-0 text-sm file:cursor-pointer file:rounded-full file:border file:border-solid file:border-spring-50 file:bg-white file:px-4 file:py-0.5 file:text-spring-50 file:outline-none"
+              />
+            </div>
+            <span v-if="error" class="error">{{ error }}</span>
+            <div class="flex items-end justify-between">
+              <BtnComponent
+                type="primary"
+                text="Upload file"
+                icon="upload-file"
+                @click="uploadFile"
+              />
+              <div class="flex items-center space-x-2.5">
+                <button class="relative text-sm text-bluecoral">
+                  <svg-vue :icon="'download'" class="mr-1" />
+                  <span @click="downloadExcel">Download .CSV activity Template</span>
+                </button>
+                <HoverText
+                  hover-text="This template contains all the elements that you have to fill as per the IATI Standard before uploading in IATI Publisher. Please make sure that you follow the structure and format of the template."
+                  name=""
+                  class="hover-text"
+                  position="right"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <Loader v-if="loader" :text="loaderText" :class="{ 'animate-loader': loader }" />
+</template>
+
+<script setup lang="ts">
+import { ref } from "vue";
+import BtnComponent from "Components/ButtonComponent.vue";
+import HoverText from "Components/HoverText.vue";
+import Loader from "Components/sections/ProgressLoader.vue";
+import axios from "axios";
+
+const file = ref(),
+  error = ref(""),
+  loader = ref(false),
+  loaderText = ref("Please Wait");
+
+function uploadFile() {
+  loader.value = true;
+  loaderText.value = "Uploading .csv/.xml file";
+  let activity = file.value.files.length ? file.value.files[0] : "";
+  const config = {
+    headers: {
+      "content-type": "multipart/form-data",
+    },
+  };
+  let data = new FormData();
+  data.append("activity", activity);
+  error.value = "";
+
+  axios
+    .post("/import", data, config)
+    .then((res) => {
+      if (file.value.files.length && res?.data?.success) {
+        setTimeout(() => {
+          window.location.href = "/import/list";
+        }, 5000);
+      } else {
+        error.value = res.data.error;
+        loader.value = false;
+      }
+    })
+    .catch(() => {
+      error.value = "The file field is required and must be csv or xml.";
+      loader.value = false;
+    });
+}
+
+function downloadExcel() {
+  axios({
+    url: "import/download/csv",
+    method: "GET",
+    responseType: "arraybuffer",
+  }).then((response) => {
+    let blob = new Blob([response.data], {
+      type: "application/csv",
+    });
+    let link = document.createElement("a");
+    link.href = window.URL.createObjectURL(blob);
+    link.download = "csv_test.csv";
+    link.click();
+  });
+}
+</script>
+
+<style lang="scss"></style>
