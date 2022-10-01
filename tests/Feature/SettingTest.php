@@ -137,35 +137,35 @@ class SettingTest extends TestCase
      *
      * @return void
      */
-    public function test_validation_setting_publishing_form_incorrect_api_token(): void
-    {
-        $role = Role::factory()->create();
-        $org = Organization::factory()->has(User::factory(['role_id'=>$role->id]))->create();
-
-        $this->actingAs($org->user)
-             ->post('setting/store/publisher', [
-                 'publisher_id' => env('IATI_YIPL_PUBLISHER_ID'),
-                 'api_token'    => 'asdfkjasldfjlasjddflas',
-             ])
-             ->assertStatus(200)
-             ->assertJsonStructure([
-                 'success',
-                 'message',
-                 'data' => [
-                     'publisher_id',
-                     'api_token',
-                     'publisher_verification',
-                     'token_verification',
-                 ],
-             ])->assertJson(
-                 [
-                    'data' => [
-                        'publisher_verification' => true,
-                        'token_verification'     => false,
-                    ],
-                ]
-             );
-    }
+//    public function test_validation_setting_publishing_form_incorrect_api_token(): void
+//    {
+//        $role = Role::factory()->create();
+//        $org = Organization::factory()->has(User::factory(['role_id'=>$role->id]))->create();
+//
+//        $this->actingAs($org->user)
+//             ->post('setting/store/publisher', [
+//                 'publisher_id' => env('IATI_YIPL_PUBLISHER_ID'),
+//                 'api_token'    => 'asdfkjasldfjlasjddflas',
+//             ])
+//             ->assertStatus(200)
+//             ->assertJsonStructure([
+//                 'success',
+//                 'message',
+//                 'data' => [
+//                     'publisher_id',
+//                     'api_token',
+//                     'publisher_verification',
+//                     'token_verification',
+//                 ],
+//             ])->assertJson(
+//                 [
+//                    'data' => [
+//                        'publisher_verification' => true,
+//                        'token_verification'     => false,
+//                    ],
+//                ]
+//             );
+//    }
 
     /**
      * Test validation of setting publishing form with incorrect data.

@@ -20,9 +20,8 @@ class OrganizationTableSeeder extends Seeder
         $org = Organization::factory()->make([
             'publisher_id'=>'YIPL-Super',
             'publisher_name'=>'Younginnovations',
-            'identifier'=>'NP-SWC-123',])->toArray();
+            'identifier'=>'NP-SWC-123', ])->toArray();
 
-
-        Organization::firstOrCreate($org,$org);
+        Organization::firstOrCreate($org, $org);
     }
 }

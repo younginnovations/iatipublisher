@@ -20,12 +20,11 @@ class UserTableSeeder extends Seeder
      */
     public function run(): void
     {
-
         $user = User::factory()->make([
                                   'username'  => 'yipl_user',
                                   'organization_id'  => app(Organization::class),
                                   'role_id'   => app(Role::class)->getOrganizationAdminId(),
-                                  'password'  => Hash::make('passwordAuthenticationTest')
+                                  'password'  => Hash::make('passwordAuthenticationTest'),
                               ])->makeVisible('password')->toArray();
 
         User::firstOrCreate(['username'=>$user['username']], $user);

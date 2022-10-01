@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use App\IATI\Models\User\Role;
+use Illuminate\Encryption\Encrypter;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Session;
 
@@ -402,9 +403,10 @@ if (!function_exists('decryptString')) {
      *
      * @return bool|string|null
      */
-    function decryptString(string $encryptedString, string $key=null): bool|string|null
+    function decryptString(string $encryptedString, string $key = null): bool|string|null
     {
-        $frontendEncryptor = new \Illuminate\Encryption\Encrypter ($key??env('MIX_ENCRYPTION_KEY'), Config::get('app.cipher'));
+        $frontendEncryptor = new Encrypter($key ?? env('MIX_ENCRYPTION_KEY'), Config::get('app.cipher'));
+
         return $frontendEncryptor->decrypt($encryptedString);
     }
 }
@@ -416,9 +418,10 @@ if (!function_exists('encryptString')) {
      *
      * @return bool|string|null
      */
-    function encryptString(string $string, string $key=null): bool|string|null
+    function encryptString(string $string, string $key = null): bool|string|null
     {
-        $frontendEncryptor = new \Illuminate\Encryption\Encrypter ($key??env('MIX_ENCRYPTION_KEY'), Config::get('app.cipher'));
+        $frontendEncryptor = new Encrypter($key ?? env('MIX_ENCRYPTION_KEY'), Config::get('app.cipher'));
+
         return $frontendEncryptor->encrypt($string);
     }
 }

@@ -29,7 +29,7 @@ class HorizonServiceProvider extends HorizonApplicationServiceProvider
     {
         Gate::define('viewHorizon', function ($user) {
             return in_array($user->username, [
-                'yipl_user'
+                'yipl_user',
             ]);
         });
     }

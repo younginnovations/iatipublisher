@@ -17,14 +17,15 @@ class DatabaseSeeder extends Seeder
     {
         $this->call([RoleTableSeeder::class]);
 
-        if (app()->environment('production')){
+        if (app()->environment('production')) {
             $this->call([UserTableSeeder::class]);
         }
 
-        if ( app()->environment(['local','staging','dev']) ) {
-            $this->call([
+        if (app()->environment(['local', 'staging', 'dev'])) {
+            $this->call(
+                [
                 OrganizationTableFaker::class,
-                ActivityTableFaker::class]
+                ActivityTableFaker::class, ]
             );
         }
     }
