@@ -48,6 +48,7 @@ jobs:
           context: .
           push: true
           target: cli
+          file: Dockerfile.develop
           tags: |
             ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/cli:${{ github.sha }}
             ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/cli:latest
@@ -93,6 +94,7 @@ jobs:
         with:
           context: .
           push: true
+          file: Dockerfile.develop
           target: fpm_server
           build-args: |
             MIX_ENCRYPTION_KEY=${{ secrets.MIX_ENCRYPTION_KEY }}
@@ -137,6 +139,7 @@ jobs:
         with:
           context: .
           push: true
+          file: Dockerfile.develop
           target: web_server
           tags: |
             ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/web_server:${{ github.sha }}
@@ -185,6 +188,7 @@ jobs:
           context: .
           push: true
           target: cron
+          file: Dockerfile.develop
           tags: |
             ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/cron:${{ github.sha }}
             ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/cron:latest
@@ -232,6 +236,7 @@ jobs:
           context: .
           push: true
           target: horizon
+          file: Dockerfile.develop
           tags: |
             ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/horizon:${{ github.sha }}
             ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/horizon:latest

@@ -9,10 +9,13 @@ use App\IATI\Models\User\Role;
 use App\IATI\Models\User\User;
 use App\Providers\RouteServiceProvider;
 use GuzzleHttp\Psr7\Response;
+use Illuminate\Encryption\Encrypter;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Crypt;
 use Illuminate\Validation\ValidationException;
 
 /**
@@ -113,6 +116,8 @@ class LoginController extends Controller
     public function login(Request $request): RedirectResponse|Response|JsonResponse|ValidationException
     {
         if (isset($request['password'])) {
+            Crypt::decrypt($request['password']);
+
             $request['password'] = decryptString($request['password'], env('MIX_ENCRYPTION_KEY'));
         }
 

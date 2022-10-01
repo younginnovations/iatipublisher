@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use App\IATI\Models\User\Role;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Session;
 
 if (!function_exists('dashesToCamelCase')) {
@@ -396,38 +397,29 @@ if (!function_exists('getCodeListArray')) {
 
 if (!function_exists('decryptString')) {
     /**
-     * Decrypt encrypted base64 string.
-     *
-     * @param string $encryptedString
-     * @param string $key
+     * @param string      $encryptedString
+     * @param string|null $key
      *
      * @return bool|string|null
-     * @throws JsonException
      */
-    function decryptString(string $encryptedString, string $key): bool|string|null
+    function decryptString(string $encryptedString, string $key=null): bool|string|null
     {
-        $json = json_decode(base64_decode($encryptedString), true, 512, JSON_THROW_ON_ERROR);
+        $frontendEncryptor = new \Illuminate\Encryption\Encrypter ($key??env('MIX_ENCRYPTION_KEY'), Config::get('app.cipher'));
+        return $frontendEncryptor->decrypt($encryptedString);
+    }
+}
 
-        try {
-            $salt = hex2bin($json['salt']);
-            $iv = hex2bin($json['iv']);
-        } catch (Exception $e) {
-            return null;
-        }
-
-        $cipherText = base64_decode($json['ciphertext']);
-        $iterations = (int) abs($json['iterations']);
-
-        if ($iterations <= 0) {
-            $iterations = 999;
-        }
-
-        $hashKey = hash_pbkdf2('sha512', $key, $salt, $iterations, (256 / 4));
-        unset($iterations, $json, $salt);
-        $decrypted = openssl_decrypt($cipherText, 'AES-256-CBC', hex2bin($hashKey), OPENSSL_RAW_DATA, $iv);
-        unset($cipherText, $hashKey, $iv);
-
-        return $decrypted;
+if (!function_exists('encryptString')) {
+    /**
+     * @param string      $string
+     * @param string|null $key
+     *
+     * @return bool|string|null
+     */
+    function encryptString(string $string, string $key=null): bool|string|null
+    {
+        $frontendEncryptor = new \Illuminate\Encryption\Encrypter ($key??env('MIX_ENCRYPTION_KEY'), Config::get('app.cipher'));
+        return $frontendEncryptor->encrypt($string);
     }
 }
 

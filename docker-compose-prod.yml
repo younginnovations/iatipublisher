@@ -4,6 +4,7 @@ services:
     laravel.fpm:
         build:
             context: .
+            dockerfile: Dockerfile.develop
             target: fpm_server
         image: laravel-in-kubernetes/fpm_server
         # We can override any env values here.
@@ -21,11 +22,12 @@ services:
     laravel.web:
         build:
             context: .
+            dockerfile: Dockerfile.develop
             target: web_server
         image: laravel-in-kubernetes/web_server
         # Expose our application port (80) through a port on our local machine (8080)
         ports:
-            - '8080:80'
+            - '80:80'
         environment:
             # We need to pass in the new FPM hst as the name of the fpm container on port 9000
             FPM_HOST: "laravel.fpm:9000"
@@ -39,6 +41,7 @@ services:
     laravel.cron:
         build:
             context: .
+            dockerfile: Dockerfile.develop
             target: cron
         image: laravel-in-kubernetes/cron
         # Here we mount in our codebase so any changes are immediately reflected into the container
@@ -51,6 +54,7 @@ services:
     laravel.horizon:
       build:
         context: .
+        dockerfile: Dockerfile.develop
         target: horizon
       image: laravel-in-kubernetes/horizon
       # Here we mount in our codebase so any changes are immediately reflected into the container
@@ -64,6 +68,7 @@ services:
     laravel.frontend:
         build:
             context: .
+            dockerfile: Dockerfile.develop
             target: frontend
         # Override the default CMD, so we can watch changes to frontend files, and re-transpile them.
         command: ["npm", "run", "watch"]
@@ -96,6 +101,33 @@ services:
             retries: 3
             timeout: 5s
 
+    mailhog:
+      image: 'mailhog/mailhog:latest'
+      ports:
+        - '${FORWARD_MAILHOG_PORT:-1025}:1025'
+        - '${FORWARD_MAILHOG_DASHBOARD_PORT:-8025}:8025'
+      networks:
+        - laravel-in-kubernetes
+
+
+    minio:
+      image: 'minio/minio:latest'
+      ports:
+        - '${FORWARD_MINIO_PORT:-9000}:9000'
+        - '${FORWARD_MINIO_CONSOLE_PORT:-8900}:8900'
+      environment:
+        MINIO_ROOT_USER: 'sail'
+        MINIO_ROOT_PASSWORD: 'password'
+      volumes:
+        - 'laravel-in-kubernetes-minio:/data/minio'
+      networks:
+        - laravel-in-kubernetes
+      command: minio server /data/minio --console-address ":8900"
+      healthcheck:
+        test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+        retries: 3
+        timeout: 5s
+
     redis:
         image: 'redis:alpine'
         ports:
@@ -114,3 +146,4 @@ networks:
 volumes:
     laravel-in-kubernetes-pgsql:
     laravel-in-kubernetes-redis:
+    laravel-in-kubernetes-minio:
