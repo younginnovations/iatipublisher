@@ -49,6 +49,7 @@
     "sub_elements": {}
   },
   "name": {
+    "name": "name",
     "label": "name",
     "multiple": false,
     "hover_text": "The human-readable name of the organisation.",
@@ -1431,6 +1432,7 @@
         "element_criteria": "mandatory",
         "wrapper_collection": false,
         "hover_text": "IATI Document Category Code.<br> <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/document-link/category/'>For more information",
+        "help_text": "",
         "attributes": {
           "code": {
             "name": "code",
