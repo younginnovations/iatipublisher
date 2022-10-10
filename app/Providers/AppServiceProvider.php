@@ -26,6 +26,7 @@ class AppServiceProvider extends ServiceProvider
     {
         if (config('app.env') === 'production' || config('app.env') === 'staging') {
             \URL::forceScheme('https');
+            // return true;
         }
 
         Horizon::auth(function ($request) {
