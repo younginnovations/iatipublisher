@@ -50,11 +50,11 @@
               <div>
                 <div class="label-field">
                   <label class="label" for=""
-                    >@xml: lang
+                    >language
                     <span class="required-icon"> *</span>
                   </label>
                   <HoverText
-                    name="@xml:lang"
+                    name="language"
                     hover-text="A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/title/narrative/' target='_blank'>For more information</a>"
                     :show-iati-reference="true"
                   />
@@ -68,7 +68,7 @@
                   }"
                   :searchable="true"
                   :options="languages"
-                  placeholder="Select @xml:lang"
+                  placeholder="Select language"
                 />
 
                 <span v-if="errorData.language != ''" class="error" role="alert">

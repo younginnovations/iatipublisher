@@ -63,7 +63,7 @@ class BaseForm extends Form
 
             if ((isset($field['add_more']) && $field['add_more']) || (isset($element['add_more_attributes']) && $element['add_more_attributes'])) {
                 $this->add('add_to_collection_' . $field['name'], 'button', [
-                    'label' => 'Add More',
+                    'label' => sprintf('Add More %s', str_replace('_',' ',$field['name'])),
                     'attr'  => [
                         'class'     => 'add_to_collection add_more button relative -translate-y-1/2 pl-3.5 text-xs font-bold uppercase leading-normal text-spring-50 text-bluecoral ',
                         'form_type' => $field['parent'] . '_' . $field['name'],
@@ -86,8 +86,8 @@ class BaseForm extends Form
                         'data'            => $field,
                         'label'           => false,
                         'element_criteria'=> $field['element_criteria'] ?? '',
-                        'hover_text'=> Arr::get($field, 'hover_text', '') ?: Arr::get($element, 'hover_text', ''),
-                        'help_text'=> Arr::get($field, 'help_text', '') ?: Arr::get($element, 'help_text', ''),
+                        'hover_text'=> Arr::get($field, 'hover_text', ''),
+                        'help_text'=> Arr::get($field, 'help_text', ''),
                         'wrapper'         => [
                             'class' => ((Arr::get($element, 'attributes', null) && isset($field['name']) && strtolower(
                                 $field['name']
@@ -112,7 +112,9 @@ class BaseForm extends Form
 
             if ((isset($field['add_more']) && $field['add_more']) || Arr::get($element, 'add_more_attributes', false)) {
                 $this->add('add_to_collection_' . $name, 'button', [
-                    'label' => sprintf('add more %s', str_replace('_', ' ', '')),
+                    'label' => sprintf('add more %s', str_replace('_', ' ', (!Arr::get($element, 'attributes', null) && strtolower(
+                        $field['name']
+                    ) === 'narrative') ? $element['name']: $field['name'])),
                     'attr'  => [
                         'class'     => 'add_to_collection add_more button relative -translate-y-1/2 pl-3.5 text-xs font-bold uppercase leading-normal text-spring-50 text-bluecoral ',
                         'form_type' => !empty(Arr::get($this->getData(), 'name', null)) ? sprintf(
