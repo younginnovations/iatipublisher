@@ -49,7 +49,7 @@ class NameController extends Controller
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while opening organization name form.');
+            return redirect()->route('admin.organisation.index')->with('error', 'Error has occurred while opening organization name form.');
         }
     }
 

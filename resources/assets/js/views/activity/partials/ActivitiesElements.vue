@@ -43,17 +43,11 @@
           class="button__dropdown button dropdown-btn"
         >
           <ul class="w-full py-2 bg-eggshell">
-            <li
-              class="flex py-1.5 px-3.5 hover:bg-white"
-              @click="dropdownFilter('')"
-            >
+            <li class="flex py-1.5 px-3.5 hover:bg-white" @click="dropdownFilter('')">
               <svg-vue class="mr-1 text-lg" icon="box" />
               <span>All Elements</span>
             </li>
-            <li
-              class="flex py-1.5 px-3.5 hover:bg-white"
-              @click="dropdownFilter('core')"
-            >
+            <li class="flex py-1.5 px-3.5 hover:bg-white" @click="dropdownFilter('core')">
               <svg-vue class="mr-1 text-lg" icon="core" />
               <span>Core</span>
             </li>
@@ -71,9 +65,7 @@
     <div class="grid grid-cols-2 gap-2 mt-3 elements__listing">
       <template v-for="(post, index) in filteredElements" :key="index">
         <a
-          v-if="
-            !(index.toString() === 'indicator' || index.toString() === 'period')
-          "
+          v-if="!(index.toString() === 'indicator' || index.toString() === 'period')"
           class="elements__item relative flex cursor-pointer flex-col items-center justify-center rounded border border-dashed border-n-40 py-2.5 text-n-30"
           :href="
             index.toString() === 'reporting_org'
@@ -81,9 +73,7 @@
               : getLink(post.has_data, index.toString())
           "
         >
-          <div
-            class="absolute top-0 right-0 inline-flex mt-1 mr-1 status_icons"
-          >
+          <div class="absolute top-0 right-0 inline-flex mt-1 mr-1 status_icons">
             <svg-vue
               v-if="post.completed"
               class="text-base text-spring-50"
@@ -103,19 +93,13 @@
               index === 'fss'
             "
           >
-            <svg-vue
-              class="text-base"
-              icon="activity-elements/building"
-            ></svg-vue>
+            <svg-vue class="text-base" icon="activity-elements/building"></svg-vue>
           </template>
           <template v-else>
-            <svg-vue
-              :icon="'activity-elements/' + index"
-              class="text-base"
-            ></svg-vue>
+            <svg-vue :icon="'activity-elements/' + index" class="text-base"></svg-vue>
           </template>
           <div class="mt-1 text-xs title">
-            {{ index.toString().replace(/_/g, '-') }}
+            {{ index.toString().replace(/_/g, "-") }}
           </div>
         </a>
       </template>
@@ -124,18 +108,10 @@
 </template>
 
 <script setup lang="ts">
-import {
-  computed,
-  defineProps,
-  reactive,
-  onMounted,
-  ref,
-  toRefs,
-  inject,
-} from 'vue';
-import { useToggle } from '@vueuse/core';
+import { computed, defineProps, reactive, onMounted, ref, toRefs, inject } from "vue";
+import { useToggle } from "@vueuse/core";
 
-import { activityCoreElements } from 'Composable/coreElements';
+import { activityCoreElements } from "Composable/coreElements";
 
 const props = defineProps({
   data: {
@@ -150,7 +126,7 @@ const props = defineProps({
 
 const { data } = toRefs(props);
 
-const hasReportingOrgData = inject('hasReportingOrgData') ? 1 : 0;
+const hasReportingOrgData = inject("hasReportingOrgData") ? 1 : 0;
 
 const dropdown = ref();
 const dropdownBtn = ref();
@@ -160,8 +136,8 @@ const [searchBtnValue, searchBtnToggle] = useToggle();
  * Search functionality
  */
 const elements = reactive({
-  search: '',
-  status: '',
+  search: "",
+  status: "",
 });
 
 const asArrayData = Object.entries(data.value);
@@ -170,16 +146,12 @@ const filteredElements = computed(() => {
     if (!elements.status) {
       return key
         .toLowerCase()
-        .includes(
-          elements.search.toLowerCase().replace('_', '').replace('-', '_')
-        );
+        .includes(elements.search.toLowerCase().replace("_", "").replace("-", "_"));
     } else {
       if (value[elements.status]) {
         return key
           .toLowerCase()
-          .includes(
-            elements.search.toLowerCase().replace('_', '').replace('-', '_')
-          );
+          .includes(elements.search.toLowerCase().replace("_", "").replace("-", "_"));
       }
     }
   });
@@ -193,7 +165,7 @@ const filteredElements = computed(() => {
  */
 Object.keys(data.value).map((key) => {
   if (activityCoreElements().includes(key.toString())) {
-    data.value[key]['core'] = true;
+    data.value[key]["core"] = true;
   }
 });
 
@@ -203,7 +175,7 @@ const dropdownFilter = (s: string) => {
 };
 
 onMounted(() => {
-  window.addEventListener('click', (e) => {
+  window.addEventListener("click", (e) => {
     if (
       !dropdownBtn.value.contains(e.target) &&
       !dropdown.value.contains(e.target) &&
@@ -220,13 +192,13 @@ function getLink(has_data: number, index: string) {
   }
 
   if (has_data) {
-    return index == 'reporting_org' ? `/organisation#${index}` : `#${index}`;
-  } else if (index == 'result' || index == 'transactions') {
-    let element = index == 'result' ? 'result' : 'transaction';
+    return index == "reporting_org" ? `/organisation#${index}` : `#${index}`;
+  } else if (index == "result" || index == "transactions") {
+    let element = index == "result" ? "result" : "transaction";
     return `/activity/${props.activityId}/${element}/create`;
   }
 
-  return index == 'reporting_org'
+  return index == "reporting_org"
     ? `/organisation/${index}`
     : `/activity/${props.activityId}/${index}`;
 }
