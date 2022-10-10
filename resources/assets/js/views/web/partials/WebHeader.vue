@@ -85,7 +85,7 @@
           <div id="menu-overlay"></div>
           <div
             id="hamburger"
-            class="hamburger mb-4 scale-90 sm:scale-100 xl:hidden"
+            class="hamburger home-burger-menu mb-4 scale-90 xl:hidden"
           >
             <span class="bg-bluecoral" />
             <span class="bg-bluecoral" />

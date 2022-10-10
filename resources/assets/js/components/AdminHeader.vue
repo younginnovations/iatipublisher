@@ -10,21 +10,21 @@
     />
     <div class="flex items-center gap-5">
       <div class="hamburger-menu">
-        <div id="hamburger" class="scale-75 hamburger">
+        <div id="hamburger" class="hamburger scale-75">
           <span class="bg-n-20" />
           <span class="bg-n-20" />
           <span class="bg-n-20" />
         </div>
       </div>
-      <figure class="flex items-center grow-0">
+      <figure class="flex grow-0 items-center">
         <a href="/activities">
           <svg-vue icon="logo" class="text-4xl" />
         </a>
       </figure>
       <div id="activity-menu-overlay"></div>
     </div>
-    <div id="nav-list" class="flex justify-between w-full activity-nav-menu">
-      <nav>
+    <div id="nav-list" class="activity-nav-menu flex w-full justify-between">
+      <nav class="justify-end">
         <ul class="flex">
           <li
             v-for="(language, index) in data.languages"
@@ -32,7 +32,10 @@
             :class="data.languageNavLiClasses"
           >
             <a
-              :class="[{ nav__pointer: language.active }, data.languageNavAnchorClasses]"
+              :class="[
+                { nav__pointer: language.active },
+                data.languageNavAnchorClasses,
+              ]"
               :href="language.permalink"
             >
               <span>{{ language.language }}</span>
@@ -40,7 +43,7 @@
           </li>
         </ul>
       </nav>
-      <nav v-if="superAdmin" class="flex grow justify-end">
+      <nav v-if="superAdmin" class="activity-nav">
         <ul class="activity-nav-list -mx-4">
           <li
             v-for="(menu, index) in data.menus"
@@ -48,7 +51,10 @@
             :class="data.menuNavLiClasses"
           >
             <a
-              :class="[{ nav__pointer: menu.active }, data.menuNavAnchorClasses]"
+              :class="[
+                { nav__pointer: menu.active },
+                data.menuNavAnchorClasses,
+              ]"
               :href="menu.permalink"
             >
               <span class="">{{ menu.name }}</span>
@@ -107,7 +113,7 @@
                   </span>
                 </div>
               </li>
-              <li class="border-b dropdown__list border-b-n-20">
+              <li class="dropdown__list border-b border-b-n-20">
                 <svg-vue icon="user" />
                 <a href="#">Your Profile</a>
               </li>
@@ -132,91 +138,93 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, ref, reactive, onMounted } from "vue";
-import type { Ref } from "vue";
-import axios from "axios";
-import { useToggle } from "@vueuse/core";
-import CreateModal from "../views/activity/CreateModal.vue";
-import Toast from "./Toast.vue";
+import { defineProps, ref, reactive, onMounted, Ref } from 'vue';
+import axios from 'axios';
+import { useToggle } from '@vueuse/core';
+import CreateModal from '../views/activity/CreateModal.vue';
+import Toast from './Toast.vue';
+
 defineProps({
   user: { type: Object, required: true },
   organization: {
     type: Object,
     validator: (v: unknown) =>
-      typeof v === "object" || typeof v === "string" || v === null,
+      typeof v === 'object' || typeof v === 'string' || v === null,
     required: false,
+    default() {
+      return {};
+    },
   },
   superAdmin: { type: Boolean, required: true },
 });
 
 const toastVisibility = ref(false);
-const toastMessage = ref("");
+const toastMessage = ref('');
 const toastType = ref(false);
 const data = reactive({
-  languageNavLiClasses: "flex",
+  languageNavLiClasses: 'flex',
   languageNavAnchorClasses:
-    "flex text-white items-center uppercase nav__pointer-hover px-1.5",
-  menuNavLiClasses: "flex px-4",
-  menuNavAnchorClasses: "flex text-white items-center uppercase nav__pointer-hover",
+    'flex text-white items-center uppercase nav__pointer-hover px-1.5',
+  menuNavLiClasses: 'flex px-4',
+  menuNavAnchorClasses:
+    'flex text-white items-center uppercase nav__pointer-hover',
   languages: [
     {
-      language: "EN",
-      permalink: "#",
+      language: 'EN',
+      permalink: '#',
       active: true,
     },
     {
-      language: "FR",
-      permalink: "#",
+      language: 'FR',
+      permalink: '#',
       active: false,
     },
     {
-      language: "ES",
-      permalink: "#",
+      language: 'ES',
+      permalink: '#',
       active: false,
     },
   ],
   menus: [
     {
-      name: "Activity DATA",
-      permalink: "/activities",
+      name: 'Activity DATA',
+      permalink: '/activities',
       active: true,
     },
     {
-      name: "Organisation DATA",
-      permalink: "/organisation",
+      name: 'Organisation DATA',
+      permalink: '/organisation',
       active: false,
     },
     {
-      name: "Settings",
-      permalink: "/setting",
+      name: 'Settings',
+      permalink: '/setting',
       active: false,
     },
     {
-      name: "Import Activity",
-      permalink: "/import",
+      name: 'Import Activity',
+      permalink: '/import',
       active: false,
     },
   ],
 });
 const [modalValue, modalToggle] = useToggle();
-
 function toast(message: string, type: boolean) {
   toastVisibility.value = true;
   setTimeout(() => (toastVisibility.value = false), 5000);
   toastMessage.value = message;
   toastType.value = type;
 }
-
 function changeActiveMenu() {
   const path = window.location.pathname;
   data.menus.forEach((menu, key) => {
-    data.menus[key]["active"] = menu.permalink === path ? true : false;
+    data.menus[key]['active'] = menu.permalink === path ? true : false;
   });
 }
 async function logout() {
-  await axios.post("/logout").then((res) => {
+  await axios.post('/logout').then((res) => {
     if (res.status) {
-      window.location.href = "/";
+      window.location.href = '/';
     }
   });
 }
@@ -224,25 +232,25 @@ async function logout() {
  * Search functionality
  *
  */
-const searchValue: Ref<string | null> = ref("");
+const searchValue: Ref<string | null> = ref('');
 const currentURL = window.location.href;
-if (currentURL.includes("?")) {
+if (currentURL.includes('?')) {
   const queryString = window.location.search,
     urlParams = new URLSearchParams(queryString),
-    search = urlParams.get("q");
+    search = urlParams.get('q');
   searchValue.value = search;
 }
 const spinner = ref(false);
 const searchFunction = (url: string) => {
   spinner.value = true;
-  const param = searchValue.value?.replace("#", "");
-  let sortingParam = "";
-  if (currentURL.includes("?") && currentURL.includes("&")) {
+  const param = searchValue.value?.replace('#', '');
+  let sortingParam = '';
+  if (currentURL.includes('?') && currentURL.includes('&')) {
     const queryString = window.location.search;
-    let queryStringArr = queryString.split("&") as [];
-    sortingParam = "&" + queryStringArr.slice(1).join("&");
+    let queryStringArr = queryString.split('&') as [];
+    sortingParam = '&' + queryStringArr.slice(1).join('&');
   }
-  let href = param ? `${url}?q=${param}${sortingParam}` : "/activities/";
+  let href = param ? `${url}?q=${param}${sortingParam}` : '/activities/';
   window.location.href = href;
 };
 onMounted(async () => {
