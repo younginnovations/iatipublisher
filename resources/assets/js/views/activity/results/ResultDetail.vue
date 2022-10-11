@@ -5,6 +5,7 @@
       title="Result Detail"
       :back-link="`${activityLink}/result`"
     >
+    <div class="flex space-x-3 items-center">
       <Toast
         v-if="toastData.visibility"
         :message="toastData.message"
@@ -14,6 +15,7 @@
       <a :href="`${activityLink}/result/create`">
         <Btn text="Edit Result" :link="`${resultLink}/edit`" icon="edit" />
       </a>
+    </div>
     </PageTitle>
     <div class="activities">
       <aside class="activities__sidebar">

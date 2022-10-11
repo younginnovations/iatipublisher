@@ -5,6 +5,7 @@
       :title="`${transactionData.reference ?? 'Untitled'} - Transaction detail`"
       :back-link="`${activityLink}/transaction`"
     >
+    <div class="flex space-x-3 items-center">
       <Toast
         v-if="toastData.visibility"
         :message="toastData.message"
@@ -16,6 +17,7 @@
         :link="`${activityLink}/transaction/${transaction.id}/edit`"
         icon="edit"
       />
+    </div>
     </PageTitle>
 
     <div class="activities">

@@ -78,7 +78,7 @@
   }
 
   td:nth-child(2) {
-    @apply flex flex-col pl-2 text-xs  text-n-50;
+    @apply flex flex-col text-xs text-n-50 pl-2;
   }
   .multiline {
     @apply items-start;
