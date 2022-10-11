@@ -101,7 +101,7 @@
                 text="proxy"
                 type="outline"
                 icon="smile"
-                @click="proxyUser(data.id)"
+                @click="proxyUser(data.user.id)"
               />
             </td>
           </tr>
