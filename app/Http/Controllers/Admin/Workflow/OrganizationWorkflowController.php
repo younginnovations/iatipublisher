@@ -46,7 +46,7 @@ class OrganizationWorkflowController extends Controller
             $organization = Auth::user()->organization;
 
             if ($this->hasNoPublisherInfo($organization->settings)) {
-                return response()->json(['success' => false, 'message' => 'Please update the publishing information first.']);
+                return response()->json(['success' => false, 'message' => 'Please add a Registry API key before attempting to automatically publish.']);
             }
 
             $this->organizationWorkflowService->publishOrganization($organization);

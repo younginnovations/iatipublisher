@@ -91,6 +91,6 @@ class ActivityIdentifierService
         $model['activity_identifier'] = $this->getActivityIdentifierData($id);
         $this->baseFormCreator->url = route('admin.activity.identifier.update', [$id]);
 
-        return $this->baseFormCreator->editForm($model['activity_identifier'], $element, 'PUT', '/activities/' . $id);
+        return $this->baseFormCreator->editForm($model['activity_identifier'], $element, 'PUT', '/activity/' . $id);
     }
 }

@@ -104,7 +104,7 @@ class DateController extends Controller
             if (isset($date) && isset($type)) {
                 if (($type === '2' || $type === '4')) {
                     (strtotime($date) <= strtotime(date('Y-m-d'))) ?: $messages[] = sprintf(
-                        'Actual Start Date and Actual End Date must be Today or past days. (block %s)',
+                        'Actual start and end dates may not be in the future.(block %s)',
                         $blockIndex
                     );
                 }

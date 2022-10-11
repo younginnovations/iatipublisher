@@ -36,9 +36,9 @@ class IndicatorObserver
     public function created(Indicator $indicator): void
     {
         $resultObserver = new ResultObserver();
+        $this->setIndicatorDefaultValues($indicator);
         $resultObserver->updateActivityElementStatus($indicator->result);
         $resultObserver->resetActivityStatus($indicator->result);
-        $this->setIndicatorDefaultValues($indicator);
     }
 
     /**

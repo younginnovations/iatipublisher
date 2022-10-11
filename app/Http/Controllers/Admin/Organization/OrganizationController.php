@@ -85,7 +85,7 @@ class OrganizationController extends Controller
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activities.index')->with('error', 'Error has occurred while opening organization detail page]12345.');
+            return redirect()->route('admin.activities.index')->with('error', 'Error has occurred while opening organization detail page.');
         }
     }
 

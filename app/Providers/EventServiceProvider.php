@@ -37,7 +37,7 @@ class EventServiceProvider extends ServiceProvider
             SendEmailVerificationNotification::class,
         ],
         'Illuminate\Auth\Events\Verified' => [
-            'App\Listerners\LogVerifieduser',
+            'App\Listeners\LogVerifieduser',
         ],
         ActivityCsvWasUploaded::class => [ActivityCsvUpload::class],
         XmlWasUploaded::class => [XmlUpload::class],

@@ -29,7 +29,9 @@
                         <span class="font-bold text-bluecoral">' . $label . '</span>
                         <p>' . $options['options']['hover_text'] . '</p>
                     </div>
-                </div>' : ''; ?>
+                </div>' : '';
+            $label = strtolower(str_replace(' ', '-', $options['label']));
+            ?>
             <?php if (isset($options['options']['element_criteria']) && $options['options']['element_criteria'] === 'mandatory') : ?>
                 <?= htmlspecialchars_decode(Form::customLabel($name,  '<svg-vue icon="star" class="mr-2"></svg-vue>' . $label . $help_text . $hover_text, $options['label_attr'])) ?>
             <?php elseif (isset($options['options']['element_criteria']) && $options['options']['element_criteria'] === 'recommended') : ?>

@@ -188,8 +188,8 @@
           <div v-else class="text-sm">
             <span v-if="post.code">{{ types.budgetIdentifier[post.code] }}</span>
             <span v-else class="italic">Not Available</span>
-            <span v-if="post.code"> ({{ roundFloat(post.percentage) }} %)</span>
-            <span v-else class="italic">Not Available</span>
+            <span v-if="post.percentage"> ({{ roundFloat(post.percentage) }} %)</span>
+            <span v-else class="italic">(Percentage Not Available)</span>
           </div>
           <template v-for="(item, i) in post.description" :key="i">
             <div
@@ -254,7 +254,7 @@
           >
             <div class="text-sm">
               <div v-if="item.amount" class="value">
-                <span>{{ item.amount }}</span>
+                <span>{{ Number(item.amount).toLocaleString() }}</span>
                 <span>{{ item.currency }}</span>
                 <span v-if="item.value_date"
                   >(Valued at {{ formatDate(item.value_date) }})</span

@@ -11,13 +11,13 @@
       <div class="category flex">
         {{
           types?.budgetType[total_budget.total_budget_status] ??
-          'Budget Status Not Available'
+          "Budget Status Not Available"
         }}
       </div>
       <div class="flex text-sm">
         <span v-if="total_budget.value[0].amount">
-          {{ total_budget.value['0'].amount }}
-          {{ total_budget.value['0'].currency }}
+          {{ Number(total_budget.value["0"].amount).toLocaleString() }}
+          {{ total_budget.value["0"].currency }}
         </span>
         <span v-else> Budget Amount Not Available</span>
       </div>
@@ -27,13 +27,13 @@
             <td>Period</td>
             <td>
               {{
-                formatDate(total_budget.period_start['0'].date) ??
-                'Period Start Date Not Available'
+                formatDate(total_budget.period_start["0"].date) ??
+                "Period Start Date Not Available"
               }}
               -
               {{
-                formatDate(total_budget.period_end['0'].date) ??
-                'Period End Date Not Available'
+                formatDate(total_budget.period_end["0"].date) ??
+                "Period End Date Not Available"
               }}
             </td>
           </tr>
@@ -41,8 +41,8 @@
             <td>Value date</td>
             <td>
               {{
-                formatDate(total_budget.value['0'].value_date) ??
-                'Value Date Not Available'
+                formatDate(total_budget.value["0"].value_date) ??
+                "Value Date Not Available"
               }}
             </td>
           </tr>
@@ -57,16 +57,15 @@
         v-for="(budget_line, j) in total_budget.budget_line"
         :key="j"
         :class="{
-          'mb-2 border-b border-n-20':
-            j !== total_budget.budget_line.length - 1,
+          'mb-2 border-b border-n-20': j !== total_budget.budget_line.length - 1,
         }"
       >
         <div class="indicator-content flex px-6 py-2">
           <div class="elements-detail grow">
             <div class="category flex">
               <span>
-                {{ budget_line.value['0'].amount }}
-                {{ budget_line.value['0'].currency }}
+                {{ Number(budget_line.value["0"].amount).toLocaleString() }}
+                {{ budget_line.value["0"].currency }}
               </span>
             </div>
             <div class="ml-4">
@@ -75,15 +74,15 @@
                   <tr>
                     <td>Reference</td>
                     <td>
-                      {{ budget_line.ref ?? 'Reference Not Available' }}
+                      {{ budget_line.ref ?? "Reference Not Available" }}
                     </td>
                   </tr>
                   <tr>
                     <td>Value Date</td>
                     <td>
                       {{
-                        formatDate(budget_line.value['0'].value_date) ??
-                        'Value Date Not Available'
+                        formatDate(budget_line.value["0"].value_date) ??
+                        "Value Date Not Available"
                       }}
                     </td>
                   </tr>
@@ -101,14 +100,12 @@
                         <div class="language mb-1.5">
                           ({{
                             narrative.language
-                              ? `Language: ${
-                                  types?.languages[narrative.language]
-                                }`
-                              : 'Language : Not Available'
+                              ? `Language: ${types?.languages[narrative.language]}`
+                              : "Language : Not Available"
                           }})
                         </div>
                         <div class="w-[500px] max-w-full">
-                          {{ narrative.narrative ?? 'Narrative Not Available' }}
+                          {{ narrative.narrative ?? "Narrative Not Available" }}
                         </div>
                       </div>
                     </td>
@@ -124,8 +121,8 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, inject } from 'vue';
-import moment from 'moment';
+import { defineProps, inject } from "vue";
+import moment from "moment";
 
 defineProps({
   content: { type: Object, required: true },
@@ -137,9 +134,9 @@ interface TypesInterface {
   budgetType: [];
 }
 
-const types = inject('orgTypes') as TypesInterface;
+const types = inject("orgTypes") as TypesInterface;
 
 function formatDate(date: Date) {
-  return date ? moment(date).format('LL') : 'Date Not Available';
+  return date ? moment(date).format("LL") : "Date Not Available";
 }
 </script>

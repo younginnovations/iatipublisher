@@ -23,7 +23,7 @@
                             </div>
                             <div class="inline-flex items-center">
                                 <div class="mr-3">
-                                    <a href="/activities/1">
+                                    <a href="/activity/1">
                                         <svg-vue icon="arrow-short-left"></svg-vue>
                                     </a>
                                 </div>

@@ -17,7 +17,7 @@
       </div>
       <div class="flex text-sm">
         <span v-if="recipient_org_budget.value[0].amount">
-          {{ recipient_org_budget.value["0"].amount }}
+          {{ Number(recipient_org_budget.value["0"].amount).toLocaleString() }}
           {{ recipient_org_budget.value["0"].currency }}
         </span>
         <span v-else> Budget Amount Not Available</span>
@@ -111,7 +111,11 @@
           <div class="elements-detail grow">
             <div class="category flex">
               <span>
-                {{ budget_line.value["0"].amount ?? "Budget Not Available" }}
+                {{
+                  budget_line.value["0"].amount
+                    ? Number(budget_line.value[0].amount).toLocaleString()
+                    : "Budget Not Available"
+                }}
                 {{ budget_line.value["0"].currency }}
               </span>
             </div>

@@ -13,9 +13,7 @@
           </div>
           <div class="">
             <h4 class="ellipsis__title relative mr-4 text-2xl font-bold">
-              <span class="ellipsis__title overflow-hidden">
-                {{ title }}
-              </span>
+              <span class="ellipsis__title overflow-hidden"> {{ title }} </span>
               <span class="ellipsis__title--hover">{{ title }}</span>
             </h4>
           </div>
@@ -29,13 +27,13 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent } from "vue";
 
 // components
-import Breadcrumb from 'Components/BreadCrumb.vue';
+import Breadcrumb from "Components/BreadCrumb.vue";
 
 export default defineComponent({
-  name: 'PageTitle',
+  name: "PageTitle",
   components: { Breadcrumb },
   props: {
     breadcrumbData: {

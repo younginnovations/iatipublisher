@@ -23,7 +23,8 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, provide, reactive, ref } from "vue";
+import { defineComponent, onMounted, provide, reactive, ref, watch } from "vue";
+import { watchIgnorable } from "@vueuse/core";
 import axios from "axios";
 
 import EmptyActivity from "./partials/EmptyActivity.vue";
@@ -129,6 +130,25 @@ export default defineComponent({
         isEmpty.value = !response.data;
       });
     }
+
+    const { ignoreUpdates } = watchIgnorable(toastData, () => undefined, {
+      flush: "sync",
+    });
+    watch(
+      () => toastData.visibility,
+      () => {
+        setTimeout(() => {
+          toastData.visibility = false;
+          ignoreToastUpdate();
+        }, 2000);
+      }
+    );
+
+    const ignoreToastUpdate = () => {
+      ignoreUpdates(() => {
+        toastData.message = "";
+      });
+    };
 
     provide("toastMessage", toastMessage);
     provide("toastData", toastData);

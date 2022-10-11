@@ -107,7 +107,7 @@ class BulkPublishingController extends Controller
             DB::beginTransaction();
 
             if ($this->activityWorkflowService->hasNoPublisherInfo(auth()->user()->organization->settings)) {
-                return response()->json(['success' => false, 'message' => 'Please update the publishing information first.']);
+                return response()->json(['success' => false, 'message' => 'Please add a Registry API key before attempting to automatically publish.']);
             }
 
             $activityIds = json_decode($request->get('activities'), true, 512, JSON_THROW_ON_ERROR);
@@ -147,7 +147,7 @@ class BulkPublishingController extends Controller
             DB::beginTransaction();
 
             if ($this->activityWorkflowService->hasNoPublisherInfo(auth()->user()->organization->settings)) {
-                return response()->json(['success' => false, 'message' => 'Please update the publishing information first.']);
+                return response()->json(['success' => false, 'message' => 'Please add a Registry API key before attempting to automatically publish.']);
             }
 
             if ($this->publishingStatusService->ongoingBulkPublishing(auth()->user()->organization->id)) {

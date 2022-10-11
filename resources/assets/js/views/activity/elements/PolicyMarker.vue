@@ -19,7 +19,7 @@
         <span v-else class="italic">Not Available</span>
       </div>
       <div v-else>
-        <span v-if="post.policy_marker">{{ post.policy_marker }}</span>
+        <span v-if="post.policy_marker_text">{{ post.policy_marker_text }}</span>
         <span v-else class="italic">Not Available</span>
       </div>
     </div>
@@ -28,12 +28,9 @@
         <tr v-if="post.policy_marker_vocabulary === '99'">
           <td>Vocabulary URI</td>
           <td>
-            <a
-              v-if="post.vocabulary_uri"
-              target="_blank"
-              :href="post.vocabulary_uri"
-              >{{ post.vocabulary_uri }}</a
-            >
+            <a v-if="post.vocabulary_uri" target="_blank" :href="post.vocabulary_uri">{{
+              post.vocabulary_uri
+            }}</a>
             <span v-else class="italic">Not Available</span>
           </td>
         </tr>
@@ -69,11 +66,11 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, inject } from 'vue';
-import dateFormat from 'Composable/dateFormat';
+import { defineComponent, inject } from "vue";
+import dateFormat from "Composable/dateFormat";
 
 export default defineComponent({
-  name: 'PolicyMarker',
+  name: "PolicyMarker",
   props: {
     data: {
       type: Object,
@@ -88,7 +85,7 @@ export default defineComponent({
       languages: [];
     }
 
-    const types = inject('types') as Types;
+    const types = inject("types") as Types;
 
     return { types, dateFormat };
   },

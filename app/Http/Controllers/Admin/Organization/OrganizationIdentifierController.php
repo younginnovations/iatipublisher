@@ -70,7 +70,7 @@ class OrganizationIdentifierController extends Controller
             $organizationIdentifier = $request->all();
 
             if (!$this->verifyPublisher($organizationIdentifier)) {
-                return redirect()->route('admin.organisation.index')->with('error', 'Error has occurred while updating organization identifier. Please enter correct identifier as present in IATI Registry.');
+                return redirect()->route('admin.organisation.identifier.edit')->with('error', 'Please enter correct identifier as present in IATI Registry.')->withInput();
             }
 
             if (!$this->organizationIdentifierService->update($id, $organizationIdentifier)) {

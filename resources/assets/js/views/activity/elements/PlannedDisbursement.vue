@@ -7,10 +7,7 @@
   >
     <div class="category">
       <span>
-        {{
-          types.budgetType[post.planned_disbursement_type] ??
-          'Type Not Available'
-        }}
+        {{ types.budgetType[post.planned_disbursement_type] ?? "Type Not Available" }}
       </span>
     </div>
 
@@ -25,10 +22,10 @@
             <td>
               {{
                 post.value[0].amount
-                  ? post.value[0].amount +
-                    '' +
+                  ? Number(post.value[0].amount).toLocaleString() +
+                    " " +
                     types.currency[post.value[0].currency]
-                  : 'Not available'
+                  : "Not available"
               }}
             </td>
           </tr>
@@ -38,7 +35,7 @@
               {{
                 post.value[0].value_date
                   ? formatDate(post.value[0].value_date)
-                  : 'Not Available'
+                  : "Not Available"
               }}
             </td>
           </tr>
@@ -49,7 +46,7 @@
                 {{
                   post.period_start[0].iso_date
                     ? formatDate(post.period_start[0].iso_date)
-                    : 'Date Not Available'
+                    : "Date Not Available"
                 }}
               </span>
             </td>
@@ -61,7 +58,7 @@
                 {{
                   post.period_end[0].iso_date
                     ? formatDate(post.period_end[0].iso_date)
-                    : 'Date Not Available'
+                    : "Date Not Available"
                 }}
               </span>
             </td>
@@ -78,19 +75,19 @@
           <tr>
             <td>Type</td>
             <td>
-              {{ post.provider_org[0].type ?? 'Not available' }}
+              {{ post.provider_org[0].type ?? "Not available" }}
             </td>
           </tr>
           <tr>
             <td>Provider Activity ID</td>
             <td>
-              {{ post.provider_org[0].provider_activity_id ?? 'Not Available' }}
+              {{ post.provider_org[0].provider_activity_id ?? "Not Available" }}
             </td>
           </tr>
           <tr>
             <td>Reference</td>
             <td>
-              {{ post.provider_org[0].ref ?? 'Not available' }}
+              {{ post.provider_org[0].ref ?? "Not available" }}
             </td>
           </tr>
           <tr>
@@ -109,11 +106,11 @@
                   {{
                     narrative.language
                       ? types.languages[narrative.language]
-                      : 'Not Available'
+                      : "Not Available"
                   }})
                 </div>
                 <div class="w-[500px] max-w-full">
-                  {{ narrative.narrative ?? 'Not Available' }}
+                  {{ narrative.narrative ?? "Not Available" }}
                 </div>
               </div>
             </td>
@@ -130,19 +127,19 @@
           <tr>
             <td>Type</td>
             <td>
-              {{ post.receiver_org[0].type ?? 'Not available' }}
+              {{ post.receiver_org[0].type ?? "Not available" }}
             </td>
           </tr>
           <tr>
             <td>Receiver Activity ID</td>
             <td>
-              {{ post.receiver_org[0].provider_activity_id ?? 'Not Available' }}
+              {{ post.receiver_org[0].receiver_activity_id ?? "Not Available" }}
             </td>
           </tr>
           <tr>
             <td>Reference</td>
             <td>
-              {{ post.receiver_org[0].ref ?? 'Not available' }}
+              {{ post.receiver_org[0].ref ?? "Not available" }}
             </td>
           </tr>
           <tr>
@@ -161,11 +158,11 @@
                   {{
                     narrative.language
                       ? types.languages[narrative.language]
-                      : 'Not Available'
+                      : "Not Available"
                   }})
                 </div>
                 <div class="w-[500px] max-w-full">
-                  {{ narrative.narrative ?? 'Not Available' }}
+                  {{ narrative.narrative ?? "Not Available" }}
                 </div>
               </div>
             </td>
@@ -177,8 +174,8 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, inject } from 'vue';
-import moment from 'moment';
+import { defineProps, inject } from "vue";
+import moment from "moment";
 
 defineProps({
   data: {
@@ -194,8 +191,8 @@ interface Types {
 }
 
 function formatDate(date: Date) {
-  return moment(date).format('LL');
+  return moment(date).format("LL");
 }
 
-const types = inject('types') as Types;
+const types = inject("types") as Types;
 </script>

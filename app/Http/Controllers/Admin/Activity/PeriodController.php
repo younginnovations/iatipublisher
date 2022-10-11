@@ -348,9 +348,21 @@ class PeriodController extends Controller
                 }
             }
 
-            foreach ($period['actual'] as $actual) {
+            foreach ($period['period']['actual'] as $actual) {
                 if ($actual['value']) {
                     return 'Value must be omitted when the indicator measure is qualitative.';
+                }
+            }
+        } else {
+            foreach ($period['period']['target'] as $target) {
+                if (!$target['value']) {
+                    return 'Value must be filled when the indicator measure is non-qualitative.';
+                }
+            }
+
+            foreach ($period['period']['actual'] as $actual) {
+                if (!$actual['value']) {
+                    return 'Value must be filled when the indicator measure is non-qualitative.';
                 }
             }
         }
