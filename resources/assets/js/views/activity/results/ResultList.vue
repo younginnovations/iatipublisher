@@ -100,7 +100,7 @@ import axios from "axios";
 import Btn from "Components/ButtonComponent.vue";
 import Pagination from "Components/TablePagination.vue";
 import PageTitle from "Components/sections/PageTitle.vue";
-import Toast from "Components/Toast.vue";
+import Toast from "Components/ToastMessage.vue";
 import DeleteAction from "Components/sections/DeleteAction.vue";
 
 // composable

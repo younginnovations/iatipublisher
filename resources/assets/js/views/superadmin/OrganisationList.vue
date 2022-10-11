@@ -31,7 +31,7 @@ import { reactive, provide } from 'vue';
 // Components
 import PageTitle from 'Components/sections/PageTitle.vue';
 import Loader from 'Components/sections/ProgressLoader.vue';
-import Toast from 'Components/Toast.vue';
+import Toast from 'Components/ToastMessage.vue';
 
 import TableList from './components/TableList.vue';
 

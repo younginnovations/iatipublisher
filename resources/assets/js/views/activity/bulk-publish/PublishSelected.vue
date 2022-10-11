@@ -162,6 +162,7 @@
       :class="{ 'animate-loader': loader }"
     />
     <BulkPublishing v-if="Object.keys(pa.publishingActivities).length > 0" />
+
   </div>
 </template>
 
@@ -331,6 +332,7 @@ const startBulkPublish = () => {
     .then((res) => {
       const response = res.data;
       if (response.success) {
+
         bulkPublishStep.value = 1;
         publishAlertValue.value = false;
         pa.value.publishingActivities = response.data;

@@ -1,11 +1,11 @@
 <template>
-  <div class="page-title mb-4">
+  <div class="mb-4 page-title">
     <div class="flex items-end gap-4">
       <div class="title grow-0">
         <div class="mb-2 text-caption-c1 text-n-40 xl:mb-4">
           <nav aria-label="breadcrumbs" class="breadcrumb">
             <p>
-              <span class="last font-bold">Your Activities</span>
+              <span class="font-bold last">Your Activities</span>
             </p>
           </nav>
         </div>
@@ -45,7 +45,7 @@
           </div>
         </div>
       </div>
-      <div class="actions relative flex grow flex-col items-end justify-end">
+      <div class="relative flex flex-col items-end justify-end actions grow">
         <div class="inline-flex justify-end">
           <Toast
             v-if="toastMessage.visibility"
@@ -54,6 +54,12 @@
             :type="toastMessage.type"
           />
           <div class="inline-flex items-center justify-end gap-3">
+            <RefreshToastMessage
+              v-if="refreshToastMsg.visibility"
+              :message="refreshMessage"
+              :type="refreshMessageType"
+              class="mr-5"
+            />
             <PublishSelected />
             <DeleteButton v-if="store.state.selectedActivities.length === 1" />
             <AddActivityButton />
@@ -67,7 +73,8 @@
 <script setup lang="ts">
 import { inject } from 'vue';
 import AddActivityButton from './AddActivityButton.vue';
-import Toast from 'Components/Toast.vue';
+import Toast from 'Components/ToastMessage.vue';
+import RefreshToastMessage from 'Activity/bulk-publish/RefreshToast.vue';
 import PublishSelected from 'Activity/bulk-publish/PublishSelected.vue';
 import DeleteButton from 'Components/buttons/DeleteButton.vue';
 
@@ -76,6 +83,10 @@ import { useStore } from 'Store/activities/index';
 
 const store = useStore();
 
+const refreshMessageType = true,
+  refreshMessage =
+    'Activity has been published sucessfully, refresh to see changes';
+
 interface ToastInterface {
   visibility: boolean;
   message: string;
@@ -83,4 +94,6 @@ interface ToastInterface {
 }
 
 const toastMessage = inject('toastData') as ToastInterface;
+
+const refreshToastMsg = inject('refreshToastMsg');
 </script>

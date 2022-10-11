@@ -106,7 +106,7 @@ import ResultElement from './ResultElement.vue';
 import Indicator from 'Activity/results/elements/Indicator.vue';
 import Btn from 'Components/buttons/Link.vue';
 import PageTitle from 'Components/sections/PageTitle.vue';
-import Toast from 'Components/Toast.vue';
+import Toast from 'Components/ToastMessage.vue';
 
 //composable
 import dateFormat from 'Composable/dateFormat';

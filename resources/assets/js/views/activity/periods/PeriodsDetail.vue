@@ -68,7 +68,7 @@ import { defineComponent, toRefs, provide, onMounted, reactive } from 'vue';
 //component
 import Btn from 'Components/buttons/Link.vue';
 import PageTitle from 'Components/sections/PageTitle.vue';
-import Toast from 'Components/Toast.vue';
+import Toast from 'Components/ToastMessage.vue';
 
 import { TargetValue, ActualValue } from './elements/Index';
 

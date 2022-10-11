@@ -86,7 +86,7 @@ import axios from 'axios';
 import SettingDefaultForm from './SettingDefaultForm.vue';
 import SettingPublishingForm from './SettingPublishingForm.vue';
 import Loader from '../../components/Loader.vue';
-import Toast from '../../components/Toast.vue';
+import Toast from 'Components/ToastMessage.vue';
 
 export default defineComponent({
   components: {
