@@ -1,12 +1,12 @@
 <template>
-  <section class="section">
+  <section class="section-wrapper">
     <Loader v-if="loaderVisibility" />
     <div class="setting input__field">
       <span class="text-xs font-bold text-n-40">Override default values</span>
       <div class="flex items-center justify-between">
-        <div class="flex items-center mt-4 mb-6">
+        <div class="mt-4 mb-6 flex items-center">
           <a :href="`/activity/${activityId}`"><svg-vue icon="left-arrow" /></a>
-          <h2 class="ml-3 font-bold text-heading-4 text-n-50">
+          <h2 class="ml-3 text-heading-4 font-bold text-n-50">
             Override default values
           </h2>
         </div>
@@ -18,14 +18,14 @@
           />
         </div>
       </div>
-      <div class="overflow-x-hidden setting__container">
+      <div class="setting__container overflow-x-hidden">
         <div class="mb-8 text-xs text-n-40">
           Use the following form to change the default values such as currency,
           language etc for this specific activity. Changing the values here will
           not change the default values in the setting page.
         </div>
-        <div class="mt-4 register">
-          <div class="mb-0 register__container">
+        <div class="register mt-4">
+          <div class="register__container mb-0">
             <div>
               <div class="flex justify-between">
                 <label for="default-currency">Currency</label>
@@ -119,7 +119,7 @@
               <input
                 id="default-hierarchy"
                 v-model="defaultValues.hierarchy"
-                class="mb-2 register__input"
+                class="register__input mb-2"
                 type="text"
                 placeholder="Type default hierarchy here"
               />
@@ -210,9 +210,9 @@
         </div>
       </div>
     </div>
-    <div class="fixed bottom-0 w-full py-5 pr-40 bg-eggshell shadow-dropdown">
+    <div class="fixed bottom-0 w-full bg-eggshell py-5 pr-40 shadow-dropdown">
       <div class="flex items-center justify-end">
-        <a class="mr-8 ghost-btn" :href="`/activity/${activityId}`">Cancel</a>
+        <a class="ghost-btn mr-8" :href="`/activity/${activityId}`">Cancel</a>
         <button class="primary-btn save-btn" @click="submitForm()">
           Save default values
         </button>
