@@ -135,7 +135,7 @@
                   v-for="(recipient_country, i) in document_link.recipient_country"
                   :key="i"
                 >
-                  <div class="mb-1.5 text-xs font-bold">
+                  <div class="mb-1.5 text-xs">
                     {{
                       recipient_country.code
                         ? `${types?.country[recipient_country.code]}`

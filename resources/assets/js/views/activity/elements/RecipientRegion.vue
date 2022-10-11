@@ -69,7 +69,7 @@
                       : 'Not Available'
                   }})
                 </div>
-                <div class="w-[500px] max-w-full text-sm">
+                <div class="w-[500px] max-w-full text-xs">
                   {{ narrative.narrative ?? 'Not Available' }}
                 </div>
               </div>
