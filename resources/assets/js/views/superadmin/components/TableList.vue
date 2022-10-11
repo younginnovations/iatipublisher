@@ -101,7 +101,7 @@
                 text="proxy"
                 type="outline"
                 icon="smile"
-                @click="proxyUser(data.id)"
+                @click="proxyUser(data?.user?.id)"
               />
             </td>
           </tr>
@@ -155,6 +155,7 @@ interface oDataInterface {
     organization_url: string;
     user: {
       email: string;
+      id: number;
     };
     all_activities_count: number;
     updated_at: Date;
