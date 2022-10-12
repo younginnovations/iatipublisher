@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
-Route::name('admin.')->group(function () {
+Route::group([], static function () {
     Route::get('activities/core-elements-completed', [\App\Http\Controllers\Admin\Workflow\BulkPublishingController::class, 'checkCoreElementsCompleted'])->name('activities.coreElementsCompleted');
     Route::post('activities/validate-activities', [\App\Http\Controllers\Admin\Workflow\BulkPublishingController::class, 'validateActivities'])->name('activities.validateActivities');
     Route::get('activities/start-bulk-publish', [\App\Http\Controllers\Admin\Workflow\BulkPublishingController::class, 'startBulkPublish'])->name('activities.startBulkPublish');
