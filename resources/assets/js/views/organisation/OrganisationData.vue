@@ -201,33 +201,8 @@
         />
       </aside>
       <div class="activities__content">
-        <!-- <div class="mb-3 inline-flex flex-wrap gap-2">
-          <a
-            v-for="(post, key, index) in groupedData"
-            :key="index"
-            v-smooth-scroll
-            :href="`#${String(key)}`"
-            class="tab-btn-anchor"
-          >
-            <button :disabled="post.status == 'disabled'" class="tab-btn">
-              <span>{{ post.label }}</span>
-              <span class="hover__text">
-                <HoverText
-                  :name="post.label"
-                  hover-text="You cannot publish an activity until all the mandatory fields have been filled."
-                  icon_size="text-tiny"
-                />
-              </span>
-            </button>
-          </a>
-        </div> -->
         <div class="activities__content--elements -mx-3 grid grid-cols-2">
           <template v-for="(post, key, index) in groupedData" :key="index">
-            <!-- <div
-              class="elements-title relative col-span-2 mx-3 mt-3 mb-1 flex items-center text-sm uppercase text-n-40"
-            >
-              <div class="mr-4 shrink-0">{{ key }}</div>
-            </div> -->
             <template v-for="(element, name, i) in post.elements" :key="i">
               <OrganisationElementsDetail
                 v-if="
@@ -381,8 +356,11 @@ export default defineComponent({
           elementProps[k]["has_data"] = false;
         }
 
-        elementProps[k]["core"] = organizationData[key]["elements"][k]["core"];
-        elementProps[k]["completed"] = organizationProps["element_status"][k];
+        elementProps[k]["core"] = organizationData[key]["elements"][k]["mandatory"];
+        elementProps[k]["completed"] =
+          k === "organisation_identifier"
+            ? organizationProps["element_status"]["identifier"]
+            : organizationProps["element_status"][k];
       });
 
       if (flag === false) {
