@@ -37,10 +37,10 @@ onUnmounted(() => {
 
 <style lang="scss" scoped>
 .progress_bar {
-  @apply fixed left-0 bottom-0 flex w-full items-center justify-center bg-white;
-  top: 60px;
+  @apply fixed left-0 flex w-full items-center justify-center bg-white;
+  top: 0;
   z-index: 999;
-  height: calc(100vh - 60px);
+  height: 100vh;
 
   &__wrapper {
     @apply w-[250px] overflow-hidden rounded-2xl;
