@@ -28,9 +28,13 @@
     <div class="flex mb-4">
         <div class="flex items-center title grow">
             <span class="text-bluecoral text-xl mr-1.5">
-                    <svg-vue icon="organisation-elements/{{ str_replace('-','_',$data['name']) }}"></svg-vue>
+                <svg-vue icon="organisation-elements/{{ str_replace('-', '_', $data['name']) }}"></svg-vue>
             </span>
             <div class="text-sm font-bold title"> {{ str_replace(' ', '-', strtolower($data['title'])) }}</div>
+
+            @if ($data['name'] === 'name' || $data['name'] === 'reporting-org')
+                <svg-vue icon="star"></svg-vue>
+            @endif
             @if (Arr::get(getOrganizationElementSchema($data['name']), 'show_info_in_title', false))
                 @if (Arr::get(getOrganizationElementSchema($data['name']), 'help_text', false))
                     <div>
@@ -67,9 +71,6 @@
                 <b class="mr-2 text-base leading-3">.</b>
                 <span>{{ $data['status'] ? 'completed' : 'not completed' }}</span>
             </div> --}}
-            {{-- @if ($data['core'])
-                <svg-vue icon="core"></svg-vue>
-            @endif --}}
         </div>
         <div class="flex icons">
             <span class="text-xs"><span class="required-icon">*</span> Mandatory fields</span>

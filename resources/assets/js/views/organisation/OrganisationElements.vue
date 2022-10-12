@@ -45,7 +45,7 @@
               <svg-vue class="mr-1 text-lg" icon="box"></svg-vue>
               <span>All Elements</span>
             </li>
-            <li class="flex py-1.5 px-3.5 hover:bg-white" @click="dropdownFilter('star')">
+            <li class="flex py-1.5 px-3.5 hover:bg-white" @click="dropdownFilter('core')">
               <svg-vue class="mr-1 text-lg" icon="star"></svg-vue>
               <span>Mandatory</span>
             </li>
@@ -115,6 +115,10 @@ const props = defineProps({
     type: Object,
     required: true,
   },
+  mandatory: {
+    type: Object,
+    required: true,
+  },
 });
 
 const [searchBtnValue, searchBtnToggle] = useToggle();
@@ -163,7 +167,6 @@ onMounted(() => {
 
 const dropdownFilter = (s: string) => {
   elements.status = s;
-  console.log(elements.status);
   searchBtnToggle();
 };
 </script>
