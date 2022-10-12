@@ -1207,11 +1207,12 @@ class ElementCompleteService
      * @param $activity
      *
      * @return mixed
+     * @throws \JsonException
      */
     public function setDefaultValues(&$data, $activity): mixed
     {
         if (is_string($data)) {
-            $data = json_decode($data, true);
+            $data = json_decode($data, true, 512, JSON_THROW_ON_ERROR);
         }
 
         if ($data) {
@@ -1220,19 +1221,19 @@ class ElementCompleteService
                     $this->setDefaultValues($datum, $activity);
                 }
 
-                if ($key == 'narrative') {
+                if ($key === 'narrative') {
                     $this->tempNarrative = $datum;
                 }
 
-                if ($key == 'amount') {
+                if ($key === 'amount') {
                     $this->tempAmount = $datum;
                 }
 
-                if ($key == 'language' && empty($datum) && !empty($this->tempNarrative)) {
+                if ($key === 'language' && empty($datum) && !empty($this->tempNarrative)) {
                     $data['language'] = Arr::get($activity->default_field_values, 'default_language', null);
                 }
 
-                if ($key == 'currency' && empty($datum) && !empty($this->tempAmount)) {
+                if ($key === 'currency' && empty($datum) && !empty($this->tempAmount)) {
                     $data['currency'] = Arr::get($activity->default_field_values, 'default_currency', null);
                 }
             }

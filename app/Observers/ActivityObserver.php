@@ -77,9 +77,9 @@ class ActivityObserver
      */
     public function created(Activity $activity): void
     {
+        $this->setTitleDefaultValues($activity);
         $this->setElementStatus($activity, true);
         $this->resetActivityStatus($activity);
-        $this->setTitleDefaultValues($activity);
         $activity->saveQuietly();
     }
 
@@ -124,6 +124,7 @@ class ActivityObserver
      * @param $activity
      *
      * @return void
+     * @throws \JsonException
      */
     public function setTitleDefaultValues($activity): void
     {
