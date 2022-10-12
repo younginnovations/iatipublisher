@@ -12,19 +12,16 @@
                 >
                 <span class="separator mx-4"> / </span>
                 <div class="breadcrumb__title">
-                  <span
-                    class="breadcrumb__title last overflow-hidden text-n-30"
-                    >{{
-                      organization.name
-                        ? organization.name['0'].narrative ?? 'Untitled'
-                        : 'Untitled'
-                    }}</span
-                  >
+                  <span class="breadcrumb__title last overflow-hidden text-n-30">{{
+                    organization.name
+                      ? organization.name["0"].narrative ?? "Untitled"
+                      : "Untitled"
+                  }}</span>
                   <span class="ellipsis__title--hover w-[calc(100%_+_35px)]">
                     {{
                       organization.name
-                        ? organization.name['0'].narrative ?? 'Untitled'
-                        : 'Untitled'
+                        ? organization.name["0"].narrative ?? "Untitled"
+                        : "Untitled"
                     }}
                   </span>
                 </div>
@@ -42,15 +39,15 @@
                 <span class="ellipsis__title overflow-hidden">
                   {{
                     organization.name
-                      ? organization.name['0'].narrative ?? 'Untitled'
-                      : 'Untitled'
+                      ? organization.name["0"].narrative ?? "Untitled"
+                      : "Untitled"
                   }}
                 </span>
                 <span class="ellipsis__title--hover w-[calc(100%_+_35px)]">
                   {{
                     organization.name
-                      ? organization.name['0'].narrative ?? 'Untitled'
-                      : 'Untitled'
+                      ? organization.name["0"].narrative ?? "Untitled"
+                      : "Untitled"
                   }}
                 </span>
               </h4>
@@ -71,11 +68,7 @@
             >
               <svg-vue icon="download-file" />
             </button> -->
-            <Modal
-              :modal-active="downloadValue"
-              width="583"
-              @close="downloadToggle"
-            >
+            <Modal :modal-active="downloadValue" width="583" @close="downloadToggle">
               <div class="mb-4">
                 <div class="title mb-6 flex">
                   <svg-vue
@@ -113,17 +106,10 @@
             >
               <svg-vue icon="delete" />
             </button> -->
-            <Modal
-              :modal-active="deleteValue"
-              width="583"
-              @close="deleteToggle"
-            >
+            <Modal :modal-active="deleteValue" width="583" @close="deleteToggle">
               <div class="mb-4">
                 <div class="title mb-6 flex">
-                  <svg-vue
-                    class="mr-1 mt-0.5 text-lg text-crimson-40"
-                    icon="delete"
-                  />
+                  <svg-vue class="mr-1 mt-0.5 text-lg text-crimson-40" icon="delete" />
                   <b>Delete organisation</b>
                 </div>
                 <div class="rounded-lg bg-rose p-4">
@@ -173,7 +159,7 @@
               :is-percent="true"
               :percent="progress"
             ></RadialProgressBar>
-            <span>Fill core elements to get 100% score</span>
+            <span>Fill mandatory fields of all elements to get 100% score</span>
           </div>
           <div class="activities__card elements">
             <div class="mb-7 flex items-center justify-between">
@@ -262,11 +248,7 @@
                     : status[name]
                 "
                 class="elements-card col-span-2"
-                :class="
-                  String(name) === 'organisation_identifier'
-                    ? 'xl:col-span-1'
-                    : ''
-                "
+                :class="String(name) === 'organisation_identifier' ? 'xl:col-span-1' : ''"
               />
             </template>
           </template>
@@ -277,27 +259,20 @@
 </template>
 
 <script lang="ts">
-import {
-  defineComponent,
-  reactive,
-  onMounted,
-  toRefs,
-  provide,
-  watch,
-} from 'vue';
-import HoverText from '../../components/HoverText.vue';
-import RadialProgressBar from '../../components/RadialProgressBar.vue';
-import OrganisationElements from './OrganisationElements.vue';
-import OrganisationElementsDetail from './OrganisationElementsDetail.vue';
-import Modal from '../../components/PopupModal.vue';
-import BtnComponent from '../../components/ButtonComponent.vue';
-import Toast from '../../components/Toast.vue';
-import PublishUnpublish from 'Components/sections/OrganizationPublishUnpublishButton.vue';
-import { useToggle } from '@vueuse/core';
-import { watchIgnorable } from '@vueuse/core';
+import { defineComponent, reactive, onMounted, toRefs, provide, watch } from "vue";
+import HoverText from "../../components/HoverText.vue";
+import RadialProgressBar from "../../components/RadialProgressBar.vue";
+import OrganisationElements from "./OrganisationElements.vue";
+import OrganisationElementsDetail from "./OrganisationElementsDetail.vue";
+import Modal from "../../components/PopupModal.vue";
+import BtnComponent from "../../components/ButtonComponent.vue";
+import Toast from "../../components/Toast.vue";
+import PublishUnpublish from "Components/sections/OrganizationPublishUnpublishButton.vue";
+import { useToggle } from "@vueuse/core";
+import { watchIgnorable } from "@vueuse/core";
 
 export default defineComponent({
-  name: 'OrganisationData',
+  name: "OrganisationData",
   components: {
     HoverText,
     RadialProgressBar,
@@ -345,7 +320,7 @@ export default defineComponent({
   setup(props) {
     const toastData = reactive({
       visibility: false,
-      message: '',
+      message: "",
       type: true,
     });
 
@@ -355,15 +330,15 @@ export default defineComponent({
     const [downloadValue, downloadToggle] = useToggle();
 
     onMounted(() => {
-      if (props.toast.message !== '') {
-        toastData.type = props.toast.type === 'success' ? true : false;
+      if (props.toast.message !== "") {
+        toastData.type = props.toast.type === "success" ? true : false;
         toastData.visibility = true;
         toastData.message = props.toast.message;
       }
     });
 
     const { ignoreUpdates } = watchIgnorable(toastData, () => undefined, {
-      flush: 'sync',
+      flush: "sync",
     });
     watch(
       () => toastData.visibility,
@@ -377,7 +352,7 @@ export default defineComponent({
 
     const ignoreToastUpdate = () => {
       ignoreUpdates(() => {
-        toastData.message = '';
+        toastData.message = "";
       });
     };
 
@@ -396,19 +371,18 @@ export default defineComponent({
     Object.keys(organizationData).map((key) => {
       let flag = false;
 
-      Object.keys(organizationData[key]['elements']).map((k) => {
-        if (organizationProps[k] || typeof organizationProps[k] === 'number') {
-          organizationData[key]['elements'][k]['content'] =
-            organizationProps[k];
+      Object.keys(organizationData[key]["elements"]).map((k) => {
+        if (organizationProps[k] || typeof organizationProps[k] === "number") {
+          organizationData[key]["elements"][k]["content"] = organizationProps[k];
           flag = true;
-          elementProps[k]['has_data'] = true;
+          elementProps[k]["has_data"] = true;
         } else {
           delete organizationData[key][k];
-          elementProps[k]['has_data'] = false;
+          elementProps[k]["has_data"] = false;
         }
 
-        elementProps[k]['core'] = organizationData[key]['elements'][k]['core'];
-        elementProps[k]['completed'] = organizationProps['element_status'][k];
+        elementProps[k]["core"] = organizationData[key]["elements"][k]["core"];
+        elementProps[k]["completed"] = organizationProps["element_status"][k];
       });
 
       if (flag === false) {
@@ -419,9 +393,9 @@ export default defineComponent({
     // generating available categories of elements
     Object.keys(groupedData).map((key) => {
       if (Object.prototype.hasOwnProperty.call(organizationData, key)) {
-        groupedData[key]['status'] = 'enabled';
+        groupedData[key]["status"] = "enabled";
       } else {
-        groupedData[key]['status'] = 'disabled';
+        groupedData[key]["status"] = "disabled";
       }
     });
 
@@ -434,7 +408,7 @@ export default defineComponent({
     }
 
     const publishMessage: PublishMessage = reactive({
-      message: '',
+      message: "",
       type: false,
     });
 
@@ -448,10 +422,10 @@ export default defineComponent({
       status: organizationProps.status,
     });
 
-    provide('publishMessage', publishMessage);
-    provide('mandatoryCompleted', props.mandatoryCompleted);
-    provide('toastData', toastData);
-    provide('publishStatus', publishStatus);
+    provide("publishMessage", publishMessage);
+    provide("mandatoryCompleted", props.mandatoryCompleted);
+    provide("toastData", toastData);
+    provide("publishStatus", publishStatus);
 
     return {
       groupedData,
@@ -474,7 +448,7 @@ export default defineComponent({
 
 <style lang="scss">
 .mandatory::after {
-  content: '';
+  content: "";
   width: 0.5px;
   height: 140px;
   @apply absolute top-1 -right-6 bg-n-20;
@@ -509,12 +483,12 @@ export default defineComponent({
   @apply relative cursor-pointer px-2 pb-6;
 
   &::after {
-    content: '';
+    content: "";
     @apply absolute bottom-0 left-0 h-1 w-full scale-0 bg-bluecoral duration-300;
   }
 
   &:hover::after {
-    content: '';
+    content: "";
     @apply visible scale-100;
   }
 
@@ -524,7 +498,7 @@ export default defineComponent({
 }
 
 .tab__links--active::after {
-  content: '';
+  content: "";
   @apply absolute bottom-0 left-0 h-1 w-full bg-bluecoral duration-300;
 }
 

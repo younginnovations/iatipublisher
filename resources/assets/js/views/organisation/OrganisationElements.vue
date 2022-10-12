@@ -41,13 +41,14 @@
           class="button__dropdown button dropdown-btn absolute right-0 top-full z-10 w-[118px] bg-white text-left shadow-dropdown"
         >
           <ul class="w-full py-2 bg-eggshell">
-            <li
-              class="flex py-1.5 px-3.5 hover:bg-white"
-              @click="dropdownFilter('')"
-            >
+            <li class="flex py-1.5 px-3.5 hover:bg-white" @click="dropdownFilter('')">
               <svg-vue class="mr-1 text-lg" icon="box"></svg-vue>
               <span>All Elements</span>
             </li>
+            <!-- <li class="flex py-1.5 px-3.5 hover:bg-white" @click="dropdownFilter('star')">
+              <svg-vue class="mr-1 text-lg" icon="star"></svg-vue>
+              <span>Mandatory</span>
+            </li> -->
             <li
               class="flex py-1.5 px-3.5 hover:bg-white"
               @click="dropdownFilter('completed')"
@@ -83,19 +84,13 @@
           ></svg-vue>
         </div>
         <template v-if="index === 'name'">
-          <svg-vue
-            class="text-base"
-            icon="organisation-elements/building"
-          ></svg-vue>
+          <svg-vue class="text-base" icon="organisation-elements/building"></svg-vue>
         </template>
         <template v-else>
-          <svg-vue
-            :icon="'organisation-elements/' + index"
-            class="text-base"
-          ></svg-vue>
+          <svg-vue :icon="'organisation-elements/' + index" class="text-base"></svg-vue>
         </template>
         <div class="mt-1 text-xs break-all title">
-          {{ index.toString().replace(/_/g, '-') }}
+          {{ index.toString().replace(/_/g, "-") }}
         </div>
       </a>
     </div>
@@ -103,9 +98,9 @@
 </template>
 
 <script setup lang="ts">
-import { computed, defineProps, reactive, onMounted, ref } from 'vue';
-import { useToggle } from '@vueuse/core';
-import { orgMandatoryElements } from 'Composable/coreElements';
+import { computed, defineProps, reactive, onMounted, ref } from "vue";
+import { useToggle } from "@vueuse/core";
+import { orgMandatoryElements } from "Composable/coreElements";
 
 const props = defineProps({
   data: {
@@ -130,8 +125,8 @@ const dropdownBtn = ref();
  * Search functionality
  */
 const elements = reactive({
-  search: '',
-  status: '',
+  search: "",
+  status: "",
 });
 
 const asArrayData = Object.entries(props.data);
@@ -140,16 +135,12 @@ const filteredElements = computed(() => {
     if (!elements.status) {
       return key
         .toLowerCase()
-        .includes(
-          elements.search.toLowerCase().replace(/_/g, ' ').replace(/-/g, '_')
-        );
+        .includes(elements.search.toLowerCase().replace(/_/g, " ").replace(/-/g, "_"));
     } else {
       if (value[elements.status]) {
         return key
           .toLowerCase()
-          .includes(
-            elements.search.toLowerCase().replace(/_/g, ' ').replace(/-/g, '_')
-          );
+          .includes(elements.search.toLowerCase().replace(/_/g, " ").replace(/-/g, "_"));
       }
     }
   });
@@ -159,7 +150,7 @@ const filteredElements = computed(() => {
 });
 
 onMounted(() => {
-  window.addEventListener('click', (e) => {
+  window.addEventListener("click", (e) => {
     if (
       !dropdownBtn.value.contains(e.target) &&
       !dropdown.value.contains(e.target) &&
@@ -172,6 +163,7 @@ onMounted(() => {
 
 const dropdownFilter = (s: string) => {
   elements.status = s;
+  console.log(elements.status);
   searchBtnToggle();
 };
 </script>
