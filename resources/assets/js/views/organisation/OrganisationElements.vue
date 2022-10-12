@@ -45,10 +45,10 @@
               <svg-vue class="mr-1 text-lg" icon="box"></svg-vue>
               <span>All Elements</span>
             </li>
-            <!-- <li class="flex py-1.5 px-3.5 hover:bg-white" @click="dropdownFilter('star')">
+            <li class="flex py-1.5 px-3.5 hover:bg-white" @click="dropdownFilter('star')">
               <svg-vue class="mr-1 text-lg" icon="star"></svg-vue>
               <span>Mandatory</span>
-            </li> -->
+            </li>
             <li
               class="flex py-1.5 px-3.5 hover:bg-white"
               @click="dropdownFilter('completed')"

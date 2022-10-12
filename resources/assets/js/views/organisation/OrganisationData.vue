@@ -201,7 +201,7 @@
         />
       </aside>
       <div class="activities__content">
-        <div class="mb-3 inline-flex flex-wrap gap-2">
+        <!-- <div class="mb-3 inline-flex flex-wrap gap-2">
           <a
             v-for="(post, key, index) in groupedData"
             :key="index"
@@ -220,14 +220,14 @@
               </span>
             </button>
           </a>
-        </div>
+        </div> -->
         <div class="activities__content--elements -mx-3 grid grid-cols-2">
           <template v-for="(post, key, index) in groupedData" :key="index">
-            <div
+            <!-- <div
               class="elements-title relative col-span-2 mx-3 mt-3 mb-1 flex items-center text-sm uppercase text-n-40"
             >
               <div class="mr-4 shrink-0">{{ key }}</div>
-            </div>
+            </div> -->
             <template v-for="(element, name, i) in post.elements" :key="i">
               <OrganisationElementsDetail
                 v-if="
