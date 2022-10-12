@@ -693,7 +693,7 @@ class OrganizationElementCompleteService
                 $this->tempAmount = $datum;
             }
 
-            if($organization->settings){
+            if ($organization->settings) {
                 if ($key === 'language' && empty($datum) && !empty($this->tempNarrative)) {
                     $data['language'] = Arr::get($organization->settings->default_values, 'default_language', null);
                 }
