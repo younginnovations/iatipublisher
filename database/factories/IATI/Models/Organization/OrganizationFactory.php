@@ -3,7 +3,6 @@
 namespace Database\Factories\IATI\Models\Organization;
 
 use App\IATI\Models\Organization\Organization;
-use App\Model;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;

@@ -40,44 +40,42 @@ class RouteServiceProvider extends ServiceProvider
         $this->routes(function () {
             Route::prefix('api')
                 ->middleware('api')
-                ->namespace($this->namespace)
                 ->group(base_path('routes/api.php'));
 
             Route::middleware('web')
-                ->namespace($this->namespace)
                 ->group(base_path('routes/web.php'));
 
             Route::middleware(['admin', 'auth'])
-                 ->namespace($this->namespace)
-                 ->group(base_path('routes/publish.php'));
-
-            Route::middleware(['admin', 'auth', 'activity.auth:{id}'])
-                ->namespace($this->namespace)
-                ->group(base_path('routes/activity.php'));
+                 ->name('admin.')
+                 ->group(base_path('routes/setting.php'));
 
             Route::middleware(['admin', 'auth'])
-                ->namespace($this->namespace)
-                ->group(base_path('routes/organization.php'));
+                 ->name('admin.')
+                 ->group(base_path('routes/organization.php'));
 
             Route::middleware(['admin', 'auth'])
-                ->namespace($this->namespace)
-                ->group(base_path('routes/setting.php'));
+                 ->name('admin.')
+                 ->group(base_path('routes/user.php'));
+
+            Route::middleware(['admin', 'auth', 'activity'])
+                 ->name('admin.')
+                 ->group(base_path('routes/activity.php'));
 
             Route::middleware(['admin', 'auth'])
-                ->namespace($this->namespace)
+                ->name('admin.')
+                ->group(base_path('routes/publish.php'));
+
+            Route::middleware(['admin', 'auth'])
+                ->name('admin.')
                 ->group(base_path('routes/import.php'));
 
             Route::middleware(['admin', 'auth'])
-                ->namespace($this->namespace)
+                ->name('admin.')
                 ->group(base_path('routes/dashboard.php'));
 
-            Route::middleware(['admin', 'auth'])
-                ->namespace($this->namespace)
-                ->group(base_path('routes/user.php'));
-
             Route::middleware(['admin', 'auth', 'superadmin'])
-                 ->namespace($this->namespace)
-                 ->group(base_path('routes/superadmin.php'));
+                ->name('superadmin.')
+                ->group(base_path('routes/superadmin.php'));
         });
     }
 
@@ -86,9 +84,9 @@ class RouteServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    protected function configureRateLimiting()
+    protected function configureRateLimiting(): void
     {
-        RateLimiter::for('api', function (Request $request) {
+        RateLimiter::for('api', static function (Request $request) {
             return Limit::perMinute(60)->by($request->user()?->id ?: $request->ip());
         });
     }

@@ -63,11 +63,9 @@ class LoginController extends Controller
     /**
      * Validate the user login request.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      *
      * @return void
-     *
-     * @throws \Illuminate\Validation\ValidationException
      */
     protected function validateLogin(Request $request): void
     {
@@ -80,8 +78,9 @@ class LoginController extends Controller
     /**
      * Log the user out of the application.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Http\JsonResponse
+     * @param Request $request
+     *
+     * @return RedirectResponse|\Illuminate\Http\JsonResponse
      */
     public function logout(Request $request)
     {
@@ -105,12 +104,14 @@ class LoginController extends Controller
     /**
      * Handle a login request to the application.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Http\Response|\Illuminate\Http\JsonResponse
+     * @param Request $request
      *
-     * @throws \Illuminate\Validation\ValidationException
+     * @return \Symfony\Component\HttpFoundation\Response
+     *
+     * @throws ValidationException
+     * @throws \JsonException
      */
-    public function login(Request $request): RedirectResponse|Response|JsonResponse|ValidationException
+    public function login(Request $request): \Symfony\Component\HttpFoundation\Response
     {
         if (isset($request['password'])) {
             $request['password'] = decryptString($request['password'], env('MIX_ENCRYPTION_KEY'));

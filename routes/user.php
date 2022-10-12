@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
-Route::name('admin.')->group(function () {
+Route::group([], static function () {
     Route::get('/user/verification/status', [App\Http\Controllers\Admin\User\UserController::class, 'getUserVerificationStatus'])->name('user.verification.status');
     Route::post('/user/verification/email', [App\Http\Controllers\Admin\User\UserController::class, 'resendVerificationEmail'])->name('user.verification.email');
 });

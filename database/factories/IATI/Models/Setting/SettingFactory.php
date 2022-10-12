@@ -4,9 +4,10 @@ namespace Database\Factories\IATI\Models\Setting;
 
 use App\IATI\Models\Setting\Setting;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Database\Eloquent\Model;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Model>
+ * @extends Factory<Model>
  */
 class SettingFactory extends Factory
 {

@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
-Route::namespace('SuperAdmin')->name('superadmin.')->group(function () {
+Route::namespace('SuperAdmin')->group(function () {
     Route::get('/list-organisations', [SuperAdminController::class, 'listOrganizations'])->name('listOrganizations');
     Route::get('/list-organisations/page/{page?}', [SuperAdminController::class, 'getPaginatedOrganizations'])->name('listOrganizations.paginate');
     Route::get('/proxy-organisation/{userId}', [SuperAdminController::class, 'proxyOrganization'])->name('proxyOrganization');

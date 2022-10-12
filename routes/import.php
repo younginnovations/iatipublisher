@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Route;
 | contains the "admin" middleware group. Now create something great!
 |
 */
-Route::name('admin.')->group(function () {
+Route::group([], static function () {
     Route::get('/import', [ImportActivityController::class, 'index'])->name('import.index');
     Route::post('/import', [ImportActivityController::class, 'store'])->name('import');
     Route::get('/import/list', [ImportActivityController::class, 'status'])->name('import.list');
