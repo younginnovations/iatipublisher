@@ -122,7 +122,7 @@ class RegisterController extends Controller
                 'query'       => ['id' => $postData['publisher_id'] ?? ''],
             ];
 
-            if (env('APP_ENV') != 'production') {
+            if (env('APP_ENV') !== 'production') {
                 $clientConfig['headers']['X-CKAN-API-Key'] = env('IATI_API_KEY');
                 $requestConfig['auth'] = [env('IATI_USERNAME'), env('IATI_PASSWORD')];
             }
@@ -143,11 +143,11 @@ class RegisterController extends Controller
             $errors = [];
             $response = json_decode($res->getBody()->getContents())->result;
 
-            if ($postData['publisher_name'] != $response->title) {
+            if ($postData['publisher_name'] !== $response->title) {
                 $errors['publisher_name'] = ['Publisher Name doesn\'t match your IATI Registry information'];
             }
 
-            if ($postData['registration_agency'] . '-' . $postData['registration_number'] != $response->publisher_iati_id) {
+            if ($postData['registration_agency'] . '-' . $postData['registration_number'] !== $response->publisher_iati_id) {
                 $errors['identifier'] = ['Publisher IATI ID doesn\'t match your IATI Registry information'];
             }
 
@@ -206,6 +206,8 @@ class RegisterController extends Controller
      * @param Request $request
      *
      * @return RedirectResponse|JsonResponse
+     * @throws \JsonException
+     * @throws \Throwable
      */
     public function register(Request $request): JsonResponse|RedirectResponse
     {

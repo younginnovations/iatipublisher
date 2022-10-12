@@ -426,6 +426,29 @@ if (!function_exists('customEncryptString')) {
     }
 }
 
+if (!function_exists('encryptString')) {
+    /**
+     * Decrypt encrypted base64 string.
+     *
+     * @param string $string
+     *
+     * @return bool|string|null
+     * @throws Exception
+     */
+    function encryptString(string $string): bool|string|null
+    {
+        $iv = random_bytes(16);
+        $salt = random_bytes(256);
+        $iterations = 999;
+        $encryptMethodLength = 256 / 4;
+        $hashKey = hash_pbkdf2('sha512', env('MIX_ENCRYPTION_KEY'), $salt, $iterations, $encryptMethodLength);
+        $encryptedData = openssl_encrypt($string, 'AES-256-CBC', hex2bin($hashKey), OPENSSL_RAW_DATA, $iv);
+        $output = ['ciphertext' => base64_encode($encryptedData), 'iv' => bin2hex($iv), 'salt' => bin2hex($salt), 'iterations' => $iterations];
+
+        return base64_encode(json_encode($output, JSON_THROW_ON_ERROR));
+    }
+}
+
 if (!function_exists('decryptString')) {
     /**
      * Decrypt encrypted base64 string.
@@ -641,7 +664,7 @@ if (!function_exists('getTableConfig')) {
     function getTableConfig($module): array
     {
         $tableConfig = [
-            'activity' => ['orderBy' => ['updated_at'], 'direction' => ['asc', 'desc']],
+            'activity'     => ['orderBy' => ['updated_at'], 'direction' => ['asc', 'desc']],
             'organisation' => ['orderBy' => ['updated_at', 'all_activities_count', 'name'], 'direction' => ['asc', 'desc']],
         ];
 
@@ -785,6 +808,7 @@ function trimInput($input): string
  *
  * @param $format
  * @param $date
+ *
  * @return false|string
  */
 function dateFormat($format, $date): bool|string

@@ -8,7 +8,6 @@ use App\Http\Controllers\Controller;
 use App\IATI\Models\User\Role;
 use App\IATI\Models\User\User;
 use App\Providers\RouteServiceProvider;
-use GuzzleHttp\Psr7\Response;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;

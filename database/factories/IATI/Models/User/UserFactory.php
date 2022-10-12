@@ -22,9 +22,11 @@ class UserFactory extends Factory
      */
     public function definition(): array
     {
-        $role = Role::factory()->make(['role' => 'superadmin'])->toArray();
+        $adminRole = Role::factory()->make(['role' => 'admin'])->toArray();
+        Role::firstOrCreate($adminRole, $adminRole);
 
-        Role::firstOrCreate($role, $role);
+        $superAdminRole = Role::factory()->make(['role' => 'superadmin'])->toArray();
+        Role::firstOrCreate($superAdminRole, $superAdminRole);
 
         return [
             'username'  => 'yipl_user',

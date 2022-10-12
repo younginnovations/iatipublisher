@@ -73,7 +73,7 @@ class Kernel extends HttpKernel
 
         'activity' => [
             VerifyCsrfToken::class,
-            RedirectActivity::class
+            RedirectActivity::class,
         ],
 
         'superadmin' => [
