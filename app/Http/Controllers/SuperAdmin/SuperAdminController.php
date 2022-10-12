@@ -136,6 +136,9 @@ class SuperAdminController extends Controller
     public function switchBack(): JsonResponse
     {
         try {
+            logger()->error('test:'.isSuperAdmin());
+
+            // dump(isSuperAdmin());
             if (isSuperAdmin()) {
                 $superAdmin = $this->userService->getUser(session()->get('superadmin_user_id'));
 
