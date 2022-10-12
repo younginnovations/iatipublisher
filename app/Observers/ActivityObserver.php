@@ -124,6 +124,7 @@ class ActivityObserver
      * @param $activity
      *
      * @return void
+     * @throws \JsonException
      */
     public function setTitleDefaultValues($activity): void
     {
