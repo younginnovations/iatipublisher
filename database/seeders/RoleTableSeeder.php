@@ -26,6 +26,5 @@ class RoleTableSeeder extends Seeder
         /** @var array $superAdminRole */
         $superAdminRole = Role::factory()->make(['role' => 'superadmin'])->toArray();
         Role::firstOrCreate($superAdminRole, $superAdminRole);
-
     }
 }

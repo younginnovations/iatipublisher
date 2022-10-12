@@ -48,7 +48,7 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
-Route::group([],static function () {
+Route::group([], static function () {
     // Route::get('activity/{id}', [\App\Http\Controllers\Admin\Activity\ActivityController::class, 'show'])->name('activity.show');
     Route::get('/activities', [ActivityController::class, 'index'])->name('activities.index');
     Route::get('/activities/page/{page?}', [App\Http\Controllers\Admin\Activity\ActivityController::class, 'getPaginatedActivities'])->name('activities.paginate');
