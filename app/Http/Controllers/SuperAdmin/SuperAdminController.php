@@ -127,30 +127,4 @@ class SuperAdminController extends Controller
             return response()->json(['success' => false, 'message' => 'Error occurred while trying to proxy']);
         }
     }
-
-    /**
-     * Allows superadmin to switch back to superadmin.
-     *
-     * @return JsonResponse
-     */
-    public function switchBack(): JsonResponse
-    {
-        try {
-            if (isSuperAdmin()) {
-                $superAdmin = $this->userService->getUser(session()->get('superadmin_user_id'));
-
-                if ($superAdmin) {
-                    auth()->loginUsingId($superAdmin->id);
-
-                    return response()->json(['success' => true, 'message' => 'Switch back successful.']);
-                }
-            }
-
-            return response()->json(['success' => false, 'message' => 'Error occurred while trying to proxy']);
-        } catch (\Exception $e) {
-            logger()->error($e->getMessage());
-
-            return response()->json(['success' => false, 'message' => 'Error occurred while trying to proxy']);
-        }
-    }
 }

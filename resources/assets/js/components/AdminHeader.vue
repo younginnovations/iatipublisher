@@ -74,7 +74,7 @@
           <input
             v-else
             v-model="searchValue"
-            class="search__input"
+            class="search__input mr-3.5"
             type="text"
             placeholder="Search organisation..."
             @keyup.enter="searchFunction('/list-organisations')"

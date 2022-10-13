@@ -77,15 +77,22 @@
         </thead>
         <tbody>
           <tr v-if="organisationData.status === 'fetching'">
-            <td colspan="4">Fetching Data</td>
+            <td colspan="4">Fetching Data...</td>
           </tr>
           <tr v-else-if="organisationData.status === 'empty'">
             <td colspan="4">No Data Available</td>
           </tr>
           <tr v-for="data in organisationData.data.data" v-else :key="data.id">
             <td>
-              <div v-if="data.name">
-                {{ data?.name[0]?.narrative ?? 'Name not available' }}
+              <div v-if="data.name" class="ellipsis relative">
+                <span class="ellipsis overflow-hidden">
+                  {{ data?.name[0]?.narrative ?? 'Name not available' }}
+                </span>
+                <div class="w-52">
+                  <span class="ellipsis__title--hover">
+                    {{ data?.name[0]?.narrative ?? 'Name not available' }}
+                  </span>
+                </div>
               </div>
               <div v-else>Name not available</div>
               <div class="text-blue-40">{{ data?.user?.email }}</div>
@@ -101,18 +108,20 @@
                 text="proxy"
                 type="outline"
                 icon="smile"
-                @click="proxyUser(data.id)"
+                @click="proxyUser(data?.user?.id)"
               />
             </td>
           </tr>
         </tbody>
       </table>
     </div>
-    <Pagination
-      v-if="organisationData.data && organisationData.data.last_page > 1"
-      :data="organisationData.data"
-      @fetch-activities="fetchOrganisation"
-    />
+    <div class="mt-6">
+      <Pagination
+        v-if="organisationData.data && organisationData.data.last_page > 1"
+        :data="organisationData.data"
+        @fetch-activities="fetchOrganisation"
+      />
+    </div>
   </div>
 </template>
 
@@ -155,6 +164,7 @@ interface oDataInterface {
     organization_url: string;
     user: {
       email: string;
+      id: number;
     };
     all_activities_count: number;
     updated_at: Date;

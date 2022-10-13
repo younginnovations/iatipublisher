@@ -693,12 +693,14 @@ class OrganizationElementCompleteService
                 $this->tempAmount = $datum;
             }
 
-            if ($key === 'language' && empty($datum) && !empty($this->tempNarrative)) {
-                $data['language'] = Arr::get($organization->settings->default_values, 'default_language', null);
-            }
+            if($organization->settings){
+                if ($key === 'language' && empty($datum) && !empty($this->tempNarrative)) {
+                    $data['language'] = Arr::get($organization->settings->default_values, 'default_language', null);
+                }
 
-            if ($key === 'currency' && empty($datum) && !empty($this->tempAmount)) {
-                $data['currency'] = Arr::get($organization->settings->default_values, 'default_currency', null);
+                if ($key === 'currency' && empty($datum) && !empty($this->tempAmount)) {
+                    $data['currency'] = Arr::get($organization->settings->default_values, 'default_currency', null);
+                }
             }
         }
 

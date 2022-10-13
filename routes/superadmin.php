@@ -17,5 +17,4 @@ Route::namespace('SuperAdmin')->name('superadmin.')->group(function () {
     Route::get('/list-organisations', [SuperAdminController::class, 'listOrganizations'])->name('listOrganizations');
     Route::get('/list-organisations/page/{page?}', [SuperAdminController::class, 'getPaginatedOrganizations'])->name('listOrganizations.paginate');
     Route::get('/proxy-organisation/{userId}', [SuperAdminController::class, 'proxyOrganization'])->name('proxyOrganization');
-    Route::get('/switch-back', [SuperAdminController::class, 'switchBack'])->name('switchBack');
 });
