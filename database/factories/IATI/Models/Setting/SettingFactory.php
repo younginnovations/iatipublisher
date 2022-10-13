@@ -24,7 +24,7 @@ class SettingFactory extends Factory
             'publishing_info'         => [
                 'publisher_id'           => env('IATI_YIPL_PUBLISHER_ID'),
                 'publisher_verification' => true,
-                'api_token'              => env('IATI_PUBLISHER_API_KEY'),
+                'api_token'              => env('IATI_API_KEY'),
                 'token_verification'     => true,
             ],
             'default_values'          => [

@@ -12,7 +12,7 @@ data:
 
   DEBUGBAR_ENABLED: "false"
 
-  LOG_CHANNEL: "stack"
+  LOG_CHANNEL: "daily"
   LOG_LEVEL: "debug"
 
   DB_CONNECTION: "pgsql"
@@ -23,7 +23,11 @@ data:
 
   BROADCAST_DRIVER: "log"
   CACHE_DRIVER: "redis"
+  FILESYSTEM_DISK: "s3"
+
+  QUEUE_DRIVER: "redis"
   QUEUE_CONNECTION: "redis"
+
   SESSION_DRIVER: "redis"
   SESSION_LIFETIME: "120"
   SESSION_SECURE_COOKIE: "true"
@@ -41,16 +45,13 @@ data:
   MAIL_FROM_ADDRESS: "no-reply@iatipublisher.com"
   MAIL_FROM_NAME: "IATI Publisher"
 
-  IATI_URL: "https://iatiregistry.org"
-  IATI_API_ENDPOINT: "https://iatiregistry.org/api"
+  IATI_VALIDATOR_ENDPOINT: "https://api.iatistandard.org/validator/validate"
 
-  FILESYSTEM_DISK: "s3"
+  IATI_API_ENDPOINT: "https://iatiregistry.org/api"
 
   AWS_DEFAULT_REGION: "us-east-1"
   AWS_BUCKET: "iatipublisher-prod"
   AWS_USE_PATH_STYLE_ENDPOINT: "false"
-
-  IATI_VALIDATOR_ENDPOINT: "https://api.iatistandard.org/validator/validate"
 
   CSV_DATA_STORAGE_PATH :  'app/CsvImporter/tmp'
   CSV_FILE_STORAGE_PATH :  'app/CsvImporter/file'
