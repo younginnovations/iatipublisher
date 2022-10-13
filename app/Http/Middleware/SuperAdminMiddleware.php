@@ -21,8 +21,6 @@ class SuperAdminMiddleware
      */
     public function handle(Request $request, Closure $next): mixed
     {
-        logger()->error('test middleware:'.isSuperAdmin());
-
         if (isSuperAdmin()) {
             if (session()->get('superadmin_user_id') !== auth()->user()->id) {
                 auth()->loginUsingId(session()->get('superadmin_user_id'));

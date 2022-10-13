@@ -16,7 +16,6 @@
 
 <script setup lang="ts">
 import { defineProps } from "vue";
-import axios from "axios";
 
 defineProps({
   name: { type: String, required: true },
@@ -27,17 +26,6 @@ defineProps({
  * Switch Back
  */
 const switchBack = () => {
-  const endpoint = `/switch-back`;
   window.location.replace("/list-organisations");
-
-  // axios.get(endpoint).then((res) => {
-  //   const response = res.data;
-
-  //   if (response.success) {
-  //     setTimeout(() => {
-  //       window.location.replace("/list-organisations");
-  //     }, 1000);
-  //   }
-  // });
 };
 </script>
