@@ -171,90 +171,78 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, ref, reactive, onMounted, inject } from 'vue';
+<script setup lang="ts">
+import { defineProps, ref, reactive, onMounted, inject } from 'vue';
 import { TransitionRoot } from '@headlessui/vue';
 import Loader from '../components/Loader.vue';
 import axios from 'axios';
 
-export default defineComponent({
-  components: {
-    TransitionRoot,
-    Loader,
+defineProps({
+  isEmpty: {
+    type: Boolean,
+    required: false,
+    default: true,
   },
-  props: {
-    isEmpty: {
-      type: Boolean,
-      required: false,
-      default: true,
-    },
-  },
-  setup() {
-    const show = ref(false);
-    interface ToastInterface {
-      visibility: boolean;
-      message: string;
-      type: boolean;
-    }
-    const toastData = inject('toastData') as ToastInterface;
-    const errorData = reactive({
-      account_verified: false,
-      default_setting: false,
-      publisher_setting: false,
-    });
-    const isLoaderVisible = ref(false);
+});
 
-    function resendVerificationEmail() {
-      isLoaderVisible.value = true;
+const show = ref(false);
+interface ToastInterface {
+  visibility: boolean;
+  message: string;
+  type: boolean;
+}
+const toastData = inject('toastData') as ToastInterface;
+const errorData = reactive({
+  account_verified: false,
+  default_setting: false,
+  publisher_setting: false,
+  token_status: false,
+});
+const isLoaderVisible = ref(false);
 
-      axios
-        .post('/user/verification/email')
-        .then((res) => {
-          toastData.visibility = true;
-          toastData.message = res.data.message;
-          toastData.type = res.data.success;
-          isLoaderVisible.value = false;
-        })
-        .catch((error) => {
-          toastData.visibility = true;
-          toastData.message = error.data.message;
-          toastData.type = false;
-          isLoaderVisible.value = false;
-        });
+function resendVerificationEmail() {
+  isLoaderVisible.value = true;
 
-      setTimeout(() => {
-        toastData.visibility = false;
-        toastData.message = '';
-        toastData.type = false;
-      }, 2000);
-    }
-
-    onMounted(async () => {
-      axios.get('/setting/status').then((res) => {
-        const response = res.data;
-        errorData.default_setting = response?.data?.default_status;
-        errorData.publisher_setting = response?.data?.publisher_status;
-      });
-
-      axios.get('/user/verification/status').then((res) => {
-        const response = res.data;
-        errorData.account_verified = response.data.account_verified;
-      });
-
-      setTimeout(() => {
-        toastData.visibility = false;
-        toastData.message = '';
-        toastData.type = false;
-      }, 2000);
+  axios
+    .post('/user/verification/email')
+    .then((res) => {
+      toastData.visibility = true;
+      toastData.message = res.data.message;
+      toastData.type = res.data.success;
+      isLoaderVisible.value = false;
+    })
+    .catch((error) => {
+      toastData.visibility = true;
+      toastData.message = error.data.message;
+      toastData.type = false;
+      isLoaderVisible.value = false;
     });
 
-    return {
-      show,
-      errorData,
-      resendVerificationEmail,
-      isLoaderVisible,
-    };
-  },
+  setTimeout(() => {
+    toastData.visibility = false;
+    toastData.message = '';
+    toastData.type = false;
+  }, 2000);
+}
+
+onMounted(async () => {
+  axios.get('/setting/status').then((res) => {
+    const response = res.data;
+    errorData.default_setting = response?.data?.default_status;
+    errorData.publisher_setting = response?.data?.publisher_status;
+    errorData.token_status = response?.data?.token_status;
+  });
+
+  axios.get('/user/verification/status').then((res) => {
+    const response = res.data;
+    errorData.account_verified = response.data.account_verified;
+  });
+
+  setTimeout(() => {
+    toastData.visibility = false;
+    toastData.message = '';
+    toastData.type = false;
+  }, 2000);
 });
 </script>
 

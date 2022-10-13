@@ -120,7 +120,7 @@ class BulkPublishActivities implements ShouldQueue
             $this->publishingStatusService->updateActivityStatus($activity->id, $this->uuid, 'completed');
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
-            $this->activityService->updatePublishedStatus($activity, 'draft', $activity->already_published, false);
+            $this->activityService->updatePublishedStatus($activity, 'draft', false);
             $this->publishingStatusService->updateActivityStatus($activity->id, $this->uuid, 'failed');
         }
     }

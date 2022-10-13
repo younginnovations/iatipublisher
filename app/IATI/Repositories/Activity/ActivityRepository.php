@@ -90,16 +90,14 @@ class ActivityRepository extends Repository
      *
      * @param $activity
      * @param $status
-     * @param $alreadyPublished
      * @param $linkedToIati
      *
      * @return bool
      */
-    public function updatePublishedStatus($activity, $status, $alreadyPublished, $linkedToIati): bool
+    public function updatePublishedStatus($activity, $status, $linkedToIati): bool
     {
         return (bool) $this->model->where('id', $activity->id)->update([
             'status'            => $status,
-            'already_published' => $alreadyPublished,
             'linked_to_iati'    => $linkedToIati,
         ]);
     }

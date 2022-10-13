@@ -36,6 +36,9 @@ import ImportList from './views/import/ImportList.vue';
  */
 import SettingPage from './views/setting/SettingPage.vue';
 
+//Activity Default Values
+import ActivityDefaultValues from './views/activity/ActivityDefaultValue.vue';
+
 /**
  * vue component for password reset
  */
@@ -102,6 +105,8 @@ app.component('ActivityUpload', ActivityUpload)
  * Setting page
  */
 app.component('SettingPage', SettingPage);
+
+app.component('ActivityDefaultValues', ActivityDefaultValues);
 /*
 Registering vue component for password reset
 */

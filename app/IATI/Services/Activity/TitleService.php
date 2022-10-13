@@ -31,6 +31,7 @@ class TitleService
      * TitleService constructor.
      *
      * @param ActivityRepository $activityRepository
+     * @param BaseFormCreator $baseFormCreator
      */
     public function __construct(ActivityRepository $activityRepository, BaseFormCreator $baseFormCreator)
     {

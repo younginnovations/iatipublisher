@@ -151,7 +151,7 @@ class SettingController extends Controller
     /**
      * Store default data of organization.
      *
-     * @param request
+     * @param DefaultFormRequest $request
      *
      * @return JsonResponse
      */
@@ -166,6 +166,7 @@ class SettingController extends Controller
 
             return response()->json(['success' => true, 'message' => 'Default setting stored successfully', 'data' => $setting]);
         } catch (\Exception $e) {
+            $this->db->rollBack();
             logger()->error($e->getMessage());
 
             return response()->json(['success' => false, 'message' => 'Error occurred while storing setting']);

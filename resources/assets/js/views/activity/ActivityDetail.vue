@@ -67,7 +67,6 @@
               <!-- Publish Activity -->
               <Publish
                 v-if="store.state.showPublished"
-                :already-published="activityProps.already_published"
                 :linked-to-iati="activityProps.linked_to_iati"
                 :status="activityProps.status"
                 :core-completed="coreCompleted"
@@ -87,7 +86,12 @@
     <!-- title section ends -->
     <div class="activities">
       <aside class="activities__sidebar">
-        <div v-if="publishStatus.already_published" class="mb-2">
+        <div
+          v-if="
+            publishStatus.linked_to_iati && publishStatus.status === 'draft'
+          "
+          class="mb-2"
+        >
           <PreviouslyPublished />
         </div>
         <div class="flex mb-1">
@@ -142,6 +146,17 @@
         </div>
       </aside>
       <div class="activities__content">
+        <div class="flex justify-end">
+          <a
+            :href="`/activity/${activityProps.id}/default_values`"
+            class="flex items-center mb-4 text-xs font-bold leading-normal uppercase text-n-50"
+          >
+            <svg-vue class="mr-0.5 text-base" icon="setting"></svg-vue>
+            <span class="whitespace-nowrap"
+              >Override this activity's default values</span
+            >
+          </a>
+        </div>
         <div class="inline-flex flex-wrap gap-2 mb-3">
           <a
             v-for="(post, key, index) in groupedData"
@@ -444,13 +459,11 @@ export default defineComponent({
     });
 
     interface PublishStatusTypeface {
-      already_published: boolean;
       linked_to_iati: boolean;
       status: string;
     }
 
     const publishStatus: PublishStatusTypeface = reactive({
-      already_published: activityProps.already_published,
       linked_to_iati: activityProps.linked_to_iati,
       status: activityProps.status,
     });

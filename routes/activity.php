@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\Activity\ActivityController;
+use App\Http\Controllers\Admin\Activity\ActivityDefaultController;
 use App\Http\Controllers\Admin\Activity\BudgetController;
 use App\Http\Controllers\Admin\Activity\CapitalSpendController;
 use App\Http\Controllers\Admin\Activity\CollaborationTypeController;
@@ -134,4 +135,8 @@ Route::name('admin.')->group(function () {
 
     Route::resource('indicator.period', PeriodController::class)->parameters(['indicator' => 'id', 'period'=>'periodId']);
     Route::get('/indicator/{id}/periods/page/{page?}', [PeriodController::class, 'getPaginatedPeriods'])->name('indicator.periods.paginate');
+
+    Route::get('activity/{id}/default_values', [ActivityDefaultController::class, 'edit'])->name('activity.default_values.edit');
+    Route::get('activity/{id}/default_values/data', [ActivityDefaultController::class, 'getActivityDefaultValues'])->name('activity.default_values.data');
+    Route::put('activity/{id}/default_values', [ActivityDefaultController::class, 'update'])->name('activity.default_values.update');
 });
