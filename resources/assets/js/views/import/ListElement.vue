@@ -73,7 +73,7 @@ const props = defineProps({
 const emit = defineEmits(["selectElement"]);
 
 const active = ref(false);
-const activities = reactive([]);
+let activities = reactive([]);
 function toggleError() {
   active.value = !active.value;
 }
