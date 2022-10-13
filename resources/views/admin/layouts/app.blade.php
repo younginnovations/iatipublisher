@@ -60,7 +60,7 @@
   </div>
 
   <script defer src="{{ mix('/manifest.js') }}"></script>
-  <script defer src="{{ mix('/js/vendor.js') }}"></script>
+  <script defer src="/js/vendor.js"></script>
   <script defer src="{{ mix('/js/app.js') }}"></script>
   <script defer src="{{ mix('/js/script.js') }}"></script>
   <script defer src="{{ mix('js/formbuilder.js') }}"></script>
