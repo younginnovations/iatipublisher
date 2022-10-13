@@ -280,7 +280,10 @@ onMounted(async () => {
   const { data } = await axios.get(
     `/activity/${props.activityId}/default_values/data`
   );
-  defaultValues.value = data.data;
+  const defaultData = data.data;
+  if (defaultData) {
+    defaultValues.value = defaultData;
+  }
 });
 
 /**
