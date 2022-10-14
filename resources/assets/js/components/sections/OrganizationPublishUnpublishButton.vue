@@ -54,7 +54,7 @@
     v-if="publishStatus.is_published"
     class="ml-4"
     text="Unpublish"
-    type="secondary"
+    type="primary"
     icon="cancel-cloud"
     @click="unpublishValue = true"
   />

@@ -248,7 +248,6 @@ export default defineComponent({
           loaderVisibility.value = false;
 
           if (response.success) {
-            emit("toast", response.message, response.success);
             emit("closeModal");
             window.location.href = `/activity/${response.data.id}`;
           }
