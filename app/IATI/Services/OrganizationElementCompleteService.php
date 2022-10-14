@@ -28,6 +28,21 @@ class OrganizationElementCompleteService
      */
     public string $tempAmount = '';
 
+    /**
+     * Returns identifier element complete status.
+     *
+     * @param $organization
+     *
+     * @return bool
+     */
+    public function isIdentifierElementCompleted($organization): bool
+    {
+        $identifier = $organization->identifier;
+        $registration_agency = $organization->registration_agency;
+        $registration_number = $organization->registration_number;
+
+        return !(empty($identifier) || empty($registration_agency) || empty($registration_number));
+    }
 
     /**
      * Sets default values of language and currency where required for organization.
@@ -74,7 +89,7 @@ class OrganizationElementCompleteService
     }
 
     /**
-     * Checks if the string is json
+     * Checks if the string is json.
      *
      * @param $string
      *

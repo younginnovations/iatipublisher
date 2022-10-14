@@ -53,9 +53,9 @@ class IndicatorObserver
     {
         $resultObserver = new ResultObserver();
 
+        $this->setIndicatorDefaultValues($indicator);
         $resultObserver->updateActivityElementStatus($indicator->result);
         $resultObserver->resetActivityStatus($indicator->result);
-        $this->setIndicatorDefaultValues($indicator);
     }
 
     /**
@@ -64,6 +64,7 @@ class IndicatorObserver
      * @param $indicator
      *
      * @return void
+     * @throws \JsonException
      */
     public function setIndicatorDefaultValues($indicator): void
     {
