@@ -1,5 +1,6 @@
 {
   "title": {
+    "name":"title",
     "label": "title",
     "multiple": false,
     "add_more": false,
@@ -2287,7 +2288,7 @@
         "attributes": {
           "amount": {
             "name": "amount",
-            "label": "amount",
+            "label": "value",
             "type": "text",
             "placeholder": "Type value",
             "required": true,
@@ -2321,7 +2322,7 @@
       },
       "provider_org": {
         "name": "provider_org",
-        "label": "provider org",
+        "label": "provider organisation",
         "add_more": false,
         "hover_text": "The organisation from which the planned disbursement will originate. If omitted the reporting-org is assumed.<br> <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/planned-disbursement/provider-org/'>For more information</a>",
         "help_text": "Will your organisation be disbursing these funds? If so then you are the provider organisation. If not, please provide information on the organisation who will be disbursing these funds.",
@@ -2635,7 +2636,7 @@
         "attributes": {
           "amount": {
             "name": "amount",
-            "label": "amount",
+            "label": "value",
             "type": "text",
             "placeholder": "Type value",
             "required": true,
@@ -2997,6 +2998,7 @@
     "add_more": false,
     "hover_text": "The indicator(s) that are measured to meet the results. There can be multiple indicators for each result.</br><a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/indicator/'>For more information</a>",
     "help_text": "Indicators describe how the activity’s progress towards the result is measured. Multiple indicators can be published for each result.</br><b>Example usage</b>: An activity is working towards the outcome: ‘people to have access to independent media covering a diverse range of outcomes’. One of the ways this is being measured is through ‘the percentage of journalists who feel free to express their opinion’ (which is an indicator). This is measured through a bi-annual survey where they are asked to score how free they feel on a scale of 1 - 4.</br>See <a target='_blank' href='https://iatistandard.org/en/guidance/standard-guidance/results/'>Results Information</a> for more details on this example and <a target='_blank' href='https://iatistandard.org/en/guidance/standard-guidance/understanding-results/'>Understanding results data</a> for further examples.",
+    "show_info_in_title": true,
     "attributes": {
       "measure": {
         "name": "measure",
@@ -3149,7 +3151,6 @@
             "label": "title",
             "element_criteria": "mandatory",
             "hover_text": "A short, human-readable title. </br><a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/indicator/document-link/title/'>For more information</a>",
-            "help_text": "If you have provided a document link then, provide a title for the document.",
             "attributes": {},
             "sub_elements": {
               "narrative": {
@@ -3331,7 +3332,7 @@
         "label": "baseline",
         "add_more": true,
         "hover_text": "The baseline value for the indicator. </br><a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/indicator/baseline/'>For more information</a>",
-        "help_text": "See <a target='_blank' href='https://iatistandard.org/en/guidance/standard-guidance/results/'>Results Information</a> for more details on this example and <a target='_blank' href='https://iatistandard.org/en/guidance/standard-guidance/understanding-results/'>Understanding results data</a> for further examples.",
+        "help_text": "For each indicator please provide a baseline value, a target and the actual result achieved. The baseline is the starting point. The target is a result an organisation wants an activity to achieve in a certain period of time. The actual result is what was achieved at the end of that period.<br>For example: The starting value (baseline) was 15% of journalists felt free to express their opinions. At the end of the chosen time period, the target was set at 50%. The activity achieved its target, as by the end of the period (actual) 53% of journalists felt free to express their opinions.<br>See <a target='_blank' href='https://iatistandard.org/en/guidance/standard-guidance/results/'>Results Information</a> for more details on this example and <a target='_blank' href='https://iatistandard.org/en/guidance/standard-guidance/understanding-results/'>Understanding results data</a> for further examples.",
         "attributes": {
           "year": {
             "name": "year",
@@ -3494,7 +3495,7 @@
                         "required": true,
                         "criteria": "mandatory",
                         "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed. </br><a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/indicator/baseline/document-link/title/narrative/'>For more information</a>",
-                        "help_text": ""
+                        "help_text": "Select the language of the text you provided in the narrative. If no language is selected, your default language is assumed."
                       }
                     },
                     "sub_elements": {}
@@ -3567,6 +3568,7 @@
                 "add_more": true,
                 "wrapper_collection": false,
                 "hover_text": "The ISO 639-1 language code in which target document is written, e.g. “en”. Can be repeated to describe multi-lingual documents. </br><a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/indicator/baseline/document-link/language/'>For more information</a>",
+                "help_text": "Select the language that the document is written in.",
                 "attributes": {
                   "language": {
                     "name": "language",
@@ -4233,6 +4235,7 @@
     "add_more": false,
     "hover_text": "Transactions recording committed or actual funds flowing in or out of an aid activity.</br><a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/transaction/'>For more information</a>",
     "help_text": "Please provide a record of how your activity is being financed and how the finance is being used. Each incoming and outgoing flow should be published as a transaction.</br>If an organisation makes many small transactions, these can be grouped together. For example, all travel expenses for one month could be published as one expenditure transaction. When deciding whether (or how) to aggregate transactions, it is recommended that publishers consider the needs of data users, as too much aggregation can inhibit the usability of the data</br>Please note, you should not group together flows of funds to or from multiple external organisations (e.g. a disbursement to CARE should not be combined with a disbursement to IRC).</br><a target='_blank' href='https://iatistandard.org/en/guidance/standard-guidance/financial-transactions/'>Guidance on publishing financial transactions</a>",
+    "show_info_in_title": true,
     "attributes": {
       "reference": {
         "name": "reference",
@@ -4334,7 +4337,7 @@
         "attributes": {
           "amount": {
             "name": "amount",
-            "label": "amount",
+            "label": "value",
             "type": "text",
             "placeholder": "Type value here",
             "required": true,
@@ -4350,7 +4353,7 @@
             "required": true,
             "criteria": "mandatory",
             "hover_text": "The date to be used for determining the exchange rate for currency conversions.",
-            "help_text": ""
+            "help_text": "This date must not be in the future."
           },
           "currency": {
             "name": "currency",
@@ -4440,7 +4443,7 @@
             "required": false,
             "criteria": "recommended",
             "hover_text": "The type of organisation providing the funds. </br><a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/transaction/provider-org/'>For more information</a>",
-            "help_text": ""
+            "help_text": "Select the type that best describes the provider organisation. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/codelists/organisationtype/'>Information on all organisation types</a>. <br>If your organisation is the provider, please select the organisation type that your organisation provided when it first registered. You can find it here."
           }
         },
         "sub_elements": {
@@ -4629,7 +4632,7 @@
             "required": false,
             "criteria": "",
             "hover_text": "The code for the sector. </br><a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/transaction/sector/'>For more information</a>",
-            "help_text": "",
+            "help_text": "Select the sector that the transaction’s funds are supporting. You must only choose <b>one sector</b> from each list that you use.",
             "parent": {
               "name": "sector_vocabulary",
               "value": ["3", "4", "5", "6", "9", "10", "99", "98"]
@@ -4644,7 +4647,7 @@
             "required": false,
             "criteria": "",
             "hover_text": "The code for the sector. </br><a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/transaction/sector/'>For more information</a>",
-            "help_text": "",
+            "help_text": "Select the sector that the transaction’s funds are supporting. You must only choose <b>one sector</b> from each list that you use.",
             "parent": {
               "name": "sector_vocabulary",
               "value": ["2"]
@@ -4659,7 +4662,7 @@
             "required": false,
             "criteria": "",
             "hover_text": "The code for the sector. </br><a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/transaction/sector/'>For more information</a>",
-            "help_text": "",
+            "help_text": "Select the sector that the transaction’s funds are supporting. You must only choose <b>one sector</b> from each list that you use.",
             "parent": {
               "name": "sector_vocabulary",
               "value": ["7"]
@@ -4674,7 +4677,7 @@
             "criteria": "",
             "choices": "Activity/UNSDG-Targets.json",
             "hover_text": "The code for the sector. </br><a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/transaction/sector/'>For more information</a>",
-            "help_text": "",
+            "help_text": "Select the sector that the transaction’s funds are supporting. You must only choose <b>one sector</b> from each list that you use.",
             "parent": {
               "name": "sector_vocabulary",
               "value": ["8"]
@@ -4804,7 +4807,7 @@
             "required": true,
             "criteria": "mandatory",
             "hover_text": "Either an OECD DAC or UN region code. Codelist is determined by vocabulary attribute. </br><a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/transaction/recipient-region/'>For more information</a>",
-            "help_text": "",
+            "help_text": "Select the region benefitting from this transaction.",
             "hidden": true,
             "parent": {
               "name": "region_vocabulary",

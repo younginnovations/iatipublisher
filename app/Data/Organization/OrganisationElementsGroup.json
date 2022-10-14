@@ -3,15 +3,15 @@
     "label": "Identification",
     "elements": {
       "organisation_identifier": {
-        "core": true,
+        "mandatory": false,
         "label": "Organisation Identifier"
       },
       "name": {
-        "core": true,
+        "mandatory": true,
         "label": "Organisation Name"
       },
       "reporting_org": {
-        "core": true,
+        "mandatory": true,
         "label": "Reporting Organisation"
       }
     }
@@ -21,19 +21,19 @@
     "label": "Budget",
     "elements": {
       "total_budget": {
-        "core": false,
+        "mandatory": false,
         "label": "Total Budget"
       },
       "recipient_org_budget": {
-        "core": false,
+        "mandatory": false,
         "label": "Recipient Org Budget"
       },
       "recipient_region_budget": {
-        "core": false,
+        "mandatory": false,
         "label": "Recipient Region Budget"
       },
       "recipient_country_budget": {
-        "core": false,
+        "mandatory": false,
         "label": "Recipient Country Budget"
       }
     }
@@ -43,7 +43,7 @@
     "label": "Expenditure",
     "elements": {
       "total_expenditure": {
-        "core": false,
+        "mandatory": false,
         "label": "Total Expenditure"
       }
     }
@@ -53,7 +53,7 @@
     "label": "Document Link",
     "elements": {
       "document_link": {
-        "core": false,
+        "mandatory": false,
         "label": "Document Link"
       }
     }
