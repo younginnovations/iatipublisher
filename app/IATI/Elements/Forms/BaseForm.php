@@ -50,7 +50,7 @@ class BaseForm extends Form
                             'class' => (isset($field['add_more']) && $field['add_more']) ?
                                 ((!Arr::get($element, 'attributes', null) && strtolower(
                                     $field['name']
-                                ) === 'narrative') ? 'border-l border-spring-50 pb-11' : 'subelement rounded-tl-lg border-l border-spring-50 pb-11')
+                                ) === 'narrative') && !strtolower($element['name'])=='mailing_address' ? 'border-l border-spring-50 pb-11' : 'subelement rounded-tl-lg border-l border-spring-50 pb-11')
                                 : ((!Arr::get(
                                     $field,
                                     'attributes',
@@ -86,8 +86,8 @@ class BaseForm extends Form
                         'data'            => $field,
                         'label'           => false,
                         'element_criteria'=> $field['element_criteria'] ?? '',
-                        'hover_text'=> Arr::get($field, 'hover_text', null)??Arr::get($element, 'hover_text', ''),
-                        'help_text'=> Arr::get($field, 'hover_text', null)??Arr::get($element, 'help_text', ''),
+                        'hover_text'=> isset($field['name']) ?Arr::get($field, 'hover_text', ''):Arr::get($element, 'hover_text', ''),
+                        'help_text'=> isset($field['name']) ?Arr::get($field, 'help_text', ''):Arr::get($element, 'help_text', ''),
                         'wrapper'         => [
                             'class' => ((Arr::get($element, 'attributes', null) && isset($field['name']) && strtolower(
                                 $field['name']

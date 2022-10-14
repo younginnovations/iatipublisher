@@ -48,7 +48,7 @@
     "attributes": {
       "ref": {
         "name": "ref",
-        "label": "ref",
+        "label": "reference",
         "type": "text",
         "placeholder": "",
         "required": true,
@@ -150,7 +150,7 @@
     "attributes": {
       "reference": {
         "name": "reference",
-        "label": "ref",
+        "label": "reference",
         "type": "text",
         "placeholder": "Type reference",
         "required": true,
@@ -179,7 +179,7 @@
         "attributes": {
           "ref": {
             "name": "ref",
-            "label": "ref",
+            "label": "reference",
             "type": "text",
             "placeholder": "Type reference",
             "required": false,
@@ -1357,6 +1357,7 @@
         "name": "condition",
         "label": "Condition",
         "add_more": true,
+        "hover_text":"The text of a specific condition attached to the activity. Organisation-wide terms and conditions that apply to all activities should not be reported here, but in either iati-organisation/document-link or iati-activity-document-link.<br><a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/conditions/condition/'> For more information</a>",
         "attributes": {
           "condition_type": {
             "name": "condition_type",
@@ -2482,7 +2483,7 @@
       },
       "ref": {
         "name": "ref",
-        "label": "ref",
+        "label": "reference",
         "type": "text",
         "placeholder": "Type reference",
         "required": false,

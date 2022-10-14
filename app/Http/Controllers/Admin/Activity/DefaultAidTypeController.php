@@ -51,6 +51,7 @@ class DefaultAidTypeController extends Controller
 
             return view('admin.activity.defaultAidType.edit', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {
+            dd($e);
             logger()->error($e->getMessage());
 
             return redirect()->route('admin.activity.show', $id)->with('error', 'Error has occurred while rendering default-aid-type form.');
