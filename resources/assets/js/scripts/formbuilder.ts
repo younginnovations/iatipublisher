@@ -111,8 +111,8 @@ class FormBuilder {
     const count = $(target).attr('parent_count')
       ? parseInt($(target).attr('parent_count') as string) + 1
       : ($(target).prev().find('.multi-form').length
-          ? $(target).prev().find('.multi-form').length
-          : $(target).prev().find('.wrapped-child-body').length) + 1;
+        ? $(target).prev().find('.multi-form').length
+        : $(target).prev().find('.wrapped-child-body').length) + 1;
 
     let proto = container.data('prototype').replace(/__PARENT_NAME__/g, count);
     proto = proto.replace(/__NAME__/g, 0);
@@ -248,11 +248,21 @@ class FormBuilder {
 
   public addToCollection() {
     $('body').on('click', '.add_to_collection', (event: Event) => {
-      this.addForm(event);
+      if ($(event.target as EventTarget).hasClass('add-icon')) {
+        event.stopPropagation();
+        $(event.target as EventTarget).parent('button').trigger('click');
+      } else {
+        this.addForm(event);
+      }
     });
 
     $('.add_to_parent').on('click', (event: Event) => {
-      this.addParentForm(event);
+      if ($(event.target as EventTarget).hasClass('add-icon')) {
+        event.stopPropagation();
+        $(event.target as EventTarget).parent('button').trigger('click');
+      } else {
+        this.addParentForm(event);
+      }
     });
   }
 
