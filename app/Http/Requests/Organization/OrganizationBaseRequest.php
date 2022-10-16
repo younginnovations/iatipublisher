@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Requests\Organization;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
@@ -17,17 +18,8 @@ class OrganizationBaseRequest extends FormRequest
     {
         Validator::extendImplicit(
             'unique_lang',
-            function ($attribute, $value, $parameters, $validator) {
-                $languages = [];
-                foreach ($value as $narrative) {
-                    $language = $narrative['language'];
-                    if (in_array($language, $languages)) {
-                        return false;
-                    }
-                    $languages[] = $language;
-                }
-
-                return true;
+            function ($attribute, $value) {
+                return $this->uniqueLangValidator($attribute, $value);
             }
         );
 
@@ -40,11 +32,11 @@ class OrganizationBaseRequest extends FormRequest
 
         Validator::extendImplicit(
             'required_with_language',
-            function ($attribute, $value, $parameters, $validator) {
+            function ($attribute) {
                 $language = preg_replace('/([^~]+).narrative/', '$1.language', $attribute);
+                $request = FormRequest::all();
 
-                // return !(Request::get($language) && !Request::get($attribute));
-                return true;
+                return !(Arr::get($request,$language) && !Arr::get($request,$attribute));
             }
         );
 
@@ -72,6 +64,29 @@ class OrganizationBaseRequest extends FormRequest
                 return $this->uniqueLanguageValidator($attribute, $value);
             }
         );
+    }
+
+    /**
+     * Validator for unique lang.
+     *
+     * @param      $attribute
+     * @param      $value
+     *
+     * @return bool
+     */
+    public function uniqueLangValidator($attribute, $value): bool
+    {
+        $languages = [];
+
+        foreach ($value as $narrative) {
+            if (in_array($narrative['language'], $languages)) {
+                return false;
+            }
+
+            $languages[] = $narrative['language'];
+        }
+
+        return true;
     }
 
     /**
@@ -176,6 +191,11 @@ class OrganizationBaseRequest extends FormRequest
         $rules = [];
         $rules[sprintf('%s.narrative', $formBase)][] = 'unique_lang';
         $rules[sprintf('%s.narrative', $formBase)][] = 'unique_default_lang';
+
+        foreach ($formFields as $narrativeIndex => $narrative) {
+            $rules[sprintf('%s.narrative.%s.narrative', $formBase, $narrativeIndex)][] = 'required_with_language';
+        }
+
 
         return $rules;
     }
@@ -430,6 +450,7 @@ class OrganizationBaseRequest extends FormRequest
     {
         $rules = [];
         $rules[sprintf('%s.narrative', $formBase)] = 'unique_lang';
+        $rules[sprintf('%s.narrative', $formBase)] = 'unique_default_lang';
 
         return $rules;
     }
@@ -447,6 +468,7 @@ class OrganizationBaseRequest extends FormRequest
     {
         $messages = [];
         $messages[sprintf('%s.narrative.unique_lang', $formBase)] = trans('validation.unique', ['attribute' => trans('elementForm.languages')]);
+        $messages[sprintf('%s.narrative.unique_default_lang', $formBase)] = trans('validation.unique', ['attribute' => trans('elementForm.languages')]);
 
         foreach ($formFields as $narrativeIndex => $narrative) {
             $messages[sprintf('%s.narrative.%s.narrative.required_with', $formBase, $narrativeIndex)] = trans('validation.required', ['attribute' => trans('elementForm.narrative')]);

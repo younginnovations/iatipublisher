@@ -1457,7 +1457,7 @@
         "hover_text": "The ISO 639-1 language code in which target document is written, e.g. “en”. Can be repeated to describe multi-lingual documents.<br> <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/document-link/language/'>For more information</a>",
         "attributes": {
           "code": {
-            "name": "code",
+            "name": "language",
             "label": "code",
             "type": "select",
             "multiSelect": false,
