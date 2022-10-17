@@ -83,7 +83,7 @@ class ImportActivityController extends Controller
     public function index(): View|JsonResponse|RedirectResponse
     {
         try {
-            if(!Auth::user()->organization_id){
+            if (!Auth::user()->organization_id) {
                 Session::put('error', 'User is not associated with any organization.');
 
                 return redirect()->route('admin.activities.index');
@@ -200,7 +200,7 @@ class ImportActivityController extends Controller
             $filetype = Session::get('import_filetype');
             $org_id = Auth::user()->organization_id;
 
-            if(!$org_id){
+            if (!$org_id) {
                 Session::put('error', 'User is not associated with any organization.');
 
                 return redirect()->route('admin.activities.index');

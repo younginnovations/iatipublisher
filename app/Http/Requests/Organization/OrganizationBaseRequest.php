@@ -36,7 +36,7 @@ class OrganizationBaseRequest extends FormRequest
                 $language = preg_replace('/([^~]+).narrative/', '$1.language', $attribute);
                 $request = FormRequest::all();
 
-                return !(Arr::get($request,$language) && !Arr::get($request,$attribute));
+                return !(Arr::get($request, $language) && !Arr::get($request, $attribute));
             }
         );
 
@@ -195,7 +195,6 @@ class OrganizationBaseRequest extends FormRequest
         foreach ($formFields as $narrativeIndex => $narrative) {
             $rules[sprintf('%s.narrative.%s.narrative', $formBase, $narrativeIndex)][] = 'required_with_language';
         }
-
 
         return $rules;
     }

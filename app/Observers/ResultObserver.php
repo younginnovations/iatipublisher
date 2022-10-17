@@ -54,9 +54,9 @@ class ResultObserver
      */
     public function created(Result $result): void
     {
+        $this->setResultDefaultValues($result);
         $this->updateActivityElementStatus($result);
         $this->resetActivityStatus($result);
-        $this->setResultDefaultValues($result);
     }
 
     /**
@@ -94,6 +94,7 @@ class ResultObserver
      * @param $result
      *
      * @return void
+     * @throws \JsonException
      */
     public function setResultDefaultValues($result): void
     {

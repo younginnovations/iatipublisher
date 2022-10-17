@@ -12,7 +12,7 @@ data:
 
   DEBUGBAR_ENABLED: "false"
 
-  LOG_CHANNEL: "stack"
+  LOG_CHANNEL: "daily"
   LOG_LEVEL: "debug"
 
   DB_CONNECTION: "pgsql"
@@ -23,7 +23,11 @@ data:
 
   BROADCAST_DRIVER: "log"
   CACHE_DRIVER: "redis"
+  FILESYSTEM_DISK: "s3"
+
+  QUEUE_DRIVER: "redis"
   QUEUE_CONNECTION: "redis"
+
   SESSION_DRIVER: "redis"
   SESSION_LIFETIME: "120"
   SESSION_SECURE_COOKIE: "true"
@@ -41,11 +45,15 @@ data:
   MAIL_FROM_ADDRESS: "no-reply@iatipublisher-dev.yipl.com.np"
   MAIL_FROM_NAME: "IATI Publisher Dev"
 
-  IATI_URL: "https://staging.iatiregistry.org"
-  IATI_API_ENDPOINT: "https://staging.iatiregistry.org/api"
   IATI_VALIDATOR_ENDPOINT: "https://api.iatistandard.org/validator/validate"
 
-  FILESYSTEM_DISK: "s3"
+  IATI_API_ENDPOINT: "https://staging.iatiregistry.org/api"
+
+  IATI_YIPL_PUBLISHER_NAME: "ztest"
+  IATI_YIPL_PUBLISHER_ID: "ztest"
+  IATI_YIPL_REGISTRATION_AGENCY: "NP-SWC"
+  IATI_YIPL_REGISTRATION_NUMBER: "0987"
+  IATI_YIPL_IDENTIFIER: "NP-SWC-0987"
 
   AWS_DEFAULT_REGION: "us-east-1"
   AWS_BUCKET: "iatipublisher-dev"

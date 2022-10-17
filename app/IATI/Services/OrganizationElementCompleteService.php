@@ -21,12 +21,12 @@ class OrganizationElementCompleteService
     /**
      * @var string
      */
-    public $tempNarrative = '';
+    public string $tempNarrative = '';
 
     /**
      * @var string
      */
-    public $tempAmount = '';
+    public string $tempAmount = '';
 
     /**
      * Returns mandatory fields.
@@ -532,7 +532,7 @@ class OrganizationElementCompleteService
     /**
      * Returns identifier element complete status.
      *
-     * @param $activity
+     * @param $organization
      *
      * @return bool
      */
@@ -548,7 +548,7 @@ class OrganizationElementCompleteService
     /**
      * Returns title element complete status.
      *
-     * @param $activity
+     * @param $organization
      *
      * @return bool
      * @throws \JsonException
@@ -564,7 +564,7 @@ class OrganizationElementCompleteService
     /**
      * Returns description element complete status.
      *
-     * @param $activity
+     * @param $organization
      *
      * @return bool
      * @throws \JsonException
@@ -579,7 +579,7 @@ class OrganizationElementCompleteService
     /**
      * Returns conditions element complete status.
      *
-     * @param $activity
+     * @param $organization
      *
      * @return bool
      * @throws \JsonException
@@ -594,7 +594,7 @@ class OrganizationElementCompleteService
     /**
      * Returns conditions element complete status.
      *
-     * @param $activity
+     * @param $organization
      *
      * @return bool
      * @throws \JsonException
@@ -609,7 +609,7 @@ class OrganizationElementCompleteService
     /**
      * Returns conditions element complete status.
      *
-     * @param $activity
+     * @param $organization
      *
      * @return bool
      * @throws \JsonException
@@ -624,7 +624,7 @@ class OrganizationElementCompleteService
     /**
      * Returns conditions element complete status.
      *
-     * @param $activity
+     * @param $organization
      *
      * @return bool
      * @throws \JsonException
@@ -639,7 +639,7 @@ class OrganizationElementCompleteService
     /**
      * Returns conditions element complete status.
      *
-     * @param $activity
+     * @param $organization
      *
      * @return bool
      * @throws \JsonException
@@ -654,7 +654,7 @@ class OrganizationElementCompleteService
     /**
      * Returns conditions element complete status.
      *
-     * @param $activity
+     * @param $organization
      *
      * @return bool
      * @throws \JsonException
@@ -673,6 +673,7 @@ class OrganizationElementCompleteService
      * @param $organization
      *
      * @return mixed
+     * @throws \JsonException
      */
     public function setOrganizationDefaultValues(&$data, $organization): mixed
     {
@@ -710,15 +711,17 @@ class OrganizationElementCompleteService
     }
 
     /**
-     * Checks if the string is json
+     * Checks if the string is json.
      *
      * @param $string
      *
      * @return bool
+     * @throws \JsonException
      */
-    function isJson($string): bool
+    public function isJson($string): bool
     {
-        json_decode($string);
+        json_decode($string, false, 512, JSON_THROW_ON_ERROR);
+
         return json_last_error() === JSON_ERROR_NONE;
     }
 }

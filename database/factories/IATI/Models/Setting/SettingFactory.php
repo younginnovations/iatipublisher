@@ -4,9 +4,10 @@ namespace Database\Factories\IATI\Models\Setting;
 
 use App\IATI\Models\Setting\Setting;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Database\Eloquent\Model;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Model>
+ * @extends Factory<Model>
  */
 class SettingFactory extends Factory
 {
@@ -21,9 +22,9 @@ class SettingFactory extends Factory
     {
         return [
             'publishing_info'         => [
-                'publisher_id'           => 'yipl',
+                'publisher_id'           => env('IATI_YIPL_PUBLISHER_ID'),
                 'publisher_verification' => true,
-                'api_token'              => 'test',
+                'api_token'              => env('IATI_API_KEY'),
                 'token_verification'     => true,
             ],
             'default_values'          => [

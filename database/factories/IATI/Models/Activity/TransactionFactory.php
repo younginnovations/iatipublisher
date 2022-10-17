@@ -4,9 +4,10 @@ namespace Database\Factories\IATI\Models\Activity;
 
 use App\IATI\Models\Activity\Transaction;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Database\Eloquent\Model;
 
 /**
- * Class TransactionFactory.
+ * @extends Factory<Model>
  */
 class TransactionFactory extends Factory
 {

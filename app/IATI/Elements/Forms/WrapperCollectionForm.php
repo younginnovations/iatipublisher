@@ -63,7 +63,7 @@ class WrapperCollectionForm extends Form
                                         $data,
                                         'attributes',
                                         null
-                                    )  && $data['name'] !== 'mailing_address' ? 'border-l border-spring-50 pb-11' : 'subelement rounded-tl-lg border-l border-spring-50 pb-11')
+                                    ) && $data['name'] !== 'mailing_address' ? 'border-l border-spring-50 pb-11' : 'subelement rounded-tl-lg border-l border-spring-50 pb-11')
                                     : 'subelement rounded-tl-lg border-l border-spring-50 mb-6',
                             ],
                         ],
@@ -74,7 +74,7 @@ class WrapperCollectionForm extends Form
 
                 if (isset($field['add_more']) && $field['add_more']) {
                     $this->add('add_to_collection_' . $name, 'button', [
-                        'label' => sprintf('Add More %s', str_replace('_',' ',Arr::get($data, 'attributes', null) ? $field['name']:$data['name'])),
+                        'label' => sprintf('Add More %s', str_replace('_', ' ', Arr::get($data, 'attributes', null) ? $field['name'] : $data['name'])),
                         'attr'  => [
                             'class'     => 'add_to_collection add_more button relative -translate-y-1/2 pl-3.5 text-xs font-bold uppercase leading-normal text-spring-50 text-bluecoral',
                             'form_type' => $data['parent'] . '_' . $data['name'] . '_' . $field['name'],
@@ -210,7 +210,7 @@ class WrapperCollectionForm extends Form
 
         if (isset($field['add_more']) && $field['add_more']) {
             $this->add('add_to_collection_' . $field['name'], 'button', [
-                'label' => sprintf('Add More %s', str_replace('_',' ',$field['name'])),
+                'label' => sprintf('Add More %s', str_replace('_', ' ', $field['name'])),
                 'attr'  => [
                     'class'     => 'add_to_collection add_more button relative -translate-y-1/2 pl-3.5 text-xs font-bold uppercase leading-normal text-spring-50 text-bluecoral ',
                     'form_type' =>  $field['name'],

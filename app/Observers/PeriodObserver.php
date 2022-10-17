@@ -37,9 +37,9 @@ class PeriodObserver
     {
         $resultObserver = new ResultObserver();
 
+        $this->setPeriodDefaultValues($period);
         $resultObserver->updateActivityElementStatus($period->indicator->result);
         $resultObserver->resetActivityStatus($period->indicator->result);
-        $this->setPeriodDefaultValues($period);
     }
 
     /**
@@ -65,6 +65,7 @@ class PeriodObserver
      * @param $period
      *
      * @return void
+     * @throws \JsonException
      */
     public function setPeriodDefaultValues($period): void
     {

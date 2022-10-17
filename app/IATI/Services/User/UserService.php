@@ -29,7 +29,8 @@ class UserService
     /**
      * UserService constructor.
      *
-     * @param UserRepository $userRepo
+     * @param UserRepository         $userRepo
+     * @param OrganizationRepository $organizationRepo
      */
     public function __construct(UserRepository $userRepo, OrganizationRepository $organizationRepo)
     {
@@ -41,6 +42,8 @@ class UserService
      * Store user.
      *
      * @param array $data
+     *
+     * @return Model
      */
     public function create(array $data): Model
     {
@@ -48,8 +51,6 @@ class UserService
     }
 
     /**
-     * Stores the user that exists in IATI.
-     *
      * @param array $data
      *
      * @return Model
@@ -74,7 +75,7 @@ class UserService
             'password'        => Hash::make($data['password']),
         ]);
 
-        User::sendEmail($user);
+        User::sendEmail();
 
         return $user;
     }
@@ -94,9 +95,9 @@ class UserService
      *
      * @return void
      */
-    public function resendVerificationEmail()
+    public function resendVerificationEmail(): void
     {
-        User::sendEmail(Auth::user());
+        User::sendEmail();
         User::resendEmail(Auth::user());
     }
 

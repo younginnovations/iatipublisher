@@ -573,7 +573,6 @@ export default defineComponent({
 
     function encrypt(string: string, key: string) {
       let iv = CryptoJS.lib.WordArray.random(16);
-
       let salt = CryptoJS.lib.WordArray.random(256);
       let iterations = 999;
       let encryptMethodLength = 256 / 4;

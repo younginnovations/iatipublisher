@@ -15,11 +15,7 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        $this->call([RoleTableSeeder::class]);
-
-        if (app()->environment('production')) {
-            $this->call([UserTableSeeder::class]);
-        }
+        $this->call([RoleTableSeeder::class, SuperAdminSeeder::class]);
 
         if (app()->environment(['local', 'staging', 'dev'])) {
             $this->call(

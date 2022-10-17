@@ -79,7 +79,6 @@ class PolicyMarkerRequest extends ActivityBaseRequest
                 }
             }
 
-
             $messages = array_merge(
                 $messages,
                 $this->getMessagesForNarrative($policyMarker['narrative'], $policyMarkerForm)
