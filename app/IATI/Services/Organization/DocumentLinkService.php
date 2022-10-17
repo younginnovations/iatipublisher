@@ -128,7 +128,7 @@ class DocumentLinkService
 
                 foreach (Arr::get($documentLink, 'language', []) as $language) {
                     $languages[] = [
-                        '@attributes' => ['code' => Arr::get($language, 'code', null)],
+                        '@attributes' => ['code' => Arr::get($language, 'language', null)],
                     ];
                 }
 

@@ -106,7 +106,7 @@ class TotalExpenditureRequest extends OrganizationBaseRequest
             $rules = array_merge(
                 $rules,
                 $this->getRulesForBudgetOrExpenseLineValue($expenseLine['value'], $expenseLineForm),
-                $this->getRulesForBudgetOrExpenseLineNarrative($expenseLine['narrative'], $expenseLineForm, $expenseLineIndex)
+                $this->getRulesForNarrative($expenseLine['narrative'], $expenseLineForm, $expenseLineIndex)
             );
         }
 

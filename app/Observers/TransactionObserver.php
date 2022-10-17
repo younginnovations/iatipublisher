@@ -53,9 +53,9 @@ class TransactionObserver
      */
     public function created(Transaction $transaction): void
     {
+        $this->setTransactionDefaultValues($transaction);
         $this->updateActivityElementStatus($transaction);
         $this->resetActivityStatus($transaction);
-        $this->setTransactionDefaultValues($transaction);
     }
 
     /**

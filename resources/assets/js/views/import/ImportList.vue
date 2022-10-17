@@ -22,7 +22,7 @@
               <div class="tooltip-btn">
                 <button class="">
                   <svg-vue icon="question-mark" />
-                  <span>What is activity?</span>
+                  <span>What is an activity?</span>
                 </button>
                 <div class="tooltip-btn__content z-[1]">
                   <div class="content">

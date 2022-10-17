@@ -217,7 +217,6 @@ class ImportXmlService
                 $result = (array) $result;
                 $indicators = $result['indicator'];
                 unset($result['indicator']);
-                // dd($result);
 
                 $savedResult = $this->resultRepository->store([
                     'activity_id' => $activityId,

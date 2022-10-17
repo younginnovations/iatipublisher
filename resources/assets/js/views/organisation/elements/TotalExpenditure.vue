@@ -7,10 +7,14 @@
     }"
   >
     <div class="elements-detail mb-4">
-      <div class="flex text-sm ml-2">
+      <div class="ml-2 flex text-sm">
         <span v-if="total_expenditure.value[0].amount">
-          {{ total_expenditure.value['0'].amount ?? 'Budget Not Available' }}
-          {{ total_expenditure.value['0'].currency }}
+          {{
+            total_expenditure.value["0"].amount
+              ? Number(total_expenditure.value[0].amount).toLocaleString()
+              : "Budget Not Available"
+          }}
+          {{ total_expenditure.value["0"].currency }}
         </span>
         <span v-else> Expenditure Amount Not Available</span>
       </div>
@@ -20,15 +24,15 @@
             <tr>
               <td>Period</td>
               <td>
-                {{ formatDate(total_expenditure.period_start['0'].date) }}
+                {{ formatDate(total_expenditure.period_start["0"].date) }}
                 -
-                {{ formatDate(total_expenditure.period_end['0'].date) }}
+                {{ formatDate(total_expenditure.period_end["0"].date) }}
               </td>
             </tr>
             <tr>
               <td>Value date</td>
               <td>
-                {{ formatDate(total_expenditure.value['0'].value_date) }}
+                {{ formatDate(total_expenditure.value["0"].value_date) }}
               </td>
             </tr>
           </tbody>
@@ -45,16 +49,15 @@
         :key="j"
         class="item"
         :class="{
-          'mb-2 border-b border-n-20':
-            j !== total_expenditure.expense_line.length - 1,
+          'mb-2 border-b border-n-20': j !== total_expenditure.expense_line.length - 1,
         }"
       >
         <div class="indicator-content flex px-6 py-2">
           <div class="elements-detail grow">
             <div class="category flex">
               <span v-if="expense_line.value['0'].amount">
-                {{ expense_line.value['0'].amount }}
-                {{ expense_line.value['0'].currency }}
+                {{ Number(expense_line.value["0"].amount).toLocaleString() }}
+                {{ expense_line.value["0"].currency }}
               </span>
               <span v-else> Expense Line Not Available </span>
             </div>
@@ -64,13 +67,13 @@
                   <tr>
                     <td>Reference</td>
                     <td>
-                      {{ expense_line.ref ?? 'Reference Not Available' }}
+                      {{ expense_line.ref ?? "Reference Not Available" }}
                     </td>
                   </tr>
                   <tr>
                     <td>Value Date</td>
                     <td>
-                      {{ formatDate(expense_line.value['0'].value_date) }}
+                      {{ formatDate(expense_line.value["0"].value_date) }}
                     </td>
                   </tr>
                   <tr>
@@ -87,14 +90,12 @@
                         <div class="language mb-1.5">
                           ({{
                             narrative.language
-                              ? `Language: ${
-                                  types?.languages[narrative.language]
-                                }`
-                              : 'Language : Not Available'
+                              ? `Language: ${types?.languages[narrative.language]}`
+                              : "Language : Not Available"
                           }})
                         </div>
                         <div class="w-[500px] max-w-full">
-                          {{ narrative.narrative ?? 'Narrative Not Available' }}
+                          {{ narrative.narrative ?? "Narrative Not Available" }}
                         </div>
                       </div>
                     </td>
@@ -110,8 +111,8 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, inject } from 'vue';
-import moment from 'moment';
+import { defineProps, inject } from "vue";
+import moment from "moment";
 
 defineProps({
   content: { type: Object, required: true },
@@ -124,9 +125,9 @@ interface TypesInterface {
   country: [];
 }
 
-const types = inject('orgTypes') as TypesInterface;
+const types = inject("orgTypes") as TypesInterface;
 
 function formatDate(date: Date) {
-  return date ? moment(date).format('LL') : 'Date Not Available';
+  return date ? moment(date).format("LL") : "Date Not Available";
 }
 </script>

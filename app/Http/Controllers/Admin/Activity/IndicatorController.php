@@ -152,12 +152,12 @@ class IndicatorController extends Controller
     /**
      * Creates new indicator.
      *
-     * @param Request          $request
+     * @param IndicatorRequest $request
      * @param                  $resultId
      *
      * @return RedirectResponse
      */
-    public function store(Request $request, $resultId): RedirectResponse
+    public function store(IndicatorRequest $request, $resultId): RedirectResponse
     {
         try {
             $indicatorData = $request->except(['_token']);

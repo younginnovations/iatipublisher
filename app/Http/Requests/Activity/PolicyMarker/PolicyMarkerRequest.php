@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Requests\Activity\PolicyMarker;
 
 use App\Http\Requests\Activity\ActivityBaseRequest;
+use Illuminate\Support\Arr;
 
 /**
  * Class PolicyMarkerRequest.
@@ -45,10 +46,12 @@ class PolicyMarkerRequest extends ActivityBaseRequest
         foreach ($formFields as $policyMarkerIndex => $policyMarker) {
             $policyMarkerForm = sprintf('policy_marker.%s', $policyMarkerIndex);
             $rules[sprintf('%s.vocabulary_uri', $policyMarkerForm)] = 'nullable|url';
-            $rules = array_merge(
-                $rules,
-                $this->getRulesForNarrative($policyMarker['narrative'], $policyMarkerForm)
-            );
+
+            if (Arr::get($policyMarker, 'policy_marker_vocabulary') === '99') {
+                foreach ($formFields as $narrativeIndex => $narrative) {
+                    $rules[sprintf('%s.narrative.%s.narrative', $policyMarkerForm, $narrativeIndex)] = 'required';
+                }
+            }
         }
 
         return $rules;
@@ -69,6 +72,13 @@ class PolicyMarkerRequest extends ActivityBaseRequest
             $policyMarkerForm = sprintf('policy_marker.%s', $policyMarkerIndex);
             $messages[sprintf('%s.vocabulary_uri.url', $policyMarkerForm)]
                 = 'The @vocabulary-uri field must be a valid url.';
+
+            if (Arr::get($policyMarker, 'policy_marker_vocabulary') === '99') {
+                foreach ($formFields as $narrativeIndex => $narrative) {
+                    $messages[sprintf('%s.narrative.%s.narrative.required', $policyMarkerForm, $narrativeIndex)] = 'The narrative field is required when vocabulary is reporting organisation.';
+                }
+            }
+
 
             $messages = array_merge(
                 $messages,

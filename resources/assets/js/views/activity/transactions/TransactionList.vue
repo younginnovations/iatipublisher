@@ -53,38 +53,36 @@
           <tr v-for="(trans, t, index) in transactionsData.data" :key="index">
             <td>
               <a :href="`${activityLink}/transaction/${trans.id}`">
-                <span>{{ trans.transaction.reference ?? '- - -' }}</span>
+                <span>{{ trans.transaction.reference ?? "- - -" }}</span>
               </a>
             </td>
             <td>
               {{
                 types.transactionType[
                   trans.transaction.transaction_type[0].transaction_type_code
-                ] ?? '- - -'
+                ] ?? "- - -"
               }}
             </td>
             <td class="truncate">
-              {{ trans.transaction.value[0].amount ?? '- - -' }}
+              {{
+                trans.transaction.value[0].amount
+                  ? Number(trans.transaction.value[0].amount).toLocaleString()
+                  : "- - -"
+              }}
             </td>
             <td>
               <span>
                 {{
                   trans.transaction.transaction_date[0].date
-                    ? dateFormat(
-                        trans.transaction.transaction_date[0].date,
-                        'fromNow'
-                      )
-                    : '- - -'
+                    ? dateFormat(trans.transaction.transaction_date[0].date, "fromNow")
+                    : "- - -"
                 }}
               </span>
             </td>
             <!--            <td><span class="text-spring-50">completed</span></td>-->
             <td>
               <div class="flex text-n-40">
-                <a
-                  class="mr-6"
-                  :href="`${activityLink}/transaction/${trans.id}/edit`"
-                >
+                <a class="mr-6" :href="`${activityLink}/transaction/${trans.id}/edit`">
                   <svg-vue icon="edit" class="text-xl"></svg-vue>
                 </a>
                 <DeleteAction :item-id="trans.id" item-type="transaction" />
@@ -105,26 +103,26 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, toRefs, reactive, onMounted, provide } from 'vue';
-import axios from 'axios';
+import { defineComponent, toRefs, reactive, onMounted, provide } from "vue";
+import axios from "axios";
 
 //components
-import Btn from 'Components/ButtonComponent.vue';
-import Pagination from 'Components/TablePagination.vue';
-import PageTitle from 'Components/sections/PageTitle.vue';
-import Toast from 'Components/Toast.vue';
-import DeleteAction from 'Components/sections/DeleteAction.vue';
+import Btn from "Components/ButtonComponent.vue";
+import Pagination from "Components/TablePagination.vue";
+import PageTitle from "Components/sections/PageTitle.vue";
+import Toast from "Components/Toast.vue";
+import DeleteAction from "Components/sections/DeleteAction.vue";
 
 //composable
-import dateFormat from 'Composable/dateFormat';
-import getActivityTitle from 'Composable/title';
-import { useToggle } from '@vueuse/core';
+import dateFormat from "Composable/dateFormat";
+import getActivityTitle from "Composable/title";
+import { useToggle } from "@vueuse/core";
 
 // toggle state for modal popup
 let [deleteValue, deleteToggle] = useToggle();
 
 export default defineComponent({
-  name: 'TransactionList',
+  name: "TransactionList",
   components: {
     Btn,
     Pagination,
@@ -153,11 +151,11 @@ export default defineComponent({
   setup(props) {
     const { activity } = toRefs(props);
     const activityId = activity.value.id,
-      activityTitle = getActivityTitle(activity.value.title, 'en'),
+      activityTitle = getActivityTitle(activity.value.title, "en"),
       activityLink = `/activity/${activityId}`;
     const toastData = reactive({
       visibility: false,
-      message: '',
+      message: "",
       type: true,
     });
 
@@ -189,7 +187,7 @@ export default defineComponent({
         Object.assign(transactionsData, response.data);
       });
 
-      if (props.toast.message !== '') {
+      if (props.toast.message !== "") {
         toastData.type = props.toast.type;
         toastData.visibility = true;
         toastData.message = props.toast.message;
@@ -210,23 +208,23 @@ export default defineComponent({
     }
 
     // Provide
-    provide('parentItemId', activityId);
+    provide("parentItemId", activityId);
 
     /**
      * Breadcrumb data
      */
     const breadcrumbData = [
       {
-        title: 'Your Activities',
-        link: '/activities',
+        title: "Your Activities",
+        link: "/activities",
       },
       {
         title: activityTitle,
         link: activityLink,
       },
       {
-        title: 'Transaction List',
-        link: '',
+        title: "Transaction List",
+        link: "",
       },
     ];
 

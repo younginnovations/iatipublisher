@@ -5,23 +5,31 @@
     class=""
     :class="{ 'mb-4': Number(t) !== data.length - 1 }"
   >
-    <div class="mb-4 text-sm font-bold">
+    <div class="mb-4 text-sm font-bold inline-flex">
       {{
         types.transactionType[
           trans.transaction.transaction_type[0].transaction_type_code
-        ] ?? 'Transaction type not available'
+        ] ?? "Transaction type not available"
       }}
+      <div class="ml-2">
+        <Btn
+          text="Edit"
+          icon="edit"
+          :link="`/activity/${trans.activity_id}/transaction/${trans.id}/edit`"
+        />
+      </div>
     </div>
     <template v-for="(val, v) in trans.transaction.value" :key="v">
       <div
-        class="text-sm description"
+        class="description text-sm"
         :class="{ 'mb-4': Number(t) !== trans.transaction.value.length - 1 }"
       >
-        {{ val.amount ?? 'Value not available' }} {{ val.currency }}
+        {{ val.amount ? Number(val.amount).toLocaleString() : "Value not available" }}
+        {{ val.currency }}
         {{
-          dateFormat(val.date, 'MMMM DD, YYYY')
-            ? '- valued at' + ' ' + dateFormat(val.date, 'MMMM DD, YYYY')
-            : ''
+          dateFormat(val.date, "MMMM DD, YYYY")
+            ? "- valued at" + " " + dateFormat(val.date, "MMMM DD, YYYY")
+            : ""
         }}
       </div>
     </template>
@@ -29,11 +37,15 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, inject } from 'vue';
-import dateFormat from 'Composable/dateFormat';
+import { defineComponent, inject } from "vue";
+import dateFormat from "Composable/dateFormat";
+import Btn from "Components/buttons/Link.vue";
 
 export default defineComponent({
-  name: 'ActivityTransactions',
+  name: "ActivityTransactions",
+  components: {
+    Btn,
+  },
   props: {
     data: {
       type: Object,
@@ -46,7 +58,7 @@ export default defineComponent({
       languages: [];
     }
 
-    const types = inject('types') as Types;
+    const types = inject("types") as Types;
 
     return { types, dateFormat };
   },

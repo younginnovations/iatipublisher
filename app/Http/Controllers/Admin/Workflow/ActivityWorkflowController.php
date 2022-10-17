@@ -53,9 +53,9 @@ class ActivityWorkflowController extends Controller
             $activity = $this->activityWorkflowService->findActivity($id);
 
             if ($this->activityWorkflowService->hasNoPublisherInfo($activity->organization->settings)) {
-                Session::put('error', 'Please update the publishing information first.');
+                Session::put('error', 'Please add a Registry API key before attempting to automatically publish.');
 
-                return response()->json(['success' => false, 'message' => 'Please update the publishing information first.']);
+                return response()->json(['success' => false, 'message' => 'Please add a Registry API key before attempting to automatically publish.']);
             }
 
             DB::beginTransaction();

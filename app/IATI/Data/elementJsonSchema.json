@@ -48,7 +48,7 @@
     "attributes": {
       "ref": {
         "name": "ref",
-        "label": "ref",
+        "label": "reference",
         "type": "text",
         "placeholder": "",
         "required": true,
@@ -150,7 +150,7 @@
     "attributes": {
       "reference": {
         "name": "reference",
-        "label": "ref",
+        "label": "reference",
         "type": "text",
         "placeholder": "Type reference",
         "required": true,
@@ -179,7 +179,7 @@
         "attributes": {
           "ref": {
             "name": "ref",
-            "label": "ref",
+            "label": "reference",
             "type": "text",
             "placeholder": "Type reference",
             "required": false,
@@ -470,7 +470,7 @@
         "name": "custom_code",
         "label": "code",
         "type": "text",
-        "placeholder": "",
+        "placeholder": "Type code",
         "required": true,
         "criteria": "mandatory",
         "hidden": true,
@@ -1357,6 +1357,7 @@
         "name": "condition",
         "label": "Condition",
         "add_more": true,
+        "hover_text":"The text of a specific condition attached to the activity. Organisation-wide terms and conditions that apply to all activities should not be reported here, but in either iati-organisation/document-link or iati-activity-document-link.<br><a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/conditions/condition/'> For more information</a>",
         "attributes": {
           "condition_type": {
             "name": "condition_type",
@@ -2100,7 +2101,7 @@
             "name": "level",
             "label": "level",
             "type": "text",
-            "placeholder": "",
+            "placeholder": "Type level",
             "required": false,
             "criteria": "Type level",
             "hover_text": "A number defining a subdivision within a hierarchical system of administrative areas. The precise system for defining the particular meaning of each @level value is determined by the @vocabulary being used.</br><a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/location/administrative/'>For more information</a>",
@@ -2482,7 +2483,7 @@
       },
       "ref": {
         "name": "ref",
-        "label": "ref",
+        "label": "reference",
         "type": "text",
         "placeholder": "Type reference",
         "required": false,
@@ -2911,7 +2912,6 @@
             "label": "language",
             "add_more": true,
             "wrapper_collection": false,
-            "hover_text": "The ISO 639-1 language code in which the  document is written, e.g. “en”. Can be repeated to describe multi-lingual documents.</br><a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/document-link/language/'>For more information.</a>",
             "attributes": {
               "language": {
                 "name": "language",
@@ -3247,8 +3247,6 @@
             "label": "language",
             "add_more": true,
             "wrapper_collection": false,
-            "hover_text": "The ISO 639-1 language code in which target document is written, e.g. “en”. Can be repeated to describe multi-lingual documents. </br><a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/indicator/document-link/language/'>For more information</a>",
-            "help_tex": "Select the language that the document is written in.",
             "attributes": {
               "language": {
                 "name": "language",
@@ -3567,8 +3565,6 @@
                 "label": "language",
                 "add_more": true,
                 "wrapper_collection": false,
-                "hover_text": "The ISO 639-1 language code in which target document is written, e.g. “en”. Can be repeated to describe multi-lingual documents. </br><a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/indicator/baseline/document-link/language/'>For more information</a>",
-                "help_text": "Select the language that the document is written in.",
                 "attributes": {
                   "language": {
                     "name": "language",
@@ -3634,6 +3630,7 @@
     "add_more": false,
     "hover_text": "The period covered for the results reported. Multiple periods can be reported for a single indicator. </br><a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/indicator/period/'>For more information</a>",
     "help_text": "Each indicator can have a given time period with a start and an end date. This is the time period in which the indicator is being measured, e.g. agricultural season or school term.",
+    "show_info_in_title": true,
     "attributes": {},
     "sub_elements": {
       "period_start": {
@@ -3737,7 +3734,6 @@
             "label": "dimension",
             "add_more": true,
             "wrapper_collection": false,
-            "hover_text": "A category used for disaggregating the result by gender, age, etc. </br><a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/indicator/period/target/dimension/'>For more information</a>",
             "attributes": {
               "name": {
                 "name": "name",
@@ -3934,7 +3930,6 @@
             "label": "location",
             "add_more": "true",
             "wrapper_collection": false,
-            "hover_text": "A location already defined and described in the iati-activity/location element. </br><a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/indicator/period/target/location/'>For more information</a>",
             "attributes": {
               "reference": {
                 "name": "reference",
@@ -4210,7 +4205,6 @@
             "label": "location",
             "add_more": "true",
             "wrapper_collection": false,
-            "hover_text": "A location already defined and described in the iati-activity/location element. </br><a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/indicator/period/actual/location/'>For more information</a>",
             "attributes": {
               "reference": {
                 "name": "reference",

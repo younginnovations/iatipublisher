@@ -61,6 +61,16 @@ class ActivityBaseRequest extends FormRequest
         );
 
         Validator::extendImplicit(
+            'required_with_language',
+            function ($attribute, $value, $parameters, $validator) {
+                $language = preg_replace('/([^~]+).narrative/', '$1.language', $attribute);
+                $request = FormRequest::all();
+
+                return !(Arr::get($request,$language) && !Arr::get($request,$attribute));
+            }
+        );
+
+        Validator::extendImplicit(
             'sum',
             function ($attribute, $value, $parameters, $validator) {
                 return false;
@@ -274,6 +284,18 @@ class ActivityBaseRequest extends FormRequest
         $rules[sprintf('%s.narrative', $formBase)][] = 'unique_lang';
         $rules[sprintf('%s.narrative', $formBase)][] = 'unique_default_lang';
 
+        foreach ($formFields as $narrativeIndex => $narrative) {
+            if (boolval($narrative['language'])) {
+                $rules[sprintf('%s.narrative.%s.narrative', $formBase, $narrativeIndex)] = 'required_with:' . sprintf(
+                        '%s.narrative.%s.language',
+                        $formBase,
+                        $narrativeIndex
+                    );
+            } else {
+                $rules[sprintf('%s.narrative.%s.narrative', $formBase, $narrativeIndex)] = 'required';
+            }
+        }
+
         return $rules;
     }
 
@@ -307,6 +329,10 @@ class ActivityBaseRequest extends FormRequest
         $rules[sprintf('%s.narrative', $formBase)][] = 'unique_lang';
         $rules[sprintf('%s.narrative', $formBase)][] = 'unique_default_lang';
 
+        foreach ($formFields as $narrativeIndex => $narrative) {
+            $rules[sprintf('%s.narrative.%s.narrative', $formBase, $narrativeIndex)][] = 'required_with_language';
+        }
+
         return $rules;
     }
 
@@ -326,7 +352,7 @@ class ActivityBaseRequest extends FormRequest
 
         foreach ($formFields as $narrativeIndex => $narrative) {
             $messages[sprintf(
-                '%s.narrative.%s.narrative.required_with',
+                '%s.narrative.%s.narrative.required_with_language',
                 $formBase,
                 $narrativeIndex
             )] = 'The narrative field is required with @xml:lang field.';

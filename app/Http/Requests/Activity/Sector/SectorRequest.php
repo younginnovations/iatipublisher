@@ -104,7 +104,7 @@ class SectorRequest extends ActivityBaseRequest
             $messages[sprintf('%s.vocabulary_uri.url', $sectorForm)] = 'The @vocabulary-uri field must be a valid url.';
             $messages[sprintf('%s.percentage.numeric', $sectorForm)] = 'The @percentage field must be a number.';
             $messages[sprintf('%s.percentage.max', $sectorForm)] = 'The @percentage field cannot be greater than 100.';
-            $messages[sprintf('%s.percentage.sum', $sectorForm)] = 'The sum of @percentage within a vocabulary must add upto 100.';
+            $messages[sprintf('%s.percentage.sum', $sectorForm)] = 'The sum of @percentage within a vocabulary must add up to 100.';
             $messages[sprintf('%s.percentage.in', $sectorForm)] = 'The @percentage for single sector must be either omitted or be 100.';
             $messages = array_merge($this->getMessagesForNarrative($sector['narrative'], $sectorForm), $messages);
         }

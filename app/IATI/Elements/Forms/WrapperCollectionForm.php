@@ -63,7 +63,7 @@ class WrapperCollectionForm extends Form
                                         $data,
                                         'attributes',
                                         null
-                                    ) ? 'border-l border-spring-50 pb-11' : 'subelement rounded-tl-lg border-l border-spring-50 pb-11')
+                                    )  && $data['name'] !== 'mailing_address' ? 'border-l border-spring-50 pb-11' : 'subelement rounded-tl-lg border-l border-spring-50 pb-11')
                                     : 'subelement rounded-tl-lg border-l border-spring-50 mb-6',
                             ],
                         ],

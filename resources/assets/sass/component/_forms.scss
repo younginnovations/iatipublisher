@@ -115,6 +115,12 @@ form {
       content: '';
       @apply absolute left-0 top-2/4 h-px w-3.5 -translate-y-1/2 border-b border-spring-50;
     }
+
+    i {
+      width: 18px;
+      height: 18px;
+      background: url('/images/add-more-green.svg') no-repeat center;
+    }
   }
   .subelement {
     &.border-l > label {

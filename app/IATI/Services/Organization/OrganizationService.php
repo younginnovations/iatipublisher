@@ -169,8 +169,8 @@ class OrganizationService
             'documentCategory' => getCodeList('DocumentCategory', 'Activity', false),
             'organizationType' => getCodeList('OrganizationType', 'Organization', false),
             'country'          => getCodeList('Country', 'Organization', false),
-            'regionVocabulary' => getCodeList('RegionVocabulary', 'Activity'),
-            'region'           => getCodeList('Region', 'Activity'),
+            'regionVocabulary' => getCodeList('RegionVocabulary', 'Activity', false),
+            'region'           => getCodeList('Region', 'Activity', false),
         ];
     }
 

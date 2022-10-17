@@ -160,6 +160,8 @@ class ActivityController extends Controller
             $hasIndicatorPeriod = $this->resultService->checkResultIndicatorPeriod($results);
             $transactions = $this->transactionService->getActivityTransactions($activity->id);
             $status = $activity->element_status;
+            $status['transactions'] = $transactions->count()===0?false:$status['transactions'];
+            $status['result'] = $results->count()===0?false:$status['result'];
             $progress = $this->activityService->activityPublishingProgress($activity);
             $coreCompleted = isCoreElementCompleted(array_merge(['reporting_org' => $activity->organization->reporting_org_element_completed], $activity->element_status));
             $validatorResponse = $this->activityValidatorResponseService->getValidatorResponse($id);
@@ -178,7 +180,7 @@ class ActivityController extends Controller
         } catch (Exception $e) {
             logger()->error($e->getMessage());
 
-            return response()->json(['success' => false, 'error' => 'Error has occurred rendering activity detail page']);
+            return redirect()->route('admin.activities.index')->with('error', 'Error has occurred while opening activity detail page.');
         }
     }
 

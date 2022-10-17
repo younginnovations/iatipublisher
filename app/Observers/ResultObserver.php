@@ -69,9 +69,9 @@ class ResultObserver
      */
     public function updated(Result $result): void
     {
+        $this->setResultDefaultValues($result);
         $this->updateActivityElementStatus($result);
         $this->resetActivityStatus($result);
-        $this->setResultDefaultValues($result);
     }
 
     /**

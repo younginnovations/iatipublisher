@@ -11,13 +11,13 @@
         {{
           recipient_country_budget.status
             ? types?.budgetType[recipient_country_budget.status]
-            : 'Status Not Available'
+            : "Status Not Available"
         }}
       </div>
       <div class="flex text-sm">
         <span v-if="recipient_country_budget.value[0].amount">
-          {{ recipient_country_budget.value['0'].amount }}
-          {{ recipient_country_budget.value['0'].currency }}
+          {{ Number(recipient_country_budget.value["0"].amount).toLocaleString() }}
+          {{ recipient_country_budget.value["0"].currency }}
         </span>
         <span v-else> Budget Amount Not Available</span>
       </div>
@@ -27,18 +27,16 @@
             <tr>
               <td>Value date</td>
               <td>
-                {{ formatDate(recipient_country_budget.value['0'].value_date) }}
+                {{ formatDate(recipient_country_budget.value["0"].value_date) }}
               </td>
             </tr>
             <tr>
               <td>Code</td>
               <td>
                 {{
-                  recipient_country_budget.recipient_country['0'].code
-                    ? types.country[
-                        recipient_country_budget.recipient_country['0'].code
-                      ]
-                    : 'Code Not Available'
+                  recipient_country_budget.recipient_country["0"].code
+                    ? types.country[recipient_country_budget.recipient_country["0"].code]
+                    : "Code Not Available"
                 }}
               </td>
             </tr>
@@ -46,15 +44,14 @@
               <td>Narrative</td>
               <td>
                 <div
-                  v-for="(narrative, i) in recipient_country_budget
-                    .recipient_country['0'].narrative"
+                  v-for="(narrative, i) in recipient_country_budget.recipient_country['0']
+                    .narrative"
                   :key="i"
                   class="item"
                   :class="{
                     'mb-4':
                       i !=
-                      recipient_country_budget.recipient_country['0'].narrative
-                        .length -
+                      recipient_country_budget.recipient_country['0'].narrative.length -
                         1,
                   }"
                 >
@@ -64,12 +61,12 @@
                       {{
                         narrative.language
                           ? `Language: ${types?.languages[narrative.language]}`
-                          : 'Language : Not Available'
+                          : "Language : Not Available"
                       }}
                       )
                     </div>
                     <div class="w-[500px] max-w-full">
-                      {{ narrative.narrative ?? 'Narrative Not Available' }}
+                      {{ narrative.narrative ?? "Narrative Not Available" }}
                     </div>
                   </div>
                 </div>
@@ -78,11 +75,9 @@
             <tr>
               <td>Period</td>
               <td>
-                {{
-                  formatDate(recipient_country_budget.period_start['0'].date)
-                }}
+                {{ formatDate(recipient_country_budget.period_start["0"].date) }}
                 -
-                {{ formatDate(recipient_country_budget.period_end['0'].date) }}
+                {{ formatDate(recipient_country_budget.period_end["0"].date) }}
               </td>
             </tr>
           </tbody>
@@ -107,12 +102,10 @@
           <div class="elements-detail grow">
             <div class="category flex">
               <span v-if="budget_line.value['0'].amount">
-                {{ budget_line.value['0'].amount }}
-                {{ budget_line.value['0'].currency }}
+                {{ Number(budget_line.value["0"].amount).toLocaleString() }}
+                {{ budget_line.value["0"].currency }}
               </span>
-              <span v-else>
-                Budget Amount Not Available
-              </span>
+              <span v-else> Budget Amount Not Available </span>
             </div>
             <div class="ml-4">
               <table>
@@ -120,13 +113,13 @@
                   <tr>
                     <td class="pr-20 text-n-40">Reference</td>
                     <td>
-                      {{ budget_line.ref ?? 'Reference Not Available' }}
+                      {{ budget_line.ref ?? "Reference Not Available" }}
                     </td>
                   </tr>
                   <tr>
                     <td>Value date</td>
                     <td>
-                      {{ formatDate(budget_line.value['0'].value_date) }}
+                      {{ formatDate(budget_line.value["0"].value_date) }}
                     </td>
                   </tr>
                   <tr>
@@ -143,14 +136,12 @@
                         <div class="language mb-1.5">
                           ({{
                             narrative.language
-                              ? `Language: ${
-                                  types?.languages[narrative.language]
-                                }`
-                              : 'Language : Not Available'
+                              ? `Language: ${types?.languages[narrative.language]}`
+                              : "Language : Not Available"
                           }})
                         </div>
                         <div class="w-[500px] max-w-full">
-                          {{ narrative.narrative ?? 'Narrative Not Available' }}
+                          {{ narrative.narrative ?? "Narrative Not Available" }}
                         </div>
                       </div>
                     </td>
@@ -166,8 +157,8 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, inject } from 'vue';
-import moment from 'moment';
+import { defineProps, inject } from "vue";
+import moment from "moment";
 
 defineProps({
   content: { type: Object, required: true },
@@ -180,9 +171,9 @@ interface TypesInterface {
   country: [];
 }
 
-const types = inject('orgTypes') as TypesInterface;
+const types = inject("orgTypes") as TypesInterface;
 
 function formatDate(date: Date) {
-  return date ? moment(date).format('LL') : 'Date Not Available';
+  return date ? moment(date).format("LL") : "Date Not Available";
 }
 </script>
