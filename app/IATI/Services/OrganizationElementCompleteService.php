@@ -21,12 +21,12 @@ class OrganizationElementCompleteService
     /**
      * @var string
      */
-    public string $tempNarrative = '';
+    public $tempNarrative = '';
 
     /**
      * @var string
      */
-    public string $tempAmount = '';
+    public $tempAmount = '';
 
     /**
      * Returns mandatory fields.

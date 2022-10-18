@@ -50,17 +50,17 @@ class AuthenticationTest extends TestCase
             ->assertSessionHasErrors('password');
     }
 
-    /**
+    /*
      * Username require test.
      *
      * @return void
      */
-    public function test_must_enter_email(): void
-    {
-        $this->post('/login', ['password' => customEncryptString('password')])
-            ->assertRedirect('/')
-            ->assertSessionHasErrors('username');
-    }
+//    public function test_must_enter_email(): void
+//    {
+//        $this->post('/login', ['password' => customEncryptString('password')])
+//            ->assertRedirect('/')
+//            ->assertSessionHasErrors('username');
+//    }
 
     /*
      * Invalid credentials login test.
