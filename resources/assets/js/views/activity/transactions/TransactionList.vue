@@ -5,15 +5,17 @@
       title="Transaction List"
       :back-link="activityLink"
     >
-      <Toast
-        v-if="toastData.visibility"
-        :message="toastData.message"
-        :type="toastData.type"
-        class="mr-3"
-      />
-      <a :href="`${activityLink}/transaction/create`">
-        <Btn text="Add Transaction" icon="plus" type="primary" />
-      </a>
+      <div class="flex space-x-3 items-center">
+        <Toast
+          v-if="toastData.visibility"
+          :message="toastData.message"
+          :type="toastData.type"
+          class="mr-3"
+        />
+        <a :href="`${activityLink}/transaction/create`">
+          <Btn text="Add Transaction" icon="plus" type="primary" />
+        </a>
+      </div>
     </PageTitle>
 
     <!-- page content -->
