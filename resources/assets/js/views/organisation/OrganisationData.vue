@@ -54,7 +54,7 @@
             </div>
           </div>
         </div>
-        <div class="actions flex grow items-end justify-end gap-3">
+        <div class="actions flex grow md:shrink-0 items-end justify-end gap-3">
             <Toast
               v-if="toastData.visibility"
               :message="toastData.message"
