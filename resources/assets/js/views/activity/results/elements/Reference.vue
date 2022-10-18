@@ -15,7 +15,7 @@
           </tr>
           <tr>
             <td>Vocabulary URI</td>
-            <td>{{ ref.vocabulary_uri }}</td>
+            <td><a target="_blank" :href="ref.vocabulary_uri">{{ ref.vocabulary_uri }}</a></td>
           </tr>
         </tbody>
       </table>

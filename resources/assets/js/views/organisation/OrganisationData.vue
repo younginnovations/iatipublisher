@@ -59,6 +59,7 @@
               v-if="toastData.visibility"
               :message="toastData.message"
               :type="toastData.type"
+              class="mr-4"
             />
           <div class="inline-flex justify-end">
             <!-- Download File -->
