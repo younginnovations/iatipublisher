@@ -149,67 +149,70 @@ class RegisterTest extends TestCase
      * Username `unique` test.
      *
      * @return void
+     * @throws \Exception
      */
-//    public function test_username_must_be_unique(): void
-//    {
-//        $role = Role::factory()->create();
-//        $org = Organization::factory()->has(User::factory(['role_id' => $role->id]))->create();
-//
-//        $this->post('/register', [
-//            'username'              => $org->user->username,
-//            'full_name'             => Str::random(5),
-//            'email'                 => 'test+1@gmail.com',
-//            'password'              => customEncryptString('password'),
-//            'password_confirmation' => customEncryptString('password'),
-//            'publisher_id'          => Str::random(5),
-//        ])
-//             ->assertStatus(200)
-//             ->assertJsonValidationErrors(['username']);
-//    }
+    public function test_username_must_be_unique(): void
+    {
+        $role = Role::factory()->create();
+        $org = Organization::factory()->has(User::factory(['role_id' => $role->id]))->create();
+
+        $this->post('/register', [
+            'username'              => $org->user->username,
+            'full_name'             => Str::random(5),
+            'email'                 => 'test+1@gmail.com',
+            'password'              => encryptString('password'),
+            'password_confirmation' => encryptString('password'),
+            'publisher_id'          => Str::random(5),
+        ])
+             ->assertStatus(200)
+             ->assertJsonValidationErrors(['username']);
+    }
 
     /**
      * Email unique test.
      *
      * @return void
+     * @throws \Exception
      */
-//    public function test_email_must_be_unique(): void
-//    {
-//        $role = Role::factory()->create();
-//        $org = Organization::factory()->has(User::factory(['role_id' => $role->id]))->create();
-//
-//        $this->post('/register', [
-//            'username'              => Str::random(5),
-//            'full_name'             => Str::random(5),
-//            'email'                 => $org->user->email,
-//            'password'              => customEncryptString('password'),
-//            'password_confirmation' => customEncryptString('password'),
-//            'publisher_id'          => Str::random(5),
-//        ])
-//             ->assertStatus(200)
-//             ->assertJsonValidationErrors(['email']);
-//    }
+    public function test_email_must_be_unique(): void
+    {
+        $role = Role::factory()->create();
+        $org = Organization::factory()->has(User::factory(['role_id' => $role->id]))->create();
+
+        $this->post('/register', [
+            'username'              => Str::random(5),
+            'full_name'             => Str::random(5),
+            'email'                 => $org->user->email,
+            'password'              => encryptString('password'),
+            'password_confirmation' => encryptString('password'),
+            'publisher_id'          => Str::random(5),
+        ])
+             ->assertStatus(200)
+             ->assertJsonValidationErrors(['email']);
+    }
 
     /**
      * Password confirm test.
      *
      * @return void
+     * @throws \Exception
      */
-//    public function test_password_confirm_must_be_same(): void
-//    {
-//        $role = Role::factory()->create();
-//        Organization::factory()->has(User::factory(['role_id' => $role->id]))->create();
-//
-//        $this->post('/register', [
-//            'username'              => Str::random(5),
-//            'full_name'             => Str::random(5),
-//            'email'                 => 'test+1@gmail.com',
-//            'password'              => customEncryptString('password'),
-//            'password_confirmation' => customEncryptString('password1'),
-//            'publisher_id'          => Str::random(5),
-//        ])
-//             ->assertStatus(200)
-//             ->assertJsonValidationErrors(['password']);
-//    }
+    public function test_password_confirm_must_be_same(): void
+    {
+        $role = Role::factory()->create();
+        Organization::factory()->has(User::factory(['role_id' => $role->id]))->create();
+
+        $this->post('/register', [
+            'username'              => Str::random(5),
+            'full_name'             => Str::random(5),
+            'email'                 => 'test+1@gmail.com',
+            'password'              => encryptString('password'),
+            'password_confirmation' => encryptString('password1'),
+            'publisher_id'          => Str::random(5),
+        ])
+             ->assertStatus(200)
+             ->assertJsonValidationErrors(['password']);
+    }
 
     /**
      * Register success test.
