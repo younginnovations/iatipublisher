@@ -66,6 +66,10 @@ class Title extends Element
                     $this->map($value);
                 }
             }
+
+            if ($key === $this->index && empty($this->data)) {
+                $this->data[end($this->_csvHeader)][] = ['narrative' => null, 'language' => null];
+            }
         }
     }
 
@@ -80,8 +84,6 @@ class Title extends Element
     {
         if (!(is_null($value) || $value === '')) {
             $this->data[end($this->_csvHeader)][] = $this->setNarrative($value);
-        } else {
-            $this->data[end($this->_csvHeader)][] = ['narrative' => null, 'language' => null];
         }
     }
 

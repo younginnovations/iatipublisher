@@ -242,6 +242,7 @@ return [
     'within_a_year' => "The :attribute must be within a year after :date.",
     'required_if_any' => "The :field is required if any of the fields of :element are filled.",
     'amount' => 'Please enter amount in the format xx.xx',
-    'greater' => 'The :attribute must be greater than or equal to :value'
+    'greater' => 'The :attribute must be greater than or equal to :value',
+    'date_greater_than' => 'The date must be greater than :value',
 
 ];

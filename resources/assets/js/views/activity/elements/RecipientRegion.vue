@@ -14,7 +14,7 @@
     <div class="ml-5">
       <table>
         <tbody>
-          <tr v-if="post.region_vocabulary === '1'">
+          <tr v-if="post.region_vocabulary == '1'">
             <td>Region Code</td>
             <td>
               <span v-if="post.region_code">{{
@@ -39,7 +39,7 @@
               <span v-else>Not Available</span>
             </td>
           </tr>
-          <tr v-if="post.region_vocabulary === '99'">
+          <tr v-if="post.region_vocabulary == '99'">
             <td>Vocabulary-uri</td>
             <td>
               <a

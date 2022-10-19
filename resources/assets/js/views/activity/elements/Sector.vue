@@ -13,21 +13,21 @@
     </div>
     <div class="flex mb-1 space-x-1 text-sm">
       <div>
-        <div v-if="post.sector_vocabulary === '1'">
+        <div v-if="post.sector_vocabulary == 1">
           <span v-if="post.code">{{ types.sectorCode[post.code] }}</span>
           <span v-else class="italic">Not Available</span>
         </div>
-        <div v-else-if="post.sector_vocabulary === '2'">
+        <div v-else-if="post.sector_vocabulary == 2">
           <span v-if="post.category_code">{{
             types.sectorCategory[post.category_code]
           }}</span>
           <span v-else class="italic">Not Available</span>
         </div>
-        <div v-else-if="post.sector_vocabulary === '7'">
+        <div v-else-if="post.sector_vocabulary == 7">
           <span v-if="post.sdg_goal">{{ types.sdgGoals[post.sdg_goal] }}</span>
           <span v-else class="italic">Not Available</span>
         </div>
-        <div v-else-if="post.sector_vocabulary === '8'">
+        <div v-else-if="post.sector_vocabulary == 8">
           <span v-if="post.sdg_target">{{
             types.sdgTarget[post.sdg_target]
           }}</span>

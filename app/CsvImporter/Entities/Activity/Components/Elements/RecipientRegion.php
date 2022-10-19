@@ -17,7 +17,7 @@ class RecipientRegion extends Element
     /**
      * CSV Header of Description with their code.
      */
-    private array $_csvHeaders = ['recipient_region_code', 'recipient_region_percentage'];
+    private array $_csvHeaders = ['recipient_region_code', 'recipient_region_percentage', 'recipient_region_vocabulary_uri'];
 
     /**
      * Index under which the data is stored within the object.
@@ -104,7 +104,7 @@ class RecipientRegion extends Element
         if (!(is_null($value) || $value === '')) {
             $this->setRegion($key, $value, $index);
             $this->setRegionVocabulary($index);
-            $this->setVocabularyUri($index);
+            $this->setVocabularyUri($key, $value, $index);
             $this->setPercentage($key, $value, $index);
             $this->setNarrative($index);
         }
@@ -140,8 +140,13 @@ class RecipientRegion extends Element
                 }
             }
 
-            $this->data['recipient_region'][$index]['region_code'] = $value;
-            $this->data['recipient_region'][$index]['custom_code'] = $value;
+            $validRegions = array_flip(explode(',', $this->validRecipientRegion()));
+
+            if (isset($validRegions[$value])) {
+                $this->data['recipient_region'][$index]['region_code'] = $value;
+            } else {
+                $this->data['recipient_region'][$index]['custom_code'] = $value;
+            }
         }
     }
 
@@ -184,13 +189,18 @@ class RecipientRegion extends Element
     /**
      * Set VocabularyUri of RecipientRegion.
      *
+     * @param $key
+     * @param $value
      * @param $index
-     *
      * @return void
      */
-    protected function setVocabularyUri($index): void
+    protected function setVocabularyUri($key, $value, $index): void
     {
-        $this->data['recipient_region'][$index]['vocabulary_uri'] = '';
+        if ($key === $this->_csvHeaders[2]) {
+            $value = (!$value) ? '' : $value;
+            $this->data['recipient_region'][$index]['vocabulary_uri'] = $value;
+            $this->data['recipient_region'][$index]['region_vocabulary'] = 99;
+        }
     }
 
     /**
@@ -209,6 +219,10 @@ class RecipientRegion extends Element
 
         if (isset($validRegions[$regionCode])) {
             $this->data['recipient_region'][$index]['region_vocabulary'] = 1;
+        } elseif (isset($this->data['recipient_region'][$index]['vocabulary_uri']) && !empty($this->data['recipient_region'][$index]['vocabulary_uri'])) {
+            $this->data['recipient_region'][$index]['region_vocabulary'] = 99;
+        } else {
+            $this->data['recipient_region'][$index]['region_vocabulary'] = 2;
         }
     }
 
@@ -258,7 +272,14 @@ class RecipientRegion extends Element
         ? $rules['recipient_region_total_percentage'] = 'percentage_sum' : null;
 
         foreach (Arr::get($this->data(), 'recipient_region', []) as $key => $value) {
-            $rules['recipient_region.' . $key . '.region_code'] = sprintf('nullable|required_with:recipient_region.%s.percentage|in:%s', $key, $codes);
+            if (Arr::get($value, 'region_vocabulary', 1) === 1) {
+                $rules['recipient_region.' . $key . '.region_code'] = sprintf('nullable|required_with:recipient_region.%s.percentage|in:%s', $key, $codes);
+            } elseif (Arr::get($value, 'region_vocabulary', 1) === 2) {
+                $rules['recipient_region.' . $key . '.custom_code'] = sprintf('nullable|required_with:recipient_region.%s.percentage', $key);
+            } else {
+                $rules['recipient_region.' . $key . '.custom_code'] = sprintf('nullable|required_with:recipient_region.%s.percentage, recipient_region.%s.vocabulary_uri', $key, $key);
+                $rules['recipient_region.' . $key . '.vocabulary_uri'] = sprintf('url|required_with:recipient_region.%s.custom_code, recipient_region.%s.percentage', $key, $key);
+            }
             $rules['recipient_region.' . $key . '.percentage'] = 'nullable|numeric|max:100|min:0';
         }
 
@@ -290,6 +311,9 @@ class RecipientRegion extends Element
             $messages['recipient_region.' . $key . '.percentage.numeric'] = trans('validation.numeric', ['attribute' => trans('elementForm.percentage')]);
             $messages['recipient_region.' . $key . '.percentage.max'] = trans('validation.max.numeric', ['attribute' => trans('elementForm.percentage'), 'max' => 100]);
             $messages['recipient_region.' . $key . '.percentage.min'] = trans('validation.min.numeric', ['attribute' => trans('elementForm.percentage'), 'min' => 0]);
+            $messages['recipient_region.' . $key . '.custom_code.required_with'] = trans('validation.required_with', ['attribute' => 'percentage or vocabulary uri']);
+            $messages['recipient_region.' . $key . '.vocabulary_uri.required_with'] = trans('validation.required_with', ['attribute' => 'percentage or code']);
+            $messages['recipient_region.' . $key . '.vocabulary_uri.url'] = trans('validation.url', ['attribute' => trans('elementForm.recipient_region_vocabulary_uri')]);
         }
 
         return $messages;
