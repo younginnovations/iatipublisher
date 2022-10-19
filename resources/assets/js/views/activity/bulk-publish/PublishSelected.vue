@@ -267,6 +267,7 @@ const verifyCoreElements = () => {
         coreInCompletedActivities.value = response.data.incomplete;
         bulkPublishStep.value = 2;
       } else {
+        loader.value = false;
         resetPublishStep();
         displayToast(response.message, response.success);
       }
