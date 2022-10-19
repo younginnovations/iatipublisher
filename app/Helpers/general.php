@@ -428,7 +428,7 @@ if (!function_exists('customEncryptString')) {
 
 if (!function_exists('encryptString')) {
     /**
-     * Decrypt encrypted base64 string.
+     * Encrypts string.
      *
      * @param string $string
      *
@@ -467,6 +467,8 @@ if (!function_exists('decryptString')) {
             $salt = hex2bin($json['salt']);
             $iv = hex2bin($json['iv']);
         } catch (Exception $e) {
+            logger()->error($e->getMessage());
+
             return null;
         }
 
