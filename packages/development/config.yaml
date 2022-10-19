@@ -32,7 +32,7 @@ data:
   SESSION_LIFETIME: "120"
   SESSION_SECURE_COOKIE: "true"
 
-  REDIS_CLIENT: "predis"
+  REDIS_CLIENT: "phpredis"
   REDIS_HOST: "tls://private-yi-redis-prod-do-user-4025190-0.b.db.ondigitalocean.com"
   REDIS_USERNAME: "default"
   REDIS_PORT: "25061"
