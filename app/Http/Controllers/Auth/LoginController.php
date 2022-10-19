@@ -13,6 +13,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Class LoginController.
@@ -79,9 +80,9 @@ class LoginController extends Controller
      *
      * @param Request $request
      *
-     * @return RedirectResponse|\Illuminate\Http\JsonResponse
+     * @return RedirectResponse|JsonResponse
      */
-    public function logout(Request $request)
+    public function logout(Request $request): JsonResponse|RedirectResponse
     {
         $this->guard()->logout();
 
@@ -105,12 +106,12 @@ class LoginController extends Controller
      *
      * @param Request $request
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      *
      * @throws ValidationException
      * @throws \JsonException
      */
-    public function login(Request $request): \Symfony\Component\HttpFoundation\Response
+    public function login(Request $request): Response
     {
         if (isset($request['password'])) {
             $request['password'] = decryptString($request['password'], env('MIX_ENCRYPTION_KEY'));

@@ -415,7 +415,13 @@ class ImportCsvService
     public function storeCsv(UploadedFile $file): ?bool
     {
         try {
-            $file->move($this->getStoredCsvPath(), str_replace(' ', '', $file->getClientOriginalName()));
+            $filePath = $this->getStoredCsvPath();
+
+            if (!file_exists($filePath) && !mkdir($filePath, 0777, true) && !is_dir($filePath)) {
+                throw new \RuntimeException(sprintf('Directory "%s" was not created', $filePath));
+            }
+
+            $file->move($filePath, str_replace(' ', '', $file->getClientOriginalName()));
 
             return true;
         } catch (Exception $exception) {
