@@ -106,7 +106,7 @@
               />
             </div>
             <ProgressBar :percent="progress" class="mb-3" />
-            <span>Fill core elements to get 100% score</span>
+            <span>Fill all elements to get 100% score</span>
           </div>
           <div class="activities__card elements">
             <div class="flex items-center justify-between mb-7">
