@@ -6,7 +6,6 @@ namespace App\IATI\Services\ImportActivity;
 
 use App\CsvImporter\Events\ActivityCsvWasUploaded;
 use App\CsvImporter\Queue\Processor;
-use App\IATI\Models\Activity\Activity;
 use App\IATI\Repositories\Activity\ActivityRepository;
 use App\IATI\Repositories\Activity\TransactionRepository;
 use App\IATI\Repositories\Organization\OrganizationRepository;
@@ -415,13 +414,7 @@ class ImportCsvService
     public function storeCsv(UploadedFile $file): ?bool
     {
         try {
-            $filePath = $this->getStoredCsvPath();
-
-            if (!file_exists($filePath) && !mkdir($filePath, 0755, true) && !is_dir($filePath)) {
-                throw new \RuntimeException(sprintf('Directory "%s" was not created', $filePath));
-            }
-
-            $file->move($filePath, str_replace(' ', '', $file->getClientOriginalName()));
+            $file->move($this->getStoredCsvPath(), str_replace(' ', '', $file->getClientOriginalName()));
 
             return true;
         } catch (Exception $exception) {
@@ -440,14 +433,14 @@ class ImportCsvService
     /**
      * Get the temporary Csv filepath for the uploaded Csv file.
      *
-     * @param $filenamee
+     * @param $filename
      *
      * @return string
      */
-    public function getStoredCsvPath($filenamee = null): string
+    public function getStoredCsvPath($filename = null): string
     {
-        if ($filenamee) {
-            return sprintf('%s/%s', storage_path(sprintf('%s/%s', $this->csv_file_storage_path, Session::get('org_id'))), $filenamee);
+        if ($filename) {
+            return sprintf('%s/%s', storage_path(sprintf('%s/%s', $this->csv_file_storage_path, Session::get('org_id'))), $filename);
         }
 
         return storage_path(sprintf('%s/%s/', $this->csv_file_storage_path, Session::get('org_id')));

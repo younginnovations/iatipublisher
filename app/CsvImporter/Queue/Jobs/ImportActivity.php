@@ -74,7 +74,7 @@ class ImportActivity extends Job implements ShouldQueue
      */
     public function handle(): void
     {
-        $directoryPath = storage_path(sprintf('%s/%s', env('CSV_DATA_STORAGE_PATH ', 'app/CsvImporter/tmp/'), $this->organizationId));
+        $directoryPath = storage_path(sprintf('%s/%s', env('CSV_DATA_STORAGE_PATH ', 'app/CsvImporter/tmp'), $this->organizationId));
 
         if (!file_exists($directoryPath) && !mkdir($directoryPath, 0755, true) && !is_dir($directoryPath)) {
             throw new \RuntimeException(sprintf('Directory "%s" was not created', $directoryPath));
@@ -82,6 +82,7 @@ class ImportActivity extends Job implements ShouldQueue
 
         $path = sprintf('%s/%s', $directoryPath, 'status.json');
         $data_path = sprintf('%s/%s', $directoryPath, 'valid.json');
+
         try {
             if (file_exists($data_path)) {
                 unlink(sprintf('%s/%s', $directoryPath, 'valid.json'));
