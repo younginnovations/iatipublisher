@@ -417,7 +417,7 @@ class ImportCsvService
         try {
             $filePath = $this->getStoredCsvPath();
 
-            if (!file_exists($filePath) && !mkdir($filePath, 0777, true) && !is_dir($filePath)) {
+            if (!file_exists($filePath) && !mkdir($filePath, 0755, true) && !is_dir($filePath)) {
                 throw new \RuntimeException(sprintf('Directory "%s" was not created', $filePath));
             }
 
