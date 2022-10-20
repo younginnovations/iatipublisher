@@ -122,6 +122,8 @@ FROM cli as horizon
 
 WORKDIR /opt/apps/laravel-in-kubernetes
 
+USER  www-data
+
 RUN apk add --no-cache supervisor
 
 COPY docker/supervisord.conf /etc/supervisord.conf
