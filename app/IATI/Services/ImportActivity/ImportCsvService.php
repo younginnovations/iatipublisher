@@ -440,14 +440,14 @@ class ImportCsvService
     /**
      * Get the temporary Csv filepath for the uploaded Csv file.
      *
-     * @param $filename
+     * @param $filenamee
      *
      * @return string
      */
-    public function getStoredCsvPath($filename = null): string
+    public function getStoredCsvPath($filenamee = null): string
     {
-        if ($filename) {
-            return sprintf('%s/%s', storage_path(sprintf('%s/%s', $this->csv_file_storage_path, Session::get('org_id'))), $filename);
+        if ($filenamee) {
+            return sprintf('%s/%s', storage_path(sprintf('%s/%s', $this->csv_file_storage_path, Session::get('org_id'))), $filenamee);
         }
 
         return storage_path(sprintf('%s/%s/', $this->csv_file_storage_path, Session::get('org_id')));
