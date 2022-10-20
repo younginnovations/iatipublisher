@@ -20,7 +20,7 @@
   &.active {
     span:nth-child(1) {
       width: 40px;
-      transform: rotate(45deg);
+      transform: rotate(45deg)  translateZ(0);
     }
     span:nth-child(2) {
       transform: translateX(60px);
