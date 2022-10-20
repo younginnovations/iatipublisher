@@ -18,6 +18,8 @@ use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Storage;
+use League\Flysystem\FilesystemException;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
@@ -122,8 +124,19 @@ class ImportXmlService
         $this->resultRepository = $resultRepository;
         $this->indicatorRepository = $indicatorRepository;
         $this->periodRepository = $periodRepository;
-        $this->xml_file_storage_path = env('XML_FILE_STORAGE_PATH', 'app/XmlImporter/file');
-        $this->xml_data_storage_path = env('XML_DATA_STORAGE_PATH', 'app/XmlImporter/tmp');
+        $this->xml_file_storage_path = env('XML_FILE_STORAGE_PATH', 'XmlImporter/file');
+        $this->xml_data_storage_path = env('XML_DATA_STORAGE_PATH', 'XmlImporter/tmp');
+    }
+
+    /**
+     * @param $path
+     * @param $content
+     *
+     * @return void
+     */
+    public function uploadFile($path, $content): void
+    {
+        Storage::disk('s3')->put($path, $content);
     }
 
     /**
@@ -131,14 +144,12 @@ class ImportXmlService
      *
      * @param UploadedFile $file
      *
-     * @return bool|null
+     * @return bool
      */
-    public function store(UploadedFile $file): ?bool
+    public function store(UploadedFile $file): bool
     {
         try {
-            $file->move($this->getXmlFileStoragePath(), $file->getClientOriginalName());
-
-            return true;
+            return awsUploadFile(sprintf('%s/%s/%s', $this->xml_file_storage_path, Auth::user()->organization_id, $file->getClientOriginalName()), $file->getContent());
         } catch (Exception $exception) {
             $this->logger->error(
                 sprintf('Error uploading Xml file due to %s', $exception->getMessage()),
@@ -148,7 +159,7 @@ class ImportXmlService
                 ]
             );
 
-            return null;
+            return false;
         }
     }
 
@@ -174,12 +185,12 @@ class ImportXmlService
                 $this->transactionRepository->deleteTransaction($oldActivity->id);
                 $this->resultRepository->deleteResult($oldActivity->id);
                 $this->saveTransactions($activity->data->transactions, $oldActivity->id)
-                    ->saveResults($activity->data->result, $oldActivity->id);
+                     ->saveResults($activity->data->result, $oldActivity->id);
             } else {
                 $storeActivity = $this->activityRepository->importXmlActivities(null, (array) $activity->data);
 
                 $this->saveTransactions($activity->data->transactions, $storeActivity->id)
-                    ->saveResults($activity->data->result, $storeActivity->id);
+                     ->saveResults($activity->data->result, $storeActivity->id);
             }
         }
 
@@ -251,14 +262,6 @@ class ImportXmlService
     }
 
     /**
-     * @return string
-     */
-    public function getXmlFileStoragePath(): string
-    {
-        return storage_path(sprintf('%s/%s/', $this->xml_file_storage_path, Auth::user()->organization_id));
-    }
-
-    /**
      * Get the temporary storage path for the uploaded Xml file.
      *
      * @param $filename
@@ -273,20 +276,18 @@ class ImportXmlService
     /**
      * @param $filename
      * @param $userId
-     * @param $organizationId
+     * @param $orgId
      *
      * @return void
+     * @throws FilesystemException
      * @throws \JsonException
      */
-    public function startImport($filename, $userId, $organizationId): void
+    public function startImport($filename, $userId, $orgId): void
     {
-        if (file_exists($this->getXmlDataStoragePath('valid.json'))) {
-            unlink($this->getXmlDataStoragePath('valid.json'));
-        }
+        awsDeleteFile(sprintf('%s/%s/%s', $this->xml_data_storage_path, $orgId, 'valid.json'));
+        awsUploadFile(sprintf('%s/%s/%s', $this->xml_data_storage_path, $orgId, 'status.json'), json_encode(['xml_import_status' => 'started'], JSON_THROW_ON_ERROR));
 
-        $contents = json_encode(['xml_import_status' => 'started'], JSON_THROW_ON_ERROR);
-        $this->filesystem->put($this->getXmlDataStoragePath('status.json'), $contents);
-        $this->fireXmlUploadEvent($filename, $userId, $organizationId);
+        $this->fireXmlUploadEvent($filename, $userId, $orgId);
     }
 
     /**
@@ -313,10 +314,10 @@ class ImportXmlService
     public function loadJsonFile($filename): mixed
     {
         try {
-            $filePath = $this->getXmlDataStoragePath($filename);
+            $contents = awsGetFile(sprintf('%s/%s/%s', $this->xml_data_storage_path, Auth::user()->organization_id, $filename));
 
-            if (file_exists($filePath)) {
-                return json_decode(file_get_contents($filePath), false, 512, JSON_THROW_ON_ERROR);
+            if ($contents) {
+                return json_decode($contents, false, 512, JSON_THROW_ON_ERROR);
             }
 
             return false;

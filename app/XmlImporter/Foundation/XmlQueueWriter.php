@@ -102,7 +102,7 @@ class XmlQueueWriter
         $this->userId = $userId;
         $this->orgId = $orgId;
         $this->dbIatiIdentifiers = $dbIatiIdentifiers;
-        $this->xml_data_storage_path = env('XML_DATA_STORAGE_PATH ', 'app/XmlImporter/tmp');
+        $this->xml_data_storage_path = env('XML_DATA_STORAGE_PATH ', 'XmlImporter/tmp');
     }
 
     /**
@@ -126,7 +126,7 @@ class XmlQueueWriter
         $mappedActivity['org_id'] = $this->orgId;
         $this->success++;
 
-        $this->appendDataIntoFile($mappedActivity, Arr::flatten($errors), $existing, storage_path(sprintf('%s/%s/%s', $this->xml_data_storage_path, $this->orgId, 'valid.json')));
+        $this->appendDataIntoFile($mappedActivity, Arr::flatten($errors), $existing);
 
         return true;
     }
@@ -147,24 +147,26 @@ class XmlQueueWriter
      * @param $data
      * @param $errors
      * @param $existence
-     * @param $destinationFilePath
      *
      * @return void
      * @throws \JsonException
      */
-    protected function appendDataIntoFile($data, $errors, $existence, $destinationFilePath): void
+    protected function appendDataIntoFile($data, $errors, $existence): void
     {
         array_walk_recursive($errors, static function ($a) use (&$return) {
             $return[] = $a;
         });
 
-        if (file_exists($destinationFilePath)) {
-            $currentContents = json_decode(file_get_contents($destinationFilePath), true, 512, JSON_THROW_ON_ERROR);
-            $currentContents[] = ['data' => $data, 'errors' => $errors, 'status' => 'processed', 'existence' => $existence];
+        $validJsonFile = awsGetFile(sprintf('%s/%s/%s', $this->xml_data_storage_path, $this->orgId, 'valid.json'));
 
-            file_put_contents($destinationFilePath, json_encode($currentContents, JSON_THROW_ON_ERROR));
+        if ($validJsonFile) {
+            $currentContents = json_decode($validJsonFile, true, 512, JSON_THROW_ON_ERROR);
+            $currentContents[] = ['data' => $data, 'errors' => $errors, 'status' => 'processed', 'existence' => $existence];
+            $content = json_encode($currentContents, JSON_THROW_ON_ERROR);
         } else {
-            file_put_contents($destinationFilePath, json_encode([['data' => $data, 'errors' => $errors, 'status' => 'processed', 'existence' => $existence]], JSON_THROW_ON_ERROR));
+            $content = json_encode([['data' => $data, 'errors' => $errors, 'status' => 'processed', 'existence' => $existence]], JSON_THROW_ON_ERROR);
         }
+
+        awsUploadFile(sprintf('%s/%s/%s', $this->xml_data_storage_path, $this->orgId, 'valid.json'), $content);
     }
 }
