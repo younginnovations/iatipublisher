@@ -261,10 +261,17 @@ const verifyCoreElements = () => {
     .get(`/activities/core-elements-completed?activities=[${activities}]`)
     .then((res) => {
       const response = res.data;
-      coreCompletedActivities.value = response.data.complete;
-      coreInCompletedActivities.value = response.data.incomplete;
+      
+      if (response.success) {
+        coreCompletedActivities.value = response.data.complete;
+        coreInCompletedActivities.value = response.data.incomplete;
+        bulkPublishStep.value = 2;
+      } else {
+        loader.value = false;
+        resetPublishStep();
+        displayToast(response.message, response.success);
+      }
 
-      bulkPublishStep.value = 2;
       setTimeout(() => {
         loader.value = false;
       }, 2000);
