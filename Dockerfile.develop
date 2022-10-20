@@ -127,7 +127,6 @@ USER  www-data
 RUN apk add --no-cache supervisor
 
 COPY docker/supervisord.conf /etc/supervisord.conf
-
 USER  www-data
 
 ENTRYPOINT ["/usr/bin/supervisord", "-n", "-c",  "/etc/supervisord.conf"]
