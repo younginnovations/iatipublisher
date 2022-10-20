@@ -71,8 +71,8 @@ class ImportActivityController extends Controller
         $this->importCsvService = $importCsvService;
         $this->importXmlService = $importXmlService;
         $this->db = $db;
-        $this->csv_data_storage_path = env('CSV_DATA_STORAGE_PATH ', 'app/CsvImporter/tmp');
-        $this->xml_data_storage_path = env('XML_DATA_STORAGE_PATH ', 'app/XmlImporter/tmp');
+        $this->csv_data_storage_path = env('CSV_DATA_STORAGE_PATH', 'app/CsvImporter/tmp');
+        $this->xml_data_storage_path = env('XML_DATA_STORAGE_PATH', 'app/XmlImporter/tmp');
     }
 
     /**
@@ -129,8 +129,7 @@ class ImportActivityController extends Controller
 
                 if ($this->importCsvService->storeCsv($file)) {
                     $filename = str_replace(' ', '', $file->getClientOriginalName());
-                    $this->importCsvService->startImport($filename)
-                        ->fireCsvUploadEvent($filename);
+                    $this->importCsvService->startImport($filename)->fireCsvUploadEvent($filename);
 
                     if (!$this->importCsvService->isInUTF8Encoding($filename)) {
                         $response = ['success' => false, 'code' => ['encoding_error', ['message' => 'Something went wrong']]];
