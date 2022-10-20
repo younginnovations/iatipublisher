@@ -69,6 +69,7 @@ class XmlQueueProcessor
 
     /**
      * XmlQueueProcessor constructor.
+     *
      * @param XmlServiceProvider $xmlServiceProvider
      * @param XmlProcessor       $xmlProcessor
      * @param ActivityRepository $activityRepo
@@ -82,8 +83,8 @@ class XmlQueueProcessor
         $this->activityRepo = $activityRepo;
         $this->logger = $logger;
         $this->databaseManager = $databaseManager;
-        $this->xml_file_storage_path = env('XML_FILE_STORAGE_PATH ', 'app/XmlImporter/file');
-        $this->xml_data_storage_path = env('XML_DATA_STORAGE_PATH ', 'app/XmlImporter/tmp');
+        $this->xml_file_storage_path = env('XML_FILE_STORAGE_PATH ', 'XmlImporter/file');
+        $this->xml_data_storage_path = env('XML_DATA_STORAGE_PATH ', 'XmlImporter/tmp');
     }
 
     /**
@@ -106,12 +107,10 @@ class XmlQueueProcessor
             $this->userId = $userId;
             $this->filename = $filename;
             $dbIatiIdentifiers = $this->dbIatiIdentifiers($orgId);
-            $contents = file_get_contents($this->getXmlFile($filename));
-            $mismatch_file = storage_path(sprintf('%s/%s/%s', $this->xml_data_storage_path, $orgId, 'header_mismatch.json'));
-
-            if (file_exists($mismatch_file)) {
-                unlink($mismatch_file);
-            }
+            //$contents          = file_get_contents($this->getXmlFile($filename));
+            $contents = awsGetFile(sprintf('%s/%s/%s', $this->xml_file_storage_path, $this->orgId, $filename));
+            $mismatchFilePath = storage_path(sprintf('%s/%s/%s', $this->xml_data_storage_path, $orgId, 'header_mismatch.json'));
+            awsDeleteFile($mismatchFilePath);
 
             if ($this->xmlServiceProvider->isValidAgainstSchema($contents)) {
                 $xmlData = $this->xmlServiceProvider->load($contents);
@@ -123,27 +122,15 @@ class XmlQueueProcessor
                 return true;
             }
 
-            $path = storage_path(sprintf('%s/%s/%s', $this->xml_data_storage_path, $orgId, 'header_mismatch.json'));
-
             $this->databaseManager->rollback();
-            file_put_contents($path, json_encode(['header_mismatch' => true], JSON_THROW_ON_ERROR));
+            awsUploadFile($mismatchFilePath, json_encode(['header_mismatch' => true], JSON_THROW_ON_ERROR));
 
             return false;
         } catch (\Exception $exception) {
             $this->logger->error('Xml Import process failed for Organization: ' . $orgId . ', User:' . $userId, ['error' => $exception]);
-            // $this->storeInJsonFile('error.json', ['code' => 'processing_error', 'message' => $exception]);
+
             throw  $exception;
         }
-    }
-
-    /**
-     * @param $filename
-     *
-     * @return string
-     */
-    public function getXmlFile($filename): string
-    {
-        return sprintf('%s/%s', storage_path(sprintf('%s/%s', $this->xml_file_storage_path, $this->orgId)), $filename);
     }
 
     /**

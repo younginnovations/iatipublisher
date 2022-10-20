@@ -6,6 +6,8 @@ use App\IATI\Models\User\Role;
 use Illuminate\Encryption\Encrypter;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Storage;
+use League\Flysystem\FilesystemException;
 
 if (!function_exists('dashesToCamelCase')) {
     /**
@@ -838,4 +840,50 @@ function dateFormat($format, $date): bool|string
     }
 
     return '';
+}
+
+if (!function_exists('awsGetFile')) {
+    /**
+     * @param $filePath
+     *
+     * @return string|null
+     */
+    function awsGetFile($filePath): ?string
+    {
+        return Storage::disk('s3')->get($filePath);
+    }
+}
+
+if (!function_exists('awsUploadFile')) {
+    /**
+     * @param $path
+     * @param $content
+     *
+     * @return bool
+     */
+    function awsUploadFile($path, $content): bool
+    {
+        try {
+            return Storage::disk('s3')->put($path, $content);
+        } catch (\Exception $e) {
+            logger()->error($e->getMessage());
+
+            return false;
+        }
+    }
+}
+
+if (!function_exists('awsDeleteFile')) {
+    /**
+     * @param $filePath
+     *
+     * @return void
+     * @throws FilesystemException
+     */
+    function awsDeleteFile($filePath): void
+    {
+        if (Storage::disk('s3')->has($filePath)) {
+            Storage::disk('s3')->delete($filePath);
+        }
+    }
 }
