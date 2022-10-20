@@ -405,7 +405,7 @@ class ActivityRow extends Row
     {
         $path = sprintf('%s/%s/', storage_path($this->csv_data_storage_path), $this->organizationId);
 
-        if (!file_exists($path) && !mkdir($path, 0777, true) && !is_dir($path)) {
+        if (!file_exists($path) && !mkdir($path, 0755, true) && !is_dir($path)) {
             throw new \RuntimeException(sprintf('Directory "%s" was not created', $path));
         }
 
