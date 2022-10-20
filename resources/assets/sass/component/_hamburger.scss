@@ -1,10 +1,10 @@
 .hamburger {
-  @apply relative z-auto flex h-11 w-11 cursor-pointer items-center justify-center overflow-hidden rounded;
+  @apply relative z-auto flex h-11 w-11 cursor-pointer duration-300 items-center justify-center overflow-hidden rounded;
   z-index: 120;
 
   &.active {
     span {
-      @apply bg-white;
+      @apply bg-n-10;
     }
   }
 
@@ -20,7 +20,7 @@
   &.active {
     span:nth-child(1) {
       width: 40px;
-      transform: rotate(45deg);
+      transform: rotate(45deg)  translateZ(0);
     }
     span:nth-child(2) {
       transform: translateX(60px);
@@ -44,3 +44,15 @@
     display: block;
   }
 }
+
+.home-burger-menu.active {
+  @media screen and (min-width: 640px) {
+    translate: -350% -140%;
+  }
+  translate: -490% -90%;
+
+  @media screen and (max-width: 440px) {
+    translate: -380% -90%;
+  }
+}
+
