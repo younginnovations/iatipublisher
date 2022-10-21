@@ -167,10 +167,10 @@ class DocumentLinkRequest extends OrganizationBaseRequest
     public function getRulesForDocumentLanguage($formFields, $formIndex): array
     {
         $rules = [];
-        $rules[sprintf('%s.language', $formIndex)] = 'unique_category';
+        $rules[sprintf('%s.language', $formIndex)] = 'unique_language';
 
         foreach ($formFields as $documentCategoryIndex => $documentCategory) {
-            $rules[sprintf('%s.language.%s.code', $formIndex, $documentCategoryIndex)] = 'nullable';
+            $rules[sprintf('%s.language.%s.language', $formIndex, $documentCategoryIndex)] = 'nullable';
         }
 
         return $rules;
@@ -188,7 +188,7 @@ class DocumentLinkRequest extends OrganizationBaseRequest
     {
         $messages = [];
         $messages[sprintf(
-            '%s.language.unique_category',
+            '%s.language.unique_language',
             $formIndex
         )] = 'The language @code field must be unique.';
 

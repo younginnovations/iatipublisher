@@ -129,7 +129,7 @@ class OrganizationBaseRequest extends FormRequest
         foreach ($value as $category) {
             $code = $category['code'];
 
-            if (in_array($code, $categoryCodes)) {
+            if (in_array($code, $categoryCodes, true)) {
                 return false;
             }
 
