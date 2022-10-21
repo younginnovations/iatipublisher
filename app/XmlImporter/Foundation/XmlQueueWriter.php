@@ -115,7 +115,7 @@ class XmlQueueWriter
      */
     public function save($mappedActivity): bool
     {
-        file_put_contents('valid_test.json', sprintf('%s%s', 'Save fx called ', PHP_EOL), FILE_APPEND);
+        //file_put_contents('valid_test.json', sprintf('%s%s', 'Save fx called ', PHP_EOL), FILE_APPEND);
         $activity_identifier = Arr::get($mappedActivity, 'identifier.activity_identifier');
         $xmlValidator = app(XmlValidator::class);
         $existing = $this->activityAlreadyExists($activity_identifier);
@@ -154,7 +154,7 @@ class XmlQueueWriter
      */
     protected function appendDataIntoFile($data, $errors, $existence): void
     {
-        file_put_contents('valid_test.json', sprintf('%s%s', 'appendDataIntoFile fx called ', PHP_EOL), FILE_APPEND);
+        //file_put_contents('valid_test.json', sprintf('%s%s', 'appendDataIntoFile fx called ', PHP_EOL), FILE_APPEND);
         array_walk_recursive($errors, static function ($a) use (&$return) {
             $return[] = $a;
         });
@@ -171,12 +171,14 @@ class XmlQueueWriter
 
         try {
             $path = sprintf('%s/%s/%s', $this->xml_data_storage_path, $this->orgId, 'valid.json');
-            file_put_contents('valid_test.json', sprintf('%s%s%s', 'The file path is: ', $path, PHP_EOL), FILE_APPEND);
+            //file_put_contents('valid_test.json', sprintf('%s%s%s', 'The file path is: ', $path, PHP_EOL), FILE_APPEND);
             $resp = awsUploadFile($path, $content);
-            file_put_contents('valid_test.json', sprintf('%s%s%s', 'File upload success:', $resp, PHP_EOL), FILE_APPEND);
+            //file_put_contents('valid_test.json', sprintf('%s%s%s', 'File upload success:', $resp, PHP_EOL), FILE_APPEND);
         } catch (\Exception $e) {
-            logger()->error($e->getMessage());
-            file_put_contents('valid_test.json', sprintf('%s%s%s', 'File upload failed:', $e->getMessage(), PHP_EOL), FILE_APPEND);
+            awsUploadFile('error-appendDataIntoFile.log', $e->getMessage());
+
+            //logger()->error($e->getMessage());
+            //file_put_contents('valid_test.json', sprintf('%s%s%s', 'File upload failed:', $e->getMessage(), PHP_EOL), FILE_APPEND);
         }
     }
 }
