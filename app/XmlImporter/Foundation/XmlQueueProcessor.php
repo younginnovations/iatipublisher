@@ -41,14 +41,17 @@ class XmlQueueProcessor
      * @var
      */
     protected $filename;
+
     /**
      * @var ActivityRepository
      */
     protected ActivityRepository $activityRepo;
+
     /**
      * @var LoggerInterface
      */
     private LoggerInterface $logger;
+
     /**
      * @var DatabaseManager
      */
@@ -66,6 +69,7 @@ class XmlQueueProcessor
 
     /**
      * XmlQueueProcessor constructor.
+     *
      * @param XmlServiceProvider $xmlServiceProvider
      * @param XmlProcessor       $xmlProcessor
      * @param ActivityRepository $activityRepo
@@ -79,8 +83,8 @@ class XmlQueueProcessor
         $this->activityRepo = $activityRepo;
         $this->logger = $logger;
         $this->databaseManager = $databaseManager;
-        $this->xml_file_storage_path = env('XML_FILE_STORAGE_PATH ', 'app/XmlImporter/file');
-        $this->xml_data_storage_path = env('XML_DATA_STORAGE_PATH ', 'app/XmlImporter/tmp');
+        $this->xml_file_storage_path = env('XML_FILE_STORAGE_PATH ', 'XmlImporter/file');
+        $this->xml_data_storage_path = env('XML_DATA_STORAGE_PATH ', 'XmlImporter/tmp');
     }
 
     /**
@@ -102,67 +106,27 @@ class XmlQueueProcessor
             $this->orgId = $orgId;
             $this->userId = $userId;
             $this->filename = $filename;
-            $file = $this->temporaryXmlStorage($filename);
             $dbIatiIdentifiers = $this->dbIatiIdentifiers($orgId);
-            $contents = file_get_contents($file);
-            $mismatch_file = storage_path(sprintf('%s/%s/%s', $this->xml_data_storage_path, $orgId, 'header_mismatch.json'));
-
-            if (file_exists($mismatch_file)) {
-                unlink($mismatch_file);
-            }
+            $contents = awsGetFile(sprintf('%s/%s/%s', $this->xml_file_storage_path, $this->orgId, $filename));
+            $mismatchFilePath = storage_path(sprintf('%s/%s/%s', $this->xml_data_storage_path, $orgId, 'header_mismatch.json'));
+            awsDeleteFile($mismatchFilePath);
 
             if ($this->xmlServiceProvider->isValidAgainstSchema($contents)) {
                 $xmlData = $this->xmlServiceProvider->load($contents);
-
-                $this->logger->info('Xml Import process started for Organization: ' . $orgId . ', User: ' . $userId);
-
                 $this->xmlProcessor->process($xmlData, $userId, $orgId, $dbIatiIdentifiers);
 
                 return true;
-            } else {
-                $path = storage_path(sprintf('%s/%s/%s', $this->xml_data_storage_path, $orgId, 'header_mismatch.json'));
-
-                $this->databaseManager->rollback();
-                file_put_contents($path, json_encode(['header_mismatch' => true], JSON_THROW_ON_ERROR));
             }
 
+            $this->databaseManager->rollback();
+            awsUploadFile($mismatchFilePath, json_encode(['header_mismatch' => true], JSON_THROW_ON_ERROR));
+
             return false;
-        } catch (\Exception $exception) {
-            $this->logger->error('Xml Import process failed for Organization: ' . $orgId . ', User:' . $userId, ['error' => $exception]);
-            // $this->storeInJsonFile('error.json', ['code' => 'processing_error', 'message' => $exception]);
-            throw  $exception;
+        } catch (\Exception $e) {
+            awsUploadFile('error-import.log', $e->getMessage());
+
+            throw  $e;
         }
-    }
-
-    /**
-     * Get the temporary storage path for the uploaded Xml file.
-     *
-     * @param $filename
-     *
-     * @return string
-     */
-    protected function temporaryXmlStorage($filename = null): string
-    {
-        if ($filename) {
-            return sprintf('%s/%s', storage_path(sprintf('%s/%s', $this->xml_data_storage_path, $this->orgId)), $filename);
-        }
-
-        return storage_path(sprintf('%s/%s/', $this->xml_data_storage_path, $this->orgId));
-    }
-
-    /**
-     * Store data in given json filename.
-     *
-     * @param $filename
-     * @param $data
-     *
-     * @return void
-     * @throws \JsonException
-     */
-    protected function storeInJsonFile($filename, $data): void
-    {
-        $filePath = $this->temporaryXmlStorage($filename);
-        file_put_contents($filePath, json_encode($data, JSON_THROW_ON_ERROR));
     }
 
     /**

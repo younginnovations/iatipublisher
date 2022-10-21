@@ -310,13 +310,7 @@ class XmlGenerator
         foreach ($publishedFiles as $xml) {
             $addDom = new \DOMDocument();
             $fileContent = awsGetFile(sprintf('%s/%s/%s', 'xml', 'activityXmlFiles', $xml));
-
-            if ($fileContent) {
-                localUploadFile('public/xml/activityXmlFiles/' . $xml, $fileContent);
-            }
-
-            $file = localFilePath('public/xml/activityXmlFiles/' . $xml);
-            $addDom->load($file);
+            $addDom->loadXML($fileContent);
 
             if ($addDom->documentElement) {
                 foreach ($addDom->documentElement->childNodes as $node) {
@@ -324,10 +318,6 @@ class XmlGenerator
                         $dom->importNode($node, true)
                     );
                 }
-            }
-
-            if (localHasFile('public/xml/activityXmlFiles/' . $xml)) {
-                localDeleteFile('public/xml/activityXmlFiles/' . $xml);
             }
         }
 

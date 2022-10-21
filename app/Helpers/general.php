@@ -7,7 +7,6 @@ use Illuminate\Encryption\Encrypter;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Storage;
-use League\Flysystem\FilesystemException;
 
 if (!function_exists('dashesToCamelCase')) {
     /**
@@ -847,7 +846,6 @@ if (!function_exists('awsHasFile')) {
      * @param $filePath
      *
      * @return bool
-     * @throws FilesystemException
      */
     function awsHasFile($filePath): bool
     {
@@ -876,13 +874,7 @@ if (!function_exists('awsUploadFile')) {
      */
     function awsUploadFile($path, $content): bool
     {
-        try {
-            return Storage::disk('s3')->put($path, $content);
-        } catch (\Exception $e) {
-            logger()->error($e->getMessage());
-
-            return false;
-        }
+        return Storage::disk('s3')->put($path, $content);
     }
 }
 
@@ -896,13 +888,7 @@ if (!function_exists('awsUploadFileAs')) {
      */
     function awsUploadFileAs($path, $content, $filename): bool
     {
-        try {
-            return Storage::disk('s3')->putFileAs($path, $content, $filename);
-        } catch (\Exception $e) {
-            logger()->error($e->getMessage());
-
-            return false;
-        }
+        return Storage::disk('s3')->putFileAs($path, $content, $filename);
     }
 }
 
@@ -911,21 +897,14 @@ if (!function_exists('awsDeleteFile')) {
      * @param $filePath
      *
      * @return bool
-     * @throws FilesystemException
      */
     function awsDeleteFile($filePath): bool
     {
-        try {
-            if (Storage::disk('s3')->exists($filePath)) {
-                return Storage::disk('s3')->delete($filePath);
-            }
-
-            return false;
-        } catch (\Exception $e) {
-            logger()->error($e->getMessage());
-
-            return false;
+        if (Storage::disk('s3')->exists($filePath)) {
+            return Storage::disk('s3')->delete($filePath);
         }
+
+        return false;
     }
 }
 
@@ -934,11 +913,22 @@ if (!function_exists('awsUrl')) {
      * @param $filePath
      *
      * @return string
-     * @throws FilesystemException
      */
     function awsUrl($filePath): string
     {
         return Storage::disk('s3')->url($filePath);
+    }
+}
+
+if (!function_exists('awsFilePath')) {
+    /**
+     * @param $path
+     *
+     * @return string
+     */
+    function awsFilePath($path): string
+    {
+        return Storage::disk('s3')->path($path);
     }
 }
 
@@ -947,7 +937,6 @@ if (!function_exists('localHasFile')) {
      * @param $filePath
      *
      * @return bool
-     * @throws FilesystemException
      */
     function localHasFile($filePath): bool
     {
@@ -964,13 +953,7 @@ if (!function_exists('localUploadFile')) {
      */
     function localUploadFile($path, $content): bool
     {
-        try {
-            return Storage::disk('local')->put($path, $content);
-        } catch (\Exception $e) {
-            logger()->error($e->getMessage());
-
-            return false;
-        }
+        return Storage::disk('local')->put($path, $content);
     }
 }
 
@@ -982,13 +965,7 @@ if (!function_exists('localFilePath')) {
      */
     function localFilePath($path): string
     {
-        try {
-            return Storage::disk('local')->path($path);
-        } catch (\Exception $e) {
-            logger()->error($e->getMessage());
-
-            return '';
-        }
+        return Storage::disk('local')->path($path);
     }
 }
 
@@ -997,20 +974,13 @@ if (!function_exists('localDeleteFile')) {
      * @param $filePath
      *
      * @return bool
-     * @throws FilesystemException
      */
     function localDeleteFile($filePath): bool
     {
-        try {
-            if (Storage::disk('local')->exists($filePath)) {
-                return Storage::disk('local')->delete($filePath);
-            }
-
-            return false;
-        } catch (\Exception $e) {
-            logger()->error($e->getMessage());
-
-            return false;
+        if (Storage::disk('local')->exists($filePath)) {
+            return Storage::disk('local')->delete($filePath);
         }
+
+        return false;
     }
 }

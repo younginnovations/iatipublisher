@@ -251,7 +251,7 @@ class ImportActivityController extends Controller
                 $result = $this->importCsvService->importIsComplete() ?? 'Processing';
                 $status = $result !== 'Processing';
 
-                $data = $this->getValidData();
+                $data = $this->importCsvService->getAwsCsvData('valid.json');
             }
 
             return response()->json(['status' => $status, 'data' => $data]);
