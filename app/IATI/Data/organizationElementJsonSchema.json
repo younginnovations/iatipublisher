@@ -121,8 +121,8 @@
         "label": "secondary-reporter",
         "type": "select",
         "choices": {
-          "1": "True",
-          "0": "False"
+          "1": "Yes",
+          "0": "No"
         },
         "placeholder": "Select secondary-reporter",
         "required": false,
