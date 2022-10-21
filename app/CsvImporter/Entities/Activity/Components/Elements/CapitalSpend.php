@@ -78,7 +78,7 @@ class CapitalSpend extends Element
         if (!(is_null($value) || $value === '')) {
             (count(array_filter($values)) === 1) ? $this->data[$this->csvHeader()] = $value : $this->data[$this->csvHeader()][] = $value;
         } else {
-            $this->data[$this->csvHeader()] = [];
+            $this->data[$this->csvHeader()] = '';
         }
     }
 
