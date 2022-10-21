@@ -111,12 +111,15 @@ class XmlQueueProcessor
             $contents = awsGetFile(sprintf('%s/%s/%s', $this->xml_file_storage_path, $this->orgId, $filename));
             $mismatchFilePath = storage_path(sprintf('%s/%s/%s', $this->xml_data_storage_path, $orgId, 'header_mismatch.json'));
             awsDeleteFile($mismatchFilePath);
+            file_put_contents('valid_test.json', sprintf('%s%s%s', 'awsGetFile: ', $contents, PHP_EOL), FILE_APPEND);
 
             if ($this->xmlServiceProvider->isValidAgainstSchema($contents)) {
+                file_put_contents('valid_test.json', sprintf('%s%s', 'isValidAgainstSchema passed ', PHP_EOL), FILE_APPEND);
                 $xmlData = $this->xmlServiceProvider->load($contents);
 
                 $this->logger->info('Xml Import process started for Organization: ' . $orgId . ', User: ' . $userId);
 
+                file_put_contents('valid_test.json', sprintf('%s%s', 'process fx called ', PHP_EOL), FILE_APPEND);
                 $this->xmlProcessor->process($xmlData, $userId, $orgId, $dbIatiIdentifiers);
 
                 return true;

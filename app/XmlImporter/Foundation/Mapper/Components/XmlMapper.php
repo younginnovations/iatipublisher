@@ -130,6 +130,7 @@ class XmlMapper
 
         $totalActivities = count($activities);
         $mappedData = [];
+        file_put_contents('valid_test.json', sprintf('%s%s%s', 'Total Activities: ', $totalActivities, PHP_EOL), FILE_APPEND);
 
         foreach ($activities as $index => $activity) {
             $this->initComponents();
