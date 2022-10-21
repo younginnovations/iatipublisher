@@ -37,7 +37,6 @@ class XmlWasUploaded extends Event
      */
     public function __construct($filename, $userId, $organizationId)
     {
-        //file_put_contents('valid_test.json', sprintf('%s%s', 'XmlWasUploaded class construct ', PHP_EOL), FILE_APPEND);
         $this->filename = $filename;
         $this->userId = $userId;
         $this->organizationId = $organizationId;

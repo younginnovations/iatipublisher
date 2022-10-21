@@ -103,25 +103,16 @@ class XmlQueueProcessor
     public function import($filename, $orgId, $userId): bool
     {
         try {
-            awsUploadFile('test.txt', 'file uploaded from queue');
-            //file_put_contents('valid_test.json', sprintf('%s%s', 'XmlQueueProcessor import fx called ', PHP_EOL), FILE_APPEND);
             $this->orgId = $orgId;
             $this->userId = $userId;
             $this->filename = $filename;
             $dbIatiIdentifiers = $this->dbIatiIdentifiers($orgId);
-            //$contents          = file_get_contents($this->getXmlFile($filename));
             $contents = awsGetFile(sprintf('%s/%s/%s', $this->xml_file_storage_path, $this->orgId, $filename));
             $mismatchFilePath = storage_path(sprintf('%s/%s/%s', $this->xml_data_storage_path, $orgId, 'header_mismatch.json'));
             awsDeleteFile($mismatchFilePath);
-//            file_put_contents('valid_test.json', sprintf('%s%s%s', 'awsGetFile: ', $contents, PHP_EOL), FILE_APPEND);
 
             if ($this->xmlServiceProvider->isValidAgainstSchema($contents)) {
-                //file_put_contents('valid_test.json', sprintf('%s%s', 'isValidAgainstSchema passed ', PHP_EOL), FILE_APPEND);
                 $xmlData = $this->xmlServiceProvider->load($contents);
-
-                //$this->logger->info('Xml Import process started for Organization: ' . $orgId . ', User: ' . $userId);
-
-                //file_put_contents('valid_test.json', sprintf('%s%s', 'process fx called ', PHP_EOL), FILE_APPEND);
                 $this->xmlProcessor->process($xmlData, $userId, $orgId, $dbIatiIdentifiers);
 
                 return true;
@@ -133,8 +124,6 @@ class XmlQueueProcessor
             return false;
         } catch (\Exception $e) {
             awsUploadFile('error-import.log', $e->getMessage());
-
-            //$this->logger->error('Xml Import process failed for Organization: ' . $orgId . ', User:' . $userId, ['error' => $exception]);
 
             throw  $e;
         }

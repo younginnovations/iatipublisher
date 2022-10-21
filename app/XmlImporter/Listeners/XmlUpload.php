@@ -46,7 +46,6 @@ class XmlUpload
      */
     public function handle(XmlWasUploaded $event): bool
     {
-        //file_put_contents('valid_test.json', sprintf('%s%s', 'XmlUpload handle fx called ', PHP_EOL), FILE_APPEND);
         $this->dispatch(new ImportXml($event->organizationId, $event->userId, $event->filename));
 
         return true;

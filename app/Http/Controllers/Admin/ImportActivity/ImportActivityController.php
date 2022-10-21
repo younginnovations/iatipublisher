@@ -117,7 +117,6 @@ class ImportActivityController extends Controller
 
             if ($filetype === 'xml') {
                 if ($this->importXmlService->store($file)) {
-                    //file_put_contents('valid_test.json', sprintf('%s%s', 'xml file uploaded ', PHP_EOL), FILE_APPEND);
                     $user = Auth::user();
                     $this->importXmlService->startImport($file->getClientOriginalName(), $user->id, $user->organization_id);
                 }

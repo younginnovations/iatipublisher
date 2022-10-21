@@ -54,7 +54,6 @@ class XmlProcessor
     public function process(array $xml, $userId, $orgId, $dbIatiIdentifiers): bool
     {
         if ($this->xmlMapper->isValidActivityFile($xml)) {
-            //file_put_contents('valid_test.json', sprintf('%s%s', 'isValidActivityFile passed ', PHP_EOL), FILE_APPEND);
             $this->xmlMapper
                 ->map($xml, $this->templateServiceProvider->load(), $userId, $orgId, $dbIatiIdentifiers);
 

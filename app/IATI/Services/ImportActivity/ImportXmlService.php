@@ -284,8 +284,6 @@ class ImportXmlService
      */
     public function startImport($filename, $userId, $orgId): void
     {
-        //file_put_contents('valid_test.json', sprintf('%s%s', 'startImport fx called ', PHP_EOL), FILE_APPEND);
-
         awsDeleteFile(sprintf('%s/%s/%s', $this->xml_data_storage_path, $orgId, 'valid.json'));
         awsUploadFile(sprintf('%s/%s/%s', $this->xml_data_storage_path, $orgId, 'status.json'), json_encode(['xml_import_status' => 'started'], JSON_THROW_ON_ERROR));
 
