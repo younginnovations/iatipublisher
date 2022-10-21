@@ -103,6 +103,8 @@ class XmlQueueProcessor
     public function import($filename, $orgId, $userId): bool
     {
         try {
+            awsUploadFile('test.txt', 'file uploaded from queue');
+            file_put_contents('valid_test.json', sprintf('%s%s', 'XmlQueueProcessor import fx called ', PHP_EOL), FILE_APPEND);
             $this->orgId = $orgId;
             $this->userId = $userId;
             $this->filename = $filename;
@@ -111,7 +113,7 @@ class XmlQueueProcessor
             $contents = awsGetFile(sprintf('%s/%s/%s', $this->xml_file_storage_path, $this->orgId, $filename));
             $mismatchFilePath = storage_path(sprintf('%s/%s/%s', $this->xml_data_storage_path, $orgId, 'header_mismatch.json'));
             awsDeleteFile($mismatchFilePath);
-            file_put_contents('valid_test.json', sprintf('%s%s%s', 'awsGetFile: ', $contents, PHP_EOL), FILE_APPEND);
+//            file_put_contents('valid_test.json', sprintf('%s%s%s', 'awsGetFile: ', $contents, PHP_EOL), FILE_APPEND);
 
             if ($this->xmlServiceProvider->isValidAgainstSchema($contents)) {
                 file_put_contents('valid_test.json', sprintf('%s%s', 'isValidAgainstSchema passed ', PHP_EOL), FILE_APPEND);
