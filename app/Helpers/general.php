@@ -6,6 +6,8 @@ use App\IATI\Models\User\Role;
 use Illuminate\Encryption\Encrypter;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Storage;
+use League\Flysystem\FilesystemException;
 
 if (!function_exists('dashesToCamelCase')) {
     /**
@@ -428,7 +430,7 @@ if (!function_exists('customEncryptString')) {
 
 if (!function_exists('encryptString')) {
     /**
-     * Decrypt encrypted base64 string.
+     * Encrypts string.
      *
      * @param string $string
      *
@@ -467,6 +469,8 @@ if (!function_exists('decryptString')) {
             $salt = hex2bin($json['salt']);
             $iv = hex2bin($json['iv']);
         } catch (Exception $e) {
+            logger()->error($e->getMessage());
+
             return null;
         }
 
@@ -836,4 +840,177 @@ function dateFormat($format, $date): bool|string
     }
 
     return '';
+}
+
+if (!function_exists('awsHasFile')) {
+    /**
+     * @param $filePath
+     *
+     * @return bool
+     * @throws FilesystemException
+     */
+    function awsHasFile($filePath): bool
+    {
+        return Storage::disk('s3')->exists($filePath);
+    }
+}
+
+if (!function_exists('awsGetFile')) {
+    /**
+     * @param $filePath
+     *
+     * @return string|null
+     */
+    function awsGetFile($filePath): ?string
+    {
+        return Storage::disk('s3')->get($filePath);
+    }
+}
+
+if (!function_exists('awsUploadFile')) {
+    /**
+     * @param $path
+     * @param $content
+     *
+     * @return bool
+     */
+    function awsUploadFile($path, $content): bool
+    {
+        try {
+            return Storage::disk('s3')->put($path, $content);
+        } catch (\Exception $e) {
+            logger()->error($e->getMessage());
+
+            return false;
+        }
+    }
+}
+
+if (!function_exists('awsUploadFileAs')) {
+    /**
+     * @param $path
+     * @param $content
+     * @param $filename
+     *
+     * @return bool
+     */
+    function awsUploadFileAs($path, $content, $filename): bool
+    {
+        try {
+            return Storage::disk('s3')->putFileAs($path, $content, $filename);
+        } catch (\Exception $e) {
+            logger()->error($e->getMessage());
+
+            return false;
+        }
+    }
+}
+
+if (!function_exists('awsDeleteFile')) {
+    /**
+     * @param $filePath
+     *
+     * @return bool
+     * @throws FilesystemException
+     */
+    function awsDeleteFile($filePath): bool
+    {
+        try {
+            if (Storage::disk('s3')->exists($filePath)) {
+                return Storage::disk('s3')->delete($filePath);
+            }
+
+            return false;
+        } catch (\Exception $e) {
+            logger()->error($e->getMessage());
+
+            return false;
+        }
+    }
+}
+
+if (!function_exists('awsUrl')) {
+    /**
+     * @param $filePath
+     *
+     * @return string
+     * @throws FilesystemException
+     */
+    function awsUrl($filePath): string
+    {
+        return Storage::disk('s3')->url($filePath);
+    }
+}
+
+if (!function_exists('localHasFile')) {
+    /**
+     * @param $filePath
+     *
+     * @return bool
+     * @throws FilesystemException
+     */
+    function localHasFile($filePath): bool
+    {
+        return Storage::disk('local')->exists($filePath);
+    }
+}
+
+if (!function_exists('localUploadFile')) {
+    /**
+     * @param $path
+     * @param $content
+     *
+     * @return bool
+     */
+    function localUploadFile($path, $content): bool
+    {
+        try {
+            return Storage::disk('local')->put($path, $content);
+        } catch (\Exception $e) {
+            logger()->error($e->getMessage());
+
+            return false;
+        }
+    }
+}
+
+if (!function_exists('localFilePath')) {
+    /**
+     * @param $path
+     *
+     * @return string
+     */
+    function localFilePath($path): string
+    {
+        try {
+            return Storage::disk('local')->path($path);
+        } catch (\Exception $e) {
+            logger()->error($e->getMessage());
+
+            return '';
+        }
+    }
+}
+
+if (!function_exists('localDeleteFile')) {
+    /**
+     * @param $filePath
+     *
+     * @return bool
+     * @throws FilesystemException
+     */
+    function localDeleteFile($filePath): bool
+    {
+        try {
+            if (Storage::disk('local')->exists($filePath)) {
+                return Storage::disk('local')->delete($filePath);
+            }
+
+            return false;
+        } catch (\Exception $e) {
+            logger()->error($e->getMessage());
+
+            return false;
+        }
+    }
 }
