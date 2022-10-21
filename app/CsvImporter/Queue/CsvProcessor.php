@@ -7,6 +7,7 @@ namespace App\CsvImporter\Queue;
 use App\CsvImporter\Entities\Activity\Activity;
 use App\CsvImporter\Traits\ChecksCsvHeaders;
 use Illuminate\Support\Arr;
+use League\Flysystem\FilesystemException;
 
 /**
  * Class CsvProcessor.
@@ -47,30 +48,27 @@ class CsvProcessor
     /**
      * Handle the import functionality.
      *
-     * @param $organizationId
+     * @param $orgId
      * @param $userId
      * @param $activityIdentifiers
      *
      * @throws \JsonException
+     * @throws FilesystemException
      */
-    public function handle($organizationId, $userId, $activityIdentifiers): void
+    public function handle($orgId, $userId, $activityIdentifiers): void
     {
         $this->filterHeader();
-        $directoryPath = storage_path(sprintf('%s/%s', env('CSV_DATA_STORAGE_PATH ', 'app/CsvImporter/tmp/'), $organizationId));
-        $path = sprintf('%s/%s', $directoryPath, 'header_mismatch.json');
-
-        if (file_exists($path)) {
-            unlink($path);
-        }
+        $mismatchFilePath = sprintf('%s/%s/%s', env('CSV_DATA_STORAGE_PATH ', 'CsvImporter/tmp'), $orgId, 'header_mismatch.json');
+        awsDeleteFile($mismatchFilePath);
 
         if ($this->isCorrectCsv()) {
             $this->groupValues();
 
-            $this->initActivity(['organization_id' => $organizationId, 'user_id' => $userId, 'activity_identifiers' => $activityIdentifiers]);
+            $this->initActivity(['organization_id' => $orgId, 'user_id' => $userId, 'activity_identifiers' => $activityIdentifiers]);
 
             $this->activity->process();
         } else {
-            file_put_contents($path, json_encode(['header_mismatch' => true], JSON_THROW_ON_ERROR));
+            awsUploadFile($mismatchFilePath, json_encode(['header_mismatch' => true], JSON_THROW_ON_ERROR));
         }
     }
 

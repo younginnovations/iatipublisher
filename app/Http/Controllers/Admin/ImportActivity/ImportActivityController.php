@@ -21,7 +21,6 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Storage;
-use League\Flysystem\FilesystemException;
 
 /**
  * Class ActivityController.
@@ -72,8 +71,8 @@ class ImportActivityController extends Controller
         $this->importCsvService = $importCsvService;
         $this->importXmlService = $importXmlService;
         $this->db = $db;
-        $this->csv_data_storage_path = env('CSV_DATA_STORAGE_PATH', 'CsvImporter/tmp');
-        $this->xml_data_storage_path = env('XML_DATA_STORAGE_PATH', 'XmlImporter/tmp');
+        $this->csv_data_storage_path = env('CSV_DATA_STORAGE_PATH ', 'app/CsvImporter/tmp');
+        $this->xml_data_storage_path = env('XML_DATA_STORAGE_PATH ', 'app/XmlImporter/tmp');
     }
 
     /**
@@ -106,7 +105,6 @@ class ImportActivityController extends Controller
      * @param ImportActivityRequest $request
      *
      * @return JsonResponse
-     * @throws FilesystemException
      */
     public function store(ImportActivityRequest $request): JsonResponse
     {
@@ -131,7 +129,8 @@ class ImportActivityController extends Controller
 
                 if ($this->importCsvService->storeCsv($file)) {
                     $filename = str_replace(' ', '', $file->getClientOriginalName());
-                    $this->importCsvService->startImport($filename)->fireCsvUploadEvent($filename);
+                    $this->importCsvService->startImport($filename)
+                        ->fireCsvUploadEvent($filename);
 
                     if (!$this->importCsvService->isInUTF8Encoding($filename)) {
                         $response = ['success' => false, 'code' => ['encoding_error', ['message' => 'Something went wrong']]];
@@ -143,6 +142,7 @@ class ImportActivityController extends Controller
 
             return response()->json(['success' => true, 'message' => 'Uploaded successfully', 'type' => $filetype]);
         } catch (\Exception $e) {
+            logger()->error($e);
             logger()->error($e->getMessage());
 
             return response()->json(['success' => false, 'error' => 'Error has occurred while rendering activity import page.']);
@@ -251,7 +251,7 @@ class ImportActivityController extends Controller
                 $result = $this->importCsvService->importIsComplete() ?? 'Processing';
                 $status = $result !== 'Processing';
 
-                $data = $this->getValidData();
+                $data = $this->importCsvService->getAwsCsvData('valid.json');
             }
 
             return response()->json(['status' => $status, 'data' => $data]);

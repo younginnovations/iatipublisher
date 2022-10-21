@@ -39,6 +39,11 @@ class ImportXmlService
     public string $xml_data_storage_path;
 
     /**
+     * Temporary Csv data storage location.
+     */
+    public string $csv_data_storage_path;
+
+    /**
      * @var XmlServiceProvider
      */
     protected XmlServiceProvider $xmlServiceProvider;
@@ -126,6 +131,7 @@ class ImportXmlService
         $this->periodRepository = $periodRepository;
         $this->xml_file_storage_path = env('XML_FILE_STORAGE_PATH', 'XmlImporter/file');
         $this->xml_data_storage_path = env('XML_DATA_STORAGE_PATH', 'XmlImporter/tmp');
+        $this->csv_data_storage_path = env('CSV_DATA_STORAGE_PATH', 'CsvImporter/tmp');
     }
 
     /**

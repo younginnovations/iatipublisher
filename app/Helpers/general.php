@@ -359,14 +359,14 @@ if (!function_exists('getCodeList')) {
      */
     function getCodeList($listName, $listType, bool $code = true): array
     {
-        $filePath         = app_path("Data/$listType/$listName.json");
+        $filePath = app_path("Data/$listType/$listName.json");
         $codeListFromFile = file_get_contents($filePath);
-        $codeLists        = json_decode($codeListFromFile, true, 512, JSON_THROW_ON_ERROR);
-        $codeList         = $codeLists[$listName];
-        $data             = [];
+        $codeLists = json_decode($codeListFromFile, true, 512, JSON_THROW_ON_ERROR);
+        $codeList = $codeLists[$listName];
+        $data = [];
 
         foreach ($codeList as $list) {
-            $data[$list['code']] = ($code) ? $list['code'].(array_key_exists('name', $list) ? ' - '.$list['name'] : '') : $list['name'];
+            $data[$list['code']] = ($code) ? $list['code'] . (array_key_exists('name', $list) ? ' - ' . $list['name'] : '') : $list['name'];
         }
 
         return $data;
@@ -385,12 +385,12 @@ if (!function_exists('getCodeListArray')) {
      */
     function getCodeListArray($listName, $listType, bool $code = true): array
     {
-        $filePath         = app_path("Data/$listType/$listName.php");
+        $filePath = app_path("Data/$listType/$listName.php");
         $codeListFromFile = include $filePath;
-        $data             = [];
+        $data = [];
 
         foreach ($codeListFromFile as $key => $value) {
-            $data[$key] = ($code) ? $key.' - '.$value : $value;
+            $data[$key] = ($code) ? $key . ' - ' . $value : $value;
         }
 
         return $data;
@@ -438,13 +438,13 @@ if (!function_exists('encryptString')) {
      */
     function encryptString(string $string): bool|string|null
     {
-        $iv                  = random_bytes(16);
-        $salt                = random_bytes(256);
-        $iterations          = 999;
+        $iv = random_bytes(16);
+        $salt = random_bytes(256);
+        $iterations = 999;
         $encryptMethodLength = 256 / 4;
-        $hashKey             = hash_pbkdf2('sha512', env('MIX_ENCRYPTION_KEY'), $salt, $iterations, $encryptMethodLength);
-        $encryptedData       = openssl_encrypt($string, 'AES-256-CBC', hex2bin($hashKey), OPENSSL_RAW_DATA, $iv);
-        $output              = ['ciphertext' => base64_encode($encryptedData), 'iv' => bin2hex($iv), 'salt' => bin2hex($salt), 'iterations' => $iterations];
+        $hashKey = hash_pbkdf2('sha512', env('MIX_ENCRYPTION_KEY'), $salt, $iterations, $encryptMethodLength);
+        $encryptedData = openssl_encrypt($string, 'AES-256-CBC', hex2bin($hashKey), OPENSSL_RAW_DATA, $iv);
+        $output = ['ciphertext' => base64_encode($encryptedData), 'iv' => bin2hex($iv), 'salt' => bin2hex($salt), 'iterations' => $iterations];
 
         return base64_encode(json_encode($output, JSON_THROW_ON_ERROR));
     }
@@ -466,7 +466,7 @@ if (!function_exists('decryptString')) {
 
         try {
             $salt = hex2bin($json['salt']);
-            $iv   = hex2bin($json['iv']);
+            $iv = hex2bin($json['iv']);
         } catch (Exception $e) {
             logger()->error($e->getMessage());
 
@@ -474,7 +474,7 @@ if (!function_exists('decryptString')) {
         }
 
         $cipherText = base64_decode($json['ciphertext']);
-        $iterations = (int)abs($json['iterations']);
+        $iterations = (int) abs($json['iterations']);
 
         if ($iterations <= 0) {
             $iterations = 999;
@@ -501,17 +501,17 @@ if (!function_exists('getList')) {
      */
     function getList(string $filePath, bool $code = true): array
     {
-        $filePath         = app_path("Data/$filePath");
+        $filePath = app_path("Data/$filePath");
         $codeListFromFile = file_get_contents($filePath);
-        $codeLists        = json_decode($codeListFromFile, true, 512, JSON_THROW_ON_ERROR);
-        $codeList         = last($codeLists);
-        $data             = [];
+        $codeLists = json_decode($codeListFromFile, true, 512, JSON_THROW_ON_ERROR);
+        $codeList = last($codeLists);
+        $data = [];
 
         foreach ($codeList as $list) {
-            $data[$list['code']] = ($code) ? $list['code'].(array_key_exists(
-                    'name',
-                    $list
-                ) ? ' - '.$list['name'] : '') : $list['name'];
+            $data[$list['code']] = ($code) ? $list['code'] . (array_key_exists(
+                'name',
+                $list
+            ) ? ' - ' . $list['name'] : '') : $list['name'];
         }
 
         return $data;
@@ -616,7 +616,7 @@ if (!function_exists('generateToastData')) {
     function generateToastData(): array
     {
         $toast['message'] = Session::exists('error') ? Session::get('error') : (Session::exists('success') ? Session::get('success') : '');
-        $toast['type']    = Session::exists('error') ? false : 'success';
+        $toast['type'] = Session::exists('error') ? false : 'success';
         Session::forget('success');
         Session::forget('error');
 
@@ -771,8 +771,8 @@ if (!function_exists('isSuperAdminRoute')) {
 function getEncodingType($file): string
 {
     try {
-        $response = exec('file -i '.$file->getPathname());
-        $charset  = strripos($response, 'charset=');
+        $response = exec('file -i ' . $file->getPathname());
+        $charset = strripos($response, 'charset=');
 
         if ($charset) {
             return strtoupper(substr($response, $charset + strlen('charset=')));

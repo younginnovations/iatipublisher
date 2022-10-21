@@ -53,7 +53,7 @@ data:
   AWS_BUCKET: "iatipublisher-prod"
   AWS_USE_PATH_STYLE_ENDPOINT: "false"
 
-  CSV_DATA_STORAGE_PATH :  'app/CsvImporter/tmp'
-  CSV_FILE_STORAGE_PATH :  'app/CsvImporter/file'
+  CSV_DATA_STORAGE_PATH :  'CsvImporter/tmp'
+  CSV_FILE_STORAGE_PATH :  'CsvImporter/file'
   XML_DATA_STORAGE_PATH :  'XmlImporter/tmp'
   XML_FILE_STORAGE_PATH :  'XmlImporter/file'

@@ -18,6 +18,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\File as FileFacade;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Storage;
+use League\Flysystem\FilesystemException;
 use Maatwebsite\Excel\Excel;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\File\File;
@@ -130,8 +132,8 @@ class ImportCsvService
         $this->transactionRepo = $transactionRepo;
         $this->userId = Auth::user()?->organization_id ?? 1;
         $this->filesystem = $filesystem;
-        $this->csv_data_storage_path = env('CSV_DATA_STORAGE_PATH', 'app/CsvImporter/tmp');
-        $this->csv_file_storage_path = env('CSV_FILE_STORAGE_PATH', 'app/CsvImporter/file');
+        $this->csv_data_storage_path = env('CSV_DATA_STORAGE_PATH', 'CsvImporter/tmp');
+        $this->csv_file_storage_path = env('CSV_FILE_STORAGE_PATH', 'CsvImporter/file');
     }
 
     /**
@@ -144,19 +146,24 @@ class ImportCsvService
     public function process($filename): void
     {
         try {
-            $file = new File($this->getStoredCsvPath($filename));
+            $uploadedFile = awsGetFile(sprintf('%s/%s/%s', $this->csv_file_storage_path, Auth::user()->organization->id, $filename));
+            $s3 = Storage::disk('local');
+            $localPath = sprintf('%s/%s/%s', 'CsvImporter/file', Auth::user()->organization->id, $filename);
+            $s3->put($localPath, $uploadedFile);
+
+            $file = new File(storage_path(sprintf('%s/%s', 'app', $localPath)));
             Session::put('user_id', Auth::user()->id);
             Session::put('org_id', Auth::user()->organization->id);
 
             $activityIdentifiers = $this->getIdentifiers();
 
             $this->processor->pushIntoQueue($file, $filename, $activityIdentifiers);
-        } catch (Exception $exception) {
+        } catch (Exception $e) {
             $this->logger->error(
-                $exception->getMessage(),
+                $e->getMessage(),
                 [
                     'user'  => auth()->user(),
-                    'trace' => $exception->getTraceAsString(),
+                    'trace' => $e->getTraceAsString(),
                 ]
             );
         }
@@ -390,11 +397,11 @@ class ImportCsvService
             }
 
             return $response;
-        } catch (Exception $exception) {
+        } catch (Exception $e) {
             $this->logger->error(
-                sprintf('Error during reading data due to [%s]', $exception->getMessage()),
+                sprintf('Error during reading data due to [%s]', $e->getMessage()),
                 [
-                    'trace'           => $exception->getTraceAsString(),
+                    'trace'           => $e->getTraceAsString(),
                     'user_id'         => $this->userId,
                     'organization_id' => Session::get('org_id'),
                 ]
@@ -414,14 +421,12 @@ class ImportCsvService
     public function storeCsv(UploadedFile $file): ?bool
     {
         try {
-            $file->move($this->getStoredCsvPath(), str_replace(' ', '', $file->getClientOriginalName()));
-
-            return true;
-        } catch (Exception $exception) {
+            return awsUploadFile(sprintf('%s/%s/%s', $this->csv_file_storage_path, Auth::user()->organization_id, str_replace(' ', '', $file->getClientOriginalName())), $file->getContent());
+        } catch (Exception $e) {
             $this->logger->error(
-                sprintf('Error uploading Activity CSV file due to [%s]', $exception->getMessage()),
+                sprintf('Error uploading Activity CSV file due to [%s]', $e->getMessage()),
                 [
-                    'trace'   => $exception->getTraceAsString(),
+                    'trace'   => $e->getTraceAsString(),
                     'user_id' => $this->userId,
                 ]
             );
@@ -440,10 +445,10 @@ class ImportCsvService
     public function getStoredCsvPath($filename = null): string
     {
         if ($filename) {
-            return sprintf('%s/%s', storage_path(sprintf('%s/%s', $this->csv_file_storage_path, Session::get('org_id'))), $filename);
+            return sprintf('%s/%s', storage_path(sprintf('%s/%s', 'CsvImporter/file', Session::get('org_id'))), $filename);
         }
 
-        return storage_path(sprintf('%s/%s/', $this->csv_file_storage_path, Session::get('org_id')));
+        return storage_path(sprintf('%s/%s/', 'CsvImporter/file', Session::get('org_id')));
     }
 
     /**
@@ -504,10 +509,11 @@ class ImportCsvService
 
     /**
      * Clear old import data before another.
+     * @throws FilesystemException
      */
     public function clearOldImport(): void
     {
-        $this->removeImportDirectory();
+        awsDeleteFile(sprintf('%s/%s', $this->csv_data_storage_path, Session::get('org_id')));
 
         if ($this->hasOldData()) {
             $this->clearSession(['import-status', 'filename']);
@@ -547,8 +553,37 @@ class ImportCsvService
      */
     public function isInUTF8Encoding($filename): bool
     {
-        $file = new File($this->getStoredCsvPath($filename));
+        $uploadedFile = awsGetFile(sprintf('%s/%s/%s', $this->csv_file_storage_path, Auth::user()->organization->id, $filename));
+        $s3 = Storage::disk('local');
+        $localPath = sprintf('%s/%s/%s', 'CsvImporter/file', Auth::user()->organization->id, $filename);
+        $s3->put($localPath, $uploadedFile);
+
+        $file = new File(storage_path(sprintf('%s/%s', 'app', $localPath)));
 
         return getEncodingType($file) === self::DEFAULT_ENCODING;
+    }
+
+    public function getAwsCsvData($filename)
+    {
+        try {
+            $contents = awsGetFile(sprintf('%s/%s/%s', $this->csv_data_storage_path, Auth::user()->organization_id, $filename));
+
+            if ($contents) {
+                return json_decode($contents, false, 512, JSON_THROW_ON_ERROR);
+            }
+
+            return false;
+        } catch (Exception $exception) {
+            $this->logger->error(
+                sprintf('Error due to %s', $exception->getMessage()),
+                [
+                    'trace'    => $exception->getTraceAsString(),
+                    'user_id'  => auth()->user()->id,
+                    'filename' => $filename,
+                ]
+            );
+
+            return null;
+        }
     }
 }
