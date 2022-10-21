@@ -179,8 +179,9 @@ class ImportCsvService
      */
     public function create($activities): void
     {
-        $contents = json_decode(file_get_contents($this->getFilePath()), true, 512, JSON_THROW_ON_ERROR);
         $organizationId = Auth::user()->organization_id;
+        $file = awsGetFile(sprintf('%s/%s/%s', $this->csv_data_storage_path, $organizationId, self::VALID_CSV_FILE));
+        $contents = json_decode($file, true, 512, JSON_THROW_ON_ERROR);
 
         $organizationIdentifier = Arr::get(
             $this->organizationRepo->getOrganizationData($organizationId)->toArray(),
