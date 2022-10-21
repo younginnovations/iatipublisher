@@ -38,7 +38,6 @@ use App\IATI\Services\Activity\TitleService;
 use App\IATI\Services\Activity\TransactionService;
 use App\IATI\Services\Organization\OrganizationService;
 use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\Storage;
 
 /**
  * Class XmlGenerator.
@@ -253,7 +252,7 @@ class XmlGenerator
         $filename = sprintf('%s-%s.xml', $publisherId, 'activities');
         $publishedActivity = sprintf('%s-%s.xml', $publisherId, $activity->id);
         $xml = $this->getXml($activity, $transaction, $result, $settings, $organization);
-        $result = Storage::disk('minio')->put(
+        $result = awsUploadFile(
             sprintf('%s/%s/%s', 'xml', 'activityXmlFiles', $publishedActivity),
             $xml->saveXML()
         );
@@ -310,13 +309,13 @@ class XmlGenerator
 
         foreach ($publishedFiles as $xml) {
             $addDom = new \DOMDocument();
-            $fileContent = Storage::disk('minio')->get(sprintf('%s/%s/%s', 'xml', 'activityXmlFiles', $xml));
+            $fileContent = awsGetFile(sprintf('%s/%s/%s', 'xml', 'activityXmlFiles', $xml));
 
             if ($fileContent) {
-                Storage::disk('local')->put('public/xml/activityXmlFiles/' . $xml, $fileContent);
+                localUploadFile('public/xml/activityXmlFiles/' . $xml, $fileContent);
             }
 
-            $file = Storage::disk('local')->path('public/xml/activityXmlFiles/' . $xml);
+            $file = localFilePath('public/xml/activityXmlFiles/' . $xml);
             $addDom->load($file);
 
             if ($addDom->documentElement) {
@@ -327,8 +326,8 @@ class XmlGenerator
                 }
             }
 
-            if (Storage::disk('local')->exists('public/xml/activityXmlFiles/' . $xml)) {
-                Storage::disk('local')->delete('public/xml/activityXmlFiles/' . $xml);
+            if (localHasFile('public/xml/activityXmlFiles/' . $xml)) {
+                localDeleteFile('public/xml/activityXmlFiles/' . $xml);
             }
         }
 
@@ -345,13 +344,13 @@ class XmlGenerator
      */
     protected function saveXMLFile($dom, $filename = null)
     {
-        $exists = Storage::disk('minio')->exists(sprintf('%s/%s/%s', 'xml', 'mergedActivityXml', $filename));
+        $exists = awsHasFile(sprintf('%s/%s/%s', 'xml', 'mergedActivityXml', $filename));
 
         if ($exists) {
-            Storage::disk('minio')->delete(sprintf('%s/%s/%s', 'xml', 'mergedActivityXml', $filename));
+            awsDeleteFile(sprintf('%s/%s/%s', 'xml', 'mergedActivityXml', $filename));
         }
 
-        Storage::disk('minio')->put(sprintf('%s/%s/%s', 'xml', 'mergedActivityXml', $filename), $dom->saveXML());
+        awsUploadFile(sprintf('%s/%s/%s', 'xml', 'mergedActivityXml', $filename), $dom->saveXML());
     }
 
     /**
@@ -490,8 +489,8 @@ class XmlGenerator
      */
     public function deleteUnpublishedFile($filename)
     {
-        if (Storage::disk('minio')->exists(sprintf('%s/%s/%s', 'xml', 'activityXmlFiles', $filename))) {
-            Storage::disk('minio')->delete(sprintf('%s/%s/%s', 'xml', 'activityXmlFiles', $filename));
+        if (awsHasFile(sprintf('%s/%s/%s', 'xml', 'activityXmlFiles', $filename))) {
+            awsDeleteFile(sprintf('%s/%s/%s', 'xml', 'activityXmlFiles', $filename));
         }
     }
 }

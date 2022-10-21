@@ -11,7 +11,6 @@ use App\IATI\Traits\RegistryApiInvoker;
 use GuzzleHttp\Exception\ClientException;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\Storage;
 
 /**
  * Class PublisherService.
@@ -300,7 +299,7 @@ class PublisherService extends RegistryApiHandler
                 [
                     'format'   => 'IATI-XML',
                     'mimetype' => 'application/xml',
-                    'url'      => Storage::disk('minio')->url('/organizationXmlFiles/' . $filename . '.xml'),
+                    'url'      => awsUrl('/organizationXmlFiles/' . $filename . '.xml'),
                 ],
             ],
             'filetype'     => 'organisation',
@@ -338,7 +337,7 @@ class PublisherService extends RegistryApiHandler
                 [
                     'format'   => 'IATI-XML',
                     'mimetype' => 'application/xml',
-                    'url'      => Storage::disk('minio')->url('xml/mergedActivityXml/' . $publishedFile->filename),
+                    'url'      => awsUrl('xml/mergedActivityXml/' . $publishedFile->filename),
                 ],
             ],
             'filetype'     => ($code != 'organisation') ? 'activity' : $code,

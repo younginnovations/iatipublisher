@@ -117,7 +117,7 @@ class OrganizationXmlGenerator
         $publishedOrganization = sprintf('%s-%s.xml', $publisherId, $organization->id);
         $xml = $this->getXml($settings, $organization);
 
-        $result = Storage::disk('minio')->put(
+        $result = Storage::disk('s3')->put(
             sprintf('%s/%s', 'organizationXmlFiles', $filename),
             $xml->saveXML(),
             $filename
@@ -231,8 +231,8 @@ class OrganizationXmlGenerator
      */
     public function deleteUnpublishedFile($filename)
     {
-        if (Storage::disk('minio')->exists(sprintf('%s/%s', 'organizationXmlFiles', $filename))) {
-            Storage::disk('minio')->delete(sprintf('%s/%s', 'organizationXmlFiles', $filename));
+        if (awsHasFile(sprintf('%s/%s', 'organizationXmlFiles', $filename))) {
+            awsDeleteFile(sprintf('%s/%s', 'organizationXmlFiles', $filename));
         }
     }
 }

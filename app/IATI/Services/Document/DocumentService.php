@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\IATI\Services\Document;
 
 use App\IATI\Repositories\Document\DocumentRepository;
-use Illuminate\Support\Facades\Storage;
 
 /**
  * Class DocumentService.
@@ -62,7 +61,7 @@ class DocumentService
                 if (!$file_exists && isset($document['document'])) {
                     $file = $document['document'];
                     $data['filename'] = str_replace(' ', '_', $file->getClientOriginalName());
-                    Storage::disk('minio')->putFileAs('/document_link/' . $activity['id'], $file, $data['filename']);
+                    awsUploadFileAs('/document_link/' . $activity['id'], $file, $data['filename']);
                     $data['activity_id'] = $activity['id'];
                     $data['extension'] = pathinfo($file->getClientOriginalName(), PATHINFO_EXTENSION);
                     $data['document_link'] = json_encode($document, JSON_THROW_ON_ERROR);
@@ -74,7 +73,7 @@ class DocumentService
         if (count($savedDocumentLinks) > 0) {
             foreach ($savedDocumentLinks as $id => $savedFile) {
                 $this->documentRepo->delete($savedFile['id']);
-                Storage::disk('minio')->delete('/document_link/' . $activity['id'] . '/' . $savedFile['filename']);
+                awsDeleteFile('/document_link/' . $activity['id'] . '/' . $savedFile['filename']);
             }
         }
 
