@@ -115,6 +115,7 @@ class XmlQueueWriter
      */
     public function save($mappedActivity): bool
     {
+        file_put_contents('valid_test.json', sprintf('%s%s', 'Save fx called ', PHP_EOL), FILE_APPEND);
         $activity_identifier = Arr::get($mappedActivity, 'identifier.activity_identifier');
         $xmlValidator = app(XmlValidator::class);
         $existing = $this->activityAlreadyExists($activity_identifier);
@@ -153,6 +154,7 @@ class XmlQueueWriter
      */
     protected function appendDataIntoFile($data, $errors, $existence): void
     {
+        file_put_contents('valid_test.json', sprintf('%s%s', 'appendDataIntoFile fx called ', PHP_EOL), FILE_APPEND);
         array_walk_recursive($errors, static function ($a) use (&$return) {
             $return[] = $a;
         });
