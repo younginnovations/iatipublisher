@@ -920,6 +920,18 @@ if (!function_exists('awsUrl')) {
     }
 }
 
+if (!function_exists('awsFilePath')) {
+    /**
+     * @param $path
+     *
+     * @return string
+     */
+    function awsFilePath($path): string
+    {
+        return Storage::disk('s3')->path($path);
+    }
+}
+
 if (!function_exists('localHasFile')) {
     /**
      * @param $filePath
