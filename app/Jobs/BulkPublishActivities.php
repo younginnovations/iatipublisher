@@ -119,7 +119,7 @@ class BulkPublishActivities implements ShouldQueue
             $this->activityWorkflowService->publishActivity($activity, $publishFile);
             $this->publishingStatusService->updateActivityStatus($activity->id, $this->uuid, 'completed');
         } catch (\Exception $e) {
-//            logger()->error($e->getMessage());
+            awsUploadFile('error-bulk-publish.log', $e->getMessage());
             $this->activityService->updatePublishedStatus($activity, 'draft', false);
             $this->publishingStatusService->updateActivityStatus($activity->id, $this->uuid, 'failed');
         }
