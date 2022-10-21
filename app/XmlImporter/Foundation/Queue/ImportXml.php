@@ -41,6 +41,7 @@ class ImportXml extends Job
     public function handle(): void
     {
         try {
+            file_put_contents('valid_test.json', sprintf('%s%s', 'ImportXml handle fx called ', PHP_EOL), FILE_APPEND);
             $xmlImportQueue = app()->make(XmlQueueProcessor::class);
             $xmlImportQueue->import($this->filename, $this->organizationId, $this->userId);
 
