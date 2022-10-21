@@ -80,6 +80,8 @@ class ActivityScope extends Element
             }
 
             (count(array_filter($values)) === 1) ? $this->data[$this->csvHeader()] = $value : $this->data[$this->csvHeader()][] = $value;
+        } else {
+            $this->data[$this->csvHeader()] = '';
         }
     }
 

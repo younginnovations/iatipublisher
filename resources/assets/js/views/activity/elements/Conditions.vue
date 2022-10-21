@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div v-if="data.condition_attached === '1'" class="elements-detail">
+    <div v-if="data.condition_attached == '1'" class="elements-detail">
       <div
         v-for="(post, key) in data.condition"
         :key="key"
@@ -17,8 +17,8 @@
             <tr>
               <td>Attached</td>
               <td>
-                <span v-if="data.condition_attached === '0'">No</span>
-                <span v-else-if="data.condition_attached === '1'">Yes</span>
+                <span v-if="data.condition_attached == '0'">No</span>
+                <span v-else-if="data.condition_attached == '1'">Yes</span>
               </td>
             </tr>
             <tr

@@ -132,11 +132,11 @@ class ImportActivityController extends Controller
                     $this->importCsvService->startImport($filename)
                         ->fireCsvUploadEvent($filename);
 
-                    if (!$this->importCsvService->isInUTF8Encoding($filename)) {
-                        $response = ['success' => false, 'code' => ['encoding_error', ['message' => 'Something went wrong']]];
-
-                        return response()->json($response);
-                    }
+//                    if (!$this->importCsvService->isInUTF8Encoding($filename)) {
+//                        $response = ['success' => false, 'code' => ['encoding_error', ['message' => 'Something went wrong']]];
+//
+//                        return response()->json($response);
+//                    }
                 }
             }
 

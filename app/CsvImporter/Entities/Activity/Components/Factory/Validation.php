@@ -196,7 +196,7 @@ class Validation extends Factory
                     );
 
                     foreach ($totalPercentage as $percentage) {
-                        if ($percentage !== '' && $percentage !== 100) {
+                        if ($percentage !== '' && $percentage !== 100.0) {
                             return false;
                         }
                     }
@@ -321,7 +321,7 @@ class Validation extends Factory
 
                 if (is_array(Arr::get($values, 'activityRecipientRegion'))) {
                     foreach (Arr::get($values, 'activityRecipientRegion', []) as $recipientRegion) {
-                        $activityRecipientRegion = $recipientRegion['region_code'];
+                        $activityRecipientRegion = !empty($recipientRegion['region_code']) ? $recipientRegion['region_code'] : (!empty($recipientRegion['custom_code']) ? $recipientRegion['custom_code'] : '');
                     }
                 }
 
@@ -455,6 +455,23 @@ class Validation extends Factory
                 }
 
                 return $check;
+            }
+        );
+
+        $this->extend(
+            'sum',
+            function ($attribute, $value, $parameters, $validator) {
+                return false;
+            }
+        );
+
+        $this->extend(
+            'date_greater_than',
+            function ($attribute, $value, $parameters, $validator) {
+                $inserted = Carbon::parse($value)->year;
+                $since = $parameters[0];
+
+                return $inserted >= $since;
             }
         );
     }

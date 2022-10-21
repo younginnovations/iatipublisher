@@ -397,16 +397,16 @@ class Sector extends Element
 
                     switch ($vocabulary) {
                         case '1':
-                            $rules[sprintf('%s.sector_code', $sectorForm)] = sprintf('nullable|in:%s', $sectorCodeList);
+                            $rules[sprintf('%s.code', $sectorForm)] = sprintf('nullable|in:%s', $sectorCodeList);
                             break;
                         case '2':
                             $rules[sprintf('%s.category_code', $sectorForm)] = sprintf('nullable|in:%s', $sectorCategoryCodeList);
                             break;
                         case '7':
-                            $rules[sprintf('%s.sector_sdg_goal', $sectorForm)] = sprintf('nullable|in:%s', $sectorSdgGoalsCodeList);
+                            $rules[sprintf('%s.sdg_goal', $sectorForm)] = sprintf('nullable|in:%s', $sectorSdgGoalsCodeList);
                             break;
                         case '8':
-                            $rules[sprintf('%s.sector_sdg_target', $sectorForm)] = sprintf('nullable|in:%s', $sectorSdgTargetsCodeList);
+                            $rules[sprintf('%s.sdg_target', $sectorForm)] = sprintf('nullable|in:%s', $sectorSdgTargetsCodeList);
                             break;
                         case '98':
                         case '99':
@@ -451,8 +451,8 @@ class Sector extends Element
 
                     switch ($vocabulary) {
                         case '1':
-                            $messages[sprintf('%s.sector_code.%s', $sectorForm, 'required')] = trans('validation.required', ['attribute' => trans('elementForm.sector_code')]);
-                            $messages[sprintf('%s.sector_code.%s', $sectorForm, 'in')] = trans('validation.invalid_in_transaction', ['attribute' => trans('elementForm.sector_code')]);
+                            $messages[sprintf('%s.code.%s', $sectorForm, 'required')] = trans('validation.required', ['attribute' => trans('elementForm.sector_code')]);
+                            $messages[sprintf('%s.code.%s', $sectorForm, 'in')] = trans('validation.invalid_in_transaction', ['attribute' => trans('elementForm.sector_code')]);
                             break;
                         case '2':
                             $messages[sprintf('%s.category_code.%s', $sectorForm, 'required')] = trans('validation.required', ['attribute' => trans('elementForm.sector_code')]);
@@ -460,12 +460,12 @@ class Sector extends Element
 
                             break;
                         case '7':
-                            $messages[sprintf('%s.sector_sdg_goal.%s', $sectorForm, 'required')] = trans('validation.required', ['attribute' => trans('elementForm.sector_code')]);
-                            $messages[sprintf('%s.sector_sdg_goal.%s', $sectorForm, 'in')] = trans('validation.invalid_in_transaction', ['attribute' => trans('elementForm.sector_code')]);
+                            $messages[sprintf('%s.sdg_goal.%s', $sectorForm, 'required')] = trans('validation.required', ['attribute' => trans('elementForm.sector_code')]);
+                            $messages[sprintf('%s.sdg_goal.%s', $sectorForm, 'in')] = trans('validation.invalid_in_transaction', ['attribute' => trans('elementForm.sector_code')]);
                             break;
                         case '8':
-                            $messages[sprintf('%s.sector_sdg_target.%s', $sectorForm, 'required')] = trans('validation.required', ['attribute' => trans('elementForm.sector_code')]);
-                            $messages[sprintf('%s.sector_sdg_target.%s', $sectorForm, 'in')] = trans('validation.invalid_in_transaction', ['attribute' => trans('elementForm.sector_code')]);
+                            $messages[sprintf('%s.sdg_target.%s', $sectorForm, 'required')] = trans('validation.required', ['attribute' => trans('elementForm.sector_code')]);
+                            $messages[sprintf('%s.sdg_target.%s', $sectorForm, 'in')] = trans('validation.invalid_in_transaction', ['attribute' => trans('elementForm.sector_code')]);
                             break;
                         case '98':
                         case '99':

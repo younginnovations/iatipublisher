@@ -94,6 +94,19 @@ class ActivityRow extends Row
         'policyMarker',
         'relatedActivity',
         'contactInfo',
+        'otherIdentifier',
+        'tag',
+        'collaborationType',
+        'defaultFlowType',
+        'defaultFinanceType',
+        'defaultTiedStatus',
+        'defaultAidType',
+        'countryBudgetItem',
+        'humanitarianScope',
+        'capitalSpend',
+        'condition',
+        'legacyData',
+        'documentLink',
     ];
 
     /**
