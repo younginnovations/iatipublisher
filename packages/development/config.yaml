@@ -61,5 +61,5 @@ data:
 
   CSV_DATA_STORAGE_PATH :  'app/CsvImporter/tmp'
   CSV_FILE_STORAGE_PATH :  'app/CsvImporter/file'
-  XML_DATA_STORAGE_PATH :  'xmlImporter/tmp'
-  XML_FILE_STORAGE_PATH :  'xmlImporter/file'
+  XML_DATA_STORAGE_PATH :  'XmlImporter/tmp'
+  XML_FILE_STORAGE_PATH :  'XmlImporter/file'
