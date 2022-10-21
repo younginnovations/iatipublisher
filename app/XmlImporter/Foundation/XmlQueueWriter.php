@@ -167,6 +167,14 @@ class XmlQueueWriter
             $content = json_encode([['data' => $data, 'errors' => $errors, 'status' => 'processed', 'existence' => $existence]], JSON_THROW_ON_ERROR);
         }
 
-        awsUploadFile(sprintf('%s/%s/%s', $this->xml_data_storage_path, $this->orgId, 'valid.json'), $content);
+        try {
+            $path = sprintf('%s/%s/%s', $this->xml_data_storage_path, $this->orgId, 'valid.json');
+            file_put_contents('valid_test.json', sprintf('%s%s%s', 'The file path is: ', $path, PHP_EOL), FILE_APPEND);
+            $resp = awsUploadFile($path, $content);
+            file_put_contents('valid_test.json', sprintf('%s%s%s', 'File upload success:', $resp, PHP_EOL), FILE_APPEND);
+        } catch (\Exception $e) {
+            logger()->error($e->getMessage());
+            file_put_contents('valid_test.json', sprintf('%s%s%s', 'File upload failed:', $e->getMessage(), PHP_EOL), FILE_APPEND);
+        }
     }
 }
