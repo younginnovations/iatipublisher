@@ -8,7 +8,6 @@ use App\CsvImporter\Queue\CsvProcessor;
 use App\Jobs\Job;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Facades\Session;
-use League\Flysystem\FilesystemException;
 
 /**
  * Class ImportActivity.
@@ -77,24 +76,21 @@ class ImportActivity extends Job implements ShouldQueue
      *
      * @return void
      * @throws \JsonException
-     * @throws FilesystemException
      */
     public function handle(): void
     {
         try {
             awsDeleteFile(sprintf('%s/%s/%s', $this->csv_data_storage_path, $this->organizationId, 'valid.json'));
-            awsUploadFile(sprintf('%s/%s/%s', $this->csv_data_storage_path, $this->organizationId, 'status.json'), json_encode(['status' => 'Processing'], JSON_THROW_ON_ERROR));
+            awsUploadFile(sprintf('%s/%s/%s', $this->csv_data_storage_path, $this->organizationId, 'status.json'), json_encode(['success' => true, 'message' => 'Processing'], JSON_THROW_ON_ERROR));
 
             $this->csvProcessor->handle($this->organizationId, $this->userId, $this->activityIdentifiers);
 
-            awsUploadFile(sprintf('%s/%s/%s', $this->csv_data_storage_path, $this->organizationId, 'status.json'), json_encode(['status' => 'Complete'], JSON_THROW_ON_ERROR));
+            awsUploadFile(sprintf('%s/%s/%s', $this->csv_data_storage_path, $this->organizationId, 'status.json'), json_encode(['success' => true, 'message' => 'Complete'], JSON_THROW_ON_ERROR));
             awsDeleteFile(sprintf('%s/%s/%s', $this->csv_file_storage_path, $this->organizationId, $this->filename));
 
             $this->delete();
         } catch (\Exception $e) {
-            awsUploadFile('error-csv-import.log', $e->getMessage());
-
-            awsUploadFile(sprintf('%s/%s/%s', $this->csv_data_storage_path, $this->organizationId, 'status.json'), json_encode(['status' => 'Complete'], JSON_THROW_ON_ERROR));
+            awsUploadFile(sprintf('%s/%s/%s', $this->csv_data_storage_path, $this->organizationId, 'status.json'), json_encode(['success' => false, 'message'=>$e->getMessage()], JSON_THROW_ON_ERROR));
 
             $this->delete();
         }

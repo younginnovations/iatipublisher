@@ -7,7 +7,6 @@ namespace App\CsvImporter\Queue;
 use App\CsvImporter\Entities\Activity\Activity;
 use App\CsvImporter\Traits\ChecksCsvHeaders;
 use Illuminate\Support\Arr;
-use League\Flysystem\FilesystemException;
 
 /**
  * Class CsvProcessor.
@@ -53,13 +52,10 @@ class CsvProcessor
      * @param $activityIdentifiers
      *
      * @throws \JsonException
-     * @throws FilesystemException
      */
     public function handle($orgId, $userId, $activityIdentifiers): void
     {
         $this->filterHeader();
-        $mismatchFilePath = sprintf('%s/%s/%s', env('CSV_DATA_STORAGE_PATH ', 'CsvImporter/tmp'), $orgId, 'header_mismatch.json');
-        awsDeleteFile($mismatchFilePath);
 
         if ($this->isCorrectCsv()) {
             $this->groupValues();
@@ -68,7 +64,7 @@ class CsvProcessor
 
             $this->activity->process();
         } else {
-            awsUploadFile($mismatchFilePath, json_encode(['header_mismatch' => true], JSON_THROW_ON_ERROR));
+            throw new \RuntimeException('Mismatch CSV header');
         }
     }
 
