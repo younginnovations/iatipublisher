@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Requests\Activity\Period;
 
 use App\Http\Requests\Activity\ActivityBaseRequest;
+use Illuminate\Support\Facades\Validator;
 
 /**
  * Class PeriodRequest.
@@ -170,16 +171,33 @@ class PeriodRequest extends ActivityBaseRequest
     protected function getRulesForTarget($formFields, $valueType): array
     {
         $rules = [];
+        $indicator = $this->indicatorService->getIndicator($this->id)->indicator;
+        $measure = $indicator['measure'];
+
+        Validator::extendImplicit('qualitative_rule', static function () {
+            return false;
+        });
 
         foreach ($formFields as $targetIndex => $target) {
             $targetForm = sprintf('%s.%s', $valueType, $targetIndex);
-            $rules[sprintf('%s.%s.value', $valueType, $targetIndex)] = 'nullable|numeric';
+            $narrativeRules = $this->getRulesForNarrative($target['comment'][0]['narrative'], sprintf('%s.comment.0', $targetForm));
+            $docLinkRules = $this->getRulesForDocumentLink($target['document_link'], $targetForm);
 
-            $rules = array_merge(
-                $rules,
-                $this->getRulesForNarrative($target['comment'][0]['narrative'], sprintf('%s.comment.0', $targetForm)),
-                $this->getRulesForDocumentLink($target['document_link'], $targetForm),
-            );
+            foreach ($narrativeRules as $key=> $narrativeRule) {
+                $rules[$key] = $narrativeRule;
+            }
+
+            foreach ($docLinkRules as $key=>$docLinkRule) {
+                $rules[$key] = $docLinkRule;
+            }
+
+            if ($measure === '5') {
+                if ($target['value']) {
+                    $rules[sprintf('%s.%s.value', $valueType, $targetIndex)] = 'qualitative_rule';
+                }
+            } elseif (!$target['value']) {
+                $rules[sprintf('%s.%s.value', $valueType, $targetIndex)] = 'required|numeric';
+            }
         }
 
         return $rules;
@@ -196,6 +214,8 @@ class PeriodRequest extends ActivityBaseRequest
     protected function getMessagesForTarget($formFields, $valueType): array
     {
         $messages = [];
+        $indicator = $this->indicatorService->getIndicator($this->id)->indicator;
+        $measure = $indicator['measure'];
 
         foreach ($formFields as $targetIndex => $target) {
             $targetForm = sprintf('%s.%s', $valueType, $targetIndex);
@@ -206,14 +226,26 @@ class PeriodRequest extends ActivityBaseRequest
                 $targetIndex
             )]
                 = 'The @value field must be numeric.';
-            $messages = array_merge(
-                $messages,
-                $this->getMessagesForNarrative(
-                    $target['comment'][0]['narrative'],
-                    sprintf('%s.comment.0', $targetForm)
-                ),
-                $this->getMessagesForDocumentLink($target['document_link'], $targetForm),
-            );
+
+            $narrativeMessages = $this->getMessagesForNarrative($target['comment'][0]['narrative'], sprintf('%s.comment.0', $targetForm));
+
+            foreach ($narrativeMessages as $key => $narrativeMessage) {
+                $messages[$key] = $narrativeMessage;
+            }
+
+            $docLinkMessages = $this->getMessagesForDocumentLink($target['document_link'], $targetForm);
+
+            foreach ($docLinkMessages as $key => $docLinkMessage) {
+                $messages[$key] = $docLinkMessage;
+            }
+
+            if ($measure === '5') {
+                if ($target['value']) {
+                    $messages[sprintf('%s.%s.value', $valueType, $targetIndex)] = 'Value must be omitted when the indicator measure is qualitative.';
+                }
+            } elseif (!$target['value']) {
+                $messages[sprintf('%s.%s.value', $valueType, $targetIndex)] = 'Value must be filled when the indicator measure is non-qualitative.';
+            }
         }
 
         return $messages;
