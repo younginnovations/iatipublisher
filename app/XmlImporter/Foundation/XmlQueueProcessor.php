@@ -74,14 +74,12 @@ class XmlQueueProcessor
      * @param XmlProcessor       $xmlProcessor
      * @param ActivityRepository $activityRepo
      * @param DatabaseManager    $databaseManager
-     * @param LoggerInterface    $logger
      */
-    public function __construct(XmlServiceProvider $xmlServiceProvider, XmlProcessor $xmlProcessor, ActivityRepository $activityRepo, DatabaseManager $databaseManager, LoggerInterface $logger)
+    public function __construct(XmlServiceProvider $xmlServiceProvider, XmlProcessor $xmlProcessor, ActivityRepository $activityRepo, DatabaseManager $databaseManager)
     {
         $this->xmlServiceProvider = $xmlServiceProvider;
         $this->xmlProcessor = $xmlProcessor;
         $this->activityRepo = $activityRepo;
-        $this->logger = $logger;
         $this->databaseManager = $databaseManager;
         $this->xml_file_storage_path = env('XML_FILE_STORAGE_PATH ', 'XmlImporter/file');
         $this->xml_data_storage_path = env('XML_DATA_STORAGE_PATH ', 'XmlImporter/tmp');
@@ -108,22 +106,29 @@ class XmlQueueProcessor
             $this->filename = $filename;
             $dbIatiIdentifiers = $this->dbIatiIdentifiers($orgId);
             $contents = awsGetFile(sprintf('%s/%s/%s', $this->xml_file_storage_path, $this->orgId, $filename));
-            $mismatchFilePath = storage_path(sprintf('%s/%s/%s', $this->xml_data_storage_path, $orgId, 'header_mismatch.json'));
-            awsDeleteFile($mismatchFilePath);
+            awsUploadFile(sprintf('%s/%s/%s', $this->xml_data_storage_path, $this->orgId, 'status.json'), json_encode(['success'=> true, 'message' => 'XML import processing'], JSON_THROW_ON_ERROR));
 
             if ($this->xmlServiceProvider->isValidAgainstSchema($contents)) {
                 $xmlData = $this->xmlServiceProvider->load($contents);
                 $this->xmlProcessor->process($xmlData, $userId, $orgId, $dbIatiIdentifiers);
 
+                awsUploadFile(sprintf('%s/%s/%s', $this->xml_data_storage_path, $this->orgId, 'status.json'), json_encode(
+                    ['success'=> true, 'message' => 'XML import completed'],
+                    JSON_THROW_ON_ERROR
+                ));
+
                 return true;
             }
+            awsUploadFile(sprintf('%s/%s/%s', $this->xml_data_storage_path, $orgId, 'status.json'), json_encode(
+                ['success'=> false, 'message' => 'Invalid XMl or Header mismatched'],
+                JSON_THROW_ON_ERROR
+            ));
 
             $this->databaseManager->rollback();
-            awsUploadFile($mismatchFilePath, json_encode(['header_mismatch' => true], JSON_THROW_ON_ERROR));
 
             return false;
         } catch (\Exception $e) {
-            awsUploadFile('error-import.log', $e->getMessage());
+            awsUploadFile(sprintf('%s/%s/%s', $this->xml_data_storage_path, $orgId, 'status.json'), json_encode(['success'=> false, 'message' => $e->getMessage()], JSON_THROW_ON_ERROR));
 
             throw  $e;
         }

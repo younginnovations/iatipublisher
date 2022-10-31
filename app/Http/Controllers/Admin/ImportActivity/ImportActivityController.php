@@ -88,8 +88,6 @@ class ImportActivityController extends Controller
                 return redirect()->route('admin.activities.index');
             }
 
-            Session::forget('header_mismatch');
-
             return view('admin.import.index');
         } catch (Exception $e) {
             logger()->error($e->getMessage());
