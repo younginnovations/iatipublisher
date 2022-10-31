@@ -18,9 +18,8 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Session;
-use Illuminate\Support\Facades\Storage;
+use League\Flysystem\FilesystemException;
 
 /**
  * Class ActivityController.
@@ -60,10 +59,10 @@ class ImportActivityController extends Controller
     /**
      * ActivityController Constructor.
      *
-     * @param ActivityService    $activityService
+     * @param ActivityService  $activityService
      * @param ImportCsvService $importCsvService
      * @param ImportXmlService $importXmlService
-     * @param DatabaseManager    $db
+     * @param DatabaseManager  $db
      */
     public function __construct(ActivityService $activityService, ImportCsvService $importCsvService, ImportXmlService $importXmlService, DatabaseManager $db)
     {
@@ -71,8 +70,8 @@ class ImportActivityController extends Controller
         $this->importCsvService = $importCsvService;
         $this->importXmlService = $importXmlService;
         $this->db = $db;
-        $this->csv_data_storage_path = env('CSV_DATA_STORAGE_PATH ', 'app/CsvImporter/tmp');
-        $this->xml_data_storage_path = env('XML_DATA_STORAGE_PATH ', 'app/XmlImporter/tmp');
+        $this->csv_data_storage_path = env('CSV_DATA_STORAGE_PATH', 'CsvImporter/tmp');
+        $this->xml_data_storage_path = env('XML_DATA_STORAGE_PATH', 'XmlImporter/tmp');
     }
 
     /**
@@ -105,6 +104,7 @@ class ImportActivityController extends Controller
      * @param ImportActivityRequest $request
      *
      * @return JsonResponse
+     * @throws FilesystemException
      */
     public function store(ImportActivityRequest $request): JsonResponse
     {
@@ -130,7 +130,7 @@ class ImportActivityController extends Controller
                 if ($this->importCsvService->storeCsv($file)) {
                     $filename = str_replace(' ', '', $file->getClientOriginalName());
                     $this->importCsvService->startImport($filename)
-                        ->fireCsvUploadEvent($filename);
+                                           ->fireCsvUploadEvent($filename);
 
 //                    if (!$this->importCsvService->isInUTF8Encoding($filename)) {
 //                        $response = ['success' => false, 'code' => ['encoding_error', ['message' => 'Something went wrong']]];
@@ -198,9 +198,9 @@ class ImportActivityController extends Controller
     {
         try {
             $filetype = Session::get('import_filetype');
-            $org_id = Auth::user()->organization_id;
+            $orgId = Auth::user()->organization_id;
 
-            if (!$org_id) {
+            if (!$orgId) {
                 Session::put('error', 'User is not associated with any organization.');
 
                 return redirect()->route('admin.activities.index');
@@ -210,11 +210,18 @@ class ImportActivityController extends Controller
                 return redirect()->route('admin.activities.index');
             }
 
-            $message = $filetype === 'xml' ? 'Invalid xml schema. Please upload correct schema file' : 'Invalid file content. Please upload file with correct header and content.';
-            $filepath = $filetype === 'xml' ? sprintf('%s/%s/%s', $this->xml_data_storage_path, $org_id, 'header_mismatch.json') : sprintf('%s/%s/%s', $this->csv_data_storage_path, $org_id, 'header_mismatch.json');
+            $status = awsGetFile(sprintf('%s/%s/%s', $filetype === 'xml' ? $this->xml_data_storage_path : $this->csv_data_storage_path, $orgId, 'status.json'));
 
-            if (file_exists(storage_path($filepath))) {
-                Session::put('error', $message);
+            if (!$status) {
+                Session::put('error', 'status.json file not present in AWS');
+
+                return redirect()->route('admin.activities.index');
+            }
+
+            $status = json_decode($status, true, 512, JSON_THROW_ON_ERROR);
+
+            if (!$status['success']) {
+                Session::put('error', $status['message']);
 
                 return redirect()->route('admin.activities.index');
             }

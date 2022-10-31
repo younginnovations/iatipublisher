@@ -19,7 +19,6 @@ use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\File as FileFacade;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Storage;
-use League\Flysystem\FilesystemException;
 use Maatwebsite\Excel\Excel;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\File\File;
@@ -413,7 +412,7 @@ class ImportCsvService
     }
 
     /**
-     * Store Csv file before import.
+     * Uploads Csv file to bucket before import.
      *
      * @param UploadedFile $file
      *
@@ -510,7 +509,6 @@ class ImportCsvService
 
     /**
      * Clear old import data before another.
-     * @throws FilesystemException
      */
     public function clearOldImport(): void
     {
