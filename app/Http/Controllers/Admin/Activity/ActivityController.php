@@ -162,6 +162,7 @@ class ActivityController extends Controller
             $status = $activity->element_status;
             $status['transactions'] = $transactions->count() === 0 ? false : $status['transactions'];
             $status['result'] = $results->count() === 0 ? false : $status['result'];
+            $status['reporting_org'] = $activity->organization->reporting_org_element_completed;
             $progress = $this->activityService->activityPublishingProgress($activity);
             $coreCompleted = isCoreElementCompleted(array_merge(['reporting_org' => $activity->organization->reporting_org_element_completed], $activity->element_status));
             $validatorResponse = $this->activityValidatorResponseService->getValidatorResponse($id);
