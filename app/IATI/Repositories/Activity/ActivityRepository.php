@@ -300,6 +300,8 @@ class ActivityRepository extends Repository
                 'conditions'           => Arr::get($activityData, 'condition', null),
                 'legacy_data'          => $this->getActivityElement($activityData, 'legacy_data'),
                 'document_link'        => $this->getActivityElement($activityData, 'document_link'),
+                'location'             => $this->getActivityElement($activityData, 'location'),
+                'planned_disbursement' => $this->getActivityElement($activityData, 'planned_disbursement'),
             ]
         );
     }
@@ -347,6 +349,8 @@ class ActivityRepository extends Repository
                 'conditions'           => Arr::get($activityData, 'condition', null),
                 'legacy_data'          => $this->getActivityElement($activityData, 'legacy_data'),
                 'document_link'        => $this->getActivityElement($activityData, 'document_link'),
+                'location'             => $this->getActivityElement($activityData, 'location'),
+                'planned_disbursement' => $this->getActivityElement($activityData, 'planned_disbursement'),
             ]
         );
     }
