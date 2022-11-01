@@ -67,8 +67,8 @@ class ImportActivity extends Job implements ShouldQueue
         $this->userId = Session::get('user_id');
         $this->filename = $filename;
         $this->activityIdentifiers = $activityIdentifiers;
-        $this->csv_file_storage_path = env('CSV_FILE_STORAGE_PATH ', 'CsvImporter/file');
-        $this->csv_data_storage_path = env('CSV_DATA_STORAGE_PATH ', 'CsvImporter/tmp');
+        $this->csv_file_storage_path = env('CSV_FILE_STORAGE_PATH', 'CsvImporter/file');
+        $this->csv_data_storage_path = env('CSV_DATA_STORAGE_PATH', 'CsvImporter/tmp');
     }
 
     /**

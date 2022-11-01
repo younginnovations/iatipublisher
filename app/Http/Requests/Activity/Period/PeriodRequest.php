@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Http\Requests\Activity\Period;
 
 use App\Http\Requests\Activity\ActivityBaseRequest;
-use Illuminate\Support\Facades\Validator;
 
 /**
  * Class PeriodRequest.
@@ -174,10 +173,6 @@ class PeriodRequest extends ActivityBaseRequest
         $indicator = $this->indicatorService->getIndicator($this->id)->indicator;
         $measure = $indicator['measure'];
 
-        Validator::extendImplicit('qualitative_rule', static function () {
-            return false;
-        });
-
         foreach ($formFields as $targetIndex => $target) {
             $targetForm = sprintf('%s.%s', $valueType, $targetIndex);
             $narrativeRules = $this->getRulesForNarrative($target['comment'][0]['narrative'], sprintf('%s.comment.0', $targetForm));
@@ -191,12 +186,12 @@ class PeriodRequest extends ActivityBaseRequest
                 $rules[$key] = $docLinkRule;
             }
 
-            if ($measure === '5') {
-                if ($target['value']) {
-                    $rules[sprintf('%s.%s.value', $valueType, $targetIndex)] = 'qualitative_rule';
-                }
-            } elseif (!$target['value']) {
+            if ($measure) {
                 $rules[sprintf('%s.%s.value', $valueType, $targetIndex)] = 'required|numeric';
+
+                if ($measure === '5') {
+                    $rules[sprintf('%s.%s.value', $valueType, $targetIndex)] = 'prohibited';
+                }
             }
         }
 
@@ -239,12 +234,12 @@ class PeriodRequest extends ActivityBaseRequest
                 $messages[$key] = $docLinkMessage;
             }
 
-            if ($measure === '5') {
-                if ($target['value']) {
+            if ($measure) {
+                $messages[sprintf('%s.%s.value', $valueType, $targetIndex)] = 'Value must be filled when the indicator measure is non-qualitative.';
+
+                if ($measure === '5') {
                     $messages[sprintf('%s.%s.value', $valueType, $targetIndex)] = 'Value must be omitted when the indicator measure is qualitative.';
                 }
-            } elseif (!$target['value']) {
-                $messages[sprintf('%s.%s.value', $valueType, $targetIndex)] = 'Value must be filled when the indicator measure is non-qualitative.';
             }
         }
 
