@@ -2249,7 +2249,7 @@
         "add_more": false,
         "hover_text": "The exact date of the planned disbursement OR the starting date of the period in which this specific disbursement will be made.<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/planned-disbursement/period-start/'>For more information</a>",
         "attributes": {
-          "iso_date": {
+          "date": {
             "name": "date",
             "label": "iso_date",
             "type": "date",
@@ -2268,7 +2268,7 @@
         "add_more": false,
         "hover_text": "The ending date for the period in which this specific disbursement will be made.<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/planned-disbursement/period-end/'>For more information</a>",
         "attributes": {
-          "iso_date": {
+          "date": {
             "name": "date",
             "label": "iso_date",
             "type": "date",
