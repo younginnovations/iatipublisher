@@ -474,5 +474,12 @@ class Validation extends Factory
                 return $inserted >= $since;
             }
         );
+
+        $this->extend(
+            'period_start_end',
+            function ($attribute, $value, $parameter, $validator) {
+                return !($parameter[1] < $parameter[0]);
+            }
+        );
     }
 }

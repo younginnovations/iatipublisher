@@ -107,6 +107,8 @@ class ActivityRow extends Row
         'condition',
         'legacyData',
         'documentLink',
+        'location',
+        'plannedDisbursement',
     ];
 
     /**
