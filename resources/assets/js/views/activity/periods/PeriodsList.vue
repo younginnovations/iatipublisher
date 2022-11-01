@@ -5,15 +5,17 @@
       title="Periods List"
       :back-link="indicatorLink"
     >
-      <Toast
-        v-if="toastData.visibility"
-        :message="toastData.message"
-        :type="toastData.type"
-        class="mr-3"
-      />
-      <a :href="`${periodLink}/create`">
-        <Btn text="Add Period" icon="plus" type="primary" />
-      </a>
+      <div class="flex space-x-3 items-center">
+        <Toast
+          v-if="toastData.visibility"
+          :message="toastData.message"
+          :type="toastData.type"
+          class="mr-3"
+        />
+        <a :href="`${periodLink}/create`">
+          <Btn text="Add Period" icon="plus" type="primary" />
+        </a>
+      </div>
     </PageTitle>
 
     <div class="iati-list-table text-n-40">

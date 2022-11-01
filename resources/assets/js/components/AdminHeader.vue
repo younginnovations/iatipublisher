@@ -323,7 +323,7 @@ onMounted(async () => {
   }
 }
 .spinner {
-  @apply absolute top-3 right-3 inline-block animate-spin rounded-full border-2 border-n-10 border-opacity-5;
+  @apply absolute top-3 right-7 inline-block animate-spin rounded-full border-2 border-n-10 border-opacity-5;
   width: 15px;
   height: 15px;
   border-top-color: white;

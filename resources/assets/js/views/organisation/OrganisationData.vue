@@ -54,14 +54,14 @@
             </div>
           </div>
         </div>
-        <div class="actions flex grow flex-col items-end justify-end">
-          <div class="inline-flex justify-end">
+        <div class="actions flex grow md:shrink-0 items-end justify-end gap-3">
             <Toast
               v-if="toastData.visibility"
               :message="toastData.message"
               :type="toastData.type"
             />
-            <div></div>
+          <div class="inline-flex justify-end">
+            <!-- Download File -->
             <!-- <button
               class="button secondary-btn mr-3.5 font-bold"
               @click="downloadValue = true"
