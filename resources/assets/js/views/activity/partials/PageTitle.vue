@@ -58,7 +58,6 @@
               v-if="refreshToastMsg.visibility"
               :message="refreshMessage"
               :type="refreshMessageType"
-              class="mr-5"
             />
             <PublishSelected />
             <DeleteButton v-if="store.state.selectedActivities.length === 1" />
@@ -89,7 +88,7 @@ const store = useStore();
 
 const refreshMessageType = true,
   refreshMessage =
-    'Activity has been published sucessfully, refresh to see changes';
+    'Activity has been published successfully, refresh to see changes';
 
 interface ToastInterface {
   visibility: boolean;

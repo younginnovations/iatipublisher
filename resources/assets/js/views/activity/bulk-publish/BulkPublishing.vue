@@ -138,6 +138,9 @@ const bulkPublishStatus = () => {
 
           if (completed.value === "completed") {
             refreshToastMsg.visibility = true;
+            setTimeout(() => {
+              refreshToastMsg.visibility = false;
+            }, 5000);
           }
         } else {
           completed.value = "completed";

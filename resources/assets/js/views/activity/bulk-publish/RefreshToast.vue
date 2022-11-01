@@ -1,6 +1,6 @@
 <template>
   <div
-    class="inline-flex items-center px-5 py-3 text-xs leading-normal border rounded-lg toast-notification text-n-50"
+    class="inline-flex items-center px-5 py-3 text-xs leading-normal border rounded-lg text-n-50"
     :class="className"
   >
     <svg-vue
@@ -28,9 +28,3 @@ className.value = props.type
   ? 'bg-mint border-spring-10'
   : 'bg-crimson-10 border-crimson-20';
 </script>
-
-<style scoped lang="scss">
-.toast-notification {
-  @apply absolute top-0 right-0 -translate-y-11;
-}
-</style>
