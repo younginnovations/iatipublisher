@@ -142,7 +142,7 @@ import { defineProps, ref, reactive, onMounted, Ref } from 'vue';
 import axios from 'axios';
 import { useToggle } from '@vueuse/core';
 import CreateModal from '../views/activity/CreateModal.vue';
-import Toast from './Toast.vue';
+import Toast from './ToastMessage.vue';
 
 defineProps({
   user: { type: Object, required: true },

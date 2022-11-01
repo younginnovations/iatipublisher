@@ -55,6 +55,12 @@
 import { onMounted, ref, reactive, watch, inject } from "vue";
 import axios from "axios";
 
+interface RefreshToastMsgTypeface {
+  visibility: boolean;
+}
+
+let refreshToastMsg = inject('refreshToastMsg') as RefreshToastMsgTypeface;
+
 interface paInterface {
   value: {
     publishingActivities: paElements;
@@ -129,6 +135,13 @@ const bulkPublishStatus = () => {
           paStorage.value.publishingActivities.activities = response.data.activities;
           paStorage.value.publishingActivities.status = response.data.status;
           paStorage.value.publishingActivities.message = response.data.message;
+
+          if (completed.value === "completed") {
+            refreshToastMsg.visibility = true;
+            setTimeout(() => {
+              refreshToastMsg.visibility = false;
+            }, 5000);
+          }
         } else {
           completed.value = "completed";
         }

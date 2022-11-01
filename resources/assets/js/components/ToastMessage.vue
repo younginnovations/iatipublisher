@@ -1,22 +1,20 @@
 <template>
-  <div
-    class="fixed right-10 bottom-0 z-10 inline-flex rounded-t-lg bg-eggshell py-4 px-8 text-sm leading-normal text-n-50"
-  >
-    <span>5 activities ready to publish</span>
-    <span class="ml-2.5 cursor-pointer font-bold text-spring-50"
-      >Publish all</span
-    >
+  <div :class="className">
+    <svg-vue :icon="props.type ? 'check-circle' : 'times-circle'" />
+    <span>{{ props.message }}</span>
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue';
+<script setup lang="ts">
+import { defineProps, ref } from 'vue';
 
-export default defineComponent({
-  name: 'ToastMessage',
-  components: {},
-  setup() {
-    return {};
-  },
+const props = defineProps({
+  message: { type: String, required: true },
+  type: { type: Boolean, required: true },
 });
+
+const className = ref('');
+className.value = props.type
+  ? 'rounded-lg bg-mint border border-spring-10 py-3 px-5 inline-flex items-center space-x-1 text-xs leading-normal text-n-50'
+  : 'rounded-lg bg-crimson-10 border border-crimson-20 py-3 px-5 inline-flex items-center space-x-1 text-xs leading-normal text-n-50';
 </script>

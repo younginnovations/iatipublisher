@@ -227,7 +227,7 @@ import Multiselect from '@vueform/multiselect';
 import axios from 'axios';
 
 import Loader from 'Components/Loader.vue';
-import Toast from 'Components/Toast.vue';
+import Toast from 'Components/ToastMessage.vue';
 
 /**
  * Props

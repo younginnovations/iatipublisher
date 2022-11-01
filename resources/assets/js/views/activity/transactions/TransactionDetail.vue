@@ -66,7 +66,7 @@ import { defineComponent, toRefs, onMounted, reactive } from "vue";
 //components
 import Btn from "Components/buttons/Link.vue";
 import PageTitle from "Components/sections/PageTitle.vue";
-import Toast from "Components/Toast.vue";
+import Toast from "Components/ToastMessage.vue";
 //composable
 import dateFormat from "Composable/dateFormat";
 import getActivityTitle from "Composable/title";

@@ -250,7 +250,7 @@ import Publish from 'Components/buttons/PublishButton.vue';
 import UnPublish from 'Components/buttons/UnPublishButton.vue';
 import DeleteButton from 'Components/buttons/DeleteButton.vue';
 import Errors from 'Components/sections/StickyErrors.vue';
-import Toast from 'Components/Toast.vue';
+import Toast from 'Components/ToastMessage.vue';
 
 // Activity Components
 import Elements from 'Activity/partials/ActivitiesElements.vue';
