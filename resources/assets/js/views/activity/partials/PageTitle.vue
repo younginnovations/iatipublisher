@@ -81,6 +81,10 @@ import DeleteButton from 'Components/buttons/DeleteButton.vue';
 // Vuex Store
 import { useStore } from 'Store/activities/index';
 
+interface RefreshToastMsgTypeface {
+  visibility: boolean;
+}
+
 const store = useStore();
 
 const refreshMessageType = true,
@@ -95,5 +99,5 @@ interface ToastInterface {
 
 const toastMessage = inject('toastData') as ToastInterface;
 
-const refreshToastMsg = inject('refreshToastMsg');
+const refreshToastMsg = inject('refreshToastMsg') as RefreshToastMsgTypeface;
 </script>
