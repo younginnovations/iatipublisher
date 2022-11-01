@@ -44,8 +44,8 @@
             <td>
               <span>
                 {{
-                  post.period_start[0].iso_date
-                    ? formatDate(post.period_start[0].iso_date)
+                  post.period_start[0].date
+                    ? formatDate(post.period_start[0].date)
                     : "Date Not Available"
                 }}
               </span>
@@ -56,8 +56,8 @@
             <td>
               <span>
                 {{
-                  post.period_end[0].iso_date
-                    ? formatDate(post.period_end[0].iso_date)
+                  post.period_end[0].date
+                    ? formatDate(post.period_end[0].date)
                     : "Date Not Available"
                 }}
               </span>
