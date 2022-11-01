@@ -135,7 +135,7 @@ class PlannedDisbursement extends Element
     {
         if ($key === $this->_csvHeaders[1]) {
             $value = (!$value) ? '' : $value;
-            $this->data['planned_disbursement'][$index]['period_start'][0]['iso_date'] = dateFormat('Y-m-d', $value);
+            $this->data['planned_disbursement'][$index]['period_start'][0]['date'] = dateFormat('Y-m-d', $value);
         }
     }
 
@@ -152,7 +152,7 @@ class PlannedDisbursement extends Element
     {
         if ($key === $this->_csvHeaders[2]) {
             $value = (!$value) ? '' : $value;
-            $this->data['planned_disbursement'][$index]['period_end'][0]['iso_date'] = dateFormat('Y-m-d', $value);
+            $this->data['planned_disbursement'][$index]['period_end'][0]['date'] = dateFormat('Y-m-d', $value);
         }
     }
 
@@ -290,8 +290,8 @@ class PlannedDisbursement extends Element
         foreach (Arr::get($this->data(), 'planned_disbursement', []) as $key => $value) {
             $plannedDisbursementForm = sprintf('planned_disbursement.%s', $key);
             $diff = 0;
-            $start = Arr::get($value, 'period_start.0.iso_date', null);
-            $end = Arr::get($value, 'period_end.0.iso_date', null);
+            $start = Arr::get($value, 'period_start.0.date', null);
+            $end = Arr::get($value, 'period_end.0.date', null);
 
             if ($start && $end) {
                 $diff = (strtotime($end) - strtotime($start)) / 86400;
@@ -301,11 +301,11 @@ class PlannedDisbursement extends Element
                 'nullable|in:%s',
                 $validPlannedDisbursementType,
             );
-            $rules[sprintf('%s.period_start.0.iso_date', $plannedDisbursementForm)] = sprintf(
-                'date|date_greater_than:1900|period_start_end:%s,90' . '|required_with: %s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s',
+            $rules[sprintf('%s.period_start.0.date', $plannedDisbursementForm)] = sprintf(
+                'date|date_greater_than:1900|period_start_end:%s,90|required_with: %s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s',
                 $diff,
                 sprintf('%s.planned_disbursement_type', $plannedDisbursementForm),
-                sprintf('%s.period_end.0.iso_date', $plannedDisbursementForm),
+                sprintf('%s.period_end.0.date', $plannedDisbursementForm),
                 sprintf('%s.value.0.amount', $plannedDisbursementForm),
                 sprintf('%s.value.0.currency', $plannedDisbursementForm),
                 sprintf('%s.value.0.value_date', $plannedDisbursementForm),
@@ -319,11 +319,12 @@ class PlannedDisbursement extends Element
                 sprintf('%s.receiver_org.0.narrative.0.narrative', $plannedDisbursementForm),
             );
 
-            $rules[sprintf('%s.period_end.0.iso_date', $plannedDisbursementForm)] = sprintf(
-                'date|date_greater_than:1900|period_start_end:%s,90' . 'after:' . $plannedDisbursementForm . '.period_start.0.iso_date' . '|required_with: %s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s',
+            $rules[sprintf('%s.period_end.0.date', $plannedDisbursementForm)] = sprintf(
+                'date|date_greater_than:1900|period_start_end:%s,90|after:%s.period_start.0.date|required_with: %s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s',
                 $diff,
+                $plannedDisbursementForm,
                 sprintf('%s.planned_disbursement_type', $plannedDisbursementForm),
-                sprintf('%s.period_start.0.iso_date', $plannedDisbursementForm),
+                sprintf('%s.period_start.0.date', $plannedDisbursementForm),
                 sprintf('%s.value.0.amount', $plannedDisbursementForm),
                 sprintf('%s.value.0.currency', $plannedDisbursementForm),
                 sprintf('%s.value.0.value_date', $plannedDisbursementForm),
@@ -339,8 +340,8 @@ class PlannedDisbursement extends Element
             $rules[sprintf('%s.value.0.amount', $plannedDisbursementForm)] = sprintf(
                 'nullable|numeric|required_with: %s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s',
                 sprintf('%s.planned_disbursement_type', $plannedDisbursementForm),
-                sprintf('%s.period_start.0.iso_date', $plannedDisbursementForm),
-                sprintf('%s.period_end.0.iso_date', $plannedDisbursementForm),
+                sprintf('%s.period_start.0.date', $plannedDisbursementForm),
+                sprintf('%s.period_end.0.date', $plannedDisbursementForm),
                 sprintf('%s.value.0.currency', $plannedDisbursementForm),
                 sprintf('%s.value.0.value_date', $plannedDisbursementForm),
                 sprintf('%s.provider_org.0.ref', $plannedDisbursementForm),
@@ -356,8 +357,8 @@ class PlannedDisbursement extends Element
                 'in:%s|required_with: %s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s',
                 $validCurrency,
                 sprintf('%s.planned_disbursement_type', $plannedDisbursementForm),
-                sprintf('%s.period_start.0.iso_date', $plannedDisbursementForm),
-                sprintf('%s.period_end.0.iso_date', $plannedDisbursementForm),
+                sprintf('%s.period_start.0.date', $plannedDisbursementForm),
+                sprintf('%s.period_end.0.date', $plannedDisbursementForm),
                 sprintf('%s.value.0.amount', $plannedDisbursementForm),
                 sprintf('%s.value.0.value_date', $plannedDisbursementForm),
                 sprintf('%s.provider_org.0.ref', $plannedDisbursementForm),
@@ -372,8 +373,8 @@ class PlannedDisbursement extends Element
             $rules[sprintf('%s.value.0.value_date', $plannedDisbursementForm)] = sprintf(
                 'nullable|date|date_greater_than:1900|required_with: %s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s',
                 sprintf('%s.planned_disbursement_type', $plannedDisbursementForm),
-                sprintf('%s.period_start.0.iso_date', $plannedDisbursementForm),
-                sprintf('%s.period_end.0.iso_date', $plannedDisbursementForm),
+                sprintf('%s.period_start.0.date', $plannedDisbursementForm),
+                sprintf('%s.period_end.0.date', $plannedDisbursementForm),
                 sprintf('%s.value.0.currency', $plannedDisbursementForm),
                 sprintf('%s.value.0.amount', $plannedDisbursementForm),
                 sprintf('%s.provider_org.0.ref', $plannedDisbursementForm),
@@ -427,27 +428,27 @@ class PlannedDisbursement extends Element
                 'validation.code_list',
                 ['attribute' => trans('elementForm.planned_disbursement_type')]
             );
-            $messages[sprintf('%s.period_start.0.iso_date.%s', $plannedDisbursementForm, 'date')] = trans(
+            $messages[sprintf('%s.period_start.0.date.%s', $plannedDisbursementForm, 'date')] = trans(
                 'validation.date',
                 ['attribute' => trans('elementForm.planned_disbursement_period_start_date')]
             );
-            $messages[sprintf('%s.period_start.0.iso_date.%s', $plannedDisbursementForm, 'date_greater_than')] = 'Planned disbursement period start date must be greater than 1900';
-            $messages[sprintf('%s.period_start.0.iso_date.%s', $plannedDisbursementForm, 'required_with')] = trans(
+            $messages[sprintf('%s.period_start.0.date.%s', $plannedDisbursementForm, 'date_greater_than')] = 'Planned disbursement period start date must be greater than 1900';
+            $messages[sprintf('%s.period_start.0.date.%s', $plannedDisbursementForm, 'required_with')] = trans(
                 'validation.required_with',
                 ['attribute' => trans('elementForm.planned_disbursement_period_start_date'), 'values' => 'any planned disbursement element values']
             );
-            $messages[sprintf('%s.period_start.0.iso_date.%s', $plannedDisbursementForm, 'period_start_end')] = 'The Planned Disbursement Period must not be longer than three months';
-            $messages[sprintf('%s.period_end.0.iso_date.%s', $plannedDisbursementForm, 'date')] = trans(
+            $messages[sprintf('%s.period_start.0.date.%s', $plannedDisbursementForm, 'period_start_end')] = 'The Planned Disbursement Period must not be longer than three months';
+            $messages[sprintf('%s.period_end.0.date.%s', $plannedDisbursementForm, 'date')] = trans(
                 'validation.date',
                 ['attribute' => trans('elementForm.planned_disbursement_period_end_date')]
             );
-            $messages[sprintf('%s.period_end.0.iso_date.%s', $plannedDisbursementForm, 'date_greater_than')] = 'Planned disbursement period end date must be greater than 1900';
-            $messages[sprintf('%s.period_end.0.iso_date.%s', $plannedDisbursementForm, 'required_with')] = trans(
+            $messages[sprintf('%s.period_end.0.date.%s', $plannedDisbursementForm, 'date_greater_than')] = 'Planned disbursement period end date must be greater than 1900';
+            $messages[sprintf('%s.period_end.0.date.%s', $plannedDisbursementForm, 'required_with')] = trans(
                 'validation.required_with',
                 ['attribute' => trans('elementForm.planned_disbursement_period_end_date'), 'values' => 'any planned disbursement element values']
             );
-            $messages[sprintf('%s.period_end.0.iso_date.%s', $plannedDisbursementForm, 'period_start_end')] = 'The Planned Disbursement Period must not be longer than three months';
-            $messages[sprintf('%s.period_end.0.iso_date.%s', $plannedDisbursementForm, 'after')] = trans(
+            $messages[sprintf('%s.period_end.0.date.%s', $plannedDisbursementForm, 'period_start_end')] = 'The Planned Disbursement Period must not be longer than three months';
+            $messages[sprintf('%s.period_end.0.date.%s', $plannedDisbursementForm, 'after')] = trans(
                 'validation.after',
                 ['attribute' => trans('elementForm.planned_disbursement_period_end_date'), 'date' => trans('elementForm.planned_disbursement_period_start_date')]
             );
