@@ -114,12 +114,12 @@ class PlannedDisbursementService
                 ],
                 'period-start' => [
                     '@attributes' => [
-                        'iso-date' => Arr::get($plannedDisbursement, 'period_start.0.iso_date', null),
+                        'iso-date' => Arr::get($plannedDisbursement, 'period_start.0.date', null),
                     ],
                 ],
                 'period-end'   => [
                     '@attributes' => [
-                        'iso-date' => Arr::get($plannedDisbursement, 'period_end.0.iso_date', null),
+                        'iso-date' => Arr::get($plannedDisbursement, 'period_end.0.date', null),
                     ],
                 ],
                 'value'        => [

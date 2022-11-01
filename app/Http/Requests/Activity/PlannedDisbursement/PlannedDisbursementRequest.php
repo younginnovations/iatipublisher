@@ -45,8 +45,8 @@ class PlannedDisbursementRequest extends ActivityBaseRequest
         foreach ($formFields as $plannedDisbursementIndex => $plannedDisbursement) {
             $plannedDisbursementForm = sprintf('planned_disbursement.%s', $plannedDisbursementIndex);
             $diff = 0;
-            $start = $plannedDisbursement['period_start'][0]['iso_date'];
-            $end = $plannedDisbursement['period_end'][0]['iso_date'];
+            $start = $plannedDisbursement['period_start'][0]['date'];
+            $end = $plannedDisbursement['period_end'][0]['date'];
 
             if ($start && $end) {
                 $diff = (strtotime($end) - strtotime($start)) / 86400;
@@ -263,7 +263,7 @@ class PlannedDisbursementRequest extends ActivityBaseRequest
         $rules = [];
 
         foreach ($formFields as $periodStartKey => $periodStartVal) {
-            $rules[$formBase . '.period_start.' . $periodStartKey . '.iso_date'] = 'nullable|date|period_start_end:' . $diff . ',90';
+            $rules[$formBase . '.period_start.' . $periodStartKey . '.date'] = 'nullable|date|period_start_end:' . $diff . ',90';
         }
 
         return $rules;
@@ -282,10 +282,10 @@ class PlannedDisbursementRequest extends ActivityBaseRequest
         $messages = [];
 
         foreach ($formFields as $periodStartKey => $periodStartVal) {
-            $messages[$formBase . '.period_start.' . $periodStartKey . '.iso_date.required'] = trans('validation.required', ['attribute' => trans('elementForm.period_start')]);
-            $messages[$formBase . '.period_end.' . $periodStartKey . '.iso_date.date'] = 'Period end must be a date.';
-            $messages[$formBase . '.period_end.' . $periodStartKey . '.iso_date.date_greater_than'] = 'Period end date must be date greater than year 1900.';
-            $messages[$formBase . '.period_start.' . $periodStartKey . '.iso_date.period_start_end'] = 'The Planned Disbursement Period must not be longer than three months';
+            $messages[$formBase . '.period_start.' . $periodStartKey . '.date.required'] = trans('validation.required', ['attribute' => trans('elementForm.period_start')]);
+            $messages[$formBase . '.period_end.' . $periodStartKey . '.date.date'] = 'Period end must be a date.';
+            $messages[$formBase . '.period_end.' . $periodStartKey . '.date.date_greater_than'] = 'Period end date must be date greater than year 1900.';
+            $messages[$formBase . '.period_start.' . $periodStartKey . '.date.period_start_end'] = 'The Planned Disbursement Period must not be longer than three months';
         }
 
         return $messages;
@@ -305,12 +305,12 @@ class PlannedDisbursementRequest extends ActivityBaseRequest
         $rules = [];
 
         foreach ($formFields as $periodEndKey => $periodEndVal) {
-            $rules[$formBase . '.period_end.' . $periodEndKey . '.iso_date'][] = 'nullable';
-            $rules[$formBase . '.period_end.' . $periodEndKey . '.iso_date'][] = 'date';
-            $rules[$formBase . '.period_end.' . $periodEndKey . '.iso_date'][] = 'period_start_end:' . $diff . ',90';
-            $rules[$formBase . '.period_end.' . $periodEndKey . '.iso_date'][] = sprintf(
+            $rules[$formBase . '.period_end.' . $periodEndKey . '.date'][] = 'nullable';
+            $rules[$formBase . '.period_end.' . $periodEndKey . '.date'][] = 'date';
+            $rules[$formBase . '.period_end.' . $periodEndKey . '.date'][] = 'period_start_end:' . $diff . ',90';
+            $rules[$formBase . '.period_end.' . $periodEndKey . '.date'][] = sprintf(
                 'after:%s',
-                $formBase . '.period_start.' . $periodEndKey . '.iso_date'
+                $formBase . '.period_start.' . $periodEndKey . '.date'
             );
         }
 
@@ -330,11 +330,11 @@ class PlannedDisbursementRequest extends ActivityBaseRequest
         $messages = [];
 
         foreach ($formFields as $periodEndKey => $periodEndVal) {
-            $messages[$formBase . '.period_end.' . $periodEndKey . '.iso_date.required'] = 'Period end is a required field';
-            $messages[$formBase . '.period_end.' . $periodEndKey . '.iso_date.date'] = 'Period end must be a date field';
-            $messages[$formBase . '.period_end.' . $periodEndKey . '.iso_date.after'] = 'Period end must be a date after period';
-            $messages[$formBase . '.period_end.' . $periodEndKey . '.iso_date.date_greater_than'] = 'Period end date must be date greater than year 1900.';
-            $messages[$formBase . '.period_end.' . $periodEndKey . '.iso_date.period_start_end'] = 'The Planned Disbursement Period must not be longer than three months';
+            $messages[$formBase . '.period_end.' . $periodEndKey . '.date.required'] = 'Period end is a required field';
+            $messages[$formBase . '.period_end.' . $periodEndKey . '.date.date'] = 'Period end must be a date field';
+            $messages[$formBase . '.period_end.' . $periodEndKey . '.date.after'] = 'Period end must be a date after period';
+            $messages[$formBase . '.period_end.' . $periodEndKey . '.date.date_greater_than'] = 'Period end date must be date greater than year 1900.';
+            $messages[$formBase . '.period_end.' . $periodEndKey . '.date.period_start_end'] = 'The Planned Disbursement Period must not be longer than three months';
         }
 
         return $messages;
