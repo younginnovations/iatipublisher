@@ -53,12 +53,23 @@ class BudgetRequest extends ActivityBaseRequest
             }
 
             $budgetForm = sprintf('budget.%s', $budgetIndex);
-            $rules = array_merge(
-                $rules,
-                $this->getBudgetRulesForPeriodStart($budget['period_start'], $budgetForm, $diff),
-                $this->getBudgetRulesForPeriodEnd($budget['period_end'], $budgetForm, $diff),
-                $this->getRulesForValue($budget['budget_value'], $budgetForm)
-            );
+            $periodStartRules = $this->getBudgetRulesForPeriodStart($budget['period_start'], $budgetForm, $diff);
+
+            foreach ($periodStartRules as $key => $periodStartRule) {
+                $rules[$key] = $periodStartRule;
+            }
+
+            $periodEndRules = $this->getBudgetRulesForPeriodEnd($budget['period_end'], $budgetForm, $diff);
+
+            foreach ($periodEndRules as $key => $periodEndRule) {
+                $rules[$key] = $periodEndRule;
+            }
+
+            $valueRules = $this->getRulesForValue($budget['budget_value'], $budgetForm);
+
+            foreach ($valueRules as $key => $valueRule) {
+                $rules[$key] = $valueRule;
+            }
 
             $startDate = Arr::get($budget, 'period_start.0.date', null);
             $newDate = $startDate ? date('Y-m-d', strtotime($startDate . '+1year')) : '';
@@ -76,6 +87,7 @@ class BudgetRequest extends ActivityBaseRequest
      *
      * @param $formFields
      * @param $formBase
+     * @param $diff
      *
      * @return array
      */
@@ -118,27 +130,6 @@ class BudgetRequest extends ActivityBaseRequest
     }
 
     /**
-     * Returns rules for value.
-     *
-     * @param $formFields
-     * @param $formBase
-     *
-     * @return array
-     */
-    protected function getRulesForValue($formFields, $formBase): array
-    {
-        $rules = [];
-
-        foreach ($formFields as $valueIndex => $value) {
-            $valueForm = sprintf('%s.budget_value.%s', $formBase, $valueIndex);
-            $rules[sprintf('%s.amount', $valueForm)] = 'nullable|numeric';
-            $rules[sprintf('%s.value_date', $valueForm)] = 'nullable|date';
-        }
-
-        return $rules;
-    }
-
-    /**
      * Returns messages for related activity validations.
      *
      * @param array $formFields
@@ -151,13 +142,23 @@ class BudgetRequest extends ActivityBaseRequest
 
         foreach ($formFields as $budgetIndex => $budget) {
             $budgetForm = sprintf('budget.%s', $budgetIndex);
+            $periodStartMessages = $this->getMessagesForPeriodStart($budget['period_start'], $budgetForm);
 
-            $messages = array_merge(
-                $messages,
-                $this->getMessagesForPeriodStart($budget['period_start'], $budgetForm),
-                $this->getMessagesForPeriodEnd($budget['period_end'], $budgetForm),
-                $this->getMessagesForValue($budget['budget_value'], $budgetForm)
-            );
+            foreach ($periodStartMessages as $key => $periodStartMessage) {
+                $messages[$key] = $periodStartMessage;
+            }
+
+            $periodEndMessages = $this->getMessagesForPeriodEnd($budget['period_end'], $budgetForm);
+
+            foreach ($periodEndMessages as $key => $periodEndMessage) {
+                $messages[$key] = $periodEndMessage;
+            }
+
+            $valueMessages = $this->getMessagesForValue($budget['budget_value'], $budgetForm);
+
+            foreach ($valueMessages as $key => $valueMessage) {
+                $messages[$key] = $valueMessage;
+            }
 
             $messages[$budgetForm . '.period_end.0.date.before'] = 'The Period End @iso-date must be within a year after Period Start @iso-date.';
             $messages[$budgetForm . '.period_end.0.date.period_start_end'] = 'he Budget Period must not be longer than one year';
@@ -224,6 +225,8 @@ class BudgetRequest extends ActivityBaseRequest
             $valueForm = sprintf('%s.budget_value.%s', $formBase, $valueIndex);
             $messages[sprintf('%s.amount.numeric', $valueForm)] = 'The amount field must be a number.';
             $messages[sprintf('%s.value_date.date', $valueForm)] = 'The @value-date field must be a valid date.';
+            $messages[sprintf('%s.value_date.after', $valueForm)] = 'The @value-date field must be a between period start and period end';
+            $messages[sprintf('%s.value_date.before', $valueForm)] = 'The @value-date field must be a between period start and period end';
         }
 
         return $messages;

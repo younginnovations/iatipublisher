@@ -30,17 +30,36 @@ class RecipientCountryBudgetRequest extends OrganizationBaseRequest
             }
 
             $recipientCountryBudgetForm = sprintf('recipient_country_budget.%s', $recipientCountryBudgetIndex);
-            $rules = array_merge(
-                $rules,
-                $this->getRecipientCountryBudgetRules(
-                    $recipientCountryBudget['recipient_country'],
-                    $recipientCountryBudgetForm
-                ),
-                $this->getRulesForPeriodStart($recipientCountryBudget['period_start'], $recipientCountryBudgetForm, $diff, 365),
-                $this->getRulesForPeriodEnd($recipientCountryBudget['period_end'], $recipientCountryBudgetForm, $diff, 365),
-                $this->getRulesForValue($recipientCountryBudget['value'], $recipientCountryBudgetForm),
-                $this->getRulesForBudgetLine($recipientCountryBudget['budget_line'], $recipientCountryBudgetForm)
-            );
+
+            $budgetRules = $this->getRecipientCountryBudgetRules($recipientCountryBudget['recipient_country'], $recipientCountryBudgetForm);
+
+            foreach ($budgetRules as $key => $budgetRule) {
+                $rules[$key] = $budgetRule;
+            }
+
+            $periodStartRules = $this->getRulesForPeriodStart($recipientCountryBudget['period_start'], $recipientCountryBudgetForm, $diff, 365);
+
+            foreach ($periodStartRules as $key => $periodStartRule) {
+                $rules[$key] = $periodStartRule;
+            }
+
+            $periodEndRules = $this->getRulesForPeriodEnd($recipientCountryBudget['period_end'], $recipientCountryBudgetForm, $diff, 365);
+
+            foreach ($periodEndRules as $key => $periodEndRule) {
+                $rules[$key] = $periodEndRule;
+            }
+
+            $valueRules = $this->getRulesForValue($recipientCountryBudget['value'], $recipientCountryBudgetForm);
+
+            foreach ($valueRules as $key => $valueRule) {
+                $rules[$key] = $valueRule;
+            }
+
+            $budgetLineRules = $this->getRulesForBudgetLine($recipientCountryBudget['budget_line'], $recipientCountryBudgetForm);
+
+            foreach ($budgetLineRules as $key => $budgetLineRule) {
+                $rules[$key] = $budgetLineRule;
+            }
         }
 
         return $rules;
@@ -55,21 +74,38 @@ class RecipientCountryBudgetRequest extends OrganizationBaseRequest
     {
         $messages = [];
 
-        foreach ($this->get(
-            'recipient_country_budget'
-        ) as $recipientCountryBudgetIndex => $recipientCountryBudget) {
+        foreach ($this->get('recipient_country_budget') as $recipientCountryBudgetIndex => $recipientCountryBudget) {
             $recipientCountryBudgetForm = sprintf('recipient_country_budget.%s', $recipientCountryBudgetIndex);
-            $messages = array_merge(
-                $messages,
-                $this->getRecipientCountryBudgetMessages(
-                    $recipientCountryBudget['recipient_country'],
-                    $recipientCountryBudgetForm
-                ),
-                $this->getMessagesForPeriodStart($recipientCountryBudget['period_start'], $recipientCountryBudgetForm),
-                $this->getMessagesForPeriodEnd($recipientCountryBudget['period_end'], $recipientCountryBudgetForm),
-                $this->getMessagesForValue($recipientCountryBudget['value'], $recipientCountryBudgetForm),
-                $this->getMessagesBudgetLine($recipientCountryBudget['budget_line'], $recipientCountryBudgetForm)
-            );
+
+            $budgetMessages = $this->getRecipientCountryBudgetMessages($recipientCountryBudget['recipient_country'], $recipientCountryBudgetForm);
+
+            foreach ($budgetMessages as $key => $budgetMessage) {
+                $messages[$key] = $budgetMessage;
+            }
+
+            $periodStartMessages = $this->getMessagesForPeriodStart($recipientCountryBudget['period_start'], $recipientCountryBudgetForm);
+
+            foreach ($periodStartMessages as $key => $periodStartMessage) {
+                $messages[$key] = $periodStartMessage;
+            }
+
+            $periodEndMessages = $this->getMessagesForPeriodEnd($recipientCountryBudget['period_end'], $recipientCountryBudgetForm);
+
+            foreach ($periodEndMessages as $key => $periodEndMessage) {
+                $messages[$key] = $periodEndMessage;
+            }
+
+            $valueMessages = $this->getMessagesForValue($recipientCountryBudget['value'], $recipientCountryBudgetForm);
+
+            foreach ($valueMessages as $key => $valueMessage) {
+                $messages[$key] = $valueMessage;
+            }
+
+            $budgetLineMessages = $this->getMessagesBudgetLine($recipientCountryBudget['budget_line'], $recipientCountryBudgetForm);
+
+            foreach ($budgetLineMessages as $key => $budgetLineMessage) {
+                $messages[$key] = $budgetLineMessage;
+            }
         }
 
         return $messages;
@@ -90,10 +126,11 @@ class RecipientCountryBudgetRequest extends OrganizationBaseRequest
         foreach ($formFields as $recipientCountryIndex => $recipientCountry) {
             $recipientCountryForm = sprintf('%s.recipient_country.%s', $formBase, $recipientCountryIndex);
             $rules[sprintf('%s.code', $recipientCountryForm)] = 'nullable';
-            $rules = array_merge(
-                $rules,
-                $this->getRulesForNarrative($recipientCountry['narrative'], $recipientCountryForm)
-            );
+            $narrativeRules = $this->getRulesForNarrative($recipientCountry['narrative'], $recipientCountryForm);
+
+            foreach ($narrativeRules as $key => $narrativeRule) {
+                $rules[$key] = $narrativeRule;
+            }
         }
 
         return $rules;
@@ -114,10 +151,11 @@ class RecipientCountryBudgetRequest extends OrganizationBaseRequest
         foreach ($formFields as $recipientCountryIndex => $recipientCountry) {
             $recipientCountryForm = sprintf('%s.recipient_country.%s', $formBase, $recipientCountryIndex);
             $messages[sprintf('%s.code.required', $recipientCountryForm)] = trans('validation.required', ['attribute' => trans('elementForm.code')]);
-            $messages = array_merge(
-                $messages,
-                $this->getMessagesForNarrative($recipientCountry['narrative'], $recipientCountryForm)
-            );
+            $narrativeMessages = $this->getMessagesForNarrative($recipientCountry['narrative'], $recipientCountryForm);
+
+            foreach ($narrativeMessages as $key => $narrativeMessage) {
+                $messages[$key] = $narrativeMessage;
+            }
         }
 
         return $messages;
