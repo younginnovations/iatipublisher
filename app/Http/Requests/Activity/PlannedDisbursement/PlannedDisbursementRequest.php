@@ -52,14 +52,35 @@ class PlannedDisbursementRequest extends ActivityBaseRequest
                 $diff = (strtotime($end) - strtotime($start)) / 86400;
             }
 
-            $rules = array_merge(
-                $rules,
-                $this->getPlannedDisbursementRulesForPeriodStart($plannedDisbursement['period_start'], $plannedDisbursementForm, $diff),
-                $this->getPlannedDisbursementRulesForPeriodEnd($plannedDisbursement['period_end'], $plannedDisbursementForm, $diff),
-                $this->getRulesForValue($plannedDisbursement['value'], $plannedDisbursementForm),
-                $this->getRulesForProviderOrg($plannedDisbursement['provider_org'], $plannedDisbursementForm),
-                $this->getRulesForReceiverOrg($plannedDisbursement['receiver_org'], $plannedDisbursementForm)
-            );
+            $periodStartRules = $this->getPlannedDisbursementRulesForPeriodStart($plannedDisbursement['period_start'], $plannedDisbursementForm, $diff);
+
+            foreach ($periodStartRules as $key => $periodStartRule) {
+                $rules[$key] = $periodStartRule;
+            }
+
+            $periodEndRules = $this->getPlannedDisbursementRulesForPeriodEnd($plannedDisbursement['period_end'], $plannedDisbursementForm, $diff);
+
+            foreach ($periodEndRules as $key => $periodEndRule) {
+                $rules[$key] = $periodEndRule;
+            }
+
+            $valueRules = $this->getRulesForValue($plannedDisbursement['value'], $plannedDisbursementForm);
+
+            foreach ($valueRules as $key => $valueRule) {
+                $rules[$key] = $valueRule;
+            }
+
+            $providerOrgRules = $this->getRulesForProviderOrg($plannedDisbursement['provider_org'], $plannedDisbursementForm);
+
+            foreach ($providerOrgRules as $key => $providerOrgRule) {
+                $rules[$key] = $providerOrgRule;
+            }
+
+            $receiverOrgRules = $this->getRulesForReceiverOrg($plannedDisbursement['receiver_org'], $plannedDisbursementForm);
+
+            foreach ($receiverOrgRules as $key => $receiverOrgRule) {
+                $rules[$key] = $receiverOrgRule;
+            }
         }
 
         return $rules;
@@ -79,14 +100,35 @@ class PlannedDisbursementRequest extends ActivityBaseRequest
         foreach ($formFields as $plannedDisbursementIndex => $plannedDisbursement) {
             $plannedDisbursementForm = sprintf('planned_disbursement.%s', $plannedDisbursementIndex);
 
-            $messages = array_merge(
-                $messages,
-                $this->getMessagesForPeriodStart($plannedDisbursement['period_start'], $plannedDisbursementForm),
-                $this->getMessagesForPeriodEnd($plannedDisbursement['period_end'], $plannedDisbursementForm),
-                $this->getMessagesForValue($plannedDisbursement['value'], $plannedDisbursementForm),
-                $this->getMessagesForProviderOrg($plannedDisbursement['provider_org'], $plannedDisbursementForm),
-                $this->getMessagesForReceiverOrg($plannedDisbursement['receiver_org'], $plannedDisbursementForm)
-            );
+            $periodStartMessages = $this->getMessagesForPeriodStart($plannedDisbursement['period_start'], $plannedDisbursementForm);
+
+            foreach ($periodStartMessages as $key => $periodStartMessage) {
+                $messages[$key] = $periodStartMessage;
+            }
+
+            $periodEndMessages = $this->getMessagesForPeriodEnd($plannedDisbursement['period_end'], $plannedDisbursementForm);
+
+            foreach ($periodEndMessages as $key => $periodEndMessage) {
+                $messages[$key] = $periodEndMessage;
+            }
+
+            $valueMessages = $this->getMessagesForValue($plannedDisbursement['value'], $plannedDisbursementForm);
+
+            foreach ($valueMessages as $key => $valueMessage) {
+                $messages[$key] = $valueMessage;
+            }
+
+            $providerOrgMessages = $this->getMessagesForProviderOrg($plannedDisbursement['provider_org'], $plannedDisbursementForm);
+
+            foreach ($providerOrgMessages as $key => $providerOrgMessage) {
+                $messages[$key] = $providerOrgMessage;
+            }
+
+            $receiverOrgMessages = $this->getMessagesForReceiverOrg($plannedDisbursement['receiver_org'], $plannedDisbursementForm);
+
+            foreach ($receiverOrgMessages as $key => $receiverOrgMessage) {
+                $messages[$key] = $receiverOrgMessage;
+            }
         }
 
         return $messages;
@@ -185,27 +227,6 @@ class PlannedDisbursementRequest extends ActivityBaseRequest
     }
 
     /**
-     * Rules for value.
-     *
-     * @param $formFields
-     * @param $formBase
-     *
-     * @return array
-     */
-    protected function getRulesForValue($formFields, $formBase): array
-    {
-        $rules = [];
-
-        foreach ($formFields as $valueIndex => $value) {
-            $valueForm = sprintf('%s.value.%s', $formBase, $valueIndex);
-            $rules[sprintf('%s.amount', $valueForm)] = 'nullable|numeric';
-            $rules[sprintf('%s.value_date', $valueForm)] = 'nullable|date';
-        }
-
-        return $rules;
-    }
-
-    /**
      * Messages for value.
      *
      * @param $formFields
@@ -222,6 +243,8 @@ class PlannedDisbursementRequest extends ActivityBaseRequest
             $messages[sprintf('%s.amount.required', $valueForm)] = 'Amount field is required';
             $messages[sprintf('%s.amount.numeric', $valueForm)] = 'Amount field must be a number';
             $messages[sprintf('%s.value_date.required', $valueForm)] = 'Value date is a required field';
+            $messages[sprintf('%s.value_date.after', $valueForm)] = 'The @value-date field must be a between period start and period end';
+            $messages[sprintf('%s.value_date.before', $valueForm)] = 'The @value-date field must be a between period start and period end';
         }
 
         return $messages;
