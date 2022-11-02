@@ -376,6 +376,7 @@ class XmlGenerator
             'default-currency'      => Arr::get($defaultValues, 'default_currency', null),
             'humanitarian'          => Arr::get($defaultValues, 'humanitarian', 1),
             'hierarchy'             => Arr::get($defaultValues, 'hierarchy', 1),
+            'budget-not-provided'   => Arr::get($defaultValues, 'budget_not_provided', ''),
         ];
 
         return $this->arrayToXml->createXml('iati-activities', $xmlData);

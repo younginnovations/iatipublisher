@@ -129,7 +129,7 @@ class ActivityWorkflowService
     }
 
     /**
-     * Unpublish activity from the IATI registry.
+     * Unpublish activity and then republish required file to the IATI registry.
      *
      * @param $activity
      *
@@ -137,11 +137,16 @@ class ActivityWorkflowService
      */
     public function unpublishActivity($activity): void
     {
+        $organization = $activity->organization;
+        $settings = $organization->settings;
         $publishedFile = $this->activityPublishedService->getActivityPublished($activity->org_id);
         $this->removeActivityFromPublishedArray($publishedFile, $activity);
+        $this->xmlGeneratorService->generateNewXmlFile($publishedFile);
+        $activityPublished = $this->activityPublishedService->getActivityPublished($organization->id);
+        $publishingInfo = $settings->publishing_info;
+        $this->publisherService->publishFile($publishingInfo, $activityPublished, $organization);
         $this->activityService->updatePublishedStatus($activity, 'draft', false);
         $this->validatorService->deleteValidatorResponse($activity->id);
-        $this->xmlGeneratorService->generateNewXmlFile($publishedFile);
     }
 
     /**
@@ -235,5 +240,37 @@ class ActivityWorkflowService
         }
 
         return false;
+    }
+
+    /**
+     * Returns if logged in user is verified or not.
+     *
+     * @return bool
+     */
+    public function isUserVerified(): bool
+    {
+        return !is_null(auth()->user()->email_verified_at);
+    }
+
+    /**
+     * Returns errors related to publishing activity.
+     *
+     * @param $settings
+     *
+     * @return array
+     */
+    public function getPublishErrorMessage($settings): array
+    {
+        $messages = [];
+
+        if (!$this->isUserVerified()) {
+            $messages[] = 'User email needs to be verified for publishing activity.';
+        }
+
+        if ($this->hasNoPublisherInfo($settings)) {
+            $messages[] = 'Please add a Registry API key before attempting to automatically publish.';
+        }
+
+        return $messages;
     }
 }
