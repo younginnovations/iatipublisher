@@ -36,6 +36,7 @@ use App\Http\Controllers\Admin\Activity\StatusController;
 use App\Http\Controllers\Admin\Activity\TagController;
 use App\Http\Controllers\Admin\Activity\TitleController;
 use App\Http\Controllers\Admin\Activity\TransactionController;
+use App\Http\Controllers\Admin\ElementJsonController;
 use App\Http\Controllers\Admin\Workflow\ActivityWorkflowController;
 use Illuminate\Support\Facades\Route;
 

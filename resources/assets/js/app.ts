@@ -193,8 +193,7 @@ const stickySidebar = (el: {
     targetScrollPosition =
       elScrollBottom ?? +currentWindowsScrollPosition - viewportHeight;
 
-  const isScrollDown =
-    currentWindowsScrollPosition > lastScrollTop ? true : false;
+  const isScrollDown = currentWindowsScrollPosition > lastScrollTop;
 
   const isScrollUp = !isScrollDown;
 
