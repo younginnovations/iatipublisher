@@ -598,7 +598,7 @@ class ActivityBaseRequest extends FormRequest
         $betweenRule = sprintf('nullable|date|after:%s|before:%s', $periodStartFormBase, $periodEndFormBase);
 
         foreach ($formFields as $valueIndex => $value) {
-            $valueForm = sprintf('%s.budget_value.%s', $formBase, $valueIndex);
+            $valueForm = sprintf('%s.value.%s', $formBase, $valueIndex);
             $rules[sprintf('%s.amount', $valueForm)] = 'nullable|numeric';
             $rules[sprintf('%s.value_date', $valueForm)] = $betweenRule;
         }
