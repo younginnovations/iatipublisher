@@ -42,15 +42,13 @@ class ResultRequest extends ActivityBaseRequest
     {
         $rules = [];
 
-        $rules = array_merge(
+        return array_merge(
             $rules,
             $this->getRulesForNarrative($formFields['title'][0]['narrative'], 'title.0'),
             $this->getRulesForNarrative($formFields['description'][0]['narrative'], 'description.0'),
             $this->getRulesForDocumentLink($formFields['document_link']),
             $this->getRulesForReferences($formFields['reference'])
         );
-
-        return $rules;
     }
 
     /**
@@ -64,15 +62,13 @@ class ResultRequest extends ActivityBaseRequest
     {
         $messages = [];
 
-        $messages = array_merge(
+        return array_merge(
             $messages,
             $this->getMessagesForNarrative($formFields['title'][0]['narrative'], 'title.0'),
             $this->getMessagesForNarrative($formFields['description'][0]['narrative'], 'description.0'),
             $this->getMessagesForDocumentLink($formFields['document_link']),
             $this->getMessagesForReferences($formFields['reference'])
         );
-
-        return $messages;
     }
 
     /**
@@ -82,14 +78,14 @@ class ResultRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    protected function getRulesforReferences($formFields): array
+    protected function getRulesForReferences($formFields): array
     {
         $rules = [];
+        dd($this->route()->parameters());
 
         foreach ($formFields as $referenceIndex => $reference) {
             $referenceForm = sprintf('reference.%s', $referenceIndex);
-            $rules[sprintf('%s.vocabulary_uri', $referenceForm)]
-                = 'nullable|url';
+            $rules[sprintf('%s.vocabulary_uri', $referenceForm)] = 'nullable|url';
         }
 
         return $rules;
@@ -108,8 +104,7 @@ class ResultRequest extends ActivityBaseRequest
 
         foreach ($formFields as $referenceIndex => $reference) {
             $referenceForm = sprintf('reference.%s', $referenceIndex);
-            $messages[sprintf('%s.vocabulary_uri.url', $referenceForm)]
-                = 'The @vocabulary-uri field must be a valid url.';
+            $messages[sprintf('%s.vocabulary_uri.url', $referenceForm)] = 'The @vocabulary-uri field must be a valid url.';
         }
 
         return $messages;

@@ -46,10 +46,11 @@ class ReportingOrgRequest extends OrganizationBaseRequest
             $reportingOrganizationForm = sprintf('reporting_org.%s', $reportingOrganizationIndex);
             $rules[$reportingOrganizationForm . '.ref'] = ['nullable', 'not_regex:/(&|!|\/|\||\?)/'];
 
-            $rules = array_merge(
-                $rules,
-                $this->getRulesForNarrative($reportingOrganization['narrative'], $reportingOrganizationForm)
-            );
+            $narrativeRules = $this->getRulesForNarrative($reportingOrganization['narrative'], $reportingOrganizationForm);
+
+            foreach ($narrativeRules as $key => $item) {
+                $rules[$key] = $item;
+            }
         }
 
         return $rules;
@@ -71,10 +72,11 @@ class ReportingOrgRequest extends OrganizationBaseRequest
 
             $messages[$reportingOrganizationForm . '.ref.not_regex'] = 'The @ref format is invalid.';
 
-            $messages = array_merge(
-                $messages,
-                $this->getMessagesForNarrative($reportingOrganization['narrative'], $reportingOrganizationForm)
-            );
+            $narrativeMessages = $this->getMessagesForNarrative($reportingOrganization['narrative'], $reportingOrganizationForm);
+
+            foreach ($narrativeMessages as $key => $item) {
+                $messages[$key] = $item;
+            }
         }
 
         return $messages;

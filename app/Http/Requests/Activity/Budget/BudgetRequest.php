@@ -83,6 +83,30 @@ class BudgetRequest extends ActivityBaseRequest
     }
 
     /**
+     * Returns rules for value.
+     *
+     * @param $formFields
+     * @param $formBase
+     *
+     * @return array
+     */
+    protected function getRulesForValue($formFields, $formBase): array
+    {
+        $rules = [];
+        $periodStartFormBase = sprintf('%s.period_start.0.date', $formBase);
+        $periodEndFormBase = sprintf('%s.period_end.0.date', $formBase);
+        $betweenRule = sprintf('nullable|date|after:%s|before:%s', $periodStartFormBase, $periodEndFormBase);
+
+        foreach ($formFields as $valueIndex => $value) {
+            $valueForm = sprintf('%s.budget_value.%s', $formBase, $valueIndex);
+            $rules[sprintf('%s.amount', $valueForm)] = 'nullable|numeric';
+            $rules[sprintf('%s.value_date', $valueForm)] = $betweenRule;
+        }
+
+        return $rules;
+    }
+
+    /**
      * returns rules for period start form.
      *
      * @param $formFields
