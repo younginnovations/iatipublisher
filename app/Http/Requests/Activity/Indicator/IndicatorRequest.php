@@ -6,6 +6,9 @@ namespace App\Http\Requests\Activity\Indicator;
 
 use App\Http\Requests\Activity\ActivityBaseRequest;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Validator;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * Class IndicatorRequest.
@@ -16,6 +19,8 @@ class IndicatorRequest extends ActivityBaseRequest
      * Get the validation rules that apply to the request.
      *
      * @return array
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     public function rules(): array
     {
@@ -38,12 +43,14 @@ class IndicatorRequest extends ActivityBaseRequest
      * @param array $formFields
      *
      * @return array
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     protected function getRulesForIndicator(array $formFields): array
     {
         $rules = [];
 
-        $rules = array_merge(
+        return array_merge(
             $rules,
             $this->getRulesForNarrative($formFields['title'], 'title.0'),
             $this->getRulesForNarrative($formFields['description'], 'description.0'),
@@ -51,8 +58,6 @@ class IndicatorRequest extends ActivityBaseRequest
             $this->getRulesForReference($formFields['reference']),
             $this->getRulesForBaseline($formFields['baseline']),
         );
-
-        return $rules;
     }
 
     /**
@@ -66,7 +71,7 @@ class IndicatorRequest extends ActivityBaseRequest
     {
         $messages = [];
 
-        $messages = array_merge(
+        return array_merge(
             $messages,
             $this->getMessagesForNarrative($formFields['title'], 'title.0'),
             $this->getMessagesForNarrative($formFields['description'], 'description.0'),
@@ -74,8 +79,6 @@ class IndicatorRequest extends ActivityBaseRequest
             $this->getMessagesForReference($formFields['reference']),
             $this->getMessagesForBaseline($formFields['baseline']),
         );
-
-        return $messages;
     }
 
     /**
@@ -89,9 +92,22 @@ class IndicatorRequest extends ActivityBaseRequest
     {
         $rules = [];
 
+        Validator::extendImplicit(
+            'result_ref_code_present',
+            function () {
+                $params = $this->route()->parameters();
+
+                return !$this->resultService->resultHasRefCode((int) $params['id']);
+            }
+        );
+
         foreach ($formFields as $referenceIndex => $reference) {
             $referenceForm = sprintf('reference.%s', $referenceIndex);
             $rules[sprintf('%s.indicator_uri', $referenceForm)] = 'nullable|url';
+
+            if (!empty($reference['code'])) {
+                $rules[sprintf('%s.code', $referenceForm)] = 'result_ref_code_present';
+            }
         }
 
         return $rules;
@@ -110,8 +126,11 @@ class IndicatorRequest extends ActivityBaseRequest
 
         foreach ($formFields as $referenceIndex => $reference) {
             $referenceForm = sprintf('reference.%s', $referenceIndex);
-            $messages[sprintf('%s.indicator_uri.url', $referenceForm)]
-                = 'The @indicator-uri field must be a valid url.';
+            $messages[sprintf('%s.indicator_uri.url', $referenceForm)] = 'The @indicator-uri field must be a valid url.';
+
+            if (!empty($reference['code'])) {
+                $messages[sprintf('%s.code.result_ref_code_present', $referenceForm)] = 'The @code is already defined in its result';
+            }
         }
 
         return $messages;
@@ -123,6 +142,8 @@ class IndicatorRequest extends ActivityBaseRequest
      * @param $formFields
      *
      * @return array
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     protected function getRulesForBaseline($formFields): array
     {
@@ -130,26 +151,31 @@ class IndicatorRequest extends ActivityBaseRequest
 
         foreach ($formFields as $baselineIndex => $baseline) {
             $baselineForm = sprintf('baseline.%s', $baselineIndex);
+            $baselineYearRule = 'nullable|date_format:Y|digits:4';
 
-            $rules[sprintf('%s.year', $baselineForm)] = 'nullable|date_format:Y|digits:4';
+            if (!empty($baseline['date'])) {
+                $baselineYearRule = sprintf('%s|in:%s', $baselineYearRule, date('Y', strtotime($baseline['date'])));
+            }
+            $rules[sprintf('%s.year', $baselineForm)] = $baselineYearRule;
             $rules[sprintf('%s.value', $baselineForm)] = 'nullable|numeric|gte:0';
 
-            if ((request()->get('measure') == 2) &&
-                (Arr::get($baseline, 'value', null))) {
+            if ((request()->get('measure') === 2) && Arr::get($baseline, 'value', null)) {
                 $rules[sprintf('%s.value', $baselineForm)] = 'nullable|numeric|gte:0';
-            } elseif ((request()->get('measure') == 1) &&
-                (Arr::get($baseline, 'value', null))) {
+            } elseif ((request()->get('measure') === 1) && Arr::get($baseline, 'value', null)) {
                 $rules[sprintf('%s.value', $baselineForm)] = 'nullable|numeric';
             }
 
-            $rules = array_merge(
-                $rules,
-                $this->getRulesForNarrative(
-                    $baseline['comment'][0]['narrative'],
-                    sprintf('%s.comment.0', $baselineForm)
-                ),
-                $this->getRulesForDocumentLink($baseline['document_link'], $baselineForm),
-            );
+            $narrativeRules = $this->getRulesForNarrative($baseline['comment'][0]['narrative'], sprintf('%s.comment.0', $baselineForm));
+
+            foreach ($narrativeRules as $key => $item) {
+                $rules[$key] = $item;
+            }
+
+            $dcoLinkRules = $this->getRulesForDocumentLink($baseline['document_link'], $baselineForm);
+
+            foreach ($dcoLinkRules as $key => $item) {
+                $rules[$key] = $item;
+            }
         }
 
         return $rules;
@@ -169,19 +195,23 @@ class IndicatorRequest extends ActivityBaseRequest
         foreach ($formFields as $baselineIndex => $baseline) {
             $baselineForm = sprintf('baseline.%s', $baselineIndex);
             $messages[sprintf('%s.year.date_format', $baselineForm)] = 'The @year field is not valid.';
+            $messages[sprintf('%s.year.in', $baselineForm)] = 'The @year field should be the year of baseline date';
             $messages[sprintf('%s.year.digits', $baselineForm)] = 'The @year field must have 4 digits.';
 
             $messages[sprintf('%s.value.numeric', $baselineForm)] = 'The @value field must be a number.';
             $messages[sprintf('%s.value.gte', $baselineForm)] = 'The @value field must be greater or equal to 0.';
 
-            $messages = array_merge(
-                $messages,
-                $this->getMessagesForNarrative(
-                    $baseline['comment'][0]['narrative'],
-                    sprintf('%s.comment.0', $baselineForm)
-                ),
-                $this->getMessagesForDocumentLink($baseline['document_link'], $baselineForm),
-            );
+            $narrativeMessages = $this->getMessagesForNarrative($baseline['comment'][0]['narrative'], sprintf('%s.comment.0', $baselineForm));
+
+            foreach ($narrativeMessages as $key => $item) {
+                $messages[$key] = $item;
+            }
+
+            $docLinkMessages = $this->getMessagesForDocumentLink($baseline['document_link'], $baselineForm);
+
+            foreach ($docLinkMessages as $key => $item) {
+                $messages[$key] = $item;
+            }
         }
 
         return $messages;
