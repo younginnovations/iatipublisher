@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Requests\Activity\Result;
 
 use App\Http\Requests\Activity\ActivityBaseRequest;
+use Illuminate\Support\Facades\Validator;
 
 /**
  * Class ResultRequest.
@@ -80,12 +81,24 @@ class ResultRequest extends ActivityBaseRequest
      */
     protected function getRulesForReferences($formFields): array
     {
+        Validator::extendImplicit(
+            'indicator_ref_code_present',
+            function () {
+                $params = $this->route()->parameters();
+
+                return !$this->resultService->indicatorHasRefCode($params['resultId']);
+            }
+        );
+
         $rules = [];
-        dd($this->route()->parameters());
 
         foreach ($formFields as $referenceIndex => $reference) {
             $referenceForm = sprintf('reference.%s', $referenceIndex);
             $rules[sprintf('%s.vocabulary_uri', $referenceForm)] = 'nullable|url';
+
+            if (!empty($reference['code'])) {
+                $rules[sprintf('%s.code', $referenceForm)] = 'indicator_ref_code_present';
+            }
         }
 
         return $rules;
@@ -105,6 +118,10 @@ class ResultRequest extends ActivityBaseRequest
         foreach ($formFields as $referenceIndex => $reference) {
             $referenceForm = sprintf('reference.%s', $referenceIndex);
             $messages[sprintf('%s.vocabulary_uri.url', $referenceForm)] = 'The @vocabulary-uri field must be a valid url.';
+
+            if (!empty($reference['code'])) {
+                $messages[sprintf('%s.code.indicator_ref_code_present', $referenceForm)] = 'The @code is already defined in its indicators';
+            }
         }
 
         return $messages;
