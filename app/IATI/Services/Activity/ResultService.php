@@ -189,6 +189,61 @@ class ResultService
     }
 
     /**
+     * Checks if result indicator has ref code.
+     *
+     * @param $resultId
+     *
+     * @return bool
+     */
+    public function indicatorHasRefCode($resultId): bool
+    {
+        $result = $this->resultRepository->getResultWithIndicator($resultId);
+
+        if (!empty($result['indicators'])) {
+            $indicators = $result['indicators'];
+
+            foreach ($indicators as $item) {
+                $indicator = $item['indicator'];
+                $refs = $indicator['reference'];
+
+                if (!empty($refs)) {
+                    foreach ($refs as $ref) {
+                        if (array_key_exists('code', $ref) && $ref['code']) {
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Checks if result indicator has ref code.
+     *
+     * @param $resultId
+     *
+     * @return bool
+     */
+    public function resultHasRefCode($resultId): bool
+    {
+        $result = $this->resultRepository->getResult($resultId);
+
+        if (!empty($result['result']) && array_key_exists('reference', $result['result']) && !empty($result['result']['reference'])) {
+            $refs = $result['result']['reference'];
+
+            foreach ($refs as $ref) {
+                if (array_key_exists('code', $ref) && $ref['code']) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    /**
      * Returns result create form.
      *
      * @param $activityId
@@ -271,19 +326,19 @@ class ResultService
                 $result = $totalResult->result;
 
                 $resultData[] = [
-                    '@attributes' => [
-                        'type' => Arr::get($result, 'type', null),
+                    '@attributes'   => [
+                        'type'               => Arr::get($result, 'type', null),
                         'aggregation-status' => Arr::get($result, 'aggregation_status', null),
                     ],
-                    'title' => [
+                    'title'         => [
                         'narrative' => $this->buildNarrative(Arr::get($result, 'title.0.narrative', [])),
                     ],
-                    'description' => [
+                    'description'   => [
                         'narrative' => $this->buildNarrative(Arr::get($result, 'description.0.narrative', [])),
                     ],
                     'document-link' => $this->buildDocumentLink(Arr::get($result, 'document_link', [])),
-                    'reference' => $this->buildReference(Arr::get($result, 'reference', []), 'vocabulary-uri'),
-                    'indicator' => $this->buildIndicator($totalResult->indicators),
+                    'reference'     => $this->buildReference(Arr::get($result, 'reference', []), 'vocabulary-uri'),
+                    'indicator'     => $this->buildIndicator($totalResult->indicators),
                 ];
             }
         }
@@ -307,21 +362,21 @@ class ResultService
                 $indicator = $totalIndicator->indicator;
 
                 $indicatorData[] = [
-                    '@attributes' => [
-                        'measure' => Arr::get($indicator, 'measure', null),
-                        'ascending' => Arr::get($indicator, 'ascending', null),
+                    '@attributes'   => [
+                        'measure'            => Arr::get($indicator, 'measure', null),
+                        'ascending'          => Arr::get($indicator, 'ascending', null),
                         'aggregation-status' => Arr::get($indicator, 'aggregation_status', null),
                     ],
-                    'title' => [
+                    'title'         => [
                         'narrative' => $this->buildNarrative(Arr::get($indicator, 'title.0.narrative', null)),
                     ],
-                    'description' => [
+                    'description'   => [
                         'narrative' => $this->buildNarrative(Arr::get($indicator, 'description.0.narrative', null)),
                     ],
                     'document-link' => $this->buildDocumentLink(Arr::get($indicator, 'document_link', [])),
-                    'reference' => $this->buildReference(Arr::get($indicator, 'reference', []), 'indicator-uri'),
-                    'baseline' => $this->buildBaseline(Arr::get($indicator, 'baseline', []), Arr::get($indicator, 'measure', null)),
-                    'period' => $this->buildPeriod($totalIndicator->periods, Arr::get($indicator, 'measure', null)),
+                    'reference'     => $this->buildReference(Arr::get($indicator, 'reference', []), 'indicator-uri'),
+                    'baseline'      => $this->buildBaseline(Arr::get($indicator, 'baseline', []), Arr::get($indicator, 'measure', null)),
+                    'period'        => $this->buildPeriod($totalIndicator->periods, Arr::get($indicator, 'measure', null)),
                 ];
             }
         }
@@ -350,17 +405,17 @@ class ResultService
                 }
 
                 $baselineData[] = [
-                    '@attributes' => [
-                        'year' => Arr::get($baseline, 'year', null),
+                    '@attributes'   => [
+                        'year'     => Arr::get($baseline, 'year', null),
                         'iso-date' => Arr::get($baseline, 'date', null),
-                        'value' => $baselineValue,
+                        'value'    => $baselineValue,
                     ],
-                    'comment' => [
+                    'comment'       => [
                         'narrative' => $this->buildNarrative(Arr::get($baseline, 'comment.0.narrative')),
                     ],
-                    'dimension' => $this->buildDimension(Arr::get($baseline, 'dimension', []), $measure),
+                    'dimension'     => $this->buildDimension(Arr::get($baseline, 'dimension', []), $measure),
                     'document-link' => $this->buildDocumentLink(Arr::get($baseline, 'document_link', [])),
-                    'location' => $this->buildLocation(Arr::get($baseline, 'location', [])),
+                    'location'      => $this->buildLocation(Arr::get($baseline, 'location', [])),
                 ];
             }
         }
@@ -390,13 +445,13 @@ class ResultService
                             'iso-date' => Arr::get($period, 'period_start.0.date', null),
                         ],
                     ],
-                    'period-end' => [
+                    'period-end'   => [
                         '@attributes' => [
                             'iso-date' => Arr::get($period, 'period_end.0.date', null),
                         ],
                     ],
-                    'target' => $this->buildFunction(Arr::get($period, 'target', []), $measure),
-                    'actual' => $this->buildFunction(Arr::get($period, 'actual', []), $measure),
+                    'target'       => $this->buildFunction(Arr::get($period, 'target', []), $measure),
+                    'actual'       => $this->buildFunction(Arr::get($period, 'actual', []), $measure),
                 ];
             }
         }
@@ -419,15 +474,15 @@ class ResultService
         if (count($data)) {
             foreach ($data as $period) {
                 $targetData[] = [
-                    '@attributes' => [
+                    '@attributes'   => [
                         'value' => Arr::get($period, 'value', null),
                     ],
-                    'comment' => [
+                    'comment'       => [
                         'narrative' => $this->buildNarrative(Arr::get($period, 'comment.0.narrative', [])),
                     ],
-                    'dimension' => $this->buildDimension(Arr::get($period, 'dimension', []), $measure),
+                    'dimension'     => $this->buildDimension(Arr::get($period, 'dimension', []), $measure),
                     'document-link' => $this->buildDocumentLink(Arr::get($period, 'document_link', [])),
-                    'location' => $this->buildLocation(Arr::get($period, 'location', [])),
+                    'location'      => $this->buildLocation(Arr::get($period, 'location', [])),
                 ];
             }
         }
