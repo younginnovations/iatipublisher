@@ -48,7 +48,7 @@
 
         <div class="flex" :class="elementSpacing">
           <div>Dimension:&nbsp;</div>
-          <div>
+          <div class="description">
             {{ dimensions(base.dimension) }}
           </div>
         </div>
@@ -67,9 +67,6 @@
               <div>
                 <div class="description">
                   {{ com.narrative ? com.narrative : 'Not Available' }}
-                  &nbsp;
-                </div>
-                <div>
                   (Language:
                   {{
                     com.language
@@ -187,10 +184,10 @@ export default defineComponent({
       dimensions = data.map((item) => {
         const name = item.name ?? 'Not Available',
           value = item.value ?? 'Not Available';
-        return name + ' (' + value + ')';
+        return `code - ${name}, value - (${value})`;
       });
 
-      return dimensions.join(', ');
+      return dimensions.join('; ');
     };
     return { baseline, location, dimensions, elementSpacing };
   },

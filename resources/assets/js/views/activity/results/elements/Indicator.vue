@@ -223,7 +223,7 @@
 
                             <div class="flex">
                               <div>Dimension:&nbsp;</div>
-                              <div>
+                              <div class="description">
                                 <div
                                   v-for="(dim, d) in base.dimension"
                                   :key="d"
@@ -252,7 +252,7 @@
 
                             <div class="flex">
                               <div>Comment:&nbsp;</div>
-                              <div>
+                              <div class="description">
                                 <div
                                   v-for="(com, c) in base.comment[0].narrative"
                                   :key="c"
