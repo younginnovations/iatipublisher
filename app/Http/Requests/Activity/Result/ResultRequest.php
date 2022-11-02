@@ -91,12 +91,14 @@ class ResultRequest extends ActivityBaseRequest
         );
 
         $rules = [];
+        $params = $this->route()->parameters();
+        $hasResultId = array_key_exists('resultId', $params);
 
         foreach ($formFields as $referenceIndex => $reference) {
             $referenceForm = sprintf('reference.%s', $referenceIndex);
             $rules[sprintf('%s.vocabulary_uri', $referenceForm)] = 'nullable|url';
 
-            if (!empty($reference['code'])) {
+            if (!empty($reference['code']) && $hasResultId) {
                 $rules[sprintf('%s.code', $referenceForm)] = 'indicator_ref_code_present';
             }
         }
@@ -114,12 +116,14 @@ class ResultRequest extends ActivityBaseRequest
     protected function getMessagesForReferences($formFields): array
     {
         $messages = [];
+        $params = $this->route()->parameters();
+        $hasResultId = array_key_exists('resultId', $params);
 
         foreach ($formFields as $referenceIndex => $reference) {
             $referenceForm = sprintf('reference.%s', $referenceIndex);
             $messages[sprintf('%s.vocabulary_uri.url', $referenceForm)] = 'The @vocabulary-uri field must be a valid url.';
 
-            if (!empty($reference['code'])) {
+            if (!empty($reference['code']) && $hasResultId) {
                 $messages[sprintf('%s.code.indicator_ref_code_present', $referenceForm)] = 'The @code is already defined in its indicators';
             }
         }
