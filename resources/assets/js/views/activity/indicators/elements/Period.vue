@@ -55,7 +55,7 @@
             icon=""
             design="bgText"
             :link="`/indicator/${id.indicator}/period`"
-            class="mr-2.5"
+            class="mr-2.5 -mt-1"
           />
         </div>
       </div>
