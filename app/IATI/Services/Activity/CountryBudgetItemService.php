@@ -119,7 +119,6 @@ class CountryBudgetItemService
                 ],
                 'budget-item' => $this->buildBudgetItem(
                     Arr::get($countryBudgetItem, 'budget_item', []),
-                    Arr::get($countryBudgetItem, 'country_budget_vocabulary', null)
                 ),
             ];
         }
@@ -131,11 +130,10 @@ class CountryBudgetItemService
      * Returns array of xml budget items.
      *
      * @param $budgetItems
-     * @param $vocabulary
      *
      * @return array
      */
-    private function buildBudgetItem($budgetItems, $vocabulary): array
+    private function buildBudgetItem($budgetItems): array
     {
         $budgetItemData = [];
 
@@ -143,9 +141,9 @@ class CountryBudgetItemService
             foreach ($budgetItems as $budgetItem) {
                 $budgetItemData[] = [
                     '@attributes' => [
-                        'code'       => $vocabulary == 1 ? Arr::get($budgetItem, 'code', null) : Arr::get(
+                        'code'       => Arr::get(
                             $budgetItem,
-                            'code_text',
+                            'code',
                             null
                         ),
                         'percentage' => Arr::get($budgetItem, 'percentage', null),

@@ -553,10 +553,10 @@ class Activity
     public function countryBudgetItems($element, $template): array
     {
         $this->countryBudgetItems[$this->index] = $template['country_budget_items'];
-        $this->countryBudgetItems[$this->index]['country_budget_vocabulary'] = $vocabulary = $this->attributes($element, 'vocabulary');
+        $this->countryBudgetItems[$this->index]['country_budget_vocabulary'] = $this->attributes($element, 'vocabulary');
 
         foreach (Arr::get($element, 'value', []) as $index => $budgetItem) {
-            $this->countryBudgetItems[$this->index]['budget_item'][$index]['code'] = ($vocabulary === 1) ? $this->attributes($budgetItem, 'code') : '';
+            $this->countryBudgetItems[$this->index]['budget_item'][$index]['code'] = $this->attributes($budgetItem, 'code');
             $this->countryBudgetItems[$this->index]['budget_item'][$index]['percentage'] = $this->attributes($budgetItem, 'percentage');
             $this->countryBudgetItems[$this->index]['budget_item'][$index]['description'][0]['narrative'] = (($desc = $this->value(
                 Arr::get($budgetItem, 'value', []),
@@ -689,7 +689,7 @@ class Activity
      */
     private function capitalSpend($element): ?float
     {
-        return $this->attributes($element, 'code') ? (float) $this->attributes($element, 'code') : null;
+        return $this->attributes($element, 'percentage') ? (float) $this->attributes($element, 'percentage') : null;
     }
 
     /**

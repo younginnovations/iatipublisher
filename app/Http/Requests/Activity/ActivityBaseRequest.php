@@ -80,7 +80,7 @@ class ActivityBaseRequest extends FormRequest
         Validator::extend(
             'total',
             function ($attribute, $value, $parameters, $validator) {
-                ($value !== 100) ? $check = false : $check = true;
+                ($value !== 100 && $value !== '100') ? $check = false : $check = true;
 
                 return $check;
             }

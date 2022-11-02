@@ -984,10 +984,16 @@ class XmlValidator
 
         foreach ($recipientRegions as $recipientRegionIndex => $recipientRegion) {
             $recipientRegionBase = 'recipient_region.' . $recipientRegionIndex;
-            $rules[$recipientRegionBase . '.region_code'] = sprintf(
-                'required|in:%s',
-                $this->validCodeList('Region')
-            );
+
+            if (Arr::get($recipientRegion, 'region_vocabulary', 1) === 1 || Arr::get($recipientRegion, 'region_vocabulary', 1) === '1') {
+                $rules[$recipientRegionBase . '.region_code'] = sprintf(
+                    'required|in:%s',
+                    $this->validCodeList('Region')
+                );
+            } else {
+                $rules[$recipientRegionBase . '.custom_code'] = 'required';
+            }
+
             $rules[$recipientRegionBase . '.percentage'] = 'nullable|numeric|max:100';
             if (count($recipientRegions) > 1) {
                 $rules[$recipientRegionBase . '.percentage'] = 'required|numeric|max:100';
@@ -1014,14 +1020,23 @@ class XmlValidator
 
         foreach ($recipientRegions as $recipientRegionIndex => $recipientRegion) {
             $recipientRegionBase = 'recipient_region.' . $recipientRegionIndex;
-            $messages[$recipientRegionBase . '.region_code.required'] = trans(
-                'validation.required',
-                ['attribute' => trans('elementForm.recipient_region_code')]
-            );
-            $messages[$recipientRegionBase . '.region_code.in'] = trans(
-                'validation.code_list',
-                ['attribute' => trans('elementForm.region_code')]
-            );
+
+            if (Arr::get($recipientRegion, 'region_vocabulary', 1) === 1 || Arr::get($recipientRegion, 'region_vocabulary', 1) === '1') {
+                $messages[$recipientRegionBase . '.region_code.required'] = trans(
+                    'validation.required',
+                    ['attribute' => trans('elementForm.recipient_region_code')]
+                );
+                $messages[$recipientRegionBase . '.region_code.in'] = trans(
+                    'validation.code_list',
+                    ['attribute' => trans('elementForm.region_code')]
+                );
+            } else {
+                $messages[$recipientRegionBase . '.custom_code.required'] = trans(
+                    'validation.required',
+                    ['attribute' => trans('elementForm.recipient_region_code')]
+                );
+            }
+
             $messages[$recipientRegionBase . '.percentage.numeric'] = trans(
                 'validation.numeric',
                 ['attribute' => trans('elementForm.percentage')]
@@ -1206,14 +1221,14 @@ class XmlValidator
             if ($locationId['code'] !== '') {
                 $messages[sprintf('%s.vocabulary.required_with', $locationIdBase)] = trans(
                     'validation.required_with',
-                    ['attribute' => trans('elementForm.vocabulary'), 'values' => trans('elementForm.code')]
+                    ['attribute' => trans('elementForm.location_id_vocabulary'), 'values' => trans('elementForm.code')]
                 );
             }
 
             if ($locationId['vocabulary'] !== '') {
                 $messages[sprintf('%s.code.required_with', $locationIdBase)] = trans(
                     'validation.required_with',
-                    ['attribute' => trans('elementForm.code'), 'values' => trans('elementForm.vocabulary')]
+                    ['attribute' => trans('elementForm.code'), 'values' => trans('elementForm.location_id_vocabulary')]
                 );
             }
         }
@@ -1772,14 +1787,13 @@ class XmlValidator
 
         foreach ($countryBudgetItems as $countryBudgetItemIndex => $countryBudgetItem) {
             $countryBudgetItemBase = sprintf('country_budget_items.%s', $countryBudgetItemIndex);
-            $code = Arr::get($countryBudgetItem, 'vocabulary', '') === 1 ? 'code' : 'code_text';
-            $rules[sprintf('%s.budget_item.0.%s', $countryBudgetItemBase, $code)] = 'required';
-            $rules[sprintf('%s.vocabulary', $countryBudgetItemBase)] = sprintf(
+            $rules[sprintf('%s.budget_item.0.%s', $countryBudgetItemBase, 'code')] = 'required';
+            $rules[sprintf('%s.country_budget_vocabulary', $countryBudgetItemBase)] = sprintf(
                 'required|in:%s',
                 $this->validCodeList('BudgetIdentifierVocabulary')
             );
 
-            $tempRules = $this->getBudgetItemRules($countryBudgetItem['budget_item'], $countryBudgetItemBase, $code, $countryBudgetItems);
+            $tempRules = $this->getBudgetItemRules($countryBudgetItem['budget_item'], $countryBudgetItemBase, 'code', $countryBudgetItem);
 
             foreach ($tempRules as $idx => $tempRule) {
                 $rules[$idx] = $tempRule;
@@ -1801,21 +1815,21 @@ class XmlValidator
 
         foreach ($countryBudgetItems as $countryBudgetItemIndex => $countryBudgetItem) {
             $countryBudgetItemBase = sprintf('country_budget_items.%s', $countryBudgetItemIndex);
-            $code = Arr::get($countryBudgetItem, 'vocabulary', '') === 1 ? 'code' : 'code_text';
+            $code = 'code';
             $messages[sprintf(
                 '%s.budget_item.0.%s.required',
                 $countryBudgetItemBase,
                 $code
             )] = trans('validation.required', ['attribute' => trans('elementForm.code')]);
-            $messages[sprintf('%s.vocabulary.required', $countryBudgetItemBase)] = trans(
+            $messages[sprintf('%s.country_budget_vocabulary.required', $countryBudgetItemBase)] = trans(
                 'validation.required',
-                ['attribute' => trans('elementForm.vocabulary')]
+                ['attribute' => trans('elementForm.country_budget_item_vocabulary')]
             );
-            $messages[sprintf('%s.vocabulary.in', $countryBudgetItemBase)] = trans(
+            $messages[sprintf('%s.country_budget_vocabulary.in', $countryBudgetItemBase)] = trans(
                 'validation.code_list',
-                ['attribute' => trans('elementForm.vocabulary')]
+                ['attribute' => trans('elementForm.country_budget_item_vocabulary')]
             );
-            $tempMessages = $this->getBudgetItemMessages(Arr::get($countryBudgetItem, 'budget_item', []), $countryBudgetItemBase, $code);
+            $tempMessages = $this->getBudgetItemMessages(Arr::get($countryBudgetItem, 'budget_item', []), $countryBudgetItemBase, $code, $countryBudgetItem);
 
             foreach ($tempMessages as $idx => $tempMessage) {
                 $messages[$idx] = $tempMessage;
@@ -1830,10 +1844,10 @@ class XmlValidator
      * @param $budgetItems
      * @param $countryBudgetItemBase
      * @param $code
-     * @param $countryBudgetItems
+     * @param $countryBudgetItem
      * @return array
      */
-    public function getBudgetItemRules($budgetItems, $countryBudgetItemBase, $code, $countryBudgetItems): array
+    public function getBudgetItemRules($budgetItems, $countryBudgetItemBase, $code, $countryBudgetItem): array
     {
         $rules = [];
         foreach ($budgetItems as $budgetItemIndex => $budgetItem) {
@@ -1846,7 +1860,7 @@ class XmlValidator
             );
             $tempRules = [
                 $this->getBudgetItemDescriptionRules(Arr::get($budgetItem, 'description', []), $budgetItemBase),
-                $this->getRulesForBudgetPercentage($countryBudgetItems),
+                $this->getRulesForBudgetPercentage($countryBudgetItemBase, $countryBudgetItem),
             ];
 
             foreach ($tempRules as $tempRule) {
@@ -1864,11 +1878,13 @@ class XmlValidator
      * @param       $budgetItems
      * @param       $countryBudgetItemBase
      * @param       $code
+     * @param       $countryBudgetItem
      * @return array
      */
-    public function getBudgetItemMessages($budgetItems, $countryBudgetItemBase, $code): array
+    public function getBudgetItemMessages($budgetItems, $countryBudgetItemBase, $code, $countryBudgetItem): array
     {
         $messages = [];
+
         foreach ($budgetItems as $budgetItemIndex => $budgetItem) {
             $budgetItemBase = sprintf('%s.budget_item.%s', $countryBudgetItemBase, $budgetItemIndex);
             $messages[sprintf('%s.%s.required', $budgetItemBase, $code)] = trans(
@@ -1899,7 +1915,10 @@ class XmlValidator
                 'validation.total',
                 ['attribute' => trans('elementForm.percentage'), 'values' => trans('elementForm.budget_item)')]
             );
-            $tempMessages = $this->getBudgetItemDescriptionMessages(Arr::get($budgetItem, 'description', []), $budgetItemBase);
+            $tempMessages = [
+                $this->getBudgetItemDescriptionMessages(Arr::get($budgetItem, 'description', []), $budgetItemBase),
+                $this->getMessagesForBudgetPercentage($countryBudgetItemBase, $countryBudgetItem),
+            ];
 
             foreach ($tempMessages as $idx => $tempMessage) {
                 $messages[$idx] = $tempMessage;
@@ -1945,12 +1964,15 @@ class XmlValidator
     }
 
     /** Returns rules for percentage.
+     *
+     * @param $countryBudgetItemBase
      * @param $countryBudget
+     *
      * @return array
      */
-    protected function getRulesForBudgetPercentage($countryBudget): array
+    protected function getRulesForBudgetPercentage($countryBudgetItemBase, $countryBudget): array
     {
-        $countryBudgetItems = Arr::get($countryBudget, '0.budget_item', []);
+        $countryBudgetItems = Arr::get($countryBudget, 'budget_item', []);
         $totalPercentage = 0;
         $isEmpty = false;
         $countryBudgetPercentage = 0;
@@ -1964,16 +1986,40 @@ class XmlValidator
 
             foreach ($countryBudgetItems as $key => $countryBudgetItem) {
                 if ($isEmpty) {
-                    $rules["country_budget_items.0.budget_item.$key.percentage"] = 'required';
+                    $rules[sprintf('%s.budget_item.%s.percentage', $countryBudgetItemBase, $key)] = 'required';
                 } elseif ($totalPercentage !== 100) {
-                    $rules["country_budget_items.0.budget_item.$key.percentage"] = 'sum';
+                    $rules[sprintf('%s.budget_item.%s.percentage', $countryBudgetItemBase, $key)] = 'sum';
                 }
             }
         } else {
-            $rules['country_budget_items.0.budget_item.0.percentage'] = 'total';
+            $rules[sprintf('%s.budget_item.0.percentage', $countryBudgetItemBase)] = 'total';
         }
 
         return $rules;
+    }
+
+    /** Returns messages for percentage.
+     *
+     * @param $countryBudgetItemBase
+     * @param $countryBudget
+     *
+     * @return array
+     */
+    protected function getMessagesForBudgetPercentage($countryBudgetItemBase, $countryBudget): array
+    {
+        $countryBudgetItems = Arr::get($countryBudget, 'budget_item', []);
+        $messages = [];
+
+        if (count($countryBudgetItems) > 1) {
+            foreach ($countryBudgetItems as $key => $countryBudgetItem) {
+                $messages[sprintf('%s.budget_item.%s.percentage.required', $countryBudgetItemBase, $key)] = trans('validation.required', ['attribute' => 'budget_item_percentage']);
+                $messages[sprintf('%s.budget_item.%s.percentage.sum', $countryBudgetItemBase, $key)] = 'The sum of percentages must be 100.';
+            }
+        } else {
+            $messages[sprintf('%s.budget_item.0.percentage.total', $countryBudgetItemBase)] = trans('validation.total', ['attribute' => 'budget_item_percentage', 'values' => 'budget_item']);
+        }
+
+        return $messages;
     }
 
     /**
@@ -2172,7 +2218,7 @@ class XmlValidator
 
         foreach ($budgets as $budgetIndex => $budget) {
             $budgetBase = sprintf('budget.%s', $budgetIndex);
-            $rules[sprintf('%s.status', $budgetBase)] = sprintf(
+            $rules[sprintf('%s.budget_status', $budgetBase)] = sprintf(
                 'required|in:%s',
                 $this->validCodeList('BudgetStatus')
             );
@@ -2218,11 +2264,11 @@ class XmlValidator
         foreach ($budgets as $budgetIndex => $budget) {
             $budgetBase = sprintf('budget.%s', $budgetIndex);
 
-            $messages[sprintf('%s.status.required', $budgetBase)] = trans(
+            $messages[sprintf('%s.budget_status.required', $budgetBase)] = trans(
                 'validation.required',
                 ['attribute' => trans('elementForm.budget_status')]
             );
-            $messages[sprintf('%s.status.in', $budgetBase)] = trans(
+            $messages[sprintf('%s.budget_status.in', $budgetBase)] = trans(
                 'validation.code_list',
                 ['attribute' => trans('elementForm.budget_status')]
             );
@@ -2654,7 +2700,7 @@ class XmlValidator
 
         foreach ($legacy as $legacyDataIndex => $legacyData) {
             $legacyDataBase = sprintf('legacy_data.%s', $legacyDataIndex);
-            $rules[sprintf('%s.name', $legacyDataBase)] = 'required';
+            $rules[sprintf('%s.legacy_name', $legacyDataBase)] = 'required';
             $rules[sprintf('%s.value', $legacyDataBase)] = 'required';
         }
 
@@ -2672,13 +2718,13 @@ class XmlValidator
 
         foreach ($legacy as $legacyDataIndex => $legacyData) {
             $legacyDataBase = sprintf('legacy_data.%s', $legacyDataIndex);
-            $messages[sprintf('%s.name.required', $legacyDataBase)] = trans(
+            $messages[sprintf('%s.legacy_name.required', $legacyDataBase)] = trans(
                 'validation.required',
-                ['attribute' => trans('elementForm.name')]
+                ['attribute' => trans('elementForm.legacy_data_name')]
             );
             $messages[sprintf('%s.value.required', $legacyDataBase)] = trans(
                 'validation.required',
-                ['attribute' => trans('elementForm.value')]
+                ['attribute' => trans('elementForm.legacy_data_value')]
             );
         }
 
@@ -4100,20 +4146,20 @@ class XmlValidator
 
         foreach ($defaultAidType as $index => $aidtype) {
             $aidtypeForm = sprintf('default_aid_type.%s', $index);
-            $rules[sprintf('%s.aid_type_vocabulary', $aidtypeForm)] = 'required|in:1,2,3,4';
-            $vocabulary = Arr::get($aidtype, 'aid_type_vocabulary');
+            $rules[sprintf('%s.default_aid_type_vocabulary', $aidtypeForm)] = 'required|in:1,2,3,4';
+            $vocabulary = Arr::get($aidtype, 'default_aid_type_vocabulary');
 
             if ($vocabulary === 1) {
-                $rules[sprintf('%s.default_aid_type', $aidtypeForm)] = sprintf('required_with:%s|in:%s', $aidtypeForm . '.aid_type_vocabulary', $this->validCodeList('AidType', 'V203'));
+                $rules[sprintf('%s.default_aid_type', $aidtypeForm)] = sprintf('required_with:%s|in:%s', $aidtypeForm . '.default_aid_type_vocabulary', $this->validCodeList('AidType', 'V203'));
             }
             if ($vocabulary === 2) {
-                $rules[sprintf('%s.earmarking_category', $aidtypeForm)] = sprintf('required_with:%s|in:%s', $aidtypeForm . '.aid_type_vocabulary', $this->validCodeList('EarmarkingCategory', 'V203'));
+                $rules[sprintf('%s.earmarking_category', $aidtypeForm)] = sprintf('required_with:%s|in:%s', $aidtypeForm . '.default_aid_type_vocabulary', $this->validCodeList('EarmarkingCategory', 'V203'));
             }
             if ($vocabulary === 3) {
-                $rules[sprintf('%s.default_aid_type_text', $aidtypeForm)] = sprintf('required_with:%s|in:%s', $aidtypeForm . '.aid_type_vocabulary', $this->validCodeList('EarmarkingModality', 'V203'));
+                $rules[sprintf('%s.default_aid_type_text', $aidtypeForm)] = sprintf('required_with:%s|in:%s', $aidtypeForm . '.default_aid_type_vocabulary', $this->validCodeList('EarmarkingModality', 'V203'));
             }
             if ($vocabulary === 4) {
-                $rules[sprintf('%s.cash_and_voucher_modalities', $aidtypeForm)] = sprintf('required_with:%s|in:%s', $aidtypeForm . '.aid_type_vocabulary', $this->validCodeList('CashandVoucherModalities', 'V203'));
+                $rules[sprintf('%s.cash_and_voucher_modalities', $aidtypeForm)] = sprintf('required_with:%s|in:%s', $aidtypeForm . '.default_aid_type_vocabulary', $this->validCodeList('CashandVoucherModalities', 'V203'));
             }
         }
 
@@ -4133,10 +4179,9 @@ class XmlValidator
 
         foreach ((array) $defaultAidType as $index => $aidtype) {
             $aidtypeForm = sprintf('default_aid_type.%s', $index);
-            $messages[sprintf('%s.aid_type_vocabulary.required', $aidtypeForm)] = trans('validation.required', ['attribute' => trans('elementForm.default_aid_type_vocabulary')]);
-            $messages[sprintf('%s.aid_type_vocabulary.in', $aidtypeForm)] = trans('validation.code_list', ['attribute' => trans('elementForm.default_aid_type_vocabulary')]);
-
-            $vocabulary = Arr::get($aidtype, 'aid_type_vocabulary');
+            $messages[sprintf('%s.default_aid_type_vocabulary.required', $aidtypeForm)] = trans('validation.required', ['attribute' => trans('elementForm.default_aid_type_vocabulary')]);
+            $messages[sprintf('%s.default_aid_type_vocabulary.in', $aidtypeForm)] = trans('validation.code_list', ['attribute' => trans('elementForm.default_aid_type_vocabulary')]);
+            $vocabulary = Arr::get($aidtype, 'default_aid_type_vocabulary');
 
             if ($vocabulary === 1) {
                 $messages[sprintf('%s.default_aid_type.%s', $aidtypeForm, 'required_with')] = trans(

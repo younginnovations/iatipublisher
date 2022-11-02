@@ -63,7 +63,7 @@ trait RegistersValidationRules
         );
 
         $this->extendImplicit('total', function ($attribute, $value) {
-            if ($value === 100) {
+            if ($value === 100 || $value === '100') {
                 return true;
             }
 
