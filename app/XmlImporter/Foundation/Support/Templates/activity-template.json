@@ -5,10 +5,10 @@
   },
   "other_identifier": {
     "reference": "",
-    "type": "",
+    "reference_type": "",
     "owner_org": [
       {
-        "reference": "",
+        "ref": "",
         "narrative": [
           {
             "narrative": "",

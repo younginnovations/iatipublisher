@@ -1594,9 +1594,9 @@ class XmlValidator
             }
         }
 
-        foreach ($fields as $field) {
-            $rules[$field] = 'required|sum|numeric|max:100';
-        }
+//        foreach ($fields as $field) {
+//            $rules[$field] = 'required|sum|numeric|max:100';
+//        }
 
         return $rules;
     }

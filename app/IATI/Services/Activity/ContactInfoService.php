@@ -83,7 +83,7 @@ class ContactInfoService
             }
         }
 
-        return $this->activityRepository->update($id, ['contact_info' => $contactInfo['contact_info']]);
+        return $this->activityRepository->update($id, ['contact_info' => array_values($contactInfo['contact_info'])]);
     }
 
     /**
@@ -133,22 +133,59 @@ class ContactInfoService
                     'job-title'       => [
                         'narrative' => $this->buildNarrative(Arr::get($contact, 'job_title.0.narrative', [])),
                     ],
-                    'telephone'       => [
-                        '@value' => Arr::get($contact, 'telephone.0.telephone', null),
-                    ],
-                    'email'           => [
-                        '@value' => Arr::get($contact, 'email.0.email', null),
-                    ],
-                    'website'         => [
-                        '@value' => Arr::get($contact, 'website.0.website', null),
-                    ],
-                    'mailing-address' => [
-                        'narrative' => $this->buildNarrative(Arr::get($contact, 'mailing_address.0.narrative', [])),
-                    ],
+                    'telephone'       => $this->getValues(Arr::get($contact, 'telephone', []), 'telephone'),
+                    'email'           => $this->getValues(Arr::get($contact, 'email', []), 'email'),
+                    'website'         => $this->getValues(Arr::get($contact, 'website', []), 'website'),
+                    'mailing-address' => $this->getMailingAddressNarratives(Arr::get($contact, 'mailing_address', [])),
                 ];
             }
         }
 
         return $activityData;
+    }
+
+    /**
+     * Returns multiple values of sub-elements.
+     *
+     * @param $collection
+     * @param string $element
+     *
+     * @return array
+     */
+    public function getValues($collection, string $element): array
+    {
+        $array = [];
+
+        if (count($collection)) {
+            foreach ($collection as $data) {
+                $array[] = [
+                    '@value' => Arr::get($data, $element, null),
+                ];
+            }
+        }
+
+        return $array;
+    }
+
+    /**
+     * Returns mailing addresses and their narratives.
+     *
+     * @param $mailingAddresses
+     *
+     * @return array
+     */
+    public function getMailingAddressNarratives($mailingAddresses): array
+    {
+        $array = [];
+
+        if (count($mailingAddresses)) {
+            foreach ($mailingAddresses as $mailingAddress) {
+                $array[] = [
+                    'narrative' => $this->buildNarrative(Arr::get($mailingAddress, 'narrative', [])),
+                ];
+            }
+        }
+
+        return $array;
     }
 }

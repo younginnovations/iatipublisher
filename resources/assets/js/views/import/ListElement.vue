@@ -36,17 +36,26 @@
 
   <td class="check-column" @click="(event: Event) => event.stopPropagation()">
     <label class="sr-only" for=""> Select </label>
-    <label v-if="activity['errors'].length === 0" class="checkbox">
+<!--    <label v-if="activity['errors'].length === 0" class="checkbox">-->
+<!--      <input-->
+<!--        v-model="activities"-->
+<!--        type="checkbox"-->
+<!--        :value="index"-->
+<!--        @click="selectElement(index)"-->
+<!--      />-->
+<!--      <span class="checkmark" />-->
+<!--    </label>-->
+<!--    <label v-else class="checkbox">-->
+<!--      &lt;!&ndash; <input type="checkbox" :value="index" /> &ndash;&gt;-->
+<!--      <span class="checkmark" />-->
+<!--    </label>-->
+    <label class="checkbox">
       <input
-        v-model="activities"
-        type="checkbox"
-        :value="index"
-        @click="selectElement(index)"
+          v-model="activities"
+          type="checkbox"
+          :value="index"
+          @click="selectElement(index)"
       />
-      <span class="checkmark" />
-    </label>
-    <label v-else class="checkbox">
-      <!-- <input type="checkbox" :value="index" /> -->
       <span class="checkmark" />
     </label>
   </td>
