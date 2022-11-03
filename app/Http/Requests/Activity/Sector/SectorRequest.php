@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Requests\Activity\Sector;
 
 use App\Http\Requests\Activity\ActivityBaseRequest;
+use Illuminate\Support\Facades\Validator;
 
 /**
  * Class SectorRequest.
@@ -32,16 +33,44 @@ class SectorRequest extends ActivityBaseRequest
     }
 
     /**
+     * @param $formFields
+     *
+     * @return array
+     */
+    public function groupSector($formFields): array
+    {
+        $groupedSector = [];
+
+        foreach ($formFields as $formField) {
+            if (array_key_exists($formField['sector_vocabulary'], $groupedSector)) {
+                $groupedSector[$formField['sector_vocabulary']]['count'] += 1;
+                $groupedSector[$formField['sector_vocabulary']]['total'] += $formField['percentage'];
+            } else {
+                $groupedSector[$formField['sector_vocabulary']] = ['count' => 1, 'total' => $formField['percentage']];
+            }
+        }
+
+        return $groupedSector;
+    }
+
+    /**
      * returns rules for sector.
      *
      * @param $formFields
      *
-     * @return array|mixed
+     * @return array
      */
     public function getSectorsRules($formFields): array
     {
+        Validator::extend('sector_total_percent', function () {
+            return false;
+        });
+        Validator::extend('sector_has_five_digit_oced_vocab', function () {
+            return false;
+        });
         $rules = [];
-        $sectorArray = $this->get('sector');
+        $groupedPercentSector = $this->groupSector($formFields);
+        $hasFiveDigitOecd = false;
 
         foreach ($formFields as $sectorIndex => $sector) {
             $sectorForm = sprintf('sector.%s', $sectorIndex);
@@ -50,40 +79,33 @@ class SectorRequest extends ActivityBaseRequest
                 $rules[sprintf('%s.vocabulary_uri', $sectorForm)] = 'nullable|url';
             }
 
-            $rules[sprintf('%s.percentage', $sectorForm)] = 'nullable|numeric|max:100';
+            $rules[sprintf('%s.percentage', $sectorForm)] = 'nullable|numeric';
 
-            $rules = array_merge($this->getRulesForNarrative($sector['narrative'], $sectorForm), $rules);
+            $narrativeRules = $this->getRulesForNarrative($sector['narrative'], $sectorForm);
+
+            foreach ($narrativeRules as $key => $item) {
+                $rules[$key] = $item;
+            }
+
+            if ($sector['sector_vocabulary'] === '1') {
+                $hasFiveDigitOecd = true;
+            }
+
+            if ($groupedPercentSector[$sector['sector_vocabulary']]['count'] > 1) {
+                if ($groupedPercentSector[$sector['sector_vocabulary']]['total'] !== 100) {
+                    $rules[$sectorForm . '.percentage'] .= '|sector_total_percent';
+                }
+            } else {
+                $rules[$sectorForm . '.percentage'] .= '|in:' . 100;
+            }
         }
 
-        if (count($sectorArray) > 1) {
-            $totalPercentage = $this->getRulesForPercentage($sectorArray);
-
-            $indexes = [];
-
-            foreach ($totalPercentage as $index => $value) {
-                if (is_numeric($index) && $value != 100) {
-                    $indexes[] = $index;
-                }
+        if (!$hasFiveDigitOecd) {
+            foreach ($formFields as $sectorIndex => $sector) {
+                $sectorForm = sprintf('sector.%s', $sectorIndex);
+                $rules[$sectorForm . '.sector_vocabulary'] = 'sector_has_five_digit_oced_vocab';
             }
-
-            $fields = [];
-
-            foreach ($totalPercentage as $i => $percentage) {
-                foreach ($indexes as $index) {
-                    if ($index == $percentage) {
-                        $fields[] = $i;
-                    }
-                }
-            }
-
-            foreach ($fields as $field) {
-                $rules[$field] = 'nullable|sum|numeric|max:100';
-            }
-
-            return $rules;
         }
-
-        $rules['sector.0.percentage'] = 'nullable|in:100';
 
         return $rules;
     }
@@ -93,7 +115,7 @@ class SectorRequest extends ActivityBaseRequest
      *
      * @param $formFields
      *
-     * @return array|mixed
+     * @return array
      */
     public function getSectorsMessages($formFields): array
     {
@@ -103,45 +125,17 @@ class SectorRequest extends ActivityBaseRequest
             $sectorForm = sprintf('sector.%s', $sectorIndex);
             $messages[sprintf('%s.vocabulary_uri.url', $sectorForm)] = 'The @vocabulary-uri field must be a valid url.';
             $messages[sprintf('%s.percentage.numeric', $sectorForm)] = 'The @percentage field must be a number.';
-            $messages[sprintf('%s.percentage.max', $sectorForm)] = 'The @percentage field cannot be greater than 100.';
-            $messages[sprintf('%s.percentage.sum', $sectorForm)] = 'The sum of @percentage within a vocabulary must add up to 100.';
             $messages[sprintf('%s.percentage.in', $sectorForm)] = 'The @percentage for single sector must be either omitted or be 100.';
-            $messages = array_merge($this->getMessagesForNarrative($sector['narrative'], $sectorForm), $messages);
-        }
+            $messages[sprintf('%s.percentage.sector_total_percent', $sectorForm)] = 'The @percentage for single sector must be either omitted or be 100.';
+            $messages[sprintf('%s.sector_vocabulary.sector_has_five_digit_oced_vocab', $sectorForm)] = 'The sector vocabulary must have 5 digit OCED';
 
-        return $messages;
-    }
+            $messageNarratives = $this->getMessagesForNarrative($sector['narrative'], $sectorForm);
 
-    /**
-     * write brief description.
-     *
-     * @param $sectors
-     *
-     * @return array
-     */
-    protected function getRulesForPercentage($sectors): array
-    {
-        $array = [];
-        $totalPercentage = 0;
-
-        if (count($sectors) > 1) {
-            foreach ($sectors as $sectorIndex => $sector) {
-                $sectorForm = sprintf('sector.%s', $sectorIndex);
-                $percentage = $sector['percentage'] ?: 0;
-                $sectorVocabulary = $sector['sector_vocabulary'] ?: 'Not Specified';
-
-                if (array_key_exists($sectorVocabulary, $array)) {
-                    $totalPercentage = $array[$sectorVocabulary] + (float) $percentage;
-                    $array[$sectorVocabulary] = $totalPercentage;
-                    $array[sprintf('%s.percentage', $sectorForm)] = $sectorVocabulary;
-                } else {
-                    $array[$sectorVocabulary] = $percentage;
-
-                    $array[sprintf('%s.percentage', $sectorForm)] = $sectorVocabulary;
-                }
+            foreach ($messageNarratives as $key => $item) {
+                $messages[$key] = $item;
             }
         }
 
-        return $array;
+        return $messages;
     }
 }
