@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Requests\Activity\RecipientCountry;
 
 use App\Http\Requests\Activity\ActivityBaseRequest;
+use Illuminate\Support\Facades\Validator;
 
 /**
  * Class RecipientCountryRequest.
@@ -32,54 +33,55 @@ class RecipientCountryRequest extends ActivityBaseRequest
     }
 
     /**
+     * @param $formFields
+     *
+     * @return int
+     */
+    public function getTotalPercent($formFields): int
+    {
+        $total = 0;
+
+        foreach ($formFields as $formField) {
+            $total += $formField['percentage'];
+        }
+
+        return $total;
+    }
+
+    /**
      * Returns rules for related activity.
      *
      * @param array $formFields
-
+     *
      * @return array
      */
     protected function getRulesForRecipientCountry(array $formFields): array
     {
+        Validator::extend('allocated_country_percent_exceeded', function () {
+            return false;
+        });
         $rules = [];
+        $totalCountryPercent = $this->getTotalPercent($formFields);
+        $params = $this->route()->parameters();
+        $allottedCountryPercent = $this->activityService->getAllottedRecipientCountryPercent($params['id']);
 
         foreach ($formFields as $recipientCountryIndex => $recipientCountry) {
             $recipientCountryForm = 'recipient_country.' . $recipientCountryIndex;
-            $rules[$recipientCountryForm . '.percentage'] = 'nullable|numeric|max:100';
+            $rules[$recipientCountryForm . '.percentage'] = 'nullable|numeric|';
 
-            $rules = array_merge(
-                $rules,
-                $this->getRulesForNarrative(
-                    $recipientCountry['narrative'],
-                    $recipientCountryForm
-                )
-            );
-        }
+            $narrativeRules = $this->getRulesForNarrative($recipientCountry['narrative'], $recipientCountryForm);
 
-        $totalPercentage = $this->getPercentageRules($this->get('recipient_country'));
-
-        $indexes = [];
-        $fields = [];
-        $overallPercentage = [];
-
-        foreach ($totalPercentage as $index => $value) {
-            if (is_numeric($index) && $value != 100) {
-                $overallPercentage[] = $value;
-                $indexes[] = $index;
+            foreach ($narrativeRules as $key => $item) {
+                $rules[$key] = $item;
             }
-        }
 
-        foreach ($totalPercentage as $i => $percentage) {
-            if (array_sum($overallPercentage) > 100) {
-                foreach ($indexes as $index) {
-                    if ($index == $percentage) {
-                        $fields[] = $i;
-                    }
-                }
+            if ($allottedCountryPercent === 100) {
+                $rules[$recipientCountryForm . '.percentage'] .= '|max:100';
             }
-        }
 
-        foreach ($fields as $field) {
-            $rules[$field] = 'required|sum|numeric|max:100';
+            if ($totalCountryPercent > $allottedCountryPercent) {
+                $rules[$recipientCountryForm . '.percentage'] .= '|allocated_country_percent_exceeded:';
+            }
         }
 
         return $rules;
@@ -101,14 +103,13 @@ class RecipientCountryRequest extends ActivityBaseRequest
             $messages[$recipientCountryForm . '.percentage.numeric'] = 'The @percentage must be a number.';
             $messages[$recipientCountryForm . '.percentage.max'] = 'The @percentage cannot be greater than 100';
 
-            $messages = array_merge(
-                $messages,
-                $this->getMessagesForNarrative(
-                    $recipientCountry['narrative'],
-                    $recipientCountryForm
-                )
-            );
-            $messages[$recipientCountryForm . '.percentage.sum'] = 'The overall sum of @percentage must not be more than 100.';
+            $narrativeMessages = $this->getMessagesForNarrative($recipientCountry['narrative'], $recipientCountryForm);
+
+            foreach ($narrativeMessages as $key => $item) {
+                $messages[$key] = $item;
+            }
+            $messages[$recipientCountryForm . '.percentage.in'] = 'Country percent must be equal to allocated percent';
+            $messages[$recipientCountryForm . '.percentage.allocated_country_percent_exceeded'] = 'Country percent must match with allocated percent';
         }
 
         return $messages;

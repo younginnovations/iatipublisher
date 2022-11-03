@@ -80,7 +80,7 @@ class RecipientCountryService
     /**
      * Generates budget form.
      *
-     * @param id
+     * @param $id
      *
      * @return Form
      * @throws \JsonException
