@@ -227,4 +227,58 @@ class ActivityService
     {
         return $this->activityRepository->getActivitiesHavingIds($activityIds);
     }
+
+    /**
+     * Returns allocated recipient region percent.
+     *
+     * @param $activityId
+     *
+     * @return int
+     */
+    public function getAllottedRecipientRegionPercent($activityId): int
+    {
+        $activity = $this->getActivity($activityId);
+        $data = $activity->recipient_country;
+        $total = 0;
+
+        if (!empty($data)) {
+            foreach ($data as $datum) {
+                $total += $datum['percentage'];
+            }
+        }
+
+        return 100 - $total;
+    }
+
+    /**
+     * Returns allocated recipient region percent.
+     *
+     * @param $activityId
+     *
+     * @return int
+     */
+    public function getAllottedRecipientCountryPercent($activityId): int
+    {
+        $activity = $this->getActivity($activityId);
+        $data = $activity->recipient_region;
+        $groupedRegion = [];
+
+        if (!empty($data)) {
+            foreach ($data as $datum) {
+                if (array_key_exists($datum['region_vocabulary'], $groupedRegion)) {
+                    $groupedRegion[$datum['region_vocabulary']] += $datum['percentage'];
+                } else {
+                    $groupedRegion[$datum['region_vocabulary']] = $datum['percentage'];
+                }
+            }
+
+            if (!empty($groupedRegion)) {
+                $groupedRegion = array_values($groupedRegion);
+
+                return 100 - $groupedRegion[0];
+            }
+        }
+
+        return 100;
+    }
 }
