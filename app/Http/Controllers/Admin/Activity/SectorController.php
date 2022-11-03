@@ -57,8 +57,8 @@ class SectorController extends Controller
     /**
      * Updates sector data.
      *
-     * @param Request $request
-     * @param         $id
+     * @param SectorRequest $request
+     * @param               $id
      *
      * @return JsonResponse|RedirectResponse
      */
