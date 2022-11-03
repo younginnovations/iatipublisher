@@ -34,8 +34,10 @@ class LocationService
      * @param ActivityRepository $activityRepository
      * @param ParentCollectionFormCreator $parentCollectionFormCreator
      */
-    public function __construct(ActivityRepository $activityRepository, ParentCollectionFormCreator $parentCollectionFormCreator)
-    {
+    public function __construct(
+        ActivityRepository $activityRepository,
+        ParentCollectionFormCreator $parentCollectionFormCreator
+    ) {
         $this->activityRepository = $activityRepository;
         $this->parentCollectionFormCreator = $parentCollectionFormCreator;
     }
@@ -110,12 +112,20 @@ class LocationService
             foreach ($locations as $location) {
                 $point = [];
 
-                if ((Arr::get($location, 'point.0.pos.0.latitude', '') !== '') && (Arr::get($location, 'point.0.pos.0.longitude', '') !== '')) {
+                if ((Arr::get($location, 'point.0.pos.0.latitude', '') !== '') && (Arr::get(
+                    $location,
+                    'point.0.pos.0.longitude',
+                    ''
+                ) !== '')) {
                     $point = [
                         '@attributes' => [
                             'srsName' => Arr::get($location, 'point.0.srs_name', null),
                         ],
-                        'pos'         => sprintf('%s %s', Arr::get($location, 'point.0.pos.0.latitude', ''), Arr::get($location, 'point.0.pos.0.longitude', '')),
+                        'pos'         => sprintf(
+                            '%s %s',
+                            Arr::get($location, 'point.0.pos.0.latitude', ''),
+                            Arr::get($location, 'point.0.pos.0.longitude', '')
+                        ),
                     ];
                 }
 
@@ -128,12 +138,7 @@ class LocationService
                             'code' => Arr::get($location, 'location_reach.0.code', null),
                         ],
                     ],
-                    'location-id'          => [
-                        '@attributes' => [
-                            'code'       => Arr::get($location, 'location_id.0.code', null),
-                            'vocabulary' => Arr::get($location, 'location_id.0.vocabulary', null),
-                        ],
-                    ],
+                    'location-id'          => $this->getLocationIdValues(Arr::get($location, 'location_id', [])),
                     'name'                 => [
                         'narrative' => $this->buildNarrative(Arr::get($location, 'name.0.narrative', [])),
                     ],
@@ -141,7 +146,9 @@ class LocationService
                         'narrative' => $this->buildNarrative(Arr::get($location, 'description.0.narrative', [])),
                     ],
                     'activity-description' => [
-                        'narrative' => $this->buildNarrative(Arr::get($location, 'activity_description.0.narrative', [])),
+                        'narrative' => $this->buildNarrative(
+                            Arr::get($location, 'activity_description.0.narrative', [])
+                        ),
                     ],
                     'administrative'       => [
                         '@attributes' => [
@@ -192,5 +199,28 @@ class LocationService
         }
 
         return array_values($location['location']);
+    }
+
+    /**
+     * Returns array for location ids.
+     *
+     * @param $locationIds
+     *
+     * @return array
+     */
+    public function getLocationIdValues($locationIds): array
+    {
+        $array = [];
+
+        foreach ($locationIds as $locationId) {
+            $array[] = [
+                '@attributes' => [
+                    'code'       => Arr::get($locationId, 'code', null),
+                    'vocabulary' => Arr::get($locationId, 'vocabulary', null),
+                ],
+            ];
+        }
+
+        return $array;
     }
 }

@@ -286,9 +286,10 @@ class Activity
     {
         $this->participatingOrg[$this->index] = $template['participating_organization'];
         $this->participatingOrg[$this->index]['organization_role'] = $this->attributes($element, 'role');
-        $this->participatingOrg[$this->index]['identifier'] = $this->attributes($element, 'ref');
-        $this->participatingOrg[$this->index]['organization_type'] = $this->attributes($element, 'type');
-        $this->participatingOrg[$this->index]['activity_id'] = $this->attributes($element, 'activity-id');
+        $this->participatingOrg[$this->index]['ref'] = $this->attributes($element, 'ref');
+        $this->participatingOrg[$this->index]['type'] = $this->attributes($element, 'type');
+        $this->participatingOrg[$this->index]['identifier'] = $this->attributes($element, 'activity-id');
+        $this->participatingOrg[$this->index]['crs_channel_code'] = $this->attributes($element, 'crs-channel-code');
         $this->participatingOrg[$this->index]['narrative'] = $this->narrative($element);
         $this->index++;
 
@@ -376,13 +377,11 @@ class Activity
     public function getMailingAddress($component): array
     {
         $array = [];
-        $mailingIndex = 0;
 
         foreach (Arr::get($component, 'value', []) as $key => $value) {
             if (($this->name($value) === 'mailingAddress') && is_array($value)) {
-                $array[$mailingIndex]['narrative'] = $this->value(Arr::get($component, 'value', []), 'mailingAddress');
+                $array[]['narrative'] = $this->value(Arr::get($component, 'value', []), 'mailingAddress');
                 unset($component['value'][$key]);
-                $mailingIndex++;
             }
         }
 
@@ -451,13 +450,13 @@ class Activity
     public function budget($element, $template): array
     {
         $this->budget[$this->index] = $template['budget'];
-        $this->budget[$this->index]['budget_type'] = $this->attributes($element, 'type');
         $this->budget[$this->index]['budget_status'] = $this->attributes($element, 'status');
+        $this->budget[$this->index]['budget_type'] = $this->attributes($element, 'type');
         $this->budget[$this->index]['period_start'][0]['date'] = dateFormat('Y-m-d', $this->attributes($element, 'iso-date', 'periodStart'));
         $this->budget[$this->index]['period_end'][0]['date'] = dateFormat('Y-m-d', $this->attributes($element, 'iso-date', 'periodEnd'));
-        $this->budget[$this->index]['value'][0]['amount'] = $this->value(Arr::get($element, 'value', []), 'value');
-        $this->budget[$this->index]['value'][0]['currency'] = $this->attributes($element, 'currency', 'value');
-        $this->budget[$this->index]['value'][0]['value_date'] = dateFormat('Y-m-d', $this->attributes($element, 'value-date', 'value'));
+        $this->budget[$this->index]['budget_value'][0]['amount'] = $this->value(Arr::get($element, 'value', []), 'value');
+        $this->budget[$this->index]['budget_value'][0]['currency'] = $this->attributes($element, 'currency', 'value');
+        $this->budget[$this->index]['budget_value'][0]['value_date'] = dateFormat('Y-m-d', $this->attributes($element, 'value-date', 'value'));
         $this->index++;
 
         return $this->budget;
@@ -511,6 +510,7 @@ class Activity
         $this->location[$this->index] = $template['location'];
         $this->location[$this->index]['ref'] = $this->attributes($element, 'ref');
         $this->location[$this->index]['location_reach'][0]['code'] = $this->attributes($element, 'code', 'locationReach');
+        $this->location[$this->index]['location_id'] = $this->getLocationIdData($element);
         $this->location[$this->index]['location_id'][0]['vocabulary'] = $this->attributes($element, 'vocabulary', 'locationId');
         $this->location[$this->index]['location_id'][0]['code'] = $this->attributes($element, 'code', 'locationId');
         $this->location[$this->index]['name'][0]['narrative'] = (($name = $this->value(Arr::get($element, 'value', []), 'name')) === '') ? $this->emptyNarrative : $name;
@@ -549,14 +549,14 @@ class Activity
         $this->plannedDisbursement[$this->index]['value'][0]['currency'] = $this->attributes($element, 'currency', 'value');
         $this->plannedDisbursement[$this->index]['value'][0]['value_date'] = dateFormat('Y-m-d', $this->attributes($element, 'value-date', 'value'));
         $this->plannedDisbursement[$this->index]['provider_org'][0]['ref'] = $this->attributes($element, 'ref', 'providerOrg');
-        $this->plannedDisbursement[$this->index]['provider_org'][0]['activity_id'] = $this->attributes($element, 'provider-activity-id', 'providerOrg');
+        $this->plannedDisbursement[$this->index]['provider_org'][0]['provider_activity_id'] = $this->attributes($element, 'provider-activity-id', 'providerOrg');
         $this->plannedDisbursement[$this->index]['provider_org'][0]['type'] = $this->attributes($element, 'type', 'providerOrg');
         $this->plannedDisbursement[$this->index]['provider_org'][0]['narrative'] = (($providerOrg = $this->value(
             Arr::get($element, 'value', []),
             'providerOrg'
         )) === '') ? $this->emptyNarrative : $providerOrg;
         $this->plannedDisbursement[$this->index]['receiver_org'][0]['ref'] = $this->attributes($element, 'ref', 'receiverOrg');
-        $this->plannedDisbursement[$this->index]['receiver_org'][0]['activity_id'] = $this->attributes($element, 'receiver-activity-id', 'receiverOrg');
+        $this->plannedDisbursement[$this->index]['receiver_org'][0]['receiver_activity_id'] = $this->attributes($element, 'receiver-activity-id', 'receiverOrg');
         $this->plannedDisbursement[$this->index]['receiver_org'][0]['type'] = $this->attributes($element, 'type', 'receiverOrg');
         $this->plannedDisbursement[$this->index]['receiver_org'][0]['narrative'] = (($receiverOrg = $this->value(
             Arr::get($element, 'value', []),
@@ -825,5 +825,25 @@ class Activity
         $this->index++;
 
         return $this->tagVariable;
+    }
+
+    /**
+     * Returns location id array.
+     *
+     * @param $element
+     *
+     * @return array
+     */
+    public function getLocationIdData($element): array
+    {
+        $array = [];
+
+        foreach (Arr::get($element, 'value', []) as $value) {
+            if ($this->name($value) === 'locationId') {
+                $array[] = $this->attributes($value);
+            }
+        }
+
+        return $array;
     }
 }
