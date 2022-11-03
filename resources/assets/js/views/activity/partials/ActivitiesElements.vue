@@ -196,7 +196,7 @@ function getLink(has_data: number, index: string) {
   .elements {
     border-radius: 0px 8px 8px 0px;
     width: 125px;
-    height: 174px;
+    min-height: 174px;
   }
 
   .elements__panel {

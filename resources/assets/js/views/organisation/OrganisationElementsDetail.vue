@@ -53,7 +53,7 @@
           <svg-vue
             v-if="orgMandatoryElements().includes(title)"
             class="mr-1.5"
-            icon="star"
+            icon="core"
           ></svg-vue>
           <HoverText
             v-if="tooltip"
@@ -82,7 +82,7 @@
                 {{ post.narrative }}
               </span>
             </div>
-            <span v-else class="text-sm italic">Title Not Available</span>
+            <span v-else class="text-sm italic">Title Missing</span>
             <div v-if="i !== data.content.length - 1" class="mb-4"></div>
           </div>
         </div>

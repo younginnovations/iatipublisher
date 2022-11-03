@@ -7,9 +7,9 @@
   >
     <div class="category">
       <span v-if="post.type">
-        {{ types.humanitarianScopeType[post.type] ?? 'Not available' }}
+        {{ types.humanitarianScopeType[post.type] ?? 'Missing' }}
       </span>
-      <span v-else>Vocabulary Not Available</span>
+      <span v-else>Vocabulary Missing</span>
     </div>
     <div class="ml-5">
       <table>
@@ -19,7 +19,7 @@
             <td>
               {{
                 types.humanitarianScopeVocabulary[post.vocabulary] ??
-                'Not available'
+                'Missing'
               }}
             </td>
           </tr>
@@ -33,13 +33,13 @@
               >
                 {{ post.vocabulary_uri }}
               </a>
-              <span v-else class="italic">Not Available</span>
+              <span v-else class="italic">Missing</span>
             </td>
           </tr>
           <tr>
             <td>Code</td>
             <td>
-              {{ post.code ?? 'Not Available' }}
+              {{ post.code ?? 'Missing' }}
             </td>
           </tr>
           <tr>
@@ -56,11 +56,11 @@
                   {{
                     narrative.language
                       ? types.languages[narrative.language]
-                      : 'Not Available'
+                      : 'Missing'
                   }})
                 </div>
                 <div class="w-[500px] max-w-full">
-                  {{ narrative.narrative ?? 'Not Available' }}
+                  {{ narrative.narrative ?? 'Missing' }}
                 </div>
               </div>
             </td>

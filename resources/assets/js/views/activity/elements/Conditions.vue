@@ -10,7 +10,7 @@
           <div v-if="post.condition_type">
             {{ types.conditionType[post.condition_type] }}
           </div>
-          <span v-else class="italic">Type Not Available</span>
+          <span v-else class="italic">Type Missing</span>
         </div>
         <table class="ml-5">
           <tbody>
@@ -37,7 +37,7 @@
                     item.narrative
                   }}</span>
                 </div>
-                <span v-else class="italic">Not Available</span>
+                <span v-else class="italic">Missing</span>
               </td>
             </tr>
           </tbody>

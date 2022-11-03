@@ -49,7 +49,7 @@ class ParentCollectionForm extends BaseForm
 
         if (Arr::get($field, 'add_more', false) || Arr::get($field, 'add_more_attributes', false)) {
             $this->add('add_to_collection', 'button', [
-                'label' => sprintf('add more %s', str_replace('_', ' ', $field['name'])),
+                'label' => sprintf('add additional %s', str_replace('_', ' ', $field['name'])),
                 'attr' => [
                     'icon' => true,
                     'class' => 'add_to_parent add_more button relative text-xs font-bold text-spring-50 text-bluecoral uppercase leading-normal -translate-y-1/2 pl-3.5',

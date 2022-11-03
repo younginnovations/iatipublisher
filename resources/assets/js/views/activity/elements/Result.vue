@@ -85,7 +85,7 @@
                                   result.result.description[0].narrative,
                                   currentLanguage
                                 ) === "Untitled"
-                                  ? "Not Available"
+                                  ? "Missing"
                                   : types.languages[currentLanguage]
                               }})
                             </div>
@@ -193,14 +193,14 @@
                                           <template v-if="baseline.value">
                                             {{ baseline.value }},
                                           </template>
-                                          <template v-else> Not Available, </template>
+                                          <template v-else> Missing, </template>
                                         </span>
                                         <span>
                                           Date:
                                           <template v-if="baseline.date">
                                             {{ baseline.date }}
                                           </template>
-                                          <template v-else> Not Available </template>
+                                          <template v-else> Missing </template>
                                         </span>
                                       </div>
                                     </div>

@@ -7,7 +7,7 @@
   >
     <div class="text-sm font-bold category">
       <span v-if="post.type">{{ types.contactType[post.type] }}</span>
-      <span v-else class="italic">Type Not Available</span>
+      <span v-else class="italic">Type Missing</span>
     </div>
 
     <div class="ml-5">
@@ -29,11 +29,11 @@
                   {{
                     narrative.language
                       ? types.languages[narrative.language]
-                      : "Not Available"
+                      : "Missing"
                   }})
                 </div>
                 <div class="w-[500px] max-w-full">
-                  {{ narrative.narrative ?? "Not Available" }}
+                  {{ narrative.narrative ?? "Missing" }}
                 </div>
               </div>
             </td>
@@ -54,11 +54,11 @@
                   {{
                     narrative.language
                       ? types.languages[narrative.language]
-                      : "Not Available"
+                      : "Missing"
                   }})
                 </div>
                 <div class="w-[500px] max-w-full">
-                  {{ narrative.narrative ?? "Not Available" }}
+                  {{ narrative.narrative ?? "Missing" }}
                 </div>
               </div>
             </td>
@@ -80,11 +80,11 @@
                   {{
                     narrative.language
                       ? types.languages[narrative.language]
-                      : "Not Available"
+                      : "Missing"
                   }})
                 </div>
                 <div class="w-[500px] max-w-full">
-                  {{ narrative.narrative ?? "Not Available" }}
+                  {{ narrative.narrative ?? "Missing" }}
                 </div>
               </div>
             </td>
@@ -105,11 +105,11 @@
                   {{
                     narrative.language
                       ? types.languages[narrative.language]
-                      : "Not Available"
+                      : "Missing"
                   }})
                 </div>
                 <div class="w-[500px] max-w-full">
-                  {{ narrative.narrative ?? "Not Available" }}
+                  {{ narrative.narrative ?? "Missing" }}
                 </div>
               </div>
             </td>
@@ -126,7 +126,7 @@
                 }"
               >
                 <div class="w-[500px] max-w-full">
-                  {{ email_value.email ?? "Not Available" }}
+                  {{ email_value.email ?? "Missing" }}
                 </div>
               </div>
             </td>
@@ -143,7 +143,7 @@
                 }"
               >
                 <div class="w-[500px] max-w-full">
-                  {{ tel.telephone ?? "Not Available" }}
+                  {{ tel.telephone ?? "Missing" }}
                 </div>
               </div>
             </td>
@@ -160,7 +160,7 @@
                 }"
               >
                 <div class="w-[500px] max-w-full">
-                  {{ w.website ?? "Not Available" }}
+                  {{ w.website ?? "Missing" }}
                 </div>
               </div>
             </td>
@@ -181,11 +181,11 @@
                   {{
                     narrative.language
                       ? types.languages[narrative.language]
-                      : "Not Available"
+                      : "Missing"
                   }})
                 </div>
                 <div class="w-[500px] max-w-full">
-                  {{ narrative.narrative ?? "Not Available" }}
+                  {{ narrative.narrative ?? "Missing" }}
                 </div>
               </div>
             </td>

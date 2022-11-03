@@ -22,7 +22,6 @@
 
     <div class="activities">
       <aside class="activities__sidebar">
-        <Notes class="mb-4" />
         <div class="indicator sticky top-0 rounded-lg bg-eggshell px-6 py-4 text-n-50">
           <ul class="text-sm font-bold leading-relaxed">
             <li v-for="(rData, r, ri) in transactionData" :key="ri">
@@ -70,13 +69,11 @@ import Toast from "Components/ToastMessage.vue";
 //composable
 import dateFormat from "Composable/dateFormat";
 import getActivityTitle from "Composable/title";
-import Notes from "Activity/partials/ElementsNote.vue";
 import TransactionElement from "./TransactionElement.vue";
 
 export default defineComponent({
   name: "TransactionDetail",
   components: {
-    Notes,
     TransactionElement,
     Btn,
     PageTitle,

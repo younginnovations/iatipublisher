@@ -9,7 +9,7 @@
       {{
         types.transactionType[
           trans.transaction.transaction_type[0].transaction_type_code
-        ] ?? "Transaction type not available"
+        ] ?? "Transaction type missing"
       }}
       <div class="ml-2">
         <Btn
@@ -24,7 +24,7 @@
         class="description text-sm"
         :class="{ 'mb-4': Number(t) !== trans.transaction.value.length - 1 }"
       >
-        {{ val.amount ? Number(val.amount).toLocaleString() : "Value not available" }}
+        {{ val.amount ? Number(val.amount).toLocaleString() : "Value missing" }}
         {{ val.currency }}
         {{
           dateFormat(val.date, "MMMM DD, YYYY")

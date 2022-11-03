@@ -11,7 +11,7 @@
         {{
           recipient_country_budget.status
             ? types?.budgetType[recipient_country_budget.status]
-            : "Status Not Available"
+            : "Status Missing"
         }}
       </div>
       <div class="flex text-sm">
@@ -19,7 +19,7 @@
           {{ Number(recipient_country_budget.value["0"].amount).toLocaleString() }}
           {{ recipient_country_budget.value["0"].currency }}
         </span>
-        <span v-else> Budget Amount Not Available</span>
+        <span v-else> Budget Amount Missing</span>
       </div>
       <div class="ml-4">
         <table>
@@ -36,7 +36,7 @@
                 {{
                   recipient_country_budget.recipient_country["0"].code
                     ? types.country[recipient_country_budget.recipient_country["0"].code]
-                    : "Code Not Available"
+                    : "Code Missing"
                 }}
               </td>
             </tr>
@@ -61,12 +61,12 @@
                       {{
                         narrative.language
                           ? `Language: ${types?.languages[narrative.language]}`
-                          : "Language : Not Available"
+                          : "Language : Missing"
                       }}
                       )
                     </div>
                     <div class="w-[500px] max-w-full">
-                      {{ narrative.narrative ?? "Narrative Not Available" }}
+                      {{ narrative.narrative ?? "Narrative Missing" }}
                     </div>
                   </div>
                 </div>
@@ -105,7 +105,7 @@
                 {{ Number(budget_line.value["0"].amount).toLocaleString() }}
                 {{ budget_line.value["0"].currency }}
               </span>
-              <span v-else> Budget Amount Not Available </span>
+              <span v-else> Budget Amount Missing </span>
             </div>
             <div class="ml-4">
               <table>
@@ -113,7 +113,7 @@
                   <tr>
                     <td class="pr-20 text-n-40">Reference</td>
                     <td>
-                      {{ budget_line.ref ?? "Reference Not Available" }}
+                      {{ budget_line.ref ?? "Reference Missing" }}
                     </td>
                   </tr>
                   <tr>
@@ -137,11 +137,11 @@
                           ({{
                             narrative.language
                               ? `Language: ${types?.languages[narrative.language]}`
-                              : "Language : Not Available"
+                              : "Language : Missing"
                           }})
                         </div>
                         <div class="w-[500px] max-w-full">
-                          {{ narrative.narrative ?? "Narrative Not Available" }}
+                          {{ narrative.narrative ?? "Narrative Missing" }}
                         </div>
                       </div>
                     </td>
@@ -174,6 +174,6 @@ interface TypesInterface {
 const types = inject("orgTypes") as TypesInterface;
 
 function formatDate(date: Date) {
-  return date ? moment(date).format("LL") : "Date Not Available";
+  return date ? moment(date).format("LL") : "Date Missing";
 }
 </script>

@@ -8,7 +8,7 @@
       <span v-if="post.type">
         {{ types.descriptionType[post.type] }}
       </span>
-      <span v-else class="italic">Type Not Available</span>
+      <span v-else class="italic">Type Missing</span>
     </div>
     <div
       v-for="(item, i) in post.narrative"
@@ -24,7 +24,7 @@
           {{ item.narrative }}
         </span>
       </div>
-      <span v-else class="italic">Narrative Not Available</span>
+      <span v-else class="italic">Narrative Missing</span>
     </div>
   </div>
 </template>

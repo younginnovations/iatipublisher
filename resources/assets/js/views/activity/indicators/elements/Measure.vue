@@ -2,7 +2,7 @@
   <tr>
     <td>Measure</td>
     <td>
-      {{ measureData ? measureType[measureData] : 'Not Available' }}
+      {{ measureData ? measureType[measureData] : 'Missing' }}
     </td>
   </tr>
 </template>

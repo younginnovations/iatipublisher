@@ -54,7 +54,7 @@ class ParentCollectionFormCreator
             ]
         )->add('buttons', 'buttongroup', [
             'wrapper' => [
-                'class' => 'fixed left-0 bottom-0 w-full bg-eggshell py-5 pr-20 xl:pr-40 shadow-dropdown z-50',
+                'class' => 'fixed left-0 bottom-0 w-full bg-eggshell py-5 pr-20 xl:pr-40 shadow-dropdown',
             ],
             'buttons' => [
                 'clear'    => [

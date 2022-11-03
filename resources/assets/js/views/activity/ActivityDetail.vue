@@ -93,20 +93,20 @@
             <div class="flex items-center justify-between mb-2">
               <span class="mr-2">Publishing Progress</span>
               <HoverText
-                hover-text="You cannot publish an activity until all the mandatory fields have been filled."
+                hover-text="The IATI Standard contains a wide range of data elements and your organisation is encouraged to (at least) publish data in elements marked as “Core”."
                 name=""
                 class="hover-text"
                 position="right"
               />
             </div>
             <ProgressBar :percent="progress" class="mb-3" />
-            <span>Fill all elements to get 100% score</span>
+            <span>Complete all core elements to get 100% score</span>
           </div>
           <div class="activities__card elements">
             <div class="flex items-center justify-between mb-7">
               <span>Elements</span>
               <HoverText
-                hover-text="You cannot publish an activity until all the mandatory fields have been filled."
+                hover-text="Each “Element” represents a basic unit of information in the IATI Standard. Click on each element listed below and complete all data fields contained in the element. For each element, you will find its technical definition, which is labelled as “IATI Standard Reference” and helpful guidance on the data you are required to provide."
                 name=""
                 class="hover-text"
               />
@@ -117,7 +117,7 @@
                 <span>Core</span>
               </div>
               <HoverText
-                hover-text="You cannot publish an activity until all the mandatory fields have been filled."
+                hover-text="Core elements include the IATI Standard's “mandatory and recommended” elements and it is important to provide this data to ensure your data is usable and useful."
                 name=""
                 class="hover-text"
               />

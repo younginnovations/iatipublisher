@@ -191,6 +191,10 @@ span.select2-container--default {
   &__sidebar {
     flex-shrink: 0;
     width: 280px;
+
+    &-inner {
+      order: 1;
+    }
   }
 
   &__content {
@@ -205,7 +209,7 @@ span.select2-container--default {
   .progress {
     @apply items-center;
     width: 151px;
-    height: 174px;
+    min-height: 174px;
     border-radius: 8px 0px 0px 8px;
   }
 

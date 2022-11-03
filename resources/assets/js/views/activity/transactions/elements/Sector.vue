@@ -12,7 +12,7 @@
         <span>{{
           sec.sector_vocabulary
             ? type.sectorVocabulary[sec.sector_vocabulary]
-            : 'Vocabulary Not Available'
+            : 'Vocabulary Missing'
         }}</span>
       </div>
       <div class="ml-4">
@@ -23,30 +23,30 @@
               <td>
                 <div class="text-sm">
                   <span v-if="sec.text">
-                    {{ sec.text ?? 'Not Available' }}
+                    {{ sec.text ?? 'Missing' }}
                   </span>
                   <span v-else-if="sec.code">
-                    {{ sec.code ? type.sectorCode[sec.code] : 'Not Available' }}
+                    {{ sec.code ? type.sectorCode[sec.code] : 'Missing' }}
                   </span>
                   <span v-else-if="sec.category_code">
                     {{
                       sec.category_code
                         ? type.sectorCategory[sec.category_code]
-                        : 'Not Available'
+                        : 'Missing'
                     }}
                   </span>
                   <span v-else-if="sec.sdg_goal">
                     {{
                       sec.sdg_goal
                         ? type.unsdgGoals[sec.sdg_goal]
-                        : 'Not Available'
+                        : 'Missing'
                     }}
                   </span>
                   <span v-else-if="sec.sdg_target">
                     {{
                       sec.sdg_target
                         ? type.unsdgTargets[sec.sdg_target]
-                        : 'Not Available'
+                        : 'Missing'
                     }}
                   </span>
                 </div>
@@ -68,11 +68,11 @@
                     {{
                       sd.language
                         ? `Language: ${type.languages[sd.language]}`
-                        : 'Language Not Available'
+                        : 'Language Missing'
                     }})
                   </div>
                   <div class="text-sm">
-                    {{ sd.narrative ?? 'Narrative Not Available' }}
+                    {{ sd.narrative ?? 'Narrative Missing' }}
                   </div>
                 </div>
               </td>

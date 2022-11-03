@@ -60,7 +60,7 @@
                   ? "True"
                   : indicator.indicator.aggregation_status
                   ? "False"
-                  : "Not Available"
+                  : "Missing"
               }}
             </td>
             <td>

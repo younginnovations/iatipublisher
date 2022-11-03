@@ -7,7 +7,7 @@
             <td>Organisation Identifier Code</td>
             <td>
               <div class="text-sm">
-                {{ PoData[0].organization_identifier_code ?? 'Not Available' }}
+                {{ PoData[0].organization_identifier_code ?? 'Missing' }}
               </div>
             </td>
           </tr>
@@ -27,11 +27,11 @@
                   {{
                     po.language
                       ? `Language: ${type.languages[po.language]}`
-                      : 'Language: Not Available'
+                      : 'Language: Missing'
                   }})
                 </div>
                 <div class="text-sm">
-                  {{ po.narrative ?? 'Narrative Not Available' }}
+                  {{ po.narrative ?? 'Narrative Missing' }}
                 </div>
               </div>
             </td>
@@ -40,7 +40,7 @@
             <td>Provider Activity ID</td>
             <td>
               <div class="text-sm">
-                {{ PoData[0].provider_activity_id ?? 'Not Available' }}
+                {{ PoData[0].provider_activity_id ?? 'Missing' }}
               </div>
             </td>
           </tr>
@@ -51,7 +51,7 @@
                 {{
                   PoData[0].type
                     ? type.organizationType[PoData[0].type]
-                    : 'Not Available'
+                    : 'Missing'
                 }}
               </div>
             </td>

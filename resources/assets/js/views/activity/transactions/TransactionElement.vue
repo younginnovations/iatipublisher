@@ -81,7 +81,7 @@
           <TiedStatus :data="elementData" />
         </template>
         <template v-else>
-          <div class="text-sm">{{ data ?? 'Not Available' }}</div>
+          <div class="text-sm">{{ data ?? 'Missing' }}</div>
         </template>
       </div>
     </div>

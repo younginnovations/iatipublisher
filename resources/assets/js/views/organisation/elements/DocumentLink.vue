@@ -12,7 +12,7 @@
         <a v-if="document_link.url" :href="document_link.url" target="_blank">
           {{ document_link.url }}
         </a>
-        <span v-else class="italic">URL Not Available</span>
+        <span v-else class="italic">URL Missing</span>
       </div>
       <div class="ml-4">
         <table>
@@ -31,7 +31,7 @@
                     ({{
                       narrative.language
                         ? `Language: ${types?.languages[narrative.language]}`
-                        : "Language : Not Available"
+                        : "Language : Missing"
                     }})
                   </span>
                   <div v-if="narrative.narrative" class="flex flex-col">
@@ -39,7 +39,7 @@
                       {{ narrative.narrative }}
                     </span>
                   </div>
-                  <span v-else class="italic">Not Available</span>
+                  <span v-else class="italic">Missing</span>
                 </div>
               </td>
             </tr>
@@ -58,11 +58,11 @@
                     ({{
                       narrative.language
                         ? `Language: ${types?.languages[narrative.language]}`
-                        : "Language : Not Available"
+                        : "Language : Missing"
                     }})
                   </div>
                   <div class="w-[500px] max-w-full">
-                    {{ narrative.narrative ?? "Narrative Not Available" }}
+                    {{ narrative.narrative ?? "Narrative Missing" }}
                   </div>
                 </div>
               </td>
@@ -79,7 +79,7 @@
                       document_link.language
                         .map((entry) => types.languages[entry.language])
                         .join(", ") === ""
-                        ? "Language Not Available"
+                        ? "Language Missing"
                         : document_link.language
                             .map((entry) => types.languages[entry.language])
                             .join(", ")
@@ -93,7 +93,7 @@
               <td v-if="document_link.format">
                 {{ document_link.format }}
               </td>
-              <td v-else class="italic">Not Available</td>
+              <td v-else class="italic">Missing</td>
             </tr>
             <tr>
               <td>Category</td>
@@ -110,10 +110,10 @@
                     {{
                       category.code
                         ? types?.documentCategory[category.code]
-                        : "Category Not Available"
+                        : "Category Missing"
                     }}
                   </span>
-                  <span v-else class="italic">Not Available</span>
+                  <span v-else class="italic">Missing</span>
                 </div>
               </td>
             </tr>
@@ -124,7 +124,7 @@
                   <span v-if="document_date.date">
                     {{ formatDate(document_date.date) }}
                   </span>
-                  <span v-else class="italic">Not Available</span>
+                  <span v-else class="italic">Missing</span>
                 </div>
               </td>
             </tr>
@@ -139,7 +139,7 @@
                     {{
                       recipient_country.code
                         ? `${types?.country[recipient_country.code]}`
-                        : "Not Available"
+                        : "Missing"
                     }}
                   </div>
                   <div
@@ -154,11 +154,11 @@
                       ({{
                         narrative.language
                           ? `Language: ${types?.languages[narrative.language]} `
-                          : "Language : Not Available"
+                          : "Language : Missing"
                       }})
                     </div>
                     <div class="w-[500px] max-w-full">
-                      {{ narrative.narrative ?? "Narrative Not Available" }}
+                      {{ narrative.narrative ?? "Narrative Missing" }}
                     </div>
                   </div>
                 </div>
@@ -190,6 +190,6 @@ interface TypesInterface {
 const types = inject("orgTypes") as TypesInterface;
 
 function formatDate(date: Date) {
-  return date ? moment(date).format("LL") : "Date Not Available";
+  return date ? moment(date).format("LL") : "Date Missing";
 }
 </script>
