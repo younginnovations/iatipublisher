@@ -33,9 +33,10 @@
   },
   "participating_organization": {
     "organization_role": "",
+    "ref": "",
+    "type": "",
     "identifier": "",
-    "organization_type": "",
-    "activity_id": "",
+    "crs_channel_code": "",
     "narrative": [
       {
         "narrative": "",
@@ -148,8 +149,8 @@
   },
   "default_tied_status": "",
   "budget": {
+    "budget_status": "",
     "budget_type": "",
-    "status": "",
     "period_start": [
       {
         "date": ""
@@ -160,7 +161,7 @@
         "date": ""
       }
     ],
-    "value": [
+    "budget_value": [
       {
         "amount": "",
         "currency": "",
@@ -434,7 +435,7 @@
     "provider_org": [
       {
         "ref": "",
-        "activity_id": "",
+        "provider_activity_id": "",
         "type": "",
         "narrative": [
           {
@@ -447,7 +448,7 @@
     "receiver_org": [
       {
         "ref": "",
-        "activity_id": "",
+        "receiver_activity_id": "",
         "type": "",
         "narrative": [
           {

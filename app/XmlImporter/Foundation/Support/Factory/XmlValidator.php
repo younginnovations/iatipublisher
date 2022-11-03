@@ -258,9 +258,9 @@ class XmlValidator
 
         foreach ($otherIdentifiers as $otherIdentifierIndex => $otherIdentifier) {
             $otherIdentifierBase = sprintf('other_identifier.%s', $otherIdentifierIndex);
-            $rules[sprintf('%s.reference', $otherIdentifierBase)] = 'nullable';
-            $rules[sprintf('%s.type', $otherIdentifierBase)] = sprintf(
-                'nullable|in:%s',
+            $rules[sprintf('%s.reference', $otherIdentifierBase)] = 'required';
+            $rules[sprintf('%s.reference_type', $otherIdentifierBase)] = sprintf(
+                'required|in:%s',
                 $this->validCodeList('OtherIdentifierType')
             );
             $tempRules = $this->rulesForOwnerOrg(Arr::get($otherIdentifier, 'owner_org', []), $otherIdentifierBase);
@@ -290,7 +290,7 @@ class XmlValidator
                 'validation.required',
                 ['attribute' => trans('elementForm.reference')]
             );
-            $messages[sprintf('%s.type.required', $otherIdentifierBase)] = trans(
+            $messages[sprintf('%s.reference_type.required', $otherIdentifierBase)] = trans(
                 'validation.required',
                 ['attribute' => trans('elementForm.type')]
             );
@@ -832,13 +832,17 @@ class XmlValidator
                 'required|in:%s',
                 $this->validCodeList('OrganisationRole', 'Organization')
             );
-            $rules[$participatingOrgBase . '.organization_type'] = sprintf(
+            $rules[$participatingOrgBase . '.type'] = sprintf(
                 'in:%s',
                 $this->validCodeList('OrganizationType', 'Organization')
             );
             $identifier = $participatingOrgBase . '.identifier';
             $narrative = sprintf('%s.narrative.0.narrative', $participatingOrgBase);
             $rules[$identifier] = 'exclude_operators|required_without:' . $narrative;
+            $rules[$participatingOrgBase . '.crs_channel_code'] = sprintf(
+                'nullable|in:%s',
+                $this->validCodeList('CRSChannelCode')
+            );
             $rules[$narrative] = [];
             $rules[$narrative][] = 'required_without:' . $identifier;
             $tempRules = $this->factory->getRulesForNarrative($participatingOrg['narrative'], $participatingOrgBase);
@@ -876,7 +880,7 @@ class XmlValidator
                 'validation.code_list',
                 ['attribute' => trans('elementForm.organisation_role')]
             );
-            $messages[$participatingOrgBase . '.organization_type.in'] = trans(
+            $messages[$participatingOrgBase . '.type.in'] = trans(
                 'validation.code_list',
                 ['attribute' => trans('elementForm.organisation_type')]
             );
@@ -885,6 +889,10 @@ class XmlValidator
             $messages[$identifier . '.required_without'] = trans(
                 'validation.required_without',
                 ['attribute' => trans('elementForm.identifier'), 'values' => trans('elementForm.narrative')]
+            );
+            $messages[$participatingOrgBase . '.crs_channel_code.in'] = trans(
+                'validation.code_list',
+                ['attribute' => trans('elementForm.organisation_crs_channel_code')]
             );
             $messages[$narrative . '.required_without'] = trans(
                 'validation.required_without',
@@ -1579,7 +1587,7 @@ class XmlValidator
         $indexes = [];
 
         foreach ($totalPercentage as $index => $value) {
-            if (is_numeric($index) && $value !== 100) {
+            if (is_numeric($index) && $value != 100) {
                 $indexes[] = $index;
             }
         }
@@ -1588,15 +1596,15 @@ class XmlValidator
 
         foreach ($totalPercentage as $i => $percentage) {
             foreach ($indexes as $index) {
-                if ($index === $percentage) {
+                if ($index == $percentage) {
                     $fields[] = $i;
                 }
             }
         }
 
-//        foreach ($fields as $field) {
-//            $rules[$field] = 'required|sum|numeric|max:100';
-//        }
+        foreach ($fields as $field) {
+            $rules[$field] = 'required|sum|numeric|max:100';
+        }
 
         return $rules;
     }
@@ -2229,7 +2237,7 @@ class XmlValidator
             $tempRules = [
                 $this->factory->getRulesForPeriodStart($budget['period_start'], $budgetBase),
                 $this->factory->getRulesForPeriodEnd($budget['period_end'], $budgetBase),
-                $this->getRulesForValue($budget['value'], $budgetBase),
+                $this->getRulesForBudgetValue($budget['budget_value'], $budgetBase),
             ];
 
             foreach ($tempRules as $tempRule) {
@@ -2277,9 +2285,9 @@ class XmlValidator
                 ['attribute' => trans('elementForm.budget_code')]
             );
             $tempMessages = [
-                $this->factory->getRulesForPeriodStart($budget['period_start'], $budgetBase),
-                $this->factory->getRulesForPeriodEnd($budget['period_end'], $budgetBase),
-                $this->getRulesForValue($budget['value'], $budgetBase),
+                $this->factory->getMessagesForPeriodStart($budget['period_start'], $budgetBase),
+                $this->factory->getMessagesForPeriodEnd($budget['period_end'], $budgetBase),
+                $this->getMessagesForBudgetValue($budget['budget_value'], $budgetBase),
             ];
 
             foreach ($tempMessages as $tempMessage) {
@@ -2300,13 +2308,34 @@ class XmlValidator
     /**
      * @param $budgetValues
      * @param $budgetBase
+     *
      * @return array
      */
     protected function getRulesForValue($budgetValues, $budgetBase): array
     {
         $rules = [];
+
         foreach ($budgetValues as $valueIndex => $value) {
             $valueBase = sprintf('%s.value.%s', $budgetBase, $valueIndex);
+            $rules[sprintf('%s.amount', $valueBase)] = 'required|numeric';
+            $rules[sprintf('%s.value_date', $valueBase)] = 'required';
+        }
+
+        return $rules;
+    }
+
+    /**
+     * @param $budgetValues
+     * @param $budgetBase
+     *
+     * @return array
+     */
+    protected function getRulesForBudgetValue($budgetValues, $budgetBase): array
+    {
+        $rules = [];
+
+        foreach ($budgetValues as $valueIndex => $value) {
+            $valueBase = sprintf('%s.budget_value.%s', $budgetBase, $valueIndex);
             $rules[sprintf('%s.amount', $valueBase)] = 'required|numeric';
             $rules[sprintf('%s.value_date', $valueBase)] = 'required';
         }
@@ -2322,8 +2351,38 @@ class XmlValidator
     protected function getMessagesForValue($budgetValues, $budgetBase): array
     {
         $messages = [];
+
         foreach ($budgetValues as $valueIndex => $value) {
             $valueBase = sprintf('%s.value.%s', $budgetBase, $valueIndex);
+            $messages[sprintf('%s.amount.required', $valueBase)] = trans(
+                'validation.required',
+                ['attribute' => trans('elementForm.amount')]
+            );
+            $messages[sprintf('%s.amount.numeric', $valueBase)] = trans(
+                'validation.numeric',
+                ['attribute' => trans('elementForm.amount')]
+            );
+            $messages[sprintf('%s.value_date.required', $valueBase)] = trans(
+                'validation.required',
+                ['attribute' => trans('elementForm.date')]
+            );
+        }
+
+        return $messages;
+    }
+
+    /**
+     * @param $budgetValues
+     * @param $budgetBase
+     *
+     * @return array
+     */
+    protected function getMessagesForBudgetValue($budgetValues, $budgetBase): array
+    {
+        $messages = [];
+
+        foreach ($budgetValues as $valueIndex => $value) {
+            $valueBase = sprintf('%s.budget_value.%s', $budgetBase, $valueIndex);
             $messages[sprintf('%s.amount.required', $valueBase)] = trans(
                 'validation.required',
                 ['attribute' => trans('elementForm.amount')]
