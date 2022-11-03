@@ -216,9 +216,9 @@ class Activity
     {
         $this->otherIdentifier[$this->index] = $template['other_identifier'];
         $this->otherIdentifier[$this->index]['reference'] = $this->attributes($element, 'ref');
-        $this->otherIdentifier[$this->index]['type'] = $this->attributes($element, 'type');
-        $this->otherIdentifier[$this->index]['owner_org'][0]['reference'] = $this->attributes($element, 'ref', 'ownerOrg');
-        // $this->otherIdentifier[$this->index]['owner_org'][0]['narrative'] = (($narrative = $this->value(Arr::get($element, 'value', []), 'ownerOrg')) === '') ? $this->emptyNarrative : $narrative;
+        $this->otherIdentifier[$this->index]['reference_type'] = $this->attributes($element, 'type');
+        $this->otherIdentifier[$this->index]['owner_org'][0]['ref'] = $this->attributes($element, 'ref', 'ownerOrg');
+        $this->otherIdentifier[$this->index]['owner_org'][0]['narrative'] = $this->narrative(Arr::get($element, 'value.0', []));
         $this->index++;
 
         return $this->otherIdentifier;
@@ -360,10 +360,33 @@ class Activity
         $this->contactInfo[$this->index]['telephone'] = $this->filterValues(Arr::get($element, 'value', []), 'telephone');
         $this->contactInfo[$this->index]['email'] = $this->filterValues(Arr::get($element, 'value', []), 'email');
         $this->contactInfo[$this->index]['website'] = $this->filterValues(Arr::get($element, 'value', []), 'website');
-        $this->contactInfo[$this->index]['mailing_address'][0]['narrative'] = $this->value(Arr::get($element, 'value', []), 'mailingAddress');
+        $this->contactInfo[$this->index]['mailing_address'] = $this->getMailingAddress($element);
         $this->index++;
 
         return $this->contactInfo;
+    }
+
+    /**
+     * Returns array for mailing address.
+     *
+     * @param $component
+     *
+     * @return array
+     */
+    public function getMailingAddress($component): array
+    {
+        $array = [];
+        $mailingIndex = 0;
+
+        foreach (Arr::get($component, 'value', []) as $key => $value) {
+            if (($this->name($value) === 'mailingAddress') && is_array($value)) {
+                $array[$mailingIndex]['narrative'] = $this->value(Arr::get($component, 'value', []), 'mailingAddress');
+                unset($component['value'][$key]);
+                $mailingIndex++;
+            }
+        }
+
+        return $array;
     }
 
     /**
@@ -580,10 +603,9 @@ class Activity
         $this->documentLink[$this->index]['url'] = $this->attributes($element, 'url');
         $this->documentLink[$this->index]['format'] = $this->attributes($element, 'format');
         $this->documentLink[$this->index]['title'][0]['narrative'] = (($title = $this->value(Arr::get($element, 'value', []), 'title')) === '') ? $this->emptyNarrative : $title;
+        $this->documentLink[$this->index]['description'][0]['narrative'] = (($description = $this->value(Arr::get($element, 'value', []), 'description')) === '') ? $this->emptyNarrative : $description;
         $this->documentLink[$this->index]['category'] = $this->filterAttributes($element['value'], 'category', ['code']);
-        foreach ($this->filterAttributes($element['value'], 'language', ['code']) as $index => $language) {
-            $this->documentLink[$this->index]['language'][$index]['language'] = $language['code'];
-        }
+        $this->documentLink[$this->index]['language'] = $this->filterAttributes($element['value'], 'language', ['code']);
         $this->documentLink[$this->index]['document_date'][0]['date'] = dateFormat('Y-m-d', $this->attributes($element, 'iso-date', 'documentDate'));
         $this->index++;
 
