@@ -6,12 +6,11 @@
     <div class="px-5 xl:px-10 pt-4 pb-[71px]">
       @include('admin.layouts.activityTitle')
       <div class="activities">
-        <aside class="activities__sidebar">
-          <elements-note></elements-note>
+        <aside class="activities__sidebar activities__sidebar-inner">
           <sidebar-help-block></sidebar-help-block>
         </aside>
         <div class="activities__content">
-          <div class="py-[6.06%] px-[6%] xl:px-[12%] bg-white max-w-[1000px]">
+          <div class="py-[6.06%] px-[6%] xl:px-[12%] bg-white">
             @include('admin.activity.partial.form-title')
 
             {!! form($form) !!}

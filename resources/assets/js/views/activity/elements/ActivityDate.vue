@@ -9,13 +9,13 @@
         <span v-if="post.type" class="font-bold">{{
           types.activityDate[post.type]
         }}</span>
-        <span v-else class="text-sm italic font-bold">Type Not Available</span>
+        <span v-else class="text-sm italic font-bold">Type Missing</span>
       </div>
       <div>
         <span v-if="post.date" class="text-sm font-normal">{{
           formatDate(post.date)
         }}</span>
-        <span v-else class="text-sm italic">Date Not Available</span>
+        <span v-else class="text-sm italic">Date Missing</span>
       </div>
     </div>
     <div
@@ -36,7 +36,7 @@
                 {{ item.narrative }}
               </span>
             </div>
-            <span v-else class="italic">Not Available</span>
+            <span v-else class="italic">Missing</span>
           </td>
         </tr>
       </table>

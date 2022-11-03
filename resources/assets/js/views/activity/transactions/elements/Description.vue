@@ -11,11 +11,11 @@
       ({{
         post.language
           ? `Language: ${type.languages[post.language]}`
-          : 'Language Not Available'
+          : 'Language Missing'
       }})
     </div>
     <div class="text-sm description">
-      {{ post.narrative ?? 'Narrative Not Available' }}
+      {{ post.narrative ?? 'Narrative Missing' }}
     </div>
   </div>
 </template>

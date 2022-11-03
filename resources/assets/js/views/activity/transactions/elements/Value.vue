@@ -8,7 +8,7 @@
       {{
         value[0].amount
           ? Number(value[0].amount).toLocaleString()
-          : "Amount Not Available"
+          : "Amount Missing"
       }}
     </span>
     <span v-if="value[0].amount" class="mb-5">{{ value[0].currency }}</span>

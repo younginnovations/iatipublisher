@@ -1,5 +1,5 @@
 <template>
-  {{ date[0].date?dateFormat(date[0].date): 'Date Not Available' }}
+  {{ date[0].date?dateFormat(date[0].date): 'Date Missing' }}
 </template>
 
 <script lang="ts">

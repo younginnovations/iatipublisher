@@ -7,7 +7,7 @@
             <td><span class="flex category">Target Value</span></td>
             <td>
               <div :class="elementSpacing">
-                {{ tValue.value ?? 'Not available' }}
+                {{ tValue.value ?? 'Missing' }}
               </div>
 
               <div class="flex" :class="elementSpacing">
@@ -16,7 +16,7 @@
                   {{
                     getLocation(tValue.location)
                       ? getLocation(tValue.location)
-                      : 'Not Available'
+                      : 'Missing'
                   }}
                 </div>
               </div>
@@ -29,8 +29,8 @@
                     :key="d"
                     class="dimension"
                   >
-                    {{ dim.name ?? 'Not Available' }} ({{
-                      dim.value ?? 'Not Available'
+                    {{ dim.name ?? 'Missing' }} ({{
+                      dim.value ?? 'Missing'
                     }})
                   </div>
                 </div>
@@ -49,7 +49,7 @@
                   >
                     <div>
                       <span>
-                        {{ com.narrative ? com.narrative : 'Not Available' }}
+                        {{ com.narrative ? com.narrative : 'Missing' }}
                         &nbsp;
                       </span>
                       <span>
@@ -57,7 +57,7 @@
                         {{
                           com.language
                             ? dlType.language[com.language]
-                            : 'Not Available'
+                            : 'Missing'
                         }})
                       </span>
                     </div>

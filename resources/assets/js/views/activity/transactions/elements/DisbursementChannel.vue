@@ -3,7 +3,7 @@
     {{
       code[0].disbursement_channel_code
         ? type.disbursementChannel[code[0].disbursement_channel_code]
-        : 'Disbursement Channel Code Not Available'
+        : 'Disbursement Channel Code Missing'
     }}
   </div>
 </template>

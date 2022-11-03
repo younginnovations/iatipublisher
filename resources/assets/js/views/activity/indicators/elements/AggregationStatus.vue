@@ -2,7 +2,7 @@
   <tr>
     <td>Aggregation Status</td>
     <td class="capitalize">
-      {{ parseInt(data) ? 'True' : data ? 'False' : 'Not Available' }}
+      {{ parseInt(data) ? 'True' : data ? 'False' : 'Missing' }}
     </td>
   </tr>
 </template>

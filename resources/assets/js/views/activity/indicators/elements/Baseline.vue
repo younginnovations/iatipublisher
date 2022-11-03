@@ -15,7 +15,7 @@
             <template v-if="base.year">
               {{ base.year }}
             </template>
-            <template v-else>Not Available</template>
+            <template v-else>Missing</template>
             ,
           </span>
           <span>
@@ -23,7 +23,7 @@
             <template v-if="base.date">
               {{ base.date }}
             </template>
-            <template v-else>Not Available</template>
+            <template v-else>Missing</template>
             ,
           </span>
           <span>
@@ -31,7 +31,7 @@
             <template v-if="base.value">
               {{ base.value }}
             </template>
-            <template v-else>Not Available</template>
+            <template v-else>Missing</template>
           </span>
         </div>
 
@@ -41,7 +41,7 @@
             {{
               location(base.location)
                 ? location(base.location)
-                : 'Not Available'
+                : 'Missing'
             }}
           </div>
         </div>
@@ -66,12 +66,12 @@
             >
               <div>
                 <div class="description">
-                  {{ com.narrative ? com.narrative : 'Not Available' }}
+                  {{ com.narrative ? com.narrative : 'Missing' }}
                   (Language:
                   {{
                     com.language
                       ? baseType.language[com.language]
-                      : 'Not Available'
+                      : 'Missing'
                   }})
                 </div>
               </div>
@@ -182,8 +182,8 @@ export default defineComponent({
       let dimensions: string[] = [];
 
       dimensions = data.map((item) => {
-        const name = item.name ?? 'Not Available',
-          value = item.value ?? 'Not Available';
+        const name = item.name ?? 'Missing',
+          value = item.value ?? 'Missing';
         return `code - ${name}, value - (${value})`;
       });
 

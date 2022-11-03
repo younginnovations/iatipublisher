@@ -14,7 +14,7 @@
         <span v-if="item.code">
           {{ types.geographicLocationReach[item.code] }}
         </span>
-        <span v-else class="italic">Location Reach Not Available</span>
+        <span v-else class="italic">Location Reach Missing</span>
       </div>
     </div>
     <div
@@ -34,7 +34,7 @@
             >(Language: {{ types.languages[narrative.language] }})</span
           >
         </div>
-        <span v-else class="italic">Name Not Available</span>
+        <span v-else class="italic">Name Missing</span>
       </div>
     </div>
     <div class="ml-5">
@@ -43,7 +43,7 @@
           <td>Reference</td>
           <td class="text-sm">
             <span v-if="post.ref">{{ post.ref }}</span>
-            <span v-else class="italic">Not Available</span>
+            <span v-else class="italic">Missing</span>
           </td>
         </tr>
       </table>
@@ -63,11 +63,11 @@
                   <span v-if="item.vocabulary"
                     >{{ types.geographicVocabulary[item.vocabulary] }},
                   </span>
-                  <span v-else class="italic">(Vocabulary Not Available)</span>
+                  <span v-else class="italic">(Vocabulary Missing)</span>
                 </div>
                 <div>
                   <span v-if="item.code">code {{ item.code }}</span>
-                  <span v-else class="italic">(Not Available)</span>
+                  <span v-else class="italic">(Missing)</span>
                 </div>
               </div>
             </td>
@@ -94,7 +94,7 @@
                   >
                   <span class="description">{{ narrative.narrative }}</span>
                 </div>
-                <span v-else class="italic">Not Available</span>
+                <span v-else class="italic">Missing</span>
               </td>
             </tr>
           </table>
@@ -120,7 +120,7 @@
                   >
                   <span class="description">{{ narrative.narrative }}</span>
                 </div>
-                <span v-else class="italic">Not Available</span>
+                <span v-else class="italic">Missing</span>
               </td>
             </tr>
           </table>
@@ -141,17 +141,17 @@
                     >Vocabulary -
                     {{ types.geographicVocabulary[item.vocabulary] }}
                   </span>
-                  <span v-else class="italic">(Vocabulary Not Available)</span>
+                  <span v-else class="italic">(Vocabulary Missing)</span>
                 </div>
                 <div>
                   <span v-if="item.code"
                     >, code {{ types.country[item.code] }}</span
                   >
-                  <span v-else class="ml-1 italic"> (Code Not Available)</span>
+                  <span v-else class="ml-1 italic"> (Code Missing)</span>
                 </div>
                 <div>
                   <span v-if="item.level">, level {{ item.level }}</span>
-                  <span v-else class="ml-1 italic"> (Level Not Available)</span>
+                  <span v-else class="ml-1 italic"> (Level Missing)</span>
                 </div>
               </div>
             </td>
@@ -171,19 +171,19 @@
               <div class="flex space-x-1">
                 <div>
                   <span v-if="item.srs_name">({{ item.srs_name }})</span>
-                  <span v-else class="italic"> (SRS Name Not Available)</span>
+                  <span v-else class="italic"> (SRS Name Missing)</span>
                 </div>
                 <div>
                   <span v-if="item.pos[0].latitude">
                     latitude {{ item.pos[0].latitude }},
                   </span>
-                  <span v-else class="italic"> (Latitude Not Available)</span>
+                  <span v-else class="italic"> (Latitude Missing)</span>
                 </div>
                 <div>
                   <span v-if="item.pos[0].longitude"
                     >longitude {{ item.pos[0].longitude }}</span
                   >
-                  <span v-else class="italic"> (Longitude Not Available)</span>
+                  <span v-else class="italic"> (Longitude Missing)</span>
                 </div>
               </div>
             </td>
@@ -202,7 +202,7 @@
               <span v-if="item.code">{{
                 types.geographicExactness[item.code]
               }}</span>
-              <span v-else class="italic">Not Available</span>
+              <span v-else class="italic">Missing</span>
             </td>
           </tr>
         </table>
@@ -219,7 +219,7 @@
               <span v-if="item.code">{{
                 types.geographicLocationClass[item.code]
               }}</span>
-              <span v-else class="italic">Not Available</span>
+              <span v-else class="italic">Missing</span>
             </td>
           </tr>
         </table>
@@ -234,7 +234,7 @@
             <td>Feature Designation</td>
             <td>
               <span v-if="item.code">{{ types.locationType[item.code] }}</span>
-              <span v-else class="italic">Not Available</span>
+              <span v-else class="italic">Missing</span>
             </td>
           </tr>
         </table>

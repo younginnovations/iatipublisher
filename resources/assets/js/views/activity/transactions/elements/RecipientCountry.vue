@@ -30,11 +30,11 @@
                     {{
                       sd.language
                         ? `Language: ${type.languages[sd.language]}`
-                        : 'Language Not Available'
+                        : 'Language Missing'
                     }})
                   </div>
                   <div class="text-sm">
-                    {{ sd.narrative ?? 'Narrative Not Available' }}
+                    {{ sd.narrative ?? 'Narrative Missing' }}
                   </div>
                 </div>
               </td>

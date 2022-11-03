@@ -1,5 +1,5 @@
 <template>
-  <div class="text-sm">{{ type[typeData] ?? 'Not Available' }}</div>
+  <div class="text-sm">{{ type[typeData] ?? 'Missing' }}</div>
 </template>
 
 <script lang="ts">

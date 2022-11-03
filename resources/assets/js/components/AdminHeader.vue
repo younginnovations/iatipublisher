@@ -220,6 +220,12 @@ function changeActiveMenu() {
   data.menus.forEach((menu, key) => {
     data.menus[key]['active'] = menu.permalink === path ? true : false;
   });
+  if(path.includes('activity') || path.includes('result') || path.includes('indicator')){
+    data.menus[0]['active'] = true
+  }
+  if(path.includes('organisation')){
+    data.menus[1]['active'] = true
+  }
 }
 async function logout() {
   await axios.post('/logout').then((res) => {

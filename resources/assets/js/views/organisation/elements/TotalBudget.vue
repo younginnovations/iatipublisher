@@ -11,7 +11,7 @@
       <div class="category flex">
         {{
           types?.budgetType[total_budget.total_budget_status] ??
-          "Budget Status Not Available"
+          "Budget Status Missing"
         }}
       </div>
       <div class="flex text-sm">
@@ -19,7 +19,7 @@
           {{ Number(total_budget.value["0"].amount).toLocaleString() }}
           {{ total_budget.value["0"].currency }}
         </span>
-        <span v-else> Budget Amount Not Available</span>
+        <span v-else> Budget Amount Missing</span>
       </div>
       <table>
         <tbody>
@@ -28,12 +28,12 @@
             <td>
               {{
                 formatDate(total_budget.period_start["0"].date) ??
-                "Period Start Date Not Available"
+                "Period Start Date Missing"
               }}
               -
               {{
                 formatDate(total_budget.period_end["0"].date) ??
-                "Period End Date Not Available"
+                "Period End Date Missing"
               }}
             </td>
           </tr>
@@ -42,7 +42,7 @@
             <td>
               {{
                 formatDate(total_budget.value["0"].value_date) ??
-                "Value Date Not Available"
+                "Value Date Missing"
               }}
             </td>
           </tr>
@@ -74,7 +74,7 @@
                   <tr>
                     <td>Reference</td>
                     <td>
-                      {{ budget_line.ref ?? "Reference Not Available" }}
+                      {{ budget_line.ref ?? "Reference Missing" }}
                     </td>
                   </tr>
                   <tr>
@@ -82,7 +82,7 @@
                     <td>
                       {{
                         formatDate(budget_line.value["0"].value_date) ??
-                        "Value Date Not Available"
+                        "Value Date Missing"
                       }}
                     </td>
                   </tr>
@@ -101,11 +101,11 @@
                           ({{
                             narrative.language
                               ? `Language: ${types?.languages[narrative.language]}`
-                              : "Language : Not Available"
+                              : "Language : Missing"
                           }})
                         </div>
                         <div class="w-[500px] max-w-full">
-                          {{ narrative.narrative ?? "Narrative Not Available" }}
+                          {{ narrative.narrative ?? "Narrative Missing" }}
                         </div>
                       </div>
                     </td>
@@ -137,6 +137,6 @@ interface TypesInterface {
 const types = inject("orgTypes") as TypesInterface;
 
 function formatDate(date: Date) {
-  return date ? moment(date).format("LL") : "Date Not Available";
+  return date ? moment(date).format("LL") : "Date Missing";
 }
 </script>

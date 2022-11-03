@@ -12,11 +12,11 @@
           {{
             total_expenditure.value["0"].amount
               ? Number(total_expenditure.value[0].amount).toLocaleString()
-              : "Budget Not Available"
+              : "Budget Missing"
           }}
           {{ total_expenditure.value["0"].currency }}
         </span>
-        <span v-else> Expenditure Amount Not Available</span>
+        <span v-else> Expenditure Amount Missing</span>
       </div>
       <div class="ml-4">
         <table>
@@ -59,7 +59,7 @@
                 {{ Number(expense_line.value["0"].amount).toLocaleString() }}
                 {{ expense_line.value["0"].currency }}
               </span>
-              <span v-else> Expense Line Not Available </span>
+              <span v-else> Expense Line Missing </span>
             </div>
             <div class="ml-4">
               <table>
@@ -67,7 +67,7 @@
                   <tr>
                     <td>Reference</td>
                     <td>
-                      {{ expense_line.ref ?? "Reference Not Available" }}
+                      {{ expense_line.ref ?? "Reference Missing" }}
                     </td>
                   </tr>
                   <tr>
@@ -91,11 +91,11 @@
                           ({{
                             narrative.language
                               ? `Language: ${types?.languages[narrative.language]}`
-                              : "Language : Not Available"
+                              : "Language : Missing"
                           }})
                         </div>
                         <div class="w-[500px] max-w-full">
-                          {{ narrative.narrative ?? "Narrative Not Available" }}
+                          {{ narrative.narrative ?? "Narrative Missing" }}
                         </div>
                       </div>
                     </td>
@@ -128,6 +128,6 @@ interface TypesInterface {
 const types = inject("orgTypes") as TypesInterface;
 
 function formatDate(date: Date) {
-  return date ? moment(date).format("LL") : "Date Not Available";
+  return date ? moment(date).format("LL") : "Date Missing";
 }
 </script>

@@ -79,7 +79,7 @@ class ResultElementForm extends BaseForm
                 if (Arr::get($sub_element, 'add_more', false) || Arr::get($sub_element, 'add_more_attributes', false)) {
                     $this->add('add_to_collection_' . $sub_element['name'], 'button', [
                         'label' => sprintf(
-                            'add more %s',
+                            'add additional %s',
                             str_replace('_', ' ', $this->getData(sprintf('sub_elements.%s.name', $name)))
                         ),
                         'attr'  => [

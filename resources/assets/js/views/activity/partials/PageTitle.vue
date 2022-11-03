@@ -1,11 +1,11 @@
 <template>
-  <div class="mb-4 page-title">
+  <div class="page-title mb-4">
     <div class="flex items-end gap-4">
       <div class="title grow-0">
         <div class="mb-2 text-caption-c1 text-n-40 xl:mb-4">
           <nav aria-label="breadcrumbs" class="breadcrumb">
             <p>
-              <span class="font-bold last">Your Activities</span>
+              <span class="last font-bold">Your Activities</span>
             </p>
           </nav>
         </div>
@@ -24,28 +24,28 @@
                   What is an activity?
                 </div>
                 <p>
-                  Organisations need to publish data on their activities. An
-                  ‘activity’ is an individual project or piece of development
-                  and humanitarian work. The unit of work described by an
-                  ‘activity’ is determined by the organisation that is
+                  You need to provide data about your organisation's development
+                  and humanitarian 'activities'. The unit of work described by
+                  an 'activity' is determined by the organisation that is
                   publishing the data. For example, an activity could be a donor
-                  government providing US$ 50 million to a recipient country’s
-                  government in order to implement basic education over 5 years.
-                  Another activity could be an NGO spending US$ 500,000 to
-                  deliver clean drinking water to 1000 households over 6 months.
-                </p>
-                <p class="text-n-40">
-                  Learn more about how to publish data on activities in IATI’s
-                  publishing
-                  <a href="#" class="text-bluecoral"><b>guidance.</b></a
-                  >.
+                  government providing US$ 50 million to a recipient country's
+                  government to implement basic education over 5 years. Or an
+                  activity could be an NGO spending US$ 500,000 to deliver clean
+                  drinking water to 1000 households over 6 months.
+                  <br />
+                  Therefore your organisation will need to determine how it will
+                  divide its work internally into activities. Read the
+                  <a href="#" class="text-bluecoral"
+                    ><b>Publishing Checklist</b></a
+                  >
+                  for more information.
                 </p>
               </div>
             </div>
           </div>
         </div>
       </div>
-      <div class="relative flex flex-col items-end justify-end actions grow">
+      <div class="actions relative flex grow flex-col items-end justify-end">
         <div class="inline-flex justify-end">
           <Toast
             v-if="toastMessage.visibility"

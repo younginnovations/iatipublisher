@@ -12,7 +12,7 @@
         {{
           recipient_org_budget.status
             ? types?.budgetType[recipient_org_budget.status]
-            : "Status Not Available"
+            : "Status Missing"
         }}
       </div>
       <div class="flex text-sm">
@@ -20,7 +20,7 @@
           {{ Number(recipient_org_budget.value["0"].amount).toLocaleString() }}
           {{ recipient_org_budget.value["0"].currency }}
         </span>
-        <span v-else> Budget Amount Not Available</span>
+        <span v-else> Budget Amount Missing</span>
       </div>
     </div>
     <div class="elements-detail mb-4">
@@ -39,7 +39,7 @@
               {{
                 recipient_org.ref
                   ? `Reference - ${recipient_org.ref}`
-                  : "Reference Not Available"
+                  : "Reference Missing"
               }}
               <div
                 v-for="(narrative, narrative_index) in recipient_org.narrative"
@@ -55,12 +55,12 @@
                     {{
                       narrative.language
                         ? `Language: ${types?.languages[narrative.language]}`
-                        : "Language : Not Available"
+                        : "Language : Missing"
                     }}
                     )
                   </div>
                   <div class="w-[500px] max-w-full">
-                    {{ narrative.narrative ?? "Narrative Not Available" }}
+                    {{ narrative.narrative ?? "Narrative Missing" }}
                   </div>
                 </div>
               </div>
@@ -71,7 +71,7 @@
             <td>
               {{
                 formatDate(
-                  recipient_org_budget.value["0"].value_date ?? "Value Date Not Available"
+                  recipient_org_budget.value["0"].value_date ?? "Value Date Missing"
                 )
               }}
             </td>
@@ -82,13 +82,13 @@
               {{
                 formatDate(
                   recipient_org_budget.period_start["0"].date ??
-                    "Period Start Not Available"
+                    "Period Start Missing"
                 )
               }}
               -
               {{
                 formatDate(
-                  recipient_org_budget.period_end["0"].date ?? "Period End Not Available"
+                  recipient_org_budget.period_end["0"].date ?? "Period End Missing"
                 )
               }}
             </td>
@@ -114,7 +114,7 @@
                 {{
                   budget_line.value["0"].amount
                     ? Number(budget_line.value[0].amount).toLocaleString()
-                    : "Budget Not Available"
+                    : "Budget Missing"
                 }}
                 {{ budget_line.value["0"].currency }}
               </span>
@@ -125,7 +125,7 @@
                   <tr>
                     <td>Reference</td>
                     <td>
-                      {{ budget_line.ref ?? "Reference Not Available" }}
+                      {{ budget_line.ref ?? "Reference Missing" }}
                     </td>
                   </tr>
                   <tr>
@@ -133,7 +133,7 @@
                     <td>
                       {{
                         formatDate(budget_line.value["0"].value_date) ??
-                        "Value Date Not Available"
+                        "Value Date Missing"
                       }}
                     </td>
                   </tr>
@@ -152,11 +152,11 @@
                           ({{
                             narrative.language
                               ? `Language: ${types?.languages[narrative.language]}`
-                              : "Language : Not Available"
+                              : "Language : Missing"
                           }})
                         </div>
                         <div class="w-[500px] max-w-full">
-                          {{ narrative.narrative ?? "Narrative Not Available" }}
+                          {{ narrative.narrative ?? "Narrative Missing" }}
                         </div>
                       </div>
                     </td>
@@ -188,6 +188,6 @@ interface TypesInterface {
 const types = inject("orgTypes") as TypesInterface;
 
 function formatDate(date: Date) {
-  return date ? moment(date).format("LL") : "Date Not Available";
+  return date ? moment(date).format("LL") : "Date Missing";
 }
 </script>

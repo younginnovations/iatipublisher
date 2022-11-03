@@ -46,8 +46,8 @@
               <span>All Elements</span>
             </li>
             <li class="flex py-1.5 px-3.5 hover:bg-white" @click="dropdownFilter('core')">
-              <svg-vue class="mr-1 text-lg" icon="star"></svg-vue>
-              <span>Mandatory</span>
+              <svg-vue class="mr-1 text-lg" icon="core"></svg-vue>
+              <span>Core</span>
             </li>
             <li
               class="flex py-1.5 px-3.5 hover:bg-white"
@@ -80,7 +80,7 @@
           <svg-vue
             v-if="orgMandatoryElements().includes(index.toString())"
             class="text-base text-camel-50"
-            icon="star"
+            icon="core"
           ></svg-vue>
         </div>
         <template v-if="index === 'name'">

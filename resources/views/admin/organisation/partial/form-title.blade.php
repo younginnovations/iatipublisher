@@ -33,7 +33,7 @@
             <div class="text-sm font-bold title"> {{ str_replace(' ', '-', strtolower($data['title'])) }}</div>
 
             @if ($data['name'] === 'name' || $data['name'] === 'reporting-org')
-                <svg-vue icon="star"></svg-vue>
+                <svg-vue icon="core"></svg-vue>
             @endif
             @if (Arr::get(getOrganizationElementSchema($data['name']), 'show_info_in_title', false))
                 @if (Arr::get(getOrganizationElementSchema($data['name']), 'help_text', false))

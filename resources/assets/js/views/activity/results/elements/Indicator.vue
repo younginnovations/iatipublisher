@@ -183,7 +183,7 @@
                                 <template v-if="base.year">
                                   {{ base.year }}
                                 </template>
-                                <template v-else>Not Available</template>
+                                <template v-else>Missing</template>
                                 ,
                               </span>
                               <span>
@@ -191,7 +191,7 @@
                                 <template v-if="base.date">
                                   {{ base.date }}
                                 </template>
-                                <template v-else>Not Available</template>
+                                <template v-else>Missing</template>
                                 ,
                               </span>
                               <span>
@@ -199,7 +199,7 @@
                                 <template v-if="base.value">
                                   {{ base.value }}
                                 </template>
-                                <template v-else>Not Available</template>
+                                <template v-else>Missing</template>
                               </span>
                             </div>
                             <div class="flex">
@@ -216,7 +216,7 @@
                                   <template v-if="loc.reference">
                                     {{ loc.reference }}
                                   </template>
-                                  <template v-else>Not Available</template>
+                                  <template v-else>Missing</template>
                                 </div>
                               </div>
                             </div>
@@ -236,14 +236,14 @@
                                       <template v-if="dim.name">
                                         {{ dim.name }}
                                       </template>
-                                      <template v-else> Not Available </template>
+                                      <template v-else> Missing </template>
                                       &nbsp;
                                     </span>
                                     <span>
                                       <template v-if="dim.value">
                                         ({{ dim.value }})
                                       </template>
-                                      <template v-else> (Not Available) </template>
+                                      <template v-else> (Missing) </template>
                                     </span>
                                   </div>
                                 </div>
@@ -266,7 +266,7 @@
                                       <template v-if="com.narrative">
                                         {{ com.narrative }}
                                       </template>
-                                      <template v-else> Not Available </template>
+                                      <template v-else> Missing </template>
                                       &nbsp;
                                     </span>
                                     <span>
@@ -274,7 +274,7 @@
                                       <template v-if="com.language">
                                         {{ type.language[com.language] }})
                                       </template>
-                                      <template v-else> Not Available) </template>
+                                      <template v-else> Missing) </template>
                                     </span>
                                   </div>
                                 </div>
@@ -381,7 +381,7 @@
                                         <template v-if="loc.reference">
                                           {{ loc.reference }}
                                         </template>
-                                        <template v-else> Not Available </template>
+                                        <template v-else> Missing </template>
                                       </span>
                                     </div>
                                   </div>
@@ -403,13 +403,13 @@
                                       <template v-if="dim.name">
                                         {{ dim.name }}
                                       </template>
-                                      <template v-else> Not Available </template>
+                                      <template v-else> Missing </template>
                                     </span>
                                     <span>
                                       <template v-if="dim.value">
                                         ({{ dim.value }})
                                       </template>
-                                      <template v-else> (Not Available) </template>
+                                      <template v-else> (Missing) </template>
                                     </span>
                                   </div>
                                 </div>
@@ -431,7 +431,7 @@
                                         <template v-if="com.narrative">
                                           {{ com.narrative }}
                                         </template>
-                                        <template v-else> Not Available </template>
+                                        <template v-else> Missing </template>
                                         &nbsp;
                                       </span>
                                       <span>
@@ -439,7 +439,7 @@
                                         <template v-if="com.language">
                                           {{ type.language[com.language] }})
                                         </template>
-                                        <template v-else> Not Available) </template>
+                                        <template v-else> Missing) </template>
                                       </span>
                                     </div>
                                   </div>
@@ -480,7 +480,7 @@
                                         <template v-if="loc.reference">
                                           {{ loc.reference }}
                                         </template>
-                                        <template v-else> Not Available </template>
+                                        <template v-else> Missing </template>
                                       </span>
                                     </div>
                                   </div>
@@ -502,13 +502,13 @@
                                       <template v-if="dim.name">
                                         {{ dim.name }}
                                       </template>
-                                      <template v-else> Not Available </template>
+                                      <template v-else> Missing </template>
                                     </span>
                                     <span>
                                       <template v-if="dim.value">
                                         ({{ dim.value }})
                                       </template>
-                                      <template v-else> (Not Available) </template>
+                                      <template v-else> (Missing) </template>
                                     </span>
                                   </div>
                                 </div>
@@ -530,7 +530,7 @@
                                         <template v-if="com.narrative">
                                           {{ com.narrative }}
                                         </template>
-                                        <template v-else> Not Available </template>
+                                        <template v-else> Missing </template>
                                         &nbsp;
                                       </span>
                                       <span>
@@ -538,7 +538,7 @@
                                         <template v-if="com.language">
                                           {{ type.language[com.language] }})
                                         </template>
-                                        <template v-else> Not Available) </template>
+                                        <template v-else> Missing) </template>
                                       </span>
                                     </div>
                                   </div>

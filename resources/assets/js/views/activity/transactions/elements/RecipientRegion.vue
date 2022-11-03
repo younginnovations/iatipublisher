@@ -20,10 +20,10 @@
                 <span v-if="cou.region_vocabulary === 1">{{
                   cou.region_code
                     ? type.regionCode[cou.region_code]
-                    : 'Code Not Available'
+                    : 'Code Missing'
                 }}</span>
                 <span v-else>{{
-                  cou.custom_code ?? 'Code Not Available'
+                  cou.custom_code ?? 'Code Missing'
                 }}</span>
               </td>
             </tr>
@@ -51,11 +51,11 @@
                     {{
                       sd.language
                         ? `Language: ${type.languages[sd.language]}`
-                        : 'Language Not Available'
+                        : 'Language Missing'
                     }})
                   </div>
                   <div class="text-sm">
-                    {{ sd.narrative ?? 'Narrative Not Available' }}
+                    {{ sd.narrative ?? 'Narrative Missing' }}
                   </div>
                 </div>
               </td>

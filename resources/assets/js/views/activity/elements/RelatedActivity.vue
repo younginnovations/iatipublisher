@@ -9,13 +9,13 @@
         <span v-if="post.relationship_type">{{
           types.relatedActivityType[post.relationship_type]
         }}</span>
-        <span v-else class="italic">Type Not Available</span>
+        <span v-else class="italic">Type Missing</span>
       </div>
       <div>
         <span v-if="post.activity_identifier">{{
           post.activity_identifier
         }}</span>
-        <span v-else class="italic">Reference Not Available</span>
+        <span v-else class="italic">Reference Missing</span>
       </div>
     </div>
   </div>
