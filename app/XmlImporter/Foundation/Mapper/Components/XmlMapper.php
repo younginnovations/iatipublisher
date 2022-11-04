@@ -191,10 +191,10 @@ class XmlMapper
     {
         $defaultFieldValues[0] = $template['default_field_values'];
         $defaultFieldValues[0]['default_currency'] = $this->attributes($activity, 'default-currency');
-        $defaultFieldValues[0]['default_language'] = $this->attributes($activity, 'language');
-        $defaultFieldValues[0]['default_hierarchy'] = $this->attributes($activity, 'hierarchy');
-        $defaultFieldValues[0]['linked_data_uri'] = $this->attributes($activity, 'linked-data-uri');
+        $defaultFieldValues[0]['default_language'] = $this->attributes($activity, 'lang');
+        $defaultFieldValues[0]['hierarchy'] = $this->attributes($activity, 'hierarchy');
         $defaultFieldValues[0]['humanitarian'] = $this->attributes($activity, 'humanitarian');
+        $defaultFieldValues[0]['budget_not_provided'] = $this->attributes($activity, 'budget-not-provided');
 
         return $defaultFieldValues;
     }

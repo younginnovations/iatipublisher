@@ -248,11 +248,15 @@ class ActivityRepository extends Repository
 
         foreach ($defaultFieldValues as $index => $value) {
             $settingsDefaultFieldValues[0]['default_currency'] = ((Arr::get((array) $value, 'default_currency')) === '')
-                ? Arr::get($settingsDefaultFieldValues, '0.default_currency') : (Arr::get((array) $value, 'default_currency'));
-            $settingsDefaultFieldValues[0]['default_language'] = ((Arr::get($value, 'default_language')) === '')
-                ? Arr::get($settingsDefaultFieldValues, '0.default_language') : Arr::get($value, 'default_language');
-            $settingsDefaultFieldValues[0]['humanitarian'] = ((Arr::get($value, 'humanitarian')) === '')
-                ? Arr::get($settingsDefaultFieldValues, '0.humanitarian') : Arr::get($value, 'default_language');
+                ? Arr::get($settingsDefaultFieldValues, '0.default_currency', null) : (Arr::get((array) $value, 'default_currency', null));
+            $settingsDefaultFieldValues[0]['default_language'] = ((Arr::get((array) $value, 'default_language')) === '')
+                ? Arr::get($settingsDefaultFieldValues, '0.default_language', null) : Arr::get((array) $value, 'default_language', null);
+            $settingsDefaultFieldValues[0]['hierarchy'] = ((Arr::get((array) $value, 'hierarchy')) === '')
+                ? Arr::get($settingsDefaultFieldValues, '0.hierarchy', null) : (Arr::get((array) $value, 'hierarchy', null));
+            $settingsDefaultFieldValues[0]['humanitarian'] = ((Arr::get((array) $value, 'humanitarian')) === '')
+                ? Arr::get($settingsDefaultFieldValues, '0.humanitarian', null) : Arr::get((array) $value, 'humanitarian', null);
+            $settingsDefaultFieldValues[0]['budget_not_provided'] = ((Arr::get((array) $value, 'budget_not_provided')) === '')
+                ? Arr::get($settingsDefaultFieldValues, '0.budget_not_provided', null) : (Arr::get((array) $value, 'budget_not_provided', null));
         }
 
         return $settingsDefaultFieldValues;
