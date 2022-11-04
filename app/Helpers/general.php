@@ -710,7 +710,7 @@ if (!function_exists('removeEmptyValues')) {
         $data = array_filter(
             $data,
             function ($value) {
-                return !empty($value);
+                return $value !== '' && $value != [];
             }
         );
     }

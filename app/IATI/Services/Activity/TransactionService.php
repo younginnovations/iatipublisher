@@ -296,11 +296,11 @@ class TransactionService
             $aidType = [];
 
             if (Arr::get($transaction, 'aid_type', null)) {
-                foreach (Arr::get($transaction, 'aid_type') as $aidType) {
-                    $vocabulary = Arr::get($aidType, 'aidtype_vocabulary', null);
-                    $code = $this->getAidTypeCode($vocabulary, $aidType);
+                foreach (Arr::get($transaction, 'aid_type', []) as $transactionAidType) {
+                    $vocabulary = Arr::get($transactionAidType, 'aid_type_vocabulary', null);
+                    $code = $this->getAidTypeCode($vocabulary, $transactionAidType);
 
-                    $aidType = [
+                    $aidType[] = [
                         '@attributes' => [
                             'code'       => $code,
                             'vocabulary' => $vocabulary,
