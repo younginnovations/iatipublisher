@@ -1,7 +1,7 @@
 <template>
   <div :class="className">
     <svg-vue :icon="props.type ? 'check-circle' : 'times-circle'" />
-    <span>{{ props.message }}</span>
+    <span>{{ props.message.toString().replace(',', '') }}</span>
   </div>
 </template>
 
