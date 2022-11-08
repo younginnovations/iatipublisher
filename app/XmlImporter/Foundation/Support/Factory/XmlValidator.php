@@ -370,7 +370,7 @@ class XmlValidator
         foreach ($activityDates as $activityDateIndex => $activityDate) {
             $activityDateBase = sprintf('activity_date.%s', $activityDateIndex);
             $rules[sprintf('%s.type', $activityDateBase)] = sprintf(
-                'nullable|in:%s',
+                'required|in:%s',
                 $this->validCodeList('ActivityDateType')
             );
             $rules[sprintf('%s.date', $activityDateBase)] = 'date|actual_date|nullable';

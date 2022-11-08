@@ -205,11 +205,11 @@ class ActivityRepository extends Repository
             'default_tied_status'  => Arr::get($mappedActivity, 'default_tied_status', null),
             'contact_info'         => $this->getActivityElement($mappedActivity, 'contact_info'),
             'related_activity'     => $this->getActivityElement($mappedActivity, 'related_activity'),
-            'default_field_values' => $defaultFieldValues[0],
+            'default_field_values' => $defaultFieldValues[0] ?? $defaultFieldValues,
         ];
 
         if ($activity_id) {
-            return $this->model->where('id', $activity_id)->update($data);
+            return $this->model->find($activity_id)->update($data);
         }
 
         return $this->model->create($data);
@@ -288,7 +288,7 @@ class ActivityRepository extends Repository
                 'policy_marker'        => $this->getActivityElement($activityData, 'policy_marker'),
                 'budget'               => $this->getActivityElement($activityData, 'budget'),
                 'activity_scope'       => Arr::get($this->getActivityElement($activityData, 'activity_scope'), '0', null),
-                'default_field_values' => $defaultFieldValues[0],
+                'default_field_values' => $defaultFieldValues[0] ?? $defaultFieldValues,
                 'contact_info'         => $this->getActivityElement($activityData, 'contact_info'),
                 'related_activity'     => $this->getActivityElement($activityData, 'related_activity'),
                 'other_identifier'     => $this->getActivityElement($activityData, 'other_identifier'),
@@ -316,13 +316,13 @@ class ActivityRepository extends Repository
      * @param       $id
      * @param array $activityData
      *
-     * @return int
+     * @return bool
      */
-    public function updateActivity($id, array $activityData): int
+    public function updateActivity($id, array $activityData): bool
     {
         $defaultFieldValues = $this->setDefaultFieldValues($activityData['default_field_values'], $activityData['organization_id']);
 
-        return $this->model->where('id', $id)->update(
+        return $this->model->find($id)->update(
             [
                 'iati_identifier'      => $activityData['identifier'],
                 'title'                => $this->getActivityElement($activityData, 'title'),
@@ -337,12 +337,12 @@ class ActivityRepository extends Repository
                 'policy_marker'        => $this->getActivityElement($activityData, 'policy_marker'),
                 'budget'               => $this->getActivityElement($activityData, 'budget'),
                 'activity_scope'       => Arr::get($this->getActivityElement($activityData, 'activity_scope'), '0', null),
-                'default_field_values' => $defaultFieldValues[0],
+                'default_field_values' => $defaultFieldValues[0] ?? $defaultFieldValues,
                 'contact_info'         => $this->getActivityElement($activityData, 'contact_info'),
                 'related_activity'     => $this->getActivityElement($activityData, 'related_activity'),
                 'other_identifier'     => $this->getActivityElement($activityData, 'other_identifier'),
                 'tag'                  => $this->getActivityElement($activityData, 'tag'),
-                'collaboration_type'   => $this->getActivityElement($activityData, 'collaboration_type'),
+                'collaboration_type'   => Arr::get($this->getActivityElement($activityData, 'collaboration_type'), '0', null),
                 'default_flow_type'    => Arr::get($this->getActivityElement($activityData, 'default_flow_type'), '0', null),
                 'default_finance_type' => Arr::get($this->getActivityElement($activityData, 'default_finance_type'), '0', null),
                 'default_tied_status'  => Arr::get($this->getActivityElement($activityData, 'default_tied_status'), '0', null),
