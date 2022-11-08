@@ -77,7 +77,7 @@ class ActivityObserver
      */
     public function created(Activity $activity): void
     {
-        $this->setTitleDefaultValues($activity);
+        $this->setDefaultValues($activity->getDirty(), $activity);
         $this->setElementStatus($activity, true);
         $this->resetActivityStatus($activity);
         $activity->saveQuietly();
@@ -93,14 +93,7 @@ class ActivityObserver
      */
     public function updated(Activity $activity): void
     {
-        $key = array_key_first($activity->getDirty());
-        $data = Arr::get($activity->getDirty(), $key);
-
-        if (!in_array($key, getNonArrayElements(), true) && !Arr::has($activity->getDirty(), 'linked_to_iati')) {
-            $updatedData = $this->elementCompleteService->setDefaultValues($data, $activity);
-            $activity->$key = $updatedData;
-        }
-
+        $this->setDefaultValues($activity->getDirty(), $activity);
         $this->setElementStatus($activity);
         $this->resetActivityStatus($activity);
         $activity->saveQuietly();
@@ -119,17 +112,21 @@ class ActivityObserver
     }
 
     /**
-     * Sets default values for language for activity title.
+     * Sets default values for activity elements.
      *
+     * @param $activityElements
      * @param $activity
      *
      * @return void
      * @throws \JsonException
      */
-    public function setTitleDefaultValues($activity): void
+    public function setDefaultValues($activityElements, $activity): void
     {
-        $activityData = $activity->title;
-        $updatedData = $this->elementCompleteService->setDefaultValues($activityData, $activity);
-        $activity->title = $updatedData;
+        foreach ($activityElements as $key => $activityElement) {
+            if (!in_array($key, getNonArrayElements(), true) && !Arr::has($activity->getDirty(), 'linked_to_iati')) {
+                $updatedData = $this->elementCompleteService->setDefaultValues($activityElement, $activity);
+                $activity->$key = $updatedData;
+            }
+        }
     }
 }
