@@ -6,6 +6,7 @@ namespace App\IATI\Services\Activity;
 
 use App\IATI\Elements\Builder\ResultElementFormCreator;
 use App\IATI\Repositories\Activity\ResultRepository;
+use App\IATI\Traits\DataSanitizeTrait;
 use App\IATI\Traits\XmlBaseElement;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
@@ -18,7 +19,7 @@ use Kris\LaravelFormBuilder\Form;
  */
 class ResultService
 {
-    use XmlBaseElement;
+    use XmlBaseElement, DataSanitizeTrait;
 
     /**
      * @var ResultRepository
@@ -119,7 +120,9 @@ class ResultService
      */
     public function create(array $resultData): Model
     {
-        return $this->resultRepository->create($this->sanitizeResultData($resultData));
+        $resultData['result'] = $this->sanitizeData($resultData['result']);
+
+        return $this->resultRepository->create($resultData);
     }
 
     /**
@@ -132,35 +135,9 @@ class ResultService
      */
     public function update($resultId, array $resultData): bool
     {
-        return $this->resultRepository->update($resultId, $this->sanitizeResultData($resultData));
-    }
+        $resultData['result'] = $this->sanitizeData($resultData['result']);
 
-    /**
-     * Function to sanitize result data.
-     *
-     * @param array $resultData
-     *
-     * @return array
-     */
-    public function sanitizeResultData(array $resultData): array
-    {
-        foreach ($resultData['result'] as $result_key => $result) {
-            if (is_array($result)) {
-                $resultData['result'][$result_key] = array_values($result);
-
-                foreach ($result as $sub_key => $sub_element) {
-                    if (is_array($sub_element)) {
-                        foreach ($sub_element as $inner_key => $inner_element) {
-                            if (is_array($inner_element)) {
-                                $resultData['result'][$result_key][$sub_key][$inner_key] = array_values($inner_element);
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        return $resultData;
+        return $this->resultRepository->update($resultId, $resultData);
     }
 
     /**
