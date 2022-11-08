@@ -102,7 +102,7 @@ class HumanitarianScope extends Element
             if (!is_int($value)) {
                 foreach ($validHumanitarianScopeVocab as $code => $name) {
                     if (strcasecmp(trim($value), $name) === 0) {
-                        $value = is_int($code) ? (int) $code : $code;
+                        $value = $code;
                         break;
                     }
                 }
@@ -241,7 +241,7 @@ class HumanitarianScope extends Element
             if ($vocabulary) {
                 $rules[sprintf('%s.vocabulary_uri', $humanitarianScopeForm)] = 'nullable|url';
 
-                if ((int) $vocabulary === 99) {
+                if ($vocabulary === '99') {
                     $rules[sprintf('%s.vocabulary_uri', $humanitarianScopeForm)] = sprintf(
                         'required_with: %s,%s,%s,%s',
                         sprintf('%s.type', $humanitarianScopeForm),

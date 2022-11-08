@@ -342,7 +342,7 @@ class ActivityRepository extends Repository
                 'related_activity'     => $this->getActivityElement($activityData, 'related_activity'),
                 'other_identifier'     => $this->getActivityElement($activityData, 'other_identifier'),
                 'tag'                  => $this->getActivityElement($activityData, 'tag'),
-                'collaboration_type'   => $this->getActivityElement($activityData, 'collaboration_type'),
+                'collaboration_type'    => Arr::get($this->getActivityElement($activityData, 'collaboration_type'), '0', null),
                 'default_flow_type'    => Arr::get($this->getActivityElement($activityData, 'default_flow_type'), '0', null),
                 'default_finance_type' => Arr::get($this->getActivityElement($activityData, 'default_finance_type'), '0', null),
                 'default_tied_status'  => Arr::get($this->getActivityElement($activityData, 'default_tied_status'), '0', null),

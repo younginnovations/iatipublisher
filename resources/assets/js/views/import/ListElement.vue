@@ -20,7 +20,7 @@
     </span>
 
     <div class="upload-error-content" :class="{ open: active }">
-      <ul>
+      <ul @click.stop>
         <li v-for="(err, i) in activity['errors']" :key="i">
           <p>{{ err }}</p>
         </li>
@@ -36,25 +36,25 @@
 
   <td class="check-column" @click="(event: Event) => event.stopPropagation()">
     <label class="sr-only" for=""> Select </label>
-<!--    <label v-if="activity['errors'].length === 0" class="checkbox">-->
-<!--      <input-->
-<!--        v-model="activities"-->
-<!--        type="checkbox"-->
-<!--        :value="index"-->
-<!--        @click="selectElement(index)"-->
-<!--      />-->
-<!--      <span class="checkmark" />-->
-<!--    </label>-->
-<!--    <label v-else class="checkbox">-->
-<!--      &lt;!&ndash; <input type="checkbox" :value="index" /> &ndash;&gt;-->
-<!--      <span class="checkmark" />-->
-<!--    </label>-->
+    <!--    <label v-if="activity['errors'].length === 0" class="checkbox">-->
+    <!--      <input-->
+    <!--        v-model="activities"-->
+    <!--        type="checkbox"-->
+    <!--        :value="index"-->
+    <!--        @click="selectElement(index)"-->
+    <!--      />-->
+    <!--      <span class="checkmark" />-->
+    <!--    </label>-->
+    <!--    <label v-else class="checkbox">-->
+    <!--      &lt;!&ndash; <input type="checkbox" :value="index" /> &ndash;&gt;-->
+    <!--      <span class="checkmark" />-->
+    <!--    </label>-->
     <label class="checkbox">
       <input
-          v-model="activities"
-          type="checkbox"
-          :value="index"
-          @click="selectElement(index)"
+        v-model="activities"
+        type="checkbox"
+        :value="index"
+        @click="selectElement(index)"
       />
       <span class="checkmark" />
     </label>

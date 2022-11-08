@@ -131,7 +131,7 @@ class Sector extends Element
             if (!is_int($value)) {
                 foreach ($validSectorVocab as $code => $name) {
                     if (strcasecmp(trim($value), $name) === 0) {
-                        $value = is_int($code) ? (int) $code : $code;
+                        $value = $code;
                         break;
                     }
                 }
@@ -153,9 +153,9 @@ class Sector extends Element
     protected function setSectorCode($key, $value, $index): void
     {
         if ($key === $this->_csvHeaders[1]) {
-            $sectorVocabulary = (int) $this->data['sector'][$index]['sector_vocabulary'];
+            $sectorVocabulary = $this->data['sector'][$index]['sector_vocabulary'];
 
-            if ($sectorVocabulary === 1) {
+            if ($sectorVocabulary === '1') {
                 ($value) ?: $value = '';
                 $this->codes[] = $value;
                 $validSectorCode = $this->loadCodeList('SectorCode');
@@ -163,18 +163,18 @@ class Sector extends Element
                 if (!is_int($value)) {
                     foreach ($validSectorCode as $code => $name) {
                         if (strcasecmp(trim($value), $name) === 0) {
-                            $value = is_int($code) ? (int) $code : $code;
+                            $value = $code;
                             break;
                         }
                     }
                 }
 
                 $this->data['sector'][$index]['code'] = $value;
-            } elseif ($sectorVocabulary === 2) {
+            } elseif ($sectorVocabulary === '2') {
                 $this->setSectorCategoryCode($value, $index);
-            } elseif ($sectorVocabulary === 7) {
+            } elseif ($sectorVocabulary === '7') {
                 $this->setSectorSdgGoal($value, $index);
-            } elseif ($sectorVocabulary === 8) {
+            } elseif ($sectorVocabulary === '8') {
                 $this->setSectorSdgTarget($value, $index);
             } else {
                 $this->setSectorText($value, $index);
@@ -214,7 +214,7 @@ class Sector extends Element
         if (!is_int($value)) {
             foreach ($validCategoryCode as $code => $name) {
                 if (strcasecmp(trim($value), $name) === 0) {
-                    $value = is_int($code) ? (int) $code : $code;
+                    $value = $code;
                     break;
                 }
             }
@@ -238,7 +238,7 @@ class Sector extends Element
 
         foreach ($validSdgGoal as $code => $name) {
             if ($value === $name) {
-                $value = is_int($code) ? (int) $code : $code;
+                $value = $code;
                 break;
             }
         }
@@ -261,7 +261,7 @@ class Sector extends Element
 
         foreach ($validSdgTarget as $code => $name) {
             if ($value === $name) {
-                $value = is_int($code) ? (int) $code : $code;
+                $value = $code;
                 break;
             }
         }

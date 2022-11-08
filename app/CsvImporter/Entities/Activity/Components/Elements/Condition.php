@@ -18,11 +18,11 @@ class Condition extends Element
      * @var array
      */
     private array $_csvHeaders
-        = [
-            'conditions_attached',
-            'condition_type',
-            'condition_narrative',
-        ];
+    = [
+        'conditions_attached',
+        'condition_type',
+        'condition_narrative',
+    ];
 
     /**
      * Index under which the data is stored within the object.
@@ -93,9 +93,9 @@ class Condition extends Element
             if (is_int($value) || is_bool($value)) {
                 $value = (int) $value;
             } elseif (is_string($value)) {
-                if ($value === '0' || $value === 'false' || $value === 'no') {
+                if ($value === '0' || strcasecmp($value, 'false') === 0 || strcasecmp($value, 'no') === 0) {
                     $value = 0;
-                } elseif ($value === '1' || $value === 'true' || $value === 'yes') {
+                } elseif ($value === '1' || strcasecmp($value, 'true') === 0 || strcasecmp($value, 'yes') === 0) {
                     $value = 1;
                 }
             }
@@ -123,7 +123,7 @@ class Condition extends Element
             if (!is_int($value)) {
                 foreach ($validConditionType as $code => $name) {
                     if (strcasecmp(trim($value), $name) === 0) {
-                        $value = is_int($code) ? (int) $code : $code;
+                        $value = $code;
                         break;
                     }
                 }
@@ -267,8 +267,8 @@ class Condition extends Element
     public function validate(): static
     {
         $this->validator = $this->factory->sign($this->data())
-                                         ->with($this->rules(), $this->messages())
-                                         ->getValidatorInstance();
+            ->with($this->rules(), $this->messages())
+            ->getValidatorInstance();
         $this->setValidity();
 
         return $this;

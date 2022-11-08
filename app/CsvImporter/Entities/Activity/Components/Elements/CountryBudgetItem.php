@@ -99,7 +99,7 @@ class CountryBudgetItem extends Element
             if (!is_int($value)) {
                 foreach ($validCountryBudgetItemVocab as $code => $name) {
                     if (strcasecmp(trim($value), $name) === 0) {
-                        $value = is_int($code) ? (int) $code : $code;
+                        $value = $code;
                         break;
                     }
                 }
@@ -128,7 +128,7 @@ class CountryBudgetItem extends Element
             if (!is_int($value)) {
                 foreach ($validBudgetItemCode as $code => $name) {
                     if (strcasecmp(trim($value), $name) === 0) {
-                        $value = is_int($code) ? (int) $code : $code;
+                        $value = $code;
                         break;
                     }
                 }

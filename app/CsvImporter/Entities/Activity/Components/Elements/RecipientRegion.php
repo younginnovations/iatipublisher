@@ -134,7 +134,7 @@ class RecipientRegion extends Element
             if (!is_int($value)) {
                 foreach ($validRegionCode as $code => $name) {
                     if (strcasecmp(trim($value), $name) === 0) {
-                        $value = is_int($code) ? (int) $code : $code;
+                        $value = $code;
                         break;
                     }
                 }
@@ -272,9 +272,9 @@ class RecipientRegion extends Element
         ? $rules['recipient_region_total_percentage'] = 'percentage_sum' : null;
 
         foreach (Arr::get($this->data(), 'recipient_region', []) as $key => $value) {
-            if (Arr::get($value, 'region_vocabulary', 1) === 1) {
+            if (Arr::get($value, 'region_vocabulary', 1) === '1') {
                 $rules['recipient_region.' . $key . '.region_code'] = sprintf('nullable|required_with:recipient_region.%s.percentage|in:%s', $key, $codes);
-            } elseif (Arr::get($value, 'region_vocabulary', 1) === 2) {
+            } elseif (Arr::get($value, 'region_vocabulary', 1) === '2') {
                 $rules['recipient_region.' . $key . '.custom_code'] = sprintf('nullable|required_with:recipient_region.%s.percentage', $key);
             } else {
                 $rules['recipient_region.' . $key . '.custom_code'] = sprintf('nullable|required_with:recipient_region.%s.percentage, recipient_region.%s.vocabulary_uri', $key, $key);

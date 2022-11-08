@@ -55,20 +55,20 @@
           <div class="inline-flex justify-end">
             <div class="actions flex grow justify-end">
               <div class="inline-flex justify-center">
-<!--                <BtnComponent-->
-<!--                  v-if="selectedActivities.length > 0"-->
-<!--                  class="mr-3.5"-->
-<!--                  type="primary"-->
-<!--                  :text="`Import (${selectedCount}/${activitiesLength})`"-->
-<!--                  icon="download-file"-->
-<!--                  @click="importActivities"-->
-<!--                />-->
+                <!--                <BtnComponent-->
+                <!--                  v-if="selectedActivities.length > 0"-->
+                <!--                  class="mr-3.5"-->
+                <!--                  type="primary"-->
+                <!--                  :text="`Import (${selectedCount}/${activitiesLength})`"-->
+                <!--                  icon="download-file"-->
+                <!--                  @click="importActivities"-->
+                <!--                />-->
                 <BtnComponent
-                    class="mr-3.5"
-                    type="primary"
-                    :text="`Import (${selectedCount}/${activitiesLength})`"
-                    icon="download-file"
-                    @click="importActivities"
+                  class="mr-3.5"
+                  type="primary"
+                  :text="`Import (${selectedCount}/${activitiesLength})`"
+                  icon="download-file"
+                  @click="importActivities"
                 />
               </div>
             </div>
@@ -172,15 +172,15 @@ onMounted(() => {
 function updateSelectedActivities(activity_id) {
   let index = selectedActivities.indexOf(activity_id);
 
-  if (activities[activity_id]["errors"].length === 0) {
-    if (index >= 0) {
-      selectedActivities.splice(index, 1);
-      selectedCount.value = selectedCount.value - 1;
-    } else {
-      selectedActivities.push(activity_id);
-      selectedCount.value = selectedCount.value + 1;
-    }
+  // if (activities[activity_id]["errors"].length === 0) {
+  if (index >= 0) {
+    selectedActivities.splice(index, 1);
+    selectedCount.value = selectedCount.value - 1;
+  } else {
+    selectedActivities.push(activity_id);
+    selectedCount.value = selectedCount.value + 1;
   }
+  // }
 }
 
 function selectAllActivities() {
@@ -190,14 +190,14 @@ function selectAllActivities() {
 
   Object.keys(activities).forEach((activity_id) => {
     let index = selectedActivities.indexOf(activity_id);
-    if (activities[activity_id]["errors"].length === 0) {
-      if (selectAll.value) {
-        selectedActivities.push(activity_id);
-        selectedCount.value = selectedCount.value + 1;
-      } else {
-        selectedActivities.splice(index, 1);
-      }
+    // if (activities[activity_id]["errors"].length === 0) {
+    if (selectAll.value) {
+      selectedActivities.push(activity_id);
+      selectedCount.value = selectedCount.value + 1;
+    } else {
+      selectedActivities.splice(index, 1);
     }
+    // }
   });
 
   if (!selectAll.value) {

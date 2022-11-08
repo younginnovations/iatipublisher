@@ -184,7 +184,7 @@ class DocumentLink extends Element
             if (!is_int($value)) {
                 foreach ($validDocumentCategory as $code => $name) {
                     if (strcasecmp(trim($value), $name) === 0) {
-                        $value = is_int($code) ? (int) $code : $code;
+                        $value = $code;
                         break;
                     }
                 }
@@ -213,7 +213,7 @@ class DocumentLink extends Element
             if (!is_int($value)) {
                 foreach ($validLanguage as $code => $name) {
                     if (strcasecmp(trim($value), $name) === 0) {
-                        $value = is_int($code) ? (int) $code : $code;
+                        $value = $code;
                         break;
                     }
                 }

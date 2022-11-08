@@ -94,7 +94,7 @@ class PolicyMarker extends Element
             if (!is_int($value)) {
                 foreach ($validVocabulary as $code => $name) {
                     if (strcasecmp(trim($value), $name) === 0) {
-                        $value = is_int($code) ? (int) $code : $code;
+                        $value = $code;
                         break;
                     }
                 }
@@ -141,7 +141,7 @@ class PolicyMarker extends Element
             if (!is_int($value)) {
                 foreach ($validSignificance as $code => $name) {
                     if (strcasecmp(trim($value), $name) === 0) {
-                        $value = is_int($code) ? (int) $code : $code;
+                        $value = $code;
                         break;
                     }
                 }
@@ -179,7 +179,7 @@ class PolicyMarker extends Element
                     if (!is_int($value)) {
                         foreach ($validMarker as $code => $name) {
                             if (strcasecmp(trim($value), $name) === 0) {
-                                $value = is_int($code) ? (int) $code : $code;
+                                $value = $code;
                                 break;
                             }
                         }

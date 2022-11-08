@@ -135,7 +135,7 @@ class Location extends Element
             if (!is_int($value)) {
                 foreach ($validLocationReachCode as $code => $name) {
                     if (strcasecmp(trim($value), $name) === 0) {
-                        $value = is_int($code) ? (int) $code : $code;
+                        $value = $code;
                         break;
                     }
                 }
@@ -164,7 +164,7 @@ class Location extends Element
             if (!is_int($value)) {
                 foreach ($validLocationIdVocabulary as $code => $name) {
                     if (strcasecmp(trim($value), $name) === 0) {
-                        $value = is_int($code) ? (int) $code : $code;
+                        $value = $code;
                         break;
                     }
                 }
@@ -263,7 +263,7 @@ class Location extends Element
             if (!is_int($value)) {
                 foreach ($validAdministrativeVocabulary as $code => $name) {
                     if (strcasecmp(trim($value), $name) === 0) {
-                        $value = is_int($code) ? (int) $code : $code;
+                        $value = $code;
                         break;
                     }
                 }
@@ -278,7 +278,7 @@ class Location extends Element
             if (!is_int($value)) {
                 foreach ($validAdministrativeCode as $code => $name) {
                     if (strcasecmp(trim($value), $name) === 0) {
-                        $value = is_int($code) ? (int) $code : $code;
+                        $value = $code;
                         break;
                     }
                 }
@@ -337,7 +337,7 @@ class Location extends Element
             if (!is_int($value)) {
                 foreach ($validLocationExactness as $code => $name) {
                     if (strcasecmp(trim($value), $name) === 0) {
-                        $value = is_int($code) ? (int) $code : $code;
+                        $value = $code;
                         break;
                     }
                 }
@@ -366,7 +366,7 @@ class Location extends Element
             if (!is_int($value)) {
                 foreach ($validLocationClass as $code => $name) {
                     if (strcasecmp(trim($value), $name) === 0) {
-                        $value = is_int($code) ? (int) $code : $code;
+                        $value = $code;
                         break;
                     }
                 }
@@ -395,7 +395,7 @@ class Location extends Element
             if (!is_int($value)) {
                 foreach ($validFeatureDesignation as $code => $name) {
                     if (strcasecmp(trim($value), $name) === 0) {
-                        $value = is_int($code) ? (int) $code : $code;
+                        $value = $code;
                         break;
                     }
                 }

@@ -112,7 +112,7 @@ class PlannedDisbursement extends Element
             if (!is_int($value)) {
                 foreach ($validType as $code => $name) {
                     if (strcasecmp(trim($value), $name) === 0) {
-                        $value = is_int($code) ? (int) $code : $code;
+                        $value = $code;
                         break;
                     }
                 }
@@ -177,7 +177,7 @@ class PlannedDisbursement extends Element
             if (!is_int($value)) {
                 foreach ($validCurrency as $code => $name) {
                     if (strcasecmp(trim($value), $name) === 0) {
-                        $value = is_int($code) ? (int) $code : $code;
+                        $value = $code;
                         break;
                     }
                 }
@@ -214,7 +214,7 @@ class PlannedDisbursement extends Element
             if (!is_int($value)) {
                 foreach ($validProviderOrgType as $code => $name) {
                     if (strcasecmp(trim($value), $name) === 0) {
-                        $value = is_int($code) ? (int) $code : $code;
+                        $value = $code;
                         break;
                     }
                 }
@@ -256,7 +256,7 @@ class PlannedDisbursement extends Element
             if (!is_int($value)) {
                 foreach ($validReceiverOrgType as $code => $name) {
                     if (strcasecmp(trim($value), $name) === 0) {
-                        $value = is_int($code) ? (int) $code : $code;
+                        $value = $code;
                         break;
                     }
                 }
