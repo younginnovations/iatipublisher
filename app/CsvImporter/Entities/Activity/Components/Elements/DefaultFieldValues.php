@@ -62,16 +62,11 @@ class DefaultFieldValues extends Element
     protected function map($key, $value, $index): void
     {
         if (!(is_null($value) || $value === '')) {
-            $this->setLinkedDataUri($index);
-            $this->setDefaultLanguage($key, $value, $index);
             $this->setDefaultCurrency($key, $value, $index);
+            $this->setDefaultLanguage($key, $value, $index);
             $this->setDefaultHierarchy($index);
-            $this->setDefaultCollaborationType($index);
-            $this->setDefaultFlowType($index);
-            $this->setDefaultFinanceType($index);
-            $this->setDefaultAidType($index);
-            $this->setDefaultTiedStatus($index);
             $this->setHumanitarian($key, $value, $index);
+            $this->setBudgetNotProvided($index);
         }
     }
 
@@ -82,7 +77,7 @@ class DefaultFieldValues extends Element
      *
      * @return void
      */
-    protected function setLinkedDataUri($index): void
+    protected function setBudgetNotProvided($index): void
     {
         $this->data['default_field_values'][$index]['linked_data_uri'] = '';
     }
@@ -103,6 +98,7 @@ class DefaultFieldValues extends Element
         }
 
         if ($key === $this->_csvHeaders[1]) {
+            $value = (!$value) ? '' : $value;
             $this->data['default_field_values'][$index]['default_language'] = strtolower($value);
         }
     }
@@ -123,6 +119,7 @@ class DefaultFieldValues extends Element
         }
 
         if ($key === $this->_csvHeaders[0]) {
+            $value = (!$value) ? '' : $value;
             $this->data['default_field_values'][$index]['default_currency'] = strtoupper($value);
         }
     }
@@ -146,93 +143,6 @@ class DefaultFieldValues extends Element
     }
 
     /**
-     * Set collaboration type for the default field values.
-     *
-     * @param $index
-     *
-     * @return void
-     */
-    protected function setDefaultCollaborationType($index): void
-    {
-        if (!isset($this->data['default_field_values'][$index]['default_collaboration_type'])) {
-            $this->data['default_field_values'][$index]['default_collaboration_type'] = '';
-        }
-
-        if (array_key_exists('default_hierarchy', $this->data['default_field_values'][$index])) {
-            $this->data['default_field_values'][$index]['default_collaboration_type'] = '';
-        }
-    }
-
-    /**
-     * Set flow type for the default field values.
-     *
-     * @param $index
-     *
-     * @return void
-     */
-    protected function setDefaultFlowType($index): void
-    {
-        if (!isset($this->data['default_field_values'][$index]['default_flow_type'])) {
-            $this->data['default_field_values'][$index]['default_flow_type'] = '';
-        }
-
-        if (array_key_exists('default_flow_type', $this->data['default_field_values'][$index])) {
-            $this->data['default_field_values'][$index]['default_flow_type'] = '';
-        }
-    }
-
-    /**
-     * Set finance type for the default field values.
-     *
-     * @param $index
-     *
-     * @return void
-     */
-    protected function setDefaultFinanceType($index): void
-    {
-        if (!isset($this->data['default_field_values'][$index]['default_finance_type'])) {
-            $this->data['default_field_values'][$index]['default_finance_type'] = '';
-        }
-        if (array_key_exists('default_hierarchy', $this->data['default_field_values'][$index])) {
-            $this->data['default_field_values'][$index]['default_finance_type'] = '';
-        }
-    }
-
-    /**
-     * Set aid type for the default field values.
-     *
-     * @param $index
-     *
-     * @return void
-     */
-    protected function setDefaultAidType($index): void
-    {
-        if (!isset($this->data['default_field_values'][$index]['default_aid_type'])) {
-            $this->data['default_field_values'][$index]['default_aid_type'] = '';
-        }
-        if (array_key_exists('default_finance_type', $this->data['default_field_values'][$index])) {
-            $this->data['default_field_values'][$index]['default_aid_type'] = '';
-        }
-    }
-
-    /**
-     * Set tied status for the default field values.
-     *
-     * @param $index
-     *
-     * @return void
-     */
-    protected function setDefaultTiedStatus($index): void
-    {
-        if (!isset($this->data['default_field_values'][$index]['default_tied_status'])) {
-            $this->data['default_field_values'][$index]['default_tied_status'] = '';
-        }
-        if (array_key_exists('default_aid_type', $this->data['default_field_values'][$index])) {
-            $this->data['default_field_values'][$index]['default_tied_status'] = '';
-        }
-    }
-
-    /**
      * Set humanitarian for the default field values.
      *
      * @param $key
@@ -246,6 +156,7 @@ class DefaultFieldValues extends Element
         if (!isset($this->data['default_field_values'][$index]['humanitarian'])) {
             $this->data['default_field_values'][$index]['humanitarian'] = '';
         }
+
         if ($key === $this->_csvHeaders[2]) {
             if ((strtolower($value) === 'yes') || (strtolower($value) === 'true')) {
                 $value = '1';
