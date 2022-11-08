@@ -7,6 +7,7 @@ namespace App\Http\Requests\Activity;
 use App\IATI\Services\Activity\ActivityService;
 use App\IATI\Services\Activity\IndicatorService;
 use App\IATI\Services\Activity\ResultService;
+use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Carbon;
@@ -18,34 +19,11 @@ use Illuminate\Support\Facades\Validator;
 class ActivityBaseRequest extends FormRequest
 {
     /**
-     * @var IndicatorService
-     */
-    protected IndicatorService $indicatorService;
-
-    /**
-     * @var ResultService
-     */
-    protected ResultService $resultService;
-
-    /**
-     * @var ActivityService
-     */
-    protected ActivityService $activityService;
-
-    /**
      * ActivityBaseRequest constructor.
-     *
-     * @param IndicatorService $indicatorService
-     * @param ResultService    $resultService
-     * @param ActivityService  $activityService
      */
-    public function __construct(IndicatorService $indicatorService, ResultService $resultService, ActivityService $activityService)
+    public function __construct()
     {
         parent::__construct();
-        $this->indicatorService = $indicatorService;
-        $this->resultService = $resultService;
-        $this->activityService = $activityService;
-
         Validator::extendImplicit(
             'unique_lang',
             function ($attribute, $value) {
@@ -206,6 +184,7 @@ class ActivityBaseRequest extends FormRequest
      * Returns default values related to an activity.
      *
      * @return mixed
+     * @throws BindingResolutionException
      */
     public function getActivityDefaultValues(): mixed
     {
@@ -213,13 +192,13 @@ class ActivityBaseRequest extends FormRequest
         $routeParam = explode('.', $this->route()->getName());
 
         if ($routeParam[1] === 'indicator') {
-            $indicator = $this->indicatorService->getIndicator($parameters['id']);
+            $indicator = app()->make(IndicatorService::class)->getIndicator($parameters['id']);
             $activity = $indicator->result->activity;
         } elseif ($routeParam[1] === 'result') {
-            $result = $this->resultService->getResult($parameters['id']);
+            $result = app()->make(ResultService::class)->getResult($parameters['id']);
             $activity = $result->activity;
         } else {
-            $activity = $this->activityService->getActivity($parameters['id']);
+            $activity = app()->make(ActivityService::class)->getActivity($parameters['id']);
         }
 
         return $activity->default_field_values;
@@ -234,6 +213,7 @@ class ActivityBaseRequest extends FormRequest
      * @param      $validator
      *
      * @return bool
+     * @throws BindingResolutionException
      */
     public function uniqueDefaultLangValidator($attribute, $value, $parameters, $validator): bool
     {

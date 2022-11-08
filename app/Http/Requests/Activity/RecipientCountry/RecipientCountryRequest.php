@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Requests\Activity\RecipientCountry;
 
 use App\Http\Requests\Activity\ActivityBaseRequest;
+use App\IATI\Services\Activity\ActivityService;
 use Illuminate\Support\Facades\Validator;
 
 /**
@@ -63,7 +64,7 @@ class RecipientCountryRequest extends ActivityBaseRequest
         $rules = [];
         $totalCountryPercent = $this->getTotalPercent($formFields);
         $params = $this->route()->parameters();
-        $allottedCountryPercent = $this->activityService->getAllottedRecipientCountryPercent($params['id']);
+        $allottedCountryPercent = app()->make(ActivityService::class)->getAllottedRecipientCountryPercent($params['id']);
 
         foreach ($formFields as $recipientCountryIndex => $recipientCountry) {
             $recipientCountryForm = 'recipient_country.' . $recipientCountryIndex;

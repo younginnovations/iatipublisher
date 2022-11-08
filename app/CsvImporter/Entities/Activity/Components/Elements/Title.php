@@ -6,6 +6,7 @@ namespace App\CsvImporter\Entities\Activity\Components\Elements;
 
 use App\CsvImporter\Entities\Activity\Components\Elements\Foundation\Iati\Element;
 use App\CsvImporter\Entities\Activity\Components\Factory\Validation;
+use App\Http\Requests\Activity\Title\TitleRequest;
 
 /**
  * Class Title.
@@ -34,6 +35,8 @@ class Title extends Element
      */
     protected $languages;
 
+    protected $elementService;
+
     /**
      * Template for Title element.
      * @var array
@@ -42,6 +45,7 @@ class Title extends Element
 
     /**
      * Title constructor.
+     *
      * @param            $fields
      * @param Validation $factory
      */
@@ -49,6 +53,7 @@ class Title extends Element
     {
         $this->prepare($fields);
         $this->factory = $factory;
+        $this->elementService = new TitleRequest();
     }
 
     /**
@@ -119,10 +124,7 @@ class Title extends Element
      */
     public function rules(): array
     {
-        return [
-            'activity_title'             => 'size:1',
-            'activity_title.0.narrative' => 'required',
-        ];
+        return $this->getBaseRules($this->elementService->rules());
     }
 
     /**
@@ -132,10 +134,7 @@ class Title extends Element
      */
     public function messages(): array
     {
-        return [
-            'activity_title.size'                 => trans('validation.csv_size', ['attribute' => trans('element.title')]),
-            'activity_title.0.narrative.required' => trans('validation.required', ['attribute' => trans('element.title')]),
-        ];
+        return $this->getBaseMessages($this->elementService->messages());
     }
 
     /**
@@ -146,8 +145,8 @@ class Title extends Element
     public function validate(): static
     {
         $this->validator = $this->factory->sign($this->data())
-            ->with($this->rules(), $this->messages())
-            ->getValidatorInstance();
+                                         ->with($this->rules(), $this->messages())
+                                         ->getValidatorInstance();
 
         $this->setValidity();
 
