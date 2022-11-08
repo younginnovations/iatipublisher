@@ -6,10 +6,10 @@ namespace App\IATI\Services\Activity;
 
 use App\IATI\Elements\Builder\ResultElementFormCreator;
 use App\IATI\Repositories\Activity\PeriodRepository;
+use App\IATI\Traits\DataSanitizeTrait;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\Support\Arr;
 use Kris\LaravelFormBuilder\Form;
 
 /**
@@ -17,6 +17,8 @@ use Kris\LaravelFormBuilder\Form;
  */
 class PeriodService
 {
+    use DataSanitizeTrait;
+
     /**
      * @var PeriodRepository
      */
@@ -111,7 +113,9 @@ class PeriodService
      */
     public function create(array $periodData): Model
     {
-        return $this->periodRepository->store($this->sanitizePeriodData($periodData));
+        $periodData['period'] = $this->sanitizeData($periodData['period']);
+
+        return $this->periodRepository->store($periodData);
     }
 
     /**
@@ -124,7 +128,9 @@ class PeriodService
      */
     public function update(int $id, $periodData): bool
     {
-        return $this->periodRepository->update($id, ['period' => Arr::get($this->sanitizePeriodData($periodData), 'period', [])]);
+        $periodData['period'] = $this->sanitizeData($periodData['period']);
+
+        return $this->periodRepository->update($id, $periodData);
     }
 
     /**
