@@ -78,6 +78,8 @@ class RedirectActivity
             'admin.activities.codelist',
             'admin.activity.store',
             'admin.activities.paginate',
+            'admin.element.editor.index',
+            'admin.element.editor.save',
             //'admin.activities.validateActivity'
         ];
 
