@@ -30,7 +30,7 @@
         </div>
       </div>
 
-      <SignIn v-if="pageContent === 'Join Now'" :message="message"/>
+      <SignIn v-if="pageContent === 'Join Now'" :message="message" />
       <JoinNow v-else />
     </div>
   </section>
@@ -53,8 +53,8 @@ export default defineComponent({
     },
     message: {
       type: String,
-      required: true
-    }
+      required: true,
+    },
   },
   setup(props) {
     const pageContent = ref(props.page === 'signin' ? 'Join Now' : 'Sign In');

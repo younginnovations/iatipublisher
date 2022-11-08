@@ -14,7 +14,7 @@
               class="nav__list flex pt-10 leading-5 xl:space-x-3"
             >
               <li class="nav__links active dropdown">
-                <a href="/">ABOUT</a>
+                <a href="/about">ABOUT</a>
                 <NavDropdown
                   name="About"
                   text="IATI Publisher helps small and medium-sized organisations publish IATI data on development and humanitarian financing and activities"
@@ -22,7 +22,7 @@
                 />
               </li>
               <li class="nav__links active dropdown">
-                <a href="/">PUBLISHING CHECKLIST</a>
+                <a href="/publishing-checklist">PUBLISHING CHECKLIST</a>
                 <NavDropdown
                   name="Publishing checklist"
                   text="New to IATI? Use our checklist to track each step required for your organisation to successfully publish IATI data"
@@ -30,7 +30,7 @@
                 />
               </li>
               <li class="nav__links active dropdown relative">
-                <a href="/">IATI STANDARD</a>
+                <a href="/iati-standerd">IATI STANDARD</a>
                 <NavDropdown
                   name="IATI Standard"
                   text="The IATI Standard provides information and guidance on all the data fields that
@@ -39,7 +39,7 @@
                 />
               </li>
               <li class="nav__links active dropdown">
-                <a href="/">SUPPORT</a>
+                <a href="/support">SUPPORT</a>
                 <NavDropdown
                   name="Support"
                   text=" Any questions? Get help to publish your organisation’s data"
@@ -95,8 +95,10 @@
         <div
           class="header__title mt-6 border-l-4 border-l-turquoise py-2 px-4 sm:py-5 sm:px-6"
         >
-          <h1 class="text-4xl font-bold text-white sm:text-heading-2">
-            IATI Publisher
+          <h1
+            class="text-2xl font-bold text-white sm:text-4xl sm:text-heading-2"
+          >
+            {{ title }}
           </h1>
         </div>
       </header>
@@ -109,6 +111,9 @@ import { defineComponent } from 'vue';
 import NavDropdown from '../../../components/NavDropdown.vue';
 
 export default defineComponent({
+  props: {
+    title: String,
+  },
   components: {
     NavDropdown,
   },
