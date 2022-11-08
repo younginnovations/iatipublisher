@@ -1,0 +1,15 @@
+.jsoneditor-menu {
+  background-color: rgb(var(--bluecoral)) !important;
+  margin-bottom: 20px !important;
+}
+.jsoneditor-contextmenu ul li button {
+  color: white !important;
+}
+.jsoneditor-vue .jsoneditor-outer {
+  width: calc(100vw - 240px) !important;
+  padding: 20px !important;
+  height: calc(100vh - 200px);
+}
+.jsoneditor {
+  border: 1px solid rgb(var(--bluecoral)) !important;
+}
