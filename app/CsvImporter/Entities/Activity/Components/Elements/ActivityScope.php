@@ -52,6 +52,7 @@ class ActivityScope extends Element
             if (!is_null($values) && array_key_exists($key, array_flip($this->_csvHeader))) {
                 foreach ($values as $value) {
                     $this->map($value, $values);
+                    break;
                 }
             }
         }

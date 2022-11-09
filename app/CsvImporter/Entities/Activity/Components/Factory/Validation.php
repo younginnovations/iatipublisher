@@ -238,7 +238,7 @@ class Validation extends Factory
         $this->extend(
             'recipient_country_region_percentage_sum',
             function ($attribute, $value) {
-                return number_format($value) === 100;
+                return number_format($value) == 100;
             }
         );
 
