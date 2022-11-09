@@ -325,14 +325,14 @@ class Validation extends Factory
                     }
                 }
 
-                if (($activityRecipientCountry === '' && $activityRecipientRegion === '')
-                    && ($transactionRecipientRegion !== '' || $transactionRecipientCountry !== '')
+                if (($activityRecipientCountry == '' && $activityRecipientRegion == '')
+                    && ($transactionRecipientRegion != '' || $transactionRecipientCountry != '')
                 ) {
                     return true;
                 }
 
-                if (($activityRecipientCountry !== '' || $activityRecipientRegion !== '')
-                    && ($transactionRecipientRegion === '' && $transactionRecipientCountry === '')
+                if (($activityRecipientCountry != '' || $activityRecipientRegion != '')
+                    && ($transactionRecipientRegion == '' && $transactionRecipientCountry == '')
                 ) {
                     return true;
                 }

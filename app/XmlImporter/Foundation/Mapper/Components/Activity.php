@@ -238,16 +238,24 @@ class Activity
 
     /**
      * @param $element
+     * @param $template
      *
      * @return array
      */
-    public function reportingOrg($element): array
+    public function reportingOrg($element, $template): array
     {
         if (empty($this->identifier)) {
             $this->orgRef = $this->attributes($element, 'ref');
         } else {
             $this->identifier['activity_identifier'] = substr($this->identifier['iati_identifier_text'], strlen($this->attributes($element, 'ref')) + 1);
+            unset($this->identifier['iati_identifier_text']);
         }
+
+        $this->activity['reporting_org'][0] = $template['reporting_org'];
+        $this->activity['reporting_org'][0]['ref'] = $this->attributes($element, 'ref');
+        $this->activity['reporting_org'][0]['type'] = $this->attributes($element, 'type');
+        $this->activity['reporting_org'][0]['secondary_reporter'] = $this->attributes($element, 'secondary-reporter');
+        $this->activity['reporting_org'][0]['narrative'] = $this->narrative($element);
 
         return $this->identifier;
     }

@@ -1,7 +1,17 @@
 {
   "identifier": {
-    "activity_identifier": "",
-    "iati_identifier_text": ""
+    "activity_identifier": ""
+  },
+  "reporting_org": {
+    "ref": "",
+    "type": "",
+    "secondary_reporter": "",
+    "narrative": [
+      {
+        "narrative": "",
+        "language": ""
+      }
+    ]
   },
   "other_identifier": {
     "reference": "",

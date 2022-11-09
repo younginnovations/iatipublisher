@@ -206,6 +206,7 @@ class ActivityRepository extends Repository
             'contact_info'         => $this->getActivityElement($mappedActivity, 'contact_info'),
             'related_activity'     => $this->getActivityElement($mappedActivity, 'related_activity'),
             'default_field_values' => $defaultFieldValues[0] ?? $defaultFieldValues,
+            'reporting_org'        => $this->getActivityElement($mappedActivity, 'reporting_org'),
         ];
 
         if ($activity_id) {

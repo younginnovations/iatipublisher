@@ -6,6 +6,7 @@ namespace App\CsvImporter\Entities\Activity\Components\Elements;
 
 use App\CsvImporter\Entities\Activity\Components\Elements\Foundation\Iati\Element;
 use App\CsvImporter\Entities\Activity\Components\Factory\Validation;
+use Illuminate\Support\Arr;
 
 /**
  * Class ReportingOrganization.
@@ -198,13 +199,16 @@ class ReportingOrganization extends Element
         );
 
         $rules = [];
-        $reportingOrgForm = 'reporting_org.0';
-        $rules[sprintf('%s.type', $reportingOrgForm)] = sprintf(
-            'in:%s|required',
-            $validReportingOrganizationType,
-        );
-        $rules[sprintf('%s.secondary_reporter', $reportingOrgForm)] = 'nullable|in:0,1';
-        $rules[sprintf('%s.narrative.0.narrative', $reportingOrgForm)] = 'required';
+
+        foreach (Arr::get($this->data, 'reporting_org', []) as $key => $reportingOrganization) {
+            $reportingOrgForm = sprintf('reporting_org.%s', $key);
+            $rules[sprintf('%s.type', $reportingOrgForm)] = sprintf(
+                'in:%s|required',
+                $validReportingOrganizationType,
+            );
+            $rules[sprintf('%s.secondary_reporter', $reportingOrgForm)] = 'nullable|in:0,1';
+            $rules[sprintf('%s.narrative.0.narrative', $reportingOrgForm)] = 'required';
+        }
 
         return $rules;
     }
@@ -231,27 +235,30 @@ class ReportingOrganization extends Element
     public function messages(): array
     {
         $messages = [];
-        $reportingOrgForm = 'reporting_org.0';
-        $messages[sprintf('%s.type.%s', $reportingOrgForm, 'in')] = trans(
-            'validation.code_list',
-            ['attribute' => trans('elementForm.reporting_org_type')]
-        );
-        $messages[sprintf('%s.type.%s', $reportingOrgForm, 'required')] = trans(
-            'validation.required',
-            [
-                'attribute' => trans('elementForm.reporting_org_type'),
-            ]
-        );
-        $messages[sprintf('%s.secondary_reporter.%s', $reportingOrgForm, 'in')] = trans(
-            'validation.code_list',
-            ['attribute' => trans('elementForm.reporting_org_secondary_reporter')]
-        );
-        $messages[sprintf('%s.narrative.0.narrative.%s', $reportingOrgForm, 'required')] = trans(
-            'validation.required',
-            [
-                'attribute' => trans('elementForm.reporting_org_narrative'),
-            ]
-        );
+
+        foreach (Arr::get($this->data, 'reporting_org', []) as $key => $reportingOrganization) {
+            $reportingOrgForm = sprintf('reporting_org.%s', $key);
+            $messages[sprintf('%s.type.%s', $reportingOrgForm, 'in')] = trans(
+                'validation.code_list',
+                ['attribute' => trans('elementForm.reporting_org_type')]
+            );
+            $messages[sprintf('%s.type.%s', $reportingOrgForm, 'required')] = trans(
+                'validation.required',
+                [
+                    'attribute' => trans('elementForm.reporting_org_type'),
+                ]
+            );
+            $messages[sprintf('%s.secondary_reporter.%s', $reportingOrgForm, 'in')] = trans(
+                'validation.code_list',
+                ['attribute' => trans('elementForm.reporting_org_secondary_reporter')]
+            );
+            $messages[sprintf('%s.narrative.0.narrative.%s', $reportingOrgForm, 'required')] = trans(
+                'validation.required',
+                [
+                    'attribute' => trans('elementForm.reporting_org_narrative'),
+                ]
+            );
+        }
 
         return $messages;
     }

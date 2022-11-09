@@ -192,7 +192,7 @@ return [
     'transaction_sector_narrative'              => '<a href=\'%s\' >Transaction Sector Narrative</a> is required when vocabulay is 98 or 99.',
     'transaction_sector_validation'             => 'All Transactions must contain Sector element.',
     'sector_in_activity_and_transaction_remove' => 'You can only mention Sector either at Activity or in Transaction level(should be included in all transactions) but not both. <br/>Please click the link to remove Sector From: <a href=\'%s\' class=\'delete_data\'>Transaction Level</a> OR <a href=\'%s\' class=\'delete_data\'>Activity Level</a>',
-    'sector_in_activity_and_transaction'        => 'You can only mention Recipient Country or Region either in Activity Level or in Transaction level. You can\'t have Country/Region in both Activity level and Transaction level.',
+    'sector_in_activity_and_transaction'        => 'You need to mention either Recipient Country or Region either in Activity Level or in Transaction level. You can\'t have Country/Region in both Activity level and Transaction level. Also, they cannot be empty for both activity and transactions',
     'recipient_country_or_region_required'      => 'Either Recipient Country or Recipient Region is required in Activity Level or Transaction Level.',
     'transaction_recipient_country_or_region_required' => 'All Transactions must contain Recipient Region or Recipient Country',
     'sum_of_percentage'                         => 'The sum of percentage in :attribute must be 100.',
