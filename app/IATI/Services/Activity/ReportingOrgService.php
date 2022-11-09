@@ -91,7 +91,7 @@ class ReportingOrgService
         $model['reporting_org'] = $this->getReportingOrgData($id) ?? [];
         $this->parentCollectionFormCreator->url = route('admin.activity.reporting-org.update', [$id]);
 
-        return $this->parentCollectionFormCreator->editForm($model, $element['reporting_org'], 'PUT', '/organisation');
+        return $this->parentCollectionFormCreator->editForm($model, $element['reporting_org'], 'PUT', '/activity/' . $id);
     }
 
     /**

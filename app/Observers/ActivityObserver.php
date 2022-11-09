@@ -122,7 +122,6 @@ class ActivityObserver
      */
     public function setDefaultValues($activityElements, $activity): void
     {
-
         foreach ($activityElements as $key => $activityElement) {
             if (!in_array($key, getNonArrayElements(), true) && !Arr::has($activity->getDirty(), 'linked_to_iati')) {
                 $updatedData = $this->elementCompleteService->setDefaultValues($activityElement, $activity);
