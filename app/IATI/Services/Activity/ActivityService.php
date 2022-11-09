@@ -232,7 +232,7 @@ class ActivityService
 
         if (!empty($data)) {
             foreach ($data as $datum) {
-                $total += $datum['percentage'];
+                $total += (float) $datum['percentage'];
             }
         }
 
@@ -255,9 +255,9 @@ class ActivityService
         if (!empty($data)) {
             foreach ($data as $datum) {
                 if (array_key_exists($datum['region_vocabulary'], $groupedRegion)) {
-                    $groupedRegion[$datum['region_vocabulary']] += $datum['percentage'];
+                    $groupedRegion[$datum['region_vocabulary']] += (float) $datum['percentage'];
                 } else {
-                    $groupedRegion[$datum['region_vocabulary']] = $datum['percentage'];
+                    $groupedRegion[$datum['region_vocabulary']] = (float) $datum['percentage'];
                 }
             }
 
@@ -268,7 +268,7 @@ class ActivityService
             }
         }
 
-        return 100;
+        return 100.0;
     }
 
     public function hasRecipientCountryDefinedInTransactions($activityId): bool
