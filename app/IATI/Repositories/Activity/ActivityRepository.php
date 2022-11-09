@@ -306,6 +306,7 @@ class ActivityRepository extends Repository
                 'document_link'        => $this->getActivityElement($activityData, 'document_link'),
                 'location'             => $this->getActivityElement($activityData, 'location'),
                 'planned_disbursement' => $this->getActivityElement($activityData, 'planned_disbursement'),
+                'reporting_org'        => $this->getActivityElement($activityData, 'reporting_organization'),
             ]
         );
     }
@@ -355,6 +356,7 @@ class ActivityRepository extends Repository
                 'document_link'        => $this->getActivityElement($activityData, 'document_link'),
                 'location'             => $this->getActivityElement($activityData, 'location'),
                 'planned_disbursement' => $this->getActivityElement($activityData, 'planned_disbursement'),
+                'reporting_org'        => $this->getActivityElement($activityData, 'reporting_organization'),
             ]
         );
     }

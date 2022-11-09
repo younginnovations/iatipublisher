@@ -109,6 +109,7 @@ class ActivityRow extends Row
         'documentLink',
         'location',
         'plannedDisbursement',
+        'reportingOrganization',
     ];
 
     /**

@@ -61,7 +61,9 @@ class ActivityObserver
         $updatedElements = ($isNew) ? $this->getUpdatedElement($model->getAttributes()) : $this->getUpdatedElement($model->getChanges());
 
         foreach ($updatedElements as $attribute => $value) {
-            $elementStatus[$attribute] = call_user_func([$this->elementCompleteService, dashesToCamelCase('is_' . $attribute . '_element_completed')], $model);
+            if ($attribute !== 'reporting_org') {
+                $elementStatus[$attribute] = call_user_func([$this->elementCompleteService, dashesToCamelCase('is_' . $attribute . '_element_completed')], $model);
+            }
         }
 
         $model->element_status = $elementStatus;
