@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Http\Requests\Activity\Sector;
 
 use App\Http\Requests\Activity\ActivityBaseRequest;
+use App\IATI\Services\Activity\ActivityService;
+use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Support\Facades\Validator;
 
 /**
@@ -16,6 +18,7 @@ class SectorRequest extends ActivityBaseRequest
      * Get the validation rules that apply to the request.
      *
      * @return array
+     * @throws BindingResolutionException
      */
     public function rules(): array
     {
@@ -59,9 +62,25 @@ class SectorRequest extends ActivityBaseRequest
      * @param $formFields
      *
      * @return array
+     * @throws BindingResolutionException
      */
     public function getSectorsRules($formFields): array
     {
+        if (empty($formFields)) {
+            return [];
+        }
+
+        $params = $this->route()->parameters();
+        $activityService = app()->make(ActivityService::class);
+
+        if ($activityService->hasSectorDefinedInTransactions($params['id'])) {
+            Validator::extend('already_in_transactions', function () {
+                return false;
+            });
+
+            return ['sector'=> 'already_in_transactions'];
+        }
+
         Validator::extend('sector_total_percent', function () {
             return false;
         });
@@ -119,7 +138,7 @@ class SectorRequest extends ActivityBaseRequest
      */
     public function getSectorsMessages($formFields): array
     {
-        $messages = [];
+        $messages = ['sector.already_in_transactions' => 'Sector already defined in Transactions'];
 
         foreach ($formFields as $sectorIndex => $sector) {
             $sectorForm = sprintf('sector.%s', $sectorIndex);

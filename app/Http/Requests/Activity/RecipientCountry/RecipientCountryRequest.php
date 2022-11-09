@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Http\Requests\Activity\RecipientCountry;
 
 use App\Http\Requests\Activity\ActivityBaseRequest;
+use App\IATI\Services\Activity\ActivityService;
+use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Support\Facades\Validator;
 
 /**
@@ -16,6 +18,7 @@ class RecipientCountryRequest extends ActivityBaseRequest
      * Get the validation rules that apply to the request.
      *
      * @return array
+     * @throws BindingResolutionException
      */
     public function rules(): array
     {
@@ -35,9 +38,9 @@ class RecipientCountryRequest extends ActivityBaseRequest
     /**
      * @param $formFields
      *
-     * @return int
+     * @return float
      */
-    public function getTotalPercent($formFields): int
+    public function getTotalPercent($formFields): float
     {
         $total = 0;
 
@@ -54,16 +57,32 @@ class RecipientCountryRequest extends ActivityBaseRequest
      * @param array $formFields
      *
      * @return array
+     * @throws BindingResolutionException
      */
     protected function getRulesForRecipientCountry(array $formFields): array
     {
+        if (empty($formFields)) {
+            return [];
+        }
+
+        $params = $this->route()->parameters();
+        $activityService = app()->make(ActivityService::class);
+
+        if ($activityService->hasRecipientCountryDefinedInTransactions($params['id'])) {
+            Validator::extend('already_in_transactions', function () {
+                return false;
+            });
+
+            return ['recipient_country'=> 'already_in_transactions'];
+        }
+
         Validator::extend('allocated_country_percent_exceeded', function () {
             return false;
         });
+
         $rules = [];
+        $allottedCountryPercent = $activityService->getAllottedRecipientCountryPercent($params['id']);
         $totalCountryPercent = $this->getTotalPercent($formFields);
-        $params = $this->route()->parameters();
-        $allottedCountryPercent = app()->make(ActivityService::class)->getAllottedRecipientCountryPercent($params['id']);
 
         foreach ($formFields as $recipientCountryIndex => $recipientCountry) {
             $recipientCountryForm = 'recipient_country.' . $recipientCountryIndex;
@@ -96,7 +115,7 @@ class RecipientCountryRequest extends ActivityBaseRequest
      */
     protected function getMessagesForRecipientCountry(array $formFields): array
     {
-        $messages = [];
+        $messages = ['recipient_country.already_in_transactions' => 'Recipient Country Already defined in Transactions'];
 
         foreach ($formFields as $recipientCountryIndex => $recipientCountry) {
             $recipientCountryForm = 'recipient_country.' . $recipientCountryIndex;
@@ -113,38 +132,5 @@ class RecipientCountryRequest extends ActivityBaseRequest
         }
 
         return $messages;
-    }
-
-    /**
-     * generate rules for percentage.
-     *
-     * @param $recipient_countries
-     *
-     * @return array
-     */
-    protected function getPercentageRules($recipient_countries): array
-    {
-        $array = [];
-
-        if (count($recipient_countries) > 1) {
-            foreach ($recipient_countries as $countryIndex => $country) {
-                $countryForm = sprintf('recipient_country.%s', $countryIndex);
-                $percentage = $country['percentage'] ?: 0;
-                $recipient_country = $country['country_code'] ?: 'Not Specified';
-                $newIndex = $countryIndex + 1;
-
-                if (isset($array['country_code']) && array_key_exists($recipient_country, $array)) {
-                    $totalPercentage = (int) $array[$recipient_country] + (float) $percentage;
-                    $array[$newIndex] = $totalPercentage;
-                    $array[sprintf('%s.percentage', $countryForm)] = (string) $newIndex;
-                } else {
-                    $array['country_code'] = $recipient_country;
-                    $array[$newIndex] = $percentage;
-                    $array[sprintf('%s.percentage', $countryForm)] = (string) $newIndex;
-                }
-            }
-        }
-
-        return $array;
     }
 }

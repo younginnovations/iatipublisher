@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Http\Requests\Activity\Period;
 
 use App\Http\Requests\Activity\ActivityBaseRequest;
+use App\IATI\Services\Activity\IndicatorService;
+use Illuminate\Contracts\Container\BindingResolutionException;
 
 /**
  * Class PeriodRequest.
@@ -49,15 +51,13 @@ class PeriodRequest extends ActivityBaseRequest
             $diff = (strtotime($end) - strtotime($start)) / 86400;
         }
 
-        $rules = array_merge(
+        return array_merge(
             $rules,
             $this->getRulesForResultPeriodStart($formFields['period_start'], 'period_start', $diff),
             $this->getRulesForResultPeriodEnd($formFields['period_end'], 'period_end', $formFields['period_start'], $diff),
             $this->getRulesForTarget($formFields['target'], 'target'),
             $this->getRulesForTarget($formFields['actual'], 'actual')
         );
-
-        return $rules;
     }
 
     /**
@@ -71,15 +71,13 @@ class PeriodRequest extends ActivityBaseRequest
     {
         $messages = [];
 
-        $messages = array_merge(
+        return array_merge(
             $messages,
             $this->getMessagesForResultPeriod($formFields['period_start'], 'period_start'),
             $this->getMessagesForResultPeriod($formFields['period_end'], 'period_end'),
             $this->getMessagesForTarget($formFields['target'], 'target'),
             $this->getMessagesForTarget($formFields['actual'], 'actual')
         );
-
-        return $messages;
     }
 
     /**
@@ -90,7 +88,7 @@ class PeriodRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    protected function getRulesForResultPeriodStart($formFields, $periodType, $diff): array
+    protected function getRulesForResultPeriodStart($formFields, $periodType): array
     {
         $rules = [];
 
@@ -106,11 +104,10 @@ class PeriodRequest extends ActivityBaseRequest
      *
      * @param $formFields
      * @param $periodType
-     * @param $periodStart
      *
      * @return array
      */
-    protected function getRulesForResultPeriodEnd($formFields, $periodType, $periodStart, $diff): array
+    protected function getRulesForResultPeriodEnd($formFields, $periodType): array
     {
         $rules = [];
 
@@ -166,11 +163,12 @@ class PeriodRequest extends ActivityBaseRequest
      * @param $valueType
      *
      * @return array
+     * @throws BindingResolutionException
      */
     protected function getRulesForTarget($formFields, $valueType): array
     {
         $rules = [];
-        $indicator = $this->indicatorService->getIndicator($this->id)->indicator;
+        $indicator = app()->make(IndicatorService::class)->getIndicator($this->id)->indicator;
         $measure = $indicator['measure'];
 
         foreach ($formFields as $targetIndex => $target) {
@@ -209,7 +207,7 @@ class PeriodRequest extends ActivityBaseRequest
     protected function getMessagesForTarget($formFields, $valueType): array
     {
         $messages = [];
-        $indicator = $this->indicatorService->getIndicator($this->id)->indicator;
+        $indicator = app()->make(IndicatorService::class)->getIndicator($this->id)->indicator;
         $measure = $indicator['measure'];
 
         foreach ($formFields as $targetIndex => $target) {
