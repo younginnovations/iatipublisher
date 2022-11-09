@@ -156,7 +156,6 @@ const stickySidebar = (el: {
   };
   style: { cssText: string };
 }) => {
-  console.log('-----------' + affixType + '---------');
 
   //sticky element/child data
   const stickyElement = el.firstChild,

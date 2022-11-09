@@ -14,6 +14,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Session;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 
@@ -74,6 +75,13 @@ class BulkPublishingController extends Controller
     public function checkCoreElementsCompleted(Request $request): JsonResponse
     {
         try {
+            if ($this->activityWorkflowService->checkActivityCannotBePublished(auth()->user()->organization)) {
+                $message = $this->activityWorkflowService->getPublishErrorMessage(auth()->user()->organization);
+                Session::put('error', $message);
+
+                return response()->json(['success' => false, 'message' => $message]);
+            }
+
             if ($this->publishingStatusService->ongoingBulkPublishing(auth()->user()->organization->id)) {
                 return response()->json(['success' => false, 'message' => 'Another bulk publishing is already in progress.']);
             }
@@ -106,8 +114,11 @@ class BulkPublishingController extends Controller
         try {
             DB::beginTransaction();
 
-            if ($this->activityWorkflowService->hasNoPublisherInfo(auth()->user()->organization->settings)) {
-                return response()->json(['success' => false, 'message' => 'Please add a Registry API key before attempting to automatically publish.']);
+            if ($this->activityWorkflowService->checkActivityCannotBePublished(auth()->user()->organization)) {
+                $message = $this->activityWorkflowService->getPublishErrorMessage(auth()->user()->organization);
+                Session::put('error', $message);
+
+                return response()->json(['success' => false, 'message' => $message]);
             }
 
             $activityIds = json_decode($request->get('activities'), true, 512, JSON_THROW_ON_ERROR);
@@ -146,8 +157,11 @@ class BulkPublishingController extends Controller
         try {
             DB::beginTransaction();
 
-            if ($this->activityWorkflowService->hasNoPublisherInfo(auth()->user()->organization->settings)) {
-                return response()->json(['success' => false, 'message' => 'Please add a Registry API key before attempting to automatically publish.']);
+            if ($this->activityWorkflowService->checkActivityCannotBePublished(auth()->user()->organization)) {
+                $message = $this->activityWorkflowService->getPublishErrorMessage(auth()->user()->organization);
+                Session::put('error', $message);
+
+                return response()->json(['success' => false, 'message' => $message]);
             }
 
             if ($this->publishingStatusService->ongoingBulkPublishing(auth()->user()->organization->id)) {

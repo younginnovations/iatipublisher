@@ -52,10 +52,11 @@ class ActivityWorkflowController extends Controller
         try {
             $activity = $this->activityWorkflowService->findActivity($id);
 
-            if ($this->activityWorkflowService->hasNoPublisherInfo($activity->organization->settings)) {
-                Session::put('error', 'Please add a Registry API key before attempting to automatically publish.');
+            if ($this->activityWorkflowService->checkActivityCannotBePublished($activity->organization)) {
+                $message = $this->activityWorkflowService->getPublishErrorMessage($activity->organization);
+                Session::put('error', $message);
 
-                return response()->json(['success' => false, 'message' => 'Please add a Registry API key before attempting to automatically publish.']);
+                return response()->json(['success' => false, 'message' => $message]);
             }
 
             DB::beginTransaction();
@@ -124,6 +125,14 @@ class ActivityWorkflowController extends Controller
     {
         try {
             $activity = $this->activityWorkflowService->findActivity($id);
+
+            if ($this->activityWorkflowService->checkActivityCannotBePublished($activity->organization)) {
+                $message = $this->activityWorkflowService->getPublishErrorMessage($activity->organization);
+                Session::put('error', $message);
+
+                return response()->json(['success' => false, 'message' => $message]);
+            }
+
             $response = $this->activityWorkflowService->validateActivityOnIATIValidator($activity);
 
             if ($this->validatorService->updateOrCreateResponse($id, json_decode($response, true, 512, JSON_THROW_ON_ERROR))) {

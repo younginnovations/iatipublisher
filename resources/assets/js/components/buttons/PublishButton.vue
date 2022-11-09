@@ -280,6 +280,10 @@ const validatorFunction = () => {
     const response = res.data;
     const errors = response.errors;
 
+    if(response.success === false){
+      location.reload()
+    }
+
     if (errors.length > 0) {
       store.dispatch('updatePublishErrors', errors);
 
@@ -319,7 +323,7 @@ const publishFunction = () => {
   axios.post(`/activity/${id}/publish`).then((res) => {
     const response = res.data;
     toastMessage.message = response.message;
-    toastMessage.type = response.success;
+    // toastMessage.type = response.success;
     store.dispatch('updateUnPublished', response.success);
     store.dispatch('updateShowPublished', !response.success);
     setTimeout(() => {
