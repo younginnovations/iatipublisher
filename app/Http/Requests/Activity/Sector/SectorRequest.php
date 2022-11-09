@@ -47,9 +47,9 @@ class SectorRequest extends ActivityBaseRequest
         foreach ($formFields as $formField) {
             if (array_key_exists($formField['sector_vocabulary'], $groupedSector)) {
                 $groupedSector[$formField['sector_vocabulary']]['count'] += 1;
-                $groupedSector[$formField['sector_vocabulary']]['total'] += $formField['percentage'];
+                $groupedSector[$formField['sector_vocabulary']]['total'] += (float) $formField['percentage'];
             } else {
-                $groupedSector[$formField['sector_vocabulary']] = ['count' => 1, 'total' => $formField['percentage']];
+                $groupedSector[$formField['sector_vocabulary']] = ['count' => 1, 'total' => (float) $formField['percentage']];
             }
         }
 
@@ -111,11 +111,11 @@ class SectorRequest extends ActivityBaseRequest
             }
 
             if ($groupedPercentSector[$sector['sector_vocabulary']]['count'] > 1) {
-                if ($groupedPercentSector[$sector['sector_vocabulary']]['total'] !== 100) {
+                if ($groupedPercentSector[$sector['sector_vocabulary']]['total'] !== 100.0) {
                     $rules[$sectorForm . '.percentage'] .= '|sector_total_percent';
                 }
             } else {
-                $rules[$sectorForm . '.percentage'] .= '|in:' . 100;
+                $rules[$sectorForm . '.percentage'] .= '|in:' . 100.0;
             }
         }
 
