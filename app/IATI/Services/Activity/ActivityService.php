@@ -77,6 +77,7 @@ class ActivityService
             'org_id'               => Auth::user()->organization_id,
             'element_status'       => getDefaultElementStatus(),
             'default_field_values' => $this->getDefaultValues(),
+            'reporting_org'        => Auth::user()->organization->reporting_org,
         ]);
     }
 
@@ -165,7 +166,7 @@ class ActivityService
     {
         $core_elements = getCoreElements();
         $orgElementStatus = $activity->organization->element_status;
-        $completed_core_element_count = (array_key_exists('reporting_org', $orgElementStatus) && $orgElementStatus['reporting_org']) ? 1 : 0;
+        $completed_core_element_count = 0;
 
         foreach ($core_elements as $core_element) {
             if (array_key_exists($core_element, $activity->element_status) && $activity->element_status[$core_element]) {

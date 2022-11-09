@@ -556,6 +556,21 @@ class ElementCompleteService
     }
 
     /**
+     * Returns reporting org element complete status.
+     *
+     * @param $activity
+     *
+     * @return bool
+     * @throws \JsonException
+     */
+    public function isReportingOrgElementCompleted($activity): bool
+    {
+        $this->element = 'reporting_org';
+
+        return $this->isLevelOneMultiDimensionElementCompleted($activity->reporting_org);
+    }
+
+    /**
      * Returns description element complete status.
      *
      * @param $activity

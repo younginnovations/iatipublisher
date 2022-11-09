@@ -29,6 +29,7 @@ use App\IATI\Services\Activity\PolicyMarkerService;
 use App\IATI\Services\Activity\RecipientCountryService;
 use App\IATI\Services\Activity\RecipientRegionService;
 use App\IATI\Services\Activity\RelatedActivityService;
+use App\IATI\Services\Activity\ReportingOrgService;
 use App\IATI\Services\Activity\ResultService;
 use App\IATI\Services\Activity\ScopeService;
 use App\IATI\Services\Activity\SectorService;
@@ -58,6 +59,11 @@ class XmlGenerator
      * @var TitleService
      */
     protected TitleService $titleService;
+
+    /**
+     * @var ReportingOrgService
+     */
+    protected ReportingOrgService $reportingOrgService;
 
     /**
      * @var OtherIdentifierService
@@ -390,6 +396,7 @@ class XmlGenerator
     public function setServices()
     {
         $this->titleService = $this->activityService->getService('TitleService');
+        $this->reportingOrgService = $this->activityService->getService('ReportingOrgService');
         $this->otherIdentifierService = $this->activityService->getService('OtherIdentifierService');
         $this->descriptionService = $this->activityService->getService('DescriptionService');
         $this->activityStatusService = $this->activityService->getService('StatusService');
@@ -435,7 +442,7 @@ class XmlGenerator
     {
         $xmlActivity = [];
         $xmlActivity['iati-identifier'] = ($organization->identifier ?: 'Not Available') . '-' . Arr::get($activity->iati_identifier, 'activity_identifier', 'Not Available');
-        $xmlActivity['reporting-org'] = $this->organizationService->getReportingOrgXmlData($organization);
+        $xmlActivity['reporting-org'] = $this->reportingOrgService->getXmlData($activity);
         $xmlActivity['title'] = $this->titleService->getXmlData($activity);
         $xmlActivity['description'] = $this->descriptionService->getXmlData($activity);
         $xmlActivity['participating-org'] = $this->participatingOrgService->getXmlData($activity);
