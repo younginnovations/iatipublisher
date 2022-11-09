@@ -97,7 +97,7 @@ class IndicatorRequest extends ActivityBaseRequest
             function () {
                 $params = $this->route()->parameters();
 
-                return !$this->resultService->resultHasRefCode((int) $params['id']);
+                return !app()->make(ResultService::class)->resultHasRefCode((int) $params['id']);
             }
         );
 
@@ -159,9 +159,9 @@ class IndicatorRequest extends ActivityBaseRequest
             $rules[sprintf('%s.year', $baselineForm)] = $baselineYearRule;
             $rules[sprintf('%s.value', $baselineForm)] = 'nullable|numeric|gte:0';
 
-            if ((request()->get('measure') === 2) && Arr::get($baseline, 'value', null)) {
+            if ((request()->get('measure') == 2) && Arr::get($baseline, 'value', null)) {
                 $rules[sprintf('%s.value', $baselineForm)] = 'nullable|numeric|gte:0';
-            } elseif ((request()->get('measure') === 1) && Arr::get($baseline, 'value', null)) {
+            } elseif ((request()->get('measure') == 1) && Arr::get($baseline, 'value', null)) {
                 $rules[sprintf('%s.value', $baselineForm)] = 'nullable|numeric';
             }
 

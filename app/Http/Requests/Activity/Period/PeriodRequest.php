@@ -189,7 +189,7 @@ class PeriodRequest extends ActivityBaseRequest
             if ($measure) {
                 $rules[sprintf('%s.%s.value', $valueType, $targetIndex)] = 'required|numeric';
 
-                if ($measure === '5') {
+                if ($measure == '5') {
                     $rules[sprintf('%s.%s.value', $valueType, $targetIndex)] = 'prohibited';
                 }
             }
@@ -237,7 +237,7 @@ class PeriodRequest extends ActivityBaseRequest
             if ($measure) {
                 $messages[sprintf('%s.%s.value', $valueType, $targetIndex)] = 'Value must be filled when the indicator measure is non-qualitative.';
 
-                if ($measure === '5') {
+                if ($measure == '5') {
                     $messages[sprintf('%s.%s.value', $valueType, $targetIndex)] = 'Value must be omitted when the indicator measure is qualitative.';
                 }
             }
