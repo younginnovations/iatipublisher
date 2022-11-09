@@ -53,7 +53,7 @@ class OrganizationWorkflowController extends Controller
             $organization = Auth::user()->organization;
 
             if ($this->activityWorkflowService->hasNoPublisherInfo($organization->settings) || !$this->activityWorkflowService->isUserVerified()) {
-                $message = $this->activityWorkflowService->getPublishErrorMessage($organization->settings);
+                $message = $this->activityWorkflowService->getPublishErrorMessage($organization, 'organization');
 
                 return response()->json(['success' => false, 'message' => $message]);
             }

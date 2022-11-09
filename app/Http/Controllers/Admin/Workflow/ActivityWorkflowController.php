@@ -52,8 +52,8 @@ class ActivityWorkflowController extends Controller
         try {
             $activity = $this->activityWorkflowService->findActivity($id);
 
-            if ($this->activityWorkflowService->hasNoPublisherInfo($activity->organization->settings) || !$this->activityWorkflowService->isUserVerified()) {
-                $message = $this->activityWorkflowService->getPublishErrorMessage($activity->organization->settings);
+            if ($this->activityWorkflowService->checkActivityCannotBePublished($activity->organization)) {
+                $message = $this->activityWorkflowService->getPublishErrorMessage($activity->organization);
                 Session::put('error', $message);
 
                 return response()->json(['success' => false, 'message' => $message]);
@@ -126,8 +126,8 @@ class ActivityWorkflowController extends Controller
         try {
             $activity = $this->activityWorkflowService->findActivity($id);
 
-            if ($this->activityWorkflowService->hasNoPublisherInfo($activity->organization->settings) || !$this->activityWorkflowService->isUserVerified()) {
-                $message = $this->activityWorkflowService->getPublishErrorMessage($activity->organization->settings);
+            if ($this->activityWorkflowService->checkActivityCannotBePublished($activity->organization)) {
+                $message = $this->activityWorkflowService->getPublishErrorMessage($activity->organization);
                 Session::put('error', $message);
 
                 return response()->json(['success' => false, 'message' => $message]);

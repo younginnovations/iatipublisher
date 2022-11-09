@@ -255,11 +255,12 @@ class ActivityWorkflowService
     /**
      * Returns errors related to publishing activity.
      *
-     * @param $settings
+     * @param $organization
+     * @param string $type
      *
      * @return array
      */
-    public function getPublishErrorMessage($settings): array
+    public function getPublishErrorMessage($organization, string $type = 'activity'): array
     {
         $messages = [];
 
@@ -267,10 +268,40 @@ class ActivityWorkflowService
             $messages[] = 'User email needs to be verified for publishing activity.';
         }
 
-        if ($this->hasNoPublisherInfo($settings)) {
+        if ($this->hasNoPublisherInfo($organization->settings)) {
             $messages[] = 'Please add a Registry API key before attempting to automatically publish.';
         }
 
+        if ($type === 'activity' && !$this->isOrganizationPublished($organization)) {
+            $messages[] = 'Organization needs to be published before publishing activity.';
+        }
+
         return $messages;
+    }
+
+    /**
+     * Checks of organization is published or not.
+     *
+     * @param $organization
+     *
+     * @return bool
+     */
+    public function isOrganizationPublished($organization): bool
+    {
+        return $organization->is_published;
+    }
+
+    /**
+     * Checks if all conditions for publishing activities have been fulfilled.
+     *
+     * @param $organization
+     *
+     * @return bool
+     */
+    public function checkActivityCannotBePublished($organization): bool
+    {
+        return $this->hasNoPublisherInfo($organization->settings) ||
+            !$this->isUserVerified() ||
+            !$this->isOrganizationPublished($organization);
     }
 }
