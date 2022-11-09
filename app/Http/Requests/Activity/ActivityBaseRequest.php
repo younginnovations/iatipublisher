@@ -18,33 +18,16 @@ use Illuminate\Support\Facades\Validator;
 class ActivityBaseRequest extends FormRequest
 {
     /**
-     * @var IndicatorService
-     */
-    protected IndicatorService $indicatorService;
-
-    /**
-     * @var ResultService
-     */
-    protected ResultService $resultService;
-
-    /**
      * @var ActivityService
      */
     protected ActivityService $activityService;
 
     /**
      * ActivityBaseRequest constructor.
-     *
-     * @param IndicatorService $indicatorService
-     * @param ResultService    $resultService
-     * @param ActivityService  $activityService
      */
-    public function __construct(IndicatorService $indicatorService, ResultService $resultService, ActivityService $activityService)
+    public function __construct()
     {
         parent::__construct();
-        $this->indicatorService = $indicatorService;
-        $this->resultService = $resultService;
-        $this->activityService = $activityService;
 
         Validator::extendImplicit(
             'unique_lang',
@@ -80,7 +63,7 @@ class ActivityBaseRequest extends FormRequest
         Validator::extend(
             'total',
             function ($attribute, $value, $parameters, $validator) {
-                ($value !== 100) ? $check = false : $check = true;
+                ($value != 100) ? $check = false : $check = true;
 
                 return $check;
             }
@@ -213,13 +196,13 @@ class ActivityBaseRequest extends FormRequest
         $routeParam = explode('.', $this->route()->getName());
 
         if ($routeParam[1] === 'indicator') {
-            $indicator = $this->indicatorService->getIndicator($parameters['id']);
+            $indicator = app()->make(IndicatorService::class)->getIndicator($parameters['id']);
             $activity = $indicator->result->activity;
         } elseif ($routeParam[1] === 'result') {
-            $result = $this->resultService->getResult($parameters['id']);
+            $result = app()->make(ResultService::class)->getResult($parameters['id']);
             $activity = $result->activity;
         } else {
-            $activity = $this->activityService->getActivity($parameters['id']);
+            $activity = app()->make(ActivityService::class)->getActivity($parameters['id']);
         }
 
         return $activity->default_field_values;

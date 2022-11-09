@@ -63,7 +63,7 @@ class RecipientCountryRequest extends ActivityBaseRequest
         $rules = [];
         $totalCountryPercent = $this->getTotalPercent($formFields);
         $params = $this->route()->parameters();
-        $allottedCountryPercent = $this->activityService->getAllottedRecipientCountryPercent($params['id']);
+        $allottedCountryPercent = app()->make(ActivityService::class)->getAllottedRecipientCountryPercent($params['id']);
 
         foreach ($formFields as $recipientCountryIndex => $recipientCountry) {
             $recipientCountryForm = 'recipient_country.' . $recipientCountryIndex;
