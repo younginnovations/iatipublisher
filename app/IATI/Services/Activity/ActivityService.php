@@ -222,9 +222,9 @@ class ActivityService
      *
      * @param $activityId
      *
-     * @return int
+     * @return float
      */
-    public function getAllottedRecipientRegionPercent($activityId): int
+    public function getAllottedRecipientRegionPercent($activityId): float
     {
         $activity = $this->getActivity($activityId);
         $data = $activity->recipient_country;
@@ -244,9 +244,9 @@ class ActivityService
      *
      * @param $activityId
      *
-     * @return int
+     * @return float
      */
-    public function getAllottedRecipientCountryPercent($activityId): int
+    public function getAllottedRecipientCountryPercent($activityId): float
     {
         $activity = $this->getActivity($activityId);
         $data = $activity->recipient_region;
@@ -269,5 +269,50 @@ class ActivityService
         }
 
         return 100;
+    }
+
+    public function hasRecipientCountryDefinedInTransactions($activityId): bool
+    {
+        $transactions = $this->getActivity($activityId)->transactions->toArray();
+
+        if (!empty($transactions)) {
+            foreach ($transactions as $transaction) {
+                if (!empty($transaction['transaction']) && (array_key_exists('recipient_country', $transaction['transaction']) && !empty($transaction['transaction']['recipient_country']))) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    public function hasRecipientRegionDefinedInTransactions($activityId): bool
+    {
+        $transactions = $this->getActivity($activityId)->transactions->toArray();
+
+        if (!empty($transactions)) {
+            foreach ($transactions as $transaction) {
+                if (!empty($transaction['transaction']) && (array_key_exists('recipient_region', $transaction['transaction']) && !empty($transaction['transaction']['recipient_region']))) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    public function hasSectorDefinedInTransactions($activityId): bool
+    {
+        $transactions = $this->getActivity($activityId)->transactions->toArray();
+
+        if (!empty($transactions)) {
+            foreach ($transactions as $transaction) {
+                if (!empty($transaction['transaction']) && (array_key_exists('sector', $transaction['transaction']) && !empty($transaction['transaction']['sector']))) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 }

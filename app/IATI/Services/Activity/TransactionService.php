@@ -452,4 +452,28 @@ class TransactionService
     {
         return $this->transactionRepository->delete($id);
     }
+
+    public function hasRecipientCountryDefinedInActivity($transactionId): bool
+    {
+        $transaction = $this->getTransaction($transactionId);
+        $activity = $transaction->activity->toArray();
+
+        return !empty($activity) && (array_key_exists('recipient_country', $activity) && !empty($activity['recipient_country']));
+    }
+
+    public function hasRecipientRegionDefinedInActivity($transactionId): bool
+    {
+        $transaction = $this->getTransaction($transactionId);
+        $activity = $transaction->activity->toArray();
+
+        return !empty($activity) && (array_key_exists('recipient_region', $activity) && !empty($activity['recipient_region']));
+    }
+
+    public function hasSectorDefinedInActivity($transactionId): bool
+    {
+        $transaction = $this->getTransaction($transactionId);
+        $activity = $transaction->activity->toArray();
+
+        return !empty($activity) && (array_key_exists('sector', $activity) && !empty($activity['sector']));
+    }
 }

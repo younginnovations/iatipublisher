@@ -6,10 +6,7 @@ namespace App\Http\Requests\Activity\RecipientRegion;
 
 use App\Http\Requests\Activity\ActivityBaseRequest;
 use App\IATI\Services\Activity\ActivityService;
-use App\IATI\Services\Activity\IndicatorService;
-use App\IATI\Services\Activity\RecipientCountryService;
-use App\IATI\Services\Activity\ResultService;
-use Illuminate\Support\Arr;
+use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Support\Facades\Validator;
 
 /**
@@ -17,26 +14,6 @@ use Illuminate\Support\Facades\Validator;
  */
 class RecipientRegionRequest extends ActivityBaseRequest
 {
-    /**
-     * @var RecipientCountryService
-     */
-    protected RecipientCountryService $recipientCountryService;
-
-    /**
-     * RecipientRegionRequest Constructor.
-     *
-     * @param IndicatorService        $indicatorService
-     * @param ResultService           $resultService
-     * @param ActivityService         $activityService
-     * @param RecipientCountryService $recipientCountryService
-     */
-    public function __construct(IndicatorService $indicatorService, ResultService $resultService, ActivityService $activityService, RecipientCountryService $recipientCountryService)
-    {
-        parent::__construct($indicatorService, $resultService, $activityService);
-
-        $this->recipientCountryService = $recipientCountryService;
-    }
-
     /**
      * Get the validation rules that apply to the request.
      *
@@ -84,16 +61,31 @@ class RecipientRegionRequest extends ActivityBaseRequest
      * @param array $formFields
      *
      * @return array
+     * @throws BindingResolutionException
      */
     protected function getRulesForRecipientRegion(array $formFields): array
     {
+        if (empty($formFields)) {
+            return [];
+        }
+
+        $params = $this->route()->parameters();
+        $activityService = app()->make(ActivityService::class);
+
+        if ($activityService->hasRecipientRegionDefinedInTransactions($params['id'])) {
+            Validator::extend('already_in_transactions', function () {
+                return false;
+            });
+
+            return ['recipient_region'=> 'already_in_transactions'];
+        }
+
         Validator::extend('allocated_region_total_mismatch', function () {
             return false;
         });
         $rules = [];
         $groupedPercentRegion = $this->groupRegion($formFields);
-        $params = $this->route()->parameters();
-        $allottedRegionPercent = $this->activityService->getAllottedRecipientRegionPercent($params['id']);
+        $allottedRegionPercent = $activityService->getAllottedRecipientRegionPercent($params['id']);
 
         foreach ($formFields as $recipientRegionIndex => $recipientRegion) {
             $recipientRegionForm = 'recipient_region.' . $recipientRegionIndex;
@@ -127,7 +119,7 @@ class RecipientRegionRequest extends ActivityBaseRequest
      */
     protected function getMessagesForRecipientRegion(array $formFields): array
     {
-        $messages = [];
+        $messages = ['recipient_region.already_in_transactions' => 'Recipient Region already defined in Transactions'];
 
         foreach ($formFields as $recipientRegionIndex => $recipientRegion) {
             $recipientRegionForm = 'recipient_region.' . $recipientRegionIndex;
@@ -144,53 +136,5 @@ class RecipientRegionRequest extends ActivityBaseRequest
         }
 
         return $messages;
-    }
-
-    /**
-     * generate rules for percentage.
-     *
-     * @param $regions
-     *
-     * @return array
-     */
-    protected function getPercentageRules($regions): array
-    {
-        $array = [];
-        $totalPercentage = 0;
-        $regionVocabs = [];
-
-        if (count($regions) > 1) {
-            foreach ($regions as $regionIndex => $region) {
-                $regionVocab = $region['region_vocabulary'] ?: 'Not Specified';
-                $regionVocabs[$regionVocab] = 0;
-            }
-
-            foreach ($regions as $regionIndex => $region) {
-                $regionVocab = $region['region_vocabulary'] ?: 'Not Specified';
-                $regionVocabs[$regionVocab] += (float) Arr::get($region, 'percentage', 0);
-                $regionForm = sprintf('recipient_region.%s', $regionIndex);
-                $percentage = $region['percentage'] ?: 0;
-                $recipient_region = $regionVocab;
-
-                if (array_key_exists($recipient_region, $array)) {
-                    $totalPercentage = (int) $array[$recipient_region] + (float) $percentage;
-                    $array[$recipient_region] = $totalPercentage;
-                    $array[sprintf('%s.percentage', $regionForm)] = $recipient_region;
-                } else {
-                    $array[$recipient_region] = $percentage;
-                    $array[sprintf('%s.percentage', $regionForm)] = $recipient_region;
-                }
-            }
-
-            foreach ($regions as $regionIndex => $region) {
-                $regionVocab = $region['region_vocabulary'] ?: 'Not Specified';
-
-                if ($regionVocabs[$regionVocab] > 100) {
-                    return $array;
-                }
-            }
-        }
-
-        return [];
     }
 }

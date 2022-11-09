@@ -5,11 +5,10 @@ declare(strict_types=1);
 namespace App\Http\Requests\Activity\Transaction;
 
 use App\Http\Requests\Activity\ActivityBaseRequest;
-use App\IATI\Services\Activity\ActivityService;
-use App\IATI\Services\Activity\IndicatorService;
-use App\IATI\Services\Activity\ResultService;
 use App\IATI\Services\Activity\TransactionService;
+use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Validator;
 
 /**
  * Class TransactionRequest.
@@ -17,29 +16,10 @@ use Illuminate\Support\Arr;
 class TransactionRequest extends ActivityBaseRequest
 {
     /**
-     * @var TransactionService
-     */
-    protected TransactionService $transactionService;
-
-    /**
-     * Transaction constructor.
-     *
-     * @param IndicatorService   $indicatorService
-     * @param ResultService      $resultService
-     * @param ActivityService    $activityService
-     * @param TransactionService $transactionService
-     */
-    public function __construct(IndicatorService $indicatorService, ResultService $resultService, ActivityService $activityService, TransactionService $transactionService)
-    {
-        parent::__construct($indicatorService, $resultService, $activityService);
-
-        $this->transactionService = $transactionService;
-    }
-
-    /**
      * Get the validation rules that apply to the request.
      *
      * @return array
+     * @throws BindingResolutionException
      */
     public function rules(): array
     {
@@ -62,17 +42,16 @@ class TransactionRequest extends ActivityBaseRequest
      * @param array $formFields
      *
      * @return array
+     * @throws BindingResolutionException
      */
     protected function getRulesForTransaction(array $formFields): array
     {
         $rules = [];
-
         $transactionId = $this->segment(4);
         $activityId = $this->segment(2);
-        $references = ($transactionId) ? $this->transactionService->getTransactionReferencesExcept(
-            $activityId,
-            $transactionId
-        ) : $this->transactionService->getTransactionReferences($activityId);
+        $references = ($transactionId) ? app()->make(TransactionService::class)->getTransactionReferencesExcept($activityId, $transactionId) : app()
+            ->make(TransactionService::class)
+            ->getTransactionReferences($activityId);
 
         $transactionReference = implode(',', array_filter(array_keys($references)));
 
@@ -105,7 +84,7 @@ class TransactionRequest extends ActivityBaseRequest
         $messages = [];
 
         $messages['reference.not_in']
-                = 'The @ref field must be unique for an activity.';
+            = 'The @ref field must be unique for an activity.';
 
         return array_merge(
             $messages,
@@ -123,11 +102,11 @@ class TransactionRequest extends ActivityBaseRequest
     /**
      * get transaction date rules.
      *
-     * @param $formFields
+     * @param array $formFields
      *
      * @return array
      */
-    protected function getTransactionDateRules($formFields): array
+    protected function getTransactionDateRules(array $formFields): array
     {
         $rules = [];
 
@@ -142,11 +121,11 @@ class TransactionRequest extends ActivityBaseRequest
     /**
      * get transaction date error message.
      *
-     * @param $formFields
+     * @param array $formFields
      *
      * @return array
      */
-    protected function getTransactionDateMessages($formFields): array
+    protected function getTransactionDateMessages(array $formFields): array
     {
         $messages = [];
 
@@ -162,11 +141,11 @@ class TransactionRequest extends ActivityBaseRequest
     /**
      * get values rules.
      *
-     * @param $formFields
+     * @param array $formFields
      *
      * @return array
      */
-    protected function getValueRules($formFields): array
+    protected function getValueRules(array $formFields): array
     {
         $rules = [];
 
@@ -182,11 +161,11 @@ class TransactionRequest extends ActivityBaseRequest
     /**
      * get value error message.
      *
-     * @param $formFields
+     * @param array $formFields
      *
      * @return array$transactionForm
      */
-    protected function getValueMessages($formFields): array
+    protected function getValueMessages(array $formFields): array
     {
         $messages = [];
 
@@ -203,20 +182,21 @@ class TransactionRequest extends ActivityBaseRequest
     /**
      * get description rules.
      *
-     * @param $formFields
+     * @param array $formFields
      *
      * @return array
      */
-    protected function getDescriptionRules($formFields): array
+    protected function getDescriptionRules(array $formFields): array
     {
         $rules = [];
 
         foreach ($formFields as $descriptionIndex => $description) {
             $narrativeForm = sprintf('description.%s', $descriptionIndex);
-            $rules = array_merge(
-                $rules,
-                $this->getRulesForNarrative($description['narrative'], $narrativeForm)
-            );
+            $narrativeRules = $this->getRulesForNarrative($description['narrative'], $narrativeForm);
+
+            foreach ($narrativeRules as $key => $item) {
+                $rules[$key] = $item;
+            }
         }
 
         return $rules;
@@ -225,20 +205,21 @@ class TransactionRequest extends ActivityBaseRequest
     /**
      * get description error message.
      *
-     * @param $formFields
+     * @param array $formFields
      *
      * @return array
      */
-    protected function getDescriptionMessages($formFields): array
+    protected function getDescriptionMessages(array $formFields): array
     {
         $messages = [];
 
         foreach ($formFields as $descriptionIndex => $description) {
             $narrativeForm = sprintf('description.%s', $descriptionIndex);
-            $messages = array_merge(
-                $messages,
-                $this->getMessagesForNarrative($description['narrative'], $narrativeForm)
-            );
+            $narrativeMessages = $this->getMessagesForNarrative($description['narrative'], $narrativeForm);
+
+            foreach ($narrativeMessages as $key => $item) {
+                $messages[$key] = $item;
+            }
         }
 
         return $messages;
@@ -247,16 +228,27 @@ class TransactionRequest extends ActivityBaseRequest
     /**
      * returns rules for sector.
      *
-     * @param $formFields
+     * @param array $formFields
      *
      * @return array
+     * @throws BindingResolutionException
      */
-    public function getSectorsRules($formFields): array
+    public function getSectorsRules(array $formFields): array
     {
-        $rules = [];
+        if (empty($formFields)) {
+            return [];
+        }
 
-        if (!$formFields) {
-            return $rules;
+        $rules = [];
+        $params = $this->route()->parameters();
+        $transactionService = app()->make(TransactionService::class);
+
+        if ($transactionService->hasSectorDefinedInActivity($params['transactionId'])) {
+            Validator::extend('already_in_activity', function () {
+                return false;
+            });
+
+            return ['sector' => 'already_in_activity'];
         }
 
         foreach ($formFields as $sectorIndex => $sector) {
@@ -266,7 +258,11 @@ class TransactionRequest extends ActivityBaseRequest
                 $rules[sprintf('%s.vocabulary_uri', $sectorForm)] = 'nullable|url';
             }
 
-            $rules = array_merge($this->getRulesForNarrative($sector['narrative'], $sectorForm), $rules);
+            $narrativeRules = $this->getRulesForNarrative($sector['narrative'], $sectorForm);
+
+            foreach ($narrativeRules as $key => $item) {
+                $rules[$key] = $item;
+            }
         }
 
         return $rules;
@@ -275,15 +271,15 @@ class TransactionRequest extends ActivityBaseRequest
     /**
      * returns messages for sector.
      *
-     * @param $formFields
+     * @param array $formFields
      *
      * @return array
      */
-    public function getSectorsMessages($formFields): array
+    public function getSectorsMessages(array $formFields): array
     {
-        $messages = [];
+        $messages = ['sector.already_in_activity' => 'Sector already defined in Activity'];
 
-        if (!$formFields) {
+        if (empty($formFields)) {
             return $messages;
         }
 
@@ -295,7 +291,11 @@ class TransactionRequest extends ActivityBaseRequest
                     = 'The @vocabulary-uri field must be a valid url.';
             }
 
-            $messages = array_merge($this->getMessagesForNarrative($sector['narrative'], $sectorForm), $messages);
+            $narrativeMessages = $this->getMessagesForNarrative($sector['narrative'], $sectorForm);
+
+            foreach ($narrativeMessages as $key => $item) {
+                $messages[$key] = $item;
+            }
         }
 
         return $messages;
@@ -314,13 +314,12 @@ class TransactionRequest extends ActivityBaseRequest
 
         foreach ($formFields as $providerOrgIndex => $providerOrg) {
             $providerOrgForm = sprintf('provider_organization.%s', $providerOrgIndex);
-
             $rules[sprintf('%s.%s', $providerOrgForm, 'provider_activity_id')] = 'exclude_operators';
+            $narrativeRules = $this->getRulesForNarrative($providerOrg['narrative'], $providerOrgForm);
 
-            $rules = array_merge(
-                $rules,
-                $this->getRulesForNarrative($providerOrg['narrative'], $providerOrgForm)
-            );
+            foreach ($narrativeRules as $key => $item) {
+                $rules[$key] = $item;
+            }
         }
 
         return $rules;
@@ -335,19 +334,19 @@ class TransactionRequest extends ActivityBaseRequest
      */
     protected function getMessagesForProviderOrg(array $formFields): array
     {
-        $message = [];
+        $messages = [];
 
         foreach ($formFields as $providerOrgIndex => $providerOrg) {
             $providerOrgForm = sprintf('provider_organization.%s', $providerOrgIndex);
             $message[sprintf('%s.%s.exclude_operators', $providerOrgForm, 'provider_activity_id')] = 'The @provider-activity-id field is not valid.';
+            $narrativeMessages = $this->getMessagesForNarrative($providerOrg['narrative'], $providerOrgForm);
 
-            $message = array_merge(
-                $message,
-                $this->getMessagesForNarrative($providerOrg['narrative'], $providerOrgForm)
-            );
+            foreach ($narrativeMessages as $key => $item) {
+                $messages[$key] = $item;
+            }
         }
 
-        return $message;
+        return $messages;
     }
 
     /**
@@ -363,13 +362,12 @@ class TransactionRequest extends ActivityBaseRequest
 
         foreach ($formFields as $receiverOrgIndex => $receiverOrg) {
             $receiverOrgForm = sprintf('receiver_organization.%s', $receiverOrgIndex);
-
             $rules[sprintf('%s.%s', $receiverOrgForm, 'receiver_activity_id')] = 'exclude_operators';
+            $narrativeRules = $this->getRulesForNarrative($receiverOrg['narrative'], $receiverOrgForm);
 
-            $rules = array_merge(
-                $rules,
-                $this->getRulesForNarrative($receiverOrg['narrative'], $receiverOrgForm)
-            );
+            foreach ($narrativeRules as $key => $item) {
+                $rules[$key] = $item;
+            }
         }
 
         return $rules;
@@ -384,48 +382,58 @@ class TransactionRequest extends ActivityBaseRequest
      */
     protected function getMessagesForReceiverOrg(array $formFields): array
     {
-        $message = [];
+        $messages = [];
 
         foreach ($formFields as $receiverOrgIndex => $receiverOrg) {
             $receiverOrgForm = sprintf('receiver_organization.%s', $receiverOrgIndex);
             $message[sprintf('%s.%s.exclude_operators', $receiverOrgForm, 'receiver_activity_id')] = 'The @receiver-activity-id field is not valid.';
+            $narrativeMessages = $this->getMessagesForNarrative($receiverOrg['narrative'], $receiverOrgForm);
 
-            $message = array_merge(
-                $message,
-                $this->getMessagesForNarrative($receiverOrg['narrative'], $receiverOrgForm)
-            );
+            foreach ($narrativeMessages as $key => $item) {
+                $messages[$key] = $item;
+            }
         }
 
-        return $message;
+        return $messages;
     }
 
     /**
      * returns rules for recipient region.
      *
-     * @param $formFields
+     * @param array $formFields
      *
      * @return array
+     * @throws BindingResolutionException
      */
-    public function getRulesForRecipientRegion($formFields): array
+    public function getRulesForRecipientRegion(array $formFields): array
     {
-        $rules = [];
+        if (empty($formFields)) {
+            return [];
+        }
 
-        if (!$formFields) {
-            return $rules;
+        $rules = [];
+        $params = $this->route()->parameters();
+        $transactionService = app()->make(TransactionService::class);
+
+        if ($transactionService->hasRecipientRegionDefinedInActivity($params['transactionId'])) {
+            Validator::extend('already_in_activity', function () {
+                return false;
+            });
+
+            return ['recipient_region' => 'already_in_activity'];
         }
 
         foreach ($formFields as $recipientRegionIndex => $recipientRegion) {
             $recipientRegionForm = sprintf('recipient_region.%s', $recipientRegionIndex);
 
             if (Arr::get($recipientRegion, 'region_vocabulary', 1) === '99') {
-                $rules[sprintf('%s.vocabulary_uri', $recipientRegionForm)]
-                    = 'nullable|url';
+                $rules[sprintf('%s.vocabulary_uri', $recipientRegionForm)] = 'nullable|url';
             }
+            $narrativeRules = $this->getRulesForNarrative($recipientRegion['narrative'], $recipientRegionForm);
 
-            $rules = array_merge(
-                $this->getRulesForNarrative($recipientRegion['narrative'], $recipientRegionForm),
-                $rules
-            );
+            foreach ($narrativeRules as $key => $item) {
+                $rules[$key] = $item;
+            }
         }
 
         return $rules;
@@ -434,13 +442,13 @@ class TransactionRequest extends ActivityBaseRequest
     /**
      * returns messaged for recipient region.
      *
-     * @param $formFields
+     * @param array $formFields
      *
      * @return array
      */
-    public function getMessagesForRecipientRegion($formFields): array
+    public function getMessagesForRecipientRegion(array $formFields): array
     {
-        $messages = [];
+        $messages = ['recipient_region.already_in_activity' => 'Recipient Region already defined in Activity'];
 
         if (!$formFields) {
             return $messages;
@@ -454,10 +462,11 @@ class TransactionRequest extends ActivityBaseRequest
                     = 'The @vocabulary-uri field must be a valid url.';
             }
 
-            $messages = array_merge(
-                $this->getMessagesForNarrative($recipientRegion['narrative'], $recipientRegionForm),
-                $messages
-            );
+            $narrativeMessages = $this->getMessagesForNarrative($recipientRegion['narrative'], $recipientRegionForm);
+
+            foreach ($narrativeMessages as $key => $item) {
+                $messages[$key] = $item;
+            }
         }
 
         return $messages;
@@ -466,24 +475,36 @@ class TransactionRequest extends ActivityBaseRequest
     /**
      * returns rules for recipient country.
      *
-     * @param $formFields
+     * @param array $formFields
      *
      * @return array
+     * @throws BindingResolutionException
      */
-    public function getRulesForRecipientCountry($formFields): array
+    public function getRulesForRecipientCountry(array $formFields): array
     {
-        $rules = [];
+        if (empty($formFields)) {
+            return [];
+        }
 
-        if (!$formFields) {
-            return $rules;
+        $rules = [];
+        $params = $this->route()->parameters();
+        $transactionService = app()->make(TransactionService::class);
+
+        if ($transactionService->hasRecipientCountryDefinedInActivity($params['transactionId'])) {
+            Validator::extend('already_in_activity', function () {
+                return false;
+            });
+
+            return ['recipient_country' => 'already_in_activity'];
         }
 
         foreach ($formFields as $recipientCountryIndex => $recipientCountry) {
             $recipientCountryForm = sprintf('recipient_country.%s', $recipientCountryIndex);
-            $rules = array_merge(
-                $this->getRulesForNarrative($recipientCountry['narrative'], $recipientCountryForm),
-                $rules
-            );
+            $narrativeRules = $this->getRulesForNarrative($recipientCountry['narrative'], $recipientCountryForm);
+
+            foreach ($narrativeRules as $key => $item) {
+                $rules[$key] = $item;
+            }
         }
 
         return $rules;
@@ -492,13 +513,13 @@ class TransactionRequest extends ActivityBaseRequest
     /**
      * returns messages for recipient country.
      *
-     * @param $formFields
+     * @param array $formFields
      *
      * @return array
      */
-    public function getMessagesForRecipientCountry($formFields): array
+    public function getMessagesForRecipientCountry(array $formFields): array
     {
-        $messages = [];
+        $messages = ['recipient_country.already_in_activity' => 'Recipient Country already defined in Activity'];
 
         if (!$formFields) {
             return $messages;
@@ -506,10 +527,11 @@ class TransactionRequest extends ActivityBaseRequest
 
         foreach ($formFields as $recipientCountryIndex => $recipientCountry) {
             $recipientCountryForm = sprintf('recipient_country.%s', $recipientCountryIndex);
-            $messages = array_merge($this->getMessagesForNarrative(
-                $recipientCountry['narrative'],
-                $recipientCountryForm
-            ), $messages);
+            $narrativeMessages = $this->getMessagesForNarrative($recipientCountry['narrative'], $recipientCountryForm);
+
+            foreach ($narrativeMessages as $key => $item) {
+                $messages[$key] = $item;
+            }
         }
 
         return $messages;
