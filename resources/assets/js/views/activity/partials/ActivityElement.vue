@@ -137,21 +137,21 @@
               <span v-else class="italic">Vocabulary Not Available</span>
             </div>
 
-            <div v-if="post.default_aid_type_vocabulary === '2'" class="text-sm">
+            <div v-if="post.default_aid_type_vocabulary == '2'" class="text-sm">
               <span v-if="post.earmarking_category">{{
                 types.earmarkingCategory[post.earmarking_category]
               }}</span>
               <span v-else class="italic">Code Not Available</span>
             </div>
 
-            <div v-else-if="post.default_aid_type_vocabulary === '3'" class="text-sm">
+            <div v-else-if="post.default_aid_type_vocabulary == '3'" class="text-sm">
               <span v-if="post.earmarking_modality">{{
                 types.earmarkingModality[post.earmarking_modality]
               }}</span>
               <span v-else class="italic">Code Not Available</span>
             </div>
 
-            <div v-else-if="post.default_aid_type_vocabulary === '4'" class="text-sm">
+            <div v-else-if="post.default_aid_type_vocabulary == '4'" class="text-sm">
               <span v-if="post.cash_and_voucher_modalities">{{
                 types.cashandVoucherModalities[post.cash_and_voucher_modalities]
               }}</span>
