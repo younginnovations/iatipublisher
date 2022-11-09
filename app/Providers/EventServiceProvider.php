@@ -33,9 +33,9 @@ class EventServiceProvider extends ServiceProvider
      * @var array<class-string, array<int, class-string>>
      */
     protected $listen = [
-        Registered::class                 => [
-            SendEmailVerificationNotification::class,
-        ],
+        // Registered::class                 => [
+        //     SendEmailVerificationNotification::class,
+        // ],
         ActivityCsvWasUploaded::class => [ActivityCsvUpload::class],
         XmlWasUploaded::class => [XmlUpload::class],
     ];

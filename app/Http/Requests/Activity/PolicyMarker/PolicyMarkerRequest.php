@@ -48,7 +48,7 @@ class PolicyMarkerRequest extends ActivityBaseRequest
             $rules[sprintf('%s.vocabulary_uri', $policyMarkerForm)] = 'nullable|url';
 
             if (Arr::get($policyMarker, 'policy_marker_vocabulary') === '99') {
-                foreach ($formFields as $narrativeIndex => $narrative) {
+                foreach (array_keys($policyMarker['narrative']) as $narrativeIndex) {
                     $rules[sprintf('%s.narrative.%s.narrative', $policyMarkerForm, $narrativeIndex)] = 'required';
                 }
             }
@@ -74,7 +74,7 @@ class PolicyMarkerRequest extends ActivityBaseRequest
                 = 'The @vocabulary-uri field must be a valid url.';
 
             if (Arr::get($policyMarker, 'policy_marker_vocabulary') === '99') {
-                foreach ($formFields as $narrativeIndex => $narrative) {
+                foreach (array_keys($policyMarker['narrative']) as $narrativeIndex) {
                     $messages[sprintf('%s.narrative.%s.narrative.required', $policyMarkerForm, $narrativeIndex)] = 'The narrative field is required when vocabulary is reporting organisation.';
                 }
             }

@@ -122,11 +122,36 @@ class ActivityObserver
      */
     public function setDefaultValues($activityElements, $activity): void
     {
+        $activityElements = $this->removeElements($activityElements);
+
         foreach ($activityElements as $key => $activityElement) {
             if (!in_array($key, getNonArrayElements(), true) && !Arr::has($activity->getDirty(), 'linked_to_iati')) {
                 $updatedData = $this->elementCompleteService->setDefaultValues($activityElement, $activity);
                 $activity->$key = $updatedData;
             }
         }
+    }
+
+    /**
+     * Removes activity fields that do not require setting default value.
+     *
+     * @param $activityElement
+     *
+     * @return array
+     */
+    public function removeElements($activityElements)
+    {
+        $ignorableElements = [
+            'updated_at',
+            'status',
+        ];
+
+        foreach (array_keys($activityElements) as $key) {
+            if (in_array($key, $ignorableElements)) {
+                unset($activityElements[$key]);
+            }
+        }
+
+        return $activityElements;
     }
 }
