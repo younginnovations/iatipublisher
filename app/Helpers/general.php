@@ -710,7 +710,7 @@ if (!function_exists('removeEmptyValues')) {
         $data = array_filter(
             $data,
             function ($value) {
-                return !empty($value);
+                return $value !== '' && $value != [];
             }
         );
     }
@@ -724,7 +724,7 @@ if (!function_exists('getNonArrayElements')) {
      */
     function getNonArrayElements(): array
     {
-        return ['activity_status', 'activity_scope', 'default_flow_type', 'default_finance_type', 'default_tied_status', 'capital_spend', 'collaboration_type', 'identifier'];
+        return ['activity_status', 'activity_scope', 'default_flow_type', 'default_finance_type', 'default_tied_status', 'capital_spend', 'collaboration_type', 'identifier', 'org_id', 'default_field_values', 'updated_at', 'created_at', 'id', 'iati_identifier', 'element_status'];
     }
 }
 

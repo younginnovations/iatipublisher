@@ -205,11 +205,12 @@ class ActivityRepository extends Repository
             'default_tied_status'  => Arr::get($mappedActivity, 'default_tied_status', null),
             'contact_info'         => $this->getActivityElement($mappedActivity, 'contact_info'),
             'related_activity'     => $this->getActivityElement($mappedActivity, 'related_activity'),
-            'default_field_values' => $defaultFieldValues[0],
+            'default_field_values' => $defaultFieldValues[0] ?? $defaultFieldValues,
+            'reporting_org'        => $this->getActivityElement($mappedActivity, 'reporting_org'),
         ];
 
         if ($activity_id) {
-            return $this->model->where('id', $activity_id)->update($data);
+            return $this->model->find($activity_id)->update($data);
         }
 
         return $this->model->create($data);
@@ -248,11 +249,15 @@ class ActivityRepository extends Repository
 
         foreach ($defaultFieldValues as $index => $value) {
             $settingsDefaultFieldValues[0]['default_currency'] = ((Arr::get((array) $value, 'default_currency')) === '')
-                ? Arr::get($settingsDefaultFieldValues, '0.default_currency') : (Arr::get((array) $value, 'default_currency'));
-            $settingsDefaultFieldValues[0]['default_language'] = ((Arr::get($value, 'default_language')) === '')
-                ? Arr::get($settingsDefaultFieldValues, '0.default_language') : Arr::get($value, 'default_language');
-            $settingsDefaultFieldValues[0]['humanitarian'] = ((Arr::get($value, 'humanitarian')) === '')
-                ? Arr::get($settingsDefaultFieldValues, '0.humanitarian') : Arr::get($value, 'default_language');
+                ? Arr::get($settingsDefaultFieldValues, '0.default_currency', null) : (Arr::get((array) $value, 'default_currency', null));
+            $settingsDefaultFieldValues[0]['default_language'] = ((Arr::get((array) $value, 'default_language')) === '')
+                ? Arr::get($settingsDefaultFieldValues, '0.default_language', null) : Arr::get((array) $value, 'default_language', null);
+            $settingsDefaultFieldValues[0]['hierarchy'] = ((Arr::get((array) $value, 'hierarchy')) === '')
+                ? Arr::get($settingsDefaultFieldValues, '0.hierarchy', null) : (Arr::get((array) $value, 'hierarchy', null));
+            $settingsDefaultFieldValues[0]['humanitarian'] = ((Arr::get((array) $value, 'humanitarian')) === '')
+                ? Arr::get($settingsDefaultFieldValues, '0.humanitarian', null) : Arr::get((array) $value, 'humanitarian', null);
+            $settingsDefaultFieldValues[0]['budget_not_provided'] = ((Arr::get((array) $value, 'budget_not_provided')) === '')
+                ? Arr::get($settingsDefaultFieldValues, '0.budget_not_provided', null) : (Arr::get((array) $value, 'budget_not_provided', null));
         }
 
         return $settingsDefaultFieldValues;
@@ -284,7 +289,7 @@ class ActivityRepository extends Repository
                 'policy_marker'        => $this->getActivityElement($activityData, 'policy_marker'),
                 'budget'               => $this->getActivityElement($activityData, 'budget'),
                 'activity_scope'       => Arr::get($this->getActivityElement($activityData, 'activity_scope'), '0', null),
-                'default_field_values' => $defaultFieldValues[0],
+                'default_field_values' => $defaultFieldValues[0] ?? $defaultFieldValues,
                 'contact_info'         => $this->getActivityElement($activityData, 'contact_info'),
                 'related_activity'     => $this->getActivityElement($activityData, 'related_activity'),
                 'other_identifier'     => $this->getActivityElement($activityData, 'other_identifier'),
@@ -300,6 +305,9 @@ class ActivityRepository extends Repository
                 'conditions'           => Arr::get($activityData, 'condition', null),
                 'legacy_data'          => $this->getActivityElement($activityData, 'legacy_data'),
                 'document_link'        => $this->getActivityElement($activityData, 'document_link'),
+                'location'             => $this->getActivityElement($activityData, 'location'),
+                'planned_disbursement' => $this->getActivityElement($activityData, 'planned_disbursement'),
+                'reporting_org'        => $this->getActivityElement($activityData, 'reporting_organization'),
             ]
         );
     }
@@ -310,13 +318,13 @@ class ActivityRepository extends Repository
      * @param       $id
      * @param array $activityData
      *
-     * @return int
+     * @return bool
      */
-    public function updateActivity($id, array $activityData): int
+    public function updateActivity($id, array $activityData): bool
     {
         $defaultFieldValues = $this->setDefaultFieldValues($activityData['default_field_values'], $activityData['organization_id']);
 
-        return $this->model->where('id', $id)->update(
+        return $this->model->find($id)->update(
             [
                 'iati_identifier'      => $activityData['identifier'],
                 'title'                => $this->getActivityElement($activityData, 'title'),
@@ -331,12 +339,12 @@ class ActivityRepository extends Repository
                 'policy_marker'        => $this->getActivityElement($activityData, 'policy_marker'),
                 'budget'               => $this->getActivityElement($activityData, 'budget'),
                 'activity_scope'       => Arr::get($this->getActivityElement($activityData, 'activity_scope'), '0', null),
-                'default_field_values' => $defaultFieldValues[0],
+                'default_field_values' => $defaultFieldValues[0] ?? $defaultFieldValues,
                 'contact_info'         => $this->getActivityElement($activityData, 'contact_info'),
                 'related_activity'     => $this->getActivityElement($activityData, 'related_activity'),
                 'other_identifier'     => $this->getActivityElement($activityData, 'other_identifier'),
                 'tag'                  => $this->getActivityElement($activityData, 'tag'),
-                'collaboration_type'   => $this->getActivityElement($activityData, 'collaboration_type'),
+                'collaboration_type'   => Arr::get($this->getActivityElement($activityData, 'collaboration_type'), '0', null),
                 'default_flow_type'    => Arr::get($this->getActivityElement($activityData, 'default_flow_type'), '0', null),
                 'default_finance_type' => Arr::get($this->getActivityElement($activityData, 'default_finance_type'), '0', null),
                 'default_tied_status'  => Arr::get($this->getActivityElement($activityData, 'default_tied_status'), '0', null),
@@ -347,6 +355,9 @@ class ActivityRepository extends Repository
                 'conditions'           => Arr::get($activityData, 'condition', null),
                 'legacy_data'          => $this->getActivityElement($activityData, 'legacy_data'),
                 'document_link'        => $this->getActivityElement($activityData, 'document_link'),
+                'location'             => $this->getActivityElement($activityData, 'location'),
+                'planned_disbursement' => $this->getActivityElement($activityData, 'planned_disbursement'),
+                'reporting_org'        => $this->getActivityElement($activityData, 'reporting_organization'),
             ]
         );
     }

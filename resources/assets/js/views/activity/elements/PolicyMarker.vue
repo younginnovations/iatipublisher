@@ -12,7 +12,7 @@
       <span v-else class="italic">Vocabulary Not Available</span>
     </div>
     <div class="text-sm">
-      <div v-if="post.policy_marker_vocabulary === '1'">
+      <div v-if="post.policy_marker_vocabulary == '1'">
         <span v-if="post.policy_marker">
           {{ types.policyMarker[post.policy_marker] }}
         </span>
@@ -25,7 +25,7 @@
     </div>
     <table class="ml-5">
       <tbody>
-        <tr v-if="post.policy_marker_vocabulary === '99'">
+        <tr v-if="post.policy_marker_vocabulary == '99'">
           <td>Vocabulary URI</td>
           <td>
             <a v-if="post.vocabulary_uri" target="_blank" :href="post.vocabulary_uri">{{

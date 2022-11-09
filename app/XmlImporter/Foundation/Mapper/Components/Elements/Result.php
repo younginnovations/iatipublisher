@@ -24,6 +24,11 @@ class Result
     protected $indicators;
 
     /**
+     * @var array
+     */
+    protected array $documentLinkTemplate;
+
+    /**
      * @param array $results
      * @param       $template
      *
@@ -31,6 +36,8 @@ class Result
      */
     public function map(array $results, $template): mixed
     {
+        $this->documentLinkTemplate = $template['result']['document_link'];
+
         foreach ($results as $index => $result) {
             $this->result[$index] = $template['result'];
             $this->result[$index]['type'] = $this->attributes($result, 'type');
@@ -52,22 +59,25 @@ class Result
      */
     protected function indicator($result, $index): array
     {
-        $indicatorAttributes = $this->filterAttributes(Arr::get($result, 'value', []), 'indicator', ['measure', 'ascending', 'aggregation_status']);
+        $indicatorAttributes = $this->filterAttributes(Arr::get($result, 'value', []), 'indicator', ['measure', 'ascending', 'aggregation-status']);
         $indicators = $this->filterValues(Arr::get($result, 'value', []), 'indicator');
         $indicatorTemplate = Arr::get($this->result[$index], 'indicator', []);
         $indicatorData = [Arr::get($indicatorTemplate, 0, [])];
 
         foreach ($indicators as $key => $indicator) {
             $indicator = $indicator['indicator'];
-            $indicatorData[$key]['measure'] = $indicatorAttributes[$key]['measure'];
-            $indicatorData[$key]['ascending'] = $indicatorAttributes[$key]['ascending'];
-            $indicatorData[$key]['aggregation_status'] = $indicatorAttributes[$key]['aggregation_status'];
-            $indicatorData[$key]['title'][0]['narrative'] = $this->value($indicator, 'title');
-            $indicatorData[$key]['description'][0]['narrative'] = $this->value($indicator, 'description');
-            $indicatorData[$key]['reference'] = $this->reference($indicator, $indicatorTemplate);
-            $indicatorData[$key]['baseline'] = $this->baseline($indicator, $indicatorTemplate, $index);
-            $indicatorData[$key]['period'] = $this->period($indicator, $indicatorTemplate, $index);
-            $indicatorData[$index]['document_link'] = $this->documentLink(['value' => $indicator], $index);
+
+            if (!empty($indicator)) {
+                $indicatorData[$key]['measure'] = $indicatorAttributes[$key]['measure'];
+                $indicatorData[$key]['ascending'] = $indicatorAttributes[$key]['ascending'];
+                $indicatorData[$key]['aggregation_status'] = $indicatorAttributes[$key]['aggregation-status'];
+                $indicatorData[$key]['title'][0]['narrative'] = $this->value($indicator, 'title');
+                $indicatorData[$key]['description'][0]['narrative'] = $this->value($indicator, 'description');
+                $indicatorData[$key]['reference'] = $this->reference($indicator, $indicatorTemplate);
+                $indicatorData[$key]['baseline'] = $this->baseline($indicator, $indicatorTemplate, $index);
+                $indicatorData[$key]['period'] = $this->period($indicator, $indicatorTemplate, $index);
+                $indicatorData[$index]['document_link'] = $this->documentLink(['value' => $indicator], $index);
+            }
         }
 
         return $indicatorData;
@@ -101,7 +111,9 @@ class Result
         $referenceData = Arr::get($resultTemplate, '0.reference');
 
         foreach ($references as $referenceIndex => $reference) {
-            $referenceData[$referenceIndex] = $reference;
+            $referenceData[$referenceIndex]['vocabulary'] = Arr::get($reference, 'vocabulary', null);
+            $referenceData[$referenceIndex]['code'] = Arr::get($reference, 'code', null);
+            $referenceData[$referenceIndex]['vocabulary_uri'] = Arr::get($reference, 'vocabulary-uri', null);
         }
 
         return $referenceData;
@@ -118,14 +130,27 @@ class Result
     {
         $baseline = Arr::get($indicatorTemplate, '0.baseline');
         $baselineAttributes = $this->filterAttributes($indicator, 'baseline', ['year', 'iso-date', 'value']);
-        $baseline[0]['year'] = Arr::get($baselineAttributes, '0.year', '');
-        $baseline[0]['date'] = Arr::get($baselineAttributes, '0.iso-date', '');
-        $baseline[0]['value'] = Arr::get($baselineAttributes, '0.value', '');
-        $baselineValues = Arr::get($this->filterValues($indicator, 'baseline'), '0.baseline');
-        $baseline[0]['comment'][0]['narrative'] = $this->value($baselineValues, 'comment');
-        $baseline[0]['document_link'] = $this->documentLink(['value' => $baselineValues], $index);
-        $baseline[0]['location'] = $this->location($baselineValues, $baseline);
-        $baseline[0]['dimension'] = $this->dimension($baselineValues, $baseline);
+
+        if (count($baselineAttributes)) {
+            foreach ($baselineAttributes as $key => $baselineAttribute) {
+                $baseline[$key] = Arr::get($indicatorTemplate, '0.baseline.0');
+                $baseline[$key]['year'] = Arr::get($baselineAttribute, 'year', '');
+                $baseline[$key]['date'] = Arr::get($baselineAttribute, 'iso-date', '');
+                $baseline[$key]['value'] = Arr::get($baselineAttribute, 'value', '');
+            }
+        }
+
+        $baselines = $this->filterValues($indicator, 'baseline');
+
+        if (count($baselines)) {
+            foreach ($baselines as $baselineKey => $baselineValue) {
+                $baselineValues = Arr::get($baselineValue, 'baseline', []);
+                $baseline[$baselineKey]['comment'][0]['narrative'] = $this->value($baselineValues, 'comment');
+                $baseline[$baselineKey]['document_link'] = $this->documentLink(['value' => $baselineValues], $index);
+                $baseline[$baselineKey]['location'] = $this->location($baselineValues, Arr::get($indicatorTemplate, '0.baseline'));
+                $baseline[$baselineKey]['dimension'] = $this->dimension($baselineValues, Arr::get($indicatorTemplate, '0.baseline'));
+            }
+        }
 
         return $baseline;
     }
@@ -142,12 +167,15 @@ class Result
         $periods = $this->filterValues($indicator, 'period');
         $periodsData = $periodsTemplate = Arr::get($indicatorTemplate, '0.period');
 
-        foreach ($periods as $index => $period) {
+        foreach ($periods as $key => $period) {
             $period = Arr::get($period, 'period', []);
-            $periodsData[$index]['period_start'][0]['date'] = Arr::get($this->filterAttributes($period, 'periodStart', ['iso-date']), '0.iso-date', '');
-            $periodsData[$index]['period_end'][0]['date'] = Arr::get($this->filterAttributes($period, 'periodEnd', ['iso-date']), '0.iso-date', '');
-            $periodsData[$index]['target'] = $this->target($period, $periodsTemplate, $index);
-            $periodsData[$index]['actual'] = $this->actual($period, $periodsTemplate, $index);
+
+            if (!empty($period)) {
+                $periodsData[$key]['period_start'][0]['date'] = Arr::get($this->filterAttributes($period, 'periodStart', ['iso-date']), '0.iso-date', '');
+                $periodsData[$key]['period_end'][0]['date'] = Arr::get($this->filterAttributes($period, 'periodEnd', ['iso-date']), '0.iso-date', '');
+                $periodsData[$key]['target'] = $this->target($period, $periodsTemplate, $index);
+                $periodsData[$key]['actual'] = $this->actual($period, $periodsTemplate, $index);
+            }
         }
 
         return $periodsData;
@@ -163,12 +191,26 @@ class Result
     protected function target($period, $periodTemplate, $index): array
     {
         $targetData = Arr::get($periodTemplate, '0.target');
-        $targetData[0]['value'] = Arr::get($this->filterAttributes($period, 'target', ['value']), '0.value', '');
-        $target = Arr::get($this->filterValues($period, 'target'), '0.target', []);
-        $targetData[0]['location'] = $this->location($target, $targetData);
-        $targetData[0]['dimension'] = $this->dimension($target, $targetData);
-        $targetData[0]['comment'] = $this->comment($target, $targetData);
-        $targetData[0]['document_link'] = $this->documentLink(['value' => $target], $index);
+        $targetDataAttributes = $this->filterAttributes($period, 'target', ['value']);
+
+        if (count($targetDataAttributes)) {
+            foreach ($targetDataAttributes as $key => $targetDataAttribute) {
+                $targetData[$key] = Arr::get($periodTemplate, '0.target.0');
+                $targetData[$key]['value'] = Arr::get($targetDataAttribute, 'value', '');
+            }
+        }
+
+        $periodTarget = $this->filterValues($period, 'target');
+
+        if (count($periodTarget)) {
+            foreach ($periodTarget as $targetKey => $targetValue) {
+                $currentTarget = Arr::get($targetValue, 'target', []);
+                $targetData[$targetKey]['location'] = $this->location($currentTarget, Arr::get($periodTemplate, '0.target'));
+                $targetData[$targetKey]['dimension'] = $this->dimension($currentTarget, Arr::get($periodTemplate, '0.target'));
+                $targetData[$targetKey]['comment'] = $this->comment($currentTarget, Arr::get($periodTemplate, '0.target'));
+                $targetData[$targetKey]['document_link'] = $this->documentLink(['value' => $currentTarget], $index);
+            }
+        }
 
         return $targetData;
     }
@@ -183,12 +225,26 @@ class Result
     protected function actual($period, $periodTemplate, $index): array
     {
         $actualData = Arr::get($periodTemplate, '0.actual');
-        $actualData[0]['value'] = Arr::get($this->filterAttributes($period, 'actual', ['value']), '0.value', '');
-        $actual = Arr::get($this->filterValues($period, 'actual'), '0.actual', []);
-        $actualData[0]['location'] = $this->location($actual, $actualData);
-        $actualData[0]['dimension'] = $this->dimension($actual, $actualData);
-        $actualData[0]['comment'] = $this->comment($actual, $actualData);
-        $actualData[0]['document_link'] = $this->documentLink(['value' => $actual], $index);
+        $actualDataAttributes = $this->filterAttributes($period, 'actual', ['value']);
+
+        if (count($actualDataAttributes)) {
+            foreach ($actualDataAttributes as $key => $actualDataAttribute) {
+                $actualData[$key] = Arr::get($periodTemplate, '0.actual.0');
+                $actualData[$key]['value'] = Arr::get($actualDataAttribute, 'value', '');
+            }
+        }
+
+        $periodActual = $this->filterValues($period, 'actual');
+
+        if (count($periodActual)) {
+            foreach ($periodActual as $actualKey => $actualValue) {
+                $currentActual = Arr::get($actualValue, 'actual', []);
+                $actualData[$actualKey]['location'] = $this->location($currentActual, Arr::get($periodTemplate, '0.actual'));
+                $actualData[$actualKey]['dimension'] = $this->dimension($currentActual, Arr::get($periodTemplate, '0.actual'));
+                $actualData[$actualKey]['comment'] = $this->comment($currentActual, Arr::get($periodTemplate, '0.actual'));
+                $actualData[$actualKey]['document_link'] = $this->documentLink(['value' => $currentActual], $index);
+            }
+        }
 
         return $actualData;
     }
@@ -258,22 +314,24 @@ class Result
     {
         $documentLinkAttributes = $this->filterAttributes(Arr::get($element, 'value', []), 'documentLink', ['format', 'url']);
         $documentLinks = $this->filterValues(Arr::get($element, 'value', []), 'documentLink');
-        $documentLinkTemplate = Arr::get($this->result[$index], 'document_link', []);
-        $documentLinkData = [Arr::get($documentLinkTemplate, 0, [])];
+        $documentLinkData = [Arr::get($this->documentLinkTemplate, 0, [])];
 
         foreach ($documentLinks as $key => $document) {
             $document = $document['documentLink'];
-            $documentLinkData[$key]['url'] = $documentLinkAttributes[$key]['url'];
-            $documentLinkData[$key]['format'] = $documentLinkAttributes[$key]['format'];
-            $documentLinkData[$key]['title'][0]['narrative'] = (($title = $this->value($document, 'title')) === '') ? $this->emptyNarrative : $title;
-            $documentLinkData[$key]['description'][0]['narrative'] = (($title = $this->value($document, 'description')) === '') ? $this->emptyNarrative : $title;
-            $documentLinkData[$key]['category'] = $this->filterAttributes($document, 'category', ['code']);
 
-            foreach ($this->filterAttributes($document, 'language', ['code']) as $language_index => $language) {
-                $documentLinkData[$key]['language'][$language_index]['language'] = $language['code'];
+            if (!empty($document)) {
+                $documentLinkData[$key]['url'] = $documentLinkAttributes[$key]['url'];
+                $documentLinkData[$key]['format'] = $documentLinkAttributes[$key]['format'];
+                $documentLinkData[$key]['title'][0]['narrative'] = (($title = $this->value($document, 'title')) === '') ? $this->emptyNarrative : $title;
+                $documentLinkData[$key]['description'][0]['narrative'] = (($title = $this->value($document, 'description')) === '') ? $this->emptyNarrative : $title;
+                $documentLinkData[$key]['category'] = $this->filterAttributes($document, 'category', ['code']);
+
+                foreach ($this->filterAttributes($document, 'language', ['code']) as $language_index => $language) {
+                    $documentLinkData[$key]['language'][$language_index]['language'] = $language['code'];
+                }
+
+                $documentLinkData[$key]['document_date'][0]['date'] = dateFormat('Y-m-d', $this->attributes(['value' => $document], 'iso-date', 'documentDate'));
             }
-
-            $documentLinkData[$key]['document_date'][0]['date'] = dateFormat('Y-m-d', $this->attributes(['value' => $document], 'iso-date', 'documentDate'));
         }
 
         return $documentLinkData;

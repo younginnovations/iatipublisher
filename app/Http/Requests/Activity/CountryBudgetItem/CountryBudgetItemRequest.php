@@ -43,10 +43,9 @@ class CountryBudgetItemRequest extends ActivityBaseRequest
     {
         $rules = [];
 
-        $code = $formFields['country_budget_vocabulary'] == 1 ? 'code' : 'code_text';
         $rules = array_merge(
             $rules,
-            $this->getBudgetItemRules($formFields['budget_item'], $code)
+            $this->getBudgetItemRules($formFields['budget_item'], 'code')
         );
 
         return $rules;
@@ -75,12 +74,11 @@ class CountryBudgetItemRequest extends ActivityBaseRequest
     /**
      * returns budget item validation rules.
      *
-     * @param $formFields
-     * @param $code
+     * @param array $formFields
      *
      * @return array
      */
-    public function getBudgetItemRules(array $formFields, $code): array
+    public function getBudgetItemRules(array $formFields): array
     {
         $rules = [];
 

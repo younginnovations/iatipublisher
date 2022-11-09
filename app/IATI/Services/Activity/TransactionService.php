@@ -6,6 +6,7 @@ namespace App\IATI\Services\Activity;
 
 use App\IATI\Elements\Builder\TransactionElementFormCreator;
 use App\IATI\Repositories\Activity\TransactionRepository;
+use App\IATI\Traits\DataSanitizeTrait;
 use App\IATI\Traits\XmlBaseElement;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
@@ -18,7 +19,7 @@ use Kris\LaravelFormBuilder\Form;
  */
 class TransactionService
 {
-    use XmlBaseElement;
+    use XmlBaseElement, DataSanitizeTrait;
 
     /**
      * @var TransactionRepository
@@ -102,7 +103,9 @@ class TransactionService
      */
     public function create(array $transactionData): Model
     {
-        return $this->transactionRepository->store($this->sanitizeTransactionData($transactionData));
+        $transactionData['transaction'] = $this->sanitizeData($transactionData['transaction']);
+
+        return $this->transactionRepository->store($transactionData);
     }
 
     /**
@@ -117,7 +120,7 @@ class TransactionService
     {
         return $this->transactionRepository->update(
             $id,
-            $this->sanitizeTransactionData(['transaction' => $transactionData])
+            $this->sanitizeData($transactionData)
         );
     }
 
@@ -201,36 +204,6 @@ class TransactionService
     }
 
     /**
-     * Function to sanitize transaction data.
-     *
-     * @param array $transactionData
-     *
-     * @return array
-     */
-    public function sanitizeTransactionData(array $transactionData): array
-    {
-        foreach ($transactionData['transaction'] as $transaction_key => $transaction) {
-            if (is_array($transaction)) {
-                $transactionData['transaction'][$transaction_key] = array_values($transaction);
-
-                foreach ($transaction as $sub_key => $sub_element) {
-                    if (is_array($sub_element)) {
-                        foreach ($sub_element as $inner_key => $inner_element) {
-                            if (is_array($inner_element)) {
-                                $transactionData['transaction'][$transaction_key][$sub_key][$inner_key] = array_values(
-                                    $inner_element
-                                );
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        return $transactionData;
-    }
-
-    /**
      * Returns data in required xml array format.
      *
      * @param $transactions
@@ -296,11 +269,11 @@ class TransactionService
             $aidType = [];
 
             if (Arr::get($transaction, 'aid_type', null)) {
-                foreach (Arr::get($transaction, 'aid_type') as $aidType) {
-                    $vocabulary = Arr::get($aidType, 'aidtype_vocabulary', null);
-                    $code = $this->getAidTypeCode($vocabulary, $aidType);
+                foreach (Arr::get($transaction, 'aid_type', []) as $transactionAidType) {
+                    $vocabulary = Arr::get($transactionAidType, 'aid_type_vocabulary', null);
+                    $code = $this->getAidTypeCode($vocabulary, $transactionAidType);
 
-                    $aidType = [
+                    $aidType[] = [
                         '@attributes' => [
                             'code'       => $code,
                             'vocabulary' => $vocabulary,

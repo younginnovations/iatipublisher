@@ -238,7 +238,7 @@ class Validation extends Factory
         $this->extend(
             'recipient_country_region_percentage_sum',
             function ($attribute, $value) {
-                return number_format($value) === 100;
+                return number_format($value) == 100;
             }
         );
 
@@ -325,14 +325,14 @@ class Validation extends Factory
                     }
                 }
 
-                if (($activityRecipientCountry === '' && $activityRecipientRegion === '')
-                    && ($transactionRecipientRegion !== '' || $transactionRecipientCountry !== '')
+                if (($activityRecipientCountry == '' && $activityRecipientRegion == '')
+                    && ($transactionRecipientRegion != '' || $transactionRecipientCountry != '')
                 ) {
                     return true;
                 }
 
-                if (($activityRecipientCountry !== '' || $activityRecipientRegion !== '')
-                    && ($transactionRecipientRegion === '' && $transactionRecipientCountry === '')
+                if (($activityRecipientCountry != '' || $activityRecipientRegion != '')
+                    && ($transactionRecipientRegion == '' && $transactionRecipientCountry == '')
                 ) {
                     return true;
                 }
@@ -472,6 +472,13 @@ class Validation extends Factory
                 $since = $parameters[0];
 
                 return $inserted >= $since;
+            }
+        );
+
+        $this->extend(
+            'period_start_end',
+            function ($attribute, $value, $parameter, $validator) {
+                return !($parameter[1] < $parameter[0]);
             }
         );
     }

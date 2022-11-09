@@ -1,14 +1,24 @@
 {
   "identifier": {
-    "activity_identifier": "",
-    "iati_identifier_text": ""
+    "activity_identifier": ""
+  },
+  "reporting_org": {
+    "ref": "",
+    "type": "",
+    "secondary_reporter": "",
+    "narrative": [
+      {
+        "narrative": "",
+        "language": ""
+      }
+    ]
   },
   "other_identifier": {
     "reference": "",
-    "type": "",
+    "reference_type": "",
     "owner_org": [
       {
-        "reference": "",
+        "ref": "",
         "narrative": [
           {
             "narrative": "",
@@ -33,9 +43,10 @@
   },
   "participating_organization": {
     "organization_role": "",
+    "ref": "",
+    "type": "",
     "identifier": "",
-    "organization_type": "",
-    "activity_id": "",
+    "crs_channel_code": "",
     "narrative": [
       {
         "narrative": "",
@@ -148,8 +159,8 @@
   },
   "default_tied_status": "",
   "budget": {
+    "budget_status": "",
     "budget_type": "",
-    "status": "",
     "period_start": [
       {
         "date": ""
@@ -160,7 +171,7 @@
         "date": ""
       }
     ],
-    "value": [
+    "budget_value": [
       {
         "amount": "",
         "currency": "",
@@ -434,7 +445,7 @@
     "provider_org": [
       {
         "ref": "",
-        "activity_id": "",
+        "provider_activity_id": "",
         "type": "",
         "narrative": [
           {
@@ -447,7 +458,7 @@
     "receiver_org": [
       {
         "ref": "",
-        "activity_id": "",
+        "receiver_activity_id": "",
         "type": "",
         "narrative": [
           {
@@ -923,13 +934,8 @@
   "default_field_values": {
     "default_currency": "",
     "default_language": "",
-    "default_hierarchy": "",
-    "linked_data_uri": "",
-    "default_collaboration_type": "",
-    "default_flow_type": "",
-    "default_finance_type": "",
-    "default_aid_type": "",
-    "default_tied_status": "",
-    "humanitarian": ""
+    "hierarchy": "",
+    "humanitarian": "",
+    "budget_not_provided": ""
   }
 }

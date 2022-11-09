@@ -105,7 +105,7 @@ class DefaultAidTypeService
 
         if (count($aidTypeArray)) {
             foreach ($aidTypeArray as $aidType) {
-                $vocabulary = Arr::get($aidType, 'default_aidtype_vocabulary', null);
+                $vocabulary = Arr::get($aidType, 'default_aid_type_vocabulary', null);
 
                 switch ($vocabulary) {
                     case '1':

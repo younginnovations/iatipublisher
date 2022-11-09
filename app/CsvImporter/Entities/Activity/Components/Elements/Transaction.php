@@ -190,9 +190,9 @@ class Transaction extends Element
             'transaction.value.*.amount'                           => 'required|numeric',
             'transaction.value.*.date'                             => 'required|date_format:Y-m-d',
             'transaction.provider_organization.*.type'             => sprintf('in:%s', $this->validCodeOrName('OrganizationType', 'Organization')),
-            'transaction.provider_organization'                    => 'only_one_among',
+//            'transaction.provider_organization'                    => 'only_one_among',
             'transaction.receiver_organization.*.type'             => sprintf('in:%s', $this->validCodeOrName('OrganizationType', 'Organization')),
-            'transaction.receiver_organization'                    => 'only_one_among',
+//            'transaction.receiver_organization'                    => 'only_one_among',
             'transaction.sector'                                   => 'check_sector',
             'transaction.recipient_country.0.country_code'         => sprintf('in:%s', $countryCode),
             'transaction.recipient_region.0.region_code'           => sprintf('in:%s', $regionCode),
@@ -256,22 +256,22 @@ class Transaction extends Element
             'transaction.value.*.date.required'                             => trans('validation.required', ['attribute' => trans('transaction element transaction_value_date')]),
             'transaction.value.*.date.date_format'                          => trans('validation.csv_date', ['attribute' => trans('transaction element transaction_value_date')]),
             'transaction.provider_organization.*.type.in'                   => trans('validation.invalid_in_transaction', ['attribute' => trans('transaction element provider_organisation_type')]),
-            'transaction.provider_organization.only_one_among'              => trans(
-                'validation.required_if',
-                [
-                    'attribute' => trans('transaction element provider_organisation_identifier'),
-                    'values'    => trans('transaction element organisation_name'),
-                    'value'     => 'absent',
-                ]
-            ),
+//            'transaction.provider_organization.only_one_among'              => trans(
+//                'validation.required_if',
+//                [
+//                    'attribute' => trans('transaction element provider_organisation_identifier'),
+//                    'values'    => trans('transaction element organisation_name'),
+//                    'value'     => 'absent',
+//                ]
+//            ),
             'transaction.receiver_organization.*.type.in'                   => trans('validation.invalid_in_transaction', ['attribute' => trans('transaction element receiver_organisation_type')]),
-            'transaction.receiver_organization.only_one_among'              => trans(
-                'validation.required_if_in_transaction',
-                [
-                    'attribute' => trans('transaction element receiver_organisation_identifier'),
-                    'values'    => trans('transaction element organisation_name'),
-                ]
-            ),
+//            'transaction.receiver_organization.only_one_among'              => trans(
+//                'validation.required_if_in_transaction',
+//                [
+//                    'attribute' => trans('transaction element receiver_organisation_identifier'),
+//                    'values'    => trans('transaction element organisation_name'),
+//                ]
+//            ),
             'transaction.sector.check_sector'                               => trans('validation.sector_validation'),
             'transaction.recipient_country.*.country_code.in'               => trans('validation.invalid_in_transaction', ['attribute' => trans('transaction element recipient_country_code')]),
             'transaction.recipient_region.*.region_code.in'                 => trans('validation.invalid_in_transaction', ['attribute' => trans('transaction element recipient_region_code')]),
