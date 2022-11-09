@@ -228,7 +228,7 @@ class ImportActivityController extends Controller
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activities.index')->withResponse(['success' => false, 'message' => 'Error has occurred while checking the status.']);
+            return redirect()->route('admin.activities.index')->withResponse(['success' => false, 'error' => 'Error has occurred while checking the status.']);
         }
     }
 
