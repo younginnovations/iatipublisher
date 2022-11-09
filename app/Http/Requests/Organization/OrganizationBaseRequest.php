@@ -243,7 +243,7 @@ class OrganizationBaseRequest extends FormRequest
 
         foreach ($formFields as $valueKey => $valueVal) {
             $valueForm = $formBase . '.value.' . $valueKey;
-            $rules[$valueForm . '.amount'] = 'nullable|numeric';
+            $rules[$valueForm . '.amount'] = 'nullable|numeric|min:0';
             $rules[$valueForm . '.value_date'] = $valueDateRule;
         }
 
@@ -266,6 +266,7 @@ class OrganizationBaseRequest extends FormRequest
             $valueForm = $formBase . '.value.' . $valueKey;
             $messages[$valueForm . '.amount.required'] = 'The amount field is required.';
             $messages[$valueForm . '.amount.numeric'] = 'The amount must be numeric.';
+            $messages[$valueForm . '.amount.min'] = 'The amount must not be in negative.';
             $messages[$valueForm . '.value_date.required'] = 'The @value-date field is required.';
             $messages[$valueForm . '.value_date.date'] = 'The @value-date must be date.';
             $messages[sprintf('%s.value_date.after', $valueForm)] = 'The @value-date field must be a between period start and period end';
@@ -436,7 +437,7 @@ class OrganizationBaseRequest extends FormRequest
         $valueDateRule = sprintf('nullable|date|after:%s|before:%s', $periodStartFormBase, $periodEndFormBase);
 
         foreach ($formField as $budgetLineIndex => $budgetLine) {
-            $rules[$formBase . '.value.' . $budgetLineIndex . '.amount'] = 'nullable|numeric';
+            $rules[$formBase . '.value.' . $budgetLineIndex . '.amount'] = 'nullable|numeric|min:0';
             $rules[$formBase . '.value.' . $budgetLineIndex . '.value_date'] = $valueDateRule;
         }
 
@@ -457,6 +458,7 @@ class OrganizationBaseRequest extends FormRequest
         foreach ($formField as $budgetLineIndex => $budgetLine) {
             $messages[sprintf('%s.value.%s.amount.required_with', $formBase, $budgetLineIndex)] = 'The amount field is required with value.';
             $messages[sprintf('%s.value.%s.amount.numeric', $formBase, $budgetLineIndex)] = 'The amount field must be a number.';
+            $messages[sprintf('%s.value.%s.amount.min', $formBase, $budgetLineIndex)] = 'The amount field must not be in negative.';
             $messages[sprintf('%s.value.%s.value_date.date', $formBase, $budgetLineIndex)] = 'The @value-date must be a date.';
             $messages[sprintf('%s.value.%s.value_date.required_with', $formBase, $budgetLineIndex)] = 'The @value-date is required with value,.';
             $messages[sprintf('%s.value.%s.value_date.after', $formBase, $budgetLineIndex)] = 'The @value-date field must be a between period start and period end';

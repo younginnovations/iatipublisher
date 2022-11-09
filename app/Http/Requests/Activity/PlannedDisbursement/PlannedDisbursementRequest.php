@@ -242,6 +242,7 @@ class PlannedDisbursementRequest extends ActivityBaseRequest
             $valueForm = sprintf('%s.value.%s', $formBase, $valueIndex);
             $messages[sprintf('%s.amount.required', $valueForm)] = 'Amount field is required';
             $messages[sprintf('%s.amount.numeric', $valueForm)] = 'Amount field must be a number';
+            $messages[sprintf('%s.amount.min', $valueForm)] = 'Amount field must not be in negative.';
             $messages[sprintf('%s.value_date.required', $valueForm)] = 'Value date is a required field';
             $messages[sprintf('%s.value_date.after', $valueForm)] = 'The @value-date field must be a between period start and period end';
             $messages[sprintf('%s.value_date.before', $valueForm)] = 'The @value-date field must be a between period start and period end';
