@@ -55,20 +55,13 @@
           <div class="inline-flex justify-end">
             <div class="actions flex grow justify-end">
               <div class="inline-flex justify-center">
-<!--                <BtnComponent-->
-<!--                  v-if="selectedActivities.length > 0"-->
-<!--                  class="mr-3.5"-->
-<!--                  type="primary"-->
-<!--                  :text="`Import (${selectedCount}/${activitiesLength})`"-->
-<!--                  icon="download-file"-->
-<!--                  @click="importActivities"-->
-<!--                />-->
                 <BtnComponent
-                    class="mr-3.5"
-                    type="primary"
-                    :text="`Import (${selectedCount}/${activitiesLength})`"
-                    icon="download-file"
-                    @click="importActivities"
+                  v-if="selectedActivities.length > 0"
+                  class="mr-3.5"
+                  type="primary"
+                  :text="`Import (${selectedCount}/${activitiesLength})`"
+                  icon="download-file"
+                  @click="importActivities"
                 />
               </div>
             </div>
