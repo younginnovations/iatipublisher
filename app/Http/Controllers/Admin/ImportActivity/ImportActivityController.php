@@ -118,7 +118,7 @@ class ImportActivityController extends Controller
                 }
             } else {
                 if ($this->importCsvService->isCsvFileEmpty($file)) {
-                    $response = ['type' => 'danger', 'code' => ['message', ['message' => trans('Data not available')]]];
+                    $response = ['success' => false, 'type' => 'danger', 'code' => ['message', ['message' => trans('Data not available')]], 'error' => trans('Data not available')];
 
                     return response()->json($response);
                 }
