@@ -8,7 +8,6 @@ use App\IATI\Elements\Builder\ParentCollectionFormCreator;
 use App\IATI\Models\Activity\Activity;
 use App\IATI\Repositories\Activity\ActivityRepository;
 use App\IATI\Traits\XmlBaseElement;
-use Illuminate\Database\Eloquent\Model;
 use Kris\LaravelFormBuilder\Form;
 
 /**
@@ -22,6 +21,11 @@ class ReportingOrgService
      * @var ActivityRepository
      */
     protected ActivityRepository $activityRepository;
+
+    /**
+     * @var ParentCollectionFormCreator
+     */
+    protected ParentCollectionFormCreator $parentCollectionFormCreator;
 
     /**
      * ReportingOrgService constructor.
@@ -38,7 +42,7 @@ class ReportingOrgService
     /**
      * Returns reporting org data of an Activity.
      *
-     * @param int $Activity_id
+     * @param int $activity_id
      *
      * @return array|null
      */
@@ -52,9 +56,9 @@ class ReportingOrgService
      *
      * @param $id
      *
-     * @return Model
+     * @return object|null
      */
-    public function getActivityData($id): Model
+    public function getActivityData($id): ?object
     {
         return $this->activityRepository->find($id);
     }
@@ -84,10 +88,11 @@ class ReportingOrgService
      * @param $id
      *
      * @return Form
+     * @throws \JsonException
      */
     public function formGenerator($id): Form
     {
-        $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true);
+        $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true, 512, JSON_THROW_ON_ERROR);
         $model['reporting_org'] = $this->getReportingOrgData($id) ?? [];
         $this->parentCollectionFormCreator->url = route('admin.activity.reporting-org.update', [$id]);
 
@@ -97,7 +102,7 @@ class ReportingOrgService
     /**
      * Generates xml data for reporting org.
      *
-     * @param Activity $Activity
+     * @param Activity $activity
      *
      * @return array
      */
