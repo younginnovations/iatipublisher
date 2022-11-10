@@ -6,7 +6,9 @@
         <p class="mt-2 mb-4 text-sm text-n-50">
           {{ props.text }}
         </p>
-        <a class="read__more" href="#">{{ props.btnText }}</a>
+        <a class="read__more" :href="`${props.btnLink}`">
+          {{ props.btnText }}
+        </a>
       </div>
     </div>
   </div>
@@ -28,6 +30,9 @@ export default defineComponent({
     btnText: {
       type: String,
       required: true,
+    },
+    btnLink: {
+      type: String,
     },
   },
   setup(props) {

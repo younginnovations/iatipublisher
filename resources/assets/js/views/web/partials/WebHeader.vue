@@ -19,6 +19,7 @@
                   name="About"
                   text="IATI Publisher helps small and medium-sized organisations publish IATI data on development and humanitarian financing and activities"
                   btn-text="Learn more"
+                  btn-link="/about"
                 />
               </li>
               <li class="nav__links active dropdown">
@@ -27,6 +28,7 @@
                   name="Publishing checklist"
                   text="New to IATI? Use our checklist to track each step required for your organisation to successfully publish IATI data"
                   btn-text="Read more"
+                  btn-link="/publishing-checklist"
                 />
               </li>
               <li class="nav__links active dropdown relative">
@@ -36,6 +38,7 @@
                   text="The IATI Standard provides information and guidance on all the data fields that
                         your organisation can publish IATI data on"
                   btn-text="See all data fields"
+                  btn-link="/iati-standard"
                 />
               </li>
               <li class="nav__links active dropdown">
@@ -44,6 +47,7 @@
                   name="Support"
                   text=" Any questions? Get help to publish your organisation’s data"
                   btn-text="Read more"
+                  btn-link="/support"
                 />
               </li>
               <li class="absolute bottom-4 left-0 right-0 xl:hidden">
@@ -108,7 +112,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { defineProps } from 'vue';
+import { defineProps, onMounted } from 'vue';
 import NavDropdown from '../../../components/NavDropdown.vue';
 
 export default defineComponent({

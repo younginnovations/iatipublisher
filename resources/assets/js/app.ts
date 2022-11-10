@@ -13,6 +13,7 @@ import RegisterPage from './views/web/RegisterPage.vue';
 import AboutPage from './views/web/AboutPage.vue';
 import SupportPage from './views/web/SupportPage.vue';
 import IatiStandard from './views/web/IatiStandard.vue';
+import PublishingChecklist from './views/web/PublishingChecklist.vue';
 
 /**
  * Vue components for Activities Listing
@@ -86,7 +87,8 @@ app
 app
   .component('AboutPage', AboutPage)
   .component('SupportPage', SupportPage)
-  .component('IatiStandard', IatiStandard);
+  .component('IatiStandard', IatiStandard)
+  .component('PublishingChecklist', PublishingChecklist);
 
 /**
  * Registering vue component for activity listing
