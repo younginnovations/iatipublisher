@@ -556,6 +556,21 @@ class ElementCompleteService
     }
 
     /**
+     * Returns reporting org element complete status.
+     *
+     * @param $activity
+     *
+     * @return bool
+     * @throws \JsonException
+     */
+    public function isReportingOrgElementCompleted($activity): bool
+    {
+        $this->element = 'reporting_org';
+
+        return $this->isLevelOneMultiDimensionElementCompleted($activity->reporting_org);
+    }
+
+    /**
      * Returns description element complete status.
      *
      * @param $activity
@@ -1229,7 +1244,7 @@ class ElementCompleteService
                     $this->tempAmount = $datum;
                 }
 
-                if ($key === 'language' && empty($datum) && !empty($this->tempNarrative)) {
+                if ($key === 'language' && empty($datum) && !empty($this->tempNarrative) && !is_array($this->tempNarrative)) {
                     $data['language'] = Arr::get($activity->default_field_values, 'default_language', null);
                 }
 

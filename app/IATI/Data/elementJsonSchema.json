@@ -42,7 +42,7 @@
   "reporting_org": {
     "name": "reporting_org",
     "label": "reporting org",
-    "add_more": "true",
+    "add_more": false,
     "help_text": "This is your IATI Organisation Identifier (it is the unique ID that was generated for your organisation when you registered).<a target='_blank' href='https://iatistandard.org/en/guidance/publishing-data/registering-and-managing-your-organisation-account/how-to-create-your-iati-organisation-identifier/'>For more information.</a>",
     "hover_text": "The organisation issuing the report. May be a primary source (reporting on its own activity as donor, implementing agency, etc) or a secondary source (reporting on the activities of another organisation). <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/reporting-org/'>For more information</a>",
     "attributes": {
@@ -2249,8 +2249,8 @@
         "hover_text": "The exact date of the planned disbursement OR the starting date of the period in which this specific disbursement will be made.<br> <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/planned-disbursement/period-start/'>For more information</a>",
         "attributes": {
           "iso_date": {
-            "name": "iso_date",
-            "label": "date",
+            "name": "date",
+            "label": "iso_date",
             "type": "date",
             "placeholder": "YYYY-MM-DD",
             "required": true,
@@ -2268,8 +2268,8 @@
         "hover_text": "The ending date for the period in which this specific disbursement will be made.<br> <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/planned-disbursement/period-end/'>For more information</a>",
         "attributes": {
           "iso_date": {
-            "name": "iso_date",
-            "label": "date",
+            "name": "date",
+            "label": "iso_date",
             "type": "date",
             "placeholder": "YYYY-MM-DD",
             "required": true,
@@ -3662,7 +3662,7 @@
         "attributes": {
           "date": {
             "name": "date",
-            "label": "date",
+            "label": "iso date",
             "type": "date",
             "placeholder": "YYYY-MM-DD",
             "required": true,

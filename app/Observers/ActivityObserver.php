@@ -61,9 +61,7 @@ class ActivityObserver
         $updatedElements = ($isNew) ? $this->getUpdatedElement($model->getAttributes()) : $this->getUpdatedElement($model->getChanges());
 
         foreach ($updatedElements as $attribute => $value) {
-            if ($attribute !== 'reporting_org') {
-                $elementStatus[$attribute] = call_user_func([$this->elementCompleteService, dashesToCamelCase('is_' . $attribute . '_element_completed')], $model);
-            }
+            $elementStatus[$attribute] = call_user_func([$this->elementCompleteService, dashesToCamelCase('is_' . $attribute . '_element_completed')], $model);
         }
 
         $model->element_status = $elementStatus;
@@ -124,11 +122,36 @@ class ActivityObserver
      */
     public function setDefaultValues($activityElements, $activity): void
     {
+        $activityElements = $this->removeElements($activityElements);
+
         foreach ($activityElements as $key => $activityElement) {
             if (!in_array($key, getNonArrayElements(), true) && !Arr::has($activity->getDirty(), 'linked_to_iati')) {
                 $updatedData = $this->elementCompleteService->setDefaultValues($activityElement, $activity);
                 $activity->$key = $updatedData;
             }
         }
+    }
+
+    /**
+     * Removes activity fields that do not require setting default value.
+     *
+     * @param $activityElement
+     *
+     * @return array
+     */
+    public function removeElements($activityElements)
+    {
+        $ignorableElements = [
+            'updated_at',
+            'status',
+        ];
+
+        foreach (array_keys($activityElements) as $key) {
+            if (in_array($key, $ignorableElements)) {
+                unset($activityElements[$key]);
+            }
+        }
+
+        return $activityElements;
     }
 }

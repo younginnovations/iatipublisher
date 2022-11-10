@@ -32,10 +32,7 @@
           'bg-[#FFF1F0]': !publishStateChange.alertState,
         }"
       >
-        <div
-          class="text-sm leading-normal"
-          v-html="publishStateChange.description"
-        ></div>
+        <div class="text-sm leading-normal" v-html="publishStateChange.description"></div>
       </div>
     </div>
     <div class="flex justify-end">
@@ -118,28 +115,24 @@
       </div>
     </div>
   </Modal>
-  <Loader
-    v-if="loader"
-    :text="loaderText"
-    :class="{ 'animate-loader': loader }"
-  />
+  <Loader v-if="loader" :text="loaderText" :class="{ 'animate-loader': loader }" />
 </template>
 
 <script setup lang="ts">
-import { defineProps, reactive, ref, toRefs, computed, inject } from 'vue';
-import { useToggle } from '@vueuse/core';
-import axios from 'axios';
+import { defineProps, reactive, ref, toRefs, computed, inject } from "vue";
+import { useToggle } from "@vueuse/core";
+import axios from "axios";
 
 //component
-import BtnComponent from 'Components/ButtonComponent.vue';
-import Modal from 'Components/PopupModal.vue';
-import Loader from 'Components/sections/ProgressLoader.vue';
+import BtnComponent from "Components/ButtonComponent.vue";
+import Modal from "Components/PopupModal.vue";
+import Loader from "Components/sections/ProgressLoader.vue";
 
 // Vuex Store
-import { detailStore } from 'Store/activities/show';
+import { detailStore } from "Store/activities/show";
 
 const props = defineProps({
-  type: { type: String, default: 'primary' },
+  type: { type: String, default: "primary" },
   linkedToIati: { type: Boolean, required: true },
   status: { type: String, required: true },
   coreCompleted: { type: Boolean, required: true },
@@ -172,7 +165,7 @@ const loader = ref(false);
 const coreElementStatus = coreCompleted.value;
 
 // Dynamic text for loader
-const loaderText = ref('Please Wait');
+const loaderText = ref("Please Wait");
 
 // reset step to zero after closing modal
 const resetPublishStep = () => {
@@ -183,26 +176,26 @@ const resetPublishStep = () => {
 // computed function to change content of modal
 const publishStateChange = computed(() => {
   const publishState = reactive({
-    title: '',
-    description: '',
-    icon: '',
+    title: "",
+    description: "",
+    icon: "",
     alertState: true,
   });
 
-  let title = '',
-    description = '',
-    icon = 'tick';
+  let title = "",
+    description = "",
+    icon = "tick";
 
   // different content for step 1 based on coreElement status
   if (coreElementStatus) {
-    title = 'Core Elements Complete';
+    title = "Core Elements Complete";
     description =
-      'Congratulations! All the core elements are complete. Continue to Validate this activity.';
+      "Congratulations! All the core elements are complete. Continue to Validate this activity.";
   } else {
-    title = 'Core Elements not complete';
+    title = "Core Elements not complete";
     description =
-      '<p>There is missing data in some of the core elements. We highly recommend that you complete these data fields to help ensure your data is useful.</p><p>Do you want to continue anyway and run checks on (validate) this data.</p>';
-    icon = 'warning-fill';
+      "<p>There is missing data in some of the core elements. We highly recommend that you complete these data fields to help ensure your data is useful.</p><p>Do you want to continue anyway and run checks on (validate) this data.</p>";
+    icon = "warning-fill";
   }
 
   switch (publishStep.value) {
@@ -274,18 +267,18 @@ let err: Err = reactive({
 
 const validatorFunction = () => {
   loader.value = true;
-  loaderText.value = 'Validating Activity';
+  loaderText.value = "Validating Activity";
 
   axios.post(`/activity/${id}/validateActivity`).then((res) => {
     const response = res.data;
     const errors = response.errors;
 
-    if(response.success === false){
-      location.reload()
+    if (response.success === false) {
+      location.reload();
     }
 
     if (errors.length > 0) {
-      store.dispatch('updatePublishErrors', errors);
+      store.dispatch("updatePublishErrors", errors);
 
       //identify error types
       const crit = response.summary.critical;
@@ -301,6 +294,7 @@ const validatorFunction = () => {
     } else {
       publishStep.value = 2;
     }
+
     setTimeout(() => {
       loader.value = false;
     }, 2000);
@@ -313,19 +307,19 @@ interface ToastMessageTypeface {
   type: boolean;
 }
 
-const toastMessage = inject('toastMessage') as ToastMessageTypeface;
+const toastMessage = inject("toastMessage") as ToastMessageTypeface;
 
 const publishFunction = () => {
   loader.value = true;
-  loaderText.value = 'Publishing Activity';
+  loaderText.value = "Publishing Activity";
   resetPublishStep();
 
   axios.post(`/activity/${id}/publish`).then((res) => {
     const response = res.data;
     toastMessage.message = response.message;
     // toastMessage.type = response.success;
-    store.dispatch('updateUnPublished', response.success);
-    store.dispatch('updateShowPublished', !response.success);
+    store.dispatch("updateUnPublished", response.success);
+    store.dispatch("updateShowPublished", !response.success);
     setTimeout(() => {
       location.reload();
     }, 1000);
@@ -340,15 +334,12 @@ const publishStatus = reactive({
 });
 
 const btnText = computed(() => {
-  if (publishStatus.linked_to_iati && publishStatus.status === 'draft') {
-    return 'Republish';
-  } else if (
-    !publishStatus.linked_to_iati &&
-    publishStatus.status === 'draft'
-  ) {
-    return 'Publish';
+  if (publishStatus.linked_to_iati && publishStatus.status === "draft") {
+    return "Republish";
+  } else if (!publishStatus.linked_to_iati && publishStatus.status === "draft") {
+    return "Publish";
   } else {
-    return '';
+    return "";
   }
 });
 </script>

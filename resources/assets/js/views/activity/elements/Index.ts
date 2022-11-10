@@ -19,3 +19,4 @@ export { default as PolicyMarker } from './PolicyMarker.vue';
 export { default as Tag } from './Tag.vue';
 export { default as HumanitarianScope } from './HumanitarianScope.vue';
 export { default as PlannedDisbursement } from './PlannedDisbursement.vue';
+export { default as ReportingOrganization } from './ReportingOrganization.vue';

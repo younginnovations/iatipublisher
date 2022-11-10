@@ -81,6 +81,10 @@
         <TitleElement :data="data" />
       </template>
 
+      <template v-else-if="title === 'reporting_org'">
+        <ReportingOrganization :data="data" />
+      </template>
+
       <template v-else-if="title === 'description'">
         <Description :data="data.content" />
       </template>
@@ -519,6 +523,7 @@ import {
   Tag,
   HumanitarianScope,
   PlannedDisbursement,
+  ReportingOrganization,
 } from "Activity/elements/Index";
 
 import Btn from "Components/buttons/Link.vue";

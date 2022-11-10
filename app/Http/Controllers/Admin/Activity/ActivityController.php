@@ -171,11 +171,10 @@ class ActivityController extends Controller
                 'iati_identifier_text' => $activity->organization->identifier . '-' . $activity->iati_identifier['activity_identifier'],
             ];
             $iatiValidatorResponse = $validatorResponse->response ?? null;
-            $hasReportingOrgData = $this->organizationService->hasReportingOrgData(Auth::user()->organization_id);
 
             return view(
                 'admin.activity.show',
-                compact('elements', 'elementGroups', 'progress', 'activity', 'toast', 'types', 'status', 'results', 'hasIndicatorPeriod', 'transactions', 'coreCompleted', 'iatiValidatorResponse', 'organization_identifier', 'hasReportingOrgData')
+                compact('elements', 'elementGroups', 'progress', 'activity', 'toast', 'types', 'status', 'results', 'hasIndicatorPeriod', 'transactions', 'coreCompleted', 'iatiValidatorResponse', 'organization_identifier')
             );
         } catch (Exception $e) {
             logger()->error($e->getMessage());

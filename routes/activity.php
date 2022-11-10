@@ -28,6 +28,7 @@ use App\Http\Controllers\Admin\Activity\PolicyMarkerController;
 use App\Http\Controllers\Admin\Activity\RecipientCountryController;
 use App\Http\Controllers\Admin\Activity\RecipientRegionController;
 use App\Http\Controllers\Admin\Activity\RelatedActivityController;
+use App\Http\Controllers\Admin\Activity\ReportingOrgController;
 use App\Http\Controllers\Admin\Activity\ResultController;
 use App\Http\Controllers\Admin\Activity\ScopeController;
 use App\Http\Controllers\Admin\Activity\SectorController;
@@ -114,6 +115,8 @@ Route::group([], static function () {
     Route::put('activity/{id}/planned_disbursement', [PlannedDisbursementController::class, 'update'])->name('activity.planned-disbursement.update');
     Route::get('activity/{id}/budget', [BudgetController::class, 'edit'])->name('activity.budget.edit');
     Route::put('activity/{id}/budget', [BudgetController::class, 'update'])->name('activity.budget.update');
+    Route::get('activity/{id}/reporting_org', [ReportingOrgController::class, 'edit'])->name('activity.reporting-org.edit');
+    Route::put('activity/{id}/reporting_org', [ReportingOrgController::class, 'update'])->name('activity.reporting-org.update');
 
     Route::resource('activity.transaction', TransactionController::class)->parameters(['activity' => 'id', 'transaction' => 'transactionId']);
     Route::get('/activity/{id}/transactions/page/{page?}', [App\Http\Controllers\Admin\Activity\TransactionController::class, 'getPaginatedTransactions'])->name('activity.transactions.paginate');

@@ -59,6 +59,7 @@ class Activity extends Model
         'default_field_values',
         'is_published',
         'tag',
+        'reporting_org',
         'element_status',
         'reporting_org',
     ];
@@ -96,6 +97,7 @@ class Activity extends Model
         'conditions'           => 'json',
         'default_field_values' => 'json',
         'tag'                  => 'json',
+        'reporting_org'        => 'json',
         'element_status'       => 'json',
         'reporting_org'       => 'json',
     ];
