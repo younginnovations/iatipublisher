@@ -5,13 +5,25 @@ declare(strict_types=1);
 namespace App\Http\Requests\Activity\Budget;
 
 use App\Http\Requests\Activity\ActivityBaseRequest;
+use App\IATI\Services\Activity\ActivityService;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Validator;
 
 /**
  * Class BudgetRequest.
  */
 class BudgetRequest extends ActivityBaseRequest
 {
+    /**
+     * @var array
+     */
+    protected array $identicalIds = [];
+
+    /**
+     * @var array
+     */
+    protected array $revisedIds = [];
+
     /**
      * Get the validation rules that apply to the request.
      *
@@ -42,6 +54,34 @@ class BudgetRequest extends ActivityBaseRequest
     protected function getRulesForBudget(array $formFields): array
     {
         $rules = [];
+        $activityService = app()->make(ActivityService::class);
+        $formFields = $activityService->setBudgets($formFields);
+        $this->identicalIds = $activityService->checkSameMultipleBudgets($formFields);
+        $this->revisedIds = $activityService->checkRevisedBudgets($formFields);
+
+        if (count($this->identicalIds)) {
+            Validator::extend('budgets_identical', function () {
+                return false;
+            });
+
+            foreach ($this->identicalIds as $ids) {
+                foreach ($ids as $id) {
+                    $rules['budget.' . $id . '.budget_status'][] = 'budgets_identical';
+                }
+            }
+        }
+
+        if (count($this->revisedIds)) {
+            Validator::extend('budget_revised_invalid', function () {
+                return false;
+            });
+
+            foreach ($this->revisedIds as $ids) {
+                foreach ($ids as $id) {
+                    $rules['budget.' . $id . '.budget_status'][] = 'budget_revised_invalid';
+                }
+            }
+        }
 
         foreach ($formFields as $budgetIndex => $budget) {
             $diff = 0;
@@ -164,6 +204,22 @@ class BudgetRequest extends ActivityBaseRequest
     {
         $messages = [];
 
+        if (count($this->identicalIds)) {
+            foreach ($this->identicalIds as $ids) {
+                foreach ($ids as $id) {
+                    $messages['budget.' . $id . '.budget_status.budgets_identical'] = 'Budget elements at position ' . $this->getIdenticalIds($ids) . ' have same status, type, period start and period end.';
+                }
+            }
+        }
+
+        if (count($this->revisedIds)) {
+            foreach ($this->revisedIds as $ids) {
+                foreach ($ids as $id) {
+                    $messages['budget.' . $id . '.budget_status.budget_revised_invalid'] = 'Budget with type revised must have period start and end same to that of one of the budgets having same status and type original for budgets elements at position ' . $this->getIdenticalIds($ids);
+                }
+            }
+        }
+
         foreach ($formFields as $budgetIndex => $budget) {
             $budgetForm = sprintf('budget.%s', $budgetIndex);
             $periodStartMessages = $this->getMessagesForPeriodStart($budget['period_start'], $budgetForm);
@@ -255,5 +311,21 @@ class BudgetRequest extends ActivityBaseRequest
         }
 
         return $messages;
+    }
+
+    /**
+     * Implodes identical ids and returns them.
+     *
+     * @param $ids
+     *
+     * @return string
+     */
+    public function getIdenticalIds($ids): string
+    {
+        foreach ($ids as $key => $id) {
+            $ids[$key] = $id + 1;
+        }
+
+        return implode(', ', $ids);
     }
 }

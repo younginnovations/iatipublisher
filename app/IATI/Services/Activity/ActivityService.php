@@ -9,6 +9,7 @@ use App\IATI\Repositories\Activity\ActivityRepository;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 
 /**
@@ -34,18 +35,30 @@ class ActivityService
     /**
      * Returns all activities present in database.
      *
-     * @param int   $page
+     * @param int $page
      * @param array $queryParams
      *
      * @return Collection|LengthAwarePaginator
      */
     public function getPaginatedActivities(int $page, array $queryParams): Collection|LengthAwarePaginator
     {
-        $activities = $this->activityRepository->getActivityForOrganization(Auth::user()->organization_id, $queryParams, $page);
+        $activities = $this->activityRepository->getActivityForOrganization(
+            Auth::user()->organization_id,
+            $queryParams,
+            $page
+        );
 
         foreach ($activities as $idx => $activity) {
             $activities[$idx]['default_title_narrative'] = $activity->default_title_narrative;
-            $activity->setAttribute('coreCompleted', isCoreElementCompleted(array_merge(['reporting_org' => $activity->organization->reporting_org_element_completed], $activity->element_status)));
+            $activity->setAttribute(
+                'coreCompleted',
+                isCoreElementCompleted(
+                    array_merge(
+                        ['reporting_org' => $activity->organization->reporting_org_element_completed],
+                        $activity->element_status
+                    )
+                )
+            );
         }
 
         return $activities;
@@ -168,7 +181,10 @@ class ActivityService
         $completed_core_element_count = 0;
 
         foreach ($core_elements as $core_element) {
-            if (array_key_exists($core_element, $activity->element_status) && $activity->element_status[$core_element]) {
+            if (array_key_exists(
+                $core_element,
+                $activity->element_status
+            ) && $activity->element_status[$core_element]) {
                 $completed_core_element_count++;
             }
         }
@@ -277,7 +293,10 @@ class ActivityService
 
         if (!empty($transactions)) {
             foreach ($transactions as $transaction) {
-                if (!empty($transaction['transaction']) && (array_key_exists('recipient_country', $transaction['transaction']) && !empty($transaction['transaction']['recipient_country']))) {
+                if (!empty($transaction['transaction']) && (array_key_exists(
+                    'recipient_country',
+                    $transaction['transaction']
+                ) && !empty($transaction['transaction']['recipient_country']))) {
                     return true;
                 }
             }
@@ -292,7 +311,10 @@ class ActivityService
 
         if (!empty($transactions)) {
             foreach ($transactions as $transaction) {
-                if (!empty($transaction['transaction']) && (array_key_exists('recipient_region', $transaction['transaction']) && !empty($transaction['transaction']['recipient_region']))) {
+                if (!empty($transaction['transaction']) && (array_key_exists(
+                    'recipient_region',
+                    $transaction['transaction']
+                ) && !empty($transaction['transaction']['recipient_region']))) {
                     return true;
                 }
             }
@@ -307,12 +329,150 @@ class ActivityService
 
         if (!empty($transactions)) {
             foreach ($transactions as $transaction) {
-                if (!empty($transaction['transaction']) && (array_key_exists('sector', $transaction['transaction']) && !empty($transaction['transaction']['sector']))) {
+                if (!empty($transaction['transaction']) && (array_key_exists(
+                    'sector',
+                    $transaction['transaction']
+                ) && !empty($transaction['transaction']['sector']))) {
                     return true;
                 }
             }
         }
 
         return false;
+    }
+
+    /**
+     * Checks if any budgets have same type, status, period start and period end.
+     *
+     * @param $budgets
+     *
+     * @return array
+     */
+    public function checkSameMultipleBudgets($budgets): array
+    {
+        $array = [];
+        $ids = [];
+
+        if (count($budgets)) {
+            foreach ($budgets as $key => $budget) {
+                if (!array_key_exists(Arr::get($budget, 'budget_type', '1'), $array)) {
+                    $array[Arr::get($budget, 'budget_type', '1')] = [
+                        'id'            => $key,
+                        'budget_status' => Arr::get($budget, 'budget_status', '1'),
+                        'period_start'  => Arr::get($budget, 'period_start.0.date', ''),
+                        'period_end'    => Arr::get($budget, 'period_end.0.date', ''),
+                    ];
+                } elseif (Arr::get($budget, 'budget_status', '1') === Arr::get(
+                    $array,
+                    Arr::get($budget, 'budget_type', '1') . '.budget_status',
+                    '1'
+                ) &&
+                    Arr::get($budget, 'period_start.0.date', '') === Arr::get(
+                        $array,
+                        Arr::get($budget, 'budget_type', '1') . '.period_start',
+                        ''
+                    ) &&
+                    Arr::get($budget, 'period_end.0.date', '') === Arr::get(
+                        $array,
+                        Arr::get($budget, 'budget_type', '1') . '.period_end',
+                        ''
+                    )
+                ) {
+                    if (empty($ids) ||
+                        !in_array(Arr::get($array, Arr::get($budget, 'budget_type', '1') . '.id'), $ids[Arr::get($budget, 'budget_type', '1')], true)
+                    ) {
+                        $ids[Arr::get($budget, 'budget_type', '1')][] = Arr::get(
+                            $array,
+                            Arr::get($budget, 'budget_type', '1') . '.id'
+                        );
+                    }
+
+                    $ids[Arr::get($budget, 'budget_type', '1')][] = $key;
+                }
+            }
+        }
+
+        return $ids;
+    }
+
+    /**
+     * Sets default values for budget status and type if not provided.
+     * @param $budgets
+     *
+     * @return array
+     */
+    public function setBudgets($budgets): array
+    {
+        if (count($budgets)) {
+            foreach ($budgets as $key => $budget) {
+                $budgets[$key]['budget_status'] = !empty(Arr::get($budget, 'budget_status', '1')) ? Arr::get(
+                    $budget,
+                    'budget_status',
+                    '1'
+                ) : '1';
+                $budgets[$key]['budget_type'] = !empty(Arr::get($budget, 'budget_type', '1')) ? Arr::get(
+                    $budget,
+                    'budget_type',
+                    '1'
+                ) : '1';
+            }
+        }
+
+        return $budgets;
+    }
+
+    /**
+     * Checks if revised budgets are valid.
+     *
+     * @param $budgets
+     *
+     * @return array
+     *
+     * @throws \JsonException
+     */
+    public function checkRevisedBudgets($budgets): array
+    {
+        $ids = [];
+        $originalBudgets = [];
+
+        foreach (getCodeList('BudgetStatus', 'Activity', false) as $statusKey => $budgetStatus) {
+            $originalBudgets[$statusKey] = [];
+        }
+
+        if (count($budgets)) {
+            foreach ($budgets as $key => $budget) {
+                if (Arr::get($budget, 'budget_type', '1') === '1') {
+                    $originalBudgets[Arr::get($budget, 'budget_status', '1')][] = [
+                        'id'           => $key,
+                        'period_start' => Arr::get($budget, 'period_start.0.date', ''),
+                        'period_end'   => Arr::get($budget, 'period_end.0.date', ''),
+                    ];
+                }
+            }
+
+            foreach ($budgets as $key => $budget) {
+                if ((Arr::get($budget, 'budget_type', '1') === '2') && !empty($originalBudgets[Arr::get($budget, 'budget_status', '1')])) {
+                    $valid = false;
+
+                    foreach ($originalBudgets[Arr::get($budget, 'budget_status', '1')] as $originalBudget) {
+                        if ($originalBudget['period_start'] === Arr::get($budget, 'period_start.0.date', '') &&
+                            $originalBudget['period_end'] === Arr::get($budget, 'period_end.0.date', '')
+                        ) {
+                            $valid = true;
+                        }
+                    }
+
+                    if (!$valid) {
+                        $ids[Arr::get($budget, 'budget_status', '1')][] = $key;
+
+                        foreach ($originalBudgets[Arr::get($budget, 'budget_status', '1')] as $originalBudget) {
+                            $ids[Arr::get($budget, 'budget_status', '1')][] = $originalBudget['id'];
+                        }
+                    }
+                }
+            }
+        }
+
+        return $ids;
     }
 }
