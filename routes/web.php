@@ -27,6 +27,10 @@ Route::middleware(RedirectIfAuthenticated::class)->name('web.')->group(function 
     Route::post('/password/email', [App\Http\Controllers\Auth\ForgotPasswordController::class, 'sendResetLinkEmail'])->name('password.email.post');
     Route::get('/password/confirm', [App\Http\Controllers\Auth\ForgotPasswordController::class, 'showEmailSentMessage'])->name('password.confirm');
     Route::post('/reset', [App\Http\Controllers\Auth\ResetPasswordController::class, 'reset'])->name('reset');
+    Route::get('/about', [App\Http\Controllers\Web\WebController::class, 'about'])->name('about');
+    Route::get('/publishing-checklist', [App\Http\Controllers\Web\WebController::class, 'publishing_checklist'])->name('publishingchecklist');
+    Route::get('/iati-standerd', [App\Http\Controllers\Web\WebController::class, 'iati_standerd'])->name('iatistanderd');
+    Route::get('/support', [App\Http\Controllers\Web\WebController::class, 'support'])->name('support');
 });
 
 Route::middleware(RedirectIfAuthenticated::class)->get('password/reset/{token}', [App\Http\Controllers\Auth\ResetPasswordController::class, 'showResetForm'])->name('password.reset');
