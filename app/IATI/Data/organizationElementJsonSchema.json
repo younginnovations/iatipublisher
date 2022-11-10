@@ -90,8 +90,8 @@
   "reporting_org": {
     "name": "reporting_org",
     "label": "reporting organisation",
-    "hover_text": "The organisation issuing the report. May be a primary source (reporting on its own activity as donor, implementing agency, etc) or a secondary source (reporting on the activities of another organisation).<br> <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/reporting-org/'>For more information</a>",
-    "help_text": "You need to specify which organisation is publishing the file, and which organisation the data is about. In most cases, the publishing organisation is publishing data about itself.<br> <a target='_blank' href='https://iatistandard.org/en/guidance/standard-guidance/activity-participants/'>Further guidance</a>",
+    "hover_text": "The organisation issuing the report. May be a primary source (reporting on its own activity as donor, implementing agency, etc) or a secondary source (reporting on the activities of another organisation).<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/reporting-org/'>For more information</a>",
+    "help_text": "You need to specify which organisation is publishing the file, and which organisation the data is about. In most cases, the publishing organisation is publishing data about itself.<a target='_blank' href='https://iatistandard.org/en/guidance/standard-guidance/activity-participants/'>Further guidance</a>",
     "add_more": false,
     "attributes": {
       "ref": {
@@ -113,8 +113,8 @@
         "placeholder": "Select type",
         "required": true,
         "criteria": "mandatory",
-        "hover_text": "The type of organisation issuing the report.<br> <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/reporting-org/'>For more information</a>",
-        "help_text": "Select the type that best describes the organisation publishing the data. <br><a target='_blank' href='https://iatistandard.org/en/iati-standard/203/codelists/organisationtype/'>Information on all organisation types.</a>"
+        "hover_text": "The type of organisation issuing the report.<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/reporting-org/'>For more information</a>",
+        "help_text": "Select the type that best describes the organisation publishing the data.<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/codelists/organisationtype/'>Information on all organisation types.</a>"
       },
       "secondary_reporter": {
         "name": "secondary_reporter",
@@ -127,8 +127,8 @@
         "placeholder": "Select secondary-reporter",
         "required": false,
         "criteria": "",
-        "hover_text": "A flag indicating that the reporting organisation of this activity is acting as a secondary reporter. A secondary reporter is one that reproduces data on the activities of an organisation for which it is not directly responsible.<br> <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/reporting-org/'>For more information</a>",
-        "help_text": "Are you reproducing the data reported by another organisation? If so, your organisation is a ‘secondary reporter’ and you should select '<b>Yes</b>’. If you are reporting your own organisation’s data, select ‘<b>No</b>’.<br>Please note: you are <b>not</b> a secondary reporter if your organisation is officially assigned as a proxy to report IATI data on behalf of another organisation."
+        "hover_text": "A flag indicating that the reporting organisation of this activity is acting as a secondary reporter. A secondary reporter is one that reproduces data on the activities of an organisation for which it is not directly responsible.<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/reporting-org/'>For more information</a>",
+        "help_text": "Are you reproducing the data reported by another organisation? If so, your organisation is a ‘secondary reporter’ and you should select '<b>Yes</b>’. If you are reporting your own organisation’s data, select ‘<b>No</b>’.<br><br>Please note: you are <b>not</b> a secondary reporter if your organisation is officially assigned as a proxy to report IATI data on behalf of another organisation."
       }
     },
     "sub_elements": {
@@ -144,7 +144,7 @@
         "attr": {
           "row": 4
         },
-        "hover_text": "The text in this element must be of type xsd:string. This element must occur at least once (within each parent element).<br> <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/reporting-org/narrative/'>For more information</a>",
+        "hover_text": "The text in this element must be of type xsd:string. This element must occur at least once (within each parent element). <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/reporting-org/narrative/'>For more information</a>",
         "help_text": "If you are reporting another organisation’s data, provide their name.",
         "attributes": {
           "lang": {
@@ -156,7 +156,7 @@
             "language": "Select language",
             "required": true,
             "criteria": "mandatory",
-            "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed.<br> <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/reporting-org/narrative/'>For more information</a>",
+            "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed.<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/reporting-org/narrative/'>For more information</a>",
             "help_text": "Select the language of the text you provided in the narrative. If no language is selected, your default language is assumed."
           }
         },
