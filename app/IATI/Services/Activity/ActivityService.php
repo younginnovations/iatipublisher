@@ -165,7 +165,6 @@ class ActivityService
     public function activityPublishingProgress($activity): float|int
     {
         $core_elements = getCoreElements();
-        $orgElementStatus = $activity->organization->element_status;
         $completed_core_element_count = 0;
 
         foreach ($core_elements as $core_element) {

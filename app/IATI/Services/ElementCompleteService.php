@@ -239,6 +239,10 @@ class ElementCompleteService
      */
     public function isSubElementDataCompleted($mandatorySubElements, $data): bool
     {
+        if (is_variable_null($data)) {
+            return false;
+        }
+
         if (empty($mandatorySubElements)) {
             return true;
         }
@@ -385,6 +389,10 @@ class ElementCompleteService
      */
     public function isLevelOneMultiDimensionElementCompleted($data): bool
     {
+        if (is_variable_null($data)) {
+            return false;
+        }
+
         return $this->isLevelOneMultiDimensionDataCompleted(getElementSchema($this->element), $data);
     }
 
@@ -398,7 +406,7 @@ class ElementCompleteService
      */
     public function isLevelTwoSingleDimensionElementCompleted($data): bool
     {
-        if (!$this->singleDimensionAttributeCheck($data)) {
+        if (is_variable_null($data) || !$this->singleDimensionAttributeCheck($data)) {
             return false;
         }
 
@@ -466,6 +474,10 @@ class ElementCompleteService
      */
     public function isLevelTwoMultiDimensionElementCompleted($data): bool
     {
+        if (is_variable_null($data)) {
+            return false;
+        }
+
         return $this->isLevelTwoMultiDimensionDataCompleted(getElementSchema($this->element), $data);
     }
 
@@ -479,7 +491,7 @@ class ElementCompleteService
      */
     public function isLevelThreeSingleDimensionElementCompleted($data): bool
     {
-        if (!$this->singleDimensionAttributeCheck($data)) {
+        if (is_variable_null($data) || !$this->singleDimensionAttributeCheck($data)) {
             return false;
         }
 
@@ -1152,15 +1164,15 @@ class ElementCompleteService
     {
         [$resultData, $indicatorData, $periodData] = $this->getFormattedResults($activity);
 
-        if (!$this->isPeriodElementCompleted($periodData)) {
+        if (is_variable_null($periodData) || !$this->isPeriodElementCompleted($periodData)) {
             return false;
         }
 
-        if (!$this->isIndicatorElementCompleted($indicatorData)) {
+        if (is_variable_null($indicatorData) || !$this->isIndicatorElementCompleted($indicatorData)) {
             return false;
         }
 
-        if (!$this->isResultElementDataCompleted($resultData)) {
+        if (is_variable_null($resultData) || !$this->isResultElementDataCompleted($resultData)) {
             return false;
         }
 
@@ -1176,7 +1188,7 @@ class ElementCompleteService
      */
     public function checkTransactionData($subElements, $data): bool
     {
-        if (!$this->singleDimensionAttributeCheck('transactions', $data)) {
+        if (is_variable_null($data) || !$this->singleDimensionAttributeCheck($data)) {
             return false;
         }
 
