@@ -19,7 +19,7 @@
             <span class="font-bold text-n-10">IATI Publisher</span>
             <ul class="mt-2 flex flex-col">
               <li><a href="/">Home</a></li>
-              <li><a href="/">About</a></li>
+              <li><a href="/about">About</a></li>
               <li><a href="/">Sign In</a></li>
               <li><a href="/register/join">Join Now</a></li>
             </ul>
