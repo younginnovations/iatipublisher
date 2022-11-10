@@ -984,3 +984,57 @@ if (!function_exists('localDeleteFile')) {
         return false;
     }
 }
+
+if (!function_exists('array_values_recursive')) {
+    /**
+     * Converts multi-dimensional array to single array.
+     *
+     * @param array $arr
+     *
+     * @return array
+     */
+    function array_values_recursive(array $arr): array
+    {
+        $result = [];
+
+        foreach (array_keys($arr) as $k) {
+            $v = $arr[$k];
+
+            if (is_scalar($v)) {
+                $result[] = $v;
+            } elseif (is_array($v)) {
+                $result = array_merge($result, array_values_recursive($v));
+            }
+        }
+
+        return $result;
+    }
+}
+
+if (!function_exists('is_array_values_null')) {
+    /**
+     * Checks if all values in array is empty.
+     *
+     * @param array $arr
+     *
+     * @return bool
+     */
+    function is_array_values_null(array $arr): bool
+    {
+        return empty(array_values_recursive($arr));
+    }
+}
+
+if (!function_exists('is_variable_null')) {
+    /**
+     * Checks if variable is null.
+     *
+     * @param $var
+     *
+     * @return bool
+     */
+    function is_variable_null($var): bool
+    {
+        return is_array($var) ? is_array_values_null($var) : is_null($var);
+    }
+}
