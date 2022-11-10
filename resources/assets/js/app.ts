@@ -10,6 +10,9 @@ import WebHeader from './views/web/partials/WebHeader.vue';
 import WebFooter from './views/web/partials/WebFooter.vue';
 import WelcomeSignIn from './views/web/WelcomePage.vue';
 import RegisterPage from './views/web/RegisterPage.vue';
+import AboutPage from './views/web/AboutPage.vue';
+import SupportPage from './views/web/SupportPage.vue';
+import IatiStandard from './views/web/IatiStandard.vue';
 
 /**
  * Vue components for Activities Listing
@@ -73,8 +76,17 @@ const app = createApp({});
 app
   .component('WebHeader', WebHeader)
   .component('WebFooter', WebFooter)
+
   .component('WelcomeSignin', WelcomeSignIn)
   .component('RegisterForm', RegisterPage);
+/**
+ * registering web portal pages
+ */
+
+app
+  .component('AboutPage', AboutPage)
+  .component('SupportPage', SupportPage)
+  .component('IatiStandard', IatiStandard);
 
 /**
  * Registering vue component for activity listing
@@ -96,9 +108,10 @@ app
   .component('SidebarHelpBlock', SidebarHelpBlock);
 
 /*
-* Import page
-*/
-app.component('ActivityUpload', ActivityUpload)
+ * Import page
+ */
+app
+  .component('ActivityUpload', ActivityUpload)
   .component('ImportList', ImportList);
 
 /*
@@ -156,7 +169,6 @@ const stickySidebar = (el: {
   };
   style: { cssText: string };
 }) => {
-
   //sticky element/child data
   const stickyElement = el.firstChild,
     elHeight = stickyElement.offsetHeight,

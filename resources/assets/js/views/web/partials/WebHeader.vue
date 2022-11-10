@@ -95,7 +95,9 @@
         <div
           class="header__title mt-6 border-l-4 border-l-turquoise py-2 px-4 sm:py-5 sm:px-6"
         >
-          <h1 class="text-4xl font-bold text-white sm:text-heading-2">
+          <h1
+            class="text-xl font-bold text-white sm:text-4xl sm:text-heading-2"
+          >
             {{ title }}
           </h1>
         </div>
