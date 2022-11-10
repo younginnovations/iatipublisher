@@ -211,7 +211,7 @@ const data = reactive({
 const [modalValue, modalToggle] = useToggle();
 function toast(message: string, type: boolean) {
   toastVisibility.value = true;
-  setTimeout(() => (toastVisibility.value = false), 5000);
+  setTimeout(() => (toastVisibility.value = false), 15000);
   toastMessage.value = message;
   toastType.value = type;
 }

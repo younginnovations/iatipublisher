@@ -1,7 +1,7 @@
 <template>
   <div class="page-title mb-4">
     <div class="flex items-end gap-4">
-      <div class="title grow-0">
+      <div class="title grow-0 shrink-0">
         <div class="mb-2 text-caption-c1 text-n-40 xl:mb-4">
           <nav aria-label="breadcrumbs" class="breadcrumb">
             <p>
@@ -53,7 +53,7 @@
             :message="toastMessage.message"
             :type="toastMessage.type"
           />
-          <div class="inline-flex items-center justify-end gap-3">
+          <div class="inline-flex items-center justify-end gap-3 shrink-0">
             <RefreshToastMessage
               v-if="refreshToastMsg.visibility"
               :message="refreshMessage"

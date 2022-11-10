@@ -340,7 +340,7 @@ export default defineComponent({
 
       setTimeout(() => {
         toastData.visibility = false;
-      }, 5000);
+      }, 10000);
     });
     /**
      * Grouping all the data's for scroll function
