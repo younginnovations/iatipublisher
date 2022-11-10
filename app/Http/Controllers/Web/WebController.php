@@ -34,4 +34,34 @@ class WebController extends Controller
     {
         return view('web.register');
     }
+
+    /**
+     * Shows the about page.
+     *
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function about(): \Illuminate\Contracts\Support\Renderable
+    {
+        return view('web.about');
+    }
+
+    /**
+     * Shows the publisher checklist page.
+     *
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function publishing_checklist(): \Illuminate\Contracts\Support\Renderable
+    {
+        return view('web.publishing_checklist');
+    }
+
+    public function iati_standerd(): \Illuminate\Contracts\Support\Renderable
+    {
+        return view('web.iati_standerd');
+    }
+
+    public function support(): \Illuminate\Contracts\Support\Renderable
+    {
+        return view('web.support');
+    }
 }

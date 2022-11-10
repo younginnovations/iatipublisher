@@ -35,7 +35,7 @@
 
 <body class="font-sans bg-n-10 antialiased overflow-x-hidden">
   <div id="app">
-    <web-header></web-header>
+    <web-header title='@yield('title', 'IATI PUBLISHER')'></web-header>    
     @yield('content')
     <web-footer></web-footer>
   </div>
