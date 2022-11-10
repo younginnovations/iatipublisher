@@ -55,11 +55,21 @@ class WebController extends Controller
         return view('web.publishing_checklist');
     }
 
-    public function iati_standerd(): \Illuminate\Contracts\Support\Renderable
+    /**
+     * Shows the iati standard checklist page.
+     *
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function iati_standard(): \Illuminate\Contracts\Support\Renderable
     {
-        return view('web.iati_standerd');
+        return view('web.iati_standard');
     }
 
+    /**
+     * Shows the support checklist page.
+     *
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
     public function support(): \Illuminate\Contracts\Support\Renderable
     {
         return view('web.support');

@@ -29,7 +29,7 @@ Route::middleware(RedirectIfAuthenticated::class)->name('web.')->group(function 
     Route::post('/reset', [App\Http\Controllers\Auth\ResetPasswordController::class, 'reset'])->name('reset');
     Route::get('/about', [App\Http\Controllers\Web\WebController::class, 'about'])->name('about');
     Route::get('/publishing-checklist', [App\Http\Controllers\Web\WebController::class, 'publishing_checklist'])->name('publishingchecklist');
-    Route::get('/iati-standerd', [App\Http\Controllers\Web\WebController::class, 'iati_standerd'])->name('iatistanderd');
+    Route::get('/iati-standard', [App\Http\Controllers\Web\WebController::class, 'iati_standard'])->name('iatistanderd');
     Route::get('/support', [App\Http\Controllers\Web\WebController::class, 'support'])->name('support');
 });
 

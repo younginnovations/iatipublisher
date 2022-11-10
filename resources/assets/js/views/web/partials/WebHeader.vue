@@ -30,7 +30,7 @@
                 />
               </li>
               <li class="nav__links active dropdown relative">
-                <a href="/iati-standerd">IATI STANDARD</a>
+                <a href="/iati-standard">IATI STANDARD</a>
                 <NavDropdown
                   name="IATI Standard"
                   text="The IATI Standard provides information and guidance on all the data fields that

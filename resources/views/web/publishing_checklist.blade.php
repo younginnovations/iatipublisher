@@ -35,7 +35,7 @@
             </p>
             <p class="my-2 text-base">
                 The IATI Standard contains a wide range of data fields. Data fields are referred to as ‘elements’ and they represent a basic unit of information in the IATI Standard. For each element you will find its technical definition, which is labelled as “IATI Standard Reference” and helpful guidance on the data you are required to provide. Your organisation is encouraged to (at least) publish data in fields marked as “Core” in IATI Publisher. Core elements include IATI’s "mandatory and recommended" elements and it is important to provide this data to ensure your data is usable and useful.            </p>
-            <a href="/iati-standerd">
+            <a href="/iati-standard">
                 Discover what Activity Data is required by the IATI Standard
             </a>
            <br/>
@@ -69,7 +69,7 @@
                 When publishing your Activity Data you are encouraged to (at least) publish data in fields marked as “Core” in IATI Publisher. They include IATI’s "mandatory and recommended" elements and it is important to provide this data to ensure your data is usable and useful.
             </p>
 
-           <a href="/iati-standerd">
+           <a href="/iati-standard">
                 Discover what Activity Data is required by the IATI Standard
             </a>
            <br/>
