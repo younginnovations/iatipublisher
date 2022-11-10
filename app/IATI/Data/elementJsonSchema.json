@@ -964,7 +964,7 @@
   },
   "default_finance_type": {
     "label": "default finance type",
-    "hover_text": "The type of finance (e.g. grant, loan, debt relief, etc). This the default value for all transactions in the activity report; it can be overridden by individual transactions.<br> <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/default-finance-type/'>For more information</a>",
+    "hover_text": "The type of finance (e.g. grant, loan, debt relief, etc). This the default value for all transactions in the activity report; it can be overridden by individual transactions. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/default-finance-type/'>For more information</a>",
     "help_text": "Finance type specifies the financial instrument that is being used for this activity. For example, financing is most commonly delivered as a grant or a loan.",
     "show_info_in_title": true,
     "attributes": {
@@ -987,8 +987,8 @@
     "label": "default aid type",
     "add_more": true,
     "add_more_attributes": true,
-    "hover_text": "The type of aid being supplied (project-type intervention, budget support, debt relief, etc.). This element specifies a default for all the activity’s financial transactions; it can be overridden at the individual transaction level.<br> <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/default-aid-type/'>For more information</a>",
-    "help_text": "You can provide information about the type of aid that is being delivered. This is most commonly referred to as the aid modality and IATI recommends that an aid type from the OECD DAC codelist be selected for all activities.</br>Examples from this codelist include: project-type interventions which provide support to a particular project, budget support which is a financial contribution to a recipient government’s budget. Project-type interventions is the most common aid type for NGOs and CSOs but many other options are found <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/codelists/aidtype/'>here</a>.</br>If your activity is addressing a humanitarian event, you can provide specific information on the type of funds for it. This includes providing information on the level of earmarking of the activity’s funds and if the activity is providing funds through cash or vouchers. <a target='_blank' href='https://iatistandard.org/en/guidance/standard-guidance/humanitarian/'>More information on publishing aid-types related to humanitarian activities</a>.",
+    "hover_text": "The type of aid being supplied (project-type intervention, budget support, debt relief, etc.). This element specifies a default for all the activity’s financial transactions; it can be overridden at the individual transaction level. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/default-aid-type/'>For more information</a>",
+    "help_text": "You can provide information about the type of aid that is being delivered. This is most commonly referred to as the aid modality and IATI recommends that an aid type from the OECD DAC codelist be selected for all activities.<br></br>Examples from this codelist include: project-type interventions which provide support to a particular project, budget support which is a financial contribution to a recipient government’s budget. Project-type interventions is the most common aid type for NGOs and CSOs but many other options are found <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/codelists/aidtype/'>here</a>.<br></br>If your activity is addressing a humanitarian event, you can provide specific information on the type of funds for it. This includes providing information on the level of earmarking of the activity’s funds and if the activity is providing funds through cash or vouchers. <a target='_blank' href='https://iatistandard.org/en/guidance/standard-guidance/humanitarian/'>More information on publishing aid-types related to humanitarian activities</a>.",
     "dependent_attributes": {
       "default_aid_type": {},
       "earmarking_category": {},
@@ -1005,7 +1005,7 @@
         "required": false,
         "criteria": "",
         "hover_text": "A code for the vocabulary aid-type classifications. If omitted the AidType (OECD DAC) codelist is assumed. The code must be a valid value in the AidTypeVocabulary codelist. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/default-aid-type/'>For more information</a>",
-        "help_text": "Select a list that includes the aid-type related to your activity (if any are applicable). Otherwise leave this blank. You can choose to select an aid-type from more than one list.</br>]<b>1 OECD DAC</b> - IATI recommends that you select this list which has <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/codelists/aidtype/'>over 20 options</a> to choose from. Then, in addition you can select an option from another list</br><b>2 Earmarking Category</b> - select <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/codelists/earmarkingcategory/'>this list</a> to categorise how flexible humanitarian funding is. There are 4 earmarking categories. Understand more about the categories in <a target='_blank' href='https://reliefweb.int/sites/reliefweb.int/files/resources/Grand_Bargain_final_22_May_FINAL-2.pdf'>Annex 1</a></br><b>3 Earmarking Modality</b> - use this list to choose the specific earmarking modality to describe your activity’s humanitarian funding. All earmarking modality options are <a target='_blank' href='https://reliefweb.int/sites/reliefweb.int/files/resources/Grand_Bargain_final_22_May_FINAL-2.pdf'>listed in Annex 1</a></br><b>4 Cash and Voucher Modalities</b> - select this list to specify if your activity is responding to a humanitarian event by providing cash and voucher assistance. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/codelists/CashandVoucherModalities/'>More information</a>.</br>"
+        "help_text": "Select a list that includes the aid-type related to your activity (if any are applicable). Otherwise leave this blank. You can choose to select an aid-type from more than one list.<br></br>]<b>1 OECD DAC</b> - IATI recommends that you select this list which has <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/codelists/aidtype/'>over 20 options</a> to choose from. Then, in addition you can select an option from another list<br></br><b>2 Earmarking Category</b> - select <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/codelists/earmarkingcategory/'>this list</a> to categorise how flexible humanitarian funding is. There are 4 earmarking categories. Understand more about the categories in <a target='_blank' href='https://reliefweb.int/sites/reliefweb.int/files/resources/Grand_Bargain_final_22_May_FINAL-2.pdf'>Annex 1</a><br></br><b>3 Earmarking Modality</b> - use this list to choose the specific earmarking modality to describe your activity’s humanitarian funding. All earmarking modality options are <a target='_blank' href='https://reliefweb.int/sites/reliefweb.int/files/resources/Grand_Bargain_final_22_May_FINAL-2.pdf'>listed in Annex 1</a><br></br><b>4 Cash and Voucher Modalities</b> - select this list to specify if your activity is responding to a humanitarian event by providing cash and voucher assistance. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/codelists/CashandVoucherModalities/'>More information</a>.</br>"
       },
       "default_aid_type": {
         "name": "default_aid_type",
@@ -1015,7 +1015,7 @@
         "choices": "Activity/AidType.json",
         "required": true,
         "criteria": "mandatory",
-        "hover_text": "A code from the specified vocabulary. This attribute is required.<br> <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/default-aid-type/'>For more information</a>",
+        "hover_text": "A code from the specified vocabulary. This attribute is required. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/default-aid-type/'>For more information</a>",
         "help_text": "Select the aid-type related to your activity.",
         "parent": {
           "name": "default_aid_type_vocabulary",
@@ -1075,7 +1075,7 @@
   },
   "default_tied_status": {
     "label": "default tied status",
-    "hover_text": "Whether the aid is untied, tied, or partially tied. This element specifies a default for all the activity’s financial transactions; it can be overridden at the individual transaction level.<br> <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/default-tied-status/'>For more information</a>",
+    "hover_text": "Whether the aid is untied, tied, or partially tied. This element specifies a default for all the activity’s financial transactions; it can be overridden at the individual transaction level.<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/default-tied-status/'>For more information</a>",
     "help_text": "You can state the tied status of this transaction. Here you can specify if funds are tied - where they must be spent on goods or services procured from a particular country (e.g. donor country) or group of countries. Or if funds are untied, this is where the recipient organisation is allowed to procure from any country.",
     "show_info_in_title": true,
     "attributes": {
@@ -1087,7 +1087,7 @@
         "choices": "Activity/TiedStatus.json",
         "required": true,
         "criteria": "mandatory",
-        "hover_text": "An IATI code interpreting the usage of Columns 36-38 of the CRS++ reporting format. (Amount tied, Amount partially untied, Amount tied).<br> <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/default-tied-status/'>For more information</a>",
+        "hover_text": "An IATI code interpreting the usage of Columns 36-38 of the CRS++ reporting format. (Amount tied, Amount partially untied, Amount tied). <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/default-tied-status/'>For more information</a>",
         "help_text": "Select a default-tied-status, if applicable to your activity. See <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/codelists/tiedstatus/'>descriptions of all options</a>. Otherwise leave blank."
       }
     },
@@ -1280,7 +1280,7 @@
   },
   "capital_spend": {
     "label": "capital spend",
-    "hover_text": "The percentage of the total commitment that is for capital spending.<br> <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/capital-spend/'>For more information</a>",
+    "hover_text": "The percentage of the total commitment that is for capital spending. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/capital-spend/'>For more information</a>",
     "help_text": "Please indicate how much of the total activity’s funding will be spent on capital. Capital describes physical assets with a useful life of more than one year. For example, a road.",
     "show_info_in_title": true,
     "attributes": {
@@ -1291,7 +1291,7 @@
         "placeholder": "Type percentage",
         "required": true,
         "criteria": "mandatory",
-        "hover_text": "The percentage of the total commitment allocated to or planned for capital expenditure. Content must be a decimal number between 0 and 100 inclusive, with no percentage sign.<br> <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/capital-spend/'>For more information</a>",
+        "hover_text": "The percentage of the total commitment allocated to or planned for capital expenditure. Content must be a decimal number between 0 and 100 inclusive, with no percentage sign.<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/capital-spend/'>For more information</a>",
         "help_text": "Percentage must not exceed 100."
       }
     },
@@ -1449,8 +1449,8 @@
     "name": "document_link",
     "label": "document link",
     "add_more": true,
-    "hover_text": "A link to an online, publicly accessible web page or document.<br> <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/document-link/'>For more information</a>",
-    "help_text": "You can report further information about this activity by providing a publicly accessible link to a document or webpage.</br>If documents are available in other languages and stored separately, please provide them by creating additional document elements.</br><a target='_blank' href='https://iatistandard.org/en/guidance/standard-guidance/related-documents/'>Further guidance</a>",
+    "hover_text": "A link to an online, publicly accessible web page or document. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/document-link/'>For more information</a>",
+    "help_text": "You can report further information about this activity by providing a publicly accessible link to a document or webpage.<br></br>If documents are available in other languages and stored separately, please provide them by creating additional document elements.<a target='_blank' href='https://iatistandard.org/en/guidance/standard-guidance/related-documents/'>Further guidance</a>",
     "attributes": {
       "url": {
         "name": "url",
@@ -1459,7 +1459,7 @@
         "placeholder": "Type url",
         "required": true,
         "criteria": "mandatory",
-        "hover_text": "The target URL of the external document, e.g. 'http://www.example.org/doc.odt'.<br> <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/document-link/'>For more information</a>",
+        "hover_text": "The target URL of the external document, e.g. 'http://www.example.org/doc.odt'.<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/document-link/'>For more information</a>",
         "help_text": "The URL must begin with either ‘http://’ or ‘https://’."
       },
       "format": {
@@ -1470,7 +1470,7 @@
         "choices": "Activity/FileFormat.json",
         "required": true,
         "criteria": "mandatory",
-        "hover_text": "An IANA code for the MIME type of the document being referenced, e.g. “application/pdf”.<br> <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/document-link/'>For more information</a>",
+        "hover_text": "An IANA code for the MIME type of the document being referenced, e.g. “application/pdf”. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/document-link/'>For more information</a>",
         "help_text": "If you know the format of the document file, please type it <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/codelists/fileformat/'>using an option from this list</a>."
       },
       "document": {
@@ -1490,7 +1490,7 @@
         "label": "Title",
         "element_criteria": "mandatory",
         "add_more": false,
-        "hover_text": "A short, human-readable title.<br> <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/document-link/title/'>For information</a>",
+        "hover_text": "A short, human-readable title.<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/document-link/title/'>For information</a>",
         "attributes": {},
         "sub_elements": {
           "narrative": {
@@ -1527,7 +1527,7 @@
         "name": "description",
         "label": "description",
         "add_more": false,
-        "hover_text": "A description of the document contents, or guidance on where to access the relevant information in the document.<br> <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/document-link/description/'>For more information</a>",
+        "hover_text": "A description of the document contents, or guidance on where to access the relevant information in the document. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/document-link/description/'>For more information</a>",
         "attributes": {},
         "sub_elements": {
           "narrative": {
@@ -1566,6 +1566,7 @@
         "element_criteria": "mandatory",
         "add_more": true,
         "wrapper_collection": false,
+        "hover_text": "IATI Document Category Code. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/document-link/category/'>For more information</a>",
         "help_text": "You must select a category of the document or webpage that you have provided.",
         "attributes": {
           "code": {
@@ -1576,7 +1577,7 @@
             "choices": "Activity/DocumentCategory.json",
             "required": true,
             "criteria": "mandatory",
-            "hover_text": "An IATI code defining the category of the document.<br> <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/document-link/category/'>For more information</a>",
+            "hover_text": "An IATI code defining the category of the document. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/document-link/category/'>For more information</a>",
             "help_text": "Select a category of the document or webpage that you have provided from <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/codelists/documentcategory/'>this list</a>."
           }
         },
@@ -2226,8 +2227,8 @@
     "name": "planned_disbursement",
     "label": "planned disbursement",
     "add_more": true,
-    "hover_text": "The planned disbursement element should only be used to report specific planned cash transfers. These should be reported for a specific date or a meaningfully predictable period.<br> <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/planned-disbursement/'>For more information</a>",
-    "help_text": "You can publish data on your planned cash transfers to organisations (or between two other organisations) as part of this activity.</br>The purpose of planned disbursements is to publish predefined payment schedules. Planned disbursements should be reported for a specific date or a meaningfully predictable period. Planned disbursements should be reported in addition and should not replace the activity’s budget.",
+    "hover_text": "The planned disbursement element should only be used to report specific planned cash transfers. These should be reported for a specific date or a meaningfully predictable period.<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/planned-disbursement/'>For more information</a>",
+    "help_text": "You can publish data on your planned cash transfers to organisations (or between two other organisations) as part of this activity.<br></br>The purpose of planned disbursements is to publish predefined payment schedules. Planned disbursements should be reported for a specific date or a meaningfully predictable period. Planned disbursements should be reported in addition and should not replace the activity’s budget.",
     "attributes": {
       "planned_disbursement_type": {
         "name": "planned_disbursement_type",
@@ -2237,7 +2238,7 @@
         "choices": "Activity/BudgetType.json",
         "required": false,
         "criteria": "",
-        "hover_text": "The purpose of planned-disbursement is to describe any predefined payment schedule.<br> <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/planned-disbursement/'>For more information</a>",
+        "hover_text": "The purpose of planned-disbursement is to describe any predefined payment schedule.<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/planned-disbursement/'>For more information</a>",
         "help_text": "Specify if this is an ‘original’ planned disbursement (prepared when the original commitment was made) or has subsequently been ‘revised’."
       }
     },
@@ -2246,7 +2247,7 @@
         "name": "period_start",
         "label": "period start",
         "add_more": false,
-        "hover_text": "The exact date of the planned disbursement OR the starting date of the period in which this specific disbursement will be made.<br> <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/planned-disbursement/period-start/'>For more information</a>",
+        "hover_text": "The exact date of the planned disbursement OR the starting date of the period in which this specific disbursement will be made.<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/planned-disbursement/period-start/'>For more information</a>",
         "attributes": {
           "iso_date": {
             "name": "date",
@@ -2255,7 +2256,7 @@
             "placeholder": "YYYY-MM-DD",
             "required": true,
             "criteria": "mandatory",
-            "hover_text": "The exact date of the planned disbursement OR the starting date of the period in which this specific disbursement will be made.<br> <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/planned-disbursement/period-start/'>For more information</a>",
+            "hover_text": "The exact date of the planned disbursement OR the starting date of the period in which this specific disbursement will be made.<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/planned-disbursement/period-start/'>For more information</a>",
             "help_text": ""
           }
         },
@@ -2265,7 +2266,7 @@
         "name": "period_end",
         "label": "period end",
         "add_more": false,
-        "hover_text": "The ending date for the period in which this specific disbursement will be made.<br> <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/planned-disbursement/period-end/'>For more information</a>",
+        "hover_text": "The ending date for the period in which this specific disbursement will be made.<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/planned-disbursement/period-end/'>For more information</a>",
         "attributes": {
           "iso_date": {
             "name": "date",
@@ -2274,7 +2275,7 @@
             "placeholder": "YYYY-MM-DD",
             "required": true,
             "criteria": "mandatory",
-            "hover_text": "The ending date for the period in which this specific disbursement will be made.<br> <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/planned-disbursement/period-end/'>For more information</a>",
+            "hover_text": "The ending date for the period in which this specific disbursement will be made.<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/planned-disbursement/period-end/'>For more information</a>",
             "help_text": ""
           }
         },
@@ -2285,7 +2286,7 @@
         "label": "value",
         "element_criteria": "mandatory",
         "add_more": false,
-        "hover_text": "The amount that is planned to be disbursed in the specified currency.<br> <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/planned-disbursement/value/'>For more information</a>",
+        "hover_text": "The amount that is planned to be disbursed in the specified currency. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/planned-disbursement/value/'>For more information</a>",
         "attributes": {
           "amount": {
             "name": "amount",
@@ -2305,7 +2306,7 @@
             "choices": "Activity/Currency.json",
             "required": true,
             "criteria": "mandatory",
-            "hover_text": "A three letter ISO 4217 code for the original currency of the amount. This is required for all currency amounts unless the iati-organisation/@default-currency attribute is specified.<br> <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/planned-disbursement/value/'>For more information</a>",
+            "hover_text": "A three letter ISO 4217 code for the original currency of the amount. This is required for all currency amounts unless the iati-organisation/@default-currency attribute is specified. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/planned-disbursement/value/'>For more information</a>",
             "help_text": "Select the currency that you have provided the value in. If no value is selected, default value is assumed."
           },
           "value_date": {
@@ -2315,7 +2316,7 @@
             "placeholder": "YYYY-MM-DD",
             "required": true,
             "criteria": "mandatory",
-            "hover_text": "The date to be used for determining the exchange rate for currency conversions.This attribute is required.<br> <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/planned-disbursement/value/'>For more information</a>",
+            "hover_text": "The date to be used for determining the exchange rate for currency conversions.This attribute is required. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/planned-disbursement/value/'>For more information</a>",
             "help_text": "Provide the date on which the planned disbursement was agreed."
           }
         },
@@ -2325,7 +2326,7 @@
         "name": "provider_org",
         "label": "provider organisation",
         "add_more": false,
-        "hover_text": "The organisation from which the planned disbursement will originate. If omitted the reporting-org is assumed.<br> <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/planned-disbursement/provider-org/'>For more information</a>",
+        "hover_text": "The organisation from which the planned disbursement will originate. If omitted the reporting-org is assumed.<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/planned-disbursement/provider-org/'>For more information</a>",
         "help_text": "Will your organisation be disbursing these funds? If so then you are the provider organisation. If not, please provide information on the organisation who will be disbursing these funds.",
         "attributes": {
           "ref": {
@@ -2335,7 +2336,7 @@
             "placeholder": "Type reference",
             "required": false,
             "criteria": "",
-            "hover_text": "Machine-readable identification string for the organisation issuing the report. Must be in the format {RegistrationAgency}-{RegistrationNumber} where {RegistrationAgency} is a valid code in the Organisation Registration Agency code list and {RegistrationNumber} is a valid identifier issued by the {RegistrationAgency}. If this is not present then the narrative MUST contain the name of the organisation.<br> <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/planned-disbursement/provider-org/'>For more information</a>",
+            "hover_text": "Machine-readable identification string for the organisation issuing the report. Must be in the format {RegistrationAgency}-{RegistrationNumber} where {RegistrationAgency} is a valid code in the Organisation Registration Agency code list and {RegistrationNumber} is a valid identifier issued by the {RegistrationAgency}. If this is not present then the narrative MUST contain the name of the organisation.<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/planned-disbursement/provider-org/'>For more information</a>",
             "help_text": "Please type the provider organisation’s <i>IATI Organisation Identifier</i>. The quickest way to find this is to search for the organisation in the <a target='_blank' href='https://www.iatiregistry.org/publisher/'>IATI Publisher List</a>. If you cannot find the organisation, see <a target='_blank' href='https://iatistandard.org/en/guidance/publishing-data/data-quality-and-visualisation/finding-other-organisations-identifiers/'>further guidance</a>."
           },
           "provider_activity_id": {
@@ -2345,8 +2346,8 @@
             "placeholder": "Type provider-activity-id",
             "required": false,
             "criteria": "",
-            "hover_text": "The identifier for the activity in which the planned disbursement will be reported. If omitted the current activity is assumed.<br> <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/planned-disbursement/provider-org/'>For more information</a>",
-            "help_text": "The provider organisation may have published IATI data on these funds in their own activity. If so, please provide the activity-id for their activity that includes information on this funding. You can ask the provider organisation for this activity-id, or search for their activity on d-portal.org. <a target='_blank' href='https://iatistandard.org/en/guidance/publishing-data/data-quality-and-visualisation/finding-other-organisations-identifiers/'>See further guidance</a>.</br>If you are the provider organisation then leave this blank."
+            "hover_text": "The identifier for the activity in which the planned disbursement will be reported. If omitted the current activity is assumed.  <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/planned-disbursement/provider-org/'>For more information</a>",
+            "help_text": "The provider organisation may have published IATI data on these funds in their own activity. If so, please provide the activity-id for their activity that includes information on this funding. You can ask the provider organisation for this activity-id, or search for their activity on d-portal.org. <a target='_blank' href='https://iatistandard.org/en/guidance/publishing-data/data-quality-and-visualisation/finding-other-organisations-identifiers/'>See further guidance</a>.<br></br>If you are the provider organisation then leave this blank."
           },
           "type": {
             "name": "type",
@@ -2356,7 +2357,7 @@
             "choices": "Organization/OrganizationType.json",
             "required": false,
             "criteria": "",
-            "hover_text": "The type of organisation providing the funds.<br> <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/planned-disbursement/provider-org/'>For more information</a>",
+            "hover_text": "The type of organisation providing the funds.<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/planned-disbursement/provider-org/'>For more information</a>",
             "help_text": "Select the type that best describes the provider organisation (if this is not your organisation). <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/codelists/organisationtype/'>Information on all organisation types</a>."
           }
         },
@@ -2369,7 +2370,7 @@
             "required": false,
             "criteria": "",
             "add_more": true,
-            "hover_text": "The name of the organisation. This can be repeated in multiple languages.<br> <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/planned-disbursement/provider-org/narrative/'>For more information</a>",
+            "hover_text": "The name of the organisation. This can be repeated in multiple languages.<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/planned-disbursement/provider-org/narrative/'>For more information</a>",
             "help_text": "If the provider organisation does not have an IATI Organisation Identifier, the name of the organisation must be given.",
             "attr": {
               "row": 4
@@ -2383,7 +2384,7 @@
                 "choices": "Activity/Language.json",
                 "required": false,
                 "criteria": "recommended",
-                "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed.<br> <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/planned-disbursement/provider-org/narrative/'>For more information</a>",
+                "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed.<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/planned-disbursement/provider-org/narrative/'>For more information</a>",
                 "help_text": "Select the language of the name provided. If no language is selected, your default language is assumed."
               }
             },
@@ -2395,7 +2396,7 @@
         "name": "receiver_org",
         "label": "receiver organisation",
         "add_more": false,
-        "hover_text": "The organisation receiving the money from the planned disbursement.<br> <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/planned-disbursement/receiver-org/'>For more information</a>",
+        "hover_text": "The organisation receiving the money from the planned disbursement.<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/planned-disbursement/receiver-org/'>For more information</a>",
         "help_text": "Provide information on which organisation will be receiving the funds.",
         "attributes": {
           "ref": {
@@ -2405,7 +2406,7 @@
             "placeholder": "Type reference",
             "required": false,
             "criteria": "",
-            "hover_text": "Machine-readable identification string for the organisation issuing the report. Must be in the format {RegistrationAgency}-{RegistrationNumber} where {RegistrationAgency} is a valid code in the Organisation Registration Agency code list and {RegistrationNumber} is a valid identifier issued by the {RegistrationAgency}. If this is not present then the narrative MUST contain the name of the organisation.<br> <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/planned-disbursement/receiver-org/'>For more information</a>",
+            "hover_text": "Machine-readable identification string for the organisation issuing the report. Must be in the format {RegistrationAgency}-{RegistrationNumber} where {RegistrationAgency} is a valid code in the Organisation Registration Agency code list and {RegistrationNumber} is a valid identifier issued by the {RegistrationAgency}. If this is not present then the narrative MUST contain the name of the organisation.<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/planned-disbursement/receiver-org/'>For more information</a>",
             "help_text": "Please provide the receiver organisation’s <i>IATI Organisation Identifier</i> (org-ID). The quickest way to find this is to search for the organisation in the <a target='_blank' href='https://www.iatiregistry.org/publisher/'>IATI Publisher List</a>. If you cannot find the organisation, see <a target='_blank' href='https://iatistandard.org/en/guidance/publishing-data/data-quality-and-visualisation/finding-other-organisations-identifiers/'>further guidance</a>."
           },
           "receiver_activity_id": {
@@ -2415,7 +2416,7 @@
             "placeholder": "Type receiver-activity",
             "required": false,
             "criteria": "",
-            "hover_text": "If outgoing funds are being provided to another activity that is reported to IATI, this may, if possible, record the unique IATI activity identifier for that activity.<br> <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/planned-disbursement/receiver-org/'>For more information</a>",
+            "hover_text": "If outgoing funds are being provided to another activity that is reported to IATI, this may, if possible, record the unique IATI activity identifier for that activity.<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/planned-disbursement/receiver-org/'>For more information</a>",
             "help_text": "If possible, please provide the activity-id for the receiver’s activity which will receive this disbursement. You can ask the receiver organisation for this activity-id, or search for their activity on d-portal.org. <a target='_blank' href='https://iatistandard.org/en/guidance/publishing-data/data-quality-and-visualisation/finding-other-organisations-identifiers/'>See further guidance</a>."
           },
           "type": {
@@ -2426,7 +2427,7 @@
             "choices": "Organization/OrganizationType.json",
             "required": false,
             "criteria": "",
-            "hover_text": "The type of organisation receiving the funds.<br> <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/planned-disbursement/receiver-org/'>For more information</a>",
+            "hover_text": "The type of organisation receiving the funds.<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/planned-disbursement/receiver-org/'>For more information</a>",
             "help_text": "Select the type that best describes the receiver organisation. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/codelists/organisationtype/'>Information on all organisation types</a>."
           }
         },
@@ -2439,7 +2440,7 @@
             "required": false,
             "criteria": "",
             "add_more": true,
-            "hover_text": "The name of the organisation. This can be repeated in multiple languages.<br> <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/planned-disbursement/receiver-org/narrative/'>For more information</a>",
+            "hover_text": "The name of the organisation. This can be repeated in multiple languages. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/planned-disbursement/receiver-org/narrative/'>For more information</a>",
             "help_text": "Add the name of the receiver organisation.",
             "attr": {
               "row": 4
@@ -2453,7 +2454,7 @@
                 "choices": "Activity/Language.json",
                 "required": false,
                 "criteria": "recommended",
-                "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed.<br> <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/planned-disbursement/receiver-org/narrative/'>For more information</a>",
+                "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed.<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/planned-disbursement/receiver-org/narrative/'>For more information</a>",
                 "help_text": "Select the language of the text you provided in the narrative. If no language is selected, then your default language is assumed."
               }
             },
@@ -2560,8 +2561,8 @@
     "name": "budget",
     "label": "budget",
     "add_more": true,
-    "hover_text": "The value of the activity’s budget for each financial quarter or year over the lifetime of the activity. The purpose of this element is to provide predictability for recipient planning on an annual basis. The status explains whether the budget being reported is indicative or has been formally committed.<br> <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/budget/'>For more information</a>",
-    "help_text": "Provide the amount of finance expected to be spent as part of this activity. You need to provide budget(s) broken down by time periods of a year or less covering the whole life of the activity. Publishing budgets for each quarter is helpful for data users. A budget must not span more than 12 months.</br>\nYou should provide your budget(s) for your activity as soon as possible. You can then update this over time as more or less funding comes in, or the scope of the activity changes. <a target='_blank' href='https://iatistandard.org/en/guidance/standard-guidance/activity-budgets/'>More information</a>.",
+    "hover_text": "The value of the activity’s budget for each financial quarter or year over the lifetime of the activity. The purpose of this element is to provide predictability for recipient planning on an annual basis. The status explains whether the budget being reported is indicative or has been formally committed. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/budget/'>For more information</a>",
+    "help_text": "Provide the amount of finance expected to be spent as part of this activity. You need to provide budget(s) broken down by time periods of a year or less covering the whole life of the activity. Publishing budgets for each quarter is helpful for data users. A budget must not span more than 12 months.<br></br>\nYou should provide your budget(s) for your activity as soon as possible. You can then update this over time as more or less funding comes in, or the scope of the activity changes. <a target='_blank' href='https://iatistandard.org/en/guidance/standard-guidance/activity-budgets/'>More information</a>.",
     "attributes": {
       "budget_status": {
         "name": "budget_status",
@@ -2571,8 +2572,8 @@
         "choices": "Activity/BudgetStatus.json",
         "required": false,
         "criteria": "recommended",
-        "hover_text": "The status explains whether the budget being reported is indicative or has been formally committed. The value should appear within the BudgetStatus codelist.<br> <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/budget/'>For more information</a>",
-        "help_text": "Please select a status for this budget:</br><b>1 Indicative</b>: a non-binding estimate for the described budget</br><b>2 committed</b> a binding agreement for the described budget</br>If this budget changes status, you should change the status of this budget here. You should not create a new budget for the same time period with a different status. <a target='_blank' href='https://iatistandard.org/en/guidance/standard-guidance/activity-budgets/'>More information</a>."
+        "hover_text": "The status explains whether the budget being reported is indicative or has been formally committed. The value should appear within the BudgetStatus codelist.<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/budget/'>For more information</a>",
+        "help_text": "Please select a status for this budget:<br></br><b>1 Indicative</b>: a non-binding estimate for the described budget<br></br><b>2 committed</b> a binding agreement for the described budget<br></br>If this budget changes status, you should change the status of this budget here. You should not create a new budget for the same time period with a different status. <a target='_blank' href='https://iatistandard.org/en/guidance/standard-guidance/activity-budgets/'>More information</a>."
       },
       "budget_type": {
         "name": "budget_type",
@@ -2582,8 +2583,8 @@
         "choices": "Activity/BudgetType.json",
         "required": false,
         "criteria": "recommended",
-        "hover_text": "Whether this is the original budget (prepared when the original commitment was made) or has subsequently been revised.<br> <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/budget/'>For more information</a>",
-        "help_text": "Select the type of budget that you a providing:</br><b>1 Original</b> The original budget allocated to the activity. Select this option if you are publishing information about this budget for the first time.</br><b>2 Revised</b> The updated budget for an activity. Select this option if you are revising your original budget.</br>For example: an activity lasts a year. The original budget was $10,000 and was later decreased by $2,000. The final total budget for the activity is $8,000. You would need to create two budgets for this time period. Firstly you would add a budget with the type ‘original’ with the start and end date for the year, with the value of $10,000. Once you know that the budget has been revised, you would then add another budget for the same dates, with the type ‘revised’ with a value of $8,000.</br>If there are further changes to the revised budget, you should change the value in the ‘revised’ budget. Do not create additional ‘revised’ budgets for the same time period.</br>Therefore only one original and one revised budget should be published for each time period. <a target='_blank' href='https://iatistandard.org/en/guidance/standard-guidance/activity-budgets/'>More information</a>."
+        "hover_text": "Whether this is the original budget (prepared when the original commitment was made) or has subsequently been revised.<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/budget/'>For more information</a>",
+        "help_text": "Select the type of budget that you a providing:<br></br><b>1 Original</b> The original budget allocated to the activity. Select this option if you are publishing information about this budget for the first time.<br></br><b>2 Revised</b> The updated budget for an activity. Select this option if you are revising your original budget.<br></br>For example: an activity lasts a year. The original budget was $10,000 and was later decreased by $2,000. The final total budget for the activity is $8,000.You would need to create two budgets for this time period. Firstly you would add a budget with the type ‘original’ with the start and end date for the year, with the value of $10,000. Once you know that the budget has been revised, you would then add another budget for the same dates, with the type ‘revised’ with a value of $8,000.<br></br>If there are further changes to the revised budget, you should change the value in the ‘revised’ budget. Do not create additional ‘revised’ budgets for the same time period.<br></br>Therefore only one original and one revised budget should be published for each time period. <a target='_blank' href='https://iatistandard.org/en/guidance/standard-guidance/activity-budgets/'>More information</a>."
       }
     },
     "sub_elements": {
@@ -2592,7 +2593,7 @@
         "label": "period-start",
         "element_criteria": "mandatory",
         "add_more": false,
-        "hover_text": "The start of the budget period.<br> <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/budget/period-start/'>For more information</a>",
+        "hover_text": "The start of the budget period.<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/budget/period-start/'>For more information</a>",
         "attributes": {
           "date": {
             "name": "date",
@@ -2601,7 +2602,7 @@
             "placeholder": "Type date",
             "required": true,
             "criteria": "mandatory",
-            "hover_text": "This attribute is required.<br>This value must be of type xsd:date.<br> <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/budget/period-start/'>For more information</a>",
+            "hover_text": "This attribute is required.<br><br>This value must be of type xsd:date.<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/budget/period-start/'>For more information</a>",
             "help_text": "Provide the start date of the budget."
           }
         },
@@ -2612,7 +2613,7 @@
         "label": "period-end",
         "element_criteria": "mandatory",
         "add_more": false,
-        "hover_text": "The end of the period (which must not be greater than one year).<br> <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/budget/period-end/'>For more information</a>",
+        "hover_text": "The end of the period (which must not be greater than one year). <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/budget/period-end/'>For more information</a>",
         "attributes": {
           "date": {
             "name": "date",
@@ -2621,7 +2622,7 @@
             "placeholder": "Select date",
             "required": true,
             "criteria": "mandatory",
-            "hover_text": "This attribute is required. This value must be of type xsd:date.<br> <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/budget/period-end/'>For more information</a>",
+            "hover_text": "This attribute is required. This value must be of type xsd:date.<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/budget/period-end/'>For more information</a>",
             "help_text": "Provide the end date of the budget."
           }
         },
@@ -2632,7 +2633,7 @@
         "label": "value",
         "element_criteria": "mandatory",
         "add_more": false,
-        "hover_text": "The budget for this period.<br> <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/budget/value/'>For more information</a>",
+        "hover_text": "The budget for this period.<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/budget/value/'>For more information</a>",
         "help_text": "Provide the total finance for this budget",
         "attributes": {
           "amount": {
@@ -2653,7 +2654,7 @@
             "choices": "Activity/Currency.json",
             "required": false,
             "criteria": "recommended",
-            "hover_text": "A three letter ISO 4217 code for the original currency of the amount. This is required for all currency amounts unless the iati-organisation/@default-currency attribute is specified.<br> <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/budget/value/'>For more information</a>",
+            "hover_text": "A three letter ISO 4217 code for the original currency of the amount. This is required for all currency amounts unless the iati-organisation/@default-currency attribute is specified.<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/budget/value/'>For more information</a>",
             "help_text": "Select the currency that you have provided the value in."
           },
           "value_date": {
@@ -2663,7 +2664,7 @@
             "placeholder": "Select value-date",
             "required": true,
             "criteria": "mandatory",
-            "hover_text": "The date to be used for determining the exchange rate for currency conversions.This attribute is required.<br> <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/budget/value/'>For more information</a>",
+            "hover_text": "The date to be used for determining the exchange rate for currency conversions.This attribute is required.<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/budget/value/'>For more information</a>",
             "help_text": ""
           }
         },
