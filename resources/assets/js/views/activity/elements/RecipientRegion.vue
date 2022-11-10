@@ -9,7 +9,7 @@
       <span v-if="post.region_vocabulary">{{
         types.regionVocabulary[post.region_vocabulary]
       }}</span>
-      <span v-else>Vocabulary Not Available</span>
+      <span v-else>Vocabulary Missing</span>
     </div>
     <div class="ml-5">
       <table>
@@ -20,14 +20,14 @@
               <span v-if="post.region_code">{{
                 types.region[post.region_code]
               }}</span>
-              <span v-else>Not Available</span>
+              <span v-else>Missing</span>
             </td>
           </tr>
           <tr v-else>
             <td>Custom Code</td>
             <td>
               <span v-if="post.custom_code">{{ post.custom_code }}</span>
-              <span v-else>Not Available</span>
+              <span v-else>Missing</span>
             </td>
           </tr>
           <tr>
@@ -36,7 +36,7 @@
               <span v-if="post.percentage">
                 ({{ roundFloat(post.percentage) }}%)
               </span>
-              <span v-else>Not Available</span>
+              <span v-else>Missing</span>
             </td>
           </tr>
           <tr v-if="post.region_vocabulary == '99'">
@@ -49,7 +49,7 @@
               >
                 {{ post.vocabulary_uri }}
               </a>
-              <span v-else>Not Available</span>
+              <span v-else>Missing</span>
             </td>
           </tr>
           <tr>
@@ -66,11 +66,11 @@
                   {{
                     narrative.language
                       ? types.languages[narrative.language]
-                      : 'Not Available'
+                      : 'Missing'
                   }})
                 </div>
                 <div class="w-[500px] max-w-full text-xs">
-                  {{ narrative.narrative ?? 'Not Available' }}
+                  {{ narrative.narrative ?? 'Missing' }}
                 </div>
               </div>
             </td>

@@ -9,14 +9,14 @@
       <span v-if="participating_org.organization_role">{{
         types.organisationRole[participating_org.organization_role]
       }}</span>
-      <span v-else class="italic">Organization Role Not Available</span>
+      <span v-else class="italic">Organization Role Missing</span>
     </div>
 
     <div class="mb-4 text-sm">
       <span v-if="participating_org.narrative['0'].narrative">{{
         participating_org.narrative['0'].narrative
       }}</span>
-      <span v-else class="italic">Narrative Not Available</span>
+      <span v-else class="italic">Narrative Missing</span>
     </div>
 
     <div class="ml-5">
@@ -37,7 +37,7 @@
                   narrative.narrative
                 }}</span>
               </div>
-              <span v-else class="italic">Not Available</span>
+              <span v-else class="italic">Missing</span>
             </div>
           </td>
         </tr>
@@ -46,21 +46,21 @@
           <td v-if="participating_org.type">
             {{ types.organizationType[participating_org.type] }}
           </td>
-          <td v-else class="italic">Not Available</td>
+          <td v-else class="italic">Missing</td>
         </tr>
         <tr>
           <td>Organisation Role</td>
           <td v-if="participating_org.organization_role">
             {{ types.organisationRole[participating_org.organization_role] }}
           </td>
-          <td v-else class="italic">Not Available</td>
+          <td v-else class="italic">Missing</td>
         </tr>
         <tr>
           <td>Ref</td>
           <td v-if="participating_org.ref">
             {{ participating_org.ref }}
           </td>
-          <td v-else class="italic">Not Available</td>
+          <td v-else class="italic">Missing</td>
         </tr>
         <tr>
           <td>Activity Id</td>
@@ -69,7 +69,7 @@
               <span v-if="participating_org.identifier">{{
                 participating_org.identifier
               }}</span>
-              <span v-else class="italic">Not Available</span>
+              <span v-else class="italic">Missing</span>
             </div>
           </td>
         </tr>

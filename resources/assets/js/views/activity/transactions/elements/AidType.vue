@@ -10,7 +10,7 @@
     >
       <div class="category">
         <span>{{
-          type.aidTypeVocabulary[at.aid_type_vocabulary] ?? 'Not Available'
+          type.aidTypeVocabulary[at.aid_type_vocabulary] ?? 'Missing'
         }}</span>
       </div>
       <div clas="ml-4">
@@ -35,7 +35,7 @@
                 <span v-else-if="at.earmarking_modality">
                   {{ type.earMarkingModality[at.earmarking_modality] }}
                 </span>
-                <span v-else> Not Available </span>
+                <span v-else> Missing </span>
               </div>
             </td>
           </tr>

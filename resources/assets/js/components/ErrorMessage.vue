@@ -202,12 +202,6 @@ function resendVerificationEmail() {
       toastData.type = false;
       isLoaderVisible.value = false;
     });
-
-  setTimeout(() => {
-    toastData.visibility = false;
-    toastData.message = "";
-    toastData.type = false;
-  }, 2000);
 }
 
 onMounted(async () => {
@@ -222,12 +216,6 @@ onMounted(async () => {
     const response = res.data;
     errorData.account_verified = response.data.account_verified;
   });
-
-  setTimeout(() => {
-    toastData.visibility = false;
-    toastData.message = "";
-    toastData.type = false;
-  }, 2000);
 });
 </script>
 

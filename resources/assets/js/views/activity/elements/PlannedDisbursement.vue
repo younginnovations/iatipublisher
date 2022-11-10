@@ -7,7 +7,7 @@
   >
     <div class="category">
       <span>
-        {{ types.budgetType[post.planned_disbursement_type] ?? "Type Not Available" }}
+        {{ types.budgetType[post.planned_disbursement_type] ?? "Type Missing" }}
       </span>
     </div>
 
@@ -25,7 +25,7 @@
                   ? Number(post.value[0].amount).toLocaleString() +
                     " " +
                     types.currency[post.value[0].currency]
-                  : "Not available"
+                  : "Missing"
               }}
             </td>
           </tr>
@@ -35,7 +35,7 @@
               {{
                 post.value[0].value_date
                   ? formatDate(post.value[0].value_date)
-                  : "Not Available"
+                  : "Missing"
               }}
             </td>
           </tr>
@@ -46,7 +46,7 @@
                 {{
                   post.period_start[0].date
                     ? formatDate(post.period_start[0].date)
-                    : "Date Not Available"
+                    : "Date Missing"
                 }}
               </span>
             </td>
@@ -58,7 +58,7 @@
                 {{
                   post.period_end[0].date
                     ? formatDate(post.period_end[0].date)
-                    : "Date Not Available"
+                    : "Date Missing"
                 }}
               </span>
             </td>
@@ -75,19 +75,19 @@
           <tr>
             <td>Type</td>
             <td>
-              {{ post.provider_org[0].type ?? "Not available" }}
+              {{ post.provider_org[0].type ?? "Missing" }}
             </td>
           </tr>
           <tr>
             <td>Provider Activity ID</td>
             <td>
-              {{ post.provider_org[0].provider_activity_id ?? "Not Available" }}
+              {{ post.provider_org[0].provider_activity_id ?? "Missing" }}
             </td>
           </tr>
           <tr>
             <td>Reference</td>
             <td>
-              {{ post.provider_org[0].ref ?? "Not available" }}
+              {{ post.provider_org[0].ref ?? "Missing" }}
             </td>
           </tr>
           <tr>
@@ -106,11 +106,11 @@
                   {{
                     narrative.language
                       ? types.languages[narrative.language]
-                      : "Not Available"
+                      : "Missing"
                   }})
                 </div>
                 <div class="w-[500px] max-w-full">
-                  {{ narrative.narrative ?? "Not Available" }}
+                  {{ narrative.narrative ?? "Missing" }}
                 </div>
               </div>
             </td>
@@ -127,19 +127,19 @@
           <tr>
             <td>Type</td>
             <td>
-              {{ post.receiver_org[0].type ?? "Not available" }}
+              {{ post.receiver_org[0].type ?? "Missing" }}
             </td>
           </tr>
           <tr>
             <td>Receiver Activity ID</td>
             <td>
-              {{ post.receiver_org[0].receiver_activity_id ?? "Not Available" }}
+              {{ post.receiver_org[0].receiver_activity_id ?? "Missing" }}
             </td>
           </tr>
           <tr>
             <td>Reference</td>
             <td>
-              {{ post.receiver_org[0].ref ?? "Not available" }}
+              {{ post.receiver_org[0].ref ?? "Missing" }}
             </td>
           </tr>
           <tr>
@@ -158,11 +158,11 @@
                   {{
                     narrative.language
                       ? types.languages[narrative.language]
-                      : "Not Available"
+                      : "Missing"
                   }})
                 </div>
                 <div class="w-[500px] max-w-full">
-                  {{ narrative.narrative ?? "Not Available" }}
+                  {{ narrative.narrative ?? "Missing" }}
                 </div>
               </div>
             </td>

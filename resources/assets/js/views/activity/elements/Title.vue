@@ -8,7 +8,7 @@
         {{ post.narrative }}
       </span>
     </div>
-    <span v-else class="text-sm italic">Title Not Available</span>
+    <span v-else class="text-sm italic">Title Missing</span>
     <div v-if="i !== data.content.length - 1" class="mb-4"></div>
   </div>
 </template>

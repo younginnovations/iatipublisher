@@ -3,7 +3,7 @@
     {{
       tsData[0].tied_status_code
         ? type.tiedStatusType[tsData[0].tied_status_code]
-        : 'Tied Status Code Not Available'
+        : 'Tied Status Code Missing'
     }}
   </div>
 </template>

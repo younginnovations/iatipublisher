@@ -3,7 +3,7 @@
     {{
       activity["data"]["title"][0]["narrative"]
         ? activity["data"]["title"][0]["narrative"]
-        : "Not Available"
+        : "Missing"
     }}
 
     <span

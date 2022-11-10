@@ -3,7 +3,7 @@
     {{
       flowData[0].flow_type
         ? type.flowType[flowData[0].flow_type]
-        : 'Flow Type Not Available'
+        : 'Flow Type Missing'
     }}
   </div>
 </template>

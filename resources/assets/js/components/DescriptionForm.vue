@@ -102,7 +102,7 @@ Education and psychosocial support to children in Aleppo Governorate</textarea
       <span class="mr-1.5 text-lg">
         <svg-vue icon="add-more" />
       </span>
-      add more description
+      add additional description
     </button>
   </form>
 </template>

@@ -9,11 +9,11 @@
         <span v-if="identifier.reference_type">{{
           types.otherIdentifierType[identifier.reference_type]
         }}</span>
-        <span v-else class="italic">Type Not Available</span>
+        <span v-else class="italic">Type Missing</span>
       </div>
       <div class="text-sm">
         <span v-if="identifier.reference">{{ identifier.reference }}</span>
-        <span v-else class="italic">Reference Not Available</span>
+        <span v-else class="italic">Reference Missing</span>
       </div>
       <div>
         <div class="ml-5 tb-content">
@@ -27,7 +27,7 @@
                 <tr>
                   <td>Owner Organisation Reference</td>
                   <td v-if="post.ref">{{ post.ref }}</td>
-                  <td v-else class="italic">Not Available</td>
+                  <td v-else class="italic">Missing</td>
                 </tr>
                 <tr>
                   <td>Owner Organisation Narrative</td>
@@ -46,7 +46,7 @@
                           n.narrative
                         }}</span>
                       </div>
-                      <span v-else class="italic">Not Available</span>
+                      <span v-else class="italic">Missing</span>
                     </div>
                   </td>
                 </tr>

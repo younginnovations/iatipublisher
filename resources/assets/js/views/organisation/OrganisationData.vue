@@ -173,8 +173,8 @@
             </div>
             <div class="mb-3 flex justify-between">
               <div class="flex items-center space-x-1">
-                <svg-vue icon="star" />
-                <span>Mandatory</span>
+                <svg-vue icon="core" />
+                <span>Core</span>
               </div>
               <HoverText
                 hover-text="You cannot publish an activity until all the mandatory fields have been filled."

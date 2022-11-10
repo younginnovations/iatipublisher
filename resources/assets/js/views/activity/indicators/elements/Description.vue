@@ -10,7 +10,7 @@
           }"
         >
           <div class="mb-1 language">
-            (Language: {{ description.language ? descType[description.language] : 'Not Available' }})
+            (Language: {{ description.language ? descType[description.language] : 'Missing' }})
           </div>
           <div class="text-xs description">
             {{ description.narrative }}

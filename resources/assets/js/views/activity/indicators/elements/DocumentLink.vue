@@ -11,7 +11,7 @@
                   {{
                     getActivityTitle(post.title[0].narrative, 'en')
                       ? getActivityTitle(post.title[0].narrative, 'en')
-                      : 'Not Available'
+                      : 'Missing'
                   }}
                 </div>
                 <div class="ml-4">
@@ -33,11 +33,11 @@
                               {{
                                 na.language
                                   ? type.language[na.language]
-                                  : 'Not Available'
+                                  : 'Missing'
                               }})
                             </div>
                             <div class="text-xs description">
-                              {{ na.narrative ?? 'Not Available' }}
+                              {{ na.narrative ?? 'Missing' }}
                             </div>
                           </div>
                         </td>
@@ -47,13 +47,13 @@
                         <td>Document Link</td>
                         <td>
                           <a v-if="post.url" target='_blank' :href="post.url">{{ post.url }}</a>
-                          <span v-else>Not Available</span>
+                          <span v-else>Missing</span>
                         </td>
                       </tr>
 
                       <tr>
                         <td>Format</td>
-                        <td>{{ post.format ?? 'Not Available' }}</td>
+                        <td>{{ post.format ?? 'Missing' }}</td>
                       </tr>
 
                       <tr>
@@ -73,11 +73,11 @@
                               {{
                                 na.language
                                   ? type.language[na.language]
-                                  : 'Not available'
+                                  : 'Missing'
                               }})
                             </div>
                             <div class="text-xs description">
-                              {{ na.narrative ?? 'Not available' }}
+                              {{ na.narrative ?? 'Missing' }}
                             </div>
                           </div>
                         </td>
@@ -95,7 +95,7 @@
                             {{
                               cat.code
                                 ? type.documentCategory[cat.code]
-                                : 'Not Available'
+                                : 'Missing'
                             }}
                           </div>
                         </td>
@@ -112,7 +112,7 @@
                                       (entry) => type.language[entry.language]
                                     )
                                     .join(', ')
-                                : 'Not Available'
+                                : 'Missing'
                             }}
                           </div>
                         </td>
@@ -122,7 +122,7 @@
                         <td>Document Date</td>
                         <td>
                           <div class="text-xs">
-                            {{ post.document_date[0].date ?? 'Not Available' }}
+                            {{ post.document_date[0].date ?? 'Missing' }}
                           </div>
                         </td>
                       </tr>

@@ -9,18 +9,18 @@
       <span v-if="post.policy_marker_vocabulary">{{
         types.policyMarkerVocabulary[post.policy_marker_vocabulary]
       }}</span>
-      <span v-else class="italic">Vocabulary Not Available</span>
+      <span v-else class="italic">Vocabulary Missing</span>
     </div>
     <div class="text-sm">
       <div v-if="post.policy_marker_vocabulary == '1'">
         <span v-if="post.policy_marker">
           {{ types.policyMarker[post.policy_marker] }}
         </span>
-        <span v-else class="italic">Not Available</span>
+        <span v-else class="italic">Missing</span>
       </div>
       <div v-else>
         <span v-if="post.policy_marker_text">{{ post.policy_marker_text }}</span>
-        <span v-else class="italic">Not Available</span>
+        <span v-else class="italic">Missing</span>
       </div>
     </div>
     <table class="ml-5">
@@ -31,7 +31,7 @@
             <a v-if="post.vocabulary_uri" target="_blank" :href="post.vocabulary_uri">{{
               post.vocabulary_uri
             }}</a>
-            <span v-else class="italic">Not Available</span>
+            <span v-else class="italic">Missing</span>
           </td>
         </tr>
         <tr>
@@ -40,7 +40,7 @@
             <span v-if="post.significance">{{
               types.policySignificance[post.significance]
             }}</span>
-            <span v-else class="italic">Not Available</span>
+            <span v-else class="italic">Missing</span>
           </td>
         </tr>
         <tr
@@ -57,7 +57,7 @@
               >
               <span class="description">{{ narrative.narrative }}</span>
             </div>
-            <span v-else class="italic">Not Available</span>
+            <span v-else class="italic">Missing</span>
           </td>
         </tr>
       </tbody>

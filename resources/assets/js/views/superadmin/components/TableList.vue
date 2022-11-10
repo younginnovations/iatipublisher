@@ -86,15 +86,15 @@
             <td>
               <div v-if="data.name" class="ellipsis relative">
                 <span class="ellipsis overflow-hidden">
-                  {{ data?.name[0]?.narrative ?? 'Name not available' }}
+                  {{ data?.name[0]?.narrative ?? 'Name Missing' }}
                 </span>
                 <div class="w-52">
                   <span class="ellipsis__title--hover">
-                    {{ data?.name[0]?.narrative ?? 'Name not available' }}
+                    {{ data?.name[0]?.narrative ?? 'Name Missing' }}
                   </span>
                 </div>
               </div>
-              <div v-else>Name not available</div>
+              <div v-else>Name Missing</div>
               <div class="text-blue-40">{{ data?.user?.email }}</div>
             </td>
             <td class="text-n-40">

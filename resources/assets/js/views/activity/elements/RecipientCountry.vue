@@ -11,7 +11,7 @@
           >({{ roundFloat(participating_org.percentage) }}%)</span
         >
       </div>
-      <span v-else class="italic">Not Available</span>
+      <span v-else class="italic">Missing</span>
     </div>
 
     <div
@@ -26,7 +26,7 @@
         </span>
         <span>{{ item.narrative }}</span>
       </div>
-      <span v-else class="italic">Narrative Not Available</span>
+      <span v-else class="italic">Narrative Missing</span>
     </div>
   </div>
 </template>

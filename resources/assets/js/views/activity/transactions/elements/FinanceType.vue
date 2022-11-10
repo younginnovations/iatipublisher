@@ -3,7 +3,7 @@
     {{
       financeData[0].finance_type
         ? type.financeType[financeData[0].finance_type]
-        : 'Finance Type Not Available'
+        : 'Finance Type Missing'
     }}
   </div>
 </template>

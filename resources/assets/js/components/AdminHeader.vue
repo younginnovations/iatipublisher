@@ -211,7 +211,7 @@ const data = reactive({
 const [modalValue, modalToggle] = useToggle();
 function toast(message: string, type: boolean) {
   toastVisibility.value = true;
-  setTimeout(() => (toastVisibility.value = false), 5000);
+  setTimeout(() => (toastVisibility.value = false), 15000);
   toastMessage.value = message;
   toastType.value = type;
 }
@@ -220,6 +220,15 @@ function changeActiveMenu() {
   data.menus.forEach((menu, key) => {
     data.menus[key]['active'] = menu.permalink === path ? true : false;
   });
+  if(path.includes('activity') || path.includes('result') || path.includes('indicator')){
+    data.menus[0]['active'] = true
+  }
+  if(path.includes('organisation')){
+    data.menus[1]['active'] = true
+  }
+  if(path.includes('import')){
+    data.menus[3]['active'] = true
+  }
 }
 async function logout() {
   await axios.post('/logout').then((res) => {

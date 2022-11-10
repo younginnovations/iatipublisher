@@ -18,10 +18,10 @@
             >
           </li>
           <li>
-            <a href="#" :class="liClass">Upload activities from .xml</a>
+            <a href="/import" :class="liClass">Upload activities from .xml</a>
           </li>
           <li>
-            <a href="#" :class="liClass">Upload activities from .csv</a>
+            <a href="/import" :class="liClass">Upload activities from .csv</a>
           </li>
         </ul>
       </div>

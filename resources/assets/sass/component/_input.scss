@@ -101,7 +101,7 @@ textarea.form__input {
   }
 
   .multiselect-search {
-    @apply border border-n-30 py-2.5;
+    @apply border border-n-30 py-2.5 cursor-pointer;
   }
 
   .multiselect-search:focus {
