@@ -1,5 +1,9 @@
 {
+<<<<<<< HEAD
     "/js/app.js": "/js/app.js?id=f85f49e635c007d8a72364b258e2d01b",
+=======
+    "/js/app.js": "/js/app.js?id=ad12bdb2a5adb6b457cf9a91178fadc8",
+>>>>>>> 132b89ef (publisher page ficed)
     "/js/script.js": "/js/script.js?id=d02904bc52c9ad26eaeaca66414b7ecd",
     "/js/formbuilder.js": "/js/formbuilder.js?id=9f35675051e65b532700fcb1e73cb2bd",
     "/manifest.js": "/manifest.js?id=6ec4db78dd752c29bd9956118b1e0467",
