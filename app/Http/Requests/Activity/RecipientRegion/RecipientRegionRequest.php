@@ -18,6 +18,7 @@ class RecipientRegionRequest extends ActivityBaseRequest
      * Get the validation rules that apply to the request.
      *
      * @return array
+     * @throws BindingResolutionException
      */
     public function rules(): array
     {
@@ -46,9 +47,9 @@ class RecipientRegionRequest extends ActivityBaseRequest
         foreach ($formFields as $formField) {
             if (array_key_exists($formField['region_vocabulary'], $groupedRegion)) {
                 $groupedRegion[$formField['region_vocabulary']]['count'] += 1;
-                $groupedRegion[$formField['region_vocabulary']]['total'] += $formField['percentage'];
+                $groupedRegion[$formField['region_vocabulary']]['total'] += (float) $formField['percentage'];
             } else {
-                $groupedRegion[$formField['region_vocabulary']] = ['count' => 1, 'total' => $formField['percentage']];
+                $groupedRegion[$formField['region_vocabulary']] = ['count' => 1, 'total' => (float) $formField['percentage']];
             }
         }
 

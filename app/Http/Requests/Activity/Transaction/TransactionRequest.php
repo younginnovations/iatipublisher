@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Requests\Activity\Transaction;
 
 use App\Http\Requests\Activity\ActivityBaseRequest;
+use App\IATI\Services\Activity\ActivityService;
 use App\IATI\Services\Activity\TransactionService;
 use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Support\Arr;
@@ -242,9 +243,9 @@ class TransactionRequest extends ActivityBaseRequest
 
         $rules = [];
         $params = $this->route()->parameters();
-        $transactionService = app()->make(TransactionService::class);
+        $activityService = app()->make(ActivityService::class);
 
-        if ($transactionService->hasSectorDefinedInActivity($params['transactionId'])) {
+        if ($activityService->hasSectorDefined($params['id'])) {
             Validator::extend('already_in_activity', function () {
                 return false;
             });
@@ -414,9 +415,9 @@ class TransactionRequest extends ActivityBaseRequest
 
         $rules = [];
         $params = $this->route()->parameters();
-        $transactionService = app()->make(TransactionService::class);
+        $activityService = app()->make(ActivityService::class);
 
-        if ($transactionService->hasRecipientRegionDefinedInActivity($params['transactionId'])) {
+        if ($activityService->hasRecipientRegionDefined($params['id'])) {
             Validator::extend('already_in_activity', function () {
                 return false;
             });
@@ -489,9 +490,9 @@ class TransactionRequest extends ActivityBaseRequest
 
         $rules = [];
         $params = $this->route()->parameters();
-        $transactionService = app()->make(TransactionService::class);
+        $activityService = app()->make(ActivityService::class);
 
-        if ($transactionService->hasRecipientCountryDefinedInActivity($params['transactionId'])) {
+        if ($activityService->hasRecipientCountryDefined($params['id'])) {
             Validator::extend('already_in_activity', function () {
                 return false;
             });

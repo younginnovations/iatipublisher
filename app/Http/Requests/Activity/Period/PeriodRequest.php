@@ -7,6 +7,7 @@ namespace App\Http\Requests\Activity\Period;
 use App\Http\Requests\Activity\ActivityBaseRequest;
 use App\IATI\Services\Activity\IndicatorService;
 use Illuminate\Contracts\Container\BindingResolutionException;
+use Illuminate\Support\Facades\Validator;
 
 /**
  * Class PeriodRequest.
@@ -17,6 +18,7 @@ class PeriodRequest extends ActivityBaseRequest
      * Get the validation rules that apply to the request.
      *
      * @return array
+     * @throws BindingResolutionException
      */
     public function rules(): array
     {
@@ -27,6 +29,7 @@ class PeriodRequest extends ActivityBaseRequest
      * Get the error message as required.
      *
      * @return array
+     * @throws BindingResolutionException
      */
     public function messages(): array
     {
@@ -39,22 +42,16 @@ class PeriodRequest extends ActivityBaseRequest
      * @param array $formFields
      *
      * @return array
+     * @throws BindingResolutionException
      */
     protected function getRulesForPeriod(array $formFields): array
     {
         $rules = [];
-        $diff = 0;
-        $start = $formFields['period_start'][0]['date'];
-        $end = $formFields['period_end'][0]['date'];
-
-        if ($start && $end) {
-            $diff = (strtotime($end) - strtotime($start)) / 86400;
-        }
 
         return array_merge(
             $rules,
-            $this->getRulesForResultPeriodStart($formFields['period_start'], 'period_start', $diff),
-            $this->getRulesForResultPeriodEnd($formFields['period_end'], 'period_end', $formFields['period_start'], $diff),
+            $this->getRulesForResultPeriodStart($formFields['period_start'], 'period_start'),
+            $this->getRulesForResultPeriodEnd($formFields['period_end'], 'period_end'),
             $this->getRulesForTarget($formFields['target'], 'target'),
             $this->getRulesForTarget($formFields['actual'], 'actual')
         );
@@ -66,6 +63,7 @@ class PeriodRequest extends ActivityBaseRequest
      * @param array $formFields
      *
      * @return array
+     * @throws BindingResolutionException
      */
     protected function getMessagesForPeriod(array $formFields): array
     {
@@ -168,9 +166,13 @@ class PeriodRequest extends ActivityBaseRequest
     protected function getRulesForTarget($formFields, $valueType): array
     {
         $rules = [];
-        $indicator = app()->make(IndicatorService::class)->getIndicator($this->id)->indicator;
-        $measure = $indicator['measure'];
+        $params = $this->route()->parameters();
+        $indicatorService = app()->make(IndicatorService::class);
+        $indicatorMeasureType = $indicatorService->getIndicatorMeasureType($params['id']);
 
+        Validator::extend('qualitative_empty', function () {
+            return false;
+        });
         foreach ($formFields as $targetIndex => $target) {
             $targetForm = sprintf('%s.%s', $valueType, $targetIndex);
             $narrativeRules = $this->getRulesForNarrative($target['comment'][0]['narrative'], sprintf('%s.comment.0', $targetForm));
@@ -184,12 +186,10 @@ class PeriodRequest extends ActivityBaseRequest
                 $rules[$key] = $docLinkRule;
             }
 
-            if ($measure) {
-                $rules[sprintf('%s.%s.value', $valueType, $targetIndex)] = 'required|numeric';
-
-                if ($measure == '5') {
-                    $rules[sprintf('%s.%s.value', $valueType, $targetIndex)] = 'prohibited';
-                }
+            if ($indicatorMeasureType['non_qualitative']) {
+                $rules[sprintf('%s.%s.value', $valueType, $targetIndex)] = 'numeric|required';
+            } elseif ($indicatorMeasureType['qualitative'] && !empty($target['value'])) {
+                $rules[sprintf('%s.%s.value', $valueType, $targetIndex)] = 'qualitative_empty';
             }
         }
 
@@ -203,22 +203,19 @@ class PeriodRequest extends ActivityBaseRequest
      * @param $valueType
      *
      * @return array
+     * @throws BindingResolutionException
      */
     protected function getMessagesForTarget($formFields, $valueType): array
     {
         $messages = [];
-        $indicator = app()->make(IndicatorService::class)->getIndicator($this->id)->indicator;
-        $measure = $indicator['measure'];
+        $params = $this->route()->parameters();
+        $indicatorService = app()->make(IndicatorService::class);
+        $indicatorMeasureType = $indicatorService->getIndicatorMeasureType($params['id']);
 
         foreach ($formFields as $targetIndex => $target) {
             $targetForm = sprintf('%s.%s', $valueType, $targetIndex);
 
-            $messages[sprintf(
-                '%s.%s.value.numeric',
-                $valueType,
-                $targetIndex
-            )]
-                = 'The @value field must be numeric.';
+            $messages[sprintf('%s.%s.value.numeric', $valueType, $targetIndex)] = 'The @value field must be numeric.';
 
             $narrativeMessages = $this->getMessagesForNarrative($target['comment'][0]['narrative'], sprintf('%s.comment.0', $targetForm));
 
@@ -232,12 +229,10 @@ class PeriodRequest extends ActivityBaseRequest
                 $messages[$key] = $docLinkMessage;
             }
 
-            if ($measure) {
+            if ($indicatorMeasureType['non_qualitative']) {
                 $messages[sprintf('%s.%s.value', $valueType, $targetIndex)] = 'Value must be filled when the indicator measure is non-qualitative.';
-
-                if ($measure == '5') {
-                    $messages[sprintf('%s.%s.value', $valueType, $targetIndex)] = 'Value must be omitted when the indicator measure is qualitative.';
-                }
+            } elseif ($indicatorMeasureType['qualitative'] && !empty($target['value'])) {
+                $messages[sprintf('%s.%s.value.qualitative_empty', $valueType, $targetIndex)] = 'Value must be omitted when the indicator measure is qualitative.';
             }
         }
 

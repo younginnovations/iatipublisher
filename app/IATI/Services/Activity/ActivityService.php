@@ -298,6 +298,55 @@ class ActivityService
         return 100.0;
     }
 
+    /**
+     * Checks if activity has recipient region.
+     *
+     * @param $activityId
+     *
+     * @return bool
+     */
+    public function hasRecipientRegionDefined($activityId): bool
+    {
+        $activity = $this->getActivity($activityId)->toArray;
+
+        return !empty($activity) && (array_key_exists('recipient_region', $activity) && !empty($activity['recipient_region']));
+    }
+
+    /**
+     * Checks if activity has recipient country.
+     *
+     * @param $activityId
+     *
+     * @return bool
+     */
+    public function hasRecipientCountryDefined($activityId): bool
+    {
+        $activity = $this->getActivity($activityId)->toArray;
+
+        return !empty($activity) && (array_key_exists('recipient_country', $activity) && !empty($activity['recipient_country']));
+    }
+
+    /**
+     * Checks if activity has sector.
+     *
+     * @param $activityId
+     *
+     * @return bool
+     */
+    public function hasSectorDefined($activityId): bool
+    {
+        $activity = $this->getActivity($activityId)->toArray;
+
+        return !empty($activity) && (array_key_exists('sector', $activity) && !empty($activity['sector']));
+    }
+
+    /**
+     * Checks if recipient_country of specific activity has been defined in any one of the transactions.
+     *
+     * @param $activityId
+     *
+     * @return bool
+     */
     public function hasRecipientCountryDefinedInTransactions($activityId): bool
     {
         $transactions = $this->getActivity($activityId)->transactions->toArray();
@@ -316,6 +365,13 @@ class ActivityService
         return false;
     }
 
+    /**
+     * Checks if recipient_region of specific activity has been defined in any one of the transactions.
+     *
+     * @param $activityId
+     *
+     * @return bool
+     */
     public function hasRecipientRegionDefinedInTransactions($activityId): bool
     {
         $transactions = $this->getActivity($activityId)->transactions->toArray();
@@ -334,6 +390,13 @@ class ActivityService
         return false;
     }
 
+    /**
+     * Checks if sector of specific activity has been defined in any one of the transactions.
+     *
+     * @param $activityId
+     *
+     * @return bool
+     */
     public function hasSectorDefinedInTransactions($activityId): bool
     {
         $transactions = $this->getActivity($activityId)->transactions->toArray();

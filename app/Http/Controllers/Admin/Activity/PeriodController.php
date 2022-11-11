@@ -268,15 +268,6 @@ class PeriodController extends Controller
             $periodData = $request->except(['_method', '_token']);
             $period = $this->periodService->getPeriod($periodId);
 
-            $messages = $this->validateData([
-                'measure' => $this->indicatorService->getIndicator($indicatorId)['indicator']['measure'],
-                'period'  => $periodData,
-            ]);
-
-            if ($messages) {
-                return redirect()->route('admin.indicator.period.edit', [$indicatorId, $periodId])->with('error', $messages)->withInput();
-            }
-
             if (!$this->periodService->update($periodId, ['indicator_id' => $indicatorId, 'period' => $periodData])) {
                 return redirect()->route('admin.indicator.period.index', [$indicatorId])->with(
                     'error',
@@ -327,46 +318,5 @@ class PeriodController extends Controller
                 'indicator_id' => $id,
             ], 400);
         }
-    }
-
-    /**
-     * Validate value data based on quantitative and non-quantitative measure.
-     *
-     * @param array $period
-     *
-     * @return string
-     */
-    private function validateData(array $period): string
-    {
-        $messages = '';
-        $measure = $period['measure'];
-
-        if ($measure === '5') {
-            foreach ($period['period']['target'] as $target) {
-                if ($target['value']) {
-                    return 'Value must be omitted when the indicator measure is qualitative.';
-                }
-            }
-
-            foreach ($period['period']['actual'] as $actual) {
-                if ($actual['value']) {
-                    return 'Value must be omitted when the indicator measure is qualitative.';
-                }
-            }
-        } else {
-            foreach ($period['period']['target'] as $target) {
-                if (!$target['value']) {
-                    return 'Value must be filled when the indicator measure is non-qualitative.';
-                }
-            }
-
-            foreach ($period['period']['actual'] as $actual) {
-                if (!$actual['value']) {
-                    return 'Value must be filled when the indicator measure is non-qualitative.';
-                }
-            }
-        }
-
-        return $messages;
     }
 }
