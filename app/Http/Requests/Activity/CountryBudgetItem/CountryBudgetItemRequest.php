@@ -61,8 +61,7 @@ class CountryBudgetItemRequest extends ActivityBaseRequest
     protected function getMessagesForCountryBudgetItem(array $formFields): array
     {
         $messages = [];
-
-        $code = $formFields['country_budget_vocabulary'] == 1 ? 'code' : 'code_text';
+        $code = $formFields['country_budget_vocabulary'] === '1' ? 'code' : 'code_text';
         $messages = array_merge(
             $messages,
             $this->getBudgetItemMessages($formFields['budget_item'], $code)

@@ -107,10 +107,10 @@ class ContactInfo extends Element
         if ($key === $this->_csvHeaders[0]) {
             $relatedActivityType = $this->loadCodeList('ContactType');
 
-            if (!is_int($value)) {
+            if ($value) {
                 foreach ($relatedActivityType as $code => $name) {
                     if (strcasecmp(trim($value), (string) $name) === 0) {
-                        $value = $code;
+                        $value = strval($code);
                         break;
                     }
                 }

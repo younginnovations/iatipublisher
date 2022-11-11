@@ -68,8 +68,10 @@ class OrganizationWorkflowController extends Controller
 
             return response()->json(['success' => false, 'message' => $message->getMessage()]);
         } catch (\Exception $e) {
+            // dd($e);
             DB::rollBack();
             logger()->error($e->getMessage());
+            logger()->error($e);
 
             return response()->json(['success' => false, 'message' => 'Error has occurred while publishing organization.']);
         }

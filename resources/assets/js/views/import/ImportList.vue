@@ -166,15 +166,15 @@ onMounted(() => {
 function updateSelectedActivities(activity_id) {
   let index = selectedActivities.indexOf(activity_id);
 
-  if (activities[activity_id]["errors"].length === 0) {
-    if (index >= 0) {
-      selectedActivities.splice(index, 1);
-      selectedCount.value = selectedCount.value - 1;
-    } else {
-      selectedActivities.push(activity_id);
-      selectedCount.value = selectedCount.value + 1;
-    }
+  // if (activities[activity_id]["errors"].length === 0) {
+  if (index >= 0) {
+    selectedActivities.splice(index, 1);
+    selectedCount.value = selectedCount.value - 1;
+  } else {
+    selectedActivities.push(activity_id);
+    selectedCount.value = selectedCount.value + 1;
   }
+  // }
 }
 
 function selectAllActivities() {
@@ -184,14 +184,14 @@ function selectAllActivities() {
 
   Object.keys(activities).forEach((activity_id) => {
     let index = selectedActivities.indexOf(activity_id);
-    if (activities[activity_id]["errors"].length === 0) {
-      if (selectAll.value) {
-        selectedActivities.push(activity_id);
-        selectedCount.value = selectedCount.value + 1;
-      } else {
-        selectedActivities.splice(index, 1);
-      }
+    // if (activities[activity_id]["errors"].length === 0) {
+    if (selectAll.value) {
+      selectedActivities.push(activity_id);
+      selectedCount.value = selectedCount.value + 1;
+    } else {
+      selectedActivities.splice(index, 1);
     }
+    // }
   });
 
   if (!selectAll.value) {

@@ -49,10 +49,10 @@ trait PreparesTransactionData
         if ($key === $this->_csvHeaders[1]) {
             $validTransactionType = $this->loadCodeList('TransactionType', 'Activity');
 
-            if (!is_int($value)) {
+            if ($value) {
                 foreach ($validTransactionType as $code => $name) {
                     if (strcasecmp(trim($value), (string) $name) === 0) {
-                        $value = is_int($code) ? (int) $code : $code;
+                        $value = strval($code);
                         break;
                     }
                 }
@@ -197,10 +197,10 @@ trait PreparesTransactionData
         if ($key === $this->_csvHeaders[14]) {
             $validSectorVocabulary = $this->loadCodeList('SectorVocabulary');
 
-            if (!is_int($value)) {
+            if ($value) {
                 foreach ($validSectorVocabulary as $code => $name) {
                     if (strcasecmp(trim($value), $name) === 0) {
-                        $value = is_int($code) ? (int) $code : $code;
+                        $value = strval($code);
                         break;
                     }
                 }
@@ -240,13 +240,13 @@ trait PreparesTransactionData
      */
     protected function setSectorCode($sectorVocabulary, $value): void
     {
-        if ($sectorVocabulary === 1) {
+        if ($sectorVocabulary === '1') {
             $validSectorCode = $this->loadCodeList('SectorCode');
 
-            if (!is_int($value)) {
+            if ($value) {
                 foreach ($validSectorCode as $code => $name) {
                     if (strcasecmp(trim($value), $name) === 0) {
-                        $value = is_int($code) ? (int) $code : $code;
+                        $value = strval($code);
                         break;
                     }
                 }
@@ -257,13 +257,13 @@ trait PreparesTransactionData
             $this->data['transaction']['sector'][0]['code'] = '';
         }
 
-        if ($sectorVocabulary === 2) {
+        if ($sectorVocabulary === '2') {
             $validCategoryCode = $this->loadCodeList('SectorCategory');
 
-            if (!is_int($value)) {
+            if ($value) {
                 foreach ($validCategoryCode as $code => $name) {
                     if (strcasecmp(trim($value), $name) === 0) {
-                        $value = is_int($code) ? (int) $code : $code;
+                        $value = strval($code);
                         break;
                     }
                 }
@@ -274,13 +274,13 @@ trait PreparesTransactionData
             $this->data['transaction']['sector'][0]['category_code'] = '';
         }
 
-        if ($sectorVocabulary === 7) {
+        if ($sectorVocabulary === '7') {
             $validSdgGoals = $this->loadCodeList('UNSDG-Goals');
 
-            if (!is_int($value)) {
+            if ($value) {
                 foreach ($validSdgGoals as $code => $name) {
                     if (strcasecmp(trim($value), $name) === 0) {
-                        $value = is_int($code) ? (int) $code : $code;
+                        $value = strval($code);
                         break;
                     }
                 }
@@ -291,13 +291,13 @@ trait PreparesTransactionData
             $this->data['transaction']['sector'][0]['sdg_goal'] = '';
         }
 
-        if ($sectorVocabulary === 8) {
+        if ($sectorVocabulary === '8') {
             $validSdgTarget = $this->loadCodeList('UNSDG-Targets');
 
-            if (!is_int($value)) {
+            if ($value) {
                 foreach ($validSdgTarget as $code => $name) {
                     if (strcasecmp(trim($value), $name) === 0) {
-                        $value = is_int($code) ? (int) $code : $code;
+                        $value = strval($code);
                         break;
                     }
                 }
@@ -308,7 +308,7 @@ trait PreparesTransactionData
             $this->data['transaction']['sector'][0]['sdg_target'] = '';
         }
 
-        if ($sectorVocabulary != 1 && $sectorVocabulary != 2 && $sectorVocabulary != 7 && $sectorVocabulary != 8) {
+        if ($sectorVocabulary !== '1' && $sectorVocabulary !== '2' && $sectorVocabulary !== '7' && $sectorVocabulary !== '8') {
             $this->data['transaction']['sector'][0]['text'] = $value;
         } else {
             $this->data['transaction']['sector'][0]['text'] = '';
@@ -328,10 +328,10 @@ trait PreparesTransactionData
         if ($key === $this->_csvHeaders[18]) {
             $validCountry = $this->loadCodeList('Country');
 
-            if (!is_int($value)) {
+            if ($value) {
                 foreach ($validCountry as $code => $name) {
                     if (strcasecmp(trim($value), $name) === 0) {
-                        $value = is_int($code) ? (int) $code : $code;
+                        $value = strval($code);
                         break;
                     }
                 }
@@ -355,10 +355,10 @@ trait PreparesTransactionData
         if ($key === $this->_csvHeaders[19]) {
             $validRegion = $this->loadCodeList('Region');
 
-            if (!is_int($value)) {
+            if ($value) {
                 foreach ($validRegion as $code => $name) {
                     if (strcasecmp(trim($value), $name) === 0) {
-                        $value = is_int($code) ? (int) $code : $code;
+                        $value = strval($code);
                         break;
                     }
                 }
@@ -443,10 +443,10 @@ trait PreparesTransactionData
     {
         $validOrganizationType = $this->loadCodeList('OrganizationType', 'Organization');
 
-        if (!is_int($value)) {
+        if ($value) {
             foreach ($validOrganizationType as $code => $name) {
-                if (strcasecmp(trim($value), $name)) {
-                    $value = is_int($code) ? (int) $code : $code;
+                if (strcasecmp(trim($value), $name) === 0) {
+                    $value = strval($code);
                     break;
                 }
             }

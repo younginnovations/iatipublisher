@@ -18,7 +18,7 @@ class ActivityDate extends Element
      *
      * @var array
      */
-    private array $_csvHeaders = ['actual_start_date' => 2, 'actual_end_date' => 4, 'planned_start_date' => 1, 'planned_end_date' => 3];
+    private array $_csvHeaders = ['actual_start_date' => '2', 'actual_end_date' => '4', 'planned_start_date' => '1', 'planned_end_date' => '3'];
 
     /**
      * Index under which the data is stored within the object.

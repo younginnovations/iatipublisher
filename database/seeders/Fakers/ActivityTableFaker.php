@@ -25,7 +25,7 @@ class ActivityTableFaker extends Seeder
             'org_id'               => $org->id,
             'description'          => [
                 [
-                    'type'      => 1,
+                    'type'      => '1',
                     'narrative' => [
                         [
                             'narrative' => 'Education and psychosocial support to children in Aleppo Governorate',
@@ -59,7 +59,7 @@ class ActivityTableFaker extends Seeder
             'status'               => 'draft',
             'sector'               => [
                 [
-                    'sector_vocabulary' => 1,
+                    'sector_vocabulary' => '1',
                     'vocabulary_uri'    => '',
                     'code'              => '72050',
                     'category_code'     => '',

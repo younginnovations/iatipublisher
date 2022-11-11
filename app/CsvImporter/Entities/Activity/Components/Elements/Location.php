@@ -132,10 +132,10 @@ class Location extends Element
 
             $validLocationReachCode = $this->loadCodeList('GeographicLocationReach');
 
-            if (!is_int($value)) {
+            if ($value) {
                 foreach ($validLocationReachCode as $code => $name) {
                     if (strcasecmp(trim($value), $name) === 0) {
-                        $value = is_int($code) ? (int) $code : $code;
+                        $value = strval($code);
                         break;
                     }
                 }
@@ -161,16 +161,16 @@ class Location extends Element
 
             $validLocationIdVocabulary = $this->loadCodeList('GeographicVocabulary');
 
-            if (!is_int($value)) {
+            if ($value) {
                 foreach ($validLocationIdVocabulary as $code => $name) {
                     if (strcasecmp(trim($value), $name) === 0) {
-                        $value = is_int($code) ? (int) $code : $code;
+                        $value = strval($code);
                         break;
                     }
                 }
             }
 
-            $this->data['location'][$index]['location_id'][0]['vocabulary'] = $value;
+            $this->data['location'][$index]['location_id'][0]['vocabulary'] = strtoupper($value);
         } elseif ($key === $this->_csvHeaders[3]) {
             $value = (!$value) ? '' : $value;
 
@@ -260,25 +260,25 @@ class Location extends Element
 
             $validAdministrativeVocabulary = $this->loadCodeList('GeographicVocabulary');
 
-            if (!is_int($value)) {
+            if ($value) {
                 foreach ($validAdministrativeVocabulary as $code => $name) {
                     if (strcasecmp(trim($value), $name) === 0) {
-                        $value = is_int($code) ? (int) $code : $code;
+                        $value = strval($code);
                         break;
                     }
                 }
             }
 
-            $this->data['location'][$index]['administrative'][0]['vocabulary'] = $value;
+            $this->data['location'][$index]['administrative'][0]['vocabulary'] = strtoupper($value);
         } elseif ($key === $this->_csvHeaders[8]) {
             $value = (!$value) ? '' : $value;
 
             $validAdministrativeCode = $this->loadCodeList('Country');
 
-            if (!is_int($value)) {
+            if ($value) {
                 foreach ($validAdministrativeCode as $code => $name) {
                     if (strcasecmp(trim($value), $name) === 0) {
-                        $value = is_int($code) ? (int) $code : $code;
+                        $value = strval($code);
                         break;
                     }
                 }
@@ -334,10 +334,10 @@ class Location extends Element
 
             $validLocationExactness = $this->loadCodeList('GeographicExactness');
 
-            if (!is_int($value)) {
+            if ($value) {
                 foreach ($validLocationExactness as $code => $name) {
                     if (strcasecmp(trim($value), $name) === 0) {
-                        $value = is_int($code) ? (int) $code : $code;
+                        $value = strval($code);
                         break;
                     }
                 }
@@ -363,10 +363,10 @@ class Location extends Element
 
             $validLocationClass = $this->loadCodeList('GeographicLocationClass');
 
-            if (!is_int($value)) {
+            if ($value) {
                 foreach ($validLocationClass as $code => $name) {
                     if (strcasecmp(trim($value), $name) === 0) {
-                        $value = is_int($code) ? (int) $code : $code;
+                        $value = strval($code);
                         break;
                     }
                 }
@@ -392,16 +392,16 @@ class Location extends Element
 
             $validFeatureDesignation = $this->loadCodeList('LocationType');
 
-            if (!is_int($value)) {
+            if ($value) {
                 foreach ($validFeatureDesignation as $code => $name) {
                     if (strcasecmp(trim($value), $name) === 0) {
-                        $value = is_int($code) ? (int) $code : $code;
+                        $value = strval($code);
                         break;
                     }
                 }
             }
 
-            $this->data['location'][$index]['feature_designation'][0]['code'] = $value;
+            $this->data['location'][$index]['feature_designation'][0]['code'] = strtoupper($value);
         }
     }
 

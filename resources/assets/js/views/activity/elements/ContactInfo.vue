@@ -5,7 +5,7 @@
     class="elements-detail"
     :class="{ 'mb-4': Number(key) !== data.length - 1 }"
   >
-    <div class="text-sm font-bold category">
+    <div class="category text-sm font-bold">
       <span v-if="post.type">{{ types.contactType[post.type] }}</span>
       <span v-else class="italic">Type Missing</span>
     </div>
@@ -27,9 +27,7 @@
                 <div class="language mb-1.5">
                   (Language:
                   {{
-                    narrative.language
-                      ? types.languages[narrative.language]
-                      : "Missing"
+                    narrative.language ? types.languages[narrative.language] : "Missing"
                   }})
                 </div>
                 <div class="w-[500px] max-w-full">
@@ -52,9 +50,7 @@
                 <div class="language mb-1.5">
                   (Language:
                   {{
-                    narrative.language
-                      ? types.languages[narrative.language]
-                      : "Missing"
+                    narrative.language ? types.languages[narrative.language] : "Missing"
                   }})
                 </div>
                 <div class="w-[500px] max-w-full">
@@ -78,9 +74,7 @@
                 <div class="language mb-1.5">
                   (Language:
                   {{
-                    narrative.language
-                      ? types.languages[narrative.language]
-                      : "Missing"
+                    narrative.language ? types.languages[narrative.language] : "Missing"
                   }})
                 </div>
                 <div class="w-[500px] max-w-full">
@@ -103,9 +97,7 @@
                 <div class="language mb-1.5">
                   (Language:
                   {{
-                    narrative.language
-                      ? types.languages[narrative.language]
-                      : "Missing"
+                    narrative.language ? types.languages[narrative.language] : "Missing"
                   }})
                 </div>
                 <div class="w-[500px] max-w-full">
@@ -169,23 +161,28 @@
             <td>Mailing Address</td>
             <td>
               <div
-                v-for="(narrative, k) in post.mailing_address[0].narrative"
-                :key="k"
-                class="description-content"
+                v-for="(address, address_index) in post.mailing_address"
+                :key="address_index"
                 :class="{
-                  'mb-4': k !== post.mailing_address[0].narrative.length - 1,
+                  'mb-4': k !== address.narrative.length - 1,
                 }"
               >
-                <div class="language mb-1.5">
-                  (Language:
-                  {{
-                    narrative.language
-                      ? types.languages[narrative.language]
-                      : "Missing"
-                  }})
-                </div>
-                <div class="w-[500px] max-w-full">
-                  {{ narrative.narrative ?? "Missing" }}
+                <div
+                  v-for="(narrative, k) in address.narrative"
+                  :key="k"
+                  class="description-content"
+                >
+                  <div class="language mb-1.5">
+                    (Language:
+                    {{
+                      narrative.language
+                        ? types.languages[narrative.language]
+                        : "Not Available"
+                    }})
+                  </div>
+                  <div class="w-[500px] max-w-full">
+                    {{ narrative.narrative ?? "Not Available" }}
+                  </div>
                 </div>
               </div>
             </td>

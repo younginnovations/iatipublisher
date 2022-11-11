@@ -404,14 +404,14 @@ class Activity
     public function sector($element, $template): array
     {
         $this->sector[$this->index] = $template['sector'];
-        $vocabulary = (int) $this->attributes($element, 'vocabulary');
+        $vocabulary = $this->attributes($element, 'vocabulary');
         $this->sector[$this->index]['sector_vocabulary'] = $vocabulary;
         $this->sector[$this->index]['vocabulary_uri'] = $this->attributes($element, 'vocabulary-uri');
-        $this->sector[$this->index]['code'] = ($vocabulary === 1) ? $this->attributes($element, 'code') : '';
-        $this->sector[$this->index]['category_code'] = ($vocabulary === 2) ? $this->attributes($element, 'code') : '';
-        $this->sector[$this->index]['sdg_goal'] = ($vocabulary === 7) ? $this->attributes($element, 'code') : '';
-        $this->sector[$this->index]['sdg_target'] = ($vocabulary === 8) ? $this->attributes($element, 'code') : '';
-        $this->sector[$this->index]['text'] = ($vocabulary !== 1 && $vocabulary !== 2) ? $this->attributes($element, 'code') : '';
+        $this->sector[$this->index]['code'] = ($vocabulary === '1') ? $this->attributes($element, 'code') : '';
+        $this->sector[$this->index]['category_code'] = ($vocabulary === '2') ? $this->attributes($element, 'code') : '';
+        $this->sector[$this->index]['sdg_goal'] = ($vocabulary === '7') ? $this->attributes($element, 'code') : '';
+        $this->sector[$this->index]['sdg_target'] = ($vocabulary === '8') ? $this->attributes($element, 'code') : '';
+        $this->sector[$this->index]['text'] = ($vocabulary !== '1' && $vocabulary !== '2') ? $this->attributes($element, 'code') : '';
         $this->sector[$this->index]['percentage'] = $this->attributes($element, 'percentage');
         $this->sector[$this->index]['narrative'] = $this->narrative($element);
         $this->index++;
@@ -809,7 +809,7 @@ class Activity
     {
         $this->tagVariable[$this->index] = $template['tag'];
         $tagVocabulary = $this->attributes($element, 'vocabulary');
-        $tagVocabulary = is_int($tagVocabulary) ? (int) $tagVocabulary : $tagVocabulary;
+        $tagVocabulary = $tagVocabulary;
 
         $this->tagVariable[$this->index]['tag_vocabulary'] = $this->attributes($element, 'vocabulary');
         $this->tagVariable[$this->index]['vocabulary_uri'] = $this->attributes($element, 'vocabulary-uri');
