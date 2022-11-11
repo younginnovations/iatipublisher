@@ -120,16 +120,16 @@ class OtherIdentifier extends Element
 
             $validOtherIdentifierType = $this->loadCodeList('OtherIdentifierType');
 
-            if (!is_int($value)) {
+            if ($value) {
                 foreach ($validOtherIdentifierType as $code => $name) {
                     if (strcasecmp(trim($value), $name) === 0) {
-                        $value = is_int($code) ? (int) $code : $code;
+                        $value = strval($code);
                         break;
                     }
                 }
             }
 
-            $this->data['other_identifier'][$index]['reference_type'] = $value;
+            $this->data['other_identifier'][$index]['reference_type'] = strtoupper($value);
         }
     }
 

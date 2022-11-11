@@ -99,6 +99,18 @@ class DefaultFieldValues extends Element
 
         if ($key === $this->_csvHeaders[1]) {
             $value = (!$value) ? '' : $value;
+
+            $validReportingOrgType = $this->loadCodeList('Language');
+
+            if ($value) {
+                foreach ($validReportingOrgType as $code => $name) {
+                    if (strcasecmp(trim($value), $name) === 0) {
+                        $value = strval($code);
+                        break;
+                    }
+                }
+            }
+
             $this->data['default_field_values'][$index]['default_language'] = strtolower($value);
         }
     }
@@ -120,6 +132,18 @@ class DefaultFieldValues extends Element
 
         if ($key === $this->_csvHeaders[0]) {
             $value = (!$value) ? '' : $value;
+
+            $validReportingOrgType = $this->loadCodeList('Currency');
+
+            if ($value) {
+                foreach ($validReportingOrgType as $code => $name) {
+                    if (strcasecmp(trim($value), $name) === 0) {
+                        $value = strval($code);
+                        break;
+                    }
+                }
+            }
+
             $this->data['default_field_values'][$index]['default_currency'] = strtoupper($value);
         }
     }
@@ -138,7 +162,7 @@ class DefaultFieldValues extends Element
         }
 
         if (array_key_exists('default_currency', $this->data['default_field_values'][$index])) {
-            $this->data['default_field_values'][$index]['default_hierarchy'] = 1;
+            $this->data['default_field_values'][$index]['default_hierarchy'] = '1';
         }
     }
 

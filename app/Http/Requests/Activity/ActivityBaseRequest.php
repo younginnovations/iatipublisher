@@ -285,7 +285,7 @@ class ActivityBaseRequest extends FormRequest
         $rules[sprintf('%s.narrative', $formBase)][] = 'unique_default_lang';
 
         foreach ($formFields as $narrativeIndex => $narrative) {
-            if (boolval($narrative['language'])) {
+            if ($narrative['language']) {
                 $rules[sprintf('%s.narrative.%s.narrative', $formBase, $narrativeIndex)] = 'required_with:' . sprintf(
                     '%s.narrative.%s.language',
                     $formBase,

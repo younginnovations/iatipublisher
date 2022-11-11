@@ -17,8 +17,7 @@ class Tag extends Element
      * Csv Header for Tag element.
      * @var array
      */
-    private array $_csvHeaders
-        = [
+    private array $_csvHeaders = [
             'tag_vocabulary',
             'tag_code',
             'tag_vocabulary_uri',
@@ -97,16 +96,16 @@ class Tag extends Element
 
             $validTagVocab = $this->loadCodeList('TagVocabulary');
 
-            if (!is_int($value)) {
+            if ($value) {
                 foreach ($validTagVocab as $code => $name) {
                     if (strcasecmp(trim($value), $name) === 0) {
-                        $value = is_int($code) ? (int) $code : $code;
+                        $value = strval($code);
                         break;
                     }
                 }
             }
 
-            $this->data['tag'][$index]['tag_vocabulary'] = $value;
+            $this->data['tag'][$index]['tag_vocabulary'] = strval($value);
         }
     }
 
@@ -123,25 +122,25 @@ class Tag extends Element
     {
         if ($key === $this->_csvHeaders[1]) {
             $tagVocabulary = $this->data['tag'][$index]['tag_vocabulary'] ?? '';
-            $tagVocabulary = empty($tagVocabulary) ?: (int) $tagVocabulary;
+            $tagVocabulary = $tagVocabulary;
             $value = (!$value) ? '' : $value;
 
-            if ($tagVocabulary === 1 || $tagVocabulary === 99) {
+            if ($tagVocabulary === '1' || $tagVocabulary === '99') {
                 $this->data['tag'][$index]['tag_text'] = $value;
-            } elseif ($tagVocabulary === 2) {
+            } elseif ($tagVocabulary === '2') {
                 $validTagCode = $this->loadCodeList('UNSDG-Goals');
 
-                if (!is_int($value)) {
+                if ($value) {
                     foreach ($validTagCode as $code => $name) {
                         if (strcasecmp(trim($value), $name) === 0) {
-                            $value = is_int($code) ? (int) $code : $code;
+                            $value = strval($code);
                             break;
                         }
                     }
                 }
 
                 $this->data['tag'][$index]['goals_tag_code'] = $value;
-            } elseif ($tagVocabulary === 3) {
+            } elseif ($tagVocabulary === '3') {
                 $validTagCode = $this->loadCodeList('UNSDG-Targets');
 
                 if (!is_float($value)) {
@@ -227,9 +226,8 @@ class Tag extends Element
                 switch ($vocabulary) {
                     case '1':
                         $rules[sprintf('%s.tag_text', $tagForm)] = sprintf(
-                            'required_with: %s,%s,%s',
+                            'required_with: %s,%s',
                             sprintf('%s.tag_vocabulary', $tagForm),
-                            sprintf('%s.vocabulary_uri', $tagForm),
                             sprintf('%s.narrative.0.narrative', $tagForm),
                         );
                         break;

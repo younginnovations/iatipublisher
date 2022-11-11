@@ -1,8 +1,8 @@
 <template>
-  <div :class="layout" class="p-3 activities__content--element text-n-50">
-    <div :id="title" class="p-4 bg-white rounded-lg">
-      <div class="flex mb-4">
-        <div class="flex title grow">
+  <div :class="layout" class="activities__content--element p-3 text-n-50">
+    <div :id="title" class="rounded-lg bg-white p-4">
+      <div class="mb-4 flex">
+        <div class="title flex grow">
           <template
             v-if="
               title === 'reporting_org' ||
@@ -22,14 +22,14 @@
             <svg-vue :icon="'activity-elements/' + title" class="elements-svg"></svg-vue>
           </template>
 
-          <div class="text-sm font-bold title">
+          <div class="title text-sm font-bold">
             {{ title.toString().replace(/_/g, "-") }}
           </div>
 
           <Status :data="completed" />
         </div>
 
-        <div class="flex items-center icons">
+        <div class="icons flex items-center">
           <template v-if="title == 'transactions'">
             <Btn
               text="Add Transaction"
@@ -67,7 +67,7 @@
         </div>
       </div>
 
-      <div class="w-full h-px mb-4 divider bg-n-20"></div>
+      <div class="divider mb-4 h-px w-full bg-n-20"></div>
 
       <template v-if="title === 'iati_identifier'">
         <IatiIdentifier :data="data.content.iati_identifier_text" />
@@ -134,7 +134,7 @@
           :class="{ 'mb-4': key !== data.content.length - 1 }"
         >
           <div class="default_aid_type-content">
-            <div class="mb-2 text-sm font-bold date-type">
+            <div class="date-type mb-2 text-sm font-bold">
               <span v-if="post.default_aid_type_vocabulary">{{
                 types.aidTypeVocabulary[post.default_aid_type_vocabulary]
               }}</span>
@@ -174,6 +174,17 @@
 
       <!-- Country Budget Items -->
       <template v-else-if="title === 'country_budget_items'">
+        <div class="category">
+          <span>Vocabulary - </span>
+          <span>
+            <span v-if="data.content.country_budget_vocabulary">{{
+              props.types.budgetIdentifierVocabulary[
+                data.content.country_budget_vocabulary
+              ]
+            }}</span>
+            <span v-else class="italic">Missing</span>
+          </span>
+        </div>
         <div
           v-for="(post, key) in data.content.budget_item"
           :key="key"
@@ -199,21 +210,11 @@
             <div
               v-for="(narrative, k) in item.narrative"
               :key="k"
-              class="ml-5 elements-detail"
+              class="elements-detail ml-5"
               :class="{ 'mb-0': k !== item.narrative - 1 }"
             >
               <table>
-                <tr class="multiline">
-                  <td>Vocabulary</td>
-                  <td>
-                    <span v-if="data.content.country_budget_vocabulary">{{
-                      props.types.budgetIdentifierVocabulary[
-                        data.content.country_budget_vocabulary
-                      ]
-                    }}</span>
-                    <span v-else class="italic">Missing</span>
-                  </td>
-                </tr>
+                <tr class="multiline"></tr>
                 <tr class="multiline">
                   <td>Description</td>
                   <td>
@@ -253,7 +254,7 @@
           <div
             v-for="(item, i) in post.budget_value"
             :key="i"
-            class="mb-1 elements-detail"
+            class="elements-detail mb-1"
             :class="{ 'mb-4': i !== post.budget_value.length - 1 }"
           >
             <div class="text-sm">
@@ -361,7 +362,7 @@
               <div
                 v-for="(narrative, j) in item.narrative"
                 :key="j"
-                class="flex items-center mb-1 space-x-1"
+                class="mb-1 flex items-center space-x-1"
               >
                 <table>
                   <tr class="multiline">
@@ -441,7 +442,7 @@
 
       <template v-else>
         <!-- Activity Status -->
-        <div class="text-sm content">
+        <div class="content text-sm">
           <template v-if="title === 'activity_status'">
             <span v-if="data.content">{{
               props.types.activityStatus[data.content]

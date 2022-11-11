@@ -181,16 +181,16 @@ class DocumentLink extends Element
 
             $validDocumentCategory = $this->loadCodeList('DocumentCategory');
 
-            if (!is_int($value)) {
+            if ($value) {
                 foreach ($validDocumentCategory as $code => $name) {
                     if (strcasecmp(trim($value), $name) === 0) {
-                        $value = is_int($code) ? (int) $code : $code;
+                        $value = strval($code);
                         break;
                     }
                 }
             }
 
-            $this->data['document_link'][$index]['category'][0]['code'] = $value;
+            $this->data['document_link'][$index]['category'][0]['code'] = strtoupper($value);
         }
     }
 
@@ -210,10 +210,10 @@ class DocumentLink extends Element
 
             $validLanguage = $this->loadCodeList('Language');
 
-            if (!is_int($value)) {
+            if ($value) {
                 foreach ($validLanguage as $code => $name) {
                     if (strcasecmp(trim($value), $name) === 0) {
-                        $value = is_int($code) ? (int) $code : $code;
+                        $value = strval($code);
                         break;
                     }
                 }

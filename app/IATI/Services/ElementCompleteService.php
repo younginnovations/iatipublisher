@@ -150,8 +150,10 @@ class ElementCompleteService
             if (array_key_exists('dependent_attributes', $elementSchema) && array_key_exists($mandatoryAttribute, $elementSchema['dependent_attributes'])) {
                 $parentLevel = $elementSchema['attributes'];
 
-                if (array_key_exists('sub_element', $elementSchema['dependent_attributes'][$mandatoryAttribute])
-                    && !empty($elementSchema['dependent_attributes'][$mandatoryAttribute]['sub_element'])) {
+                if (
+                    array_key_exists('sub_element', $elementSchema['dependent_attributes'][$mandatoryAttribute])
+                    && !empty($elementSchema['dependent_attributes'][$mandatoryAttribute]['sub_element'])
+                ) {
                     $parentLevel = $elementSchema['sub_elements'][$elementSchema['dependent_attributes'][$mandatoryAttribute]['sub_element']]['attributes'];
                 }
 
@@ -872,7 +874,7 @@ class ElementCompleteService
     {
         $this->element = 'capital_spend';
 
-        return !empty($activity->capital_spend);
+        return $activity->capital_spend !== null;
     }
 
     /**

@@ -43,21 +43,18 @@
             <span v-else class="italic">Missing</span>
           </td>
         </tr>
-        <tr
-          v-for="(narrative, k) in post.narrative"
-          :key="k"
-          class="multiline"
-          :class="{ 'mb-4': k !== post.narrative.length - 1 }"
-        >
+        <tr class="multiline" :class="{ 'mb-4': k !== post.narrative.length - 1 }">
           <td>Narrative</td>
           <td>
-            <div v-if="narrative.narrative" class="flex flex-col">
-              <span v-if="narrative.language" class="language top"
-                >(Language: {{ types.languages[narrative.language] }})</span
-              >
-              <span class="description">{{ narrative.narrative }}</span>
+            <div v-for="(narrative, k) in post.narrative" :key="k">
+              <div v-if="narrative.narrative" class="flex flex-col">
+                <span v-if="narrative.language" class="language top"
+                  >(Language: {{ types.languages[narrative.language] }})</span
+                >
+                <span class="description">{{ narrative.narrative }}</span>
+              </div>
+              <span v-else class="italic">Missing</span>
             </div>
-            <span v-else class="italic">Missing</span>
           </td>
         </tr>
       </tbody>

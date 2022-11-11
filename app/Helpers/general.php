@@ -820,25 +820,51 @@ function dateFormat($format, $date): bool|string
         return false;
     }
 
-    if ($date !== '') {
+    if (is_string($date) && $date !== '') {
         if ((str_contains($date, '/'))) {
-            $formattedDate = str_replace('/', '-', $date);
-
-            if (strtotime($formattedDate)) {
-                return date($format, strtotime($formattedDate));
-            }
-
-            return false;
+            $date = str_replace('/', '-', $date);
         }
 
-        if (strtotime($date)) {
+        $dateArray = date_parse_from_format('Y-m-d', $date);
+
+        if (checkdate((int) $dateArray['month'], (int) $dateArray['day'], (int) $dateArray['year'])) {
             return date($format, strtotime($date));
+        }
+
+        return $date;
+    }
+
+    return '';
+}
+
+/**
+ * Returns strtotime date.
+ *
+ * @param $date
+ *
+ * @return false|int
+ */
+function dateStrToTime($date): int|bool
+{
+    if (is_array($date)) {
+        return false;
+    }
+
+    if ($date !== '') {
+        if ((str_contains($date, '/'))) {
+            $date = str_replace('/', '-', $date);
+        }
+
+        $dateArray = date_parse_from_format('Y-m-d', $date);
+
+        if (checkdate((int) $dateArray['month'], (int) $dateArray['day'], (int) $dateArray['year'])) {
+            return strtotime($date);
         }
 
         return false;
     }
 
-    return '';
+    return false;
 }
 
 if (!function_exists('awsHasFile')) {

@@ -169,11 +169,40 @@ class ActivityRow extends Row
     public function __construct($fields, $organizationId, $userId, $activityIdentifiers)
     {
         $this->fields = $fields;
+        $this->stringifyFields();
         $this->organizationId = $organizationId;
         $this->userId = $userId;
         $this->init();
         $this->activityIdentifiers = $activityIdentifiers;
         $this->csv_data_storage_path = env('CSV_DATA_STORAGE_PATH ', 'CsvImporter/tmp');
+    }
+
+    /**
+     * Converts all the integer to string.
+     */
+    public function stringifyFields()
+    {
+        $int_fields = [
+            'activity_scope',
+            'activity_status',
+            'default_flow_type',
+            'default_finance_type',
+            'default_tied_status',
+            'capital_spend',
+            'collaboration_type',
+            'default_flow_type',
+            'default_finance_type',
+        ];
+
+        foreach ($this->fields as $key => $dataDatum) {
+            if (is_array($dataDatum) && !in_array($key, $int_fields)) {
+                foreach ($dataDatum as $datumKey => $datum) {
+                    if (is_int($datum)) {
+                        $this->fields[$key][$datumKey] = strval($datum);
+                    }
+                }
+            }
+        }
     }
 
     /**
@@ -314,7 +343,7 @@ class ActivityRow extends Row
         foreach ($this->getFields() as $key => $values) {
             if (array_key_exists($key, array_flip($this->transactionCSVHeaders))) {
                 foreach ($values as $index => $value) {
-                    $this->transactionRows[$index][$key] = $value;
+                    $this->transactionRows[$index][$key] = $value ? (string) $value : $value;
                 }
             }
         }

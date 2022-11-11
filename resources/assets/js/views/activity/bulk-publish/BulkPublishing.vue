@@ -59,7 +59,7 @@ interface RefreshToastMsgTypeface {
   visibility: boolean;
 }
 
-let refreshToastMsg = inject('refreshToastMsg') as RefreshToastMsgTypeface;
+let refreshToastMsg = inject("refreshToastMsg") as RefreshToastMsgTypeface;
 
 interface paInterface {
   value: {
