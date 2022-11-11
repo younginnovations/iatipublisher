@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Requests\Activity\Result;
 
 use App\Http\Requests\Activity\ActivityBaseRequest;
+use App\IATI\Services\Activity\ResultService;
 use Illuminate\Support\Facades\Validator;
 
 /**
@@ -86,7 +87,7 @@ class ResultRequest extends ActivityBaseRequest
             function () {
                 $params = $this->route()->parameters();
 
-                return !$this->resultService->indicatorHasRefCode($params['resultId']);
+                return !app()->make(ResultService::class)->indicatorHasRefCode($params['resultId']);
             }
         );
 
