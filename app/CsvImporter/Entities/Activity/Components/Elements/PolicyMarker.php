@@ -91,10 +91,10 @@ class PolicyMarker extends Element
         if ($key === $this->_csvHeaders[0]) {
             $validVocabulary = $this->loadCodeList('PolicyMarkerVocabulary');
 
-            if (!is_int($value)) {
+            if ($value) {
                 foreach ($validVocabulary as $code => $name) {
                     if (strcasecmp(trim($value), $name) === 0) {
-                        $value = is_int($code) ? (int) $code : $code;
+                        $value = strval($code);
                         break;
                     }
                 }
@@ -138,10 +138,10 @@ class PolicyMarker extends Element
         if ($key === $this->_csvHeaders[2]) {
             $validSignificance = $this->loadCodeList('PolicySignificance');
 
-            if (!is_int($value)) {
+            if ($value) {
                 foreach ($validSignificance as $code => $name) {
                     if (strcasecmp(trim($value), $name) === 0) {
-                        $value = is_int($code) ? (int) $code : $code;
+                        $value = strval($code);
                         break;
                     }
                 }
@@ -176,10 +176,10 @@ class PolicyMarker extends Element
                 case '1':
                     $validMarker = $this->loadCodeList('PolicyMarker');
 
-                    if (!is_int($value)) {
+                    if ($value) {
                         foreach ($validMarker as $code => $name) {
                             if (strcasecmp(trim($value), $name) === 0) {
-                                $value = is_int($code) ? (int) $code : $code;
+                                $value = strval($code);
                                 break;
                             }
                         }

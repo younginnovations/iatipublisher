@@ -109,10 +109,10 @@ class PlannedDisbursement extends Element
 
             $validType = $this->loadCodeList('BudgetType');
 
-            if (!is_int($value)) {
+            if ($value) {
                 foreach ($validType as $code => $name) {
                     if (strcasecmp(trim($value), $name) === 0) {
-                        $value = is_int($code) ? (int) $code : $code;
+                        $value = strval($code);
                         break;
                     }
                 }
@@ -174,16 +174,16 @@ class PlannedDisbursement extends Element
             $value = (!$value) ? '' : $value;
             $validCurrency = $this->loadCodeList('Currency');
 
-            if (!is_int($value)) {
+            if ($value) {
                 foreach ($validCurrency as $code => $name) {
                     if (strcasecmp(trim($value), $name) === 0) {
-                        $value = is_int($code) ? (int) $code : $code;
+                        $value = strval($code);
                         break;
                     }
                 }
             }
 
-            $this->data['planned_disbursement'][$index]['value'][0]['currency'] = $value;
+            $this->data['planned_disbursement'][$index]['value'][0]['currency'] = strtoupper($value);
         } elseif ($key === $this->_csvHeaders[5]) {
             $value = (!$value) ? '' : $value;
             $this->data['planned_disbursement'][$index]['value'][0]['value_date'] = dateFormat('Y-m-d', $value);
@@ -211,10 +211,10 @@ class PlannedDisbursement extends Element
             $value = (!$value) ? '' : $value;
             $validProviderOrgType = $this->loadCodeList('OrganizationType', 'Organization');
 
-            if (!is_int($value)) {
+            if ($value) {
                 foreach ($validProviderOrgType as $code => $name) {
                     if (strcasecmp(trim($value), $name) === 0) {
-                        $value = is_int($code) ? (int) $code : $code;
+                        $value = strval($code);
                         break;
                     }
                 }
@@ -253,10 +253,10 @@ class PlannedDisbursement extends Element
             $value = (!$value) ? '' : $value;
             $validReceiverOrgType = $this->loadCodeList('OrganizationType', 'Organization');
 
-            if (!is_int($value)) {
+            if ($value) {
                 foreach ($validReceiverOrgType as $code => $name) {
                     if (strcasecmp(trim($value), $name) === 0) {
-                        $value = is_int($code) ? (int) $code : $code;
+                        $value = strval($code);
                         break;
                     }
                 }
@@ -294,7 +294,7 @@ class PlannedDisbursement extends Element
             $end = Arr::get($value, 'period_end.0.date', null);
 
             if ($start && $end) {
-                $diff = (strtotime($end) - strtotime($start)) / 86400;
+                $diff = (dateStrToTime($end) - dateStrToTime($start)) / 86400;
             }
 
             $rules[sprintf('%s.planned_disbursement_type', $plannedDisbursementForm)] = sprintf(

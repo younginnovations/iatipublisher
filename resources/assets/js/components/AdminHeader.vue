@@ -143,7 +143,7 @@
 <script setup lang="ts">
 import { defineProps, ref, reactive, onMounted, onUnmounted, Ref } from "vue";
 import axios from "axios";
-import { useToggle } from "@vueuse/core";
+import { useToggle, useStorage } from "@vueuse/core";
 import CreateModal from "../views/activity/CreateModal.vue";
 import Toast from "./ToastMessage.vue";
 
@@ -163,13 +163,13 @@ defineProps({
 
 const toastVisibility = ref(false);
 const toastMessage = ref("");
-
 const toastType = ref(false);
 const data = reactive({
   languageNavLiClasses: "flex",
   languageNavAnchorClasses:
     "flex text-white items-center uppercase nav__pointer-hover px-1.5",
   menuNavLiClasses: "flex px-4 relative",
+
   menuNavAnchorClasses: "flex text-white items-center uppercase nav__pointer-hover",
   languages: [
     {
@@ -243,7 +243,34 @@ function changeActiveMenu() {
     data.menus[3]["active"] = true;
   }
 }
+
+interface paInterface {
+  value: {
+    publishingActivities: paElements;
+  };
+}
+
+interface paElements {
+  activities: actElements;
+  organization_id: number;
+  job_batch_uuid: string;
+  status: string;
+  message: string;
+}
+
+interface actElements {
+  activity_id: number;
+  activity_title: string;
+  status: string;
+}
+
+// local storage for publishing
+const pa = useStorage("vue-use-local-storage", {
+  publishingActivities: localStorage.getItem("publishingActivities") ?? {},
+});
+
 async function logout() {
+  pa.value.publishingActivities = {};
   await axios.post("/logout").then((res) => {
     if (res.status) {
       window.location.href = "/";

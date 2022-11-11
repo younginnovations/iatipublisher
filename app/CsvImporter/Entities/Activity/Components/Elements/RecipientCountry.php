@@ -123,16 +123,16 @@ class RecipientCountry extends Element
             $this->countries = array_unique($this->countries);
             $validCountry = $this->loadCodeList('Country');
 
-            if (!is_int($value)) {
+            if ($value) {
                 foreach ($validCountry as $code => $name) {
                     if (strcasecmp(trim($value), $name) === 0) {
-                        $value = is_int($code) ? (int) $code : $code;
+                        $value = strval($code);
                         break;
                     }
                 }
             }
 
-            $this->data['recipient_country'][$index]['country_code'] = $value;
+            $this->data['recipient_country'][$index]['country_code'] = strtoupper($value);
         }
     }
 

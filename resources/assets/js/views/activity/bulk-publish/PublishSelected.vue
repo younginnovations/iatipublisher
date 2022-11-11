@@ -22,8 +22,8 @@
           </div>
           <div class="p-4 rounded-lg bg-eggshell">
             <div class="text-sm leading-normal">
-              Activities that are already published will not be published.
-              Changes made to published activities (Draft) will be republished.
+              Activities that are already published will not be published. Changes made to
+              published activities (Draft) will be republished.
             </div>
           </div>
         </div>
@@ -53,17 +53,13 @@
           </div>
 
           <div class="px-6 rounded-lg bg-mint">
-            <div
-              v-if="coreCompletedActivities.length > 0"
-              class="coreCompleted"
-            >
+            <div v-if="coreCompletedActivities.length > 0" class="coreCompleted">
               <div
                 v-for="(act, i) in coreCompletedActivities"
                 :key="i"
                 class="py-6 item"
                 :class="{
-                  'border-b border-n-20':
-                    i != coreCompletedActivities.length - 1,
+                  'border-b border-n-20': i != coreCompletedActivities.length - 1,
                 }"
               >
                 <a :href="`${permalink}${act.activity_id}`" class="">
@@ -77,32 +73,21 @@
 
         <div class="mb-6 text-sm leading-relaxed non-eligible-activities">
           <div class="flex mb-6 title">
-            <svg-vue
-              icon="warning-fill"
-              class="mr-1 mt-0.5 text-lg text-crimson-40"
-            />
+            <svg-vue icon="warning-fill" class="mr-1 mt-0.5 text-lg text-crimson-40" />
             <b>Core Elements not Complete</b>
           </div>
 
           <div class="px-6 rounded-lg bg-rose">
-            <div
-              v-if="coreInCompletedActivities.length > 0"
-              class="notCompleted"
-            >
+            <div v-if="coreInCompletedActivities.length > 0" class="notCompleted">
               <div
                 v-for="(act, i) in coreInCompletedActivities"
                 :key="i"
                 class="py-6 item"
                 :class="{
-                  'border-b border-n-20':
-                    i != coreInCompletedActivities.length - 1,
+                  'border-b border-n-20': i != coreInCompletedActivities.length - 1,
                 }"
               >
-                <a
-                  :href="`${permalink}${act.activity_id}`"
-                  target="_blank"
-                  class=""
-                >
+                <a :href="`${permalink}${act.activity_id}`" target="_blank" class="">
                   {{ act.title }}
                 </a>
               </div>
@@ -114,8 +99,7 @@
           <div class="inline-flex">
             <BtnComponent
               v-if="
-                coreCompletedActivities.length > 0 ||
-                coreInCompletedActivities.length > 0
+                coreCompletedActivities.length > 0 || coreInCompletedActivities.length > 0
               "
               class="px-6 uppercase bg-white"
               type=""
@@ -156,33 +140,28 @@
       </template>
     </Modal>
 
-    <Loader
-      v-if="loader"
-      :text="loaderText"
-      :class="{ 'animate-loader': loader }"
-    />
+    <Loader v-if="loader" :text="loaderText" :class="{ 'animate-loader': loader }" />
     <BulkPublishing v-if="Object.keys(pa.publishingActivities).length > 0" />
-
   </div>
 </template>
 
 <script setup lang="ts">
-import { defineProps, ref, Ref, computed, provide, inject } from 'vue';
-import { useToggle, useStorage } from '@vueuse/core';
-import axios from 'axios';
+import { defineProps, ref, Ref, computed, provide, inject } from "vue";
+import { useToggle, useStorage } from "@vueuse/core";
+import axios from "axios";
 
 //component
-import BtnComponent from 'Components/ButtonComponent.vue';
-import Modal from 'Components/PopupModal.vue';
-import Loader from 'Components/sections/ProgressLoader.vue';
-import ValidationErrors from './ValidationErrors.vue';
-import BulkPublishing from './BulkPublishing.vue';
+import BtnComponent from "Components/ButtonComponent.vue";
+import Modal from "Components/PopupModal.vue";
+import Loader from "Components/sections/ProgressLoader.vue";
+import ValidationErrors from "./ValidationErrors.vue";
+import BulkPublishing from "./BulkPublishing.vue";
 
 // Vuex Store
-import { useStore } from 'Store/activities/index';
+import { useStore } from "Store/activities/index";
 
 defineProps({
-  type: { type: String, default: 'primary' },
+  type: { type: String, default: "primary" },
 });
 
 /**
@@ -200,7 +179,7 @@ const bulkPublishStep = ref(1);
 const loader = ref(false);
 
 // Dynamic text for loader
-const loaderText = ref('Please Wait');
+const loaderText = ref("Please Wait");
 
 // reset step to zero after closing modal
 const resetPublishStep = () => {
@@ -210,13 +189,13 @@ const resetPublishStep = () => {
 };
 
 const popUpWidthChange = computed(() => {
-  let width = ref('825');
+  let width = ref("825");
   switch (bulkPublishStep.value) {
     case 1:
-      width.value = '583';
+      width.value = "583";
       break;
     case 2:
-      width.value = '809';
+      width.value = "809";
       break;
     default:
   }
@@ -230,7 +209,7 @@ interface ToastMessageTypeface {
   type: boolean;
   visibility: boolean;
 }
-const toastData = inject('toastData') as ToastMessageTypeface;
+const toastData = inject("toastData") as ToastMessageTypeface;
 const displayToast = (message, type) => {
   toastData.message = message;
   toastData.type = type;
@@ -255,14 +234,14 @@ let coreCompletedActivities: Ref<actTypeface[]> = ref([]),
 
 const verifyCoreElements = () => {
   loader.value = true;
-  loaderText.value = 'Verifying Core Elements';
-  const activities = store.state.selectedActivities.join(', ');
+  loaderText.value = "Verifying Core Elements";
+  const activities = store.state.selectedActivities.join(", ");
 
   axios
     .get(`/activities/core-elements-completed?activities=[${activities}]`)
     .then((res) => {
       const response = res.data;
-      
+
       if (response.success) {
         coreCompletedActivities.value = response.data.complete;
         coreInCompletedActivities.value = response.data.incomplete;
@@ -286,26 +265,24 @@ let validationErrors = ref({});
 
 const validateActivities = () => {
   loader.value = true;
-  loaderText.value = 'Validating Activity';
-  const activities = store.state.selectedActivities.join(', ');
+  loaderText.value = "Validating Activity";
+  const activities = store.state.selectedActivities.join(", ");
 
-  axios
-    .post(`/activities/validate-activities?activities=[${activities}]`)
-    .then((res) => {
-      const response = res.data;
+  axios.post(`/activities/validate-activities?activities=[${activities}]`).then((res) => {
+    const response = res.data;
 
-      if (response.success) {
-        bulkPublishStep.value = 3;
-        validationErrors.value = response.data;
-      } else {
-        resetPublishStep();
-        displayToast(response.message, response.success);
-      }
+    if (response.success) {
+      bulkPublishStep.value = 3;
+      validationErrors.value = response.data;
+    } else {
+      resetPublishStep();
+      displayToast(response.message, response.success);
+    }
 
-      setTimeout(() => {
-        loader.value = false;
-      }, 2000);
-    });
+    setTimeout(() => {
+      loader.value = false;
+    }, 2000);
+  });
 };
 
 /**
@@ -313,26 +290,23 @@ const validateActivities = () => {
  */
 
 let selectedActivities: Ref<number[]> = ref([]);
-provide('selectedActivities', selectedActivities);
+provide("selectedActivities", selectedActivities);
 
 // local storage for publishing
-const pa = useStorage('vue-use-local-storage', {
-  publishingActivities: localStorage.getItem('publishingActivities') ?? {},
+const pa = useStorage("vue-use-local-storage", {
+  publishingActivities: localStorage.getItem("publishingActivities") ?? {},
 });
 
 const startBulkPublish = () => {
   loader.value = true;
-  loaderText.value = 'Starting to publish';
+  loaderText.value = "Starting to publish";
   pa.value.publishingActivities = {};
 
   axios
-    .get(
-      `activities/start-bulk-publish?activities=[${selectedActivities.value}]`
-    )
+    .get(`activities/start-bulk-publish?activities=[${selectedActivities.value}]`)
     .then((res) => {
       const response = res.data;
       if (response.success) {
-
         bulkPublishStep.value = 1;
         publishAlertValue.value = false;
         pa.value.publishingActivities = response.data;
@@ -344,5 +318,5 @@ const startBulkPublish = () => {
     });
 };
 
-provide('paStorage', pa);
+provide("paStorage", pa);
 </script>

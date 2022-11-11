@@ -95,10 +95,10 @@ trait RegistersValidationRules
                 $planned_end_date = '';
 
                 foreach ($dates as $date) {
-                    $actual_start_date = (Arr::get($date, 'type') === 2) ? Arr::get($date, 'date') : $actual_start_date;
-                    $actual_end_date = (Arr::get($date, 'type') === 4) ? Arr::get($date, 'date') : $actual_end_date;
-                    $planned_start_date = (Arr::get($date, 'type') === 1) ? Arr::get($date, 'date') : $planned_start_date;
-                    $planned_end_date = (Arr::get($date, 'type') === 3) ? Arr::get($date, 'date') : $planned_end_date;
+                    $actual_start_date = (Arr::get($date, 'type') === '2') ? Arr::get($date, 'date') : $actual_start_date;
+                    $actual_end_date = (Arr::get($date, 'type') === '4') ? Arr::get($date, 'date') : $actual_end_date;
+                    $planned_start_date = (Arr::get($date, 'type') === '1') ? Arr::get($date, 'date') : $planned_start_date;
+                    $planned_end_date = (Arr::get($date, 'type') === '3') ? Arr::get($date, 'date') : $planned_end_date;
                 }
 
                 if (($actual_start_date > $actual_end_date) && ($actual_start_date !== '' && $actual_end_date !== '')) {
@@ -128,7 +128,7 @@ trait RegistersValidationRules
             function ($attribute, $date) {
                 $dateType = (!is_array($date)) ?: Arr::get($date, '0.type');
 
-                if ($dateType === 2 || $dateType === 4) {
+                if ($dateType === '2' || $dateType === '4') {
                     $actual_date = (!is_array($date)) ?: Arr::get($date, '0.date');
                     if ($actual_date > date('Y-m-d')) {
                         return false;

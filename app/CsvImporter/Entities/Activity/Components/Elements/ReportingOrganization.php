@@ -119,10 +119,10 @@ class ReportingOrganization extends Element
             $value = (!$value) ? '' : $value;
             $validReportingOrgType = $this->loadCodeList('OrganizationType', 'Organization');
 
-            if (!is_int($value)) {
+            if ($value) {
                 foreach ($validReportingOrgType as $code => $name) {
                     if (strcasecmp(trim($value), $name) === 0) {
-                        $value = is_int($code) ? (int) $code : $code;
+                        $value = strval($code);
                         break;
                     }
                 }

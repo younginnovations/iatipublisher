@@ -348,8 +348,8 @@ class Validation extends Factory
                     return true;
                 }
 
-                $periodStart = strtotime(Arr::get($values[array_key_first($values)], 'period_start.0.date'));
-                $periodEnd = strtotime(Arr::get($values[array_key_first($values)], 'period_end.0.date'));
+                $periodStart = dateStrToTime(Arr::get($values[array_key_first($values)], 'period_start.0.date'));
+                $periodEnd = dateStrToTime(Arr::get($values[array_key_first($values)], 'period_end.0.date'));
 
                 if ($periodStart === false || $periodEnd === false) {
                     return true;
@@ -372,8 +372,10 @@ class Validation extends Factory
 
                 $periodStart = Arr::get($values[array_key_first($values)], 'period_start.0.date');
                 $periodEnd = Arr::get($values[array_key_first($values)], 'period_end.0.date');
-                $isPeriodStartDate = strtotime($periodStart);
-                $isPeriodEndDate = strtotime($periodEnd);
+                // $isPeriodStartDate = strtotime($periodStart);
+                // $isPeriodEndDate = strtotime($periodEnd);
+                $isPeriodStartDate = dateStrToTime($periodStart);
+                $isPeriodEndDate = dateStrToTime($periodEnd);
 
                 if ($isPeriodStartDate !== false && $isPeriodEndDate !== false) {
                     $periodStart = Carbon::parse($periodStart);

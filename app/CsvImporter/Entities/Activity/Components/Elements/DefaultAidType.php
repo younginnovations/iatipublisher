@@ -93,10 +93,10 @@ class DefaultAidType extends Element
 
             $validDefaultAidTypeVocab = $this->loadCodeList('AidTypeVocabulary');
 
-            if (!is_int($value)) {
+            if ($value) {
                 foreach ($validDefaultAidTypeVocab as $code => $name) {
                     if (strcasecmp(trim($value), $name) === 0) {
-                        $value = is_int($code) ? (int) $code : $code;
+                        $value = strval($code);
                         break;
                     }
                 }
@@ -143,16 +143,16 @@ class DefaultAidType extends Element
                     $variable = 'default_aid_type';
             }
 
-            if (!is_int($value)) {
+            if ($value) {
                 foreach ($validDefaultAidTypeCode as $code => $name) {
                     if (strcasecmp(trim($value), $name) === 0) {
-                        $value = is_int($code) ? (int) $code : $code;
+                        $value = strval($code);
                         break;
                     }
                 }
             }
 
-            $this->data['default_aid_type'][$index][$variable] = $value;
+            $this->data['default_aid_type'][$index][$variable] = strtoupper($value);
         }
     }
 

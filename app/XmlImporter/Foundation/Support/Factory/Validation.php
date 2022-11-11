@@ -288,8 +288,8 @@ class Validation extends Factory
                     $formBase
                 )] = 'required_with:' . sprintf('%s.narrative.%s.narrative', $formBase, $narrativeIndex);
 
-                if ($sector['sector_vocabulary'] === 1 || $sector['sector_vocabulary'] === 2) {
-                    if ($sector['sector_vocabulary'] === 1) {
+                if ($sector['sector_vocabulary'] === '1' || $sector['sector_vocabulary'] === '2') {
+                    if ($sector['sector_vocabulary'] === '1') {
                         $rules[sprintf(
                             '%s.sector_code',
                             $formBase
@@ -299,7 +299,7 @@ class Validation extends Factory
                             $narrativeIndex
                         );
                     }
-                    if ($sector['sector_vocabulary'] === 2) {
+                    if ($sector['sector_vocabulary'] === '2') {
                         $rules[sprintf(
                             '%s.sector_category_code',
                             $formBase
@@ -358,8 +358,8 @@ class Validation extends Factory
                     ['attribute' => trans('elementForm.sector_vocabulary'), 'values' => trans('elementForm.narrative')]
                 );
 
-                if ($sector['sector_vocabulary'] === 1 || $sector['sector_vocabulary'] === 2) {
-                    if ($sector['sector_vocabulary'] === 1) {
+                if ($sector['sector_vocabulary'] === '1' || $sector['sector_vocabulary'] === '2') {
+                    if ($sector['sector_vocabulary'] === '1') {
                         $messages[sprintf('%s.sector_code.required_with', $formBase)] = trans(
                             'validation.required_with',
                             [
@@ -368,7 +368,7 @@ class Validation extends Factory
                             ]
                         );
                     }
-                    if ($sector['sector_vocabulary'] === 2) {
+                    if ($sector['sector_vocabulary'] === '2') {
                         $messages[sprintf('%s.sector_category_code.required_with', $formBase)] = trans(
                             'validation.required_with',
                             [
