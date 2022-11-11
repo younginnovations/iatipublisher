@@ -18,11 +18,11 @@ class FormBuilder {
 
     const parent_count = $(target).attr('parent_count')
       ? parseInt($(target).attr('parent_count') as string)
-      : $(target).parent('.subelement').prevAll('.multi-form').length;
+      : $(target).parents('.multi-form').index()-1;
 
     const wrapper_parent_count = $(target).attr('wrapped_parent_count')
       ? parseInt($(target).attr('wrapped_parent_count') as string)
-      : $(target).parent('.subelement').find('.wrapped-child-body').length;
+      : $(target).parents('.wrapped-child-body').index()-1;
 
     let proto = container
       .data('prototype')

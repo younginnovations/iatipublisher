@@ -211,6 +211,7 @@ return [
     'required_only_one_among'                   => 'Either :attribute or :values is required.',
     'recipient_country_region_percentage_sum'   => 'Sum of percentage of Recipient Country and Recipient Region must be equal to 100.',
     'invalid_in_transaction'                    => 'Entered :attribute is incorrect in Transaction.',
+    'invalid_in_sector'                         => 'Entered :attribute is incorrect in Sector.',
     'required_if_in_transaction'                => ':attribute is required if :values is not present in Transaction.',
     'sector_vocabulary_required'                => 'Sector Vocabulary is required in Transaction if not present in Activity Level.',
     'required_in_transaction'                   => ':attribute is required in Transaction.',

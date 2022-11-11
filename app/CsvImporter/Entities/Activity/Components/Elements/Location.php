@@ -128,14 +128,14 @@ class Location extends Element
     protected function setLocationReachCode($key, $value, $index): void
     {
         if ($key === $this->_csvHeaders[1]) {
-            $value = (!$value) ? '' : $value;
+            $value = (!$value) ? '' : trim($value);
 
             $validLocationReachCode = $this->loadCodeList('GeographicLocationReach');
 
-            if (!is_int($value)) {
+            if ($value) {
                 foreach ($validLocationReachCode as $code => $name) {
-                    if (strcasecmp(trim($value), $name) === 0) {
-                        $value = is_int($code) ? (int) $code : $code;
+                    if (strcasecmp($value, $name) === 0) {
+                        $value = strval($code);
                         break;
                     }
                 }
@@ -157,22 +157,22 @@ class Location extends Element
     protected function setLocationId($key, $value, $index): void
     {
         if ($key === $this->_csvHeaders[2]) {
-            $value = (!$value) ? '' : $value;
+            $value = (!$value) ? '' : trim($value);
 
             $validLocationIdVocabulary = $this->loadCodeList('GeographicVocabulary');
 
-            if (!is_int($value)) {
+            if ($value) {
                 foreach ($validLocationIdVocabulary as $code => $name) {
-                    if (strcasecmp(trim($value), $name) === 0) {
-                        $value = is_int($code) ? (int) $code : $code;
+                    if (strcasecmp($value, $name) === 0) {
+                        $value = strval($code);
                         break;
                     }
                 }
             }
 
-            $this->data['location'][$index]['location_id'][0]['vocabulary'] = $value;
+            $this->data['location'][$index]['location_id'][0]['vocabulary'] = strtoupper($value);
         } elseif ($key === $this->_csvHeaders[3]) {
-            $value = (!$value) ? '' : $value;
+            $value = (!$value) ? '' : trim($value);
 
             $this->data['location'][$index]['location_id'][0]['code'] = $value;
         }
@@ -256,37 +256,37 @@ class Location extends Element
     protected function setAdministrative($key, $value, $index): void
     {
         if ($key === $this->_csvHeaders[7]) {
-            $value = (!$value) ? '' : $value;
+            $value = (!$value) ? '' : trim($value);
 
             $validAdministrativeVocabulary = $this->loadCodeList('GeographicVocabulary');
 
-            if (!is_int($value)) {
+            if ($value) {
                 foreach ($validAdministrativeVocabulary as $code => $name) {
-                    if (strcasecmp(trim($value), $name) === 0) {
-                        $value = is_int($code) ? (int) $code : $code;
+                    if (strcasecmp($value, $name) === 0) {
+                        $value = strval($code);
                         break;
                     }
                 }
             }
 
-            $this->data['location'][$index]['administrative'][0]['vocabulary'] = $value;
+            $this->data['location'][$index]['administrative'][0]['vocabulary'] = strtoupper($value);
         } elseif ($key === $this->_csvHeaders[8]) {
-            $value = (!$value) ? '' : $value;
+            $value = (!$value) ? '' : trim($value);
 
             $validAdministrativeCode = $this->loadCodeList('Country');
 
-            if (!is_int($value)) {
+            if ($value) {
                 foreach ($validAdministrativeCode as $code => $name) {
-                    if (strcasecmp(trim($value), $name) === 0) {
-                        $value = is_int($code) ? (int) $code : $code;
+                    if (strcasecmp($value, $name) === 0) {
+                        $value = strval($code);
                         break;
                     }
                 }
             }
 
-            $this->data['location'][$index]['administrative'][0]['code'] = $value;
+            $this->data['location'][$index]['administrative'][0]['code'] = strtoupper($value);
         } elseif ($key === $this->_csvHeaders[9]) {
-            $value = (!$value) ? '' : $value;
+            $value = (!$value) ? '' : trim($value);
 
             $this->data['location'][$index]['administrative'][0]['level'] = $value;
         }
@@ -304,15 +304,15 @@ class Location extends Element
     protected function setPoint($key, $value, $index): void
     {
         if ($key === $this->_csvHeaders[10]) {
-            $value = (!$value) ? '' : $value;
+            $value = (!$value) ? '' : trim($value);
 
             $this->data['location'][$index]['point'][0]['srs_name'] = $value;
         } elseif ($key === $this->_csvHeaders[11]) {
-            $value = (!$value) ? '' : $value;
+            $value = (!$value) ? '' : trim($value);
 
             $this->data['location'][$index]['point'][0]['pos'][0]['latitude'] = $value;
         } elseif ($key === $this->_csvHeaders[12]) {
-            $value = (!$value) ? '' : $value;
+            $value = (!$value) ? '' : trim($value);
 
             $this->data['location'][$index]['point'][0]['pos'][0]['longitude'] = $value;
         }
@@ -330,14 +330,14 @@ class Location extends Element
     protected function setExactness($key, $value, $index): void
     {
         if ($key === $this->_csvHeaders[13]) {
-            $value = (!$value) ? '' : $value;
+            $value = (!$value) ? '' : trim($value);
 
             $validLocationExactness = $this->loadCodeList('GeographicExactness');
 
-            if (!is_int($value)) {
+            if ($value) {
                 foreach ($validLocationExactness as $code => $name) {
-                    if (strcasecmp(trim($value), $name) === 0) {
-                        $value = is_int($code) ? (int) $code : $code;
+                    if (strcasecmp($value, $name) === 0) {
+                        $value = strval($code);
                         break;
                     }
                 }
@@ -359,14 +359,14 @@ class Location extends Element
     protected function setLocationClass($key, $value, $index): void
     {
         if ($key === $this->_csvHeaders[14]) {
-            $value = (!$value) ? '' : $value;
+            $value = (!$value) ? '' : trim($value);
 
             $validLocationClass = $this->loadCodeList('GeographicLocationClass');
 
-            if (!is_int($value)) {
+            if ($value) {
                 foreach ($validLocationClass as $code => $name) {
-                    if (strcasecmp(trim($value), $name) === 0) {
-                        $value = is_int($code) ? (int) $code : $code;
+                    if (strcasecmp($value, $name) === 0) {
+                        $value = strval($code);
                         break;
                     }
                 }
@@ -388,20 +388,20 @@ class Location extends Element
     protected function setFeatureDesignation($key, $value, $index): void
     {
         if ($key === $this->_csvHeaders[15]) {
-            $value = (!$value) ? '' : $value;
+            $value = (!$value) ? '' : trim($value);
 
             $validFeatureDesignation = $this->loadCodeList('LocationType');
 
-            if (!is_int($value)) {
+            if ($value) {
                 foreach ($validFeatureDesignation as $code => $name) {
-                    if (strcasecmp(trim($value), $name) === 0) {
-                        $value = is_int($code) ? (int) $code : $code;
+                    if (strcasecmp($value, $name) === 0) {
+                        $value = strval($code);
                         break;
                     }
                 }
             }
 
-            $this->data['location'][$index]['feature_designation'][0]['code'] = $value;
+            $this->data['location'][$index]['feature_designation'][0]['code'] = strtoupper($value);
         }
     }
 

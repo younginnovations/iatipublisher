@@ -130,19 +130,18 @@ class RecipientRegion extends Element
             $this->regions[] = $value;
             $this->regions = array_unique($this->regions);
             $validRegionCode = $this->loadCodeList('Region');
+            $value = $value ? trim($value) : '';
 
-            if (!is_int($value)) {
+            if ($value) {
                 foreach ($validRegionCode as $code => $name) {
-                    if (strcasecmp(trim($value), $name) === 0) {
-                        $value = is_int($code) ? (int) $code : $code;
+                    if (strcasecmp($value, $name) === 0) {
+                        $value = strval($code);
                         break;
                     }
                 }
             }
 
-            $validRegions = array_flip(explode(',', $this->validRecipientRegion()));
-
-            if (isset($validRegions[$value])) {
+            if ($value === '1') {
                 $this->data['recipient_region'][$index]['region_code'] = $value;
             } else {
                 $this->data['recipient_region'][$index]['custom_code'] = $value;
@@ -197,9 +196,9 @@ class RecipientRegion extends Element
     protected function setVocabularyUri($key, $value, $index): void
     {
         if ($key === $this->_csvHeaders[2]) {
-            $value = (!$value) ? '' : $value;
+            $value = (!$value) ? '' : trim($value);
             $this->data['recipient_region'][$index]['vocabulary_uri'] = $value;
-            $this->data['recipient_region'][$index]['region_vocabulary'] = 99;
+            $this->data['recipient_region'][$index]['region_vocabulary'] = '99';
         }
     }
 
@@ -218,11 +217,11 @@ class RecipientRegion extends Element
         $this->data['recipient_region'][$index]['region_vocabulary'] = '';
 
         if (isset($validRegions[$regionCode])) {
-            $this->data['recipient_region'][$index]['region_vocabulary'] = 1;
+            $this->data['recipient_region'][$index]['region_vocabulary'] = '1';
         } elseif (isset($this->data['recipient_region'][$index]['vocabulary_uri']) && !empty($this->data['recipient_region'][$index]['vocabulary_uri'])) {
-            $this->data['recipient_region'][$index]['region_vocabulary'] = 99;
+            $this->data['recipient_region'][$index]['region_vocabulary'] = '99';
         } else {
-            $this->data['recipient_region'][$index]['region_vocabulary'] = 2;
+            $this->data['recipient_region'][$index]['region_vocabulary'] = '2';
         }
     }
 
@@ -272,9 +271,9 @@ class RecipientRegion extends Element
         ? $rules['recipient_region_total_percentage'] = 'percentage_sum' : null;
 
         foreach (Arr::get($this->data(), 'recipient_region', []) as $key => $value) {
-            if (Arr::get($value, 'region_vocabulary', 1) === 1) {
+            if (Arr::get($value, 'region_vocabulary', 1) === '1') {
                 $rules['recipient_region.' . $key . '.region_code'] = sprintf('nullable|required_with:recipient_region.%s.percentage|in:%s', $key, $codes);
-            } elseif (Arr::get($value, 'region_vocabulary', 1) === 2) {
+            } elseif (Arr::get($value, 'region_vocabulary', 1) === '2') {
                 $rules['recipient_region.' . $key . '.custom_code'] = sprintf('nullable|required_with:recipient_region.%s.percentage', $key);
             } else {
                 $rules['recipient_region.' . $key . '.custom_code'] = sprintf('nullable|required_with:recipient_region.%s.percentage, recipient_region.%s.vocabulary_uri', $key, $key);

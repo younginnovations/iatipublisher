@@ -20,8 +20,11 @@ trait DataSanitizeTrait
     {
         foreach ($data as $key => $dataDatum) {
             if (is_array($dataDatum)) {
-                $data[$key] = array_values($dataDatum);
-                $this->sanitizeData($dataDatum);
+                if (is_string($key)) {
+                    $data[$key] = array_values($this->sanitizeData($dataDatum));
+                } else {
+                    $data[$key] = $this->sanitizeData($dataDatum);
+                }
             }
         }
 

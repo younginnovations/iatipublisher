@@ -537,7 +537,8 @@ if (!function_exists('getTransactionTypes')) {
             'unsdgGoals'               => getCodeList('UNSDG-Goals', 'Activity', false),
             'unsdgTargets'             => getCodeList('UNSDG-Targets', 'Activity', false),
             'countryCode'              => getCodeList('Country', 'Activity', false),
-            'regionCode'               => getCodeList('RegionVocabulary', 'Activity', false),
+            'regionVocabulary'         => getCodeList('RegionVocabulary', 'Activity', false),
+            'regionCode'               => getCodeList('Region', 'Activity', false),
             'flowType'                 => getCodeList('FlowType', 'Activity', false),
             'financeType'              => getCodeList('FinanceType', 'Activity', false),
             'tiedStatusType'           => getCodeList('TiedStatus', 'Activity', false),
@@ -820,18 +821,14 @@ function dateFormat($format, $date): bool|string
         return false;
     }
 
-    if ($date !== '') {
+    if (is_string($date) && $date !== '') {
         if ((str_contains($date, '/'))) {
-            $formattedDate = str_replace('/', '-', $date);
-
-            if (strtotime($formattedDate)) {
-                return date($format, strtotime($formattedDate));
-            }
-
-            return false;
+            $date = str_replace('/', '-', $date);
         }
 
-        if (strtotime($date)) {
+        $dateArray = date_parse_from_format('Y-m-d', $date);
+
+        if (checkdate((int) $dateArray['month'], (int) $dateArray['day'], (int) $dateArray['year'])) {
             return date($format, strtotime($date));
         }
 
@@ -839,6 +836,36 @@ function dateFormat($format, $date): bool|string
     }
 
     return '';
+}
+
+/**
+ * Returns strtotime date.
+ *
+ * @param $date
+ *
+ * @return false|int
+ */
+function dateStrToTime($date): int|bool
+{
+    if (is_array($date)) {
+        return false;
+    }
+
+    if ($date !== '' && is_string($date)) {
+        if ((str_contains($date, '/'))) {
+            $date = str_replace('/', '-', $date);
+        }
+
+        $dateArray = date_parse_from_format('Y-m-d', $date);
+
+        if (checkdate((int) $dateArray['month'], (int) $dateArray['day'], (int) $dateArray['year'])) {
+            return strtotime($date);
+        }
+
+        return false;
+    }
+
+    return false;
 }
 
 if (!function_exists('awsHasFile')) {

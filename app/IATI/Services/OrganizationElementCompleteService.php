@@ -677,7 +677,7 @@ class OrganizationElementCompleteService
      */
     public function setOrganizationDefaultValues(&$data, $organization): mixed
     {
-        if (is_string($data) && $this->isJson($data)) {
+        if (is_string($data)) {
             $data = json_decode($data, true, 512, JSON_THROW_ON_ERROR);
         }
 
@@ -708,20 +708,5 @@ class OrganizationElementCompleteService
         }
 
         return $data;
-    }
-
-    /**
-     * Checks if the string is json.
-     *
-     * @param $string
-     *
-     * @return bool
-     * @throws \JsonException
-     */
-    public function isJson($string): bool
-    {
-        json_decode($string, false, 512, JSON_THROW_ON_ERROR);
-
-        return json_last_error() === JSON_ERROR_NONE;
     }
 }

@@ -89,14 +89,14 @@ class DefaultAidType extends Element
     protected function setDefaultAidTypeVocabulary($key, $value, $index): void
     {
         if ($key === $this->_csvHeaders[0]) {
-            $value = (!$value) ? '' : $value;
+            $value = (!$value) ? '' : trim($value);
 
             $validDefaultAidTypeVocab = $this->loadCodeList('AidTypeVocabulary');
 
-            if (!is_int($value)) {
+            if ($value) {
                 foreach ($validDefaultAidTypeVocab as $code => $name) {
-                    if (strcasecmp(trim($value), $name) === 0) {
-                        $value = is_int($code) ? (int) $code : $code;
+                    if (strcasecmp($value, $name) === 0) {
+                        $value = strval($code);
                         break;
                     }
                 }
@@ -120,7 +120,7 @@ class DefaultAidType extends Element
         if ($key === $this->_csvHeaders[1]) {
             $defaultAidTypeVocabulary = $this->data['default_aid_type'][$index]['default_aid_type_vocabulary'] ?? '';
             $defaultAidTypeVocabulary = empty($defaultAidTypeVocabulary) ?: (int) $defaultAidTypeVocabulary;
-            $value = (!$value) ? '' : $value;
+            $value = (!$value) ? '' : trim($value);
 
             switch ($defaultAidTypeVocabulary) {
                 case '2':
@@ -143,16 +143,16 @@ class DefaultAidType extends Element
                     $variable = 'default_aid_type';
             }
 
-            if (!is_int($value)) {
+            if ($value) {
                 foreach ($validDefaultAidTypeCode as $code => $name) {
-                    if (strcasecmp(trim($value), $name) === 0) {
-                        $value = is_int($code) ? (int) $code : $code;
+                    if (strcasecmp($value, $name) === 0) {
+                        $value = strval($code);
                         break;
                     }
                 }
             }
 
-            $this->data['default_aid_type'][$index][$variable] = $value;
+            $this->data['default_aid_type'][$index][$variable] = strtoupper($value);
         }
     }
 

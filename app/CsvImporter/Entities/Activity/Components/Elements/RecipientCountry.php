@@ -122,17 +122,18 @@ class RecipientCountry extends Element
             $this->countries[] = $value;
             $this->countries = array_unique($this->countries);
             $validCountry = $this->loadCodeList('Country');
+            $value = $value ? trim($value) : '';
 
-            if (!is_int($value)) {
+            if ($value) {
                 foreach ($validCountry as $code => $name) {
-                    if (strcasecmp(trim($value), $name) === 0) {
-                        $value = is_int($code) ? (int) $code : $code;
+                    if (strcasecmp($value, $name) === 0) {
+                        $value = strval($code);
                         break;
                     }
                 }
             }
 
-            $this->data['recipient_country'][$index]['country_code'] = $value;
+            $this->data['recipient_country'][$index]['country_code'] = strtoupper($value);
         }
     }
 
@@ -214,7 +215,8 @@ class RecipientCountry extends Element
 
         if (($this->data['recipient_region'] === '')
             && array_key_exists('recipient_country', $this->data)
-            && (!(abs(100.0 - $this->totalPercentage()) < 0.01) && $this->totalPercentage() !== 0)) {
+            && (!(abs(100.0 - $this->totalPercentage()) < 0.01) && $this->totalPercentage() !== 0)
+        ) {
             $rules['recipient_country_total_percentage'] = 'percentage_sum';
         }
 

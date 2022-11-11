@@ -123,15 +123,15 @@ class Sector extends Element
     protected function setSectorVocabulary($key, $value, $index): void
     {
         if ($key === $this->_csvHeaders[0]) {
-            $value = (!$value) ? '' : $value;
+            $value = (!$value) ? '' : trim($value);
             $this->vocabularies[] = $value;
 
             $validSectorVocab = $this->loadCodeList('SectorVocabulary');
 
-            if (!is_int($value)) {
+            if ($value) {
                 foreach ($validSectorVocab as $code => $name) {
-                    if (strcasecmp(trim($value), $name) === 0) {
-                        $value = is_int($code) ? (int) $code : $code;
+                    if (strcasecmp($value, $name) === 0) {
+                        $value = strval($code);
                         break;
                     }
                 }
@@ -153,28 +153,28 @@ class Sector extends Element
     protected function setSectorCode($key, $value, $index): void
     {
         if ($key === $this->_csvHeaders[1]) {
-            $sectorVocabulary = (int) $this->data['sector'][$index]['sector_vocabulary'];
+            $sectorVocabulary = Arr::get($this->data['sector'], $index . '.sector_vocabulary', null);
 
-            if ($sectorVocabulary === 1) {
-                ($value) ?: $value = '';
+            if ($sectorVocabulary === '1') {
+                $value = $value ? trim($value) : '';
                 $this->codes[] = $value;
                 $validSectorCode = $this->loadCodeList('SectorCode');
 
-                if (!is_int($value)) {
+                if ($value) {
                     foreach ($validSectorCode as $code => $name) {
-                        if (strcasecmp(trim($value), $name) === 0) {
-                            $value = is_int($code) ? (int) $code : $code;
+                        if (strcasecmp($value, $name) === 0) {
+                            $value = strval($code);
                             break;
                         }
                     }
                 }
 
                 $this->data['sector'][$index]['code'] = $value;
-            } elseif ($sectorVocabulary === 2) {
+            } elseif ($sectorVocabulary === '2') {
                 $this->setSectorCategoryCode($value, $index);
-            } elseif ($sectorVocabulary === 7) {
+            } elseif ($sectorVocabulary === '7') {
                 $this->setSectorSdgGoal($value, $index);
-            } elseif ($sectorVocabulary === 8) {
+            } elseif ($sectorVocabulary === '8') {
                 $this->setSectorSdgTarget($value, $index);
             } else {
                 $this->setSectorText($value, $index);
@@ -210,11 +210,12 @@ class Sector extends Element
     protected function setSectorCategoryCode($value, $index): void
     {
         $validCategoryCode = $this->loadCodeList('SectorCategory');
+        $value = $value ? trim($value) : '';
 
-        if (!is_int($value)) {
+        if ($value) {
             foreach ($validCategoryCode as $code => $name) {
-                if (strcasecmp(trim($value), $name) === 0) {
-                    $value = is_int($code) ? (int) $code : $code;
+                if (strcasecmp($value, $name) === 0) {
+                    $value = strval($code);
                     break;
                 }
             }
@@ -238,7 +239,7 @@ class Sector extends Element
 
         foreach ($validSdgGoal as $code => $name) {
             if ($value === $name) {
-                $value = is_int($code) ? (int) $code : $code;
+                $value = strval($code);
                 break;
             }
         }
@@ -261,7 +262,7 @@ class Sector extends Element
 
         foreach ($validSdgTarget as $code => $name) {
             if ($value === $name) {
-                $value = is_int($code) ? (int) $code : $code;
+                $value = strval($code);
                 break;
             }
         }
@@ -335,14 +336,14 @@ class Sector extends Element
     protected function isEmptySector($index): void
     {
         if (
-            $this->data['sector'][$index]['sector_vocabulary'] === ''
-            && $this->data['sector'][$index]['vocabulary_uri'] === ''
-            && $this->data['sector'][$index]['code'] === ''
-            && $this->data['sector'][$index]['category_code'] === ''
-            && $this->data['sector'][$index]['sdg_goal'] === ''
-            && $this->data['sector'][$index]['sdg_target'] === ''
-            && $this->data['sector'][$index]['text'] === ''
-            && $this->data['sector'][$index]['percentage'] === ''
+            Arr::get($this->data['sector'], $index . '.sector_vocabulary', false)
+            && Arr::get($this->data['sector'], $index . '.vocabulary_uri', false)
+            && Arr::get($this->data['sector'], $index . '.code', false)
+            && Arr::get($this->data['sector'], $index . '.category_code', false)
+            && Arr::get($this->data['sector'], $index . '.sdg_goal', false)
+            && Arr::get($this->data['sector'], $index . '.sdg_target', false)
+            && Arr::get($this->data['sector'], $index . '.text', false)
+            && Arr::get($this->data['sector'], $index . '.percentage', false)
         ) {
             unset($this->data['sector'][$index]);
         }

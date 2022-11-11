@@ -116,20 +116,20 @@ class OtherIdentifier extends Element
         }
 
         if ($key === $this->_csvHeaders[1]) {
-            $value = (!$value) ? '' : $value;
+            $value = (!$value) ? '' : trim($value);
 
             $validOtherIdentifierType = $this->loadCodeList('OtherIdentifierType');
 
-            if (!is_int($value)) {
+            if ($value) {
                 foreach ($validOtherIdentifierType as $code => $name) {
-                    if (strcasecmp(trim($value), $name) === 0) {
-                        $value = is_int($code) ? (int) $code : $code;
+                    if (strcasecmp($value, $name) === 0) {
+                        $value = strval($code);
                         break;
                     }
                 }
             }
 
-            $this->data['other_identifier'][$index]['reference_type'] = $value;
+            $this->data['other_identifier'][$index]['reference_type'] = strtoupper($value);
         }
     }
 
