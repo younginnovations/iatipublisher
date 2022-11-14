@@ -816,16 +816,16 @@ class Activity
         $this->tagVariable[$this->index]['narrative'] = $this->narrative($element);
 
         switch ($tagVocabulary) {
-            case 1:
+            case '1':
                 $this->tagVariable[$this->index]['tag_text'] = $this->attributes($element, 'code');
                 break;
-            case 2:
+            case '2':
                 $this->tagVariable[$this->index]['goals_tag_code'] = $this->attributes($element, 'code');
                 break;
-            case 3:
+            case '3':
                 $this->tagVariable[$this->index]['targets_tag_code'] = $this->attributes($element, 'code');
                 break;
-            case 99:
+            case '99':
                 $this->tagVariable[$this->index]['tag_text'] = $this->attributes($element, 'code');
                 break;
         }

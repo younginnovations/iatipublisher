@@ -4125,7 +4125,7 @@ class XmlValidator
             $tagVocabulary = Arr::get($tag, 'tag_vocabulary');
 
             if ($tagVocabulary === '1') {
-                $rules[sprintf('%s.tag_code', $tagForm)] = 'required';
+                $rules[sprintf('%s.tag_text', $tagForm)] = 'required';
             }
             if ($tagVocabulary === '2') {
                 $rules[sprintf('%s.goals_tag_code', $tagForm)] = 'required';
@@ -4165,7 +4165,7 @@ class XmlValidator
             $tagVocabulary = Arr::get($tag, 'tag_vocabulary');
 
             if ($tagVocabulary === '1') {
-                $messages[sprintf('%s.tag_code.required', $tagForm)] = trans('validation.required', ['attribute' => trans('elementForm.tag_code')]);
+                $messages[sprintf('%s.tag_text.required', $tagForm)] = trans('validation.required', ['attribute' => trans('elementForm.tag_code')]);
             }
             if ($tagVocabulary === '2') {
                 $messages[sprintf('%s.goals_tag_code.required', $tagForm)] = trans('validation.required', ['attribute' => trans('elementForm.tag_code')]);
