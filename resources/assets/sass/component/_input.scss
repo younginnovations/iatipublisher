@@ -30,7 +30,9 @@
   font-weight: normal;
   font-size: 12px;
 }
-
+.error_input {
+  border: 1px solid #d1001e !important;
+}
 .has_error {
   .form__input {
     @apply border border-crimson-50;
@@ -101,7 +103,7 @@ textarea.form__input {
   }
 
   .multiselect-search {
-    @apply border border-n-30 py-2.5 cursor-pointer;
+    @apply cursor-pointer border border-n-30 py-2.5;
   }
 
   .multiselect-search:focus {
@@ -149,6 +151,6 @@ textarea.form__input {
     @apply absolute left-3 top-3 text-base text-n-30;
   }
 }
-.required-icon{
-  @apply text-crimson-50 text-base leading-none relative top-0.5;
+.required-icon {
+  @apply relative top-0.5 text-base leading-none text-crimson-50;
 }
