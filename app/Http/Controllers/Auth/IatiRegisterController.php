@@ -244,6 +244,9 @@ class IatiRegisterController extends Controller
             $types = [
                 'Country' => getCodeListArray('Country', 'OrganizationArray'),
                 'RegistrationAgency' => getCodeListArray('OrganizationRegistrationAgency', 'OrganizationArray'),
+                'PublisherType' => getCodeListArray('OrganizationRegistrationAgency', 'OrganizationArray'),
+                'DataLicense' => getCodeListArray('OrganizationRegistrationAgency', 'OrganizationArray'),
+                'Source' => getCodeListArray('OrganizationRegistrationAgency', 'OrganizationArray'),
             ];
 
             return view('web.iati_register', compact('types'));
