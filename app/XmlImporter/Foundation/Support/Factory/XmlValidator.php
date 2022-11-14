@@ -1500,8 +1500,8 @@ class XmlValidator
                 $this->validCodeList('SectorCategory')
             );
 
-            if ($sector['sector_vocabulary'] === 1 || $sector['sector_vocabulary'] === 2) {
-                if ($sector['sector_vocabulary'] === 1) {
+            if ($sector['sector_vocabulary'] === '1' || $sector['sector_vocabulary'] === '2') {
+                if ($sector['sector_vocabulary'] === '1') {
                     $rules[sprintf(
                         '%s.code',
                         $sectorBase
@@ -1519,7 +1519,7 @@ class XmlValidator
                         $this->validCodeList('SectorVocabulary')
                     );
                 }
-                if ($sector['sector_vocabulary'] === 2) {
+                if ($sector['sector_vocabulary'] === '2') {
                     $rules[sprintf(
                         '%s.category_code',
                         $sectorBase
@@ -1641,8 +1641,8 @@ class XmlValidator
                 ['attribute' => trans('elementForm.code')]
             );
 
-            if ($sector['sector_vocabulary'] === 1 || $sector['sector_vocabulary'] === 2) {
-                if ($sector['sector_vocabulary'] === 1) {
+            if ($sector['sector_vocabulary'] === '1' || $sector['sector_vocabulary'] === '2') {
+                if ($sector['sector_vocabulary'] === '1') {
                     $messages[sprintf('%s.code.%s', $sectorBase, 'required_with')] = trans(
                         'validation.required_with',
                         [
@@ -1660,7 +1660,7 @@ class XmlValidator
                         ]
                     );
                 }
-                if ($sector['sector_vocabulary'] === 2) {
+                if ($sector['sector_vocabulary'] === '2') {
                     $messages[sprintf('%s.category_code.%s', $sectorBase, 'required_with')] = trans(
                         'validation.required_with',
                         [
@@ -3192,7 +3192,7 @@ class XmlValidator
                 $this->validCodeList('SectorCategory')
             );
 
-            if ($sector['sector_vocabulary'] === 1) {
+            if ($sector['sector_vocabulary'] === '1') {
                 $rules[sprintf(
                     '%s.code',
                     $sectorBase
@@ -3207,7 +3207,7 @@ class XmlValidator
                     'in:%s|required_with:' . $sectorBase . '.code',
                     $this->validCodeList('SectorVocabulary')
                 );
-            } elseif ($sector['sector_vocabulary'] === 2) {
+            } elseif ($sector['sector_vocabulary'] === '2') {
                 $rules[sprintf(
                     '%s.category_code',
                     $sectorBase
@@ -3222,7 +3222,7 @@ class XmlValidator
                     'in:%s|required_with:' . $sectorBase . '.category_code',
                     $this->validCodeList('SectorVocabulary')
                 );
-            } elseif ($sector['sector_vocabulary'] === 98 || $sector['sector_vocabulary'] === 99) {
+            } elseif ($sector['sector_vocabulary'] === '98' || $sector['sector_vocabulary'] === '99') {
                 $rules[sprintf(
                     '%s.vocabulary_uri',
                     $sectorBase
@@ -3280,7 +3280,7 @@ class XmlValidator
                 ['attribute' => trans('elementForm.code')]
             );
 
-            if ($sector['sector_vocabulary'] === 1) {
+            if ($sector['sector_vocabulary'] === '1') {
                 $messages[sprintf('%s.code.%s', $sectorBase, 'required_with')] = trans(
                     'validation.required_with',
                     ['attribute' => trans('elementForm.code'), 'values' => trans('sector_vocabulary')]
@@ -3289,7 +3289,7 @@ class XmlValidator
                     'validation.required_with',
                     ['attribute' => trans('elementForm.sector_vocabulary'), 'values' => trans('sector_code')]
                 );
-            } elseif ($sector['sector_vocabulary'] === 2) {
+            } elseif ($sector['sector_vocabulary'] === '2') {
                 $messages[sprintf('%s.category_code.%s', $sectorBase, 'required_with')] = trans(
                     'validation.required_with',
                     ['attribute' => trans('elementForm.code'), 'values' => trans('sector_vocabulary')]
@@ -3298,7 +3298,7 @@ class XmlValidator
                     'validation.required_with',
                     ['attribute' => trans('elementForm.sector_vocabulary'), 'values' => trans('sector_code')]
                 );
-            } elseif ($sector['sector_vocabulary'] === 98 || $sector['sector_vocabulary'] === 99) {
+            } elseif ($sector['sector_vocabulary'] === '98' || $sector['sector_vocabulary'] === '99') {
                 $messages[sprintf('%s.vocabulary_uri.%s', $sectorBase, 'required_with')] = trans(
                     'validation.required_with',
                     [
@@ -4124,16 +4124,16 @@ class XmlValidator
 
             $tagVocabulary = Arr::get($tag, 'tag_vocabulary');
 
-            if ($tagVocabulary === 1) {
+            if ($tagVocabulary === '1') {
                 $rules[sprintf('%s.tag_code', $tagForm)] = 'required';
             }
-            if ($tagVocabulary === 2) {
+            if ($tagVocabulary === '2') {
                 $rules[sprintf('%s.goals_tag_code', $tagForm)] = 'required';
             }
-            if ($tagVocabulary === 3) {
+            if ($tagVocabulary === '3') {
                 $rules[sprintf('%s.targets_tag_code', $tagForm)] = 'required';
             }
-            if ($tagVocabulary === 99) {
+            if ($tagVocabulary === '99') {
                 $rules[sprintf('%s.tag_text', $tagForm)] = 'required';
                 $rules[sprintf('%s.vocabulary_uri', $tagForm)] = 'url|required_with:' . $tagForm . '.tag_vocabulary';
             }
@@ -4164,17 +4164,17 @@ class XmlValidator
 
             $tagVocabulary = Arr::get($tag, 'tag_vocabulary');
 
-            if ($tagVocabulary === 1) {
+            if ($tagVocabulary === '1') {
                 $messages[sprintf('%s.tag_code.required', $tagForm)] = trans('validation.required', ['attribute' => trans('elementForm.tag_code')]);
             }
-            if ($tagVocabulary === 2) {
+            if ($tagVocabulary === '2') {
                 $messages[sprintf('%s.goals_tag_code.required', $tagForm)] = trans('validation.required', ['attribute' => trans('elementForm.tag_code')]);
             }
-            if ($tagVocabulary === 3) {
+            if ($tagVocabulary === '3') {
                 $messages[sprintf('%s.targets_tag_code.required', $tagForm)] = trans('validation.required', ['attribute' => trans('elementForm.tag_code')]);
             }
 
-            if ($tagVocabulary === 99) {
+            if ($tagVocabulary === '99') {
                 $messages[sprintf('%s.tag_text.required', $tagForm)] = trans('validation.required', ['attribute' => trans('elementForm.tag_code')]);
                 $messages[sprintf('%s.vocabulary_uri.%s', $tagForm, 'required_with')] = trans(
                     'validation.required_with',
@@ -4210,17 +4210,17 @@ class XmlValidator
             $rules[sprintf('%s.default_aid_type_vocabulary', $aidtypeForm)] = 'required|in:1,2,3,4';
             $vocabulary = Arr::get($aidtype, 'default_aid_type_vocabulary');
 
-            if ($vocabulary === 1) {
-                $rules[sprintf('%s.default_aid_type', $aidtypeForm)] = sprintf('required_with:%s|in:%s', $aidtypeForm . '.default_aid_type_vocabulary', $this->validCodeList('AidType', 'V203'));
+            if ($vocabulary === '1') {
+                $rules[sprintf('%s.default_aid_type', $aidtypeForm)] = sprintf('required_with:%s|in:%s', $aidtypeForm . '.default_aid_type_vocabulary', $this->validCodeList('AidType'));
             }
-            if ($vocabulary === 2) {
-                $rules[sprintf('%s.earmarking_category', $aidtypeForm)] = sprintf('required_with:%s|in:%s', $aidtypeForm . '.default_aid_type_vocabulary', $this->validCodeList('EarmarkingCategory', 'V203'));
+            if ($vocabulary === '2') {
+                $rules[sprintf('%s.earmarking_category', $aidtypeForm)] = sprintf('required_with:%s|in:%s', $aidtypeForm . '.default_aid_type_vocabulary', $this->validCodeList('EarmarkingCategory'));
             }
-            if ($vocabulary === 3) {
-                $rules[sprintf('%s.default_aid_type_text', $aidtypeForm)] = sprintf('required_with:%s|in:%s', $aidtypeForm . '.default_aid_type_vocabulary', $this->validCodeList('EarmarkingModality', 'V203'));
+            if ($vocabulary === '3') {
+                $rules[sprintf('%s.default_aid_type_text', $aidtypeForm)] = sprintf('required_with:%s|in:%s', $aidtypeForm . '.default_aid_type_vocabulary', $this->validCodeList('EarmarkingModality'));
             }
-            if ($vocabulary === 4) {
-                $rules[sprintf('%s.cash_and_voucher_modalities', $aidtypeForm)] = sprintf('required_with:%s|in:%s', $aidtypeForm . '.default_aid_type_vocabulary', $this->validCodeList('CashandVoucherModalities', 'V203'));
+            if ($vocabulary === '4') {
+                $rules[sprintf('%s.cash_and_voucher_modalities', $aidtypeForm)] = sprintf('required_with:%s|in:%s', $aidtypeForm . '.default_aid_type_vocabulary', $this->validCodeList('CashandVoucherModalities'));
             }
         }
 
@@ -4244,14 +4244,14 @@ class XmlValidator
             $messages[sprintf('%s.default_aid_type_vocabulary.in', $aidtypeForm)] = trans('validation.code_list', ['attribute' => trans('elementForm.default_aid_type_vocabulary')]);
             $vocabulary = Arr::get($aidtype, 'default_aid_type_vocabulary');
 
-            if ($vocabulary === 1) {
+            if ($vocabulary === '1') {
                 $messages[sprintf('%s.default_aid_type.%s', $aidtypeForm, 'required_with')] = trans(
                     'validation.required_with',
                     ['attribute' => trans('elementForm.default_aid_type'), 'values' => trans('elementForm.default_aid_type_vocabulary')]
                 );
                 $messages[sprintf('%s.default_aid_type.in', $aidtypeForm)] = trans('validation.code_list', ['attribute' => trans('element.default_aid_type')]);
             }
-            if ($vocabulary === 2) {
+            if ($vocabulary === '2') {
                 $messages[sprintf('%s.earmarking_category.%s', $aidtypeForm, 'required_with')] = trans(
                     'validation.required_with',
                     ['attribute' => trans('elementForm.default_aid_type'), 'values' => trans('elementForm.default_aid_type_vocabulary')]
@@ -4261,7 +4261,7 @@ class XmlValidator
                     ['attribute' => trans('elementForm.default_aid_type')]
                 );
             }
-            if ($vocabulary === 3) {
+            if ($vocabulary === '3') {
                 $messages[sprintf('%s.default_aid_type_text.%s', $aidtypeForm, 'required_with')] = trans(
                     'validation.required_with',
                     ['attribute' => trans('elementForm.default_aid_type'), 'values' => trans('elementForm.default_aid_type_vocabulary')]
@@ -4271,7 +4271,7 @@ class XmlValidator
                     ['attribute' => trans('elementForm.default_aid_type')]
                 );
             }
-            if ($vocabulary === 4) {
+            if ($vocabulary === '4') {
                 $messages[sprintf('%s.cash_and_voucher_modalities.%s', $aidtypeForm, 'required_with')] = trans(
                     'validation.required_with',
                     ['attribute' => trans('elementForm.default_aid_type'), 'values' => trans('elementForm.default_aid_type_vocabulary')]

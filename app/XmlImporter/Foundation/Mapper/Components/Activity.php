@@ -268,7 +268,7 @@ class Activity
     public function description($element): array
     {
         $type = $this->attributes($element, 'type');
-        $descType = ($type === '') ? 1 : $type;
+        $descType = ($type === '') ? '1' : $type;
         $this->description[$descType]['type'] = $descType;
 
         if (array_key_exists('narrative', Arr::get($this->description, $descType, []))) {
@@ -634,8 +634,8 @@ class Activity
         $this->policyMarker[$this->index] = $template['policy_marker'];
         $this->policyMarker[$this->index]['policy_marker_vocabulary'] = $vocabulary;
         $this->policyMarker[$this->index]['vocabulary_uri'] = $this->attributes($element, 'vocabulary-uri');
-        $this->policyMarker[$this->index]['policy_marker'] = ($vocabulary !== 99) ? $code : '';
-        $this->policyMarker[$this->index]['policy_marker_text'] = ($vocabulary === 99) ? $code : '';
+        $this->policyMarker[$this->index]['policy_marker'] = ($vocabulary !== '99') ? $code : '';
+        $this->policyMarker[$this->index]['policy_marker_text'] = ($vocabulary === '99') ? $code : '';
         $this->policyMarker[$this->index]['significance'] = $this->attributes($element, 'significance');
         $this->policyMarker[$this->index]['narrative'] = $this->narrative($element);
         $this->index++;
