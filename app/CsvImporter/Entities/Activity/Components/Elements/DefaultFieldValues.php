@@ -101,7 +101,6 @@ class DefaultFieldValues extends Element
             $value = (!$value) ? '' : $value;
 
             $validReportingOrgType = $this->loadCodeList('Language');
-            dump('language', $value);
 
             if ($value) {
                 foreach ($validReportingOrgType as $code => $name) {
@@ -111,7 +110,6 @@ class DefaultFieldValues extends Element
                     }
                 }
             }
-            dump('converted value', $value);
 
             $this->data['default_field_values'][$index]['default_language'] = strtolower($value);
         }

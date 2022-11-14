@@ -294,7 +294,7 @@ class PlannedDisbursement extends Element
             $end = Arr::get($value, 'period_end.0.date', null);
 
             if ($start && $end) {
-                $diff = (strtotime($end) - strtotime($start)) / 86400;
+                $diff = (dateStrToTime($end) - dateStrToTime($start)) / 86400;
             }
 
             $rules[sprintf('%s.planned_disbursement_type', $plannedDisbursementForm)] = sprintf(

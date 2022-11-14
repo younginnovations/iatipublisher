@@ -94,8 +94,9 @@ class OrganizationObserver
      */
     public function updated(Organization $organization): void
     {
-        $key = array_key_first($organization->getDirty());
-        $data = Arr::get($organization->getDirty(), $key);
+        $updatedElements = $this->removeElements($organization->getDirty());
+        $key = array_key_first($updatedElements);
+        $data = Arr::get($updatedElements, $key);
 
         if (!in_array($key, getNonArrayElements(), true) && !Arr::has($organization->getDirty(), 'is_published')) {
             $updatedData = $this->organizationElementCompleteService->setOrganizationDefaultValues($data, $organization);
@@ -105,6 +106,31 @@ class OrganizationObserver
         $this->setElementStatus($organization);
         $this->resetOrganizationStatus($organization);
         $organization->saveQuietly();
+    }
+
+    /**
+     * Removes organization fields that do not require setting default value.
+     *
+     * @param $organizationElements
+     *
+     * @return array
+     */
+    public function removeElements($organizationElements)
+    {
+        $ignorableElements = [
+            'iati_status',
+            'status',
+            'is_published',
+            'updated_at',
+        ];
+
+        foreach (array_keys($organizationElements) as $key) {
+            if (in_array($key, $ignorableElements)) {
+                unset($organizationElements[$key]);
+            }
+        }
+
+        return $organizationElements;
     }
 
     /**

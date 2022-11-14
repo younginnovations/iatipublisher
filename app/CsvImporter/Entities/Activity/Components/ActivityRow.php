@@ -197,7 +197,6 @@ class ActivityRow extends Row
         foreach ($this->fields as $key => $dataDatum) {
             if (is_array($dataDatum) && !in_array($key, $int_fields)) {
                 foreach ($dataDatum as $datumKey => $datum) {
-                    dump($key);
                     if (is_int($datum)) {
                         $this->fields[$key][$datumKey] = strval($datum);
                     }
