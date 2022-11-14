@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\Admin\Workflow\ActivityWorkflowController;
+use App\Http\Controllers\Admin\Workflow\BulkPublishingController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -13,8 +15,9 @@ use Illuminate\Support\Facades\Route;
 |
 */
 Route::group([], static function () {
-    Route::get('activities/core-elements-completed', [\App\Http\Controllers\Admin\Workflow\BulkPublishingController::class, 'checkCoreElementsCompleted'])->name('activities.coreElementsCompleted');
-    Route::post('activities/validate-activities', [\App\Http\Controllers\Admin\Workflow\BulkPublishingController::class, 'validateActivities'])->name('activities.validateActivities');
-    Route::get('activities/start-bulk-publish', [\App\Http\Controllers\Admin\Workflow\BulkPublishingController::class, 'startBulkPublish'])->name('activities.startBulkPublish');
-    Route::get('activities/bulk-publish-status', [\App\Http\Controllers\Admin\Workflow\BulkPublishingController::class, 'getBulkPublishStatus'])->name('activities.bulkPublishStatus');
+    Route::get('activities/core-elements-completed', [BulkPublishingController::class, 'checkCoreElementsCompleted'])->name('activities.coreElementsCompleted');
+    Route::post('activities/validate-activities', [BulkPublishingController::class, 'validateActivities'])->name('activities.validateActivities');
+    Route::get('activities/start-bulk-publish', [BulkPublishingController::class, 'startBulkPublish'])->name('activities.startBulkPublish');
+    Route::get('activities/bulk-publish-status', [BulkPublishingController::class, 'getBulkPublishStatus'])->name('activities.bulkPublishStatus');
+    Route::get('activities/checks-for-activity-publish', [ActivityWorkflowController::class, 'checksForActivityPublish'])->name('activities.checks_for_publish');
 });

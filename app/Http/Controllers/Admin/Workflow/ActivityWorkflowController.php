@@ -156,4 +156,26 @@ class ActivityWorkflowController extends Controller
             return response()->json(['success' => false, 'error' => 'Error has occurred while validating activity.']);
         }
     }
+
+    /**
+     * Performs required checks for publishing activity.
+     *
+     * @return JsonResponse
+     */
+    public function checksForActivityPublish(): JsonResponse
+    {
+        try {
+            if ($this->activityWorkflowService->checkActivityCannotBePublished(auth()->user()->organization)) {
+                $message = $this->activityWorkflowService->getPublishErrorMessage(auth()->user()->organization);
+
+                return response()->json(['success' => false, 'message' => $message]);
+            }
+
+            return response()->json(['success' => true, 'message' => 'Activity is ready to be published.']);
+        } catch (\Exception $e) {
+            logger()->error($e->getMessage());
+
+            return response()->json(['success' => false, 'message' => 'Error has occurred while checking activity.']);
+        }
+    }
 }
