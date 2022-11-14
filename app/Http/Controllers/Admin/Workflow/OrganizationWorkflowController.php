@@ -101,4 +101,20 @@ class OrganizationWorkflowController extends Controller
             return response()->json(['success' => false, 'message' => 'Error has occurred while un-publishing organization.']);
         }
     }
+
+    /**
+     * Performs required checks for publishing organization.
+     *
+     * @return JsonResponse
+     */
+    public function checksForOrganizationPublish(): JsonResponse
+    {
+        if ($this->activityWorkflowService->hasNoPublisherInfo(auth()->user()->organization->settings) || !$this->activityWorkflowService->isUserVerified()) {
+            $message = $this->activityWorkflowService->getPublishErrorMessage(auth()->user()->organization->settings, 'organization');
+
+            return response()->json(['success' => false, 'message' => $message]);
+        }
+
+        return response()->json(['success' => true, 'message' => 'Organization is ready to be published.']);
+    }
 }
