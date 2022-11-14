@@ -69,7 +69,7 @@ class ActivityRepository extends Repository
             $bindParams[] = "%$query%";
         }
 
-        $orderBy = 'created_at';
+        $orderBy = 'updated_at';
         $direction = 'desc';
 
         if (array_key_exists('orderBy', $queryParams) && !empty($queryParams['orderBy'])) {
