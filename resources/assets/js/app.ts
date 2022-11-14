@@ -14,6 +14,7 @@ import AboutPage from './views/web/AboutPage.vue';
 import SupportPage from './views/web/SupportPage.vue';
 import IatiStandard from './views/web/IatiStandard.vue';
 import PublishingChecklist from './views/web/PublishingChecklist.vue';
+import IatiRegisterPage from './views/web/IatiRegisterPage.vue';
 
 /**
  * Vue components for Activities Listing
@@ -79,7 +80,9 @@ app
   .component('WebFooter', WebFooter)
 
   .component('WelcomeSignin', WelcomeSignIn)
-  .component('RegisterForm', RegisterPage);
+  .component('RegisterForm', RegisterPage)
+  .component('IatiRegisterForm', IatiRegisterPage);
+
 /**
  * registering web portal pages
  */
@@ -89,6 +92,7 @@ app
   .component('SupportPage', SupportPage)
   .component('IatiStandard', IatiStandard)
   .component('PublishingChecklist', PublishingChecklist);
+
 
 /**
  * Registering vue component for activity listing
@@ -164,7 +168,7 @@ const stickySidebar = (el: {
   offsetWidth: number;
   getBoundingClientRect: () => {
     (): object;
-    new (): object;
+    new(): object;
     left: number | null;
     top: number | null;
     bottom: number | null;
@@ -246,9 +250,8 @@ const scrollDown = (
 ) => {
   switch (affixType) {
     case 'sticky-top':
-      cssText = `position: relative; transform: translate3d(0, ${
-        stickyCurrentTop - elScrollTop
-      }px, 0);`;
+      cssText = `position: relative; transform: translate3d(0, ${stickyCurrentTop - elScrollTop
+        }px, 0);`;
       affixType = 'sticky-translate';
       break;
 
@@ -291,9 +294,8 @@ const scrollUp = (
       break;
 
     case 'sticky-bottom':
-      cssText = `position: relative; transform: translate3d(0, ${
-        stickyCurrentTop - elScrollTop
-      }px, 0);`;
+      cssText = `position: relative; transform: translate3d(0, ${stickyCurrentTop - elScrollTop
+        }px, 0);`;
       affixType = 'sticky-translate';
       break;
 

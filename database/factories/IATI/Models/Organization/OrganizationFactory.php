@@ -23,7 +23,7 @@ class OrganizationFactory extends Factory
         return [
             'publisher_id'        => env('IATI_YIPL_PUBLISHER_ID'),
             'publisher_name'      => env('IATI_YIPL_PUBLISHER_NAME'),
-            'publisher_type'      => 'government',
+            'publisher_type'      => 10,
             'country'             => 'NP',
             'registration_agency' => env('IATI_YIPL_REGISTRATION_AGENCY'),
             'registration_number' => env('IATI_YIPL_REGISTRATION_NUMBER'),
