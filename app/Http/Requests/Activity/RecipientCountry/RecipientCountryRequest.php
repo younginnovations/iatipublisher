@@ -45,7 +45,10 @@ class RecipientCountryRequest extends ActivityBaseRequest
         $total = 0;
 
         foreach ($formFields as $formField) {
-            $total += $formField['percentage'];
+            //if clause added to bypass server error. Numeric validation will invoke and data wont be saved
+            if (is_numeric($formField['percentage'])) {
+                $total += $formField['percentage'];
+            }
         }
 
         return $total;
