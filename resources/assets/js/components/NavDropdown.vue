@@ -33,6 +33,7 @@ export default defineComponent({
     },
     btnLink: {
       type: String,
+      required: true,
     },
   },
   setup(props) {
