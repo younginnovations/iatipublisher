@@ -864,7 +864,7 @@ function dateStrToTime($date): int|bool
         return false;
     }
 
-    return '';
+    return false;
 }
 
 if (!function_exists('awsHasFile')) {

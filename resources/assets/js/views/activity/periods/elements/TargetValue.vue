@@ -7,34 +7,28 @@
             <td><span class="flex category">Target Value</span></td>
             <td>
               <div :class="elementSpacing">
-                {{ tValue.value ?? 'Missing' }}
+                {{ tValue.value ?? "Missing" }}
               </div>
 
-              <div class="flex" :class="elementSpacing">
+              <!-- <div class="flex" :class="elementSpacing">
                 <div>Location Reference:&nbsp;</div>
                 <div>
                   {{
                     getLocation(tValue.location)
                       ? getLocation(tValue.location)
-                      : 'Missing'
+                      : "Missing"
                   }}
                 </div>
-              </div>
+              </div> -->
 
-              <div class="flex" :class="elementSpacing">
+              <!-- <div class="flex" :class="elementSpacing">
                 <div>Dimension:&nbsp;</div>
                 <div>
-                  <div
-                    v-for="(dim, d) in tValue.dimension"
-                    :key="d"
-                    class="dimension"
-                  >
-                    {{ dim.name ?? 'Missing' }} ({{
-                      dim.value ?? 'Missing'
-                    }})
+                  <div v-for="(dim, d) in tValue.dimension" :key="d" class="dimension">
+                    {{ dim.name ?? "Missing" }} ({{ dim.value ?? "Missing" }})
                   </div>
                 </div>
-              </div>
+              </div> -->
 
               <div class="flex" :class="elementSpacing">
                 <div>Comment:&nbsp;</div>
@@ -49,16 +43,12 @@
                   >
                     <div>
                       <span>
-                        {{ com.narrative ? com.narrative : 'Missing' }}
+                        {{ com.narrative ? com.narrative : "Missing" }}
                         &nbsp;
                       </span>
                       <span>
                         (Language:
-                        {{
-                          com.language
-                            ? dlType.language[com.language]
-                            : 'Missing'
-                        }})
+                        {{ com.language ? dlType.language[com.language] : "Missing" }})
                       </span>
                     </div>
                   </div>
@@ -88,16 +78,16 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, toRefs, inject } from 'vue';
+import { defineComponent, toRefs, inject } from "vue";
 
 // component
-import { DocumentLink } from 'Activity/indicators/elements/Index';
+import { DocumentLink } from "Activity/indicators/elements/Index";
 
 //composable
-import getLocation from 'Composable/utils';
+import getLocation from "Composable/utils";
 
 export default defineComponent({
-  name: 'TargetValue',
+  name: "TargetValue",
   components: { DocumentLink },
   props: {
     data: {
@@ -110,9 +100,9 @@ export default defineComponent({
 
     // vue inject
     // const languageType = inject('types').language;
-    const dlType = inject('types');
+    const dlType = inject("types");
 
-    const elementSpacing = 'mb-1';
+    const elementSpacing = "mb-1";
 
     const targetValue = data.value;
 
