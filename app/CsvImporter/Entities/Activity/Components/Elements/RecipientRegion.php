@@ -17,7 +17,7 @@ class RecipientRegion extends Element
     /**
      * CSV Header of Description with their code.
      */
-    private array $_csvHeaders = ['recipient_region_code', 'recipient_region_percentage', 'recipient_region_vocabulary_uri'];
+    private array $_csvHeaders = ['recipient_region_code', 'recipient_region_percentage', 'recipient_region_vocabulary_uri', 'recipient_region_narrative'];
 
     /**
      * Index under which the data is stored within the object.
@@ -106,7 +106,7 @@ class RecipientRegion extends Element
             $this->setRegionVocabulary($index);
             $this->setVocabularyUri($key, $value, $index);
             $this->setPercentage($key, $value, $index);
-            $this->setNarrative($index);
+            $this->setNarrative($key, $value, $index);
         }
     }
 
@@ -174,15 +174,30 @@ class RecipientRegion extends Element
     /**
      * Set Narrative of RecipientRegion.
      *
+     * @param $key
+     * @param $value
      * @param $index
      *
      * @return void
      */
-    protected function setNarrative($index): void
+    protected function setNarrative($key, $value, $index): void
     {
-        $narrative = ['narrative' => '', 'language' => ''];
+        if (!isset($this->data['recipient_region'][$index]['narrative'][0]['narrative'])) {
+            $this->data['recipient_region'][$index]['narrative'][0] = [
+                'narrative' => '',
+                'language'  => '',
+            ];
+        }
 
-        $this->data['recipient_region'][$index]['narrative'][0] = $narrative;
+        if ($key === $this->_csvHeaders[3]) {
+            $value = $value ?: '';
+            $narrative = [
+                'narrative' => $value,
+                'language'  => '',
+            ];
+
+            $this->data['recipient_region'][$index]['narrative'][0] = $narrative;
+        }
     }
 
     /**
