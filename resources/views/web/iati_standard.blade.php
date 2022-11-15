@@ -4,5 +4,4 @@
 
 @section('content')
 <iati-standard></iati-standard>
-
 @endsection

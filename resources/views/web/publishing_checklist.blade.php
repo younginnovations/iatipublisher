@@ -4,6 +4,4 @@
 
 @section('content')
 <publishing-checklist></publishing-checklist>
-
-
 @endsection

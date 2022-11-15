@@ -4,5 +4,4 @@
 
 @section('content')
 <support-page></support-page>
-
 @endsection
