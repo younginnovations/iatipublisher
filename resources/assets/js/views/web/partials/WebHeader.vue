@@ -119,7 +119,7 @@ export default defineComponent({
     NavDropdown,
   },
   props: {
-    title: String,
+    title: { type: String, required: true },
   },
 });
 </script>
