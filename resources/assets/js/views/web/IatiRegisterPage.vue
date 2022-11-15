@@ -119,6 +119,13 @@
                   :placeholder="field.placeholder"
                   :type="field.type"
                 />
+                <textarea
+                  v-if="field.type === 'textarea'"
+                  :class="{
+                    'error_input form__input ': errorData[field.name],
+                    'form__input ': !errorData[field.name],
+                  }"
+                />
 
                 <input
                   v-if="field.name === 'identifier'"
@@ -444,13 +451,48 @@ export default defineComponent({
             label: 'Publisher Type',
             name: 'publisher_type',
             placeholder: 'Select an Organisation Registration Agency',
-            id: 'registration-agency',
+            id: 'publisher-type',
             required: true,
             hover_text:
               "Select the agency in your country where your organisation is registered. If you do not know this information please email <a href='mailto:support@iatistandard.org'>support@iatistandard.org</a>",
             type: 'select',
             options: registration_agency,
             class: 'mb-4 lg:mb-2 relative',
+            help_text: '',
+          },
+          data_license: {
+            label: 'Data License',
+            name: 'data_license',
+            placeholder: 'Select a Data License',
+            id: 'data-license',
+            required: true,
+            hover_text:
+              ' Select the License under which your data is being published. IATI is an open data standard and requires you to make your data available under an open licence so it can be freely used. One of the most frequently used licenses is Creative Commons Attribution. For more information read: How to license your data.',
+            type: 'select',
+            class: 'mb-4 lg:mb-2 relative',
+            help_text: '',
+          },
+          publisher_logo_url: {
+            label: 'Publisher Logo Url',
+            name: 'publisher_logo_url',
+            placeholder: 'For e.g. http://mylogo.com ',
+            id: 'publisher-logo-url',
+            required: true,
+            hover_text:
+              " Provide a link to an image to your organisation's logo (Optimum size: 200 x 120 px)",
+            type: 'text',
+            class: 'mb-4 lg:mb-2 relative',
+            help_text: '',
+          },
+          description: {
+            label: 'Organization Description',
+            name: 'organization_description',
+            placeholder: 'Type Description here',
+            id: 'organization-description',
+            required: true,
+            hover_text: ' Provide a short description about your organisation.',
+            type: 'textarea',
+            class: 'mb-4 col-span-2 lg:mb-2 relative',
             help_text: '',
           },
         },
@@ -470,7 +512,7 @@ export default defineComponent({
             hover_text:
               'Please add a contact email address for your organisation. Please note that IATI is an open data standard and the email provided here will be visible to others on the IATI Registry.',
             type: 'text',
-            class: 'mb-4 lg:mb-6',
+            class: 'mb-4  lg:mb-6',
           },
           website: {
             label: 'Website',
@@ -490,7 +532,7 @@ export default defineComponent({
             required: false,
             hover_text: '',
             type: 'text',
-            class: 'mb-4 lg:mb-6',
+            class: 'mb-4 col-span-2 lg:mb-6',
           },
         },
       },
@@ -519,8 +561,8 @@ export default defineComponent({
             required: false,
             hover_text:
               "Does your organisation have an exclusion policy that provide details on what data that it cannot publish? For example an organisation may not be able to publish data because of political sensitivity issues or if information is commercially restricted. Please provide details here about what data your organisation needs to exclude (if any), and a URL to your organisation's exclusion policy (if it has one). For more information read: Information and data you can't publish (exclusions)",
-            type: 'text',
-            class: 'mb-4 lg:mb-6',
+            type: 'textarea',
+            class: 'mb-4  col-span-2 lg:mb-6',
           },
         },
       },
