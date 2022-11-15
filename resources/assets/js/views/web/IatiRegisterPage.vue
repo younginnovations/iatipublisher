@@ -12,7 +12,7 @@
         </p>
       </div>
       <div class="section__wrapper flex justify-center">
-        <EmailVerification v-if="checkStep('3')" :email="formData['email']" />
+        <EmailVerification v-if="checkStep('5')" :email="formData['email']" />
         <div v-else class="form input__field" @keyup.enter="goToNextForm">
           <aside class="mb-4 block border-b border-b-n-10 pb-4 xl:hidden">
             <span class="text-base font-bold"
@@ -184,7 +184,7 @@
               ></span
             >
             <button
-              v-if="!checkStep(3)"
+              v-if="!checkStep(5)"
               class="btn btn-next"
               @click="goToNextForm()"
             >
@@ -226,9 +226,8 @@
                   <svg-vue class="text-xs" icon="checked"> </svg-vue>
                 </span>
                 <span
-                  class="font-bold"
                   :class="{
-                    'text-n-50': checkStep(key),
+                    'font-bold text-n-50 ': checkStep(key),
                     'text-bluecoral': !checkStep(key) && form.is_complete,
                     'text-n-40': !checkStep(key) && !form.is_complete,
                   }"
@@ -457,6 +456,75 @@ export default defineComponent({
         },
       },
       2: {
+        title: 'Contact Information',
+        is_complete: false,
+        description:
+          'This information will be used to create a Publisher in IATI Publisher',
+        fields: {
+          contact_email: {
+            label: 'Contact Email',
+            name: 'contact_email',
+            placeholder: '',
+            id: 'contact-email',
+            required: true,
+            hover_text:
+              'Please add a contact email address for your organisation. Please note that IATI is an open data standard and the email provided here will be visible to others on the IATI Registry.',
+            type: 'text',
+            class: 'mb-4 lg:mb-6',
+          },
+          website: {
+            label: 'Website',
+            name: 'website',
+            placeholder: 'For e.g. http://mywebsite.com',
+            id: 'website',
+            required: false,
+            hover_text: "Add the URL to your organisation's website.",
+            type: 'text',
+            class: 'mb-4 lg:mb-6',
+          },
+          address: {
+            label: 'Address',
+            name: 'address',
+            placeholder: 'Type address here',
+            id: 'website',
+            required: false,
+            hover_text: '',
+            type: 'text',
+            class: 'mb-4 lg:mb-6',
+          },
+        },
+      },
+      3: {
+        title: 'Publishing Aditional Information',
+        is_complete: false,
+        description:
+          'This information will be used to create an admin account in IATI Publisher',
+        fields: {
+          source: {
+            label: 'Source',
+            name: 'source',
+            placeholder: 'Select a Source',
+            id: 'contact-email',
+            required: true,
+            hover_text:
+              "Select an option:Primary - your organisation is publishing its own or (associated organisations') data Secondary - your organisation is reproducing data on the activities of another organisation",
+            type: 'select',
+            class: 'mb-4 lg:mb-6',
+          },
+          record_exclusions: {
+            label: 'Record Exclusions',
+            name: 'record_exclusions',
+            placeholder: 'Type Record Exclusions here',
+            id: 'record-exclusions',
+            required: false,
+            hover_text:
+              "Does your organisation have an exclusion policy that provide details on what data that it cannot publish? For example an organisation may not be able to publish data because of political sensitivity issues or if information is commercially restricted. Please provide details here about what data your organisation needs to exclude (if any), and a URL to your organisation's exclusion policy (if it has one). For more information read: Information and data you can't publish (exclusions)",
+            type: 'text',
+            class: 'mb-4 lg:mb-6',
+          },
+        },
+      },
+      4: {
         title: 'Administrator Information',
         is_complete: false,
         description:
@@ -518,80 +586,11 @@ export default defineComponent({
           },
         },
       },
-      3: {
+      5: {
         title: 'Email Verification',
         is_complete: false,
         description:
           'Please verify and activate your IATI Publisher account through your provided email',
-      },
-      4: {
-        title: 'Contact Information',
-        is_complete: false,
-        description:
-          'This information will be used to create a Publisher in IATI Publisher',
-        fields: {
-          contact_email: {
-            label: 'Contact Email',
-            name: 'contact_email',
-            placeholder: '',
-            id: 'contact-email',
-            required: true,
-            hover_text:
-              'Please add a contact email address for your organisation. Please note that IATI is an open data standard and the email provided here will be visible to others on the IATI Registry.',
-            type: 'text',
-            class: 'mb-4 lg:mb-6',
-          },
-          website: {
-            label: 'Website',
-            name: 'website',
-            placeholder: 'For e.g. http://mywebsite.com',
-            id: 'website',
-            required: false,
-            hover_text: "Add the URL to your organisation's website.",
-            type: 'text',
-            class: 'mb-4 lg:mb-6',
-          },
-          address: {
-            label: 'Address',
-            name: 'address',
-            placeholder: 'Type address here',
-            id: 'website',
-            required: false,
-            hover_text: '',
-            type: 'text',
-            class: 'mb-4 lg:mb-6',
-          },
-        },
-      },
-      5: {
-        title: 'Publishing Aditional Information',
-        is_complete: false,
-        description:
-          'This information will be used to create an admin account in IATI Publisher',
-        fields: {
-          source: {
-            label: 'Source',
-            name: 'source',
-            placeholder: 'Select a Source',
-            id: 'contact-email',
-            required: true,
-            hover_text:
-              "Select an option:Primary - your organisation is publishing its own or (associated organisations') data Secondary - your organisation is reproducing data on the activities of another organisation",
-            type: 'select',
-            class: 'mb-4 lg:mb-6',
-          },
-          record_exclusions: {
-            label: 'Record Exclusions',
-            name: 'record_exclusions',
-            placeholder: 'Type Record Exclusions here',
-            id: 'record-exclusions',
-            required: false,
-            hover_text:
-              "Does your organisation have an exclusion policy that provide details on what data that it cannot publish? For example an organisation may not be able to publish data because of political sensitivity issues or if information is commercially restricted. Please provide details here about what data your organisation needs to exclude (if any), and a URL to your organisation's exclusion policy (if it has one). For more information read: Information and data you can't publish (exclusions)",
-            type: 'text',
-            class: 'mb-4 lg:mb-6',
-          },
-        },
       },
     });
 
@@ -827,7 +826,7 @@ export default defineComponent({
       ul::before {
         content: '';
         width: 4px;
-        height: 175px;
+        height: 100%;
         @apply bg-n-20;
         border-radius: 2px;
         position: absolute;
