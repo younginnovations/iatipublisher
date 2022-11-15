@@ -98,7 +98,7 @@ class SectorRequest extends ActivityBaseRequest
                 $rules[sprintf('%s.vocabulary_uri', $sectorForm)] = 'nullable|url';
             }
 
-            $rules[sprintf('%s.percentage', $sectorForm)] = 'nullable|numeric';
+            $rules[sprintf('%s.percentage', $sectorForm)] = 'nullable|numeric|min:0';
 
             $narrativeRules = $this->getRulesForNarrative($sector['narrative'], $sectorForm);
 

@@ -159,15 +159,6 @@ class PeriodController extends Controller
     {
         try {
             $periodData = $request->except(['_token']);
-            $indicator = $this->indicatorService->getIndicator($indicatorId);
-            $messages = $this->validateData([
-                'measure' => $indicator['measure'],
-                'period'  => $periodData,
-            ]);
-
-            if ($messages) {
-                return redirect()->route('admin.indicator.period.create', $indicatorId)->with('error', $messages)->withInput();
-            }
 
             $period = $this->periodService->create([
                 'indicator_id' => $indicatorId,

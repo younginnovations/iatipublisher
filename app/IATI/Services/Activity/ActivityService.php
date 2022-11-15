@@ -307,7 +307,7 @@ class ActivityService
      */
     public function hasRecipientRegionDefined($activityId): bool
     {
-        $activity = $this->getActivity($activityId)->toArray;
+        $activity = $this->getActivity($activityId)->toArray();
 
         return !empty($activity) && (array_key_exists('recipient_region', $activity) && !empty($activity['recipient_region']));
     }
@@ -321,7 +321,7 @@ class ActivityService
      */
     public function hasRecipientCountryDefined($activityId): bool
     {
-        $activity = $this->getActivity($activityId)->toArray;
+        $activity = $this->getActivity($activityId)->toArray();
 
         return !empty($activity) && (array_key_exists('recipient_country', $activity) && !empty($activity['recipient_country']));
     }
@@ -335,7 +335,7 @@ class ActivityService
      */
     public function hasSectorDefined($activityId): bool
     {
-        $activity = $this->getActivity($activityId)->toArray;
+        $activity = $this->getActivity($activityId)->toArray();
 
         return !empty($activity) && (array_key_exists('sector', $activity) && !empty($activity['sector']));
     }

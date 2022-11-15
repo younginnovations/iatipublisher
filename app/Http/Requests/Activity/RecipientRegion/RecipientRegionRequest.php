@@ -91,7 +91,7 @@ class RecipientRegionRequest extends ActivityBaseRequest
         foreach ($formFields as $recipientRegionIndex => $recipientRegion) {
             $recipientRegionForm = 'recipient_region.' . $recipientRegionIndex;
             $rules[$recipientRegionForm . '.vocabulary_uri'] = 'nullable|url';
-            $rules[$recipientRegionForm . '.percentage'] = 'nullable|numeric';
+            $rules[$recipientRegionForm . '.percentage'] = 'nullable|numeric|min:0';
 
             $narrativeRules = $this->getRulesForNarrative($recipientRegion['narrative'], $recipientRegionForm);
 
