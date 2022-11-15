@@ -30,7 +30,9 @@
   font-weight: normal;
   font-size: 12px;
 }
-
+.error_input {
+  border: 1px solid #d1001e !important;
+}
 .has_error {
   .form__input {
     @apply border border-crimson-50;
