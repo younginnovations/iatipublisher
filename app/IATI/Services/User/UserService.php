@@ -343,7 +343,7 @@ class UserService
                 'publisher_organization_type' => $data['publisher_type'] ?? '',
                 'title' => $data['publisher_name'] ?? '',
                 'publisher_contact_email' => $data['contact_email'] ?? '',
-                'license_id' => $data['data_license'] ?? '',
+                'license_id' => $data['license_id'] ?? '',
                 'name' => $data['publisher_id'] ?? '',
                 'full_name' => $data['fullname'] ?? '',
                 'state' => 'approval_needed',
@@ -352,6 +352,8 @@ class UserService
                 'publisher_contact' => $data['address'] ?? '',
                 'publisher_source_type' => $data['source'] ?? '',
                 'image_url' => $data['image_url'] ?? '',
+                'website' => $data['website'] ?? '',
+                'record_exclusion' => $data['record_exclusions'] ?? '',
             ],
         ];
 
@@ -375,6 +377,50 @@ class UserService
             'success' => false,
             'errors' => $response->error,
         ];
+    }
+
+    /**
+     * Map IATI errors to system error.
+     *
+     * @param string type
+     * @param array $errors
+     *
+     * @return array
+     */
+    public function mapError($type, $errors): array
+    {
+        $mapper = [
+            'user' => [
+                'name' => 'username',
+                'email' => 'contact_email',
+                'password' => 'password',
+            ],
+            'publisher' => [
+                'publisher_iati_id' => 'identifier',
+                'publisher_organization_type' => 'publisher_type',
+                'title' => 'publisher_name',
+                'publisher_contact_email' => 'contact_email',
+                'license_id' => 'license_id',
+                'name' => 'publisher_id',
+                'full_name' => 'fullname',
+                'publisher_organization_type' => 'publisher_type',
+                'publisher_url' => 'publisher_url',
+                'publisher_contact' => 'address',
+                'publisher_source_type' => 'source',
+                'image_url' => 'image_url',
+                'website' => 'website',
+                'record_exclusion' => 'record_exclusions',
+            ],
+        ];
+
+        foreach ($errors as $field => $error) {
+            if (in_array($field, array_keys($mapper[$type]))) {
+                $errors[$mapper[$type][$field]] = $error;
+                unset($errors[$field]);
+            }
+        }
+
+        return $errors;
     }
 
     /**

@@ -13,11 +13,11 @@ use Exception;
 use GuzzleHttp\Exception\ClientException;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Database\DatabaseManager;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
@@ -112,7 +112,7 @@ class IatiRegisterController extends Controller
                 'registration_agency' => ['required'],
                 'registration_number' => ['required'],
                 'publisher_type'      => ['required'],
-                'data_license'        => ['required'],
+                'license_id'        => ['required'],
                 'description'         => ['sometimes'],
             ]);
 
@@ -269,37 +269,45 @@ class IatiRegisterController extends Controller
      *
      * @param array $data
      *
-     * @return Model
+     * @return array
      * @throws \Throwable
      */
-    protected function create(array $data): Model
+    protected function create(array $data): array
     {
         try {
             $this->db->beginTransaction();
             $api_token = [];
             $publisher = [];
-
-            $iati_user = $this->userService->createUserInRegistry($data);
-            if ($iati_user['success']) {
-                $api_token = $this->userService->createAPItoken($data['username']);
-            }
-            if ($api_token['success']) {
-                $publisher = $this->userService->createPublisherInRegistry($data, $api_token['token']);
-            }
-            $data['token'] = $api_token['token'];
             $user = [];
 
-            if ($iati_user['success'] && $api_token['success'] && $publisher['success']) {
-                $user = $this->userService->registerNewUser($data);
-            } else {
-                // return response()->json(['success' => false, 'errors' => array_merge($iati_user['error']?? [],$api_token['error']??[], $publisher['error']??[])]);
+            $iati_user = $this->userService->createUserInRegistry($data);
+
+            if (Arr::get($iati_user, 'success', false)) {
+                $api_token = $this->userService->createAPItoken($data['username']);
+
+                if (Arr::get($api_token, 'success', false)) {
+                    $publisher = $this->userService->createPublisherInRegistry($data, $api_token['token']);
+                    $data['token'] = $api_token['token'];
+                }
+
+                if ($iati_user['success'] && $api_token['success'] && $publisher['success']) {
+                    $user = $this->userService->registerNewUser($data);
+                } else {
+                    return [
+                        'success' => false,
+                        'errors' => array_merge(
+                            $this->userService->mapError('user', $iati_user['error'] ?? []),
+                            $api_token['error'] ?? [],
+                            $this->userService->mapError('publisher', $publisher['error'] ?? [])
+                        ),
+                    ];
+                }
             }
 
             $this->db->commit();
 
-            return $user;
+            return ['success' => true, 'user' => $user];
         } catch (\Exception $e) {
-            dd($e);
             logger()->error($e->getMessage());
         }
     }
