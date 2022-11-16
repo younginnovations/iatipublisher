@@ -6,7 +6,7 @@
     :text="btnText"
     type="primary"
     icon="approved-cloud"
-    @click="publishValue = true"
+    @click="checkPublish"
   />
   <Modal :modal-active="publishValue" width="583" @close="publishToggle">
     <div class="popup mb-4">
@@ -137,6 +137,22 @@ interface ToastDataTypeface {
   visibility: boolean;
 }
 const toastData = inject("toastData") as ToastDataTypeface;
+
+/**
+ * check publish status
+ */
+const checkPublish = () =>{
+  axios.get(`/organisation/checks-for-organisation-publish`).then((res) => {
+    const response = res.data;
+    if(response.success === true){
+      publishValue.value = true
+    }else{
+      toastData.message = response.message;
+      toastData.type = response.success;
+      toastData.visibility = true;
+    }
+  })
+}
 
 const publishFunction = () => {
   loader.value = true;

@@ -5,7 +5,7 @@
     :text="btnText"
     :type="type"
     icon="approved-cloud"
-    @click="publishValue = true"
+    @click="checkPublish"
   />
   <Modal
     :modal-active="publishValue"
@@ -302,12 +302,34 @@ const validatorFunction = () => {
 };
 
 // call api for publishing
-interface ToastMessageTypeface {
-  message: string;
+interface ToastDataTypeface {
+  message: string ;
   type: boolean;
+  visibility: boolean;
 }
 
-const toastMessage = inject("toastMessage") as ToastMessageTypeface;
+const toastData = inject("toastData") as ToastDataTypeface;
+
+/**
+ * check publish status
+ */
+const checkPublish = () =>{
+  axios.get(`/activities/checks-for-activity-publish`).then((res) => {
+    const response = res.data;
+
+    if(response.success === true){
+      publishValue.value = true
+    }else{
+      toastData.message = response.message;
+      toastData.type = response.success;
+      toastData.visibility = true;
+      
+      setTimeout(() => {
+        toastData.visibility = false;
+      }, 10000);
+    }
+  })
+}
 
 const publishFunction = () => {
   loader.value = true;
@@ -316,8 +338,6 @@ const publishFunction = () => {
 
   axios.post(`/activity/${id}/publish`).then((res) => {
     const response = res.data;
-    toastMessage.message = response.message;
-    // toastMessage.type = response.success;
     store.dispatch("updateUnPublished", response.success);
     store.dispatch("updateShowPublished", !response.success);
     setTimeout(() => {
