@@ -90,7 +90,7 @@ export default defineComponent({
 
       setTimeout(() => {
         toastData.visibility = false;
-      }, 5000);
+      }, 10000);
     });
 
     onMounted(async () => {

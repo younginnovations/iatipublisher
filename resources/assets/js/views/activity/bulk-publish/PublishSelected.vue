@@ -6,7 +6,7 @@
       type="secondary"
       text="Publish Selected"
       icon="approved-cloud"
-      @click="publishAlertValue = true"
+      @click="checkPublish"
     />
     <Modal
       :modal-active="publishAlertValue"
@@ -219,6 +219,21 @@ const displayToast = (message, type) => {
     toastData.visibility = false;
   }, 10000);
 };
+
+/**
+ * check publish status
+ */
+const checkPublish = () =>{
+  axios.get(`/activities/checks-for-activity-publish`).then((res) => {
+    const response = res.data;
+
+    if(response.success === true){
+      publishAlertValue.value = true
+    }else{
+      displayToast(response.message, response.success);
+    }
+  })
+}
 
 /**
  * Verify core elements
