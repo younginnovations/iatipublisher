@@ -112,7 +112,7 @@ class IatiRegisterController extends Controller
                 'registration_agency' => ['required'],
                 'registration_number' => ['required'],
                 'publisher_type'      => ['required'],
-                'license_id'        => ['required'],
+                'license_id'          => ['required'],
                 'description'         => ['sometimes'],
             ]);
 
@@ -125,8 +125,7 @@ class IatiRegisterController extends Controller
             if (!empty($publisherCheck)) {
                 return response()->json([
                     'success'         => false,
-                    'publisher_error' => true,
-                    'errors'          => $publisherCheck,
+                    'errors'          => $this->userService->mapError('publisher', $publisherCheck),
                 ]);
             }
 
@@ -245,6 +244,9 @@ class IatiRegisterController extends Controller
             $publisherCheck = $this->userService->checkPublisher($postData, false);
             $userCheck = $this->userService->checkUser($postData, false);
 
+            logger()->error('publisherCheck' . json_encode($publisherCheck));
+            logger()->error('userCheck' . json_encode($userCheck));
+
             if (!empty($publisherCheck) || !empty($userCheck)) {
                 return response()->json([
                     'success'         => false,
@@ -253,6 +255,16 @@ class IatiRegisterController extends Controller
             }
 
             $user = $this->create($postData);
+
+            logger()->error('user' . json_encode($user));
+
+            if (!$user['success']) {
+                return response()->json([
+                    'success'         => false,
+                    'errors'          => $user['errors'],
+                ]);
+            }
+
             event(new Registered($user));
             Session::put('role_id', app(Role::class)->getOrganizationAdminId());
 
@@ -284,24 +296,25 @@ class IatiRegisterController extends Controller
 
             if (Arr::get($iati_user, 'success', false)) {
                 $api_token = $this->userService->createAPItoken($data['username']);
+            }
 
-                if (Arr::get($api_token, 'success', false)) {
-                    $publisher = $this->userService->createPublisherInRegistry($data, $api_token['token']);
-                    $data['token'] = $api_token['token'];
-                }
+            if (Arr::get($api_token, 'success', false)) {
+                $publisher = $this->userService->createPublisherInRegistry($data, $api_token['token']);
+                $data['token'] = $api_token['token'];
+            }
 
-                if ($iati_user['success'] && $api_token['success'] && $publisher['success']) {
-                    $user = $this->userService->registerNewUser($data);
-                } else {
-                    return [
-                        'success' => false,
-                        'errors' => array_merge(
-                            $this->userService->mapError('user', $iati_user['error'] ?? []),
-                            $api_token['error'] ?? [],
-                            $this->userService->mapError('publisher', $publisher['error'] ?? [])
-                        ),
-                    ];
-                }
+            if (Arr::get($iati_user, 'success', false) && Arr::get($api_token, 'success', false) && Arr::get($publisher, 'success', false)) {
+                $user = $this->userService->registerNewUser($data);
+            } else {
+                // logger()->error();
+                return [
+                    'success' => false,
+                    'errors' => array_merge(
+                        $this->userService->mapError('user', $iati_user['errors'] ?? []),
+                        $api_token['errors'] ?? [],
+                        $this->userService->mapError('publisher', $publisher['errors'] ?? [])
+                    ),
+                ];
             }
 
             $this->db->commit();

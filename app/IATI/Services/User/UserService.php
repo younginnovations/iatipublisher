@@ -143,7 +143,7 @@ class UserService
         $clientConfig = ['base_uri' => env('IATI_API_ENDPOINT')];
         $requestConfig = [
             'http_errors' => false,
-            'query'       => ['id' => $postData['publisher_id'] ?? ''],
+            'query'       => ['id' => $data['publisher_id'] ?? ''],
         ];
 
         if (env('APP_ENV') !== 'production') {
@@ -175,7 +175,7 @@ class UserService
             }
         } else {
             if ($data['publisher_name'] === $response->title) {
-                $errors['publisher_name'] = ['Publisher Name already exists IATI Registry.'];
+                $errors['publisher_name'] = ['Publisher Name already exists in IATI Registry.'];
             }
 
             if ($data['registration_agency'] . '-' . $data['registration_number'] === $response->publisher_iati_id) {
@@ -272,6 +272,8 @@ class UserService
         $res = $client->request('POST', env('IATI_API_ENDPOINT') . '/action/user_create', $requestConfig);
         $response = json_decode($res->getBody()->getContents());
 
+        logger()->error(json_encode($response));
+
         if ($response->success) {
             return [
                 'success' => true,
@@ -281,7 +283,7 @@ class UserService
 
         return [
             'success' => false,
-            'errors' => $response->error,
+            'errors' => (array) $response->error,
         ];
     }
 
@@ -312,6 +314,8 @@ class UserService
         $res = $client->request('POST', env('IATI_API_ENDPOINT') . '/action/api_token_create', $requestConfig);
         $response = json_decode($res->getBody()->getContents());
 
+        logger()->error(json_encode($response));
+
         if ($response->success) {
             return [
                 'success' => true,
@@ -321,7 +325,7 @@ class UserService
 
         return [
             'success' => false,
-            'token' => $response->error->message,
+            'errors' => (array) $response->error->message,
         ];
     }
 
@@ -366,6 +370,8 @@ class UserService
         $res = $client->request('POST', env('IATI_API_ENDPOINT') . '/action/organization_create', $requestConfig);
         $response = json_decode($res->getBody()->getContents());
 
+        logger()->error(json_encode($response));
+
         if ($response->success) {
             return [
                 'success' => true,
@@ -373,9 +379,11 @@ class UserService
             ];
         }
 
+        logger()->error('publisher creation error' . json_encode($response));
+
         return [
             'success' => false,
-            'errors' => $response->error,
+            'errors' => (array) $response->error,
         ];
     }
 
@@ -389,6 +397,8 @@ class UserService
      */
     public function mapError($type, $errors): array
     {
+        logger()->error('mapped error1' . json_encode($errors));
+
         $mapper = [
             'user' => [
                 'name' => 'username',
@@ -419,6 +429,8 @@ class UserService
                 unset($errors[$field]);
             }
         }
+
+        logger()->error('mapped error' . json_encode($errors));
 
         return $errors;
     }
