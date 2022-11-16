@@ -6,7 +6,9 @@ namespace App\IATI\Services\User;
 
 use App\IATI\Models\User\User;
 use App\IATI\Repositories\Organization\OrganizationRepository;
+use App\IATI\Repositories\Setting\SettingRepository;
 use App\IATI\Repositories\User\UserRepository;
+use GuzzleHttp\Client;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -27,15 +29,22 @@ class UserService
     private OrganizationRepository $organizationRepo;
 
     /**
+     * @var SettingRepository
+     */
+    private SettingRepository $settingRepo;
+
+    /**
      * UserService constructor.
      *
      * @param UserRepository         $userRepo
      * @param OrganizationRepository $organizationRepo
+     * @param SettingRepository $settingRepo
      */
-    public function __construct(UserRepository $userRepo, OrganizationRepository $organizationRepo)
+    public function __construct(UserRepository $userRepo, OrganizationRepository $organizationRepo, SettingRepository $settingRepo)
     {
         $this->userRepo = $userRepo;
         $this->organizationRepo = $organizationRepo;
+        $this->settingRepo = $settingRepo;
     }
 
     /**
@@ -78,6 +87,294 @@ class UserService
         User::sendEmail();
 
         return $user;
+    }
+
+    /**
+     * @param array $data
+     *
+     * @return Model
+     */
+    public function registerNewUser(array $data): Model
+    {
+        $organization = $this->organizationRepo->createOrganization([
+            'publisher_id'        => $data['publisher_id'],
+            'publisher_name'      => $data['publisher_name'],
+            'country'             => $data['country'] ?? null,
+            'registration_agency' => $data['registration_agency'],
+            'registration_number' => $data['registration_number'],
+            'identifier'          => $data['registration_agency'] . '-' . $data['registration_number'],
+            'iati_status'         => 'pending',
+            'reporting_org'       => $data['source'] ? ['secondary_reporter' => ($data['source'] === 'secondary')] : null,
+        ]);
+
+        $user = $this->userRepo->store([
+            'username'        => $data['username'],
+            'full_name'       => $data['full_name'],
+            'email'           => $data['email'],
+            'organization_id' => $organization['id'],
+            'password'        => Hash::make($data['password']),
+        ]);
+
+        $this->settingRepo->store([
+            'organization_id' => $organization['id'],
+            'publishing_info' => [
+                'publisher_id' => $data['publisher_id'],
+                'api_token' => $data['token'],
+                'publisher_verification' => true,
+                'token_verification' => true,
+            ],
+        ]);
+
+        User::sendEmail();
+
+        return $user;
+    }
+
+    /**
+     * Create User and Publisher In Iati Registry.
+     *
+     * @param array $data
+     * @param bool $exists
+     *
+     * @return array
+     */
+    public function checkPublisher(array $data, bool $exists = true): array
+    {
+        $clientConfig = ['base_uri' => env('IATI_API_ENDPOINT')];
+        $requestConfig = [
+            'http_errors' => false,
+            'query'       => ['id' => $postData['publisher_id'] ?? ''],
+        ];
+
+        if (env('APP_ENV') !== 'production') {
+            $clientConfig['headers']['X-CKAN-API-Key'] = env('IATI_API_KEY');
+            $requestConfig['auth'] = [env('IATI_USERNAME'), env('IATI_PASSWORD')];
+        }
+
+        $client = new Client($clientConfig);
+        $res = $client->request('GET', env('IATI_API_ENDPOINT') . '/action/organization_show', $requestConfig);
+        $errors = [];
+
+        if ($res->getStatusCode() === 404) {
+            if ($exists) {
+                $errors['publisher_id'] = ['Publisher ID doesn\'t exist in IATI Registry.'];
+            }
+
+            return $errors;
+        }
+
+        $response = json_decode($res->getBody()->getContents())->result;
+
+        if ($exists) {
+            if ($data['publisher_name'] !== $response->title) {
+                $errors['publisher_name'] = ['Publisher Name doesn\'t match your IATI Registry information.'];
+            }
+
+            if ($data['registration_agency'] . '-' . $data['registration_number'] !== $response->publisher_iati_id) {
+                $errors['identifier'] = ['Publisher IATI ID doesn\'t match your IATI Registry information.'];
+            }
+        } else {
+            if ($data['publisher_name'] === $response->title) {
+                $errors['publisher_name'] = ['Publisher Name already exists IATI Registry.'];
+            }
+
+            if ($data['registration_agency'] . '-' . $data['registration_number'] === $response->publisher_iati_id) {
+                $errors['identifier'] = ['Publisher IATI ID already exists in IATI Registry.'];
+            }
+        }
+
+        return $errors;
+    }
+
+    /**
+     * Create User and Publisher In Iati Registry.
+     *
+     * @param array $data
+     * @param bool $exists
+     *
+     * @return array|bool
+     */
+    public function checkUser(array $data, bool $exists = true): array|bool
+    {
+        $clientConfig = ['base_uri' => env('IATI_API_ENDPOINT')];
+        $requestConfig = [
+            'http_errors' => false,
+            'query'       => ['id' => $data['username'] ?? ''],
+        ];
+
+        if (env('APP_ENV') !== 'production') {
+            $clientConfig['headers']['X-CKAN-API-Key'] = env('IATI_API_KEY');
+            $requestConfig['auth'] = [env('IATI_USERNAME'), env('IATI_PASSWORD')];
+        }
+
+        $client = new Client($clientConfig);
+        $res = $client->request('GET', env('IATI_API_ENDPOINT') . '/action/user_show', $requestConfig);
+        $errors = [];
+
+        if ($res->getStatusCode() === 404) {
+            if ($exists) {
+                $errors['publisher_id'] = ['User doesn\'t exist in IATI Registry.'];
+            }
+
+            return $errors;
+        }
+
+        $response = json_decode($res->getBody()->getContents())->result;
+
+        $errors = [];
+
+        if ($exists) {
+            if ($data['username'] !== $response->name) {
+                $errors['username'] = ['User with this name does not exists in IATI Registry.'];
+            }
+
+            if ($data['contact_email'] !== $response->email) {
+                $errors['contact_email'] = ['User with this email does not exist in IATI Registry.'];
+            }
+        } else {
+            if ($data['username'] === $response->name) {
+                $errors['username'] = ['Publisher Name already exists IATI Registry.'];
+            }
+
+            if ($data['contact_email'] === $response->email) {
+                $errors['contact_email'] = ['Publisher IATI ID already exists in IATI Registry.'];
+            }
+        }
+
+        return $errors;
+    }
+
+    /**
+     * Create User In Iati Registry.
+     *
+     * @param array $data
+     *
+     * @return array|bool
+     */
+    public function createUserInRegistry(array $data): array
+    {
+        $clientConfig = ['base_uri' => env('IATI_API_ENDPOINT')];
+        $requestConfig = [
+            'http_errors' => false,
+            'form_params'       => [
+                'name' => $data['username'] ?? '',
+                'email' => $data['contact_email'] ?? '',
+                'password' => $data['password'] ?? '',
+            ],
+        ];
+
+        if (env('APP_ENV') !== 'production') {
+            $requestConfig['auth'] = [env('IATI_USERNAME'), env('IATI_PASSWORD')];
+        }
+
+        $clientConfig['headers']['X-CKAN-API-Key'] = env('IATI_API_KEY');
+        $client = new Client($clientConfig);
+        $res = $client->request('POST', env('IATI_API_ENDPOINT') . '/action/user_create', $requestConfig);
+        $response = json_decode($res->getBody()->getContents());
+
+        if ($response->success) {
+            return [
+                'success' => true,
+                'token' => $response->result,
+            ];
+        }
+
+        return [
+            'success' => false,
+            'errors' => $response->error,
+        ];
+    }
+
+    /**
+     * Creates API token.
+     *
+     * @param string $data
+     *
+     * @return array|bool
+     */
+    public function createAPItoken(string $username): array
+    {
+        $clientConfig = ['base_uri' => env('IATI_API_ENDPOINT')];
+        $requestConfig = [
+            'http_errors' => false,
+            'form_params'       => [
+                'user' => $username ?? '',
+                'name' => $username ?? '',
+            ],
+        ];
+
+        if (env('APP_ENV') !== 'production') {
+            $requestConfig['auth'] = [env('IATI_USERNAME'), env('IATI_PASSWORD')];
+        }
+
+        $clientConfig['headers']['X-CKAN-API-Key'] = env('IATI_API_KEY');
+        $client = new Client($clientConfig);
+        $res = $client->request('POST', env('IATI_API_ENDPOINT') . '/action/api_token_create', $requestConfig);
+        $response = json_decode($res->getBody()->getContents());
+
+        if ($response->success) {
+            return [
+                'success' => true,
+                'token' => $response->result->token,
+            ];
+        }
+
+        return [
+            'success' => false,
+            'token' => $response->error->message,
+        ];
+    }
+
+    /**
+     * Create User and Publisher In Iati Registry.
+     *
+     * @param array $data
+     *
+     * @return array|bool
+     */
+    public function createPublisherInRegistry(array $data, $token): array|bool
+    {
+        $clientConfig = ['base_uri' => env('IATI_API_ENDPOINT')];
+
+        $requestConfig = [
+            'http_errors' => false,
+            'form_params'       => [
+                'publisher_iati_id' => $data['identifier'] ?? '',
+                'publisher_organization_type' => $data['publisher_type'] ?? '',
+                'title' => $data['publisher_name'] ?? '',
+                'publisher_contact_email' => $data['contact_email'] ?? '',
+                'license_id' => $data['data_license'] ?? '',
+                'name' => $data['publisher_id'] ?? '',
+                'full_name' => $data['fullname'] ?? '',
+                'state' => 'approval_needed',
+                'publisher_organization_type' => $data['publisher_type'] ?? '',
+                'publisher_url' => $data['publisher_url'] ?? '',
+                'publisher_contact' => $data['address'] ?? '',
+                'publisher_source_type' => $data['source'] ?? '',
+                'image_url' => $data['image_url'] ?? '',
+            ],
+        ];
+
+        if (env('APP_ENV') !== 'production') {
+            $requestConfig['auth'] = [env('IATI_USERNAME'), env('IATI_PASSWORD')];
+        }
+
+        $clientConfig['headers']['X-CKAN-API-Key'] = $token;
+        $client = new Client($clientConfig);
+        $res = $client->request('POST', env('IATI_API_ENDPOINT') . '/action/organization_create', $requestConfig);
+        $response = json_decode($res->getBody()->getContents());
+
+        if ($response->success) {
+            return [
+                'success' => true,
+                'token' => $response->result,
+            ];
+        }
+
+        return [
+            'success' => false,
+            'errors' => $response->error,
+        ];
     }
 
     /**

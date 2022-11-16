@@ -33,9 +33,9 @@ Route::middleware(RedirectIfAuthenticated::class)->name('web.')->group(function 
     Route::get('/support', [App\Http\Controllers\Web\WebController::class, 'support'])->name('support');
     Route::get('/iati/register', [App\Http\Controllers\Auth\IatiRegisterController::class, 'showRegistrationForm'])->name('iati.register');
     Route::post('/iati/register/publisher', [App\Http\Controllers\Auth\IatiRegisterController::class, 'verifyPublisher'])->name('iati.verify-publisher');
-    Route::get('/iati/register/contact', [App\Http\Controllers\Auth\IatiRegisterController::class, 'verifyContactInfo'])->name('iati.verify-contact');
-    Route::get('/iati/register/source', [App\Http\Controllers\Auth\IatiRegisterController::class, 'verifySource'])->name('iati.verify-source');
-    Route::post('/iati/register', [App\Http\Controllers\Auth\IatiRegisterController::class, 'iati.register']);
+    Route::post('/iati/register/contact', [App\Http\Controllers\Auth\IatiRegisterController::class, 'verifyContactInfo'])->name('iati.verify-contact');
+    Route::post('/iati/register/additional', [App\Http\Controllers\Auth\IatiRegisterController::class, 'verifyAdditionalInfo'])->name('iati.verify-source');
+    Route::post('/iati/register', [App\Http\Controllers\Auth\IatiRegisterController::class, 'register'])->name('iati.user.register');
 });
 
 Route::middleware(RedirectIfAuthenticated::class)->get('password/reset/{token}', [App\Http\Controllers\Auth\ResetPasswordController::class, 'showResetForm'])->name('password.reset');

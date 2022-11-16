@@ -9,7 +9,7 @@ use App\IATI\Models\User\Role;
 use App\IATI\Services\Organization\OrganizationService;
 use App\IATI\Services\User\UserService;
 use App\Providers\RouteServiceProvider;
-use GuzzleHttp\Client;
+use Exception;
 use GuzzleHttp\Exception\ClientException;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Database\DatabaseManager;
@@ -83,11 +83,12 @@ class IatiRegisterController extends Controller
             'username'              => ['required', 'string', 'max:255', 'unique:users,username'],
             'full_name'             => ['required', 'string', 'max:255'],
             'email'                 => ['required', 'string', 'email', 'max:255', 'unique:users,email'],
+            'contact_email'         => ['required', 'string', 'email', 'max:255', 'unique:users,email'],
             'publisher_id'          => ['required', 'string', 'max:255', 'unique:organizations,publisher_id'],
             'publisher_name'        => ['required', 'string', 'max:255', 'unique:organizations,publisher_name'],
             'identifier'            => ['required', 'string', 'max:255', 'unique:organizations,identifier'],
-            'password'              => ['required', 'string', 'min:8', 'confirmed'],
-            'password_confirmation' => ['required', 'string', 'min:8'],
+            'password'              => ['required', 'string', 'min:6', 'confirmed'],
+            'password_confirmation' => ['required', 'string', 'min:6'],
         ]);
     }
 
@@ -110,56 +111,26 @@ class IatiRegisterController extends Controller
                 'identifier'          => ['required', 'string', 'max:255', 'unique:organizations,identifier'],
                 'registration_agency' => ['required'],
                 'registration_number' => ['required'],
+                'publisher_type'      => ['required'],
+                'data_license'        => ['required'],
+                'description'         => ['sometimes'],
             ]);
 
             if ($validator->fails()) {
                 return response()->json(['success' => false, 'errors' => $validator->errors()]);
             }
 
-            $clientConfig = ['base_uri' => env('IATI_API_ENDPOINT')];
-            $requestConfig = [
-                'http_errors' => false,
-                'query'       => ['id' => $postData['publisher_id'] ?? ''],
-            ];
+            $publisherCheck = $this->userService->checkPublisher($postData, false);
 
-            if (env('APP_ENV') !== 'production') {
-                $clientConfig['headers']['X-CKAN-API-Key'] = env('IATI_API_KEY');
-                $requestConfig['auth'] = [env('IATI_USERNAME'), env('IATI_PASSWORD')];
-            }
-
-            $client = new Client($clientConfig);
-            $res = $client->request('GET', env('IATI_API_ENDPOINT') . '/action/organization_show', $requestConfig);
-
-            if ($res->getStatusCode() === 404) {
+            if (!empty($publisherCheck)) {
                 return response()->json([
                     'success'         => false,
                     'publisher_error' => true,
-                    'errors'          => [
-                        'publisher_id' => ['Publisher ID doesn\'t exist in IATI Registry.'],
-                    ],
+                    'errors'          => $publisherCheck,
                 ]);
             }
 
-            $errors = [];
-            $response = json_decode($res->getBody()->getContents())->result;
-
-            if ($postData['publisher_name'] !== $response->title) {
-                $errors['publisher_name'] = ['Publisher Name doesn\'t match your IATI Registry information'];
-            }
-
-            if ($postData['registration_agency'] . '-' . $postData['registration_number'] !== $response->publisher_iati_id) {
-                $errors['identifier'] = ['Publisher IATI ID doesn\'t match your IATI Registry information'];
-            }
-
-            if (!empty($errors)) {
-                return response()->json([
-                    'success'         => false,
-                    'publisher_error' => true,
-                    'errors'          => $errors,
-                ]);
-            }
-
-            return response()->json(['success' => true, 'message' => 'Publisher verified successfully', 'data' => $response]);
+            return response()->json(['success' => true, 'message' => 'Publisher verified successfully', 'data' => $publisherCheck]);
         } catch (ClientException $e) {
             logger()->error($e->getMessage());
 
@@ -172,10 +143,124 @@ class IatiRegisterController extends Controller
                     ],
                 ]
             );
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             logger()->error($e->getMessage());
 
             return response()->json(['success' => false, 'error' => 'Error has occurred while verifying the publisher.']);
+        }
+    }
+
+    /**
+     * Handle a registration request for the application.
+     *
+     * @param Request $request
+     *
+     * @return RedirectResponse|JsonResponse
+     * @throws \JsonException
+     * @throws \Throwable
+     */
+    public function verifyContactInfo(Request $request): JsonResponse|RedirectResponse
+    {
+        try {
+            $request['password'] = isset($request['password']) && $request['password'] ? decryptString($request['password'], env('MIX_ENCRYPTION_KEY')) : '';
+            $request['password_confirmation'] = isset($request['password_confirmation']) && $request['password_confirmation'] ? decryptString($request['password_confirmation'], env('MIX_ENCRYPTION_KEY')) : '';
+
+            $validator = Validator::make($request->all(), [
+                'contact_email' => ['required', 'string', 'email', 'regex:/^([a-z0-9\+_\-]+)(\.[a-z0-9\+_\-]+)*@([a-z0-9\-]+\.)+[a-z]{2,6}$/ix', 'max:255', 'unique:users,email'],
+                'website' => ['nullable', 'url'],
+            ]);
+
+            if ($validator->fails()) {
+                return response()->json(['success' => false, 'errors' => $validator->errors()]);
+            }
+
+            return response()->json(['success' => true, 'message' => 'Contact info successfully verified']);
+        } catch (Exception $e) {
+            logger()->error($e->getMessage());
+
+            return response()->json(['success' => true, 'message' => 'Error occurred while verifying contact info']);
+        }
+    }
+
+    /**
+     * Handle a registration request for the application.
+     *
+     * @param Request $request
+     *
+     * @return RedirectResponse|JsonResponse
+     * @throws \JsonException
+     * @throws \Throwable
+     */
+    public function verifyAdditionalInfo(Request $request): JsonResponse|RedirectResponse
+    {
+        try {
+            $request['password'] = isset($request['password']) && $request['password'] ? decryptString($request['password'], env('MIX_ENCRYPTION_KEY')) : '';
+            $request['password_confirmation'] = isset($request['password_confirmation']) && $request['password_confirmation'] ? decryptString($request['password_confirmation'], env('MIX_ENCRYPTION_KEY')) : '';
+
+            $validator = Validator::make($request->all(), [
+                'source' => 'required',
+            ]);
+
+            if ($validator->fails()) {
+                return response()->json(['success' => false, 'errors' => $validator->errors()]);
+            }
+
+            return response()->json(['success' => true, 'message' => 'Additional Information successfully verified.']);
+        } catch (Exception $e) {
+            logger()->error($e->getMessage());
+
+            return response()->json(['success' => true, 'message' => 'Error occurred while verifying additional info.']);
+        }
+    }
+
+    /**
+     * Handle a registration request for the application.
+     *
+     * @param Request $request
+     *
+     * @return RedirectResponse|JsonResponse
+     * @throws \JsonException
+     * @throws \Throwable
+     */
+    public function register(Request $request): JsonResponse|RedirectResponse
+    {
+        try {
+            $request['password'] = isset($request['password']) && $request['password'] ? decryptString($request['password'], env('MIX_ENCRYPTION_KEY')) : '';
+            $request['password_confirmation'] = isset($request['password_confirmation']) && $request['password_confirmation'] ? decryptString($request['password_confirmation'], env('MIX_ENCRYPTION_KEY')) : '';
+            $postData = $request->all();
+
+            $validator = Validator::make($request->all(), [
+                'username'              => ['required', 'max:255', 'string', 'regex:/^[A-Za-z]([0-9A-Za-z _])*$/', 'unique:users,username'],
+                'full_name'             => ['required', 'string', 'max:255'],
+                'email'                 => ['required', 'string', 'email', 'regex:/^([a-z0-9\+_\-]+)(\.[a-z0-9\+_\-]+)*@([a-z0-9\-]+\.)+[a-z]{2,6}$/ix', 'max:255', 'unique:users,email'],
+                'publisher_id'          => ['required', 'string', 'max:255', 'unique:organizations,publisher_id'],
+                'password'              => ['required', 'string', 'min:6', 'max:255', 'confirmed'],
+                'password_confirmation' => ['required', 'string', 'min:6', 'max:255'],
+            ]);
+
+            if ($validator->fails()) {
+                return response()->json(['success' => false, 'errors' => $validator->errors()]);
+            }
+
+            $publisherCheck = $this->userService->checkPublisher($postData, false);
+            $userCheck = $this->userService->checkUser($postData, false);
+
+            if (!empty($publisherCheck) || !empty($userCheck)) {
+                return response()->json([
+                    'success'         => false,
+                    'errors'          => array_merge($publisherCheck, $userCheck),
+                ]);
+            }
+
+            $user = $this->create($postData);
+            event(new Registered($user));
+            Session::put('role_id', app(Role::class)->getOrganizationAdminId());
+
+            return response()->json(['success' => true, 'message' => 'User registered successfully']);
+        } catch (Exception $e) {
+            logger()->error($e->getMessage());
+
+            return response()->json(['success' => false, 'message' => 'User registered successfully']);
         }
     }
 
@@ -191,46 +276,32 @@ class IatiRegisterController extends Controller
     {
         try {
             $this->db->beginTransaction();
-            $user = $this->userService->registerExistingUser($data);
+            $api_token = [];
+            $publisher = [];
+
+            $iati_user = $this->userService->createUserInRegistry($data);
+            if ($iati_user['success']) {
+                $api_token = $this->userService->createAPItoken($data['username']);
+            }
+            if ($api_token['success']) {
+                $publisher = $this->userService->createPublisherInRegistry($data, $api_token['token']);
+            }
+            $data['token'] = $api_token['token'];
+            $user = [];
+
+            if ($iati_user['success'] && $api_token['success'] && $publisher['success']) {
+                $user = $this->userService->registerNewUser($data);
+            } else {
+                // return response()->json(['success' => false, 'errors' => array_merge($iati_user['error']?? [],$api_token['error']??[], $publisher['error']??[])]);
+            }
+
             $this->db->commit();
 
             return $user;
         } catch (\Exception $e) {
+            dd($e);
             logger()->error($e->getMessage());
         }
-    }
-
-    /**
-     * Handle a registration request for the application.
-     *
-     * @param Request $request
-     *
-     * @return RedirectResponse|JsonResponse
-     * @throws \JsonException
-     * @throws \Throwable
-     */
-    public function register(Request $request): JsonResponse|RedirectResponse
-    {
-        $request['password'] = isset($request['password']) && $request['password'] ? decryptString($request['password'], env('MIX_ENCRYPTION_KEY')) : '';
-        $request['password_confirmation'] = isset($request['password_confirmation']) && $request['password_confirmation'] ? decryptString($request['password_confirmation'], env('MIX_ENCRYPTION_KEY')) : '';
-
-        $validator = Validator::make($request->all(), [
-            'username'              => ['required', 'max:255', 'string', 'regex:/^[A-Za-z]([0-9A-Za-z _])*$/', 'unique:users,username'],
-            'full_name'             => ['required', 'string', 'max:255'],
-            'email'                 => ['required', 'string', 'email', 'regex:/^([a-z0-9\+_\-]+)(\.[a-z0-9\+_\-]+)*@([a-z0-9\-]+\.)+[a-z]{2,6}$/ix', 'max:255', 'unique:users,email'],
-            'publisher_id'          => ['required', 'string', 'max:255', 'unique:organizations,publisher_id'],
-            'password'              => ['required', 'string', 'min:8', 'max:255', 'confirmed'],
-            'password_confirmation' => ['required', 'string', 'min:8', 'max:255'],
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json(['success' => false, 'errors' => $validator->errors()]);
-        }
-        $user = $this->create($request->all());
-        event(new Registered($user));
-        Session::put('role_id', app(Role::class)->getOrganizationAdminId());
-
-        return response()->json(['success' => true, 'message' => 'User registered successfully']);
     }
 
     /**
@@ -242,11 +313,11 @@ class IatiRegisterController extends Controller
     {
         try {
             $types = [
-                'Country' => getCodeListArray('Country', 'OrganizationArray'),
-                'RegistrationAgency' => getCodeListArray('OrganizationRegistrationAgency', 'OrganizationArray'),
-                'PublisherType' => getCodeListArray('OrganizationRegistrationAgency', 'OrganizationArray'),
-                'DataLicense' => getCodeListArray('OrganizationRegistrationAgency', 'OrganizationArray'),
-                'Source' => getCodeListArray('OrganizationRegistrationAgency', 'OrganizationArray'),
+                'country' => getCodeListArray('Country', 'OrganizationArray'),
+                'registrationAgency' => getCodeListArray('OrganizationRegistrationAgency', 'OrganizationArray'),
+                'publisherType' => getCodeList('PublisherType', 'Activity'),
+                'dataLicense' => getCodeList('DataLicense', 'Activity'),
+                'source' => getCodeList('Source', 'Activity'),
             ];
 
             return view('web.iati_register', compact('types'));
