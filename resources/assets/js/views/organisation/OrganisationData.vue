@@ -322,7 +322,7 @@ export default defineComponent({
         setTimeout(() => {
           toastData.visibility = false;
           ignoreToastUpdate();
-        }, 5000);
+        }, 10000);
       }
     );
 
