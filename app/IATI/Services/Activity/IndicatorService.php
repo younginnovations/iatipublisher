@@ -185,6 +185,8 @@ class IndicatorService
     }
 
     /**
+     * Returns indicator measure.
+     *
      * @param $indicatorId
      *
      * @return string

@@ -36,6 +36,8 @@ class SectorRequest extends ActivityBaseRequest
     }
 
     /**
+     * Returns grouped sector.
+     *
      * @param $formFields
      *
      * @return array
@@ -78,7 +80,7 @@ class SectorRequest extends ActivityBaseRequest
                 return false;
             });
 
-            return ['sector'=> 'already_in_transactions'];
+            return ['sector' => 'already_in_transactions'];
         }
 
         Validator::extend('sector_total_percent', function () {

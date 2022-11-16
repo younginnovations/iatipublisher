@@ -305,7 +305,7 @@ class ActivityService
      *
      * @return bool
      */
-    public function hasRecipientRegionDefined($activityId): bool
+    public function hasRecipientRegionDefinedInActivity($activityId): bool
     {
         $activity = $this->getActivity($activityId)->toArray();
 
@@ -319,7 +319,7 @@ class ActivityService
      *
      * @return bool
      */
-    public function hasRecipientCountryDefined($activityId): bool
+    public function hasRecipientCountryDefinedInActivity($activityId): bool
     {
         $activity = $this->getActivity($activityId)->toArray();
 
@@ -333,7 +333,7 @@ class ActivityService
      *
      * @return bool
      */
-    public function hasSectorDefined($activityId): bool
+    public function hasSectorDefinedInActivity($activityId): bool
     {
         $activity = $this->getActivity($activityId)->toArray();
 
@@ -353,10 +353,9 @@ class ActivityService
 
         if (!empty($transactions)) {
             foreach ($transactions as $transaction) {
-                if (!empty($transaction['transaction']) && (array_key_exists(
-                    'recipient_country',
-                    $transaction['transaction']
-                ) && !empty($transaction['transaction']['recipient_country']))) {
+                if (!empty($transaction['transaction'])
+                    && array_key_exists('recipient_country', $transaction['transaction'])
+                    && !empty($transaction['transaction']['recipient_country'])) {
                     return true;
                 }
             }
@@ -378,10 +377,9 @@ class ActivityService
 
         if (!empty($transactions)) {
             foreach ($transactions as $transaction) {
-                if (!empty($transaction['transaction']) && (array_key_exists(
-                    'recipient_region',
-                    $transaction['transaction']
-                ) && !empty($transaction['transaction']['recipient_region']))) {
+                if (!empty($transaction['transaction'])
+                    && array_key_exists('recipient_region', $transaction['transaction'])
+                    && !empty($transaction['transaction']['recipient_region'])) {
                     return true;
                 }
             }
@@ -403,10 +401,9 @@ class ActivityService
 
         if (!empty($transactions)) {
             foreach ($transactions as $transaction) {
-                if (!empty($transaction['transaction']) && (array_key_exists(
-                    'sector',
-                    $transaction['transaction']
-                ) && !empty($transaction['transaction']['sector']))) {
+                if (!empty($transaction['transaction'])
+                    && array_key_exists('sector', $transaction['transaction'])
+                        && !empty($transaction['transaction']['sector'])) {
                     return true;
                 }
             }

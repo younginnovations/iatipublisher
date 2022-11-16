@@ -76,7 +76,7 @@ class RecipientCountryRequest extends ActivityBaseRequest
                 return false;
             });
 
-            return ['recipient_country'=> 'already_in_transactions'];
+            return ['recipient_country' => 'already_in_transactions'];
         }
 
         Validator::extend('allocated_country_percent_exceeded', function () {

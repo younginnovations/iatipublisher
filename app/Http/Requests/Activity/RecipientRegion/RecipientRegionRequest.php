@@ -78,7 +78,7 @@ class RecipientRegionRequest extends ActivityBaseRequest
                 return false;
             });
 
-            return ['recipient_region'=> 'already_in_transactions'];
+            return ['recipient_region' => 'already_in_transactions'];
         }
 
         Validator::extend('allocated_region_total_mismatch', function () {
