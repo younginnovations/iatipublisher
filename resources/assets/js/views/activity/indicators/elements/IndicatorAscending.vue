@@ -2,7 +2,7 @@
   <tr>
     <td>Ascending</td>
     <td>
-      {{ parseInt(data)? 'True' : (data?'False':'Not Available') }}
+      {{ parseInt(data)? 'True' : (data?'False':'Missing') }}
     </td>
   </tr>
 </template>

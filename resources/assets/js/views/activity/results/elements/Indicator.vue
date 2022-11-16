@@ -24,7 +24,7 @@
             :link="`/result/${result.id}/indicator`"
             class="mr-2.5"
           />
-          <svg-vue class="mr-1.5" icon="moon"></svg-vue>
+          <svg-vue class="mr-1.5" icon="core"></svg-vue>
           <div class="help text-n-40">
             <button>
               <svg-vue icon="help"></svg-vue>

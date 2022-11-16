@@ -57,6 +57,7 @@
         @yield('content')
         @stack('scripts')
     </main>
+    <admin-footer></admin-footer>
   </div>
 
   <script defer src="{{ mix('/manifest.js') }}"></script>

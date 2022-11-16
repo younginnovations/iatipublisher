@@ -12,7 +12,7 @@
         <span>{{
           reporting_org.type
             ? types?.organizationType[reporting_org.type]
-            : "Type Not Available"
+            : "Type Missing"
         }}</span>
       </div>
       <table>
@@ -20,7 +20,7 @@
           <tr>
             <td>Reference</td>
             <td>
-              {{ reporting_org.ref ?? "Reference Not Available" }}
+              {{ reporting_org.ref ?? "Reference Missing" }}
             </td>
           </tr>
           <tr>
@@ -31,7 +31,7 @@
                   ? "True"
                   : reporting_org.secondary_reporter
                   ? "False"
-                  : "Not Available"
+                  : "Missing"
               }}
             </td>
           </tr>
@@ -50,11 +50,11 @@
                   ({{
                     narrative.language
                       ? `Language: ${types?.languages[narrative.language]}`
-                      : "Language : Not Available"
+                      : "Language : Missing"
                   }})
                 </div>
                 <div class="w-[500px] max-w-full">
-                  {{ narrative.narrative ?? "Narrative Not Available" }}
+                  {{ narrative.narrative ?? "Narrative Missing" }}
                 </div>
               </div>
             </td>

@@ -55,7 +55,7 @@
               </div>
             </td>
             <td>
-              {{ types.resultType[result.result.type] ?? "Not Available" }}
+              {{ types.resultType[result.result.type] ?? "Missing" }}
             </td>
             <td class="capitalize">
               {{
@@ -63,7 +63,7 @@
                   ? "True"
                   : result.result.aggregation_status
                   ? "False"
-                  : "Not Available"
+                  : "Missing"
               }}
             </td>
             <td>

@@ -27,10 +27,9 @@
           <div class="footer__links">
             <span class="font-bold text-n-10">IATI Standard</span>
             <ul class="mt-2 flex flex-col">
-              <li><a href="/">IATI Standard</a></li>
-              <li><a href="/">Publishing Checklist</a></li>
-              <li><a href="/">Access IATI Data</a></li>
-              <li><a href="/">Support</a></li>
+              <li><a href="/iati-standard">IATI Standard</a></li>
+              <li><a href="/publishing-checklist">Publishing Checklist</a></li>
+              <li><a href="/support">Support</a></li>
             </ul>
           </div>
           <div class="footer__links lg:justify-self-end">

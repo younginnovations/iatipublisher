@@ -97,13 +97,21 @@
           </div>
         </nav>
         <div
-          class="header__title mt-6 border-l-4 border-l-turquoise py-2 px-4 sm:py-5 sm:px-6"
+          class="header__title mt-6 flex items-center justify-between border-l-4 border-l-turquoise py-2 px-4 sm:py-5 sm:px-6"
         >
           <h1
             class="text-xl font-bold text-white sm:text-4xl sm:text-heading-2"
           >
             {{ title }}
           </h1>
+          <a
+            v-if="auth === '1'"
+            href="/activities"
+            class="button secondary-btn"
+          >
+            Go to Dashboard
+            <svg-vue class="text-2xl" icon="right-arrow" />
+          </a>
         </div>
       </header>
     </div>
@@ -120,6 +128,7 @@ export default defineComponent({
   },
   props: {
     title: { type: String, required: true },
+    auth: { type: String, required: true },
   },
 });
 </script>

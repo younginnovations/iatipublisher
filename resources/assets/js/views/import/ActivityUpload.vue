@@ -35,7 +35,7 @@
                       <br />
                       Therefore your organisation will need to determine how it will
                       divide its work internally into activities. Read the
-                      <a href="#" class="text-bluecoral"
+                      <a href="/publishing-checklist" class="text-bluecoral"
                         ><b>Publishing Checklist</b></a
                       >
                       for more information.
