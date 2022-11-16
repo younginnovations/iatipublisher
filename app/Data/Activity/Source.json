@@ -1,0 +1,28 @@
+{
+  "attributes": {
+    "name": "Source",
+    "complete": "1",
+    "embedded": "0",
+    "category-codelist": null
+  },
+  "metadata": {
+    "name": "Source",
+    "description": "",
+    "category": "Non-Core",
+    "url": ""
+  },
+  "Source": [
+    {
+      "code": "primary_source",
+      "name": "Primary Source",
+      "description": "Primary Source",
+      "status": "active"
+    },
+    {
+      "code": "secondary_source",
+      "name": "Secondary Source",
+      "description": "Secondary Source",
+      "status": "active"
+    }
+  ]
+}
