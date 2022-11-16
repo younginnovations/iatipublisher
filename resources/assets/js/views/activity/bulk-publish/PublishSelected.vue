@@ -6,7 +6,7 @@
       type="secondary"
       text="Publish Selected"
       icon="approved-cloud"
-      @click="publishAlertValue = true"
+      @click="checkPublish"
     />
     <Modal
       :modal-active="publishAlertValue"
@@ -242,6 +242,21 @@ const displayToast = (message, type) => {
 };
 
 /**
+ * check publish status
+ */
+const checkPublish = () =>{
+  axios.get(`/activities/checks-for-activity-publish`).then((res) => {
+    const response = res.data;
+
+    if(response.success === true){
+      publishAlertValue.value = true
+    }else{
+      displayToast(response.message, response.success);
+    }
+  })
+}
+
+/**
  * Verify core elements
  */
 interface actTypeface {
@@ -262,7 +277,7 @@ const verifyCoreElements = () => {
     .get(`/activities/core-elements-completed?activities=[${activities}]`)
     .then((res) => {
       const response = res.data;
-      
+
       if (response.success) {
         coreCompletedActivities.value = response.data.complete;
         coreInCompletedActivities.value = response.data.incomplete;
