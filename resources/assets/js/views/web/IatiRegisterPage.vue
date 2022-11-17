@@ -63,23 +63,14 @@
             >
               <p class="mb-2 flex font-bold">
                 <svg-vue class="mr-2 text-xl" icon="warning" />
-                Sorry, the information you provided doesn’t match your IATI Registry
-                information.
+                Please work on following errors before submitting the form again.
               </p>
               <p class="ml-8 xl:mr-1">
-                Please note that if you’re an account holder in
-                <span><a href="https://iatiregistry.org/">IATI Registry</a></span
-                >, make sure your
-                <span class="font-bold"
-                  >Publisher Name, Publisher ID and IATI Organisation ID</span
-                >
-                match your IATI Registry Information. Contact
-                <span
-                  ><a class="text-bluecoral" href="mailto:PubToolTest@iatistandard.org"
-                    >PubToolTest@iatistandard.org</a
-                  ></span
-                >
-                for more details.
+              <ul>
+              <li v-for="(error, error_key) in IATI" :key="error_key">
+              <span>{{error}}</span>
+              </li>
+              </ul>
               </p>
             </div>
             <div class="form__content">
@@ -229,7 +220,7 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, reactive, ref, watch, toRefs } from "vue";
+import { computed, defineComponent, reactive, ref, watch } from "vue";
 import axios from "axios";
 import EmailVerification from "./EmailVerification.vue";
 import HoverText from "./../../components/HoverText.vue";
@@ -689,6 +680,7 @@ export default defineComponent({
           const response = res.data;
           publisherExists.value = true;
           const errors = !response.success || "errors" in response ? response.errors : [];
+          registerForm["1"].is_complete = false;
 
           updateValidationErrors(errors);
 
@@ -734,6 +726,7 @@ export default defineComponent({
 
           updateValidationErrors(errors);
           isLoaderVisible.value = false;
+          registerForm["2"].is_complete = false;
 
           if (response.success) {
             registerForm["2"].is_complete = true;
@@ -772,9 +765,10 @@ export default defineComponent({
           const errors = !response.success || "errors" in response ? response.errors : [];
           updateValidationErrors(errors);
           isLoaderVisible.value = false;
+          registerForm["3"].is_complete = false;
 
           if (response.success) {
-            registerForm["2"].is_complete = true;
+            registerForm["3"].is_complete = true;
             step.value += 1;
           }
         })
@@ -810,10 +804,12 @@ export default defineComponent({
           const response = res.data;
           const errors = !response.success || "errors" in response ? response.errors : [];
           updateValidationErrors(errors);
+          Object.assign()
           isLoaderVisible.value = false;
+          registerForm["1"].is_complete = false;
 
           if (response.success) {
-            registerForm["2"].is_complete = true;
+            registerForm["4"].is_complete = true;
             step.value += 1;
           }
         })
