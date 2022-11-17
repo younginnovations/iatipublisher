@@ -44,8 +44,8 @@
             </div>
           </div>
         </div>
-        <div class="actions flex grow flex-col items-end justify-end">
-          <div class="relative inline-flex justify-end">
+        <div class="actions relative flex grow flex-col items-end justify-end">
+          <div class="inline-flex justify-end">
             <!-- toast msg for publishing -->
             <Toast
               v-if="toastData.visibility"
@@ -151,7 +151,7 @@
             </div>
           </div>
         </div>
-        <div>
+        <div v-sticky-component="{ boundary: '.activities' }">
           <Elements :activity-id="activity.id" :data="elementProps" />
         </div>
       </aside>

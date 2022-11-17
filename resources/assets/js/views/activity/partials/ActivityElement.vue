@@ -1,18 +1,18 @@
 <template>
   <Modal :modal-active="deleteValue" width="583" @close="deleteToggle">
     <div class="mb-4">
-      <div class="flex mb-6 title">
+      <div class="title mb-6 flex">
         <svg-vue class="mr-1 mt-0.5 text-lg text-crimson-40" icon="delete" />
         <b>Delete element</b>
       </div>
-      <div class="p-4 rounded-lg bg-rose">
+      <div class="rounded-lg bg-rose p-4">
         Are you sure you want to delete this element?
       </div>
     </div>
     <div class="flex justify-end">
       <div class="inline-flex">
         <BtnComponent
-          class="px-6 uppercase bg-white"
+          class="bg-white px-6 uppercase"
           text="Go Back"
           type=""
           @click="deleteValue = false"
@@ -26,10 +26,17 @@
       </div>
     </div>
   </Modal>
+<<<<<<< HEAD
   <div :class="layout" class="p-3 activities__content--element text-n-50">
     <div :id="title" class="p-4 bg-white rounded-lg">
       <div class="flex mb-4">
         <div class="flex title grow">
+=======
+  <div :class="layout" class="activities__content--element p-3 text-n-50">
+    <div :id="title" class="rounded-lg bg-white p-4">
+      <div class="mb-4 flex">
+        <div class="title flex grow">
+>>>>>>> fc56cd7d (754-sidebar-sticky-issue)
           <template
             v-if="
               title === 'reporting_org' ||
@@ -42,6 +49,7 @@
           </template>
 
           <template v-else-if="title === 'iati_identifier'">
+<<<<<<< HEAD
             <svg-vue class="elements-svg" icon="activity-elements/iati_identifier" />
           </template>
 
@@ -51,12 +59,33 @@
 
           <div class="text-sm font-bold title">
             {{ title.toString().replace(/_/g, "-") }}
+=======
+            <svg-vue
+              class="elements-svg"
+              icon="activity-elements/iati_identifier"
+            />
+          </template>
+
+          <template v-else>
+            <svg-vue
+              :icon="'activity-elements/' + title"
+              class="elements-svg"
+            ></svg-vue>
+          </template>
+
+          <div class="title text-sm font-bold">
+            {{ title.toString().replace(/_/g, '-') }}
+>>>>>>> fc56cd7d (754-sidebar-sticky-issue)
           </div>
 
           <Status :data="completed" />
         </div>
 
+<<<<<<< HEAD
         <div class="flex items-center icons">
+=======
+        <div class="icons flex items-center">
+>>>>>>> fc56cd7d (754-sidebar-sticky-issue)
           <template v-if="title == 'transactions'">
             <Btn
               text="Add Transaction"
@@ -72,7 +101,7 @@
               class="mr-2.5"
             />
           </template>
-          <div v-else class="flex gap-2.5 mr-2.5">
+          <div v-else class="mr-2.5 flex gap-2.5">
             <Btn
               text="Edit"
               :link="`/activity/${activityId}/${title}`"
@@ -83,7 +112,7 @@
               text="Delete"
               class="delete-button"
               icon="delete"
-              @click="deleteValue = true"
+              @click="deleteActivityElement"
             />
           </div>
           <svg-vue
@@ -101,7 +130,11 @@
         </div>
       </div>
 
+<<<<<<< HEAD
       <div class="w-full h-px mb-4 divider bg-n-20"></div>
+=======
+      <div class="divider mb-4 h-px w-full bg-n-20"></div>
+>>>>>>> fc56cd7d (754-sidebar-sticky-issue)
 
       <template v-if="title === 'iati_identifier'">
         <IatiIdentifier :data="data.content.iati_identifier_text" />
@@ -168,7 +201,11 @@
           :class="{ 'mb-4': key !== data.content.length - 1 }"
         >
           <div class="default_aid_type-content">
+<<<<<<< HEAD
             <div class="mb-2 text-sm font-bold date-type">
+=======
+            <div class="date-type mb-2 text-sm font-bold">
+>>>>>>> fc56cd7d (754-sidebar-sticky-issue)
               <span v-if="post.default_aid_type_vocabulary">{{
                 types.aidTypeVocabulary[post.default_aid_type_vocabulary]
               }}</span>
@@ -182,14 +219,28 @@
               <span v-else class="italic">Code Missing</span>
             </div>
 
+<<<<<<< HEAD
             <div v-else-if="post.default_aid_type_vocabulary == '3'" class="text-sm">
+=======
+            <div
+              v-else-if="post.default_aid_type_vocabulary == '3'"
+              class="text-sm"
+            >
+>>>>>>> fc56cd7d (754-sidebar-sticky-issue)
               <span v-if="post.earmarking_modality">{{
                 types.earmarkingModality[post.earmarking_modality]
               }}</span>
               <span v-else class="italic">Code Missing</span>
             </div>
 
+<<<<<<< HEAD
             <div v-else-if="post.default_aid_type_vocabulary == '4'" class="text-sm">
+=======
+            <div
+              v-else-if="post.default_aid_type_vocabulary == '4'"
+              class="text-sm"
+            >
+>>>>>>> fc56cd7d (754-sidebar-sticky-issue)
               <span v-if="post.cash_and_voucher_modalities">{{
                 types.cashandVoucherModalities[post.cash_and_voucher_modalities]
               }}</span>
@@ -225,7 +276,14 @@
           class="elements-detail"
           :class="{ 'mb-4': key !== data.content.budget_item.length - 1 }"
         >
+<<<<<<< HEAD
           <div v-if="data.content.country_budget_vocabulary === '1'" class="text-sm">
+=======
+          <div
+            v-if="data.content.country_budget_vocabulary === '1'"
+            class="text-sm"
+          >
+>>>>>>> fc56cd7d (754-sidebar-sticky-issue)
             <div v-if="post.code" class="flex space-x-1">
               <span>
                 {{ types.budgetIdentifier[post.code] }}
@@ -235,25 +293,58 @@
             <span v-else class="italic">Missing</span>
           </div>
           <div v-else class="text-sm">
+<<<<<<< HEAD
             <span v-if="post.code">{{ types.budgetIdentifier[post.code] }}</span>
             <span v-else class="italic">Missing</span>
             <span v-if="post.percentage"> ({{ roundFloat(post.percentage) }} %)</span>
+=======
+            <span v-if="post.code">{{
+              types.budgetIdentifier[post.code]
+            }}</span>
+            <span v-else class="italic">Missing</span>
+            <span v-if="post.percentage">
+              ({{ roundFloat(post.percentage) }} %)</span
+            >
+>>>>>>> fc56cd7d (754-sidebar-sticky-issue)
             <span v-else class="italic">(Percentage Missing)</span>
           </div>
           <template v-for="(item, i) in post.description" :key="i">
             <div
               v-for="(narrative, k) in item.narrative"
               :key="k"
+<<<<<<< HEAD
               class="ml-5 elements-detail"
+=======
+              class="elements-detail ml-5"
+>>>>>>> fc56cd7d (754-sidebar-sticky-issue)
               :class="{ 'mb-0': k !== item.narrative - 1 }"
             >
               <table>
                 <tr class="multiline">
+<<<<<<< HEAD
+=======
+                  <td>Vocabulary</td>
+                  <td>
+                    <span v-if="data.content.country_budget_vocabulary">{{
+                      props.types.budgetIdentifierVocabulary[
+                        data.content.country_budget_vocabulary
+                      ]
+                    }}</span>
+                    <span v-else class="italic">Missing</span>
+                  </td>
+                </tr>
+                <tr class="multiline">
+>>>>>>> fc56cd7d (754-sidebar-sticky-issue)
                   <td>Description</td>
                   <td>
                     <div v-if="narrative.narrative" class="flex flex-col">
                       <span v-if="narrative.language" class="language top"
+<<<<<<< HEAD
                         >(Language: {{ types.languages[narrative.language] }})</span
+=======
+                        >(Language:
+                        {{ types.languages[narrative.language] }})</span
+>>>>>>> fc56cd7d (754-sidebar-sticky-issue)
                       >
                       <span class="description">{{ narrative.narrative }}</span>
                     </div>
@@ -280,14 +371,24 @@
           :class="{ 'mb-4': key !== data.content.length - 1 }"
         >
           <div class="category">
+<<<<<<< HEAD
             <span v-if="post.budget_type">{{ types.budgetType[post.budget_type] }}</span>
+=======
+            <span v-if="post.budget_type">{{
+              types.budgetType[post.budget_type]
+            }}</span>
+>>>>>>> fc56cd7d (754-sidebar-sticky-issue)
             <span v-else class="italic">Type Missing</span>
           </div>
 
           <div
             v-for="(item, i) in post.budget_value"
             :key="i"
+<<<<<<< HEAD
             class="mb-1 elements-detail"
+=======
+            class="elements-detail mb-1"
+>>>>>>> fc56cd7d (754-sidebar-sticky-issue)
             :class="{ 'mb-4': i !== post.budget_value.length - 1 }"
           >
             <div class="text-sm">
@@ -395,7 +496,11 @@
               <div
                 v-for="(narrative, j) in item.narrative"
                 :key="j"
+<<<<<<< HEAD
                 class="flex items-center mb-1 space-x-1"
+=======
+                class="mb-1 flex items-center space-x-1"
+>>>>>>> fc56cd7d (754-sidebar-sticky-issue)
               >
                 <table>
                   <tr class="multiline">
@@ -443,7 +548,12 @@
                     <td>
                       <div v-if="narrative.narrative" class="flex flex-col">
                         <span v-if="narrative.language" class="language"
+<<<<<<< HEAD
                           >(Language: {{ types.languages[narrative.language] }})</span
+=======
+                          >(Language:
+                          {{ types.languages[narrative.language] }})</span
+>>>>>>> fc56cd7d (754-sidebar-sticky-issue)
                         >
                         <span>{{ narrative.narrative }}</span>
                       </div>
@@ -475,7 +585,11 @@
 
       <template v-else>
         <!-- Activity Status -->
+<<<<<<< HEAD
         <div class="text-sm content">
+=======
+        <div class="content text-sm">
+>>>>>>> fc56cd7d (754-sidebar-sticky-issue)
           <template v-if="title === 'activity_status'">
             <span v-if="data.content">{{
               props.types.activityStatus[data.content]
@@ -485,7 +599,13 @@
 
           <!-- Activity Scope -->
           <template v-else-if="title === 'activity_scope'">
+<<<<<<< HEAD
             <span v-if="data.content">{{ props.types.activityScope[data.content] }}</span>
+=======
+            <span v-if="data.content">{{
+              props.types.activityScope[data.content]
+            }}</span>
+>>>>>>> fc56cd7d (754-sidebar-sticky-issue)
             <span v-else class="italic">Missing</span>
           </template>
 
@@ -499,25 +619,49 @@
 
           <!-- Default Flow Type -->
           <template v-else-if="title === 'default_flow_type'">
+<<<<<<< HEAD
             <span v-if="data.content">{{ props.types.flowType[data.content] }}</span>
+=======
+            <span v-if="data.content">{{
+              props.types.flowType[data.content]
+            }}</span>
+>>>>>>> fc56cd7d (754-sidebar-sticky-issue)
             <span v-else class="italic">Missing</span>
           </template>
 
           <!-- Default Tied Status -->
           <template v-else-if="title === 'default_tied_status'">
+<<<<<<< HEAD
             <span v-if="data.content">{{ props.types.tiedStatus[data.content] }}</span>
+=======
+            <span v-if="data.content">{{
+              props.types.tiedStatus[data.content]
+            }}</span>
+>>>>>>> fc56cd7d (754-sidebar-sticky-issue)
             <span v-else class="italic">Missing</span>
           </template>
 
           <!-- Capital Spend -->
           <template v-else-if="title === 'capital_spend'">
+<<<<<<< HEAD
             <span v-if="data.content.toString()">{{ data.content.toString() }}%</span>
+=======
+            <span v-if="data.content.toString()"
+              >{{ data.content.toString() }}%</span
+            >
+>>>>>>> fc56cd7d (754-sidebar-sticky-issue)
             <span v-else class="italic">Missing</span>
           </template>
 
           <!-- Default Finance Type -->
           <template v-else-if="title === 'default_finance_type'">
+<<<<<<< HEAD
             <span v-if="data.content"> {{ props.types.financeType[data.content] }}</span>
+=======
+            <span v-if="data.content">
+              {{ props.types.financeType[data.content] }}</span
+            >
+>>>>>>> fc56cd7d (754-sidebar-sticky-issue)
             <span v-else class="italic">Missing</span>
           </template>
 
@@ -531,12 +675,21 @@
 </template>
 
 <script setup lang="ts">
+<<<<<<< HEAD
 import { defineProps, inject } from "vue";
 import { useToggle } from "@vueuse/core";
 import moment from "moment";
 import axios from "axios";
 
 import { activityCoreElements } from "Composable/coreElements";
+=======
+import { defineProps, inject } from 'vue';
+import { useToggle } from '@vueuse/core';
+import moment from 'moment';
+import axios from 'axios';
+
+import { activityCoreElements } from 'Composable/coreElements';
+>>>>>>> fc56cd7d (754-sidebar-sticky-issue)
 
 //components
 import {
@@ -560,6 +713,7 @@ import {
   Tag,
   TitleElement,
   Transactions,
+<<<<<<< HEAD
 } from "Activity/elements/Index";
 
 import Btn from "Components/buttons/Link.vue";
@@ -567,6 +721,15 @@ import Status from "Components/status/ElementStatus.vue";
 import HoverText from "Components/HoverText.vue";
 import Modal from "Components/PopupModal.vue";
 import BtnComponent from "Components/ButtonComponent.vue";
+=======
+} from 'Activity/elements/Index';
+
+import Btn from 'Components/buttons/Link.vue';
+import Status from 'Components/status/ElementStatus.vue';
+import HoverText from 'Components/HoverText.vue';
+import Modal from 'Components/PopupModal.vue';
+import BtnComponent from 'Components/ButtonComponent.vue';
+>>>>>>> fc56cd7d (754-sidebar-sticky-issue)
 
 // toggle state for modal popup
 let [deleteValue, deleteToggle] = useToggle();
@@ -610,8 +773,9 @@ interface ToastDataTypeface {
   type: boolean;
   visibility: boolean;
 }
-const toastData = inject("toastData") as ToastDataTypeface;
+const toastData = inject('toastData') as ToastDataTypeface;
 
+<<<<<<< HEAD
 let layout = "basis-6/12";
 if (props.width === "full") {
   layout = "basis-full";
@@ -619,11 +783,26 @@ if (props.width === "full") {
 
 function formatDate(date: Date) {
   return moment(date).format("LL");
+=======
+let layout = 'basis-6/12';
+if (props.width === 'full') {
+  layout = 'basis-full';
+}
+
+function formatDate(date: Date) {
+  return moment(date).format('LL');
+>>>>>>> fc56cd7d (754-sidebar-sticky-issue)
 }
 
 function roundFloat(num: string) {
   return parseFloat(num).toFixed(2);
 }
+const deleteActivityElement = () => {
+  deleteValue.value = true;
+  window.scrollTo(0, 0);
+
+  
+};
 
 function deleteElement(id, element) {
   deleteValue.value = false;
@@ -644,7 +823,8 @@ function deleteElement(id, element) {
       }
     })
     .catch(() => {
-      toastData.message = "Couldn't delete the activity title due to system error.";
+      toastData.message =
+        "Couldn't delete the activity title due to system error.";
       toastData.type = false;
       toastData.visibility = true;
     });

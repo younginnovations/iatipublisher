@@ -2,10 +2,13 @@ import $ from 'jquery';
 import jQuery from 'jquery';
 import 'select2';
 
+// window.onbeforeunload = function () {
+//   window.scrollTo(0, 0);
+// };
 jQuery(function () {
-  $(function () {
-    $('html').scrollTop(0);
-  });
+  // $(function () {
+  //   $('html').scrollTop(0);
+  // });
   $('body').on('click', '#hamburger', () => {
     $('#nav-list').toggleClass('nav-active');
     $('#hamburger').toggleClass('active');
