@@ -503,7 +503,6 @@ class UserService
         foreach ($errors as $field => $error) {
             if (in_array($field, array_keys($mapper[$type]))) {
                 $errors[$mapper[$type][$field]] = $error;
-                unset($errors[$field]);
             }
         }
 
