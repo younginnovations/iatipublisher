@@ -57,7 +57,8 @@
             <a
               target="_blank"
               rel="noopener noreferrer"
-              href="https://www.iatiregistry.org/register_publisher/"
+              href="/organisation"
+              @click="triggerModel"
               >Publish your Organisation Data</a
             >
           </p>
@@ -144,7 +145,8 @@
             <a
               target="_blank"
               rel="noopener noreferrer"
-              href="https://www.iatiregistry.org/register_publisher/"
+              href="/organisation"
+              @click="triggerModel"
               >Publish your Organisation Data</a
             >
           </p>
@@ -199,3 +201,8 @@
     </div>
   </div>
 </template>
+<script lang="ts" setup>
+function triggerModel() {
+  localStorage.setItem('openAddModel', 'true');
+}
+</script>

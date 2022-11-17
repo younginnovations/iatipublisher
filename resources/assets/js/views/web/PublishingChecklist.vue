@@ -32,10 +32,7 @@
             the IATI Registry, IATI Publisher will ask you to provide your
             organisation’s account details.
           </p>
-          <a
-            target="_blank"
-            href="https://www.iatiregistry.org/register_publisher/"
-          >
+          <a target="_blank" href="/register">
             Provide your organisations existing IATI Registry Publisher Account
             details
           </a>
@@ -65,11 +62,8 @@
             Discover what Activity Data is required by the IATI Standard
           </a>
           <br />
-          <a
-            target="_blank"
-            href="https://www.iatiregistry.org/register_publisher/"
-          >
-            Publish you Activity Data
+          <a target="_blank" href="/activities" @click="triggerModel">
+            Publish your Activity Data
           </a>
         </article>
         <article class="py-4 sm:py-6">
@@ -137,11 +131,8 @@
             Discover what Activity Data is required by the IATI Standard
           </a>
           <br />
-          <a
-            target="_blank"
-            href="https://www.iatiregistry.org/register_publisher/"
-          >
-            Publish you Activity Data
+          <a target="_blank" href="/activities" @click="triggerModel">
+            Publish your Activity Data
           </a>
         </article>
         <article class="py-4 sm:py-6">
@@ -269,3 +260,8 @@
     </div>
   </div>
 </template>
+<script lang="ts" setup>
+function triggerModel() {
+  localStorage.setItem('openAddModel', 'true');
+}
+</script>
