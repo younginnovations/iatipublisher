@@ -121,11 +121,12 @@ class IatiRegisterController extends Controller
             }
 
             $publisherCheck = $this->userService->checkPublisher($postData, false);
+            $identifierCheck = $this->userService->checkIATIIdentifier($postData['identifier'], false);
 
-            if (!empty($publisherCheck)) {
+            if (!empty($publisherCheck) || !empty($identifierCheck)) {
                 return response()->json([
                     'success'         => false,
-                    'errors'          => $this->userService->mapError('publisher', $publisherCheck),
+                    'errors'          => array_merge($this->userService->mapError('publisher', $publisherCheck), $this->userService->mapError('publisher', $identifierCheck)),
                 ]);
             }
 
@@ -242,21 +243,18 @@ class IatiRegisterController extends Controller
             }
 
             $publisherCheck = $this->userService->checkPublisher($postData, false);
+            $identifierCheck = $this->userService->checkIATIIdentifier($postData['identifier'], false);
             $userCheck = $this->userService->checkUser($postData, false);
-
-            logger()->error('publisherCheck' . json_encode($publisherCheck));
-            logger()->error('userCheck' . json_encode($userCheck));
+            $emailCheck = $this->userService->checkUserEmail($postData['email'], false);
 
             if (!empty($publisherCheck) || !empty($userCheck)) {
                 return response()->json([
                     'success'         => false,
-                    'errors'          => array_merge($publisherCheck, $userCheck),
+                    'errors'          => array_merge($publisherCheck, $userCheck, $identifierCheck, $emailCheck),
                 ]);
             }
 
             $user = $this->create($postData);
-
-            logger()->error('user' . json_encode($user));
 
             if (!$user['success']) {
                 return response()->json([
@@ -306,7 +304,6 @@ class IatiRegisterController extends Controller
             if (Arr::get($iati_user, 'success', false) && Arr::get($api_token, 'success', false) && Arr::get($publisher, 'success', false)) {
                 $user = $this->userService->registerNewUser($data);
             } else {
-                // logger()->error();
                 return [
                     'success' => false,
                     'errors' => array_merge(

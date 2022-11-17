@@ -112,6 +112,8 @@
                 />
                 <textarea
                   v-if="field.type === 'textarea'"
+                  v-model="formData[field.name]"
+                  :placeholder="field.placeholder"
                   :class="{
                     'error_input form__input ': errorData[field.name],
                     'form__input ': !errorData[field.name],
@@ -401,7 +403,7 @@ export default defineComponent({
             hover_text:
               "Select the agency in your country where your organisation is registered. If you do not know this information please email <a href='mailto:support@iatistandard.org'>support@iatistandard.org</a>",
             type: "select",
-            options: props.types.registrationAgency,
+            options: registration_agency,
             class: "mb-4 lg:mb-2 relative",
             help_text: "",
           },

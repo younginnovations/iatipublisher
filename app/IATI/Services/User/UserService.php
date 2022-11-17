@@ -131,7 +131,7 @@ class UserService
     }
 
     /**
-     * Create User and Publisher In Iati Registry.
+     * Check publisher id in iati registry.
      *
      * @param array $data
      * @param bool $exists
@@ -166,20 +166,66 @@ class UserService
         $response = json_decode($res->getBody()->getContents())->result;
 
         if ($exists) {
-            if ($data['publisher_name'] !== $response->title) {
-                $errors['publisher_name'] = ['Publisher Name doesn\'t match your IATI Registry information.'];
+            if ($data['publisher_id'] !== $response->title) {
+                $errors['publisher_id'] = ['Publisher Name doesn\'t match your IATI Registry information.'];
             }
 
             if ($data['registration_agency'] . '-' . $data['registration_number'] !== $response->publisher_iati_id) {
                 $errors['identifier'] = ['Publisher IATI ID doesn\'t match your IATI Registry information.'];
             }
         } else {
-            if ($data['publisher_name'] === $response->title) {
-                $errors['publisher_name'] = ['Publisher Name already exists in IATI Registry.'];
+            if ($data['publisher_id'] === $response->title) {
+                $errors['publisher_id'] = ['Publisher ID already exists in IATI Registry.'];
             }
 
             if ($data['registration_agency'] . '-' . $data['registration_number'] === $response->publisher_iati_id) {
                 $errors['identifier'] = ['Publisher IATI ID already exists in IATI Registry.'];
+            }
+        }
+
+        return $errors;
+    }
+
+    /**
+     * Create User and Publisher In Iati Registry.
+     *
+     * @param string $data
+     *
+     * @return array|bool
+     */
+    public function checkIATIIdentifier(string $identifier): array
+    {
+        $clientConfig = ['base_uri' => env('IATI_API_ENDPOINT')];
+        $requestConfig = [
+            'http_errors' => false,
+            'query'       => ['q' => $identifier ?? '', 'all_fields' => true, 'include_extras' => true],
+        ];
+
+        if (env('APP_ENV') !== 'production') {
+            $clientConfig['headers']['X-CKAN-API-Key'] = env('IATI_API_KEY');
+            $requestConfig['auth'] = [env('IATI_USERNAME'), env('IATI_PASSWORD')];
+        }
+
+        $client = new Client($clientConfig);
+        $res = $client->request('GET', env('IATI_API_ENDPOINT') . '/action/organization_list', $requestConfig);
+        $errors = [];
+
+        if ($res->getStatusCode() === 404) {
+            $errors['error'] = ['Error occurred while trying to check user email.'];
+
+            return $errors;
+        }
+
+        $result = json_decode($res->getBody()->getContents())->result;
+
+        if (!empty($result)) {
+            foreach ($result as $publisher) {
+                if ($publisher->publisher_iati_id === $identifier) {
+                    return [
+                        'identifier' => [
+                            0 => 'IATI Organizational Identifier already exists in IATI Registry.', ],
+                    ];
+                }
             }
         }
 
@@ -228,17 +274,58 @@ class UserService
                 $errors['username'] = ['User with this name does not exists in IATI Registry.'];
             }
 
-            if ($data['contact_email'] !== $response->email) {
-                $errors['contact_email'] = ['User with this email does not exist in IATI Registry.'];
+            if ($data['email'] !== $response->email) {
+                $errors['email'] = ['User with this email does not exist in IATI Registry.'];
             }
         } else {
             if ($data['username'] === $response->name) {
                 $errors['username'] = ['Publisher Name already exists IATI Registry.'];
             }
 
-            if ($data['contact_email'] === $response->email) {
-                $errors['contact_email'] = ['Publisher IATI ID already exists in IATI Registry.'];
+            if ($data['email'] === $response->email) {
+                $errors['email'] = ['Publisher IATI ID already exists in IATI Registry.'];
             }
+        }
+
+        return $errors;
+    }
+
+    /**
+     * Create User and Publisher In Iati Registry.
+     *
+     * @param array $email
+     *
+     * @return array|bool
+     */
+    public function checkUserEmail(string $email): array|bool
+    {
+        $clientConfig = ['base_uri' => env('IATI_API_ENDPOINT')];
+        $requestConfig = [
+            'http_errors' => false,
+            'query'       => ['email' => $email ?? ''],
+        ];
+
+        if (env('APP_ENV') !== 'production') {
+            $clientConfig['headers']['X-CKAN-API-Key'] = env('IATI_API_KEY');
+            $requestConfig['auth'] = [env('IATI_USERNAME'), env('IATI_PASSWORD')];
+        }
+
+        $client = new Client($clientConfig);
+        $res = $client->request('GET', env('IATI_API_ENDPOINT') . '/action/user_list', $requestConfig);
+        $errors = [];
+
+        if ($res->getStatusCode() === 404) {
+            $errors['error'] = ['Error occurred while trying to check user email.'];
+
+            return $errors;
+        }
+
+        $response = json_decode($res->getBody()->getContents())->result;
+
+        $errors = [];
+
+        if (!empty($response)) {
+            $errors['email'] = ['User with this email does not exist in IATI Registry.'];
         }
 
         return $errors;
@@ -258,7 +345,7 @@ class UserService
             'http_errors' => false,
             'form_params'       => [
                 'name' => $data['username'] ?? '',
-                'email' => $data['contact_email'] ?? '',
+                'email' => $data['email'] ?? '',
                 'password' => $data['password'] ?? '',
             ],
         ];
@@ -271,8 +358,6 @@ class UserService
         $client = new Client($clientConfig);
         $res = $client->request('POST', env('IATI_API_ENDPOINT') . '/action/user_create', $requestConfig);
         $response = json_decode($res->getBody()->getContents());
-
-        logger()->error(json_encode($response));
 
         if ($response->success) {
             return [
@@ -313,8 +398,6 @@ class UserService
         $client = new Client($clientConfig);
         $res = $client->request('POST', env('IATI_API_ENDPOINT') . '/action/api_token_create', $requestConfig);
         $response = json_decode($res->getBody()->getContents());
-
-        logger()->error(json_encode($response));
 
         if ($response->success) {
             return [
@@ -370,16 +453,12 @@ class UserService
         $res = $client->request('POST', env('IATI_API_ENDPOINT') . '/action/organization_create', $requestConfig);
         $response = json_decode($res->getBody()->getContents());
 
-        logger()->error(json_encode($response));
-
         if ($response->success) {
             return [
                 'success' => true,
                 'token' => $response->result,
             ];
         }
-
-        logger()->error('publisher creation error' . json_encode($response));
 
         return [
             'success' => false,
@@ -397,12 +476,10 @@ class UserService
      */
     public function mapError($type, $errors): array
     {
-        logger()->error('mapped error1' . json_encode($errors));
-
         $mapper = [
             'user' => [
                 'name' => 'username',
-                'email' => 'contact_email',
+                'contact_email' => 'email',
                 'password' => 'password',
             ],
             'publisher' => [
@@ -429,8 +506,6 @@ class UserService
                 unset($errors[$field]);
             }
         }
-
-        logger()->error('mapped error' . json_encode($errors));
 
         return $errors;
     }
