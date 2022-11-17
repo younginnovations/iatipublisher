@@ -3,6 +3,9 @@ import jQuery from 'jquery';
 import 'select2';
 
 jQuery(function () {
+  // $(function () {
+  //   $('html').scrollTop(0);
+  // });
   $('body').on('click', '#hamburger', () => {
     $('#nav-list').toggleClass('nav-active');
     $('#hamburger').toggleClass('active');
@@ -52,4 +55,3 @@ if (submitBtnElement.length > 0) {
     $(this).closest('form').trigger('submit');
   });
 }
-
