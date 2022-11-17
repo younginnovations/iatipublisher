@@ -34,13 +34,23 @@
 
 // activity detail
 .activities__content--element > div {
-  .edit-button {
+  .edit-button,
+  .delete-button {
     visibility: hidden;
     opacity: 0;
     transition: all 0.4s ease;
   }
 
-  &:hover .edit-button {
+  .edit-button {
+    order: 2;
+  }
+
+  .delete-button {
+    order: 1;
+  }
+
+  &:hover .edit-button,
+  &:hover .delete-button {
     visibility: visible;
     opacity: 1;
   }
@@ -78,7 +88,7 @@
   }
 
   td:nth-child(2) {
-    @apply flex flex-col text-xs text-n-50 pl-2;
+    @apply flex flex-col pl-2 text-xs text-n-50;
   }
   .multiline {
     @apply items-start;

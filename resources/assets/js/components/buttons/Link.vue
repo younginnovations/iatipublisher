@@ -3,7 +3,11 @@
     <svg-vue v-if="icon" class="mr-0.5 text-base" :icon="icon"></svg-vue>
     <span class="whitespace-nowrap">{{ text }}</span>
   </a>
-  <span v-else :class="classes" class="text-bluecoral">
+  <span
+    v-else
+    :class="classes"
+    class="cursor-pointer text-bluecoral transition-all ease-linear hover:text-spring-50"
+  >
     <svg-vue v-if="icon" class="mr-0.5 text-base" :icon="icon"></svg-vue>
     <span class="whitespace-nowrap">{{ text }}</span>
   </span>

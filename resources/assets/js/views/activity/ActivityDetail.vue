@@ -231,8 +231,8 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, reactive, toRefs, provide } from "vue";
-import { useToggle } from "@vueuse/core";
+import { defineComponent, onMounted, reactive, toRefs, provide, watch } from "vue";
+import { useToggle, watchIgnorable } from "@vueuse/core";
 
 // components
 import { Result } from "./elements/Index";
@@ -446,6 +446,25 @@ export default defineComponent({
       type: false,
     });
 
+    const { ignoreUpdates } = watchIgnorable(toastData, () => undefined, {
+      flush: "sync",
+    });
+    watch(
+      () => toastData.visibility,
+      () => {
+        setTimeout(() => {
+          toastData.visibility = false;
+          ignoreToastUpdate();
+        }, 10000);
+      }
+    );
+
+    const ignoreToastUpdate = () => {
+      ignoreUpdates(() => {
+        toastData.message = "";
+      });
+    };
+
     interface PublishStatusTypeface {
       linked_to_iati: boolean;
       status: string;
@@ -460,6 +479,7 @@ export default defineComponent({
     provide("types", types.value);
     provide("coreCompleted", coreCompleted.value);
     provide("toastMessage", toastMessage);
+    provide("toastData", toastData);
 
     indexStore.dispatch("updateSelectedActivities", [activity.value.id]);
 

@@ -9,6 +9,7 @@ use App\IATI\Services\Activity\ActivityService;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Session;
 
 /**
  * Class ActivityController.
@@ -37,6 +38,8 @@ class ActivityController extends Controller
             if (!$this->activityService->deleteElement($id, $element)) {
                 return response(['status'=>false, 'message' => 'Error has occurred while deleting activity element.']);
             }
+
+            Session::put('success', 'Activity title deleted successfully.');
 
             return response(['status'=>true, 'message' => 'Activity title deleted successfully.']);
         } catch (\Exception $e) {

@@ -1,4 +1,31 @@
 <template>
+  <Modal :modal-active="deleteValue" width="583" @close="deleteToggle">
+    <div class="mb-4">
+      <div class="flex mb-6 title">
+        <svg-vue class="mr-1 mt-0.5 text-lg text-crimson-40" icon="delete" />
+        <b>Delete element</b>
+      </div>
+      <div class="p-4 rounded-lg bg-rose">
+        Are you sure you want to delete this element?
+      </div>
+    </div>
+    <div class="flex justify-end">
+      <div class="inline-flex">
+        <BtnComponent
+          class="px-6 uppercase bg-white"
+          text="Go Back"
+          type=""
+          @click="deleteValue = false"
+        />
+        <BtnComponent
+          class="space"
+          text="Delete"
+          type="primary"
+          @click='deleteElement(activityId, title)'
+        />
+      </div>
+    </div>
+  </Modal>
   <div :class='layout' class='p-3 activities__content--element text-n-50'>
     <div :id='title' class='p-4 bg-white rounded-lg'>
       <div class='flex mb-4'>
@@ -45,16 +72,18 @@
               class='mr-2.5'
             />
           </template>
-          <div v-else>
+          <div v-else class="flex gap-2.5 mr-2.5">
             <Btn
               text='Edit'
               :link='`/activity/${activityId}/${title}`'
-              class='edit-button mr-2.5'
+              class='edit-button'
             />
             <Btn
+              v-if="title !== 'title'"
               text='Delete'
-              v-on:click='deleteElement(activityId, title)'
-              class='delete-button mr-2.5'
+              class='delete-button'
+              icon="delete"
+              @click="deleteValue = true"
             />
           </div>
           <svg-vue
@@ -502,7 +531,8 @@
 </template>
 
 <script setup lang='ts'>
-import { defineProps } from 'vue'
+import { defineProps, inject } from 'vue'
+import { useToggle } from '@vueuse/core';
 import moment from 'moment'
 import axios from 'axios'
 
@@ -535,6 +565,11 @@ import {
 import Btn from 'Components/buttons/Link.vue'
 import Status from 'Components/status/ElementStatus.vue'
 import HoverText from 'Components/HoverText.vue'
+import Modal from 'Components/PopupModal.vue';
+import BtnComponent from 'Components/ButtonComponent.vue';
+
+// toggle state for modal popup
+let [deleteValue, deleteToggle] = useToggle();
 
 const props = defineProps({
   data: {
@@ -569,6 +604,14 @@ const props = defineProps({
   },
 })
 
+// call api for publishing
+interface ToastDataTypeface {
+  message: string;
+  type: boolean;
+  visibility: boolean;
+}
+const toastData = inject("toastData") as ToastDataTypeface;
+
 let layout = 'basis-6/12'
 if (props.width === 'full') {
   layout = 'basis-full'
@@ -583,15 +626,27 @@ function roundFloat(num: string) {
 }
 
 function deleteElement(id, element) {
-  if (confirm('Do you really want to delete?')) {
-    axios
-      .delete(`/api/activity/${id}/${element}`)
-      .then((res) => {
-        console.log(res)
-      })
-      .catch((error) => {
-        console.log(error)
-      })
-  }
+  deleteValue.value = false;
+  axios
+    .delete(`/api/activity/${id}/${element}`)
+    .then((res) => {
+      const response = res.data;
+
+      if(response.status){
+        setTimeout(()=>{
+          location.reload()
+        }, 300)
+      }
+      if(!response.status){
+        toastData.message = response.message;
+        toastData.type = response.status;
+        toastData.visibility = true;
+      }
+    })
+    .catch(() => {
+      toastData.message = "Couldn't delete the activity title due to system error.";
+      toastData.type = false;
+      toastData.visibility = true;
+    })
 }
 </script>
