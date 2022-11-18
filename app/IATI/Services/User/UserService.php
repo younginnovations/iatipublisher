@@ -149,7 +149,6 @@ class UserService
         $clientConfig = ['base_uri' => env('IATI_API_ENDPOINT')];
         $requestConfig = [
             'http_errors' => false,
-            'query'       => ['id' => $data['publisher_id'] ?? ''],
         ];
 
         if (env('APP_ENV') !== 'production') {
@@ -276,11 +275,11 @@ class UserService
             }
         } else {
             if ($data['username'] === $response->name) {
-                $errors['username'] = ['Publisher Name already exists IATI Registry.'];
+                $errors['username'] = ['Username already exists in IATI Registry.'];
             }
 
             if ($data['email'] === $response->email) {
-                $errors['email'] = ['Publisher IATI ID already exists in IATI Registry.'];
+                $errors['email'] = ['User with this email already exists in IATI Registry.'];
             }
         }
 
@@ -505,6 +504,7 @@ class UserService
         foreach ($errors as $field => $error) {
             if (in_array($field, array_keys($mapper[$type]))) {
                 $errors[$mapper[$type][$field]] = $error;
+                unset($errors[$field]);
             }
         }
 

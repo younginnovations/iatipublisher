@@ -819,8 +819,6 @@ export default defineComponent({
      */
     function submitForm() {
       isLoaderVisible.value = true;
-      Object.assign(iatiError,{});
-
       let form = {
         password: encrypt(formData.password, process.env.MIX_ENCRYPTION_KEY ?? ""),
         password_confirmation: encrypt(
@@ -828,6 +826,10 @@ export default defineComponent({
           process.env.MIX_ENCRYPTION_KEY ?? ""
         ),
       };
+
+      for(const err in iatiError){
+        delete iatiError[err];
+      }
 
       axios
         .post("/iati/register", { ...formData, ...form })
@@ -841,7 +843,7 @@ export default defineComponent({
           updateValidationErrors(errors);
           Object.assign(iatiError,errors);
           isLoaderVisible.value = false;
-          registerForm["1"].is_complete = false;
+          registerForm["4"].is_complete = false;
 
           if (response.success) {
             registerForm["4"].is_complete = true;
