@@ -67,7 +67,7 @@
                 Error:
               </p>
               <p class="ml-8 xl:mr-1">
-              <ul class="list-disc	" >
+              <ul class="list-disc" >
               <li v-for="(error, error_key) in iatiError" :key="error_key">
               <span v-if="typeof(error) === 'object'">{{error[0]}}</span>
               <span v-else>{{error}}</span>
