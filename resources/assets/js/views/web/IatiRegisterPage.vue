@@ -61,7 +61,7 @@
               v-if ="Object.keys(iatiError).length>0"
               class="feedback mt-6 border-l-2 border-crimson-50 bg-crimson-10 p-4 text-sm text-n-50 "
             >
-            
+
               <p class="mb-2 flex font-bold">
                 <svg-vue class="mr-2 text-xl" icon="warning" />
                 Error:
@@ -672,18 +672,16 @@ export default defineComponent({
      * Update IATI and system Error
      */
     function updateErrors(errorResponse) {
-      // if(Object.values(errorData).every(value => value === '')){
+      if(Object.values(errorData).every(value => value === '')){
         Object.assign(iatiError,
         typeof(errorResponse) === 'string'? {'error' : errorResponse}: errorResponse);
 
         setTimeout(() => {
           for(const err in iatiError){
-            console.log(err, iatiError[err]);
             delete iatiError[err];
           }
         },15000);
-      // }
-
+      }
     }
 
     /**
@@ -723,7 +721,6 @@ export default defineComponent({
             registerForm["1"].is_complete = true;
             step.value += 1;
           } else {
-            console.log('test',response);
             updateValidationErrors(errors);
             updateErrors(errors);
           }
@@ -772,9 +769,7 @@ export default defineComponent({
           }
         })
         .catch((error) => {
-          const { errors } = error.response.data;
-          updateErrors(errors);
-
+          updateErrors(error);
           isLoaderVisible.value = false;
         });
     }
@@ -814,9 +809,7 @@ export default defineComponent({
           }
         })
         .catch((error) => {
-          const { errors } = error.response.data;
-          updateValidationErrors(errors);
-          updateErrors(errors);
+          updateErrors(error);
           isLoaderVisible.value = false;
         });
     }
@@ -826,8 +819,6 @@ export default defineComponent({
      */
     function submitForm() {
       isLoaderVisible.value = true;
-      Object.assign(iatiError,{});
-
       let form = {
         password: encrypt(formData.password, process.env.MIX_ENCRYPTION_KEY ?? ""),
         password_confirmation: encrypt(
@@ -835,6 +826,10 @@ export default defineComponent({
           process.env.MIX_ENCRYPTION_KEY ?? ""
         ),
       };
+
+      for(const err in iatiError){
+        delete iatiError[err];
+      }
 
       axios
         .post("/iati/register", { ...formData, ...form })
@@ -848,7 +843,7 @@ export default defineComponent({
           updateValidationErrors(errors);
           Object.assign(iatiError,errors);
           isLoaderVisible.value = false;
-          registerForm["1"].is_complete = false;
+          registerForm["4"].is_complete = false;
 
           if (response.success) {
             registerForm["4"].is_complete = true;
@@ -856,10 +851,7 @@ export default defineComponent({
           }
         })
         .catch((error) => {
-          const { errors } = error.response.data;
-          updateValidationErrors(errors);
-          updateErrors(errors);
-
+          updateErrors(error);
           isLoaderVisible.value = false;
         });
     }
