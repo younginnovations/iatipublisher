@@ -105,7 +105,12 @@ class UserService
             'publisher_type'      => $data['publisher_type'],
             'identifier'          => $data['registration_agency'] . '-' . $data['registration_number'],
             'iati_status'         => 'pending',
-            'reporting_org'       => $data['source'] ? ['secondary_reporter' => ($data['source'] === 'secondary_source' ? '1' : '0')] : null,
+            'reporting_org'       => $data['source'] ? [[
+                'type' => null,
+                'ref' => null,
+                'secondary_reporter' => ($data['source'] === 'secondary_source' ? '1' : '0'),
+                'narrative' => [['narrative' => null, 'language' => null]],
+            ]] : null,
         ]);
 
         $this->settingRepo->store([
@@ -144,7 +149,6 @@ class UserService
         $clientConfig = ['base_uri' => env('IATI_API_ENDPOINT')];
         $requestConfig = [
             'http_errors' => false,
-            'query'       => ['id' => $data['publisher_id'] ?? ''],
         ];
 
         if (env('APP_ENV') !== 'production') {
@@ -271,11 +275,11 @@ class UserService
             }
         } else {
             if ($data['username'] === $response->name) {
-                $errors['username'] = ['Publisher Name already exists IATI Registry.'];
+                $errors['username'] = ['Username already exists in IATI Registry.'];
             }
 
             if ($data['email'] === $response->email) {
-                $errors['email'] = ['Publisher IATI ID already exists in IATI Registry.'];
+                $errors['email'] = ['User with this email already exists in IATI Registry.'];
             }
         }
 
@@ -424,14 +428,15 @@ class UserService
                 'license_id' => $data['license_id'] ?? '',
                 'name' => $data['publisher_id'] ?? '',
                 'full_name' => $data['fullname'] ?? '',
+                'publisher_country' => $data['country'] ?? '',
                 'state' => 'approval_needed',
                 'publisher_organization_type' => $data['publisher_type'] ?? '',
                 'publisher_url' => $data['publisher_url'] ?? '',
                 'publisher_contact' => $data['address'] ?? '',
                 'publisher_source_type' => $data['source'] ?? '',
                 'image_url' => $data['image_url'] ?? '',
-                'website' => $data['website'] ?? '',
-                'description' => $data['description'] ?? '',
+                'publisher_url' => $data['website'] ?? '',
+                'publisher_description' => $data['description'] ?? '',
                 'record_exclusion' => $data['record_exclusions'] ?? '',
             ],
         ];
@@ -487,8 +492,10 @@ class UserService
                 'publisher_contact' => 'address',
                 'publisher_source_type' => 'source',
                 'image_url' => 'image_url',
-                'website' => 'website',
+                'publisher_url' => 'website',
+                'publisher_description' => 'description',
                 'record_exclusion' => 'record_exclusions',
+                'publisher_country' => 'country',
             ],
         ];
 
@@ -497,6 +504,7 @@ class UserService
         foreach ($errors as $field => $error) {
             if (in_array($field, array_keys($mapper[$type]))) {
                 $errors[$mapper[$type][$field]] = $error;
+                unset($errors[$field]);
             }
         }
 
