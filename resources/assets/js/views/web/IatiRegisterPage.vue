@@ -429,11 +429,11 @@ export default defineComponent({
           publisher_type: {
             label: "Publisher Type",
             name: "publisher_type",
-            placeholder: "Select an Organisation Registration Agency",
+            placeholder: "Select a publisher type ",
             id: "publisher-type",
             required: true,
             hover_text:
-              "Select the agency in your country where your organisation is registered. If you do not know this information please email <a href='mailto:support@iatistandard.org'>support@iatistandard.org</a>",
+              'Select the type that best describes your organisation.  <a href="https://iatistandard.org/en/iati-standard/203/codelists/organisationtype/" target="_blank"> Read more on Organisation types.</a>',
             type: "select",
             options: props.types.publisherType,
             class: "mb-4 lg:mb-2 relative",
@@ -446,7 +446,7 @@ export default defineComponent({
             id: "data-license",
             required: true,
             hover_text:
-              " Select the License under which your data is being published. IATI is an open data standard and requires you to make your data available under an open licence so it can be freely used. One of the most frequently used licenses is Creative Commons Attribution. For more information read: How to license your data.",
+              " Select the License under which your data is being published. IATI is an open data standard and requires you to make your data available under an open licence so it can be freely used. One of the most frequently used licenses is Creative Commons Attribution. <a href='https://iatistandard.org/en/guidance/standard-overview/preparing-your-organisation-data-publication/how-to-license-your-data/' target='_blank' > For more information read: How to license your data.</a>",
             type: "select",
             options: props.types.dataLicense,
             class: "mb-4 lg:mb-2 relative",
@@ -541,7 +541,7 @@ export default defineComponent({
             id: "record-exclusions",
             required: false,
             hover_text:
-              "Does your organisation have an exclusion policy that provide details on what data that it cannot publish? For example an organisation may not be able to publish data because of political sensitivity issues or if information is commercially restricted. Please provide details here about what data your organisation needs to exclude (if any), and a URL to your organisation's exclusion policy (if it has one). For more information read: Information and data you can't publish (exclusions)",
+              "Does your organisation have an exclusion policy that provide details on what data that it cannot publish? For example an organisation may not be able to publish data because of political sensitivity issues or if information is commercially restricted. Please provide details here about what data your organisation needs to exclude (if any), and a URL to your organisation's exclusion policy (if it has one).<a > For more information read: Information and data you can't publish (exclusions)",
             type: "textarea",
             class: "mb-4  col-span-2 lg:mb-6",
           },
