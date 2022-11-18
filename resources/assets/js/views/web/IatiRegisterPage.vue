@@ -59,14 +59,15 @@
             </div>
             <div
               v-if ="Object.keys(iatiError).length>0"
-              class="feedback mt-6 border-l-2 border-crimson-50 bg-crimson-10 p-4 text-sm text-n-50 xl:h-32"
+              class="feedback mt-6 border-l-2 border-crimson-50 bg-crimson-10 p-4 text-sm text-n-50 "
             >
+            
               <p class="mb-2 flex font-bold">
                 <svg-vue class="mr-2 text-xl" icon="warning" />
                 Error:
               </p>
               <p class="ml-8 xl:mr-1">
-              <ul >
+              <ul class="list-disc	" >
               <li v-for="(error, error_key) in iatiError" :key="error_key">
               <span v-if="typeof(error) === 'object'">{{error[0]}}</span>
               <span v-else>{{error}}</span>
@@ -541,7 +542,7 @@ export default defineComponent({
             id: "record-exclusions",
             required: false,
             hover_text:
-              "Does your organisation have an exclusion policy that provide details on what data that it cannot publish? For example an organisation may not be able to publish data because of political sensitivity issues or if information is commercially restricted. Please provide details here about what data your organisation needs to exclude (if any), and a URL to your organisation's exclusion policy (if it has one).<a > For more information read: Information and data you can't publish (exclusions)",
+              "Does your organisation have an exclusion policy that provide details on what data that it cannot publish? For example an organisation may not be able to publish data because of political sensitivity issues or if information is commercially restricted. Please provide details here about what data your organisation needs to exclude (if any), and a URL to your organisation's exclusion policy (if it has one).<a href='https://iatistandard.org/en/guidance/standard-overview/preparing-your-organisation-data-publication/information-and-data-you-cant-publish-exclusions/' > For more information read: Information and data you can't publish (exclusions)</a>",
             type: "textarea",
             class: "mb-4  col-span-2 lg:mb-6",
           },
