@@ -105,7 +105,12 @@ class UserService
             'publisher_type'      => $data['publisher_type'],
             'identifier'          => $data['registration_agency'] . '-' . $data['registration_number'],
             'iati_status'         => 'pending',
-            'reporting_org'       => $data['source'] ? ['secondary_reporter' => ($data['source'] === 'secondary_source' ? '1' : '0')] : null,
+            'reporting_org'       => $data['source'] ? [[
+                'type' => null,
+                'ref' => null,
+                'secondary_reporter' => ($data['source'] === 'secondary_source' ? '1' : '0'),
+                'narrative' => [['narrative' => null, 'language' => null]],
+            ]] : null,
         ]);
 
         $this->settingRepo->store([
@@ -430,8 +435,8 @@ class UserService
                 'publisher_contact' => $data['address'] ?? '',
                 'publisher_source_type' => $data['source'] ?? '',
                 'image_url' => $data['image_url'] ?? '',
-                'website' => $data['website'] ?? '',
-                'description' => $data['description'] ?? '',
+                'publisher_url' => $data['website'] ?? '',
+                'publisher_description' => $data['description'] ?? '',
                 'record_exclusion' => $data['record_exclusions'] ?? '',
             ],
         ];

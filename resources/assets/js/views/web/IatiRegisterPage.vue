@@ -672,7 +672,7 @@ export default defineComponent({
      * Update IATI and system Error
      */
     function updateErrors(errorResponse) {
-      // if(Object.values(errorData).every(value => value === '')){
+      if(Object.values(errorData).every(value => value === '')){
         Object.assign(iatiError,
         typeof(errorResponse) === 'string'? {'error' : errorResponse}: errorResponse);
 
@@ -682,8 +682,7 @@ export default defineComponent({
             delete iatiError[err];
           }
         },15000);
-      // }
-
+      }
     }
 
     /**
@@ -772,9 +771,7 @@ export default defineComponent({
           }
         })
         .catch((error) => {
-          const { errors } = error.response.data;
-          updateErrors(errors);
-
+          updateErrors(error);
           isLoaderVisible.value = false;
         });
     }
@@ -814,9 +811,7 @@ export default defineComponent({
           }
         })
         .catch((error) => {
-          const { errors } = error.response.data;
-          updateValidationErrors(errors);
-          updateErrors(errors);
+          updateErrors(error);
           isLoaderVisible.value = false;
         });
     }
@@ -856,10 +851,7 @@ export default defineComponent({
           }
         })
         .catch((error) => {
-          const { errors } = error.response.data;
-          updateValidationErrors(errors);
-          updateErrors(errors);
-
+          updateErrors(error);
           isLoaderVisible.value = false;
         });
     }
