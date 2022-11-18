@@ -61,7 +61,6 @@
               v-if ="Object.keys(iatiError).length>0"
               class="feedback mt-6 border-l-2 border-crimson-50 bg-crimson-10 p-4 text-sm text-n-50 xl:h-32"
             >
-            {{typeof(iatiError)}}
               <p class="mb-2 flex font-bold">
                 <svg-vue class="mr-2 text-xl" icon="warning" />
                 Error:

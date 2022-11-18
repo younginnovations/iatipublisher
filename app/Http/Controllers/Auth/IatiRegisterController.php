@@ -233,16 +233,16 @@ class IatiRegisterController extends Controller
                 ]);
             }
 
-            $user = $this->create($postData);
+            $createUser = $this->create($postData);
 
-            if (!$user['success']) {
+            if (!$createUser['success']) {
                 return response()->json([
                     'success'         => false,
                     'errors'          => $user['errors'],
                 ]);
             }
 
-            event(new Registered($user));
+            event(new Registered($createUser['user']));
             Session::put('role_id', app(Role::class)->getOrganizationAdminId());
 
             return response()->json(['success' => true, 'message' => 'User registered successfully']);
