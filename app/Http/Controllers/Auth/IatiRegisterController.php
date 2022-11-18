@@ -238,7 +238,7 @@ class IatiRegisterController extends Controller
             if (!$createUser['success']) {
                 return response()->json([
                     'success'         => false,
-                    'errors'          => $user['errors'],
+                    'errors'          => $createUser['errors'],
                 ]);
             }
 

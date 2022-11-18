@@ -61,7 +61,7 @@
               v-if ="Object.keys(iatiError).length>0"
               class="feedback mt-6 border-l-2 border-crimson-50 bg-crimson-10 p-4 text-sm text-n-50 "
             >
-            
+
               <p class="mb-2 flex font-bold">
                 <svg-vue class="mr-2 text-xl" icon="warning" />
                 Error:
@@ -678,7 +678,6 @@ export default defineComponent({
 
         setTimeout(() => {
           for(const err in iatiError){
-            console.log(err, iatiError[err]);
             delete iatiError[err];
           }
         },15000);
@@ -722,7 +721,6 @@ export default defineComponent({
             registerForm["1"].is_complete = true;
             step.value += 1;
           } else {
-            console.log('test',response);
             updateValidationErrors(errors);
             updateErrors(errors);
           }

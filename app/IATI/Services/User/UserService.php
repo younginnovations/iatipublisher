@@ -429,6 +429,7 @@ class UserService
                 'license_id' => $data['license_id'] ?? '',
                 'name' => $data['publisher_id'] ?? '',
                 'full_name' => $data['fullname'] ?? '',
+                'publisher_country' => $data['country'] ?? '',
                 'state' => 'approval_needed',
                 'publisher_organization_type' => $data['publisher_type'] ?? '',
                 'publisher_url' => $data['publisher_url'] ?? '',
@@ -492,8 +493,10 @@ class UserService
                 'publisher_contact' => 'address',
                 'publisher_source_type' => 'source',
                 'image_url' => 'image_url',
-                'website' => 'website',
+                'publisher_url' => 'website',
+                'publisher_description' => 'description',
                 'record_exclusion' => 'record_exclusions',
+                'publisher_country' => 'country',
             ],
         ];
 
