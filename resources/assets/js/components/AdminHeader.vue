@@ -48,6 +48,7 @@
           <li
             v-for="(menu, index) in data.menus"
             :key="index"
+            class="group"
             :class="data.menuNavLiClasses"
           >
             <a
@@ -59,6 +60,23 @@
             >
               <span class="">{{ menu.name }}</span>
             </a>
+            <div
+              v-if="menu.permalink === '/import'"
+              class="button__dropdown invisible absolute left-4 top-full z-10 w-56 -translate-y-3 bg-white p-2 text-left opacity-0 shadow-dropdown transition-all duration-300 group-hover:visible group-hover:translate-y-0 group-hover:opacity-100"
+            >
+              <ul class="flex-col">
+                <li>
+                  <a href="#" :class="liClass" @click="modalValue = true"
+                    >Add activity manually</a
+                  >
+                </li>
+                <li>
+                  <a href="/import" :class="liClass"
+                    >Import activities from .csv/.xml</a
+                  >
+                </li>
+              </ul>
+            </div>
           </li>
         </ul>
       </nav>
@@ -88,13 +106,6 @@
           <svg-vue icon="search" />
           <span v-if="spinner" class="spinner" />
         </div>
-        <button
-          v-if="superAdmin"
-          class="button secondary-btn mr-3.5 font-bold"
-          @click="modalValue = true"
-        >
-          <svg-vue icon="add" />
-        </button>
         <button class="button secondary-btn dropdown-btn">
           <svg-vue icon="user-profile" />
           <svg-vue class="dropdown__arrow" icon="dropdown-arrow" />
@@ -166,7 +177,7 @@ const data = reactive({
   languageNavLiClasses: 'flex',
   languageNavAnchorClasses:
     'flex text-white items-center uppercase nav__pointer-hover px-1.5',
-  menuNavLiClasses: 'flex px-4',
+  menuNavLiClasses: 'flex px-4 relative',
   menuNavAnchorClasses:
     'flex text-white items-center uppercase nav__pointer-hover',
   languages: [
@@ -203,12 +214,14 @@ const data = reactive({
       active: false,
     },
     {
-      name: 'Import Activity',
+      name: 'Add / Import Activity',
       permalink: '/import',
       active: false,
     },
   ],
 });
+const liClass =
+  'block p-2.5 text-n-40 text-tiny uppercase leading-[1.5] font-bold hover:!text-n-50 hover:bg-n-10';
 const [modalValue, modalToggle] = useToggle();
 function toast(message: string, type: boolean) {
   toastVisibility.value = true;
