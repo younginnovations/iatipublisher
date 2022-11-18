@@ -71,28 +71,6 @@ class IatiRegisterController extends Controller
     }
 
     /**
-     * Get a validator for an incoming registration request.
-     *
-     * @param array $data
-     *
-     * @return \Illuminate\Contracts\Validation\Validator
-     */
-    protected function validator(array $data): \Illuminate\Contracts\Validation\Validator
-    {
-        return Validator::make($data, [
-            'username'              => ['required', 'string', 'max:255', 'unique:users,username'],
-            'full_name'             => ['required', 'string', 'max:255'],
-            'email'                 => ['required', 'string', 'email', 'max:255', 'unique:users,email'],
-            'contact_email'         => ['required', 'string', 'email', 'max:255', 'unique:users,email'],
-            'publisher_id'          => ['required', 'string', 'max:255', 'unique:organizations,publisher_id'],
-            'publisher_name'        => ['required', 'string', 'max:255', 'unique:organizations,publisher_name'],
-            'identifier'            => ['required', 'string', 'max:255', 'unique:organizations,identifier'],
-            'password'              => ['required', 'string', 'min:6', 'confirmed'],
-            'password_confirmation' => ['required', 'string', 'min:6'],
-        ]);
-    }
-
-    /**
      * @param Request $request
      *
      * @return JsonResponse|void
@@ -114,13 +92,14 @@ class IatiRegisterController extends Controller
                 'publisher_type'      => ['required'],
                 'license_id'          => ['required'],
                 'description'         => ['sometimes'],
+                'image_url'             => ['nullable', 'url'],
             ]);
 
             if ($validator->fails()) {
                 return response()->json(['success' => false, 'errors' => $validator->errors()]);
             }
 
-            $publisherCheck = $this->userService->checkPublisher($postData, false);
+            $publisherCheck = $this->userService->checkPublisher($postData['publisher_id'], false);
             $identifierCheck = $this->userService->checkIATIIdentifier($postData['identifier'], false);
 
             if (!empty($publisherCheck) || !empty($identifierCheck)) {
@@ -146,7 +125,7 @@ class IatiRegisterController extends Controller
         } catch (Exception $e) {
             logger()->error($e->getMessage());
 
-            return response()->json(['success' => false, 'error' => 'Error has occurred while verifying the publisher.']);
+            return response()->json(['success' => false, 'errors' => 'Error has occurred while verifying the publisher.']);
         }
     }
 
@@ -166,7 +145,7 @@ class IatiRegisterController extends Controller
             $request['password_confirmation'] = isset($request['password_confirmation']) && $request['password_confirmation'] ? decryptString($request['password_confirmation'], env('MIX_ENCRYPTION_KEY')) : '';
 
             $validator = Validator::make($request->all(), [
-                'contact_email' => ['required', 'string', 'email', 'regex:/^([a-z0-9\+_\-]+)(\.[a-z0-9\+_\-]+)*@([a-z0-9\-]+\.)+[a-z]{2,6}$/ix', 'max:255', 'unique:users,email'],
+                'contact_email' => ['required', 'string', 'email', 'regex:/^([a-z0-9\+_\-]+)(\.[a-z0-9\+_\-]+)*@([a-z0-9\-]+\.)+[a-z]{2,6}$/ix', 'max:255'],
                 'website' => ['nullable', 'url'],
             ]);
 
@@ -242,7 +221,7 @@ class IatiRegisterController extends Controller
                 return response()->json(['success' => false, 'errors' => $validator->errors()]);
             }
 
-            $publisherCheck = $this->userService->checkPublisher($postData, false);
+            $publisherCheck = $this->userService->checkPublisher($postData['publisher_id'], false);
             $identifierCheck = $this->userService->checkIATIIdentifier($postData['identifier'], false);
             $userCheck = $this->userService->checkUser($postData, false);
             $emailCheck = $this->userService->checkUserEmail($postData['email'], false);
@@ -333,9 +312,9 @@ class IatiRegisterController extends Controller
             $types = [
                 'country' => getCodeListArray('Country', 'OrganizationArray'),
                 'registrationAgency' => getCodeListArray('OrganizationRegistrationAgency', 'OrganizationArray'),
-                'publisherType' => getCodeList('PublisherType', 'Activity'),
-                'dataLicense' => getCodeList('DataLicense', 'Activity'),
-                'source' => getCodeList('Source', 'Activity'),
+                'publisherType' => getCodeList('OrganizationType', 'Organization'),
+                'dataLicense' => getCodeList('DataLicense', 'Activity', false),
+                'source' => getCodeList('Source', 'Activity', false),
             ];
 
             return view('web.iati_register', compact('types'));

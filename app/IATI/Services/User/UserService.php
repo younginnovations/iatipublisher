@@ -102,17 +102,10 @@ class UserService
             'country'             => $data['country'] ?? null,
             'registration_agency' => $data['registration_agency'],
             'registration_number' => $data['registration_number'],
+            'publisher_type'      => $data['publisher_type'],
             'identifier'          => $data['registration_agency'] . '-' . $data['registration_number'],
             'iati_status'         => 'pending',
-            'reporting_org'       => $data['source'] ? ['secondary_reporter' => ($data['source'] === 'secondary')] : null,
-        ]);
-
-        $user = $this->userRepo->store([
-            'username'        => $data['username'],
-            'full_name'       => $data['full_name'],
-            'email'           => $data['email'],
-            'organization_id' => $organization['id'],
-            'password'        => Hash::make($data['password']),
+            'reporting_org'       => $data['source'] ? ['secondary_reporter' => ($data['source'] === 'secondary_source' ? '1' : '0')] : null,
         ]);
 
         $this->settingRepo->store([
@@ -125,6 +118,14 @@ class UserService
             ],
         ]);
 
+        $user = $this->userRepo->store([
+            'username'        => $data['username'],
+            'full_name'       => $data['full_name'],
+            'email'           => $data['email'],
+            'organization_id' => $organization['id'],
+            'password'        => Hash::make($data['password']),
+        ]);
+
         User::sendEmail();
 
         return $user;
@@ -133,12 +134,12 @@ class UserService
     /**
      * Check publisher id in iati registry.
      *
-     * @param array $data
+     * @param string $publisher_id
      * @param bool $exists
      *
      * @return array
      */
-    public function checkPublisher(array $data, bool $exists = true): array
+    public function checkPublisher(string $publisher_id, bool $exists = true): array
     {
         $clientConfig = ['base_uri' => env('IATI_API_ENDPOINT')];
         $requestConfig = [
@@ -152,7 +153,7 @@ class UserService
         }
 
         $client = new Client($clientConfig);
-        $res = $client->request('GET', env('IATI_API_ENDPOINT') . '/action/organization_show', $requestConfig);
+        $res = $client->request('GET', env('IATI_API_ENDPOINT') . '/action/organization_list', $requestConfig);
         $errors = [];
 
         if ($res->getStatusCode() === 404) {
@@ -165,22 +166,12 @@ class UserService
 
         $response = json_decode($res->getBody()->getContents())->result;
 
-        if ($exists) {
-            if ($data['publisher_id'] !== $response->title) {
-                $errors['publisher_id'] = ['Publisher Name doesn\'t match your IATI Registry information.'];
-            }
+        if (!in_array($publisher_id, $response) && $exists) {
+            $errors['publisher_id'] = ['Publisher ID doesn\'t match your IATI Registry information.'];
+        }
 
-            if ($data['registration_agency'] . '-' . $data['registration_number'] !== $response->publisher_iati_id) {
-                $errors['identifier'] = ['Publisher IATI ID doesn\'t match your IATI Registry information.'];
-            }
-        } else {
-            if ($data['publisher_id'] === $response->title) {
-                $errors['publisher_id'] = ['Publisher ID already exists in IATI Registry.'];
-            }
-
-            if ($data['registration_agency'] . '-' . $data['registration_number'] === $response->publisher_iati_id) {
-                $errors['identifier'] = ['Publisher IATI ID already exists in IATI Registry.'];
-            }
+        if (in_array($publisher_id, $response) && !$exists) {
+            $errors['publisher_id'] = ['Publisher ID already exists in IATI Registry.'];
         }
 
         return $errors;
@@ -223,7 +214,8 @@ class UserService
                 if ($publisher->publisher_iati_id === $identifier) {
                     return [
                         'identifier' => [
-                            0 => 'IATI Organizational Identifier already exists in IATI Registry.', ],
+                            0 => 'IATI Organizational Identifier already exists in IATI Registry.',
+                        ],
                     ];
                 }
             }
@@ -295,9 +287,9 @@ class UserService
      *
      * @param array $email
      *
-     * @return array|bool
+     * @return array
      */
-    public function checkUserEmail(string $email): array|bool
+    public function checkUserEmail(string $email): array
     {
         $clientConfig = ['base_uri' => env('IATI_API_ENDPOINT')];
         $requestConfig = [
@@ -321,11 +313,10 @@ class UserService
         }
 
         $response = json_decode($res->getBody()->getContents())->result;
-
         $errors = [];
 
         if (!empty($response)) {
-            $errors['email'] = ['User with this email does not exist in IATI Registry.'];
+            $errors['email'] = ['User with this email already exist in IATI Registry.'];
         }
 
         return $errors;
@@ -377,7 +368,7 @@ class UserService
      *
      * @param string $data
      *
-     * @return array|bool
+     * @return array
      */
     public function createAPItoken(string $username): array
     {
@@ -417,9 +408,9 @@ class UserService
      *
      * @param array $data
      *
-     * @return array|bool
+     * @return array
      */
-    public function createPublisherInRegistry(array $data, $token): array|bool
+    public function createPublisherInRegistry(array $data, $token): array
     {
         $clientConfig = ['base_uri' => env('IATI_API_ENDPOINT')];
 
@@ -440,6 +431,7 @@ class UserService
                 'publisher_source_type' => $data['source'] ?? '',
                 'image_url' => $data['image_url'] ?? '',
                 'website' => $data['website'] ?? '',
+                'description' => $data['description'] ?? '',
                 'record_exclusion' => $data['record_exclusions'] ?? '',
             ],
         ];
@@ -499,6 +491,8 @@ class UserService
                 'record_exclusion' => 'record_exclusions',
             ],
         ];
+
+        unset($errors['__type']);
 
         foreach ($errors as $field => $error) {
             if (in_array($field, array_keys($mapper[$type]))) {

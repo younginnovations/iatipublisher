@@ -58,17 +58,19 @@
               }}</span>
             </div>
             <div
-              v-if="!publisherExists"
+              v-if ="Object.keys(iatiError).length>0"
               class="feedback mt-6 border-l-2 border-crimson-50 bg-crimson-10 p-4 text-sm text-n-50 xl:h-32"
             >
+            {{typeof(iatiError)}}
               <p class="mb-2 flex font-bold">
                 <svg-vue class="mr-2 text-xl" icon="warning" />
-                Please work on following errors before submitting the form again.
+                Error:
               </p>
               <p class="ml-8 xl:mr-1">
-              <ul>
-              <li v-for="(error, error_key) in IATI" :key="error_key">
-              <span>{{error}}</span>
+              <ul >
+              <li v-for="(error, error_key) in iatiError" :key="error_key">
+              <span v-if="typeof(error) === 'object'">{{error[0]}}</span>
+              <span v-else>{{error}}</span>
               </li>
               </ul>
               </p>
@@ -275,6 +277,8 @@ export default defineComponent({
       password_confirmation: "",
     });
 
+    const iatiError: ObjectType = reactive({});
+
     const formData: ObjectType = reactive({
       publisher_name: "",
       publisher_id: "",
@@ -449,7 +453,7 @@ export default defineComponent({
             class: "mb-4 lg:mb-2 relative",
             help_text: "",
           },
-          iamge_url: {
+          image_url: {
             label: "Publisher Logo Url",
             name: "image_url",
             placeholder: "For e.g. http://mylogo.com ",
@@ -505,10 +509,10 @@ export default defineComponent({
             label: "Address",
             name: "address",
             placeholder: "Type address here",
-            id: "website",
+            id: "address",
             required: false,
             hover_text: "",
-            type: "text",
+            type: "textarea",
             class: "mb-4 col-span-2 lg:mb-6",
           },
         },
@@ -649,9 +653,37 @@ export default defineComponent({
      * Update Validation errors from api into errorData array
      */
     function updateValidationErrors(errorResponse) {
+      cleanValidationErrors()
       for (const field in errorData) {
         errorData[field] = errorResponse[field] ? errorResponse[field][0] : "";
       }
+    }
+
+      /**
+     * Update Validation errors from api into errorData array
+     */
+    function cleanValidationErrors() {
+      for (const field in errorData) {
+        errorData[field] = "";
+      }
+    }
+
+    /**
+     * Update IATI and system Error
+     */
+    function updateErrors(errorResponse) {
+      // if(Object.values(errorData).every(value => value === '')){
+        Object.assign(iatiError,
+        typeof(errorResponse) === 'string'? {'error' : errorResponse}: errorResponse);
+
+        setTimeout(() => {
+          for(const err in iatiError){
+            console.log(err, iatiError[err]);
+            delete iatiError[err];
+          }
+        },15000);
+      // }
+
     }
 
     /**
@@ -682,7 +714,6 @@ export default defineComponent({
           const errors = !response.success || "errors" in response ? response.errors : [];
           registerForm["1"].is_complete = false;
 
-          updateValidationErrors(errors);
 
           if ("publisher_error" in response) {
             publisherExists.value = false;
@@ -691,11 +722,16 @@ export default defineComponent({
           if (response.success) {
             registerForm["1"].is_complete = true;
             step.value += 1;
+          } else {
+            console.log('test',response);
+            updateValidationErrors(errors);
+            updateErrors(errors);
           }
 
           isLoaderVisible.value = false;
         })
-        .catch(() => {
+        .catch((err) => {
+          updateErrors(err);
           isLoaderVisible.value = false;
         });
     }
@@ -731,11 +767,14 @@ export default defineComponent({
           if (response.success) {
             registerForm["2"].is_complete = true;
             step.value += 1;
+          } else {
+            updateErrors(errors);
           }
         })
         .catch((error) => {
           const { errors } = error.response.data;
-          updateValidationErrors(errors);
+          updateErrors(errors);
+
           isLoaderVisible.value = false;
         });
     }
@@ -770,12 +809,14 @@ export default defineComponent({
           if (response.success) {
             registerForm["3"].is_complete = true;
             step.value += 1;
+          } else {
+            updateErrors(errors);
           }
         })
         .catch((error) => {
           const { errors } = error.response.data;
           updateValidationErrors(errors);
-
+          updateErrors(errors);
           isLoaderVisible.value = false;
         });
     }
@@ -785,6 +826,7 @@ export default defineComponent({
      */
     function submitForm() {
       isLoaderVisible.value = true;
+      Object.assign(iatiError,{});
 
       let form = {
         password: encrypt(formData.password, process.env.MIX_ENCRYPTION_KEY ?? ""),
@@ -804,7 +846,7 @@ export default defineComponent({
           const response = res.data;
           const errors = !response.success || "errors" in response ? response.errors : [];
           updateValidationErrors(errors);
-          Object.assign()
+          Object.assign(iatiError,errors);
           isLoaderVisible.value = false;
           registerForm["1"].is_complete = false;
 
@@ -816,6 +858,7 @@ export default defineComponent({
         .catch((error) => {
           const { errors } = error.response.data;
           updateValidationErrors(errors);
+          updateErrors(errors);
 
           isLoaderVisible.value = false;
         });
@@ -859,6 +902,7 @@ export default defineComponent({
       goToPreviousForm,
       getCurrentStep,
       checkStep,
+      iatiError,
       isTextField,
       props,
     };
