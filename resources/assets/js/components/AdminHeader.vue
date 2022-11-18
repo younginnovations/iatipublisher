@@ -160,6 +160,7 @@ defineProps({
 
 const toastVisibility = ref(false);
 const toastMessage = ref('');
+
 const toastType = ref(false);
 const data = reactive({
   languageNavLiClasses: 'flex',
@@ -274,7 +275,11 @@ onMounted(async () => {
   changeActiveMenu();
 });
 onMounted(() => {
-  if (localStorage.getItem('openAddModel') === 'true') {
+  console.log(window.location.pathname);
+  if (
+    localStorage.getItem('openAddModel') === 'true' &&
+    window.location.pathname === '/activities'
+  ) {
     modalValue.value = true;
   }
 });
