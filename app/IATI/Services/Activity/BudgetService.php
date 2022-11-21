@@ -47,7 +47,34 @@ class BudgetService
      */
     public function update($id, $activityBudget): bool
     {
-        return $this->activityRepository->update($id, ['budget' => array_values($activityBudget['budget'])]);
+        return $this->activityRepository->update($id, ['budget' => array_values($this->setBudgets($activityBudget['budget']))]);
+    }
+
+    /**
+     * Sets default values for budget status and type if not provided.
+     *
+     * @param $budgets
+     *
+     * @return array
+     */
+    public function setBudgets($budgets): array
+    {
+        if (count($budgets)) {
+            foreach ($budgets as $key => $budget) {
+                $budgets[$key]['budget_status'] = !empty(Arr::get($budget, 'budget_status', '1')) ? Arr::get(
+                    $budget,
+                    'budget_status',
+                    '1'
+                ) : '1';
+                $budgets[$key]['budget_type'] = !empty(Arr::get($budget, 'budget_type', '1')) ? Arr::get(
+                    $budget,
+                    'budget_type',
+                    '1'
+                ) : '1';
+            }
+        }
+
+        return $budgets;
     }
 
     /**

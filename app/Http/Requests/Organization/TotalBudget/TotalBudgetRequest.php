@@ -52,13 +52,30 @@ class TotalBudgetRequest extends OrganizationBaseRequest
             }
 
             $totalBudgetForm = sprintf('total_budget.%s', $totalBudgetIndex);
-            $rules = array_merge(
-                $rules,
-                $this->getRulesForPeriodStart($totalBudget['period_start'], $totalBudgetForm, $diff, 365),
-                $this->getRulesForPeriodEnd($totalBudget['period_end'], $totalBudgetForm, $diff, 365),
-                $this->getRulesForValue($totalBudget['value'], $totalBudgetForm),
-                $this->getRulesForBudgetLine($totalBudget['budget_line'], $totalBudgetForm)
-            );
+
+            $periodStartRules = $this->getRulesForPeriodStart($totalBudget['period_start'], $totalBudgetForm, $diff, 365);
+
+            foreach ($periodStartRules as $key => $periodStartRule) {
+                $rules[$key] = $periodStartRule;
+            }
+
+            $periodEndRules = $this->getRulesForPeriodEnd($totalBudget['period_end'], $totalBudgetForm, $diff, 365);
+
+            foreach ($periodEndRules as $key => $periodEndRule) {
+                $rules[$key] = $periodEndRule;
+            }
+
+            $valueRules = $this->getRulesForValue($totalBudget['value'], $totalBudgetForm);
+
+            foreach ($valueRules as $key => $valueRule) {
+                $rules[$key] = $valueRule;
+            }
+
+            $budgetLineRules = $this->getRulesForBudgetLine($totalBudget['budget_line'], $totalBudgetForm);
+
+            foreach ($budgetLineRules as $key => $budgetLineRule) {
+                $rules[$key] = $budgetLineRule;
+            }
         }
 
         return $rules;
@@ -77,13 +94,29 @@ class TotalBudgetRequest extends OrganizationBaseRequest
 
         foreach ($formFields as $totalBudgetIndex => $totalBudget) {
             $totalBudgetForm = sprintf('total_budget.%s', $totalBudgetIndex);
-            $messages = array_merge(
-                $messages,
-                $this->getMessagesForPeriodStart($totalBudget['period_start'], $totalBudgetForm),
-                $this->getMessagesForPeriodEnd($totalBudget['period_end'], $totalBudgetForm),
-                $this->getMessagesForValue($totalBudget['value'], $totalBudgetForm),
-                $this->getMessagesBudgetLine($totalBudget['budget_line'], $totalBudgetForm)
-            );
+            $periodStartMessages = $this->getMessagesForPeriodStart($totalBudget['period_start'], $totalBudgetForm);
+
+            foreach ($periodStartMessages as $key => $periodStartMessage) {
+                $messages[$key] = $periodStartMessage;
+            }
+
+            $periodEndMessages = $this->getMessagesForPeriodEnd($totalBudget['period_end'], $totalBudgetForm);
+
+            foreach ($periodEndMessages as $key => $periodEndMessage) {
+                $messages[$key] = $periodEndMessage;
+            }
+
+            $valueMessages = $this->getMessagesForValue($totalBudget['value'], $totalBudgetForm);
+
+            foreach ($valueMessages as $key => $valueMessage) {
+                $messages[$key] = $valueMessage;
+            }
+
+            $budgetLineMessages = $this->getMessagesBudgetLine($totalBudget['budget_line'], $totalBudgetForm);
+
+            foreach ($budgetLineMessages as $key => $budgetLineMessage) {
+                $messages[$key] = $budgetLineMessage;
+            }
         }
 
         return $messages;

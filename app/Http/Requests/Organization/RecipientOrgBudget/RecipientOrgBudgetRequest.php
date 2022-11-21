@@ -28,16 +28,36 @@ class RecipientOrgBudgetRequest extends OrganizationBaseRequest
             if ($start && $end) {
                 $diff = (strtotime($end) - strtotime($start)) / 86400;
             }
-
             $recipientOrganizationBudgetForm = sprintf('recipient_org_budget.%s', $recipientOrganizationBudgetIndex);
-            $rules = array_merge_recursive(
-                $rules,
-                $this->getRulesForPeriodStart($recipientOrganizationBudget['period_start'], $recipientOrganizationBudgetForm, $diff, 365),
-                $this->getRulesForPeriodEnd($recipientOrganizationBudget['period_end'], $recipientOrganizationBudgetForm, $diff, 365),
-                $this->getRulesForValue($recipientOrganizationBudget['value'], $recipientOrganizationBudgetForm),
-                $this->getRulesForBudgetLine($recipientOrganizationBudget['budget_line'], $recipientOrganizationBudgetForm),
-                $this->getRulesForNarrative($recipientOrganizationBudget['recipient_org'][0]['narrative'], $recipientOrganizationBudgetForm . '.recipient_org.0')
-            );
+            $periodStartRules = $this->getRulesForPeriodStart($recipientOrganizationBudget['period_start'], $recipientOrganizationBudgetForm, $diff, 365);
+
+            foreach ($periodStartRules as $key => $item) {
+                $rules[$key] = $item;
+            }
+
+            $periodEndRules = $this->getRulesForPeriodEnd($recipientOrganizationBudget['period_end'], $recipientOrganizationBudgetForm, $diff, 365);
+
+            foreach ($periodEndRules as $key => $item) {
+                $rules[$key] = $item;
+            }
+
+            $valueRules = $this->getRulesForValue($recipientOrganizationBudget['value'], $recipientOrganizationBudgetForm);
+
+            foreach ($valueRules as $key => $item) {
+                $rules[$key] = $item;
+            }
+
+            $budgetLineRules = $this->getRulesForBudgetLine($recipientOrganizationBudget['budget_line'], $recipientOrganizationBudgetForm);
+
+            foreach ($budgetLineRules as $key => $item) {
+                $rules[$key] = $item;
+            }
+
+            $narrativeRules = $this->getRulesForNarrative($recipientOrganizationBudget['recipient_org'][0]['narrative'], $recipientOrganizationBudgetForm . '.recipient_org.0');
+
+            foreach ($narrativeRules as $key => $item) {
+                $rules[$key] = $item;
+            }
         }
 
         return $rules;
@@ -56,14 +76,36 @@ class RecipientOrgBudgetRequest extends OrganizationBaseRequest
             $recipientOrganizationBudgetForm = sprintf('recipient_org_budget.%s', $recipientOrganizationBudgetIndex);
             $narrativeField = sprintf('%s.recipient_org.0.narrative.0.narrative.required_without', $recipientOrganizationBudgetForm);
             $messages[$narrativeField] = trans('validation.required_without', ['attribute' => trans('elementForm.narrative'), 'values' => trans('elementForm.ref')]);
-            $messages = array_merge(
-                $messages,
-                $this->getMessagesForPeriodStart($recipientOrganizationBudget['period_start'], $recipientOrganizationBudgetForm),
-                $this->getMessagesForPeriodEnd($recipientOrganizationBudget['period_end'], $recipientOrganizationBudgetForm),
-                $this->getMessagesForValue($recipientOrganizationBudget['value'], $recipientOrganizationBudgetForm),
-                $this->getMessagesBudgetLine($recipientOrganizationBudget['budget_line'], $recipientOrganizationBudgetForm),
-                $this->getMessagesForNarrative($recipientOrganizationBudget['recipient_org'][0]['narrative'], $recipientOrganizationBudgetForm . '.recipient_org.0')
-            );
+
+            $periodStartMessages = $this->getMessagesForPeriodStart($recipientOrganizationBudget['period_start'], $recipientOrganizationBudgetForm);
+
+            foreach ($periodStartMessages as $key => $item) {
+                $messages[$key] = $item;
+            }
+
+            $periodEndMessages = $this->getMessagesForPeriodEnd($recipientOrganizationBudget['period_end'], $recipientOrganizationBudgetForm);
+
+            foreach ($periodEndMessages as $key => $item) {
+                $messages[$key] = $item;
+            }
+
+            $valueMessages = $this->getMessagesForValue($recipientOrganizationBudget['value'], $recipientOrganizationBudgetForm);
+
+            foreach ($valueMessages as $key => $item) {
+                $messages[$key] = $item;
+            }
+
+            $budgetLineMessages = $this->getMessagesBudgetLine($recipientOrganizationBudget['budget_line'], $recipientOrganizationBudgetForm);
+
+            foreach ($budgetLineMessages as $key => $item) {
+                $messages[$key] = $item;
+            }
+
+            $narrativeMessages = $this->getMessagesForNarrative($recipientOrganizationBudget['recipient_org'][0]['narrative'], $recipientOrganizationBudgetForm . '.recipient_org.0');
+
+            foreach ($narrativeMessages as $key => $item) {
+                $messages[$key] = $item;
+            }
         }
 
         return $messages;

@@ -10,10 +10,14 @@ use App\Http\Requests\Setting\PublisherFormRequest;
 use App\IATI\Services\Organization\OrganizationService;
 use App\IATI\Services\Setting\SettingService;
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\GuzzleException;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
 use Illuminate\Database\DatabaseManager;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Log;
 
 /**
  * Class SettingController.
@@ -29,23 +33,21 @@ class SettingController extends Controller
      *
      * @param OrganizationService $organizationService
      * @param SettingService      $settingService
-     * @param Log                 $logger
      * @param DatabaseManager     $db
      */
-    public function __construct(OrganizationService $organizationService, SettingService $settingService, Log $logger, DatabaseManager $db)
+    public function __construct(OrganizationService $organizationService, SettingService $settingService, DatabaseManager $db)
     {
         $this->organizationService = $organizationService;
         $this->settingService = $settingService;
         $this->db = $db;
-        $this->logger = $logger;
     }
 
     /**
      * Show the organization setting page.
      *
-     * @return \Illuminate\Contracts\Support\Renderable
+     * @return Factory|View|Application|RedirectResponse
      */
-    public function index(): \Illuminate\Contracts\Support\Renderable
+    public function index(): Factory|View|Application|RedirectResponse
     {
         try {
             $currencies = getCodeListArray('Currency', 'OrganizationArray');
@@ -57,7 +59,7 @@ class SettingController extends Controller
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('/activities');
+            return redirect()->route('admin.activities.index')->with('error', 'Error while rendering setting page');
         }
     }
 
@@ -83,6 +85,7 @@ class SettingController extends Controller
      * @param PublisherFormRequest $request
      *
      * @return JsonResponse
+     * @throws GuzzleException
      */
     public function verify(PublisherFormRequest $request): JsonResponse
     {
@@ -95,7 +98,7 @@ class SettingController extends Controller
             $message = $publisherData['publisher_verification'] ?
                 ($publisherData['token_verification'] ? 'API token verified successfully' : 'API token incorrect. Please enter valid API token.')
                 : 'API token incorrect. Please make sure that your publisher is approved in IATI Registry.';
-            $success = $publisherData['publisher_verification'] && $publisherData['token_verification'] ? true : false;
+            $success = $publisherData['publisher_verification'] && $publisherData['token_verification'];
 
             return response()->json(['success' => $success, 'message' => $message, 'data' => $publisherData]);
         } catch (\Exception $e) {
@@ -108,9 +111,10 @@ class SettingController extends Controller
     /**
      * Store publishing info a valid registration.
      *
-     * @param array $data
+     * @param PublisherFormRequest $request
      *
      * @return JsonResponse
+     * @throws \Throwable
      */
     public function storePublishingInfo(PublisherFormRequest $request): JsonResponse
     {
@@ -154,6 +158,7 @@ class SettingController extends Controller
      * @param DefaultFormRequest $request
      *
      * @return JsonResponse
+     * @throws \Throwable
      */
     public function storeDefaultForm(DefaultFormRequest $request): JsonResponse
     {
@@ -179,6 +184,7 @@ class SettingController extends Controller
      * @param array $data
      *
      * @return array
+     * @throws GuzzleException
      */
     public function verifyPublisher(array $data): array
     {
@@ -198,9 +204,9 @@ class SettingController extends Controller
                 'connect_timeout' => 500,
             ]);
 
-            $response = json_decode($res->getBody()->getContents())->result;
+            $response = json_decode($res->getBody()->getContents(), false, 512, JSON_THROW_ON_ERROR)->result;
 
-            return ['success' => true, 'validation' => $response ? true : false];
+            return ['success' => true, 'validation' => (bool) $response];
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
@@ -214,6 +220,7 @@ class SettingController extends Controller
      * @param array $data
      *
      * @return array
+     * @throws GuzzleException
      */
     public function verifyApi(array $data): array
     {
@@ -233,9 +240,9 @@ class SettingController extends Controller
                     'connect_timeout' => 500,
                 ]);
 
-                $response = json_decode($res->getBody()->getContents())->result;
+                $response = json_decode($res->getBody()->getContents(), false)->result;
 
-                return ['success' => true, 'validation' => in_array($data['publisher_id'], array_column($response, 'name')) ? true : false];
+                return ['success' => true, 'validation' => in_array($data['publisher_id'], array_column($response, 'name'), true)];
             }
 
             return ['success' => true, 'validation' => false];
@@ -248,8 +255,6 @@ class SettingController extends Controller
 
     /**
      * Get setting status.
-     *
-     * @param array $data
      *
      * @return JsonResponse
      */

@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\IATI\Services\Activity;
 
 use App\IATI\Elements\Builder\ResultElementFormCreator;
-use App\IATI\Models\Activity\Indicator;
 use App\IATI\Repositories\Activity\IndicatorRepository;
 use App\IATI\Traits\DataSanitizeTrait;
 use Illuminate\Database\Eloquent\Collection;
@@ -32,7 +31,7 @@ class IndicatorService
     /**
      * IndicatorService constructor.
      *
-     * @param IndicatorRepository $indicatorRepository
+     * @param IndicatorRepository      $indicatorRepository
      * @param ResultElementFormCreator $resultElementFormCreator
      */
     public function __construct(IndicatorRepository $indicatorRepository, ResultElementFormCreator $resultElementFormCreator)
@@ -183,5 +182,37 @@ class IndicatorService
     public function deleteIndicator($id): bool
     {
         return $this->indicatorRepository->delete($id);
+    }
+
+    /**
+     * Returns indicator measure.
+     *
+     * @param $indicatorId
+     *
+     * @return string
+     */
+    public function getIndicatorMeasure($indicatorId): string
+    {
+        $indicator = $this->getIndicator($indicatorId)->toArray();
+
+        if (!empty($indicator) && (array_key_exists('indicator', $indicator) && array_key_exists('measure', $indicator['indicator']))) {
+            return (string) $indicator['indicator']['measure'];
+        }
+
+        return '';
+    }
+
+    /**
+     * Returns indicator measure type.
+     *
+     * @param $indicatorId
+     *
+     * @return array
+     */
+    public function getIndicatorMeasureType($indicatorId): array
+    {
+        $measure = $this->getIndicatorMeasure($indicatorId);
+
+        return ['qualitative' => $measure === '5', 'non_qualitative' =>  in_array($measure, ['1', '2', '3', '4'])];
     }
 }

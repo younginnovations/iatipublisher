@@ -74,6 +74,16 @@ class ResultRepository extends Repository
     }
 
     /**
+     * @param int $id
+     *
+     * @return array
+     */
+    public function getResult(int $id): array
+    {
+        return $this->model->where(['id'=>$id])->first()->toArray();
+    }
+
+    /**
      * Returns all results with its indicators and their periods for a particular activity.
      *
      * @param $activityId
@@ -96,6 +106,18 @@ class ResultRepository extends Repository
     public function getResultWithIndicatorAndPeriod($resultId, $activityId): ?Model
     {
         return $this->model->where('id', $resultId)->where('activity_id', $activityId)->with(['indicators', 'indicators.periods'])->first();
+    }
+
+    /**
+     * Returns result with its indicators.
+     *
+     * @param $resultId
+     *
+     * @return array
+     */
+    public function getResultWithIndicator($resultId): array
+    {
+        return $this->model->where('id', $resultId)->with(['indicators'])->first()->toArray();
     }
 
     /**

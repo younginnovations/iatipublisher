@@ -18,33 +18,16 @@ use Illuminate\Support\Facades\Validator;
 class ActivityBaseRequest extends FormRequest
 {
     /**
-     * @var IndicatorService
-     */
-    protected IndicatorService $indicatorService;
-
-    /**
-     * @var ResultService
-     */
-    protected ResultService $resultService;
-
-    /**
      * @var ActivityService
      */
     protected ActivityService $activityService;
 
     /**
      * ActivityBaseRequest constructor.
-     *
-     * @param IndicatorService $indicatorService
-     * @param ResultService    $resultService
-     * @param ActivityService  $activityService
      */
-    public function __construct(IndicatorService $indicatorService, ResultService $resultService, ActivityService $activityService)
+    public function __construct()
     {
         parent::__construct();
-        $this->indicatorService = $indicatorService;
-        $this->resultService = $resultService;
-        $this->activityService = $activityService;
 
         Validator::extendImplicit(
             'unique_lang',
@@ -124,7 +107,7 @@ class ActivityBaseRequest extends FormRequest
         Validator::extendImplicit(
             'period_start_end',
             function ($attribute, $value, $parameter, $validator) {
-                return $parameter[1] < $parameter[0] ? false : true;
+                return !($parameter[1] < $parameter[0]);
             }
         );
     }
@@ -142,7 +125,7 @@ class ActivityBaseRequest extends FormRequest
         $languages = [];
 
         foreach ($value as $narrative) {
-            if (in_array($narrative['language'], $languages)) {
+            if (in_array($narrative['language'], $languages, true)) {
                 return false;
             }
 
@@ -165,7 +148,7 @@ class ActivityBaseRequest extends FormRequest
         $languageCodes = [];
 
         foreach ($value as $language) {
-            $code = isset($language['code']) ? $language['code'] : ($language['language'] ?? '');
+            $code = $language['code'] ?? ($language['language'] ?? '');
 
             if (in_array($code, $languageCodes, true)) {
                 return false;
@@ -213,13 +196,13 @@ class ActivityBaseRequest extends FormRequest
         $routeParam = explode('.', $this->route()->getName());
 
         if ($routeParam[1] === 'indicator') {
-            $indicator = $this->indicatorService->getIndicator($parameters['id']);
+            $indicator = app()->make(IndicatorService::class)->getIndicator($parameters['id']);
             $activity = $indicator->result->activity;
         } elseif ($routeParam[1] === 'result') {
-            $result = $this->resultService->getResult($parameters['id']);
+            $result = app()->make(ResultService::class)->getResult($parameters['id']);
             $activity = $result->activity;
         } else {
-            $activity = $this->activityService->getActivity($parameters['id']);
+            $activity = app()->make(ActivityService::class)->getActivity($parameters['id']);
         }
 
         return $activity->default_field_values;
@@ -285,7 +268,7 @@ class ActivityBaseRequest extends FormRequest
         $rules[sprintf('%s.narrative', $formBase)][] = 'unique_default_lang';
 
         foreach ($formFields as $narrativeIndex => $narrative) {
-            if (boolval($narrative['language'])) {
+            if ($narrative['language']) {
                 $rules[sprintf('%s.narrative.%s.narrative', $formBase, $narrativeIndex)] = 'required_with:' . sprintf(
                     '%s.narrative.%s.language',
                     $formBase,
@@ -461,31 +444,32 @@ class ActivityBaseRequest extends FormRequest
         foreach ($formFields as $documentLinkIndex => $documentLink) {
             $documentLinkForm = $formBase ? sprintf('%s.document_link.%s', $formBase, $documentLinkIndex) : sprintf('document_link.%s', $documentLinkIndex);
 
-            if (Arr::get($documentLink, 'url', null) != '') {
+            if (Arr::get($documentLink, 'url', null) !== '') {
                 $rules[sprintf('%s.url', $documentLinkForm)] = 'nullable|url';
             }
 
-            if (Arr::get($documentLink, 'document_date', null) != '') {
-                $rules = array_merge(
-                    $rules,
-                    $this->getRulesForDocumentDate($documentLink['document_date'], $documentLinkForm),
-                );
+            if (Arr::get($documentLink, 'document_date', null) !== '') {
+                $docDateRules = $this->getRulesForDocumentDate($documentLink['document_date'], $documentLinkForm);
+
+                foreach ($docDateRules as $key => $item) {
+                    $rules[$key] = $item;
+                }
             }
 
             $rules[sprintf('%s.category', $documentLinkForm)][] = 'unique_category';
             $rules[sprintf('%s.language', $documentLinkForm)][] = 'unique_language';
 
-            $rules = array_merge(
-                $rules,
-                $this->getRulesForNarrative(
-                    $documentLink['title'][0]['narrative'],
-                    sprintf('%s.title.0', $documentLinkForm)
-                ),
-                $this->getRulesForNarrative(
-                    $documentLink['description'][0]['narrative'],
-                    sprintf('%s.description.0', $documentLinkForm)
-                ),
-            );
+            $narrativeTitleRules = $this->getRulesForNarrative($documentLink['title'][0]['narrative'], sprintf('%s.title.0', $documentLinkForm));
+
+            foreach ($narrativeTitleRules as $key => $item) {
+                $rules[$key] = $item;
+            }
+
+            $narrativeDesRules = $this->getRulesForNarrative($documentLink['description'][0]['narrative'], sprintf('%s.description.0', $documentLinkForm));
+
+            foreach ($narrativeDesRules as $key => $item) {
+                $rules[$key] = $item;
+            }
         }
 
         return $rules;
@@ -529,32 +513,31 @@ class ActivityBaseRequest extends FormRequest
                 $documentLinkForm = sprintf('document_link.%s', $documentLinkIndex);
             }
 
-            if (Arr::get($documentLink, 'url', null) != '') {
+            if (Arr::get($documentLink, 'url', null) !== '') {
                 $messages[sprintf('%s.url.url', $documentLinkForm)] = 'The @url field must be a valid url.';
             }
 
-            if (Arr::get($documentLink, 'document_date', null) != '') {
-                $messages = array_merge(
-                    $messages,
-                    $this->getMessagesForDocumentDate($documentLink['document_date'], $documentLinkForm)
-                );
+            if (Arr::get($documentLink, 'document_date', null) !== '') {
+                $docDateMessages = $this->getMessagesForDocumentDate($documentLink['document_date'], $documentLinkForm);
+
+                foreach ($docDateMessages as $key => $item) {
+                    $messages[$key] = $item;
+                }
             }
 
             $messages[sprintf('%s.category.unique_category', $documentLinkForm)] = 'The @code field must be a unique.';
-
             $messages[sprintf('%s.language.unique_language', $documentLinkForm)] = 'The @code field must be a unique.';
+            $narrativeTitleMessages = $this->getMessagesForNarrative($documentLink['title'][0]['narrative'], sprintf('%s.title.0', $documentLinkForm));
 
-            $messages = array_merge(
-                $messages,
-                $this->getMessagesForNarrative(
-                    $documentLink['title'][0]['narrative'],
-                    sprintf('%s.title.0', $documentLinkForm)
-                ),
-                $this->getMessagesForNarrative(
-                    $documentLink['description'][0]['narrative'],
-                    sprintf('%s.description.0', $documentLinkForm)
-                ),
-            );
+            foreach ($narrativeTitleMessages as $key => $item) {
+                $messages[$key] = $item;
+            }
+
+            $narrativeDesMessages = $this->getMessagesForNarrative($documentLink['description'][0]['narrative'], sprintf('%s.description.0', $documentLinkForm));
+
+            foreach ($narrativeDesMessages as $key => $item) {
+                $messages[$key] = $item;
+            }
         }
 
         return $messages;
@@ -580,5 +563,29 @@ class ActivityBaseRequest extends FormRequest
         }
 
         return $messages;
+    }
+
+    /**
+     * Returns rules for value.
+     *
+     * @param $formFields
+     * @param $formBase
+     *
+     * @return array
+     */
+    protected function getRulesForValue($formFields, $formBase): array
+    {
+        $rules = [];
+        $periodStartFormBase = sprintf('%s.period_start.0.date', $formBase);
+        $periodEndFormBase = sprintf('%s.period_end.0.date', $formBase);
+        $betweenRule = sprintf('nullable|date|after:%s|before:%s', $periodStartFormBase, $periodEndFormBase);
+
+        foreach ($formFields as $valueIndex => $value) {
+            $valueForm = sprintf('%s.value.%s', $formBase, $valueIndex);
+            $rules[sprintf('%s.amount', $valueForm)] = 'nullable|numeric|min:0';
+            $rules[sprintf('%s.value_date', $valueForm)] = $betweenRule;
+        }
+
+        return $rules;
     }
 }
