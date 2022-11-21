@@ -221,7 +221,7 @@
                       <span v-if="narrative.language" class="language top"
                         >(Language: {{ types.languages[narrative.language] }})</span
                       >
-                      <span>{{ narrative.narrative }}</span>
+                      <span class="description">{{ narrative.narrative }}</span>
                     </div>
                     <span v-else class="italic">Missing</span>
                   </td>

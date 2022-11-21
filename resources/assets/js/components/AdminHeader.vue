@@ -130,15 +130,15 @@
     <CreateModal
       v-if="superAdmin"
       :modal-active="modalValue"
-      @close="modalToggle"
-      @close-modal="modalToggle"
+      @close="ToggleModel"
+      @close-modal="ToggleModel"
       @toast="toast"
     />
   </header>
 </template>
 
 <script setup lang="ts">
-import { defineProps, ref, reactive, onMounted, Ref } from 'vue';
+import { defineProps, ref, reactive, onMounted, onUnmounted, Ref } from 'vue';
 import axios from 'axios';
 import { useToggle } from '@vueuse/core';
 import CreateModal from '../views/activity/CreateModal.vue';
@@ -160,6 +160,7 @@ defineProps({
 
 const toastVisibility = ref(false);
 const toastMessage = ref('');
+
 const toastType = ref(false);
 const data = reactive({
   languageNavLiClasses: 'flex',
@@ -215,19 +216,27 @@ function toast(message: string, type: boolean) {
   toastMessage.value = message;
   toastType.value = type;
 }
+function ToggleModel() {
+  modalToggle();
+  window.localStorage.removeItem('openAddModel');
+}
 function changeActiveMenu() {
   const path = window.location.pathname;
   data.menus.forEach((menu, key) => {
     data.menus[key]['active'] = menu.permalink === path ? true : false;
   });
-  if(path.includes('activity') || path.includes('result') || path.includes('indicator')){
-    data.menus[0]['active'] = true
+  if (
+    path.includes('activity') ||
+    path.includes('result') ||
+    path.includes('indicator')
+  ) {
+    data.menus[0]['active'] = true;
   }
-  if(path.includes('organisation')){
-    data.menus[1]['active'] = true
+  if (path.includes('organisation')) {
+    data.menus[1]['active'] = true;
   }
-  if(path.includes('import')){
-    data.menus[3]['active'] = true
+  if (path.includes('import')) {
+    data.menus[3]['active'] = true;
   }
 }
 async function logout() {
@@ -264,6 +273,18 @@ const searchFunction = (url: string) => {
 };
 onMounted(async () => {
   changeActiveMenu();
+});
+onMounted(() => {
+  console.log(window.location.pathname);
+  if (
+    localStorage.getItem('openAddModel') === 'true' &&
+    window.location.pathname === '/activities'
+  ) {
+    modalValue.value = true;
+  }
+});
+onUnmounted(() => {
+  localStorage.removeItem('openAddModel');
 });
 </script>
 

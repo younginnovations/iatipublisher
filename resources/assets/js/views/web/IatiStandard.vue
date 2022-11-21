@@ -54,10 +54,7 @@
             </li>
           </ul>
           <p class="mt-4 text-base">
-            <a
-              target="_blank"
-              rel="noopener noreferrer"
-              href="https://www.iatiregistry.org/register_publisher/"
+            <a target="_blank" rel="noopener noreferrer" href="/organisation"
               >Publish your Organisation Data</a
             >
           </p>
@@ -141,10 +138,7 @@
             publish data for.
           </p>
           <p class="my-4 text-base">
-            <a
-              target="_blank"
-              rel="noopener noreferrer"
-              href="https://www.iatiregistry.org/register_publisher/"
+            <a target="_blank" rel="noopener noreferrer" href="/organisation"
               >Publish your Organisation Data</a
             >
           </p>
@@ -199,3 +193,4 @@
     </div>
   </div>
 </template>
+<script lang="ts" setup></script>

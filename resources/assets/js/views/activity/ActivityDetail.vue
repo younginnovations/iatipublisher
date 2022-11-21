@@ -135,7 +135,7 @@
             </div>
           </div>
         </div>
-        <div v-sticky-component>
+        <div>
           <Elements :activity-id="activity.id" :data="elementProps" />
         </div>
       </aside>

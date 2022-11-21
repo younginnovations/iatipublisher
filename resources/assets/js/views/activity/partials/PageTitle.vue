@@ -1,7 +1,7 @@
 <template>
   <div class="page-title mb-4">
     <div class="flex items-end gap-4">
-      <div class="title grow-0 shrink-0">
+      <div class="title shrink-0 grow-0">
         <div class="mb-2 text-caption-c1 text-n-40 xl:mb-4">
           <nav aria-label="breadcrumbs" class="breadcrumb">
             <p>
@@ -35,7 +35,11 @@
                   <br />
                   Therefore your organisation will need to determine how it will
                   divide its work internally into activities. Read the
-                  <a href="#" class="text-bluecoral"
+                  <a
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    href="/publishing-checklist"
+                    class="text-bluecoral"
                     ><b>Publishing Checklist</b></a
                   >
                   for more information.
@@ -53,7 +57,7 @@
             :message="toastMessage.message"
             :type="toastMessage.type"
           />
-          <div class="inline-flex items-center justify-end gap-3 shrink-0">
+          <div class="inline-flex shrink-0 items-center justify-end gap-3">
             <RefreshToastMessage
               v-if="refreshToastMsg.visibility"
               :message="refreshMessage"

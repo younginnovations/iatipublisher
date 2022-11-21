@@ -35,9 +35,13 @@
 
 <body class="font-sans bg-n-10 antialiased overflow-x-hidden">
   <div id="app">
-    <web-header title='@yield('title', 'IATI PUBLISHER')'></web-header>    
+    <web-header title='@yield('title', 'IATI PUBLISHER')' auth='{{(bool) Auth::user()}}'></web-header>    
     @yield('content')
-    <web-footer></web-footer>
+    @if (Auth::user())
+        <admin-footer></admin-footer>
+    @else
+        <web-footer></web-footer>
+    @endif
   </div>
 
   <script defer src="{{ mix('/manifest.js') }}"></script>

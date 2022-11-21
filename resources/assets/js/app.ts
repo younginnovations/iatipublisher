@@ -8,6 +8,7 @@ import VueSmoothScroll from 'vue3-smooth-scroll';
 import SvgVue from 'svg-vue3';
 import WebHeader from './views/web/partials/WebHeader.vue';
 import WebFooter from './views/web/partials/WebFooter.vue';
+import AdminFooter from './views/web/partials/AdminFooter.vue';
 import WelcomeSignIn from './views/web/WelcomePage.vue';
 import RegisterPage from './views/web/RegisterPage.vue';
 import AboutPage from './views/web/AboutPage.vue';
@@ -77,6 +78,7 @@ const app = createApp({});
 app
   .component('WebHeader', WebHeader)
   .component('WebFooter', WebFooter)
+  .component('AdminFooter', AdminFooter)
 
   .component('WelcomeSignin', WelcomeSignIn)
   .component('RegisterForm', RegisterPage);
