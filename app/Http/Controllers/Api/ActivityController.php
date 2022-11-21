@@ -16,6 +16,9 @@ use Illuminate\Support\Facades\Session;
  */
 class ActivityController extends Controller
 {
+    /**
+     * @var ActivityService
+     */
     private ActivityService $activityService;
 
     /**

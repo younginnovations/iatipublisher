@@ -13,7 +13,6 @@ class AccessibleRoute
     public function handle(Request $request, Closure $next): mixed
     {
         $accessibleRoutes = [
-            'iati_identifier',
             'reporting_org',
             'description',
             'activity_status',
