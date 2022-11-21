@@ -239,7 +239,6 @@ class TransactionController extends Controller
                 'Activity transaction updated successfully.'
             );
         } catch (\Exception $e) {
-            dd($e->getMessage());
             logger()->error($e->getMessage());
 
             return redirect()->route('admin.activity.transaction.index', $activityId)->with(
