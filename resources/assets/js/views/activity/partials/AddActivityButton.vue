@@ -9,7 +9,7 @@
       <span>Add Activity</span>
       <div
         v-if="state.isVisible"
-        class="button__dropdown absolute right-0 top-full z-10 w-48 bg-white p-2 text-left shadow-dropdown"
+        class="button__dropdown absolute right-0 top-full z-10 w-56 bg-white p-2 text-left shadow-dropdown"
       >
         <ul>
           <li>
@@ -18,10 +18,9 @@
             >
           </li>
           <li>
-            <a href="/import" :class="liClass">Upload activities from .xml</a>
-          </li>
-          <li>
-            <a href="/import" :class="liClass">Upload activities from .csv</a>
+            <a href="/import" :class="liClass"
+              >Import activities from .csv/.xml</a
+            >
           </li>
         </ul>
       </div>
