@@ -201,21 +201,20 @@ function resendVerificationEmail() {
 }
 
 onMounted(async () => {
-  axios.get("/setting/status").then((res) => {
-    const response = res.data;
-    errorData.default_setting = response?.data?.default_status;
-    errorData.publisher_setting = response?.data?.publisher_status;
-    errorData.token_status = response?.data?.token_status;
-  });
+  axios.all([axios.get("/setting/status"), axios.get("/user/verification/status")]).then(
+    axios.spread(function (setting_res, user_res) {
+      const response = setting_res.data;
+      const user_response = user_res.data;
+      errorData.default_setting = response?.data?.default_status;
+      errorData.publisher_setting = response?.data?.publisher_status;
+      errorData.token_status = response?.data?.token_status;
+      errorData.account_verified = user_response.data.account_verified;
 
-  axios.get("/user/verification/status").then((res) => {
-    const response = res.data;
-    errorData.account_verified = response.data.account_verified;
-    console.log(Object.values(errorData), Object.values(errorData).indexOf(false) > -1);
-    if (Object.values(errorData).indexOf(false) > -1) {
-      hasErrors.value = true;
-    }
-  });
+      if (Object.values(errorData).indexOf(false) > -1) {
+        hasErrors.value = true;
+      }
+    })
+  );
 });
 </script>
 

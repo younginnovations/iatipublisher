@@ -32,10 +32,7 @@
             :class="data.languageNavLiClasses"
           >
             <a
-              :class="[
-                { nav__pointer: language.active },
-                data.languageNavAnchorClasses,
-              ]"
+              :class="[{ nav__pointer: language.active }, data.languageNavAnchorClasses]"
               :href="language.permalink"
             >
               <span>{{ language.language }}</span>
@@ -52,10 +49,7 @@
             :class="data.menuNavLiClasses"
           >
             <a
-              :class="[
-                { nav__pointer: menu.active },
-                data.menuNavAnchorClasses,
-              ]"
+              :class="[{ nav__pointer: menu.active }, data.menuNavAnchorClasses]"
               :href="menu.permalink"
             >
               <span class="">{{ menu.name }}</span>
@@ -71,9 +65,7 @@
                   >
                 </li>
                 <li>
-                  <a href="/import" :class="liClass"
-                    >Import activities from .csv/.xml</a
-                  >
+                  <a href="/import" :class="liClass">Import activities from .csv/.xml</a>
                 </li>
               </ul>
             </div>
@@ -149,18 +141,18 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, ref, reactive, onMounted, onUnmounted, Ref } from 'vue';
-import axios from 'axios';
-import { useToggle } from '@vueuse/core';
-import CreateModal from '../views/activity/CreateModal.vue';
-import Toast from './ToastMessage.vue';
+import { defineProps, ref, reactive, onMounted, onUnmounted, Ref } from "vue";
+import axios from "axios";
+import { useToggle } from "@vueuse/core";
+import CreateModal from "../views/activity/CreateModal.vue";
+import Toast from "./ToastMessage.vue";
 
 defineProps({
   user: { type: Object, required: true },
   organization: {
     type: Object,
     validator: (v: unknown) =>
-      typeof v === 'object' || typeof v === 'string' || v === null,
+      typeof v === "object" || typeof v === "string" || v === null,
     required: false,
     default() {
       return {};
@@ -170,58 +162,57 @@ defineProps({
 });
 
 const toastVisibility = ref(false);
-const toastMessage = ref('');
+const toastMessage = ref("");
 
 const toastType = ref(false);
 const data = reactive({
-  languageNavLiClasses: 'flex',
+  languageNavLiClasses: "flex",
   languageNavAnchorClasses:
-    'flex text-white items-center uppercase nav__pointer-hover px-1.5',
-  menuNavLiClasses: 'flex px-4 relative',
-  menuNavAnchorClasses:
-    'flex text-white items-center uppercase nav__pointer-hover',
+    "flex text-white items-center uppercase nav__pointer-hover px-1.5",
+  menuNavLiClasses: "flex px-4 relative",
+  menuNavAnchorClasses: "flex text-white items-center uppercase nav__pointer-hover",
   languages: [
     {
-      language: 'EN',
-      permalink: '#',
+      language: "EN",
+      permalink: "#",
       active: true,
     },
     {
-      language: 'FR',
-      permalink: '#',
+      language: "FR",
+      permalink: "#",
       active: false,
     },
     {
-      language: 'ES',
-      permalink: '#',
+      language: "ES",
+      permalink: "#",
       active: false,
     },
   ],
   menus: [
     {
-      name: 'Activity DATA',
-      permalink: '/activities',
+      name: "Activity DATA",
+      permalink: "/activities",
       active: true,
     },
     {
-      name: 'Organisation DATA',
-      permalink: '/organisation',
+      name: "Organisation DATA",
+      permalink: "/organisation",
       active: false,
     },
     {
-      name: 'Settings',
-      permalink: '/setting',
+      name: "Settings",
+      permalink: "/setting",
       active: false,
     },
     {
-      name: 'Add / Import Activity',
-      permalink: '/import',
+      name: "Add / Import Activity",
+      permalink: "/import",
       active: false,
     },
   ],
 });
 const liClass =
-  'block p-2.5 text-n-40 text-tiny uppercase leading-[1.5] font-bold hover:!text-n-50 hover:bg-n-10';
+  "block p-2.5 text-n-40 text-tiny uppercase leading-[1.5] font-bold hover:!text-n-50 hover:bg-n-10";
 const [modalValue, modalToggle] = useToggle();
 function toast(message: string, type: boolean) {
   toastVisibility.value = true;
@@ -231,31 +222,31 @@ function toast(message: string, type: boolean) {
 }
 function ToggleModel() {
   modalToggle();
-  window.localStorage.removeItem('openAddModel');
+  window.localStorage.removeItem("openAddModel");
 }
 function changeActiveMenu() {
   const path = window.location.pathname;
   data.menus.forEach((menu, key) => {
-    data.menus[key]['active'] = menu.permalink === path ? true : false;
+    data.menus[key]["active"] = menu.permalink === path ? true : false;
   });
   if (
-    path.includes('activity') ||
-    path.includes('result') ||
-    path.includes('indicator')
+    path.includes("activity") ||
+    path.includes("result") ||
+    path.includes("indicator")
   ) {
-    data.menus[0]['active'] = true;
+    data.menus[0]["active"] = true;
   }
-  if (path.includes('organisation')) {
-    data.menus[1]['active'] = true;
+  if (path.includes("organisation")) {
+    data.menus[1]["active"] = true;
   }
-  if (path.includes('import')) {
-    data.menus[3]['active'] = true;
+  if (path.includes("import")) {
+    data.menus[3]["active"] = true;
   }
 }
 async function logout() {
-  await axios.post('/logout').then((res) => {
+  await axios.post("/logout").then((res) => {
     if (res.status) {
-      window.location.href = '/';
+      window.location.href = "/";
     }
   });
 }
@@ -263,41 +254,40 @@ async function logout() {
  * Search functionality
  *
  */
-const searchValue: Ref<string | null> = ref('');
+const searchValue: Ref<string | null> = ref("");
 const currentURL = window.location.href;
-if (currentURL.includes('?')) {
+if (currentURL.includes("?")) {
   const queryString = window.location.search,
     urlParams = new URLSearchParams(queryString),
-    search = urlParams.get('q');
+    search = urlParams.get("q");
   searchValue.value = search;
 }
 const spinner = ref(false);
 const searchFunction = (url: string) => {
   spinner.value = true;
-  const param = searchValue.value?.replace('#', '');
-  let sortingParam = '';
-  if (currentURL.includes('?') && currentURL.includes('&')) {
+  const param = searchValue.value?.replace("#", "");
+  let sortingParam = "";
+  if (currentURL.includes("?") && currentURL.includes("&")) {
     const queryString = window.location.search;
-    let queryStringArr = queryString.split('&') as [];
-    sortingParam = '&' + queryStringArr.slice(1).join('&');
+    let queryStringArr = queryString.split("&") as [];
+    sortingParam = "&" + queryStringArr.slice(1).join("&");
   }
-  let href = param ? `${url}?q=${param}${sortingParam}` : '/activities/';
+  let href = param ? `${url}?q=${param}${sortingParam}` : "/activities/";
   window.location.href = href;
 };
 onMounted(async () => {
   changeActiveMenu();
 });
 onMounted(() => {
-  console.log(window.location.pathname);
   if (
-    localStorage.getItem('openAddModel') === 'true' &&
-    window.location.pathname === '/activities'
+    localStorage.getItem("openAddModel") === "true" &&
+    window.location.pathname === "/activities"
   ) {
     modalValue.value = true;
   }
 });
 onUnmounted(() => {
-  localStorage.removeItem('openAddModel');
+  localStorage.removeItem("openAddModel");
 });
 </script>
 
