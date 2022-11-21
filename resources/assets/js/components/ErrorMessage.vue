@@ -1,13 +1,7 @@
 <template>
   <div
-    v-if="
-      !(
-        errorData.account_verified &&
-        errorData.default_setting &&
-        errorData.publisher_setting
-      )
-    "
-    class="relative h-full duration-300 bg-white"
+    v-if="hasErrors"
+    class="relative h-full bg-white duration-300"
     :class="{
       'mb-5': !isEmpty || !show,
       'mb-10': show,
@@ -23,11 +17,11 @@
       "
     >
       <div class="flex items-center justify-between">
-        <div class="flex items-center h-5 space-x-4">
+        <div class="flex h-5 items-center space-x-4">
           <div :show="show" class="flex items-center">
             <svg-vue
               icon="warning-activity"
-              class="mr-2 text-base grow-0 text-salmon-50"
+              class="mr-2 grow-0 text-base text-salmon-50"
             ></svg-vue>
             <span class="text-sm font-bold text-n-50">
               {{
@@ -90,7 +84,7 @@
                 Please check for verification email sent to you and verify your account,
                 <span
                   ><a
-                    class="font-bold border-b-2 cursor-pointer border-b-bluecoral text-bluecoral hover:border-b-spring-50"
+                    class="cursor-pointer border-b-2 border-b-bluecoral font-bold text-bluecoral hover:border-b-spring-50"
                     @click="resendVerificationEmail()"
                     >resend verification email</a
                   ></span
@@ -171,6 +165,8 @@ defineProps({
 });
 
 const show = ref(false);
+const hasErrors = ref(false);
+
 interface ToastInterface {
   visibility: boolean;
   message: string;
@@ -205,17 +201,20 @@ function resendVerificationEmail() {
 }
 
 onMounted(async () => {
-  axios.get("/setting/status").then((res) => {
-    const response = res.data;
-    errorData.default_setting = response?.data?.default_status;
-    errorData.publisher_setting = response?.data?.publisher_status;
-    errorData.token_status = response?.data?.token_status;
-  });
+  axios.all([axios.get("/setting/status"), axios.get("/user/verification/status")]).then(
+    axios.spread(function (setting_res, user_res) {
+      const response = setting_res.data;
+      const user_response = user_res.data;
+      errorData.default_setting = response?.data?.default_status;
+      errorData.publisher_setting = response?.data?.publisher_status;
+      errorData.token_status = response?.data?.token_status;
+      errorData.account_verified = user_response.data.account_verified;
 
-  axios.get("/user/verification/status").then((res) => {
-    const response = res.data;
-    errorData.account_verified = response.data.account_verified;
-  });
+      if (Object.values(errorData).indexOf(false) > -1) {
+        hasErrors.value = true;
+      }
+    })
+  );
 });
 </script>
 
