@@ -2,6 +2,7 @@
 
 namespace App\Http;
 
+use App\Http\Middleware\AccessibleRoute;
 use App\Http\Middleware\Authenticate;
 use App\Http\Middleware\EncryptCookies;
 use App\Http\Middleware\OrganizationUserMiddleware;
@@ -81,11 +82,8 @@ class Kernel extends HttpKernel
         ],
 
         'api' => [
-            EncryptCookies::class,
-            AddQueuedCookiesToResponse::class,
-            StartSession::class,
             'throttle:api',
-            SubstituteBindings::class,
+            AccessibleRoute::class,
         ],
     ];
 
