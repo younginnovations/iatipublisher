@@ -79,7 +79,7 @@
               class='edit-button'
             />
             <Btn
-              v-if="title !== 'title'"
+              v-if="title !== 'title' && title !== 'iati_identifier'"
               text='Delete'
               class='delete-button'
               icon="delete"
