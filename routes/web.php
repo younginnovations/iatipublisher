@@ -34,5 +34,5 @@ Route::get('/email/verify/{id}/{hash}', [App\Http\Controllers\Auth\VerificationC
 Route::post('/logout', [App\Http\Controllers\Auth\LoginController::class, 'logout'])->name('logout');
 Route::get('/about', [App\Http\Controllers\Web\WebController::class, 'about'])->name('about');
 Route::get('/publishing-checklist', [App\Http\Controllers\Web\WebController::class, 'publishing_checklist'])->name('publishingchecklist');
-Route::get('/iati-standard', [App\Http\Controllers\Web\WebController::class, 'iati_standard'])->name('iatistanderd');
+Route::get('/iati-standard', [App\Http\Controllers\Web\WebController::class, 'iati_standard'])->name('iatistandard');
 Route::get('/support', [App\Http\Controllers\Web\WebController::class, 'support'])->name('support');
