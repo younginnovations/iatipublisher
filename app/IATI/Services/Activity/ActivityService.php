@@ -82,6 +82,17 @@ class ActivityService
     }
 
     /**
+     * @param $id
+     * @param $element
+     *
+     * @return bool
+     */
+    public function deleteElement($id, $element): bool
+    {
+        return $this->activityRepository->update($id, [$element => null]);
+    }
+
+    /**
      * Returns activity identifiers used by an organization.
      *
      * @param $organizationId

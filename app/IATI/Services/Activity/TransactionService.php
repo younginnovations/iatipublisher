@@ -118,10 +118,7 @@ class TransactionService
      */
     public function update($id, $transactionData): bool
     {
-        return $this->transactionRepository->update(
-            $id,
-            $this->sanitizeData($transactionData)
-        );
+        return $this->transactionRepository->update($id, ['transaction'=>$this->sanitizeData($transactionData)]);
     }
 
     /**
