@@ -1244,6 +1244,8 @@ class ElementCompleteService
             $data = json_decode($data, true, 512, JSON_THROW_ON_ERROR);
         }
 
+        dump($data);
+
         if ($data) {
             foreach ($data as $key => &$datum) {
                 if (is_array($datum)) {
@@ -1257,8 +1259,10 @@ class ElementCompleteService
                 if ($key === 'amount') {
                     $this->tempAmount = $datum;
                 }
+                // && !is_array($this->tempNarrative)
 
-                if ($key === 'language' && empty($datum) && !empty($this->tempNarrative) && !is_array($this->tempNarrative)) {
+                if ($key === 'language' && empty($datum) && !empty($this->tempNarrative)) {
+                    dump('here default language');
                     $data['language'] = Arr::get($activity->default_field_values, 'default_language', null);
                 }
 

@@ -915,7 +915,7 @@ if (!function_exists('awsUploadFileAs')) {
      */
     function awsUploadFileAs($path, $content, $filename): bool
     {
-        return Storage::disk('s3')->putFileAs($path, $content, $filename);
+        return (bool) Storage::disk('s3')->putFileAs($path, $content, $filename);
     }
 }
 
