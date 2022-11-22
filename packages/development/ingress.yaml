@@ -2,6 +2,8 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: iatipublisher-webserver-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/proxy-body-size: 25m
 spec:
   tls:
     - hosts:
