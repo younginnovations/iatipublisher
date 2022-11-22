@@ -90,12 +90,6 @@ class ImportCsvService
     protected TransactionRepository $transactionRepo;
 
     /**
-     * Current User's id.
-     * @var
-     */
-    protected $userId;
-
-    /**
      * @var Filesystem
      */
     protected Filesystem $filesystem;
@@ -129,7 +123,6 @@ class ImportCsvService
         $this->activityRepo = $activityRepo;
         $this->organizationRepo = $organizationRepo;
         $this->transactionRepo = $transactionRepo;
-        $this->userId = Auth::user()?->organization_id ?? 1;
         $this->filesystem = $filesystem;
         $this->csv_data_storage_path = env('CSV_DATA_STORAGE_PATH', 'CsvImporter/tmp');
         $this->csv_file_storage_path = env('CSV_FILE_STORAGE_PATH', 'CsvImporter/file');
@@ -402,7 +395,7 @@ class ImportCsvService
                 sprintf('Error during reading data due to [%s]', $e->getMessage()),
                 [
                     'trace'           => $e->getTraceAsString(),
-                    'user_id'         => $this->userId,
+                    'user_id'         => Auth::user()->organization_id,
                     'organization_id' => Session::get('org_id'),
                 ]
             );
@@ -427,7 +420,7 @@ class ImportCsvService
                 sprintf('Error uploading Activity CSV file due to [%s]', $e->getMessage()),
                 [
                     'trace'   => $e->getTraceAsString(),
-                    'user_id' => $this->userId,
+                    'user_id' => Auth::user()->organization_id,
                 ]
             );
 

@@ -70,7 +70,7 @@ class Result
             if (!empty($indicator)) {
                 $indicatorData[$key]['measure'] = $indicatorAttributes[$key]['measure'];
                 $indicatorData[$key]['ascending'] = $indicatorAttributes[$key]['ascending'];
-                $indicatorData[$key]['aggregation_status'] = $indicatorAttributes[$key]['aggregation-status'];
+                $indicatorData[$key]['aggregation_status'] = Arr::get($indicatorAttributes[$key], 'aggregation-status', '');
                 $indicatorData[$key]['title'][0]['narrative'] = $this->value($indicator, 'title');
                 $indicatorData[$key]['description'][0]['narrative'] = $this->value($indicator, 'description');
                 $indicatorData[$key]['reference'] = $this->reference($indicator, $indicatorTemplate);
@@ -144,8 +144,8 @@ class Result
 
         if (count($baselines)) {
             foreach ($baselines as $baselineKey => $baselineValue) {
-                $baselineValues = Arr::get($baselineValue, 'baseline', []);
-                $baseline[$baselineKey]['comment'][0]['narrative'] = $this->value($baselineValues, 'comment');
+                $baselineValues = Arr::get($baselineValue, 'baseline') ?? [];
+                $baseline[$baselineKey]['comment'] = $this->comment($baselineValues, Arr::get($indicatorTemplate, '0.baseline'));
                 $baseline[$baselineKey]['document_link'] = $this->documentLink(['value' => $baselineValues], $index);
                 $baseline[$baselineKey]['location'] = $this->location($baselineValues, Arr::get($indicatorTemplate, '0.baseline'));
                 $baseline[$baselineKey]['dimension'] = $this->dimension($baselineValues, Arr::get($indicatorTemplate, '0.baseline'));
@@ -297,8 +297,10 @@ class Result
         $commentData = Arr::get($template, '0.comment', []);
         $comments = Arr::get($this->filterValues($data, 'comment'), '0.comment', []);
 
-        foreach ($comments as $index => $comment) {
-            $commentData[0]['narrative'][$index] = Arr::get($this->narrative($comment), '0');
+        if (!empty($comments)) {
+            foreach ($comments as $index => $comment) {
+                $commentData[0]['narrative'][$index] = Arr::get($this->narrative($comment), '0');
+            }
         }
 
         return $commentData;

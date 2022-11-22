@@ -708,7 +708,7 @@ class XmlValidator
 
         foreach ($mailingAddresses as $mailingAddressIndex => $mailingAddress) {
             $mailingAddressBase = sprintf('%s.mailing_address.%s', $contactBase, $mailingAddressIndex);
-            $tempRules = $this->factory->getRulesForNarrative($mailingAddress['narrative'], $mailingAddressBase);
+            $tempRules = $this->factory->getRulesForNarrative(Arr::get($mailingAddress, 'narrative', []), $mailingAddressBase);
 
             foreach ($tempRules as $idx => $tempRule) {
                 $rules[$idx] = $tempRule;
@@ -731,7 +731,7 @@ class XmlValidator
 
         foreach ($mailingAddresses as $mailingAddressIndex => $mailingAddress) {
             $mailingAddressBase = sprintf('%s.mailing_address.%s', $contactBase, $mailingAddressIndex);
-            $tempMessages = $this->factory->getMessagesForNarrative($mailingAddress['narrative'], $mailingAddressBase);
+            $tempMessages = $this->factory->getMessagesForNarrative(Arr::get($mailingAddress, 'narrative', []), $mailingAddressBase);
 
             foreach ($tempMessages as $idx => $tempMessage) {
                 $messages[$idx] = $tempMessage;

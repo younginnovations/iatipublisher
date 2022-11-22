@@ -128,13 +128,13 @@ class ImportActivityController extends Controller
                 if ($this->importCsvService->storeCsv($file)) {
                     $filename = str_replace(' ', '', $file->getClientOriginalName());
                     $this->importCsvService->startImport($filename)
-                                           ->fireCsvUploadEvent($filename);
+                        ->fireCsvUploadEvent($filename);
 
-//                    if (!$this->importCsvService->isInUTF8Encoding($filename)) {
-//                        $response = ['success' => false, 'code' => ['encoding_error', ['message' => 'Something went wrong']]];
-//
-//                        return response()->json($response);
-//                    }
+                    //                    if (!$this->importCsvService->isInUTF8Encoding($filename)) {
+                    //                        $response = ['success' => false, 'code' => ['encoding_error', ['message' => 'Something went wrong']]];
+                    //
+                    //                        return response()->json($response);
+                    //                    }
                 }
             }
 
@@ -207,6 +207,7 @@ class ImportActivityController extends Controller
             }
 
             $status = awsGetFile(sprintf('%s/%s/%s', $filetype === 'xml' ? $this->xml_data_storage_path : $this->csv_data_storage_path, $orgId, 'status.json'));
+            $schema_error = awsGetFile(sprintf('%s/%s/%s', $filetype === 'xml' ? $this->xml_data_storage_path : $this->csv_data_storage_path, $orgId, 'schema_error.log'));
 
             if (!$status) {
                 Session::put('error', 'status.json file not present in AWS');
@@ -215,6 +216,13 @@ class ImportActivityController extends Controller
             }
 
             $status = json_decode($status, true, 512, JSON_THROW_ON_ERROR);
+
+            if ($schema_error) {
+                Session::put('error', $status['message'] . '. To see errors <b>
+                <a href=' . awsUrl(sprintf('%s/%s/%s', $filetype === 'xml' ? $this->xml_data_storage_path : $this->csv_data_storage_path, $orgId, 'schema_error.log')) . ' target="_blank">Open Error File</a></b>');
+
+                return redirect()->route('admin.activities.index');
+            }
 
             if (!$status['success']) {
                 Session::put('error', $status['message']);

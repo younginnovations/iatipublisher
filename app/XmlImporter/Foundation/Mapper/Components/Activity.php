@@ -353,6 +353,8 @@ class Activity
     }
 
     /**
+     * Maps contactInfo fields.
+     *
      * @param $element
      * @param $template
      *
@@ -369,7 +371,7 @@ class Activity
         $this->contactInfo[$this->index]['telephone'] = $this->filterValues(Arr::get($element, 'value', []), 'telephone');
         $this->contactInfo[$this->index]['email'] = $this->filterValues(Arr::get($element, 'value', []), 'email');
         $this->contactInfo[$this->index]['website'] = $this->filterValues(Arr::get($element, 'value', []), 'website');
-        $this->contactInfo[$this->index]['mailing_address'] = $this->getMailingAddress($element);
+        $this->contactInfo[$this->index]['mailing_address'] = $this->getMailingAddress($element) ?? [];
         $this->index++;
 
         return $this->contactInfo;

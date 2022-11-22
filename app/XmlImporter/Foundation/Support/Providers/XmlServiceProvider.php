@@ -70,7 +70,6 @@ class XmlServiceProvider
             ->load($contents)
             ->schemaValidate($this->getSchemaPath());
 
-        // dd(libxml_get_errors());
         return $is_valid;
     }
 
