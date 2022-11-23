@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace App\XmlImporter\Foundation\Support\Factory;
 
+use App\Http\Requests\Activity\Description\DescriptionRequest;
+use App\Http\Requests\Activity\OtherIdentifier\OtherIdentifierRequest;
+use App\Http\Requests\Activity\Title\TitleRequest;
 use Illuminate\Support\Arr;
 
 class XmlValidator
@@ -152,6 +155,32 @@ class XmlValidator
             ->withErrors($shouldBeUnique);
     }
 
+    public function getBaseRules($baseRules, $element, $data): array
+    {
+        $rules = [];
+
+        foreach ($data as $idx => $value) {
+            foreach ($baseRules as $elementName => $baseRule) {
+                $rules[$element . '.' . $idx . '.' . $elementName] = $baseRule;
+            }
+        }
+
+        return $rules;
+    }
+
+    public function getBaseMessages($baseMessages, $element, $data): array
+    {
+        $messages = [];
+
+        foreach ($data as $idx => $value) {
+            foreach ($baseMessages as $elementName => $baseMessage) {
+                $messages[$element . '.' . $idx . '.' . $elementName] = $baseMessage;
+            }
+        }
+
+        return $messages;
+    }
+
     /**
      * @param array $activity
      *
@@ -159,10 +188,7 @@ class XmlValidator
      */
     protected function rulesForTitle(array $activity): array
     {
-        $title = Arr::get($activity, 'title', []);
-        $rules['title'] = 'nullable';
-
-        return $rules;
+        return $this->getBaseRules((new TitleRequest())->rules(), 'title', Arr::get($activity, 'title', []));
     }
 
     /**
@@ -172,85 +198,38 @@ class XmlValidator
      */
     protected function messagesForTitle(array $activity): array
     {
-        $title = Arr::get($activity, 'title', []);
-        $messages['title.required'] = trans('validation.required', ['attribute' => trans('element.title')]);
-        $messages['title.unique_lang'] = trans('validation.unique', ['attribute' => trans('element.language')]);
-
-        foreach ($title as $narrativeIndex => $narrative) {
-            $messages[sprintf('title.%s.narrative.required_with', $narrativeIndex)] = trans(
-                'validation.required_with',
-                ['attribute' => trans('element.title'), 'values' => trans('elementForm.narrative')]
-            );
-        }
-
-        return $messages;
+        return $this->getBaseMessages((new TitleRequest())->messages(), 'title', Arr::get($activity, 'title', []));
     }
 
     /**
      * Rules for Description.
      *
      * @param array $activity
+     *
      * @return array
      */
     protected function rulesForDescription(array $activity): array
     {
-        $rules = [];
-        $descriptions = Arr::get($activity, 'description');
-        $rules['description'] = 'nullable';
-
-        foreach ($descriptions as $descriptionIndex => $description) {
-            $rules[sprintf('description.%s.type', $descriptionIndex)] = sprintf(
-                'nullable|in:%s',
-                $this->validCodeList('DescriptionType')
-            );
-
-            $tempRules = $this->factory->getRulesForNarrative(Arr::get($description, 'narrative', []), sprintf('description.%s', $descriptionIndex));
-
-            foreach ($tempRules as $idx => $tempRule) {
-                $rules[$idx] = $tempRule;
-            }
-        }
-
-        return $rules;
+        return (new DescriptionRequest())->getRulesForDescription(Arr::get($activity, 'description'));
     }
 
     /**
      * Messages for Description.
      *
      * @param array $activity
+     *
      * @return array
      */
     protected function messagesForDescription(array $activity): array
     {
-        $messages = [];
-        $descriptions = Arr::get($activity, 'description');
-
-        $messages['description.required'] = trans('validation.required', ['attribute' => trans('element.description')]);
-
-        foreach ($descriptions as $descriptionIndex => $description) {
-            $messages[sprintf('description.%s.type.required', $descriptionIndex)] = trans(
-                'validation.required',
-                ['attribute' => trans('elementForm.description_type')]
-            );
-            $messages[sprintf('description.%s.type.in', $descriptionIndex)] = trans(
-                'validation.code_list',
-                ['attribute' => trans('elementForm.description_type')]
-            );
-
-            $tempMessages = $this->factory->getMessagesForNarrative(Arr::get($description, 'narrative', []), sprintf('description.%s', $descriptionIndex));
-
-            foreach ($tempMessages as $idx => $tempMessage) {
-                $messages[$idx] = $tempMessage;
-            }
-        }
-
-        return $messages;
+        return (new DescriptionRequest())->getMessagesForDescription(Arr::get($activity, 'description'));
     }
 
     /**
      * Rules for Other Identifier.
      *
      * @param array $activity
+     *
      * @return array
      */
     public function rulesForOtherIdentifier(array $activity): array
@@ -272,6 +251,11 @@ class XmlValidator
             }
         }
 
+        $baseRules = (new OtherIdentifierRequest())->getRulesForOtherIdentifier(Arr::get($activity, 'other_identifier'));
+
+        file_put_contents('test-other_identifier-rules.json', json_encode($rules));
+        file_put_contents('test-other_identifier-base-rules.json', json_encode($baseRules));
+
         return $rules;
     }
 
@@ -279,6 +263,7 @@ class XmlValidator
      * Messages for Other Identifier.
      *
      * @param array $activity
+     *
      * @return array
      */
     public function messagesForOtherIdentifier(array $activity): array
@@ -306,6 +291,11 @@ class XmlValidator
                 $messages[$idx] = $tempMessage;
             }
         }
+
+        $baseMessages = (new OtherIdentifierRequest())->getMessagesForOtherIdentifier(Arr::get($activity, 'other_identifier'));
+
+        file_put_contents('test-other_identifier-messages.json', json_encode($messages));
+        file_put_contents('test-other_identifier-base-messages.json', json_encode($baseMessages));
 
         return $messages;
     }
