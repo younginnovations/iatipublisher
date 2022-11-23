@@ -38,7 +38,7 @@ class ContactInfoRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    protected function getRulesForContactInfo(array $formFields): array
+    public function getRulesForContactInfo(array $formFields): array
     {
         $rules = [];
 
@@ -67,7 +67,7 @@ class ContactInfoRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    protected function getMessagesForContactInfo(array $formFields): array
+    public function getMessagesForContactInfo(array $formFields): array
     {
         $messages = [];
 

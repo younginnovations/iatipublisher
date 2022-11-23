@@ -6,6 +6,7 @@ namespace App\CsvImporter\Entities\Activity\Components\Elements;
 
 use App\CsvImporter\Entities\Activity\Components\Elements\Foundation\Iati\Element;
 use App\CsvImporter\Entities\Activity\Components\Factory\Validation;
+use App\Http\Requests\Activity\Identifier\IdentifierRequest;
 
 /**
  * Class Identifier.
@@ -31,6 +32,7 @@ class Identifier extends Element
      * @var array
      */
     protected array $template = [['activity_identifier' => '']];
+    private IdentifierRequest $request;
 
     /**
      * Description constructor.
@@ -41,6 +43,7 @@ class Identifier extends Element
     {
         $this->prepare($fields);
         $this->factory = $factory;
+        $this->request = new IdentifierRequest();
     }
 
     /**
@@ -98,10 +101,7 @@ class Identifier extends Element
      */
     public function rules(): array
     {
-        return [
-            'activity_identifier' => 'required',
-            'activity_identifier' => sprintf('nullable|not_in:%s', implode(',', $this->activityIdentifiers ?? [])),
-        ];
+        return $this->getBaseRules($this->request->rules());
     }
 
     /**
@@ -111,10 +111,7 @@ class Identifier extends Element
      */
     public function messages(): array
     {
-        return [
-            'activity_identifier.required' => trans('validation.required', ['attribute' => trans('elementForm.activity_identifier')]),
-            'activity_identifier.not_in'   => trans('validation.unique', ['attribute' => trans('elementForm.activity_identifier')]),
-        ];
+        return $this->getBaseMessages($this->request->messages());
     }
 
     /**

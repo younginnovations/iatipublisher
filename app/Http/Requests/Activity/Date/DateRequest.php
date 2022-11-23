@@ -38,7 +38,7 @@ class DateRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    protected function getRulesForDate(array $formFields): array
+    public function getRulesForDate(array $formFields): array
     {
         $rules = [];
 
@@ -59,14 +59,14 @@ class DateRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    protected function getMessagesForDate(array $formFields): array
+    public function getMessagesForDate(array $formFields): array
     {
         $messages = [];
 
         foreach ($formFields as $activityDateIndex => $activityDate) {
             $activityDateForm = sprintf('activity_date.%s', $activityDateIndex);
             $messages[sprintf('%s.date.date', $activityDateForm)] = 'Date is invalid.';
-            $messages = $messages + $this->getMessagesForNarrative($activityDate['narrative'], $activityDateForm);
+            $messages += $this->getMessagesForNarrative($activityDate['narrative'], $activityDateForm);
         }
 
         return $messages;

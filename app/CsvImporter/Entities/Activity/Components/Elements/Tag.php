@@ -6,6 +6,7 @@ namespace App\CsvImporter\Entities\Activity\Components\Elements;
 
 use App\CsvImporter\Entities\Activity\Components\Elements\Foundation\Iati\Element;
 use App\CsvImporter\Entities\Activity\Components\Factory\Validation;
+use App\Http\Requests\Activity\Tag\TagRequest;
 use Illuminate\Support\Arr;
 
 /**
@@ -30,6 +31,7 @@ class Tag extends Element
      * @var string
      */
     protected string $index = 'tag';
+    private TagRequest $request;
 
     /**
      * Tag constructor.
@@ -41,6 +43,7 @@ class Tag extends Element
     {
         $this->prepare($fields);
         $this->factory = $factory;
+        $this->request = new TagRequest();
     }
 
     /**
@@ -203,74 +206,76 @@ class Tag extends Element
      */
     public function rules(): array
     {
-        $validGoalsTagCode = implode(',', $this->validTagCodeList('UNSDG-Goals'));
-        $validTargetsTagCode = implode(',', $this->validTagCodeList('UNSDG-Targets'));
+        return $this->getBaseRules($this->request->rules());
 
-        $rules = [];
-
-        foreach (Arr::get($this->data(), 'tag', []) as $key => $value) {
-            $tagForm = sprintf('tag.%s', $key);
-            $rules[sprintf('%s.tag_vocabulary', $tagForm)] = sprintf(
-                'in:1,2,3,99|required_with: %s,%s,%s,%s,%s',
-                sprintf('%s.tag_text', $tagForm),
-                sprintf('%s.goals_tag_code', $tagForm),
-                sprintf('%s.targets_tag_code', $tagForm),
-                sprintf('%s.vocabulary_uri', $tagForm),
-                sprintf('%s.narrative.0.narrative', $tagForm),
-            );
-            $vocabulary = Arr::get($value, 'tag_vocabulary');
-
-            if ($vocabulary) {
-                $rules[sprintf('%s.vocabulary_uri', $tagForm)] = 'nullable|url';
-
-                switch ($vocabulary) {
-                    case '1':
-                        $rules[sprintf('%s.tag_text', $tagForm)] = sprintf(
-                            'required_with: %s,%s',
-                            sprintf('%s.tag_vocabulary', $tagForm),
-                            sprintf('%s.narrative.0.narrative', $tagForm),
-                        );
-                        break;
-                    case '2':
-                        $rules[sprintf('%s.goals_tag_code', $tagForm)] = sprintf(
-                            'sometimes|in:%s|required_with: %s,%s,%s',
-                            $validGoalsTagCode,
-                            sprintf('%s.tag_vocabulary', $tagForm),
-                            sprintf('%s.vocabulary_uri', $tagForm),
-                            sprintf('%s.narrative.0.narrative', $tagForm),
-                        );
-                        break;
-                    case '3':
-                        $rules[sprintf('%s.targets_tag_code', $tagForm)] = sprintf(
-                            'in:%s|required_with: %s,%s,%s',
-                            $validTargetsTagCode,
-                            sprintf('%s.tag_vocabulary', $tagForm),
-                            sprintf('%s.vocabulary_uri', $tagForm),
-                            sprintf('%s.narrative.0.narrative', $tagForm),
-                        );
-                        break;
-                    case '99':
-                        $rules[sprintf('%s.tag_text', $tagForm)] = sprintf(
-                            'required_with: %s,%s,%s',
-                            sprintf('%s.tag_vocabulary', $tagForm),
-                            sprintf('%s.vocabulary_uri', $tagForm),
-                            sprintf('%s.narrative.0.narrative', $tagForm),
-                        );
-                        $rules[sprintf('%s.vocabulary_uri', $tagForm)] = sprintf(
-                            'required_with: %s,%s,%s',
-                            sprintf('%s.tag_vocabulary', $tagForm),
-                            sprintf('%s.tag_text', $tagForm),
-                            sprintf('%s.narrative.0.narrative', $tagForm),
-                        );
-                        break;
-                    default:
-                        $rules[sprintf('%s.tag_text', $tagForm)] = 'required';
-                        break;
-                }
-            }
-        }
-
-        return $rules;
+//        $validGoalsTagCode = implode(',', $this->validTagCodeList('UNSDG-Goals'));
+//        $validTargetsTagCode = implode(',', $this->validTagCodeList('UNSDG-Targets'));
+//
+//        $rules = [];
+//
+//        foreach (Arr::get($this->data(), 'tag', []) as $key => $value) {
+//            $tagForm = sprintf('tag.%s', $key);
+//            $rules[sprintf('%s.tag_vocabulary', $tagForm)] = sprintf(
+//                'in:1,2,3,99|required_with: %s,%s,%s,%s,%s',
+//                sprintf('%s.tag_text', $tagForm),
+//                sprintf('%s.goals_tag_code', $tagForm),
+//                sprintf('%s.targets_tag_code', $tagForm),
+//                sprintf('%s.vocabulary_uri', $tagForm),
+//                sprintf('%s.narrative.0.narrative', $tagForm),
+//            );
+//            $vocabulary = Arr::get($value, 'tag_vocabulary');
+//
+//            if ($vocabulary) {
+//                $rules[sprintf('%s.vocabulary_uri', $tagForm)] = 'nullable|url';
+//
+//                switch ($vocabulary) {
+//                    case '1':
+//                        $rules[sprintf('%s.tag_text', $tagForm)] = sprintf(
+//                            'required_with: %s,%s',
+//                            sprintf('%s.tag_vocabulary', $tagForm),
+//                            sprintf('%s.narrative.0.narrative', $tagForm),
+//                        );
+//                        break;
+//                    case '2':
+//                        $rules[sprintf('%s.goals_tag_code', $tagForm)] = sprintf(
+//                            'in:%s|required_with: %s,%s,%s',
+//                            $validGoalsTagCode,
+//                            sprintf('%s.tag_vocabulary', $tagForm),
+//                            sprintf('%s.vocabulary_uri', $tagForm),
+//                            sprintf('%s.narrative.0.narrative', $tagForm),
+//                        );
+//                        break;
+//                    case '3':
+//                        $rules[sprintf('%s.targets_tag_code', $tagForm)] = sprintf(
+//                            'in:%s|required_with: %s,%s,%s',
+//                            $validTargetsTagCode,
+//                            sprintf('%s.tag_vocabulary', $tagForm),
+//                            sprintf('%s.vocabulary_uri', $tagForm),
+//                            sprintf('%s.narrative.0.narrative', $tagForm),
+//                        );
+//                        break;
+//                    case '99':
+//                        $rules[sprintf('%s.tag_text', $tagForm)] = sprintf(
+//                            'required_with: %s,%s,%s',
+//                            sprintf('%s.tag_vocabulary', $tagForm),
+//                            sprintf('%s.vocabulary_uri', $tagForm),
+//                            sprintf('%s.narrative.0.narrative', $tagForm),
+//                        );
+//                        $rules[sprintf('%s.vocabulary_uri', $tagForm)] = sprintf(
+//                            'required_with: %s,%s,%s',
+//                            sprintf('%s.tag_vocabulary', $tagForm),
+//                            sprintf('%s.tag_text', $tagForm),
+//                            sprintf('%s.narrative.0.narrative', $tagForm),
+//                        );
+//                        break;
+//                    default:
+//                        $rules[sprintf('%s.tag_text', $tagForm)] = 'required';
+//                        break;
+//                }
+//            }
+//        }
+//
+//        return $rules;
     }
 
     /**
@@ -293,77 +298,67 @@ class Tag extends Element
      */
     public function messages(): array
     {
-        $messages = [];
+        return $this->getBaseMessages($this->request->messages());
 
-        foreach (Arr::get($this->data(), 'tag', []) as $key => $value) {
-            $tagForm = sprintf('tag.%s', $key);
-            $messages[sprintf('%s.tag_vocabulary.%s', $tagForm, 'in')] = trans('validation.code_list', ['attribute' => trans('elementForm.tag_vocabulary')]);
-            $messages[sprintf('%s.tag_vocabulary.%s', $tagForm, 'required_with')] = trans('validation.required_with', ['attribute' => trans('elementForm.tag_vocabulary'), 'values' => 'code, uri or narrative']);
-            $vocabulary = Arr::get($value, 'tag_vocabulary');
-
-            if ($vocabulary) {
-                $messages[sprintf('%s.vocabulary_uri.%s', $tagForm, 'url')] = trans(
-                    'validation.active_url',
-                    ['attribute' => trans('elementForm.tag_vocabulary_url')]
-                );
-
-                switch ($vocabulary) {
-                    case '1':
-                        $messages[sprintf('%s.tag_text.%s', $tagForm, 'required_with')] = trans(
-                            'validation.required_with',
-                            [
-                                'attribute' => trans('elementForm.tag_code'),
-                                'values' => 'Vocabulary, url or narrative',
-                            ]
-                        );
-                        break;
-                    case '2':
-                        $messages[sprintf('%s.goals_tag_code.%s', $tagForm, 'required_with')] = trans(
-                            'validation.required_with',
-                            [
-                                'attribute' => trans('elementForm.tag_code'),
-                                'values' => 'Vocabulary, url or narrative',
-                            ]
-                        );
-                        break;
-                    case '3':
-                        $messages[sprintf('%s.targets_tag_code.%s', $tagForm, 'required_with')] = trans(
-                            'validation.required_with',
-                            [
-                                'attribute' => trans('elementForm.tag_code'),
-                                'values' => 'Vocabulary, url or narrative',
-                            ]
-                        );
-                        break;
-                    case '99':
-                        $messages[sprintf('%s.tag_text.%s', $tagForm, 'required_with')] = trans(
-                            'validation.required_with',
-                            [
-                                'attribute' => trans('elementForm.tag_code'),
-                                'values' => 'Vocabulary, url or narrative',
-                            ]
-                        );
-                        $messages[sprintf('%s.vocabulary_uri.%s', $tagForm, 'required_with')] = trans(
-                            'validation.required_with',
-                            [
-                                'attribute' => trans('elementForm.vocabulary_uri'),
-                                'values' => 'Vocabulary, code or narrative',
-                            ]
-                        );
-                        break;
-                    default:
-                        $messages[sprintf('%s.tag_text.%s', $tagForm, 'required_with')] = trans(
-                            'validation.required_with',
-                            [
-                                'attribute' => trans('elementForm.tag_code'),
-                                'values' => 'Vocabulary, url or narrative',
-                            ]
-                        );
-                }
-            }
-        }
-
-        return $messages;
+//        $messages = [];
+//
+//        foreach (Arr::get($this->data(), 'tag', []) as $key => $value) {
+//            $tagForm = sprintf('tag.%s', $key);
+//            $messages[sprintf('%s.tag_vocabulary.%s', $tagForm, 'in')] = trans('validation.code_list', ['attribute' => trans('elementForm.tag_vocabulary')]);
+//            $messages[sprintf('%s.tag_vocabulary.%s', $tagForm, 'required_with')] = trans('validation.required_with', ['attribute' => trans('elementForm.tag_vocabulary'), 'values' => 'code, uri or narrative']);
+//            $vocabulary = Arr::get($value, 'tag_vocabulary');
+//
+//            if ($vocabulary) {
+//                $messages[sprintf('%s.vocabulary_uri.%s', $tagForm, 'url')] = trans(
+//                    'validation.active_url',
+//                    ['attribute' => trans('elementForm.tag_vocabulary_url')]
+//                );
+//
+//                switch ($vocabulary) {
+//                    case '1':
+//                        $messages[sprintf('%s.tag_text.%s', $tagForm, 'required_with')] = trans(
+//                            'validation.required_with',
+//                            ['attribute' => trans('elementForm.tag_code'),
+//                                'values' => 'Vocabulary, url or narrative', ]
+//                        );
+//                        break;
+//                    case '2':
+//                        $messages[sprintf('%s.goals_tag_code.%s', $tagForm, 'required_with')] = trans(
+//                            'validation.required_with',
+//                            ['attribute' => trans('elementForm.tag_code'),
+//                             'values' => 'Vocabulary, url or narrative', ]
+//                        );
+//                        break;
+//                    case '3':
+//                        $messages[sprintf('%s.targets_tag_code.%s', $tagForm, 'required_with')] = trans(
+//                            'validation.required_with',
+//                            ['attribute' => trans('elementForm.tag_code'),
+//                             'values' => 'Vocabulary, url or narrative', ]
+//                        );
+//                        break;
+//                    case '99':
+//                        $messages[sprintf('%s.tag_text.%s', $tagForm, 'required_with')] = trans(
+//                            'validation.required_with',
+//                            ['attribute' => trans('elementForm.tag_code'),
+//                             'values' => 'Vocabulary, url or narrative', ]
+//                        );
+//                        $messages[sprintf('%s.vocabulary_uri.%s', $tagForm, 'required_with')] = trans(
+//                            'validation.required_with',
+//                            ['attribute' => trans('elementForm.vocabulary_uri'),
+//                             'values' => 'Vocabulary, code or narrative', ]
+//                        );
+//                        break;
+//                    default:
+//                        $messages[sprintf('%s.tag_text.%s', $tagForm, 'required_with')] = trans(
+//                            'validation.required_with',
+//                            ['attribute' => trans('elementForm.tag_code'),
+//                             'values' => 'Vocabulary, url or narrative', ]
+//                        );
+//                }
+//            }
+//        }
+//
+//        return $messages;
     }
 
     /**

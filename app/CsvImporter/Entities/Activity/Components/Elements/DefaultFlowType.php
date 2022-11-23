@@ -6,6 +6,7 @@ namespace App\CsvImporter\Entities\Activity\Components\Elements;
 
 use App\CsvImporter\Entities\Activity\Components\Elements\Foundation\Iati\Element;
 use App\CsvImporter\Entities\Activity\Components\Factory\Validation;
+use App\Http\Requests\Activity\DefaultFlowType\DefaultFlowTypeRequest;
 use Illuminate\Support\Arr;
 
 /**
@@ -29,6 +30,7 @@ class DefaultFlowType extends Element
      * @var array
      */
     protected array $data;
+    private DefaultFlowTypeRequest $request;
 
     /**
      * Description constructor.
@@ -42,6 +44,7 @@ class DefaultFlowType extends Element
     {
         $this->prepare($fields);
         $this->factory = $factory;
+        $this->request = new DefaultFlowTypeRequest();
     }
 
     /**
@@ -118,13 +121,14 @@ class DefaultFlowType extends Element
      */
     public function rules(): array
     {
-        $rules = [
-            $this->csvHeader() => sprintf('nullable|in:%s', $this->validDefaultFlowType()),
-        ];
-
-        (!is_array(Arr::get($this->data, 'default_flow_type'))) ?: $rules[$this->csvHeader()] .= 'nullable|size:1';
-
-        return $rules;
+        return $this->getBaseRules($this->request->rules());
+//        $rules = [
+//            $this->csvHeader() => sprintf('nullable|in:%s', $this->validDefaultFlowType()),
+//        ];
+//
+//        (!is_array(Arr::get($this->data, 'default_flow_type'))) ?: $rules[$this->csvHeader()] .= 'nullable|size:1';
+//
+//        return $rules;
     }
 
     /**
@@ -134,12 +138,14 @@ class DefaultFlowType extends Element
      */
     public function messages(): array
     {
-        $key = $this->csvHeader();
+        return $this->getBaseMessages($this->request->messages());
 
-        return [
-            sprintf('%s.size', $key)     => trans('validation.multiple_values', ['attribute' => trans('element.default_flow_type')]),
-            sprintf('%s.in', $key)       => trans('validation.code_list', ['attribute' => trans('element.default_flow_type')]),
-        ];
+//        $key = $this->csvHeader();
+//
+//        return [
+//            sprintf('%s.size', $key)     => trans('validation.multiple_values', ['attribute' => trans('element.default_flow_type')]),
+//            sprintf('%s.in', $key)       => trans('validation.code_list', ['attribute' => trans('element.default_flow_type')]),
+//        ];
     }
 
     /**

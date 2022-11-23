@@ -6,6 +6,7 @@ namespace App\CsvImporter\Entities\Activity\Components\Elements;
 
 use App\CsvImporter\Entities\Activity\Components\Elements\Foundation\Iati\Element;
 use App\CsvImporter\Entities\Activity\Components\Factory\Validation;
+use App\Http\Requests\Activity\Scope\ScopeRequest;
 use Illuminate\Support\Arr;
 
 /**
@@ -26,6 +27,7 @@ class ActivityScope extends Element
      * @var string
      */
     protected string $index = 'activity_scope';
+    private ScopeRequest $request;
 
     /**
      * ActivityScope constructor.
@@ -37,6 +39,7 @@ class ActivityScope extends Element
     {
         $this->prepare($fields);
         $this->factory = $factory;
+        $this->request = new ScopeRequest();
     }
 
     /**
@@ -111,9 +114,11 @@ class ActivityScope extends Element
      */
     public function rules(): array
     {
-        $rules[$this->csvHeader()] = (is_array(Arr::get($this->data, $this->csvHeader()))) ? 'size:1' : sprintf('in:%s', $this->validActivityScope());
+        return $this->getBaseRules($this->request->rules());
 
-        return $rules;
+//        $rules[$this->csvHeader()] = (is_array(Arr::get($this->data, $this->csvHeader()))) ? 'size:1' : sprintf('in:%s', $this->validActivityScope());
+//
+//        return $rules;
     }
 
     /**
@@ -123,10 +128,12 @@ class ActivityScope extends Element
      */
     public function messages(): array
     {
-        return [
-            $this->csvHeader() . '.size' => trans('validation.multiple_values', ['attribute' => trans('element.activity_scope')]),
-            $this->csvHeader() . '.in'   => trans('validation.code_list', ['attribute' => trans('element.activity_scope')]),
-        ];
+        return $this->getBaseMessages($this->request->messages());
+
+//        return [
+//            $this->csvHeader() . '.size' => trans('validation.multiple_values', ['attribute' => trans('element.activity_scope')]),
+//            $this->csvHeader() . '.in'   => trans('validation.code_list', ['attribute' => trans('element.activity_scope')]),
+//        ];
     }
 
     /**

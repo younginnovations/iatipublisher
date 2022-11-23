@@ -6,6 +6,7 @@ namespace App\CsvImporter\Entities\Activity\Components\Elements;
 
 use App\CsvImporter\Entities\Activity\Components\Elements\Foundation\Iati\Element;
 use App\CsvImporter\Entities\Activity\Components\Factory\Validation;
+use App\Http\Requests\Activity\ContactInfo\ContactInfoRequest;
 
 /**
  * Class ContactInfo.
@@ -34,6 +35,7 @@ class ContactInfo extends Element
      * @var string
      */
     protected string $index = 'contact_info';
+    private ContactInfoRequest $request;
 
     /**
      * ContactInfo constructor.
@@ -45,6 +47,7 @@ class ContactInfo extends Element
     {
         $this->prepare($fields);
         $this->factory = $factory;
+        $this->request = new ContactInfoRequest();
     }
 
     /**
@@ -309,13 +312,15 @@ class ContactInfo extends Element
      */
     public function rules(): array
     {
-        $rules = [];
+        return $this->getBaseRules($this->request->rules());
 
-        $rules['contact_info.*.type'] = sprintf('in:%s', $this->contactTypeCode());
-        $rules['contact_info.*.email.0.email'] = 'email';
-        $rules['contact_info.*.website.0.website'] = 'nullable|url';
-
-        return $rules;
+//        $rules = [];
+//
+//        $rules['contact_info.*.type'] = sprintf('in:%s', $this->contactTypeCode());
+//        $rules['contact_info.*.email.0.email'] = 'email';
+//        $rules['contact_info.*.website.0.website'] = 'nullable|url';
+//
+//        return $rules;
     }
 
     /**
@@ -325,13 +330,15 @@ class ContactInfo extends Element
      */
     public function messages(): array
     {
-        $messages = [];
+        return $this->getBaseMessages($this->request->messages());
 
-        $messages['contact_info.*.type.in'] = trans('validation.code_list', ['attribute' => trans('contact info element contact_type')]);
-        $messages['contact_info.*.email.0.email.email'] = trans('validation.email', ['attribute' => trans('contact info element email')]);
-        $messages['contact_info.*.website.0.website.url'] = trans('validation.url', ['attribute' => trans('contact info element website')]);
-
-        return $messages;
+//        $messages = [];
+//
+//        $messages['contact_info.*.type.in'] = trans('validation.code_list', ['attribute' => trans('contact info element contact_type')]);
+//        $messages['contact_info.*.email.0.email.email'] = trans('validation.email', ['attribute' => trans('contact info element email')]);
+//        $messages['contact_info.*.website.0.website.url'] = trans('validation.url', ['attribute' => trans('contact info element website')]);
+//
+//        return $messages;
     }
 
     /**

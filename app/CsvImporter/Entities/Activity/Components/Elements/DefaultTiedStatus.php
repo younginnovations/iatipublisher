@@ -6,6 +6,7 @@ namespace App\CsvImporter\Entities\Activity\Components\Elements;
 
 use App\CsvImporter\Entities\Activity\Components\Elements\Foundation\Iati\Element;
 use App\CsvImporter\Entities\Activity\Components\Factory\Validation;
+use App\Http\Requests\Activity\DefaultTiedStatus\DefaultTiedStatusRequest;
 use Illuminate\Support\Arr;
 
 /**
@@ -29,6 +30,7 @@ class DefaultTiedStatus extends Element
      * @var array
      */
     protected array $data;
+    private DefaultTiedStatusRequest $request;
 
     /**
      * Description constructor.
@@ -42,6 +44,7 @@ class DefaultTiedStatus extends Element
     {
         $this->prepare($fields);
         $this->factory = $factory;
+        $this->request = new DefaultTiedStatusRequest();
     }
 
     /**
@@ -118,13 +121,15 @@ class DefaultTiedStatus extends Element
      */
     public function rules(): array
     {
-        $rules = [
-            $this->csvHeader() => sprintf('nullable|in:%s', $this->validDefaultTiedStatus()),
-        ];
+        return $this->getBaseRules($this->request->rules());
 
-        (!is_array(Arr::get($this->data, 'default_tied_status'))) ?: $rules[$this->csvHeader()] .= 'nullable|size:1';
-
-        return $rules;
+//        $rules = [
+//            $this->csvHeader() => sprintf('nullable|in:%s', $this->validDefaultTiedStatus()),
+//        ];
+//
+//        (!is_array(Arr::get($this->data, 'default_tied_status'))) ?: $rules[$this->csvHeader()] .= 'nullable|size:1';
+//
+//        return $rules;
     }
 
     /**
@@ -134,12 +139,14 @@ class DefaultTiedStatus extends Element
      */
     public function messages(): array
     {
-        $key = $this->csvHeader();
+        return $this->getBaseMessages($this->request->messages());
 
-        return [
-            sprintf('%s.size', $key)     => trans('validation.multiple_values', ['attribute' => trans('element.default_tied_status')]),
-            sprintf('%s.in', $key)       => trans('validation.code_list', ['attribute' => trans('element.default_tied_status')]),
-        ];
+//        $key = $this->csvHeader();
+//
+//        return [
+//            sprintf('%s.size', $key)     => trans('validation.multiple_values', ['attribute' => trans('element.default_tied_status')]),
+//            sprintf('%s.in', $key)       => trans('validation.code_list', ['attribute' => trans('element.default_tied_status')]),
+//        ];
     }
 
     /**

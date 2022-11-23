@@ -139,17 +139,11 @@ class ImportCsvService
     {
         try {
             $uploadedFile = awsGetFile(sprintf('%s/%s/%s', $this->csv_file_storage_path, Auth::user()->organization->id, $filename));
-            $s3 = Storage::disk('local');
-            $localPath = sprintf('%s/%s/%s', 'CsvImporter/file', Auth::user()->organization->id, $filename);
-            $s3->put($localPath, $uploadedFile);
-
-            $file = new File(storage_path(sprintf('%s/%s', 'app', $localPath)));
+            $localStorageFile = $this->localStorageFile($uploadedFile, $filename);
             Session::put('user_id', Auth::user()->id);
             Session::put('org_id', Auth::user()->organization->id);
 
-            $activityIdentifiers = $this->getIdentifiers();
-
-            $this->processor->pushIntoQueue($file, $filename, $activityIdentifiers);
+            $this->processor->pushIntoQueue($localStorageFile, $filename, $this->getIdentifiers());
         } catch (Exception $e) {
             $this->logger->error(
                 $e->getMessage(),
@@ -159,6 +153,23 @@ class ImportCsvService
                 ]
             );
         }
+    }
+
+    /**
+     * Returns local storage file.
+     *
+     * @param $file
+     * @param $filename
+     *
+     * @return File
+     */
+    public function localStorageFile($file, $filename): File
+    {
+        $localStorage = Storage::disk('local');
+        $localStoragePath = sprintf('%s/%s/%s', env('CSV_FILE_LOCAL_STORAGE_PATH'), Auth::user()->organization->id, $filename);
+        $localStorage->put($localStoragePath, $file);
+
+        return new File(storage_path(sprintf('%s/%s', 'app', $localStoragePath)));
     }
 
     /**
