@@ -13,8 +13,8 @@
     @close="publishToggle"
     @reset="resetPublishStep"
   >
-    <div class="mb-4 popup">
-      <div class="flex items-center mb-6 text-sm title">
+    <div class="popup mb-4">
+      <div class="title mb-6 flex items-center text-sm">
         <svg-vue
           class="mr-1 text-lg"
           :class="{
@@ -26,13 +26,16 @@
         <b>{{ publishStateChange.title }}</b>
       </div>
       <div
-        class="p-4 rounded-lg bg-mint"
+        class="rounded-lg bg-mint p-4"
         :class="{
           'bg-mint': publishStateChange.alertState,
           'bg-[#FFF1F0]': !publishStateChange.alertState,
         }"
       >
-        <div class="text-sm leading-normal" v-html="publishStateChange.description"></div>
+        <div
+          class="text-sm leading-normal"
+          v-html="publishStateChange.description"
+        ></div>
       </div>
     </div>
     <div class="flex justify-end">
@@ -40,7 +43,7 @@
         <template v-if="coreElementStatus">
           <BtnComponent
             v-if="publishStep == 0"
-            class="px-6 uppercase bg-white"
+            class="bg-white px-6 uppercase"
             text="Go Back"
             type=""
             @click="publishValue = false"
@@ -56,7 +59,7 @@
         <template v-else>
           <BtnComponent
             v-if="publishStep == 0"
-            class="px-6 uppercase bg-white"
+            class="bg-white px-6 uppercase"
             text="Continue Anyway"
             type=""
             @click="stepPlusOne"
@@ -72,7 +75,7 @@
 
         <BtnComponent
           v-if="publishStep === 1 || publishStep === 2"
-          class="px-6 uppercase bg-white"
+          class="bg-white px-6 uppercase"
           text="Go Back"
           type=""
           @click="stepMinusOne"
@@ -99,7 +102,7 @@
         <!-- api publishing button (publishFunction) -->
         <BtnComponent
           v-if="publishStep === 3 || publishStep === 4"
-          class="px-6 uppercase bg-white"
+          class="bg-white px-6 uppercase"
           text="Publish Anyway"
           type=""
           @click="publishFunction"
@@ -115,24 +118,28 @@
       </div>
     </div>
   </Modal>
-  <Loader v-if="loader" :text="loaderText" :class="{ 'animate-loader': loader }" />
+  <Loader
+    v-if="loader"
+    :text="loaderText"
+    :class="{ 'animate-loader': loader }"
+  />
 </template>
 
 <script setup lang="ts">
-import { defineProps, reactive, ref, toRefs, computed, inject } from "vue";
-import { useToggle } from "@vueuse/core";
-import axios from "axios";
+import { defineProps, reactive, ref, toRefs, computed, inject } from 'vue';
+import { useToggle } from '@vueuse/core';
+import axios from 'axios';
 
 //component
-import BtnComponent from "Components/ButtonComponent.vue";
-import Modal from "Components/PopupModal.vue";
-import Loader from "Components/sections/ProgressLoader.vue";
+import BtnComponent from 'Components/ButtonComponent.vue';
+import Modal from 'Components/PopupModal.vue';
+import Loader from 'Components/sections/ProgressLoader.vue';
 
 // Vuex Store
-import { detailStore } from "Store/activities/show";
+import { detailStore } from 'Store/activities/show';
 
 const props = defineProps({
-  type: { type: String, default: "primary" },
+  type: { type: String, default: 'primary' },
   linkedToIati: { type: Boolean, required: true },
   status: { type: String, required: true },
   coreCompleted: { type: Boolean, required: true },
@@ -165,7 +172,7 @@ const loader = ref(false);
 const coreElementStatus = coreCompleted.value;
 
 // Dynamic text for loader
-const loaderText = ref("Please Wait");
+const loaderText = ref('Please Wait');
 
 // reset step to zero after closing modal
 const resetPublishStep = () => {
@@ -176,26 +183,26 @@ const resetPublishStep = () => {
 // computed function to change content of modal
 const publishStateChange = computed(() => {
   const publishState = reactive({
-    title: "",
-    description: "",
-    icon: "",
+    title: '',
+    description: '',
+    icon: '',
     alertState: true,
   });
 
-  let title = "",
-    description = "",
-    icon = "tick";
+  let title = '',
+    description = '',
+    icon = 'tick';
 
   // different content for step 1 based on coreElement status
   if (coreElementStatus) {
-    title = "Core Elements Complete";
+    title = 'Core Elements Complete';
     description =
-      "Congratulations! All the core elements are complete. Continue to Validate this activity.";
+      'Congratulations! All the core elements are complete. Continue to Validate this activity.';
   } else {
-    title = "Core Elements not complete";
+    title = 'Core Elements not complete';
     description =
-      "<p>There is missing data in some of the core elements. We highly recommend that you complete these data fields to help ensure your data is useful.</p><p>Do you want to continue anyway and run checks on (validate) this data.</p>";
-    icon = "warning-fill";
+      '<p>There is missing data in some of the core elements. We highly recommend that you complete these data fields to help ensure your data is useful.</p><p>Do you want to continue anyway and run checks on (validate) this data.</p>';
+    icon = 'warning-fill';
   }
 
   switch (publishStep.value) {
@@ -267,7 +274,7 @@ let err: Err = reactive({
 
 const validatorFunction = () => {
   loader.value = true;
-  loaderText.value = "Validating Activity";
+  loaderText.value = 'Validating Activity';
 
   axios.post(`/activity/${id}/validateActivity`).then((res) => {
     const response = res.data;
@@ -278,7 +285,7 @@ const validatorFunction = () => {
     }
 
     if (errors.length > 0) {
-      store.dispatch("updatePublishErrors", errors);
+      store.dispatch('updatePublishErrors', errors);
 
       //identify error types
       const crit = response.summary.critical;
@@ -302,44 +309,40 @@ const validatorFunction = () => {
 };
 
 // call api for publishing
-interface ToastDataTypeface {
-  message: string ;
+interface DataTypeface {
+  message: string;
   type: boolean;
   visibility: boolean;
 }
 
-const toastData = inject("toastData") as ToastDataTypeface;
+const errorData = inject('errorData') as DataTypeface;
 
 /**
  * check publish status
  */
-const checkPublish = () =>{
+const checkPublish = () => {
   axios.get(`/activities/checks-for-activity-publish`).then((res) => {
     const response = res.data;
 
-    if(response.success === true){
-      publishValue.value = true
-    }else{
-      toastData.message = response.message;
-      toastData.type = response.success;
-      toastData.visibility = true;
-      
-      setTimeout(() => {
-        toastData.visibility = false;
-      }, 10000);
+    if (response.success === true) {
+      publishValue.value = true;
+    } else {
+      errorData.message = response.message;
+      errorData.type = response.success;
+      errorData.visibility = true;
     }
-  })
-}
+  });
+};
 
 const publishFunction = () => {
   loader.value = true;
-  loaderText.value = "Publishing Activity";
+  loaderText.value = 'Publishing Activity';
   resetPublishStep();
 
   axios.post(`/activity/${id}/publish`).then((res) => {
     const response = res.data;
-    store.dispatch("updateUnPublished", response.success);
-    store.dispatch("updateShowPublished", !response.success);
+    store.dispatch('updateUnPublished', response.success);
+    store.dispatch('updateShowPublished', !response.success);
     setTimeout(() => {
       location.reload();
     }, 1000);
@@ -354,12 +357,15 @@ const publishStatus = reactive({
 });
 
 const btnText = computed(() => {
-  if (publishStatus.linked_to_iati && publishStatus.status === "draft") {
-    return "Republish";
-  } else if (!publishStatus.linked_to_iati && publishStatus.status === "draft") {
-    return "Publish";
+  if (publishStatus.linked_to_iati && publishStatus.status === 'draft') {
+    return 'Republish';
+  } else if (
+    !publishStatus.linked_to_iati &&
+    publishStatus.status === 'draft'
+  ) {
+    return 'Publish';
   } else {
-    return "";
+    return '';
   }
 });
 </script>

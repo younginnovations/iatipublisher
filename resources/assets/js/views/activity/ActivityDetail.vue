@@ -1,21 +1,22 @@
 <template>
   <div class="relative bg-paper px-5 pt-4 pb-[71px] xl:px-10">
     <!-- title section -->
-    <div class="mb-6 page-title">
+    <div class="page-title mb-6">
       <div class="pb-4 text-caption-c1 text-n-40">
         <div>
           <nav aria-label="breadcrumbs" class="rank-math-breadcrumb">
             <div class="flex">
-              <a class="font-bold whitespace-nowrap" href="/activities">
+              <a class="whitespace-nowrap font-bold" href="/activities">
                 Your Activities
               </a>
-              <span class="mx-4 separator"> / </span>
+              <span class="separator mx-4"> / </span>
               <div class="breadcrumb__title">
-                <span class="max-w-lg overflow-hidden breadcrumb__title last text-n-30">{{
-                  pageTitle ?? "Untitled"
-                }}</span>
+                <span
+                  class="breadcrumb__title last max-w-lg overflow-hidden text-n-30"
+                  >{{ pageTitle ?? 'Untitled' }}</span
+                >
                 <span class="ellipsis__title--hover w-[calc(100%_+_35px)]">{{
-                  pageTitle ? pageTitle : "Untitled"
+                  pageTitle ? pageTitle : 'Untitled'
                 }}</span>
               </div>
             </div>
@@ -25,26 +26,26 @@
 
       <div class="flex items-end gap-4">
         <div class="title max-w-[50%] basis-6/12">
-          <div class="inline-flex items-center w-full">
+          <div class="inline-flex w-full items-center">
             <div class="mr-3">
               <a href="/activities">
                 <svg-vue icon="arrow-short-left" />
               </a>
             </div>
             <div class="inline-flex min-h-[48px] grow flex-wrap items-center">
-              <h4 class="relative text-2xl font-bold ellipsis__title">
-                <span class="overflow-hidden ellipsis__title">
-                  {{ pageTitle ? pageTitle : "Untitled" }}
+              <h4 class="ellipsis__title relative text-2xl font-bold">
+                <span class="ellipsis__title overflow-hidden">
+                  {{ pageTitle ? pageTitle : 'Untitled' }}
                 </span>
                 <span class="ellipsis__title--hover">
-                  {{ pageTitle ? pageTitle : "Untitled" }}
+                  {{ pageTitle ? pageTitle : 'Untitled' }}
                 </span>
               </h4>
             </div>
           </div>
         </div>
-        <div class="relative flex flex-col items-end justify-end actions grow">
-          <div class="inline-flex justify-end">
+        <div class="actions flex grow flex-col items-end justify-end">
+          <div class="relative inline-flex justify-end">
             <!-- toast msg for publishing -->
             <Toast
               v-if="toastData.visibility"
@@ -52,13 +53,26 @@
               :type="toastData.type"
               class="mr-3"
             />
-
+            <ErrorPopUp
+              v-if="errorData.visibility"
+              :message="errorData.message"
+              title="Activity couldn’t be published because"
+              @close-popup="
+                () => {
+                  errorData.visibility = false;
+                }
+              "
+            />
+            <!-- {{ typeof toastData.message }} -->
             <div class="inline-flex items-center justify-end gap-3">
               <!-- Delete Activity -->
               <DeleteButton />
 
               <!-- Unpublish Activity -->
-              <UnPublish v-if="store.state.unPublished" :activity-id="activityProps.id" />
+              <UnPublish
+                v-if="store.state.unPublished"
+                :activity-id="activityProps.id"
+              />
 
               <!-- Publish Activity -->
               <Publish
@@ -74,7 +88,7 @@
           <Errors
             v-if="store.state.publishErrors.length > 0"
             :error-data="store.state.publishErrors"
-            class="absolute right-0 bottom-[calc(100%+6px)] -mr-10"
+            class="absolute right-0 bottom-[calc(100%-52px)]"
           />
         </div>
       </div>
@@ -83,14 +97,16 @@
     <div class="activities">
       <aside class="activities__sidebar">
         <div
-          v-if="publishStatus.linked_to_iati && publishStatus.status === 'draft'"
+          v-if="
+            publishStatus.linked_to_iati && publishStatus.status === 'draft'
+          "
           class="mb-2"
         >
           <PreviouslyPublished />
         </div>
-        <div class="flex mb-1">
-          <div class="mr-1 activities__card progress">
-            <div class="flex items-center justify-between mb-2">
+        <div class="mb-1 flex">
+          <div class="activities__card progress mr-1">
+            <div class="mb-2 flex items-center justify-between">
               <span class="mr-2">Publishing Progress</span>
               <HoverText
                 hover-text="The IATI Standard contains a wide range of data elements and your organisation is encouraged to (at least) publish data in elements marked as “Core”."
@@ -103,7 +119,7 @@
             <span>Complete all core elements to get 100% score</span>
           </div>
           <div class="activities__card elements">
-            <div class="flex items-center justify-between mb-7">
+            <div class="mb-7 flex items-center justify-between">
               <span>Elements</span>
               <HoverText
                 hover-text="Each “Element” represents a basic unit of information in the IATI Standard. Click on each element listed below and complete all data fields contained in the element. For each element, you will find its technical definition, which is labelled as “IATI Standard Reference” and helpful guidance on the data you are required to provide."
@@ -111,7 +127,7 @@
                 class="hover-text"
               />
             </div>
-            <div class="flex justify-between mb-3">
+            <div class="mb-3 flex justify-between">
               <div class="flex items-center space-x-1">
                 <svg-vue icon="core" />
                 <span>Core</span>
@@ -143,13 +159,15 @@
         <div class="flex justify-end">
           <a
             :href="`/activity/${activityProps.id}/default_values`"
-            class="flex items-center mb-4 text-xs font-bold leading-normal uppercase text-n-50"
+            class="mb-4 flex items-center text-xs font-bold uppercase leading-normal text-n-50"
           >
             <svg-vue class="mr-0.5 text-base" icon="setting"></svg-vue>
-            <span class="whitespace-nowrap">Override this activity's default values</span>
+            <span class="whitespace-nowrap"
+              >Override this activity's default values</span
+            >
           </a>
         </div>
-        <div class="inline-flex flex-wrap gap-2 mb-3">
+        <div class="mb-3 inline-flex flex-wrap gap-2">
           <a
             v-for="(post, key, index) in groupedData"
             :key="index"
@@ -169,10 +187,10 @@
             </button>
           </a>
         </div>
-        <div class="flex flex-wrap -mx-3 activities__content--elements">
+        <div class="activities__content--elements -mx-3 flex flex-wrap">
           <template v-for="(post, key, index) in groupedData" :key="index">
             <div
-              class="relative flex items-center w-full mx-3 mt-3 mb-1 text-sm uppercase elements-title text-n-40"
+              class="elements-title relative mx-3 mt-3 mb-1 flex w-full items-center text-sm uppercase text-n-40"
             >
               <div class="mr-4 shrink-0">{{ formatTitle(key) }}</div>
             </div>
@@ -231,27 +249,35 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, reactive, toRefs, provide, watch } from "vue";
-import { useToggle, watchIgnorable } from "@vueuse/core";
+import {
+  defineComponent,
+  onMounted,
+  reactive,
+  toRefs,
+  provide,
+  watch,
+} from 'vue';
+import { useToggle, watchIgnorable } from '@vueuse/core';
 
 // components
-import { Result } from "./elements/Index";
-import HoverText from "Components/HoverText.vue";
-import ProgressBar from "Components/RadialProgressBar.vue";
-import Publish from "Components/buttons/PublishButton.vue";
-import UnPublish from "Components/buttons/UnPublishButton.vue";
-import DeleteButton from "Components/buttons/DeleteButton.vue";
-import Errors from "Components/sections/StickyErrors.vue";
-import Toast from "Components/ToastMessage.vue";
+import { Result } from './elements/Index';
+import HoverText from 'Components/HoverText.vue';
+import ProgressBar from 'Components/RadialProgressBar.vue';
+import Publish from 'Components/buttons/PublishButton.vue';
+import UnPublish from 'Components/buttons/UnPublishButton.vue';
+import DeleteButton from 'Components/buttons/DeleteButton.vue';
+import Errors from 'Components/sections/StickyErrors.vue';
+import Toast from 'Components/ToastMessage.vue';
+import ErrorPopUp from 'Components/ErrorPopUp.vue';
 
 // Activity Components
-import Elements from "Activity/partials/ActivitiesElements.vue";
-import ActivityElement from "Activity/partials/ActivityElement.vue";
-import PreviouslyPublished from "Components/status/PreviouslyPublished.vue";
+import Elements from 'Activity/partials/ActivitiesElements.vue';
+import ActivityElement from 'Activity/partials/ActivityElement.vue';
+import PreviouslyPublished from 'Components/status/PreviouslyPublished.vue';
 
 // Vuex Store
-import { detailStore } from "Store/activities/show";
-import { useStore } from "Store/activities/index";
+import { detailStore } from 'Store/activities/show';
+import { useStore } from 'Store/activities/index';
 
 export default defineComponent({
   components: {
@@ -260,12 +286,13 @@ export default defineComponent({
     Elements,
     ActivityElement,
     Result,
-    Toast,
     Publish,
     Errors,
     UnPublish,
     DeleteButton,
     PreviouslyPublished,
+    ErrorPopUp,
+    Toast,
   },
   props: {
     elements: {
@@ -321,7 +348,12 @@ export default defineComponent({
 
     const toastData = reactive({
       visibility: false,
-      message: "",
+      message: '',
+      type: true,
+    });
+    const errorData = reactive({
+      visibility: false,
+      message: '',
       type: true,
     });
 
@@ -332,16 +364,22 @@ export default defineComponent({
     const [downloadValue, downloadToggle] = useToggle();
 
     onMounted(() => {
-      if (props.toast.message !== "") {
+      if (props.toast.message !== '') {
         toastData.type = props.toast.type;
         toastData.visibility = true;
         toastData.message = props.toast.message;
       }
-
-      setTimeout(() => {
-        toastData.visibility = false;
-      }, 10000);
     });
+    watch(
+      () => toastData.visibility,
+      () => {
+        setTimeout(() => {
+          toastData.visibility = false;
+          ignoreToastUpdate();
+        }, 10000);
+      }
+    );
+
     /**
      * Grouping all the data's for scroll function
      *
@@ -364,16 +402,16 @@ export default defineComponent({
     Object.keys(activities).map((key) => {
       let flag = false;
 
-      Object.keys(activities[key]["elements"]).map((k) => {
+      Object.keys(activities[key]['elements']).map((k) => {
         if (
-          typeof activityProps[k] === "number" ||
-          (typeof activityProps[k] === "object" &&
+          typeof activityProps[k] === 'number' ||
+          (typeof activityProps[k] === 'object' &&
             activityProps[k] &&
             Object.keys(activityProps[k]).length)
         ) {
-          activities[key]["elements"][k]["content"] = activityProps[k];
-          activities[key]["elements"][k]["hover_text"] =
-            elementProps[k]["hover_text"] ?? "";
+          activities[key]['elements'][k]['content'] = activityProps[k];
+          activities[key]['elements'][k]['hover_text'] =
+            elementProps[k]['hover_text'] ?? '';
           flag = true;
         } else {
           delete activities[key][k];
@@ -388,9 +426,9 @@ export default defineComponent({
     // generating available categories of elements
     Object.keys(groupedData).map((key) => {
       if (Object.prototype.hasOwnProperty.call(activities, key)) {
-        groupedData[key]["status"] = "enabled";
+        groupedData[key]['status'] = 'enabled';
       } else {
-        groupedData[key]["status"] = "disabled";
+        groupedData[key]['status'] = 'disabled';
       }
     });
 
@@ -402,20 +440,20 @@ export default defineComponent({
      * @returns object
      */
     Object.keys(elementProps).map((key) => {
-      elementProps[key]["completed"] = statusProps[key] ?? false;
-      elementProps[key]["has_data"] = 0;
+      elementProps[key]['completed'] = statusProps[key] ?? false;
+      elementProps[key]['has_data'] = 0;
 
       if (key in activityProps) {
         if (
-          (typeof activityProps[key] === "object" ||
-            typeof activityProps[key] === "number") &&
+          (typeof activityProps[key] === 'object' ||
+            typeof activityProps[key] === 'number') &&
           activityProps[key]
         ) {
           if (
             Object.keys(activityProps[key]).length > 0 ||
             activityProps[key].toString.length > 0
           ) {
-            elementProps[key]["has_data"] = 1;
+            elementProps[key]['has_data'] = 1;
           }
         }
       }
@@ -424,9 +462,9 @@ export default defineComponent({
     /**
      * Finding current language - activity title
      */
-    let pageTitle = "";
+    let pageTitle = '';
     const found = activityProps.title.find((e: { language: string }) => {
-      const currentLanguage = "en";
+      const currentLanguage = 'en';
       return e.language === currentLanguage;
     });
 
@@ -438,30 +476,21 @@ export default defineComponent({
     }
 
     function formatTitle(title: string) {
-      return title.replace(/_/gi, " ");
+      return title.replace(/_/gi, ' ');
     }
 
     const toastMessage = reactive({
-      message: "",
+      message: '',
       type: false,
     });
 
     const { ignoreUpdates } = watchIgnorable(toastData, () => undefined, {
-      flush: "sync",
+      flush: 'sync',
     });
-    watch(
-      () => toastData.visibility,
-      () => {
-        setTimeout(() => {
-          toastData.visibility = false;
-          ignoreToastUpdate();
-        }, 10000);
-      }
-    );
 
     const ignoreToastUpdate = () => {
       ignoreUpdates(() => {
-        toastData.message = "";
+        toastData.message = '';
       });
     };
 
@@ -476,24 +505,25 @@ export default defineComponent({
     });
 
     // vue provides
-    provide("types", types.value);
-    provide("coreCompleted", coreCompleted.value);
-    provide("toastMessage", toastMessage);
-    provide("toastData", toastData);
+    provide('types', types.value);
+    provide('coreCompleted', coreCompleted.value);
+    provide('toastMessage', toastMessage);
+    provide('toastData', toastData);
+    provide('errorData', errorData);
 
-    indexStore.dispatch("updateSelectedActivities", [activity.value.id]);
+    indexStore.dispatch('updateSelectedActivities', [activity.value.id]);
 
     /**
      * Breadcrumb data
      */
     const breadcrumbData = [
       {
-        title: "Your Activities",
-        link: "/activities",
+        title: 'Your Activities',
+        link: '/activities',
       },
       {
         title: pageTitle,
-        link: "",
+        link: '',
       },
     ];
 
@@ -504,19 +534,21 @@ export default defineComponent({
     const validationResult = iatiValidatorResponse.value;
 
     if (validationResult && validationResult.errors.length > 0) {
-      store.dispatch("updatePublishErrors", validationResult.errors);
+      store.dispatch('updatePublishErrors', validationResult.errors);
     }
 
     if (publishStatus.linked_to_iati) {
-      store.dispatch("updateUnPublished", true);
+      store.dispatch('updateUnPublished', true);
     } else {
-      store.dispatch("updateUnPublished", false);
+      store.dispatch('updateUnPublished', false);
     }
 
-    if (!(publishStatus.linked_to_iati && publishStatus.status === "published")) {
-      store.dispatch("updateShowPublished", true);
+    if (
+      !(publishStatus.linked_to_iati && publishStatus.status === 'published')
+    ) {
+      store.dispatch('updateShowPublished', true);
     } else {
-      store.dispatch("updateShowPublished", false);
+      store.dispatch('updateShowPublished', false);
     }
 
     return {
@@ -536,6 +568,7 @@ export default defineComponent({
       breadcrumbData,
       store,
       activityProps,
+      errorData,
     };
   },
 });
