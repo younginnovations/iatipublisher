@@ -57,6 +57,16 @@
             :message="toastMessage.message"
             :type="toastMessage.type"
           />
+          <ErrorPopUp
+            v-if="errorData.visibility"
+            :message="errorData.message"
+            title="Activity couldn’t be published because"
+            @close-popup="
+              () => {
+                errorData.visibility = false;
+              }
+            "
+          />
           <div class="inline-flex shrink-0 items-center justify-end gap-3">
             <RefreshToastMessage
               v-if="refreshToastMsg.visibility"
@@ -80,6 +90,7 @@ import Toast from 'Components/ToastMessage.vue';
 import RefreshToastMessage from 'Activity/bulk-publish/RefreshToast.vue';
 import PublishSelected from 'Activity/bulk-publish/PublishSelected.vue';
 import DeleteButton from 'Components/buttons/DeleteButton.vue';
+import ErrorPopUp from 'Components/ErrorPopUp.vue';
 
 // Vuex Store
 import { useStore } from 'Store/activities/index';
@@ -101,6 +112,7 @@ interface ToastInterface {
 }
 
 const toastMessage = inject('toastData') as ToastInterface;
+const errorData = inject('errorData') as ToastInterface;
 
 const refreshToastMsg = inject('refreshToastMsg') as RefreshToastMsgTypeface;
 </script>

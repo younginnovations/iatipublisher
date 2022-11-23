@@ -15,12 +15,12 @@
       @reset="resetPublishStep"
     >
       <template v-if="bulkPublishStep === 1">
-        <div class="mb-4 popup">
-          <div class="flex items-center mb-6 text-sm title">
+        <div class="popup mb-4">
+          <div class="title mb-6 flex items-center text-sm">
             <svg-vue class="mr-1 text-lg text-crimson-40" icon="shield" />
             <b>Publishing alert</b>
           </div>
-          <div class="p-4 rounded-lg bg-eggshell">
+          <div class="rounded-lg bg-eggshell p-4">
             <div class="text-sm leading-normal">
               Activities that are already published will not be published.
               Changes made to published activities (Draft) will be republished.
@@ -30,7 +30,7 @@
         <div class="flex justify-end">
           <div class="inline-flex">
             <BtnComponent
-              class="px-6 uppercase bg-white"
+              class="bg-white px-6 uppercase"
               text="Cancel"
               type=""
               @click="resetPublishStep()"
@@ -46,13 +46,13 @@
       </template>
 
       <template v-else-if="bulkPublishStep === 2">
-        <div class="mb-6 text-sm leading-relaxed eligible-activities">
-          <div class="flex mb-6 title">
+        <div class="eligible-activities mb-6 text-sm leading-relaxed">
+          <div class="title mb-6 flex">
             <svg-vue icon="tick" class="mr-1 mt-0.5 text-lg text-spring-50" />
             <b>Core Elements Complete</b>
           </div>
 
-          <div class="px-6 rounded-lg bg-mint">
+          <div class="rounded-lg bg-mint px-6">
             <div
               v-if="coreCompletedActivities.length > 0"
               class="coreCompleted"
@@ -60,7 +60,7 @@
               <div
                 v-for="(act, i) in coreCompletedActivities"
                 :key="i"
-                class="py-6 item"
+                class="item py-6"
                 :class="{
                   'border-b border-n-20':
                     i != coreCompletedActivities.length - 1,
@@ -75,8 +75,8 @@
           </div>
         </div>
 
-        <div class="mb-6 text-sm leading-relaxed non-eligible-activities">
-          <div class="flex mb-6 title">
+        <div class="non-eligible-activities mb-6 text-sm leading-relaxed">
+          <div class="title mb-6 flex">
             <svg-vue
               icon="warning-fill"
               class="mr-1 mt-0.5 text-lg text-crimson-40"
@@ -84,7 +84,7 @@
             <b>Core Elements not Complete</b>
           </div>
 
-          <div class="px-6 rounded-lg bg-rose">
+          <div class="rounded-lg bg-rose px-6">
             <div
               v-if="coreInCompletedActivities.length > 0"
               class="notCompleted"
@@ -92,7 +92,7 @@
               <div
                 v-for="(act, i) in coreInCompletedActivities"
                 :key="i"
-                class="py-6 item"
+                class="item py-6"
                 :class="{
                   'border-b border-n-20':
                     i != coreInCompletedActivities.length - 1,
@@ -117,7 +117,7 @@
                 coreCompletedActivities.length > 0 ||
                 coreInCompletedActivities.length > 0
               "
-              class="px-6 uppercase bg-white"
+              class="bg-white px-6 uppercase"
               type=""
               text="Continue Anyway"
               @click="validateActivities()"
@@ -137,7 +137,7 @@
         <div class="flex justify-end">
           <div class="inline-flex">
             <BtnComponent
-              class="px-6 uppercase bg-white"
+              class="bg-white px-6 uppercase"
               type=""
               text="Cancel"
               @click="resetPublishStep()"
@@ -162,7 +162,6 @@
       :class="{ 'animate-loader': loader }"
     />
     <BulkPublishing v-if="Object.keys(pa.publishingActivities).length > 0" />
-
   </div>
 </template>
 
@@ -225,36 +224,34 @@ const popUpWidthChange = computed(() => {
 });
 
 // toast visibility
-interface ToastMessageTypeface {
+interface MessageTypeface {
   message: string;
   type: boolean;
   visibility: boolean;
 }
-const toastData = inject('toastData') as ToastMessageTypeface;
-const displayToast = (message, type) => {
-  toastData.message = message;
-  toastData.type = type;
-  toastData.visibility = true;
+const toastData = inject('toastData') as MessageTypeface;
+const errorData = inject('errorData') as MessageTypeface;
 
-  setTimeout(() => {
-    toastData.visibility = false;
-  }, 10000);
+const displayToast = (message, type) => {
+  errorData.message = message;
+  errorData.type = type;
+  errorData.visibility = true;
 };
 
 /**
  * check publish status
  */
-const checkPublish = () =>{
+const checkPublish = () => {
   axios.get(`/activities/checks-for-activity-publish`).then((res) => {
     const response = res.data;
 
-    if(response.success === true){
-      publishAlertValue.value = true
-    }else{
+    if (response.success === true) {
+      publishAlertValue.value = true;
+    } else {
       displayToast(response.message, response.success);
     }
-  })
-}
+  });
+};
 
 /**
  * Verify core elements
@@ -347,7 +344,6 @@ const startBulkPublish = () => {
     .then((res) => {
       const response = res.data;
       if (response.success) {
-
         bulkPublishStep.value = 1;
         publishAlertValue.value = false;
         pa.value.publishingActivities = response.data;

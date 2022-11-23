@@ -9,6 +9,7 @@
       <div class="overflow-hidden" :class="{ 'bg-white': isEmpty }">
         <ErrorMessage :is-empty="isEmpty"></ErrorMessage>
         <EmptyActivity v-if="isEmpty" />
+
         <TableLayout
           v-if="!isEmpty"
           :data="activities"
@@ -27,9 +28,9 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, provide, reactive, ref, watch } from "vue";
-import { watchIgnorable } from "@vueuse/core";
-import axios from "axios";
+import { defineComponent, onMounted, provide, reactive, ref, watch } from 'vue';
+import { watchIgnorable } from '@vueuse/core';
+import axios from 'axios';
 
 import EmptyActivity from './partials/EmptyActivity.vue';
 import TableLayout from './partials/TableLayout.vue';
@@ -78,6 +79,11 @@ export default defineComponent({
       message: '',
       type: true,
     });
+    const errorData = reactive({
+      visibility: false,
+      message: '',
+      type: true,
+    });
 
     // for publish button
     const toastMessage = reactive({
@@ -91,10 +97,6 @@ export default defineComponent({
         toastData.visibility = true;
         toastData.message = props.toast.message;
       }
-
-      setTimeout(() => {
-        toastData.visibility = false;
-      }, 10000);
     });
 
     onMounted(async () => {
@@ -136,26 +138,17 @@ export default defineComponent({
     }
 
     const { ignoreUpdates } = watchIgnorable(toastData, () => undefined, {
-      flush: "sync",
+      flush: 'sync',
     });
-    watch(
-      () => toastData.visibility,
-      () => {
-        setTimeout(() => {
-          toastData.visibility = false;
-          ignoreToastUpdate();
-        }, 10000);
-      }
-    );
 
     const ignoreToastUpdate = () => {
       ignoreUpdates(() => {
-        toastData.message = "";
+        toastData.message = '';
       });
     };
 
-     // for refresh toast message
-     // let refreshToastMsg = ref(false);
+    // for refresh toast message
+    // let refreshToastMsg = ref(false);
     const refreshToastMsg = reactive({
       visibility: false,
     });
@@ -163,8 +156,9 @@ export default defineComponent({
     /**
      * Provide
      */
-    provide("toastMessage", toastMessage);
-    provide("toastData", toastData);
+    provide('toastMessage', toastMessage);
+    provide('toastData', toastData);
+    provide('errorData', errorData);
     provide('refreshToastMsg', refreshToastMsg);
 
     return {
@@ -176,7 +170,8 @@ export default defineComponent({
       fetchActivities,
       toastData,
       toastMessage,
-      refreshToastMsg
+      refreshToastMsg,
+      errorData,
     };
   },
 });
