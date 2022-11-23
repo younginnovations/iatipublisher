@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\Http\Requests\Activity\Otheridentifier;
+namespace App\Http\Requests\Activity\OtherIdentifier;
 
 use App\Http\Requests\Activity\ActivityBaseRequest;
 
 /**
- * Class OtheridentifierRequest.
+ * Class OtherIdentifierRequest.
  */
 class OtherIdentifierRequest extends ActivityBaseRequest
 {

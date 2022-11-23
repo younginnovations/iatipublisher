@@ -6,6 +6,7 @@ namespace App\CsvImporter\Entities\Activity\Components\Elements;
 
 use App\CsvImporter\Entities\Activity\Components\Elements\Foundation\Iati\Element;
 use App\CsvImporter\Entities\Activity\Components\Factory\Validation;
+use App\Http\Requests\Activity\DocumentLink\DocumentLinkRequest;
 use Illuminate\Support\Arr;
 
 /**
@@ -34,6 +35,7 @@ class DocumentLink extends Element
      * @var string
      */
     protected string $index = 'document_link';
+    private DocumentLinkRequest $request;
 
     /**
      * DocumentLink constructor.
@@ -45,6 +47,7 @@ class DocumentLink extends Element
     {
         $this->prepare($fields);
         $this->factory = $factory;
+        $this->request = new DocumentLinkRequest();
     }
 
     /**
@@ -248,74 +251,76 @@ class DocumentLink extends Element
      */
     public function rules(): array
     {
-        $validDocumentFormat = implode(',', $this->validDocumentLinkCodeList('FileFormat'));
-        $validDocumentCategory = implode(',', $this->validDocumentLinkCodeList('DocumentCategory'));
-        $validDocumentLanguage = implode(',', $this->validDocumentLinkCodeList('Language'));
+        return $this->getBaseRules($this->request->rules());
 
-        $rules = [];
-
-        foreach (Arr::get($this->data(), 'document_link', []) as $key => $value) {
-            $documentLinkForm = sprintf('document_link.%s', $key);
-            $rules[sprintf('%s.url', $documentLinkForm)] = sprintf(
-                'url|required_with: %s,%s,%s,%s,%s,%s',
-                sprintf('%s.format', $documentLinkForm),
-                sprintf('%s.title.0.narrative.0.narrative', $documentLinkForm),
-                sprintf('%s.description.0.narrative.0.narrative', $documentLinkForm),
-                sprintf('%s.category.0.code', $documentLinkForm),
-                sprintf('%s.language.0.code', $documentLinkForm),
-                sprintf('%s.document_date.0.date', $documentLinkForm),
-            );
-            $rules[sprintf('%s.format', $documentLinkForm)] = sprintf(
-                'in:%s|required_with: %s,%s,%s,%s,%s,%s',
-                $validDocumentFormat,
-                sprintf('%s.url', $documentLinkForm),
-                sprintf('%s.title.0.narrative.0.narrative', $documentLinkForm),
-                sprintf('%s.description.0.narrative.0.narrative', $documentLinkForm),
-                sprintf('%s.category.0.code', $documentLinkForm),
-                sprintf('%s.language.0.code', $documentLinkForm),
-                sprintf('%s.document_date.0.date', $documentLinkForm),
-            );
-            $rules[sprintf('%s.title.0.narrative.0.narrative', $documentLinkForm)] = sprintf(
-                'required_with: %s,%s,%s,%s,%s,%s',
-                sprintf('%s.url', $documentLinkForm),
-                sprintf('%s.format', $documentLinkForm),
-                sprintf('%s.description.0.narrative.0.narrative', $documentLinkForm),
-                sprintf('%s.category.0.code', $documentLinkForm),
-                sprintf('%s.language.0.code', $documentLinkForm),
-                sprintf('%s.document_date.0.date', $documentLinkForm),
-            );
-            $rules[sprintf('%s.category.0.code', $documentLinkForm)] = sprintf(
-                'in:%s|required_with: %s,%s,%s,%s,%s,%s',
-                $validDocumentCategory,
-                sprintf('%s.url', $documentLinkForm),
-                sprintf('%s.format', $documentLinkForm),
-                sprintf('%s.description.0.narrative.0.narrative', $documentLinkForm),
-                sprintf('%s.title.0.narrative.0.narrative', $documentLinkForm),
-                sprintf('%s.language.0.code', $documentLinkForm),
-                sprintf('%s.document_date.0.date', $documentLinkForm),
-            );
-            $rules[sprintf('%s.language.0.code', $documentLinkForm)] = sprintf(
-                'in:%s|required_with: %s,%s,%s,%s,%s,%s',
-                $validDocumentLanguage,
-                sprintf('%s.url', $documentLinkForm),
-                sprintf('%s.format', $documentLinkForm),
-                sprintf('%s.title.0.narrative.0.narrative', $documentLinkForm),
-                sprintf('%s.description.0.narrative.0.narrative', $documentLinkForm),
-                sprintf('%s.category.0.code', $documentLinkForm),
-                sprintf('%s.document_date.0.date', $documentLinkForm),
-            );
-            $rules[sprintf('%s.document_date.0.date', $documentLinkForm)] = sprintf(
-                'date|date_greater_than:1900|required_with: %s,%s,%s,%s,%s,%s',
-                sprintf('%s.url', $documentLinkForm),
-                sprintf('%s.format', $documentLinkForm),
-                sprintf('%s.title.0.narrative.0.narrative', $documentLinkForm),
-                sprintf('%s.description.0.narrative.0.narrative', $documentLinkForm),
-                sprintf('%s.category.0.code', $documentLinkForm),
-                sprintf('%s.language.0.code', $documentLinkForm),
-            );
-        }
-
-        return $rules;
+//        $validDocumentFormat = implode(',', $this->validDocumentLinkCodeList('FileFormat'));
+//        $validDocumentCategory = implode(',', $this->validDocumentLinkCodeList('DocumentCategory'));
+//        $validDocumentLanguage = implode(',', $this->validDocumentLinkCodeList('Language'));
+//
+//        $rules = [];
+//
+//        foreach (Arr::get($this->data(), 'document_link', []) as $key => $value) {
+//            $documentLinkForm = sprintf('document_link.%s', $key);
+//            $rules[sprintf('%s.url', $documentLinkForm)] = sprintf(
+//                'url|required_with: %s,%s,%s,%s,%s,%s',
+//                sprintf('%s.format', $documentLinkForm),
+//                sprintf('%s.title.0.narrative.0.narrative', $documentLinkForm),
+//                sprintf('%s.description.0.narrative.0.narrative', $documentLinkForm),
+//                sprintf('%s.category.0.code', $documentLinkForm),
+//                sprintf('%s.language.0.code', $documentLinkForm),
+//                sprintf('%s.document_date.0.date', $documentLinkForm),
+//            );
+//            $rules[sprintf('%s.format', $documentLinkForm)] = sprintf(
+//                'in:%s|required_with: %s,%s,%s,%s,%s,%s',
+//                $validDocumentFormat,
+//                sprintf('%s.url', $documentLinkForm),
+//                sprintf('%s.title.0.narrative.0.narrative', $documentLinkForm),
+//                sprintf('%s.description.0.narrative.0.narrative', $documentLinkForm),
+//                sprintf('%s.category.0.code', $documentLinkForm),
+//                sprintf('%s.language.0.code', $documentLinkForm),
+//                sprintf('%s.document_date.0.date', $documentLinkForm),
+//            );
+//            $rules[sprintf('%s.title.0.narrative.0.narrative', $documentLinkForm)] = sprintf(
+//                'required_with: %s,%s,%s,%s,%s,%s',
+//                sprintf('%s.url', $documentLinkForm),
+//                sprintf('%s.format', $documentLinkForm),
+//                sprintf('%s.description.0.narrative.0.narrative', $documentLinkForm),
+//                sprintf('%s.category.0.code', $documentLinkForm),
+//                sprintf('%s.language.0.code', $documentLinkForm),
+//                sprintf('%s.document_date.0.date', $documentLinkForm),
+//            );
+//            $rules[sprintf('%s.category.0.code', $documentLinkForm)] = sprintf(
+//                'in:%s|required_with: %s,%s,%s,%s,%s,%s',
+//                $validDocumentCategory,
+//                sprintf('%s.url', $documentLinkForm),
+//                sprintf('%s.format', $documentLinkForm),
+//                sprintf('%s.description.0.narrative.0.narrative', $documentLinkForm),
+//                sprintf('%s.title.0.narrative.0.narrative', $documentLinkForm),
+//                sprintf('%s.language.0.code', $documentLinkForm),
+//                sprintf('%s.document_date.0.date', $documentLinkForm),
+//            );
+//            $rules[sprintf('%s.language.0.code', $documentLinkForm)] = sprintf(
+//                'in:%s|required_with: %s,%s,%s,%s,%s,%s',
+//                $validDocumentLanguage,
+//                sprintf('%s.url', $documentLinkForm),
+//                sprintf('%s.format', $documentLinkForm),
+//                sprintf('%s.title.0.narrative.0.narrative', $documentLinkForm),
+//                sprintf('%s.description.0.narrative.0.narrative', $documentLinkForm),
+//                sprintf('%s.category.0.code', $documentLinkForm),
+//                sprintf('%s.document_date.0.date', $documentLinkForm),
+//            );
+//            $rules[sprintf('%s.document_date.0.date', $documentLinkForm)] = sprintf(
+//                'date|date_greater_than:1900|required_with: %s,%s,%s,%s,%s,%s',
+//                sprintf('%s.url', $documentLinkForm),
+//                sprintf('%s.format', $documentLinkForm),
+//                sprintf('%s.title.0.narrative.0.narrative', $documentLinkForm),
+//                sprintf('%s.description.0.narrative.0.narrative', $documentLinkForm),
+//                sprintf('%s.category.0.code', $documentLinkForm),
+//                sprintf('%s.language.0.code', $documentLinkForm),
+//            );
+//        }
+//
+//        return $rules;
     }
 
     /**
@@ -338,61 +343,63 @@ class DocumentLink extends Element
      */
     public function messages(): array
     {
-        $messages = [];
+        return $this->getBaseMessages($this->request->messages());
 
-        foreach (Arr::get($this->data(), 'document_link', []) as $key => $value) {
-            $documentLinkForm = sprintf('document_link.%s', $key);
-            $messages[sprintf('%s.url.%s', $documentLinkForm, 'url')] = trans(
-                'validation.url',
-                ['attribute' => trans('elementForm.document_link_url')]
-            );
-            $messages[sprintf('%s.url.%s', $documentLinkForm, 'required_with')] = trans(
-                'validation.required_with',
-                ['attribute' => trans('elementForm.document_link_url'), 'values' => 'format, title, description, category, language or date']
-            );
-            $messages[sprintf('%s.format.%s', $documentLinkForm, 'in')] = trans(
-                'validation.code_list',
-                ['attribute' => trans('elementForm.document_link_format')]
-            );
-            $messages[sprintf('%s.format.%s', $documentLinkForm, 'required_with')] = trans(
-                'validation.required_with',
-                ['attribute' => trans('elementForm.document_link_format'), 'values' => 'url, title, description, category, language or date']
-            );
-            $messages[sprintf('%s.title.0.narrative.0.narrative.%s', $documentLinkForm, 'required_with')] = trans(
-                'validation.required_with',
-                ['attribute' => trans('elementForm.document_link_format'), 'values' => 'url, format, description, category, language or date']
-            );
-            $messages[sprintf('%s.category.0.code.%s', $documentLinkForm, 'in')] = trans(
-                'validation.code_list',
-                ['attribute' => trans('elementForm.document_link_category')]
-            );
-            $messages[sprintf('%s.category.0.code.%s', $documentLinkForm, 'required_with')] = trans(
-                'validation.required_with',
-                ['attribute' => trans('elementForm.document_link_category'), 'values' => 'url, format, title, description, language or date']
-            );
-            $messages[sprintf('%s.language.0.code.%s', $documentLinkForm, 'in')] = trans(
-                'validation.code_list',
-                ['attribute' => trans('elementForm.document_link_language')]
-            );
-            $messages[sprintf('%s.language.0.code.%s', $documentLinkForm, 'required_with')] = trans(
-                'validation.required_with',
-                ['attribute' => trans('elementForm.document_link_language'), 'values' => 'url, format, title, description, category or date']
-            );
-            $messages[sprintf('%s.document_date.0.date.%s', $documentLinkForm, 'date')] = trans(
-                'validation.date',
-                ['attribute' => trans('elementForm.document_link_date')]
-            );
-            $messages[sprintf('%s.document_date.0.date.%s', $documentLinkForm, 'date_greater_than')] = trans(
-                'validation.date_greater_than',
-                ['value' => '1900']
-            );
-            $messages[sprintf('%s.document_date.0.date.%s', $documentLinkForm, 'required_with')] = trans(
-                'validation.required_with',
-                ['attribute' => trans('elementForm.document_link_date'), 'values' => 'url, format, title, description, category or language']
-            );
-        }
-
-        return $messages;
+//        $messages = [];
+//
+//        foreach (Arr::get($this->data(), 'document_link', []) as $key => $value) {
+//            $documentLinkForm = sprintf('document_link.%s', $key);
+//            $messages[sprintf('%s.url.%s', $documentLinkForm, 'url')] = trans(
+//                'validation.url',
+//                ['attribute' => trans('elementForm.document_link_url')]
+//            );
+//            $messages[sprintf('%s.url.%s', $documentLinkForm, 'required_with')] = trans(
+//                'validation.required_with',
+//                ['attribute' => trans('elementForm.document_link_url'), 'values' => 'format, title, description, category, language or date']
+//            );
+//            $messages[sprintf('%s.format.%s', $documentLinkForm, 'in')] = trans(
+//                'validation.code_list',
+//                ['attribute' => trans('elementForm.document_link_format')]
+//            );
+//            $messages[sprintf('%s.format.%s', $documentLinkForm, 'required_with')] = trans(
+//                'validation.required_with',
+//                ['attribute' => trans('elementForm.document_link_format'), 'values' => 'url, title, description, category, language or date']
+//            );
+//            $messages[sprintf('%s.title.0.narrative.0.narrative.%s', $documentLinkForm, 'required_with')] = trans(
+//                'validation.required_with',
+//                ['attribute' => trans('elementForm.document_link_format'), 'values' => 'url, format, description, category, language or date']
+//            );
+//            $messages[sprintf('%s.category.0.code.%s', $documentLinkForm, 'in')] = trans(
+//                'validation.code_list',
+//                ['attribute' => trans('elementForm.document_link_category')]
+//            );
+//            $messages[sprintf('%s.category.0.code.%s', $documentLinkForm, 'required_with')] = trans(
+//                'validation.required_with',
+//                ['attribute' => trans('elementForm.document_link_category'), 'values' => 'url, format, title, description, language or date']
+//            );
+//            $messages[sprintf('%s.language.0.code.%s', $documentLinkForm, 'in')] = trans(
+//                'validation.code_list',
+//                ['attribute' => trans('elementForm.document_link_language')]
+//            );
+//            $messages[sprintf('%s.language.0.code.%s', $documentLinkForm, 'required_with')] = trans(
+//                'validation.required_with',
+//                ['attribute' => trans('elementForm.document_link_language'), 'values' => 'url, format, title, description, category or date']
+//            );
+//            $messages[sprintf('%s.document_date.0.date.%s', $documentLinkForm, 'date')] = trans(
+//                'validation.date',
+//                ['attribute' => trans('elementForm.document_link_date')]
+//            );
+//            $messages[sprintf('%s.document_date.0.date.%s', $documentLinkForm, 'date_greater_than')] = trans(
+//                'validation.date_greater_than',
+//                ['value' => '1900']
+//            );
+//            $messages[sprintf('%s.document_date.0.date.%s', $documentLinkForm, 'required_with')] = trans(
+//                'validation.required_with',
+//                ['attribute' => trans('elementForm.document_link_date'), 'values' => 'url, format, title, description, category or language']
+//            );
+//        }
+//
+//        return $messages;
     }
 
     /**

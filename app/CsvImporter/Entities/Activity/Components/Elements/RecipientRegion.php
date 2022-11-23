@@ -255,8 +255,8 @@ class RecipientRegion extends Element
         $this->data['recipient_region_total_percentage'] = Arr::get($this->data, 'recipient_region', []);
         $this->data['total_percentage'] = $this->totalPercentage;
         $this->validator = $this->factory->sign($this->data())
-            ->with($this->rules(), $this->messages())
-            ->getValidatorInstance();
+                                         ->with($this->rules(), $this->messages())
+                                         ->getValidatorInstance();
         $this->setValidity();
         unset($this->data['recipient_region_total_percentage'], $this->data['recipient_country']);
 
@@ -280,10 +280,10 @@ class RecipientRegion extends Element
             ];
         }
         ($this->data['recipient_country'] !== '' && (array_key_exists('recipient_region', $this->data)))
-        ? $rules['total_percentage'] = 'recipient_country_region_percentage_sum' : null;
+            ? $rules['total_percentage'] = 'recipient_country_region_percentage_sum' : null;
 
         ($this->data['recipient_country'] === '' && array_key_exists('recipient_region', $this->data))
-        ? $rules['recipient_region_total_percentage'] = 'percentage_sum' : null;
+            ? $rules['recipient_region_total_percentage'] = 'percentage_sum' : null;
 
         foreach (Arr::get($this->data(), 'recipient_region', []) as $key => $value) {
             if (Arr::get($value, 'region_vocabulary', 1) === '1') {

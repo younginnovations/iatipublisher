@@ -6,6 +6,7 @@ namespace App\CsvImporter\Entities\Activity\Components\Elements;
 
 use App\CsvImporter\Entities\Activity\Components\Elements\Foundation\Iati\Element;
 use App\CsvImporter\Entities\Activity\Components\Factory\Validation;
+use App\Http\Requests\Activity\Condition\ConditionRequest;
 use Illuminate\Support\Arr;
 
 /**
@@ -30,6 +31,7 @@ class Condition extends Element
      * @var string
      */
     protected string $index = 'conditions';
+    private ConditionRequest $request;
 
     /**
      * Condition constructor.
@@ -41,6 +43,7 @@ class Condition extends Element
     {
         $this->prepare($fields);
         $this->factory = $factory;
+        $this->request = new ConditionRequest();
     }
 
     /**
@@ -163,36 +166,38 @@ class Condition extends Element
      */
     public function rules(): array
     {
-        $validConditionType = implode(',', $this->validConditionCodeList('ConditionType'));
+        return $this->getBaseRules($this->request->rules());
 
-        $rules = [];
-
-        $rules['conditions.condition_attached'][] = 'in:0,1';
-
-        if (count(Arr::get($this->data, 'conditions.condition', []))) {
-            foreach (Arr::get($this->data, 'conditions.condition', []) as $key => $conditionItem) {
-                $rules['conditions.condition_attached'][] = sprintf(
-                    'required_with: %s,%s',
-                    'conditions.condition.' . $key . '.condition_type',
-                    'conditions.condition.' . $key . '.narrative.0.narrative',
-                );
-
-                $rules['conditions.condition.' . $key . '.condition_type'] = sprintf(
-                    'in:%s|required_with: %s,%s',
-                    $validConditionType,
-                    'conditions.condition_attached',
-                    'conditions.condition.' . $key . '.narrative.0.narrative',
-                );
-
-                $rules['conditions.condition.' . $key . '.narrative.0.narrative'] = sprintf(
-                    'required_with: %s,%s',
-                    'conditions.condition_attached',
-                    'conditions.condition.' . $key . '.condition_type',
-                );
-            }
-        }
-
-        return $rules;
+//        $validConditionType = implode(',', $this->validConditionCodeList('ConditionType'));
+//
+//        $rules = [];
+//
+//        $rules['conditions.condition_attached'][] = 'in:0,1';
+//
+//        if (count(Arr::get($this->data, 'conditions.condition', []))) {
+//            foreach (Arr::get($this->data, 'conditions.condition', []) as $key => $conditionItem) {
+//                $rules['conditions.condition_attached'][] = sprintf(
+//                    'required_with: %s,%s',
+//                    'conditions.condition.' . $key . '.condition_type',
+//                    'conditions.condition.' . $key . '.narrative.0.narrative',
+//                );
+//
+//                $rules['conditions.condition.' . $key . '.condition_type'] = sprintf(
+//                    'in:%s|required_with: %s,%s',
+//                    $validConditionType,
+//                    'conditions.condition_attached',
+//                    'conditions.condition.' . $key . '.narrative.0.narrative',
+//                );
+//
+//                $rules['conditions.condition.' . $key . '.narrative.0.narrative'] = sprintf(
+//                    'required_with: %s,%s',
+//                    'conditions.condition_attached',
+//                    'conditions.condition.' . $key . '.condition_type',
+//                );
+//            }
+//        }
+//
+//        return $rules;
     }
 
     /**
@@ -215,47 +220,49 @@ class Condition extends Element
      */
     public function messages(): array
     {
-        $messages = [];
+        return $this->getBaseMessages($this->request->messages());
 
-        $messages['conditions.condition_attached.in'] = trans(
-            'validation.code_list',
-            ['attribute' => trans('elementForm.condition_attached')]
-        );
-
-        if (count(Arr::get($this->data, 'conditions.condition', []))) {
-            foreach (Arr::get($this->data(), 'conditions.condition', []) as $key => $conditionItem) {
-                $messages['conditions.condition_attached.required_with'] = trans(
-                    'validation.required_with',
-                    [
-                        'attribute' => trans('elementForm.condition_attached'),
-                        'values'    => 'condition type or narrative',
-                    ]
-                );
-
-                $messages['conditions.condition.' . $key . '.condition_type.in'] = trans(
-                    'validation.code_list',
-                    ['attribute' => trans('elementForm.condition_type')]
-                );
-
-                $messages['conditions.condition.' . $key . '.condition_type.required_with'] = trans(
-                    'validation.required_with',
-                    [
-                        'attribute' => trans('elementForm.condition_type'),
-                        'values'    => 'condition attached or narrative',
-                    ]
-                );
-
-                $messages['conditions.condition.' . $key . '.narrative.0.narrative.required_with'] = trans(
-                    'validation.required_with',
-                    [
-                        'attribute' => trans('elementForm.condition_narrative'),
-                        'values'    => 'condition attached or type',
-                    ]
-                );
-            }
-        }
-
-        return $messages;
+//        $messages = [];
+//
+//        $messages['conditions.condition_attached.in'] = trans(
+//            'validation.code_list',
+//            ['attribute' => trans('elementForm.condition_attached')]
+//        );
+//
+//        if (count(Arr::get($this->data, 'conditions.condition', []))) {
+//            foreach (Arr::get($this->data(), 'conditions.condition', []) as $key => $conditionItem) {
+//                $messages['conditions.condition_attached.required_with'] = trans(
+//                    'validation.required_with',
+//                    [
+//                        'attribute' => trans('elementForm.condition_attached'),
+//                        'values'    => 'condition type or narrative',
+//                    ]
+//                );
+//
+//                $messages['conditions.condition.' . $key . '.condition_type.in'] = trans(
+//                    'validation.code_list',
+//                    ['attribute' => trans('elementForm.condition_type')]
+//                );
+//
+//                $messages['conditions.condition.' . $key . '.condition_type.required_with'] = trans(
+//                    'validation.required_with',
+//                    [
+//                        'attribute' => trans('elementForm.condition_type'),
+//                        'values'    => 'condition attached or narrative',
+//                    ]
+//                );
+//
+//                $messages['conditions.condition.' . $key . '.narrative.0.narrative.required_with'] = trans(
+//                    'validation.required_with',
+//                    [
+//                        'attribute' => trans('elementForm.condition_narrative'),
+//                        'values'    => 'condition attached or type',
+//                    ]
+//                );
+//            }
+//        }
+//
+//        return $messages;
     }
 
     /**

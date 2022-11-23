@@ -6,6 +6,7 @@ namespace App\CsvImporter\Entities\Activity\Components\Elements;
 
 use App\CsvImporter\Entities\Activity\Components\Elements\Foundation\Iati\Element;
 use App\CsvImporter\Entities\Activity\Components\Factory\Validation;
+use App\Http\Requests\Activity\CollaborationType\CollaborationTypeRequest;
 use Illuminate\Support\Arr;
 
 /**
@@ -29,6 +30,7 @@ class CollaborationType extends Element
      * @var array
      */
     protected array $data;
+    private CollaborationTypeRequest $request;
 
     /**
      * Description constructor.
@@ -42,6 +44,7 @@ class CollaborationType extends Element
     {
         $this->prepare($fields);
         $this->factory = $factory;
+        $this->request = new CollaborationTypeRequest();
     }
 
     /**
@@ -118,13 +121,15 @@ class CollaborationType extends Element
      */
     public function rules(): array
     {
-        $rules = [
-            $this->csvHeader() => sprintf('nullable|in:%s', $this->validCollaborationType()),
-        ];
+        return $this->getBaseRules($this->request->rules());
 
-        (!is_array(Arr::get($this->data, 'collaboration_type'))) ?: $rules[$this->csvHeader()] .= 'nullable|size:1';
-
-        return $rules;
+//        $rules = [
+//            $this->csvHeader() => sprintf('nullable|in:%s', $this->validCollaborationType()),
+//        ];
+//
+//        (!is_array(Arr::get($this->data, 'collaboration_type'))) ?: $rules[$this->csvHeader()] .= 'nullable|size:1';
+//
+//        return $rules;
     }
 
     /**
@@ -134,12 +139,14 @@ class CollaborationType extends Element
      */
     public function messages(): array
     {
-        $key = $this->csvHeader();
+        return $this->getBaseMessages($this->request->messages());
 
-        return [
-            sprintf('%s.size', $key)     => trans('validation.multiple_values', ['attribute' => trans('element.collaboration_type')]),
-            sprintf('%s.in', $key)       => trans('validation.code_list', ['attribute' => trans('element.collaboration_type')]),
-        ];
+//        $key = $this->csvHeader();
+//
+//        return [
+//            sprintf('%s.size', $key)     => trans('validation.multiple_values', ['attribute' => trans('element.collaboration_type')]),
+//            sprintf('%s.in', $key)       => trans('validation.code_list', ['attribute' => trans('element.collaboration_type')]),
+//        ];
     }
 
     /**

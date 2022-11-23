@@ -38,7 +38,7 @@ class DescriptionRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    protected function getRulesForDescription(array $formFields): array
+    public function getRulesForDescription(array $formFields): array
     {
         $rules = [];
 
@@ -60,7 +60,7 @@ class DescriptionRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    protected function getMessagesForDescription(array $formFields): array
+    public function getMessagesForDescription(array $formFields): array
     {
         $messages = [];
 

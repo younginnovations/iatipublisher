@@ -6,6 +6,7 @@ namespace App\CsvImporter\Entities\Activity\Components\Elements;
 
 use App\CsvImporter\Entities\Activity\Components\Elements\Foundation\Iati\Element;
 use App\CsvImporter\Entities\Activity\Components\Factory\Validation;
+use App\Http\Requests\Activity\CapitalSpend\CapitalSpendRequest;
 use Illuminate\Support\Arr;
 
 /**
@@ -29,6 +30,7 @@ class CapitalSpend extends Element
      * @var array
      */
     protected array $data;
+    private CapitalSpendRequest $request;
 
     /**
      * Description constructor.
@@ -42,6 +44,7 @@ class CapitalSpend extends Element
     {
         $this->prepare($fields);
         $this->factory = $factory;
+        $this->request = new CapitalSpendRequest();
     }
 
     /**
@@ -107,13 +110,15 @@ class CapitalSpend extends Element
      */
     public function rules(): array
     {
-        $rules = [
-            $this->csvHeader() => 'nullable|numeric|between:0, 100',
-        ];
+        return $this->getBaseRules($this->request->rules());
 
-        (!is_array(Arr::get($this->data, 'capital_spend'))) ?: $rules[$this->csvHeader()] .= 'nullable|size:1';
-
-        return $rules;
+//        $rules = [
+//            $this->csvHeader() => 'nullable|numeric|between:0, 100',
+//        ];
+//
+//        (!is_array(Arr::get($this->data, 'capital_spend'))) ?: $rules[$this->csvHeader()] .= 'nullable|size:1';
+//
+//        return $rules;
     }
 
     /**
@@ -123,13 +128,15 @@ class CapitalSpend extends Element
      */
     public function messages(): array
     {
-        $key = $this->csvHeader();
+        return $this->getBaseMessages($this->request->messages());
 
-        return [
-            sprintf('%s.numeric', $key)  => trans('validation.numeric', ['attribute' => trans('element.capital_spend')]),
-            sprintf('%s.between', $key)  => trans('validation.between.numeric', ['attribute' => trans('element.capital_spend'), 'min' => '0', 'max' => '100']),
-            sprintf('%s.size', $key)     => trans('validation.multiple_values', ['attribute' => trans('element.capital_spend')]),
-        ];
+//        $key = $this->csvHeader();
+//
+//        return [
+//            sprintf('%s.numeric', $key)  => trans('validation.numeric', ['attribute' => trans('element.capital_spend')]),
+//            sprintf('%s.between', $key)  => trans('validation.between.numeric', ['attribute' => trans('element.capital_spend'), 'min' => '0', 'max' => '100']),
+//            sprintf('%s.size', $key)     => trans('validation.multiple_values', ['attribute' => trans('element.capital_spend')]),
+//        ];
     }
 
     /**

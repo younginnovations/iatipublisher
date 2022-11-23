@@ -6,6 +6,7 @@ namespace App\CsvImporter\Entities\Activity\Components\Elements;
 
 use App\CsvImporter\Entities\Activity\Components\Elements\Foundation\Iati\Element;
 use App\CsvImporter\Entities\Activity\Components\Factory\Validation;
+use App\Http\Requests\Activity\RelatedActivity\RelatedActivityRequest;
 use Illuminate\Support\Arr;
 
 /**
@@ -26,6 +27,7 @@ class RelatedActivity extends Element
      * @var string
      */
     protected string $index = 'related_activity';
+    private RelatedActivityRequest $request;
 
     /**
      * RelatedActivity constructor.
@@ -37,6 +39,7 @@ class RelatedActivity extends Element
     {
         $this->prepare($fields);
         $this->factory = $factory;
+        $this->request = new RelatedActivityRequest();
     }
 
     /**
@@ -151,21 +154,23 @@ class RelatedActivity extends Element
      */
     public function rules(): array
     {
-        $rules = [];
+        return $this->getBaseRules($this->request->rules());
 
-        foreach (Arr::get($this->data(), 'related_activity', []) as $key => $value) {
-            $rules['related_activity.' . $key . '.activity_identifier'] = sprintf(
-                'required_with:%s',
-                'related_activity.' . $key . '.relationship_type'
-            );
-            $rules['related_activity.' . $key . '.relationship_type'] = sprintf(
-                'required_with:%s|in:%s',
-                'related_activity.' . $key . '.activity_identifier',
-                $this->relatedActivityCode()
-            );
-        }
-
-        return $rules;
+//        $rules = [];
+//
+//        foreach (Arr::get($this->data(), 'related_activity', []) as $key => $value) {
+//            $rules['related_activity.' . $key . '.activity_identifier'] = sprintf(
+//                'required_with:%s',
+//                'related_activity.' . $key . '.relationship_type'
+//            );
+//            $rules['related_activity.' . $key . '.relationship_type'] = sprintf(
+//                'required_with:%s|in:%s',
+//                'related_activity.' . $key . '.activity_identifier',
+//                $this->relatedActivityCode()
+//            );
+//        }
+//
+//        return $rules;
     }
 
     /**
@@ -175,15 +180,17 @@ class RelatedActivity extends Element
      */
     public function messages(): array
     {
-        $messages = [];
+        return $this->getBaseMessages($this->request->messages());
 
-        foreach (Arr::get($this->data(), 'related_activity', []) as $key => $value) {
-            $messages['related_activity.' . $key . '.activity_identifier.required_with'] = trans('validation.required', ['attribute' => trans('elementForm.related_activity_identifier')]);
-            $messages['related_activity.' . $key . '.relationship_type.required_with'] = trans('validation.required', ['attribute' => trans('elementForm.related_activity_relationship_type')]);
-            $messages['related_activity.' . $key . '.relationship_type.in'] = trans('validation.code_list', ['attribute' => trans('elementForm.related_activity_relationship_type')]);
-        }
-
-        return $messages;
+//        $messages = [];
+//
+//        foreach (Arr::get($this->data(), 'related_activity', []) as $key => $value) {
+//            $messages['related_activity.' . $key . '.activity_identifier.required_with'] = trans('validation.required', ['attribute' => trans('elementForm.related_activity_identifier')]);
+//            $messages['related_activity.' . $key . '.relationship_type.required_with'] = trans('validation.required', ['attribute' => trans('elementForm.related_activity_relationship_type')]);
+//            $messages['related_activity.' . $key . '.relationship_type.in'] = trans('validation.code_list', ['attribute' => trans('elementForm.related_activity_relationship_type')]);
+//        }
+//
+//        return $messages;
     }
 
     /**

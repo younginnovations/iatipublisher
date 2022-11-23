@@ -202,8 +202,8 @@ class RecipientCountry extends Element
         $this->data['recipient_region'] = (empty($recipientRegion)) ? '' : $recipientRegion;
         $this->data['recipient_country_total_percentage'] = Arr::get($this->data, 'recipient_country', []);
         $this->validator = $this->factory->sign($this->data())
-            ->with($this->rules(), $this->messages())
-            ->getValidatorInstance();
+                                         ->with($this->rules(), $this->messages())
+                                         ->getValidatorInstance();
         $this->setValidity();
 
         unset($this->data['recipient_country_total_percentage'], $this->data['recipient_region']);

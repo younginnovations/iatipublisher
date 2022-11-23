@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\CsvImporter\Entities\Activity\Components\Elements\Foundation\Iati;
 
+use Illuminate\Support\Arr;
+
 /**
  * Class Element.
  */
@@ -168,5 +170,31 @@ abstract class Element
     public function errors(): array
     {
         return $this->errors;
+    }
+
+    public function getBaseRules($baseRules): array
+    {
+        $rules = [];
+
+        foreach (Arr::get($this->data(), $this->index, []) as $idx => $value) {
+            foreach ($baseRules as $elementName => $baseRule) {
+                $rules[$this->index . '.' . $idx . '.' . $elementName] = $baseRule;
+            }
+        }
+
+        return $rules;
+    }
+
+    public function getBaseMessages($baseMessages): array
+    {
+        $messages = [];
+
+        foreach (Arr::get($this->data(), $this->index, []) as $idx => $value) {
+            foreach ($baseMessages as $elementName => $baseMessage) {
+                $messages[$this->index . '.' . $idx . '.' . $elementName] = $baseMessage;
+            }
+        }
+
+        return $messages;
     }
 }

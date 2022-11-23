@@ -6,6 +6,7 @@ namespace App\CsvImporter\Entities\Activity\Components\Elements;
 
 use App\CsvImporter\Entities\Activity\Components\Elements\Foundation\Iati\Element;
 use App\CsvImporter\Entities\Activity\Components\Factory\Validation;
+use App\Http\Requests\Activity\LegacyData\LegacyDataRequest;
 use Illuminate\Support\Arr;
 
 /**
@@ -30,6 +31,7 @@ class LegacyData extends Element
      * @var string
      */
     protected string $index = 'legacy_data';
+    private LegacyDataRequest $request;
 
     /**
      * LegacyData constructor.
@@ -41,6 +43,7 @@ class LegacyData extends Element
     {
         $this->prepare($fields);
         $this->factory = $factory;
+        $this->request = new LegacyDataRequest();
     }
 
     /**
@@ -135,23 +138,25 @@ class LegacyData extends Element
      */
     public function rules(): array
     {
-        $rules = [];
+        return $this->getBaseRules($this->request->rules());
 
-        foreach (Arr::get($this->data(), 'legacy_data', []) as $key => $value) {
-            $tagForm = sprintf('legacy_data.%s', $key);
-            $rules[sprintf('%s.legacy_name', $tagForm)] = sprintf(
-                'required_with: %s,%s',
-                sprintf('%s.value', $tagForm),
-                sprintf('%s.iati_equivalent', $tagForm),
-            );
-            $rules[sprintf('%s.value', $tagForm)] = sprintf(
-                'required_with: %s,%s',
-                sprintf('%s.legacy_name', $tagForm),
-                sprintf('%s.iati_equivalent', $tagForm),
-            );
-        }
-
-        return $rules;
+//        $rules = [];
+//
+//        foreach (Arr::get($this->data(), 'legacy_data', []) as $key => $value) {
+//            $tagForm = sprintf('legacy_data.%s', $key);
+//            $rules[sprintf('%s.legacy_name', $tagForm)] = sprintf(
+//                'required_with: %s,%s',
+//                sprintf('%s.value', $tagForm),
+//                sprintf('%s.iati_equivalent', $tagForm),
+//            );
+//            $rules[sprintf('%s.value', $tagForm)] = sprintf(
+//                'required_with: %s,%s',
+//                sprintf('%s.legacy_name', $tagForm),
+//                sprintf('%s.iati_equivalent', $tagForm),
+//            );
+//        }
+//
+//        return $rules;
     }
 
     /**
@@ -161,15 +166,17 @@ class LegacyData extends Element
      */
     public function messages(): array
     {
-        $messages = [];
+        return $this->getBaseMessages($this->request->messages());
 
-        foreach (Arr::get($this->data(), 'legacy_data', []) as $key => $value) {
-            $tagForm = sprintf('legacy_data.%s', $key);
-            $messages[sprintf('%s.legacy_name.%s', $tagForm, 'required_with')] = trans('validation.required_with', ['attribute' => trans('elementForm.legacy_data_name'), 'values' => 'value or iati equivalent']);
-            $messages[sprintf('%s.value.%s', $tagForm, 'required_with')] = trans('validation.required_with', ['attribute' => trans('elementForm.legacy_data_value'), 'values' => 'name or iati equivalent']);
-        }
-
-        return $messages;
+//        $messages = [];
+//
+//        foreach (Arr::get($this->data(), 'legacy_data', []) as $key => $value) {
+//            $tagForm = sprintf('legacy_data.%s', $key);
+//            $messages[sprintf('%s.legacy_name.%s', $tagForm, 'required_with')] = trans('validation.required_with', ['attribute' => trans('elementForm.legacy_data_name'), 'values' => 'value or iati equivalent']);
+//            $messages[sprintf('%s.value.%s', $tagForm, 'required_with')] = trans('validation.required_with', ['attribute' => trans('elementForm.legacy_data_value'), 'values' => 'name or iati equivalent']);
+//        }
+//
+//        return $messages;
     }
 
     /**
