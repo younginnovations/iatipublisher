@@ -111,6 +111,7 @@
                     'error_input form__input ': errorData[field.name],
                     'form__input ': !errorData[field.name],
                   }"
+                  @keyup.enter.stop
                 />
 
                 <input
@@ -552,7 +553,7 @@ export default defineComponent({
         title: "Administrator Information",
         is_complete: false,
         description:
-"Provide your information to create an admin account here on IATI Publisher and IATI Registry at once.",
+        "Provide your information to create an admin account here on IATI Publisher and IATI Registry at once.",
         fields: {
           username: {
             label: "Username",
@@ -676,11 +677,15 @@ export default defineComponent({
         typeof(errorResponse) === 'string'? {'error' : errorResponse}: errorResponse);
 
         setTimeout(() => {
-          for(const err in iatiError){
-            delete iatiError[err];
-          }
+          cleanIatiErrors();
         },35000);
       }
+    }
+
+    function cleanIatiErrors(){
+   for(const err in iatiError){
+            delete iatiError[err];
+          }
     }
 
     /**
@@ -837,7 +842,7 @@ export default defineComponent({
           const response = res.data;
           const errors = !response.success || "errors" in response ? response.errors : [];
           updateValidationErrors(errors);
-          updateErrors(errors);
+          Object.assign(iatiError, errors);
           isLoaderVisible.value = false;
           registerForm["4"].is_complete = false;
 
@@ -886,6 +891,8 @@ export default defineComponent({
     }
 
     function goToPreviousForm() {
+
+      cleanIatiErrors();
       step.value -= 1;
     }
 
