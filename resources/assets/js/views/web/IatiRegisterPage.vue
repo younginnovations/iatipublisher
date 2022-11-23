@@ -511,7 +511,7 @@ export default defineComponent({
             placeholder: "Type address here",
             id: "address",
             required: false,
-            hover_text: "",
+            hover_text: "Provide a contact address for your organisation.",
             type: "textarea",
             class: "mb-4 col-span-2 lg:mb-6",
           },
@@ -530,7 +530,7 @@ export default defineComponent({
             id: "contact-email",
             required: true,
             hover_text:
-              "Select an option:Primary - your organisation is publishing its own or (associated organisations') data Secondary - your organisation is reproducing data on the activities of another organisation",
+              "Select an option:<br>Primary - your organisation is publishing its own or (associated organisations') data <br>Secondary - your organisation is reproducing data on the activities of another organisation",
             type: "select",
             options: props.types.source,
             class: "mb-4 lg:mb-6",
@@ -552,9 +552,7 @@ export default defineComponent({
         title: "Administrator Information",
         is_complete: false,
         description:
-          "This information will be used to create an admin account in IATI Publisher",
-        hover_text:
-          "Provide your information to create an admin account here on IATI Publisher.",
+"Provide your information to create an admin account here on IATI Publisher and IATI Registry at once.",
         fields: {
           username: {
             label: "Username",
@@ -672,7 +670,8 @@ export default defineComponent({
      * Update IATI and system Error
      */
     function updateErrors(errorResponse) {
-      if(Object.values(errorData).every(value => value === '')){
+      if(Object.values(errorData).every(value => value === '') || step.value === 4){
+
         Object.assign(iatiError,
         typeof(errorResponse) === 'string'? {'error' : errorResponse}: errorResponse);
 
@@ -680,7 +679,7 @@ export default defineComponent({
           for(const err in iatiError){
             delete iatiError[err];
           }
-        },15000);
+        },35000);
       }
     }
 
@@ -719,7 +718,8 @@ export default defineComponent({
 
           if (response.success) {
             registerForm["1"].is_complete = true;
-            step.value += 1;
+
+            updateStep(1);
           } else {
             updateValidationErrors(errors);
             updateErrors(errors);
@@ -763,7 +763,7 @@ export default defineComponent({
 
           if (response.success) {
             registerForm["2"].is_complete = true;
-            step.value += 1;
+            updateStep(2);
           } else {
             updateErrors(errors);
           }
@@ -803,7 +803,7 @@ export default defineComponent({
 
           if (response.success) {
             registerForm["3"].is_complete = true;
-            step.value += 1;
+            updateStep(3);
           } else {
             updateErrors(errors);
           }
@@ -843,7 +843,7 @@ export default defineComponent({
 
           if (response.success) {
             registerForm["4"].is_complete = true;
-            step.value += 1;
+            updateStep(4);
           }
         })
         .catch((error) => {
@@ -857,24 +857,32 @@ export default defineComponent({
       return step.value.toString();
     }
 
+    function updateStep(current_step) {
+      if(current_step === step.value){
+        step.value+=1;
+      }
+    }
+
     /**
      * calls submit function based on current step value
      */
-    function goToNextForm() {
-      switch (step.value) {
-        case 1:
-          verifyPublisher();
-          break;
-        case 2:
-          verifyContactInformation();
-          break;
-        case 3:
-          verifyAdditionalInformation();
-          break;
-        case 4:
-          submitForm();
-          break;
-      }
+    function goToNextForm(event) {
+
+      console.log('event', event);
+        switch (step.value) {
+          case 1:
+            verifyPublisher();
+            break;
+          case 2:
+            verifyContactInformation();
+            break;
+          case 3:
+            verifyAdditionalInformation();
+            break;
+          case 4:
+            submitForm();
+            break;
+        }
     }
 
     function goToPreviousForm() {
@@ -894,6 +902,7 @@ export default defineComponent({
       iatiError,
       isTextField,
       props,
+      step
     };
   },
 });
