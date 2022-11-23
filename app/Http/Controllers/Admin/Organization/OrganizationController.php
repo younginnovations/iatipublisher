@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\IATI\Models\Organization\Organization;
 use App\IATI\Services\Organization\OrganizationService;
 use Illuminate\Contracts\View\View;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -144,5 +145,33 @@ class OrganizationController extends Controller
         }
 
         return ['message' => 'Filtered Agency successfully fetched', 'data' => $filtered_agency];
+    }
+
+    /**
+     * Get Publisher status.
+     *
+     * @param array $data
+     *
+     * @return JsonResponse
+     */
+    public function getPublisherStatus(): JsonResponse
+    {
+        try {
+            $publisher_id = Auth::user()->organization->publisher_id;
+            $status = $this->organizationService->isPublisherStateActive($publisher_id);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Publisher status successfully retrieved.',
+                'data' => ['publisher_active' => $status],
+            ]);
+        } catch (\Exception $e) {
+            logger()->error($e->getMessage());
+
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ]);
+        }
     }
 }

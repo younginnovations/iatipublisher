@@ -7,6 +7,7 @@ namespace App\IATI\Services\Organization;
 use App\IATI\Models\Organization\Organization;
 use App\IATI\Repositories\Organization\OrganizationRepository;
 use App\IATI\Traits\OrganizationXmlBaseElements;
+use GuzzleHttp\Client;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Model;
@@ -166,5 +167,41 @@ class OrganizationService
     public function getPaginatedOrganizations($page, $request): ?LengthAwarePaginator
     {
         return $this->organizationRepo->getPaginatedOrganizations($page, $request);
+    }
+
+    /**
+     * Check if publisher id is active in iati registry.
+     *
+     * @param string $publisher_id
+     *
+     * @return bool
+     */
+    public function isPublisherStateActive(string $publisher_id): bool
+    {
+        $clientConfig = ['base_uri' => env('IATI_API_ENDPOINT')];
+        $requestConfig = [
+            'http_errors' => false,
+            'query'       => ['id' => $publisher_id ?? ''],
+        ];
+
+        if (env('APP_ENV') !== 'production') {
+            $clientConfig['headers']['X-CKAN-API-Key'] = env('IATI_API_KEY');
+            $requestConfig['auth'] = [env('IATI_USERNAME'), env('IATI_PASSWORD')];
+        }
+
+        $client = new Client($clientConfig);
+        $res = $client->request('GET', env('IATI_API_ENDPOINT') . '/action/organization_show', $requestConfig);
+
+        if ($res->getStatusCode() === 404) {
+            return false;
+        }
+
+        $result = json_decode($res->getBody()->getContents())->result;
+
+        if (strcasecmp($result->state, 'active') === 0) {
+            return true;
+        }
+
+        return false;
     }
 }
