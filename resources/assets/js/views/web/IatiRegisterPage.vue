@@ -827,10 +827,6 @@ export default defineComponent({
         ),
       };
 
-      for(const err in iatiError){
-        delete iatiError[err];
-      }
-
       axios
         .post("/iati/register", { ...formData, ...form })
         .then((res) => {
@@ -841,7 +837,7 @@ export default defineComponent({
           const response = res.data;
           const errors = !response.success || "errors" in response ? response.errors : [];
           updateValidationErrors(errors);
-          Object.assign(iatiError,errors);
+          updateErrors(errors);
           isLoaderVisible.value = false;
           registerForm["4"].is_complete = false;
 
@@ -852,6 +848,7 @@ export default defineComponent({
         })
         .catch((error) => {
           updateErrors(error);
+
           isLoaderVisible.value = false;
         });
     }
