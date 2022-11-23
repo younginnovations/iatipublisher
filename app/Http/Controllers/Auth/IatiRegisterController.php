@@ -247,9 +247,9 @@ class IatiRegisterController extends Controller
 
             return response()->json(['success' => true, 'message' => 'User registered successfully']);
         } catch (Exception $e) {
-            logger()->error($e->getMessage());
+            logger()->error($e);
 
-            return response()->json(['success' => false, 'message' => 'User registered successfully']);
+            return response()->json(['success' => false, 'message' => $e]);
         }
     }
 

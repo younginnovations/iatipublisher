@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Middleware\RedirectIfAuthenticated;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -34,6 +35,7 @@ Route::middleware(RedirectIfAuthenticated::class)->name('web.')->group(function 
     Route::post('/iati/register', [App\Http\Controllers\Auth\IatiRegisterController::class, 'register'])->name('iati.user.register');
 });
 
+Auth::routes(['verify' => true]);
 Route::middleware(RedirectIfAuthenticated::class)->get('password/reset/{token}', [App\Http\Controllers\Auth\ResetPasswordController::class, 'showResetForm'])->name('password.reset');
 Route::post('/logout', [App\Http\Controllers\Auth\LoginController::class, 'logout'])->name('logout');
 Route::get('/about', [App\Http\Controllers\Web\WebController::class, 'about'])->name('about');
