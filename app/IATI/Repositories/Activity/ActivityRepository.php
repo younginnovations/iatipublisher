@@ -69,7 +69,7 @@ class ActivityRepository extends Repository
             $bindParams[] = "%$query%";
         }
 
-        $orderBy = 'created_at';
+        $orderBy = 'updated_at';
         $direction = 'desc';
 
         if (array_key_exists('orderBy', $queryParams) && !empty($queryParams['orderBy'])) {
@@ -82,6 +82,7 @@ class ActivityRepository extends Repository
 
         return $this->model->whereRaw($whereSql, $bindParams)
             ->orderBy($orderBy, $direction)
+            ->orderBy('id', $direction)
             ->paginate(10, ['*'], 'activity', $page);
     }
 
