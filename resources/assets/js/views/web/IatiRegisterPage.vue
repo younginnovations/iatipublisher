@@ -397,7 +397,7 @@ export default defineComponent({
             id: "registration-agency",
             required: true,
             hover_text:
-              "Select the agency in your country where your organisation is registered. If you do not know this information please email <a href='mailto:support@iatistandard.org'>support@iatistandard.org</a>",
+              "Select the agency in your country where your organisation is registered. If you do not know this information please email <a href='mailto:support@iatistandard.org' target='_blank'>support@iatistandard.org</a>",
             type: "select",
             options: registration_agency,
             class: "mb-4 lg:mb-2 relative",
@@ -410,7 +410,7 @@ export default defineComponent({
             id: "registration-number",
             required: true,
             hover_text:
-              "Provide the registration number for your organisation that has been provided by organisation registration agency. If you do not know this please email <a href='mailto:support@iatistandard.org'>support@iatistandard.org</a>.",
+              "Provide the registration number for your organisation that has been provided by organisation registration agency. If you do not know this please email <a href='mailto:support@iatistandard.org' target='_blank'>support@iatistandard.org</a>.",
             type: "text",
             class: "mb-4 lg:mb-2",
             help_text: "for e.g. 123456",
@@ -543,7 +543,7 @@ export default defineComponent({
             id: "record-exclusions",
             required: false,
             hover_text:
-              "Does your organisation have an exclusion policy that provide details on what data that it cannot publish? For example an organisation may not be able to publish data because of political sensitivity issues or if information is commercially restricted. Please provide details here about what data your organisation needs to exclude (if any), and a URL to your organisation's exclusion policy (if it has one).<a href='https://iatistandard.org/en/guidance/standard-overview/preparing-your-organisation-data-publication/information-and-data-you-cant-publish-exclusions/' > For more information read: Information and data you can't publish (exclusions)</a>",
+              "Does your organisation have an exclusion policy that provide details on what data that it cannot publish? For example an organisation may not be able to publish data because of political sensitivity issues or if information is commercially restricted. Please provide details here about what data your organisation needs to exclude (if any), and a URL to your organisation's exclusion policy (if it has one).<a href='https://iatistandard.org/en/guidance/standard-overview/preparing-your-organisation-data-publication/information-and-data-you-cant-publish-exclusions/' target='_blank'> For more information read: Information and data you can't publish (exclusions)</a>",
             type: "textarea",
             class: "mb-4  col-span-2 lg:mb-6",
           },
