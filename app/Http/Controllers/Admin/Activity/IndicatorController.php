@@ -195,10 +195,11 @@ class IndicatorController extends Controller
             $resultTitle = $result['result']['title'];
             $activity = $result->activity;
             $period = $this->periodService->getPeriods($indicatorId)->toArray();
+            $element = getElementSchema('indicator');
             $types = getIndicatorTypes();
             $toast = generateToastData();
 
-            return view('admin.activity.indicator.detail', compact('activity', 'resultTitle', 'indicator', 'period', 'types', 'toast'));
+            return view('admin.activity.indicator.detail', compact('activity', 'resultTitle', 'indicator', 'period', 'types', 'toast', 'element'));
         } catch (Exception $e) {
             logger()->error($e->getMessage());
 

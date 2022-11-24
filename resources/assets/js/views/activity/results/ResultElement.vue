@@ -13,20 +13,18 @@
           <div class="text-sm font-bold title">{{ elementName }}</div>
         </div>
         <div class="flex items-center icons">
-          <HoverText hover-text="example text" class="text-n-40"></HoverText>
+          <HoverText :hover-text="hoverText" class="text-n-40"></HoverText>
         </div>
       </div>
       <div class="w-full h-px mb-4 divider bg-n-20"></div>
       <div>
-        <template
-          v-if="elementName === 'title' || elementName === 'description'"
-        >
+        <template v-if="elementName === 'title' || elementName === 'description'">
           <TitleDescription :data="elementData" :type="types.language" />
         </template>
 
         <template v-else-if="elementName === 'aggregation_status'">
           <span class="text-sm capitalize">{{
-            parseInt(data) ? 'True' : data ? 'False' : 'Missing'
+            parseInt(data) ? "True" : data ? "False" : "Missing"
           }}</span>
         </template>
 
@@ -51,17 +49,12 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, toRefs } from 'vue';
-import HoverText from 'Components/HoverText.vue';
-import {
-  TitleDescription,
-  DocumentLink,
-  Reference,
-  ResultType,
-} from './elements/Index';
+import { defineComponent, toRefs } from "vue";
+import HoverText from "Components/HoverText.vue";
+import { TitleDescription, DocumentLink, Reference, ResultType } from "./elements/Index";
 
 export default defineComponent({
-  name: 'ActivityElement',
+  name: "ActivityElement",
   components: {
     HoverText,
     TitleDescription,
@@ -85,11 +78,16 @@ export default defineComponent({
     width: {
       type: String,
       required: false,
-      default: '',
+      default: "",
     },
     types: {
       type: Object,
       required: true,
+    },
+    hoverText: {
+      type: String,
+      required: false,
+      default: "",
     },
   },
   setup(props) {

@@ -64,6 +64,11 @@
                   : ''
               "
               :types="types"
+              :hover-text="
+                element['attributes'][key]
+                  ? element['attributes'][key]['hover_text'] ?? ''
+                  : element['sub_elements'][key]['hover_text'] ?? ''
+              "
             />
           </template>
 
@@ -127,6 +132,10 @@ export default defineComponent({
       required: true,
     },
     toast: {
+      type: Object,
+      required: true,
+    },
+    element: {
       type: Object,
       required: true,
     },

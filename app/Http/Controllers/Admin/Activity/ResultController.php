@@ -166,9 +166,10 @@ class ResultController extends Controller
             $toast = generateToastData();
             $activity = $this->activityService->getActivity($activityId);
             $result = $this->resultService->getResultWithIndicatorAndPeriod($resultId, $activityId);
+            $element = getElementSchema('result');
             $types = getResultTypes();
 
-            return view('admin.activity.result.detail', compact('activity', 'result', 'types', 'toast'));
+            return view('admin.activity.result.detail', compact('activity', 'result', 'types', 'toast', 'element'));
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 

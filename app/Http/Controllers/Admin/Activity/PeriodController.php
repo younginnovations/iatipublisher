@@ -205,10 +205,11 @@ class PeriodController extends Controller
                 ],
             ];
             $period = $this->periodService->getPeriod($periodId);
+            $element = getElementSchema('period');
             $types = getPeriodTypes();
             $toast = generateToastData();
 
-            return view('admin.activity.period.detail', compact('activity', 'parentData', 'period', 'types', 'toast'));
+            return view('admin.activity.period.detail', compact('activity', 'parentData', 'period', 'types', 'toast', 'element'));
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
