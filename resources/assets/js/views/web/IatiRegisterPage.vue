@@ -842,6 +842,7 @@ export default defineComponent({
           const response = res.data;
           const errors = !response.success || "errors" in response ? response.errors : [];
           updateValidationErrors(errors);
+          cleanIatiErrors();
           Object.assign(iatiError, errors);
           isLoaderVisible.value = false;
           registerForm["4"].is_complete = false;
