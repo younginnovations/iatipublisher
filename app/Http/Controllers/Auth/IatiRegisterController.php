@@ -115,11 +115,7 @@ class IatiRegisterController extends Controller
 
             return response()->json(
                 [
-                    'success' => false,
-                    'errors'  => [
-                        'publisher_name' => ['Publisher Name doesn\'t match your IATI Registry information'],
-                        'publisher_id'   => ['Publisher ID doesn\'t match with your IATI Registry information'],
-                    ],
+                    'success' => false, 'errors'  => [],
                 ]
             );
         } catch (Exception $e) {
@@ -247,9 +243,9 @@ class IatiRegisterController extends Controller
 
             return response()->json(['success' => true, 'message' => 'User registered successfully']);
         } catch (Exception $e) {
-            logger()->error($e);
+            logger()->error($e->getMessage());
 
-            return response()->json(['success' => false, 'message' => $e]);
+            return response()->json(['success' => false, 'message' => 'Error has occured while trying to register user. Please try again later.']);
         }
     }
 
