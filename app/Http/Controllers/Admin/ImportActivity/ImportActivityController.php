@@ -218,7 +218,7 @@ class ImportActivityController extends Controller
             }
 
             if (!$status['success']) {
-                Session::put('error', $status['message']);
+                Session::put('error', $status['message'] . 'sdf');
 
                 return redirect()->route('admin.activities.index');
             }

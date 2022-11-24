@@ -161,7 +161,7 @@ class ActivityDate extends Element
      */
     public function rules(): array
     {
-        return $this->getBaseRules($this->request->rules());
+        return $this->getBaseRules($this->request->rules($this->data('activity_date')));
 //        $rules = [
 //            'activity_date' => 'nullable|multiple_activity_date|start_date_required|start_end_date',
 //        ];
@@ -183,7 +183,7 @@ class ActivityDate extends Element
      */
     public function messages(): array
     {
-        return $this->getBaseMessages($this->request->messages());
+        return $this->getBaseMessages($this->request->messages($this->data('activity_date')));
 
 //        $messages = [
 //            'activity_date.required'               => 'Activity date field is required.',

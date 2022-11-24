@@ -20,9 +20,9 @@ class RecipientCountryRequest extends ActivityBaseRequest
      * @return array
      * @throws BindingResolutionException
      */
-    public function rules(): array
+    public function rules($recipient_country = []): array
     {
-        return $this->getRulesForRecipientCountry($this->get('recipient_country'));
+        return $this->getRulesForRecipientCountry($this->get('recipient_country') ?? $recipient_country);
     }
 
     /**
@@ -30,9 +30,9 @@ class RecipientCountryRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    public function messages(): array
+    public function messages($recipient_country = []): array
     {
-        return $this->getMessagesForRecipientCountry($this->get('recipient_country'));
+        return $this->getMessagesForRecipientCountry($this->get('recipient_country') ?? $recipient_country);
     }
 
     /**

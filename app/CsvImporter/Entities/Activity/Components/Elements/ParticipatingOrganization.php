@@ -277,12 +277,14 @@ class ParticipatingOrganization extends Element
      */
     public function rules(): array
     {
-        return [
-            'participating_organization'                     => 'required|required_only_one_among:identifier,narrative',
-            'participating_organization.*.organization_role' => sprintf('required|in:%s', $this->validOrganizationRoles()),
-            'participating_organization.*.type' => sprintf('in:%s', $this->validOrganizationTypes()),
-            'participating_organization.*.crs_channel_code' => sprintf('in:%s', $this->validOrganizationCrsChannelCodes()),
-        ];
+        return $this->getBaseRules($this->request->rules($this->data('participating_organization') ?? []));
+
+//        return [
+//            'participating_organization'                     => 'required|required_only_one_among:identifier,narrative',
+//            'participating_organization.*.organization_role' => sprintf('required|in:%s', $this->validOrganizationRoles()),
+//            'participating_organization.*.type' => sprintf('in:%s', $this->validOrganizationTypes()),
+//            'participating_organization.*.crs_channel_code' => sprintf('in:%s', $this->validOrganizationCrsChannelCodes()),
+//        ];
     }
 
     /**
@@ -292,20 +294,22 @@ class ParticipatingOrganization extends Element
      */
     public function messages(): array
     {
-        return [
-            'participating_organization.required'                      => trans('validation.required', ['attribute' => trans('elementForm.participating_organisation')]),
-            'participating_organization.*.organization_role.required'  => trans('validation.required', ['attribute' => trans('elementForm.participating_organisation_role')]),
-            'participating_organization.required_only_one_among'       => trans(
-                'validation.required_only_one_among',
-                [
-                    'attribute' => trans('elementForm.participating_organisation_identifier'),
-                    'values'    => trans('elementForm.participating_organisation_name'),
-                ]
-            ),
-            'participating_organization.*.organization_role.in'        => trans('validation.code_list', ['attribute' => trans('elementForm.participating_organisation_role')]),
-            'participating_organization.*.type.in'        => trans('validation.code_list', ['attribute' => trans('elementForm.participating_organisation_type')]),
-            'participating_organization.*.crs_channel_code.in'        => trans('validation.code_list', ['attribute' => trans('elementForm.participating_organisation_crs_channel_code')]),
-        ];
+        return $this->getBaseMessages($this->request->messages($this->data('participating_organization') ?? []));
+
+//        return [
+//            'participating_organization.required'                      => trans('validation.required', ['attribute' => trans('elementForm.participating_organisation')]),
+//            'participating_organization.*.organization_role.required'  => trans('validation.required', ['attribute' => trans('elementForm.participating_organisation_role')]),
+//            'participating_organization.required_only_one_among'       => trans(
+//                'validation.required_only_one_among',
+//                [
+//                    'attribute' => trans('elementForm.participating_organisation_identifier'),
+//                    'values'    => trans('elementForm.participating_organisation_name'),
+//                ]
+//            ),
+//            'participating_organization.*.organization_role.in'        => trans('validation.code_list', ['attribute' => trans('elementForm.participating_organisation_role')]),
+//            'participating_organization.*.type.in'        => trans('validation.code_list', ['attribute' => trans('elementForm.participating_organisation_type')]),
+//            'participating_organization.*.crs_channel_code.in'        => trans('validation.code_list', ['attribute' => trans('elementForm.participating_organisation_crs_channel_code')]),
+//        ];
     }
 
     /**
