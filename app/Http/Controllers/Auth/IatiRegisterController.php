@@ -18,18 +18,17 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
 
 /**
- * Class RegisterController.
+ * Class IatiRegisterController.
  */
 class IatiRegisterController extends Controller
 {
     /*
     |--------------------------------------------------------------------------
-    | Register Controller
+    | IatiRegister Controller
     |--------------------------------------------------------------------------
     |
     | This controller handles the registration of new users as well as their
@@ -47,9 +46,19 @@ class IatiRegisterController extends Controller
      */
     protected string $redirectTo = RouteServiceProvider::HOME;
 
+    /**
+     * @var OrganizationService
+     */
     protected OrganizationService $organizationService;
+
+    /**
+     * @var UserService
+     */
     protected UserService $userService;
-    protected Log $logger;
+
+    /**
+     * @var DatabaseManager
+     */
     protected DatabaseManager $db;
 
     /**
@@ -57,20 +66,20 @@ class IatiRegisterController extends Controller
      *
      * @param OrganizationService $organizationService
      * @param UserService         $userService
-     * @param Log                 $logger
      * @param DatabaseManager     $db
      */
-    public function __construct(OrganizationService $organizationService, UserService $userService, Log $logger, DatabaseManager $db)
+    public function __construct(OrganizationService $organizationService, UserService $userService, DatabaseManager $db)
     {
         $this->organizationService = $organizationService;
         $this->userService = $userService;
-        $this->logger = $logger;
         $this->db = $db;
 
         $this->middleware('guest');
     }
 
     /**
+     * Verifies and validates publisher form.
+     *
      * @param Request $request
      *
      * @return JsonResponse|void
@@ -126,7 +135,7 @@ class IatiRegisterController extends Controller
     }
 
     /**
-     * Handle a registration request for the application.
+     * Verifies and validates contact info form.
      *
      * @param Request $request
      *
@@ -158,7 +167,7 @@ class IatiRegisterController extends Controller
     }
 
     /**
-     * Handle a registration request for the application.
+     * Verifies and validates additional info form.
      *
      * @param Request $request
      *

@@ -60,6 +60,8 @@ class UserService
     }
 
     /**
+     * Register user that already exists in iati registry.
+     *
      * @param array $data
      *
      * @return Model
@@ -90,6 +92,8 @@ class UserService
     }
 
     /**
+     * Register new user.
+     *
      * @param array $data
      *
      * @return Model
@@ -234,9 +238,9 @@ class UserService
      * @param array $data
      * @param bool $exists
      *
-     * @return array|bool
+     * @return array
      */
-    public function checkUser(array $data, bool $exists = true): array|bool
+    public function checkUser(array $data, bool $exists = true): array
     {
         $clientConfig = ['base_uri' => env('IATI_API_ENDPOINT')];
         $requestConfig = [
@@ -416,35 +420,35 @@ class UserService
      */
     public function createPublisherInRegistry(array $data, $token): array
     {
-        $clientConfig = ['base_uri' => env('IATI_API_ENDPOINT')];
-
+        $formParams = [
+            'publisher_iati_id' => $data['identifier'] ?? '',
+            'publisher_organization_type' => $data['publisher_type'] ?? '',
+            'title' => $data['publisher_name'] ?? '',
+            'publisher_contact_email' => $data['contact_email'] ?? '',
+            'license_id' => $data['license_id'] ?? '',
+            'name' => $data['publisher_id'] ?? '',
+            'full_name' => $data['fullname'] ?? '',
+            'publisher_country' => $data['country'] ?? '',
+            'state' => 'approval_needed',
+            'publisher_organization_type' => $data['publisher_type'] ?? '',
+            'publisher_url' => $data['publisher_url'] ?? '',
+            'publisher_contact' => $data['address'] ?? '',
+            'publisher_source_type' => $data['source'] ?? '',
+            'image_url' => $data['image_url'] ?? '',
+            'publisher_url' => $data['website'] ?? '',
+            'publisher_description' => $data['description'] ?? '',
+            'record_exclusion' => $data['record_exclusions'] ?? '',
+        ];
         $requestConfig = [
             'http_errors' => false,
-            'form_params'       => [
-                'publisher_iati_id' => $data['identifier'] ?? '',
-                'publisher_organization_type' => $data['publisher_type'] ?? '',
-                'title' => $data['publisher_name'] ?? '',
-                'publisher_contact_email' => $data['contact_email'] ?? '',
-                'license_id' => $data['license_id'] ?? '',
-                'name' => $data['publisher_id'] ?? '',
-                'full_name' => $data['fullname'] ?? '',
-                'publisher_country' => $data['country'] ?? '',
-                'state' => 'approval_needed',
-                'publisher_organization_type' => $data['publisher_type'] ?? '',
-                'publisher_url' => $data['publisher_url'] ?? '',
-                'publisher_contact' => $data['address'] ?? '',
-                'publisher_source_type' => $data['source'] ?? '',
-                'image_url' => $data['image_url'] ?? '',
-                'publisher_url' => $data['website'] ?? '',
-                'publisher_description' => $data['description'] ?? '',
-                'record_exclusion' => $data['record_exclusions'] ?? '',
-            ],
+            'form_params' => $formParams,
         ];
 
         if (env('APP_ENV') !== 'production') {
             $requestConfig['auth'] = [env('IATI_USERNAME'), env('IATI_PASSWORD')];
         }
 
+        $clientConfig = ['base_uri' => env('IATI_API_ENDPOINT')];
         $clientConfig['headers']['X-CKAN-API-Key'] = $token;
         $client = new Client($clientConfig);
         $res = $client->request('POST', env('IATI_API_ENDPOINT') . '/action/organization_create', $requestConfig);
@@ -500,7 +504,6 @@ class UserService
         ];
 
         unset($errors['__type']);
-        logger()->error('initial' . json_encode($errors));
 
         foreach ($errors as $field => $error) {
             if (in_array($field, array_keys($mapper[$type]))) {
@@ -508,8 +511,6 @@ class UserService
                 unset($errors[$field]);
             }
         }
-
-        logger()->error('final' . json_encode($errors));
 
         return $errors;
     }
