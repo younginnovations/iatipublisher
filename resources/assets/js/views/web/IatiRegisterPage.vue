@@ -871,23 +871,21 @@ export default defineComponent({
     /**
      * calls submit function based on current step value
      */
-    function goToNextForm(event) {
-
-      console.log('event', event);
-        switch (step.value) {
-          case 1:
-            verifyPublisher();
-            break;
-          case 2:
-            verifyContactInformation();
-            break;
-          case 3:
-            verifyAdditionalInformation();
-            break;
-          case 4:
-            submitForm();
-            break;
-        }
+    function goToNextForm() {
+      switch (step.value) {
+        case 1:
+          verifyPublisher();
+          break;
+        case 2:
+          verifyContactInformation();
+          break;
+        case 3:
+          verifyAdditionalInformation();
+          break;
+        case 4:
+          submitForm();
+          break;
+      }
     }
 
     function goToPreviousForm() {
