@@ -1,8 +1,8 @@
 <template>
-  <div class="px-3 py-3 activities__content--element" :class="layout">
-    <div class="p-4 bg-white rounded-lg">
-      <div class="flex mb-4">
-        <div :id="title" class="flex title grow text-n-50">
+  <div class="activities__content--element px-3 py-3" :class="layout">
+    <div class="rounded-lg bg-white p-4">
+      <div class="mb-4 flex">
+        <div :id="title" class="title flex grow text-n-50">
           <template v-if="title === 'name'">
             <svg-vue
               class="mr-1.5 text-xl text-bluecoral"
@@ -27,7 +27,7 @@
               class="mr-1.5 text-xl text-bluecoral"
             ></svg-vue>
           </template>
-          <div class="text-sm font-bold title">
+          <div class="title text-sm font-bold">
             {{ replaceUnderscore(title) }}
           </div>
           <div
@@ -42,7 +42,7 @@
             <span v-else>not completed</span>
           </div>
         </div>
-        <div class="flex items-center icons">
+        <div class="icons flex flex-row-reverse items-center">
           <a
             class="edit-button mr-2.5 flex items-center text-xs font-bold uppercase"
             :href="'/organisation/' + title"
@@ -50,21 +50,22 @@
             <svg-vue class="mr-0.5 text-base" icon="edit"></svg-vue>
             <span>Edit</span>
           </a>
-          <svg-vue
-            v-if="orgMandatoryElements().includes(title)"
-            class="mr-1.5"
-            icon="core"
-          ></svg-vue>
+
           <HoverText
             v-if="tooltip"
             :name="title.toString().replace(/_/g, '-')"
             :hover-text="tooltip"
             :show-iati-reference="true"
             class="text-n-40"
-          ></HoverText>
+          ></HoverText
+          ><svg-vue
+            v-if="orgMandatoryElements().includes(title)"
+            class="mr-1.5"
+            icon="core"
+          ></svg-vue>
         </div>
       </div>
-      <div class="w-full h-px mb-4 divider bg-n-20"></div>
+      <div class="divider mb-4 h-px w-full bg-n-20"></div>
       <div class="text-sm text-n-50">
         <!-- iati_organizational_identifier -->
         <div v-if="title == 'organisation_identifier'">
@@ -113,7 +114,7 @@
         </div>
 
         <!-- document link -->
-        <div v-if="title == 'document_link'" class="text-xs document-link">
+        <div v-if="title == 'document_link'" class="document-link text-xs">
           <DocumentLink :content="content" />
         </div>
         <!-- document link ends -->
