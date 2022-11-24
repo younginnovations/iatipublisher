@@ -40,7 +40,6 @@ class ParticipatingOrganizationRequest extends ActivityBaseRequest
     public function getRulesForParticipatingOrg($formFields): array
     {
         $rules = [];
-        dump('participating_org', $formFields);
 
         foreach ($formFields as $participatingOrgIndex => $participatingOrg) {
             $participatingOrgForm = 'participating_org.' . $participatingOrgIndex;

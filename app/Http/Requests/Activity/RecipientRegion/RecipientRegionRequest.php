@@ -20,9 +20,9 @@ class RecipientRegionRequest extends ActivityBaseRequest
      * @return array
      * @throws BindingResolutionException
      */
-    public function rules(): array
+    public function rules($recipient_region = []): array
     {
-        return $this->getRulesForRecipientRegion($this->get('recipient_region'));
+        return $this->getRulesForRecipientRegion($this->get('recipient_region') ?? $recipient_region);
     }
 
     /**
@@ -30,9 +30,9 @@ class RecipientRegionRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    public function messages(): array
+    public function messages($recipient_region = []): array
     {
-        return $this->getMessagesForRecipientRegion($this->get('recipient_region'));
+        return $this->getMessagesForRecipientRegion($this->get('recipient_region') ?? $recipient_region);
     }
 
     /**
@@ -70,6 +70,7 @@ class RecipientRegionRequest extends ActivityBaseRequest
             return [];
         }
 
+        // issue caused in common validation due to route params
         $params = $this->route()->parameters();
         $activityService = app()->make(ActivityService::class);
 
