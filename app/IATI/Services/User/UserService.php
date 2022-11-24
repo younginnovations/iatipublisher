@@ -10,6 +10,7 @@ use App\IATI\Repositories\Setting\SettingRepository;
 use App\IATI\Repositories\User\UserRepository;
 use GuzzleHttp\Client;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
@@ -458,23 +459,23 @@ class UserService
     private function getFormParams(array $data): array
     {
         return [
-            'publisher_iati_id' => $data['identifier'] ?? '',
-            'publisher_organization_type' => $data['publisher_type'] ?? '',
-            'title' => $data['publisher_name'] ?? '',
-            'publisher_contact_email' => $data['contact_email'] ?? '',
-            'license_id' => $data['license_id'] ?? '',
-            'name' => $data['publisher_id'] ?? '',
-            'full_name' => $data['fullname'] ?? '',
-            'publisher_country' => $data['country'] ?? '',
+            'publisher_iati_id' => Arr::get($data, 'identifier', ''),
+            'publisher_organization_type' => Arr::get($data, 'publisher_type', ''),
+            'title' => Arr::get($data, 'publisher_name', ''),
+            'publisher_contact_email' => Arr::get($data, 'contact_email', ''),
+            'license_id' => Arr::get($data, 'license_id', ''),
+            'name' => Arr::get($data, 'publisher_id', ''),
+            'full_name' => Arr::get($data, 'fullname', ''),
+            'publisher_country' => Arr::get($data, 'country', ''),
             'state' => 'approval_needed',
-            'publisher_organization_type' => $data['publisher_type'] ?? '',
-            'publisher_url' => $data['publisher_url'] ?? '',
-            'publisher_contact' => $data['address'] ?? '',
-            'publisher_source_type' => $data['source'] ?? '',
-            'image_url' => $data['image_url'] ?? '',
-            'publisher_url' => $data['website'] ?? '',
-            'publisher_description' => $data['description'] ?? '',
-            'record_exclusion' => $data['record_exclusions'] ?? '',
+            'publisher_organization_type' => Arr::get($data, 'publisher_type', ''),
+            'publisher_url' => Arr::get($data, 'publisher_url', ''),
+            'publisher_contact' => Arr::get($data, 'address', ''),
+            'publisher_source_type' => Arr::get($data, 'source', ''),
+            'image_url' => Arr::get($data, 'image_url', ''),
+            'publisher_url' => Arr::get($data, 'website', ''),
+            'publisher_description' => Arr::get($data, 'description', ''),
+            'record_exclusion' => Arr::get($data, 'record_exclusions', ''),
         ];
     }
 
