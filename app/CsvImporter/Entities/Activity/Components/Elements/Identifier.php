@@ -7,6 +7,7 @@ namespace App\CsvImporter\Entities\Activity\Components\Elements;
 use App\CsvImporter\Entities\Activity\Components\Elements\Foundation\Iati\Element;
 use App\CsvImporter\Entities\Activity\Components\Factory\Validation;
 use App\Http\Requests\Activity\Identifier\IdentifierRequest;
+use App\IATI\Services\Activity\ActivityService;
 
 /**
  * Class Identifier.
@@ -33,17 +34,18 @@ class Identifier extends Element
      */
     protected array $template = [['activity_identifier' => '']];
     private IdentifierRequest $request;
+    public ActivityService $activityService;
 
     /**
      * Description constructor.
      * @param                   $fields
      * @param Validation        $factory
      */
-    public function __construct($fields, Validation $factory)
+    public function __construct($fields, Validation $factory, ActivityService $activityService)
     {
         $this->prepare($fields);
         $this->factory = $factory;
-        $this->request = new IdentifierRequest();
+        $this->request = new IdentifierRequest($activityService);
     }
 
     /**
