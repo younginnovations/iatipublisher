@@ -19,16 +19,6 @@ class IdentifierRequest extends FormRequest
     protected $activityService;
 
     /**
-     * ActivityCreateRequest constructor.
-     *
-     * @param ActivityService $activityService
-     */
-    public function __construct(ActivityService $activityService)
-    {
-        $this->activityService = $activityService;
-    }
-
-    /**
      * Get the validation rules that apply to the request.
      *
      * @return array
@@ -36,8 +26,9 @@ class IdentifierRequest extends FormRequest
     public function rules(): array
     {
         $activityIdentifiers = [];
-        $organizationActivityIdentifiers = $this->activityService->getActivityIdentifiersForOrganization(auth()->user()->organization->id);
-        $activity = $this->activityService->getActivity(request()->segment(2));
+        $activityService = app()->make(ActivityService::class);
+        $organizationActivityIdentifiers = $activityService->getActivityIdentifiersForOrganization(auth()->user()->organization->id);
+        $activity = $activityService->getActivity(request()->segment(2));
 
         if (count($organizationActivityIdentifiers)) {
             foreach ($organizationActivityIdentifiers as $identifier) {
