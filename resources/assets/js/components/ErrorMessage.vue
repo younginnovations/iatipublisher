@@ -240,19 +240,22 @@ onMounted(async () => {
         errorData.token_status = response?.data?.token_status;
         errorData.account_verified = user_response.data.account_verified;
         errorData.publisher_active = org_response.data.publisher_active;
+        let groupedError = ["default_setting", "publisher_setting", "token_status"];
 
         for (const error in errorData) {
-          if (!errorData[error]) {
+          if (!errorData[error] && groupedError.indexOf(error) === -1) {
             errorCount.value += 1;
           }
         }
 
         if (
-          errorData.publisher_setting &&
-          errorData.token_status &&
-          errorData.default_setting
+          !(
+            errorData.publisher_setting &&
+            errorData.token_status &&
+            errorData.default_setting
+          )
         ) {
-          errorCount.value -= 1;
+          errorCount.value += 1;
         }
 
         if (Object.values(errorData).indexOf(false) > -1) {
