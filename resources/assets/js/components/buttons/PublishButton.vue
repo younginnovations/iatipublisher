@@ -337,7 +337,7 @@ const checkPublish = () => {
       // }, 10000);
     }
   });
-  console.log(errorData.visibility);
+ 
 };
 
 const publishFunction = () => {

@@ -371,6 +371,15 @@ export default defineComponent({
         toastData.message = props.toast.message;
       }
     });
+    watch(
+      () => toastData.visibility,
+      () => {
+        setTimeout(() => {
+          toastData.visibility = false;
+          ignoreToastUpdate();
+        }, 10000);
+      }
+    );
 
     /**
      * Grouping all the data's for scroll function

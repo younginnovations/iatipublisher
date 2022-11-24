@@ -110,7 +110,15 @@ export default defineComponent({
         }
       });
     });
-
+    watch(
+      () => toastData.visibility,
+      () => {
+        setTimeout(() => {
+          toastData.visibility = false;
+          ignoreToastUpdate();
+        }, 10000);
+      }
+    );
     const state = reactive({
       showButtons: false,
     });

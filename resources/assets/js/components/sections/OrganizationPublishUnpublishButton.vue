@@ -178,12 +178,12 @@ const publishFunction = () => {
   axios.post(`/organisation/publish`).then((res) => {
     const response = res.data;
     loader.value = false;
-    // toastData.message = response.message;
-    // toastData.type = response.success;
-    // toastData.visibility = true;
-    errorData.message = response.message;
-    errorData.type = response.success;
-    errorData.visibility = true;
+    toastData.message = response.message;
+    toastData.type = response.success;
+    toastData.visibility = true;
+    // errorData.message = response.message;
+    // errorData.type = response.success;
+    // errorData.visibility = true;
     setTimeout(() => {
       loader.value = false;
     }, 2000);
@@ -199,12 +199,12 @@ const unPublishFunction = () => {
   unpublishValue.value = false;
   axios.post(`/organisation/unpublish`).then((res) => {
     const response = res.data;
-    // toastData.message = response.message;
-    // toastData.type = response.success;
-    // toastData.visibility = true;
-    errorData.message = response.message;
-    errorData.type = response.success;
-    errorData.visibility = true;
+    toastData.message = response.message;
+    toastData.type = response.success;
+    toastData.visibility = true;
+    // errorData.message = response.message;
+    // errorData.type = response.success;
+    // errorData.visibility = true;
     setTimeout(() => {
       loader.value = false;
     }, 2000);
@@ -226,9 +226,5 @@ const btnText = computed(() => {
   } else {
     return 'Publish';
   }
-});
-onUpdated(() => {
-  console.log('toast', toastData);
-  console.log('error', errorData);
 });
 </script>
