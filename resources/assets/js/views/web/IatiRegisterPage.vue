@@ -107,6 +107,9 @@
                   v-if="field.type === 'textarea'"
                   v-model="formData[field.name]"
                   :placeholder="field.placeholder"
+                  ref="textarea"
+                  @focus="resize($event)"
+                  @keyup="resize($event)"
                   :class="{
                     'error_input form__input ': errorData[field.name],
                     'form__input ': !errorData[field.name],
@@ -223,13 +226,14 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, reactive, ref, watch } from "vue";
+import { computed,onMounted, defineComponent, reactive, ref, watch } from "vue";
 import axios from "axios";
 import EmailVerification from "./EmailVerification.vue";
 import HoverText from "./../../components/HoverText.vue";
 import Multiselect from "@vueform/multiselect";
 import Loader from "../../components/Loader.vue";
 import CryptoJS from "crypto-js";
+import e from "express";
 
 export default defineComponent({
   components: {
@@ -250,7 +254,7 @@ export default defineComponent({
     const step = ref(1);
     const publisherExists = ref(true);
     const isLoaderVisible = ref(false);
-
+    const textarea = ref(null);
     interface ObjectType {
       [key: string]: string;
     }
@@ -309,6 +313,11 @@ export default defineComponent({
         formData.registration_agency = "";
       }
     );
+    function resize(event){
+     
+        event.target.style.height='auto'
+        event.target.style.height=`${event.target.scrollHeight}px`
+    }
 
     const registration_agency = computed(() => {
       const agencies = props.types.registrationAgency;
@@ -908,7 +917,9 @@ export default defineComponent({
       iatiError,
       isTextField,
       props,
-      step
+      step,
+      resize,
+      textarea,
     };
   },
 });

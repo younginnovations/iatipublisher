@@ -39,7 +39,11 @@
 textarea.form__input {
   display: block;
 }
-
+.text-area {
+  outline: none !important;
+  height: 60px;
+  resize: none;
+}
 .form__input {
   @apply mb-2 box-border w-full rounded border border-n-30 text-bluecoral outline-none duration-300;
 
