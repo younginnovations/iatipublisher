@@ -499,14 +499,17 @@ class UserService
             ],
         ];
 
-        // unset($errors['__type']);
+        unset($errors['__type']);
+        logger()->error('initial' . json_encode($errors));
 
         foreach ($errors as $field => $error) {
             if (in_array($field, array_keys($mapper[$type]))) {
                 $errors[$mapper[$type][$field]] = $error;
-                // unset($errors[$field]);
+                unset($errors[$field]);
             }
         }
+
+        logger()->error('final' . json_encode($errors));
 
         return $errors;
     }
