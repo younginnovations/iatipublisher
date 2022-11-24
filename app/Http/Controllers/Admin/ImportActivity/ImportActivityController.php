@@ -220,10 +220,8 @@ class ImportActivityController extends Controller
             $status = json_decode($status, true, 512, JSON_THROW_ON_ERROR);
 
             if ($schema_error) {
-                Session::put('error', $status['message'] . '.Please open this
-                <a href="' . awsUrl(sprintf('%s/%s/%s', $filetype === 'xml' ? $this->xml_data_storage_path : $this->csv_data_storage_path, $orgId, 'schema_error.log'))
-                . '" target="_blank">error file</a> to look into the error. <br>
-                <a href=' . awsUrl(sprintf('%s/%s/%s', $filetype === 'xml' ? $this->xml_data_storage_path : $this->csv_data_storage_path, $orgId, 'schema_error.log')) . '" target="_blank">error file</a>');
+                Session::put('error', $status['message'] . '. To see errors <b></b>
+                <a href=' . awsUrl(sprintf('%s/%s/%s', $filetype === 'xml' ? $this->xml_data_storage_path : $this->csv_data_storage_path, $orgId, 'schema_error.log')) . '" target="_blank">Open Error File</a>');
 
                 return redirect()->route('admin.activities.index');
             }
