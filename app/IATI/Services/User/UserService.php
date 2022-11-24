@@ -420,28 +420,9 @@ class UserService
      */
     public function createPublisherInRegistry(array $data, $token): array
     {
-        $formParams = [
-            'publisher_iati_id' => $data['identifier'] ?? '',
-            'publisher_organization_type' => $data['publisher_type'] ?? '',
-            'title' => $data['publisher_name'] ?? '',
-            'publisher_contact_email' => $data['contact_email'] ?? '',
-            'license_id' => $data['license_id'] ?? '',
-            'name' => $data['publisher_id'] ?? '',
-            'full_name' => $data['fullname'] ?? '',
-            'publisher_country' => $data['country'] ?? '',
-            'state' => 'approval_needed',
-            'publisher_organization_type' => $data['publisher_type'] ?? '',
-            'publisher_url' => $data['publisher_url'] ?? '',
-            'publisher_contact' => $data['address'] ?? '',
-            'publisher_source_type' => $data['source'] ?? '',
-            'image_url' => $data['image_url'] ?? '',
-            'publisher_url' => $data['website'] ?? '',
-            'publisher_description' => $data['description'] ?? '',
-            'record_exclusion' => $data['record_exclusions'] ?? '',
-        ];
         $requestConfig = [
             'http_errors' => false,
-            'form_params' => $formParams,
+            'form_params' => $this->getFormParams($data),
         ];
 
         if (env('APP_ENV') !== 'production') {
@@ -464,6 +445,36 @@ class UserService
         return [
             'success' => false,
             'errors' => (array) $response->error,
+        ];
+    }
+
+    /**
+     * Returns form params.
+     *
+     * @param array $data
+     *
+     * @return array
+     */
+    private function getFormParams(array $data): array
+    {
+        return [
+            'publisher_iati_id' => $data['identifier'] ?? '',
+            'publisher_organization_type' => $data['publisher_type'] ?? '',
+            'title' => $data['publisher_name'] ?? '',
+            'publisher_contact_email' => $data['contact_email'] ?? '',
+            'license_id' => $data['license_id'] ?? '',
+            'name' => $data['publisher_id'] ?? '',
+            'full_name' => $data['fullname'] ?? '',
+            'publisher_country' => $data['country'] ?? '',
+            'state' => 'approval_needed',
+            'publisher_organization_type' => $data['publisher_type'] ?? '',
+            'publisher_url' => $data['publisher_url'] ?? '',
+            'publisher_contact' => $data['address'] ?? '',
+            'publisher_source_type' => $data['source'] ?? '',
+            'image_url' => $data['image_url'] ?? '',
+            'publisher_url' => $data['website'] ?? '',
+            'publisher_description' => $data['description'] ?? '',
+            'record_exclusion' => $data['record_exclusions'] ?? '',
         ];
     }
 
