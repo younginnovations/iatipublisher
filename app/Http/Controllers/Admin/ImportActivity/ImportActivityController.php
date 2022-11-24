@@ -217,7 +217,7 @@ class ImportActivityController extends Controller
             $status = json_decode($status, true, 512, JSON_THROW_ON_ERROR);
 
             if (!$status['success']) {
-                Session::put('error', $status['message']);
+                Session::put('error', $status['message'] . 'sdf');
 
                 return redirect()->route('admin.activities.index');
             }

@@ -16,18 +16,18 @@ class ParticipatingOrganizationRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    public function rules(): array
+    public function rules($participating_org = []): array
     {
-        return $this->getRulesForParticipatingOrg($this->get('participating_org'));
+        return $this->getRulesForParticipatingOrg($this->get('participating_org') ?? $participating_org);
     }
 
     /**
      * prepare the error message.
      * @return array
      */
-    public function messages(): array
+    public function messages($participating_org = []): array
     {
-        return $this->getMessagesForParticipatingOrg($this->get('participating_org'));
+        return $this->getMessagesForParticipatingOrg($this->get('participating_org') ?? $participating_org);
     }
 
     /**
@@ -40,6 +40,7 @@ class ParticipatingOrganizationRequest extends ActivityBaseRequest
     public function getRulesForParticipatingOrg($formFields): array
     {
         $rules = [];
+        dump('participating_org', $formFields);
 
         foreach ($formFields as $participatingOrgIndex => $participatingOrg) {
             $participatingOrgForm = 'participating_org.' . $participatingOrgIndex;

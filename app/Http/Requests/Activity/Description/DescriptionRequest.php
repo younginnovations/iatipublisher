@@ -16,9 +16,9 @@ class DescriptionRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    public function rules(): array
+    public function rules($description = []): array
     {
-        return $this->getRulesForDescription($this->get('description'));
+        return $this->getRulesForDescription($this->get('description') ?? $description);
     }
 
     /**
@@ -26,9 +26,9 @@ class DescriptionRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    public function messages(): array
+    public function messages($description = []): array
     {
-        return $this->getMessagesForDescription($this->get('description'));
+        return $this->getMessagesForDescription($this->get('description') ?? $description);
     }
 
     /**
@@ -44,6 +44,7 @@ class DescriptionRequest extends ActivityBaseRequest
 
         foreach ($formFields as $descriptionIndex => $description) {
             $descriptionForm = sprintf('description.%s', $descriptionIndex);
+
             $rules = array_merge(
                 $rules,
                 $this->getRulesForNarrative($description['narrative'], $descriptionForm)
