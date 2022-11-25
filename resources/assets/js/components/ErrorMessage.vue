@@ -45,6 +45,10 @@
             <svg-vue icon="red-dot" class="text-[6px]"></svg-vue>
             <span class="text-sm font-bold text-bluecoral">Complete your setup</span>
           </div>
+          <div v-if="!errorData.publisher" :class="show ? 'text-show' : 'text-hide'">
+            <svg-vue icon="red-dot" class="text-[6px]"></svg-vue>
+            <span class="text-sm font-bold text-n-50">Publisher is Inactive</span>
+          </div>
         </div>
         <div>
           <button class="text-sm leading-relaxed text-bluecoral" @click="show = !show">

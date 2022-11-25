@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Web\IatiRegister\IatiRegisterFormRequest;
 use App\IATI\Models\User\Role;
 use App\IATI\Services\Organization\OrganizationService;
 use App\IATI\Services\User\UserService;
@@ -19,7 +20,6 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Session;
-use Illuminate\Support\Facades\Validator;
 
 /**
  * Class IatiRegisterController.
@@ -85,29 +85,10 @@ class IatiRegisterController extends Controller
      * @return JsonResponse|void
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function verifyPublisher(Request $request): JsonResponse|\GuzzleHttp\Exception\GuzzleException
+    public function verifyPublisher(IatiRegisterFormRequest $request): JsonResponse|\GuzzleHttp\Exception\GuzzleException
     {
         try {
             $postData = $request->all();
-            $request['password'] = isset($request['password']) && $request['password'] ? decryptString($request['password'], env('MIX_ENCRYPTION_KEY')) : '';
-            $request['password_confirmation'] = isset($request['password_confirmation']) && $request['password_confirmation'] ? decryptString($request['password_confirmation'], env('MIX_ENCRYPTION_KEY')) : '';
-
-            $validator = Validator::make($postData, [
-                'publisher_id'        => ['required', 'string', 'max:255', 'unique:organizations,publisher_id'],
-                'publisher_name'      => ['required', 'string', 'max:255', 'unique:organizations,publisher_name'],
-                'identifier'          => ['required', 'string', 'max:255', 'unique:organizations,identifier'],
-                'registration_agency' => ['required'],
-                'registration_number' => ['required'],
-                'publisher_type'      => ['required'],
-                'license_id'          => ['required'],
-                'description'         => ['sometimes'],
-                'image_url'             => ['nullable', 'url'],
-            ]);
-
-            if ($validator->fails()) {
-                return response()->json(['success' => false, 'errors' => $validator->errors()]);
-            }
-
             $publisherCheck = $this->userService->checkPublisher($postData['publisher_id'], false);
             $identifierCheck = $this->userService->checkIATIIdentifier($postData['identifier'], false);
 
@@ -137,27 +118,15 @@ class IatiRegisterController extends Controller
     /**
      * Verifies and validates contact info form.
      *
-     * @param Request $request
+     * @param ContactInfoFormRequest $request
      *
      * @return RedirectResponse|JsonResponse
      * @throws \JsonException
      * @throws \Throwable
      */
-    public function verifyContactInfo(Request $request): JsonResponse|RedirectResponse
+    public function verifyContactInfo(IatiRegisterFormRequest $request): JsonResponse|RedirectResponse
     {
         try {
-            $request['password'] = isset($request['password']) && $request['password'] ? decryptString($request['password'], env('MIX_ENCRYPTION_KEY')) : '';
-            $request['password_confirmation'] = isset($request['password_confirmation']) && $request['password_confirmation'] ? decryptString($request['password_confirmation'], env('MIX_ENCRYPTION_KEY')) : '';
-
-            $validator = Validator::make($request->all(), [
-                'contact_email' => ['required', 'string', 'email', 'regex:/^([a-z0-9\+_\-]+)(\.[a-z0-9\+_\-]+)*@([a-z0-9\-]+\.)+[a-z]{2,6}$/ix', 'max:255'],
-                'website' => ['nullable', 'url'],
-            ]);
-
-            if ($validator->fails()) {
-                return response()->json(['success' => false, 'errors' => $validator->errors()]);
-            }
-
             return response()->json(['success' => true, 'message' => 'Contact info successfully verified']);
         } catch (Exception $e) {
             logger()->error($e->getMessage());
@@ -175,20 +144,9 @@ class IatiRegisterController extends Controller
      * @throws \JsonException
      * @throws \Throwable
      */
-    public function verifyAdditionalInfo(Request $request): JsonResponse|RedirectResponse
+    public function verifyAdditionalInfo(IatiRegisterFormRequest $request): JsonResponse|RedirectResponse
     {
         try {
-            $request['password'] = isset($request['password']) && $request['password'] ? decryptString($request['password'], env('MIX_ENCRYPTION_KEY')) : '';
-            $request['password_confirmation'] = isset($request['password_confirmation']) && $request['password_confirmation'] ? decryptString($request['password_confirmation'], env('MIX_ENCRYPTION_KEY')) : '';
-
-            $validator = Validator::make($request->all(), [
-                'source' => 'required',
-            ]);
-
-            if ($validator->fails()) {
-                return response()->json(['success' => false, 'errors' => $validator->errors()]);
-            }
-
             return response()->json(['success' => true, 'message' => 'Additional Information successfully verified.']);
         } catch (Exception $e) {
             logger()->error($e->getMessage());
@@ -206,25 +164,12 @@ class IatiRegisterController extends Controller
      * @throws \JsonException
      * @throws \Throwable
      */
-    public function register(Request $request): JsonResponse|RedirectResponse
+    public function register(IatiRegisterFormRequest $request): JsonResponse|RedirectResponse
     {
         try {
             $request['password'] = isset($request['password']) && $request['password'] ? decryptString($request['password'], env('MIX_ENCRYPTION_KEY')) : '';
             $request['password_confirmation'] = isset($request['password_confirmation']) && $request['password_confirmation'] ? decryptString($request['password_confirmation'], env('MIX_ENCRYPTION_KEY')) : '';
             $postData = $request->all();
-
-            $validator = Validator::make($request->all(), [
-                'username'              => ['required', 'max:255', 'string', 'regex:/^[A-Za-z]([0-9A-Za-z _])*$/', 'unique:users,username'],
-                'full_name'             => ['required', 'string', 'max:255'],
-                'email'                 => ['required', 'string', 'email', 'regex:/^([a-z0-9\+_\-]+)(\.[a-z0-9\+_\-]+)*@([a-z0-9\-]+\.)+[a-z]{2,6}$/ix', 'max:255', 'unique:users,email'],
-                'publisher_id'          => ['required', 'string', 'max:255', 'unique:organizations,publisher_id'],
-                'password'              => ['required', 'string', 'min:6', 'max:255', 'confirmed'],
-                'password_confirmation' => ['required', 'string', 'min:6', 'max:255'],
-            ]);
-
-            if ($validator->fails()) {
-                return response()->json(['success' => false, 'errors' => $validator->errors()]);
-            }
 
             $publisherCheck = $this->userService->checkPublisher($postData['publisher_id'], false);
             $identifierCheck = $this->userService->checkIATIIdentifier($postData['identifier'], false);

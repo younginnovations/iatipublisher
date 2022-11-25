@@ -232,7 +232,7 @@ import EmailVerification from "./EmailVerification.vue";
 import HoverText from "./../../components/HoverText.vue";
 import Multiselect from "@vueform/multiselect";
 import Loader from "../../components/Loader.vue";
-import CryptoJS from "crypto-js";
+import encrypt from "Composable/encryption";
 
 export default defineComponent({
   components: {
@@ -304,6 +304,7 @@ export default defineComponent({
       email: "",
       password: "",
       password_confirmation: "",
+      step:"1",
     });
 
     watch(
@@ -625,38 +626,6 @@ export default defineComponent({
     });
 
     /**
-     * Encrypts password
-     */
-    function encrypt(string: string, key: string) {
-      let iv = CryptoJS.lib.WordArray.random(16);
-      let salt = CryptoJS.lib.WordArray.random(256);
-      let iterations = 999;
-      let encryptMethodLength = 256 / 4;
-      let hashKey = CryptoJS.PBKDF2(key, salt, {
-        hasher: CryptoJS.algo.SHA512,
-        keySize: encryptMethodLength / 8,
-        iterations: iterations,
-      });
-
-      let encrypted = CryptoJS.AES.encrypt(string, hashKey, {
-        mode: CryptoJS.mode.CBC,
-        iv: iv,
-      });
-      let encryptedString = CryptoJS.enc.Base64.stringify(encrypted.ciphertext);
-
-      let output = {
-        ciphertext: encryptedString,
-        iv: CryptoJS.enc.Hex.stringify(iv),
-        salt: CryptoJS.enc.Hex.stringify(salt),
-        iterations: iterations,
-      };
-
-      return CryptoJS.enc.Base64.stringify(
-        CryptoJS.enc.Utf8.parse(JSON.stringify(output))
-      );
-    }
-
-    /**
      * Update Validation errors from api into errorData array
      */
     function updateValidationErrors(errorResponse) {
@@ -703,6 +672,7 @@ export default defineComponent({
       isLoaderVisible.value = true;
 
       formData.identifier = `${formData.registration_agency}-${formData.registration_number}`;
+      formData.step = "1";
 
       let form = {
         password: encrypt(formData.password, process.env.MIX_ENCRYPTION_KEY ?? ""),
@@ -751,6 +721,7 @@ export default defineComponent({
      */
     function verifyContactInformation() {
       isLoaderVisible.value = true;
+      formData.step = "2";
 
       let form = {
         password: encrypt(formData.password, process.env.MIX_ENCRYPTION_KEY ?? ""),
@@ -792,6 +763,7 @@ export default defineComponent({
      */
     function verifyAdditionalInformation() {
       isLoaderVisible.value = true;
+      formData.step = "3";
 
       let form = {
         password: encrypt(formData.password, process.env.MIX_ENCRYPTION_KEY ?? ""),
@@ -832,6 +804,8 @@ export default defineComponent({
      */
     function submitForm() {
       isLoaderVisible.value = true;
+      formData.step = "4";
+
       let form = {
         password: encrypt(formData.password, process.env.MIX_ENCRYPTION_KEY ?? ""),
         password_confirmation: encrypt(
