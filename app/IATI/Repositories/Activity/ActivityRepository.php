@@ -245,8 +245,8 @@ class ActivityRepository extends Repository
      */
     protected function setDefaultFieldValues($defaultFieldValues, $organizationId): mixed
     {
-        $settings = Setting::where('organization_id', $organizationId)->first();
-        $settingsDefaultFieldValues = $settings ? $settings->default_values + $settings->activity_default_values : [];
+        $settings = Setting::where('organization_id', $organizationId)->first()->toArray();
+        $settingsDefaultFieldValues = $settings ? [Arr::get($settings, 'default_values') ?? []] + [Arr::get($settings, 'activity_default_values') ?? []] : [];
 
         foreach ($defaultFieldValues as $index => $value) {
             $settingsDefaultFieldValues[0]['default_currency'] = ((Arr::get((array) $value, 'default_currency')) === '')
