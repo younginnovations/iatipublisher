@@ -187,11 +187,11 @@ class UserService
     }
 
     /**
-     * Create User and Publisher In Iati Registry.
+     * Check if iatiIdentifier already exists at registry.
      *
      * @param string $data
      *
-     * @return array|bool
+     * @return array
      */
     public function checkIATIIdentifier(string $identifier): array
     {
@@ -234,7 +234,7 @@ class UserService
     }
 
     /**
-     * Create User and Publisher In Iati Registry.
+     * Check user in IATI Registry.
      *
      * @param array $data
      * @param bool $exists
@@ -260,7 +260,7 @@ class UserService
 
         if ($res->getStatusCode() === 404) {
             if ($exists) {
-                $errors['publisher_id'] = ['User doesn\'t exist in IATI Registry.'];
+                $errors['username'] = ['User doesn\'t exist in IATI Registry.'];
             }
 
             return $errors;
@@ -292,7 +292,7 @@ class UserService
     }
 
     /**
-     * Create User and Publisher In Iati Registry.
+     * Create if user email already exists In Iati Registry.
      *
      * @param array $email
      *
@@ -336,7 +336,7 @@ class UserService
      *
      * @param array $data
      *
-     * @return array|bool
+     * @return array
      */
     public function createUserInRegistry(array $data): array
     {
