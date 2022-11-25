@@ -206,7 +206,7 @@ trait PreparesTransactionData
                 }
             }
 
-            $this->data['transaction']['sector'][0]['sector_vocabulary'] = $value;
+            $this->data['transaction']['sector'][0]['sector_vocabulary'] = trim($value);
         }
 
         if ($key === $this->_csvHeaders[15]) {
@@ -252,7 +252,7 @@ trait PreparesTransactionData
                 }
             }
 
-            $this->data['transaction']['sector'][0]['code'] = $value;
+            $this->data['transaction']['sector'][0]['code'] = trim($value);
         } else {
             $this->data['transaction']['sector'][0]['code'] = '';
         }
@@ -269,7 +269,7 @@ trait PreparesTransactionData
                 }
             }
 
-            $this->data['transaction']['sector'][0]['category_code'] = $value;
+            $this->data['transaction']['sector'][0]['category_code'] = trim($value);
         } else {
             $this->data['transaction']['sector'][0]['category_code'] = '';
         }
@@ -286,7 +286,7 @@ trait PreparesTransactionData
                 }
             }
 
-            $this->data['transaction']['sector'][0]['sdg_goal'] = $value;
+            $this->data['transaction']['sector'][0]['sdg_goal'] = trim($value);
         } else {
             $this->data['transaction']['sector'][0]['sdg_goal'] = '';
         }
@@ -303,7 +303,7 @@ trait PreparesTransactionData
                 }
             }
 
-            $this->data['transaction']['sector'][0]['sdg_target'] = $value;
+            $this->data['transaction']['sector'][0]['sdg_target'] = trim($value);
         } else {
             $this->data['transaction']['sector'][0]['sdg_target'] = '';
         }
@@ -337,7 +337,7 @@ trait PreparesTransactionData
                 }
             }
 
-            $this->data['transaction']['recipient_country'][0]['country_code'] = $value;
+            $this->data['transaction']['recipient_country'][0]['country_code'] = trim($value);
             $this->data['transaction']['recipient_country'][0]['narrative'][0] = ['narrative' => '', 'language' => ''];
         }
     }
@@ -364,7 +364,7 @@ trait PreparesTransactionData
                 }
             }
 
-            $this->data['transaction']['recipient_region'][0]['region_code'] = $value;
+            $this->data['transaction']['recipient_region'][0]['region_code'] = trim($value);
             $this->data['transaction']['recipient_region'][0]['region_vocabulary'] = '';
             $this->data['transaction']['recipient_region'][0]['vocabulary_uri'] = '';
             $this->data['transaction']['recipient_region'][0]['narrative'][0] = ['narrative' => '', 'language' => ''];
@@ -452,6 +452,6 @@ trait PreparesTransactionData
             }
         }
 
-        return $value;
+        return trim($value);
     }
 }

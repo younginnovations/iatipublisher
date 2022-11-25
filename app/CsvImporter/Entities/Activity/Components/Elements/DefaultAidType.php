@@ -89,7 +89,7 @@ class DefaultAidType extends Element
     protected function setDefaultAidTypeVocabulary($key, $value, $index): void
     {
         if ($key === $this->_csvHeaders[0]) {
-            $value = (!$value) ? '' : $value;
+            $value = (!$value) ? '' : trim($value);
 
             $validDefaultAidTypeVocab = $this->loadCodeList('AidTypeVocabulary');
 
@@ -120,7 +120,7 @@ class DefaultAidType extends Element
         if ($key === $this->_csvHeaders[1]) {
             $defaultAidTypeVocabulary = $this->data['default_aid_type'][$index]['default_aid_type_vocabulary'] ?? '';
             $defaultAidTypeVocabulary = empty($defaultAidTypeVocabulary) ?: (int) $defaultAidTypeVocabulary;
-            $value = (!$value) ? '' : $value;
+            $value = (!$value) ? '' : trim($value);
 
             switch ($defaultAidTypeVocabulary) {
                 case '2':

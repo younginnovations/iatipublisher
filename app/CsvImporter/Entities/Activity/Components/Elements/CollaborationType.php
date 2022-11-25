@@ -87,7 +87,7 @@ class CollaborationType extends Element
                 }
             }
 
-            (count(array_filter($values)) === 1) ? $this->data[$this->csvHeader()] = $value : $this->data[$this->csvHeader()][] = $value;
+            (count(array_filter($values)) === 1) ? $this->data[$this->csvHeader()] = trim($value) : $this->data[$this->csvHeader()][] = trim($value);
         } else {
             $this->data[$this->csvHeader()] = '';
         }

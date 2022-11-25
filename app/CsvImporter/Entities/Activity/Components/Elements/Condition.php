@@ -116,7 +116,7 @@ class Condition extends Element
     protected function setConditionType($key, $value, $index): void
     {
         if ($key === $this->_csvHeaders[1]) {
-            $value = (!$value) ? '' : $value;
+            $value = (!$value) ? '' : trim($value);
 
             $validConditionType = $this->loadCodeList('ConditionType');
 

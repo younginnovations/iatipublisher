@@ -105,7 +105,7 @@ class PlannedDisbursement extends Element
     protected function setPlannedDisbursementType($key, $value, $index): void
     {
         if ($key === $this->_csvHeaders[0]) {
-            $value = (!$value) ? '' : $value;
+            $value = (!$value) ? '' : trim($value);
 
             $validType = $this->loadCodeList('BudgetType');
 
@@ -134,7 +134,7 @@ class PlannedDisbursement extends Element
     protected function setPlannedDisbursementPeriodStart($key, $value, $index): void
     {
         if ($key === $this->_csvHeaders[1]) {
-            $value = (!$value) ? '' : $value;
+            $value = (!$value) ? '' : trim($value);
             $this->data['planned_disbursement'][$index]['period_start'][0]['date'] = dateFormat('Y-m-d', $value);
         }
     }
@@ -151,7 +151,7 @@ class PlannedDisbursement extends Element
     protected function setPlannedDisbursementPeriodEnd($key, $value, $index): void
     {
         if ($key === $this->_csvHeaders[2]) {
-            $value = (!$value) ? '' : $value;
+            $value = (!$value) ? '' : trim($value);
             $this->data['planned_disbursement'][$index]['period_end'][0]['date'] = dateFormat('Y-m-d', $value);
         }
     }
@@ -168,10 +168,10 @@ class PlannedDisbursement extends Element
     protected function setPlannedDisbursementValue($key, $value, $index): void
     {
         if ($key === $this->_csvHeaders[3]) {
-            $value = (!$value) ? '' : $value;
+            $value = (!$value) ? '' : trim($value);
             $this->data['planned_disbursement'][$index]['value'][0]['amount'] = $value;
         } elseif ($key === $this->_csvHeaders[4]) {
-            $value = (!$value) ? '' : $value;
+            $value = (!$value) ? '' : trim($value);
             $validCurrency = $this->loadCodeList('Currency');
 
             if ($value) {
@@ -185,7 +185,7 @@ class PlannedDisbursement extends Element
 
             $this->data['planned_disbursement'][$index]['value'][0]['currency'] = strtoupper($value);
         } elseif ($key === $this->_csvHeaders[5]) {
-            $value = (!$value) ? '' : $value;
+            $value = (!$value) ? '' : trim($value);
             $this->data['planned_disbursement'][$index]['value'][0]['value_date'] = dateFormat('Y-m-d', $value);
         }
     }
@@ -202,13 +202,13 @@ class PlannedDisbursement extends Element
     protected function setPlannedDisbursementProviderOrg($key, $value, $index): void
     {
         if ($key === $this->_csvHeaders[6]) {
-            $value = (!$value) ? '' : $value;
+            $value = (!$value) ? '' : trim($value);
             $this->data['planned_disbursement'][$index]['provider_org'][0]['ref'] = $value;
         } elseif ($key === $this->_csvHeaders[7]) {
-            $value = (!$value) ? '' : $value;
+            $value = (!$value) ? '' : trim($value);
             $this->data['planned_disbursement'][$index]['provider_org'][0]['provider_activity_id'] = $value;
         } elseif ($key === $this->_csvHeaders[8]) {
-            $value = (!$value) ? '' : $value;
+            $value = (!$value) ? '' : trim($value);
             $validProviderOrgType = $this->loadCodeList('OrganizationType', 'Organization');
 
             if ($value) {
@@ -244,13 +244,13 @@ class PlannedDisbursement extends Element
     protected function setPlannedDisbursementReceiverOrg($key, $value, $index): void
     {
         if ($key === $this->_csvHeaders[10]) {
-            $value = (!$value) ? '' : $value;
+            $value = (!$value) ? '' : trim($value);
             $this->data['planned_disbursement'][$index]['receiver_org'][0]['ref'] = $value;
         } elseif ($key === $this->_csvHeaders[11]) {
-            $value = (!$value) ? '' : $value;
+            $value = (!$value) ? '' : trim($value);
             $this->data['planned_disbursement'][$index]['receiver_org'][0]['receiver_activity_id'] = $value;
         } elseif ($key === $this->_csvHeaders[12]) {
-            $value = (!$value) ? '' : $value;
+            $value = (!$value) ? '' : trim($value);
             $validReceiverOrgType = $this->loadCodeList('OrganizationType', 'Organization');
 
             if ($value) {

@@ -104,7 +104,7 @@ class Budget extends Element
                 }
             }
 
-            $this->data['budget'][$index]['budget_type'] = $value;
+            $this->data['budget'][$index]['budget_type'] = trim($value);
         }
     }
 
@@ -134,7 +134,7 @@ class Budget extends Element
                 }
             }
 
-            $this->data['budget'][$index]['budget_status'] = $value;
+            $this->data['budget'][$index]['budget_status'] = trim($value);
         }
     }
 
@@ -228,7 +228,7 @@ class Budget extends Element
                 }
             }
 
-            $this->data['budget'][$index]['budget_value'][0]['currency'] = strtoupper($value);
+            $this->data['budget'][$index]['budget_value'][0]['currency'] = strtoupper(trim($value));
         }
     }
 

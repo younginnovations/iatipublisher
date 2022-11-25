@@ -95,7 +95,7 @@ class HumanitarianScope extends Element
     protected function setHumanitarianScopeType($key, $value, $index): void
     {
         if ($key === $this->_csvHeaders[0]) {
-            $value = (!$value) ? '' : $value;
+            $value = (!$value) ? '' : trim($value);
 
             $validHumanitarianScopeVocab = $this->loadCodeList('HumanitarianScopeType');
 
@@ -124,7 +124,7 @@ class HumanitarianScope extends Element
     protected function setHumanitarianScopeVocabulary($key, $value, $index): void
     {
         if ($key === $this->_csvHeaders[1]) {
-            $value = (!$value) ? '' : $value;
+            $value = (!$value) ? '' : trim($value);
 
             $validHumanitarianScopeVocab = $this->loadCodeList('HumanitarianScopeVocabulary');
 
@@ -169,7 +169,7 @@ class HumanitarianScope extends Element
     protected function setHumanitarianScopeCode($key, $value, $index): void
     {
         if ($key === $this->_csvHeaders[3]) {
-            $value = (!$value) ? '' : $value;
+            $value = (!$value) ? '' : trim($value);
             $this->data['humanitarian_scope'][$index]['code'] = $value;
         }
     }

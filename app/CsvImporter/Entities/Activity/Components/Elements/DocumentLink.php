@@ -115,7 +115,7 @@ class DocumentLink extends Element
     protected function setDocumentLinkFormat($key, $value, $index): void
     {
         if ($key === $this->_csvHeaders[1]) {
-            $value = (!$value) ? '' : $value;
+            $value = (!$value) ? '' : trim($value);
 
             $this->data['document_link'][$index]['format'] = $value;
         }
@@ -177,7 +177,7 @@ class DocumentLink extends Element
     protected function setDocumentLinkCategory($key, $value, $index): void
     {
         if ($key === $this->_csvHeaders[4]) {
-            $value = (!$value) ? '' : $value;
+            $value = (!$value) ? '' : trim($value);
 
             $validDocumentCategory = $this->loadCodeList('DocumentCategory');
 
@@ -206,7 +206,7 @@ class DocumentLink extends Element
     protected function setDocumentLinkLanguage($key, $value, $index): void
     {
         if ($key === $this->_csvHeaders[5]) {
-            $value = (!$value) ? '' : $value;
+            $value = (!$value) ? '' : trim($value);
 
             $validLanguage = $this->loadCodeList('Language');
 
@@ -235,7 +235,7 @@ class DocumentLink extends Element
     protected function setDocumentLinkDate($key, $value, $index): void
     {
         if ($key === $this->_csvHeaders[6]) {
-            $value = (!$value) ? '' : $value;
+            $value = (!$value) ? '' : trim($value);
             $this->data['document_link'][$index]['document_date'][0]['date'] = dateFormat('Y-m-d', $value);
         }
     }

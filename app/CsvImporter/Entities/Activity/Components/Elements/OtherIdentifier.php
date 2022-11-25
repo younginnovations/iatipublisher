@@ -116,7 +116,7 @@ class OtherIdentifier extends Element
         }
 
         if ($key === $this->_csvHeaders[1]) {
-            $value = (!$value) ? '' : $value;
+            $value = (!$value) ? '' : trim($value);
 
             $validOtherIdentifierType = $this->loadCodeList('OtherIdentifierType');
 

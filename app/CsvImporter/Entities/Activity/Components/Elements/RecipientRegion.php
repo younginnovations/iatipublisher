@@ -143,9 +143,9 @@ class RecipientRegion extends Element
             $validRegions = array_flip(explode(',', $this->validRecipientRegion()));
 
             if (isset($validRegions[$value])) {
-                $this->data['recipient_region'][$index]['region_code'] = $value;
+                $this->data['recipient_region'][$index]['region_code'] = trim($value);
             } else {
-                $this->data['recipient_region'][$index]['custom_code'] = $value;
+                $this->data['recipient_region'][$index]['custom_code'] = trim($value);
             }
         }
     }
@@ -197,7 +197,7 @@ class RecipientRegion extends Element
     protected function setVocabularyUri($key, $value, $index): void
     {
         if ($key === $this->_csvHeaders[2]) {
-            $value = (!$value) ? '' : $value;
+            $value = (!$value) ? '' : trim($value);
             $this->data['recipient_region'][$index]['vocabulary_uri'] = $value;
             $this->data['recipient_region'][$index]['region_vocabulary'] = '99';
         }

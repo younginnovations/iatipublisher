@@ -92,7 +92,7 @@ class Tag extends Element
     protected function setTagVocabulary($key, $value, $index): void
     {
         if ($key === $this->_csvHeaders[0]) {
-            $value = (!$value) ? '' : $value;
+            $value = (!$value) ? '' : trim($value);
 
             $validTagVocab = $this->loadCodeList('TagVocabulary');
 
@@ -123,7 +123,7 @@ class Tag extends Element
         if ($key === $this->_csvHeaders[1]) {
             $tagVocabulary = $this->data['tag'][$index]['tag_vocabulary'] ?? '';
             $tagVocabulary = $tagVocabulary;
-            $value = (!$value) ? '' : $value;
+            $value = (!$value) ? '' : trim($value);
 
             if ($tagVocabulary === '1' || $tagVocabulary === '99') {
                 $this->data['tag'][$index]['tag_text'] = $value;
@@ -139,7 +139,7 @@ class Tag extends Element
                     }
                 }
 
-                $this->data['tag'][$index]['goals_tag_code'] = $value;
+                $this->data['tag'][$index]['goals_tag_code'] = trim($value);
             } elseif ($tagVocabulary === '3') {
                 $validTagCode = $this->loadCodeList('UNSDG-Targets');
 
@@ -152,7 +152,7 @@ class Tag extends Element
                     }
                 }
 
-                $this->data['tag'][$index]['targets_tag_code'] = $value;
+                $this->data['tag'][$index]['targets_tag_code'] = trim($value);
             }
         }
     }

@@ -92,7 +92,7 @@ class CountryBudgetItem extends Element
     protected function setCountryBudgetItemVocabulary($key, $value): void
     {
         if ($key === $this->_csvHeaders[0]) {
-            $value = (!$value) ? '' : $value;
+            $value = (!$value) ? '' : trim($value);
 
             $validCountryBudgetItemVocab = $this->loadCodeList('BudgetIdentifierVocabulary');
 
@@ -121,7 +121,7 @@ class CountryBudgetItem extends Element
     protected function setBudgetItemCode($key, $value, $index): void
     {
         if ($key === $this->_csvHeaders[1]) {
-            $value = (!$value) ? '' : $value;
+            $value = (!$value) ? '' : trim($value);
 
             $validBudgetItemCode = $this->loadCodeList('BudgetIdentifier');
 

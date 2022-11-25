@@ -132,7 +132,7 @@ class RecipientCountry extends Element
                 }
             }
 
-            $this->data['recipient_country'][$index]['country_code'] = strtoupper($value);
+            $this->data['recipient_country'][$index]['country_code'] = strtoupper(trim($value));
         }
     }
 

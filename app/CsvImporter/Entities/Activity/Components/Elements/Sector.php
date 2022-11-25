@@ -123,7 +123,7 @@ class Sector extends Element
     protected function setSectorVocabulary($key, $value, $index): void
     {
         if ($key === $this->_csvHeaders[0]) {
-            $value = (!$value) ? '' : $value;
+            $value = (!$value) ? '' : trim($value);
             $this->vocabularies[] = $value;
 
             $validSectorVocab = $this->loadCodeList('SectorVocabulary');
@@ -169,7 +169,7 @@ class Sector extends Element
                     }
                 }
 
-                $this->data['sector'][$index]['code'] = $value;
+                $this->data['sector'][$index]['code'] = trim($value);
             } elseif ($sectorVocabulary === '2') {
                 $this->setSectorCategoryCode($value, $index);
             } elseif ($sectorVocabulary === '7') {
@@ -220,7 +220,7 @@ class Sector extends Element
             }
         }
 
-        $this->data['sector'][$index]['category_code'] = $value;
+        $this->data['sector'][$index]['category_code'] = trim($value);
     }
 
     /**

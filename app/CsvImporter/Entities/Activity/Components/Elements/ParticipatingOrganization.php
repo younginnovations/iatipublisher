@@ -129,7 +129,7 @@ class ParticipatingOrganization extends Element
             $this->orgRoles[] = $value;
             $this->orgRoles = array_unique($this->orgRoles);
 
-            $this->data['participating_organization'][$index]['organization_role'] = $value;
+            $this->data['participating_organization'][$index]['organization_role'] = trim($value);
         }
     }
 
@@ -184,7 +184,7 @@ class ParticipatingOrganization extends Element
             $this->types[] = $value;
             $this->types = array_unique($this->types);
 
-            $this->data['participating_organization'][$index]['type'] = $value;
+            $this->data['participating_organization'][$index]['type'] = trim($value);
         }
     }
 

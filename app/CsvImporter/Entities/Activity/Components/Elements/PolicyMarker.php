@@ -99,7 +99,7 @@ class PolicyMarker extends Element
                     }
                 }
             }
-            $this->data['policy_marker'][$index]['policy_marker_vocabulary'] = $value;
+            $this->data['policy_marker'][$index]['policy_marker_vocabulary'] = trim($value);
         }
     }
 
@@ -147,7 +147,7 @@ class PolicyMarker extends Element
                 }
             }
 
-            $this->data['policy_marker'][$index]['significance'] = $value;
+            $this->data['policy_marker'][$index]['significance'] = trim($value);
         }
     }
 
@@ -184,7 +184,7 @@ class PolicyMarker extends Element
                             }
                         }
                     }
-                    $this->data['policy_marker'][$index]['policy_marker'] = $value;
+                    $this->data['policy_marker'][$index]['policy_marker'] = trim($value);
                     break;
                 case '99':
                     $this->data['policy_marker'][$index]['policy_marker_text'] = $value;
