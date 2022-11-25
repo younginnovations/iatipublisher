@@ -140,9 +140,7 @@ class RecipientRegion extends Element
                 }
             }
 
-            $validRegions = array_flip(explode(',', $this->validRecipientRegion()));
-
-            if (isset($validRegions[$value])) {
+            if ($value === '1') {
                 $this->data['recipient_region'][$index]['region_code'] = trim($value);
             } else {
                 $this->data['recipient_region'][$index]['custom_code'] = trim($value);
