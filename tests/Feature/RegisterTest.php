@@ -232,7 +232,7 @@ class RegisterTest extends TestCase
             'registration_number'   => 10101,
             'identifier'            => Str::random(5),
             'status'                => 'pending',
-            'username'              => Str::random(5),
+            'username'              => 'ztest',
             'full_name'             => Str::random(5),
             'email'                 => 'test+1@gmail.com',
             'password'              => encryptString('password123'),

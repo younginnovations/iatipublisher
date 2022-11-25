@@ -80,7 +80,7 @@ class RegisterController extends Controller
     protected function validator(array $data): \Illuminate\Contracts\Validation\Validator
     {
         return Validator::make($data, [
-            'username'              => ['required', 'string', 'max:255', 'unique:users,username'],
+            'username'              => ['required', 'string', 'max:255', 'unique:users,username', 'regex:/^[a-z]([0-9a-z-_])*$/'],
             'full_name'             => ['required', 'string', 'max:255'],
             'email'                 => ['required', 'string', 'email', 'max:255', 'unique:users,email'],
             'publisher_id'          => ['required', 'string', 'max:255', 'unique:organizations,publisher_id'],
@@ -215,7 +215,7 @@ class RegisterController extends Controller
         $request['password_confirmation'] = isset($request['password_confirmation']) && $request['password_confirmation'] ? decryptString($request['password_confirmation'], env('MIX_ENCRYPTION_KEY')) : '';
 
         $validator = Validator::make($request->all(), [
-            'username'              => ['required', 'max:255', 'string', 'regex:/^[A-Za-z]([0-9A-Za-z _])*$/', 'unique:users,username'],
+            'username'              => ['required', 'max:255', 'string', 'regex:/^[a-z]([0-9a-z-_])*$/', 'unique:users,username'],
             'full_name'             => ['required', 'string', 'max:255'],
             'email'                 => ['required', 'string', 'email', 'regex:/^([a-z0-9\+_\-]+)(\.[a-z0-9\+_\-]+)*@([a-z0-9\-]+\.)+[a-z]{2,6}$/ix', 'max:255', 'unique:users,email'],
             'publisher_id'          => ['required', 'string', 'max:255', 'unique:organizations,publisher_id'],
@@ -226,6 +226,7 @@ class RegisterController extends Controller
         if ($validator->fails()) {
             return response()->json(['success' => false, 'errors' => $validator->errors()]);
         }
+
         $user = $this->create($request->all());
         event(new Registered($user));
         Session::put('role_id', app(Role::class)->getOrganizationAdminId());
