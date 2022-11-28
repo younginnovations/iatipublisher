@@ -37,7 +37,7 @@ class IatiRegisterFormRequest extends FormRequest
                     'publisher_name'      => ['required', 'string', 'max:255', 'unique:organizations,publisher_name'],
                     'identifier'          => ['required', 'string', 'max:255', 'unique:organizations,identifier'],
                     'registration_agency' => ['required'],
-                    'registration_number' => ['required', 'regex:/^([0-9A-Za-z_-.]+)$/'],
+                    'registration_number' => ['required', 'regex:/^([0-9A-Za-z-_.]+)$/'],
                     'publisher_type'      => ['required'],
                     'license_id'          => ['required'],
                     'description'         => ['sometimes'],
