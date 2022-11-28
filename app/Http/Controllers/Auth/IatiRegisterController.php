@@ -167,8 +167,6 @@ class IatiRegisterController extends Controller
     public function register(IatiRegisterFormRequest $request): JsonResponse|RedirectResponse
     {
         try {
-            $request['password'] = isset($request['password']) && $request['password'] ? decryptString($request['password'], env('MIX_ENCRYPTION_KEY')) : '';
-            $request['password_confirmation'] = isset($request['password_confirmation']) && $request['password_confirmation'] ? decryptString($request['password_confirmation'], env('MIX_ENCRYPTION_KEY')) : '';
             $postData = $request->all();
 
             $publisherCheck = $this->userService->checkPublisher($postData['publisher_id'], false);
@@ -198,6 +196,7 @@ class IatiRegisterController extends Controller
             return response()->json(['success' => true, 'message' => 'User registered successfully']);
         } catch (Exception $e) {
             logger()->error($e->getMessage());
+            logger()->error($e);
 
             return response()->json(['success' => false, 'message' => 'Error has occured while trying to register user. Please try again later.']);
         }

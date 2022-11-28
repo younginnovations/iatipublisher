@@ -71,8 +71,10 @@ class IatiRegisterFormRequest extends FormRequest
 
     /**
      * Prepares data before validation.
+     *
+     * @return void
      */
-    public function prepareForValidation()
+    public function prepareForValidation(): void
     {
         $this->decryptPassword();
     }
@@ -87,6 +89,7 @@ class IatiRegisterFormRequest extends FormRequest
         $request = $this->all();
         $password = Arr::get($request, 'password', null);
         $password_confirmation = Arr::get($request, 'password_confirmation', null);
+
         $this->merge([
             'password'=> $password ? decryptString($password, env('MIX_ENCRYPTION_KEY')) : '',
             'password_confirmation' => $password_confirmation ? decryptString($password_confirmation, env('MIX_ENCRYPTION_KEY')) : '',
@@ -100,7 +103,7 @@ class IatiRegisterFormRequest extends FormRequest
      *
      * @return ValidationException
      */
-    protected function failedValidation(\Illuminate\Contracts\Validation\Validator $validator)
+    protected function failedValidation(\Illuminate\Contracts\Validation\Validator $validator): ValidationException
     {
         $response = new JsonResponse(['success' => false, 'errors' => $validator->errors()]);
 
