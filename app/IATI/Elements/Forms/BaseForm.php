@@ -40,9 +40,9 @@ class BaseForm extends Form
                         'class'           => 'App\IATI\Elements\Forms\WrapperCollectionForm',
                         'data'            => $field,
                         'label'           => false,
-                        'element_criteria'=> Arr::get($field, 'element_criteria', ''),
-                        'hover_text'=> Arr::get($field, 'hover_text', ''),
-                        'help_text'=> Arr::get($field, 'help_text', ''),
+                        'element_criteria' => Arr::get($field, 'element_criteria', ''),
+                        'hover_text' => Arr::get($field, 'hover_text', ''),
+                        'help_text' => Arr::get($field, 'help_text', ''),
                         'wrapper'         => [
                             'class' => 'wrapped-child-body',
                         ],
@@ -85,9 +85,9 @@ class BaseForm extends Form
                         'class'           => 'App\IATI\Elements\Forms\SubElementForm',
                         'data'            => $field,
                         'label'           => false,
-                        'element_criteria'=> $field['element_criteria'] ?? '',
-                        'hover_text'=> Arr::get($field, 'hover_text', null) ?? Arr::get($element, 'hover_text', ''),
-                        'help_text'=> Arr::get($field, 'hover_text', null) ?? Arr::get($element, 'help_text', ''),
+                        'element_criteria' => $field['element_criteria'] ?? '',
+                        'hover_text'    => isset($field['name']) ? Arr::get($field, 'hover_text', '') : Arr::get($element, 'hover_text', ''),
+                        'help_text' => isset($field['name']) ? Arr::get($field, 'hover_text', '') : Arr::get($element, 'help_text', ''),
                         'wrapper'         => [
                             'class' => ((Arr::get($element, 'attributes', null) && isset($field['name']) && strtolower(
                                 $field['name']

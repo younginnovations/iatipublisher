@@ -17,9 +17,7 @@
         <span v-else class="italic">Missing</span>
       </span>
       <span v-if="post.tag_vocabulary === '2'">
-        <span v-if="post.goals_tag_code">{{
-          types.sdgGoals[post.goals_tag_code]
-        }}</span>
+        <span v-if="post.goals_tag_code">{{ types.sdgGoals[post.goals_tag_code] }}</span>
         <span v-else class="italic">Missing</span>
       </span>
       <span v-if="post.tag_vocabulary === '3'">
@@ -29,36 +27,29 @@
         <span v-else class="italic">Missing</span>
       </span>
     </div>
-    <table
-      v-for="(narrative, k) in post.narrative"
-      :key="k"
-      class="ml-5"
-      :class="{ 'mb-4': k !== post.narrative.length - 1 }"
-    >
+    <table class="ml-5">
       <tbody>
-        <tr class="multiline">
-          <td>Narrative</td>
-          <td>
-            <div v-if="narrative.narrative" class="flex flex-col">
-              <span v-if="narrative.language" class="language top"
-                >(Language: {{ types.languages[narrative.language] }})</span
-              >
-              <span class="description">{{ narrative.narrative }}</span>
-            </div>
-            <span v-else class="italic">Missing</span>
-          </td>
-        </tr>
         <tr v-if="post.tag_vocabulary === '99'">
           <td>Vocabulary URI</td>
           <td>
-            <a
-              v-if="post.vocabulary_uri"
-              target="_blank"
-              :href="post.vocabulary_uri"
-            >
+            <a v-if="post.vocabulary_uri" target="_blank" :href="post.vocabulary_uri">
               {{ post.vocabulary_uri }}
             </a>
             <span v-else class="italic">Missing</span>
+          </td>
+        </tr>
+        <tr class="multiline" :class="{ 'mb-4': k !== post.narrative.length - 1 }">
+          <td>Narrative</td>
+          <td>
+            <div v-for="(narrative, k) in post.narrative" :key="k">
+              <div v-if="narrative.narrative" class="flex flex-col">
+                <span v-if="narrative.language" class="language top"
+                  >(Language: {{ types.languages[narrative.language] }})</span
+                >
+                <span class="description">{{ narrative.narrative }}</span>
+              </div>
+              <span v-else class="italic">Missing</span>
+            </div>
           </td>
         </tr>
       </tbody>
@@ -67,11 +58,11 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, inject } from 'vue';
-import dateFormat from 'Composable/dateFormat';
+import { defineComponent, inject } from "vue";
+import dateFormat from "Composable/dateFormat";
 
 export default defineComponent({
-  name: 'ActivityTag',
+  name: "ActivityTag",
   props: {
     data: {
       type: Object,
@@ -86,7 +77,7 @@ export default defineComponent({
       languages: [];
     }
 
-    const types = inject('types') as Types;
+    const types = inject("types") as Types;
 
     return { types, dateFormat };
   },

@@ -115,7 +115,7 @@ class DocumentLink extends Element
     protected function setDocumentLinkFormat($key, $value, $index): void
     {
         if ($key === $this->_csvHeaders[1]) {
-            $value = (!$value) ? '' : $value;
+            $value = (!$value) ? '' : trim($value);
 
             $this->data['document_link'][$index]['format'] = $value;
         }
@@ -177,20 +177,20 @@ class DocumentLink extends Element
     protected function setDocumentLinkCategory($key, $value, $index): void
     {
         if ($key === $this->_csvHeaders[4]) {
-            $value = (!$value) ? '' : $value;
+            $value = (!$value) ? '' : trim($value);
 
             $validDocumentCategory = $this->loadCodeList('DocumentCategory');
 
-            if (!is_int($value)) {
+            if ($value) {
                 foreach ($validDocumentCategory as $code => $name) {
-                    if (strcasecmp(trim($value), $name) === 0) {
-                        $value = is_int($code) ? (int) $code : $code;
+                    if (strcasecmp($value, $name) === 0) {
+                        $value = strval($code);
                         break;
                     }
                 }
             }
 
-            $this->data['document_link'][$index]['category'][0]['code'] = $value;
+            $this->data['document_link'][$index]['category'][0]['code'] = strtoupper($value);
         }
     }
 
@@ -206,14 +206,14 @@ class DocumentLink extends Element
     protected function setDocumentLinkLanguage($key, $value, $index): void
     {
         if ($key === $this->_csvHeaders[5]) {
-            $value = (!$value) ? '' : $value;
+            $value = (!$value) ? '' : trim($value);
 
             $validLanguage = $this->loadCodeList('Language');
 
-            if (!is_int($value)) {
+            if ($value) {
                 foreach ($validLanguage as $code => $name) {
-                    if (strcasecmp(trim($value), $name) === 0) {
-                        $value = is_int($code) ? (int) $code : $code;
+                    if (strcasecmp($value, $name) === 0) {
+                        $value = strval($code);
                         break;
                     }
                 }
@@ -235,7 +235,7 @@ class DocumentLink extends Element
     protected function setDocumentLinkDate($key, $value, $index): void
     {
         if ($key === $this->_csvHeaders[6]) {
-            $value = (!$value) ? '' : $value;
+            $value = (!$value) ? '' : trim($value);
             $this->data['document_link'][$index]['document_date'][0]['date'] = dateFormat('Y-m-d', $value);
         }
     }

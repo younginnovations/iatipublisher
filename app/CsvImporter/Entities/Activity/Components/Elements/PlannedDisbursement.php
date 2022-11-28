@@ -105,14 +105,14 @@ class PlannedDisbursement extends Element
     protected function setPlannedDisbursementType($key, $value, $index): void
     {
         if ($key === $this->_csvHeaders[0]) {
-            $value = (!$value) ? '' : $value;
+            $value = (!$value) ? '' : trim($value);
 
             $validType = $this->loadCodeList('BudgetType');
 
-            if (!is_int($value)) {
+            if ($value) {
                 foreach ($validType as $code => $name) {
-                    if (strcasecmp(trim($value), $name) === 0) {
-                        $value = is_int($code) ? (int) $code : $code;
+                    if (strcasecmp($value, $name) === 0) {
+                        $value = strval($code);
                         break;
                     }
                 }
@@ -134,7 +134,7 @@ class PlannedDisbursement extends Element
     protected function setPlannedDisbursementPeriodStart($key, $value, $index): void
     {
         if ($key === $this->_csvHeaders[1]) {
-            $value = (!$value) ? '' : $value;
+            $value = (!$value) ? '' : trim($value);
             $this->data['planned_disbursement'][$index]['period_start'][0]['date'] = dateFormat('Y-m-d', $value);
         }
     }
@@ -151,7 +151,7 @@ class PlannedDisbursement extends Element
     protected function setPlannedDisbursementPeriodEnd($key, $value, $index): void
     {
         if ($key === $this->_csvHeaders[2]) {
-            $value = (!$value) ? '' : $value;
+            $value = (!$value) ? '' : trim($value);
             $this->data['planned_disbursement'][$index]['period_end'][0]['date'] = dateFormat('Y-m-d', $value);
         }
     }
@@ -168,24 +168,24 @@ class PlannedDisbursement extends Element
     protected function setPlannedDisbursementValue($key, $value, $index): void
     {
         if ($key === $this->_csvHeaders[3]) {
-            $value = (!$value) ? '' : $value;
+            $value = (!$value) ? '' : trim($value);
             $this->data['planned_disbursement'][$index]['value'][0]['amount'] = $value;
         } elseif ($key === $this->_csvHeaders[4]) {
-            $value = (!$value) ? '' : $value;
+            $value = (!$value) ? '' : trim($value);
             $validCurrency = $this->loadCodeList('Currency');
 
-            if (!is_int($value)) {
+            if ($value) {
                 foreach ($validCurrency as $code => $name) {
-                    if (strcasecmp(trim($value), $name) === 0) {
-                        $value = is_int($code) ? (int) $code : $code;
+                    if (strcasecmp($value, $name) === 0) {
+                        $value = strval($code);
                         break;
                     }
                 }
             }
 
-            $this->data['planned_disbursement'][$index]['value'][0]['currency'] = $value;
+            $this->data['planned_disbursement'][$index]['value'][0]['currency'] = strtoupper($value);
         } elseif ($key === $this->_csvHeaders[5]) {
-            $value = (!$value) ? '' : $value;
+            $value = (!$value) ? '' : trim($value);
             $this->data['planned_disbursement'][$index]['value'][0]['value_date'] = dateFormat('Y-m-d', $value);
         }
     }
@@ -202,19 +202,19 @@ class PlannedDisbursement extends Element
     protected function setPlannedDisbursementProviderOrg($key, $value, $index): void
     {
         if ($key === $this->_csvHeaders[6]) {
-            $value = (!$value) ? '' : $value;
+            $value = (!$value) ? '' : trim($value);
             $this->data['planned_disbursement'][$index]['provider_org'][0]['ref'] = $value;
         } elseif ($key === $this->_csvHeaders[7]) {
-            $value = (!$value) ? '' : $value;
+            $value = (!$value) ? '' : trim($value);
             $this->data['planned_disbursement'][$index]['provider_org'][0]['provider_activity_id'] = $value;
         } elseif ($key === $this->_csvHeaders[8]) {
-            $value = (!$value) ? '' : $value;
+            $value = (!$value) ? '' : trim($value);
             $validProviderOrgType = $this->loadCodeList('OrganizationType', 'Organization');
 
-            if (!is_int($value)) {
+            if ($value) {
                 foreach ($validProviderOrgType as $code => $name) {
-                    if (strcasecmp(trim($value), $name) === 0) {
-                        $value = is_int($code) ? (int) $code : $code;
+                    if (strcasecmp($value, $name) === 0) {
+                        $value = strval($code);
                         break;
                     }
                 }
@@ -244,19 +244,19 @@ class PlannedDisbursement extends Element
     protected function setPlannedDisbursementReceiverOrg($key, $value, $index): void
     {
         if ($key === $this->_csvHeaders[10]) {
-            $value = (!$value) ? '' : $value;
+            $value = (!$value) ? '' : trim($value);
             $this->data['planned_disbursement'][$index]['receiver_org'][0]['ref'] = $value;
         } elseif ($key === $this->_csvHeaders[11]) {
-            $value = (!$value) ? '' : $value;
+            $value = (!$value) ? '' : trim($value);
             $this->data['planned_disbursement'][$index]['receiver_org'][0]['receiver_activity_id'] = $value;
         } elseif ($key === $this->_csvHeaders[12]) {
-            $value = (!$value) ? '' : $value;
+            $value = (!$value) ? '' : trim($value);
             $validReceiverOrgType = $this->loadCodeList('OrganizationType', 'Organization');
 
-            if (!is_int($value)) {
+            if ($value) {
                 foreach ($validReceiverOrgType as $code => $name) {
-                    if (strcasecmp(trim($value), $name) === 0) {
-                        $value = is_int($code) ? (int) $code : $code;
+                    if (strcasecmp($value, $name) === 0) {
+                        $value = strval($code);
                         break;
                     }
                 }
@@ -294,7 +294,7 @@ class PlannedDisbursement extends Element
             $end = Arr::get($value, 'period_end.0.date', null);
 
             if ($start && $end) {
-                $diff = (strtotime($end) - strtotime($start)) / 86400;
+                $diff = (dateStrToTime($end) - dateStrToTime($start)) / 86400;
             }
 
             $rules[sprintf('%s.planned_disbursement_type', $plannedDisbursementForm)] = sprintf(

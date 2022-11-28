@@ -95,14 +95,14 @@ class HumanitarianScope extends Element
     protected function setHumanitarianScopeType($key, $value, $index): void
     {
         if ($key === $this->_csvHeaders[0]) {
-            $value = (!$value) ? '' : $value;
+            $value = (!$value) ? '' : trim($value);
 
             $validHumanitarianScopeVocab = $this->loadCodeList('HumanitarianScopeType');
 
-            if (!is_int($value)) {
+            if ($value) {
                 foreach ($validHumanitarianScopeVocab as $code => $name) {
-                    if (strcasecmp(trim($value), $name) === 0) {
-                        $value = is_int($code) ? (int) $code : $code;
+                    if (strcasecmp($value, $name) === 0) {
+                        $value = strval($code);
                         break;
                     }
                 }
@@ -124,13 +124,13 @@ class HumanitarianScope extends Element
     protected function setHumanitarianScopeVocabulary($key, $value, $index): void
     {
         if ($key === $this->_csvHeaders[1]) {
-            $value = (!$value) ? '' : $value;
+            $value = (!$value) ? '' : trim($value);
 
             $validHumanitarianScopeVocab = $this->loadCodeList('HumanitarianScopeVocabulary');
 
-            if (!is_int($value)) {
+            if ($value) {
                 foreach ($validHumanitarianScopeVocab as $code => $name) {
-                    if (strcasecmp(trim($value), $name) === 0) {
+                    if (strcasecmp($value, $name) === 0) {
                         $value = is_int($code) ? (int) $code : $code;
                         break;
                     }
@@ -169,7 +169,7 @@ class HumanitarianScope extends Element
     protected function setHumanitarianScopeCode($key, $value, $index): void
     {
         if ($key === $this->_csvHeaders[3]) {
-            $value = (!$value) ? '' : $value;
+            $value = (!$value) ? '' : trim($value);
             $this->data['humanitarian_scope'][$index]['code'] = $value;
         }
     }
@@ -241,7 +241,7 @@ class HumanitarianScope extends Element
             if ($vocabulary) {
                 $rules[sprintf('%s.vocabulary_uri', $humanitarianScopeForm)] = 'nullable|url';
 
-                if ((int) $vocabulary === 99) {
+                if ($vocabulary === '99') {
                     $rules[sprintf('%s.vocabulary_uri', $humanitarianScopeForm)] = sprintf(
                         'required_with: %s,%s,%s,%s',
                         sprintf('%s.type', $humanitarianScopeForm),

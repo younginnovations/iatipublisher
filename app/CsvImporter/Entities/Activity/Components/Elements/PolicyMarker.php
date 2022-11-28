@@ -90,11 +90,12 @@ class PolicyMarker extends Element
         }
         if ($key === $this->_csvHeaders[0]) {
             $validVocabulary = $this->loadCodeList('PolicyMarkerVocabulary');
+            $value = $value ? trim($value) : '';
 
-            if (!is_int($value)) {
+            if ($value) {
                 foreach ($validVocabulary as $code => $name) {
-                    if (strcasecmp(trim($value), $name) === 0) {
-                        $value = is_int($code) ? (int) $code : $code;
+                    if (strcasecmp($value, $name) === 0) {
+                        $value = strval($code);
                         break;
                     }
                 }
@@ -137,11 +138,12 @@ class PolicyMarker extends Element
         }
         if ($key === $this->_csvHeaders[2]) {
             $validSignificance = $this->loadCodeList('PolicySignificance');
+            $value = $value ? trim($value) : '';
 
-            if (!is_int($value)) {
+            if ($value) {
                 foreach ($validSignificance as $code => $name) {
-                    if (strcasecmp(trim($value), $name) === 0) {
-                        $value = is_int($code) ? (int) $code : $code;
+                    if (strcasecmp($value, $name) === 0) {
+                        $value = strval($code);
                         break;
                     }
                 }
@@ -175,15 +177,17 @@ class PolicyMarker extends Element
             switch ($vocabulary) {
                 case '1':
                     $validMarker = $this->loadCodeList('PolicyMarker');
+                    $value = $value ? trim($value) : '';
 
-                    if (!is_int($value)) {
+                    if ($value) {
                         foreach ($validMarker as $code => $name) {
-                            if (strcasecmp(trim($value), $name) === 0) {
-                                $value = is_int($code) ? (int) $code : $code;
+                            if (strcasecmp($value, $name) === 0) {
+                                $value = strval($code);
                                 break;
                             }
                         }
                     }
+
                     $this->data['policy_marker'][$index]['policy_marker'] = $value;
                     break;
                 case '99':

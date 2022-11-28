@@ -94,11 +94,12 @@ class Budget extends Element
 
         if ($key === $this->_csvHeaders[0]) {
             $validBudgetType = $this->loadCodeList('BudgetType');
+            $value = $value ? trim($value) : '';
 
-            if (!is_int($value)) {
+            if ($value) {
                 foreach ($validBudgetType as $code => $name) {
-                    if (strcasecmp(trim($value), $name) === 0) {
-                        $value = is_int($code) ? (int) $code : $code;
+                    if (strcasecmp($value, $name) === 0) {
+                        $value = strval($code);
                         break;
                     }
                 }
@@ -125,16 +126,16 @@ class Budget extends Element
         if ($key === $this->_csvHeaders[1]) {
             $validBudgetStatus = $this->loadCodeList('BudgetStatus');
 
-            if (!is_int($value)) {
+            if ($value) {
                 foreach ($validBudgetStatus as $code => $name) {
                     if (strcasecmp(trim($value), $name) === 0) {
-                        $value = is_int($code) ? (int) $code : $code;
+                        $value = strval($code);
                         break;
                     }
                 }
             }
 
-            $this->data['budget'][$index]['budget_status'] = $value;
+            $this->data['budget'][$index]['budget_status'] = trim($value);
         }
     }
 
@@ -219,16 +220,16 @@ class Budget extends Element
         if ($key === $this->_csvHeaders[6]) {
             $validCurrency = $this->loadCodeList('Currency');
 
-            if (!is_int($value)) {
+            if ($value) {
                 foreach ($validCurrency as $code => $name) {
                     if (strcasecmp(trim($value), $name) === 0) {
-                        $value = is_int($code) ? (int) $code : $code;
+                        $value = strval($code);
                         break;
                     }
                 }
             }
 
-            $this->data['budget'][$index]['budget_value'][0]['currency'] = $value;
+            $this->data['budget'][$index]['budget_value'][0]['currency'] = strtoupper(trim($value));
         }
     }
 

@@ -96,7 +96,7 @@ class ReportingOrganization extends Element
         }
 
         if ($key === $this->_csvHeaders[0]) {
-            $value = (!$value) ? '' : $value;
+            $value = (!$value) ? '' : trim($value);
             $this->data['reporting_org'][0]['ref'] = $value;
         }
     }
@@ -116,13 +116,13 @@ class ReportingOrganization extends Element
         }
 
         if ($key === $this->_csvHeaders[1]) {
-            $value = (!$value) ? '' : $value;
+            $value = (!$value) ? '' : trim($value);
             $validReportingOrgType = $this->loadCodeList('OrganizationType', 'Organization');
 
-            if (!is_int($value)) {
+            if ($value) {
                 foreach ($validReportingOrgType as $code => $name) {
-                    if (strcasecmp(trim($value), $name) === 0) {
-                        $value = is_int($code) ? (int) $code : $code;
+                    if (strcasecmp($value, $name) === 0) {
+                        $value = strval($code);
                         break;
                     }
                 }

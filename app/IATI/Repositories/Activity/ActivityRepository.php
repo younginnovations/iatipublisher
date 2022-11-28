@@ -82,6 +82,7 @@ class ActivityRepository extends Repository
 
         return $this->model->whereRaw($whereSql, $bindParams)
             ->orderBy($orderBy, $direction)
+            ->orderBy('id', $direction)
             ->paginate(10, ['*'], 'activity', $page);
     }
 
@@ -244,8 +245,8 @@ class ActivityRepository extends Repository
      */
     protected function setDefaultFieldValues($defaultFieldValues, $organizationId): mixed
     {
-        $settings = Setting::where('organization_id', $organizationId)->first();
-        $settingsDefaultFieldValues = $settings ? $settings->default_values + $settings->activity_default_values : [];
+        $settings = Setting::where('organization_id', $organizationId)->first()->toArray();
+        $settingsDefaultFieldValues = $settings ? [Arr::get($settings, 'default_values') ?? []] + [Arr::get($settings, 'activity_default_values') ?? []] : [];
 
         foreach ($defaultFieldValues as $index => $value) {
             $settingsDefaultFieldValues[0]['default_currency'] = ((Arr::get((array) $value, 'default_currency')) === '')
@@ -344,7 +345,7 @@ class ActivityRepository extends Repository
                 'related_activity'     => $this->getActivityElement($activityData, 'related_activity'),
                 'other_identifier'     => $this->getActivityElement($activityData, 'other_identifier'),
                 'tag'                  => $this->getActivityElement($activityData, 'tag'),
-                'collaboration_type'   => Arr::get($this->getActivityElement($activityData, 'collaboration_type'), '0', null),
+                'collaboration_type'    => Arr::get($this->getActivityElement($activityData, 'collaboration_type'), '0', null),
                 'default_flow_type'    => Arr::get($this->getActivityElement($activityData, 'default_flow_type'), '0', null),
                 'default_finance_type' => Arr::get($this->getActivityElement($activityData, 'default_finance_type'), '0', null),
                 'default_tied_status'  => Arr::get($this->getActivityElement($activityData, 'default_tied_status'), '0', null),

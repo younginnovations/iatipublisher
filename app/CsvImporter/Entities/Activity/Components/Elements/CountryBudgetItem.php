@@ -92,14 +92,14 @@ class CountryBudgetItem extends Element
     protected function setCountryBudgetItemVocabulary($key, $value): void
     {
         if ($key === $this->_csvHeaders[0]) {
-            $value = (!$value) ? '' : $value;
+            $value = (!$value) ? '' : trim($value);
 
             $validCountryBudgetItemVocab = $this->loadCodeList('BudgetIdentifierVocabulary');
 
-            if (!is_int($value)) {
+            if ($value) {
                 foreach ($validCountryBudgetItemVocab as $code => $name) {
-                    if (strcasecmp(trim($value), $name) === 0) {
-                        $value = is_int($code) ? (int) $code : $code;
+                    if (strcasecmp($value, $name) === 0) {
+                        $value = strval($code);
                         break;
                     }
                 }
@@ -121,14 +121,14 @@ class CountryBudgetItem extends Element
     protected function setBudgetItemCode($key, $value, $index): void
     {
         if ($key === $this->_csvHeaders[1]) {
-            $value = (!$value) ? '' : $value;
+            $value = (!$value) ? '' : trim($value);
 
             $validBudgetItemCode = $this->loadCodeList('BudgetIdentifier');
 
-            if (!is_int($value)) {
+            if ($value) {
                 foreach ($validBudgetItemCode as $code => $name) {
-                    if (strcasecmp(trim($value), $name) === 0) {
-                        $value = is_int($code) ? (int) $code : $code;
+                    if (strcasecmp($value, $name) === 0) {
+                        $value = strval($code);
                         break;
                     }
                 }
@@ -200,7 +200,7 @@ class CountryBudgetItem extends Element
 
         if (count(Arr::get($this->data, 'country_budget_items.budget_item', []))) {
             foreach (Arr::get($this->data, 'country_budget_items.budget_item', []) as $key => $budgetItem) {
-                $totalPercentage += Arr::get($budgetItem, 'percentage', 0);
+                $totalPercentage += (float) Arr::get($budgetItem, 'percentage', 0);
                 $rules['country_budget_items.country_budget_vocabulary'][] = sprintf(
                     'required_with: %s,%s,%s',
                     'country_budget_items.budget_item.' . $key . '.code',

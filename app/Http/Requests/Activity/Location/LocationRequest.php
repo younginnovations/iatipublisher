@@ -122,7 +122,7 @@ class LocationRequest extends ActivityBaseRequest
         $rules = [];
         foreach ($formFields as $nameIndex => $name) {
             $narrativeForm = sprintf('%s.name.%s', $formBase, $nameIndex);
-            $rules = array_merge($rules, $this->getRulesForRequiredNarrative($name['narrative'], $narrativeForm));
+            $rules = array_merge($rules, $this->getRulesForNarrative($name['narrative'], $narrativeForm));
         }
 
         return $rules;
@@ -139,7 +139,7 @@ class LocationRequest extends ActivityBaseRequest
         $messages = [];
         foreach ($formFields as $nameIndex => $name) {
             $narrativeForm = sprintf('%s.name.%s', $formBase, $nameIndex);
-            $messages = array_merge($messages, $this->getMessagesForRequiredNarrative($name['narrative'], $narrativeForm));
+            $messages = array_merge($messages, $this->getMessagesForNarrative($name['narrative'], $narrativeForm));
         }
 
         return $messages;

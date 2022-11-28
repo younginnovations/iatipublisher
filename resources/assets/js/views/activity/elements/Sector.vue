@@ -28,9 +28,7 @@
           <span v-else class="italic">Missing</span>
         </div>
         <div v-else-if="post.sector_vocabulary == 8">
-          <span v-if="post.sdg_target">{{
-            types.sdgTarget[post.sdg_target]
-          }}</span>
+          <span v-if="post.sdg_target">{{ types.sdgTarget[post.sdg_target] }}</span>
           <span v-else class="italic">Missing</span>
         </div>
         <div v-else>
@@ -42,38 +40,32 @@
         >({{ roundFloat(post.percentage) }}%)</span
       >
     </div>
-    <div
-      v-for="(narrative, k) in post.narrative"
-      :key="k"
-      class="ml-5 country_budget_items"
-      :class="{ 'mb-0': k !== post.narrative - 1 }"
-    >
+    <div class="ml-5 country_budget_items">
       <table>
         <tr class="multiline">
           <td>Narrative</td>
           <td>
-            <div v-if="narrative.narrative" class="flex flex-col">
-              <span v-if="narrative.language" class="language top"
-                >(Language: {{ types.languages[narrative.language] }})</span
-              >
-              <span class="description">{{ narrative.narrative }}</span>
+            <div
+              v-for="(narrative, k) in post.narrative"
+              :key="k"
+              :class="{ 'mb-0': k !== post.narrative - 1 }"
+            >
+              <div v-if="narrative.narrative" class="flex flex-col">
+                <span v-if="narrative.language" class="language top"
+                  >(Language: {{ types.languages[narrative.language] }})</span
+                >
+                <span class="description">{{ narrative.narrative }}</span>
+              </div>
+              <span v-else class="italic">Missing</span>
             </div>
-            <span v-else class="italic">Missing</span>
           </td>
         </tr>
-        <tr
-          v-if="
-            post.sector_vocabulary === '98' || post.sector_vocabulary === '99'
-          "
-        >
+        <tr v-if="post.sector_vocabulary === '98' || post.sector_vocabulary === '99'">
           <td>Vocabulary URI</td>
           <td>
-            <a
-              v-if="post.vocabulary_uri"
-              target="_blank"
-              :href="post.vocabulary_uri"
-              >{{ post.vocabulary_uri }}</a
-            >
+            <a v-if="post.vocabulary_uri" target="_blank" :href="post.vocabulary_uri">{{
+              post.vocabulary_uri
+            }}</a>
             <span v-else class="italic">Missing</span>
           </td>
         </tr>
@@ -83,10 +75,10 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, inject } from 'vue';
+import { defineComponent, inject } from "vue";
 
 export default defineComponent({
-  name: 'ActivitySector',
+  name: "ActivitySector",
   props: {
     data: {
       type: Object,
@@ -103,7 +95,7 @@ export default defineComponent({
       languages: [];
     }
 
-    const types = inject('types') as Types;
+    const types = inject("types") as Types;
 
     function roundFloat(num: string) {
       return parseFloat(num).toFixed(2);

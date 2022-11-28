@@ -1,6 +1,13 @@
 <template>
   <div>
     <div v-if="data.condition_attached == '1'" class="elements-detail">
+      <div class="category">
+        <span>Attached - </span>
+        <span>
+          <span v-if="data.condition_attached == '0'">No</span>
+          <span v-else-if="data.condition_attached == '1'">Yes</span>
+        </span>
+      </div>
       <div
         v-for="(post, key) in data.condition"
         :key="key"
@@ -14,13 +21,6 @@
         </div>
         <table class="ml-5">
           <tbody>
-            <tr>
-              <td>Attached</td>
-              <td>
-                <span v-if="data.condition_attached == '0'">No</span>
-                <span v-else-if="data.condition_attached == '1'">Yes</span>
-              </td>
-            </tr>
             <tr
               v-for="(item, i) in post.narrative"
               :key="i"
@@ -49,11 +49,11 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, inject } from 'vue';
-import dateFormat from 'Composable/dateFormat';
+import { defineComponent, inject } from "vue";
+import dateFormat from "Composable/dateFormat";
 
 export default defineComponent({
-  name: 'ActivityConditions',
+  name: "ActivityConditions",
   props: {
     data: {
       type: Object,
@@ -66,7 +66,7 @@ export default defineComponent({
       languages: [];
     }
 
-    const types = inject('types') as Types;
+    const types = inject("types") as Types;
 
     return { types, dateFormat };
   },
