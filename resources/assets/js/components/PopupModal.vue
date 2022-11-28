@@ -26,7 +26,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, watch } from 'vue';
 export default defineComponent({
   name: 'PopupModal',
   props: {
@@ -42,7 +42,18 @@ export default defineComponent({
   },
   emits: ['close', 'reset'],
   setup(props, { emit }) {
+    watch(
+      () => props.modalActive,
+      (modalActive) => {
+        if (modalActive) {
+          document.documentElement.style.overflow = 'hidden';
+        } else {
+          document.documentElement.style.overflow = 'auto';
+        }
+      }
+    );
     const close = () => {
+      document.documentElement.style.overflow = 'auto';
       emit('close');
       emit('reset');
     };
