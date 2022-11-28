@@ -51,7 +51,7 @@
               v-if="toastData.visibility"
               :message="toastData.message"
               :type="toastData.type"
-              class="mr-3 outline"
+              class="mr-3"
             />
             <ErrorPopUp
               v-if="errorData.visibility"
