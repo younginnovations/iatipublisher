@@ -4,6 +4,8 @@ metadata:
   name: iatipublisher-webserver-ingress
   annotations:
     nginx.ingress.kubernetes.io/proxy-body-size: 25m
+    nginx.ingress.kubernetes.io/client-max-body-size: 25m
+    nginx.ingress.kubernetes.io/enable-modsecurity: "false"
 spec:
   tls:
     - hosts:
