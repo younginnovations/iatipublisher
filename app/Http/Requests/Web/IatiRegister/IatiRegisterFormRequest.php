@@ -33,15 +33,15 @@ class IatiRegisterFormRequest extends FormRequest
         switch ($step) {
             case '1':
                 $rules = [
-                    'publisher_id'        => ['required', 'string', 'max:255', 'unique:organizations,publisher_id'],
+                    'publisher_id'        => ['required', 'string', 'max:255', 'unique:organizations,publisher_id', 'regex:/^([a-z0-9-_]+){2,}$/'],
                     'publisher_name'      => ['required', 'string', 'max:255', 'unique:organizations,publisher_name'],
                     'identifier'          => ['required', 'string', 'max:255', 'unique:organizations,identifier'],
                     'registration_agency' => ['required'],
-                    'registration_number' => ['required'],
+                    'registration_number' => ['required', 'regex:/^([0-9A-Za-z_.]+)$/'],
                     'publisher_type'      => ['required'],
                     'license_id'          => ['required'],
                     'description'         => ['sometimes'],
-                    'image_url'             => ['nullable', 'url'],
+                    'image_url'           => ['nullable', 'url'],
                 ];
                 break;
             case '2':
@@ -57,7 +57,7 @@ class IatiRegisterFormRequest extends FormRequest
                 break;
             case '4':
                 $rules = [
-                    'username'              => ['required', 'max:255', 'string', 'regex:/^[A-Za-z]([0-9A-Za-z _])*$/', 'unique:users,username'],
+                    'username'              => ['required', 'max:255', 'string', 'regex:/^[a-z]([0-9a-z-_])*$/', 'unique:users,username'],
                     'full_name'             => ['required', 'string', 'max:255'],
                     'email'                 => ['required', 'string', 'email', 'regex:/^([a-z0-9\+_\-]+)(\.[a-z0-9\+_\-]+)*@([a-z0-9\-]+\.)+[a-z]{2,6}$/ix', 'max:255', 'unique:users,email'],
                     'password'              => ['required', 'string', 'min:6', 'max:255', 'confirmed'],
@@ -67,6 +67,29 @@ class IatiRegisterFormRequest extends FormRequest
         }
 
         return $rules;
+    }
+
+    /**
+     * Get validation messages.
+     *
+     * @return array
+     */
+    public function messages(): array
+    {
+        $messages = [];
+        $step = $this->get('step');
+
+        switch ($step) {
+            case '1':
+                $messages['publisher_id.regex'] = 'The publisher id is invalid. The publisher id must be at least two characters long and lower case. It can include letters, numbers and also - (dash) and _ (underscore).';
+                $messages['registration_number.regex'] = 'The registration number is invalid. Valid registration number includes letter, number, . and - (dash).';
+                break;
+            case '4':
+                $messages['username.regex'] = 'The username is invalid. Username must be purely lowercase alphabets followed by alphanumeric(ascii) characters and these symbols:-_';
+                break;
+        }
+
+        return $messages;
     }
 
     /**
@@ -91,7 +114,7 @@ class IatiRegisterFormRequest extends FormRequest
         $password_confirmation = Arr::get($request, 'password_confirmation', null);
 
         $this->merge([
-            'password'=> $password ? decryptString($password, env('MIX_ENCRYPTION_KEY')) : '',
+            'password' => $password ? decryptString($password, env('MIX_ENCRYPTION_KEY')) : '',
             'password_confirmation' => $password_confirmation ? decryptString($password_confirmation, env('MIX_ENCRYPTION_KEY')) : '',
         ]);
     }

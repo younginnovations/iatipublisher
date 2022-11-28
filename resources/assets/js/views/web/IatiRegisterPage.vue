@@ -700,6 +700,7 @@ export default defineComponent({
           }
 
           if (response.success) {
+            cleanValidationErrors();
             registerForm["1"].is_complete = true;
 
             updateStep(1);
@@ -746,6 +747,7 @@ export default defineComponent({
           registerForm["2"].is_complete = false;
 
           if (response.success) {
+            cleanValidationErrors();
             registerForm["2"].is_complete = true;
             updateStep(2);
           } else {
@@ -787,6 +789,7 @@ export default defineComponent({
           registerForm["3"].is_complete = false;
 
           if (response.success) {
+            cleanValidationErrors();
             registerForm["3"].is_complete = true;
             updateStep(3);
           } else {
@@ -830,6 +833,7 @@ export default defineComponent({
           registerForm["4"].is_complete = false;
 
           if (response.success) {
+            cleanValidationErrors();
             registerForm["4"].is_complete = true;
             updateStep(4);
           }
