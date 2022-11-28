@@ -37,7 +37,7 @@ class IatiRegisterFormRequest extends FormRequest
                     'publisher_name'      => ['required', 'string', 'max:255', 'unique:organizations,publisher_name'],
                     'identifier'          => ['required', 'string', 'max:255', 'unique:organizations,identifier'],
                     'registration_agency' => ['required'],
-                    'registration_number' => ['required', 'regex:/^([0-9A-Za-z_.]+)$/'],
+                    'registration_number' => ['required', 'regex:/^([0-9A-Za-z_-.]+)$/'],
                     'publisher_type'      => ['required'],
                     'license_id'          => ['required'],
                     'description'         => ['sometimes'],
@@ -82,7 +82,7 @@ class IatiRegisterFormRequest extends FormRequest
         switch ($step) {
             case '1':
                 $messages['publisher_id.regex'] = 'The publisher id is invalid. The publisher id must be at least two characters long and lower case. It can include letters, numbers and also - (dash) and _ (underscore).';
-                $messages['registration_number.regex'] = 'The registration number is invalid. Valid registration number includes letter, number, . and - (dash).';
+                $messages['registration_number.regex'] = 'The registration number is invalid. Valid registration number includes letter, number, . and _, - (dash).';
                 break;
             case '4':
                 $messages['username.regex'] = 'The username is invalid. Username must be purely lowercase alphabets followed by alphanumeric(ascii) characters and these symbols:-_';
