@@ -39,7 +39,11 @@
 textarea.form__input {
   display: block;
 }
-
+.text-area {
+  outline: none !important;
+  height: 60px;
+  resize: none;
+}
 .form__input {
   @apply mb-2 box-border w-full rounded border border-n-30 text-bluecoral outline-none duration-300;
 
@@ -101,7 +105,7 @@ textarea.form__input {
   }
 
   .multiselect-search {
-    @apply border border-n-30 py-2.5 cursor-pointer;
+    @apply cursor-pointer border border-n-30 py-2.5;
   }
 
   .multiselect-search:focus {
@@ -121,8 +125,8 @@ textarea.form__input {
     padding: 13px 0px 13px 55px;
   }
 }
-.error__input {
-  @apply border border-crimson-50;
+.error_input {
+  border: 1px solid #d1001e;
 }
 
 .panel__input {
@@ -149,6 +153,6 @@ textarea.form__input {
     @apply absolute left-3 top-3 text-base text-n-30;
   }
 }
-.required-icon{
-  @apply text-crimson-50 text-base leading-none relative top-0.5;
+.required-icon {
+  @apply relative top-0.5 text-base leading-none text-crimson-50;
 }

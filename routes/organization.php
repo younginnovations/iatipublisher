@@ -27,6 +27,7 @@ use Illuminate\Support\Facades\Route;
 Route::group([], static function () {
     // Route::resource('/organisation', \App\Http\Controllers\Admin\Organization\OrganizationController::class);
     Route::get('/organisation', [OrganizationController::class, 'show'])->name('organisation.index');
+    Route::get('organisation/status', [OrganizationController::class, 'getPublisherStatus'])->name('organisation.status');
     Route::get('/organisation/agency/{country}', [OrganizationController::class, 'getRegistrationAgency'])->name('organisation.get.agency');
     Route::get('organisation/name', [NameController::class, 'edit'])->name('organisation.name.edit');
     Route::get('organisation/name', [NameController::class, 'edit'])->name('organisation.name.edit');
