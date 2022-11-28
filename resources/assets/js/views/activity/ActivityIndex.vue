@@ -154,6 +154,8 @@ export default defineComponent({
     // let refreshToastMsg = ref(false);
     const refreshToastMsg = reactive({
       visibility: false,
+      refreshMessageType: true,
+      refreshMessage: 'Activity has been published successfully, refresh to see changes',
     });
 
     /**

@@ -101,7 +101,7 @@ class RecipientCountryRequest extends ActivityBaseRequest
                 $rules[$recipientCountryForm . '.percentage'] .= '|max:100';
             }
 
-            if ($totalCountryPercent > $allottedCountryPercent) {
+            if ($totalCountryPercent !== $allottedCountryPercent && $allottedCountryPercent !== 100.0) {
                 $rules[$recipientCountryForm . '.percentage'] .= '|allocated_country_percent_exceeded:';
             }
         }

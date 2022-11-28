@@ -23,6 +23,39 @@ class ActivityService
     protected ActivityRepository $activityRepository;
 
     /**
+     * @var array
+     */
+    protected array $sectorFields = [
+        'sector_vocabulary',
+        'code',
+        'category_code',
+        'text',
+        'sdg_goal',
+        'sdg_target',
+        'vocabulary_uri',
+        'percentage',
+    ];
+
+    /**
+     * @var array
+     */
+    protected array $recipientCountryFields = [
+        'country_code',
+        'percentage',
+    ];
+
+    /**
+     * @var array
+     */
+    protected array $recipientRegionFields = [
+        'region_vocabulary',
+        'region_code',
+        'custom_code',
+        'vocabulary_uri',
+        'percentage',
+    ];
+
+    /**
      * ActivityService constructor.
      *
      * @param ActivityRepository $activityRepository
@@ -355,7 +388,8 @@ class ActivityService
             foreach ($transactions as $transaction) {
                 if (!empty($transaction['transaction'])
                     && array_key_exists('recipient_country', $transaction['transaction'])
-                    && !empty($transaction['transaction']['recipient_country'])) {
+                    && !empty($transaction['transaction']['recipient_country'])
+                    && !$this->isElementEmpty($transaction['transaction']['recipient_country'], 'recipientCountryFields')) {
                     return true;
                 }
             }
@@ -379,7 +413,8 @@ class ActivityService
             foreach ($transactions as $transaction) {
                 if (!empty($transaction['transaction'])
                     && array_key_exists('recipient_region', $transaction['transaction'])
-                    && !empty($transaction['transaction']['recipient_region'])) {
+                    && !empty($transaction['transaction']['recipient_region'])
+                    && !$this->isElementEmpty($transaction['transaction']['recipient_region'], 'recipientRegionFields')) {
                     return true;
                 }
             }
@@ -403,7 +438,8 @@ class ActivityService
             foreach ($transactions as $transaction) {
                 if (!empty($transaction['transaction'])
                     && array_key_exists('sector', $transaction['transaction'])
-                        && !empty($transaction['transaction']['sector'])) {
+                        && !empty($transaction['transaction']['sector'])
+                            && !$this->isElementEmpty($transaction['transaction']['sector'], 'sectorFields')) {
                     return true;
                 }
             }
@@ -545,5 +581,52 @@ class ActivityService
         }
 
         return $ids;
+    }
+
+    /**
+     * Checks if narrative is empty.
+     *
+     * @param $narratives
+     *
+     * @return bool
+     */
+    public function isNarrativeEmpty($narratives): bool
+    {
+        if (count($narratives)) {
+            foreach ($narratives as $narrative) {
+                if (!empty(Arr::get($narrative, 'narrative', '')) || !empty(Arr::get($narrative, 'language', ''))) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Checks if element is empty.
+     *
+     * @param $components
+     * @param $elementFieldName
+     *
+     * @return bool
+     */
+    public function isElementEmpty($components, $elementFieldName): bool
+    {
+        if (count($components)) {
+            foreach ($components as $component) {
+                if (!$this->isNarrativeEmpty(Arr::get($component, 'narrative', []))) {
+                    return false;
+                }
+
+                foreach ($this->$elementFieldName as $componentField) {
+                    if (!empty(Arr::get($component, $componentField, ''))) {
+                        return false;
+                    }
+                }
+            }
+        }
+
+        return true;
     }
 }
