@@ -29,7 +29,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import { defineProps, defineEmits, ref } from 'vue';
+import { defineProps, defineEmits, onMounted, onUnmounted, ref } from 'vue';
 
 const emit = defineEmits(['close-popup']);
 const props = defineProps({
@@ -40,4 +40,10 @@ const close = () => {
   console.log('close');
   emit('close-popup', 'closed');
 };
+onMounted(() => {
+  document.documentElement.style.overflow = 'hidden';
+});
+onUnmounted(() => {
+  document.documentElement.style.overflow = 'auto';
+});
 </script>

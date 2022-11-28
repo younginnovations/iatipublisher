@@ -45,13 +45,13 @@
           </div>
         </div>
         <div class="actions flex grow flex-col items-end justify-end">
-          <div class="inline-flex justify-end">
+          <div class="relative inline-flex justify-end">
             <!-- toast msg for publishing -->
             <Toast
               v-if="toastData.visibility"
               :message="toastData.message"
               :type="toastData.type"
-              class="mr-3"
+              class="mr-3 outline"
             />
             <ErrorPopUp
               v-if="errorData.visibility"
@@ -88,7 +88,7 @@
           <Errors
             v-if="store.state.publishErrors.length > 0"
             :error-data="store.state.publishErrors"
-            class="absolute right-0 bottom-[calc(100%+6px)] -mr-10"
+            class="absolute right-0 bottom-[calc(100%+6px)]"
           />
         </div>
       </div>
