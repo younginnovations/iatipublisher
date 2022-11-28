@@ -165,7 +165,7 @@ const checkPublish = () => {
       errorData.message = response.message;
       errorData.type = response.success;
       errorData.visibility = true;
-      console.log('test');
+      
     }
   });
 };

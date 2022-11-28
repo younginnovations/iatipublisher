@@ -88,7 +88,7 @@
           <Errors
             v-if="store.state.publishErrors.length > 0"
             :error-data="store.state.publishErrors"
-            class="absolute right-0 bottom-[calc(100%+6px)]"
+            class="absolute right-0 bottom-[calc(100%-52px)]"
           />
         </div>
       </div>

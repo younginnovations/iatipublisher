@@ -37,7 +37,6 @@ const props = defineProps({
   title: { type: String, required: true },
 });
 const close = () => {
-  console.log('close');
   emit('close-popup', 'closed');
 };
 onMounted(() => {
