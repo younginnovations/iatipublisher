@@ -118,7 +118,7 @@ class UserService
             ]] : null,
         ]);
 
-        $setting = $this->settingRepo->store([
+        $this->settingRepo->store([
             'organization_id' => $organization['id'],
             'publishing_info' => [
                 'publisher_id' => $data['publisher_id'],
@@ -128,15 +128,13 @@ class UserService
             ],
         ]);
 
-        $user = $this->userRepo->store([
+        return $this->userRepo->store([
             'username'        => $data['username'],
             'full_name'       => $data['full_name'],
             'email'           => $data['email'],
             'organization_id' => $organization['id'],
             'password'        => Hash::make($data['password']),
         ]);
-
-        return $user;
     }
 
     /**

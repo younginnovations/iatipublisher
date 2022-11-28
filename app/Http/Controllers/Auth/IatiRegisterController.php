@@ -88,7 +88,18 @@ class IatiRegisterController extends Controller
     public function verifyPublisher(IatiRegisterFormRequest $request): JsonResponse|\GuzzleHttp\Exception\GuzzleException
     {
         try {
-            $postData = $request->all();
+            $postData = $request->only([
+                'publisher_name',
+                'publisher_id',
+                'country',
+                'registration_agency',
+                'registration_number',
+                'identifier',
+                'publisher_type',
+                'license_id',
+                'image_url',
+                'description',
+            ]);
             $publisherCheck = $this->userService->checkPublisher($postData['publisher_id'], false);
             $identifierCheck = $this->userService->checkIATIIdentifier($postData['identifier'], false);
 
@@ -167,14 +178,37 @@ class IatiRegisterController extends Controller
     public function register(IatiRegisterFormRequest $request): JsonResponse|RedirectResponse
     {
         try {
-            $postData = $request->all();
+            $postData = $request->only(
+                [
+                    'publisher_name',
+                    'publisher_id',
+                    'country',
+                    'registration_agency',
+                    'registration_number',
+                    'identifier',
+                    'publisher_type',
+                    'license_id',
+                    'image_url',
+                    'description',
+                    'contact_email',
+                    'website',
+                    'address',
+                    'source',
+                    'record_exclusions',
+                    'username',
+                    'full_name',
+                    'email',
+                    'password',
+                    'password_confirmation',
+                ]
+            );
 
             $publisherCheck = $this->userService->checkPublisher($postData['publisher_id'], false);
             $identifierCheck = $this->userService->checkIATIIdentifier($postData['identifier'], false);
             $userCheck = $this->userService->checkUser($postData, false);
             $emailCheck = $this->userService->checkUserEmail($postData['email'], false);
 
-            if (!empty($publisherCheck) || !empty($userCheck)) {
+            if (!empty($publisherCheck) || !empty($userCheck) || !empty($identifierCheck) || !empty($emailCheck)) {
                 return response()->json([
                     'success'         => false,
                     'errors'          => array_merge($publisherCheck, $userCheck, $identifierCheck, $emailCheck),
