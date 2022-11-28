@@ -6,6 +6,7 @@ namespace App\Http\Requests\Web\IatiRegister;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 
@@ -28,9 +29,6 @@ class IatiRegisterFormRequest extends FormRequest
     {
         $rules = [];
         $step = $this->get('step');
-        // dd($step);
-        // $request['password'] = isset($request['password']) && $request['password'] ? decryptString($request['password'], env('MIX_ENCRYPTION_KEY')) : '';
-        // $request['password_confirmation'] = isset($request['password_confirmation']) && $request['password_confirmation'] ? decryptString($request['password_confirmation'], env('MIX_ENCRYPTION_KEY')) : '';
 
         switch ($step) {
             case '1':
@@ -71,9 +69,29 @@ class IatiRegisterFormRequest extends FormRequest
         return $rules;
     }
 
-    // public function getPasswordValidation(){
+    /**
+     * Prepares data before validation.
+     */
+    public function prepareForValidation()
+    {
+        $this->decryptPassword();
+    }
 
-    // }
+    /**
+     * Decrypt and update password and password field of form request.
+     *
+     * @return void
+     */
+    public function decryptPassword(): void
+    {
+        $request = $this->all();
+        $password = Arr::get($request, 'password', null);
+        $password_confirmation = Arr::get($request, 'password_confirmation', null);
+        $this->merge([
+            'password'=> $password ? decryptString($password, env('MIX_ENCRYPTION_KEY')) : '',
+            'password_confirmation' => $password_confirmation ? decryptString($password_confirmation, env('MIX_ENCRYPTION_KEY')) : '',
+        ]);
+    }
 
     /**
      * Overwritten failedValidation method for JSON response.
