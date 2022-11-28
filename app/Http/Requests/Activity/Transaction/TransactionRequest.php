@@ -245,7 +245,7 @@ class TransactionRequest extends ActivityBaseRequest
         $params = $this->route()->parameters();
         $activityService = app()->make(ActivityService::class);
 
-        if ($activityService->hasSectorDefinedInActivity($params['id'])) {
+        if (!$activityService->isElementEmpty($formFields, 'sectorFields') && $activityService->hasSectorDefinedInActivity($params['id'])) {
             Validator::extend('already_in_activity', function () {
                 return false;
             });
@@ -417,7 +417,7 @@ class TransactionRequest extends ActivityBaseRequest
         $params = $this->route()->parameters();
         $activityService = app()->make(ActivityService::class);
 
-        if ($activityService->hasRecipientRegionDefinedInActivity($params['id'])) {
+        if (!$activityService->isElementEmpty($formFields, 'recipientRegionFields') && $activityService->hasRecipientRegionDefinedInActivity($params['id'])) {
             Validator::extend('already_in_activity', function () {
                 return false;
             });
@@ -492,7 +492,7 @@ class TransactionRequest extends ActivityBaseRequest
         $params = $this->route()->parameters();
         $activityService = app()->make(ActivityService::class);
 
-        if ($activityService->hasRecipientCountryDefinedInActivity($params['id'])) {
+        if (!$activityService->isElementEmpty($formFields, 'recipientCountryFields') && $activityService->hasRecipientCountryDefinedInActivity($params['id'])) {
             Validator::extend('already_in_activity', function () {
                 return false;
             });

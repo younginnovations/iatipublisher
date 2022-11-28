@@ -84,6 +84,15 @@ class RecipientRegionRequest extends ActivityBaseRequest
         Validator::extend('allocated_region_total_mismatch', function () {
             return false;
         });
+
+        Validator::extend('sum_greater_than', function () {
+            return false;
+        });
+
+        Validator::extend('percentage_within_vocabulary', function () {
+            return false;
+        });
+
         $rules = [];
         $groupedPercentRegion = $this->groupRegion($formFields);
         $allottedRegionPercent = $activityService->getAllottedRecipientRegionPercent($params['id']);
@@ -99,12 +108,18 @@ class RecipientRegionRequest extends ActivityBaseRequest
                 $rules[$key] = $item;
             }
 
-            if ($groupedPercentRegion[$recipientRegion['region_vocabulary']]['count'] > 1) {
-                if ($groupedPercentRegion[$recipientRegion['region_vocabulary']]['total'] !== $allottedRegionPercent) {
-                    $rules[$recipientRegionForm . '.percentage'] .= '|allocated_region_total_mismatch:';
+            if ($allottedRegionPercent !== 100.0) {
+                if ($groupedPercentRegion[$recipientRegion['region_vocabulary']]['count'] > 1) {
+                    if ($groupedPercentRegion[$recipientRegion['region_vocabulary']]['total'] !== $allottedRegionPercent) {
+                        $rules[$recipientRegionForm . '.percentage'] .= '|allocated_region_total_mismatch:';
+                    }
+                } else {
+                    $rules[$recipientRegionForm . '.percentage'] .= '|in:' . $allottedRegionPercent;
                 }
-            } else {
-                $rules[$recipientRegionForm . '.percentage'] .= '|in:' . $allottedRegionPercent;
+            } elseif ($groupedPercentRegion[$recipientRegion['region_vocabulary']]['total'] > 100.0) {
+                $rules[$recipientRegionForm . '.percentage'] .= '|sum_greater_than';
+            } elseif ($groupedPercentRegion[$recipientRegion['region_vocabulary']]['total'] !== $groupedPercentRegion[array_key_first($groupedPercentRegion)]['total']) {
+                $rules[$recipientRegionForm . '.percentage'] .= '|percentage_within_vocabulary';
             }
         }
 
@@ -134,6 +149,8 @@ class RecipientRegionRequest extends ActivityBaseRequest
 
             $messages[$recipientRegionForm . '.percentage.in'] = 'Region percent must be equal to allocated percent';
             $messages[$recipientRegionForm . '.percentage.allocated_region_total_mismatch'] = 'Region percent must match with allocated percent';
+            $messages[$recipientRegionForm . '.percentage.sum_greater_than'] = 'Sum of percentage within vocabulary cannot be greater than 100';
+            $messages[$recipientRegionForm . '.percentage.percentage_within_vocabulary'] = 'The total percentage within different vocabulary must be equal.';
         }
 
         return $messages;
