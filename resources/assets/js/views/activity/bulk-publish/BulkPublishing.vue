@@ -57,6 +57,8 @@ import axios from "axios";
 
 interface RefreshToastMsgTypeface {
   visibility: boolean;
+  refreshMessageType: boolean;
+  refreshMessage: string;
 }
 
 let refreshToastMsg = inject("refreshToastMsg") as RefreshToastMsgTypeface;
@@ -137,6 +139,7 @@ const bulkPublishStatus = () => {
           paStorage.value.publishingActivities.message = response.data.message;
 
           if (completed.value === "completed") {
+            failedActivities(paStorage.value.publishingActivities.activities);
             refreshToastMsg.visibility = true;
             setTimeout(() => {
               refreshToastMsg.visibility = false;
@@ -210,6 +213,8 @@ const failedActivities = (nestedObject: actElements) => {
     hasFailedActivities.status = true;
     hasFailedActivities.ids = failedActivitiesID;
     hasFailedActivities.data = failedActivitiesData as actElements;
+    refreshToastMsg.refreshMessageType = false;
+    refreshToastMsg.refreshMessage = 'Some activities have failed to publish. Refresh to see changes.'
   } else {
     hasFailedActivities.status = false;
     hasFailedActivities.ids = [];
