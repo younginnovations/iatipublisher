@@ -9,11 +9,11 @@
         <aside class="activities__sidebar activities__sidebar-inner">
           <sidebar-help-block></sidebar-help-block>
         </aside>
-        <div class="activities__content">
+        <div class="activities__content  ">
           <div class="py-[6.06%] px-[6.06%] xl:px-[12%] bg-white">
             @include('admin.activity.partial.form-title')
 
-            @yield('form')
+            @yield('form')ss
 
           </div>
         </div>

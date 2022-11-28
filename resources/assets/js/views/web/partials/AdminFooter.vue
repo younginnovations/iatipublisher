@@ -1,5 +1,6 @@
 <template>
   <footer
+    ref="footer"
     class="mt-7 bg-bluecoral text-sm leading-6 text-n-20 sm:mt-10 md:mt-20"
   >
     <div class="border-b border-white border-opacity-20">
@@ -15,6 +16,7 @@
               />
             </a>
           </div>
+
           <div class="footer__links">
             <span class="font-bold text-n-10">IATI Publisher</span>
             <ul class="mt-2 flex flex-col">

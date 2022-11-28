@@ -102,3 +102,8 @@
 ::-webkit-scrollbar-thumb {
   @apply rounded-lg bg-n-20 hover:bg-n-30;
 }
+main {
+  display: grid; // Line 1
+  grid-template-rows: auto 1fr auto; // Line 2
+  min-height: calc(100vh - 465px); // Line 3
+}
