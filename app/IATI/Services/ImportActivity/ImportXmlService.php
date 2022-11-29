@@ -290,7 +290,7 @@ class ImportXmlService
     public function startImport($filename, $userId, $orgId): void
     {
         awsDeleteFile(sprintf('%s/%s/%s', $this->xml_data_storage_path, $orgId, 'valid.json'));
-        awsUploadFile(sprintf('%s/%s/%s', $this->xml_data_storage_path, $orgId, 'status.json'), json_encode(['success' => true, 'message' => 'XML import started'], JSON_THROW_ON_ERROR));
+        awsUploadFile(sprintf('%s/%s/%s', $this->xml_data_storage_path, $orgId, 'status.json'), json_encode(['success' => true, 'message' => 'Started'], JSON_THROW_ON_ERROR));
 
         $this->fireXmlUploadEvent($filename, $userId, $orgId);
     }
