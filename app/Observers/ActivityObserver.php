@@ -123,13 +123,18 @@ class ActivityObserver
     public function setDefaultValues($activityElements, $activity): void
     {
         $activityElements = $this->removeElements($activityElements);
+        logger()->error($activity->getDirty());
 
         foreach ($activityElements as $key => $activityElement) {
+            logger()->error($key . 'start');
             if (!in_array($key, getNonArrayElements(), true) && !Arr::has($activity->getDirty(), 'linked_to_iati')) {
+                logger()->error($key);
                 $updatedData = $this->elementCompleteService->setDefaultValues($activityElement, $activity);
                 $activity->$key = $updatedData;
+                logger()->error($updatedData);
             }
         }
+        logger()->error('stop');
     }
 
     /**
