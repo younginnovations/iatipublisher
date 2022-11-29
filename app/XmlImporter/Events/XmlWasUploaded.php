@@ -28,17 +28,23 @@ class XmlWasUploaded extends Event
      * @var
      */
     public $organizationId;
+    /**
+     * @var
+     */
+    public $iatiIdentifiers;
 
     /**
      * XmlWasUploaded constructor.
      * @param $filename
      * @param $userId
      * @param $organizationId
+     * @param $iatiIdentifiers
      */
-    public function __construct($filename, $userId, $organizationId)
+    public function __construct($filename, $userId, $organizationId, $iatiIdentifiers)
     {
         $this->filename = $filename;
         $this->userId = $userId;
         $this->organizationId = $organizationId;
+        $this->iatiIdentifiers = $iatiIdentifiers;
     }
 }

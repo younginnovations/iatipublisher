@@ -112,6 +112,19 @@ class RelatedActivity extends Element
         }
 
         if ($key === $this->_csvHeaders[1]) {
+            $value = (!$value) ? '' : trim($value);
+
+            $validRelatedActivity = $this->loadCodeList('RelatedActivityType');
+
+            if ($value) {
+                foreach ($validRelatedActivity as $code => $name) {
+                    if (strcasecmp($value, $name) === 0) {
+                        $value = strval($code);
+                        break;
+                    }
+                }
+            }
+
             $this->data['related_activity'][$index]['relationship_type'] = $value;
         }
     }

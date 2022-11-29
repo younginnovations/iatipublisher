@@ -38,7 +38,11 @@
             <span v-else class="italic">Missing</span>
           </td>
         </tr>
-        <tr class="multiline" :class="{ 'mb-4': k !== post.narrative.length - 1 }">
+        <tr
+          v-if="post?.narrative"
+          class="multiline"
+          :class="{ 'mb-4': k !== post.narrative.length - 1 }"
+        >
           <td>Narrative</td>
           <td>
             <div v-for="(narrative, k) in post.narrative" :key="k">

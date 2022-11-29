@@ -171,9 +171,9 @@ class ActivityRow extends Row
         $this->fields = $fields;
         $this->stringifyFields();
         $this->organizationId = $organizationId;
+        $this->activityIdentifiers = $activityIdentifiers;
         $this->userId = $userId;
         $this->init();
-        $this->activityIdentifiers = $activityIdentifiers;
         $this->csv_data_storage_path = env('CSV_DATA_STORAGE_PATH ', 'CsvImporter/tmp');
     }
 
@@ -281,6 +281,7 @@ class ActivityRow extends Row
 
                 if ($element === 'identifier') {
                     $this->$element->setOrganization($this->organizationId);
+                    $this->$element->setActivityIdentifier($this->activityIdentifiers);
                 }
 
                 $this->elements[] = $element;
@@ -653,7 +654,7 @@ class ActivityRow extends Row
         $commonIdentifierCount = 0;
 
         foreach ($rows as $row) {
-            if (array_key_exists('activity_identifier', $row) && $this->identifier->data() && $this->identifier->data()['activity_identifier'] === Arr::get($row, 'activity_identifier.0')) {
+            if (array_key_exists('activity_identifier', $row) && $this->identifier->data() && $this->identifier->data()['activity_identifier'] === strval(Arr::get($row, 'activity_identifier.0'))) {
                 $commonIdentifierCount++;
             }
         }

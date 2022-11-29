@@ -9,7 +9,6 @@ use App\XmlImporter\Foundation\Support\Providers\XmlServiceProvider;
 use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Database\DatabaseManager;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Support\Arr;
 use Psr\Log\LoggerInterface;
 use Sabre\Xml\ParseException;
 
@@ -98,13 +97,12 @@ class XmlQueueProcessor
      * @throws ParseException
      * @throws \Throwable
      */
-    public function import($filename, $orgId, $userId): bool
+    public function import($filename, $orgId, $userId, $dbIatiIdentifiers): bool
     {
         try {
             $this->orgId = $orgId;
             $this->userId = $userId;
             $this->filename = $filename;
-            $dbIatiIdentifiers = $this->dbIatiIdentifiers($orgId);
             $contents = awsGetFile(sprintf('%s/%s/%s', $this->xml_file_storage_path, $this->orgId, $filename));
             awsUploadFile(sprintf('%s/%s/%s', $this->xml_data_storage_path, $this->orgId, 'status.json'), json_encode(['success'=> true, 'message' => 'XML import processing'], JSON_THROW_ON_ERROR));
 
@@ -142,17 +140,5 @@ class XmlQueueProcessor
     protected function dbActivities(): Collection|array
     {
         return $this->activityRepo->getActivities($this->orgId);
-    }
-
-    /**
-     * Returns array of iati identifiers present in the activities of the organisation.
-     *
-     * @param $org_id
-     *
-     * @return array
-     */
-    protected function dbIatiIdentifiers($org_id): array
-    {
-        return Arr::flatten($this->activityRepo->getActivityIdentifiers($org_id)->toArray());
     }
 }

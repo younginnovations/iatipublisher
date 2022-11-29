@@ -15,6 +15,7 @@ use App\XmlImporter\Foundation\XmlProcessor;
 use DOMDocument;
 use Exception;
 use Illuminate\Filesystem\Filesystem;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Session;
@@ -190,12 +191,12 @@ class ImportXmlService
                 $this->transactionRepository->deleteTransaction($oldActivity->id);
                 $this->resultRepository->deleteResult($oldActivity->id);
                 $this->saveTransactions($activity->data->transactions, $oldActivity->id)
-                     ->saveResults($activity->data->result, $oldActivity->id);
+                    ->saveResults($activity->data->result, $oldActivity->id);
             } else {
                 $storeActivity = $this->activityRepository->importXmlActivities(null, (array) $activity->data);
 
                 $this->saveTransactions($activity->data->transactions, $storeActivity->id)
-                     ->saveResults($activity->data->result, $storeActivity->id);
+                    ->saveResults($activity->data->result, $storeActivity->id);
             }
         }
 
@@ -289,7 +290,7 @@ class ImportXmlService
     public function startImport($filename, $userId, $orgId): void
     {
         awsDeleteFile(sprintf('%s/%s/%s', $this->xml_data_storage_path, $orgId, 'valid.json'));
-        awsUploadFile(sprintf('%s/%s/%s', $this->xml_data_storage_path, $orgId, 'status.json'), json_encode(['success'=> true, 'message' => 'XML import started'], JSON_THROW_ON_ERROR));
+        awsUploadFile(sprintf('%s/%s/%s', $this->xml_data_storage_path, $orgId, 'status.json'), json_encode(['success' => true, 'message' => 'XML import started'], JSON_THROW_ON_ERROR));
 
         $this->fireXmlUploadEvent($filename, $userId, $orgId);
     }
@@ -305,7 +306,9 @@ class ImportXmlService
      */
     protected function fireXmlUploadEvent($filename, $userId, $organizationId): void
     {
-        Event::dispatch(new XmlWasUploaded($filename, $userId, $organizationId));
+        $iatiIdentifiers = $this->dbIatiIdentifiers($organizationId);
+
+        Event::dispatch(new XmlWasUploaded($filename, $userId, $organizationId, $iatiIdentifiers));
     }
 
     /**
@@ -371,5 +374,17 @@ class ImportXmlService
         $document->load($filePath);
 
         return $document->saveXML();
+    }
+
+    /**
+     * Returns array of iati identifiers present in the activities of the organisation.
+     *
+     * @param $org_id
+     *
+     * @return array
+     */
+    protected function dbIatiIdentifiers($org_id): array
+    {
+        return Arr::flatten($this->activityRepository->getActivityIdentifiers($org_id)->toArray());
     }
 }
