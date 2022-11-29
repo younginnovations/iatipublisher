@@ -15,7 +15,7 @@ class ParticipatingOrganization extends Element
     /**
      * @var array
      */
-    private array $_csvHeaders = ['participating_organisation_role', 'participating_organisation_type', 'participating_organisation_name', 'participating_organisation_identifier'];
+    private array $_csvHeaders = ['participating_organisation_role', 'participating_organisation_reference', 'participating_organisation_type', 'participating_organisation_name', 'participating_organisation_identifier', 'participating_organisation_crs_channel_code'];
 
     /**
      * Index under which the data is stored within the object.
@@ -89,11 +89,11 @@ class ParticipatingOrganization extends Element
     {
         if (!is_null($value)) {
             $this->setOrganisationRole($key, $value, $index);
+            $this->setOrganisationReference($key, $value, $index);
             $this->setIdentifier($key, $value, $index);
             $this->setOrganisationType($key, $value, $index);
-            $this->data['participating_organization'][$index]['activity_id'] = '';
-            $this->data['participating_organization'][$index]['crs_channel_code'] = $value;
             $this->setNarrative($key, $value, $index);
+            $this->setOrganisationCrsChannelCode($key, $value, $index);
         }
     }
 
@@ -135,6 +135,26 @@ class ParticipatingOrganization extends Element
     }
 
     /**
+     * Set Reference of Participating Organisation.
+     *
+     * @param $key
+     * @param $value
+     * @param $index
+     *
+     * @return void
+     */
+    protected function setOrganisationReference($key, $value, $index): void
+    {
+        if (!isset($this->data['participating_organization'][$index]['ref'])) {
+            $this->data['participating_organization'][$index]['ref'] = '';
+        }
+
+        if ($key === $this->_csvHeaders[1] && (!is_null($value))) {
+            $this->data['participating_organization'][$index]['ref'] = $value;
+        }
+    }
+
+    /**
      * Set Identifier of Participating Organisation.
      *
      * @param $key
@@ -149,7 +169,7 @@ class ParticipatingOrganization extends Element
             $this->data['participating_organization'][$index]['identifier'] = '';
         }
 
-        if ($key === $this->_csvHeaders[3] && (!is_null($value))) {
+        if ($key === $this->_csvHeaders[4] && (!is_null($value))) {
             $this->data['participating_organization'][$index]['identifier'] = $value;
         }
     }
@@ -170,7 +190,7 @@ class ParticipatingOrganization extends Element
             $this->data['participating_organization'][$index]['type'] = '';
         }
 
-        if ($key === $this->_csvHeaders[1] && (!is_null($value))) {
+        if ($key === $this->_csvHeaders[2] && (!is_null($value))) {
             $validOrganizationType = $this->loadCodeList('OrganizationType', 'Organization');
             $value = $value ? trim($value) : '';
 
@@ -204,7 +224,7 @@ class ParticipatingOrganization extends Element
         if (!isset($this->data['participating_organization'][$index]['narrative'])) {
             $this->data['participating_organization'][$index]['narrative'][] = ['narrative' => '', 'language' => ''];
         } else {
-            if ($key === $this->_csvHeaders[2]) {
+            if ($key === $this->_csvHeaders[3]) {
                 foreach ($this->data['participating_organization'][$index]['narrative'] as $d) {
                     $this->data['participating_organization'][$index]['narrative'] = array_filter($d);
                 }
@@ -214,6 +234,38 @@ class ParticipatingOrganization extends Element
 
                 $this->data['participating_organization'][$index]['narrative'][] = $narrative;
             }
+        }
+    }
+
+    /**
+     * Set Organisation crs channel code for Participating Organisation.
+     *
+     * @param $key
+     * @param $value
+     * @param $index
+     *
+     * @return void
+     * @throws \JsonException
+     */
+    protected function setOrganisationCrsChannelCode($key, $value, $index): void
+    {
+        if (!isset($this->data['participating_organization'][$index]['crs_channel_code'])) {
+            $this->data['participating_organization'][$index]['crs_channel_code'] = '';
+        }
+
+        if ($key === $this->_csvHeaders[5] && (!is_null($value))) {
+            $validOrganizationCrsCode = $this->loadCodeList('CRSChannelCode');
+
+            if (!is_int($value)) {
+                foreach ($validOrganizationCrsCode as $code => $name) {
+                    if (strcasecmp(trim($value), $name) === 0) {
+                        $value = is_int($code) ? (int) $code : $code;
+                        break;
+                    }
+                }
+            }
+
+            $this->data['participating_organization'][$index]['crs_channel_code'] = $value;
         }
     }
 
@@ -229,6 +281,7 @@ class ParticipatingOrganization extends Element
             'participating_organization'                     => 'required|required_only_one_among:identifier,narrative',
             'participating_organization.*.organization_role' => sprintf('required|in:%s', $this->validOrganizationRoles()),
             'participating_organization.*.type' => sprintf('in:%s', $this->validOrganizationTypes()),
+            'participating_organization.*.crs_channel_code' => sprintf('in:%s', $this->validOrganizationCrsChannelCodes()),
         ];
     }
 
@@ -251,6 +304,7 @@ class ParticipatingOrganization extends Element
             ),
             'participating_organization.*.organization_role.in'        => trans('validation.code_list', ['attribute' => trans('elementForm.participating_organisation_role')]),
             'participating_organization.*.type.in'        => trans('validation.code_list', ['attribute' => trans('elementForm.participating_organisation_type')]),
+            'participating_organization.*.crs_channel_code.in'        => trans('validation.code_list', ['attribute' => trans('elementForm.participating_organisation_crs_channel_code')]),
         ];
     }
 
@@ -300,5 +354,21 @@ class ParticipatingOrganization extends Element
         $organizationTypes = array_keys($organizationTypeCodeList) + array_values($organizationTypeCodeList);
 
         return implode(',', array_keys(array_flip($organizationTypes)));
+    }
+
+    /**
+     * Get the valid Organization crs channel codes from the OrganizationType code list as a string.
+     *
+     * @return string
+     * @throw \JsonException
+     * @throws \JsonException
+     */
+    protected function validOrganizationCrsChannelCodes(): string
+    {
+        $organizationCrsChannelCodeList = $this->loadCodeList('CRSChannelCode');
+
+        $organizationCrsChannelCodes = array_keys($organizationCrsChannelCodeList) + array_values($organizationCrsChannelCodeList);
+
+        return implode(',', array_keys(array_flip($organizationCrsChannelCodes)));
     }
 }

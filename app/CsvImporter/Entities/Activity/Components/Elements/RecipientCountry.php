@@ -17,7 +17,7 @@ class RecipientCountry extends Element
     /**
      * CSV Header of Description with their code.
      */
-    private array $_csvHeaders = ['recipient_country_code', 'recipient_country_percentage'];
+    private array $_csvHeaders = ['recipient_country_code', 'recipient_country_percentage', 'recipient_country_narrative'];
 
     /**
      * Index under which the data is stored within the object.
@@ -99,7 +99,7 @@ class RecipientCountry extends Element
         if (!(is_null($value) || $value === '')) {
             $this->setCountry($key, $value, $index);
             $this->setPercentage($key, $value, $index);
-            $this->setNarrative($index);
+            $this->setNarrative($key, $value, $index);
         }
     }
 
@@ -161,15 +161,30 @@ class RecipientCountry extends Element
     /**
      * Set Narrative for RecipientCountry Element.
      *
+     * @param $key
+     * @param $value
      * @param $index
      *
      * @return void
      */
-    protected function setNarrative($index): void
+    protected function setNarrative($key, $value, $index): void
     {
-        $narrative = ['narrative' => '', 'language' => ''];
+        if (!isset($this->data['recipient_country'][$index]['narrative'][0]['narrative'])) {
+            $this->data['recipient_country'][$index]['narrative'][0] = [
+                'narrative' => '',
+                'language'  => '',
+            ];
+        }
 
-        $this->data['recipient_country'][$index]['narrative'][0] = $narrative;
+        if ($key === $this->_csvHeaders[2]) {
+            $value = $value ?: '';
+            $narrative = [
+                'narrative' => $value,
+                'language'  => '',
+            ];
+
+            $this->data['recipient_country'][$index]['narrative'][0] = $narrative;
+        }
     }
 
     /**

@@ -122,6 +122,10 @@ class Sector extends Element
      */
     protected function setSectorVocabulary($key, $value, $index): void
     {
+        if (!isset($this->data['sector'][$index]['sector_vocabulary'])) {
+            $this->data['sector'][$index]['sector_vocabulary'] = '';
+        }
+
         if ($key === $this->_csvHeaders[0]) {
             $value = (!$value) ? '' : trim($value);
             $this->vocabularies[] = $value;
@@ -193,6 +197,10 @@ class Sector extends Element
      */
     protected function setVocabularyUri($key, $value, $index): void
     {
+        if (!isset($this->data['sector'][$index]['vocabulary_uri'])) {
+            $this->data['sector'][$index]['vocabulary_uri'] = '';
+        }
+
         if ($key === $this->_csvHeaders[3]) {
             $this->data['sector'][$index]['vocabulary_uri'] = $value;
         }
