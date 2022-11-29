@@ -83,6 +83,10 @@ class RecipientCountryRequest extends ActivityBaseRequest
             return false;
         });
 
+        Validator::extend('sum_exceeded', function () {
+            return false;
+        });
+
         $rules = [];
         $allottedCountryPercent = $activityService->getAllottedRecipientCountryPercent($params['id']);
         $totalCountryPercent = $this->getTotalPercent($formFields);
@@ -95,6 +99,10 @@ class RecipientCountryRequest extends ActivityBaseRequest
 
             foreach ($narrativeRules as $key => $item) {
                 $rules[$key] = $item;
+            }
+
+            if ($totalCountryPercent > 100.0) {
+                $rules[$recipientCountryForm . '.percentage'] .= '|sum_exceeded';
             }
 
             if ($allottedCountryPercent === 100.0) {
@@ -124,6 +132,7 @@ class RecipientCountryRequest extends ActivityBaseRequest
             $recipientCountryForm = 'recipient_country.' . $recipientCountryIndex;
             $messages[$recipientCountryForm . '.percentage.numeric'] = 'The @percentage must be a number.';
             $messages[$recipientCountryForm . '.percentage.max'] = 'The @percentage cannot be greater than 100';
+            $messages[$recipientCountryForm . '.percentage.sum_exceeded'] = 'The sum of percentage cannot be greater than 100';
 
             $narrativeMessages = $this->getMessagesForNarrative($recipientCountry['narrative'], $recipientCountryForm);
 
