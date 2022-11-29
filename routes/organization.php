@@ -50,4 +50,5 @@ Route::group([], static function () {
     Route::put('organisation/document_link', [DocumentLinkController::class, 'update'])->name('organisation.document-link.update');
     Route::post('organisation/publish', [OrganizationWorkflowController::class, 'publish'])->name('organisation.publish');
     Route::post('organisation/unpublish', [OrganizationWorkflowController::class, 'unPublish'])->name('organisation.unPublish');
+    Route::get('organisation/checks-for-organisation-publish', [OrganizationWorkflowController::class, 'checksForOrganizationPublish'])->name('organisation.checks_for_publish');
 });
