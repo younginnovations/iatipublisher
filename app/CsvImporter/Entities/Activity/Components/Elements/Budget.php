@@ -17,7 +17,16 @@ class Budget extends Element
      * Csv Header for Budget element.
      * @var array
      */
-    private array $_csvHeaders = ['budget_type', 'budget_status', 'budget_period_start', 'budget_period_end', 'budget_value', 'budget_value_date', 'budget_currency'];
+    private array $_csvHeaders
+    = [
+        'budget_type',
+        'budget_status',
+        'budget_period_start',
+        'budget_period_end',
+        'budget_value',
+        'budget_value_date',
+        'budget_currency',
+    ];
 
     /**
      * Index under which the data is stored within the object.
@@ -73,7 +82,6 @@ class Budget extends Element
             $this->setBudgetPeriodStart($key, $value, $index);
             $this->setBudgetPeriodEnd($key, $value, $index);
             $this->setBudgetValue($key, $value, $index);
-            $this->setBudgetCurrency($key, $value, $index);
         }
     }
 
@@ -189,33 +197,14 @@ class Budget extends Element
     protected function setBudgetValue($key, $value, $index): void
     {
         if (!isset($this->data['budget'][$index]['budget_value'])) {
-            $this->data['budget'][$index]['budget_value'][] = '';
+            $this->data['budget'][$index]['budget_value'][] = [];
         }
         if ($key === $this->_csvHeaders[4]) {
             $this->data['budget'][$index]['budget_value'][0]['amount'] = $value;
+            $this->data['budget'][$index]['budget_value'][0]['currency'] = Arr::get($this->data(), 'budget.' . $index . '.budget_value.0.currency', null) ?? '';
         }
         if ($key === $this->_csvHeaders[5]) {
             $this->data['budget'][$index]['budget_value'][0]['value_date'] = dateFormat('Y-m-d', $value);
-        }
-    }
-
-    /**
-     * Set Budget currency for Budget Element.
-     *
-     * @param $key
-     * @param $value
-     * @param $index
-     *
-     * @return void
-     */
-    protected function setBudgetCurrency($key, $value, $index): void
-    {
-        if (!isset($this->data['budget'][$index]['budget_value'][0]['currency'])) {
-            $this->data['budget'][$index]['budget_value'] = [
-                [
-                    'currency' => '',
-                ],
-            ];
         }
         if ($key === $this->_csvHeaders[6]) {
             $validCurrency = $this->loadCodeList('Currency');
@@ -317,7 +306,7 @@ class Budget extends Element
                 'budget.' . $key . '.period_end.0.date',
                 'budget.' . $key . '.budget_value.0.amount'
             );
-            $rules['budget.' . $key . '.budget_value.0.currency'] = sprintf('in:%s', $this->currencyCodeList());
+            $rules['budget.' . $key . '.budget_value.0.currency'] = sprintf('sometimes|in:%s', $this->currencyCodeList());
         }
 
         return $rules;

@@ -18,24 +18,24 @@ class Location extends Element
      * @var array
      */
     private array $_csvHeaders
-        = [
-            'location_reference',
-            'location_reach_code',
-            'location_id_vocabulary',
-            'location_id_code',
-            'location_name',
-            'location_description',
-            'location_activity_description',
-            'location_administrative_vocabulary',
-            'location_administrative_code',
-            'location_administrative_level',
-            'location_point_srsname',
-            'pos_latitude',
-            'pos_longitude',
-            'location_exactness',
-            'location_class',
-            'feature_designation',
-        ];
+    = [
+        'location_reference',
+        'location_reach_code',
+        'location_id_vocabulary',
+        'location_id_code',
+        'location_name',
+        'location_description',
+        'location_activity_description',
+        'location_administrative_vocabulary',
+        'location_administrative_code',
+        'location_administrative_level',
+        'location_point_srsname',
+        'pos_latitude',
+        'pos_longitude',
+        'location_exactness',
+        'location_class',
+        'feature_designation',
+    ];
 
     /**
      * Index under which the data is stored within the object.
@@ -308,11 +308,11 @@ class Location extends Element
 
             $this->data['location'][$index]['point'][0]['srs_name'] = $value;
         } elseif ($key === $this->_csvHeaders[11]) {
-            $value = (!$value) ? '' : trim($value);
+            $value = (!$value) ? '' : $value;
 
             $this->data['location'][$index]['point'][0]['pos'][0]['latitude'] = $value;
         } elseif ($key === $this->_csvHeaders[12]) {
-            $value = (!$value) ? '' : trim($value);
+            $value = (!$value) ? '' : $value;
 
             $this->data['location'][$index]['point'][0]['pos'][0]['longitude'] = $value;
         }
@@ -826,8 +826,8 @@ class Location extends Element
     public function validate(): static
     {
         $this->validator = $this->factory->sign($this->data())
-                                         ->with($this->rules(), $this->messages())
-                                         ->getValidatorInstance();
+            ->with($this->rules(), $this->messages())
+            ->getValidatorInstance();
         $this->setValidity();
 
         return $this;
