@@ -154,7 +154,7 @@ onMounted(() => {
           clearInterval(timer);
         }
 
-        if (res.data.status === "error") {
+        if (res.data.status === "error" || !res.data.data) {
           clearInterval(timer);
           window.location.href = "/activities";
         }
@@ -163,7 +163,7 @@ onMounted(() => {
         loader.value = false;
         window.location.href = "/activities";
       });
-  }, 2000);
+  }, 3000);
   loader.value = false;
 });
 

@@ -16,7 +16,6 @@ use Illuminate\Database\DatabaseManager;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use League\Flysystem\FilesystemException;
@@ -251,12 +250,15 @@ class ImportActivityController extends Controller
             if ($filetype === 'xml') {
                 $result = $this->importXmlService->loadJsonFile('status.json');
                 $data = $this->importXmlService->loadJsonFile('valid.json');
-                $status = Arr::get($result, 'success');
             } else {
-                $result = $this->importCsvService->importIsComplete() ?? 'Processing';
-                $status = $result !== 'Processing';
-
+                $result = $this->importCsvService->getAwsCsvData('status.json');
                 $data = $this->importCsvService->getAwsCsvData('valid.json');
+            }
+
+            $status = strcasecmp($result->message, 'Complete') === 0;
+
+            if (!$data) {
+                Session::put('error', 'Error has occurred while importing activities.');
             }
 
             return response()->json(['status' => $status, 'data' => $data]);
