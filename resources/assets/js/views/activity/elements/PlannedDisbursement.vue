@@ -66,7 +66,7 @@
         </tbody>
       </table>
     </div>
-    <div class="mb-4 ml-5">
+    <div class="mb-4 ml-5" v-if="post.provider_org">
       <div class="category">
         <span>Provider org</span>
       </div>
@@ -104,9 +104,7 @@
                 <div class="language mb-1.5">
                   (Language:
                   {{
-                    narrative.language
-                      ? types.languages[narrative.language]
-                      : "Missing"
+                    narrative.language ? types.languages[narrative.language] : "Missing"
                   }})
                 </div>
                 <div class="w-[500px] max-w-full">
@@ -118,7 +116,7 @@
         </tbody>
       </table>
     </div>
-    <div class="ml-5">
+    <div class="ml-5" v-if="post.receiver_org">
       <div class="category">
         <span>Receiver org</span>
       </div>
@@ -156,9 +154,7 @@
                 <div class="language mb-1.5">
                   (Language:
                   {{
-                    narrative.language
-                      ? types.languages[narrative.language]
-                      : "Missing"
+                    narrative.language ? types.languages[narrative.language] : "Missing"
                   }})
                 </div>
                 <div class="w-[500px] max-w-full">
