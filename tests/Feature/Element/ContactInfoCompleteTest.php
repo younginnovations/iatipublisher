@@ -92,7 +92,7 @@ class ContactInfoCompleteTest extends ElementCompleteTest
             JSON_THROW_ON_ERROR
         );
 
-        $this->test_level_two_multi_dimensional_element_incomplete($this->element, $actualData);
+        $this->test_level_two_multi_dimensional_element_complete($this->element, $actualData);
     }
 
     /**
@@ -110,7 +110,7 @@ class ContactInfoCompleteTest extends ElementCompleteTest
             JSON_THROW_ON_ERROR
         );
 
-        $this->test_level_two_multi_dimensional_element_incomplete($this->element, $actualData);
+        $this->test_level_two_multi_dimensional_element_complete($this->element, $actualData);
     }
 
     /**
@@ -128,7 +128,7 @@ class ContactInfoCompleteTest extends ElementCompleteTest
             JSON_THROW_ON_ERROR
         );
 
-        $this->test_level_two_multi_dimensional_element_incomplete($this->element, $actualData);
+        $this->test_level_two_multi_dimensional_element_complete($this->element, $actualData);
     }
 
     /**
@@ -146,7 +146,7 @@ class ContactInfoCompleteTest extends ElementCompleteTest
             JSON_THROW_ON_ERROR
         );
 
-        $this->test_level_two_multi_dimensional_element_incomplete($this->element, $actualData);
+        $this->test_level_two_multi_dimensional_element_complete($this->element, $actualData);
     }
 
     /**
@@ -164,7 +164,7 @@ class ContactInfoCompleteTest extends ElementCompleteTest
             JSON_THROW_ON_ERROR
         );
 
-        $this->test_level_two_multi_dimensional_element_incomplete($this->element, $actualData);
+        $this->test_level_two_multi_dimensional_element_complete($this->element, $actualData);
     }
 
     /**
@@ -182,7 +182,7 @@ class ContactInfoCompleteTest extends ElementCompleteTest
             JSON_THROW_ON_ERROR
         );
 
-        $this->test_level_two_multi_dimensional_element_incomplete($this->element, $actualData);
+        $this->test_level_two_multi_dimensional_element_complete($this->element, $actualData);
     }
 
     /**
@@ -200,7 +200,7 @@ class ContactInfoCompleteTest extends ElementCompleteTest
             JSON_THROW_ON_ERROR
         );
 
-        $this->test_level_two_multi_dimensional_element_incomplete($this->element, $actualData);
+        $this->test_level_two_multi_dimensional_element_complete($this->element, $actualData);
     }
 
     /**
@@ -218,7 +218,7 @@ class ContactInfoCompleteTest extends ElementCompleteTest
             JSON_THROW_ON_ERROR
         );
 
-        $this->test_level_two_multi_dimensional_element_incomplete($this->element, $actualData);
+        $this->test_level_two_multi_dimensional_element_complete($this->element, $actualData);
     }
 
     /**
