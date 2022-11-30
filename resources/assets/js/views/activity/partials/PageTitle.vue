@@ -60,8 +60,8 @@
           <div class="inline-flex shrink-0 items-center justify-end gap-3">
             <RefreshToastMessage
               v-if="refreshToastMsg.visibility"
-              :message="refreshMessage"
-              :type="refreshMessageType"
+              :message="refreshToastMsg.refreshMessage"
+              :type="refreshToastMsg.refreshMessageType"
             />
             <PublishSelected />
             <DeleteButton v-if="store.state.selectedActivities.length === 1" />
@@ -86,13 +86,11 @@ import { useStore } from 'Store/activities/index';
 
 interface RefreshToastMsgTypeface {
   visibility: boolean;
+  refreshMessageType: boolean;
+  refreshMessage: string;
 }
 
 const store = useStore();
-
-const refreshMessageType = true,
-  refreshMessage =
-    'Activity has been published successfully, refresh to see changes';
 
 interface ToastInterface {
   visibility: boolean;

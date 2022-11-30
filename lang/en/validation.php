@@ -245,5 +245,4 @@ return [
     'amount' => 'Please enter amount in the format xx.xx',
     'greater' => 'The :attribute must be greater than or equal to :value',
     'date_greater_than' => 'The date must be greater than :value',
-
 ];
