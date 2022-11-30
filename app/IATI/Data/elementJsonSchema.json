@@ -1729,8 +1729,8 @@
             "label": "narrative",
             "type": "textarea",
             "placeholder": "Type narrative",
-            "required": true,
-            "criteria": "mandatory",
+            "required": false,
+            "criteria": "",
             "add_more": true,
             "attr": {
               "row": 4
@@ -1744,8 +1744,8 @@
                 "type": "select",
                 "placeholder": "Select language",
                 "choices": "Activity/Language.json",
-                "required": true,
-                "criteria": "mandatory",
+                "required": false,
+                "criteria": "",
                 "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed.<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/contact-info/department/narrative/'>For more information</a>",
                 "help_text": "Select the language of the text you provided in the narrative. If no language is selected, the default language is assumed."
               }
