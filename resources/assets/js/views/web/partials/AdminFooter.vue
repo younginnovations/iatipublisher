@@ -15,6 +15,7 @@
               />
             </a>
           </div>
+
           <div class="footer__links">
             <span class="font-bold text-n-10">IATI Publisher</span>
             <ul class="mt-2 flex flex-col">
