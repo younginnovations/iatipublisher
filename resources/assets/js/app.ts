@@ -244,8 +244,15 @@ const stickySidebar = (
 
         case 'sticky-none':
           if (targetScrollPosition <= currentWindowsScrollPosition) {
-            stickyElement.style.cssText = `position: fixed; top: auto; left: ${elScrollLeft}; bottom: 0; width: ${elWidth}px`;
-            affixType = 'sticky-bottom';
+            if (
+              window.innerHeight + window.scrollY + 450 >=
+              document.body.offsetHeight
+            ) {
+              el.style.cssText = `position: sticky; top:0`;
+            } else {
+              stickyElement.style.cssText = `position: fixed; top: auto; left: ${elScrollLeft}; bottom: 0; width: ${elWidth}px`;
+              affixType = 'sticky-bottom';
+            }
           }
           break;
 
@@ -292,7 +299,6 @@ const stickySidebar = (
           break;
       }
     } else {
-      console.log(window.pageYOffset);
       el.style.cssText = `position: sticky; top:0`;
       stickyElement.style.cssText = ``;
     }
