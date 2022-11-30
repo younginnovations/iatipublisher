@@ -83,14 +83,14 @@ class PlannedDisbursement extends Element
      */
     public function map($key, $index, $value): void
     {
-        if (!(is_null($value) || $value === '')) {
-            $this->setPlannedDisbursementType($key, $value, $index);
-            $this->setPlannedDisbursementPeriodStart($key, $value, $index);
-            $this->setPlannedDisbursementPeriodEnd($key, $value, $index);
-            $this->setPlannedDisbursementValue($key, $value, $index);
-            $this->setPlannedDisbursementProviderOrg($key, $value, $index);
-            $this->setPlannedDisbursementReceiverOrg($key, $value, $index);
-        }
+        // if (!(is_null($value) || $value === '')) {
+        $this->setPlannedDisbursementType($key, $value, $index);
+        $this->setPlannedDisbursementPeriodStart($key, $value, $index);
+        $this->setPlannedDisbursementPeriodEnd($key, $value, $index);
+        $this->setPlannedDisbursementValue($key, $value, $index);
+        $this->setPlannedDisbursementProviderOrg($key, $value, $index);
+        $this->setPlannedDisbursementReceiverOrg($key, $value, $index);
+        // }
     }
 
     /**
