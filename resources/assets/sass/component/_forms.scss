@@ -146,6 +146,18 @@ form {
   .form-field-group:only-of-type > .delete-item {
     @apply hidden;
   }
+
+  /**
+  * Condition to show and delete collection error in form
+  */
+  .collection_error{
+    display: none;
+  }
+
+  .multi-form+.collection_error,
+  .wrapped-child-body+.collection_error{
+    display: block;
+  }
 }
 
 /**

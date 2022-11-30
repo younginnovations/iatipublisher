@@ -49,8 +49,10 @@
             <?php include helpBlockPath(); ?>
 
         <?php endif; ?>
+        <section class="collection_error">
+            <?php include errorBlockPath(); ?>
+        </section>
 
-        <?php include errorBlockPath(); ?>
 
         <?php if ($showLabel && $showField) : ?>
             <?php if ($options['wrapper'] !== false) : ?>
