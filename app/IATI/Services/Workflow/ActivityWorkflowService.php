@@ -265,15 +265,13 @@ class ActivityWorkflowService
         $messages = [];
 
         if (!$this->isUserVerified()) {
-            $messages[] = 'User email needs to be verified for publishing activity.';
+            $messages[] = 'You have not verified your email address.';
         }
-
         if ($this->hasNoPublisherInfo($organization->settings)) {
-            $messages[] = 'Please add a Registry API key before attempting to automatically publish.';
+            $messages[] = 'Your API Key is not valid or it is empty.';
         }
-
         if ($type === 'activity' && !$this->isOrganizationPublished($organization)) {
-            $messages[] = 'Organization needs to be published before publishing activity.';
+            $messages[] = 'Your Organisation data is not published.';
         }
 
         return $messages;

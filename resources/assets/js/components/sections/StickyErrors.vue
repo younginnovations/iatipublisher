@@ -7,8 +7,8 @@
         'opacity-1 visible': !errorValue,
       }"
     >
-      <div class="flex items-center justify-between validation__heading">
-        <div class="flex items-center text-sm leading-relaxed icon grow">
+      <div class="validation__heading flex items-center justify-between">
+        <div class="icon flex grow items-center text-sm leading-relaxed">
           <svg-vue
             class="mr-1 text-base text-crimson-50"
             icon="warning-fill"
@@ -25,8 +25,8 @@
         'invisible opacity-0': !errorValue,
       }"
     >
-      <div class="flex items-center justify-between validation__heading">
-        <div class="flex items-center text-sm leading-relaxed icon grow">
+      <div class="validation__heading flex items-center justify-between">
+        <div class="icon flex grow items-center text-sm leading-relaxed">
           <div class="font-bold">
             {{ errorData.length }} Issues found in IATI Validator
           </div>
