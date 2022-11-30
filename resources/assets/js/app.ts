@@ -201,8 +201,7 @@ const stickySidebar = (
 
   // parent wrapper / sticky boundary
   const elParent = stickyElement.closest(parentWrapper),
-    elParentBottom = elParent.getBoundingClientRect().bottom,
-    elParentHeight = elParent.offsetHeight;
+    elParentBottom = elParent?.getBoundingClientRect().bottom;
 
   // scroll behaviour
   const isScrollDown =
@@ -213,91 +212,100 @@ const stickySidebar = (
   lastScrollTop =
     currentWindowsScrollPosition <= 0 ? 0 : currentWindowsScrollPosition;
 
+  function handleScrollDown() {
+    switch (affixType) {
+      case 'sticky-top':
+        stickyElement.style.cssText = `position: relative; transform: translate3d(0, ${
+          stickyCurrentTop - elScrollTop
+        }px, 0);`;
+        affixType = 'sticky-translate';
+
+        break;
+
+      case 'sticky-bottom':
+        if (elParentBottom && elParentBottom < stickyCurrentBottom) {
+          stickyElement.style.cssText = `position : absolute;  width:280px; bottom: 16px`;
+          affixType = 'sticky-bound';
+        }
+        break;
+
+      case 'sticky-translate':
+        if (stickyCurrentBottom <= viewportHeight) {
+          stickyElement.style.cssText = `position: fixed; top: auto; left: ${elScrollLeft}; bottom: 0; width: ${elWidth}px`;
+          affixType = 'sticky-bottom';
+        }
+        break;
+
+      case 'sticky-none':
+        if (targetScrollPosition <= currentWindowsScrollPosition) {
+          if (
+            viewportHeight + window.scrollY + 450 >=
+            document.body.offsetHeight
+          ) {
+            el.style.cssText = `position: sticky; top:0`;
+          } else {
+            stickyElement.style.cssText = `position: fixed; top: auto; left: ${elScrollLeft}; bottom: 0; width: ${elWidth}px`;
+            affixType = 'sticky-bottom';
+          }
+        }
+        break;
+
+      case 'sticky-bound':
+        // nothing to do here
+
+        break;
+    }
+  }
+
+  function handleScrollUp() {
+    switch (affixType) {
+      case 'sticky-top':
+        if (elScrollTop >= 0) {
+          stickyElement.style.cssText = `position: relative;`;
+          affixType = 'sticky-none';
+        }
+        break;
+
+      case 'sticky-bottom':
+        stickyElement.style.cssText = `position: relative; transform: translate3d(0, ${
+          stickyCurrentTop - elScrollTop
+        }px, 0);`;
+        affixType = 'sticky-translate';
+        break;
+
+      case 'sticky-translate':
+        if (stickyCurrentTop >= 0) {
+          stickyElement.style.cssText = `position: fixed; top: 0; left: ${elScrollLeft}; width: ${elWidth}px`;
+          affixType = 'sticky-top';
+        }
+        break;
+
+      case 'sticky-none':
+        //nothing to do here
+        break;
+
+      case 'sticky-bound':
+        if (stickyCurrentTop >= 0 && currentWindowsScrollPosition != 0) {
+          stickyElement.style.cssText = `position:fixed; top: 0; left: ${elScrollLeft}; width: ${elWidth}px`;
+          affixType = 'sticky-top';
+        }
+        if (stickyCurrentTop >= 0 && currentWindowsScrollPosition == 0) {
+          stickyElement.style.cssText = ` top: 0; left: ${elScrollLeft}; width: ${elWidth}px`;
+          affixType = 'sticky-top';
+        }
+        break;
+    }
+  }
+
   if (elHeight < viewportHeight) {
     el.style.cssText = `position: sticky; top:0`;
     stickyElement.style.cssText = ``;
   } else {
     el.style.cssText = `height: ${elHeight}px;`;
-    if (isScrollDown && window.pageYOffset != 0) {
-      switch (affixType) {
-        case 'sticky-top':
-          stickyElement.style.cssText = `position: relative; transform: translate3d(0, ${
-            stickyCurrentTop - elScrollTop
-          }px, 0);`;
-          affixType = 'sticky-translate';
-
-          break;
-
-        case 'sticky-bottom':
-          if (elParentBottom < stickyCurrentBottom) {
-            stickyElement.style.cssText = `position : absolute;  width:280px; bottom: 16px`;
-            affixType = 'sticky-bound';
-          }
-          break;
-
-        case 'sticky-translate':
-          if (stickyCurrentBottom <= viewportHeight) {
-            stickyElement.style.cssText = `position: fixed; top: auto; left: ${elScrollLeft}; bottom: 0; width: ${elWidth}px`;
-            affixType = 'sticky-bottom';
-          }
-          break;
-
-        case 'sticky-none':
-          if (targetScrollPosition <= currentWindowsScrollPosition) {
-            if (
-              window.innerHeight + window.scrollY + 450 >=
-              document.body.offsetHeight
-            ) {
-              el.style.cssText = `position: sticky; top:0`;
-            } else {
-              stickyElement.style.cssText = `position: fixed; top: auto; left: ${elScrollLeft}; bottom: 0; width: ${elWidth}px`;
-              affixType = 'sticky-bottom';
-            }
-          }
-          break;
-
-        case 'sticky-bound':
-          // nothing to do here
-
-          break;
-      }
-    } else if (isScrollUp && window.pageYOffset != 0) {
-      switch (affixType) {
-        case 'sticky-top':
-          if (elScrollTop >= 0) {
-            stickyElement.style.cssText = `position: relative;`;
-            affixType = 'sticky-none';
-          }
-          break;
-
-        case 'sticky-bottom':
-          stickyElement.style.cssText = `position: relative; transform: translate3d(0, ${
-            stickyCurrentTop - elScrollTop
-          }px, 0);`;
-          affixType = 'sticky-translate';
-          break;
-
-        case 'sticky-translate':
-          if (stickyCurrentTop >= 0) {
-            stickyElement.style.cssText = `position: fixed; top: 0; left: ${elScrollLeft}; width: ${elWidth}px`;
-            affixType = 'sticky-top';
-          }
-          break;
-
-        case 'sticky-none':
-          //nothing to do here
-          break;
-
-        case 'sticky-bound':
-          if (stickyCurrentTop >= 0 && window.pageYOffset != 0) {
-            stickyElement.style.cssText = `position:fixed; top: 0; left: ${elScrollLeft}; width: ${elWidth}px`;
-            affixType = 'sticky-top';
-          } else if (stickyCurrentTop >= 0 && window.pageYOffset == 0) {
-            stickyElement.style.cssText = ` top: 0; left: ${elScrollLeft}; width: ${elWidth}px`;
-            affixType = 'sticky-top';
-          }
-          break;
-      }
+    if (isScrollDown && currentWindowsScrollPosition != 0) {
+      handleScrollDown();
+    } else if (isScrollUp && currentWindowsScrollPosition != 0) {
+      handleScrollUp();
     } else {
       el.style.cssText = `position: sticky; top:0`;
       stickyElement.style.cssText = ``;

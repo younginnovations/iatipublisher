@@ -45,12 +45,17 @@
           </div>
         </div>
 <<<<<<< HEAD
+<<<<<<< HEAD
         <div class="actions relative flex grow flex-col items-end justify-end">
           <div class="inline-flex justify-end">
 =======
         <div class="actions flex grow flex-col items-end justify-end">
           <div class="relative inline-flex justify-end">
 >>>>>>> 9472a0e6 (754-sidebar-sticky-issue)
+=======
+        <div class="actions relative flex grow flex-col items-end justify-end">
+          <div class="inline-flex justify-end">
+>>>>>>> f300492b (codefactor issue fix)
             <!-- toast msg for publishing -->
             <Toast
               v-if="toastData.visibility"
