@@ -105,7 +105,7 @@ class CountryBudgetItem extends Element
                 }
             }
 
-            $this->data['country_budget_items']['country_budget_vocabulary'] = $value;
+            $this->data['country_budget_items']['country_budget_vocabulary'] = Arr::get($this->data(), 'country_budget_items.country_budget_vocabulary', $value);
         }
     }
 

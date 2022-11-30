@@ -121,7 +121,7 @@ class Tag extends Element
     protected function setTagCode($key, $value, $index): void
     {
         if ($key === $this->_csvHeaders[1]) {
-            $tagVocabulary = Arr::get($this->data(), 'tag' . $index . '.tag_vocabulary', '');
+            $tagVocabulary = Arr::get($this->data(), 'tag.' . $index . '.tag_vocabulary', '');
             $value = (!$value) ? '' : trim($value);
 
             if ($tagVocabulary === '2') {
@@ -151,8 +151,8 @@ class Tag extends Element
 
                 $this->data['tag'][$index]['targets_tag_code'] = $value;
             } else {
-                $this->data['tag'][$index]['tag_vocabulary'] = '';
                 $this->data['tag'][$index]['tag_text'] = $value;
+                $this->data['tag'][$index]['tag_vocabulary'] = $tagVocabulary;
             }
         }
     }
@@ -233,7 +233,7 @@ class Tag extends Element
                         break;
                     case '2':
                         $rules[sprintf('%s.goals_tag_code', $tagForm)] = sprintf(
-                            'in:%s|required_with: %s,%s,%s',
+                            'sometimes|in:%s|required_with: %s,%s,%s',
                             $validGoalsTagCode,
                             sprintf('%s.tag_vocabulary', $tagForm),
                             sprintf('%s.vocabulary_uri', $tagForm),
