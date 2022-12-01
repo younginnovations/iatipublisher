@@ -20,6 +20,7 @@ data:
   DB_HOST: "private-yi-prod-postgres-do-user-4025190-0.b.db.ondigitalocean.com"
   DB_PORT: "25060"
   DB_SSLMODE: 'require'
+  DB_SSLROOTCERT: './ca-certificate.crt'
 
   BROADCAST_DRIVER: "log"
   CACHE_DRIVER: "redis"
