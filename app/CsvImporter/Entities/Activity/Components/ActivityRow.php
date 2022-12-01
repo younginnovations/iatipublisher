@@ -653,7 +653,7 @@ class ActivityRow extends Row
         $commonIdentifierCount = 0;
 
         foreach ($rows as $row) {
-            if (array_key_exists('activity_identifier', $row) && $this->identifier->data() && $this->identifier->data()['activity_identifier'] === Arr::get($row, 'activity_identifier.0')) {
+            if (array_key_exists('activity_identifier', $row) && $this->identifier->data() && $this->identifier->data()['activity_identifier'] === strval(Arr::get($row, 'activity_identifier.0'))) {
                 $commonIdentifierCount++;
             }
         }

@@ -81,8 +81,8 @@ class Identifier extends Element
     public function validate(): static
     {
         $this->validator = $this->factory->sign($this->data())
-                                         ->with($this->rules(), $this->messages())
-                                         ->getValidatorInstance();
+            ->with($this->rules(), $this->messages())
+            ->getValidatorInstance();
 
         $this->setValidity();
 
@@ -98,7 +98,7 @@ class Identifier extends Element
     {
         return [
             'activity_identifier' => 'required',
-//            'activity_identifier' => sprintf('nullable|not_in:%s', implode(',', $this->activityIdentifiers()))
+            'activity_identifier' => sprintf('nullable|not_in:%s', implode(',', $this->activityIdentifiers())),
         ];
     }
 
@@ -111,7 +111,7 @@ class Identifier extends Element
     {
         return [
             'activity_identifier.required' => trans('validation.required', ['attribute' => trans('elementForm.activity_identifier')]),
-//            'activity_identifier.not_in'   => trans('validation.unique', ['attribute' => trans('elementForm.activity_identifier')])
+            'activity_identifier.not_in'   => trans('validation.unique', ['attribute' => trans('elementForm.activity_identifier')]),
         ];
     }
 

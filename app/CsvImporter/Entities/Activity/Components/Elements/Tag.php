@@ -18,11 +18,11 @@ class Tag extends Element
      * @var array
      */
     private array $_csvHeaders = [
-            'tag_vocabulary',
-            'tag_code',
-            'tag_vocabulary_uri',
-            'tag_narrative',
-        ];
+        'tag_vocabulary',
+        'tag_code',
+        'tag_vocabulary_uri',
+        'tag_narrative',
+    ];
 
     /**
      * Index under which the data is stored within the object.
@@ -121,13 +121,10 @@ class Tag extends Element
     protected function setTagCode($key, $value, $index): void
     {
         if ($key === $this->_csvHeaders[1]) {
-            $tagVocabulary = $this->data['tag'][$index]['tag_vocabulary'] ?? '';
-            $tagVocabulary = $tagVocabulary;
+            $tagVocabulary = Arr::get($this->data(), 'tag.' . $index . '.tag_vocabulary', '');
             $value = (!$value) ? '' : trim($value);
 
-            if ($tagVocabulary === '1' || $tagVocabulary === '99') {
-                $this->data['tag'][$index]['tag_text'] = $value;
-            } elseif ($tagVocabulary === '2') {
+            if ($tagVocabulary === '2') {
                 $validTagCode = $this->loadCodeList('UNSDG-Goals');
 
                 if ($value) {
@@ -153,6 +150,9 @@ class Tag extends Element
                 }
 
                 $this->data['tag'][$index]['targets_tag_code'] = $value;
+            } else {
+                $this->data['tag'][$index]['tag_text'] = $value;
+                $this->data['tag'][$index]['tag_vocabulary'] = $tagVocabulary;
             }
         }
     }
@@ -233,7 +233,7 @@ class Tag extends Element
                         break;
                     case '2':
                         $rules[sprintf('%s.goals_tag_code', $tagForm)] = sprintf(
-                            'in:%s|required_with: %s,%s,%s',
+                            'sometimes|in:%s|required_with: %s,%s,%s',
                             $validGoalsTagCode,
                             sprintf('%s.tag_vocabulary', $tagForm),
                             sprintf('%s.vocabulary_uri', $tagForm),
@@ -311,41 +311,53 @@ class Tag extends Element
                     case '1':
                         $messages[sprintf('%s.tag_text.%s', $tagForm, 'required_with')] = trans(
                             'validation.required_with',
-                            ['attribute' => trans('elementForm.tag_code'),
-                                'values' => 'Vocabulary, url or narrative', ]
+                            [
+                                'attribute' => trans('elementForm.tag_code'),
+                                'values' => 'Vocabulary, url or narrative',
+                            ]
                         );
                         break;
                     case '2':
                         $messages[sprintf('%s.goals_tag_code.%s', $tagForm, 'required_with')] = trans(
                             'validation.required_with',
-                            ['attribute' => trans('elementForm.tag_code'),
-                             'values' => 'Vocabulary, url or narrative', ]
+                            [
+                                'attribute' => trans('elementForm.tag_code'),
+                                'values' => 'Vocabulary, url or narrative',
+                            ]
                         );
                         break;
                     case '3':
                         $messages[sprintf('%s.targets_tag_code.%s', $tagForm, 'required_with')] = trans(
                             'validation.required_with',
-                            ['attribute' => trans('elementForm.tag_code'),
-                             'values' => 'Vocabulary, url or narrative', ]
+                            [
+                                'attribute' => trans('elementForm.tag_code'),
+                                'values' => 'Vocabulary, url or narrative',
+                            ]
                         );
                         break;
                     case '99':
                         $messages[sprintf('%s.tag_text.%s', $tagForm, 'required_with')] = trans(
                             'validation.required_with',
-                            ['attribute' => trans('elementForm.tag_code'),
-                             'values' => 'Vocabulary, url or narrative', ]
+                            [
+                                'attribute' => trans('elementForm.tag_code'),
+                                'values' => 'Vocabulary, url or narrative',
+                            ]
                         );
                         $messages[sprintf('%s.vocabulary_uri.%s', $tagForm, 'required_with')] = trans(
                             'validation.required_with',
-                            ['attribute' => trans('elementForm.vocabulary_uri'),
-                             'values' => 'Vocabulary, code or narrative', ]
+                            [
+                                'attribute' => trans('elementForm.vocabulary_uri'),
+                                'values' => 'Vocabulary, code or narrative',
+                            ]
                         );
                         break;
                     default:
                         $messages[sprintf('%s.tag_text.%s', $tagForm, 'required_with')] = trans(
                             'validation.required_with',
-                            ['attribute' => trans('elementForm.tag_code'),
-                             'values' => 'Vocabulary, url or narrative', ]
+                            [
+                                'attribute' => trans('elementForm.tag_code'),
+                                'values' => 'Vocabulary, url or narrative',
+                            ]
                         );
                 }
             }
@@ -363,8 +375,8 @@ class Tag extends Element
     public function validate(): static
     {
         $this->validator = $this->factory->sign($this->data())
-                                         ->with($this->rules(), $this->messages())
-                                         ->getValidatorInstance();
+            ->with($this->rules(), $this->messages())
+            ->getValidatorInstance();
         $this->setValidity();
 
         return $this;

@@ -100,7 +100,7 @@ class Condition extends Element
                 }
             }
 
-            $this->data['conditions']['condition_attached'] = $value;
+            $this->data['conditions']['condition_attached'] = Arr::get($this->data(), 'conditions.condition_attached', $value);
         }
     }
 
