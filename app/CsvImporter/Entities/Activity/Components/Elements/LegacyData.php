@@ -31,6 +31,10 @@ class LegacyData extends Element
      * @var string
      */
     protected string $index = 'legacy_data';
+
+    /**
+     * @var LegacyDataRequest
+     */
     private LegacyDataRequest $request;
 
     /**
@@ -138,7 +142,7 @@ class LegacyData extends Element
      */
     public function rules(): array
     {
-        return $this->getBaseRules($this->request->rules());
+        return $this->request->getRulesForActivityLegacyData(Arr::get($this->data(), 'legacy_data', []));
 
 //        $rules = [];
 //
@@ -166,7 +170,7 @@ class LegacyData extends Element
      */
     public function messages(): array
     {
-        return $this->getBaseMessages($this->request->messages());
+        return $this->request->getMessagesForActivityLegacyData(Arr::get($this->data(), 'legacy_data', []));
 
 //        $messages = [];
 //

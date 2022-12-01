@@ -38,7 +38,7 @@ class HumanitarianScopeRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    protected function getRulesForHumanitarianScope(array $formFields): array
+    public function getRulesForHumanitarianScope(array $formFields): array
     {
         $rules = [];
 
@@ -60,7 +60,7 @@ class HumanitarianScopeRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    protected function getMessagesForHumanitarianScope(array $formFields): array
+    public function getMessagesForHumanitarianScope(array $formFields): array
     {
         $messages = [];
 

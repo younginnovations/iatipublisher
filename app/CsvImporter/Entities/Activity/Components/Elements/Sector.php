@@ -7,6 +7,7 @@ namespace App\CsvImporter\Entities\Activity\Components\Elements;
 use App\CsvImporter\Entities\Activity\Components\Elements\Foundation\Iati\Element;
 use App\CsvImporter\Entities\Activity\Components\Factory\Validation;
 use App\Http\Requests\Activity\Sector\SectorRequest;
+use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Support\Arr;
 
 /**
@@ -61,6 +62,10 @@ class Sector extends Element
             'narrative'            => ['narrative' => '', 'language' => ''],
         ],
     ];
+
+    /**
+     * @var SectorRequest
+     */
     private SectorRequest $request;
 
     /**
@@ -105,13 +110,13 @@ class Sector extends Element
      */
     public function map($key, $value, $index): void
     {
-        if (!(is_null($value) || $value === '')) {
-            $this->setSectorVocabulary($key, $value, $index);
-            $this->setVocabularyUri($key, $value, $index);
-            $this->setSectorCode($key, $value, $index);
-            $this->setSectorPercentage($key, $value, $index);
-            $this->setNarrative($key, $value, $index);
-        }
+//        if (!(is_null($value) || $value === '')) {
+        $this->setSectorVocabulary($key, $value, $index);
+        $this->setVocabularyUri($key, $value, $index);
+        $this->setSectorCode($key, $value, $index);
+        $this->setSectorPercentage($key, $value, $index);
+        $this->setNarrative($key, $value, $index);
+//        }
     }
 
     /**
@@ -380,11 +385,11 @@ class Sector extends Element
      * Provides the rules for the IATI Element validation.
      *
      * @return array
-     * @throws \JsonException
+     * @throws BindingResolutionException
      */
     public function rules(): array
     {
-        return $this->getBaseRules($this->request->rules());
+        return $this->request->getSectorsRules(Arr::get($this->data(), 'sector', []));
 
 //        $sectorVocabularyList = implode(',', $this->validSectorCodeList('SectorVocabulary'));
 //        $sectorCodeList = implode(',', $this->validSectorCodeList('SectorCode'));
@@ -448,7 +453,7 @@ class Sector extends Element
      */
     public function messages(): array
     {
-        return $this->getBaseMessages($this->request->messages());
+        return $this->request->getSectorsMessages(Arr::get($this->data(), 'sector', []));
 
 //        $messages = [
 //            'sector.required'                     => trans('validation.size', ['attribute' => trans('element.sector')]),

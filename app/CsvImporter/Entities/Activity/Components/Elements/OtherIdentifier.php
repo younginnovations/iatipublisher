@@ -31,6 +31,10 @@ class OtherIdentifier extends Element
      * @var string
      */
     protected string $index = 'other_identifier';
+
+    /**
+     * @var OtherIdentifierRequest
+     */
     private OtherIdentifierRequest $request;
 
     /**
@@ -186,7 +190,7 @@ class OtherIdentifier extends Element
      */
     public function rules(): array
     {
-        return $this->getBaseRules($this->request->rules());
+        return $this->request->getRulesForOtherIdentifier(Arr::get($this->data(), 'other_identifier', []));
 
 //        $otherIdentifierTypeList = implode(',', $this->validOtherIdentifierCodeList('OtherIdentifierType'));
 //        $rules = [];
@@ -232,7 +236,7 @@ class OtherIdentifier extends Element
      */
     public function messages(): array
     {
-        return $this->getBaseMessages($this->request->messages());
+        return $this->request->getMessagesForOtherIdentifier(Arr::get($this->data(), 'other_identifier', []));
 
 //        $messages = [];
 //

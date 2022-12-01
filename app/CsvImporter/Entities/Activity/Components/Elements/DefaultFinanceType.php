@@ -121,7 +121,7 @@ class DefaultFinanceType extends Element
      */
     public function rules(): array
     {
-        return $this->getBaseRules($this->request->rules());
+        return [];
 
 //        $rules = [
 //            $this->csvHeader() => sprintf('nullable|in:%s', $this->validDefaultFinanceType()),
@@ -139,7 +139,7 @@ class DefaultFinanceType extends Element
      */
     public function messages(): array
     {
-        return $this->getBaseMessages($this->request->messages());
+        return [];
 
 //        $key = $this->csvHeader();
 //

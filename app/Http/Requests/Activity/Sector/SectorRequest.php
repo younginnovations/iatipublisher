@@ -72,17 +72,17 @@ class SectorRequest extends ActivityBaseRequest
             return [];
         }
 
-        $params = $this->route()->parameters();
-        $activityService = app()->make(ActivityService::class);
-
-        if ($activityService->hasSectorDefinedInTransactions($params['id'])) {
-            Validator::extend('already_in_transactions', function () {
-                return false;
-            });
-
-            return ['sector' => 'already_in_transactions'];
-        }
-
+//        $params = $this->route()->parameters();
+//        $activityService = app()->make(ActivityService::class);
+//
+//        if ($activityService->hasSectorDefinedInTransactions($params['id'])) {
+//            Validator::extend('already_in_transactions', function () {
+//                return false;
+//            });
+//
+//            return ['sector' => 'already_in_transactions'];
+//        }
+//
         Validator::extend('sector_total_percent', function () {
             return false;
         });

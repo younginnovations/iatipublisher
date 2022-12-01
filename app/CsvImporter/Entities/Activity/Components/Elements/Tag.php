@@ -31,6 +31,10 @@ class Tag extends Element
      * @var string
      */
     protected string $index = 'tag';
+
+    /**
+     * @var TagRequest
+     */
     private TagRequest $request;
 
     /**
@@ -206,7 +210,7 @@ class Tag extends Element
      */
     public function rules(): array
     {
-        return $this->getBaseRules($this->request->rules());
+        return $this->request->getRulesForTag(Arr::get($this->data(), 'tag', []));
 
 //        $validGoalsTagCode = implode(',', $this->validTagCodeList('UNSDG-Goals'));
 //        $validTargetsTagCode = implode(',', $this->validTagCodeList('UNSDG-Targets'));
@@ -298,7 +302,7 @@ class Tag extends Element
      */
     public function messages(): array
     {
-        return $this->getBaseMessages($this->request->messages());
+        return $this->request->getMessagesForTag(Arr::get($this->data(), 'tag', []));
 
 //        $messages = [];
 //

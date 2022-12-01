@@ -196,7 +196,7 @@ class ReportingOrganization extends Element
      */
     public function rules(): array
     {
-        return $this->getBaseRules($this->request->rules());
+        return $this->request->getRulesForReportingOrganization(Arr::get($this->data, 'reporting_org', []));
 //        $validReportingOrganizationType = implode(
 //            ',',
 //            $this->validReportingOrganizationCodeList('OrganizationType', 'Organization')
@@ -238,7 +238,7 @@ class ReportingOrganization extends Element
      */
     public function messages(): array
     {
-        return $this->getBaseMessages($this->request->messages());
+        return $this->request->getMessagesForReportingOrganization(Arr::get($this->data, 'reporting_org', []));
 //        $messages = [];
 //
 //        foreach (Arr::get($this->data, 'reporting_org', []) as $key => $reportingOrganization) {

@@ -64,24 +64,24 @@ class RecipientRegionRequest extends ActivityBaseRequest
      * @return array
      * @throws BindingResolutionException
      */
-    protected function getRulesForRecipientRegion(array $formFields): array
+    public function getRulesForRecipientRegion(array $formFields): array
     {
         if (empty($formFields)) {
             return [];
         }
 
         // issue caused in common validation due to route params
-        $params = $this->route()->parameters();
-        $activityService = app()->make(ActivityService::class);
-
-        if ($activityService->hasRecipientRegionDefinedInTransactions($params['id'])) {
-            Validator::extend('already_in_transactions', function () {
-                return false;
-            });
-
-            return ['recipient_region' => 'already_in_transactions'];
-        }
-
+//        $params = $this->route()->parameters();
+//        $activityService = app()->make(ActivityService::class);
+//
+//        if ($activityService->hasRecipientRegionDefinedInTransactions($params['id'])) {
+//            Validator::extend('already_in_transactions', function () {
+//                return false;
+//            });
+//
+//            return ['recipient_region' => 'already_in_transactions'];
+//        }
+//
         Validator::extend('allocated_region_total_mismatch', function () {
             return false;
         });
@@ -96,7 +96,8 @@ class RecipientRegionRequest extends ActivityBaseRequest
 
         $rules = [];
         $groupedPercentRegion = $this->groupRegion($formFields);
-        $allottedRegionPercent = $activityService->getAllottedRecipientRegionPercent($params['id']);
+//        $allottedRegionPercent = $activityService->getAllottedRecipientRegionPercent($params['id']);
+        $allottedRegionPercent = 100;
 
         foreach ($formFields as $recipientRegionIndex => $recipientRegion) {
             $recipientRegionForm = 'recipient_region.' . $recipientRegionIndex;
@@ -134,7 +135,7 @@ class RecipientRegionRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    protected function getMessagesForRecipientRegion(array $formFields): array
+    public function getMessagesForRecipientRegion(array $formFields): array
     {
         $messages = ['recipient_region.already_in_transactions' => 'Recipient Region already defined in Transactions'];
 

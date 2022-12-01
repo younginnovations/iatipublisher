@@ -6,6 +6,7 @@ namespace App\CsvImporter\Entities\Activity\Components\Elements;
 
 use App\CsvImporter\Entities\Activity\Components\Elements\Foundation\Iati\Element;
 use App\CsvImporter\Entities\Activity\Components\Factory\Validation;
+use App\Http\Requests\Activity\ParticipatingOrganization\ParticipatingOrganizationRequest;
 
 /**
  * Class ParticipatingOrganization.
@@ -44,6 +45,11 @@ class ParticipatingOrganization extends Element
     protected array $orgRoles = [];
 
     /**
+     * @var ParticipatingOrganizationRequest
+     */
+    private ParticipatingOrganizationRequest $request;
+
+    /**
      * ParticipatingOrganisation constructor.
      *
      * @param            $fields
@@ -55,6 +61,7 @@ class ParticipatingOrganization extends Element
     {
         $this->prepare($fields);
         $this->factory = $factory;
+        $this->request = new ParticipatingOrganizationRequest();
     }
 
     /**
@@ -277,7 +284,7 @@ class ParticipatingOrganization extends Element
      */
     public function rules(): array
     {
-        return $this->getBaseRules($this->request->rules($this->data('participating_organization') ?? []));
+        return $this->request->getRulesForParticipatingOrg($this->data('participating_organization') ?? []);
 
 //        return [
 //            'participating_organization'                     => 'required|required_only_one_among:identifier,narrative',
@@ -294,7 +301,7 @@ class ParticipatingOrganization extends Element
      */
     public function messages(): array
     {
-        return $this->getBaseMessages($this->request->messages($this->data('participating_organization') ?? []));
+        return $this->request->getMessagesForParticipatingOrg($this->data('participating_organization') ?? []);
 
 //        return [
 //            'participating_organization.required'                      => trans('validation.required', ['attribute' => trans('elementForm.participating_organisation')]),

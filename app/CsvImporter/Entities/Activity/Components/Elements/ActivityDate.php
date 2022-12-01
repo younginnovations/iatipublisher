@@ -59,6 +59,11 @@ class ActivityDate extends Element
     protected array $activityDate = [];
 
     /**
+     * @var DateRequest
+     */
+    private DateRequest $request;
+
+    /**
      * ActivityDate constructor.
      *
      * @param            $fields
@@ -161,7 +166,7 @@ class ActivityDate extends Element
      */
     public function rules(): array
     {
-        return $this->getBaseRules($this->request->rules($this->data('activity_date')));
+        return $this->request->getRulesForDate($this->data('activity_date'));
 //        $rules = [
 //            'activity_date' => 'nullable|multiple_activity_date|start_date_required|start_end_date',
 //        ];
@@ -183,7 +188,7 @@ class ActivityDate extends Element
      */
     public function messages(): array
     {
-        return $this->getBaseMessages($this->request->messages($this->data('activity_date')));
+        return $this->request->getMessagesForDate($this->data('activity_date'));
 
 //        $messages = [
 //            'activity_date.required'               => 'Activity date field is required.',

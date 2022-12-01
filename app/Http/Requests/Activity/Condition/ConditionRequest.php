@@ -38,7 +38,7 @@ class ConditionRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    protected function getRulesForCondition(array $formFields): array
+    public function getRulesForCondition(array $formFields): array
     {
         $rules = [];
 
@@ -60,7 +60,7 @@ class ConditionRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    protected function getMessagesForCondition(array $formFields): array
+    public function getMessagesForCondition(array $formFields): array
     {
         $messages = [];
 

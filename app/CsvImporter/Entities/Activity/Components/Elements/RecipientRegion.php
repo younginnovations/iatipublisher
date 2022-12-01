@@ -6,6 +6,7 @@ namespace App\CsvImporter\Entities\Activity\Components\Elements;
 
 use App\CsvImporter\Entities\Activity\Components\Elements\Foundation\Iati\Element;
 use App\CsvImporter\Entities\Activity\Components\Factory\Validation;
+use App\Http\Requests\Activity\RecipientRegion\RecipientRegionRequest;
 use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Support\Arr;
 
@@ -56,6 +57,11 @@ class RecipientRegion extends Element
     protected $fields;
 
     /**
+     * @var RecipientRegionRequest
+     */
+    private RecipientRegionRequest $request;
+
+    /**
      * Description constructor.
      *
      * @param            $fields
@@ -69,6 +75,7 @@ class RecipientRegion extends Element
         $this->factory = $factory;
         $this->fields = $fields;
         $this->getRecipientCountry($fields);
+        $this->request = new RecipientRegionRequest();
     }
 
     /**
@@ -267,11 +274,11 @@ class RecipientRegion extends Element
      * Provides the rules for the IATI Element validation.
      *
      * @return array
-     * @throws \JsonException
+     * @throws BindingResolutionException
      */
     public function rules(): array
     {
-        return $this->getBaseRules($this->request->rules($this->data('recipient_region')));
+        return $this->request->getRulesForRecipientRegion($this->data('recipient_region'));
 
 //        $codes = $this->validRecipientRegion();
 //        $rules = [];
@@ -309,7 +316,7 @@ class RecipientRegion extends Element
      */
     public function messages(): array
     {
-        return $this->getBaseMessages($this->request->messages($this->data('recipient_region')));
+        return $this->request->getMessagesForRecipientRegion($this->data('recipient_region'));
 
 //        $messages = [
 //            'recipient_region.required_if'                             => trans(

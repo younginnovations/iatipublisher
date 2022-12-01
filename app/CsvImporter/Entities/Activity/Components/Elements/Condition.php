@@ -31,6 +31,10 @@ class Condition extends Element
      * @var string
      */
     protected string $index = 'conditions';
+
+    /**
+     * @var ConditionRequest
+     */
     private ConditionRequest $request;
 
     /**
@@ -166,7 +170,7 @@ class Condition extends Element
      */
     public function rules(): array
     {
-        return $this->getBaseRules($this->request->rules());
+        return $this->request->getRulesForCondition(Arr::get($this->data, 'conditions.condition', []));
 
 //        $validConditionType = implode(',', $this->validConditionCodeList('ConditionType'));
 //
@@ -220,7 +224,7 @@ class Condition extends Element
      */
     public function messages(): array
     {
-        return $this->getBaseMessages($this->request->messages());
+        return $this->request->getMessagesForCondition(Arr::get($this->data, 'conditions.condition', []));
 
 //        $messages = [];
 //
