@@ -97,6 +97,10 @@ class LegacyData extends Element
      */
     protected function setLegacyDataName($key, $value, $index): void
     {
+        if (!isset($this->data['legacy_data'][$index]['legacy_name'])) {
+            $this->data['legacy_data'][$index]['legacy_name'] = '';
+        }
+
         if ($key === $this->_csvHeaders[0]) {
             $this->data['legacy_data'][$index]['legacy_name'] = $value;
         }
@@ -113,6 +117,10 @@ class LegacyData extends Element
      */
     protected function setLegacyDataValue($key, $value, $index): void
     {
+        if (!isset($this->data['legacy_data'][$index]['value'])) {
+            $this->data['legacy_data'][$index]['value'] = '';
+        }
+
         if ($key === $this->_csvHeaders[1]) {
             $this->data['legacy_data'][$index]['value'] = $value;
         }
@@ -129,6 +137,10 @@ class LegacyData extends Element
      */
     protected function setLegacyDataIatiEquivalent($key, $value, $index): void
     {
+        if (!isset($this->data['legacy_data'][$index]['iati_equivalent'])) {
+            $this->data['legacy_data'][$index]['iati_equivalent'] = '';
+        }
+
         if ($key === $this->_csvHeaders[2]) {
             $this->data['legacy_data'][$index]['iati_equivalent'] = $value;
         }
@@ -143,24 +155,6 @@ class LegacyData extends Element
     public function rules(): array
     {
         return $this->request->getRulesForActivityLegacyData(Arr::get($this->data(), 'legacy_data', []));
-
-//        $rules = [];
-//
-//        foreach (Arr::get($this->data(), 'legacy_data', []) as $key => $value) {
-//            $tagForm = sprintf('legacy_data.%s', $key);
-//            $rules[sprintf('%s.legacy_name', $tagForm)] = sprintf(
-//                'required_with: %s,%s',
-//                sprintf('%s.value', $tagForm),
-//                sprintf('%s.iati_equivalent', $tagForm),
-//            );
-//            $rules[sprintf('%s.value', $tagForm)] = sprintf(
-//                'required_with: %s,%s',
-//                sprintf('%s.legacy_name', $tagForm),
-//                sprintf('%s.iati_equivalent', $tagForm),
-//            );
-//        }
-//
-//        return $rules;
     }
 
     /**
@@ -171,16 +165,6 @@ class LegacyData extends Element
     public function messages(): array
     {
         return $this->request->getMessagesForActivityLegacyData(Arr::get($this->data(), 'legacy_data', []));
-
-//        $messages = [];
-//
-//        foreach (Arr::get($this->data(), 'legacy_data', []) as $key => $value) {
-//            $tagForm = sprintf('legacy_data.%s', $key);
-//            $messages[sprintf('%s.legacy_name.%s', $tagForm, 'required_with')] = trans('validation.required_with', ['attribute' => trans('elementForm.legacy_data_name'), 'values' => 'value or iati equivalent']);
-//            $messages[sprintf('%s.value.%s', $tagForm, 'required_with')] = trans('validation.required_with', ['attribute' => trans('elementForm.legacy_data_value'), 'values' => 'name or iati equivalent']);
-//        }
-//
-//        return $messages;
     }
 
     /**

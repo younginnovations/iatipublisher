@@ -7,7 +7,6 @@ namespace App\CsvImporter\Entities\Activity\Components\Elements;
 use App\CsvImporter\Entities\Activity\Components\Elements\Foundation\Iati\Element;
 use App\CsvImporter\Entities\Activity\Components\Factory\Validation;
 use App\Http\Requests\Activity\Date\DateRequest;
-use Illuminate\Support\Arr;
 
 /**
  * Class ActivityDate.
@@ -167,18 +166,6 @@ class ActivityDate extends Element
     public function rules(): array
     {
         return $this->request->getRulesForDate($this->data('activity_date'));
-//        $rules = [
-//            'activity_date' => 'nullable|multiple_activity_date|start_date_required|start_end_date',
-//        ];
-//
-//        foreach ($this->actualDates as $index => $date) {
-//            foreach ($date as $key => $value) {
-//                $rules['activity_date.' . $index] = 'actual_date';
-//                $rules['activity_date.' . $index . '.' . $key . '.date'] = 'date_format:Y-m-d|actual_date';
-//            }
-//        }
-//
-//        return $rules;
     }
 
     /**
@@ -189,22 +176,6 @@ class ActivityDate extends Element
     public function messages(): array
     {
         return $this->request->getMessagesForDate($this->data('activity_date'));
-
-//        $messages = [
-//            'activity_date.required'               => 'Activity date field is required.',
-//            'activity_date.multiple_activity_date' => 'Activity date field is required.',
-//            'activity_date.start_date_required'    => 'Activity start date is required.',
-//            'activity_date.start_end_date'         => 'Activity end date must be after activity start date.',
-//        ];
-//
-//        foreach ($this->actualDates as $index => $date) {
-//            foreach ($date as $key => $value) {
-//                $messages['activity_date.' . $index . '.actual_date'] = 'Activity date must be date.';
-//                $messages['activity_date.' . $index . '.' . $key . '.date.date_format'] = 'Activity date must be in Y-M-d format.';
-//            }
-//        }
-//
-//        return $messages;
     }
 
     /**
@@ -214,45 +185,12 @@ class ActivityDate extends Element
      */
     public function validate(): static
     {
-        $this->activityDateRules();
-
-        $this->validator = $this->factory->sign($this->activityDate)
+        $this->validator = $this->factory->sign($this->data())
                                          ->with($this->rules(), $this->messages())
                                          ->getValidatorInstance();
 
         $this->setValidity();
 
         return $this;
-    }
-
-    /**
-     * Append additional rules for Activity Date.
-     *
-     * @return void
-     */
-    protected function activityDateRules(): void
-    {
-        $this->sortByType();
-        $this->activityDate['activity_date'] = array_merge($this->actualDates, $this->plannedDates);
-    }
-
-    /**
-     * Sort ActivityDate by their type.
-     *
-     * @return void
-     */
-    protected function sortByType(): void
-    {
-        $dates = array_flip($this->_csvHeaders);
-
-        foreach (Arr::get($this->data(), 'activity_date', []) as $key => $value) {
-            $type = Arr::get($dates, Arr::get($value, 'type', ''), '');
-
-            if ($type === $dates[2] || $type === $dates[4]) {
-                $this->actualDates[$dates[$this->_csvHeaders[$type]]][] = $value;
-            } else {
-                $this->plannedDates[$dates[$this->_csvHeaders[$type]]][] = $value;
-            }
-        }
     }
 }

@@ -40,7 +40,18 @@ class DefaultAidTypeRequest extends ActivityBaseRequest
      */
     public function getRulesForDefaultAidType(array $formFields): array
     {
-        return [];
+        $rules = [];
+
+        foreach ($formFields as $index => $formField) {
+            $baseForm = sprintf('default_aid_type.%s', $index);
+            $rules[sprintf('%s.default_aid_type_vocabulary', $baseForm)] = 'nullable|in:' . implode(',', array_keys(getCodeList('AidTypeVocabulary', 'Activity', false)));
+            $rules[sprintf('%s.default_aid_type', $baseForm)] = 'nullable|in:' . implode(',', array_keys(getCodeList('AidType', 'Activity', false)));
+            $rules[sprintf('%s.earmarking_category', $baseForm)] = 'nullable|in:' . implode(',', array_keys(getCodeList('EarmarkingCategory', 'Activity', false)));
+            $rules[sprintf('%s.earmarking_modality', $baseForm)] = 'nullable|in:' . implode(',', array_keys(getCodeList('EarmarkingModality', 'Activity', false)));
+            $rules[sprintf('%s.cash_and_voucher_modalities', $baseForm)] = 'nullable|in:' . implode(',', array_keys(getCodeList('CashandVoucherModalities', 'Activity', false)));
+        }
+
+        return $rules;
     }
 
     /**
@@ -52,6 +63,17 @@ class DefaultAidTypeRequest extends ActivityBaseRequest
      */
     public function getMessagesForDefaultAidType(array $formFields): array
     {
-        return [];
+        $messages = [];
+
+        foreach ($formFields as $index => $formField) {
+            $baseForm = sprintf('default_aid_type.%s', $index);
+            $messages[sprintf('%s.default_aid_type_vocabulary.in', $baseForm)] = 'The default aid type vocabulary is invalid.';
+            $messages[sprintf('%s.default_aid_type.in', $baseForm)] = 'The default aid type is invalid.';
+            $messages[sprintf('%s.earmarking_category.in', $baseForm)] = 'The default aid type earmarking category is invalid.';
+            $messages[sprintf('%s.earmarking_modality.in', $baseForm)] = 'The default aid type earmarking modality is invalid.';
+            $messages[sprintf('%s.cash_and_voucher_modalities.in', $baseForm)] = 'The default aid type cash and voucher modalities is invalid.';
+        }
+
+        return $messages;
     }
 }

@@ -44,9 +44,14 @@ class TagRequest extends ActivityBaseRequest
 
         foreach ($formFields as $tagIndex => $tag) {
             $tagForm = sprintf('tag.%s', $tagIndex);
+            $rules[sprintf('%s.tag_vocabulary', $tagForm)] = 'nullable|in:' . implode(',', array_keys(getCodeList('TagVocabulary', 'Activity', false)));
+            $rules[sprintf('%s.goals_tag_code', $tagForm)] = 'nullable|in:' . implode(',', array_keys(getCodeList('UNSDG-Goals', 'Activity', false)));
+            $rules[sprintf('%s.targets_tag_code', $tagForm)] = 'nullable|in:' . implode(',', array_keys(getCodeList('UNSDG-Targets', 'Activity', false)));
             $rules[sprintf('%s.vocabulary_uri', $tagForm)] = 'nullable|url';
 
-            $rules = array_merge($rules, $this->getRulesForNarrative($tag['narrative'], $tagForm));
+            foreach ($this->getRulesForNarrative($tag['narrative'], $tagForm) as $tagNarrativeIndex => $narrativeRules) {
+                $rules[$tagNarrativeIndex] = $narrativeRules;
+            }
         }
 
         return $rules;
@@ -65,8 +70,14 @@ class TagRequest extends ActivityBaseRequest
 
         foreach ($formFields as $tagIndex => $tag) {
             $tagForm = sprintf('tag.%s', $tagIndex);
+            $messages[sprintf('%s.tag_vocabulary.in', $tagForm)] = 'The tag vocabulary is invalid.';
+            $messages[sprintf('%s.goals_tag_code.in', $tagForm)] = 'The tag SDG code is invalid';
+            $messages[sprintf('%s.targets_tag_code.in', $tagForm)] = 'The tag SDG targets code is invalid.';
             $messages[sprintf('%s.vocabulary_uri.url', $tagForm)] = 'The @vocabulary-uri field must be a valid url.';
-            $messages = array_merge($messages, $this->getMessagesForNarrative($tag['narrative'], $tagForm));
+
+            foreach ($this->getMessagesForNarrative($tag['narrative'], $tagForm) as $tagNarrativeIndex => $narrativeMessages) {
+                $messages[$tagNarrativeIndex] = $narrativeMessages;
+            }
         }
 
         return $messages;

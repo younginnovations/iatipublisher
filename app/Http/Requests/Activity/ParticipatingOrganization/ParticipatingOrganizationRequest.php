@@ -45,13 +45,13 @@ class ParticipatingOrganizationRequest extends ActivityBaseRequest
             $participatingOrgForm = 'participating_org.' . $participatingOrgIndex;
             $identifier = $participatingOrgForm . '.identifier';
             $narrative = sprintf('%s.narrative.0.narrative', $participatingOrgForm);
-            $rules[$identifier] = 'exclude|required_without:' . $narrative;
-            $rules[$participatingOrgForm . '.organization_id'] = 'nullable|organization_exists';
-            $rules[$identifier] = 'exclude|required_without:' . $narrative;
-            $rules = array_merge_recursive(
-                $rules,
-                $this->getRulesForNarrative($participatingOrg['narrative'], $participatingOrgForm)
-            );
+            $rules[$identifier] = 'exclude_operators|required_without:' . $narrative;
+            $rules[sprintf('%s.organization_role', $participatingOrgForm)] = 'nullable|in:' . implode(',', array_keys(getCodeList('OrganisationRole', 'Organization', false)));
+            $rules[sprintf('%s.type', $participatingOrgForm)] = 'nullable|in:' . implode(',', array_keys(getCodeList('OrganizationType', 'Organization', false)));
+
+            foreach ($this->getRulesForNarrative($participatingOrg['narrative'], $participatingOrgForm) as $participatingNarrativeIndex => $narrativeRules) {
+                $rules[$participatingNarrativeIndex] = $narrativeRules;
+            }
         }
 
         return $rules;
@@ -85,10 +85,13 @@ class ParticipatingOrganizationRequest extends ActivityBaseRequest
                 'validation.exclude_operators',
                 ['attribute' => trans('elementForm.identifier'), 'values' => trans('elementForm.identifier')]
             );
-            $messages = array_merge(
-                $messages,
-                $this->getMessagesForNarrative($participatingOrg['narrative'], $participatingOrgForm)
-            );
+
+            $messages[sprintf('%s.organization_role.in', $participatingOrgForm)] = 'The participating organisation role is invalid.';
+            $messages[sprintf('%s.type.in', $participatingOrgForm)] = 'The participating organisation type is invalid.';
+
+            foreach ($this->getMessagesForNarrative($participatingOrg['narrative'], $participatingOrgForm) as $participatingNarrativeIndex => $narrativeMessages) {
+                $messages[$participatingNarrativeIndex] = $narrativeMessages;
+            }
         }
 
         return $messages;

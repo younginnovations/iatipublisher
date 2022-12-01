@@ -197,38 +197,6 @@ class ReportingOrganization extends Element
     public function rules(): array
     {
         return $this->request->getRulesForReportingOrganization(Arr::get($this->data, 'reporting_org', []));
-//        $validReportingOrganizationType = implode(
-//            ',',
-//            $this->validReportingOrganizationCodeList('OrganizationType', 'Organization')
-//        );
-//
-//        $rules = [];
-//
-//        foreach (Arr::get($this->data, 'reporting_org', []) as $key => $reportingOrganization) {
-//            $reportingOrgForm = sprintf('reporting_org.%s', $key);
-//            $rules[sprintf('%s.type', $reportingOrgForm)] = sprintf(
-//                'in:%s|required',
-//                $validReportingOrganizationType,
-//            );
-//            $rules[sprintf('%s.secondary_reporter', $reportingOrgForm)] = 'nullable|in:0,1';
-//            $rules[sprintf('%s.narrative.0.narrative', $reportingOrgForm)] = 'required';
-//        }
-//
-//        return $rules;
-    }
-
-    /**
-     * Return Valid ReportingOrganization Type.
-     *
-     * @param $name
-     * @param string $type
-     *
-     * @return array
-     * @throws \JsonException
-     */
-    protected function validReportingOrganizationCodeList($name, string $type = 'Activity'): array
-    {
-        return array_keys($this->loadCodeList($name, $type));
     }
 
     /**
@@ -239,33 +207,6 @@ class ReportingOrganization extends Element
     public function messages(): array
     {
         return $this->request->getMessagesForReportingOrganization(Arr::get($this->data, 'reporting_org', []));
-//        $messages = [];
-//
-//        foreach (Arr::get($this->data, 'reporting_org', []) as $key => $reportingOrganization) {
-//            $reportingOrgForm = sprintf('reporting_org.%s', $key);
-//            $messages[sprintf('%s.type.%s', $reportingOrgForm, 'in')] = trans(
-//                'validation.code_list',
-//                ['attribute' => trans('elementForm.reporting_org_type')]
-//            );
-//            $messages[sprintf('%s.type.%s', $reportingOrgForm, 'required')] = trans(
-//                'validation.required',
-//                [
-//                    'attribute' => trans('elementForm.reporting_org_type'),
-//                ]
-//            );
-//            $messages[sprintf('%s.secondary_reporter.%s', $reportingOrgForm, 'in')] = trans(
-//                'validation.code_list',
-//                ['attribute' => trans('elementForm.reporting_org_secondary_reporter')]
-//            );
-//            $messages[sprintf('%s.narrative.0.narrative.%s', $reportingOrgForm, 'required')] = trans(
-//                'validation.required',
-//                [
-//                    'attribute' => trans('elementForm.reporting_org_narrative'),
-//                ]
-//            );
-//        }
-//
-//        return $messages;
     }
 
     /**

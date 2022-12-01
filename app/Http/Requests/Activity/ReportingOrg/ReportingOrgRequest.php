@@ -70,7 +70,7 @@ class ReportingOrgRequest extends ActivityBaseRequest
         foreach ($formFields as $reportingOrganizationIndex => $reportingOrganization) {
             $reportingOrganizationForm = sprintf('reporting_org.%s', $reportingOrganizationIndex);
 
-            $messages[$reportingOrganizationForm . '.ref.not_regex'] = 'The @ref format is invalid.';
+            $messages[$reportingOrganizationForm . '.ref.not_regex'] = 'The reference format for reporting organisation is invalid.';
 
             $narrativeMessages = $this->getMessagesForNarrative($reportingOrganization['narrative'], $reportingOrganizationForm);
 

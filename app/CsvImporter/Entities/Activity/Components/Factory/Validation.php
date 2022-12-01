@@ -509,5 +509,28 @@ class Validation extends Factory
         $this->extend('allocated_region_total_mismatch', function () {
             return false;
         });
+
+        $this->extend('end_later_than_start', function () {
+            return false;
+        });
+
+        $this->extend('budgets_identical', function () {
+            return false;
+        });
+
+        $this->extend('budget_revised_invalid', function () {
+            return false;
+        });
+
+        $this->extend(
+            'exclude_operators',
+            function ($attribute, $value, $parameters, $validator) {
+                if ($value) {
+                    return !preg_match('/[\&\|\?|]+/', $value);
+                }
+
+                return true;
+            }
+        );
     }
 }

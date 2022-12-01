@@ -44,10 +44,14 @@ class HumanitarianScopeRequest extends ActivityBaseRequest
 
         foreach ($formFields as $humanitarianScopeIndex => $humanitarianScope) {
             $humanitarianScopeForm = 'humanitarian_scope.' . $humanitarianScopeIndex;
-            $rules[$humanitarianScopeForm . '.vocabulary_uri'] = 'nullable|url';
-            $rules[$humanitarianScopeForm . '.code'] = 'nullable|string';
+            $rules[sprintf('%s.type', $humanitarianScopeForm)] = 'nullable|in:' . implode(',', array_keys(getCodeList('HumanitarianScopeType', 'Activity', false)));
+            $rules[sprintf('%s.vocabulary', $humanitarianScopeForm)] = 'nullable|in:' . implode(',', array_keys(getCodeList('HumanitarianScopeVocabulary', 'Activity', false)));
+            $rules[sprintf('%s.vocabulary_uri', $humanitarianScopeForm)] = 'nullable|url';
+            $rules[sprintf('%s.code', $humanitarianScopeForm)] = 'nullable|string';
 
-            $rules = array_merge($rules, $this->getRulesForNarrative($humanitarianScope['narrative'], $humanitarianScopeForm));
+            foreach ($this->getRulesForNarrative($humanitarianScope['narrative'], $humanitarianScopeForm) as $humanitarianIndex => $narrativeRules) {
+                $rules[$humanitarianIndex] = $narrativeRules;
+            }
         }
 
         return $rules;
@@ -66,9 +70,14 @@ class HumanitarianScopeRequest extends ActivityBaseRequest
 
         foreach ($formFields as $humanitarianScopeIndex => $humanitarianScope) {
             $humanitarianScopeForm = 'humanitarian_scope.' . $humanitarianScopeIndex;
-            $messages[$humanitarianScopeForm . '.code.string'] = 'The @code must be a string.';
-            $messages[$humanitarianScopeForm . '.vocabulary_uri.url'] = 'The @vocabulary-uri must be a proper url.';
-            $messages = array_merge($messages, $this->getMessagesForNarrative($humanitarianScope['narrative'], $humanitarianScopeForm));
+            $messages[sprintf('%s.type.in', $humanitarianScopeForm)] = 'The humanitarian scope type is invalid.';
+            $messages[sprintf('%s.vocabulary.in', $humanitarianScopeForm)] = 'The humanitarian scope vocabulary is invalid.';
+            $messages[sprintf('%s.code.string', $humanitarianScopeForm)] = 'The humanitarian scope code must be a string.';
+            $messages[sprintf('%s.vocabulary_uri.url', $humanitarianScopeForm)] = 'The humanitarian scope vocabulary-uri must be a proper url.';
+
+            foreach ($this->getMessagesForNarrative($humanitarianScope['narrative'], $humanitarianScopeForm) as $humanitarianIndex => $narrativeMessages) {
+                $messages[$humanitarianIndex] = $narrativeMessages;
+            }
         }
 
         return $messages;
