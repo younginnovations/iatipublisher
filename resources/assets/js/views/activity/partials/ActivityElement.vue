@@ -670,11 +670,11 @@ function roundFloat(num: string) {
 }
 const deleteActivityElement = () => {
   deleteValue.value = true;
+  window.scrollTo(0, 0);
 };
 
 function deleteElement(id, element) {
   deleteValue.value = false;
-  window.scrollTo(0, 0);
   axios
     .delete(`/api/activity/${id}/${element}`)
     .then((res) => {
