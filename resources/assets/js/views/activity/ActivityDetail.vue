@@ -151,7 +151,7 @@
             </div>
           </div>
         </div>
-        <div>
+        <div v-sticky-component="{ boundary: '.activities' }">
           <Elements :activity-id="activity.id" :data="elementProps" />
         </div>
       </aside>

@@ -61,7 +61,7 @@
               <span class="">{{ menu.name }}</span>
             </a>
             <div
-              v-if="menu.permalink === '/import'"
+              v-if="menu.name === 'Add / Import Activity'"
               class="button__dropdown invisible absolute left-4 top-full z-10 w-56 -translate-y-3 bg-white p-2 text-left opacity-0 shadow-dropdown transition-all duration-300 group-hover:visible group-hover:translate-y-0 group-hover:opacity-100"
             >
               <ul class="flex-col">
@@ -177,7 +177,6 @@ const data = reactive({
   languageNavAnchorClasses:
     'flex text-white items-center uppercase nav__pointer-hover px-1.5',
   menuNavLiClasses: 'flex px-4 relative',
-
   menuNavAnchorClasses:
     'flex text-white items-center uppercase nav__pointer-hover',
   languages: [
@@ -215,7 +214,7 @@ const data = reactive({
     },
     {
       name: 'Add / Import Activity',
-      permalink: '/import',
+      permalink: '#',
       active: false,
     },
   ],
