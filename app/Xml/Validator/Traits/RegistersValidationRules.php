@@ -22,7 +22,6 @@ trait RegistersValidationRules
             function ($attribute, $value) {
                 $languages = [];
                 foreach ((array) $value as $narrative) {
-                    dump($narrative);
                     $language = $narrative['language'];
                     if (in_array($language, $languages, true)) {
                         return false;

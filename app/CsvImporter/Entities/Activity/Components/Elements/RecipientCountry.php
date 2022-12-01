@@ -253,7 +253,6 @@ class RecipientCountry extends Element
      */
     public function messages(): array
     {
-
         return $this->getBaseMessages($this->request->messages($this->data('recipient_country')));
 
 //        $messages = [
