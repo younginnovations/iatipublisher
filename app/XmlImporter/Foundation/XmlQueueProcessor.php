@@ -138,14 +138,4 @@ class XmlQueueProcessor
             throw  $e;
         }
     }
-
-    /**
-     * Returns activities of the organisation.
-     *
-     * @return Collection|array
-     */
-    protected function dbActivities(): Collection|array
-    {
-        return $this->activityRepo->getActivities($this->orgId);
-    }
 }

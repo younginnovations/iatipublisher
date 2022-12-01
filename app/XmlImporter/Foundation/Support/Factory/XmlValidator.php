@@ -4,8 +4,15 @@ declare(strict_types=1);
 
 namespace App\XmlImporter\Foundation\Support\Factory;
 
+use App\Http\Requests\Activity\CapitalSpend\CapitalSpendRequest;
+use App\Http\Requests\Activity\CollaborationType\CollaborationTypeRequest;
+use App\Http\Requests\Activity\DefaultFinanceType\DefaultFinanceTypeRequest;
+use App\Http\Requests\Activity\DefaultFlowType\DefaultFlowTypeRequest;
+use App\Http\Requests\Activity\DefaultTiedStatus\DefaultTiedStatusRequest;
 use App\Http\Requests\Activity\Description\DescriptionRequest;
 use App\Http\Requests\Activity\OtherIdentifier\OtherIdentifierRequest;
+use App\Http\Requests\Activity\Scope\ScopeRequest;
+use App\Http\Requests\Activity\Status\StatusRequest;
 use App\Http\Requests\Activity\Title\TitleRequest;
 use Illuminate\Support\Arr;
 
@@ -36,15 +43,21 @@ class XmlValidator
     {
         $activity = $this->activity;
         $rules = [];
-        $rules['activity_status'] = sprintf('nullable|in:%s', $this->validCodeList('ActivityStatus'));
-        $rules['activity_scope'] = sprintf('in:%s', $this->validCodeList('ActivityScope'));
-        $rules['default_flow_type'] = sprintf('in:%s', $this->validCodeList('FlowType'));
-        $rules['collaboration_type'] = sprintf('in:%s', $this->validCodeList('CollaborationType'));
-        $rules['default_finance_type'] = sprintf('in:%s', $this->validCodeList('FinanceType'));
-        $rules['default_tied_status'] = sprintf('in:%s', $this->validCodeList('TiedStatus'));
-        $rules['capital_spend'] = 'numeric|max:100|min:0';
+        // $rules['activity_status'] = $this->rules;
+        // $rules['activity_scope'] = sprintf('in:%s', $this->validCodeList('ActivityScope'));
+        // $rules['default_flow_type'] = sprintf('in:%s', $this->validCodeList('FlowType'));
+        // $rules['collaboration_type'] = sprintf('in:%s', $this->validCodeList('CollaborationType'));
+        // $rules['default_finance_type'] = sprintf('in:%s', $this->validCodeList('FinanceType'));
+        // $rules['default_tied_status'] = sprintf('in:%s', $this->validCodeList('TiedStatus'));
+        // $rules['capital_spend'] = 'numeric|max:100|min:0';
         $tempRules = [
-            $this->rulesForTitle($activity),
+            $this->rulesForActivityStatus($activity),
+            $this->rulesForActivityScope($activity),
+            $this->rulesForCollaborationType($activity),
+            $this->rulesForDefaultFlowType($activity),
+            $this->rulesForDefaultFinanceType($activity),
+            $this->rulesForDefaultTiedStatus($activity),
+            $this->rulesForCapitalSpend($activity),
             // $this->rulesForDescription($activity),
             // $this->rulesForOtherIdentifier($activity),
             // $this->rulesForActivityDate($activity),
@@ -76,6 +89,8 @@ class XmlValidator
             }
         }
 
+        dump($rules);
+
         return $rules;
     }
 
@@ -88,19 +103,26 @@ class XmlValidator
     {
         $activity = $this->activity;
         $messages = [];
-        $messages['activity_status.required'] = trans('validation.required', ['attribute' => trans('element.activity_status')]);
-        $messages['activity_status.in'] = trans('validation.code_list', ['attribute' => trans('element.activity_status')]);
-        $messages['activity_scope.required'] = trans('validation.required', ['attribute' => trans('element.activity_scope')]);
-        $messages['activity_scope.in'] = trans('validation.code_list', ['attribute' => trans('element.activity_scope')]);
-        $messages['collaboration_type.in'] = trans('validation.code_list', ['attribute' => trans('element.collaboration_type')]);
-        $messages['default_flow_type.in'] = trans('validation.code_list', ['attribute' => trans('element.default_flow_type')]);
-        $messages['default_finance_type.in'] = trans('validation.code_list', ['attribute' => trans('element.default_finance_type')]);
-        $messages['default_tied_status.in'] = trans('validation.code_list', ['attribute' => trans('element.default_tied_status')]);
-        $messages['capital_spend.numeric'] = trans('validation.numeric', ['attribute' => trans('element.capital_spend')]);
-        $messages['capital_spend.max'] = trans('validation.max.numeric', ['attribute' => trans('element.capital_spend'), 'max' => 100]);
-        $messages['capital_spend.min'] = trans('validation.negative', ['attribute' => trans('element.capital_spend')]);
+        // $messages['activity_status'] = $this->messagesForActivityStatus($activity);
+        // $messages['activity_status.in'] = trans('validation.code_list', ['attribute' => trans('element.activity_status')]);
+        // $messages['activity_scope.required'] = trans('validation.required', ['attribute' => trans('element.activity_scope')]);
+        // $messages['activity_scope.in'] = trans('validation.code_list', ['attribute' => trans('element.activity_scope')]);
+        // $messages['collaboration_type.in'] = trans('validation.code_list', ['attribute' => trans('element.collaboration_type')]);
+        // $messages['default_flow_type.in'] = trans('validation.code_list', ['attribute' => trans('element.default_flow_type')]);
+        // $messages['default_finance_type.in'] = trans('validation.code_list', ['attribute' => trans('element.default_finance_type')]);
+        // $messages['default_tied_status.in'] = trans('validation.code_list', ['attribute' => trans('element.default_tied_status')]);
+        // $messages['capital_spend.numeric'] = trans('validation.numeric', ['attribute' => trans('element.capital_spend')]);
+        // $messages['capital_spend.max'] = trans('validation.max.numeric', ['attribute' => trans('element.capital_spend'), 'max' => 100]);
+        // $messages['capital_spend.min'] = trans('validation.negative', ['attribute' => trans('element.capital_spend')]);
 
         $tempMessages = [
+            $this->messagesForActivityStatus($activity),
+            $this->messagesForActivityScope($activity),
+            $this->messagesForCollaborationType($activity),
+            $this->messagesForDefaultFlowType($activity),
+            $this->messagesForDefaultFinanceType($activity),
+            $this->messagesForDefaultTiedStatus($activity),
+            $this->messagesForCapitalSpend($activity),
             $this->messagesForTitle($activity),
             // $this->messagesForDescription($activity),
             // $this->messagesForOtherIdentifier($activity),
@@ -132,6 +154,8 @@ class XmlValidator
                 $messages[$idx] = $message;
             }
         }
+
+        dump($messages);
 
         return $messages;
     }
@@ -172,13 +196,159 @@ class XmlValidator
     {
         $messages = [];
 
-        foreach ($data as $idx => $value) {
+        if (is_string($data)) {
             foreach ($baseMessages as $elementName => $baseMessage) {
-                $messages[$element . '.' . $idx . '.' . $elementName] = $baseMessage;
+                $messages[$element . '.' . $elementName] = $baseMessage;
+            }
+        } else {
+            foreach ($data as $idx => $value) {
+                foreach ($baseMessages as $elementName => $baseMessage) {
+                    $messages[$element . '.' . $idx . '.' . $elementName] = $baseMessage;
+                }
             }
         }
 
         return $messages;
+    }
+
+    /**
+     * @param array $activity
+     *
+     * @return array
+     */
+    protected function rulesForActivityStatus(array $activity): array
+    {
+        return (new StatusRequest())->rules(Arr::get($activity, 'activity_status'));
+    }
+
+    /**
+     * @param array $activity
+     *
+     * @return array
+     */
+    protected function messagesForActivityStatus(array $activity): array
+    {
+        return $this->getBaseMessages((new StatusRequest())->messages(), 'activity_status', Arr::get($activity, 'activity_status', ''));
+    }
+
+    /**
+     * @param array $activity
+     *
+     * @return array
+     */
+    protected function rulesForActivityScope(array $activity): array
+    {
+        return (new ScopeRequest())->rules(Arr::get($activity, 'activity_scope'));
+    }
+
+    /**
+     * @param array $activity
+     *
+     * @return array
+     */
+    protected function messagesForActivityScope(array $activity): array
+    {
+        return $this->getBaseMessages((new ScopeRequest())->messages(), 'activity_scope', Arr::get($activity, 'activity_scope', ''));
+    }
+
+    /**
+     * @param array $activity
+     *
+     * @return array
+     */
+    protected function rulesForCollaborationType(array $activity): array
+    {
+        return (new CollaborationTypeRequest())->rules(Arr::get($activity, 'collaboration_type'));
+    }
+
+    /**
+     * @param array $activity
+     *
+     * @return array
+     */
+    protected function messagesForCollaborationType(array $activity): array
+    {
+        return $this->getBaseMessages((new CollaborationTypeRequest())->messages(), 'collaboration_type', Arr::get($activity, 'collaboration_type', ''));
+    }
+
+    /**
+     * @param array $activity
+     *
+     * @return array
+     */
+    protected function rulesForDefaultFlowType(array $activity): array
+    {
+        return (new DefaultFlowTypeRequest())->rules(Arr::get($activity, 'default_flow_type'));
+    }
+
+    /**
+     * @param array $activity
+     *
+     * @return array
+     */
+    protected function messagesForDefaultFlowType(array $activity): array
+    {
+        return $this->getBaseMessages((new DefaultFlowTypeRequest())->messages(), 'default_flow_type', Arr::get($activity, 'default_flow_type', ''));
+    }
+
+    /**
+     * @param array $activity
+     *
+     * @return array
+     */
+    protected function rulesForDefaultFinanceType(array $activity): array
+    {
+        return (new DefaultFinanceTypeRequest())->rules(Arr::get($activity, 'default_finance_type'));
+    }
+
+    /**
+     * @param array $activity
+     *
+     * @return array
+     */
+    protected function messagesForDefaultFinanceType(array $activity): array
+    {
+        return $this->getBaseMessages((new DefaultFinanceTypeRequest())->messages(), 'default_finance_type', Arr::get($activity, 'default_finance_type', ''));
+    }
+
+    /**
+     * @param array $activity
+     *
+     * @return array
+     */
+    protected function rulesForDefaultTiedStatus(array $activity): array
+    {
+        return (new DefaultTiedStatusRequest())->rules(Arr::get($activity, 'default_tied_status'));
+    }
+
+    /**
+     * @param array $activity
+     *
+     * @return array
+     */
+    protected function messagesForDefaultTiedStatus(array $activity): array
+    {
+        return $this->getBaseMessages((new DefaultTiedStatusRequest())->messages(), 'default_tied_status', Arr::get($activity, 'default_tied_status', ''));
+    }
+
+    /**
+     * @param array $activity
+     *
+     * @return array
+     */
+    protected function rulesForCapitalSpend(array $activity): array
+    {
+        return (new CapitalSpendRequest())->rules(Arr::get($activity, 'capital_spend'));
+    }
+
+    /**
+     * @param array $activity
+     *
+     * @return array
+     */
+    protected function messagesForCapitalSpend(array $activity): array
+    {
+        return $this->getBaseMessages((new CapitalSpendRequest())->messages(), 'capital_spend', Arr::get($activity, 'capital_spend', ''));
     }
 
     /**

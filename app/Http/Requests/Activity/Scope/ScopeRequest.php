@@ -14,12 +14,20 @@ class ScopeRequest extends ActivityBaseRequest
     /**
      * Get the validation rules that apply to the request.
      *
+     * @param $scope
+     *
      * @return array
      */
-    public function rules(): array
+    public function rules($scope = null): array
     {
+        if ($scope && is_array($scope)) {
+            return [
+                'activity_scope' => 'nullable|size:1',
+            ];
+        }
+
         return [
-            'activity_scope' => ['nullable', 'in:1,2,3,4,5,6,7,8'],
+            'activity_scope' => sprintf('nullable|in:%s', implode(',', array_keys(getCodeList('ActivityScope', 'Activity', false)))),
         ];
     }
 
@@ -31,7 +39,8 @@ class ScopeRequest extends ActivityBaseRequest
     public function messages(): array
     {
         return [
-            'in'        => 'The selected code does not exist.',
+            'in'        => 'The activity scope does not exist.',
+            'size'      => 'The default flow type cannot have more than one value.',
         ];
     }
 }
