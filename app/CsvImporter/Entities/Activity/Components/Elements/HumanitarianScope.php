@@ -6,6 +6,7 @@ namespace App\CsvImporter\Entities\Activity\Components\Elements;
 
 use App\CsvImporter\Entities\Activity\Components\Elements\Foundation\Iati\Element;
 use App\CsvImporter\Entities\Activity\Components\Factory\Validation;
+use App\Http\Requests\Activity\HumanitarianScope\HumanitarianScopeRequest;
 use Illuminate\Support\Arr;
 
 /**
@@ -34,6 +35,11 @@ class HumanitarianScope extends Element
     protected string $index = 'humanitarian_scope';
 
     /**
+     * @var HumanitarianScopeRequest
+     */
+    private HumanitarianScopeRequest $request;
+
+    /**
      * HumanitarianScope constructor.
      *
      * @param            $fields
@@ -43,6 +49,7 @@ class HumanitarianScope extends Element
     {
         $this->prepare($fields);
         $this->factory = $factory;
+        $this->request = new HumanitarianScopeRequest();
     }
 
     /**
@@ -204,56 +211,57 @@ class HumanitarianScope extends Element
      */
     public function rules(): array
     {
-        $validHumanitarianScopeVocabulary = implode(',', $this->validHumanitarianScopeCodeList('HumanitarianScopeVocabulary'));
-        $validHumanitarianScopeType = implode(',', $this->validHumanitarianScopeCodeList('HumanitarianScopeType'));
-
-        $rules = [];
-
-        foreach (Arr::get($this->data(), 'humanitarian_scope', []) as $key => $value) {
-            $humanitarianScopeForm = sprintf('humanitarian_scope.%s', $key);
-            $rules[sprintf('%s.type', $humanitarianScopeForm)] = sprintf(
-                'in:%s|required_with: %s,%s,%s,%s',
-                $validHumanitarianScopeType,
-                sprintf('%s.vocabulary', $humanitarianScopeForm),
-                sprintf('%s.vocabulary_uri', $humanitarianScopeForm),
-                sprintf('%s.code', $humanitarianScopeForm),
-                sprintf('%s.narrative.0.narrative', $humanitarianScopeForm),
-            );
-
-            $rules[sprintf('%s.vocabulary', $humanitarianScopeForm)] = sprintf(
-                'in:%s|required_with: %s,%s,%s,%s',
-                $validHumanitarianScopeVocabulary,
-                sprintf('%s.type', $humanitarianScopeForm),
-                sprintf('%s.vocabulary_uri', $humanitarianScopeForm),
-                sprintf('%s.code', $humanitarianScopeForm),
-                sprintf('%s.narrative.0.narrative', $humanitarianScopeForm),
-            );
-
-            $rules[sprintf('%s.code', $humanitarianScopeForm)] = sprintf(
-                'required_with: %s,%s,%s,%s',
-                sprintf('%s.type', $humanitarianScopeForm),
-                sprintf('%s.vocabulary', $humanitarianScopeForm),
-                sprintf('%s.vocabulary_uri', $humanitarianScopeForm),
-                sprintf('%s.narrative.0.narrative', $humanitarianScopeForm),
-            );
-            $vocabulary = Arr::get($value, 'vocabulary');
-
-            if ($vocabulary) {
-                $rules[sprintf('%s.vocabulary_uri', $humanitarianScopeForm)] = 'nullable|url';
-
-                if ($vocabulary === '99') {
-                    $rules[sprintf('%s.vocabulary_uri', $humanitarianScopeForm)] = sprintf(
-                        'required_with: %s,%s,%s,%s',
-                        sprintf('%s.type', $humanitarianScopeForm),
-                        sprintf('%s.vocabulary', $humanitarianScopeForm),
-                        sprintf('%s.code', $humanitarianScopeForm),
-                        sprintf('%s.narrative.0.narrative', $humanitarianScopeForm),
-                    );
-                }
-            }
-        }
-
-        return $rules;
+        return $this->request->getRulesForHumanitarianScope(Arr::get($this->data(), 'humanitarian_scope', []));
+//        $validHumanitarianScopeVocabulary = implode(',', $this->validHumanitarianScopeCodeList('HumanitarianScopeVocabulary'));
+//        $validHumanitarianScopeType = implode(',', $this->validHumanitarianScopeCodeList('HumanitarianScopeType'));
+//
+//        $rules = [];
+//
+//        foreach (Arr::get($this->data(), 'humanitarian_scope', []) as $key => $value) {
+//            $humanitarianScopeForm = sprintf('humanitarian_scope.%s', $key);
+//            $rules[sprintf('%s.type', $humanitarianScopeForm)] = sprintf(
+//                'in:%s|required_with: %s,%s,%s,%s',
+//                $validHumanitarianScopeType,
+//                sprintf('%s.vocabulary', $humanitarianScopeForm),
+//                sprintf('%s.vocabulary_uri', $humanitarianScopeForm),
+//                sprintf('%s.code', $humanitarianScopeForm),
+//                sprintf('%s.narrative.0.narrative', $humanitarianScopeForm),
+//            );
+//
+//            $rules[sprintf('%s.vocabulary', $humanitarianScopeForm)] = sprintf(
+//                'in:%s|required_with: %s,%s,%s,%s',
+//                $validHumanitarianScopeVocabulary,
+//                sprintf('%s.type', $humanitarianScopeForm),
+//                sprintf('%s.vocabulary_uri', $humanitarianScopeForm),
+//                sprintf('%s.code', $humanitarianScopeForm),
+//                sprintf('%s.narrative.0.narrative', $humanitarianScopeForm),
+//            );
+//
+//            $rules[sprintf('%s.code', $humanitarianScopeForm)] = sprintf(
+//                'required_with: %s,%s,%s,%s',
+//                sprintf('%s.type', $humanitarianScopeForm),
+//                sprintf('%s.vocabulary', $humanitarianScopeForm),
+//                sprintf('%s.vocabulary_uri', $humanitarianScopeForm),
+//                sprintf('%s.narrative.0.narrative', $humanitarianScopeForm),
+//            );
+//            $vocabulary = Arr::get($value, 'vocabulary');
+//
+//            if ($vocabulary) {
+//                $rules[sprintf('%s.vocabulary_uri', $humanitarianScopeForm)] = 'nullable|url';
+//
+//                if ($vocabulary === '99') {
+//                    $rules[sprintf('%s.vocabulary_uri', $humanitarianScopeForm)] = sprintf(
+//                        'required_with: %s,%s,%s,%s',
+//                        sprintf('%s.type', $humanitarianScopeForm),
+//                        sprintf('%s.vocabulary', $humanitarianScopeForm),
+//                        sprintf('%s.code', $humanitarianScopeForm),
+//                        sprintf('%s.narrative.0.narrative', $humanitarianScopeForm),
+//                    );
+//                }
+//            }
+//        }
+//
+//        return $rules;
     }
 
     /**
@@ -276,46 +284,48 @@ class HumanitarianScope extends Element
      */
     public function messages(): array
     {
-        $messages = [];
+        return $this->request->getMessagesForHumanitarianScope(Arr::get($this->data(), 'humanitarian_scope', []));
 
-        foreach (Arr::get($this->data(), 'humanitarian_scope', []) as $key => $value) {
-            $humanitarianScopeForm = sprintf('humanitarian_scope.%s', $key);
-            $messages[sprintf('%s.type.%s', $humanitarianScopeForm, 'in')] = trans(
-                'validation.code_list',
-                ['attribute' => trans('elementForm.humanitarian_scope_type')]
-            );
-            $messages[sprintf('%s.type.%s', $humanitarianScopeForm, 'required_with')] = trans(
-                'validation.required_with',
-                ['attribute' => trans('elementForm.humanitarian_scope_type'), 'values' => 'vocabulary, code, uri or narrative']
-            );
-            $messages[sprintf('%s.vocabulary.%s', $humanitarianScopeForm, 'in')] = trans(
-                'validation.code_list',
-                ['attribute' => trans('elementForm.humanitarian_scope_vocabulary')]
-            );
-            $messages[sprintf('%s.vocabulary.%s', $humanitarianScopeForm, 'required_with')] = trans(
-                'validation.required_with',
-                ['attribute' => trans('elementForm.humanitarian_scope_vocabulary'), 'values' => 'vocabulary, code, uri or narrative']
-            );
-            $messages[sprintf('%s.code.%s', $humanitarianScopeForm, 'required_with')] = trans(
-                'validation.required_with',
-                ['attribute' => trans('elementForm.humanitarian_scope_code'), 'values' => 'vocabulary, code, uri or narrative']
-            );
-            $vocabulary = Arr::get($value, 'vocabulary');
-
-            if ($vocabulary) {
-                $messages[sprintf('%s.vocabulary_uri.%s', $humanitarianScopeForm, 'url')] = trans(
-                    'validation.active_url',
-                    ['attribute' => trans('elementForm.humanitarian_scope_vocabulary_url')]
-                );
-
-                $messages[sprintf('%s.vocabulary_uri.%s', $humanitarianScopeForm, 'required_with')] = trans(
-                    'validation.required_with',
-                    ['attribute' => trans('elementForm.humanitarian_scope_vocabulary_uri'), 'values' => 'vocabulary, type, code or narrative']
-                );
-            }
-        }
-
-        return $messages;
+//        $messages = [];
+//
+//        foreach (Arr::get($this->data(), 'humanitarian_scope', []) as $key => $value) {
+//            $humanitarianScopeForm = sprintf('humanitarian_scope.%s', $key);
+//            $messages[sprintf('%s.type.%s', $humanitarianScopeForm, 'in')] = trans(
+//                'validation.code_list',
+//                ['attribute' => trans('elementForm.humanitarian_scope_type')]
+//            );
+//            $messages[sprintf('%s.type.%s', $humanitarianScopeForm, 'required_with')] = trans(
+//                'validation.required_with',
+//                ['attribute' => trans('elementForm.humanitarian_scope_type'), 'values' => 'vocabulary, code, uri or narrative']
+//            );
+//            $messages[sprintf('%s.vocabulary.%s', $humanitarianScopeForm, 'in')] = trans(
+//                'validation.code_list',
+//                ['attribute' => trans('elementForm.humanitarian_scope_vocabulary')]
+//            );
+//            $messages[sprintf('%s.vocabulary.%s', $humanitarianScopeForm, 'required_with')] = trans(
+//                'validation.required_with',
+//                ['attribute' => trans('elementForm.humanitarian_scope_vocabulary'), 'values' => 'vocabulary, code, uri or narrative']
+//            );
+//            $messages[sprintf('%s.code.%s', $humanitarianScopeForm, 'required_with')] = trans(
+//                'validation.required_with',
+//                ['attribute' => trans('elementForm.humanitarian_scope_code'), 'values' => 'vocabulary, code, uri or narrative']
+//            );
+//            $vocabulary = Arr::get($value, 'vocabulary');
+//
+//            if ($vocabulary) {
+//                $messages[sprintf('%s.vocabulary_uri.%s', $humanitarianScopeForm, 'url')] = trans(
+//                    'validation.active_url',
+//                    ['attribute' => trans('elementForm.humanitarian_scope_vocabulary_url')]
+//                );
+//
+//                $messages[sprintf('%s.vocabulary_uri.%s', $humanitarianScopeForm, 'required_with')] = trans(
+//                    'validation.required_with',
+//                    ['attribute' => trans('elementForm.humanitarian_scope_vocabulary_uri'), 'values' => 'vocabulary, type, code or narrative']
+//                );
+//            }
+//        }
+//
+//        return $messages;
     }
 
     /**

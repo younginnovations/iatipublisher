@@ -38,11 +38,9 @@ class DefaultAidTypeRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    protected function getRulesForDefaultAidType(array $formFields): array
+    public function getRulesForDefaultAidType(array $formFields): array
     {
-        $rules = [];
-
-        return $rules;
+        return [];
     }
 
     /**
@@ -52,10 +50,8 @@ class DefaultAidTypeRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    protected function getMessagesForDefaultAidType(array $formFields): array
+    public function getMessagesForDefaultAidType(array $formFields): array
     {
-        $messages = [];
-
-        return $messages;
+        return [];
     }
 }

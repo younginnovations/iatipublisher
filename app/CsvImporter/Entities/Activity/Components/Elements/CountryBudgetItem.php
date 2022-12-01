@@ -186,50 +186,51 @@ class CountryBudgetItem extends Element
      */
     public function rules(): array
     {
-        $validVocabulary = implode(',', $this->validCountryBudgetItemCodeList('BudgetIdentifierVocabulary'));
-        $validCode = implode(',', $this->validCountryBudgetItemCodeList('BudgetIdentifier'));
-
-        $rules = [];
-
-        $rules['country_budget_items.country_budget_vocabulary'][] = sprintf(
-            'in:%s',
-            $validVocabulary
-        );
-
-        $totalPercentage = 0;
-
-        if (count(Arr::get($this->data, 'country_budget_items.budget_item', []))) {
-            foreach (Arr::get($this->data, 'country_budget_items.budget_item', []) as $key => $budgetItem) {
-                $totalPercentage += (float) Arr::get($budgetItem, 'percentage', 0);
-                $rules['country_budget_items.country_budget_vocabulary'][] = sprintf(
-                    'required_with: %s,%s,%s',
-                    'country_budget_items.budget_item.' . $key . '.code',
-                    'country_budget_items.budget_item.' . $key . '.percentage',
-                    'country_budget_items.budget_item.' . $key . '.description.0.narrative.0.narrative',
-                );
-
-                $rules['country_budget_items.budget_item.' . $key . '.code'] = sprintf(
-                    'in:%s|required_with: %s,%s,%s',
-                    $validCode,
-                    'country_budget_items.country_budget_vocabulary',
-                    'country_budget_items.budget_item.' . $key . '.percentage',
-                    'country_budget_items.budget_item.' . $key . '.description.0.narrative.0.narrative',
-                );
-
-                $rules['country_budget_items.budget_item.' . $key . '.description.0.narrative.0.narrative'] = sprintf(
-                    'required_with: %s,%s,%s',
-                    'country_budget_items.country_budget_vocabulary',
-                    'country_budget_items.budget_item.' . $key . '.code',
-                    'country_budget_items.budget_item.' . $key . '.percentage',
-                );
-            }
-
-            if ($totalPercentage !== 100) {
-                $rules['country_budget_items.budget_item.0.percentage'] = 'sum';
-            }
-        }
-
-        return $rules;
+        return [];
+//        $validVocabulary = implode(',', $this->validCountryBudgetItemCodeList('BudgetIdentifierVocabulary'));
+//        $validCode = implode(',', $this->validCountryBudgetItemCodeList('BudgetIdentifier'));
+//
+//        $rules = [];
+//
+//        $rules['country_budget_items.country_budget_vocabulary'][] = sprintf(
+//            'in:%s',
+//            $validVocabulary
+//        );
+//
+//        $totalPercentage = 0;
+//
+//        if (count(Arr::get($this->data, 'country_budget_items.budget_item', []))) {
+//            foreach (Arr::get($this->data, 'country_budget_items.budget_item', []) as $key => $budgetItem) {
+//                $totalPercentage += (float) Arr::get($budgetItem, 'percentage', 0);
+//                $rules['country_budget_items.country_budget_vocabulary'][] = sprintf(
+//                    'required_with: %s,%s,%s',
+//                    'country_budget_items.budget_item.' . $key . '.code',
+//                    'country_budget_items.budget_item.' . $key . '.percentage',
+//                    'country_budget_items.budget_item.' . $key . '.description.0.narrative.0.narrative',
+//                );
+//
+//                $rules['country_budget_items.budget_item.' . $key . '.code'] = sprintf(
+//                    'in:%s|required_with: %s,%s,%s',
+//                    $validCode,
+//                    'country_budget_items.country_budget_vocabulary',
+//                    'country_budget_items.budget_item.' . $key . '.percentage',
+//                    'country_budget_items.budget_item.' . $key . '.description.0.narrative.0.narrative',
+//                );
+//
+//                $rules['country_budget_items.budget_item.' . $key . '.description.0.narrative.0.narrative'] = sprintf(
+//                    'required_with: %s,%s,%s',
+//                    'country_budget_items.country_budget_vocabulary',
+//                    'country_budget_items.budget_item.' . $key . '.code',
+//                    'country_budget_items.budget_item.' . $key . '.percentage',
+//                );
+//            }
+//
+//            if ($totalPercentage !== 100) {
+//                $rules['country_budget_items.budget_item.0.percentage'] = 'sum';
+//            }
+//        }
+//
+//        return $rules;
     }
 
     /**
@@ -252,49 +253,50 @@ class CountryBudgetItem extends Element
      */
     public function messages(): array
     {
-        $messages = [];
-
-        $messages['country_budget_items.country_budget_vocabulary.in'] = trans(
-            'validation.code_list',
-            ['attribute' => trans('elementForm.country_budget_vocabulary')]
-        );
-
-        if (count(Arr::get($this->data, 'country_budget_items.budget_item', []))) {
-            foreach (Arr::get($this->data(), 'country_budget_items.budget_item', []) as $key => $budgetItem) {
-                $messages['country_budget_items.country_budget_vocabulary.required_with'] = trans(
-                    'validation.required_with',
-                    [
-                        'attribute' => trans('elementForm.country_budget_vocabulary'),
-                        'values'    => 'code, percentage or description',
-                    ]
-                );
-
-                $messages['country_budget_items.budget_item.' . $key . '.code.in'] = trans(
-                    'validation.code_list',
-                    ['attribute' => trans('elementForm.budget_item_code')]
-                );
-
-                $messages['country_budget_items.budget_item.' . $key . '.code.required_with'] = trans(
-                    'validation.required_with',
-                    [
-                        'attribute' => trans('elementForm.budget_item_code'),
-                        'values'    => 'vocabulary, percentage or description',
-                    ]
-                );
-
-                $messages['country_budget_items.budget_item.' . $key . '.description.0.narrative.0.narrative.required_with'] = trans(
-                    'validation.required_with',
-                    [
-                        'attribute' => trans('elementForm.budget_item_code'),
-                        'values'    => 'vocabulary, percentage or description',
-                    ]
-                );
-            }
-        }
-
-        $messages['country_budget_items.budget_item.0.percentage.sum'] = 'Sum of percentage for all budget items must be 100%';
-
-        return $messages;
+        return [];
+//        $messages = [];
+//
+//        $messages['country_budget_items.country_budget_vocabulary.in'] = trans(
+//            'validation.code_list',
+//            ['attribute' => trans('elementForm.country_budget_vocabulary')]
+//        );
+//
+//        if (count(Arr::get($this->data, 'country_budget_items.budget_item', []))) {
+//            foreach (Arr::get($this->data(), 'country_budget_items.budget_item', []) as $key => $budgetItem) {
+//                $messages['country_budget_items.country_budget_vocabulary.required_with'] = trans(
+//                    'validation.required_with',
+//                    [
+//                        'attribute' => trans('elementForm.country_budget_vocabulary'),
+//                        'values'    => 'code, percentage or description',
+//                    ]
+//                );
+//
+//                $messages['country_budget_items.budget_item.' . $key . '.code.in'] = trans(
+//                    'validation.code_list',
+//                    ['attribute' => trans('elementForm.budget_item_code')]
+//                );
+//
+//                $messages['country_budget_items.budget_item.' . $key . '.code.required_with'] = trans(
+//                    'validation.required_with',
+//                    [
+//                        'attribute' => trans('elementForm.budget_item_code'),
+//                        'values'    => 'vocabulary, percentage or description',
+//                    ]
+//                );
+//
+//                $messages['country_budget_items.budget_item.' . $key . '.description.0.narrative.0.narrative.required_with'] = trans(
+//                    'validation.required_with',
+//                    [
+//                        'attribute' => trans('elementForm.budget_item_code'),
+//                        'values'    => 'vocabulary, percentage or description',
+//                    ]
+//                );
+//            }
+//        }
+//
+//        $messages['country_budget_items.budget_item.0.percentage.sum'] = 'Sum of percentage for all budget items must be 100%';
+//
+//        return $messages;
     }
 
     /**

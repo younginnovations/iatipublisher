@@ -38,7 +38,7 @@ class TagRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    protected function getRulesForTag(array $formFields): array
+    public function getRulesForTag(array $formFields): array
     {
         $rules = [];
 
@@ -59,7 +59,7 @@ class TagRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    protected function getMessagesForTag(array $formFields): array
+    public function getMessagesForTag(array $formFields): array
     {
         $messages = [];
 

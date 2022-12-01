@@ -27,6 +27,10 @@ class RelatedActivity extends Element
      * @var string
      */
     protected string $index = 'related_activity';
+
+    /**
+     * @var RelatedActivityRequest
+     */
     private RelatedActivityRequest $request;
 
     /**
@@ -154,7 +158,7 @@ class RelatedActivity extends Element
      */
     public function rules(): array
     {
-        return $this->getBaseRules($this->request->rules());
+        return $this->request->getRulesForRelatedActivity(Arr::get($this->data(), 'related_activity', []));
 
 //        $rules = [];
 //
@@ -180,8 +184,7 @@ class RelatedActivity extends Element
      */
     public function messages(): array
     {
-        return $this->getBaseMessages($this->request->messages());
-
+        return $this->request->getMessagesForRelatedActivity(Arr::get($this->data(), 'related_activity', []));
 //        $messages = [];
 //
 //        foreach (Arr::get($this->data(), 'related_activity', []) as $key => $value) {

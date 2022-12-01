@@ -27,6 +27,10 @@ class ActivityScope extends Element
      * @var string
      */
     protected string $index = 'activity_scope';
+
+    /**
+     * @var ScopeRequest
+     */
     private ScopeRequest $request;
 
     /**
@@ -114,7 +118,7 @@ class ActivityScope extends Element
      */
     public function rules(): array
     {
-        return $this->getBaseRules($this->request->rules());
+        return [];
 
 //        $rules[$this->csvHeader()] = (is_array(Arr::get($this->data, $this->csvHeader()))) ? 'size:1' : sprintf('in:%s', $this->validActivityScope());
 //
@@ -128,7 +132,7 @@ class ActivityScope extends Element
      */
     public function messages(): array
     {
-        return $this->getBaseMessages($this->request->messages());
+        return [];
 
 //        return [
 //            $this->csvHeader() . '.size' => trans('validation.multiple_values', ['attribute' => trans('element.activity_scope')]),

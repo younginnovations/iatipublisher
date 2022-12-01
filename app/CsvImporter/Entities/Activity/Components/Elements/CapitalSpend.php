@@ -110,7 +110,7 @@ class CapitalSpend extends Element
      */
     public function rules(): array
     {
-        return $this->getBaseRules($this->request->rules());
+        return [];
 
 //        $rules = [
 //            $this->csvHeader() => 'nullable|numeric|between:0, 100',
@@ -128,7 +128,7 @@ class CapitalSpend extends Element
      */
     public function messages(): array
     {
-        return $this->getBaseMessages($this->request->messages());
+        return [];
 
 //        $key = $this->csvHeader();
 //

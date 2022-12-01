@@ -35,6 +35,10 @@ class Budget extends Element
      * @var string
      */
     protected string $index = 'budget';
+
+    /**
+     * @var BudgetRequest
+     */
     private BudgetRequest $request;
 
     /**
@@ -264,7 +268,7 @@ class Budget extends Element
      */
     public function rules(): array
     {
-        return $this->getBaseRules($this->request->rules());
+        return $this->request->getRulesForBudget(Arr::get($this->data(), 'budget', []));
 
 //        $rules = ['budget' => 'start_before_end_date|diff_one_year'];
 //
@@ -323,7 +327,7 @@ class Budget extends Element
      */
     public function messages(): array
     {
-        return $this->getBaseMessages($this->request->messages());
+        return $this->request->getMessagesForBudget(Arr::get($this->data(), 'budget', []));
 
 //        $messages = [
 //            'budget.start_before_end_date' => 'Budget Period Start Date should be before Budget Period End Date.',

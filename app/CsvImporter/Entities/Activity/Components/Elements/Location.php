@@ -416,7 +416,7 @@ class Location extends Element
      */
     public function rules(): array
     {
-        return $this->getBaseRules($this->request->rules());
+        return [];
 
 //        $validLocationReachCode = implode(',', $this->validLocationCodeList('GeographicLocationReach'));
 //        $validLocationIdVocabulary = implode(',', $this->validLocationCodeList('GeographicVocabulary'));
@@ -713,7 +713,7 @@ class Location extends Element
      */
     public function messages(): array
     {
-        return $this->getBaseMessages($this->request->messages());
+        return [];
 
 //        $messages = [];
 //

@@ -90,8 +90,9 @@ class ImportActivity extends Job implements ShouldQueue
 
             $this->delete();
         } catch (\Exception $e) {
-            awsUploadFile(sprintf('%s/%s/%s', $this->csv_data_storage_path, $this->organizationId, 'status.json'), json_encode(['success' => false, 'message'=>$e->getMessage()], JSON_THROW_ON_ERROR));
             dump($e);
+            logger()->error($e->getMessage());
+            awsUploadFile(sprintf('%s/%s/%s', $this->csv_data_storage_path, $this->organizationId, 'status.json'), json_encode(['success' => false, 'message'=>$e->getMessage()], JSON_THROW_ON_ERROR));
 
             $this->delete();
         }

@@ -20,9 +20,9 @@ class RecipientCountryRequest extends ActivityBaseRequest
      * @return array
      * @throws BindingResolutionException
      */
-    public function rules($recipient_country = []): array
+    public function rules(): array
     {
-        return $this->getRulesForRecipientCountry($this->get('recipient_country') ?? $recipient_country);
+        return $this->getRulesForRecipientCountry($this->get('recipient_country'));
     }
 
     /**
@@ -30,9 +30,9 @@ class RecipientCountryRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    public function messages($recipient_country = []): array
+    public function messages(): array
     {
-        return $this->getMessagesForRecipientCountry($this->get('recipient_country') ?? $recipient_country);
+        return $this->getMessagesForRecipientCountry($this->get('recipient_country'));
     }
 
     /**
@@ -62,23 +62,23 @@ class RecipientCountryRequest extends ActivityBaseRequest
      * @return array
      * @throws BindingResolutionException
      */
-    protected function getRulesForRecipientCountry(array $formFields): array
+    public function getRulesForRecipientCountry(array $formFields): array
     {
         if (empty($formFields)) {
             return [];
         }
 
-        $params = $this->route()->parameters();
-        $activityService = app()->make(ActivityService::class);
-
-        if ($activityService->hasRecipientCountryDefinedInTransactions($params['id'])) {
-            Validator::extend('already_in_transactions', function () {
-                return false;
-            });
-
-            return ['recipient_country' => 'already_in_transactions'];
-        }
-
+//        $params = $this->route()->parameters();
+//        $activityService = app()->make(ActivityService::class);
+//
+//        if ($activityService->hasRecipientCountryDefinedInTransactions($params['id'])) {
+//            Validator::extend('already_in_transactions', function () {
+//                return false;
+//            });
+//
+//            return ['recipient_country' => 'already_in_transactions'];
+//        }
+//
         Validator::extend('allocated_country_percent_exceeded', function () {
             return false;
         });
@@ -88,7 +88,8 @@ class RecipientCountryRequest extends ActivityBaseRequest
         });
 
         $rules = [];
-        $allottedCountryPercent = $activityService->getAllottedRecipientCountryPercent($params['id']);
+//        $allottedCountryPercent = $activityService->getAllottedRecipientCountryPercent($params['id']);
+        $allottedCountryPercent = 100;
         $totalCountryPercent = $this->getTotalPercent($formFields);
 
         foreach ($formFields as $recipientCountryIndex => $recipientCountry) {
@@ -124,7 +125,7 @@ class RecipientCountryRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    protected function getMessagesForRecipientCountry(array $formFields): array
+    public function getMessagesForRecipientCountry(array $formFields): array
     {
         $messages = ['recipient_country.already_in_transactions' => 'Recipient Country Already defined in Transactions'];
 

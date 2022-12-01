@@ -6,6 +6,7 @@ namespace App\CsvImporter\Entities\Activity\Components\Elements;
 
 use App\CsvImporter\Entities\Activity\Components\Elements\Foundation\Iati\Element;
 use App\CsvImporter\Entities\Activity\Components\Factory\Validation;
+use App\Http\Requests\Activity\RecipientCountry\RecipientCountryRequest;
 use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Support\Arr;
 
@@ -54,6 +55,10 @@ class RecipientCountry extends Element
      * @var array
      */
     protected array $template = [['country_code' => '', 'percentage' => '', 'narrative' => ['narrative' => '', 'language' => '']]];
+    /**
+     * @var RecipientCountryRequest
+     */
+    private RecipientCountryRequest $request;
 
     /**
      * Description constructor.
@@ -65,6 +70,7 @@ class RecipientCountry extends Element
         $this->prepare($fields);
         $this->factory = $factory;
         $this->fields = $fields;
+        $this->request = new RecipientCountryRequest();
     }
 
     /**
@@ -219,7 +225,7 @@ class RecipientCountry extends Element
      */
     public function rules(): array
     {
-        return $this->getBaseRules($this->request->rules($this->data('recipient_country')));
+        return $this->request->getRulesForRecipientCountry($this->data('recipient_country'));
 
 //        $codes = $this->validRecipientCountry();
 //        $rules = [];
@@ -253,7 +259,7 @@ class RecipientCountry extends Element
      */
     public function messages(): array
     {
-        return $this->getBaseMessages($this->request->messages($this->data('recipient_country')));
+        return $this->request->getMessagesForRecipientCountry($this->data('recipient_country'));
 
 //        $messages = [
 //            'recipient_country.required_if' => trans('validation.required_without', ['attribute' => trans('element.recipient_country'), 'values' => trans('element.recipient_region')]),

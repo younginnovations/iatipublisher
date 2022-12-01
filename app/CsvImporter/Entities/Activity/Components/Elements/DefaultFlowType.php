@@ -30,6 +30,10 @@ class DefaultFlowType extends Element
      * @var array
      */
     protected array $data;
+
+    /**
+     * @var DefaultFlowTypeRequest
+     */
     private DefaultFlowTypeRequest $request;
 
     /**
@@ -121,7 +125,7 @@ class DefaultFlowType extends Element
      */
     public function rules(): array
     {
-        return $this->getBaseRules($this->request->rules());
+        return [];
 //        $rules = [
 //            $this->csvHeader() => sprintf('nullable|in:%s', $this->validDefaultFlowType()),
 //        ];
@@ -138,7 +142,7 @@ class DefaultFlowType extends Element
      */
     public function messages(): array
     {
-        return $this->getBaseMessages($this->request->messages());
+        return [];
 
 //        $key = $this->csvHeader();
 //

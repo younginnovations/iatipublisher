@@ -251,7 +251,7 @@ class DocumentLink extends Element
      */
     public function rules(): array
     {
-        return $this->getBaseRules($this->request->rules());
+        return [];
 
 //        $validDocumentFormat = implode(',', $this->validDocumentLinkCodeList('FileFormat'));
 //        $validDocumentCategory = implode(',', $this->validDocumentLinkCodeList('DocumentCategory'));
@@ -343,7 +343,7 @@ class DocumentLink extends Element
      */
     public function messages(): array
     {
-        return $this->getBaseMessages($this->request->messages());
+        return [];
 
 //        $messages = [];
 //

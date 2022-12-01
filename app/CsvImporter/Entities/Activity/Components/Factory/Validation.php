@@ -493,5 +493,21 @@ class Validation extends Factory
                 return !(Arr::get($request, $language) && !Arr::get($request, $attribute));
             }
         );
+
+        $this->extend('sector_total_percent', function () {
+            return false;
+        });
+
+        $this->extend('sector_has_five_digit_oced_vocab', function () {
+            return false;
+        });
+
+        $this->extend('allocated_country_percent_exceeded', function () {
+            return false;
+        });
+
+        $this->extend('allocated_region_total_mismatch', function () {
+            return false;
+        });
     }
 }

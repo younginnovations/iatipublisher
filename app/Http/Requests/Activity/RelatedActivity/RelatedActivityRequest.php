@@ -38,11 +38,9 @@ class RelatedActivityRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    protected function getRulesForRelatedActivity(array $formFields): array
+    public function getRulesForRelatedActivity(array $formFields): array
     {
-        $rules = [];
-
-        return $rules;
+        return [];
     }
 
     /**
@@ -52,10 +50,8 @@ class RelatedActivityRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    protected function getMessagesForRelatedActivity(array $formFields): array
+    public function getMessagesForRelatedActivity(array $formFields): array
     {
-        $messages = [];
-
-        return $messages;
+        return [];
     }
 }

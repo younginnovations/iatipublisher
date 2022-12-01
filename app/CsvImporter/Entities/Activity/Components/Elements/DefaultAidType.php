@@ -30,6 +30,10 @@ class DefaultAidType extends Element
      * @var string
      */
     protected string $index = 'default_aid_type';
+
+    /**
+     * @var DefaultAidTypeRequest
+     */
     private DefaultAidTypeRequest $request;
 
     /**
@@ -167,7 +171,7 @@ class DefaultAidType extends Element
      */
     public function rules(): array
     {
-        return $this->getBaseRules($this->request->rules());
+        return [];
 
 //        $rules = [];
 //
@@ -257,7 +261,7 @@ class DefaultAidType extends Element
      */
     public function messages(): array
     {
-        return $this->getBaseMessages($this->request->messages());
+        return [];
 
 //        $messages = [];
 //

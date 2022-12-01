@@ -39,7 +39,7 @@ class PolicyMarkerRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    protected function getRulesForPolicyMarker(array $formFields): array
+    public function getRulesForPolicyMarker(array $formFields): array
     {
         $rules = [];
 
@@ -64,7 +64,7 @@ class PolicyMarkerRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    protected function getMessagesForPolicyMarker(array $formFields): array
+    public function getMessagesForPolicyMarker(array $formFields): array
     {
         $messages = [];
 

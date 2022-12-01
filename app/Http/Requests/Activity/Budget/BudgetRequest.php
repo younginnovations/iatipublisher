@@ -51,7 +51,7 @@ class BudgetRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    protected function getRulesForBudget(array $formFields): array
+    public function getRulesForBudget(array $formFields): array
     {
         $rules = [];
         $activityService = app()->make(ActivityService::class);
@@ -200,7 +200,7 @@ class BudgetRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    protected function getMessagesForBudget(array $formFields): array
+    public function getMessagesForBudget(array $formFields): array
     {
         $messages = [];
 

@@ -16,9 +16,9 @@ class DateRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    public function rules($activity_date = []): array
+    public function rules(): array
     {
-        return $this->getRulesForDate($this->get('activity_date') ?? $activity_date);
+        return $this->getRulesForDate($this->get('activity_date'));
     }
 
     /**
@@ -26,9 +26,9 @@ class DateRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    public function messages($activity_date = []): array
+    public function messages(): array
     {
-        return $this->getMessagesForDate($this->get('activity_date') ?? $activity_date);
+        return $this->getMessagesForDate($this->get('activity_date'));
     }
 
     /**
