@@ -129,7 +129,7 @@ class Description extends Element
      */
     public function rules(): array
     {
-        return $this->getBaseRules($this->request->rules($this->data('description')));
+        return $this->request->getRulesForDescription($this->data('description'));
     }
 
     /**
@@ -139,7 +139,7 @@ class Description extends Element
      */
     public function messages(): array
     {
-        return $this->getBaseMessages($this->request->messages($this->data('description')));
+        return $this->request->getMessagesForDescription($this->data('description'));
     }
 
     /**

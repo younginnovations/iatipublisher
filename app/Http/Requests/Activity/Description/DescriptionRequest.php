@@ -16,9 +16,9 @@ class DescriptionRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    public function rules($description = []): array
+    public function rules(): array
     {
-        return $this->getRulesForDescription($this->get('description') ?? $description);
+        return $this->getRulesForDescription($this->get('description'));
     }
 
     /**
@@ -26,9 +26,9 @@ class DescriptionRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    public function messages($description = []): array
+    public function messages(): array
     {
-        return $this->getMessagesForDescription($this->get('description') ?? $description);
+        return $this->getMessagesForDescription($this->get('description'));
     }
 
     /**
@@ -44,11 +44,11 @@ class DescriptionRequest extends ActivityBaseRequest
 
         foreach ($formFields as $descriptionIndex => $description) {
             $descriptionForm = sprintf('description.%s', $descriptionIndex);
+            $narrativeRules = $this->getRulesForNarrative($description['narrative'], $descriptionForm);
 
-            $rules = array_merge(
-                $rules,
-                $this->getRulesForNarrative($description['narrative'], $descriptionForm)
-            );
+            foreach ($narrativeRules as $key => $item) {
+                $rules[$key] = $item;
+            }
         }
 
         return $rules;
@@ -67,10 +67,11 @@ class DescriptionRequest extends ActivityBaseRequest
 
         foreach ($formFields as $descriptionIndex => $description) {
             $descriptionForm = sprintf('description.%s', $descriptionIndex);
-            $messages = array_merge(
-                $messages,
-                $this->getMessagesForRequiredNarrative($description['narrative'], $descriptionForm)
-            );
+            $narrativeMessages = $this->getMessagesForRequiredNarrative($description['narrative'], $descriptionForm);
+
+            foreach ($narrativeMessages as $key => $item) {
+                $messages[$key] = $item;
+            }
         }
 
         return $messages;

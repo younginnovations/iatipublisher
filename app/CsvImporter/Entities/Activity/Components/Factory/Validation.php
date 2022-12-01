@@ -483,5 +483,15 @@ class Validation extends Factory
                 return !($parameter[1] < $parameter[0]);
             }
         );
+
+        $this->extend(
+            'required_with_language',
+            function ($attribute, $value, $parameters, $validator) {
+                $language = preg_replace('/([^~]+).narrative/', '$1.language', $attribute);
+                $request = $this->data;
+
+                return !(Arr::get($request, $language) && !Arr::get($request, $attribute));
+            }
+        );
     }
 }
