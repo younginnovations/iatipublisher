@@ -14,12 +14,20 @@ class DefaultFlowTypeRequest extends ActivityBaseRequest
     /**
      * Get the validation rules that apply to the request.
      *
+     * @param $default_flow_type
+     *
      * @return array
      */
-    public function rules(): array
+    public function rules($default_flow_type = null): array
     {
+        if ($default_flow_type && is_array($default_flow_type)) {
+            return [
+                'default_flow_type' => 'nullable|size:1',
+            ];
+        }
+
         return [
-            'default_flow_type' => ['nullable', 'in:10,20,21,22,30,35,36,37,40,50'],
+            'default_flow_type' => sprintf('nullable|in:%s', implode(',', array_keys(getCodeList('FlowType', 'Activity', false)))),
         ];
     }
 
@@ -31,7 +39,8 @@ class DefaultFlowTypeRequest extends ActivityBaseRequest
     public function messages(): array
     {
         return [
-            'in'        => 'The selected code does not exist.',
+            'in'        => 'The default flow type does not exist.',
+            'size'      => 'The default flow type cannot have more than one value.',
         ];
     }
 }

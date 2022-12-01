@@ -59,9 +59,10 @@ class DefaultFinanceType extends Element
     {
         foreach ($fields as $key => $values) {
             if (!is_null($values) && array_key_exists($key, array_flip($this->_csvHeader))) {
+                $this->data[$this->csvHeader()] = '';
+
                 foreach ($values as $value) {
                     $this->map($value, $values);
-                    break;
                 }
             }
         }
@@ -91,8 +92,6 @@ class DefaultFinanceType extends Element
             }
 
             (count(array_filter($values)) === 1) ? $this->data[$this->csvHeader()] = $value : $this->data[$this->csvHeader()][] = $value;
-        } else {
-            $this->data[$this->csvHeader()] = '';
         }
     }
 
@@ -105,8 +104,8 @@ class DefaultFinanceType extends Element
     public function validate(): static
     {
         $this->validator = $this->factory->sign($this->data)
-                                         ->with($this->rules(), $this->messages())
-                                         ->getValidatorInstance();
+            ->with($this->rules(), $this->messages())
+            ->getValidatorInstance();
 
         $this->setValidity();
 
@@ -121,15 +120,7 @@ class DefaultFinanceType extends Element
      */
     public function rules(): array
     {
-        return [];
-
-//        $rules = [
-//            $this->csvHeader() => sprintf('nullable|in:%s', $this->validDefaultFinanceType()),
-//        ];
-//
-//        (!is_array(Arr::get($this->data, 'default_finance_type'))) ?: $rules[$this->csvHeader()] .= 'nullable|size:1';
-//
-//        return $rules;
+        return $this->request->rules(Arr::get($this->data(), $this->csvHeader()));
     }
 
     /**
@@ -139,14 +130,7 @@ class DefaultFinanceType extends Element
      */
     public function messages(): array
     {
-        return [];
-
-//        $key = $this->csvHeader();
-//
-//        return [
-//            sprintf('%s.size', $key)     => trans('validation.multiple_values', ['attribute' => trans('element.default_finance_type')]),
-//            sprintf('%s.in', $key)       => trans('validation.code_list', ['attribute' => trans('element.default_finance_type')]),
-//        ];
+        return $this->request->messages();
     }
 
     /**
@@ -157,16 +141,5 @@ class DefaultFinanceType extends Element
     protected function csvHeader(): mixed
     {
         return end($this->_csvHeader);
-    }
-
-    /**
-     * Get the valid DefaultFinanceType from the DefaultFinanceType codelist as a string.
-     *
-     * @return string
-     * @throws \JsonException
-     */
-    protected function validDefaultFinanceType(): string
-    {
-        return implode(',', array_keys(array_flip(array_keys($this->loadCodeList('FinanceType')))));
     }
 }

@@ -14,12 +14,20 @@ class CollaborationTypeRequest extends ActivityBaseRequest
     /**
      * Get the validation rules that apply to the request.
      *
+     * @param $collaboration
+     *
      * @return array
      */
-    public function rules(): array
+    public function rules($collaboration = null): array
     {
+        if ($collaboration && is_array($collaboration)) {
+            return [
+                'collaboration_type' => 'nullable|size:1',
+            ];
+        }
+
         return [
-            'collaboration_type' => ['nullable', 'in:1,2,3,4,5,6,7,8'],
+            'collaboration_type' => sprintf('nullable|in:%s', implode(',', array_keys(getCodeList('ActivityStatus', 'Activity', false)))),
         ];
     }
 
@@ -31,7 +39,8 @@ class CollaborationTypeRequest extends ActivityBaseRequest
     public function messages(): array
     {
         return [
-            'in'        => 'The selected code does not exist.',
+            'in'        => 'The collaboration type does not exist.',
+            'size'      => 'The collaboration type cannot have more than one value.',
         ];
     }
 }
