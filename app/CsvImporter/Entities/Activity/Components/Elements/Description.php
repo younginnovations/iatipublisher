@@ -87,7 +87,7 @@ class Description extends Element
     {
         if (!(is_null($value) || $value === '')) {
             $type = $this->setType($key);
-            $this->data['description'][$type]['type'] = strval($type);
+            $this->data['description'][$type]['type'] = (string) $type;
             $this->data['description'][$type]['narrative'][] = $this->setNarrative($value);
         }
     }

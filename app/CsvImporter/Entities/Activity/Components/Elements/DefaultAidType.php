@@ -7,7 +7,6 @@ namespace App\CsvImporter\Entities\Activity\Components\Elements;
 use App\CsvImporter\Entities\Activity\Components\Elements\Foundation\Iati\Element;
 use App\CsvImporter\Entities\Activity\Components\Factory\Validation;
 use App\Http\Requests\Activity\DefaultAidType\DefaultAidTypeRequest;
-use Illuminate\Support\Arr;
 
 /**
  * Class DefaultAidType.
@@ -95,6 +94,10 @@ class DefaultAidType extends Element
      */
     protected function setDefaultAidTypeVocabulary($key, $value, $index): void
     {
+        if (!isset($this->data['default_aid_type'][$index]['default_aid_type_vocabulary'])) {
+            $this->data['default_aid_type'][$index]['default_aid_type_vocabulary'] = '';
+        }
+
         if ($key === $this->_csvHeaders[0]) {
             $value = (!$value) ? '' : trim($value);
 
@@ -103,7 +106,7 @@ class DefaultAidType extends Element
             if ($value) {
                 foreach ($validDefaultAidTypeVocab as $code => $name) {
                     if (strcasecmp($value, $name) === 0) {
-                        $value = strval($code);
+                        $value = (string) $code;
                         break;
                     }
                 }
@@ -124,6 +127,10 @@ class DefaultAidType extends Element
      */
     protected function setDefaultAidTypeCode($key, $value, $index): void
     {
+        if (!isset($this->data['default_aid_type'][$index]['default_aid_type'])) {
+            $this->data['default_aid_type'][$index]['default_aid_type'] = '';
+        }
+
         if ($key === $this->_csvHeaders[1]) {
             $defaultAidTypeVocabulary = $this->data['default_aid_type'][$index]['default_aid_type_vocabulary'] ?? '';
             $defaultAidTypeVocabulary = empty($defaultAidTypeVocabulary) ?: (int) $defaultAidTypeVocabulary;
@@ -153,7 +160,7 @@ class DefaultAidType extends Element
             if ($value) {
                 foreach ($validDefaultAidTypeCode as $code => $name) {
                     if (strcasecmp($value, $name) === 0) {
-                        $value = strval($code);
+                        $value = (string) $code;
                         break;
                     }
                 }
@@ -171,87 +178,7 @@ class DefaultAidType extends Element
      */
     public function rules(): array
     {
-        return [];
-
-//        $rules = [];
-//
-//        foreach (Arr::get($this->data(), 'default_aid_type', []) as $key => $value) {
-//            $defaultAidTypeForm = sprintf('default_aid_type.%s', $key);
-//            $rules[sprintf('%s.default_aid_type_vocabulary', $defaultAidTypeForm)] = sprintf(
-//                'in:1,2,3,4|required_with: %s,%s,%s,%s',
-//                sprintf('%s.default_aid_type', $defaultAidTypeForm),
-//                sprintf('%s.earmarking_category', $defaultAidTypeForm),
-//                sprintf('%s.earmarking_modality', $defaultAidTypeForm),
-//                sprintf('%s.cash_and_voucher_modalities', $defaultAidTypeForm),
-//            );
-//            $vocabulary = Arr::get($value, 'default_aid_type_vocabulary');
-//
-//            if ($vocabulary) {
-//                switch ($vocabulary) {
-//                    case '2':
-//                        $validAidTypeCode = implode(',', $this->validDefaultAidTypeCodeList('EarmarkingCategory'));
-//                        $rules[sprintf('%s.earmarking_category', $defaultAidTypeForm)] = sprintf(
-//                            'in:%s|required_with: %s,%s,%s,%s',
-//                            $validAidTypeCode,
-//                            sprintf('%s.default_aid_type', $defaultAidTypeForm),
-//                            sprintf('%s.earmarking_modality', $defaultAidTypeForm),
-//                            sprintf('%s.cash_and_voucher_modalities', $defaultAidTypeForm),
-//                            sprintf('%s.default_aid_type_vocabulary', $defaultAidTypeForm),
-//                        );
-//                        break;
-//                    case '3':
-//                        $validAidTypeCode = implode(',', $this->validDefaultAidTypeCodeList('EarmarkingModality'));
-//                        $rules[sprintf('%s.earmarking_modality', $defaultAidTypeForm)] = sprintf(
-//                            'in:%s|required_with: %s,%s,%s,%s',
-//                            $validAidTypeCode,
-//                            sprintf('%s.default_aid_type', $defaultAidTypeForm),
-//                            sprintf('%s.earmarking_category', $defaultAidTypeForm),
-//                            sprintf('%s.cash_and_voucher_modalities', $defaultAidTypeForm),
-//                            sprintf('%s.default_aid_type_vocabulary', $defaultAidTypeForm),
-//                        );
-//                        break;
-//                    case '4':
-//                        $validAidTypeCode = implode(
-//                            ',',
-//                            $this->validDefaultAidTypeCodeList('CashandVoucherModalities')
-//                        );
-//                        $rules[sprintf('%s.cash_and_voucher_modalities', $defaultAidTypeForm)] = sprintf(
-//                            'in:%s|required_with: %s,%s,%s,%s',
-//                            $validAidTypeCode,
-//                            sprintf('%s.default_aid_type', $defaultAidTypeForm),
-//                            sprintf('%s.earmarking_category', $defaultAidTypeForm),
-//                            sprintf('%s.earmarking_modality', $defaultAidTypeForm),
-//                            sprintf('%s.default_aid_type_vocabulary', $defaultAidTypeForm),
-//                        );
-//                        break;
-//                    default:
-//                        $validAidTypeCode = implode(',', $this->validDefaultAidTypeCodeList('AidType'));
-//                        $rules[sprintf('%s.default_aid_type', $defaultAidTypeForm)] = sprintf(
-//                            'in:%s|required_with: %s,%s,%s,%s',
-//                            $validAidTypeCode,
-//                            sprintf('%s.earmarking_category', $defaultAidTypeForm),
-//                            sprintf('%s.earmarking_modality', $defaultAidTypeForm),
-//                            sprintf('%s.cash_and_voucher_modalities', $defaultAidTypeForm),
-//                            sprintf('%s.default_aid_type_vocabulary', $defaultAidTypeForm),
-//                        );
-//                }
-//            }
-//        }
-//
-//        return $rules;
-    }
-
-    /**
-     * Return Valid DefaultAidType Type.
-     *
-     * @param $name
-     *
-     * @return array
-     * @throws \JsonException
-     */
-    protected function validDefaultAidTypeCodeList($name): array
-    {
-        return array_keys($this->loadCodeList($name));
+        return $this->request->getRulesForDefaultAidType($this->data('default_aid_type'));
     }
 
     /**
@@ -261,79 +188,7 @@ class DefaultAidType extends Element
      */
     public function messages(): array
     {
-        return [];
-
-//        $messages = [];
-//
-//        foreach (Arr::get($this->data(), 'default_aid_type', []) as $key => $value) {
-//            $defaultAidTypeForm = sprintf('default_aid_type.%s', $key);
-//            $messages[sprintf(
-//                '%s.default_aid_type_vocabulary.%s',
-//                $defaultAidTypeForm,
-//                'required_with'
-//            )]
-//                = trans(
-//                    'validation.required_with',
-//                    [
-//                        'attribute' => trans('elementForm.default_aid_type_vocabulary'),
-//                        'values'    => 'default aid type code',
-//                    ]
-//                );
-//            $messages[sprintf(
-//                '%s.default_aid_type_vocabulary.%s',
-//                $defaultAidTypeForm,
-//                'in'
-//            )]
-//                = trans(
-//                    'validation.code_list',
-//                    [
-//                        'attribute' => trans('elementForm.default_aid_type_vocabulary'),
-//                    ]
-//                );
-//            $vocabulary = Arr::get($value, 'default_aid_type_vocabulary');
-//
-//            if ($vocabulary) {
-//                switch ($vocabulary) {
-//                    case '2':
-//                        $variable = 'earmarking_category';
-//                        break;
-//
-//                    case '3':
-//                        $variable = 'earmarking_modality';
-//                        break;
-//
-//                    case '4':
-//                        $variable = 'cash_and_voucher_modalities';
-//                        break;
-//
-//                    default:
-//                        $variable = 'default_aid_type';
-//                }
-//
-//                $messages[sprintf(
-//                    '%s.%s.%s',
-//                    $defaultAidTypeForm,
-//                    $variable,
-//                    'required_with'
-//                )]
-//                    = trans(
-//                        'validation.required_with',
-//                        [
-//                            'attribute' => trans('elementForm.default_aid_type_code'),
-//                            'values'    => 'default aid type vocabulary',
-//                        ]
-//                    );
-//
-//                $messages[sprintf(
-//                    '%s.%s.%s',
-//                    $defaultAidTypeForm,
-//                    $variable,
-//                    'in'
-//                )] = trans('validation.code_list', ['attribute' => 'default aid type code']);
-//            }
-//        }
-//
-//        return $messages;
+        return $this->request->getMessagesForDefaultAidType($this->data('default_aid_type'));
     }
 
     /**

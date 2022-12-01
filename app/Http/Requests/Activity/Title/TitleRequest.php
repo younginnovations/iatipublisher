@@ -18,7 +18,7 @@ class TitleRequest extends ActivityBaseRequest
      */
     public function rules(): array
     {
-        $rules['narrative'] = 'unique_lang|unique_default_lang|max:5';
+        $rules['narrative'] = 'unique_lang|unique_default_lang|min:5';
 
         return $rules;
     }
@@ -30,9 +30,9 @@ class TitleRequest extends ActivityBaseRequest
      */
     public function messages(): array
     {
-        $messages['narrative.unique_lang'] = 'The @xml:lang field must be unique.';
-        $messages['narrative.unique_default_lang'] = 'The @xml:lang field must be unique.';
-        $messages['narrative.max'] = 'Max 5 characters';
+        $messages['narrative.unique_lang'] = 'The language field must be unique.';
+        $messages['narrative.unique_default_lang'] = 'The language field must be unique.';
+        $messages['narrative.min'] = 'The title narrative must be atleast 5 characters.';
 
         return $messages;
     }

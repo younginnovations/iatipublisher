@@ -240,8 +240,8 @@ class BudgetRequest extends ActivityBaseRequest
                 $messages[$key] = $valueMessage;
             }
 
-            $messages[$budgetForm . '.period_end.0.date.before'] = 'The Period End @iso-date must be within a year after Period Start @iso-date.';
-            $messages[$budgetForm . '.period_end.0.date.period_start_end'] = 'he Budget Period must not be longer than one year';
+            $messages[$budgetForm . '.period_end.0.date.before'] = 'The Period End iso-date must be within a year after Period Start iso-date.';
+            $messages[$budgetForm . '.period_end.0.date.period_start_end'] = 'The Budget Period must not be longer than one year';
         }
 
         return $messages;
@@ -260,8 +260,8 @@ class BudgetRequest extends ActivityBaseRequest
         $messages = [];
 
         foreach ($formFields as $periodStartKey => $periodStartVal) {
-            $messages[$formBase . '.period_start.' . $periodStartKey . '.date.date'] = 'The @iso-date field must be a valid date.';
-            $messages[$formBase . '.period_start.' . $periodStartKey . '.date.date_greater_than'] = 'The @iso-date field must date after year 1900.';
+            $messages[$formBase . '.period_start.' . $periodStartKey . '.date.date'] = 'The iso-date field must be a valid date.';
+            $messages[$formBase . '.period_start.' . $periodStartKey . '.date.date_greater_than'] = 'The iso-date field must date after year 1900.';
             $messages[$formBase . '.period_start.' . $periodStartKey . '.date.period_start_end'] = 'The Budget Period must not be longer than one year';
         }
 
@@ -281,9 +281,9 @@ class BudgetRequest extends ActivityBaseRequest
         $messages = [];
 
         foreach ($formFields as $periodEndKey => $periodEndVal) {
-            $messages[$formBase . '.period_end.' . $periodEndKey . '.date.date'] = 'The @iso-date field must be a valid date.';
-            $messages[$formBase . '.period_end.' . $periodEndKey . '.date.date_greater_than'] = 'The @iso-date field must be date after year 1900.';
-            $messages[$formBase . '.period_end.' . $periodEndKey . '.date.after'] = 'The Period End @iso-date must be a date after Period Start @iso-date';
+            $messages[$formBase . '.period_end.' . $periodEndKey . '.date.date'] = 'The iso-date field must be a valid date.';
+            $messages[$formBase . '.period_end.' . $periodEndKey . '.date.date_greater_than'] = 'The iso-date field must be date after year 1900.';
+            $messages[$formBase . '.period_end.' . $periodEndKey . '.date.after'] = 'The Period End iso-date must be a date after Period Start iso-date';
         }
 
         return $messages;
@@ -305,9 +305,9 @@ class BudgetRequest extends ActivityBaseRequest
             $valueForm = sprintf('%s.budget_value.%s', $formBase, $valueIndex);
             $messages[sprintf('%s.amount.numeric', $valueForm)] = 'The amount field must be a number.';
             $messages[sprintf('%s.amount.min', $valueForm)] = 'The amount field must not be in negative.';
-            $messages[sprintf('%s.value_date.date', $valueForm)] = 'The @value-date field must be a valid date.';
-            $messages[sprintf('%s.value_date.after', $valueForm)] = 'The @value-date field must be a between period start and period end';
-            $messages[sprintf('%s.value_date.before', $valueForm)] = 'The @value-date field must be a between period start and period end';
+            $messages[sprintf('%s.value_date.date', $valueForm)] = 'The value-date field must be a valid date.';
+            $messages[sprintf('%s.value_date.after', $valueForm)] = 'The value-date field must be a between period start and period end';
+            $messages[sprintf('%s.value_date.before', $valueForm)] = 'The value-date field must be a between period start and period end';
         }
 
         return $messages;

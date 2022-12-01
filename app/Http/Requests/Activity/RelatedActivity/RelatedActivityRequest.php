@@ -40,7 +40,14 @@ class RelatedActivityRequest extends ActivityBaseRequest
      */
     public function getRulesForRelatedActivity(array $formFields): array
     {
-        return [];
+        $rules = [];
+
+        foreach ($formFields as $index => $formField) {
+            $baseForm = sprintf('related_activity.%s', $index);
+            $rules[sprintf('%s.relationship_type', $baseForm)] = 'nullable|in:' . implode(',', array_keys(getCodeList('RelatedActivityType', 'Activity', false)));
+        }
+
+        return $rules;
     }
 
     /**
@@ -52,6 +59,13 @@ class RelatedActivityRequest extends ActivityBaseRequest
      */
     public function getMessagesForRelatedActivity(array $formFields): array
     {
-        return [];
+        $messages = [];
+
+        foreach ($formFields as $index => $formField) {
+            $baseForm = sprintf('related_activity.%s', $index);
+            $messages[sprintf('%s.relationship_type.in', $baseForm)] = 'The relationship type in related activity is invalid.';
+        }
+
+        return $messages;
     }
 }
