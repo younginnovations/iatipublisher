@@ -96,6 +96,10 @@ class Condition extends Element
      */
     protected function setConditionAttached($key, $value): void
     {
+        if (!isset($this->data['conditions']['condition_attached'])) {
+            $this->data['conditions']['condition_attached'] = '';
+        }
+
         if ($key === $this->_csvHeaders[0]) {
             if (is_int($value) || is_bool($value)) {
                 $value = (int) $value;
@@ -122,6 +126,10 @@ class Condition extends Element
      */
     protected function setConditionType($key, $value, $index): void
     {
+        if (!isset($this->data['conditions']['condition'][$index]['condition_type'])) {
+            $this->data['conditions']['condition'][$index]['condition_type'] = '';
+        }
+
         if ($key === $this->_csvHeaders[1]) {
             $value = (!$value) ? '' : trim($value);
 
@@ -130,7 +138,7 @@ class Condition extends Element
             if ($value) {
                 foreach ($validConditionType as $code => $name) {
                     if (strcasecmp(trim($value), $name) === 0) {
-                        $value = strval($code);
+                        $value = (string) $code;
                         break;
                     }
                 }
@@ -151,6 +159,13 @@ class Condition extends Element
      */
     protected function setConditionNarrative($key, $value, $index): void
     {
+        if (!isset($this->data['conditions']['condition'][$index]['narrative'][0]['narrative'])) {
+            $this->data['conditions']['condition'][$index]['narrative'][0] = [
+                'narrative' => '',
+                'language'  => '',
+            ];
+        }
+
         if ($key === $this->_csvHeaders[2]) {
             $value = $value ?: '';
             $narrative = [
@@ -158,7 +173,7 @@ class Condition extends Element
                 'language'  => '',
             ];
 
-            $this->data['conditions']['condition'][$index]['narrative'][] = $narrative;
+            $this->data['conditions']['condition'][$index]['narrative'][0] = $narrative;
         }
     }
 
@@ -170,51 +185,10 @@ class Condition extends Element
      */
     public function rules(): array
     {
-        return $this->request->getRulesForCondition(Arr::get($this->data, 'conditions.condition', []));
+        $rules = $this->getBaseRules($this->request->getRulesForCondition(Arr::get($this->data, 'conditions.condition', [])), false);
+        $rules['conditions.condition_attached'] = 'in:0,1';
 
-//        $validConditionType = implode(',', $this->validConditionCodeList('ConditionType'));
-//
-//        $rules = [];
-//
-//        $rules['conditions.condition_attached'][] = 'in:0,1';
-//
-//        if (count(Arr::get($this->data, 'conditions.condition', []))) {
-//            foreach (Arr::get($this->data, 'conditions.condition', []) as $key => $conditionItem) {
-//                $rules['conditions.condition_attached'][] = sprintf(
-//                    'required_with: %s,%s',
-//                    'conditions.condition.' . $key . '.condition_type',
-//                    'conditions.condition.' . $key . '.narrative.0.narrative',
-//                );
-//
-//                $rules['conditions.condition.' . $key . '.condition_type'] = sprintf(
-//                    'in:%s|required_with: %s,%s',
-//                    $validConditionType,
-//                    'conditions.condition_attached',
-//                    'conditions.condition.' . $key . '.narrative.0.narrative',
-//                );
-//
-//                $rules['conditions.condition.' . $key . '.narrative.0.narrative'] = sprintf(
-//                    'required_with: %s,%s',
-//                    'conditions.condition_attached',
-//                    'conditions.condition.' . $key . '.condition_type',
-//                );
-//            }
-//        }
-//
-//        return $rules;
-    }
-
-    /**
-     * Return Valid Condition Type.
-     *
-     * @param $name
-     *
-     * @return array
-     * @throws \JsonException
-     */
-    protected function validConditionCodeList($name): array
-    {
-        return array_keys($this->loadCodeList($name));
+        return $rules;
     }
 
     /**
@@ -224,49 +198,10 @@ class Condition extends Element
      */
     public function messages(): array
     {
-        return $this->request->getMessagesForCondition(Arr::get($this->data, 'conditions.condition', []));
+        $messages = $this->getBaseMessages($this->request->getMessagesForCondition(Arr::get($this->data, 'conditions.condition', [])), false);
+        $messages['conditions.condition_attached.in'] = 'The condition attached value is invalid.';
 
-//        $messages = [];
-//
-//        $messages['conditions.condition_attached.in'] = trans(
-//            'validation.code_list',
-//            ['attribute' => trans('elementForm.condition_attached')]
-//        );
-//
-//        if (count(Arr::get($this->data, 'conditions.condition', []))) {
-//            foreach (Arr::get($this->data(), 'conditions.condition', []) as $key => $conditionItem) {
-//                $messages['conditions.condition_attached.required_with'] = trans(
-//                    'validation.required_with',
-//                    [
-//                        'attribute' => trans('elementForm.condition_attached'),
-//                        'values'    => 'condition type or narrative',
-//                    ]
-//                );
-//
-//                $messages['conditions.condition.' . $key . '.condition_type.in'] = trans(
-//                    'validation.code_list',
-//                    ['attribute' => trans('elementForm.condition_type')]
-//                );
-//
-//                $messages['conditions.condition.' . $key . '.condition_type.required_with'] = trans(
-//                    'validation.required_with',
-//                    [
-//                        'attribute' => trans('elementForm.condition_type'),
-//                        'values'    => 'condition attached or narrative',
-//                    ]
-//                );
-//
-//                $messages['conditions.condition.' . $key . '.narrative.0.narrative.required_with'] = trans(
-//                    'validation.required_with',
-//                    [
-//                        'attribute' => trans('elementForm.condition_narrative'),
-//                        'values'    => 'condition attached or type',
-//                    ]
-//                );
-//            }
-//        }
-//
-//        return $messages;
+        return $messages;
     }
 
     /**

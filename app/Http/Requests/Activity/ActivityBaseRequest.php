@@ -330,8 +330,8 @@ class ActivityBaseRequest extends FormRequest
     public function getMessagesForNarrative($formFields, $formBase): array
     {
         $messages = [];
-        $messages[sprintf('%s.narrative.unique_lang', $formBase)] = 'The @xml:lang field must be unique.';
-        $messages[sprintf('%s.narrative.unique_default_lang', $formBase)] = 'The @xml:lang field must be unique.';
+        $messages[sprintf('%s.narrative.unique_lang', $formBase)] = 'The narrative language field must be unique.';
+        $messages[sprintf('%s.narrative.unique_default_lang', $formBase)] = 'The narrative language field must be unique.';
 
         foreach ($formFields as $narrativeIndex => $narrative) {
             $messages[sprintf(
@@ -443,6 +443,7 @@ class ActivityBaseRequest extends FormRequest
 
         foreach ($formFields as $documentLinkIndex => $documentLink) {
             $documentLinkForm = $formBase ? sprintf('%s.document_link.%s', $formBase, $documentLinkIndex) : sprintf('document_link.%s', $documentLinkIndex);
+            $rules[sprintf('%s.format', $documentLinkForm)] = 'nullable|in:' . implode(',', array_keys(getCodeList('FileFormat', 'Activity', false)));
 
             if (Arr::get($documentLink, 'url', null) !== '') {
                 $rules[sprintf('%s.url', $documentLinkForm)] = 'nullable|url';
@@ -457,7 +458,9 @@ class ActivityBaseRequest extends FormRequest
             }
 
             $rules[sprintf('%s.category', $documentLinkForm)][] = 'unique_category';
+            $rules[sprintf('%s.category.0.code', $documentLinkForm)] = 'nullable|in:' . implode(',', array_keys(getCodeList('DocumentCategory', 'Activity', false)));
             $rules[sprintf('%s.language', $documentLinkForm)][] = 'unique_language';
+            $rules[sprintf('%s.language.0.code', $documentLinkForm)] = 'nullable|in:' . implode(',', array_keys(getCodeList('Language', 'Activity', false)));
 
             $narrativeTitleRules = $this->getRulesForNarrative($documentLink['title'][0]['narrative'], sprintf('%s.title.0', $documentLinkForm));
 
@@ -513,6 +516,8 @@ class ActivityBaseRequest extends FormRequest
                 $documentLinkForm = sprintf('document_link.%s', $documentLinkIndex);
             }
 
+            $messages[sprintf('%s.format', $documentLinkForm)] = 'The document link format is invalid';
+
             if (Arr::get($documentLink, 'url', null) !== '') {
                 $messages[sprintf('%s.url.url', $documentLinkForm)] = 'The @url field must be a valid url.';
             }
@@ -525,8 +530,10 @@ class ActivityBaseRequest extends FormRequest
                 }
             }
 
-            $messages[sprintf('%s.category.unique_category', $documentLinkForm)] = 'The @code field must be a unique.';
-            $messages[sprintf('%s.language.unique_language', $documentLinkForm)] = 'The @code field must be a unique.';
+            $messages[sprintf('%s.category.unique_category', $documentLinkForm)] = 'The document link category code field must be a unique.';
+            $messages[sprintf('%s.category.0.code.in', $documentLinkForm)] = 'The document link category code is invalid.';
+            $messages[sprintf('%s.language.unique_language', $documentLinkForm)] = 'The document link language code field must be a unique.';
+            $messages[sprintf('%s.language.0.code.in', $documentLinkForm)] = 'The document link language code is invalid.';
             $narrativeTitleMessages = $this->getMessagesForNarrative($documentLink['title'][0]['narrative'], sprintf('%s.title.0', $documentLinkForm));
 
             foreach ($narrativeTitleMessages as $key => $item) {
@@ -583,6 +590,7 @@ class ActivityBaseRequest extends FormRequest
         foreach ($formFields as $valueIndex => $value) {
             $valueForm = sprintf('%s.value.%s', $formBase, $valueIndex);
             $rules[sprintf('%s.amount', $valueForm)] = 'nullable|numeric|min:0';
+            $rules[sprintf('%s.currency', $valueForm)] = 'nullable|in:' . implode(',', array_keys(getCodeList('Currency', 'Activity', false)));
             $rules[sprintf('%s.value_date', $valueForm)] = $betweenRule;
         }
 

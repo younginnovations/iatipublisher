@@ -172,26 +172,50 @@ abstract class Element
         return $this->errors;
     }
 
-    public function getBaseRules($baseRules): array
+    /**
+     * Returns updated base rules.
+     *
+     * @param $baseRules
+     * @param bool $hasIdx
+     *
+     * @return array
+     */
+    public function getBaseRules($baseRules, bool $hasIdx = true): array
     {
         $rules = [];
 
         foreach (Arr::get($this->data(), $this->index, []) as $idx => $value) {
             foreach ($baseRules as $elementName => $baseRule) {
-                $rules[$this->index . '.' . $idx . '.' . $elementName] = $baseRule;
+                if ($hasIdx) {
+                    $rules[$this->index . '.' . $idx . '.' . $elementName] = $baseRule;
+                } else {
+                    $rules[$this->index . '.' . $elementName] = $baseRule;
+                }
             }
         }
 
         return $rules;
     }
 
-    public function getBaseMessages($baseMessages): array
+    /**
+     * Returns updated base messages.
+     *
+     * @param $baseMessages
+     * @param bool $hasIdx
+     *
+     * @return array
+     */
+    public function getBaseMessages($baseMessages, bool $hasIdx = true): array
     {
         $messages = [];
 
         foreach (Arr::get($this->data(), $this->index, []) as $idx => $value) {
             foreach ($baseMessages as $elementName => $baseMessage) {
-                $messages[$this->index . '.' . $idx . '.' . $elementName] = $baseMessage;
+                if ($hasIdx) {
+                    $messages[$this->index . '.' . $idx . '.' . $elementName] = $baseMessage;
+                } else {
+                    $messages[$this->index . '.' . $elementName] = $baseMessage;
+                }
             }
         }
 

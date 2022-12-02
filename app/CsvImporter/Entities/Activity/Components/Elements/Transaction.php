@@ -88,6 +88,10 @@ class Transaction extends Element
      * @var ActivityRow
      */
     protected ActivityRow $activityRow;
+
+    /**
+     * @var TransactionRequest
+     */
     private TransactionRequest $request;
 
     /**
