@@ -6,6 +6,7 @@ namespace App\CsvImporter\Entities\Activity\Components\Elements;
 
 use App\CsvImporter\Entities\Activity\Components\Elements\Foundation\Iati\Element;
 use App\CsvImporter\Entities\Activity\Components\Factory\Validation;
+use App\Http\Requests\Activity\CountryBudgetItem\CountryBudgetItemRequest;
 use Illuminate\Support\Arr;
 
 /**
@@ -33,6 +34,11 @@ class CountryBudgetItem extends Element
     protected string $index = 'country_budget_items';
 
     /**
+     * @var CountryBudgetItemRequest
+     */
+    private CountryBudgetItemRequest $request;
+
+    /**
      * CountryBudgetItem constructor.
      *
      * @param            $fields
@@ -42,6 +48,7 @@ class CountryBudgetItem extends Element
     {
         $this->prepare($fields);
         $this->factory = $factory;
+        $this->request = new CountryBudgetItemRequest();
     }
 
     /**
@@ -91,6 +98,10 @@ class CountryBudgetItem extends Element
      */
     protected function setCountryBudgetItemVocabulary($key, $value): void
     {
+        if (!isset($this->data['country_budget_items']['country_budget_vocabulary'])) {
+            $this->data['country_budget_items']['country_budget_vocabulary'] = '';
+        }
+
         if ($key === $this->_csvHeaders[0]) {
             $value = (!$value) ? '' : trim($value);
 
@@ -99,7 +110,7 @@ class CountryBudgetItem extends Element
             if ($value) {
                 foreach ($validCountryBudgetItemVocab as $code => $name) {
                     if (strcasecmp($value, $name) === 0) {
-                        $value = strval($code);
+                        $value = (string) $code;
                         break;
                     }
                 }
@@ -120,6 +131,10 @@ class CountryBudgetItem extends Element
      */
     protected function setBudgetItemCode($key, $value, $index): void
     {
+        if (!isset($this->data['country_budget_items']['budget_item'][$index]['code'])) {
+            $this->data['country_budget_items']['budget_item'][$index]['code'] = '';
+        }
+
         if ($key === $this->_csvHeaders[1]) {
             $value = (!$value) ? '' : trim($value);
 
@@ -128,7 +143,7 @@ class CountryBudgetItem extends Element
             if ($value) {
                 foreach ($validBudgetItemCode as $code => $name) {
                     if (strcasecmp($value, $name) === 0) {
-                        $value = strval($code);
+                        $value = (string) $code;
                         break;
                     }
                 }
@@ -149,6 +164,10 @@ class CountryBudgetItem extends Element
      */
     protected function setBudgetItemPercentage($key, $value, $index): void
     {
+        if (!isset($this->data['country_budget_items']['budget_item'][$index]['percentage'])) {
+            $this->data['country_budget_items']['budget_item'][$index]['percentage'] = '';
+        }
+
         if ($key === $this->_csvHeaders[2]) {
             $value = (!$value) ? 0 : $value;
 
@@ -167,6 +186,13 @@ class CountryBudgetItem extends Element
      */
     protected function setBudgetItemDescriptionNarrative($key, $value, $index): void
     {
+        if (!isset($this->data['country_budget_items']['budget_item'][$index]['description'][0]['narrative'][0]['narrative'])) {
+            $this->data['country_budget_items']['budget_item'][$index]['description'][0]['narrative'][0] = [
+                'narrative' => '',
+                'language'  => '',
+            ];
+        }
+
         if ($key === $this->_csvHeaders[3]) {
             $value = $value ?: '';
             $narrative = [
@@ -174,7 +200,7 @@ class CountryBudgetItem extends Element
                 'language'  => '',
             ];
 
-            $this->data['country_budget_items']['budget_item'][$index]['description'][0]['narrative'][] = $narrative;
+            $this->data['country_budget_items']['budget_item'][$index]['description'][0]['narrative'][0] = $narrative;
         }
     }
 
@@ -186,64 +212,7 @@ class CountryBudgetItem extends Element
      */
     public function rules(): array
     {
-        return [];
-//        $validVocabulary = implode(',', $this->validCountryBudgetItemCodeList('BudgetIdentifierVocabulary'));
-//        $validCode = implode(',', $this->validCountryBudgetItemCodeList('BudgetIdentifier'));
-//
-//        $rules = [];
-//
-//        $rules['country_budget_items.country_budget_vocabulary'][] = sprintf(
-//            'in:%s',
-//            $validVocabulary
-//        );
-//
-//        $totalPercentage = 0;
-//
-//        if (count(Arr::get($this->data, 'country_budget_items.budget_item', []))) {
-//            foreach (Arr::get($this->data, 'country_budget_items.budget_item', []) as $key => $budgetItem) {
-//                $totalPercentage += (float) Arr::get($budgetItem, 'percentage', 0);
-//                $rules['country_budget_items.country_budget_vocabulary'][] = sprintf(
-//                    'required_with: %s,%s,%s',
-//                    'country_budget_items.budget_item.' . $key . '.code',
-//                    'country_budget_items.budget_item.' . $key . '.percentage',
-//                    'country_budget_items.budget_item.' . $key . '.description.0.narrative.0.narrative',
-//                );
-//
-//                $rules['country_budget_items.budget_item.' . $key . '.code'] = sprintf(
-//                    'in:%s|required_with: %s,%s,%s',
-//                    $validCode,
-//                    'country_budget_items.country_budget_vocabulary',
-//                    'country_budget_items.budget_item.' . $key . '.percentage',
-//                    'country_budget_items.budget_item.' . $key . '.description.0.narrative.0.narrative',
-//                );
-//
-//                $rules['country_budget_items.budget_item.' . $key . '.description.0.narrative.0.narrative'] = sprintf(
-//                    'required_with: %s,%s,%s',
-//                    'country_budget_items.country_budget_vocabulary',
-//                    'country_budget_items.budget_item.' . $key . '.code',
-//                    'country_budget_items.budget_item.' . $key . '.percentage',
-//                );
-//            }
-//
-//            if ($totalPercentage !== 100) {
-//                $rules['country_budget_items.budget_item.0.percentage'] = 'sum';
-//            }
-//        }
-//
-//        return $rules;
-    }
-
-    /**
-     * Return Valid CountryBudgetItem Type.
-     *
-     * @param $name
-     *
-     * @return array
-     * @throws \JsonException
-     */
-    protected function validCountryBudgetItemCodeList($name): array
-    {
-        return array_keys($this->loadCodeList($name));
+        return $this->getBaseRules($this->request->getRulesForCountryBudgetItem(Arr::get($this->data, 'country_budget_items', [])), false);
     }
 
     /**
@@ -253,50 +222,7 @@ class CountryBudgetItem extends Element
      */
     public function messages(): array
     {
-        return [];
-//        $messages = [];
-//
-//        $messages['country_budget_items.country_budget_vocabulary.in'] = trans(
-//            'validation.code_list',
-//            ['attribute' => trans('elementForm.country_budget_vocabulary')]
-//        );
-//
-//        if (count(Arr::get($this->data, 'country_budget_items.budget_item', []))) {
-//            foreach (Arr::get($this->data(), 'country_budget_items.budget_item', []) as $key => $budgetItem) {
-//                $messages['country_budget_items.country_budget_vocabulary.required_with'] = trans(
-//                    'validation.required_with',
-//                    [
-//                        'attribute' => trans('elementForm.country_budget_vocabulary'),
-//                        'values'    => 'code, percentage or description',
-//                    ]
-//                );
-//
-//                $messages['country_budget_items.budget_item.' . $key . '.code.in'] = trans(
-//                    'validation.code_list',
-//                    ['attribute' => trans('elementForm.budget_item_code')]
-//                );
-//
-//                $messages['country_budget_items.budget_item.' . $key . '.code.required_with'] = trans(
-//                    'validation.required_with',
-//                    [
-//                        'attribute' => trans('elementForm.budget_item_code'),
-//                        'values'    => 'vocabulary, percentage or description',
-//                    ]
-//                );
-//
-//                $messages['country_budget_items.budget_item.' . $key . '.description.0.narrative.0.narrative.required_with'] = trans(
-//                    'validation.required_with',
-//                    [
-//                        'attribute' => trans('elementForm.budget_item_code'),
-//                        'values'    => 'vocabulary, percentage or description',
-//                    ]
-//                );
-//            }
-//        }
-//
-//        $messages['country_budget_items.budget_item.0.percentage.sum'] = 'Sum of percentage for all budget items must be 100%';
-//
-//        return $messages;
+        return $this->getBaseMessages($this->request->getMessagesForCountryBudgetItem(Arr::get($this->data, 'country_budget_items', [])), false);
     }
 
     /**

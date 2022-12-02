@@ -88,6 +88,56 @@ class Validation extends Factory
     }
 
     /**
+     * Validator for category.
+     *
+     * @param      $attribute
+     * @param      $value
+     *
+     * @return bool
+     */
+    public function uniqueCategoryValidator($attribute, $value): bool
+    {
+        $categoryCodes = [];
+
+        foreach ($value as $category) {
+            $code = $category['code'];
+
+            if (in_array($code, $categoryCodes, true)) {
+                return false;
+            }
+
+            $categoryCodes[] = $code;
+        }
+
+        return true;
+    }
+
+    /**
+     * Validator for unique language/code.
+     *
+     * @param      $attribute
+     * @param      $value
+     *
+     * @return bool
+     */
+    public function uniqueLanguageValidator($attribute, $value): bool
+    {
+        $languageCodes = [];
+
+        foreach ($value as $language) {
+            $code = $language['code'] ?? ($language['language'] ?? '');
+
+            if (in_array($code, $languageCodes, true)) {
+                return false;
+            }
+
+            $languageCodes[] = $code;
+        }
+
+        return true;
+    }
+
+    /**
      * Register required validation rules.
      *
      * @return void
@@ -530,6 +580,29 @@ class Validation extends Factory
                 }
 
                 return true;
+            }
+        );
+
+        $this->extend(
+            'unique_category',
+            function ($attribute, $value) {
+                return $this->uniqueCategoryValidator($attribute, $value);
+            }
+        );
+
+        $this->extend(
+            'unique_language',
+            function ($attribute, $value) {
+                return $this->uniqueLanguageValidator($attribute, $value);
+            }
+        );
+
+        $this->extend(
+            'total',
+            function ($attribute, $value, $parameters, $validator) {
+                ($value != 100) ? $check = false : $check = true;
+
+                return $check;
             }
         );
     }

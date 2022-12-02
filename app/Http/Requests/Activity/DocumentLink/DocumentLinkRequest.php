@@ -14,7 +14,7 @@ class DocumentLinkRequest extends ActivityBaseRequest
     /**
      * @return array
      */
-    public function rules()
+    public function rules(): array
     {
         return $this->getRulesForDocumentLink($this->get('document_link'));
     }
@@ -22,39 +22,8 @@ class DocumentLinkRequest extends ActivityBaseRequest
     /**
      * @return array
      */
-    public function messages()
+    public function messages(): array
     {
         return $this->getMessagesForDocumentLink($this->get('document_link'));
-    }
-
-    /**
-     * @param $formFields
-     * @param $formIndex
-     * @return array
-     */
-    protected function getRulesForDocumentCategory($formFields, $formIndex)
-    {
-        $rules = [];
-        foreach ($formFields as $documentCategoryIndex => $documentCategory) {
-            // $rules[sprintf('%s.category.%s.code', $formIndex, $documentCategoryIndex)] = 'required';
-            $rules[sprintf('%s.category.%s.code', $formIndex, $documentCategoryIndex)] = 'nullable';
-        }
-
-        return $rules;
-    }
-
-    /**
-     * @param $formFields
-     * @param $formIndex
-     * @return array
-     */
-    protected function getMessagesForDocumentCategory($formFields, $formIndex)
-    {
-        $messages = [];
-        foreach ($formFields as $documentCategoryIndex => $documentCategory) {
-            $messages[sprintf('%s.category.%s.code.required', $formIndex, $documentCategoryIndex)] = trans('validation.required', ['attribute' => trans('elementForm.category')]);
-        }
-
-        return $messages;
     }
 }
