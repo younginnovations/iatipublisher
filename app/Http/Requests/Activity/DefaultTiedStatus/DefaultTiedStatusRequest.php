@@ -39,7 +39,8 @@ class DefaultTiedStatusRequest extends ActivityBaseRequest
     public function messages(): array
     {
         return [
-            'in'        => 'The selected code does not exist.',
+            'in'        => 'The default tied status does not exist.',
+            'size'      => 'The default tied status cannot have more than one value.',
         ];
     }
 }

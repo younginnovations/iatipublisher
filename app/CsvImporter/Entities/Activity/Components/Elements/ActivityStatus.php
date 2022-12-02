@@ -63,10 +63,14 @@ class ActivityStatus extends Element
     {
         foreach ($fields as $key => $values) {
             if (!is_null($values) && array_key_exists($key, array_flip($this->_csvHeader))) {
-                $this->data[$this->csvHeader()] = '';
+                $this->data[$this->csvHeader()] = [];
 
                 foreach ($values as $value) {
                     $this->map($value, $values);
+                }
+
+                if (empty($this->data[$this->csvHeader()])) {
+                    $this->data[$this->csvHeader()] = '';
                 }
             }
         }

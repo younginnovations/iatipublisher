@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Xml\Validator\Traits;
 
+use Carbon\Carbon;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Request;
 
@@ -17,7 +18,7 @@ trait RegistersValidationRules
      */
     protected function registerValidationRules(): void
     {
-        $this->extendImplicit(
+        $this->extend(
             'unique_lang',
             function ($attribute, $value) {
                 $languages = [];
@@ -33,7 +34,7 @@ trait RegistersValidationRules
             }
         );
 
-        $this->extendImplicit(
+        $this->extend(
             'unique_default_lang',
             function ($attribute, $value) {
                 $languages = [];
@@ -110,12 +111,14 @@ trait RegistersValidationRules
                 }
 
                 if (($actual_start_date > $planned_end_date) && ($actual_start_date !== '' && $planned_end_date !== '')
-                    && ($actual_end_date === '' && $planned_start_date === '')) {
+                    && ($actual_end_date === '' && $planned_start_date === '')
+                ) {
                     return false;
                 }
 
                 if (($planned_start_date > $actual_end_date) && ($planned_start_date !== '' && $actual_end_date !== '')
-                    && ($planned_end_date === '' && $actual_start_date === '')) {
+                    && ($planned_end_date === '' && $actual_start_date === '')
+                ) {
                     return false;
                 }
 
@@ -140,13 +143,31 @@ trait RegistersValidationRules
         );
 
         $this->extend(
+            'multiple_activity_date',
+            function ($attribute, $dates) {
+                if ($dates && is_array($dates)) {
+                    foreach ($dates as $activityDate) {
+                        if (count($activityDate) > 1) {
+                            return false;
+                        }
+                    }
+
+                    return true;
+                }
+
+                return false;
+            }
+        );
+
+        $this->extend(
             'start_date_required',
             function ($attribute, $dates) {
                 $dateTypes = [];
                 foreach ($dates as $date) {
                     $dateTypes[] = $date['type'];
                 }
-                if (array_key_exists('1', array_flip($dateTypes))
+                if (
+                    array_key_exists('1', array_flip($dateTypes))
                     || array_key_exists('2', array_flip($dateTypes))
                 ) {
                     return true;
@@ -176,6 +197,342 @@ trait RegistersValidationRules
                 isset($value['value']) ?: $value['value'] = null;
 
                 return $value['year'] || $value['value'];
+            }
+        );
+
+        $this->extend(
+            'sector_percentage_sum',
+            function ($attribute, $value) {
+                $totalPercentage = [];
+
+                if ($value && is_array($value)) {
+                    array_walk(
+                        $value,
+                        function ($element) use (&$totalPercentage) {
+                            $sectorVocabulary = (int) $element['sector_vocabulary'];
+                            $sectorPercentage = (float) $element['percentage'];
+
+                            if (array_key_exists($sectorVocabulary, $totalPercentage)) {
+                                $totalPercentage[$sectorVocabulary] = (float) $totalPercentage[$sectorVocabulary] + (float) $sectorPercentage;
+                            } else {
+                                $totalPercentage[$sectorVocabulary] = $sectorPercentage;
+                            }
+                        }
+                    );
+
+                    foreach ($totalPercentage as $percentage) {
+                        if ($percentage !== '' && $percentage !== 100.0) {
+                            return false;
+                        }
+                    }
+
+                    return true;
+                }
+
+                return false;
+            }
+        );
+
+        $this->extend(
+            'percentage_sum',
+            function ($attribute, $values) {
+                $totalPercentage = 0;
+                if ($values) {
+                    foreach ($values as $value) {
+                        $percentage = Arr::get($value, 'percentage');
+                        if (is_numeric($percentage)) {
+                            $totalPercentage += $percentage;
+                        }
+                    }
+
+                    if (count($values) === 1 && $totalPercentage === 0) {
+                        return true;
+                    }
+
+                    if ($totalPercentage !== 100) {
+                        return false;
+                    }
+
+                    return true;
+                }
+
+                return false;
+            }
+        );
+
+        $this->extend(
+            'recipient_country_region_percentage_sum',
+            function ($attribute, $value) {
+                return number_format($value) == 100;
+            }
+        );
+
+        $this->extendImplicit(
+            'required_only_one_among',
+            function ($attribute, $values, $parameters) {
+                [$identifierIndex, $narrativeIndex] = $parameters;
+                $isValid = false;
+
+                if ($values) {
+                    foreach ($values as $value) {
+                        [$identifier, $narratives] = [
+                            Arr::get($value, $identifierIndex, ''),
+                            Arr::get($value, $narrativeIndex, []),
+                        ];
+
+                        foreach ($narratives as $narrative) {
+                            $narrativeValue = Arr::get($narrative, 'narrative');
+
+                            if (!$identifier && !$narrativeValue) {
+                                return false;
+                            }
+
+                            $isValid = true;
+                        }
+                    }
+                }
+
+                return $isValid;
+            }
+        );
+
+        $this->extend(
+            'check_sector',
+            function ($attribute, $values) {
+                $sectorInActivityLevel = true;
+                $status = true;
+
+                foreach ($values as $value) {
+                    if ($value['activitySector'] === '') {
+                        $sectorInActivityLevel = false;
+                    }
+
+                    if (
+                        $value['sector_vocabulary'] === '' && $value['code'] === ''
+                        && $value['text'] === '' && $value['category_code'] === '' && Arr::get(
+                            $value,
+                            'sdg_goal'
+                        ) === '' && Arr::get($value, 'sdg_target') === '' &&
+                        $sectorInActivityLevel === false
+                    ) {
+                        $status = false;
+                    } elseif (($value['sector_vocabulary'] !== '' || $value['code'] !== ''
+                            || $value['text'] !== '' || $value['category_code'] !== '' || Arr::get(
+                                $value,
+                                'sdg_goal'
+                            ) !== '' || Arr::get($value, 'sdg_target') !== '')
+                        && $sectorInActivityLevel === true
+                    ) {
+                        $status = false;
+                    }
+                }
+
+                return $status;
+            }
+        );
+
+        $this->extend(
+            'check_recipient_region_country',
+            function ($attribute, $values) {
+                $transactionRecipientCountry = Arr::get($values, 'recipient_country.0.country_code');
+                $transactionRecipientRegion = Arr::get($values, 'recipient_region.0.region_code');
+                $activityRecipientRegion = '';
+                $activityRecipientCountry = '';
+
+                if (is_array(Arr::get($values, 'activityRecipientCountry'))) {
+                    foreach (Arr::get($values, 'activityRecipientCountry', []) as $recipientCountry) {
+                        $activityRecipientCountry = $recipientCountry['country_code'];
+                    }
+                }
+
+                if (is_array(Arr::get($values, 'activityRecipientRegion'))) {
+                    foreach (Arr::get($values, 'activityRecipientRegion', []) as $recipientRegion) {
+                        $activityRecipientRegion = !empty($recipientRegion['region_code']) ? $recipientRegion['region_code'] : (!empty($recipientRegion['custom_code']) ? $recipientRegion['custom_code'] : '');
+                    }
+                }
+
+                if (($activityRecipientCountry == '' && $activityRecipientRegion == '')
+                    && ($transactionRecipientRegion != '' || $transactionRecipientCountry != '')
+                ) {
+                    return true;
+                }
+
+                if (($activityRecipientCountry != '' || $activityRecipientRegion != '')
+                    && ($transactionRecipientRegion == '' && $transactionRecipientCountry == '')
+                ) {
+                    return true;
+                }
+
+                return false;
+            }
+        );
+
+        $this->extend(
+            'start_before_end_date',
+            function ($attribute, $values) {
+                if (count($values) > 1) {
+                    return true;
+                }
+
+                $periodStart = dateStrToTime(Arr::get($values[array_key_first($values)], 'period_start.0.date'));
+                $periodEnd = dateStrToTime(Arr::get($values[array_key_first($values)], 'period_end.0.date'));
+
+                if ($periodStart === false || $periodEnd === false) {
+                    return true;
+                }
+
+                if ($periodStart <= $periodEnd) {
+                    return true;
+                }
+
+                return false;
+            }
+        );
+
+        $this->extend(
+            'diff_one_year',
+            function ($attribute, $values) {
+                if (count($values) > 1) {
+                    return true;
+                }
+
+                $periodStart = Arr::get($values[array_key_first($values)], 'period_start.0.date');
+                $periodEnd = Arr::get($values[array_key_first($values)], 'period_end.0.date');
+                // $isPeriodStartDate = strtotime($periodStart);
+                // $isPeriodEndDate = strtotime($periodEnd);
+                $isPeriodStartDate = dateStrToTime($periodStart);
+                $isPeriodEndDate = dateStrToTime($periodEnd);
+
+                if ($isPeriodStartDate !== false && $isPeriodEndDate !== false) {
+                    $periodStart = Carbon::parse($periodStart);
+                    $periodEnd = Carbon::parse($periodEnd);
+
+                    $diff = $periodStart->diff($periodEnd)->days;
+
+                    return $diff <= 365;
+                }
+
+                return true;
+            }
+        );
+
+        $this->extendImplicit(
+            'only_one_among',
+            function ($attribute, $values) {
+                foreach ($values as $value) {
+                    if ((Arr::get($value, 'organization_identifier_code', '') === '')
+                        && (Arr::get($value, 'type', '') === '')
+                        && (Arr::get($value, 'provider_activity_id') === '')
+                        && (Arr::get($value, 'narrative.0.narrative') === '')
+                    ) {
+                        return true;
+                    }
+
+                    if (($value['organization_identifier_code'] === '') && (Arr::get(
+                        $value,
+                        'narrative.0.narrative'
+                    ) === '')) {
+                        return false;
+                    }
+
+                    return true;
+                }
+            }
+        );
+
+        $this->extend(
+            'sum',
+            function ($attribute, $value, $parameters, $validator) {
+                return false;
+            }
+        );
+
+        $this->extend(
+            'date_greater_than',
+            function ($attribute, $value, $parameters, $validator) {
+                $inserted = Carbon::parse($value)->year;
+                $since = $parameters[0];
+
+                return $inserted >= $since;
+            }
+        );
+
+        $this->extend(
+            'period_start_end',
+            function ($attribute, $value, $parameter, $validator) {
+                return !($parameter[1] < $parameter[0]);
+            }
+        );
+
+        $this->extend(
+            'required_with_language',
+            function ($attribute, $value, $parameters, $validator) {
+                $language = preg_replace('/([^~]+).narrative/', '$1.language', $attribute);
+                $request = $this->data;
+
+                return !(Arr::get($request, $language) && !Arr::get($request, $attribute));
+            }
+        );
+
+        $this->extend('sector_total_percent', function () {
+            return false;
+        });
+
+        $this->extend('sector_has_five_digit_oced_vocab', function () {
+            return false;
+        });
+
+        $this->extend('allocated_country_percent_exceeded', function () {
+            return false;
+        });
+
+        $this->extend('allocated_region_total_mismatch', function () {
+            return false;
+        });
+
+        $this->extend('end_later_than_start', function () {
+            return false;
+        });
+
+        $this->extend('budgets_identical', function () {
+            return false;
+        });
+
+        $this->extend('budget_revised_invalid', function () {
+            return false;
+        });
+
+        $this->extend(
+            'exclude_operators',
+            function ($attribute, $value, $parameters, $validator) {
+                if ($value) {
+                    return !preg_match('/[\&\|\?|]+/', $value);
+                }
+
+                return true;
+            }
+        );
+
+        $this->extend(
+            'unique_category',
+            function ($attribute, $value) {
+                return $this->uniqueCategoryValidator($attribute, $value);
+            }
+        );
+
+        $this->extend(
+            'unique_language',
+            function ($attribute, $value) {
+                return $this->uniqueLanguageValidator($attribute, $value);
+            }
+        );
+
+        $this->extend(
+            'total',
+            function ($attribute, $value, $parameters, $validator) {
+                ($value != 100) ? $check = false : $check = true;
+
+                return $check;
             }
         );
     }
