@@ -140,7 +140,6 @@ class ImportActivityController extends Controller
 
             return response()->json(['success' => true, 'message' => 'Uploaded successfully', 'type' => $filetype]);
         } catch (\Exception $e) {
-            logger()->error($e);
             logger()->error($e->getMessage());
 
             return response()->json(['success' => false, 'error' => 'Error has occurred while rendering activity import page.']);
@@ -179,7 +178,6 @@ class ImportActivityController extends Controller
 
             return response()->json(['success' => true, 'message' => 'Imported successfully', 'type' => $filetype]);
         } catch (\Exception $e) {
-            logger()->error($e);
             logger()->error($e->getMessage());
             Session::put('error', 'Error occured while importing activity');
 

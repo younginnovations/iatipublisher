@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\CsvImporter\Entities\Activity\Components\Elements;
 
 use App\CsvImporter\Entities\Activity\Components\Elements\Foundation\Iati\Element;
-use App\CsvImporter\Entities\Activity\Components\Elements\Foundation\Traits\DatabaseQueries;
 use App\CsvImporter\Entities\Activity\Components\Factory\Validation;
 
 /**
@@ -13,12 +12,15 @@ use App\CsvImporter\Entities\Activity\Components\Factory\Validation;
  */
 class Identifier extends Element
 {
-    use DatabaseQueries;
-
     /**
      * @var
      */
     protected $organizationId;
+
+    /**
+     * @var
+     */
+    protected $activityIdentifiers;
 
     /**
      * CSV Header of Description with their code.
@@ -81,8 +83,8 @@ class Identifier extends Element
     public function validate(): static
     {
         $this->validator = $this->factory->sign($this->data())
-                                         ->with($this->rules(), $this->messages())
-                                         ->getValidatorInstance();
+            ->with($this->rules(), $this->messages())
+            ->getValidatorInstance();
 
         $this->setValidity();
 
@@ -98,7 +100,7 @@ class Identifier extends Element
     {
         return [
             'activity_identifier' => 'required',
-//            'activity_identifier' => sprintf('nullable|not_in:%s', implode(',', $this->activityIdentifiers()))
+            'activity_identifier' => sprintf('nullable|not_in:%s', implode(',', $this->activityIdentifiers ?? [])),
         ];
     }
 
@@ -111,7 +113,7 @@ class Identifier extends Element
     {
         return [
             'activity_identifier.required' => trans('validation.required', ['attribute' => trans('elementForm.activity_identifier')]),
-//            'activity_identifier.not_in'   => trans('validation.unique', ['attribute' => trans('elementForm.activity_identifier')])
+            'activity_identifier.not_in'   => trans('validation.unique', ['attribute' => trans('elementForm.activity_identifier')]),
         ];
     }
 
@@ -125,5 +127,17 @@ class Identifier extends Element
     public function setOrganization($organizationId): void
     {
         $this->organizationId = $organizationId;
+    }
+
+    /**
+     * Set activity identifiers.
+     *
+     * @param array $activityIdentifiers
+     *
+     * @return void
+     */
+    public function setActivityIdentifier(array $activityIdentifiers): void
+    {
+        $this->activityIdentifiers = $activityIdentifiers;
     }
 }
