@@ -57,9 +57,14 @@ class ActivityScope extends Element
     {
         foreach ($fields as $key => $values) {
             if (!is_null($values) && array_key_exists($key, array_flip($this->_csvHeader))) {
+                $this->data[$this->csvHeader()] = [];
+
                 foreach ($values as $value) {
                     $this->map($value, $values);
-                    break;
+                }
+
+                if (empty($this->data[$this->csvHeader()])) {
+                    $this->data[$this->csvHeader()] = '';
                 }
             }
         }
@@ -88,8 +93,6 @@ class ActivityScope extends Element
             }
 
             (count(array_filter($values)) === 1) ? $this->data[$this->csvHeader()] = $value : $this->data[$this->csvHeader()][] = $value;
-        } else {
-            $this->data[$this->csvHeader()] = '';
         }
     }
 
@@ -118,11 +121,7 @@ class ActivityScope extends Element
      */
     public function rules(): array
     {
-        return $this->request->rules();
-
-//        $rules[$this->csvHeader()] = (is_array(Arr::get($this->data, $this->csvHeader()))) ? 'size:1' : sprintf('in:%s', $this->validActivityScope());
-//
-//        return $rules;
+        return $this->request->rules(Arr::get($this->data(), $this->csvHeader()));
     }
 
     /**
@@ -133,11 +132,6 @@ class ActivityScope extends Element
     public function messages(): array
     {
         return $this->request->messages();
-
-//        return [
-//            $this->csvHeader() . '.size' => trans('validation.multiple_values', ['attribute' => trans('element.activity_scope')]),
-//            $this->csvHeader() . '.in'   => trans('validation.code_list', ['attribute' => trans('element.activity_scope')]),
-//        ];
     }
 
     /**

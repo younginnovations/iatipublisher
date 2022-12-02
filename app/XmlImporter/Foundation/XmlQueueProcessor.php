@@ -8,7 +8,6 @@ use App\IATI\Repositories\Activity\ActivityRepository;
 use App\XmlImporter\Foundation\Support\Providers\XmlServiceProvider;
 use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Database\DatabaseManager;
-use Illuminate\Database\Eloquent\Collection;
 use Psr\Log\LoggerInterface;
 use Sabre\Xml\ParseException;
 

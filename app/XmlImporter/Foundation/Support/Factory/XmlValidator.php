@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace App\XmlImporter\Foundation\Support\Factory;
 
+use App\Http\Requests\Activity\Budget\BudgetRequest;
 use App\Http\Requests\Activity\CapitalSpend\CapitalSpendRequest;
 use App\Http\Requests\Activity\CollaborationType\CollaborationTypeRequest;
+use App\Http\Requests\Activity\Date\DateRequest;
 use App\Http\Requests\Activity\DefaultFinanceType\DefaultFinanceTypeRequest;
 use App\Http\Requests\Activity\DefaultFlowType\DefaultFlowTypeRequest;
 use App\Http\Requests\Activity\DefaultTiedStatus\DefaultTiedStatusRequest;
@@ -58,9 +60,10 @@ class XmlValidator
             $this->rulesForDefaultFinanceType($activity),
             $this->rulesForDefaultTiedStatus($activity),
             $this->rulesForCapitalSpend($activity),
-            // $this->rulesForDescription($activity),
+            // $this->rulesForTitle($activity),
+            $this->rulesForDescription($activity),
             // $this->rulesForOtherIdentifier($activity),
-            // $this->rulesForActivityDate($activity),
+            $this->rulesForActivityDate($activity),
             // $this->rulesForContactInfo($activity),
             // $this->rulesForParticipatingOrg($activity),
             // $this->rulesForRecipientCountry($activity),
@@ -71,7 +74,7 @@ class XmlValidator
             // $this->rulesForCountryBudgetItems($activity),
             // $this->rulesForHumanitarianScope($activity),
             // $this->rulesForPolicyMarker($activity),
-            // $this->rulesForBudget($activity),
+            $this->rulesForBudget($activity),
             // $this->rulesForPlannedDisbursement($activity),
             // $this->rulesForDocumentLink($activity),
             // $this->rulesForRelatedActivity($activity),
@@ -123,10 +126,15 @@ class XmlValidator
             $this->messagesForDefaultFinanceType($activity),
             $this->messagesForDefaultTiedStatus($activity),
             $this->messagesForCapitalSpend($activity),
-            $this->messagesForTitle($activity),
-            // $this->messagesForDescription($activity),
+
+            // $this->messagesForTitle($activity),
+
+            $this->messagesForDescription($activity),
+
             // $this->messagesForOtherIdentifier($activity),
-            // $this->messagesForActivityDate($activity),
+
+            $this->messagesForActivityDate($activity),
+
             // $this->messagesForContactInfo($activity),
             // $this->messagesForParticipatingOrg($activity),
             // $this->messagesForRecipientCountry($activity),
@@ -138,7 +146,7 @@ class XmlValidator
             // $this->messagesForHumanitarianScope($activity),
             // $this->messagesForPolicyMarker($activity),
             // $this->messagesForDefaultAidType($activity),
-            // $this->messagesForBudget($activity),
+            $this->messagesForBudget($activity),
             // $this->messagesForPlannedDisbursement($activity),
             // $this->messagesForDocumentLink($activity),
             // $this->messagesForRelatedActivity($activity),
@@ -196,15 +204,15 @@ class XmlValidator
     {
         $messages = [];
 
-        if (is_string($data)) {
-            foreach ($baseMessages as $elementName => $baseMessage) {
-                $messages[$element . '.' . $elementName] = $baseMessage;
-            }
-        } else {
+        if (is_array($data)) {
             foreach ($data as $idx => $value) {
                 foreach ($baseMessages as $elementName => $baseMessage) {
                     $messages[$element . '.' . $idx . '.' . $elementName] = $baseMessage;
                 }
+            }
+        } else {
+            foreach ($baseMessages as $elementName => $baseMessage) {
+                $messages[$element . '.' . $elementName] = $baseMessage;
             }
         }
 
@@ -526,24 +534,24 @@ class XmlValidator
     protected function rulesForActivityDate(array $activity): array
     {
         $rules = [];
-        $activityDates = Arr::get($activity, 'activity_date', []);
+        // $activityDates = Arr::get($activity, 'activity_date', []);
         $rules['activity_date'] = 'required|start_date_required|start_end_date';
 
-        foreach ($activityDates as $activityDateIndex => $activityDate) {
-            $activityDateBase = sprintf('activity_date.%s', $activityDateIndex);
-            $rules[sprintf('%s.type', $activityDateBase)] = sprintf(
-                'required|in:%s',
-                $this->validCodeList('ActivityDateType')
-            );
-            $rules[sprintf('%s.date', $activityDateBase)] = 'date|actual_date|nullable';
-            $tempRules = $this->factory->getRulesForNarrative($activityDate['narrative'], $activityDateBase);
+        return (new DateRequest())->getRulesForDate(Arr::get($activity, 'activity_date', []));
 
-            foreach ($tempRules as $idx => $tempRule) {
-                $rules[$idx] = $tempRule;
-            }
-        }
+        // foreach ($activityDates as $activityDateIndex => $activityDate) {
+        //     $activityDateBase = sprintf('activity_date.%s', $activityDateIndex);
+        //     $rules[sprintf('%s.type', $activityDateBase)] = sprintf(
+        //         'required|in:%s',
+        //         $this->validCodeList('ActivityDateType')
+        //     );
+        //     $rules[sprintf('%s.date', $activityDateBase)] = 'date|actual_date|nullable';
+        //     $tempRules = $this->factory->getRulesForNarrative($activityDate['narrative'], $activityDateBase);
 
-        return $rules;
+        //     foreach ($tempRules as $idx => $tempRule) {
+        //         $rules[$idx] = $tempRule;
+        //     }
+        // }
     }
 
     /**
@@ -556,48 +564,47 @@ class XmlValidator
     {
         $activityDates = Arr::get($activity, 'activity_date', []);
 
-        $messages = [
-            'activity_date.required' => trans('validation.required', ['attribute' => trans('element.activity_date')]),
-            'activity_date.start_date_required' => trans(
-                'validation.required',
-                ['attribute' => trans('elementForm.actual_start_date') . ' ' . trans('global.or') . ' ' . trans('elementForm.planned_start_date')]
-            ),
-            'activity_date.start_end_date' => trans(
-                'validation.before',
-                [
-                    'attribute' => trans('elementForm.actual_start_date') . ' ' . trans('global.or') . ' ' . trans('elementForm.planned_start_date'),
-                    'date' => trans('elementForm.actual_end_date') . ' ' . trans('global.or') . ' ' . trans('elementForm.planned_end_date'),
-                ]
-            ),
-        ];
+        return (new DateRequest())->getMessagesForDate(Arr::get($activity, 'activity_date', []));
+        // $messages = [
+        //     'activity_date.required' => trans('validation.required', ['attribute' => trans('element.activity_date')]),
+        //     'activity_date.start_date_required' => trans(
+        //         'validation.required',
+        //         ['attribute' => trans('elementForm.actual_start_date') . ' ' . trans('global.or') . ' ' . trans('elementForm.planned_start_date')]
+        //     ),
+        //     'activity_date.start_end_date' => trans(
+        //         'validation.before',
+        //         [
+        //             'attribute' => trans('elementForm.actual_start_date') . ' ' . trans('global.or') . ' ' . trans('elementForm.planned_start_date'),
+        //             'date' => trans('elementForm.actual_end_date') . ' ' . trans('global.or') . ' ' . trans('elementForm.planned_end_date'),
+        //         ]
+        //     ),
+        // ];
 
-        foreach ($activityDates as $activityDateIndex => $activityDate) {
-            $activityDateBase = sprintf('activity_date.%s', $activityDateIndex);
-            $messages[sprintf('%s.date.required', $activityDateBase)] = trans(
-                'validation.required',
-                ['attribute' => trans('elementForm.date')]
-            );
-            $messages[sprintf('%s.date.actual_date', $activityDateBase)] = trans('validation.actual_date');
-            $messages[sprintf('%s.date.date', $activityDateBase)] = trans(
-                'validation.date',
-                ['attribute' => trans('element.activity_date')]
-            );
-            $messages[sprintf('%s.type.required', $activityDateBase)] = trans(
-                'validation.required',
-                ['attribute' => trans('elementForm.type')]
-            );
-            $messages[sprintf('%s.type.in', $activityDateBase)] = trans(
-                'validation.date',
-                ['attribute' => trans('element.activity_date')]
-            );
-            $tempMessages = $this->factory->getMessagesForNarrative($activityDate['narrative'], $activityDateBase);
+        // foreach ($activityDates as $activityDateIndex => $activityDate) {
+        //     $activityDateBase = sprintf('activity_date.%s', $activityDateIndex);
+        //     $messages[sprintf('%s.date.required', $activityDateBase)] = trans(
+        //         'validation.required',
+        //         ['attribute' => trans('elementForm.date')]
+        //     );
+        //     $messages[sprintf('%s.date.actual_date', $activityDateBase)] = trans('validation.actual_date');
+        //     $messages[sprintf('%s.date.date', $activityDateBase)] = trans(
+        //         'validation.date',
+        //         ['attribute' => trans('element.activity_date')]
+        //     );
+        //     $messages[sprintf('%s.type.required', $activityDateBase)] = trans(
+        //         'validation.required',
+        //         ['attribute' => trans('elementForm.type')]
+        //     );
+        //     $messages[sprintf('%s.type.in', $activityDateBase)] = trans(
+        //         'validation.date',
+        //         ['attribute' => trans('element.activity_date')]
+        //     );
+        //     $tempMessages = $this->factory->getMessagesForNarrative($activityDate['narrative'], $activityDateBase);
 
-            foreach ($tempMessages as $idx => $tempMessage) {
-                $messages[$idx] = $tempMessage;
-            }
-        }
-
-        return $messages;
+        //     foreach ($tempMessages as $idx => $tempMessage) {
+        //         $messages[$idx] = $tempMessage;
+        //     }
+        // }
     }
 
     /**
@@ -2383,41 +2390,43 @@ class XmlValidator
      */
     protected function rulesForBudget(array $activity): array
     {
-        $rules = [];
-        $budgets = Arr::get($activity, 'budget', []);
+        // $rules = [];
+        // $budgets = Arr::get($activity, 'budget', []);
 
-        foreach ($budgets as $budgetIndex => $budget) {
-            $budgetBase = sprintf('budget.%s', $budgetIndex);
-            $rules[sprintf('%s.budget_status', $budgetBase)] = sprintf(
-                'required|in:%s',
-                $this->validCodeList('BudgetStatus')
-            );
-            $rules[sprintf('%s.budget_type', $budgetBase)] = sprintf(
-                'in:%s',
-                $this->validCodeList('BudgetType')
-            );
-            $tempRules = [
-                $this->factory->getRulesForPeriodStart($budget['period_start'], $budgetBase),
-                $this->factory->getRulesForPeriodEnd($budget['period_end'], $budgetBase),
-                $this->getRulesForBudgetValue($budget['budget_value'], $budgetBase),
-            ];
+        return (new BudgetRequest())->getRulesForBudget(Arr::get($activity, 'budget', []));
 
-            foreach ($tempRules as $tempRule) {
-                foreach ($tempRule as $idx => $rule) {
-                    $rules[$idx] = $rule;
-                }
-            }
+        // foreach ($budgets as $budgetIndex => $budget) {
+        //     $budgetBase = sprintf('budget.%s', $budgetIndex);
+        //     $rules[sprintf('%s.budget_status', $budgetBase)] = sprintf(
+        //         'required|in:%s',
+        //         $this->validCodeList('BudgetStatus')
+        //     );
+        //     $rules[sprintf('%s.budget_type', $budgetBase)] = sprintf(
+        //         'in:%s',
+        //         $this->validCodeList('BudgetType')
+        //     );
+        //     $tempRules = [
+        //         $this->factory->getRulesForPeriodStart($budget['period_start'], $budgetBase),
+        //         $this->factory->getRulesForPeriodEnd($budget['period_end'], $budgetBase),
+        //         $this->getRulesForBudgetValue($budget['budget_value'], $budgetBase),
+        //     ];
 
-            $startDate = Arr::get($budget, 'period_start.0.date');
-            $newDate = $startDate ? date('Y-m-d', strtotime($startDate . '+1year')) : '';
+        //     foreach ($tempRules as $tempRule) {
+        //         foreach ($tempRule as $idx => $rule) {
+        //             $rules[$idx] = $rule;
+        //         }
+        //     }
 
-            if ($newDate) {
-                $rules[$budgetBase . '.period_end.0.date'] = [];
-                $rules[$budgetBase . '.period_end.0.date'][] = sprintf('before:%s', $newDate);
-            }
-        }
+        //     $startDate = Arr::get($budget, 'period_start.0.date');
+        //     $newDate = $startDate ? date('Y-m-d', strtotime($startDate . '+1year')) : '';
 
-        return $rules;
+        //     if ($newDate) {
+        //         $rules[$budgetBase . '.period_end.0.date'] = [];
+        //         $rules[$budgetBase . '.period_end.0.date'][] = sprintf('before:%s', $newDate);
+        //     }
+        // }
+
+        // return $rules;
     }
 
     /**
@@ -2428,43 +2437,45 @@ class XmlValidator
      */
     protected function messagesForBudget(array $activity): array
     {
-        $messages = [];
-        $budgets = Arr::get($activity, 'budget', []);
+        // $messages = [];
+        // $budgets = Arr::get($activity, 'budget', []);
 
-        foreach ($budgets as $budgetIndex => $budget) {
-            $budgetBase = sprintf('budget.%s', $budgetIndex);
+        return (new BudgetRequest())->getMessagesForBudget(Arr::get($activity, 'budget', []));
 
-            $messages[sprintf('%s.budget_status.required', $budgetBase)] = trans(
-                'validation.required',
-                ['attribute' => trans('elementForm.budget_status')]
-            );
-            $messages[sprintf('%s.budget_status.in', $budgetBase)] = trans(
-                'validation.code_list',
-                ['attribute' => trans('elementForm.budget_status')]
-            );
-            $messages[sprintf('%s.budget_type.in', $budgetBase)] = trans(
-                'validation.code_list',
-                ['attribute' => trans('elementForm.budget_code')]
-            );
-            $tempMessages = [
-                $this->factory->getMessagesForPeriodStart($budget['period_start'], $budgetBase),
-                $this->factory->getMessagesForPeriodEnd($budget['period_end'], $budgetBase),
-                $this->getMessagesForBudgetValue($budget['budget_value'], $budgetBase),
-            ];
+        // foreach ($budgets as $budgetIndex => $budget) {
+        //     $budgetBase = sprintf('budget.%s', $budgetIndex);
 
-            foreach ($tempMessages as $tempMessage) {
-                foreach ($tempMessage as $idx => $message) {
-                    $messages[$idx] = $message;
-                }
-            }
+        //     $messages[sprintf('%s.budget_status.required', $budgetBase)] = trans(
+        //         'validation.required',
+        //         ['attribute' => trans('elementForm.budget_status')]
+        //     );
+        //     $messages[sprintf('%s.budget_status.in', $budgetBase)] = trans(
+        //         'validation.code_list',
+        //         ['attribute' => trans('elementForm.budget_status')]
+        //     );
+        //     $messages[sprintf('%s.budget_type.in', $budgetBase)] = trans(
+        //         'validation.code_list',
+        //         ['attribute' => trans('elementForm.budget_code')]
+        //     );
+        //     $tempMessages = [
+        //         $this->factory->getMessagesForPeriodStart($budget['period_start'], $budgetBase),
+        //         $this->factory->getMessagesForPeriodEnd($budget['period_end'], $budgetBase),
+        //         $this->getMessagesForBudgetValue($budget['budget_value'], $budgetBase),
+        //     ];
 
-            $messages[$budgetBase . '.period_end.0.date.before'] = trans(
-                'validation.before',
-                ['attribute' => trans('elementForm.period_end'), 'date' => trans('elementForm.period_start')]
-            );
-        }
+        //     foreach ($tempMessages as $tempMessage) {
+        //         foreach ($tempMessage as $idx => $message) {
+        //             $messages[$idx] = $message;
+        //         }
+        //     }
 
-        return $messages;
+        //     $messages[$budgetBase . '.period_end.0.date.before'] = trans(
+        //         'validation.before',
+        //         ['attribute' => trans('elementForm.period_end'), 'date' => trans('elementForm.period_start')]
+        //     );
+        // }
+
+        // return $messages;
     }
 
     /**

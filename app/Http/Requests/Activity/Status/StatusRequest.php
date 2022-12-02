@@ -27,7 +27,7 @@ class StatusRequest extends ActivityBaseRequest
         }
 
         return [
-          'activity_status' => sprintf('nullable|in:%s|size:1', implode(',', array_keys(getCodeList('ActivityStatus', 'Activity', false)))),
+          'activity_status' => sprintf('nullable|in:%s', implode(',', array_keys(getCodeList('ActivityStatus', 'Activity', false)))),
         ];
     }
 
@@ -40,7 +40,7 @@ class StatusRequest extends ActivityBaseRequest
     {
         return [
             'in'        => 'The activity status does not exist.',
-            'size'      => 'The default flow type cannot have more than one value.',
+            'size'      => 'The activity status cannot have more than one value.',
         ];
     }
 }
