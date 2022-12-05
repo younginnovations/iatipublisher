@@ -1258,7 +1258,7 @@ class ElementCompleteService
                     $this->tempAmount = $datum;
                 }
 
-                if ($key === 'language' && empty($datum) && !empty($this->tempNarrative) && !is_array($this->tempNarrative)) {
+                if ($key === 'language' && empty($datum) && !empty($this->tempNarrative)) {
                     $data['language'] = Arr::get($activity->default_field_values, 'default_language', null);
                 }
 

@@ -104,21 +104,28 @@ class XmlQueueProcessor
             $this->userId = $userId;
             $this->filename = $filename;
             $contents = awsGetFile(sprintf('%s/%s/%s', $this->xml_file_storage_path, $this->orgId, $filename));
-            awsUploadFile(sprintf('%s/%s/%s', $this->xml_data_storage_path, $this->orgId, 'status.json'), json_encode(['success'=> true, 'message' => 'XML import processing'], JSON_THROW_ON_ERROR));
+            awsUploadFile(sprintf('%s/%s/%s', $this->xml_data_storage_path, $this->orgId, 'status.json'), json_encode(['success' => true, 'message' => 'XML import processing'], JSON_THROW_ON_ERROR));
+            awsDeleteFile(sprintf('%s/%s/%s', $this->xml_data_storage_path, $this->orgId, 'schema_error.log'));
 
             if ($this->xmlServiceProvider->isValidAgainstSchema($contents)) {
                 $xmlData = $this->xmlServiceProvider->load($contents);
                 $this->xmlProcessor->process($xmlData, $userId, $orgId, $dbIatiIdentifiers);
 
                 awsUploadFile(sprintf('%s/%s/%s', $this->xml_data_storage_path, $this->orgId, 'status.json'), json_encode(
-                    ['success'=> true, 'message' => 'XML import completed'],
+                    ['success' => true, 'message' => 'XML import completed'],
                     JSON_THROW_ON_ERROR
                 ));
 
                 return true;
             }
+
+            awsUploadFile(sprintf('%s/%s/%s', $this->xml_data_storage_path, $this->orgId, 'schema_error.log'), json_encode(
+                libxml_get_errors(),
+                JSON_THROW_ON_ERROR
+            ));
+
             awsUploadFile(sprintf('%s/%s/%s', $this->xml_data_storage_path, $orgId, 'status.json'), json_encode(
-                ['success'=> false, 'message' => 'Invalid XMl or Header mismatched'],
+                ['success' => false, 'message' => 'Invalid XMl or Header mismatched'],
                 JSON_THROW_ON_ERROR
             ));
 
@@ -126,7 +133,7 @@ class XmlQueueProcessor
 
             return false;
         } catch (\Exception $e) {
-            awsUploadFile(sprintf('%s/%s/%s', $this->xml_data_storage_path, $orgId, 'status.json'), json_encode(['success'=> false, 'message' => $e->getMessage()], JSON_THROW_ON_ERROR));
+            awsUploadFile(sprintf('%s/%s/%s', $this->xml_data_storage_path, $orgId, 'status.json'), json_encode(['success' => false, 'message' => $e->getMessage()], JSON_THROW_ON_ERROR));
 
             throw  $e;
         }

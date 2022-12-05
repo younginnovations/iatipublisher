@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace App\Http\Requests\Activity\UploadActivity;
 
 use App\Http\Requests\Activity\ActivityBaseRequest;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\ValidationException;
 
 /**
  * Class ImportActivityRequest.
@@ -36,7 +38,7 @@ class ImportActivityRequest extends ActivityBaseRequest
     public function rules(): array
     {
         $rules = [];
-        $rules['activity'] = 'required|activity_file';
+        $rules['activity'] = 'required|activity_file| max:10000';
 
         return $rules;
     }
@@ -48,9 +50,24 @@ class ImportActivityRequest extends ActivityBaseRequest
      */
     public function messages(): array
     {
-        $messages['activity.required'] = trans('validation.required', ['attribute' => trans('activity_file')]);
-        $messages['activity.activity_file'] = trans('validation.mimes', ['attribute' => trans('global.activity'), 'values' => 'csv']);
+        $messages['activity.required'] = 'The activity file must be uploaded';
+        $messages['activity.activity_file'] = 'The file must be of either xml or csv format.';
+        $messages['activity.max'] = 'The file shouldn\'t be greater than 10MB.';
 
         return $messages;
+    }
+
+    /**
+     * Overwritten failedValidation method for JSON response.
+     *
+     * @param Validator $validator
+     *
+     * @return ValidationException
+     */
+    protected function failedValidation(\Illuminate\Contracts\Validation\Validator $validator): ValidationException
+    {
+        $response = new JsonResponse(['success' => false, 'errors' => $validator->errors()]);
+
+        throw new ValidationException($validator, $response);
     }
 }
