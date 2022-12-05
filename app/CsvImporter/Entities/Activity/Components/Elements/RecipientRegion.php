@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\CsvImporter\Entities\Activity\Components\Elements;
 
+use App\CsvImporter\Entities\Activity\Components\ActivityRow;
 use App\CsvImporter\Entities\Activity\Components\Elements\Foundation\Iati\Element;
 use App\CsvImporter\Entities\Activity\Components\Factory\Validation;
 use App\Http\Requests\Activity\RecipientRegion\RecipientRegionRequest;
@@ -60,6 +61,11 @@ class RecipientRegion extends Element
      * @var RecipientRegionRequest
      */
     private RecipientRegionRequest $request;
+
+    /**
+     * @var ActivityRow
+     */
+    protected ActivityRow $activityRow;
 
     /**
      * Description constructor.
@@ -286,7 +292,7 @@ class RecipientRegion extends Element
      */
     public function rules(): array
     {
-        return $this->request->getRulesForRecipientRegion($this->data('recipient_region'), true);
+        return $this->request->getRulesForRecipientRegion($this->data('recipient_region'), true, Arr::get($this->recipientCountry->data, 'recipient_country', []));
     }
 
     /**

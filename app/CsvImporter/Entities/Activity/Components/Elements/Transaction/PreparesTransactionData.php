@@ -493,7 +493,7 @@ trait PreparesTransactionData
             if (isset($validRegion[$value])) {
                 $this->data['transaction']['recipient_region'][0]['region_vocabulary'] = '1';
                 $this->data['transaction']['recipient_region'][0]['region_code'] = $value;
-            } else {
+            } elseif (!empty($value)) {
                 $this->data['transaction']['recipient_region'][0]['region_vocabulary'] = '2';
                 $this->data['transaction']['recipient_region'][0]['custom_code'] = $value;
             }

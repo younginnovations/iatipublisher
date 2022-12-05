@@ -61,21 +61,22 @@ class RecipientRegionRequest extends ActivityBaseRequest
      *
      * @param array $formFields
      * @param bool $fileUpload
+     * @param array $recipientCountries
      *
      * @return array
      * @throws BindingResolutionException
      */
-    public function getRulesForRecipientRegion(array $formFields, bool $fileUpload = false): array
+    public function getRulesForRecipientRegion(array $formFields, bool $fileUpload = false, array $recipientCountries = []): array
     {
         if (empty($formFields)) {
             return [];
         }
 
         $rules = [];
+        $activityService = app()->make(ActivityService::class);
 
         if (!$fileUpload) {
             $params = $this->route()->parameters();
-            $activityService = app()->make(ActivityService::class);
 
             if ($activityService->hasRecipientRegionDefinedInTransactions($params['id'])) {
                 Validator::extend('already_in_transactions', function () {
@@ -84,6 +85,10 @@ class RecipientRegionRequest extends ActivityBaseRequest
 
                 return ['recipient_region' => 'already_in_transactions'];
             }
+
+            $allottedRegionPercent = $activityService->getAllottedRecipientRegionPercent($params['id']);
+        } else {
+            $allottedRegionPercent = $activityService->getAllottedRecipientRegionPercentFileUpload($recipientCountries);
         }
 
         Validator::extend('allocated_region_total_mismatch', function () {
@@ -99,8 +104,6 @@ class RecipientRegionRequest extends ActivityBaseRequest
         });
 
         $groupedPercentRegion = $this->groupRegion($formFields);
-//        $allottedRegionPercent = $activityService->getAllottedRecipientRegionPercent($params['id']);
-        $allottedRegionPercent = 100.0;
 
         foreach ($formFields as $recipientRegionIndex => $recipientRegion) {
             $recipientRegionForm = 'recipient_region.' . $recipientRegionIndex;

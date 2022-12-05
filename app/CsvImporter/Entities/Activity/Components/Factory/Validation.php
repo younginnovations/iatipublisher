@@ -609,5 +609,17 @@ class Validation extends Factory
         $this->extend('sum_exceeded', function () {
             return false;
         });
+
+        $this->extend('already_in_activity', function () {
+            return false;
+        });
+
+        $this->extend('sum_greater_than', function () {
+            return false;
+        });
+
+        $this->extend('percentage_within_vocabulary', function () {
+            return false;
+        });
     }
 }
