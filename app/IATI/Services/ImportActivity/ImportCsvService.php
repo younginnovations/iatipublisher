@@ -467,30 +467,6 @@ class ImportCsvService
     }
 
     /**
-     * Check if the import process is complete.
-     *
-     * @return bool|string
-     * @throws \JsonException
-     */
-    public function importIsComplete(): bool|string
-    {
-        $filePath = $this->getTemporaryFilepath('status.json');
-
-        if (file_exists($filePath)) {
-            $jsonContents = file_get_contents($filePath);
-            $contents = json_decode($jsonContents, true, 512, JSON_THROW_ON_ERROR);
-
-            if ($contents['status'] === 'Complete') {
-                $this->completeImport();
-            }
-
-            return json_decode($jsonContents, false, 512, JSON_THROW_ON_ERROR)->status;
-        }
-
-        return false;
-    }
-
-    /**
      * Check if an old import is on going.
      *
      * @return bool
