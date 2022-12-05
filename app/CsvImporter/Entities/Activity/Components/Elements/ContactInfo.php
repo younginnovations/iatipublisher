@@ -118,7 +118,7 @@ class ContactInfo extends Element
             if ($value) {
                 foreach ($relatedActivityType as $code => $name) {
                     if (strcasecmp(trim($value), (string) $name) === 0) {
-                        $value = strval($code);
+                        $value = (string) $code;
                         break;
                     }
                 }

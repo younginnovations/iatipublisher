@@ -142,7 +142,7 @@ class RecipientRegion extends Element
             if ($value) {
                 foreach ($validRegionCode as $code => $name) {
                     if (strcasecmp($value, $name) === 0) {
-                        $value = strval($code);
+                        $value = (string) $code;
                         break;
                     }
                 }
@@ -217,6 +217,10 @@ class RecipientRegion extends Element
      */
     protected function setVocabularyUri($key, $value, $index): void
     {
+        if (!isset($this->data['recipient_region'][$index]['vocabulary_uri'])) {
+            $this->data['recipient_region'][$index]['vocabulary_uri'] = '';
+        }
+
         if ($key === $this->_csvHeaders[2]) {
             $value = (!$value) ? '' : trim($value);
             $this->data['recipient_region'][$index]['vocabulary_uri'] = $value;
@@ -234,6 +238,10 @@ class RecipientRegion extends Element
      */
     protected function setRegionVocabulary($index): void
     {
+        if (!isset($this->data['recipient_region'][$index]['region_vocabulary'])) {
+            $this->data['recipient_region'][$index]['region_vocabulary'] = '';
+        }
+
         $regionCode = $this->data['recipient_region'][$index]['region_code'];
         $validRegions = array_flip(explode(',', $this->validRecipientRegion()));
         $this->data['recipient_region'][$index]['region_vocabulary'] = '';
@@ -278,35 +286,7 @@ class RecipientRegion extends Element
      */
     public function rules(): array
     {
-        return $this->request->getRulesForRecipientRegion($this->data('recipient_region'));
-
-//        $codes = $this->validRecipientRegion();
-//        $rules = [];
-//
-//        if (count($this->fields) === 20) {
-//            $rules = [
-//                'recipient_region' => sprintf('required_if:recipient_country,%s', ''),
-//            ];
-//        }
-//        ($this->data['recipient_country'] !== '' && (array_key_exists('recipient_region', $this->data)))
-//            ? $rules['total_percentage'] = 'recipient_country_region_percentage_sum' : null;
-//
-//        ($this->data['recipient_country'] === '' && array_key_exists('recipient_region', $this->data))
-//            ? $rules['recipient_region_total_percentage'] = 'percentage_sum' : null;
-//
-//        foreach (Arr::get($this->data(), 'recipient_region', []) as $key => $value) {
-//            if (Arr::get($value, 'region_vocabulary', 1) === '1') {
-//                $rules['recipient_region.' . $key . '.region_code'] = sprintf('nullable|required_with:recipient_region.%s.percentage|in:%s', $key, $codes);
-//            } elseif (Arr::get($value, 'region_vocabulary', 1) === '2') {
-//                $rules['recipient_region.' . $key . '.custom_code'] = sprintf('nullable|required_with:recipient_region.%s.percentage', $key);
-//            } else {
-//                $rules['recipient_region.' . $key . '.custom_code'] = sprintf('nullable|required_with:recipient_region.%s.percentage, recipient_region.%s.vocabulary_uri', $key, $key);
-//                $rules['recipient_region.' . $key . '.vocabulary_uri'] = sprintf('url|required_with:recipient_region.%s.custom_code, recipient_region.%s.percentage', $key, $key);
-//            }
-//            $rules['recipient_region.' . $key . '.percentage'] = 'nullable|numeric|max:100|min:0';
-//        }
-//
-//        return $rules;
+        return $this->request->getRulesForRecipientRegion($this->data('recipient_region'), true);
     }
 
     /**
@@ -317,31 +297,6 @@ class RecipientRegion extends Element
     public function messages(): array
     {
         return $this->request->getMessagesForRecipientRegion($this->data('recipient_region'));
-
-//        $messages = [
-//            'recipient_region.required_if'                             => trans(
-//                'validation.required_without',
-//                ['attribute' => trans('element.recipient_region'), 'values' => trans('element.recipient_country')]
-//            ),
-//            'recipient_region_total_percentage.percentage_sum'         => trans('validation.sum_of_percentage', ['attribute' => trans('element.recipient_region')]),
-//            'total_percentage.recipient_country_region_percentage_sum' => trans('validation.recipient_country_region_percentage_sum'),
-//        ];
-//
-//        foreach (Arr::get($this->data(), 'recipient_region', []) as $key => $value) {
-//            $messages['recipient_region.' . $key . '.region_code.required_with'] = trans(
-//                'validation.required_with',
-//                ['attribute' => trans('elementForm.recipient_country_code'), 'values' => trans('elementForm.percentage')]
-//            );
-//            $messages['recipient_region.' . $key . '.region_code.in'] = trans('validation.code_list', ['attribute' => trans('elementForm.recipient_region_code')]);
-//            $messages['recipient_region.' . $key . '.percentage.numeric'] = trans('validation.numeric', ['attribute' => trans('elementForm.percentage')]);
-//            $messages['recipient_region.' . $key . '.percentage.max'] = trans('validation.max.numeric', ['attribute' => trans('elementForm.percentage'), 'max' => 100]);
-//            $messages['recipient_region.' . $key . '.percentage.min'] = trans('validation.min.numeric', ['attribute' => trans('elementForm.percentage'), 'min' => 0]);
-//            $messages['recipient_region.' . $key . '.custom_code.required_with'] = trans('validation.required_with', ['attribute' => 'percentage or vocabulary uri']);
-//            $messages['recipient_region.' . $key . '.vocabulary_uri.required_with'] = trans('validation.required_with', ['attribute' => 'percentage or code']);
-//            $messages['recipient_region.' . $key . '.vocabulary_uri.url'] = trans('validation.url', ['attribute' => trans('elementForm.recipient_region_vocabulary_uri')]);
-//        }
-//
-//        return $messages;
     }
 
     /**

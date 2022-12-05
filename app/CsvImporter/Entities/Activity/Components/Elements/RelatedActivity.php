@@ -126,7 +126,7 @@ class RelatedActivity extends Element
             if ($value) {
                 foreach ($validRelatedActivity as $code => $name) {
                     if (strcasecmp($value, $name) === 0) {
-                        $value = strval($code);
+                        $value = (string) $code;
                         break;
                     }
                 }

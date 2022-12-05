@@ -114,7 +114,7 @@ class Budget extends Element
             if ($value) {
                 foreach ($validBudgetType as $code => $name) {
                     if (strcasecmp($value, $name) === 0) {
-                        $value = strval($code);
+                        $value = (string) $code;
                         break;
                     }
                 }
@@ -144,7 +144,7 @@ class Budget extends Element
             if ($value) {
                 foreach ($validBudgetStatus as $code => $name) {
                     if (strcasecmp(trim($value), $name) === 0) {
-                        $value = strval($code);
+                        $value = (string) $code;
                         break;
                     }
                 }

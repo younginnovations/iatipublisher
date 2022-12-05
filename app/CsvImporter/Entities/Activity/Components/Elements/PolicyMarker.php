@@ -103,7 +103,7 @@ class PolicyMarker extends Element
             if ($value) {
                 foreach ($validVocabulary as $code => $name) {
                     if (strcasecmp($value, $name) === 0) {
-                        $value = strval($code);
+                        $value = (string) $code;
                         break;
                     }
                 }
@@ -155,7 +155,7 @@ class PolicyMarker extends Element
             if ($value) {
                 foreach ($validSignificance as $code => $name) {
                     if (strcasecmp($value, $name) === 0) {
-                        $value = strval($code);
+                        $value = (string) $code;
                         break;
                     }
                 }
@@ -194,7 +194,7 @@ class PolicyMarker extends Element
                     if ($value) {
                         foreach ($validMarker as $code => $name) {
                             if (strcasecmp($value, $name) === 0) {
-                                $value = strval($code);
+                                $value = (string) $code;
                                 break;
                             }
                         }

@@ -125,7 +125,7 @@ class ReportingOrganization extends Element
             if ($value) {
                 foreach ($validReportingOrgType as $code => $name) {
                     if (strcasecmp($value, $name) === 0) {
-                        $value = strval($code);
+                        $value = (string) $code;
                         break;
                     }
                 }

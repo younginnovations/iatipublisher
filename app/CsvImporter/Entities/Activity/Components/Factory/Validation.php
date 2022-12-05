@@ -605,5 +605,9 @@ class Validation extends Factory
                 return $check;
             }
         );
+
+        $this->extend('sum_exceeded', function () {
+            return false;
+        });
     }
 }

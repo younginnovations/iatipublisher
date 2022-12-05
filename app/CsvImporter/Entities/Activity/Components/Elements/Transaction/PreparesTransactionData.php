@@ -391,7 +391,7 @@ trait PreparesTransactionData
             if ($value) {
                 foreach ($validSdgTarget as $code => $name) {
                     if (strcasecmp($value, $name) === 0) {
-                        $value = strval($code);
+                        $value = (string) $code;
                         break;
                     }
                 }
@@ -579,7 +579,7 @@ trait PreparesTransactionData
         if ($value) {
             foreach ($validOrganizationType as $code => $name) {
                 if (strcasecmp($value, $name) === 0) {
-                    $value = strval($code);
+                    $value = (string) $code;
                     break;
                 }
             }

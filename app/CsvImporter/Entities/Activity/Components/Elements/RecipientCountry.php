@@ -55,6 +55,7 @@ class RecipientCountry extends Element
      * @var array
      */
     protected array $template = [['country_code' => '', 'percentage' => '', 'narrative' => ['narrative' => '', 'language' => '']]];
+
     /**
      * @var RecipientCountryRequest
      */
@@ -133,7 +134,7 @@ class RecipientCountry extends Element
             if ($value) {
                 foreach ($validCountry as $code => $name) {
                     if (strcasecmp($value, $name) === 0) {
-                        $value = strval($code);
+                        $value = (string) $code;
                         break;
                     }
                 }
@@ -225,31 +226,7 @@ class RecipientCountry extends Element
      */
     public function rules(): array
     {
-        return $this->request->getRulesForRecipientCountry($this->data('recipient_country'));
-
-//        $codes = $this->validRecipientCountry();
-//        $rules = [];
-//
-//        if (count($this->fields) === 20) {
-//            $rules = [
-//                'recipient_country' => sprintf('required_if:recipient_region,%s', ''),
-//            ];
-//        }
-//
-//        if (($this->data['recipient_region'] === '')
-//            && array_key_exists('recipient_country', $this->data)
-//            && (!(abs(100.0 - $this->totalPercentage()) < 0.01) && $this->totalPercentage() !== 0)
-//        ) {
-//            $rules['recipient_country_total_percentage'] = 'percentage_sum';
-//        }
-//
-//        foreach (Arr::get($this->data(), 'recipient_country', []) as $key => $value) {
-//            $rules['recipient_country.' . $key . '.country_code'] = sprintf('required_with:recipient_country.%s.percentage|in:%s', $key, $codes);
-//            $rules['recipient_country.' . $key . '.percentage'] = sprintf('required_with:recipient_country.%s.country_code', $key);
-//            $rules['recipient_country.' . $key . '.percentage'] = 'nullable|numeric|max:100|min:0';
-//        }
-//
-//        return $rules;
+        return $this->request->getRulesForRecipientCountry($this->data('recipient_country'), true);
     }
 
     /**
@@ -260,28 +237,6 @@ class RecipientCountry extends Element
     public function messages(): array
     {
         return $this->request->getMessagesForRecipientCountry($this->data('recipient_country'));
-
-//        $messages = [
-//            'recipient_country.required_if' => trans('validation.required_without', ['attribute' => trans('element.recipient_country'), 'values' => trans('element.recipient_region')]),
-//            'percentage_sum'                => trans('validation.sum_of_percentage', ['attribute' => trans('element.recipient_country')]),
-//        ];
-//
-//        foreach (Arr::get($this->data(), 'recipient_country', []) as $key => $value) {
-//            $messages['recipient_country.' . $key . '.country_code.required_with'] = trans(
-//                'validation.required_with',
-//                ['attribute' => trans('elementForm.recipient_country_code'), 'values' => trans('elementForm.percentage')]
-//            );
-//            $messages['recipient_country.' . $key . '.country_code.in'] = trans('validation.code_list', ['attribute' => trans('elementForm.recipient_country_code')]);
-//            $messages['recipient_country.' . $key . '.percentage.required_with'] = trans(
-//                'validation.required_with',
-//                ['attribute' => trans('elementForm.percentage'), 'values' => trans('elementForm.recipient_country_code')]
-//            );
-//            $messages['recipient_country.' . $key . '.percentage.numeric'] = trans('validation.numeric', ['attribute' => trans('elementForm.percentage')]);
-//            $messages['recipient_country.' . $key . '.percentage.max'] = trans('validation.max.numeric', ['attribute' => trans('elementForm.percentage'), 'max' => 100]);
-//            $messages['recipient_country.' . $key . '.percentage.min'] = trans('validation.min.numeric', ['attribute' => trans('elementForm.percentage'), 'min' => 0]);
-//        }
-
-//        return $messages;
     }
 
     /**

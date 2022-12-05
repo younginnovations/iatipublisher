@@ -60,28 +60,32 @@ class RecipientRegionRequest extends ActivityBaseRequest
      * Returns rules for related activity.
      *
      * @param array $formFields
+     * @param bool $fileUpload
      *
      * @return array
      * @throws BindingResolutionException
      */
-    public function getRulesForRecipientRegion(array $formFields): array
+    public function getRulesForRecipientRegion(array $formFields, bool $fileUpload = false): array
     {
         if (empty($formFields)) {
             return [];
         }
 
-        // issue caused in common validation due to route params
-//        $params = $this->route()->parameters();
-//        $activityService = app()->make(ActivityService::class);
-//
-//        if ($activityService->hasRecipientRegionDefinedInTransactions($params['id'])) {
-//            Validator::extend('already_in_transactions', function () {
-//                return false;
-//            });
-//
-//            return ['recipient_region' => 'already_in_transactions'];
-//        }
-//
+        $rules = [];
+
+        if (!$fileUpload) {
+            $params = $this->route()->parameters();
+            $activityService = app()->make(ActivityService::class);
+
+            if ($activityService->hasRecipientRegionDefinedInTransactions($params['id'])) {
+                Validator::extend('already_in_transactions', function () {
+                    return false;
+                });
+
+                return ['recipient_region' => 'already_in_transactions'];
+            }
+        }
+
         Validator::extend('allocated_region_total_mismatch', function () {
             return false;
         });
@@ -94,13 +98,14 @@ class RecipientRegionRequest extends ActivityBaseRequest
             return false;
         });
 
-        $rules = [];
         $groupedPercentRegion = $this->groupRegion($formFields);
 //        $allottedRegionPercent = $activityService->getAllottedRecipientRegionPercent($params['id']);
-        $allottedRegionPercent = 100;
+        $allottedRegionPercent = 100.0;
 
         foreach ($formFields as $recipientRegionIndex => $recipientRegion) {
             $recipientRegionForm = 'recipient_region.' . $recipientRegionIndex;
+            $rules[sprintf('%s.region_vocabulary', $recipientRegionForm)] = 'nullable|in:' . implode(',', array_keys(getCodeList('RegionVocabulary', 'Activity', false)));
+            $rules[sprintf('%s.region_code', $recipientRegionForm)] = 'nullable|in:' . implode(',', array_keys(getCodeList('Region', 'Activity', false)));
             $rules[$recipientRegionForm . '.vocabulary_uri'] = 'nullable|url';
             $rules[$recipientRegionForm . '.percentage'] = 'nullable|numeric|min:0';
 
@@ -141,7 +146,10 @@ class RecipientRegionRequest extends ActivityBaseRequest
 
         foreach ($formFields as $recipientRegionIndex => $recipientRegion) {
             $recipientRegionForm = 'recipient_region.' . $recipientRegionIndex;
-            $messages[$recipientRegionForm . '.percentage.numeric'] = 'The @percentage field must be a number.';
+            $messages[sprintf('%s.region_vocabulary.in', $recipientRegionForm)] = 'The recipient region vocabulary is invalid.';
+            $messages[sprintf('%s.region_code.in', $recipientRegionForm)] = 'The recipient region code is invalid.';
+            $messages[$recipientRegionForm . '.percentage.numeric'] = 'The recipient region percentage field must be a number.';
+            $messages[sprintf('%s.vocabulary_uri.url', $recipientRegionForm)] = 'The recipient region vocabulary uri must be a valid url.';
 
             $narrativeMessages = $this->getMessagesForNarrative($recipientRegion['narrative'], $recipientRegionForm);
 

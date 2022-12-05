@@ -151,14 +151,14 @@ class Transaction extends Element
      */
     public function validate(): static
     {
-        $activitySector = Arr::get($this->activityLevelSector(), 'sector', []);
-        $this->data['transaction']['sector'][0]['activitySector'] = (empty($activitySector) ? '' : $activitySector);
-
-        $recipientRegion = Arr::get($this->activityLevelRecipientRegion(), 'recipient_region', []);
-        $this->data['transaction']['activityRecipientRegion'] = (empty($recipientRegion) ? '' : $recipientRegion);
-
-        $recipientCountry = Arr::get($this->activityLevelRecipientCountry(), 'recipient_country', []);
-        $this->data['transaction']['activityRecipientCountry'] = (empty($recipientCountry) ? '' : $recipientCountry);
+//        $activitySector = Arr::get($this->activityLevelSector(), 'sector', []);
+//        $this->data['transaction']['sector'][0]['activitySector'] = (empty($activitySector) ? '' : $activitySector);
+//
+//        $recipientRegion = Arr::get($this->activityLevelRecipientRegion(), 'recipient_region', []);
+//        $this->data['transaction']['activityRecipientRegion'] = (empty($recipientRegion) ? '' : $recipientRegion);
+//
+//        $recipientCountry = Arr::get($this->activityLevelRecipientCountry(), 'recipient_country', []);
+//        $this->data['transaction']['activityRecipientCountry'] = (empty($recipientCountry) ? '' : $recipientCountry);
 
         $this->validator = $this->factory->sign($this->data())
             ->with($this->rules(), $this->messages())
@@ -166,9 +166,9 @@ class Transaction extends Element
 
         $this->setValidity();
 
-        unset($this->data['transaction']['sector'][0]['activitySector']);
-        unset($this->data['transaction']['activityRecipientRegion']);
-        unset($this->data['transaction']['activityRecipientCountry']);
+//        unset($this->data['transaction']['sector'][0]['activitySector']);
+//        unset($this->data['transaction']['activityRecipientRegion']);
+//        unset($this->data['transaction']['activityRecipientCountry']);
 
         return $this;
     }
@@ -181,7 +181,7 @@ class Transaction extends Element
      */
     public function rules(): array
     {
-        return [];
+        return $this->getBaseRules($this->request->getRulesForTransaction(Arr::get($this->data, 'transaction', [])), false);
 
 //        $sector = Arr::get($this->data(), 'transaction.sector', []);
 //        $sectorVocabularyCodeList = $this->validCodeList('SectorVocabulary');
@@ -252,7 +252,7 @@ class Transaction extends Element
      */
     public function messages(): array
     {
-        return [];
+        return $this->getBaseMessages($this->request->getMessagesForTransaction(Arr::get($this->data, 'transaction', [])), false);
 
 //        $sector = Arr::get($this->data(), 'transaction.sector', []);
 //        $message = [
