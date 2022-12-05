@@ -355,6 +355,7 @@ class ImportXmlService
         $xml = $this->loadXml($filePath);
         $xmlLines = $this->xmlService->formatUploadedXml($xml);
         $messages = $this->xmlService->getSchemaErrors($xml);
+        logger()->error($messages);
         Session::put('xmlLines', $xmlLines);
         Session::put('messages', $messages);
     }

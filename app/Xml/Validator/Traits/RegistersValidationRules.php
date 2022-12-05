@@ -535,5 +535,43 @@ trait RegistersValidationRules
                 return $check;
             }
         );
+
+        $this->extend(
+            'unique_category',
+            function ($attribute, $value) {
+                $categoryCodes = [];
+
+                foreach ($value as $category) {
+                    $code = $category['code'];
+
+                    if (in_array($code, $categoryCodes, true)) {
+                        return false;
+                    }
+
+                    $categoryCodes[] = $code;
+                }
+
+                return true;
+            }
+        );
+
+        $this->extend(
+            'unique_language',
+            function ($attribute, $value) {
+                $languageCodes = [];
+
+                foreach ($value as $language) {
+                    $code = $language['code'] ?? ($language['language'] ?? '');
+
+                    if (in_array($code, $languageCodes, true)) {
+                        return false;
+                    }
+
+                    $languageCodes[] = $code;
+                }
+
+                return true;
+            }
+        );
     }
 }

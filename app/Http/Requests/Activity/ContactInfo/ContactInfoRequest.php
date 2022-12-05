@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Requests\Activity\ContactInfo;
 
 use App\Http\Requests\Activity\ActivityBaseRequest;
+use Illuminate\Support\Arr;
 
 /**
  * Class ContactInfoRequest.
@@ -46,14 +47,14 @@ class ContactInfoRequest extends ActivityBaseRequest
             $contactInfoForm = sprintf('contact_info.%s', $contactInfoIndex);
             $rules[sprintf('%s.type', $contactInfoForm)] = 'nullable|in:' . implode(',', array_keys(getCodeList('ContactType', 'Activity', false)));
             $tempRules = [
-                $this->getRulesForDepartment($contactInfo['department'], $contactInfoForm),
-                $this->getRulesForOrganisation($contactInfo['organisation'], $contactInfoForm),
-                $this->getRulesForPersonName($contactInfo['person_name'], $contactInfoForm),
-                $this->getRulesForJobTitle($contactInfo['job_title'], $contactInfoForm),
-                $this->getRulesForMailingAddress($contactInfo['mailing_address'], $contactInfoForm),
-                $this->getRulesForTelephone($contactInfo['telephone'], $contactInfoForm),
-                $this->getRulesForEmail($contactInfo['email'], $contactInfoForm),
-                $this->getRulesForWebsite($contactInfo['website'], $contactInfoForm),
+                $this->getRulesForDepartment(Arr::get($contactInfo, 'department', []), $contactInfoForm),
+                $this->getRulesForOrganisation(Arr::get($contactInfo, 'organisation', []), $contactInfoForm),
+                $this->getRulesForPersonName(Arr::get($contactInfo, 'person_name', []), $contactInfoForm),
+                $this->getRulesForJobTitle(Arr::get($contactInfo, 'job_title', []), $contactInfoForm),
+                $this->getRulesForMailingAddress(Arr::get($contactInfo, 'mailing_address', []), $contactInfoForm),
+                $this->getRulesForTelephone(Arr::get($contactInfo, 'telephone', []), $contactInfoForm),
+                $this->getRulesForEmail(Arr::get($contactInfo, 'email', []), $contactInfoForm),
+                $this->getRulesForWebsite(Arr::get($contactInfo, 'website', []), $contactInfoForm),
             ];
 
             foreach ($tempRules as $tempRule) {
@@ -81,14 +82,14 @@ class ContactInfoRequest extends ActivityBaseRequest
             $contactInfoForm = sprintf('contact_info.%s', $contactInfoIndex);
             $messages[sprintf('%s.type.in', $contactInfoForm)] = 'The contact info type is invalid.';
             $tempMessages = [
-                $this->getMessagesForDepartment($contactInfo['department'], $contactInfoForm),
-                $this->getMessagesForOrganisation($contactInfo['organisation'], $contactInfoForm),
-                $this->getMessagesForPersonName($contactInfo['person_name'], $contactInfoForm),
-                $this->getMessagesForJobTitle($contactInfo['job_title'], $contactInfoForm),
-                $this->getMessagesForMailingAddress($contactInfo['mailing_address'], $contactInfoForm),
-                $this->getMessagesForTelephone($contactInfo['telephone'], $contactInfoForm),
-                $this->getMessagesForEmail($contactInfo['email'], $contactInfoForm),
-                $this->getMessagesForWebsite($contactInfo['website'], $contactInfoForm),
+                $this->getMessagesForDepartment(Arr::get($contactInfo, 'department', []), $contactInfoForm),
+                $this->getMessagesForOrganisation(Arr::get($contactInfo, 'organisation', []), $contactInfoForm),
+                $this->getMessagesForPersonName(Arr::get($contactInfo, 'person_name', []), $contactInfoForm),
+                $this->getMessagesForJobTitle(Arr::get($contactInfo, 'job_title', []), $contactInfoForm),
+                $this->getMessagesForMailingAddress(Arr::get($contactInfo, 'mailing_address', []), $contactInfoForm),
+                $this->getMessagesForTelephone(Arr::get($contactInfo, 'telephone', []), $contactInfoForm),
+                $this->getMessagesForEmail(Arr::get($contactInfo, 'email', []), $contactInfoForm),
+                $this->getMessagesForWebsite(Arr::get($contactInfo, 'website', []), $contactInfoForm),
             ];
 
             foreach ($tempMessages as $tempMessage) {

@@ -311,9 +311,12 @@ class ActivityBaseRequest extends FormRequest
         $rules = [];
         $rules[sprintf('%s.narrative', $formBase)][] = 'unique_lang';
         $rules[sprintf('%s.narrative', $formBase)][] = 'unique_default_lang';
+        $validLanguages = implode(',', array_keys(getCodeList('Language', 'Activity', false)));
 
         foreach ($formFields as $narrativeIndex => $narrative) {
             $rules[sprintf('%s.narrative.%s.narrative', $formBase, $narrativeIndex)][] = 'required_with_language';
+            $rules[sprintf('%s.narrative.%s.language', $formBase, $narrativeIndex)][] = 'sometimes';
+            $rules[sprintf('%s.narrative.%s.language', $formBase, $narrativeIndex)][] = sprintf('in:%s', $validLanguages);
         }
 
         return $rules;
@@ -339,6 +342,11 @@ class ActivityBaseRequest extends FormRequest
                 $formBase,
                 $narrativeIndex
             )] = 'The narrative field is required with @xml:lang field.';
+            $messages[sprintf(
+                '%s.narrative.%s.language.in',
+                $formBase,
+                $narrativeIndex
+            )] = 'The @xml:lang field is invalid.';
         }
 
         return $messages;

@@ -18,7 +18,7 @@ class TitleRequest extends ActivityBaseRequest
      */
     public function rules(): array
     {
-        $rules['narrative'] = 'unique_lang|unique_default_lang|min:5';
+        $rules['narrative'] = 'unique_lang|unique_default_lang';
 
         return $rules;
     }
@@ -32,7 +32,6 @@ class TitleRequest extends ActivityBaseRequest
     {
         $messages['narrative.unique_lang'] = 'The title language field must be unique.';
         $messages['narrative.unique_default_lang'] = 'The title language field must be unique.';
-        $messages['narrative.min'] = 'The title narrative must be atleast 5 characters.';
 
         return $messages;
     }

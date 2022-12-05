@@ -45,7 +45,7 @@ class ParticipatingOrganizationRequest extends ActivityBaseRequest
             $participatingOrgForm = 'participating_org.' . $participatingOrgIndex;
             $identifier = $participatingOrgForm . '.identifier';
             $narrative = sprintf('%s.narrative.0.narrative', $participatingOrgForm);
-            $rules[$identifier] = 'exclude_operators|required_without:' . $narrative;
+            $rules[$identifier] = 'nullable|exclude_operators';
             $rules[sprintf('%s.organization_role', $participatingOrgForm)] = 'nullable|in:' . implode(',', array_keys(getCodeList('OrganisationRole', 'Organization', false)));
             $rules[sprintf('%s.type', $participatingOrgForm)] = 'nullable|in:' . implode(',', array_keys(getCodeList('OrganizationType', 'Organization', false)));
 
@@ -73,14 +73,6 @@ class ParticipatingOrganizationRequest extends ActivityBaseRequest
             $messages[$participatingOrgForm . '.organization_role.required'] = trans('validation.required', ['attribute' => trans('elementForm.organisation_role')]);
             $identifier = $participatingOrgForm . '.identifier';
             $narrative = sprintf('%s.narrative.0.narrative', $participatingOrgForm);
-            $messages[$identifier . '.required_without'] = trans(
-                'validation.required_without',
-                ['attribute' => trans('elementForm.identifier'), 'values' => trans('elementForm.narrative')]
-            );
-            $messages[$narrative . '.required_without'] = trans(
-                'validation.required_without',
-                ['attribute' => trans('elementForm.narrative'), 'values' => trans('elementForm.identifier')]
-            );
             $messages[$identifier . '.exclude_operators'] = trans(
                 'validation.exclude_operators',
                 ['attribute' => trans('elementForm.identifier'), 'values' => trans('elementForm.identifier')]
