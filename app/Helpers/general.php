@@ -650,7 +650,7 @@ if (!function_exists('isMandatoryElement')) {
     function isMandatoryElement($element): bool
     {
         $mandatory_elements = [
-            // 'indicator',
+            'indicator',
         ];
 
         return in_array($element, $mandatory_elements, true);
