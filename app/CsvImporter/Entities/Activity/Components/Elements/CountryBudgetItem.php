@@ -19,12 +19,12 @@ class CountryBudgetItem extends Element
      * @var array
      */
     private array $_csvHeaders
-        = [
-            'country_budget_item_vocabulary',
-            'budget_item_code',
-            'budget_item_percentage',
-            'budget_item_description',
-        ];
+    = [
+        'country_budget_item_vocabulary',
+        'budget_item_code',
+        'budget_item_percentage',
+        'budget_item_description',
+    ];
 
     /**
      * Index under which the data is stored within the object.
@@ -212,7 +212,11 @@ class CountryBudgetItem extends Element
      */
     public function rules(): array
     {
-        return $this->getBaseRules($this->request->getRulesForCountryBudgetItem(Arr::get($this->data, 'country_budget_items', [])), false);
+        if (Arr::get($this->data, 'country_budget_items')) {
+            return $this->getBaseRules($this->request->getRulesForCountryBudgetItem(Arr::get($this->data, 'country_budget_items', [])), false);
+        }
+
+        return [];
     }
 
     /**
@@ -234,8 +238,8 @@ class CountryBudgetItem extends Element
     public function validate(): static
     {
         $this->validator = $this->factory->sign($this->data())
-                                         ->with($this->rules(), $this->messages())
-                                         ->getValidatorInstance();
+            ->with($this->rules(), $this->messages())
+            ->getValidatorInstance();
         $this->setValidity();
 
         return $this;

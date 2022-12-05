@@ -41,10 +41,11 @@ class RelatedActivityRequest extends ActivityBaseRequest
     public function getRulesForRelatedActivity(array $formFields): array
     {
         $rules = [];
+        $relatedActivityType = implode(',', array_keys(getCodeList('RelatedActivityType', 'Activity', false)));
 
         foreach ($formFields as $index => $formField) {
             $baseForm = sprintf('related_activity.%s', $index);
-            $rules[sprintf('%s.relationship_type', $baseForm)] = 'nullable|in:' . implode(',', array_keys(getCodeList('RelatedActivityType', 'Activity', false)));
+            $rules[sprintf('%s.relationship_type', $baseForm)] = sprintf('nullable|in:%s', $relatedActivityType);
         }
 
         return $rules;

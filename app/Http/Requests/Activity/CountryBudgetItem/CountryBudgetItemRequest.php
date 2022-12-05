@@ -41,7 +41,7 @@ class CountryBudgetItemRequest extends ActivityBaseRequest
      */
     public function getRulesForCountryBudgetItem(array $formFields): array
     {
-        $rules = $this->getBudgetItemRules($formFields['budget_item'], $formFields);
+        $rules = $this->getBudgetItemRules(Arr::get($formFields, 'budget_item', []), $formFields);
         $rules['country_budget_vocabulary'] = 'nullable|in:' . implode(',', array_keys(getCodeList('BudgetIdentifierVocabulary', 'Activity', false)));
 
         return $rules;
@@ -56,7 +56,7 @@ class CountryBudgetItemRequest extends ActivityBaseRequest
      */
     public function getMessagesForCountryBudgetItem(array $formFields): array
     {
-        $messages = $this->getBudgetItemMessages($formFields['budget_item']);
+        $messages = $this->getBudgetItemMessages(Arr::get($formFields, 'budget_item', []));
         $messages['country_budget_vocabulary.in'] = 'The country budget item vocabulary is invalid.';
 
         return $messages;

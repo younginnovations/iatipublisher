@@ -153,6 +153,7 @@ class ImportActivityController extends Controller
             $this->db->beginTransaction();
             $activities = $request->get('activities');
             $filetype = Session::get('import_filetype');
+            logger()->error('test test test');
 
             if ($activities) {
                 if ($filetype === 'xml') {
@@ -218,7 +219,7 @@ class ImportActivityController extends Controller
             }
 
             if (!$status['success']) {
-                Session::put('error', $status['message'] . 'sdf');
+                Session::put('error', $status['message']);
 
                 return redirect()->route('admin.activities.index');
             }
