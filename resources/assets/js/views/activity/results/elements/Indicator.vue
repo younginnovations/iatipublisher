@@ -3,7 +3,7 @@
     <div class="p-4 bg-white rounded-lg">
       <div class="flex mb-4">
         <div class="flex items-center title grow">
-          <svg-vue class="mr-1.5 text-xl text-bluecoral" icon="bill"></svg-vue>
+          <!-- <svg-vue class="mr-1.5 text-xl text-bluecoral" icon="bill"></svg-vue> -->
           <div class="text-sm font-bold title">Indicator</div>
           <!--          <div class="status ml-2.5 flex text-xs leading-5 text-crimson-50">-->
           <!--            <b class="mr-2 text-base leading-3">.</b>-->

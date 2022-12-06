@@ -25,13 +25,13 @@
             <ul class="text-sm font-bold leading-relaxed">
               <li>
                 <a v-smooth-scroll href="#target" :class="linkClasses">
-                  <svg-vue icon="core" class="mr-2 text-base"></svg-vue>
+                  <!-- <svg-vue icon="core" class="mr-2 text-base"></svg-vue> -->
                   target
                 </a>
               </li>
               <li>
                 <a v-smooth-scroll href="#actual" :class="linkClasses">
-                  <svg-vue icon="core" class="mr-2 text-base"></svg-vue>
+                  <!-- <svg-vue icon="core" class="mr-2 text-base"></svg-vue> -->
                   actual
                 </a>
               </li>

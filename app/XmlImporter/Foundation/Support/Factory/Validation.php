@@ -118,7 +118,7 @@ class Validation extends Factory
         }
 
         if ($duplicateTransaction) {
-            $errors['transactions']['reference'] = 'The activity contains duplicate transactions.';
+            $errors['transactions']['transaction.reference'] = 'The activity contains duplicate transactions.';
         }
 
         return $errors;

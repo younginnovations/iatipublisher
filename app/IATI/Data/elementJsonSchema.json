@@ -433,7 +433,7 @@
     "label": "recipient region",
     "add_more": true,
     "help_text": "If you cannot identify the specific country/countries benefiting from this activity, then you should provide the region instead.<br><br>If a region is included, it must be in addition to any countries specified. If the recipient country(ies) is known, then the corresponding recipient region should not also be added. For example, if 100% of the funding is going to Uganda, then you should record Uganda as the recipient country and you should not add that the funding is going to the region of Africa.<br></br>However, if you know that at least 80% of the expected funding is going to Uganda, you can specify that the unknown 20% is going to the region of Africa.<a target='_blank' href='https://iatistandard.org/en/guidance/standard-guidance/countries-regions/'>More information</a>",
-    "hover_text": "A supranational geopolitical region that will benefit from this activity. For sub-national geographical location, use the location element. Multiple countries and regions can be reported, in which case the percentage attribute MUST be used to specify the share of total commitments across all reported countries and regions. Recipient-region must not be used merely to describe the region of a country reported in recipient-country, but ONLY if the region is a recipient IN ADDITION to the country.</br><a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/recipient-region/'>For more information</a>",
+    "hover_text": "A supranational geopolitical region that will benefit from this activity. For sub-national geographical location, use the location element. Multiple countries and regions can be reported, in which case the percentage attribute MUST be used to specify the share of total commitments across all reported countries and regions. Recipient-region must not be used merely to describe the region of a country reported in recipient-country, but ONLY if the region is a recipient IN ADDITION to the country.<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/recipient-region/'>For more information</a>",
     "dependent_attributes": {
       "region_code": {},
       "custom_code": {},
@@ -1488,7 +1488,7 @@
       "title": {
         "name": "title",
         "label": "Title",
-        "element_criteria": "mandatory",
+        "element_criteria": "",
         "add_more": false,
         "hover_text": "A short, human-readable title.<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/document-link/title/'>For information</a>",
         "attributes": {},
@@ -2702,7 +2702,7 @@
         },
         "required": false,
         "criteria": "",
-        "hover_text": "Flag indicating whether the data in the result set are suitable for aggregation. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/'>For more information.</a>",
+        "hover_text": "Flag indicating whether the data in the result set are suitable for aggregation.<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/'>For more information.</a>",
         "help_text": "Select yes if the results data that you provide is suitable for aggregation (the data user should be able to add them up to get the total)."
       }
     },
@@ -2710,7 +2710,7 @@
       "title": {
         "name": "title",
         "label": "title",
-        "element_criteria": "mandatory",
+        "element_criteria": "",
         "add_more": false,
         "attributes": {},
         "hover_text": "A short, human-readable title.<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/title/'>For more information.</a>",
@@ -2815,7 +2815,7 @@
           "title": {
             "name": "title",
             "label": "title",
-            "element_criteria": "mandatory",
+            "element_criteria": "",
             "attributes": {},
             "hover_text": "A short, human-readable title.<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/document-link/title/'>For more information.</a>",
             "sub_elements": {
@@ -2888,7 +2888,7 @@
           "category": {
             "name": "category",
             "label": "category",
-            "element_criteria": "mandatory",
+            "element_criteria": "",
             "add_more": true,
             "wrapper_collection": false,
             "hover_text": "IATI Document Category Code. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/document-link/category/'>For more information.</a>",
@@ -2954,7 +2954,7 @@
         "label": "reference",
         "add_more": true,
         "make_collection": false,
-        "hover_text": "A reference element to allow for the coded identification of results framework.<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/reference/'>For more information</a>",
+        "hover_text": "A reference element to allow for the coded identification of results framework. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/reference/'>For more information</a>",
         "help_text": "If this result is contained in a results framework, then you may provide information about it. You can choose to provide a reference to a results framework in two ways:<br></br><b>1.</b> You can provide a reference to a results framework for the result here OR<br></br><b>2.</b> You can provide a reference to a results framework for each individual indicator that measures this result. For every result that you publish, you will be required to provide an indicator (which measures the result).<br></br><b>Option 2 is recommended</b>. To implement this option, leave the next three fields blank: code, vocabulary, vocabulary uri.<br></br>Do note: You cannot provide a reference to a results framework for <b>both</b> the result and indicator. See guidance for more information: <a target='_blank' href='https://iatistandard.org/en/guidance/standard-guidance/results/'>Results Information</a> ",
         "attributes": {
           "vocabulary": {
@@ -2998,7 +2998,7 @@
     "label": "indicator",
     "add_more": false,
     "hover_text": "The indicator(s) that are measured to meet the results. There can be multiple indicators for each result.<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/indicator/'>For more information</a>",
-    "help_text": "Indicators describe how the activity’s progress towards the result is measured. Multiple indicators can be published for each result.<br></br><b>Example usage</b>: An activity is working towards the outcome: ‘people to have access to independent media covering a diverse range of outcomes’. One of the ways this is being measured is through ‘the percentage of journalists who feel free to express their opinion’ (which is an indicator). This is measured through a bi-annual survey where they are asked to score how free they feel on a scale of 1 - 4.<br></br>See <a target='_blank' href='https://iatistandard.org/en/guidance/standard-guidance/results/'>Results Information</a> for more details on this example and <a target='_blank' href='https://iatistandard.org/en/guidance/standard-guidance/understanding-results/'>Understanding results data</a> for further examples.",
+    "help_text": "  <br></br><b>Example usage</b>: An activity is working towards the outcome: ‘people to have access to independent media covering a diverse range of outcomes’. One of the ways this is being measured is through ‘the percentage of journalists who feel free to express their opinion’ (which is an indicator). This is measured through a bi-annual survey where they are asked to score how free they feel on a scale of 1 - 4.<br></br>See <a target='_blank' href='https://iatistandard.org/en/guidance/standard-guidance/results/'>Results Information</a> for more details on this example and <a target='_blank' href='https://iatistandard.org/en/guidance/standard-guidance/understanding-results/'>Understanding results data</a> for further examples.",
     "show_info_in_title": true,
     "attributes": {
       "measure": {
@@ -3045,7 +3045,7 @@
       "title": {
         "name": "title",
         "label": "title",
-        "element_criteria": "mandatory",
+        "element_criteria": "",
         "add_more": false,
         "attributes": {},
         "hover_text": "A short, human-readable title.<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/indicator/title/'>For more information</a>",
@@ -3150,7 +3150,7 @@
           "title": {
             "name": "title",
             "label": "title",
-            "element_criteria": "mandatory",
+            "element_criteria": "",
             "hover_text": "A short, human-readable title. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/indicator/document-link/title/'>For more information</a>",
             "attributes": {},
             "sub_elements": {
@@ -3223,7 +3223,7 @@
           "category": {
             "name": "category",
             "label": "category",
-            "element_criteria": "mandatory",
+            "element_criteria": "",
             "add_more": true,
             "wrapper_collection": false,
             "hover_text": "IATI Document Category Code. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/indicator/document-link/category/'>For more information</a>",
@@ -3436,7 +3436,7 @@
             "name": "document_link",
             "label": "document link",
             "add_more": true,
-            "element_criteria": "mandatory",
+            "element_criteria": "",
             "hover_text": "A link to an online, publicly accessible web page or document expanding on the result. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/indicator/baseline/document-link/'>For more information</a>",
             "help_text": "You may provide more information about the indicator baseline by providing a link to an online, publicly accessible web page or document.",
             "attributes": {
@@ -3466,7 +3466,7 @@
               "title": {
                 "name": "title",
                 "label": "title",
-                "element_criteria": "mandatory",
+                "element_criteria": "",
                 "add_more": false,
                 "attributes": {},
                 "hover_text": "A short, human-readable title. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/indicator/baseline/document-link/title/'>For more information</a>",
@@ -3541,7 +3541,7 @@
               "category": {
                 "name": "category",
                 "label": "category",
-                "element_criteria": "mandatory",
+                "element_criteria": "",
                 "add_more": true,
                 "wrapper_collection": false,
                 "hover_text": "IATI Document Category Code. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/indicator/baseline/document-link/category/'>For more information</a>",
@@ -3637,7 +3637,7 @@
       "period_start": {
         "name": "period_start",
         "label": "period start",
-        "element_criteria": "mandatory",
+        "element_criteria": "",
         "add_more": false,
         "hover_text": "The start of the reporting period. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/indicator/period/period-start/'>For more information</a>",
         "attributes": {
@@ -3657,7 +3657,7 @@
       "period_end": {
         "name": "period_end",
         "label": "period end",
-        "element_criteria": "mandatory",
+        "element_criteria": "",
         "add_more": false,
         "hover_text": "The end of the reporting period. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/indicator/period/period-end/'>For more information</a>",
         "attributes": {
@@ -3792,7 +3792,7 @@
               "title": {
                 "name": "title",
                 "label": "title",
-                "element_criteria": "mandatory",
+                "element_criteria": "",
                 "attributes": {},
                 "hover_text": "A short, human-readable title. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/indicator/period/target/document-link/title/'>For more information</a>",
                 "sub_elements": {
@@ -4066,7 +4066,7 @@
               "title": {
                 "name": "title",
                 "label": "title",
-                "element_criteria": "mandatory",
+                "element_criteria": "",
                 "attributes": {},
                 "hover_text": "A short, human-readable title. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/indicator/period/actual/document-link/title/'>For more information</a>",
                 "sub_elements": {
@@ -4140,7 +4140,7 @@
                 "name": "category",
                 "label": "category",
                 "add_more": true,
-                "element_criteria": "mandatory",
+                "element_criteria": "",
                 "wrapper_collection": false,
                 "hover_text": "IATI Document Category Code. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/indicator/period/actual/document-link/category/'>For more information</a>",
                 "help_text": "If you have provided a document link, select a category that best describes the document.",
@@ -4569,7 +4569,7 @@
         "name": "sector",
         "add_more": true,
         "hover_text": "A recognised code, from a recognised vocabulary, classifying the purpose of this transaction.<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/transaction/sector/'>For more information</a>",
-        "help_text": "You can specify <b>one</b> sector that this individual transaction is supporting. For example, primary education or agriculture. If you do this, then you must specify a sector for <b><u>every</u></b> transaction that you publish.<br></br>You <b><u>should not</u></b> specify a sector for any of your transactions if you want to provide data on the sector(s) of this entire activity (which you can publish here). <b>Sectors must only be provided at either the activity or transaction level and <u>not both</u></b>.<br></br>Once your organisation decides where to publish information about which sectors it is working in, you should be consistent across all activities that you publish. This means you should publish all sector information at either activity level or for all transactions. <a target='_blank' href='https://iatistandard.org/en/guidance/standard-guidance/activity-thematic-focus/'>More information</a>.</br>",
+        "help_text": "You can specify <b>one</b> sector that this individual transaction is supporting. For example, primary education or agriculture. If you do this, then you must specify a sector for <b><u>every</u></b> transaction that you publish.</br>You <b><u>should not</u></b> specify a sector for any of your transactions if you want to provide data on the sector(s) of this entire activity (which you can publish here). <b>Sectors must only be provided at either the activity or transaction level and <u>not both</u></b>.</br>Once your organisation decides where to publish information about which sectors it is working in, you should be consistent across all activities that you publish. This means you should publish all sector information at either activity level or for all transactions. <a target='_blank' href='https://iatistandard.org/en/guidance/standard-guidance/activity-thematic-focus/'>More information</a>.</br>",
         "dependent_attributes": {
           "vocabulary_uri": {},
           "code": {},
