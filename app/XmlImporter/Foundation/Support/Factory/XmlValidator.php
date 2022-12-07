@@ -186,10 +186,12 @@ class XmlValidator
     {
         $rules = [];
 
-        foreach ($data as $idx => $value) {
-            foreach ($baseRules as $elementName => $baseRule) {
-                $fieldName = $indexRequired ? $element . '.' . $idx . '.' . $elementName : $element . '.' . $elementName;
-                $rules[$fieldName] = $baseRule;
+        if (!empty($data)) {
+            foreach ($data as $idx => $value) {
+                foreach ($baseRules as $elementName => $baseRule) {
+                    $fieldName = $indexRequired ? $element . '.' . $idx . '.' . $elementName : $element . '.' . $elementName;
+                    $rules[$fieldName] = $baseRule;
+                }
             }
         }
 
@@ -391,7 +393,7 @@ class XmlValidator
      */
     protected function rulesForDescription(array $activity): array
     {
-        return (new DescriptionRequest())->getRulesForDescription(Arr::get($activity, 'description'));
+        return (new DescriptionRequest())->getRulesForDescription(Arr::get($activity, 'description', []));
     }
 
     /**
@@ -403,7 +405,7 @@ class XmlValidator
      */
     protected function messagesForDescription(array $activity): array
     {
-        return (new DescriptionRequest())->getMessagesForDescription(Arr::get($activity, 'description'));
+        return (new DescriptionRequest())->getMessagesForDescription(Arr::get($activity, 'description', []));
     }
 
     /**
@@ -415,7 +417,7 @@ class XmlValidator
      */
     public function rulesForOtherIdentifier(array $activity): array
     {
-        return (new OtherIdentifierRequest())->getRulesForOtherIdentifier(Arr::get($activity, 'other_identifier'));
+        return (new OtherIdentifierRequest())->getRulesForOtherIdentifier(Arr::get($activity, 'other_identifier', []));
     }
 
     /**
@@ -427,7 +429,7 @@ class XmlValidator
      */
     public function messagesForOtherIdentifier(array $activity): array
     {
-        return (new OtherIdentifierRequest())->getMessagesForOtherIdentifier(Arr::get($activity, 'other_identifier'));
+        return (new OtherIdentifierRequest())->getMessagesForOtherIdentifier(Arr::get($activity, 'other_identifier', []));
     }
 
     /**
@@ -1045,8 +1047,8 @@ class XmlValidator
      */
     protected function rulesForResult(array $activity): array
     {
-        $results = Arr::get($activity, 'result', []);
-        $indicators = Arr::get($activity, 'indicator', []);
+        $results = Arr::get($activity, 'result', []) ?? [];
+        $indicators = Arr::get($activity, 'indicator', []) ?? [];
         $rules = [];
 
         foreach ($results as $resultIndex => $result) {
@@ -1079,7 +1081,7 @@ class XmlValidator
     protected function messagesForResult($activity): array
     {
         $messages = [];
-        $results = Arr::get($activity, 'result', []);
+        $results = Arr::get($activity, 'result', []) ?? [];
 
         foreach ($results as $resultIndex => $result) {
             $resultBase = sprintf('result.%s', $resultIndex);
