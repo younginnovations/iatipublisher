@@ -150,13 +150,13 @@ form {
   /**
   * Condition to show and delete collection error in form
   */
-  .collection_error{
+  .collection_error {
     display: none;
   }
 
-  .multi-form+.collection_error,
-  .form-field-group+.collection_error,
-  .wrapped-child-body+.collection_error{
+  .multi-form + .collection_error,
+  .form-field-group + .collection_error,
+  .wrapped-child-body + .collection_error {
     display: block;
   }
 }
@@ -211,7 +211,9 @@ span.select2-container--default {
   }
 
   &__content {
-    @apply grow;
+    @media (max-width: 768px) {
+      max-width: calc(100vw - 50px);
+    }
   }
 
   &__card {

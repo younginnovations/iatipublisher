@@ -33,6 +33,17 @@
 }
 
 // activity detail
+.activities__content--element {
+  @media (max-width: 768px) {
+    max-width: calc(100vw - 30px);
+  }
+  @media (max-width: 768px) {
+    .add_indicator {
+      max-width: 400px;
+    }
+  }
+}
+
 .activities__content--element > div {
   .edit-button,
   .delete-button {

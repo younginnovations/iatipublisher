@@ -1,247 +1,346 @@
 <template>
-  <div class="relative bg-paper px-5 pt-4 pb-[71px] xl:px-10">
-    <!-- title section -->
-    <div class="page-title mb-6">
-      <div class="pb-4 text-caption-c1 text-n-40">
-        <div>
-          <nav aria-label="breadcrumbs" class="rank-math-breadcrumb">
-            <div class="flex">
-              <a class="whitespace-nowrap font-bold" href="/activities">
-                Your Activities
-              </a>
-              <span class="separator mx-4"> / </span>
-              <div class="breadcrumb__title">
-                <span
-                  class="breadcrumb__title last max-w-lg overflow-hidden text-n-30"
-                  >{{ pageTitle ?? 'Untitled' }}</span
-                >
-                <span class="ellipsis__title--hover w-[calc(100%_+_35px)]">{{
-                  pageTitle ? pageTitle : 'Untitled'
-                }}</span>
+  <div>
+    <div
+      v-if="showSidebar"
+      class="fixed z-10 h-screen w-screen bg-black/10"
+      @click="
+        () => {
+          toggleSidebar();
+        }
+      "
+    />
+    <div class="relative bg-paper px-5 pt-4 pb-[71px] xl:px-10">
+      <!-- title section -->
+      <div class="page-title mb-6">
+        <div class="pb-4 text-caption-c1 text-n-40">
+          <div>
+            <nav aria-label="breadcrumbs" class="rank-math-breadcrumb">
+              <div class="flex">
+                <a class="whitespace-nowrap font-bold" href="/activities">
+                  Your Activities
+                </a>
+                <span class="separator mx-4"> / </span>
+                <div class="breadcrumb__title">
+                  <span
+                    class="breadcrumb__title last max-w-lg overflow-hidden text-n-30"
+                    >{{ pageTitle ?? 'Untitled' }}</span
+                  >
+                  <span class="ellipsis__title--hover w-[calc(100%_+_35px)]">{{
+                    pageTitle ? pageTitle : 'Untitled'
+                  }}</span>
+                </div>
+              </div>
+            </nav>
+          </div>
+        </div>
+
+        <div class="flex items-end gap-4">
+          <div class="title max-w-[50%] basis-6/12">
+            <div class="inline-flex w-full items-center">
+              <div class="mr-3">
+                <a href="/activities">
+                  <svg-vue icon="arrow-short-left" />
+                </a>
+              </div>
+              <div class="inline-flex min-h-[48px] grow flex-wrap items-center">
+                <h4 class="ellipsis__title relative text-2xl font-bold">
+                  <span class="ellipsis__title overflow-hidden">
+                    {{ pageTitle ? pageTitle : 'Untitled' }}
+                  </span>
+                  <span class="ellipsis__title--hover">
+                    {{ pageTitle ? pageTitle : 'Untitled' }}
+                  </span>
+                </h4>
               </div>
             </div>
-          </nav>
+          </div>
+          <div class="actions flex grow flex-col items-end justify-end">
+            <div class="relative inline-flex justify-end">
+              <!-- toast msg for publishing -->
+              <Toast
+                v-if="toastData.visibility"
+                :message="toastData.message"
+                :type="toastData.type"
+                class="mr-3"
+              />
+              <ErrorPopUp
+                v-if="errorData.visibility"
+                :message="errorData.message"
+                title="Activity couldn’t be published because"
+                @close-popup="
+                  () => {
+                    errorData.visibility = false;
+                  }
+                "
+              />
+              <!-- {{ typeof toastData.message }} -->
+              <div class="inline-flex items-center justify-end gap-3">
+                <!-- Delete Activity -->
+                <DeleteButton />
+
+                <!-- Unpublish Activity -->
+                <UnPublish
+                  v-if="store.state.unPublished"
+                  :activity-id="activityProps.id"
+                />
+
+                <!-- Publish Activity -->
+                <Publish
+                  v-if="store.state.showPublished"
+                  :linked-to-iati="activityProps.linked_to_iati"
+                  :status="activityProps.status"
+                  :core-completed="coreCompleted"
+                  :activity-id="activityProps.id"
+                />
+              </div>
+            </div>
+
+            <Errors
+              v-if="store.state.publishErrors.length > 0"
+              :error-data="store.state.publishErrors"
+              class="absolute right-0 bottom-[calc(100%-52px)]"
+            />
+          </div>
         </div>
       </div>
-
-      <div class="flex items-end gap-4">
-        <div class="title max-w-[50%] basis-6/12">
-          <div class="inline-flex w-full items-center">
-            <div class="mr-3">
-              <a href="/activities">
-                <svg-vue icon="arrow-short-left" />
-              </a>
-            </div>
-            <div class="inline-flex min-h-[48px] grow flex-wrap items-center">
-              <h4 class="ellipsis__title relative text-2xl font-bold">
-                <span class="ellipsis__title overflow-hidden">
-                  {{ pageTitle ? pageTitle : 'Untitled' }}
-                </span>
-                <span class="ellipsis__title--hover">
-                  {{ pageTitle ? pageTitle : 'Untitled' }}
-                </span>
-              </h4>
-            </div>
-          </div>
-        </div>
-        <div class="actions flex grow flex-col items-end justify-end">
-          <div class="relative inline-flex justify-end">
-            <!-- toast msg for publishing -->
-            <Toast
-              v-if="toastData.visibility"
-              :message="toastData.message"
-              :type="toastData.type"
-              class="mr-3"
-            />
-            <ErrorPopUp
-              v-if="errorData.visibility"
-              :message="errorData.message"
-              title="Activity couldn’t be published because"
-              @close-popup="
-                () => {
-                  errorData.visibility = false;
-                }
-              "
-            />
-            <!-- {{ typeof toastData.message }} -->
-            <div class="inline-flex items-center justify-end gap-3">
-              <!-- Delete Activity -->
-              <DeleteButton />
-
-              <!-- Unpublish Activity -->
-              <UnPublish
-                v-if="store.state.unPublished"
-                :activity-id="activityProps.id"
-              />
-
-              <!-- Publish Activity -->
-              <Publish
-                v-if="store.state.showPublished"
-                :linked-to-iati="activityProps.linked_to_iati"
-                :status="activityProps.status"
-                :core-completed="coreCompleted"
-                :activity-id="activityProps.id"
-              />
-            </div>
-          </div>
-
-          <Errors
-            v-if="store.state.publishErrors.length > 0"
-            :error-data="store.state.publishErrors"
-            class="absolute right-0 bottom-[calc(100%-52px)]"
-          />
-        </div>
-      </div>
-    </div>
-    <!-- title section ends -->
-    <div class="activities">
-      <aside class="activities__sidebar">
-        <div
-          v-if="
-            publishStatus.linked_to_iati && publishStatus.status === 'draft'
-          "
-          class="mb-2"
-        >
-          <PreviouslyPublished />
-        </div>
-        <div class="mb-1 flex">
-          <div class="activities__card progress mr-1">
-            <div class="mb-2 flex items-center justify-between">
-              <span class="mr-2">Publishing Progress</span>
-              <HoverText
-                hover-text="The IATI Standard contains a wide range of data elements and your organisation is encouraged to (at least) publish data in elements marked as “Core”."
-                name=""
-                class="hover-text"
-                position="right"
-              />
-            </div>
-            <ProgressBar :percent="progress" class="mb-3" />
-            <span>Complete all core elements to get 100% score</span>
-          </div>
-          <div class="activities__card elements">
-            <div class="mb-7 flex items-center justify-between">
-              <span>Elements</span>
-              <HoverText
-                hover-text="Each “Element” represents a basic unit of information in the IATI Standard. Click on each element listed below and complete all data fields contained in the element. For each element, you will find its technical definition, which is labelled as “IATI Standard Reference” and helpful guidance on the data you are required to provide."
-                name=""
-                class="hover-text"
-              />
-            </div>
-            <div class="mb-3 flex justify-between">
-              <div class="flex items-center space-x-1">
-                <svg-vue icon="core" />
-                <span>Core</span>
-              </div>
-              <HoverText
-                hover-text="Core elements include the IATI Standard's “mandatory and recommended” elements and it is important to provide this data to ensure your data is usable and useful."
-                name=""
-                class="hover-text"
-              />
-            </div>
-            <div class="flex justify-between">
-              <div class="flex items-center space-x-1">
-                <svg-vue class="text-spring-50" icon="double-tick" />
-                <span>Completed</span>
-              </div>
-              <HoverText
-                hover-text="You cannot publish an activity until all the mandatory fields have been filled."
-                name=""
-                class="hover-text"
-              />
-            </div>
-          </div>
-        </div>
-        <div v-sticky-component="{ boundary: '.activities' }">
-          <Elements :activity-id="activity.id" :data="elementProps" />
-        </div>
-      </aside>
-      <div class="activities__content">
-        <div class="flex justify-end">
-          <a
-            :href="`/activity/${activityProps.id}/default_values`"
-            class="mb-4 flex items-center text-xs font-bold uppercase leading-normal text-n-50"
+      <!-- title section ends -->
+      <div class="activities">
+        <aside class="activities__sidebar hidden lg:block">
+          <div
+            v-if="
+              publishStatus.linked_to_iati && publishStatus.status === 'draft'
+            "
+            class="mb-2"
           >
-            <svg-vue class="mr-0.5 text-base" icon="setting"></svg-vue>
-            <span class="whitespace-nowrap"
-              >Override this activity's default values</span
-            >
-          </a>
-        </div>
-        <div class="mb-3 inline-flex flex-wrap gap-2">
-          <a
-            v-for="(post, key, index) in groupedData"
-            :key="index"
-            v-smooth-scroll
-            :href="`#${String(key)}`"
-            class="tab-btn-anchor"
-          >
-            <button :disabled="post.status == 'disabled'" class="tab-btn">
-              <span>{{ post.label }}</span>
-              <span class="hover__text">
+            <PreviouslyPublished />
+          </div>
+          <div class="mb-1 flex">
+            <div class="activities__card progress mr-1">
+              <div class="mb-2 flex items-center justify-between">
+                <span class="mr-2">Publishing Progress</span>
                 <HoverText
-                  :name="post.label"
-                  hover-text="You cannot publish an activity until all the mandatory fields have been filled."
-                  icon_size="text-tiny"
+                  hover-text="The IATI Standard contains a wide range of data elements and your organisation is encouraged to (at least) publish data in elements marked as “Core”."
+                  name=""
+                  class="hover-text"
+                  position="right"
                 />
-              </span>
-            </button>
-          </a>
-        </div>
-        <div class="activities__content--elements -mx-3 flex flex-wrap">
-          <template v-for="(post, key, index) in groupedData" :key="index">
-            <div
-              class="elements-title relative mx-3 mt-3 mb-1 flex w-full items-center text-sm uppercase text-n-40"
-            >
-              <div class="mr-4 shrink-0">{{ formatTitle(key) }}</div>
+              </div>
+              <ProgressBar :percent="progress" class="mb-3" />
+              <span>Complete all core elements to get 100% score</span>
             </div>
-            <template v-for="(element, name, i) in post.elements" :key="i">
-              <template v-if="name.toString() !== 'result'">
-                <ActivityElement
-                  v-if="
-                    (typeof element.content === 'object'
-                      ? Object.keys(element.content).length > 0
-                      : element.content) || typeof element.content === 'number'
-                  "
-                  :id="key"
-                  :data="element"
-                  :types="types"
-                  :title="String(name)"
-                  :activity-id="activity.id"
-                  :width="
-                    String(name) === 'iati_identifier' ||
-                    String(name) === 'activity_status' ||
-                    String(name) === 'activity_scope' ||
-                    String(name) === 'collaboration_type' ||
-                    String(name) === 'default_flow_type' ||
-                    String(name) === 'default_tied_status' ||
-                    String(name) === 'default_finance_type' ||
-                    String(name) === 'capital_spend'
-                      ? 'basis-6/12'
-                      : 'full'
-                  "
-                  :completed="status[name] ?? false"
-                  :tooltip="element.hover_text"
-                  class="elements-card"
+            <div class="activities__card elements">
+              <div class="mb-7 flex items-center justify-between">
+                <span>Elements</span>
+                <HoverText
+                  hover-text="Each “Element” represents a basic unit of information in the IATI Standard. Click on each element listed below and complete all data fields contained in the element. For each element, you will find its technical definition, which is labelled as “IATI Standard Reference” and helpful guidance on the data you are required to provide."
+                  name=""
+                  class="hover-text"
                 />
-              </template>
-              <template v-else>
-                <Result
-                  v-if="
-                    (typeof element.content === 'object'
-                      ? Object.keys(element.content).length > 0
-                      : element.content) || typeof element.content === 'number'
-                  "
-                  :id="key"
-                  :data="element"
-                  :types="types"
-                  :title="String(name)"
-                  :activity-id="activity.id"
-                  :completed="status[name] ?? false"
-                  :tooltip="element.hover_text"
+              </div>
+              <div class="mb-3 flex justify-between">
+                <div class="flex items-center space-x-1">
+                  <svg-vue icon="core" />
+                  <span>Core</span>
+                </div>
+                <HoverText
+                  hover-text="Core elements include the IATI Standard's “mandatory and recommended” elements and it is important to provide this data to ensure your data is usable and useful."
+                  name=""
+                  class="hover-text"
                 />
+              </div>
+              <div class="flex justify-between">
+                <div class="flex items-center space-x-1">
+                  <svg-vue class="text-spring-50" icon="double-tick" />
+                  <span>Completed</span>
+                </div>
+                <HoverText
+                  hover-text="You cannot publish an activity until all the mandatory fields have been filled."
+                  name=""
+                  class="hover-text"
+                />
+              </div>
+            </div>
+          </div>
+          <div v-sticky-component="{ boundary: '.activities' }">
+            <Elements :activity-id="activity.id" :data="elementProps" />
+          </div>
+        </aside>
+        <div
+          class="absolute cursor-pointer lg:hidden"
+          @click="
+            () => {
+              toggleSidebar();
+            }
+          "
+        >
+          <img src="/images/svg/chevron.svg" />
+        </div>
+
+        <div
+          :class="showSidebar ? '-translate-x-[20px]' : '-translate-x-[110%]'"
+          class="opacity-1 fixed top-[60px] z-[100] block h-[calc(100vh_-_50px)] overflow-y-auto duration-200 lg:hidden"
+        >
+          <div
+            class="absolute right-4 cursor-pointer lg:hidden"
+            @click="
+              () => {
+                toggleSidebar();
+              }
+            "
+          >
+            <img src="/images/svg/chevron.svg" />
+          </div>
+          <aside class="!z-[200] w-[280px] bg-white pt-8">
+            <div
+              v-if="
+                publishStatus.linked_to_iati && publishStatus.status === 'draft'
+              "
+              class="mb-2"
+            >
+              <PreviouslyPublished />
+            </div>
+            <div class="mb-1 flex">
+              <div class="activities__card progress mr-1">
+                <div class="mb-2 flex items-center justify-between">
+                  <span class="mr-2">Publishing Progress</span>
+                  <HoverText
+                    hover-text="The IATI Standard contains a wide range of data elements and your organisation is encouraged to (at least) publish data in elements marked as “Core”."
+                    name=""
+                    class="hover-text"
+                    position="right"
+                  />
+                </div>
+                <ProgressBar :percent="progress" class="mb-3" />
+                <span>Complete all core elements to get 100% score</span>
+              </div>
+              <div class="activities__card elements">
+                <div class="mb-7 flex items-center justify-between">
+                  <span>Elements</span>
+                  <HoverText
+                    hover-text="Each “Element” represents a basic unit of information in the IATI Standard. Click on each element listed below and complete all data fields contained in the element. For each element, you will find its technical definition, which is labelled as “IATI Standard Reference” and helpful guidance on the data you are required to provide."
+                    name=""
+                    class="hover-text"
+                  />
+                </div>
+                <div class="mb-3 flex justify-between">
+                  <div class="flex items-center space-x-1">
+                    <svg-vue icon="core" />
+                    <span>Core</span>
+                  </div>
+                  <HoverText
+                    hover-text="Core elements include the IATI Standard's “mandatory and recommended” elements and it is important to provide this data to ensure your data is usable and useful."
+                    name=""
+                    class="hover-text"
+                  />
+                </div>
+                <div class="flex justify-between">
+                  <div class="flex items-center space-x-1">
+                    <svg-vue class="text-spring-50" icon="double-tick" />
+                    <span>Completed</span>
+                  </div>
+                  <HoverText
+                    hover-text="You cannot publish an activity until all the mandatory fields have been filled."
+                    name=""
+                    class="hover-text"
+                  />
+                </div>
+              </div>
+            </div>
+            <div v-sticky-component="{ boundary: '.activities' }">
+              <Elements :activity-id="activity.id" :data="elementProps" />
+            </div>
+          </aside>
+        </div>
+        <div class="">
+          <div class="flex justify-end">
+            <a
+              :href="`/activity/${activityProps.id}/default_values`"
+              class="mb-4 flex items-center text-xs font-bold uppercase leading-normal text-n-50"
+            >
+              <svg-vue class="mr-0.5 text-base" icon="setting"></svg-vue>
+              <span class="whitespace-nowrap"
+                >Override this activity's default values</span
+              >
+            </a>
+          </div>
+          <div class="mb-3 inline-flex flex-wrap gap-2">
+            <a
+              v-for="(post, key, index) in groupedData"
+              :key="index"
+              v-smooth-scroll
+              :href="`#${String(key)}`"
+              class="tab-btn-anchor"
+            >
+              <button :disabled="post.status == 'disabled'" class="tab-btn">
+                <span>{{ post.label }}</span>
+                <span class="hover__text">
+                  <HoverText
+                    :name="post.label"
+                    hover-text="You cannot publish an activity until all the mandatory fields have been filled."
+                    icon_size="text-tiny"
+                  />
+                </span>
+              </button>
+            </a>
+          </div>
+          <div class="activities__content--elements -mx-3 flex flex-wrap">
+            <template v-for="(post, key, index) in groupedData" :key="index">
+              <div
+                class="elements-title relative mx-3 mt-3 mb-1 flex w-full items-center text-sm uppercase text-n-40"
+              >
+                <div class="mr-4 shrink-0">{{ formatTitle(key) }}</div>
+              </div>
+              <template v-for="(element, name, i) in post.elements" :key="i">
+                <template v-if="name.toString() !== 'result'">
+                  <ActivityElement
+                    v-if="
+                      (typeof element.content === 'object'
+                        ? Object.keys(element.content).length > 0
+                        : element.content) ||
+                      typeof element.content === 'number'
+                    "
+                    :id="key"
+                    :data="element"
+                    :types="types"
+                    :title="String(name)"
+                    :activity-id="activity.id"
+                    :width="
+                      String(name) === 'iati_identifier' ||
+                      String(name) === 'activity_status' ||
+                      String(name) === 'activity_scope' ||
+                      String(name) === 'collaboration_type' ||
+                      String(name) === 'default_flow_type' ||
+                      String(name) === 'default_tied_status' ||
+                      String(name) === 'default_finance_type' ||
+                      String(name) === 'capital_spend'
+                        ? 'basis-6/12'
+                        : 'full'
+                    "
+                    :completed="status[name] ?? false"
+                    :tooltip="element.hover_text"
+                    class="elements-card"
+                  />
+                </template>
+                <template v-else>
+                  <Result
+                    v-if="
+                      (typeof element.content === 'object'
+                        ? Object.keys(element.content).length > 0
+                        : element.content) ||
+                      typeof element.content === 'number'
+                    "
+                    :id="key"
+                    :data="element"
+                    :types="types"
+                    :title="String(name)"
+                    :activity-id="activity.id"
+                    :completed="status[name] ?? false"
+                    :tooltip="element.hover_text"
+                  />
+                </template>
               </template>
             </template>
-          </template>
+          </div>
         </div>
       </div>
     </div>
@@ -255,6 +354,7 @@ import {
   reactive,
   toRefs,
   provide,
+  ref,
   watch,
 } from 'vue';
 import { useToggle, watchIgnorable } from '@vueuse/core';
@@ -345,6 +445,7 @@ export default defineComponent({
 
     const store = detailStore();
     const indexStore = useStore();
+    const showSidebar = ref(false);
 
     const toastData = reactive({
       visibility: false,
@@ -363,6 +464,10 @@ export default defineComponent({
     const [deleteValue, deleteToggle] = useToggle();
     const [downloadValue, downloadToggle] = useToggle();
 
+    const toggleSidebar = () => {
+      showSidebar.value = !showSidebar.value;
+      console.log(showSidebar.value);
+    };
     onMounted(() => {
       if (props.toast.message !== '') {
         toastData.type = props.toast.type;
@@ -569,6 +674,8 @@ export default defineComponent({
       store,
       activityProps,
       errorData,
+      showSidebar,
+      toggleSidebar,
     };
   },
 });

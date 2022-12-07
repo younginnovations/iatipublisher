@@ -9,7 +9,7 @@
         <aside class="activities__sidebar activities__sidebar-inner">
           @include('admin.organisation.partial.form-sidebar')
         </aside>
-        <div class="activities__content">
+        <div class="activities__content ">
           <div class="py-[6.06%] px-[6%] xl:px-[12%] bg-white">
 
             @include('admin.organisation.partial.form-title')
