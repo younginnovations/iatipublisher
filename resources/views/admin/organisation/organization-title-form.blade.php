@@ -4,7 +4,7 @@
 
     <section class="section">
         <div class="title-form-layout">
-            <div class="pt-4 pb-6 max-w-[1000px] mx-auto">
+            <div class="pt-4 pb-6  max-w-[1000px] mx-auto">
 
                 {{-- page title --}}
                 <div class="page-title mb-6">

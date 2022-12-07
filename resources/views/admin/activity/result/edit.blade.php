@@ -32,7 +32,7 @@
               </button>
             </a>
           </div>
-          <div class="py-[6.06%] px-[6%] xl:px-[12%] bg-white">
+          <div class="py-[6.06%] min-w-[500px] px-[6%] xl:px-[12%] bg-white">
 
             @include('admin.activity.partial.form-title')
 

@@ -1,5 +1,5 @@
 <template>
-  <div class="wrapper smooth relative h-56 bg-bluecoral sm:h-72">
+  <div class="wrapper smooth relative bg-bluecoral sm:h-72">
     <div class="mx-3 sm:mx-10 xl:mx-24 xl:px-1">
       <header class="header relative z-10 grid">
         <nav
@@ -97,7 +97,7 @@
           </div>
         </nav>
         <div
-          class="header__title mt-6 flex items-center justify-between border-l-4 border-l-turquoise py-2 px-4 sm:py-5 sm:px-6"
+          class="header__title mt-6 flex flex-wrap items-center justify-between gap-2 border-l-4 border-l-turquoise py-2 px-4 sm:py-5 sm:px-6"
         >
           <h1
             class="text-xl font-bold text-white sm:text-4xl sm:text-heading-2"

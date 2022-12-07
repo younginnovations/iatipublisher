@@ -10,7 +10,7 @@
           <sidebar-help-block></sidebar-help-block>
         </aside>
         <div class="activities__content">
-          <div class="py-[6.06%] px-[6%] xl:px-[12%] bg-white">
+          <div class="py-[6.06%] min-w-[500px] px-[6%] xl:px-[12%] bg-white">
             @include('admin.activity.partial.form-title')
 
             {!! form($form) !!}
