@@ -392,4 +392,16 @@ class ActivityRepository extends Repository
 
         return $this->model->where('org_id', $org_id)->whereJsonContains('iati_identifier->activity_identifier', $identifier['activity_identifier'])->first();
     }
+
+    /**
+     * Returns activities having given ids for downloading.
+     *
+     * @param $activityIds
+     *
+     * @return object
+     */
+    public function getActivitiesToDownload($activityIds): object
+    {
+        return $this->model->whereIn('id', $activityIds)->where('org_id', auth()->user()->organization->id)->get();
+    }
 }
