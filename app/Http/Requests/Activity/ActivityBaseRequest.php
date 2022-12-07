@@ -315,7 +315,7 @@ class ActivityBaseRequest extends FormRequest
 
         foreach ($formFields as $narrativeIndex => $narrative) {
             $rules[sprintf('%s.narrative.%s.narrative', $formBase, $narrativeIndex)][] = 'required_with_language';
-            $rules[sprintf('%s.narrative.%s.language', $formBase, $narrativeIndex)][] = 'sometimes';
+            $rules[sprintf('%s.narrative.%s.language', $formBase, $narrativeIndex)][] = 'nullable';
             $rules[sprintf('%s.narrative.%s.language', $formBase, $narrativeIndex)][] = sprintf('in:%s', $validLanguages);
         }
 

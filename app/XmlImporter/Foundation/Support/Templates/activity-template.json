@@ -41,7 +41,7 @@
       }
     }
   },
-  "participating_organization": {
+  "participating_org": {
     "organization_role": "",
     "ref": "",
     "type": "",

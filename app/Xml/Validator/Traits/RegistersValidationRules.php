@@ -502,6 +502,34 @@ trait RegistersValidationRules
             return false;
         });
 
+        $this->extend('sum_exceeded', function () {
+            return false;
+        });
+
+        $this->extend('already_in_activity', function () {
+            return false;
+        });
+
+        $this->extend('sum_greater_than', function () {
+            return false;
+        });
+
+        $this->extend('percentage_within_vocabulary', function () {
+            return false;
+        });
+
+        $this->extend('result_ref_code_present', function () {
+            return false;
+        });
+
+        $this->extend('indicator_ref_code_present', function () {
+            return false;
+        });
+
+        $this->extend('qualitative_empty', function () {
+            return false;
+        });
+
         $this->extend(
             'exclude_operators',
             function ($attribute, $value, $parameters, $validator) {

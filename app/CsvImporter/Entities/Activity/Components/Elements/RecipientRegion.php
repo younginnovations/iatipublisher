@@ -154,7 +154,7 @@ class RecipientRegion extends Element
                 }
             }
 
-            if ($value === '1') {
+            if (in_array($value, array_keys($validRegionCode))) {
                 $this->data['recipient_region'][$index]['region_code'] = $value;
             } else {
                 $this->data['recipient_region'][$index]['custom_code'] = $value;
@@ -227,7 +227,7 @@ class RecipientRegion extends Element
             $this->data['recipient_region'][$index]['vocabulary_uri'] = '';
         }
 
-        if ($key === $this->_csvHeaders[2]) {
+        if ($key === $this->_csvHeaders[2] && $this->data['recipient_region'][$index]['region_vocabulary'] !== '1') {
             $value = (!$value) ? '' : trim($value);
             $this->data['recipient_region'][$index]['vocabulary_uri'] = $value;
             $this->data['recipient_region'][$index]['region_vocabulary'] = '99';
@@ -276,8 +276,8 @@ class RecipientRegion extends Element
         $this->data['recipient_region_total_percentage'] = Arr::get($this->data, 'recipient_region', []);
         $this->data['total_percentage'] = $this->totalPercentage;
         $this->validator = $this->factory->sign($this->data())
-                                         ->with($this->rules(), $this->messages())
-                                         ->getValidatorInstance();
+            ->with($this->rules(), $this->messages())
+            ->getValidatorInstance();
         $this->setValidity();
         unset($this->data['recipient_region_total_percentage'], $this->data['recipient_country']);
 

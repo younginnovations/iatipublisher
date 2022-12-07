@@ -181,7 +181,7 @@ class ActivityRepository extends Repository
             'description'          => $this->getActivityElement($mappedActivity, 'description'),
             'activity_status'      => $mappedActivity['activity_status'] ?? null,
             'activity_date'        => $this->getActivityElement($mappedActivity, 'activity_date'),
-            'participating_org'    => $this->getActivityElement($mappedActivity, 'participating_organization'),
+            'participating_org'    => $this->getActivityElement($mappedActivity, 'participating_org'),
             'recipient_country'    => $this->getActivityElement($mappedActivity, 'recipient_country'),
             'recipient_region'     => $this->getActivityElement($mappedActivity, 'recipient_region'),
             'sector'               => $this->getActivityElement($mappedActivity, 'sector'),

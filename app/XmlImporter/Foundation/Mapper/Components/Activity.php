@@ -27,7 +27,7 @@ class Activity
         'activityDate'        => 'activity_date',
         'contactInfo'         => 'contact_info',
         'activityScope'       => 'activity_scope',
-        'participatingOrg'    => 'participating_organization',
+        'participatingOrg'    => 'participating_org',
         'tag'                 => 'tag',
         'recipientCountry'    => 'recipient_country',
         'recipientRegion'     => 'recipient_region',
@@ -292,7 +292,7 @@ class Activity
      */
     public function participatingOrg($element, $template): array
     {
-        $this->participatingOrg[$this->index] = $template['participating_organization'];
+        $this->participatingOrg[$this->index] = $template['participating_org'];
         $this->participatingOrg[$this->index]['organization_role'] = $this->attributes($element, 'role');
         $this->participatingOrg[$this->index]['ref'] = $this->attributes($element, 'ref');
         $this->participatingOrg[$this->index]['type'] = $this->attributes($element, 'type');
@@ -481,12 +481,13 @@ class Activity
     public function recipientRegion($element, $template): array
     {
         $this->recipientRegion[$this->index] = $template['recipient_region'];
-        $this->recipientRegion[$this->index]['region_code'] = $this->attributes($element, 'code');
-        $this->recipientRegion[$this->index]['custom_code'] = $this->attributes($element, 'code');
         $this->recipientRegion[$this->index]['region_vocabulary'] = $this->attributes($element, 'vocabulary');
         $this->recipientRegion[$this->index]['vocabulary_uri'] = $this->attributes($element, 'vocabulary-uri');
         $this->recipientRegion[$this->index]['percentage'] = $this->attributes($element, 'percentage');
         $this->recipientRegion[$this->index]['narrative'] = $this->narrative($element);
+        $code_field = $this->attributes($element, 'vocabulary') === '1' ? 'region_code' : 'custom_code';
+        $this->recipientRegion[$this->index][$code_field] = $this->attributes($element, 'code');
+        unset($this->recipientRegion[$this->index][$code_field === 'region_code' ? 'custom_code' : 'region_code']);
         $this->index++;
 
         return $this->recipientRegion;
