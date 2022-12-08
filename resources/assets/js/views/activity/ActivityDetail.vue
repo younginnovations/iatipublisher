@@ -173,7 +173,7 @@
             }
           "
         >
-          <img src="/images/svg/chevron.svg" />
+          <svg-vue icon="chevron" class="pb-2 text-3xl text-bluecoral" />
         </div>
 
         <div
@@ -188,7 +188,10 @@
               }
             "
           >
-            <img src="/images/svg/chevron.svg" />
+            <svg-vue
+              icon="chevron"
+              class="rotate-180 pb-2 text-3xl text-bluecoral"
+            />
           </div>
           <aside class="!z-[200] w-[280px] bg-white pt-8">
             <div
