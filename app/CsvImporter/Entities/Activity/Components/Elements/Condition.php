@@ -101,14 +101,14 @@ class Condition extends Element
         }
 
         if ($key === $this->_csvHeaders[0]) {
-            if (is_int($value) || is_bool($value)) {
-                $value = (int) $value;
-            } elseif (is_string($value)) {
-                if ($value === '0' || strcasecmp($value, 'false') === 0 || strcasecmp($value, 'no') === 0) {
+            if (is_string($value)) {
+                if ($value === '0' || strtolower($value) === 'false' || strtolower($value) === 'no') {
                     $value = '0';
-                } elseif ($value === '1' || strcasecmp($value, 'true') === 0 || strcasecmp($value, 'yes') === 0) {
+                } elseif ($value === '1' || strtolower($value) === 'true' || strtolower($value) === 'yes') {
                     $value = '1';
                 }
+            } elseif (is_bool($value) || is_int($value)) {
+                $value = $value ? '1' : '0';
             }
 
             $this->data['conditions']['condition_attached'] = Arr::get($this->data(), 'conditions.condition_attached', $value);

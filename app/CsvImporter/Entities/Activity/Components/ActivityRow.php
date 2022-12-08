@@ -84,6 +84,7 @@ class ActivityRow extends Row
         'transaction_sector_narrative',
         'transaction_recipient_country_code',
         'transaction_recipient_region_code',
+        'transaction_recipient_region_vocabulary_uri',
     ];
 
     /**
@@ -188,10 +189,10 @@ class ActivityRow extends Row
             'default_flow_type',
             'default_finance_type',
             'default_tied_status',
-            'capital_spend',
             'collaboration_type',
             'default_flow_type',
             'default_finance_type',
+            'capital_spend',
         ];
 
         foreach ($this->fields as $key => $dataDatum) {
@@ -200,6 +201,9 @@ class ActivityRow extends Row
                     if (is_int($datum)) {
                         $this->fields[$key][$datumKey] = strval($datum);
                     }
+                    // if (is_string($datum)) {
+                    //     $this->fields[$key][$datumKey] = mb_convert_encoding($datum, 'UTF-8');
+                    // }
                 }
             }
         }

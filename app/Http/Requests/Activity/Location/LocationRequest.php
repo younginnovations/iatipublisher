@@ -319,7 +319,7 @@ class LocationRequest extends ActivityBaseRequest
             $administrativeForm = sprintf('%s.administrative.%s', $formBase, $administrativeIndex);
             $messages[sprintf('%s.vocabulary.in', $administrativeForm)] = 'The location administrative vocabulary is invalid.';
             $messages[sprintf('%s.code.in', $administrativeForm)] = 'The location administrative code is invalid.';
-            $messages[sprintf('%s.level.min', $administrativeForm)] = 'The location administrative level must be have minimum 0 characters.';
+            $messages[sprintf('%s.level.min', $administrativeForm)] = 'The location administrative level must not have negative value.';
             $messages[sprintf('%s.level.integer', $administrativeForm)] = 'The location administrative level must be an integer.';
         }
 

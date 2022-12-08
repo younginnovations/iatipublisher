@@ -83,9 +83,9 @@ abstract class Element
     /**
      * @param null $popIndex
      *
-     * @return array|int|string
+     * @return array|int|string|float
      */
-    public function data($popIndex = null): array|int|string
+    public function data($popIndex = null): array|int|string|float
     {
         if (!$this->data) {
             $this->data = [];

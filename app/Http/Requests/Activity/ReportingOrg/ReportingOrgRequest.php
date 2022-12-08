@@ -43,6 +43,8 @@ class ReportingOrgRequest extends ActivityBaseRequest
         $rules = [];
         $reportingOrganizationTypes = implode(',', array_keys(getCodeList('OrganizationType', 'Organization', false)));
 
+        $rules['reporting_org'] = 'size:1';
+
         foreach ($formFields as $reportingOrganizationIndex => $reportingOrganization) {
             $reportingOrganizationForm = sprintf('reporting_org.%s', $reportingOrganizationIndex);
             $rules[$reportingOrganizationForm . '.ref'] = ['nullable', 'not_regex:/(&|!|\/|\||\?)/'];
@@ -68,6 +70,8 @@ class ReportingOrgRequest extends ActivityBaseRequest
     public function getMessagesForReportingOrganization(array $formFields): array
     {
         $messages = [];
+
+        $messages['reporting_org.size'] = 'The reporting org should have only one value.';
 
         foreach ($formFields as $reportingOrganizationIndex => $reportingOrganization) {
             $reportingOrganizationForm = sprintf('reporting_org.%s', $reportingOrganizationIndex);

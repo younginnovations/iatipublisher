@@ -85,6 +85,6 @@ trait ChecksCsvHeaders
         $fileHeaders = $this->replaceString($csvHeaders);
         $headers = $this->replaceString($headers);
 
-        return $this->isSameCsvHeader(array_diff($headers, $fileHeaders));
+        return $this->isSameCsvHeader(array_diff($headers, $fileHeaders)) && $this->isSameCsvHeader(array_diff($fileHeaders, $headers));
     }
 }

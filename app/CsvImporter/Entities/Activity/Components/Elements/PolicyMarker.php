@@ -123,12 +123,7 @@ class PolicyMarker extends Element
      */
     protected function setVocabularyUri($key, $value, $index): void
     {
-        if (!isset($this->data['policy_marker'][$index]['vocabulary_uri'])) {
-            $this->data['policy_marker'][$index]['vocabulary_uri'] = '';
-        }
-
-        if ($key === $this->_csvHeaders[3]) {
-            $value = (!$value) ? '' : $value;
+        if ($key === $this->_csvHeaders[3] && Arr::get($this->data(), 'policy_marker.' . $index . '.policy_marker_vocabulary') === '99') {
             $this->data['policy_marker'][$index]['vocabulary_uri'] = $value;
         }
     }
@@ -251,8 +246,8 @@ class PolicyMarker extends Element
     public function validate(): static
     {
         $this->validator = $this->factory->sign($this->data())
-                                         ->with($this->rules(), $this->messages())
-                                         ->getValidatorInstance();
+            ->with($this->rules(), $this->messages())
+            ->getValidatorInstance();
 
         $this->setValidity();
 

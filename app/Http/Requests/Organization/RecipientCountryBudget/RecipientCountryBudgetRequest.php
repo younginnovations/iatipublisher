@@ -26,7 +26,7 @@ class RecipientCountryBudgetRequest extends OrganizationBaseRequest
             $end = $recipientCountryBudget['period_end'][0]['date'];
 
             if ($start && $end) {
-                $diff = (strtotime($end) - strtotime($start)) / 86400;
+                $diff = (dateStrToTime($end) - dateStrToTime($start)) / 86400;
             }
 
             $recipientCountryBudgetForm = sprintf('recipient_country_budget.%s', $recipientCountryBudgetIndex);

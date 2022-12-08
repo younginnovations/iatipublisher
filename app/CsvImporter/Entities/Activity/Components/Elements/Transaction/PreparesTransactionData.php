@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\CsvImporter\Entities\Activity\Components\Elements\Transaction;
 
+use Illuminate\Support\Arr;
+
 /**
  * Class PreparesTransactionData.
  */
@@ -270,15 +272,9 @@ trait PreparesTransactionData
      */
     protected function setSector($key, $value): void
     {
-        if (!isset($this->data['transaction']['sector'][0]['sector_vocabulary'])) {
+        if (!isset($this->data['transaction']['sector'])) {
             $this->data['transaction']['sector'][0]['sector_vocabulary'] = '';
-        }
-
-        if (!isset($this->data['transaction']['sector'][0]['code'])) {
             $this->data['transaction']['sector'][0]['code'] = '';
-        }
-
-        if (!isset($this->data['transaction']['sector'][0]['narrative'][0]['narrative'])) {
             $this->data['transaction']['sector'][0]['narrative'][0] = [
                 'narrative' => '',
                 'language'  => '',
@@ -301,7 +297,11 @@ trait PreparesTransactionData
             $this->data['transaction']['sector'][0]['sector_vocabulary'] = $value;
         }
 
-        if ($key === $this->_csvHeaders[15]) {
+        if (
+            $key === $this->_csvHeaders[15] &&
+            ($this->data['transaction']['sector'][0]['sector_vocabulary'] == '99' ||
+                $this->data['transaction']['sector'][0]['sector_vocabulary'] === '98')
+        ) {
             $this->data['transaction']['sector'][0]['vocabulary_uri'] = $value;
         }
 
@@ -458,19 +458,9 @@ trait PreparesTransactionData
      */
     protected function setRecipientRegion($key, $value): void
     {
-        if (!isset($this->data['transaction']['recipient_region'][0]['region_code'])) {
+        if (!isset($this->data['transaction']['recipient_region'])) {
             $this->data['transaction']['recipient_region'][0]['region_code'] = '';
-        }
-
-        if (!isset($this->data['transaction']['recipient_region'][0]['region_vocabulary'])) {
             $this->data['transaction']['recipient_region'][0]['region_vocabulary'] = '';
-        }
-
-        if (!isset($this->data['transaction']['recipient_region'][0]['vocabulary_uri'])) {
-            $this->data['transaction']['recipient_region'][0]['vocabulary_uri'] = '';
-        }
-
-        if (!isset($this->data['transaction']['recipient_region'][0]['narrative'][0]['narrative'])) {
             $this->data['transaction']['recipient_region'][0]['narrative'][0] = [
                 'narrative' => '',
                 'language'  => '',
@@ -498,8 +488,12 @@ trait PreparesTransactionData
                 $this->data['transaction']['recipient_region'][0]['custom_code'] = $value;
             }
 
-            $this->data['transaction']['recipient_region'][0]['vocabulary_uri'] = '';
             $this->data['transaction']['recipient_region'][0]['narrative'][0] = ['narrative' => '', 'language' => ''];
+        }
+
+        if ($key === $this->_csvHeaders[20] && $value !== '' && Arr::get($this->data(), 'transaction.recipient_region.0.region_vocabulary') === '1') {
+            $this->data['transaction']['recipient_region'][0]['vocabulary_uri'] = $value;
+            $this->data['transaction']['recipient_region'][0]['region_vocabulary'] = '99';
         }
     }
 

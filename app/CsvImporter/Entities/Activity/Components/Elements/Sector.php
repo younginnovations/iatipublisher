@@ -209,11 +209,7 @@ class Sector extends Element
      */
     protected function setVocabularyUri($key, $value, $index): void
     {
-        if (!isset($this->data['sector'][$index]['vocabulary_uri'])) {
-            $this->data['sector'][$index]['vocabulary_uri'] = '';
-        }
-
-        if ($key === $this->_csvHeaders[3]) {
+        if ($key === $this->_csvHeaders[3] && (Arr::get($this->data(), 'sector.' . $index . '.sector_vocabulary') === '98' || Arr::get($this->data(), 'sector.' . $index . '.sector_vocabulary') === '99')) {
             $this->data['sector'][$index]['vocabulary_uri'] = $value;
         }
     }

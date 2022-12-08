@@ -40,7 +40,7 @@ class ScopeRequest extends ActivityBaseRequest
     {
         return [
             'in'        => 'The activity scope does not exist.',
-            'size'      => 'The default scope cannot have more than one value.',
+            'size'      => 'The activity scope cannot have more than one value.',
         ];
     }
 }

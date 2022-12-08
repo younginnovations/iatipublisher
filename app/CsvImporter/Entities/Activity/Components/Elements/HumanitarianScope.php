@@ -19,13 +19,13 @@ class HumanitarianScope extends Element
      * @var array
      */
     private array $_csvHeaders
-        = [
-            'humanitarian_scope_type',
-            'humanitarian_scope_vocabulary',
-            'humanitarian_scope_vocabulary_uri',
-            'humanitarian_scope_code',
-            'humanitarian_scope_narrative',
-        ];
+    = [
+        'humanitarian_scope_type',
+        'humanitarian_scope_vocabulary',
+        'humanitarian_scope_vocabulary_uri',
+        'humanitarian_scope_code',
+        'humanitarian_scope_narrative',
+    ];
 
     /**
      * Index under which the data is stored within the object.
@@ -167,11 +167,7 @@ class HumanitarianScope extends Element
      */
     protected function setVocabularyUri($key, $value, $index): void
     {
-        if (!isset($this->data['humanitarian_scope'][$index]['vocabulary_uri'])) {
-            $this->data['humanitarian_scope'][$index]['vocabulary_uri'] = '';
-        }
-
-        if ($key === $this->_csvHeaders[2]) {
+        if ($key === $this->_csvHeaders[2] && Arr::get($this->data(), 'humanitarian_scope.' . $index . '.vocabulary') === '99') {
             $this->data['humanitarian_scope'][$index]['vocabulary_uri'] = $value;
         }
     }
@@ -256,8 +252,8 @@ class HumanitarianScope extends Element
     public function validate(): static
     {
         $this->validator = $this->factory->sign($this->data())
-                                         ->with($this->rules(), $this->messages())
-                                         ->getValidatorInstance();
+            ->with($this->rules(), $this->messages())
+            ->getValidatorInstance();
         $this->setValidity();
 
         return $this;

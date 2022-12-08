@@ -19,12 +19,12 @@ class ReportingOrganization extends Element
      * @var array
      */
     private array $_csvHeaders
-        = [
-            'reporting_org_reference',
-            'reporting_org_type',
-            'reporting_org_secondary_reporter',
-            'reporting_org_narrative',
-        ];
+    = [
+        'reporting_org_reference',
+        'reporting_org_type',
+        'reporting_org_secondary_reporter',
+        'reporting_org_narrative',
+    ];
 
     /**
      * Index under which the data is stored within the object.
@@ -77,10 +77,10 @@ class ReportingOrganization extends Element
     public function map($key, $index, $value): void
     {
         if (!(is_null($value) || $value === '')) {
-            $this->setReportingOrganizationReference($key, $value);
-            $this->setReportingOrganizationType($key, $value);
-            $this->setSecondaryReporter($key, $value);
-            $this->setReportingOrganizationNarrative($key, $value);
+            $this->setReportingOrganizationReference($key, $index, $value);
+            $this->setReportingOrganizationType($key, $index, $value);
+            $this->setSecondaryReporter($key, $index, $value);
+            $this->setReportingOrganizationNarrative($key, $index, $value);
         }
     }
 
@@ -92,15 +92,15 @@ class ReportingOrganization extends Element
      *
      * @return void
      */
-    protected function setReportingOrganizationReference($key, $value): void
+    protected function setReportingOrganizationReference($key, $index, $value): void
     {
-        if (!isset($this->data['reporting_org'][0]['ref'])) {
-            $this->data['reporting_org'][0]['ref'] = '';
+        if (!isset($this->data['reporting_org'][$index]['ref'])) {
+            $this->data['reporting_org'][$index]['ref'] = '';
         }
 
         if ($key === $this->_csvHeaders[0]) {
             $value = (!$value) ? '' : trim($value);
-            $this->data['reporting_org'][0]['ref'] = $value;
+            $this->data['reporting_org'][$index]['ref'] = $value;
         }
     }
 
@@ -112,10 +112,10 @@ class ReportingOrganization extends Element
      *
      * @return void
      */
-    protected function setReportingOrganizationType($key, $value): void
+    protected function setReportingOrganizationType($key, $index, $value): void
     {
-        if (!isset($this->data['reporting_org'][0]['type'])) {
-            $this->data['reporting_org'][0]['type'] = '';
+        if (!isset($this->data['reporting_org'][$index]['type'])) {
+            $this->data['reporting_org'][$index]['type'] = '';
         }
 
         if ($key === $this->_csvHeaders[1]) {
@@ -131,7 +131,7 @@ class ReportingOrganization extends Element
                 }
             }
 
-            $this->data['reporting_org'][0]['type'] = $value;
+            $this->data['reporting_org'][$index]['type'] = $value;
         }
     }
 
@@ -143,10 +143,10 @@ class ReportingOrganization extends Element
      *
      * @return void
      */
-    protected function setSecondaryReporter($key, $value): void
+    protected function setSecondaryReporter($key, $index, $value): void
     {
-        if (!isset($this->data['reporting_org'][0]['secondary_reporter'])) {
-            $this->data['reporting_org'][0]['secondary_reporter'] = '';
+        if (!isset($this->data['reporting_org'][$index]['secondary_reporter'])) {
+            $this->data['reporting_org'][$index]['secondary_reporter'] = '';
         }
 
         if ($key === $this->_csvHeaders[2]) {
@@ -156,7 +156,7 @@ class ReportingOrganization extends Element
                 $value = '0';
             }
 
-            $this->data['reporting_org'][0]['secondary_reporter'] = $value;
+            $this->data['reporting_org'][$index]['secondary_reporter'] = $value;
         }
     }
 
@@ -168,10 +168,10 @@ class ReportingOrganization extends Element
      *
      * @return void
      */
-    protected function setReportingOrganizationNarrative($key, $value): void
+    protected function setReportingOrganizationNarrative($key, $index, $value): void
     {
-        if (!isset($this->data['reporting_org'][0]['narrative'][0]['narrative'])) {
-            $this->data['reporting_org'][0]['narrative'][0] = [
+        if (!isset($this->data['reporting_org'][$index]['narrative'][0]['narrative'])) {
+            $this->data['reporting_org'][$index]['narrative'][0] = [
                 'narrative' => '',
                 'language'  => '',
             ];
@@ -184,7 +184,7 @@ class ReportingOrganization extends Element
                 'language'  => '',
             ];
 
-            $this->data['reporting_org'][0]['narrative'][0] = $narrative;
+            $this->data['reporting_org'][$index]['narrative'][0] = $narrative;
         }
     }
 
@@ -218,8 +218,8 @@ class ReportingOrganization extends Element
     public function validate(): static
     {
         $this->validator = $this->factory->sign($this->data())
-                                         ->with($this->rules(), $this->messages())
-                                         ->getValidatorInstance();
+            ->with($this->rules(), $this->messages())
+            ->getValidatorInstance();
         $this->setValidity();
 
         return $this;

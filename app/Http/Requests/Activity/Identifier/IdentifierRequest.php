@@ -23,17 +23,21 @@ class IdentifierRequest extends FormRequest
      *
      * @return array
      */
-    public function rules(): array
+    public function rules(bool $fileUpload = false): array
     {
         $activityIdentifiers = [];
-        $activityService = app()->make(ActivityService::class);
-        $organizationActivityIdentifiers = $activityService->getActivityIdentifiersForOrganization(auth()->user()->organization->id);
-        $activity = $activityService->getActivity(request()->segment(2));
 
-        if (count($organizationActivityIdentifiers)) {
-            foreach ($organizationActivityIdentifiers as $identifier) {
-                if ($identifier->iati_identifier['activity_identifier'] != $activity->iati_identifier['activity_identifier']) {
-                    $activityIdentifiers[] = $identifier->iati_identifier['activity_identifier'];
+        if (!$fileUpload) {
+            $activityIdentifiers = [];
+            $activityService = app()->make(ActivityService::class);
+            $organizationActivityIdentifiers = $activityService->getActivityIdentifiersForOrganization(auth()->user()->organization->id);
+            $activity = $activityService->getActivity(request()->segment(2));
+
+            if (count($organizationActivityIdentifiers)) {
+                foreach ($organizationActivityIdentifiers as $identifier) {
+                    if ($identifier->iati_identifier['activity_identifier'] != $activity->iati_identifier['activity_identifier']) {
+                        $activityIdentifiers[] = $identifier->iati_identifier['activity_identifier'];
+                    }
                 }
             }
         }

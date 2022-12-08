@@ -182,9 +182,9 @@ class DefaultFieldValues extends Element
         }
 
         if ($key === $this->_csvHeaders[2]) {
-            if ((strtolower($value) === 'yes') || (strtolower($value) === 'true')) {
+            if ((strtolower($value) === 'yes') || (strtolower($value) === 'true') || $value) {
                 $value = '1';
-            } elseif ((strtolower($value) === 'no') || (strtolower($value) === 'false')) {
+            } elseif ((strtolower($value) === 'no') || (strtolower($value) === 'false') || !$value) {
                 $value = '0';
             }
 
@@ -201,8 +201,8 @@ class DefaultFieldValues extends Element
     public function validate(): static
     {
         $this->validator = $this->factory->sign($this->data())
-                                         ->with($this->rules(), $this->messages())
-                                         ->getValidatorInstance();
+            ->with($this->rules(), $this->messages())
+            ->getValidatorInstance();
 
         $this->setValidity();
 

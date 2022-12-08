@@ -53,6 +53,7 @@ class Transaction extends Element
         'transaction_sector_narrative',
         'transaction_recipient_country_code',
         'transaction_recipient_region_code',
+        'transaction_recipient_region_vocabulary_uri',
     ];
 
     /**

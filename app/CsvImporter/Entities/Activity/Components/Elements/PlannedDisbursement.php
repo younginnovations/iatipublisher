@@ -57,6 +57,7 @@ class PlannedDisbursement extends Element
     public function __construct($fields, Validation $factory)
     {
         $this->prepare($fields);
+        $this->checkAndEmptyData();
         $this->factory = $factory;
         $this->request = new PlannedDisbursementRequest();
     }
@@ -80,6 +81,29 @@ class PlannedDisbursement extends Element
     }
 
     /**
+     * Check and empty planned disbursement data.
+     *
+     * @return void
+     */
+    public function checkAndEmptyData()
+    {
+        $planned_disbursements = Arr::get($this->data(), 'planned_disbursement', []);
+
+        foreach ($planned_disbursements as $index => $disbursement) {
+            $has_data = false;
+            array_walk_recursive($disbursement, function ($item, $key) use (&$disbursement, &$has_data) {
+                if ($item !== null && $item != '') {
+                    $has_data = true;
+                }
+            });
+
+            if (!$has_data) {
+                unset($this->data['planned_disbursement'][$index]);
+            }
+        }
+    }
+
+    /**
      * Map data from CSV file into PlannedDisbursement data format.
      *
      * @param $key
@@ -90,14 +114,12 @@ class PlannedDisbursement extends Element
      */
     public function map($key, $index, $value): void
     {
-        // if (!(is_null($value) || $value === '')) {
         $this->setPlannedDisbursementType($key, $value, $index);
         $this->setPlannedDisbursementPeriodStart($key, $value, $index);
         $this->setPlannedDisbursementPeriodEnd($key, $value, $index);
         $this->setPlannedDisbursementValue($key, $value, $index);
         $this->setPlannedDisbursementProviderOrg($key, $value, $index);
         $this->setPlannedDisbursementReceiverOrg($key, $value, $index);
-        // }
     }
 
     /**

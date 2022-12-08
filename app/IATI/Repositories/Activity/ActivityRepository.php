@@ -241,9 +241,9 @@ class ActivityRepository extends Repository
      * @param      $activity
      * @param      $type
      *
-     * @return int|null
+     * @return int|float|null
      */
-    public function getIntValuedActivityElement($activity, $type): ?int
+    public function getSingleValuedActivityElement($activity, $type): int|float|null
     {
         $data = Arr::get($activity, $type);
 
@@ -295,7 +295,7 @@ class ActivityRepository extends Repository
                 'iati_identifier'      => $activityData['identifier'],
                 'title'                => $this->getActivityElement($activityData, 'title'),
                 'description'          => $this->getActivityElement($activityData, 'description'),
-                'activity_status'      => $this->getIntValuedActivityElement($activityData, 'activity_status'),
+                'activity_status'      => $this->getSingleValuedActivityElement($activityData, 'activity_status'),
                 'activity_date'        => $this->getActivityElement($activityData, 'activity_date'),
                 'participating_org'    => $this->getActivityElement($activityData, 'participating_organization'),
                 'recipient_country'    => $this->getActivityElement($activityData, 'recipient_country'),
@@ -310,14 +310,14 @@ class ActivityRepository extends Repository
                 'related_activity'     => $this->getActivityElement($activityData, 'related_activity'),
                 'other_identifier'     => $this->getActivityElement($activityData, 'other_identifier'),
                 'tag'                  => $this->getActivityElement($activityData, 'tag'),
-                'collaboration_type'    =>$this->getIntValuedActivityElement($activityData, 'collaboration_type'),
-                'default_flow_type'    => $this->getIntValuedActivityElement($activityData, 'default_flow_type'),
-                'default_finance_type' => $this->getIntValuedActivityElement($activityData, 'default_finance_type'),
-                'default_tied_status'  => $this->getIntValuedActivityElement($activityData, 'default_tied_status'),
+                'collaboration_type'    => $this->getSingleValuedActivityElement($activityData, 'collaboration_type'),
+                'default_flow_type'    => $this->getSingleValuedActivityElement($activityData, 'default_flow_type'),
+                'default_finance_type' => $this->getSingleValuedActivityElement($activityData, 'default_finance_type'),
+                'default_tied_status'  => $this->getSingleValuedActivityElement($activityData, 'default_tied_status'),
                 'default_aid_type'     => $this->getActivityElement($activityData, 'default_aid_type'),
                 'country_budget_items' => Arr::get($activityData, 'country_budget_item', null),
                 'humanitarian_scope'   => $this->getActivityElement($activityData, 'humanitarian_scope'),
-                'capital_spend'        => $this->getIntValuedActivityElement($activityData, 'capital_spend'),
+                'capital_spend'        => $this->getSingleValuedActivityElement($activityData, 'capital_spend'),
                 'conditions'           => Arr::get($activityData, 'condition', null),
                 'legacy_data'          => $this->getActivityElement($activityData, 'legacy_data'),
                 'document_link'        => $this->getActivityElement($activityData, 'document_link'),
@@ -345,7 +345,7 @@ class ActivityRepository extends Repository
                 'iati_identifier'      => $activityData['identifier'],
                 'title'                => $this->getActivityElement($activityData, 'title'),
                 'description'          => $this->getActivityElement($activityData, 'description'),
-                'activity_status'      => $this->getIntValuedActivityElement($activityData, 'activity_status'),
+                'activity_status'      => $this->getSingleValuedActivityElement($activityData, 'activity_status'),
                 'activity_date'        => $this->getActivityElement($activityData, 'activity_date'),
                 'participating_org'    => $this->getActivityElement($activityData, 'participating_organization'),
                 'recipient_country'    => $this->getActivityElement($activityData, 'recipient_country'),
@@ -360,14 +360,14 @@ class ActivityRepository extends Repository
                 'related_activity'     => $this->getActivityElement($activityData, 'related_activity'),
                 'other_identifier'     => $this->getActivityElement($activityData, 'other_identifier'),
                 'tag'                  => $this->getActivityElement($activityData, 'tag'),
-                'collaboration_type'    =>$this->getIntValuedActivityElement($activityData, 'collaboration_type'),
-                'default_flow_type'    => $this->getIntValuedActivityElement($activityData, 'default_flow_type'),
-                'default_finance_type' => $this->getIntValuedActivityElement($activityData, 'default_finance_type'),
-                'default_tied_status'  => $this->getIntValuedActivityElement($activityData, 'default_tied_status'),
+                'collaboration_type'    => $this->getSingleValuedActivityElement($activityData, 'collaboration_type'),
+                'default_flow_type'    => $this->getSingleValuedActivityElement($activityData, 'default_flow_type'),
+                'default_finance_type' => $this->getSingleValuedActivityElement($activityData, 'default_finance_type'),
+                'default_tied_status'  => $this->getSingleValuedActivityElement($activityData, 'default_tied_status'),
                 'default_aid_type'     => $this->getActivityElement($activityData, 'default_aid_type'),
                 'country_budget_items' => Arr::get($activityData, 'country_budget_item', null),
                 'humanitarian_scope'   => $this->getActivityElement($activityData, 'humanitarian_scope'),
-                'capital_spend'        => $this->getIntValuedActivityElement($activityData, 'capital_spend'),
+                'capital_spend'        => $this->getSingleValuedActivityElement($activityData, 'capital_spend'),
                 'conditions'           => Arr::get($activityData, 'condition', null),
                 'legacy_data'          => $this->getActivityElement($activityData, 'legacy_data'),
                 'document_link'        => $this->getActivityElement($activityData, 'document_link'),

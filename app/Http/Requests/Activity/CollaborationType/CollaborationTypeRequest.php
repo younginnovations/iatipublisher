@@ -27,7 +27,7 @@ class CollaborationTypeRequest extends ActivityBaseRequest
         }
 
         return [
-            'collaboration_type' => sprintf('nullable|in:%s', implode(',', array_keys(getCodeList('ActivityStatus', 'Activity', false)))),
+            'collaboration_type' => sprintf('nullable|in:%s', implode(',', array_keys(getCodeList('CollaborationType', 'Activity', false)))),
         ];
     }
 

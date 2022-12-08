@@ -63,6 +63,7 @@ class Identifier extends Element
             if (!is_null($values) && array_key_exists($key, array_flip($this->_csvHeader))) {
                 foreach ($values as $value) {
                     $this->map($value);
+                    break;
                 }
             }
         }
@@ -77,9 +78,7 @@ class Identifier extends Element
      */
     public function map($value): void
     {
-        if (!is_null($value)) {
-            $this->data[end($this->_csvHeader)] = $value;
-        }
+        $this->data[end($this->_csvHeader)] = $value;
     }
 
     /**
@@ -105,8 +104,7 @@ class Identifier extends Element
      */
     public function rules(): array
     {
-        return [];
-        // return $this->getBaseRules($this->request->rules());
+        return $this->request->rules(true);
     }
 
     /**
@@ -116,8 +114,7 @@ class Identifier extends Element
      */
     public function messages(): array
     {
-        return [];
-        // return $this->getBaseMessages($this->request->messages());
+        return $this->request->messages();
     }
 
     /**

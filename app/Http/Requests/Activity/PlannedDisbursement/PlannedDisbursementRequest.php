@@ -50,7 +50,7 @@ class PlannedDisbursementRequest extends ActivityBaseRequest
             $end = $plannedDisbursement['period_end'][0]['date'];
 
             if ($start && $end) {
-                $diff = (strtotime($end) - strtotime($start)) / 86400;
+                $diff = (dateStrToTime($end) - dateStrToTime($start)) / 86400;
             }
 
             $periodStartRules = $this->getPlannedDisbursementRulesForPeriodStart($plannedDisbursement['period_start'], $plannedDisbursementForm, $diff);
