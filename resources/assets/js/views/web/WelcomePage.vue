@@ -1,6 +1,8 @@
 <template>
   <section class="main mt-10 sm:mx-10 xl:mx-24 xl:px-1">
-    <div class="main__container sm:mb-10 md:mb-20 md:flex">
+    <div
+      class="main__container rounded-lg bg-bluecoral pb-8 sm:mb-10 md:mb-20 md:flex md:bg-none md:pb-0"
+    >
       <div
         class="left flex flex-col items-center justify-center bg-bluecoral px-3 pt-5 pb-72 text-white sm:rounded-r-lg sm:rounded-l-lg sm:px-5 sm:pt-10 md:basis-2/4 md:rounded-r-none md:pb-16 lg:pt-44 lg:pb-44 xl:px-24"
       >
@@ -12,7 +14,7 @@
             login information if you’re already a user or create a new account
             if you’re new here.
           </p>
-          <div class="hidden sm:block">
+          <div class="block">
             <span class="flex flex-wrap">
               {{
                 pageContent === 'Join Now'
@@ -30,7 +32,7 @@
         </div>
       </div>
 
-      <SignIn v-if="pageContent === 'Join Now'" :message="message"/>
+      <SignIn v-if="pageContent === 'Join Now'" :message="message" />
       <JoinNow v-else />
     </div>
   </section>
@@ -53,8 +55,8 @@ export default defineComponent({
     },
     message: {
       type: String,
-      required: true
-    }
+      required: true,
+    },
   },
   setup(props) {
     const pageContent = ref(props.page === 'signin' ? 'Join Now' : 'Sign In');

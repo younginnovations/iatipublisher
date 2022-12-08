@@ -10,7 +10,7 @@
       <span class="text-n-40">Welcome back! Please enter your details.</span>
       <div
         v-if="message != '' && !(errorData.username || errorData.password)"
-        class="error text-xs mt-2"
+        class="error mt-2 text-xs"
         role="alert"
       >
         {{ message }}
@@ -28,7 +28,11 @@
           placeholder="Enter a registered username"
         />
         <svg-vue class="absolute top-12 left-5 text-xl sm:left-6" icon="user" />
-        <span v-if="errorData.username != ''" class="error text-xs" role="alert">
+        <span
+          v-if="errorData.username != ''"
+          class="error text-xs"
+          role="alert"
+        >
           {{ errorData.username }}
         </span>
       </div>
@@ -44,7 +48,10 @@
           type="password"
           placeholder="Enter a correct password"
         />
-        <svg-vue class="absolute top-12 left-5 text-xl sm:left-6" icon="pw-lock" />
+        <svg-vue
+          class="absolute top-12 left-5 text-xl sm:left-6"
+          icon="pw-lock"
+        />
         <span v-if="errorData.password" class="error" role="alert">{{
           errorData.password
         }}</span>
@@ -68,10 +75,10 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, ref } from "vue";
-import axios from "axios";
-import CryptoJS from "crypto-js";
-import Loader from "../../../components/Loader.vue";
+import { defineComponent, reactive, ref } from 'vue';
+import axios from 'axios';
+import CryptoJS from 'crypto-js';
+import Loader from '../../../components/Loader.vue';
 
 export default defineComponent({
   components: {
@@ -81,17 +88,17 @@ export default defineComponent({
     message: {
       type: String,
       required: false,
-      default: "",
+      default: '',
     },
   },
   setup() {
     const formData = reactive({
-      username: "",
-      password: "",
+      username: '',
+      password: '',
     });
     const errorData = reactive({
-      username: "",
-      password: "",
+      username: '',
+      password: '',
     });
     const isLoaderVisible = ref(false);
 
@@ -130,20 +137,23 @@ export default defineComponent({
 
       let form = {
         username: formData.username,
-        password: encrypt(formData.password, process.env.MIX_ENCRYPTION_KEY ?? ""),
+        password: encrypt(
+          formData.password,
+          process.env.MIX_ENCRYPTION_KEY ?? ''
+        ),
       };
 
       axios
-        .post("/login", form)
+        .post('/login', form)
         .then((response) => {
-          errorData.username = "";
-          errorData.password = "";
-          if (response.status) window.location.href = "activities";
+          errorData.username = '';
+          errorData.password = '';
+          if (response.status) window.location.href = 'activities';
         })
         .catch((error) => {
           const { errors } = error.response.data;
-          errorData.username = errors.username ? errors.username[0] : "";
-          errorData.password = errors.password ? errors.password[0] : "";
+          errorData.username = errors.username ? errors.username[0] : '';
+          errorData.password = errors.password ? errors.password[0] : '';
           isLoaderVisible.value = false;
         });
     }
