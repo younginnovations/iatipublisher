@@ -174,6 +174,7 @@ class ActivityRepository extends Repository
     {
         $defaultFieldValues = $this->setDefaultFieldValues($mappedActivity['default_field_values'], $mappedActivity['org_id']);
         $mappedActivity = json_decode(json_encode($mappedActivity, JSON_THROW_ON_ERROR | 512), true, 512, JSON_THROW_ON_ERROR);
+        dd($mappedActivity);
 
         $data = [
             'iati_identifier'      => $mappedActivity['identifier'],

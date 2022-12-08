@@ -345,11 +345,13 @@ class Activity
     /**
      * @param $element
      *
-     * @return int
+     * @return int|null
      */
-    public function activityScope($element): int
+    public function activityScope($element): ?int
     {
-        return (int) $this->attributes($element, 'code');
+        dump($this->attributes($element, 'code'), $this->attributes($element, 'code') != '');
+
+        return $this->attributes($element, 'code') && $this->attributes($element, 'code') != '' ? (int) $this->attributes($element, 'code') : null;
     }
 
     /**
@@ -428,7 +430,7 @@ class Activity
      */
     public function defaultFlowType($element): ?int
     {
-        return $this->attributes($element, 'code') ? (int) $this->attributes($element, 'code') : null;
+        return $this->attributes($element, 'code') && $this->attributes($element, 'code') != '' ? (int) $this->attributes($element, 'code') : null;
     }
 
     /**
@@ -438,7 +440,7 @@ class Activity
      */
     public function defaultFinanceType($element): ?int
     {
-        return $this->attributes($element, 'code') ? (int) $this->attributes($element, 'code') : null;
+        return $this->attributes($element, 'code') && $this->attributes($element, 'code') != '' ? (int) $this->attributes($element, 'code') : null;
     }
 
     /**
@@ -448,7 +450,7 @@ class Activity
      */
     public function defaultTiedStatus($element): ?int
     {
-        return $this->attributes($element, 'code') ? (int) $this->attributes($element, 'code') : null;
+        return $this->attributes($element, 'code') && $this->attributes($element, 'code') != '' ? (int) $this->attributes($element, 'code') : null;
     }
 
     /**
@@ -712,7 +714,7 @@ class Activity
      */
     public function collaborationType($element): ?int
     {
-        return $this->attributes($element, 'code') ? (int) $this->attributes($element, 'code') : null;
+        return $this->attributes($element, 'code') && $this->attributes($element, 'code') != '' ? (int) $this->attributes($element, 'code') : null;
     }
 
     /**
@@ -722,7 +724,7 @@ class Activity
      */
     private function capitalSpend($element): ?float
     {
-        return $this->attributes($element, 'percentage') ? (float) $this->attributes($element, 'percentage') : null;
+        return $this->attributes($element, 'percentage') && $this->attributes($element, 'percentage') != '' ? (float) $this->attributes($element, 'percentage') : null;
     }
 
     /**
