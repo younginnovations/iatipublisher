@@ -384,7 +384,6 @@ class ActivityBaseRequest extends FormRequest
         $messages = [];
 
         foreach ($formFields as $periodStartKey => $periodStartVal) {
-            $messages[$formBase . '.period_start.' . $periodStartKey . '.date.required'] = trans('validation.required', ['attribute' => trans('elementForm.period_start')]);
             $messages[$formBase . '.period_end.' . $periodStartKey . '.date.date'] = 'Period end must be a date.';
             $messages[$formBase . '.period_end.' . $periodStartKey . '.date.date_greater_than'] = 'Period end date must be date greater than year 1900.';
         }

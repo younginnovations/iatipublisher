@@ -233,10 +233,10 @@ class DefaultFieldValues extends Element
     public function messages(): array
     {
         return [
-            'default_field_values.size'                  => trans('validation.multiple_values', ['attribute' => trans('elementForm.default_field_values')]),
-            'default_field_values.*.default_currency.in' => trans('validation.code_list', ['attribute' => trans('elementForm.default_currency')]),
-            'default_field_values.*.default_language.in' => trans('validation.code_list', ['attribute' => trans('elementForm.default_language')]),
-            'default_field_values.*.humanitarian.in'     => trans('validation.code_list', ['attribute' => trans('elementForm.humanitarian')]),
+            'default_field_values.size'                  => trans('validation.multiple_values', ['attribute' => trans('default_field_values')]),
+            'default_field_values.*.default_currency.in' => trans('validation.code_list', ['attribute' => trans('default_currency')]),
+            'default_field_values.*.default_language.in' => trans('validation.code_list', ['attribute' => trans('default_language')]),
+            'default_field_values.*.humanitarian.in'     => trans('validation.code_list', ['attribute' => trans('humanitarian')]),
         ];
     }
 

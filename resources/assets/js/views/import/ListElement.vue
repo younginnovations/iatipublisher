@@ -42,7 +42,7 @@
 
   <td class="check-column" @click="(event: Event) => event.stopPropagation()">
     <label class="sr-only" for=""> Select </label>
-    <label v-if="countErrors() > 0" class="checkbox">
+    <label v-if="countErrors() === 0" class="checkbox">
       <input
         v-model="activities"
         type="checkbox"
