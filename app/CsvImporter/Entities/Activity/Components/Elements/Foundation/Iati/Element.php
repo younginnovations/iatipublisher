@@ -156,8 +156,6 @@ abstract class Element
         foreach ($this->validator->errors()->getMessages() as $element => $errors) {
             $this->errors[$element] = implode('<br>', $errors);
         }
-
-        // $this->errors = array_unique($this->errors);
     }
 
     /**

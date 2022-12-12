@@ -675,8 +675,8 @@ class ActivityRow extends Row
      */
     protected function containsDuplicateTransactions($references): bool
     {
-        if ((!empty($references)) && (count(array_unique($references)) !== count($this->getTransactions()))) {
-            $this->errors[] = 'There are duplicate Transactions for this Activity in the uploaded Csv File.';
+        if ((!empty($references)) && (count(array_unique($references)) !== count($references))) {
+            $this->errors['transactions']['transactions.reference'] = 'There are duplicate Transactions for this Activity in the uploaded Csv File.';
 
             return true;
         }
@@ -694,7 +694,7 @@ class ActivityRow extends Row
     protected function containsDuplicateActivities($commonIdentifierCount): bool
     {
         if ($commonIdentifierCount > 1) {
-            $this->errors[] = 'This Activity has been duplicated in the uploaded Csv File.';
+            $this->errors['activity_identifier']['activity_identifier'] = 'This Activity has been duplicated in the uploaded Csv File.';
 
             return true;
         }

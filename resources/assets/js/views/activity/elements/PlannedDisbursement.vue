@@ -192,6 +192,7 @@ interface Types {
   budgetType: [];
   languages: [];
   currency: [];
+  organizationType: [];
 }
 
 function formatDate(date: Date) {

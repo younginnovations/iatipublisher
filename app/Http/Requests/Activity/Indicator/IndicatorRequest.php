@@ -114,13 +114,13 @@ class IndicatorRequest extends ActivityBaseRequest
                         $refs = Arr::get($result, 'reference', []);
 
                         foreach ($refs as $ref) {
-                            if (array_key_exists('code', $ref) && $ref['code']) {
-                                return true;
+                            if (array_key_exists('code', $ref) && $ref['code'] && !empty($ref['code'])) {
+                                return false;
                             }
                         }
                     }
 
-                    return false;
+                    return true;
                 } else {
                     $params = $this->route()->parameters();
 
@@ -157,7 +157,7 @@ class IndicatorRequest extends ActivityBaseRequest
             $messages[sprintf('%s.indicator_uri.url', $referenceForm)] = 'The @indicator-uri field must be a valid url.';
 
             if (!empty($reference['code'])) {
-                $messages[sprintf('%s.code.result_ref_code_present', $referenceForm)] = 'The @code is already defined in its result';
+                $messages[sprintf('%s.code.result_ref_code_present', $referenceForm)] = 'The code is already defined in its result';
             }
         }
 

@@ -185,7 +185,7 @@ class ResultService
 
                 if (!empty($refs)) {
                     foreach ($refs as $ref) {
-                        if (array_key_exists('code', $ref) && $ref['code']) {
+                        if (array_key_exists('code', $ref) && $ref['code'] && !empty($ref['code'])) {
                             return true;
                         }
                     }

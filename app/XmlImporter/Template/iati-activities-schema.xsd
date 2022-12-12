@@ -1703,14 +1703,14 @@
             <xsd:sequence>
               <xsd:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded" />
             </xsd:sequence>
-            <xsd:attribute name="code" use="required" type="xsd:string">
+            <xsd:attribute name="code" use="optional" type="xsd:string">
               <xsd:annotation>
                 <xsd:documentation xml:lang="en">
                   A code from the codelist identified in vocabulary that identifies a results framework.
 </xsd:documentation>
               </xsd:annotation>
             </xsd:attribute>
-            <xsd:attribute name="vocabulary" use="required" type="xsd:string">
+            <xsd:attribute name="vocabulary" use="optional" type="xsd:string">
               <xsd:annotation>
                 <xsd:documentation xml:lang="en">
                   A code for the results framework vocabulary. The code must be a valid value in the ResultVocabulary codelist.
@@ -1748,14 +1748,14 @@
                   <xsd:sequence>
                     <xsd:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded" />
                   </xsd:sequence>
-                  <xsd:attribute name="vocabulary" use="required" type="xsd:string">
+                  <xsd:attribute name="vocabulary" use="optional" type="xsd:string">
                     <xsd:annotation>
                       <xsd:documentation xml:lang="en">
                         A code for a recognised vocabulary of indicators. The value for this field should appear in the IndicatorVocabulary codelist.
 </xsd:documentation>
                     </xsd:annotation>
                   </xsd:attribute>
-                  <xsd:attribute name="code" use="required" type="xsd:string">
+                  <xsd:attribute name="code" use="optional" type="xsd:string">
                     <xsd:annotation>
                       <xsd:documentation xml:lang="en">
                         A code for an indicator defined in the specified vocabulary specified.

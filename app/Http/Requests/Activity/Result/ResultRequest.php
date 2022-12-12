@@ -105,14 +105,14 @@ class ResultRequest extends ActivityBaseRequest
 
                         if (!empty($refs)) {
                             foreach ($refs as $ref) {
-                                if (array_key_exists('code', $ref) && $ref['code']) {
-                                    return true;
+                                if (array_key_exists('code', $ref) && $ref['code'] && !empty($ref['code'])) {
+                                    return false;
                                 }
                             }
                         }
                     }
 
-                    return false;
+                    return true;
                 } else {
                     $params = $this->route()->parameters();
 
@@ -124,7 +124,7 @@ class ResultRequest extends ActivityBaseRequest
         $rules = [];
 
         if ($fileUpload) {
-            $hasResultId = true;
+            $hasResultId = false;
         } else {
             $params = $this->route()->parameters();
             $hasResultId = array_key_exists('resultId', $params);
@@ -165,7 +165,7 @@ class ResultRequest extends ActivityBaseRequest
             $messages[sprintf('%s.vocabulary_uri.url', $referenceForm)] = 'The @vocabulary-uri field must be a valid url.';
 
             if (!empty($reference['code']) && $hasResultId) {
-                $messages[sprintf('%s.code.indicator_ref_code_present', $referenceForm)] = 'The @code is already defined in its indicators';
+                $messages[sprintf('%s.code.indicator_ref_code_present', $referenceForm)] = 'The code is already defined in its indicators';
             }
         }
 
