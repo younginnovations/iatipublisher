@@ -44,6 +44,7 @@ class DescriptionRequest extends ActivityBaseRequest
 
         foreach ($formFields as $descriptionIndex => $description) {
             $descriptionForm = sprintf('description.%s', $descriptionIndex);
+            $rules[sprintf('%s.type', $descriptionForm)] = sprintf('nullable|in:%s', implode(',', array_keys(getCodeList('DescriptionType', 'Activity', false))));
             $narrativeRules = $this->getRulesForNarrative($description['narrative'], $descriptionForm);
 
             foreach ($narrativeRules as $key => $item) {

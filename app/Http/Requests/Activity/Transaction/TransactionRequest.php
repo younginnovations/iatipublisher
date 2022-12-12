@@ -607,7 +607,7 @@ class TransactionRequest extends ActivityBaseRequest
 
         foreach ($formFields as $recipientCountryIndex => $recipientCountry) {
             $recipientCountryForm = sprintf('recipient_country.%s', $recipientCountryIndex);
-            $rules[sprintf('%s.country_code.in', $recipientCountryForm)] = 'The transaction recipient country code is invalid.';
+            $messages[sprintf('%s.country_code.in', $recipientCountryForm)] = 'The transaction recipient country code is invalid.';
             $narrativeMessages = $this->getMessagesForNarrative($recipientCountry['narrative'], $recipientCountryForm);
 
             foreach ($narrativeMessages as $key => $item) {

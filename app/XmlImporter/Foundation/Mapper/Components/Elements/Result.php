@@ -39,6 +39,7 @@ class Result
         $this->documentLinkTemplate = $template['result']['document_link'];
 
         foreach ($results as $index => $result) {
+            $value =
             $this->result[$index] = $template['result'];
             $this->result[$index]['type'] = $this->attributes($result, 'type');
             $this->result[$index]['aggregation_status'] = $this->attributes($result, 'aggregation-status');

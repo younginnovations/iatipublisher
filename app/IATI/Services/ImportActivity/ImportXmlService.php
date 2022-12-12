@@ -18,7 +18,6 @@ use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Event;
-use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Storage;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -340,24 +339,6 @@ class ImportXmlService
 
             return null;
         }
-    }
-
-    /**
-     * Returns errors from the xml.
-     *
-     * @param $filename
-     *
-     * @return void
-     */
-    public function parseXmlErrors($filename): void
-    {
-        $filePath = $this->getXmlDataStoragePath($filename);
-        $xml = $this->loadXml($filePath);
-        $xmlLines = $this->xmlService->formatUploadedXml($xml);
-        $messages = $this->xmlService->getSchemaErrors($xml);
-        logger()->error($messages);
-        Session::put('xmlLines', $xmlLines);
-        Session::put('messages', $messages);
     }
 
     /**
