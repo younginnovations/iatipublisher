@@ -144,45 +144,38 @@ class Validation extends Factory
      */
     public function registerValidationRules(): void
     {
-        $this->extend(
-            'start_end_date',
-            function ($attribute, $dates) {
-                if ($dates && is_array($dates)) {
-                    $actual_start_date = Arr::get($dates, 'actual_start_date.0.date');
-                    $actual_end_date = Arr::get($dates, 'actual_end_date.0.date');
-                    $planned_start_date = Arr::get($dates, 'planned_start_date.0.date');
-                    $planned_end_date = Arr::get($dates, 'planned_end_date.0.date');
+        $this->uniqueLangValidation();
+        $this->percentageValidation();
+        $this->operatorValidation();
+        $this->activityDateValidation();
+        $this->startEndDateValidation();
+        $this->singleElementValidation();
+        $this->sectorValidation();
+        $this->recipientRegionCountryValidation();
+        $this->budgetValidation();
+    }
 
-                    if (($actual_start_date > $actual_end_date) && ($actual_start_date !== '' && $actual_end_date !== '')) {
-                        return false;
-                    } elseif (($planned_start_date > $planned_end_date) && ($planned_start_date !== '' && $planned_end_date !== '')) {
-                        return false;
-                    } elseif (($actual_start_date > $planned_end_date) && ($actual_start_date !== '' && $planned_end_date !== '')
-                        && ($actual_end_date === '' && $planned_start_date === '')
-                    ) {
-                        return false;
-                    } elseif (($planned_start_date > $actual_end_date) && ($planned_start_date !== '' && $actual_end_date !== '')
-                        && ($planned_end_date === '' && $actual_start_date === '')
-                    ) {
-                        return false;
-                    }
+    /**
+     * Unique language validation.
+     *
+     * @return void
+     */
+    public function uniqueLangValidation(): void
+    {
+        $this->extendImplicit(
+            'unique_lang',
+            function ($attribute, $value) {
+                $languages = [];
 
-                    return true;
-                }
+                if (is_array($value)) {
+                    foreach ($value as $narrative) {
+                        $language = Arr::get($narrative, 'narrative.0.language', '');
 
-                return false;
-            }
-        );
+                        if (in_array($language, $languages, true)) {
+                            return false;
+                        }
 
-        $this->extend(
-            'actual_date',
-            function ($attribute, $date) {
-                $dateType = (!is_array($date)) ?: Arr::get($date, '0.type');
-
-                if ($dateType === 2 || $dateType === 4) {
-                    $actual_date = (!is_array($date)) ?: Arr::get($date, '0.date');
-                    if ($actual_date > date('Y-m-d')) {
-                        return false;
+                        $languages[] = $language;
                     }
                 }
 
@@ -190,38 +183,62 @@ class Validation extends Factory
             }
         );
 
-        $this->extend(
-            'multiple_activity_date',
-            function ($attribute, $dates) {
-                if ($dates && is_array($dates)) {
-                    foreach ($dates as $activityDate) {
-                        if (count($activityDate) > 1) {
-                            return false;
-                        }
+        $this->extendImplicit(
+            'unique_default_lang',
+            function ($attribute, $value) {
+                $languages = [];
+                $defaultLanguage = 'en';
+                $check = true;
+
+                if ($value && is_array($value)) {
+                    foreach ($value as $narrative) {
+                        $languages[] = Arr::get($narrative, 'narrative.0.language', '');
                     }
 
-                    return true;
+                    if ((count($languages) === count(array_unique($languages))) && in_array(
+                        '',
+                        $languages,
+                        true
+                    ) && in_array($defaultLanguage, $languages, true)) {
+                        $check = false;
+                    }
                 }
 
+                return $check;
+            }
+        );
+
+        $this->extend(
+            'required_with_language',
+            function ($attribute, $value, $parameters, $validator) {
+                $language = preg_replace('/([^~]+).narrative/', '$1.language', $attribute);
+                $request = $this->data;
+
+                return !(Arr::get($request, $language) && !Arr::get($request, $attribute));
+            }
+        );
+    }
+
+    /**
+     * Percentage validations.
+     *
+     * @return void
+     */
+    public function percentageValidation(): void
+    {
+        $this->extend(
+            'sum',
+            function ($attribute, $value, $parameters, $validator) {
                 return false;
             }
         );
 
         $this->extend(
-            'start_date_required',
-            function ($attribute, $dates) {
-                if (is_array($dates)) {
-                    if (array_key_exists('actual_start_date', $dates) || array_key_exists(
-                        'planned_start_date',
-                        $dates
-                    )) {
-                        return true;
-                    }
+            'total',
+            function ($attribute, $value, $parameters, $validator) {
+                ($value != 100) ? $check = false : $check = true;
 
-                    return false;
-                }
-
-                return false;
+                return $check;
             }
         );
 
@@ -292,6 +309,210 @@ class Validation extends Factory
             }
         );
 
+        $this->extend('sum_exceeded', function () {
+            return false;
+        });
+
+        $this->extend('sum_greater_than', function () {
+            return false;
+        });
+
+        $this->extend('percentage_within_vocabulary', function () {
+            return false;
+        });
+    }
+
+    /**
+     * Operator validations.
+     *
+     * @return void
+     */
+    public function operatorValidation(): void
+    {
+        $this->extend(
+            'exclude_operators',
+            function ($attribute, $value, $parameters, $validator) {
+                if ($value) {
+                    return !preg_match('/[\&\|\?|]+/', $value);
+                }
+
+                return true;
+            }
+        );
+    }
+
+    /**
+     * Date validations.
+     *
+     * @return void
+     */
+    public function activityDateValidation(): void
+    {
+        $this->extend(
+            'actual_date',
+            function ($attribute, $date) {
+                $dateType = (!is_array($date)) ?: Arr::get($date, '0.type');
+
+                if ($dateType === 2 || $dateType === 4) {
+                    $actual_date = (!is_array($date)) ?: Arr::get($date, '0.date');
+                    if ($actual_date > date('Y-m-d')) {
+                        return false;
+                    }
+                }
+
+                return true;
+            }
+        );
+
+        $this->extend(
+            'multiple_activity_date',
+            function ($attribute, $dates) {
+                if ($dates && is_array($dates)) {
+                    foreach ($dates as $activityDate) {
+                        if (count($activityDate) > 1) {
+                            return false;
+                        }
+                    }
+
+                    return true;
+                }
+
+                return false;
+            }
+        );
+
+        $this->extend(
+            'diff_one_year',
+            function ($attribute, $values) {
+                if (count($values) > 1) {
+                    return true;
+                }
+
+                $periodStart = Arr::get($values[array_key_first($values)], 'period_start.0.date');
+                $periodEnd = Arr::get($values[array_key_first($values)], 'period_end.0.date');
+                $isPeriodStartDate = dateStrToTime($periodStart);
+                $isPeriodEndDate = dateStrToTime($periodEnd);
+
+                if ($isPeriodStartDate !== false && $isPeriodEndDate !== false) {
+                    $periodStart = Carbon::parse($periodStart);
+                    $periodEnd = Carbon::parse($periodEnd);
+
+                    $diff = $periodStart->diff($periodEnd)->days;
+
+                    return $diff <= 365;
+                }
+
+                return true;
+            }
+        );
+
+        $this->extend(
+            'date_greater_than',
+            function ($attribute, $value, $parameters, $validator) {
+                $inserted = Carbon::parse($value)->year;
+                $since = $parameters[0];
+
+                return $inserted >= $since;
+            }
+        );
+    }
+
+    /**
+     * Start date and end date validations.
+     *
+     * @return void
+     */
+    public function startEndDateValidation(): void
+    {
+        $this->extend(
+            'start_end_date',
+            function ($attribute, $dates) {
+                if ($dates && is_array($dates)) {
+                    $actual_start_date = Arr::get($dates, 'actual_start_date.0.date');
+                    $actual_end_date = Arr::get($dates, 'actual_end_date.0.date');
+                    $planned_start_date = Arr::get($dates, 'planned_start_date.0.date');
+                    $planned_end_date = Arr::get($dates, 'planned_end_date.0.date');
+
+                    if (($actual_start_date > $actual_end_date) && ($actual_start_date !== '' && $actual_end_date !== '')) {
+                        return false;
+                    } elseif (($planned_start_date > $planned_end_date) && ($planned_start_date !== '' && $planned_end_date !== '')) {
+                        return false;
+                    } elseif (($actual_start_date > $planned_end_date) && ($actual_start_date !== '' && $planned_end_date !== '')
+                        && ($actual_end_date === '' && $planned_start_date === '')
+                    ) {
+                        return false;
+                    } elseif (($planned_start_date > $actual_end_date) && ($planned_start_date !== '' && $actual_end_date !== '')
+                        && ($planned_end_date === '' && $actual_start_date === '')
+                    ) {
+                        return false;
+                    }
+
+                    return true;
+                }
+
+                return false;
+            }
+        );
+
+        $this->extend(
+            'start_date_required',
+            function ($attribute, $dates) {
+                if (is_array($dates)) {
+                    if (array_key_exists('actual_start_date', $dates) || array_key_exists(
+                        'planned_start_date',
+                        $dates
+                    )) {
+                        return true;
+                    }
+
+                    return false;
+                }
+
+                return false;
+            }
+        );
+
+        $this->extend(
+            'start_before_end_date',
+            function ($attribute, $values) {
+                if (count($values) > 1) {
+                    return true;
+                }
+
+                $periodStart = dateStrToTime(Arr::get($values[array_key_first($values)], 'period_start.0.date'));
+                $periodEnd = dateStrToTime(Arr::get($values[array_key_first($values)], 'period_end.0.date'));
+
+                if ($periodStart === false || $periodEnd === false) {
+                    return true;
+                }
+
+                if ($periodStart <= $periodEnd) {
+                    return true;
+                }
+
+                return false;
+            }
+        );
+
+        $this->extend(
+            'period_start_end',
+            function ($attribute, $value, $parameter, $validator) {
+                return !($parameter[1] < $parameter[0]);
+            }
+        );
+
+        $this->extend('end_later_than_start', function () {
+            return false;
+        });
+    }
+
+    /**
+     * Validations stating only one element.
+     *
+     * @return void
+     */
+    public function singleElementValidation(): void
+    {
         $this->extendImplicit(
             'required_only_one_among',
             function ($attribute, $values, $parameters) {
@@ -321,6 +542,56 @@ class Validation extends Factory
             }
         );
 
+        $this->extendImplicit(
+            'only_one_among',
+            function ($attribute, $values) {
+                foreach ($values as $value) {
+                    if ((Arr::get($value, 'organization_identifier_code', '') === '')
+                        && (Arr::get($value, 'type', '') === '')
+                        && (Arr::get($value, 'provider_activity_id') === '')
+                        && (Arr::get($value, 'narrative.0.narrative') === '')
+                    ) {
+                        return true;
+                    }
+
+                    if (($value['organization_identifier_code'] === '') && (Arr::get(
+                        $value,
+                        'narrative.0.narrative'
+                    ) === '')) {
+                        return false;
+                    }
+
+                    return true;
+                }
+            }
+        );
+
+        $this->extend('already_in_activity', function () {
+            return false;
+        });
+
+        $this->extend(
+            'unique_category',
+            function ($attribute, $value) {
+                return $this->uniqueCategoryValidator($attribute, $value);
+            }
+        );
+
+        $this->extend(
+            'unique_language',
+            function ($attribute, $value) {
+                return $this->uniqueLanguageValidator($attribute, $value);
+            }
+        );
+    }
+
+    /**
+     * Sector validations.
+     *
+     * @return void
+     */
+    public function sectorValidation(): void
+    {
         $this->extend(
             'check_sector',
             function ($attribute, $values) {
@@ -355,6 +626,22 @@ class Validation extends Factory
             }
         );
 
+        $this->extend('sector_total_percent', function () {
+            return false;
+        });
+
+        $this->extend('sector_has_five_digit_oced_vocab', function () {
+            return false;
+        });
+    }
+
+    /**
+     * Recipient region and country validations.
+     *
+     * @return void
+     */
+    public function recipientRegionCountryValidation(): void
+    {
         $this->extend(
             'check_recipient_region_country',
             function ($attribute, $values) {
@@ -391,165 +678,6 @@ class Validation extends Factory
             }
         );
 
-        $this->extend(
-            'start_before_end_date',
-            function ($attribute, $values) {
-                if (count($values) > 1) {
-                    return true;
-                }
-
-                $periodStart = dateStrToTime(Arr::get($values[array_key_first($values)], 'period_start.0.date'));
-                $periodEnd = dateStrToTime(Arr::get($values[array_key_first($values)], 'period_end.0.date'));
-
-                if ($periodStart === false || $periodEnd === false) {
-                    return true;
-                }
-
-                if ($periodStart <= $periodEnd) {
-                    return true;
-                }
-
-                return false;
-            }
-        );
-
-        $this->extend(
-            'diff_one_year',
-            function ($attribute, $values) {
-                if (count($values) > 1) {
-                    return true;
-                }
-
-                $periodStart = Arr::get($values[array_key_first($values)], 'period_start.0.date');
-                $periodEnd = Arr::get($values[array_key_first($values)], 'period_end.0.date');
-                $isPeriodStartDate = dateStrToTime($periodStart);
-                $isPeriodEndDate = dateStrToTime($periodEnd);
-
-                if ($isPeriodStartDate !== false && $isPeriodEndDate !== false) {
-                    $periodStart = Carbon::parse($periodStart);
-                    $periodEnd = Carbon::parse($periodEnd);
-
-                    $diff = $periodStart->diff($periodEnd)->days;
-
-                    return $diff <= 365;
-                }
-
-                return true;
-            }
-        );
-
-        $this->extendImplicit(
-            'only_one_among',
-            function ($attribute, $values) {
-                foreach ($values as $value) {
-                    if ((Arr::get($value, 'organization_identifier_code', '') === '')
-                        && (Arr::get($value, 'type', '') === '')
-                        && (Arr::get($value, 'provider_activity_id') === '')
-                        && (Arr::get($value, 'narrative.0.narrative') === '')
-                    ) {
-                        return true;
-                    }
-
-                    if (($value['organization_identifier_code'] === '') && (Arr::get(
-                        $value,
-                        'narrative.0.narrative'
-                    ) === '')) {
-                        return false;
-                    }
-
-                    return true;
-                }
-            }
-        );
-
-        $this->extendImplicit(
-            'unique_lang',
-            function ($attribute, $value) {
-                $languages = [];
-
-                if (is_array($value)) {
-                    foreach ($value as $narrative) {
-                        $language = Arr::get($narrative, 'narrative.0.language', '');
-
-                        if (in_array($language, $languages, true)) {
-                            return false;
-                        }
-
-                        $languages[] = $language;
-                    }
-                }
-
-                return true;
-            }
-        );
-
-        $this->extendImplicit(
-            'unique_default_lang',
-            function ($attribute, $value) {
-                $languages = [];
-                $defaultLanguage = 'en';
-                $check = true;
-
-                if ($value && is_array($value)) {
-                    foreach ($value as $narrative) {
-                        $languages[] = Arr::get($narrative, 'narrative.0.language', '');
-                    }
-
-                    if ((count($languages) === count(array_unique($languages))) && in_array(
-                        '',
-                        $languages,
-                        true
-                    ) && in_array($defaultLanguage, $languages, true)) {
-                        $check = false;
-                    }
-                }
-
-                return $check;
-            }
-        );
-
-        $this->extend(
-            'sum',
-            function ($attribute, $value, $parameters, $validator) {
-                return false;
-            }
-        );
-
-        $this->extend(
-            'date_greater_than',
-            function ($attribute, $value, $parameters, $validator) {
-                $inserted = Carbon::parse($value)->year;
-                $since = $parameters[0];
-
-                return $inserted >= $since;
-            }
-        );
-
-        $this->extend(
-            'period_start_end',
-            function ($attribute, $value, $parameter, $validator) {
-                return !($parameter[1] < $parameter[0]);
-            }
-        );
-
-        $this->extend(
-            'required_with_language',
-            function ($attribute, $value, $parameters, $validator) {
-                $language = preg_replace('/([^~]+).narrative/', '$1.language', $attribute);
-                $request = $this->data;
-
-                return !(Arr::get($request, $language) && !Arr::get($request, $attribute));
-            }
-        );
-
-        $this->extend('sector_total_percent', function () {
-            return false;
-        });
-
-        $this->extend('sector_has_five_digit_oced_vocab', function () {
-            return false;
-        });
-
         $this->extend('allocated_country_percent_exceeded', function () {
             return false;
         });
@@ -557,66 +685,20 @@ class Validation extends Factory
         $this->extend('allocated_region_total_mismatch', function () {
             return false;
         });
+    }
 
-        $this->extend('end_later_than_start', function () {
-            return false;
-        });
-
+    /**
+     * Budget validations.
+     *
+     * @return void
+     */
+    public function budgetValidation(): void
+    {
         $this->extend('budgets_identical', function () {
             return false;
         });
 
         $this->extend('budget_revised_invalid', function () {
-            return false;
-        });
-
-        $this->extend(
-            'exclude_operators',
-            function ($attribute, $value, $parameters, $validator) {
-                if ($value) {
-                    return !preg_match('/[\&\|\?|]+/', $value);
-                }
-
-                return true;
-            }
-        );
-
-        $this->extend(
-            'unique_category',
-            function ($attribute, $value) {
-                return $this->uniqueCategoryValidator($attribute, $value);
-            }
-        );
-
-        $this->extend(
-            'unique_language',
-            function ($attribute, $value) {
-                return $this->uniqueLanguageValidator($attribute, $value);
-            }
-        );
-
-        $this->extend(
-            'total',
-            function ($attribute, $value, $parameters, $validator) {
-                ($value != 100) ? $check = false : $check = true;
-
-                return $check;
-            }
-        );
-
-        $this->extend('sum_exceeded', function () {
-            return false;
-        });
-
-        $this->extend('already_in_activity', function () {
-            return false;
-        });
-
-        $this->extend('sum_greater_than', function () {
-            return false;
-        });
-
-        $this->extend('percentage_within_vocabulary', function () {
             return false;
         });
     }

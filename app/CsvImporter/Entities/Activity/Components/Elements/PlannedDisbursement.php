@@ -255,19 +255,10 @@ class PlannedDisbursement extends Element
      */
     protected function setPlannedDisbursementProviderOrg($key, $value, $index): void
     {
-        if (!isset($this->data['planned_disbursement'][$index]['provider_org'][0]['ref'])) {
+        if (!isset($this->data['planned_disbursement'][$index]['provider_org'])) {
             $this->data['planned_disbursement'][$index]['provider_org'][0]['ref'] = '';
-        }
-
-        if (!isset($this->data['planned_disbursement'][$index]['provider_org'][0]['provider_activity_id'])) {
             $this->data['planned_disbursement'][$index]['provider_org'][0]['provider_activity_id'] = '';
-        }
-
-        if (!isset($this->data['planned_disbursement'][$index]['provider_org'][0]['type'])) {
             $this->data['planned_disbursement'][$index]['provider_org'][0]['type'] = '';
-        }
-
-        if (!isset($this->data['planned_disbursement'][$index]['provider_org'][0]['narrative'][0]['narrative'])) {
             $this->data['planned_disbursement'][$index]['provider_org'][0]['narrative'][0] = [
                 'narrative' => '',
                 'language'  => '',
