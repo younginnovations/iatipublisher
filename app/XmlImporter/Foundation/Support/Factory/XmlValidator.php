@@ -35,7 +35,6 @@ use App\Http\Requests\Activity\Scope\ScopeRequest;
 use App\Http\Requests\Activity\Sector\SectorRequest;
 use App\Http\Requests\Activity\Status\StatusRequest;
 use App\Http\Requests\Activity\Tag\TagRequest;
-use App\Http\Requests\Activity\Title\TitleRequest;
 use App\Http\Requests\Activity\Transaction\TransactionRequest;
 use Illuminate\Support\Arr;
 
@@ -175,11 +174,11 @@ class XmlValidator
      *
      * @return array
      */
-    public function validateActivity(bool $shouldBeUnique = false): array
+    public function validateActivity($activityId, bool $isDuplicate = false): array
     {
         return $this->factory->initialize($this->activity, $this->rules(), $this->messages())
             ->passes()
-            ->withErrors($shouldBeUnique);
+            ->withErrors($isDuplicate);
     }
 
     public function getBaseRules($baseRules, $element, $data, $indexRequired = true): array
@@ -365,8 +364,8 @@ class XmlValidator
      */
     protected function rulesForTitle(array $activity): array
     {
-        // needs work
-        $rules = $this->getBaseRules((new TitleRequest())->rules(), 'title', Arr::get($activity, 'title', []));
+        $title = Arr::get($activity, 'title', []);
+        $rules['title'] = 'nullable|unique_lang';
 
         return $rules;
     }
@@ -378,8 +377,15 @@ class XmlValidator
      */
     protected function messagesForTitle(array $activity): array
     {
-        // needs work
-        $messages = $this->getBaseMessages((new TitleRequest())->messages(), 'title', Arr::get($activity, 'title', []));
+        $title = Arr::get($activity, 'title', []);
+        $messages['title.unique_lang'] = trans('validation.unique', ['attribute' => trans('element.language')]);
+
+        foreach ($title as $narrativeIndex => $narrative) {
+            $messages[sprintf('title.%s.narrative.required_with', $narrativeIndex)] = trans(
+                'validation.required_with',
+                ['attribute' => trans('element.title'), 'values' => trans('elementForm.narrative')]
+            );
+        }
 
         return $messages;
     }

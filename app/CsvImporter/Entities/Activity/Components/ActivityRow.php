@@ -418,13 +418,13 @@ class ActivityRow extends Row
             if ($element === 'transaction') {
                 foreach ($this->$element as $transaction) {
                     $transaction->validate()->withErrors();
-                    $this->recordErrors($transaction);
+                    $this->recordErrors($element, $transaction);
 
                     $this->validElements[] = $transaction->isElementValid();
                 }
             } else {
                 $this->$element->validate()->withErrors();
-                $this->recordErrors($this->$element);
+                $this->recordErrors($element, $this->$element);
 
                 $this->validElements[] = $this->$element->isElementValid();
             }
@@ -575,10 +575,10 @@ class ActivityRow extends Row
      *
      * @param $element
      */
-    protected function recordErrors($element): void
+    protected function recordErrors($name, $element): void
     {
-        foreach ($element->errors() as $errors) {
-            $this->errors[] = $errors;
+        if (!empty($element->errors())) {
+            $this->errors[$name] = $element->errors();
         }
     }
 

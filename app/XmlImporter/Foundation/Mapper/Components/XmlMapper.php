@@ -126,7 +126,8 @@ class XmlMapper
      */
     public function map(array $activities, $template, $userId, $orgId, $dbIatiIdentifiers): static
     {
-        $xmlQueueWriter = app()->makeWith(XmlQueueWriter::class, ['userId' => $userId, 'orgId' => $orgId, 'dbIatiIdentifiers' => $dbIatiIdentifiers]);
+        $xmlActivityIdentifiers = $this->xmlActivityIdentifiers($activities);
+        $xmlQueueWriter = app()->makeWith(XmlQueueWriter::class, ['userId' => $userId, 'orgId' => $orgId, 'dbIatiIdentifiers' => $dbIatiIdentifiers, 'xmlActivityIdentifiers' => $xmlActivityIdentifiers]);
 
         $totalActivities = count($activities);
         $mappedData = [];
@@ -142,6 +143,29 @@ class XmlMapper
         }
 
         return $this;
+    }
+
+    /**
+     * Collects all activityIdentifiers present in xml file.
+     *
+     * @param $activities
+     *
+     * @return array
+     */
+    public function xmlActivityIdentifiers($activities): array
+    {
+        $xmlActivityIdentifiers = [];
+
+        foreach ($activities as $activity) {
+            foreach (Arr::get($activity, 'value', []) as $element => $value) {
+                if ($this->name(Arr::get($value, 'name')) === 'iatiIdentifier') {
+                    $xmlActivityIdentifiers[] = $this->value($value);
+                    break;
+                }
+            }
+        }
+
+        return array_count_values($xmlActivityIdentifiers);
     }
 
     /**

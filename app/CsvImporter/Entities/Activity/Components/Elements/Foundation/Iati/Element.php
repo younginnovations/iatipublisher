@@ -154,12 +154,10 @@ abstract class Element
     public function withErrors(): void
     {
         foreach ($this->validator->errors()->getMessages() as $element => $errors) {
-            foreach ($errors as $error) {
-                $this->errors[] = $error;
-            }
+            $this->errors[$element] = implode('<br>', $errors);
         }
 
-        $this->errors = array_unique($this->errors);
+        // $this->errors = array_unique($this->errors);
     }
 
     /**

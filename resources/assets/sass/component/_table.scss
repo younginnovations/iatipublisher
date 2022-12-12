@@ -86,27 +86,33 @@
   .upload-error-content {
     display: none;
 
-    ul {
-      @apply mt-4 space-y-4 text-sm font-normal text-bluecoral;
-    }
-
-    li {
-      position: relative;
-      padding-left: 36px;
-
+    div {
       &:not(:last-child) {
         @apply border-b border-b-n-20 pb-4;
       }
 
-      &::before {
-        position: absolute;
-        top: 8px;
-        left: 20px;
-        width: 4px;
-        height: 4px;
-        border-radius: 50%;
-        content: '';
-        @apply bg-bluecoral;
+      ul {
+        @apply mt-4 space-y-4 text-sm font-normal text-bluecoral;
+      }
+
+      li {
+        position: relative;
+        padding-left: 36px;
+
+        &:not(:last-child) {
+          @apply border-b border-b-n-20 pb-4;
+        }
+
+        &::before {
+          position: absolute;
+          top: 8px;
+          left: 20px;
+          width: 4px;
+          height: 4px;
+          border-radius: 50%;
+          content: '';
+          @apply bg-bluecoral;
+        }
       }
     }
 

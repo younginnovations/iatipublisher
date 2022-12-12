@@ -7,7 +7,7 @@
     }}
 
     <span
-      v-if="activity['errors'].length > 0"
+      v-if="Object.keys(activity['errors']).length > 0"
       class="inline-flex cursor-pointer items-center text-crimson-50"
       @click="toggleError"
     >
@@ -20,11 +20,17 @@
     </span>
 
     <div class="upload-error-content" :class="{ open: active }">
-      <ul>
-        <li v-for="(err, i) in activity['errors']" :key="i">
-          <p>{{ err }}</p>
-        </li>
-      </ul>
+      <div v-for="(ele_err, i) in activity['errors']" :key="i">
+        <ul>
+          <li v-for="(err, key, j) in ele_err" :key="j">
+            <p>
+              {{ key.toString().replace(/_/g, " ").replace(/\./g, " > ") }}
+            </p>
+            <!-- eslint-disable-next-line vue/no-v-html -->
+            <p v-html="err"></p>
+          </li>
+        </ul>
+      </div>
     </div>
   </td>
 
