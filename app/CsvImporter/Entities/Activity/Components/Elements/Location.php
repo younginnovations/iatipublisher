@@ -299,15 +299,9 @@ class Location extends Element
      */
     protected function setAdministrative($key, $value, $index): void
     {
-        if (!isset($this->data['location'][$index]['administrative'][0]['vocabulary'])) {
+        if (!isset($this->data['location'][$index]['administrative'])) {
             $this->data['location'][$index]['administrative'][0]['vocabulary'] = '';
-        }
-
-        if (!isset($this->data['location'][$index]['administrative'][0]['code'])) {
             $this->data['location'][$index]['administrative'][0]['code'] = '';
-        }
-
-        if (!isset($this->data['location'][$index]['administrative'][0]['level'])) {
             $this->data['location'][$index]['administrative'][0]['level'] = '';
         }
 
