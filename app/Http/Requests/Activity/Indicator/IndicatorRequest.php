@@ -51,11 +51,11 @@ class IndicatorRequest extends ActivityBaseRequest
     {
         $rules = [];
         $tempRules = [
-            $this->getRulesForNarrative($formFields['title'], 'title.0'),
-            $this->getRulesForNarrative($formFields['description'], 'description.0'),
-            $this->getRulesForDocumentLink($formFields['document_link']),
-            $this->getRulesForReference($formFields['reference'], $fileUpload, $result),
-            $this->getRulesForBaseline($formFields['baseline']),
+            $this->getRulesForNarrative(Arr::get($formFields, 'title', []), 'title.0'),
+            $this->getRulesForNarrative(Arr::get($formFields, 'description', []), 'description.0'),
+            $this->getRulesForDocumentLink(Arr::get($formFields, 'document_link', [])),
+            $this->getRulesForReference(Arr::get($formFields, 'reference', []), $fileUpload, $result),
+            $this->getRulesForBaseline(Arr::get($formFields, 'baseline', [])),
         ];
 
         foreach ($tempRules as $index => $tempRule) {
@@ -79,11 +79,11 @@ class IndicatorRequest extends ActivityBaseRequest
         $messages = [];
 
         $tempMessages = [
-            $this->getMessagesForNarrative($formFields['title'], 'title.0'),
-            $this->getMessagesForNarrative($formFields['description'], 'description.0'),
-            $this->getMessagesForDocumentLink($formFields['document_link']),
-            $this->getMessagesForReference($formFields['reference']),
-            $this->getMessagesForBaseline($formFields['baseline']),
+            $this->getMessagesForNarrative(Arr::get($formFields, 'title', []), 'title.0'),
+            $this->getMessagesForNarrative(Arr::get($formFields, 'description', []), 'description.0'),
+            $this->getMessagesForDocumentLink(Arr::get($formFields, 'document_link', [])),
+            $this->getMessagesForReference(Arr::get($formFields, 'reference', [])),
+            $this->getMessagesForBaseline(Arr::get($formFields, 'baseline', [])),
         ];
 
         foreach ($tempMessages as $index => $tempMessage) {

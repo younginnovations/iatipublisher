@@ -1060,7 +1060,7 @@ class XmlValidator
         foreach ($results as $resultIndex => $result) {
             $resultBase = sprintf('result.%s', $resultIndex);
             $rules[sprintf('%s.type', $resultBase)] = sprintf(
-                'required|in:%s',
+                'nullable|in:%s',
                 $this->validCodeList('ResultType')
             );
 
@@ -1091,14 +1091,6 @@ class XmlValidator
 
         foreach ($results as $resultIndex => $result) {
             $resultBase = sprintf('result.%s', $resultIndex);
-            $messages[sprintf('%s.type.required', $resultBase)] = trans(
-                'validation.required',
-                ['attribute' => trans('elementForm.result_type')]
-            );
-            $messages[sprintf('%s.type.in', $resultBase)] = trans(
-                'validation.code_list',
-                ['attribute' => trans('elementForm.result_type')]
-            );
 
             $tempMessages = [
                 (new ResultRequest())->getMessagesForResult($result, true),
@@ -1132,7 +1124,7 @@ class XmlValidator
 
             $tempRules = [
                 (new IndicatorRequest())->getRulesForIndicator($indicator, true, $result),
-                $this->getRulesForPeriod($indicator['period'], $indicatorBase, $indicator),
+                $this->getRulesForPeriod(Arr::get($indicator, 'period', []) ?? [], $indicatorBase, $indicator),
             ];
 
             foreach ($tempRules as $index => $tempRule) {
@@ -1168,7 +1160,7 @@ class XmlValidator
 
             $tempMessages = [
                 (new IndicatorRequest())->getMessagesForIndicator($indicator),
-                $this->getMessagesForPeriod($indicator['period'], $indicatorBase, $indicator),
+                $this->getMessagesForPeriod(Arr::get($indicator, 'period', []) ?? [], $indicatorBase, $indicator),
             ];
 
             foreach ($tempMessages as $index => $tempMessage) {

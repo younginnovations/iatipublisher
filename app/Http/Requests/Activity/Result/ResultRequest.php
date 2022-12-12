@@ -44,6 +44,9 @@ class ResultRequest extends ActivityBaseRequest
     {
         $rules = [];
 
+        $rules['type'] = sprintf('nullable|in:%s', implode(',', array_keys(getCodeList('ResultType', 'Activity', false))));
+        $rules['aggregation_status'] = sprintf('nullable|in:0,1');
+
         $tempRules = [
             $this->getRulesForNarrative($formFields['title'][0]['narrative'], 'title.0'),
             $this->getRulesForNarrative($formFields['description'][0]['narrative'], 'description.0'),

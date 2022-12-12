@@ -84,6 +84,9 @@ class BudgetRequest extends ActivityBaseRequest
         }
 
         foreach ($formFields as $budgetIndex => $budget) {
+            $budgetForm = sprintf('budget.%s', $budgetIndex);
+            $rules[sprintf('%s.budget_type', $budgetForm)] = sprintf('nullable|in:%s', implode(',', array_keys(getCodeList('BudgetType', 'Activity', false))));
+            $rules[sprintf('%s.budget_status', $budgetForm)][] = sprintf('in:%s', implode(',', array_keys(getCodeList('BudgetStatus', 'Activity', false))));
             $diff = 0;
             $start = $budget['period_start'][0]['date'];
             $end = $budget['period_end'][0]['date'];
@@ -92,7 +95,6 @@ class BudgetRequest extends ActivityBaseRequest
                 $diff = (dateStrToTime($end) - dateStrToTime($start)) / 86400;
             }
 
-            $budgetForm = sprintf('budget.%s', $budgetIndex);
             $periodStartRules = $this->getBudgetRulesForPeriodStart($budget['period_start'], $budgetForm, $diff);
 
             foreach ($periodStartRules as $key => $periodStartRule) {
@@ -203,6 +205,10 @@ class BudgetRequest extends ActivityBaseRequest
     public function getMessagesForBudget(array $formFields): array
     {
         $messages = [];
+        $activityService = app()->make(ActivityService::class);
+        $formFields = $activityService->setBudgets($formFields);
+        $this->identicalIds = $activityService->checkSameMultipleBudgets($formFields);
+        $this->revisedIds = $activityService->checkRevisedBudgets($formFields);
 
         if (count($this->identicalIds)) {
             foreach ($this->identicalIds as $ids) {
@@ -240,6 +246,8 @@ class BudgetRequest extends ActivityBaseRequest
                 $messages[$key] = $valueMessage;
             }
 
+            $messages[$budgetForm . '.budget_type.in'] = 'The budget type is invalid.';
+            $messages[$budgetForm . '.budget_status.in'] = 'The budget status is invalid.';
             $messages[$budgetForm . '.period_end.0.date.before'] = 'The Period End iso-date must be within a year after Period Start iso-date.';
             $messages[$budgetForm . '.period_end.0.date.period_start_end'] = 'The Budget Period must not be longer than one year';
         }
