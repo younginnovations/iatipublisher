@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\IATI\Services\Download;
 
 use App\CsvImporter\Traits\ChecksCsvHeaders;
+use App\IATI\Elements\Xml\XmlGenerator;
 use App\IATI\Repositories\Activity\ActivityRepository;
 
 /**
@@ -20,14 +21,22 @@ class DownloadActivityService
     protected ActivityRepository $activityRepository;
 
     /**
+     * @var XmlGenerator
+     */
+    protected XmlGenerator $xmlGenerator;
+
+    /**
      * DownloadActivityService Constructor.
      *
      * @param ActivityRepository $activityRepository
+     * @param XmlGenerator $xmlGenerator
      */
     public function __construct(
-        ActivityRepository $activityRepository
+        ActivityRepository $activityRepository,
+        XmlGenerator $xmlGenerator
     ) {
         $this->activityRepository = $activityRepository;
+        $this->xmlGenerator = $xmlGenerator;
     }
 
     /**
@@ -59,5 +68,17 @@ class DownloadActivityService
         }
 
         return $data;
+    }
+
+    /**
+     * Returns combined xml for download.
+     *
+     * @param $activities
+     *
+     * @return string
+     */
+    public function getCombinedXmlFile($activities): string
+    {
+        return $this->xmlGenerator->getCombinedXmlFile($activities);
     }
 }
