@@ -829,7 +829,6 @@ function dateFormat($format, $date): bool|string
         $dateArray = date_parse_from_format('Y-m-d', $date);
 
         if (checkdate((int) $dateArray['month'], (int) $dateArray['day'], (int) $dateArray['year']) && (bool) strtotime($date)) {
-            // if ((bool)strtotime($date)) {
             return date($format, strtotime($date));
         }
 
@@ -860,8 +859,6 @@ function dateStrToTime($date): int|bool
         $dateArray = date_parse_from_format('Y-m-d', $date);
 
         if (checkdate((int) $dateArray['month'], (int) $dateArray['day'], (int) $dateArray['year']) && (bool) strtotime($date)) {
-            // if ((bool)strtotime($date)) {
-
             return strtotime($date);
         }
 

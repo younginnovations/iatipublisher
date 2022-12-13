@@ -201,9 +201,6 @@ class ActivityRow extends Row
                     if (is_int($datum)) {
                         $this->fields[$key][$datumKey] = strval($datum);
                     }
-                    // if (is_string($datum)) {
-                    //     $this->fields[$key][$datumKey] = mb_convert_encoding($datum, 'UTF-8');
-                    // }
                 }
             }
         }

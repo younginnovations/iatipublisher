@@ -137,6 +137,7 @@ class XmlMapper
             $mappedData[$index] = $this->activity->map($this->filter($activity, 'iatiActivity'), $template, $orgRef);
             $mappedData[$index]['default_field_values'] = $this->defaultFieldValues($activity, $template);
             $mappedData[$index]['transactions'] = $this->transactionElement->map($this->filter($activity, 'transaction'), $template);
+            $mappedData[$index]['transaction_references'] = $this->transactionElement->getReferences();
             $mappedData[$index]['result'] = $this->resultElement->map($this->filter($activity, 'result'), $template);
 
             $xmlQueueWriter->save($mappedData[$index], $totalActivities, $index);

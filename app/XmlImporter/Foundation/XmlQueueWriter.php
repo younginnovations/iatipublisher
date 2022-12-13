@@ -127,10 +127,11 @@ class XmlQueueWriter
         $xmlValidator = app(XmlValidator::class);
         $existing = $this->activityAlreadyExists($activity_identifier);
         $duplicate = $this->activityIsDuplicate(Arr::get($mappedActivity, 'iati_identifier.iati_identifier_text'));
+        $duplicate_transaction = $this->transactionIsDuplicate(Arr::get($mappedActivity, 'transaction_references'));
 
         $errors = $xmlValidator
             ->init($mappedActivity)
-            ->validateActivity($duplicate);
+            ->validateActivity($duplicate, $duplicate_transaction);
 
         $mappedActivity['org_id'] = $this->orgId;
         $this->success++;
@@ -158,6 +159,16 @@ class XmlQueueWriter
     public function activityIsDuplicate($identifier): bool
     {
         return Arr::get($this->xmlActivityIdentifiers, $identifier, 0) > 1 ? true : false;
+    }
+
+    /**
+     * @param $identifier
+     *
+     * @return bool
+     */
+    public function transactionIsDuplicate($references): bool
+    {
+        return !(count(array_unique($references)) === count($references));
     }
 
     /**iI

@@ -22,6 +22,11 @@ class Transaction
     /**
      * @var array
      */
+    protected array $reference = [];
+
+    /**
+     * @var array
+     */
     protected array $sectorVariables = [
         'sector_vocabulary',
         'code',
@@ -53,6 +58,20 @@ class Transaction
     protected function reference($element, $index): void
     {
         $this->transaction[$index]['reference'] = $this->attributes($element, 'ref');
+
+        if ($this->attributes($element, 'ref')) {
+            $this->reference[] = $this->attributes($element, 'ref');
+        }
+    }
+
+    /**
+     * Return array containing references of transaction.
+     *
+     * @return array
+     */
+    public function getReferences(): array
+    {
+        return $this->reference;
     }
 
     /**
@@ -372,7 +391,8 @@ class Transaction
 
             if ($variable === 'narrative') {
                 foreach (Arr::get($element, 'narrative', []) as $narrative) {
-                    if (!empty(Arr::get($narrative, 'narrative')) ||
+                    if (
+                        !empty(Arr::get($narrative, 'narrative')) ||
                         !empty(Arr::get($narrative, 'language'))
                     ) {
                         return false;

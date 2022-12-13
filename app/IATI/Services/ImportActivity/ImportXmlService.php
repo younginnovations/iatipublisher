@@ -354,7 +354,7 @@ class ImportXmlService
      */
     protected function loadXml($filePath): string
     {
-        libxml_use_internal_errors(false);
+        libxml_use_internal_errors(true);
 
         $document = new DOMDocument();
         $document->load($filePath);
